@@ -107,6 +107,7 @@ var DiscussionController = function () {
 
         // get the authoring component content
         this.authoringComponentContent = this.$scope.authoringComponentContent;
+        this.authoringComponentContentJSONString = this.$scope.authoringComponentContentJSONString;
 
         /*
          * get the original component content. this is used when showing
@@ -186,24 +187,16 @@ var DiscussionController = function () {
                 this.isSaveButtonVisible = false;
                 this.isSubmitButtonVisible = false;
                 this.isDisabled = true;
-            } else if (this.mode === 'authoring') {
-                this.updateAdvancedAuthoringView();
-
-                $scope.$watch(function () {
-                    return this.authoringComponentContent;
-                }.bind(this), function (newValue, oldValue) {
-                    this.componentContent = this.ProjectService.injectAssetPaths(newValue);
-                }.bind(this), true);
-            }
+            } else if (this.mode === 'authoring') {}
 
             this.isRichTextEnabled = this.componentContent.isRichTextEnabled;
 
             // set whether studentAttachment is enabled
             this.isStudentAttachmentEnabled = this.componentContent.isStudentAttachmentEnabled;
 
-            if (this.$scope.$parent.registerComponentController != null) {
+            if (this.$scope.$parent.nodeController != null) {
                 // register this component with the parent node
-                this.$scope.$parent.registerComponentController(this.$scope, this.componentContent);
+                this.$scope.$parent.nodeController.registerComponentController(this.$scope, this.componentContent);
             }
         }
 
@@ -1185,12 +1178,17 @@ var DiscussionController = function () {
 
             // update the JSON string in the advanced authoring view textarea
             this.updateAdvancedAuthoringView();
+        }
+    }, {
+        key: 'updateAdvancedAuthoringView',
 
-            /*
-             * notify the parent node that the content has changed which will save
-             * the project to the server
-             */
-            this.$scope.$parent.nodeController.authoringViewNodeChanged();
+
+        /**
+         * Update the component JSON string that will be displayed in the advanced authoring view textarea
+         */
+        value: function updateAdvancedAuthoringView() {
+            this.authoringComponentContentJSONString = angular.toJson(this.authoringComponentContent, 4);
+            this.advancedAuthoringViewComponentChanged();
         }
     }, {
         key: 'advancedAuthoringViewComponentChanged',
@@ -1219,18 +1217,8 @@ var DiscussionController = function () {
                  * notify the parent node that the content has changed which will save
                  * the project to the server
                  */
-                this.$scope.$parent.nodeController.authoringViewNodeChanged();
+                this.$scope.$parent.nodeAuthoringController.authoringViewNodeChanged();
             } catch (e) {}
-        }
-    }, {
-        key: 'updateAdvancedAuthoringView',
-
-
-        /**
-         * Update the component JSON string that will be displayed in the advanced authoring view textarea
-         */
-        value: function updateAdvancedAuthoringView() {
-            this.authoringComponentContentJSONString = angular.toJson(this.authoringComponentContent, 4);
         }
     }, {
         key: 'registerExitListener',

@@ -16,4 +16,13 @@ PossibleScoreController.$inject = [
     'ProjectService'
 ];
 
-export default PossibleScoreController;
+const PossibleScore = {
+    bindings: {
+        maxScore: '<'
+    },
+    templateUrl: 'wise5/directives/possibleScore/possibleScore.html',
+    controller: PossibleScoreController,
+    controllerAs: 'possibleScoreCtrl'
+};
+
+export default PossibleScore;

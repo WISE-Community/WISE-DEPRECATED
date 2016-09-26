@@ -18,7 +18,7 @@ import ClassroomMonitorController from './classroomMonitorController';
 import ConceptMapComponentModule from '../components/conceptMap/conceptMapComponentModule';
 import ConfigService from '../services/configService';
 import CRaterService from '../services/cRaterService';
-import Directives from '../directives/directives';
+import Components from '../directives/components';
 import DiscussionComponentModule from '../components/discussion/discussionComponentModule';
 import DrawComponentModule from '../components/draw/drawComponentModule';
 import EmbeddedComponentModule from '../components/embedded/embeddedComponentModule';
@@ -49,13 +49,13 @@ import TeacherDataService from '../services/teacherDataService';
 import TeacherWebSocketService from '../services/teacherWebSocketService';
 import UtilService from '../services/utilService';
 
-let mainModule = angular.module('classroomMonitor', [
+let classroomMonitorModule = angular.module('classroomMonitor', [
         angularDragula(angular),
         'angularMoment',
         'angular-toArrayFilter',
         'audioOscillatorComponentModule',
+        'components',
         'conceptMapComponentModule',
-        'directives',
         'discussionComponentModule',
         'drawComponentModule',
         'embeddedComponentModule',
@@ -276,4 +276,4 @@ let mainModule = angular.module('classroomMonitor', [
             $mdThemingProvider.setDefaultTheme('default');
         }]);
 
-export default mainModule;
+export default classroomMonitorModule;

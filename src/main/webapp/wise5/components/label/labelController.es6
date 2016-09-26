@@ -139,6 +139,7 @@ class LabelController {
 
         // get the authoring component content
         this.authoringComponentContent = this.$scope.authoringComponentContent;
+        this.authoringComponentContentJSONString = this.$scope.authoringComponentContentJSONString;
 
         /*
          * get the original component content. this is used when showing
@@ -218,43 +219,6 @@ class LabelController {
                 this.canDeleteLabels = false;
                 this.isDisabled = true;
             } else if (this.mode === 'authoring') {
-
-                this.updateAdvancedAuthoringView();
-
-                $scope.$watch(function() {
-                    return this.authoringComponentContent;
-                }.bind(this), function(newValue, oldValue) {
-                    this.componentContent = this.ProjectService.injectAssetPaths(newValue);
-
-                    if (this.canvas != null) {
-
-                        // clear the parent to remove the canvas
-                        $('#canvasParent_' + this.canvasId).empty();
-
-                        // create a new canvas
-                        var canvas = $('<canvas/>');
-                        canvas.attr('id', this.canvasId);
-                        canvas.css('border', '1px solid black');
-
-                        // add the new canvas
-                        $('#canvasParent').append(canvas);
-
-                        // setup the new canvas
-                        this.setupCanvas();
-                    }
-
-                    this.backgroundImage = null;
-
-                    if (this.componentContent.canCreateLabels != null) {
-                        this.canCreateLabels = this.componentContent.canCreateLabels;
-                    }
-
-                    if (this.canCreateLabels) {
-                        this.isNewLabelButtonVisible = true;
-                    } else {
-                        this.isNewLabelButtonVisible = false;
-                    }
-                }.bind(this), true);
             }
 
             this.$timeout(angular.bind(this, function() {
@@ -456,9 +420,9 @@ class LabelController {
         // check if we need to lock this component
         this.calculateDisabled();
 
-        if (this.$scope.$parent.registerComponentController != null) {
+        if (this.$scope.$parent.nodeController != null) {
             // register this component with the parent node
-            this.$scope.$parent.registerComponentController(this.$scope, this.componentContent);
+            this.$scope.$parent.nodeController.registerComponentController(this.$scope, this.componentContent);
         }
     }
 
@@ -1371,12 +1335,14 @@ class LabelController {
 
         // update the JSON string in the advanced authoring view textarea
         this.updateAdvancedAuthoringView();
+    };
 
-        /*
-         * notify the parent node that the content has changed which will save
-         * the project to the server
-         */
-        this.$scope.$parent.nodeController.authoringViewNodeChanged();
+    /**
+     * Update the component JSON string that will be displayed in the advanced authoring view textarea
+     */
+    updateAdvancedAuthoringView() {
+        this.authoringComponentContentJSONString = angular.toJson(this.authoringComponentContent, 4);
+        this.advancedAuthoringViewComponentChanged();
     };
 
     /**
@@ -1405,17 +1371,10 @@ class LabelController {
              * notify the parent node that the content has changed which will save
              * the project to the server
              */
-            this.$scope.$parent.nodeController.authoringViewNodeChanged();
+            this.$scope.$parent.nodeAuthoringController.authoringViewNodeChanged();
         } catch(e) {
 
         }
-    };
-
-    /**
-     * Update the component JSON string that will be displayed in the advanced authoring view textarea
-     */
-    updateAdvancedAuthoringView() {
-        this.authoringComponentContentJSONString = angular.toJson(this.authoringComponentContent, 4);
     };
 
     /**

@@ -30,6 +30,12 @@ describe('WISE5 Student VLE Preview', () => {
         expect(accountMenu.getAttribute('aria-hidden')).toEqual("true");  // Account menu should be hidden
     });
 
+    it('should show step content on the page', () => {
+        // Check that the html content is displayed on the page
+        var nodeContent = element(by.cssContainingText('.node-content','Why Study Newton Scooters?'));
+        expect(nodeContent.isPresent()).toBeTruthy();
+    });
+
     it('should navigate next and previous steps using the buttons', () => {
 
         // Click on the next button and expect to go to the next step
@@ -37,9 +43,15 @@ describe('WISE5 Student VLE Preview', () => {
         expect(browser.getCurrentUrl()).toEqual('http://localhost:8080/wise/project/demo#/vle/node2');
         expect(element(by.model("stepToolsCtrl.toNodeId")).getText()).toBe('1.2: Initial Ideas');
 
+        var nodeContent = element(by.cssContainingText('.node-content','Watch a video of a rubber band car!'));
+        expect(nodeContent.isPresent()).toBeTruthy();
+
         nextButton.click();
         expect(browser.getCurrentUrl()).toEqual('http://localhost:8080/wise/project/demo#/vle/node3');
         expect(element(by.model("stepToolsCtrl.toNodeId")).getText()).toBe('2.1: Newton Scooter Concepts');
+
+        nodeContent = element(by.cssContainingText('.node-content','When you test your scooter'));
+        expect(nodeContent.isPresent()).toBeTruthy();
 
         // Click on the previous button and expect to go back to the previous step
         previousButton.click();

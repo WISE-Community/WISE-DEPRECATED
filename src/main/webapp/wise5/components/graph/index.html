@@ -1,4 +1,5 @@
-<div ng-controller='GraphController as graphController' listen-for-delete-keypress style='display: flex'>
+<div ng-controller='GraphController as graphController' style='display: flex'>
+    <listen-for-delete-keypress>
     <div style='flex: 1'>
         <div ng-if='graphController.mode === "authoring"'>
             <textarea ng-model='graphController.authoringComponentContent.prompt'
@@ -9,34 +10,44 @@
             <br/>
             Graph Title: <input ng-model='graphController.authoringComponentContent.title'
                                 ng-change='graphController.authoringViewComponentChanged()'
+                                ng-model-options='{ debounce: 1000 }'
                                 size='30'/>
             Graph Type: <input ng-model='graphController.authoringComponentContent.graphType'
+                               ng-model-options='{ debounce: 1000 }'
                                ng-change='graphController.authoringViewComponentChanged()'/>
             <br/>
             Graph Width: <input type='number'
                                 ng-model='graphController.authoringComponentContent.width'
+                                ng-model-options='{ debounce: 1000 }'
                                 ng-change='graphController.authoringViewComponentChanged()'/>
             Graph Height: <input type='number'
                                  ng-model='graphController.authoringComponentContent.height'
+                                 ng-model-options='{ debounce: 1000 }'
                                  ng-change='graphController.authoringViewComponentChanged()'/>
             <br/>
             X Axis Title: <input ng-model='graphController.authoringComponentContent.xAxis.title.text'
+                                 ng-model-options='{ debounce: 1000 }'
                                  ng-change='graphController.authoringViewComponentChanged()'/>
             X Min: <input type='number'
                           ng-model='graphController.authoringComponentContent.xAxis.min'
+                          ng-model-options='{ debounce: 1000 }'
                           ng-change='graphController.authoringViewComponentChanged()'/>
             X Max: <input type='number'
                           ng-model='graphController.authoringComponentContent.xAxis.max'
+                          ng-model-options='{ debounce: 1000 }'
                           ng-change='graphController.authoringViewComponentChanged()'/>
             <br/>
             <br/>
             Y Axis Title: <input ng-model='graphController.authoringComponentContent.yAxis.title.text'
+                                 ng-model-options='{ debounce: 1000 }'
                                  ng-change='graphController.authoringViewComponentChanged()'/>
             Y Min: <input type='number'
                           ng-model='graphController.authoringComponentContent.yAxis.min'
+                          ng-model-options='{ debounce: 1000 }'
                           ng-change='graphController.authoringViewComponentChanged()'/>
             Y Max: <input type='number'
                           ng-model='graphController.authoringComponentContent.yAxis.max'
+                          ng-model-options='{ debounce: 1000 }'
                           ng-change='graphController.authoringViewComponentChanged()'/>
             <br/>
             <br/>
@@ -67,16 +78,20 @@
                  style='border: 1px solid black'>
                 Name: <input ng-model='series.name'
                              ng-change='graphController.authoringViewComponentChanged()'
+                             ng-model-options='{ debounce: 1000 }'
                              size='30'/>
                 <br/>
                 Color: <input ng-model='series.color'
+                              ng-model-options='{ debounce: 1000 }'
                               ng-change='graphController.authoringViewComponentChanged()'/>
                 <br/>
                 Symbol: <input ng-model='series.marker.symbol'
+                               ng-model-options='{ debounce: 1000 }'
                                ng-change='graphController.authoringViewComponentChanged()'/>
                 <br/>
                 Can Student Edit: <input type='checkbox'
                                          ng-model='series.canEdit'
+                                         ng-model-options='{ debounce: 1000 }'
                                          ng-change='graphController.authoringViewComponentChanged()'/>
                 <br/>
                 <button ng-click='graphController.authoringDeleteSeriesClicked($index)'>Delete Series</button>
@@ -117,7 +132,7 @@
                       cols='100'></textarea>
         </div>
         <div class="component__prompt">
-            <div class="component__prompt__content" compile='graphController.getPrompt()'></div>
+            <div class="component__prompt__content"><compile data='graphController.getPrompt()'></compile></div>
             <possible-score max-score="graphController.componentContent.maxScore"
                             ng-if="graphController.mode === 'student' && !graphController.latestAnnotations.score"></possible-score>
         </div>
@@ -217,4 +232,5 @@
                     component-state-id='componentState.id'
                     active='true'></annotation>
     </div>
+    </listen-for-delete-keypress>
 </div>

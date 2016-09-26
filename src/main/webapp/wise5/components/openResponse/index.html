@@ -59,7 +59,7 @@
             </div>
             <md-input-container class="input-container md-block input-container--open-response input-container--component md-no-float">
                 <label class="input-label md-no-float" ng-disabled="openResponseController.isDisabled"
-                       compile="openResponseController.getPrompt()" ng-if="openResponseController.showPrompt()"></label>
+                       ng-if="openResponseController.showPrompt()"><compile data="openResponseController.getPrompt()"></compile></label>
                 <possible-score max-score="openResponseController.componentContent.maxScore"
                                 ng-if="openResponseController.mode === 'student' && !openResponseController.latestAnnotations.score"></possible-score>
                 <div class="input-wrapper" ng-class="{'input-wrapper--richtext': openResponseController.isRichTextEnabled}">

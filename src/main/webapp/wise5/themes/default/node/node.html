@@ -5,20 +5,20 @@
              ng-repeat='component in nodeController.getComponents()'
              flex="100" flex-gt-sm="{{component.componentWidth ? component.componentWidth : 100}}">
             <component ng-if='component.showPreviousWorkNodeId != null && component.showPreviousWorkComponentId != null'
-                       nodeid='{{component.showPreviousWorkNodeId}}'
-                       componentid='{{component.showPreviousWorkComponentId}}'
-                       componentstate='{{nodeController.getComponentStateByNodeIdAndComponentId(component.showPreviousWorkNodeId, component.showPreviousWorkComponentId)}}'
-                       workgroupid='{{nodeController.workgroupId}}'
-                       teacherworkgroupid='{{nodeController.teacherWorkgroupId}}'
-                       originalnodeid={{nodeController.nodeId}}
-                       originalcomponentid={{component.id}}
+                       node-id='{{component.showPreviousWorkNodeId}}'
+                       component-id='{{component.showPreviousWorkComponentId}}'
+                       component-state='{{nodeController.getComponentStateByNodeIdAndComponentId(component.showPreviousWorkNodeId, component.showPreviousWorkComponentId)}}'
+                       workgroup-id='{{nodeController.workgroupId}}'
+                       teacher-workgroup-id='{{nodeController.teacherWorkgroupId}}'
+                       original-node-id={{nodeController.nodeId}}
+                       original-component-id={{component.id}}
                        mode='showPreviousWork'></component>
             <component ng-if='component.showPreviousWorkNodeId == null || component.showPreviousWorkComponentId == null'
-                       nodeid='{{nodeController.nodeId}}'
-                       componentid='{{component.id}}'
-                       componentstate='{{nodeController.getComponentStateByComponentId(component.id)}}'
-                       workgroupid='{{nodeController.workgroupId}}'
-                       teacherworkgroupid='{{nodeController.teacherWorkgroupId}}'
+                       node-id='{{nodeController.nodeId}}'
+                       component-id='{{component.id}}'
+                       component-state='{{nodeController.getComponentStateByComponentId(component.id)}}'
+                       workgroup-id='{{nodeController.workgroupId}}'
+                       teacher-workgroup-id='{{nodeController.teacherWorkgroupId}}'
                        mode='student'></component>
         </div>
         <div class="node-content__actions" layout="row" layout-align="start center" flex="100">

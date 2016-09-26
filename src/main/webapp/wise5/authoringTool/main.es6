@@ -22,7 +22,7 @@ import AuthorWebSocketService from '../services/authorWebSocketService';
 import ConceptMapComponentModule from '../components/conceptMap/conceptMapComponentModule';
 import ConfigService from '../services/configService';
 import CRaterService from '../services/cRaterService';
-import Directives from '../directives/directives';
+import Components from '../directives/components';
 import DiscussionComponentModule from '../components/discussion/discussionComponentModule';
 import DrawComponentModule from '../components/draw/drawComponentModule';
 import EmbeddedComponentModule from '../components/embedded/embeddedComponentModule';
@@ -33,7 +33,7 @@ import HTMLComponentModule from '../components/html/htmlComponentModule';
 import LabelComponentModule from '../components/label/labelComponentModule';
 import MatchComponentModule from '../components/match/matchComponentModule';
 import MultipleChoiceComponentModule from '../components/multipleChoice/multipleChoiceComponentModule';
-import NodeController from './node/nodeController';
+import NodeAuthoringController from './node/nodeAuthoringController';
 import NodeService from '../services/nodeService';
 import NotebookService from '../services/notebookService';
 import NotificationService from '../services/notificationService';
@@ -53,13 +53,13 @@ import TableComponentModule from '../components/table/tableComponentModule';
 import TeacherDataService from '../services/teacherDataService';
 import UtilService from '../services/utilService';
 
-let mainModule = angular.module('authoring', [
+let authoringModule = angular.module('authoring', [
     angularDragula(angular),
     'angularMoment',
     'angular-toArrayFilter',
     'audioOscillatorComponentModule',
+    'components',
     'conceptMapComponentModule',
-    'directives',
     'discussionComponentModule',
     'drawComponentModule',
     'embeddedComponentModule',
@@ -101,7 +101,7 @@ let mainModule = angular.module('authoring', [
     .controller(AuthoringToolController.name, AuthoringToolController)
     .controller(AuthoringToolMainController.name, AuthoringToolMainController)
     .controller(AuthoringToolNewProjectController.name, AuthoringToolNewProjectController)
-    .controller(NodeController.name, NodeController)
+    .controller(NodeAuthoringController.name, NodeAuthoringController)
     .controller(ProjectAssetController.name, ProjectAssetController)
     .controller(ProjectController.name, ProjectController)
     .controller(ProjectHistoryController.name, ProjectHistoryController)
@@ -204,8 +204,8 @@ let mainModule = angular.module('authoring', [
                 .state('root.project.node', {
                     url: '/node/:nodeId',
                     templateUrl: 'wise5/authoringTool/node/node.html',
-                    controller: 'NodeController',
-                    controllerAs: 'nodeController',
+                    controller: 'NodeAuthoringController',
+                    controllerAs: 'nodeAuthoringController',
                     resolve: {
                         load: () => {
 
@@ -310,4 +310,4 @@ let mainModule = angular.module('authoring', [
             $mdThemingProvider.setDefaultTheme('default');
     }]);
 
-export default mainModule;
+export default authoringModule;

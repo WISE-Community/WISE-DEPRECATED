@@ -101,7 +101,7 @@
                   cols='100'></textarea>
     </div>
     <div class="component__prompt">
-        <div class="component__prompt__content" compile='labelController.getPrompt()'></div>
+        <div class="component__prompt__content"><compile data='labelController.getPrompt()'></compile></div>
         <possible-score max-score="labelController.componentContent.maxScore"
                         ng-if="labelController.mode === 'student' && !labelController.latestAnnotations.score"></possible-score>
     </div>

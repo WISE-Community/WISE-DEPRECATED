@@ -98,6 +98,7 @@ class TableController {
 
         // get the authoring component content
         this.authoringComponentContent = this.$scope.authoringComponentContent;
+        this.authoringComponentContentJSONString = this.$scope.authoringComponentContentJSONString;
 
         /*
          * get the original component content. this is used when showing
@@ -149,14 +150,6 @@ class TableController {
                 this.isResetTableButtonVisible = false;
                 this.isDisabled = true;
             } else if (this.mode === 'authoring') {
-                this.updateAdvancedAuthoringView();
-
-                $scope.$watch(function() {
-                    return this.authoringComponentContent;
-                }.bind(this), function(newValue, oldValue) {
-                    this.componentContent = this.ProjectService.injectAssetPaths(newValue);
-                    this.resetTable();
-                }.bind(this), true);
             }
 
             var componentState = null;
@@ -189,9 +182,9 @@ class TableController {
             // check if we need to lock this component
             this.calculateDisabled();
 
-            if (this.$scope.$parent.registerComponentController != null) {
+            if (this.$scope.$parent.nodeController != null) {
                 // register this component with the parent node
-                this.$scope.$parent.registerComponentController(this.$scope, this.componentContent);
+                this.$scope.$parent.nodeController.registerComponentController(this.$scope, this.componentContent);
             }
         }
 
@@ -1003,12 +996,14 @@ class TableController {
     authoringViewComponentChanged() {
         // update the JSON string in the advanced authoring view textarea
         this.updateAdvancedAuthoringView();
+    };
 
-        /*
-         * notify the parent node that the content has changed which will save
-         * the project to the server
-         */
-        this.$scope.$parent.nodeController.authoringViewNodeChanged();
+    /**
+     * Update the component JSON string that will be displayed in the advanced authoring view textarea
+     */
+    updateAdvancedAuthoringView() {
+        this.authoringComponentContentJSONString = angular.toJson(this.authoringComponentContent, 4);
+        this.advancedAuthoringViewComponentChanged();
     };
 
     /**
@@ -1027,27 +1022,55 @@ class TableController {
             // replace the component in the project
             this.ProjectService.replaceComponent(this.nodeId, this.componentId, authoringComponentContent);
 
-            this.authoringComponentContent = authoringComponentContent;
-
             // set the new component into the controller
-            this.componentContent = this.ProjectService.injectAssetPaths(authoringComponentContent);
+            this.componentContent = authoringComponentContent;
 
             /*
              * notify the parent node that the content has changed which will save
              * the project to the server
              */
-            this.$scope.$parent.nodeController.authoringViewNodeChanged();
+            this.$scope.$parent.nodeAuthoringController.authoringViewNodeChanged();
         } catch(e) {
 
         }
     };
 
     /**
-     * Update the component JSON string that will be displayed in the advanced authoring view textarea
+     * Confirm whether user really want to change row/column size. Only confirm if they're decreasing the size.
      */
-    updateAdvancedAuthoringView() {
-        this.authoringComponentContentJSONString = angular.toJson(this.authoringComponentContent, 4);
-    };
+    authoringViewTableSizeConfirmChange(rowOrColumn, oldValue) {
+        if (rowOrColumn === 'rows') {
+            if (this.authoringComponentContent.numRows < oldValue) {
+                // author wants to decrease number of rows, so confirm
+                var answer = confirm('Are you sure you want to decrease number of ' + rowOrColumn + '?');
+                if (answer) {
+                    // author confirms yes, proceed with change
+                    this.authoringViewTableSizeChanged();
+                } else {
+                    // author says no, so revert
+                    this.authoringComponentContent.numRows = oldValue;
+                }
+            } else {
+                // author wants to increase number of rows, so let them.
+                this.authoringViewTableSizeChanged();
+            }
+        } else if (rowOrColumn === 'columns') {
+            if (this.authoringComponentContent.numColumns < oldValue) {
+                // author wants to decrease number of columns, so confirm
+                var answer = confirm('Are you sure you want to decrease number of ' + rowOrColumn + '?');
+                if (answer) {
+                    // author confirms yes, proceed with change
+                    this.authoringViewTableSizeChanged();
+                } else {
+                    // author says no, so revert
+                    this.authoringComponentContent.numColumns = oldValue;
+                }
+            } else {
+                // author wants to increase number of columns, so let them.
+                this.authoringViewTableSizeChanged();
+            }
+        }
+    }
 
     /**
      * The table size has changed in the authoring view so we will update it

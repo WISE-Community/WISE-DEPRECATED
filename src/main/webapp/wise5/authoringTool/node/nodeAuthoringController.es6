@@ -1,6 +1,6 @@
 'use strict';
 
-class NodeController {
+class NodeAuthoringController {
 
     constructor($anchorScroll,
                 $location,
@@ -334,6 +334,6 @@ class NodeController {
     }
 };
 
-NodeController.$inject = ['$anchorScroll', '$location', '$scope', '$state', '$stateParams', '$timeout', '$translate', 'ConfigService', 'ProjectService', 'UtilService'];
+NodeAuthoringController.$inject = ['$anchorScroll', '$location', '$scope', '$state', '$stateParams', '$timeout', '$translate', 'ConfigService', 'ProjectService', 'UtilService'];
 
-export default NodeController;
+export default NodeAuthoringController;

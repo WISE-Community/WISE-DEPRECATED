@@ -32,7 +32,7 @@ this.width=800;// the height of the graph
 this.height=500;// get the current node and node id
 var currentNode=this.StudentDataService.getCurrentNode();if(currentNode!=null){this.nodeId=currentNode.id;}else{this.nodeId=this.$scope.nodeId;}// get the component content from the scope
 this.componentContent=this.$scope.componentContent;// get the authoring component content
-this.authoringComponentContent=this.$scope.authoringComponentContent;/*
+this.authoringComponentContent=this.$scope.authoringComponentContent;this.authoringComponentContentJSONString=this.$scope.authoringComponentContentJSONString;/*
          * get the original component content. this is used when showing
          * previous work from another component.
          */this.originalComponentContent=this.$scope.originalComponentContent;// the mode to load the component in e.g. 'student', 'grading', 'onlyShowWork'
@@ -42,7 +42,7 @@ this.chartId='chart'+this.componentId;if(this.componentContent.canCreateNewTrial
 this.isResetSeriesButtonVisible=true;this.isSelectSeriesVisible=true;// get the latest annotations
 // TODO: watch for new annotations and update accordingly
 this.latestAnnotations=this.$scope.$parent.nodeController.getLatestComponentAnnotations(this.componentId);}else if(this.mode==='grading'){this.isPromptVisible=true;this.isSaveButtonVisible=false;this.isSubmitButtonVisible=false;//this.isResetGraphButtonVisible = false;
-this.isResetSeriesButtonVisible=false;this.isSelectSeriesVisible=false;this.isDisabled=true;this.isSnipDrawingButtonVisible=false;}else if(this.mode==='onlyShowWork'){this.isPromptVisible=true;this.isSaveButtonVisible=false;this.isSubmitButtonVisible=false;this.isResetGraphButtonVisible=false;this.isResetSeriesButtonVisible=false;this.isSelectSeriesVisible=false;this.isDisabled=true;this.isSnipDrawingButtonVisible=false;}else if(this.mode==='showPreviousWork'){this.isPromptVisible=true;this.isSaveButtonVisible=false;this.isSubmitButtonVisible=false;this.isDisabled=true;}else if(this.mode==='authoring'){this.updateAdvancedAuthoringView();$scope.$watch(function(){return this.authoringComponentContent;}.bind(this),function(newValue,oldValue){this.componentContent=this.ProjectService.injectAssetPaths(newValue);this.series=null;this.xAxis=null;this.yAxis=null;this.setupGraph();}.bind(this),true);}var componentState=null;// get the component state from the scope
+this.isResetSeriesButtonVisible=false;this.isSelectSeriesVisible=false;this.isDisabled=true;this.isSnipDrawingButtonVisible=false;}else if(this.mode==='onlyShowWork'){this.isPromptVisible=true;this.isSaveButtonVisible=false;this.isSubmitButtonVisible=false;this.isResetGraphButtonVisible=false;this.isResetSeriesButtonVisible=false;this.isSelectSeriesVisible=false;this.isDisabled=true;this.isSnipDrawingButtonVisible=false;}else if(this.mode==='showPreviousWork'){this.isPromptVisible=true;this.isSaveButtonVisible=false;this.isSubmitButtonVisible=false;this.isDisabled=true;}else if(this.mode==='authoring'){}var componentState=null;// get the component state from the scope
 componentState=this.$scope.componentState;// set whether studentAttachment is enabled
 this.isStudentAttachmentEnabled=this.componentContent.isStudentAttachmentEnabled;if(componentState==null){/*
                  * only import work if the student does not already have
@@ -55,8 +55,8 @@ this.importWork();}else{/*
                      */this.newTrial();}}else{// populate the student work into this component
 this.setStudentWork(componentState);}// check if we need to lock this component
 this.calculateDisabled();// setup the graph
-this.setupGraph();if(this.$scope.$parent.registerComponentController!=null){// register this component with the parent node
-this.$scope.$parent.registerComponentController(this.$scope,this.componentContent);}}/**
+this.setupGraph();if(this.$scope.$parent.nodeController!=null){// register this component with the parent node
+this.$scope.$parent.nodeController.registerComponentController(this.$scope,this.componentContent);}}/**
          * A connected component has changed its student data so we will
          * perform any necessary changes to this component
          * @param connectedComponent the connected component
@@ -407,7 +407,11 @@ var componentId=this.getComponentId();/*
          */var action='change';// create a component state populated with the student data
 this.createComponentState(action).then(function(componentState){// check if a digest is in progress
 if(!_this2.$scope.$$phase){// digest is not in progress so we can force a redraw
-_this2.$scope.$apply();}_this2.$scope.$emit('componentStudentDataChanged',{componentId:componentId,componentState:componentState});});}},{key:'createComponentState',/**
+// TODO GK (from HT) this line was causing a lot of js errors ( $digest already in progress ), so I commented it out
+// and it still seems to work. Do we need this line?
+// see here: http://stackoverflow.com/questions/12729122/angularjs-prevent-error-digest-already-in-progress-when-calling-scope-apply
+//this.$scope.$apply();
+}_this2.$scope.$emit('componentStudentDataChanged',{componentId:componentId,componentState:componentState});});}},{key:'createComponentState',/**
      * Create a new component state populated with the student data
      * @param action the action that is triggering creating of this component state
      * e.g. 'submit', 'save', 'change'
@@ -597,24 +601,20 @@ for(var i=0;i<indexes.length;i++){index=indexes[i];if(data!=null){data.splice(in
      */value:function getComponentId(){return this.componentContent.id;}},{key:'authoringViewComponentChanged',/**
      * The component has changed in the regular authoring view so we will save the project
      */value:function authoringViewComponentChanged(){// update the JSON string in the advanced authoring view textarea
-this.updateAdvancedAuthoringView();/*
-         * notify the parent node that the content has changed which will save
-         * the project to the server
-         */this.$scope.$parent.nodeController.authoringViewNodeChanged();}},{key:'advancedAuthoringViewComponentChanged',/**
+this.updateAdvancedAuthoringView();}},{key:'updateAdvancedAuthoringView',/**
+     * Update the component JSON string that will be displayed in the advanced authoring view textarea
+     */value:function updateAdvancedAuthoringView(){this.authoringComponentContentJSONString=angular.toJson(this.authoringComponentContent,4);this.advancedAuthoringViewComponentChanged();}},{key:'advancedAuthoringViewComponentChanged',/**
      * The component has changed in the advanced authoring view so we will update
      * the component and save the project.
      */value:function advancedAuthoringViewComponentChanged(){try{/*
              * create a new component by converting the JSON string in the advanced
              * authoring view into a JSON object
              */var authoringComponentContent=angular.fromJson(this.authoringComponentContentJSONString);// replace the component in the project
-this.ProjectService.replaceComponent(this.nodeId,this.componentId,authoringComponentContent);// set the new authoring component content
-this.authoringComponentContent=authoringComponentContent;// set the new component into the controller
-this.componentContent=editedComponentContent;/*
+this.ProjectService.replaceComponent(this.nodeId,this.componentId,authoringComponentContent);// set the new component into the controller
+this.componentContent=authoringComponentContent;/*
              * notify the parent node that the content has changed which will save
              * the project to the server
-             */this.$scope.$parent.nodeController.authoringViewNodeChanged();}catch(e){}}},{key:'updateAdvancedAuthoringView',/**
-     * Update the component JSON string that will be displayed in the advanced authoring view textarea
-     */value:function updateAdvancedAuthoringView(){this.authoringComponentContentJSONString=angular.toJson(this.authoringComponentContent,4);}},{key:'authoringShowPreviousWorkNodeIdChanged',/**
+             */this.$scope.$parent.nodeAuthoringController.authoringViewNodeChanged();}catch(e){}}},{key:'authoringShowPreviousWorkNodeIdChanged',/**
      * The show previous work node id has changed
      */value:function authoringShowPreviousWorkNodeIdChanged(){if(this.authoringComponentContent.showPreviousWorkNodeId==null||this.authoringComponentContent.showPreviousWorkNodeId==''){/*
              * the show previous work node id is null so we will also set the

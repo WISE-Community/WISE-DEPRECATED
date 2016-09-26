@@ -82,7 +82,7 @@
                       rows='10'
                       cols='100'></textarea>
         </div>
-        <div id='prompt' compile='audioOscillatorController.getPrompt()' ng-show='audioOscillatorController.showPrompt()'></div>
+        <div id='prompt' ng-show='audioOscillatorController.showPrompt()'><compile data='audioOscillatorController.getPrompt()'></compile></div>
         <div class="component-content__actions" layout="row">
             <md-button class="md-accent" ng-show="audioOscillatorController.isStudentAttachmentEnabled"
                        ng-click="nodeController.showStudentAssets($event, component.id, audioOscillatorController.isDisabled)">

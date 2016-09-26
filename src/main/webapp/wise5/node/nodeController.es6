@@ -51,7 +51,7 @@ class NodeController {
          * an object that holds the mappings with the key being the component
          * and the value being the scope object from the child controller
          */
-        this.$scope.componentToScope = {};
+        this.componentToScope = {};
 
         // message to show next to save/submit buttons
         this.saveMessage = {
@@ -115,22 +115,6 @@ class NodeController {
             eventData.nodeId = nodeId;
             this.StudentDataService.saveVLEEvent(nodeId, componentId, componentType, category, event, eventData);
         }
-
-        /**
-         * The function that child component controllers will call to register
-         * themselves with this node
-         * @param childScope the child scope object
-         * @param component the component content for the component
-         */
-        this.$scope.registerComponentController = function(childScope, component) {
-            if (this.$scope != null && component != null) {
-                // get the component id
-                var componentId = component.id;
-
-                // add the component id to child scope mapping
-                this.$scope.componentToScope[componentId] = childScope;
-            }
-        }.bind(this);
 
         /**
          * Listen for the componentSaveTriggered event which occurs when a
@@ -291,6 +275,22 @@ class NodeController {
     }
 
     /**
+     * The function that child component controllers will call to register
+     * themselves with this node
+     * @param childScope the child scope object
+     * @param component the component content for the component
+     */
+    registerComponentController(childScope, component) {
+        if (childScope != null && component != null) {
+            // get the component id
+            var componentId = component.id;
+
+            // add the component id to child scope mapping
+            this.componentToScope[componentId] = childScope;
+        }
+    }
+
+    /**
      * Populate the student work into the node
      */
     setStudentWork() {
@@ -319,7 +319,7 @@ class NodeController {
         var allowRevert = !isComponentDisabled;
 
         // get the scope for the component
-        var childScope = this.$scope.componentToScope[componentId];
+        var childScope = this.componentToScope[componentId];
 
         // TODO: generalize for other controllers
         var componentController = null;
@@ -342,7 +342,7 @@ class NodeController {
     showStudentAssets($event, componentId) {
 
         // get the scope for the component
-        var childScope = this.$scope.componentToScope[componentId];
+        var childScope = this.componentToScope[componentId];
 
         // TODO: generalize for other controllers
         var componentController = null;
@@ -761,7 +761,7 @@ class NodeController {
                     var componentType = component.type;
 
                     // get the scope for the component
-                    var childScope = this.$scope.componentToScope[tempComponentId];
+                    var childScope = this.componentToScope[tempComponentId];
 
                     if (childScope != null) {
                         if (childScope.getComponentState) {
@@ -919,7 +919,7 @@ class NodeController {
                                         var connectedComponent = this.getComponentById(connectedComponentId);
 
                                         // get the scope for the listening component
-                                        var componentScope = this.$scope.componentToScope[tempComponentId];
+                                        var componentScope = this.componentToScope[tempComponentId];
 
                                         // check if the listening component has a handler function
                                         if (componentScope.handleConnectedComponentStudentDataChanged != null) {

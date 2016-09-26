@@ -9,14 +9,12 @@
                     <br/>
                     Columns: <input type='number'
                                     ng-model='tableController.authoringComponentContent.numColumns'
-                                    confirm-number-decrease='Are you sure you want to decrease the number of columns?'
-                                    ng-change='tableController.authoringViewTableSizeChanged()'
+                                    ng-change='tableController.authoringViewTableSizeConfirmChange("columns", {{tableController.authoringComponentContent.numColumns}})'
                                     ng-model-options='{ debounce: 1000 }'
                                     style='width: 3em'/>
                     Rows: <input type='number'
                                  ng-model='tableController.authoringComponentContent.numRows'
-                                 confirm-number-decrease='Are you sure you want to decrease the number of rows?'
-                                 ng-change='tableController.authoringViewTableSizeChanged()'
+                                 ng-change='tableController.authoringViewTableSizeConfirmChange("rows", {{tableController.authoringComponentContent.numRows}})'
                                  ng-model-options='{ debounce: 1000 }'
                                  style='width: 3em'/>
                     Cell Size: <input type='number'
@@ -41,11 +39,14 @@
                             <td ng-repeat='cell in row' style='border: 1px solid black;'>
                                 <input type='text'
                                        ng-model='cell.text'
+                                       ng-model-options='{ debounce: 1000 }'
                                        ng-change='tableController.authoringViewComponentChanged()'
                                        size='20'/>
                                 <br/>
                                 U <input type='checkbox' ng-model='cell.editable' ng-checked='!cell.editable' ng-true-value='false' ng-false-value='true' ng-change='tableController.authoringViewComponentChanged()'/>
-                                S <input type='number' ng-model='cell.size' ng-change='tableController.authoringViewComponentChanged()' size='3' style='width: 3em'/>
+                                S <input type='number' ng-model='cell.size'
+                                         ng-model-options='{ debounce: 1000 }'
+                                         ng-change='tableController.authoringViewComponentChanged()' size='3' style='width: 3em'/>
                             </td>
                         </tr>
                     </table>
@@ -76,6 +77,7 @@
                     Show Previous Work Prompt:
                     <input type='checkbox'
                            ng-model='openResponseController.authoringComponentContent.showPreviousWorkPrompt'
+                           ng-model-options='{ debounce: 1000 }'
                            ng-change='openResponseController.authoringViewComponentChanged()'/>
                     <br/>
                     <textarea ng-model='tableController.authoringComponentContentJSONString'
@@ -85,7 +87,7 @@
                               cols='100'></textarea>
         </div>
         <div class="component__prompt">
-            <div class="component__prompt__content" compile='tableController.getPrompt()'></div>
+            <div class="component__prompt__content"><compile data='tableController.getPrompt()'></compile></div>
             <possible-score max-score="tableController.componentContent.maxScore"
                             ng-if="tableController.mode === 'student' && !tableController.latestAnnotations.score"></possible-score>
         </div>

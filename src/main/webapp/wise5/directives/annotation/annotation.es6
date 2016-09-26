@@ -170,4 +170,22 @@ AnnotationController.$inject = [
     'UtilService'
 ];
 
-export default AnnotationController;
+const Annotation = {
+    bindings: {
+        annotation: '<',
+        type: '@',
+        mode: '<',
+        nodeId: '<',
+        componentId: '<',
+        fromWorkgroupId: '<',
+        toWorkgroupId: '<',
+        componentStateId: '<',
+        active: '<',
+        maxScore: '<'
+    },
+    templateUrl: 'wise5/directives/annotation/annotation.html',
+    controller: AnnotationController,
+    controllerAs: 'annotationController'
+};
+
+export default Annotation;

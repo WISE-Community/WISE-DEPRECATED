@@ -201,4 +201,14 @@ ComponentAnnotationsController.$inject = [
     'StudentDataService'
 ];
 
-export default ComponentAnnotationsController;
+const ComponentAnnotations = {
+    bindings: {
+        annotations: '<',
+        maxScore: '<'
+    },
+    templateUrl: 'wise5/directives/componentAnnotations/componentAnnotations.html',
+    controller: ComponentAnnotationsController,
+    controllerAs: 'componentAnnotationsCtrl'
+};
+
+export default ComponentAnnotations;

@@ -8,9 +8,9 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var NodeController = function () {
-    function NodeController($anchorScroll, $location, $scope, $state, $stateParams, $timeout, $translate, ConfigService, ProjectService, UtilService) {
-        _classCallCheck(this, NodeController);
+var NodeAuthoringController = function () {
+    function NodeAuthoringController($anchorScroll, $location, $scope, $state, $stateParams, $timeout, $translate, ConfigService, ProjectService, UtilService) {
+        _classCallCheck(this, NodeAuthoringController);
 
         this.$anchorScroll = $anchorScroll;
         this.$location = $location;
@@ -67,7 +67,7 @@ var NodeController = function () {
      */
 
 
-    _createClass(NodeController, [{
+    _createClass(NodeAuthoringController, [{
         key: "previewStep",
         value: function previewStep() {
             var previewProjectURL = this.ConfigService.getConfigParam("previewProjectURL");
@@ -364,12 +364,12 @@ var NodeController = function () {
         }
     }]);
 
-    return NodeController;
+    return NodeAuthoringController;
 }();
 
 ;
 
-NodeController.$inject = ['$anchorScroll', '$location', '$scope', '$state', '$stateParams', '$timeout', '$translate', 'ConfigService', 'ProjectService', 'UtilService'];
+NodeAuthoringController.$inject = ['$anchorScroll', '$location', '$scope', '$state', '$stateParams', '$timeout', '$translate', 'ConfigService', 'ProjectService', 'UtilService'];
 
-exports.default = NodeController;
-//# sourceMappingURL=nodeController.js.map
+exports.default = NodeAuthoringController;
+//# sourceMappingURL=nodeAuthoringController.js.map

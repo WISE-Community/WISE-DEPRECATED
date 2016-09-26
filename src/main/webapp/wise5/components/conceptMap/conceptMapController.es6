@@ -158,6 +158,7 @@ class ConceptMapController {
 
         // get the authoring component content
         this.authoringComponentContent = this.$scope.authoringComponentContent;
+        this.authoringComponentContentJSONString = this.$scope.authoringComponentContentJSONString;
 
         /*
          * get the original component content. this is used when showing
@@ -227,17 +228,6 @@ class ConceptMapController {
             } else if (this.mode === 'authoring') {
                 this.availableNodes = this.componentContent.nodes;
                 this.availableLinks = this.componentContent.links;
-                
-                this.updateAdvancedAuthoringView();
-
-                $scope.$watch(function() {
-                    return this.authoringComponentContent;
-                }.bind(this), function(newValue, oldValue) {
-                    this.componentContent = this.ProjectService.injectAssetPaths(newValue);
-                    this.availableNodes = this.componentContent.nodes;
-                    this.availableLinks = this.componentContent.links;
-                    this.setupSVG();
-                }.bind(this), true);
             }
 
             var componentState = null;
@@ -301,9 +291,9 @@ class ConceptMapController {
             this.calculateDisabled();
 
             
-            if (this.$scope.$parent.registerComponentController != null) {
+            if (this.$scope.$parent.nodeController != null) {
                 // register this component with the parent node
-                this.$scope.$parent.registerComponentController(this.$scope, this.componentContent);
+                this.$scope.$parent.nodeController.registerComponentController(this.$scope, this.componentContent);
             }
         }
 
@@ -1187,13 +1177,16 @@ class ConceptMapController {
 
         // update the JSON string in the advanced authoring view textarea
         this.updateAdvancedAuthoringView();
-        
-        /*
-         * notify the parent node that the content has changed which will save
-         * the project to the server
-         */
-        this.$scope.$parent.nodeController.authoringViewNodeChanged();
     };
+
+    /**
+     * Update the component JSON string that will be displayed in the advanced authoring view textarea
+     */
+    updateAdvancedAuthoringView() {
+        this.authoringComponentContentJSONString = angular.toJson(this.authoringComponentContent, 4);
+        this.advancedAuthoringViewComponentChanged();
+    };
+
 
     /**
      * The component has changed in the advanced authoring view so we will update
@@ -1213,12 +1206,16 @@ class ConceptMapController {
 
             // set the new component into the controller
             this.componentContent = editedComponentContent;
-            
+
+            this.availableNodes = this.componentContent.nodes;
+            this.availableLinks = this.componentContent.links;
+            this.setupSVG();
+
             /*
              * notify the parent node that the content has changed which will save
              * the project to the server
              */
-            this.$scope.$parent.nodeController.authoringViewNodeChanged();
+            this.$scope.$parent.nodeAuthoringController.authoringViewNodeChanged();
         } catch(e) {
 
         }
@@ -1838,13 +1835,6 @@ class ConceptMapController {
     }
 
     /**
-     * Update the component JSON string that will be displayed in the advanced authoring view textarea
-     */
-    updateAdvancedAuthoringView() {
-        this.authoringComponentContentJSONString = angular.toJson(this.authoringComponentContent, 4);
-    };
-
-    /**
      * Set the message next to the save button
      * @param message the message to display
      * @param time the time to display
@@ -2004,30 +1994,7 @@ class ConceptMapController {
         
         var left = leftNumber + 'px';
         var top = topNumber + 'px';
-        
-        if (this.mode === 'authoring') {
-            /*
-             * if we are in authoring mode we need to include the offset of
-             * the container for some reason.
-             * TODO: figure out why the offset is required in authoring mode
-             * but not in student mode.
-             */
-            
-            // get the concept map container
-            var conceptMapContainer = angular.element('#conceptMapContainer');
-            
-            // get the offset of the container relative to the whole page
-            var offset = conceptMapContainer.offset();
-            
-            // get the left and top of the offset
-            var offsetLeft = offset.left;
-            var offsetTop = offset.top;
-            
-            // add the offset to the left and top values
-            left = leftNumber + offsetLeft + 'px';
-            top = topNumber + offsetTop + 'px';
-        }
-        
+
         this.linkTypeChooserStyle['top'] = top;
         this.linkTypeChooserStyle['left'] = left;
         
@@ -2045,7 +2012,10 @@ class ConceptMapController {
         this.newlyCreatedLink = null;
         
         if (!this.$scope.$$phase) {
-            this.$scope.$apply();
+            // TODO GK (from HT) this line was causing a lot of js errors ( $digest already in progress ), so I commented it out
+            // and it still seems to work. Do we need this line?
+            // see here: http://stackoverflow.com/questions/12729122/angularjs-prevent-error-digest-already-in-progress-when-calling-scope-apply
+            //this.$scope.$apply();
         }
     }
     
