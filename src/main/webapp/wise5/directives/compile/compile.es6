@@ -7,6 +7,13 @@ class CompileController {
     constructor($compile, $element, $scope) {
         $element.html(this.data);
         $compile($element.contents())($scope);
+        
+        $scope.$watch(() => {
+            return this.data;
+        }, (data) => {
+            $element.html(data);
+            $compile($element.contents())($scope);
+        })
     }
 }
 

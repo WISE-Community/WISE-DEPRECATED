@@ -12,10 +12,19 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
  * that needs to be compiled before rendering.
  */
 var CompileController = function CompileController($compile, $element, $scope) {
+    var _this = this;
+
     _classCallCheck(this, CompileController);
 
     $element.html(this.data);
     $compile($element.contents())($scope);
+
+    $scope.$watch(function () {
+        return _this.data;
+    }, function (data) {
+        $element.html(data);
+        $compile($element.contents())($scope);
+    });
 };
 
 CompileController.$inject = ['$compile', '$element', '$scope'];
