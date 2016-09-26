@@ -47,12 +47,12 @@
 <button id="closeProjectButton" ng-click='projectController.closeProject()' translate="close"
         ng-disabled="projectController.insertGroupMode || projectController.insertNodeMode"></button>
 <div ng-show='projectController.showCreateGroup'>
-    <label translate="activityTitle"></label>: <input ng-model='projectController.createGroupTitle' size='50'/>
+    <label translate="activityTitle"></label>: <input ng-model='projectController.createGroupTitle' ng-model-options='{ debounce: 1000 }' size='50'/>
     <button ng-click='projectController.createGroup()' translate="create"></button>
     <button ng-click='projectController.hideCreateGroup()'translate="cancel"></button>
 </div>
 <div ng-show='projectController.showCreateNode'>
-    <label translate="stepTitle"></label>: <input ng-model='projectController.createNodeTitle' size='50'/>
+    <label translate="stepTitle"></label>: <input ng-model='projectController.createNodeTitle' ng-model-options='{ debounce: 1000 }' size='50'/>
     <button ng-click='projectController.createNode()' translate="create"></button>
     <button ng-click='projectController.hideCreateNode()' translate="cancel"></button>
 </div>
@@ -74,7 +74,7 @@
     </h6>
     <h6 ng-if='item.order==0'
         style='display:inline'>
-        <label translate="projectTitle"></label>: <input id="projectTitle" size='100' ng-model='projectController.projectTitle' ng-change='projectController.projectTitleChanged()'/>
+        <label translate="projectTitle"></label>: <input id="projectTitle" size='100' ng-model='projectController.projectTitle' ng-model-options='{ debounce: 1000 }' ng-change='projectController.projectTitleChanged()'/>
         <label ng-if='projectController.projectId != null'>Project ID: {{projectController.projectId}}</label>
         <label ng-if='projectController.runId == null'>(Run ID: None)</label>
         <label ng-if='projectController.runId != null'>(Run ID: {{projectController.runId}})</label>
