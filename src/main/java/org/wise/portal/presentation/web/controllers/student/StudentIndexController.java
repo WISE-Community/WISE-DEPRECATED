@@ -24,6 +24,7 @@
 package org.wise.portal.presentation.web.controllers.student;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -41,8 +42,6 @@ import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.student.StudentService;
-
-import com.ibm.icu.util.Calendar;
 
 /**
  * Controller for Student's index page
