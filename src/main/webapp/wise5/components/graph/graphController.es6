@@ -106,6 +106,9 @@ class GraphController {
         // whether the snip drawing button is shown or not
         this.isSnipDrawingButtonVisible = true;
 
+        // whether to only show the new trial when a new trial is created
+        this.hideAllTrialsOnNewTrial = true;
+
         // the id of the chart element
         this.chartId = 'chart1';
 
@@ -165,6 +168,10 @@ class GraphController {
 
             if (this.componentContent.canDeleteTrials) {
                 this.canDeleteTrials = this.componentContent.canDeleteTrials;
+            }
+
+            if (this.componentContent.hideAllTrialsOnNewTrial === false) {
+                this.hideAllTrialsOnNewTrial = false;
             }
 
             if (this.mode === 'student') {
@@ -618,7 +625,7 @@ class GraphController {
                     tempSeries.draggableX = false;
                     tempSeries.draggableY = false;
                     tempSeries.allowPointSelect = false;
-                } else if (tempSeries.canEdit && this.isActiveSeriesIndex(s)) {
+                } else if (tempSeries.canEdit && this.isActiveSeries(tempSeries)) {
                     // set the fields to allow points to be draggable
                     tempSeries.draggableX = true;
                     tempSeries.draggableY = true;
@@ -1153,12 +1160,12 @@ class GraphController {
      * Set whether to show the active trial select menu
      * @return whether to show the active trial select menu
      */
-    showActiveTrialSelect() {
+    showSelectActiveTrials() {
         let result = false;
         let editableTrials = 0;
         for (let i = 0; i < this.trials.length; i++) {
             let trial = this.trials[i];
-            if (this.canEditTrial(trial)) {
+            if (this.canEditTrial(trial) && trial.show) {
                 editableTrials++;
                 if (editableTrials > 1) {
                     // there are more than one editable trials, so show the menu
@@ -2388,7 +2395,7 @@ class GraphController {
     showSelectSeries() {
         var show = false;
 
-        if (this.hasEditableSeries() && this.isSelectSeriesVisible && this.series.length > 1) {
+        if (this.trialIdsToShow.length && this.hasEditableSeries() && this.isSelectSeriesVisible && this.series.length > 1) {
             /*
              * we are in a mode the shows the select series input and there is
              * more than one series
@@ -2455,7 +2462,7 @@ class GraphController {
             maxTrialNumber = trialNumbers[trialNumbers.length - 1];
         }
 
-        if (this.componentContent.hideAllTrialsOnNewTrial) {
+        if (this.hideAllTrialsOnNewTrial) {
             // we only want to show the latest trial
 
             // loop through all the existing trials and hide them
@@ -2564,7 +2571,7 @@ class GraphController {
     }
 
     /**
-     * The student has selected a different trial to view
+     * The student has selected a different trial to edit
      */
     activeTrialChanged() {
 
@@ -2778,6 +2785,9 @@ class GraphController {
 
             if (latestStudentDataTrial != null) {
 
+                // get the latest student data trial id
+                var latestStudentDataTrialId = latestStudentDataTrial.id;
+
                 /*
                  * remove the first default trial that is automatically created
                  * when the student first visits the component otherwise there
@@ -2795,15 +2805,17 @@ class GraphController {
                          * have any series it means it was automatically created by
                          * the component.
                          */
-                        if (!firstTrial.series.length) {
-                            // delete the first trial
-                            this.trials.shift();
+                        if (firstTrial.series.length === 1) {
+                            if (firstTrial.series[0].data.length < 1) {
+                                if (firstTrial.id !== latestStudentDataTrialId) {
+                                    // delete the first trial
+                                    this.trials.shift();
+                                }
+                            }
                         }
                     }
                 }
 
-                // get the latest student data trial id
-                var latestStudentDataTrialId = latestStudentDataTrial.id;
 
                 // get the trial with the given trial id
                 var latestTrial = this.getTrialById(latestStudentDataTrialId);
@@ -2814,7 +2826,7 @@ class GraphController {
                      * this is a new trial
                      */
 
-                    if (this.componentContent.hideAllTrialsOnNewTrial) {
+                    if (this.hideAllTrialsOnNewTrial) {
                         // we only show the latest trial when a new trial starts
 
                         // loop through all the existing trials and hide them
@@ -3151,7 +3163,7 @@ class GraphController {
             // trials are now disabled
             this.authoringComponentContent.canCreateNewTrials = false;
             this.authoringComponentContent.canDeleteTrials = false;
-            this.authoringComponentContent.hideAllTrialsOnNewTrial = false;
+            this.authoringComponentContent.hideAllTrialsOnNewTrial = true;
         }
 
         this.authoringViewComponentChanged();
