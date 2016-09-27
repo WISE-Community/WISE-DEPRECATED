@@ -1271,6 +1271,272 @@ var OpenResponseController = function () {
              */
             this.exitListener = this.$scope.$on('exit', function (event, args) {});
         }
+    }, {
+        key: 'authoringAddScoringRule',
+
+
+        /**
+         * Add a scoring rule
+         */
+        value: function authoringAddScoringRule() {
+
+            if (this.authoringComponentContent.cRater != null && this.authoringComponentContent.cRater.scoringRules != null) {
+
+                // create a scoring rule object
+                var newScoringRule = {};
+                newScoringRule.score = "";
+                newScoringRule.feedbackText = "";
+
+                // add the new scoring rule object
+                this.authoringComponentContent.cRater.scoringRules.push(newScoringRule);
+
+                /*
+                 * the author has made changes so we will save the component
+                 * content
+                 */
+                this.authoringViewComponentChanged();
+            }
+        }
+
+        /**
+         * Move a scoring rule up
+         * @param index the index of the scoring rule
+         */
+
+    }, {
+        key: 'authoringViewScoringRuleUpClicked',
+        value: function authoringViewScoringRuleUpClicked(index) {
+
+            if (this.authoringComponentContent.cRater != null && this.authoringComponentContent.cRater.scoringRules != null) {
+
+                // make sure the scoring rule is not already at the top
+                if (index != 0) {
+                    // the scoring rule is not at the top so we can move it up
+
+                    // get the scoring rule
+                    var scoringRule = this.authoringComponentContent.cRater.scoringRules[index];
+
+                    // remove the scoring rule
+                    this.authoringComponentContent.cRater.scoringRules.splice(index, 1);
+
+                    // add the scoring rule back at the position one index back
+                    this.authoringComponentContent.cRater.scoringRules.splice(index - 1, 0, scoringRule);
+
+                    /*
+                     * the author has made changes so we will save the component
+                     * content
+                     */
+                    this.authoringViewComponentChanged();
+                }
+            }
+        }
+
+        /**
+         * Move a scoring rule down
+         * @param index the index of the scoring rule
+         */
+
+    }, {
+        key: 'authoringViewScoringRuleDownClicked',
+        value: function authoringViewScoringRuleDownClicked(index) {
+
+            if (this.authoringComponentContent.cRater != null && this.authoringComponentContent.cRater.scoringRules != null) {
+
+                // make sure the scoring rule is not already at the end
+                if (index != this.authoringComponentContent.cRater.scoringRules.length - 1) {
+
+                    // get the scoring rule
+                    var scoringRule = this.authoringComponentContent.cRater.scoringRules[index];
+
+                    // remove the scoring rule
+                    this.authoringComponentContent.cRater.scoringRules.splice(index, 1);
+
+                    // add the scoring rule back at the position one index forward
+                    this.authoringComponentContent.cRater.scoringRules.splice(index + 1, 0, scoringRule);
+
+                    /*
+                     * the author has made changes so we will save the component
+                     * content
+                     */
+                    this.authoringViewComponentChanged();
+                }
+            }
+        }
+
+        /**
+         * Delete a scoring rule
+         * @param index the index of the scoring rule
+         */
+
+    }, {
+        key: 'authoringViewScoringRuleDeleteClicked',
+        value: function authoringViewScoringRuleDeleteClicked(index) {
+
+            if (this.authoringComponentContent.cRater != null && this.authoringComponentContent.cRater.scoringRules != null) {
+
+                // get the scoring rule
+                var scoringRule = this.authoringComponentContent.cRater.scoringRules[index];
+
+                if (scoringRule != null) {
+
+                    // get the score and feedback text
+                    var score = scoringRule.score;
+                    var feedbackText = scoringRule.feedbackText;
+
+                    // make sure the author really wants to delete the scoring rule
+                    var answer = confirm('Are you sure you want to delete this scoring rule?\n\nScore: ' + score + '\n\n' + 'Feedback Text: ' + feedbackText);
+
+                    if (answer) {
+                        // the author answered yes to delete the scoring rule
+                        this.authoringComponentContent.cRater.scoringRules.splice(index, 1);
+
+                        /*
+                         * the author has made changes so we will save the component
+                         * content
+                         */
+                        this.authoringViewComponentChanged();
+                    }
+                }
+            }
+        }
+
+        /**
+         * Add a multiple attempt scoring rule
+         */
+
+    }, {
+        key: 'authoringAddMultipleAttemptScoringRule',
+        value: function authoringAddMultipleAttemptScoringRule() {
+
+            if (this.authoringComponentContent.cRater != null && this.authoringComponentContent.cRater.multipleAttemptScoringRules != null) {
+
+                // create a new multiple attempt scoring rule
+                var newMultipleAttemptScoringRule = {};
+                newMultipleAttemptScoringRule.scoreSequence = ["", ""];
+                newMultipleAttemptScoringRule.feedbackText = "";
+
+                // add the new multiple attempt scoring rule
+                this.authoringComponentContent.cRater.multipleAttemptScoringRules.push(newMultipleAttemptScoringRule);
+
+                /*
+                 * the author has made changes so we will save the component
+                 * content
+                 */
+                this.authoringViewComponentChanged();
+            }
+        }
+
+        /**
+         * Move a multiple attempt scoring rule up
+         * @param index
+         */
+
+    }, {
+        key: 'authoringViewMultipleAttemptScoringRuleUpClicked',
+        value: function authoringViewMultipleAttemptScoringRuleUpClicked(index) {
+
+            if (this.authoringComponentContent.cRater != null && this.authoringComponentContent.cRater.multipleAttemptScoringRules != null) {
+
+                // make sure the multiple attempt scoring rule is not already at the top
+                if (index != 0) {
+                    // the multiple attempt scoring rule is not at the top
+
+                    // get the multiple attempt scoring rule
+                    var multipleAttemptScoringRule = this.authoringComponentContent.cRater.multipleAttemptScoringRules[index];
+
+                    // remove the multiple attempt scoring rule
+                    this.authoringComponentContent.cRater.multipleAttemptScoringRules.splice(index, 1);
+
+                    // add the multiple attempt scoring rule back at the position one index back
+                    this.authoringComponentContent.cRater.multipleAttemptScoringRules.splice(index - 1, 0, multipleAttemptScoringRule);
+
+                    /*
+                     * the author has made changes so we will save the component
+                     * content
+                     */
+                    this.authoringViewComponentChanged();
+                }
+            }
+        }
+
+        /**
+         * Move a multiple attempt scoring rule down
+         * @param index the index of the multiple attempt scoring rule
+         */
+
+    }, {
+        key: 'authoringViewMultipleAttemptScoringRuleDownClicked',
+        value: function authoringViewMultipleAttemptScoringRuleDownClicked(index) {
+
+            if (this.authoringComponentContent.cRater != null && this.authoringComponentContent.cRater.multipleAttemptScoringRules != null) {
+
+                // make sure the multiple attempt scoring rule is not at the end
+                if (index != this.authoringComponentContent.cRater.multipleAttemptScoringRules.length - 1) {
+                    // the multiple attempt scoring rule is not at the end
+
+                    // get the multiple attempt scoring rule
+                    var multipleAttemptScoringRule = this.authoringComponentContent.cRater.multipleAttemptScoringRules[index];
+
+                    // remove the multiple attempt scoring rule
+                    this.authoringComponentContent.cRater.multipleAttemptScoringRules.splice(index, 1);
+
+                    // add the multiple attempt scoring rule back at the position one index forward
+                    this.authoringComponentContent.cRater.multipleAttemptScoringRules.splice(index + 1, 0, multipleAttemptScoringRule);
+
+                    /*
+                     * the author has made changes so we will save the component
+                     * content
+                     */
+                    this.authoringViewComponentChanged();
+                }
+            }
+        }
+
+        /**
+         * Delete a multiple attempt scoring rule
+         * @param index the index of the mulitple attempt scoring rule
+         */
+
+    }, {
+        key: 'authoringViewMultipleAttemptScoringRuleDeleteClicked',
+        value: function authoringViewMultipleAttemptScoringRuleDeleteClicked(index) {
+
+            if (this.authoringComponentContent.cRater != null && this.authoringComponentContent.cRater.multipleAttemptScoringRules != null) {
+
+                // get the multiple attempt scoring rule
+                var multipleAttemptScoringRule = this.authoringComponentContent.cRater.multipleAttemptScoringRules[index];
+
+                if (multipleAttemptScoringRule != null) {
+
+                    // get the score sequence
+                    var scoreSequence = multipleAttemptScoringRule.scoreSequence;
+                    var previousScore = "";
+                    var currentScore = "";
+
+                    if (scoreSequence != null) {
+                        previousScore = scoreSequence[0];
+                        currentScore = scoreSequence[1];
+                    }
+
+                    // get the feedback text
+                    var feedbackText = multipleAttemptScoringRule.feedbackText;
+
+                    // make sure the author really wants to delete the multiple attempt scoring rul
+                    var answer = confirm('Are you sure you want to delete this scoring rule?\n\nPrevious Score: ' + previousScore + '\n\nCurrent Score: ' + currentScore + '\n\nFeedback Text: ' + feedbackText);
+
+                    if (answer) {
+                        // the author answered yes to delete the multiple attempt scoring rule
+                        this.authoringComponentContent.cRater.multipleAttemptScoringRules.splice(index, 1);
+
+                        /*
+                         * the author has made changes so we will save the component
+                         * content
+                         */
+                        this.authoringViewComponentChanged();
+                    }
+                }
+            }
+        }
     }]);
 
     return OpenResponseController;

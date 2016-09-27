@@ -117,8 +117,20 @@ class CRaterService {
     getCRaterScoreOn(component) {
         var scoreOn = null;
         
-        if (component != null && component.cRater != null) {
-            scoreOn = component.cRater.scoreOn;
+        if (component != null) {
+            
+            /*
+             * CRater can be enabled in two ways
+             * 1. the enableCRater field is true
+             * 2. there is no enableCRater field but there is a cRater object (this is for legacy purposes)
+             */
+            if ((component.enableCRater && component.cRater != null) || 
+                (!component.hasOwnProperty('enableCRater') && component.cRater != null)) {
+                
+                // get the score on value e.g. 'submit', 'save', 'change', or 'exit'
+                scoreOn = component.cRater.scoreOn;
+            }
+            
         }
         
         return scoreOn;

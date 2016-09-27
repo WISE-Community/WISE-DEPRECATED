@@ -56,6 +56,113 @@
                           ng-model-options='{ debounce: 1000 }'
                           rows='10'
                           cols='100'></textarea>
+                <br/>
+                Show Save Button:
+                <input type='checkbox'
+                       ng-model='openResponseController.authoringComponentContent.showSaveButton'/>
+                <br/>
+                Show Submit Button:
+                <input type='checkbox'
+                       ng-model='openResponseController.authoringComponentContent.showSubmitButton'/>
+                <br/>
+                Enable CRater:
+                <input type='checkbox'
+                       ng-model='openResponseController.authoringComponentContent.enableCRater'
+                       ng-change='openResponseController.authoringViewComponentChanged()'/>
+                <div ng-show='openResponseController.authoringComponentContent.enableCRater'>
+                    Type: 
+                    <input type='radio'
+                           ng-model='openResponseController.authoringComponentContent.cRater.itemType'
+                           value='CRATER'
+                           ng-change='openResponseController.authoringViewComponentChanged()'/> CRater
+                    <input type='radio'
+                           ng-model='openResponseController.authoringComponentContent.cRater.itemType'
+                           value='HENRY'
+                           ng-change='openResponseController.authoringViewComponentChanged()'/> HENRY
+                    <br/>
+                    Item Id:
+                    <input type='text'
+                           ng-model='openResponseController.authoringComponentContent.cRater.itemId'
+                           ng-change='openResponseController.authoringViewComponentChanged()'
+                           size='30'/>
+                    <br/>
+                    Score On:
+                    <input type='radio'
+                           ng-model='openResponseController.authoringComponentContent.cRater.scoreOn'
+                           value='submit'
+                           ng-change='openResponseController.authoringViewComponentChanged()'/> Submit
+                    <input type='radio'
+                           ng-model='openResponseController.authoringComponentContent.cRater.scoreOn'
+                           value='save'
+                           ng-change='openResponseController.authoringViewComponentChanged()'/> Save
+                    <input type='radio'
+                           ng-model='openResponseController.authoringComponentContent.cRater.scoreOn'
+                           value='change'
+                           ng-change='openResponseController.authoringViewComponentChanged()'/> Change
+                    <br/>
+                    <input type='checkbox'
+                           ng-model='openResponseController.authoringComponentContent.cRater.showScore'/> Show Score
+                    <br/>
+                    <input type='checkbox'
+                           ng-model='openResponseController.authoringComponentContent.cRater.showFeedback'/> Show Feedback
+                    <br/>
+                    <button ng-click='openResponseController.authoringAddScoringRule()'>Add Scoring Rule</button>
+                    <div ng-repeat='scoringRule in openResponseController.authoringComponentContent.cRater.scoringRules'>
+                        Score: <input type='text'
+                                      ng-model='scoringRule.score'
+                                      ng-model-options='{ debounce: 500 }'
+                                      ng-change='openResponseController.authoringViewComponentChanged()'
+                                      style='width: 3em'/>
+                        Feedback Text: <textarea type='text'
+                                         ng-model='scoringRule.feedbackText'
+                                         rows='5'
+                                         cols='100'
+                                         ng-model-options='{ debounce: 500 }'
+                                         ng-change='openResponseController.authoringViewComponentChanged()'/>
+                        <button ng-click='openResponseController.authoringViewScoringRuleUpClicked($index)'>Up</button>
+                        <button ng-click='openResponseController.authoringViewScoringRuleDownClicked($index)'>Down</button>
+                        <button ng-click='openResponseController.authoringViewScoringRuleDeleteClicked($index)'>Delete</button>
+                    </div>
+                    <button ng-click='openResponseController.authoringAddScoringRule()'>Add Scoring Rule</button>
+                    <br/>
+                    <br/>
+                    Enable Multiple Attempt Feedback
+                    <input type='checkbox'
+                           ng-model='openResponseController.authoringComponentContent.cRater.enableMultipleAttemptScoringRules'/>
+                    <br/>
+                    <button ng-click='openResponseController.authoringAddMultipleAttemptScoringRule()'
+                            ng-show='openResponseController.authoringComponentContent.cRater.enableMultipleAttemptScoringRules'>
+                            Add Multiple Attempt Scoring Rule
+                    </button>
+                    <br/>
+                    <div ng-repeat='multipleAttemptScoringRule in openResponseController.authoringComponentContent.cRater.multipleAttemptScoringRules'
+                         ng-show='openResponseController.authoringComponentContent.cRater.enableMultipleAttemptScoringRules'>
+                        Previous Score: <input type='text'
+                                               ng-model='multipleAttemptScoringRule.scoreSequence[0]'
+                                               size='5'
+                                               ng-model-options='{ debounce: 500 }'
+                                               ng-change='openResponseController.authoringViewComponentChanged()'/>
+                        Current Score: <input type='text'
+                                              ng-model='multipleAttemptScoringRule.scoreSequence[1]'
+                                              size='5'
+                                              ng-model-options='{ debounce: 500 }'
+                                              ng-change='openResponseController.authoringViewComponentChanged()'/>
+                        Feedback Text: <textarea type='text'
+                                                 ng-model='multipleAttemptScoringRule.feedbackText'
+                                                 rows='5'
+                                                 cols='100'
+                                                 ng-model-options='{ debounce: 500 }'
+                                                 ng-change='openResponseController.authoringViewComponentChanged()'/>
+                         <button ng-click='openResponseController.authoringViewMultipleAttemptScoringRuleUpClicked($index)'>Up</button>
+                         <button ng-click='openResponseController.authoringViewMultipleAttemptScoringRuleDownClicked($index)'>Down</button>
+                         <button ng-click='openResponseController.authoringViewMultipleAttemptScoringRuleDeleteClicked($index)'>Delete</button>
+                    </div>
+                    <br/>
+                    <button ng-click='openResponseController.authoringAddMultipleAttemptScoringRule()'
+                            ng-show='openResponseController.authoringComponentContent.cRater.enableMultipleAttemptScoringRules'>
+                            Add Multiple Attempt Scoring Rule
+                    </button>
+                </div>
             </div>
             <md-input-container class="input-container md-block input-container--open-response input-container--component md-no-float">
                 <label class="input-label md-no-float" ng-disabled="openResponseController.isDisabled"
