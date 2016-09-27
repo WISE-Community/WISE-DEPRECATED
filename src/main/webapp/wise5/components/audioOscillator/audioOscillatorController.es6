@@ -165,6 +165,23 @@ class AudioOscillatorController {
                 this.isSubmitButtonVisible = false;
                 this.isDisabled = true;
             } else if (this.mode === 'authoring') {
+                this.updateAdvancedAuthoringView();
+
+                $scope.$watch(function() {
+                    return this.authoringComponentContent;
+                }.bind(this), function(newValue, oldValue) {
+                    // stop the audio if it is playing
+                    this.stop();
+
+                    // inject asset paths if necessary
+                    this.componentContent = this.ProjectService.injectAssetPaths(newValue);
+
+                    // load the parameters into the component
+                    this.setParametersFromComponentContent();
+
+                    // draw the oscilloscope gride after the view has rendered
+                    $timeout(() => {this.drawOscilloscopeGrid()}, 0);
+                }.bind(this), true);
             }
 
             this.oscilloscopeId = 'oscilloscope' + this.componentId;
@@ -1099,14 +1116,12 @@ class AudioOscillatorController {
 
         // update the JSON string in the advanced authoring view textarea
         this.updateAdvancedAuthoringView();
-    };
 
-    /**
-     * Update the component JSON string that will be displayed in the advanced authoring view textarea
-     */
-    updateAdvancedAuthoringView() {
-        this.authoringComponentContentJSONString = angular.toJson(this.authoringComponentContent, 4);
-        this.advancedAuthoringViewComponentChanged();
+        /*
+         * notify the parent node that the content has changed which will save
+         * the project to the server
+         */
+        this.$scope.$parent.nodeController.authoringViewNodeChanged();
     };
 
     /**
@@ -1199,6 +1214,13 @@ class AudioOscillatorController {
 
         return result;
     }
+
+    /**
+     * Update the component JSON string that will be displayed in the advanced authoring view textarea
+     */
+    updateAdvancedAuthoringView() {
+        this.authoringComponentContentJSONString = angular.toJson(this.authoringComponentContent, 4);
+    };
 
     /**
      * Set the message next to the save button

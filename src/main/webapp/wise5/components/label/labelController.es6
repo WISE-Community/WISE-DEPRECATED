@@ -219,6 +219,43 @@ class LabelController {
                 this.canDeleteLabels = false;
                 this.isDisabled = true;
             } else if (this.mode === 'authoring') {
+
+                this.updateAdvancedAuthoringView();
+
+                $scope.$watch(function() {
+                    return this.authoringComponentContent;
+                }.bind(this), function(newValue, oldValue) {
+                    this.componentContent = this.ProjectService.injectAssetPaths(newValue);
+
+                    if (this.canvas != null) {
+
+                        // clear the parent to remove the canvas
+                        $('#canvasParent_' + this.canvasId).empty();
+
+                        // create a new canvas
+                        var canvas = $('<canvas/>');
+                        canvas.attr('id', this.canvasId);
+                        canvas.css('border', '1px solid black');
+
+                        // add the new canvas
+                        $('#canvasParent').append(canvas);
+
+                        // setup the new canvas
+                        this.setupCanvas();
+                    }
+
+                    this.backgroundImage = null;
+
+                    if (this.componentContent.canCreateLabels != null) {
+                        this.canCreateLabels = this.componentContent.canCreateLabels;
+                    }
+
+                    if (this.canCreateLabels) {
+                        this.isNewLabelButtonVisible = true;
+                    } else {
+                        this.isNewLabelButtonVisible = false;
+                    }
+                }.bind(this), true);
             }
 
             this.$timeout(angular.bind(this, function() {
@@ -1335,14 +1372,12 @@ class LabelController {
 
         // update the JSON string in the advanced authoring view textarea
         this.updateAdvancedAuthoringView();
-    };
 
-    /**
-     * Update the component JSON string that will be displayed in the advanced authoring view textarea
-     */
-    updateAdvancedAuthoringView() {
-        this.authoringComponentContentJSONString = angular.toJson(this.authoringComponentContent, 4);
-        this.advancedAuthoringViewComponentChanged();
+        /*
+         * notify the parent node that the content has changed which will save
+         * the project to the server
+         */
+        this.$scope.$parent.nodeAuthoringController.authoringViewNodeChanged();
     };
 
     /**
@@ -1375,6 +1410,13 @@ class LabelController {
         } catch(e) {
 
         }
+    };
+
+    /**
+     * Update the component JSON string that will be displayed in the advanced authoring view textarea
+     */
+    updateAdvancedAuthoringView() {
+        this.authoringComponentContentJSONString = angular.toJson(this.authoringComponentContent, 4);
     };
 
     /**

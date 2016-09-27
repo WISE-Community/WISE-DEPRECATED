@@ -102,7 +102,6 @@ var TableController = function () {
 
         // get the authoring component content
         this.authoringComponentContent = this.$scope.authoringComponentContent;
-        this.authoringComponentContentJSONString = this.$scope.authoringComponentContentJSONString;
 
         /*
          * get the original component content. this is used when showing
@@ -153,7 +152,16 @@ var TableController = function () {
                 this.isSubmitButtonVisible = false;
                 this.isResetTableButtonVisible = false;
                 this.isDisabled = true;
-            } else if (this.mode === 'authoring') {}
+            } else if (this.mode === 'authoring') {
+                this.updateAdvancedAuthoringView();
+
+                $scope.$watch(function () {
+                    return this.authoringComponentContent;
+                }.bind(this), function (newValue, oldValue) {
+                    this.componentContent = this.ProjectService.injectAssetPaths(newValue);
+                    this.resetTable();
+                }.bind(this), true);
+            }
 
             var componentState = null;
 
@@ -1069,17 +1077,12 @@ var TableController = function () {
         value: function authoringViewComponentChanged() {
             // update the JSON string in the advanced authoring view textarea
             this.updateAdvancedAuthoringView();
-        }
-    }, {
-        key: 'updateAdvancedAuthoringView',
 
-
-        /**
-         * Update the component JSON string that will be displayed in the advanced authoring view textarea
-         */
-        value: function updateAdvancedAuthoringView() {
-            this.authoringComponentContentJSONString = angular.toJson(this.authoringComponentContent, 4);
-            this.advancedAuthoringViewComponentChanged();
+            /*
+             * notify the parent node that the content has changed which will save
+             * the project to the server
+             */
+            this.$scope.$parent.nodeAuthoringController.authoringViewNodeChanged();
         }
     }, {
         key: 'advancedAuthoringViewComponentChanged',
@@ -1101,8 +1104,10 @@ var TableController = function () {
                 // replace the component in the project
                 this.ProjectService.replaceComponent(this.nodeId, this.componentId, authoringComponentContent);
 
+                this.authoringComponentContent = authoringComponentContent;
+
                 // set the new component into the controller
-                this.componentContent = authoringComponentContent;
+                this.componentContent = this.ProjectService.injectAssetPaths(authoringComponentContent);
 
                 /*
                  * notify the parent node that the content has changed which will save
@@ -1110,6 +1115,16 @@ var TableController = function () {
                  */
                 this.$scope.$parent.nodeAuthoringController.authoringViewNodeChanged();
             } catch (e) {}
+        }
+    }, {
+        key: 'updateAdvancedAuthoringView',
+
+
+        /**
+         * Update the component JSON string that will be displayed in the advanced authoring view textarea
+         */
+        value: function updateAdvancedAuthoringView() {
+            this.authoringComponentContentJSONString = angular.toJson(this.authoringComponentContent, 4);
         }
     }, {
         key: 'authoringViewTableSizeConfirmChange',

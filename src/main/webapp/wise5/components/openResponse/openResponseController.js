@@ -135,7 +135,6 @@ var OpenResponseController = function () {
 
         // get the authoring component content
         this.authoringComponentContent = this.$scope.authoringComponentContent;
-        this.authoringComponentContentJSONString = this.$scope.authoringComponentContentJSONString;
 
         /*
          * get the original component content. this is used when showing
@@ -177,7 +176,15 @@ var OpenResponseController = function () {
                 this.isSaveButtonVisible = false;
                 this.isSubmitButtonVisible = false;
                 this.isDisabled = true;
-            } else if (this.mode === 'authoring') {}
+            } else if (this.mode === 'authoring') {
+                this.updateAdvancedAuthoringView();
+
+                $scope.$watch(function () {
+                    return this.authoringComponentContent;
+                }.bind(this), function (newValue, oldValue) {
+                    this.componentContent = this.ProjectService.injectAssetPaths(newValue);
+                }.bind(this), true);
+            }
 
             var componentState = null;
 
@@ -1039,17 +1046,12 @@ var OpenResponseController = function () {
 
             // update the JSON string in the advanced authoring view textarea
             this.updateAdvancedAuthoringView();
-        }
-    }, {
-        key: 'updateAdvancedAuthoringView',
 
-
-        /**
-         * Update the component JSON string that will be displayed in the advanced authoring view textarea
-         */
-        value: function updateAdvancedAuthoringView() {
-            this.authoringComponentContentJSONString = angular.toJson(this.authoringComponentContent, 4);
-            this.advancedAuthoringViewComponentChanged();
+            /*
+             * notify the parent node that the content has changed which will save
+             * the project to the server
+             */
+            this.$scope.$parent.nodeAuthoringController.authoringViewNodeChanged();
         }
     }, {
         key: 'advancedAuthoringViewComponentChanged',
@@ -1159,13 +1161,23 @@ var OpenResponseController = function () {
         }
 
         /**
+         * Update the component JSON string that will be displayed in the advanced authoring view textarea
+         */
+
+    }, {
+        key: 'updateAdvancedAuthoringView',
+        value: function updateAdvancedAuthoringView() {
+            this.authoringComponentContentJSONString = angular.toJson(this.authoringComponentContent, 4);
+        }
+    }, {
+        key: 'setSaveMessage',
+
+
+        /**
          * Set the message next to the save button
          * @param message the message to display
          * @param time the time to display
          */
-
-    }, {
-        key: 'setSaveMessage',
         value: function setSaveMessage(message, time) {
             this.saveMessage.text = message;
             this.saveMessage.time = time;

@@ -49,7 +49,6 @@ class OutsideURLController {
 
         // get the authoring component content
         this.authoringComponentContent = this.$scope.authoringComponentContent;
-        this.authoringComponentContentJSONString = this.$scope.authoringComponentContentJSONString;
 
         /*
          * get the original component content. this is used when showing
@@ -63,6 +62,19 @@ class OutsideURLController {
 
             // get the component id
             this.componentId = this.componentContent.id;
+
+            if (this.mode === 'authoring') {
+                this.updateAdvancedAuthoringView();
+
+                $scope.$watch(() => {
+                    return this.authoringComponentContent;
+                }, (newValue, oldValue) => {
+                    this.componentContent = this.ProjectService.injectAssetPaths(newValue);
+
+                    // set the url
+                    this.setURL(this.authoringComponentContent.url);
+                }, true);
+            }
 
             if (this.componentContent != null) {
                 // set the url
@@ -117,16 +129,17 @@ class OutsideURLController {
      */
     authoringViewComponentChanged() {
 
+        // set the url
+        //this.setURL(this.authoringComponentContent.url);
+
         // update the JSON string in the advanced authoring view textarea
         this.updateAdvancedAuthoringView();
-    };
 
-    /**
-     * Update the component JSON string that will be displayed in the advanced authoring view textarea
-     */
-    updateAdvancedAuthoringView() {
-        this.authoringComponentContentJSONString = angular.toJson(this.authoringComponentContent, 4);
-        this.advancedAuthoringViewComponentChanged();
+        /*
+         * notify the parent node that the content has changed which will save
+         * the project to the server
+         */
+        this.$scope.$parent.nodeAuthoringController.authoringViewNodeChanged();
     };
 
     /**
@@ -145,8 +158,11 @@ class OutsideURLController {
             // replace the component in the project
             this.ProjectService.replaceComponent(this.nodeId, this.componentId, authoringComponentContent);
 
+            // set the new authoring component content
+            this.authoringComponentContent = authoringComponentContent;
+
             // set the component content
-            this.componentContent = authoringComponentContent;
+            this.componentContent = this.ProjectService.injectAssetPaths(authoringComponentContent);
 
             /*
              * notify the parent node that the content has changed which will save
@@ -156,6 +172,13 @@ class OutsideURLController {
         } catch(e) {
             console.error(e.toString());
         }
+    };
+
+    /**
+     * Update the component JSON string that will be displayed in the advanced authoring view textarea
+     */
+    updateAdvancedAuthoringView() {
+        this.authoringComponentContentJSONString = angular.toJson(this.authoringComponentContent, 4);
     };
 
     /**
