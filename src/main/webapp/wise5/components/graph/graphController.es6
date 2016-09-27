@@ -10,6 +10,7 @@ class GraphController {
     constructor($q,
                 $rootScope,
                 $scope,
+                $timeout,
                 ConfigService,
                 GraphService,
                 NodeService,
@@ -22,6 +23,7 @@ class GraphController {
         this.$q = $q;
         this.$rootScope = $rootScope;
         this.$scope = $scope;
+        this.$timeout = $timeout;
         this.ConfigService = ConfigService;
         this.GraphService = GraphService;
         this.NodeService = NodeService;
@@ -100,7 +102,7 @@ class GraphController {
 
         // whether the select series input is shown or not
         this.isSelectSeriesVisible = false;
-        
+
         // whether the snip drawing button is shown or not
         this.isSnipDrawingButtonVisible = true;
 
@@ -108,10 +110,10 @@ class GraphController {
         this.chartId = 'chart1';
 
         // the width of the graph
-        this.width = 800;
+        this.width = null;
 
         // the height of the graph
-        this.height = 500;
+        this.height = null;
 
         // get the current node and node id
         var currentNode = this.StudentDataService.getCurrentNode();
@@ -138,11 +140,14 @@ class GraphController {
 
         this.workgroupId = this.$scope.workgroupId;
         this.teacherWorkgroupId = this.$scope.teacherWorkgroupId;
-        
+
         this.trials = [];
         this.activeTrial = null;
+        this.trialIdsToShow = [];
+        this.selectedTrialsText = "";
+
         this.studentDataVersion = 2;
-        
+
         this.canCreateNewTrials = false;
         this.canDeleteTrials = false;
 
@@ -153,11 +158,11 @@ class GraphController {
 
             // set the chart id
             this.chartId = 'chart' + this.componentId;
-            
+
             if (this.componentContent.canCreateNewTrials) {
                 this.canCreateNewTrials = this.componentContent.canCreateNewTrials;
             }
-            
+
             if (this.componentContent.canDeleteTrials) {
                 this.canDeleteTrials = this.componentContent.canDeleteTrials;
             }
@@ -167,7 +172,7 @@ class GraphController {
                 this.isSaveButtonVisible = this.componentContent.showSaveButton;
                 this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
                 //this.isResetGraphButtonVisible = true;
-                this.isResetSeriesButtonVisible = true;
+                this.isResetSeriesButtonVisible = this.componentContent.showResetSeriesButton;
                 this.isSelectSeriesVisible = true;
 
                 // get the latest annotations
@@ -232,8 +237,8 @@ class GraphController {
                     // import the work from the other component
                     this.importWork();
                 } else {
-                    
-                    /* 
+
+                    /*
                      * trials are enabled so we will create an empty trial
                      * since there is no student work
                      */
@@ -292,10 +297,10 @@ class GraphController {
                             if (seriesIndex != null) {
 
                                 var studentDataVersion = this.$scope.graphController.studentDataVersion;
-                                
+
                                 if (studentDataVersion == null || studentDataVersion == 1) {
                                     // the student data is version 1 which has no trials
-                                    
+
                                     // get the series
                                     var series = this.$scope.graphController.series[seriesIndex];
 
@@ -309,15 +314,15 @@ class GraphController {
                                     series.data = data;
                                 } else {
                                     // the student data is the newer version that has trials
-                                    
+
                                     // get the active trial
                                     var trial = this.$scope.graphController.activeTrial;
-                                    
+
                                     if (trial != null && trial.series != null) {
-                                        
+
                                         // get the series
                                         var series = trial.series[seriesIndex];
-                                        
+
                                         if (series == null) {
                                             // the series is null so we will create a series
                                             series = {};
@@ -338,7 +343,7 @@ class GraphController {
                         }
                     }
                 } else if (componentType == 'Embedded') {
-                    
+
                     // convert the embedded data to series data
                     if (componentState != null) {
 
@@ -351,12 +356,12 @@ class GraphController {
 
                         // get the student data
                         var studentData = componentState.studentData;
-                        
+
                         // parse the latest trial and set it into the component
                         this.parseLatestTrial(studentData);
-                        
+
                         /*
-                         * notify the controller that the student data has 
+                         * notify the controller that the student data has
                          * changed so that it will perform any necessary saving
                          */
                         this.studentDataChanged();
@@ -541,22 +546,22 @@ class GraphController {
 
         // get all the series from the student data
         var series = this.getSeries();
-        
+
         if (this.componentContent.enableTrials) {
             /*
-             * trials are enabled so we will show the ones the student 
+             * trials are enabled so we will show the ones the student
              * has checked
              */
             series = [];
-            
+
             var trials = this.trials;
-            
+
             // loop through all the trials
             for (var t = 0; t < trials.length; t++) {
                 var trial = trials[t];
-                
+
                 if (trial != null) {
-                    
+
                     if (trial.show) {
                         /*
                          * we want to show this trial so we will append the
@@ -650,15 +655,16 @@ class GraphController {
 
         // clear all the series ids
         this.clearSeriesIds(allSeries);
-        
+
         // give all series ids
         this.setSeriesIds(allSeries);
-        
+
         /*
          * update the min and max x and y values if necessary so that all
          * points are visible
          */
         this.updateMinMaxAxisValues(allSeries, xAxis, yAxis);
+        let timeout = this.$timeout;
 
         this.chartConfig = {
             options: {
@@ -807,7 +813,12 @@ class GraphController {
             },
             xAxis: xAxis,
             yAxis: yAxis,
-            loading: false
+            loading: false,
+            func: function (chart) {
+                timeout(function () {
+                    chart.reflow();
+                }, 1000);
+            }
         };
     };
 
@@ -1007,7 +1018,7 @@ class GraphController {
     /**
      * Check whether the student is allowed to edit a given series
      * @param series the series to check
-     * @return whether the series can edit the series
+     * @return whether the student can edit the series
      */
     canEdit(series) {
         var result = false;
@@ -1056,7 +1067,7 @@ class GraphController {
     getSeriesByIndex(index) {
         return this.series[index];
     }
-    
+
     /**
      * Set the trials
      * @param trials the trials
@@ -1064,7 +1075,7 @@ class GraphController {
     setTrials(trials) {
         this.trials = trials;
     }
-    
+
     /**
      * Get the trials
      * @return the trials
@@ -1072,22 +1083,22 @@ class GraphController {
     getTrials() {
         return this.trials;
     }
-    
+
     /**
      * Get the index of the trial
      * @param trial the trial object
      * @return the index of the trial within the trials array
      */
     getTrialIndex(trial) {
-        
+
         var index = -1;
-        
+
         if (trial != null) {
-            
+
             // loop through all the trials
             for (var t = 0; t < this.trials.length; t++) {
                 var tempTrial = this.trials[t];
-                
+
                 if (trial == tempTrial) {
                     // we have found the trial we are looking for
                     index = t;
@@ -1095,27 +1106,70 @@ class GraphController {
                 }
             }
         }
-        
+
         return index;
     }
-    
+
     /**
      * Set the active trial
      * @param index the index of the trial to make active
      */
     setActiveTrialByIndex(index) {
-        
+
         if (index != null) {
-            
+
             // get the trial
             var trial = this.trials[index];
-            
+
             if (trial != null) {
                 // make the trial the active trial
                 this.activeTrial = trial;
             }
         }
     }
+
+    /**
+     * Check whether the student is allowed to edit a given trial
+     * @param trial the trial object to check
+     * @return boolean whether the student can edit the trial
+     */
+    canEditTrial(trial) {
+        let result = false;
+        let series = trial.series;
+
+        for (let i = 0; i < series.length; i++) {
+            let currentSeries = series[i];
+            if (currentSeries.canEdit) {
+                // at least one series in this trial is editable
+                result = true;
+                break;
+            }
+        }
+
+        return result;
+    };
+
+    /**
+     * Set whether to show the active trial select menu
+     * @return whether to show the active trial select menu
+     */
+    showActiveTrialSelect() {
+        let result = false;
+        let editableTrials = 0;
+        for (let i = 0; i < this.trials.length; i++) {
+            let trial = this.trials[i];
+            if (this.canEditTrial(trial)) {
+                editableTrials++;
+                if (editableTrials > 1) {
+                    // there are more than one editable trials, so show the menu
+                    result = true;
+                    break;
+                }
+            }
+        }
+
+        return result;
+    };
 
     /**
      * Set the xAxis object
@@ -1269,35 +1323,35 @@ class GraphController {
             var studentData = componentState.studentData;
 
             if (studentData != null) {
-                
+
                 if (studentData.version == null || studentData.version == 1) {
                     // the student data is version 1 which has no trials
                     this.studentDataVersion = 1;
-                    
+
                     // populate the student data into the component
                     this.setSeries(this.UtilService.makeCopyOfJSONObject(studentData.series));
                 } else {
                     // the student data is the newer version that has trials
-                    
+
                     this.studentDataVersion = studentData.version;
-                    
+
                     if (studentData.trials != null && studentData.trials.length > 0) {
-                        
+
                         // make a copy of the trials
                         var trialsCopy = this.UtilService.makeCopyOfJSONObject(studentData.trials);
-                        
+
                         // remember the trials
                         this.setTrials(trialsCopy);
-                        
+
                         // get the trial to show
                         var activeTrialIndex = studentData.activeTrialIndex;
-                        
+
                         if (activeTrialIndex == null) {
                             /*
                              * there is no active trial index so we will show the
                              * last trial
                              */
-                            
+
                             if (trialsCopy.length > 0) {
                                 //make the last trial the active trial to show
                                 this.setActiveTrialByIndex(studentData.trials.length - 1);
@@ -1306,17 +1360,19 @@ class GraphController {
                             // there is an active trial index
                             this.setActiveTrialByIndex(activeTrialIndex);
                         }
-                        
+
                         if (this.activeTrial != null && this.activeTrial.series != null) {
                             // set the active trial series to be the series to display
                             this.series = this.activeTrial.series;
                         }
-                        
+
                         // redraw the graph
                         this.setupGraph();
                     }
                 }
-                
+
+                this.setTrialIdsToShow();
+
                 this.setXAxis(studentData.xAxis);
                 this.setYAxis(studentData.yAxis);
                 this.setActiveSeriesByIndex(studentData.activeSeriesIndex);
@@ -1377,7 +1433,7 @@ class GraphController {
     activeSeriesChanged() {
         // the student data has changed
         this.studentDataChanged();
-        
+
         // tell the parent node that this component wants to save
         //this.$scope.$emit('componentSaveTriggered', {nodeId: this.nodeId, componentId: this.componentId});
     };
@@ -1459,15 +1515,15 @@ class GraphController {
                 if (this.trials != null) {
                     // make a copy of the trials
                     studentData.trials = this.UtilService.makeCopyOfJSONObject(this.trials);
-                    
+
                     // remember which trial is being shown
                     var activeTrialIndex = this.getTrialIndex(this.activeTrial);
                     studentData.activeTrialIndex = activeTrialIndex;
                 }
             }
-            
+
             /*
-            
+
             // remove high-charts assigned id's from each series before saving
             for (var s = 0; s < studentData.series.length; s++) {
                 var series = studentData.series[s];
@@ -1499,7 +1555,7 @@ class GraphController {
                  */
                 this.isSubmit = false;
             }
-            
+
             componentState.studentData = studentData;
         }
 
@@ -1967,7 +2023,7 @@ class GraphController {
                     usedSeriesIds.push(seriesId);
                 }
             }
-            
+
             // loop through all the series
             for (var y = 0; y < allSeries.length; y++) {
                 var series = allSeries[y];
@@ -2342,42 +2398,42 @@ class GraphController {
 
         return show;
     }
-    
+
     /**
      * Create a new trial
      */
     newTrial() {
-        
+
         // get the current number of trials
         var trialCount = this.trials.length;
-        
+
         // make a copy of the original series (most likely blank with no points)
         var series = this.UtilService.makeCopyOfJSONObject(this.componentContent.series);
-        
+
         // regex to find the trial number from the trial names
         var trialNameRegex = /Trial (\d*)/;
         var trialNumbers = [];
-        
+
         // loop through all the trials
         for (var t = 0; t < this.trials.length; t++) {
             var tempTrial = this.trials[t];
-            
+
             if (tempTrial != null) {
                 // get a trial name
                 var tempTrialName = tempTrial.name;
-                
+
                 // run the regex matcher on the trial name
                 var match = trialNameRegex.exec(tempTrialName);
-                
+
                 if (match != null && match.length > 0) {
                     // we have found a trial name that looks like "Trial X"
-                    
+
                     /*
                      * get the trial number e.g. if the trial name is "Trial 3",
                      * the trial number is 3
                      */
                     var tempTrialNumber = match[1];
-                    
+
                     if (tempTrialNumber != null) {
                         /*
                          * get the number e.g. if the trial name is "Trial 2",
@@ -2388,91 +2444,93 @@ class GraphController {
                 }
             }
         }
-        
+
         // sort the trial numbers from smallest to largest
         trialNumbers.sort();
-        
+
         var maxTrialNumber = 0;
-        
+
         if (trialNumbers.length > 0) {
             // get the highest trial number
             maxTrialNumber = trialNumbers[trialNumbers.length - 1];
         }
-        
-        if (!this.componentContent.showAllTrialsOnNewTrial) {
+
+        if (this.componentContent.hideAllTrialsOnNewTrial) {
             // we only want to show the latest trial
-            
+
             // loop through all the existing trials and hide them
             for (var t = 0; t < this.trials.length; t++) {
                 var tempTrial = this.trials[t];
-                
+
                 if (tempTrial != null) {
                     tempTrial.show = false;
                 }
             }
         }
-        
+
         // make a new trial with a trial number one larger than the existing max
         var trial = {};
         trial.name = 'Trial ' + (maxTrialNumber + 1);
         trial.series = series;
         trial.show = true;
-        
+        trial.id = this.UtilService.generateKey(10);
+
         // add the trial to the array of trials
         this.trials.push(trial);
-        
+
         // set the new trial to be the active trial
         this.activeTrial = trial;
-        
+
         // set the series to be displayed
         this.series = series;
-        
+
         var activeSeriesIndex = 0;
-        
+
         if (this.activeSeries != null) {
             // get the index of the active series
             activeSeriesIndex = this.getSeriesIndex(this.activeSeries);
         }
-        
+
         this.setActiveSeriesByIndex(activeSeriesIndex);
-        
+
+        this.setTrialIdsToShow();
+
         // redraw the graph
         this.setupGraph();
-        
+
         /*
-         * notify the controller that the student data has 
+         * notify the controller that the student data has
          * changed so that it will perform any necessary saving
          */
         this.studentDataChanged();
-        
+
         // tell the parent node that this component wants to save
         //this.$scope.$emit('componentSaveTriggered', {nodeId: this.nodeId, componentId: this.componentId});
     }
-    
+
     /**
      * Delete a trial
+     * @param trialIndex the index (in the trials array) of the trial to delete
      */
     deleteTrial(trialIndex) {
-        
         /*
          * get the index of the active trial which will be the trial we are
          * going to delete
          */
         //var trialIndex = this.trials.indexOf(this.activeTrial);
-        
+
         if (trialIndex == null) {
             trialIndex = this.trials.indexOf(this.activeTrial);
         }
-        
+
         if (trialIndex != null && trialIndex != -1) {
-            
             // remove the trial from the array of trials
             this.trials.splice(trialIndex, 1);
-            
+
             if (this.trials.length == 0) {
                 // there are no more trials so we will create a new empty trial
                 this.newTrial();
-                
+
                 // reset the axis limits
                 this.setXAxis(this.componentContent.xAxis);
                 this.setYAxis(this.componentContent.yAxis);
@@ -2491,251 +2549,326 @@ class GraphController {
                     this.activeTrialChanged(trialIndex);
                 }
             }
+
+            this.setTrialIdsToShow();
         }
-        
+
         /*
-         * notify the controller that the student data has 
+         * notify the controller that the student data has
          * changed so that it will perform any necessary saving
          */
         this.studentDataChanged();
-        
+
         // tell the parent node that this component wants to save
         //this.$scope.$emit('componentSaveTriggered', {nodeId: this.nodeId, componentId: this.componentId});
     }
-    
+
     /**
      * The student has selected a different trial to view
      */
     activeTrialChanged() {
-        
+
         // get the index of the active series
         var activeSeriesIndex  = this.getSeriesIndex(this.activeSeries);
-        
+
         // get the active trial
         var activeTrial = this.activeTrial;
-        
+
         if (activeTrial != null) {
-            
+
             // get the series from the trial
             var series = activeTrial.series;
 
             // set the series to be displayed
             this.series = series;
-            
+
             /*
              * set the active series index so that the the active series
              * is the same as before.
              */
             this.setActiveSeriesByIndex(activeSeriesIndex);
-            
+
             // redraw the graph
             this.setupGraph();
         }
-        
+
         /*
-         * notify the controller that the student data has 
+         * notify the controller that the student data has
          * changed so that it will perform any necessary saving
          */
         this.studentDataChanged();
-        
+
         // tell the parent node that this component wants to save
         //this.$scope.$emit('componentSaveTriggered', {nodeId: this.nodeId, componentId: this.componentId});
     }
-    
+
+    /**
+     * The student has selected different trials to view
+     */
+    trialIdsToShowChanged() {
+        // get the trial indexes to show
+        let trialIdsToShow = this.trialIdsToShow;
+        let trials = this.trials;
+
+        // update the trials
+        for (let i = 0; i < trials.length; i++) {
+            let trial = trials[i];
+            let id = trial.id;
+            if (trialIdsToShow.indexOf(id) > -1) {
+                trial.show = true;
+            } else {
+                trial.show = false;
+            }
+        }
+
+        // hack: for some reason, the ids to show model gets out of sync when deleting a trial, for example
+        // TODO: figure out why this check is sometimes necessary and remove
+        for (let a = 0; a < trialIdsToShow.length; a++) {
+            let idToShow = trialIdsToShow[a];
+            if (!this.getTrialById(idToShow)) {
+                trialIdsToShow.splice(a, 1);
+            }
+            this.trialIdsToShow = trialIdsToShow;
+        }
+
+        /*
+         * notify the controller that the student data has
+         * changed so that it will perform any necessary saving
+         */
+        this.studentDataChanged();
+
+        // update the selected trial text
+        this.selectedTrialsText = this.getSelectedTrialsText();
+    };
+
+    /**
+     * Set which trials are selected in the trial select model
+     */
+    setTrialIdsToShow() {
+        let idsToShow = [];
+
+        let trials = this.trials;
+        for (let i = 0; i < trials.length; i++) {
+            let trial = trials[i];
+            if (trial.show) {
+                // trial is visible on graph, so add it to the ids to show model
+                let id = trial.id;
+                idsToShow.push(id);
+            }
+        }
+
+        this.trialIdsToShow = idsToShow;
+    };
+
+    /**
+     * Get the text to show in the trials select dropdown
+     */
+    getSelectedTrialsText() {
+        if (this.trialIdsToShow.length === 1) {
+            let id = this.trialIdsToShow[0];
+            let name = this.getTrialById(id).name;
+            return name;
+        } else if (this.trialIdsToShow.length > 1) {
+            return this.trialIdsToShow.length + " trials shown";
+        } else {
+            return "Select trials to show";
+        }
+    };
+
     /**
      * Parse the trials and set it into the component
      * @param studentData the student data object that has a trials field
      */
     parseTrials0(studentData) {
-        
+
         if (studentData != null) {
-            
+
             // get the trials
             var trials = studentData.trials;
-            
+
             if (trials != null) {
-                
+
                 this.trials = [];
-                
+
                 // loop through all the trials in the student data
                 for (var t = 0; t < trials.length; t++) {
                     var tempTrial = trials[t];
-                    
+
                     if (tempTrial != null) {
-                        
+
                         // create a trial object
                         var newTrial = {};
-                        
+
                         if (tempTrial.name != null) {
-                            
+
                             // set the trial name
                             newTrial.name = tempTrial.name;
                         }
-                        
+
                         if (tempTrial.series != null) {
-                            
+
                             // set the trial series
                             newTrial.series = [];
-                            
+
                             var tempSeries = tempTrial.series;
-                            
+
                             if (tempSeries != null) {
-                                
+
                                 // loop through all the series in the trial
                                 for (var s = 0; s < tempSeries.length; s++) {
-                                    
+
                                     // get a single series
                                     var singleSeries = tempSeries[s];
-                                    
+
                                     if (singleSeries != null) {
-                                        
+
                                         // get the series name and data
                                         var seriesName = singleSeries.name;
                                         var seriesData = singleSeries.data;
-                                        
+
                                         // make a series object
                                         var newSeries = {};
                                         newSeries.name = seriesName;
                                         newSeries.data = seriesData;
                                         newSeries.canEdit = false;
                                         newSeries.allowPointSelect = false;
-                                        
+
                                         // add the series to the trial
                                         newTrial.series.push(newSeries);
                                     }
                                 }
                             }
                         }
-                        
+
                         // add the trial to the array of trials
                         this.trials.push(newTrial);
                     }
                 }
-                
+
                 if (trials.length > 0) {
                     // make the last trial the active trial
                     this.activeTrial = this.trials[trials.length - 1];
                 }
             }
-            
+
             // redraw the graph so that the active trial gets displayed
             this.activeTrialChanged();
         }
     }
-    
+
     /**
      * Parse the latest trial and set it into the component
      * @param studentData the student data object that has a trials field
      */
     parseLatestTrial(studentData) {
-        
+
         if (studentData != null) {
-            
+
             var latestStudentDataTrial = null;
-            
+
             if (studentData.trial != null) {
                 // the student data only has one trial
                 latestStudentDataTrial = studentData.trial;
             }
-            
+
             if (studentData.trials != null && studentData.trials.length > 0) {
                 // the student data has an array of trials
                 latestStudentDataTrial = studentData.trials[studentData.trials.length - 1];
             }
-            
+
             if (latestStudentDataTrial != null) {
-                
+
                 /*
                  * remove the first default trial that is automatically created
                  * when the student first visits the component otherwise there
                  * will be a blank trial.
                  */
                 if (this.trials.length > 0) {
-                    
+
                     // get the first trial
                     var firstTrial = this.trials[0];
-                    
+
                     if (firstTrial != null) {
-                        
+
                         /*
-                         * check if the trial has an id. if the trial doesn't
-                         * have an id it means it was automatically created by
+                         * check if the trial has any series. if the trial doesn't
+                         * have any series it means it was automatically created by
                          * the component.
                          */
-                        if (firstTrial.id == null) {
+                        if (!firstTrial.series.length) {
                             // delete the first trial
                             this.trials.shift();
                         }
                     }
                 }
-                
+
                 // get the latest student data trial id
                 var latestStudentDataTrialId = latestStudentDataTrial.id;
-                
+
                 // get the trial with the given trial id
                 var latestTrial = this.getTrialById(latestStudentDataTrialId);
-                
+
                 if (latestTrial == null) {
-                    /* 
+                    /*
                      * we did not find a trial with the given id which means
                      * this is a new trial
                      */
-                    
-                    if (!this.componentContent.showAllTrialsOnNewTrial) {
+
+                    if (this.componentContent.hideAllTrialsOnNewTrial) {
                         // we only show the latest trial when a new trial starts
-                        
+
                         // loop through all the existing trials and hide them
                         for (var t = 0; t < this.trials.length; t++) {
                             var tempTrial = this.trials[t];
-                            
+
                             if (tempTrial != null) {
                                 tempTrial.show = false;
                             }
                         }
                     }
-                    
+
                     // create the new trial
                     latestTrial = {};
-                    
+
                     latestTrial.id = latestStudentDataTrialId;
-                    
+
                     latestTrial.show = true;
-                    
+
                     this.setXAxis(this.componentContent.xAxis);
                     this.setYAxis(this.componentContent.yAxis);
-                    
+
                     // add the trial to the array of trials
                     this.trials.push(latestTrial);
                 }
-                
+
                 if (latestStudentDataTrial.name != null) {
-                    
+
                     // set the trial name
                     latestTrial.name = latestStudentDataTrial.name;
                 }
-                
+
                 if (latestStudentDataTrial.series != null) {
-                    
+
                     // set the trial series
                     latestTrial.series = [];
-                    
+
                     var tempSeries = latestStudentDataTrial.series;
-                    
+
                     if (tempSeries != null) {
-                        
+
                         // loop through all the series in the trial
                         for (var s = 0; s < tempSeries.length; s++) {
-                            
+
                             // get a single series
                             var singleSeries = tempSeries[s];
-                            
+
                             if (singleSeries != null) {
-                                
+
                                 // get the series name and data
                                 var seriesName = singleSeries.name;
                                 var seriesData = singleSeries.data;
                                 var seriesColor = singleSeries.color;
-                                
+
                                 // make a series object
                                 var newSeries = {};
                                 newSeries.name = seriesName;
@@ -2743,7 +2876,7 @@ class GraphController {
                                 newSeries.color = seriesColor;
                                 newSeries.canEdit = false;
                                 newSeries.allowPointSelect = false;
-                                
+
                                 // add the series to the trial
                                 latestTrial.series.push(newSeries);
                             }
@@ -2751,33 +2884,35 @@ class GraphController {
                     }
                 }
             }
-            
+
             if (this.trials.length > 0) {
                 // make the last trial the active trial
                 this.activeTrial = this.trials[this.trials.length - 1];
                 this.activeTrial.show = true;
             }
-            
+
+            this.setTrialIdsToShow();
+
             // redraw the graph so that the active trial gets displayed
             this.activeTrialChanged();
         }
     }
-    
+
     /**
      * Get the trial by id
      * @param id the trial id
      * @returns the trial with the given id or null
      */
     getTrialById(id) {
-        
+
         var trial = null;
-        
+
         if (id != null) {
-            
+
             // loop through all the trials
             for (var t = 0; t < this.trials.length; t++) {
                 var tempTrial = this.trials[t];
-                
+
                 if (tempTrial != null && tempTrial.id == id) {
                     // we have found the trial with the id we want
                     trial = tempTrial;
@@ -2785,29 +2920,29 @@ class GraphController {
                 }
             }
         }
-        
+
         return trial;
     }
-    
+
     /**
      * Check if there is an editable series
      * @return whether there is an editable series
      */
     hasEditableSeries() {
-        
+
         var result = false;
-        
+
         // get the array of series
         var series = this.getSeries();
-        
+
         if (series != null) {
-            
+
             // loop through all the lines
             for (var s = 0; s < series.length; s++) {
                 var tempSeries = series[s];
-                
+
                 if (tempSeries != null) {
-                    
+
                     if (tempSeries.canEdit) {
                         // this line can be edited
                         result = true;
@@ -2815,10 +2950,10 @@ class GraphController {
                 }
             }
         }
-        
+
         return result;
     }
-    
+
     /**
      * Update the x and y axis min and max values if necessary to make sure
      * all points are visible in the graph view.
@@ -2827,12 +2962,12 @@ class GraphController {
      * @param yAxis the y axis object
      */
     updateMinMaxAxisValues(series, xAxis, yAxis) {
-        
+
         // get the min and max x and y values
         var minMaxValues = this.getMinMaxValues(series);
-        
+
         if (minMaxValues != null) {
-            
+
             if (xAxis != null) {
                 if (minMaxValues.xMin < xAxis.min) {
                     /*
@@ -2844,7 +2979,7 @@ class GraphController {
                     xAxis.min = null;
                     xAxis.minPadding = 0.2;
                 }
-                
+
                 if (minMaxValues.xMax >= xAxis.max) {
                     /*
                      * there is a point that has a larger x value than the
@@ -2856,7 +2991,7 @@ class GraphController {
                     xAxis.maxPadding = 0.2;
                 }
             }
-            
+
             if (yAxis != null) {
                 if (minMaxValues.yMin < yAxis.min) {
                     /*
@@ -2868,7 +3003,7 @@ class GraphController {
                     yAxis.min = null;
                     yAxis.minPadding = 0.2;
                 }
-                
+
                 if (minMaxValues.yMax >= yAxis.max) {
                     /*
                      * there is a point that has a larger y value than the
@@ -2882,7 +3017,7 @@ class GraphController {
             }
         }
     }
-    
+
     /**
      * Get the min and max x and y values
      * @param series an array of series
@@ -2890,35 +3025,35 @@ class GraphController {
      * series data
      */
     getMinMaxValues(series) {
-        
+
         var result = {};
         var xMin = 0;
         var xMax = 0;
         var yMin = 0;
         var yMax = 0;
-        
+
         if (series != null) {
-            
+
             // loop through all the series
             for (var s = 0; s < series.length; s++) {
-                
+
                 // get a single series
                 var tempSeries = series[s];
-                
+
                 if (tempSeries != null) {
-                    
+
                     // get the data from the single series
                     var data = tempSeries.data;
-                    
+
                     if (data != null) {
-                        
+
                         // loop through all the data points in the single series
                         for (var d = 0; d < data.length; d++) {
                             var tempData = data[d];
-                            
+
                             var tempX = null;
                             var tempY = null;
-                            
+
                             if (tempData != null) {
                                 if (tempData.constructor.name == 'Object') {
                                     /*
@@ -2937,7 +3072,7 @@ class GraphController {
                                     tempY = tempData[1];
                                 }
                             }
-                            
+
                             if (tempX > xMax) {
                                 /*
                                  * we have found a data point with a greater x
@@ -2945,7 +3080,7 @@ class GraphController {
                                  */
                                 xMax = tempX;
                             }
-                            
+
                             if (tempX < xMin) {
                                 /*
                                  * we have found a data point with a smaller x
@@ -2953,7 +3088,7 @@ class GraphController {
                                  */
                                 xMin = tempX
                             }
-                            
+
                             if (tempY > yMax) {
                                 /*
                                  * we have found a data point with a greater y
@@ -2961,7 +3096,7 @@ class GraphController {
                                  */
                                 yMax = tempY;
                             }
-                            
+
                             if (tempY < yMin) {
                                 /*
                                  * we have found a data point with a smaller y
@@ -2974,27 +3109,27 @@ class GraphController {
                 }
             }
         }
-        
+
         result.xMin = xMin;
         result.xMax = xMax;
         result.yMin = yMin;
         result.yMax = yMax;
-        
+
         return result;
     }
-    
+
     /**
      * Clear all the series ids
      * @param allSeries all of the series
      */
     clearSeriesIds(allSeries) {
-        
+
         if (allSeries != null) {
-            
+
             // loop through all the series
             for (var s = 0; s < allSeries.length; s++) {
                 var tempSeries = allSeries[s];
-                
+
                 if (tempSeries != null) {
                     // clear the id
                     tempSeries.id = null;
@@ -3002,12 +3137,12 @@ class GraphController {
             }
         }
     }
-    
+
     /**
      * The "Enable Trials" checkbox was clicked
      */
     authoringViewEnableTrialsClicked() {
-        
+
         if (this.authoringComponentContent.enableTrials) {
             // trials are now enabled
             this.authoringComponentContent.canCreateNewTrials = true;
@@ -3016,12 +3151,12 @@ class GraphController {
             // trials are now disabled
             this.authoringComponentContent.canCreateNewTrials = false;
             this.authoringComponentContent.canDeleteTrials = false;
-            this.authoringComponentContent.showAllTrialsOnNewTrial = false;
+            this.authoringComponentContent.hideAllTrialsOnNewTrial = false;
         }
-        
+
         this.authoringViewComponentChanged();
     }
-    
+
     /**
      * Check whether we need to show the snip drawing button
      * @return whether to show the snip drawing button
@@ -3033,7 +3168,7 @@ class GraphController {
             return false;
         }
     }
-    
+
     /**
      * Snip the drawing by converting it to an image
      * @param $event the click event
@@ -3042,10 +3177,10 @@ class GraphController {
 
         // get the highcharts div
         var highchartsDiv = angular.element('#' + this.chartId).find('.highcharts-container');
-        
+
         if (highchartsDiv != null && highchartsDiv.length > 0) {
             highchartsDiv = highchartsDiv[0];
-            
+
             // convert the model element to a canvas element
             html2canvas(highchartsDiv).then((canvas) => {
 
@@ -3067,6 +3202,7 @@ GraphController.$inject = [
     '$q',
     '$rootScope',
     '$scope',
+    '$timeout',
     'ConfigService',
     'GraphService',
     'NodeService',
