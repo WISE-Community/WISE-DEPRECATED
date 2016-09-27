@@ -1,6 +1,7 @@
 {
   "actionRequired": "Action Required",
   "add": "Add",
+  "notificationsTitle": "Alerts",
   "assetUploadSuccessful": "Successfully uploaded: {{assetFilenames}}",
   "assetUsageMessage": "You are using {{usage}} out of {{max}} ({{percentage}}%)",
   "attachments": "Attachments",
@@ -25,6 +26,7 @@
   "move": "Move",
   "new": "New",
   "no": "No",
+  "noAlerts": "Hi there! You currently have no alerts.",
   "notebook": "Notebook",
   "open": "Open",
   "point": "point",

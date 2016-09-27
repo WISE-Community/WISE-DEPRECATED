@@ -5,7 +5,6 @@ $avatar-icon-padding-lg: 8px !default;
 // 2. Base
 body {
   background: color('body-bg');
-  /*overflow: hidden;*/
 }
 
 // Typography
@@ -41,11 +40,9 @@ label {
 .badge {
     border-radius: $card-border-radius;
     padding: 0 6px;
-    font-size: rem(1.2);
-    font-weight: 600;
-    height: 20px;
-    line-height: 20px;
-    background-color: color('gray-light');
+    font-size: rem(1.4);
+    font-weight: 500;
+    background-color: color('gray-dark');
 }
 
 .center {
@@ -248,4 +245,25 @@ md-select-menu.md-default-theme md-option[selected], md-select-menu md-option[se
 .animate-repeat.ng-move.ng-move-active,
 .animate-repeat.ng-enter.ng-enter-active {
   opacity:1;
+}
+
+.animate-fade.ng-enter {
+  transition: 0.5s linear all;
+  opacity: 0;
+}
+
+.animate-fade.ng-enter.ng-enter-active {
+  opacity: 1;
+}
+
+.animate-fade.ng-leave {
+  transition: 0.5s linear all;
+  opacity: 1;
+}
+.animate-fade.ng-leave.ng-leave-active {
+  opacity: 0;
+}
+
+.transition-all {
+    transition: 0.5s linear all;
 }

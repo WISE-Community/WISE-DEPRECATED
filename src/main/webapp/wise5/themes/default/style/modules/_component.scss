@@ -6,6 +6,7 @@
 .component {
     overflow-x: auto;
     font-size: rem(1.5);
+    overflow-y: hidden; // TODO: figure out why this is needed after update to ng-material 1.1.1
 
     @media only screen and (min-width: $layout-breakpoint-xs) {
         padding: 0 16px;

@@ -157,7 +157,7 @@ $input-action-vertical-offset-richtext: -7px;
 
 .node-sidebar-active {
     @media only screen and (min-width: $layout-breakpoint-xs) {
-        margin-right: ($toolbar-height + 16);
+        margin-right: ($md-toolbar-height + 16);
     }
 }
 
@@ -171,12 +171,12 @@ $input-action-vertical-offset-richtext: -7px;
     position: absolute;
     right: 0;
     top: 0;
-    width: $toolbar-height;
+    width: $md-toolbar-height;
 }
 
 .node-sidebar__toolbar {
     position: fixed;
-    width: $toolbar-height;
+    width: $md-toolbar-height;
     background-color: #ffffff;
     padding: 8px 0;
     border-radius: $button-border-radius;

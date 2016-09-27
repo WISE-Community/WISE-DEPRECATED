@@ -24,8 +24,10 @@
 
 // 3. Modules
 @import "modules/dragula",
+        "modules/dialog",
         "modules/inputs",
         "modules/toolbar",
+        "modules/list",
         "modules/nav",
         "modules/menu",
         "modules/node",
@@ -36,5 +38,6 @@
         "modules/component",
         "modules/component--discussion",
         "modules/component--embedded",
+        "modules/component--graph",
         "modules/component--match",
         "modules/notebook-toolbar";

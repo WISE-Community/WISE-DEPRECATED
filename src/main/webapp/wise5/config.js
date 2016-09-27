@@ -12,13 +12,13 @@ System.config({
     "angular": "github:angular/bower-angular@1.5.8",
     "angular-animate": "github:angular/bower-angular-animate@1.5.8",
     "angular-dragula": "npm:angular-dragula@1.2.7",
-    "angular-material": "github:angular/bower-material@1.1.0-rc4-master-e638c51",
+    "angular-material": "github:angular/bower-material@1.1.1",
     "angular-mocks": "github:angular/bower-angular-mocks@1.5.8",
     "angular-moment": "npm:angular-moment@1.0.0-beta.6",
     "angular-sanitize": "github:angular/bower-angular-sanitize@1.5.8",
-    "angular-translate": "github:angular-translate/bower-angular-translate@2.12.0",
+    "angular-translate": "github:angular-translate/bower-angular-translate@2.11.1",
     "angular-translate-loader-partial": "github:angular-translate/bower-angular-translate-loader-partial@2.12.0",
-    "angular-ui-router": "github:angular-ui/ui-router@0.3.1",
+    "angular-ui-router": "npm:angular-ui-router@0.3.1",
     "angular-ui-scrollpoint": "npm:angular-ui-scrollpoint@2.1.1",
     "angular-websocket": "npm:angular-websocket@1.0.14",
     "core-js": "npm:core-js@1.2.7",
@@ -38,6 +38,9 @@ System.config({
       "angular": "github:angular/bower-angular@1.5.8",
       "angular-translate": "github:angular-translate/bower-angular-translate@2.12.0"
     },
+    "github:angular-translate/bower-angular-translate@2.11.1": {
+      "angular": "github:angular/bower-angular@1.5.8"
+    },
     "github:angular-translate/bower-angular-translate@2.12.0": {
       "angular": "github:angular/bower-angular@1.5.8"
     },
@@ -47,21 +50,17 @@ System.config({
     "github:angular/bower-angular-aria@1.5.8": {
       "angular": "github:angular/bower-angular@1.5.8"
     },
-    "github:angular/bower-angular-messages@1.5.8": {
-      "angular": "github:angular/bower-angular@1.5.8"
-    },
     "github:angular/bower-angular-mocks@1.5.8": {
       "angular": "github:angular/bower-angular@1.5.8"
     },
     "github:angular/bower-angular-sanitize@1.5.8": {
       "angular": "github:angular/bower-angular@1.5.8"
     },
-    "github:angular/bower-material@1.1.0-rc4-master-e638c51": {
+    "github:angular/bower-material@1.1.1": {
       "angular": "github:angular/bower-angular@1.5.8",
       "angular-animate": "github:angular/bower-angular-animate@1.5.8",
       "angular-aria": "github:angular/bower-angular-aria@1.5.8",
-      "angular-messages": "github:angular/bower-angular-messages@1.5.8",
-      "css": "github:systemjs/plugin-css@0.1.27"
+      "css": "github:systemjs/plugin-css@0.1.29"
     },
     "github:highcharts/draggable-points@master": {
       "process": "github:jspm/nodelibs-process@0.1.2"
@@ -123,6 +122,10 @@ System.config({
     },
     "npm:angular-moment@1.0.0-beta.6": {
       "moment": "npm:moment@2.14.1"
+    },
+    "npm:angular-ui-router@0.3.1": {
+      "angular": "npm:angular@1.5.8",
+      "process": "github:jspm/nodelibs-process@0.1.2"
     },
     "npm:angular-ui-scrollpoint@2.1.1": {
       "fs": "github:jspm/nodelibs-fs@0.1.2",

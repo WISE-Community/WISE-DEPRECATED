@@ -193,6 +193,10 @@ md-input-container.discussion-new__input-container {
 .discussion-new-reply__input-container {
   padding-top: 0;
   margin: 0;
+
+  .md-errors-spacer {
+      display: none;
+  }
 }
 
 .discussion-new-reply__actions {

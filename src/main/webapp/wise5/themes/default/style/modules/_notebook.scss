@@ -239,7 +239,7 @@ $notebook-sidebar-width: 56px;
     &.ui-scrollpoint {
         .notebook-item--report__toolbar {
             position: fixed;
-            top: ($wise-toolbar-height + $toolbar-height);
+            top: ($wise-toolbar-height + $md-toolbar-height);
             left: 0;
             right: 0;
             z-index: 1;

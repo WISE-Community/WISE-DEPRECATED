@@ -7,7 +7,7 @@
     <md-dialog-content class="nav-contents--group md-dialog-content">
         <md-list class="planning-contents">
             <md-list-item ng-repeat="item in navitemCtrl.availablePlanningNodes"
-                          class="md-2-line md-long-text nav-item--list planning-item--list md-whiteframe-z1"
+                          class="md-2-line md-long-text list-item planning-item--list md-whiteframe-z1"
                           ng-class="{'disabled': !navitemCtrl.canAddPlanningNode(item.id)}"
                           ng-click="addSelectedPlanningInstance(item.id)"
                           ng-disabled="!navitemCtrl.canAddPlanningNode(item.id)"
