@@ -99,7 +99,6 @@ class MatchController {
 
         // get the authoring component content
         this.authoringComponentContent = this.$scope.authoringComponentContent;
-        this.authoringComponentContentJSONString = this.$scope.authoringComponentContentJSONString;
 
         /*
          * get the original component content. this is used when showing
@@ -143,6 +142,20 @@ class MatchController {
                 this.isSubmitButtonVisible = false;
                 this.isDisabled = true;
             } else if (this.mode === 'authoring') {
+                this.updateAdvancedAuthoringView();
+
+                $scope.$watch(function() {
+                    return this.authoringComponentContent;
+                }.bind(this), function(newValue, oldValue) {
+                    this.componentContent = this.ProjectService.injectAssetPaths(newValue);
+
+                    /*
+                     * initialize the choices and buckets with the values from the
+                     * component content
+                     */
+                    this.initializeChoices();
+                    this.initializeBuckets();
+                }.bind(this), true);
             }
 
             /*
@@ -1127,14 +1140,12 @@ class MatchController {
 
         // update the JSON string in the advanced authoring view textarea
         this.updateAdvancedAuthoringView();
-    };
 
-    /**
-     * Update the component JSON string that will be displayed in the advanced authoring view textarea
-     */
-    updateAdvancedAuthoringView() {
-        this.authoringComponentContentJSONString = angular.toJson(this.authoringComponentContent, 4);
-        this.advancedAuthoringViewComponentChanged();
+        /*
+         * notify the parent node that the content has changed which will save
+         * the project to the server
+         */
+        this.$scope.$parent.nodeAuthoringController.authoringViewNodeChanged();
     };
 
     /**
@@ -1153,8 +1164,11 @@ class MatchController {
             // replace the component in the project
             this.ProjectService.replaceComponent(this.nodeId, this.componentId, authoringComponentContent);
 
+            // set the new authoring component content
+            this.authoringComponentContent = authoringComponentContent;
+
             // set the component content
-            this.componentContent = authoringComponentContent;
+            this.componentContent = this.ProjectService.injectAssetPaths(authoringComponentContent);
 
             /*
              * notify the parent node that the content has changed which will save
@@ -1164,6 +1178,13 @@ class MatchController {
         } catch(e) {
 
         }
+    };
+
+    /**
+     * Update the component JSON string that will be displayed in the advanced authoring view textarea
+     */
+    updateAdvancedAuthoringView() {
+        this.authoringComponentContentJSONString = angular.toJson(this.authoringComponentContent, 4);
     };
 
     /**

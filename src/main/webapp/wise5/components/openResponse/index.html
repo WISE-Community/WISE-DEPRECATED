@@ -184,7 +184,8 @@
                               ng-model="openResponseController.studentResponse"
                               ng-model-options='{ debounce: 100 }'
                               ng-disabled="openResponseController.isDisabled"
-                              ng-change="openResponseController.studentDataChanged()"></textarea>
+                              ng-change="openResponseController.studentDataChanged()"
+                              md-no-autogrow></textarea>
                     <md-button class="input--textarea__action input--textarea__action--revision md-icon-button"
                                ng-click='nodeController.showRevisions($event, component.id, openResponseController.isDisabled)'
                                ng-if="nodeController.getRevisions(component.id).length > 1">

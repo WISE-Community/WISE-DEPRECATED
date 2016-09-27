@@ -4,7 +4,7 @@ body {
 }
 
 h1 {
-    font-size: $display-3-font-size-base;
+    font-size: $display-1-font-size-base;
 }
 
 h2 {
@@ -12,7 +12,7 @@ h2 {
 }
 
 h3 {
-    font-size: $display-1-font-size-base;
+    font-size: $display-3-font-size-base;
 }
 
 h4 {
@@ -210,8 +210,13 @@ md-card md-card-actions:not(.layout-column) .md-button.md-icon-button:first-of-t
     margin-left: 0;
 }
 
-// hack until https://github.com/angular/material/issues/8094 is fixed
-md-list-item._md-button-wrap>div.md-button:first-child ._md-list-item-inner,
-md-list-item ._md-list-item-inner ._md-secondary-container, md-list-item ._md-secondary-container {
-    height: inherit;
+// hack
+md-list-item .md-avatar, md-list-item .md-avatar-icon, md-list-item .md-list-item-inner .md-avatar,
+md-list-item .md-list-item-inner .md-avatar-icon {
+    margin-right: 12px;
+    display: flex;
+}
+
+md-list-item .md-list-item-inner {
+    line-height: 1.5;
 }

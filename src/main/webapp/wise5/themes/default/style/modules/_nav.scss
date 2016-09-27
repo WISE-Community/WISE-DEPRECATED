@@ -100,10 +100,8 @@
     }
 }
 
-.nav-item--list {
-    background-color: #ffffff;
-    border-bottom: 1px solid color('gray-lighter');
-}
+//.nav-item--list {
+//}
 
 .nav-item--list__reorder {
     margin-left: 8px;
@@ -140,7 +138,6 @@
 }
 
 .nav-item__more {
-    //background-color: color('gray-lightest');
     border-top: 1px solid color('gray-light');
     border-bottom-right-radius: $card-border-radius;
     border-bottom-left-radius: $card-border-radius;
@@ -156,10 +153,20 @@
     }
 }
 
+.nav-item__users {
+    height: auto;
+    cursor: pointer;
+    color: #ffffff;
+
+    > md-icon {
+        padding-right: 4px;
+        color: #ffffff;
+    }
+}
+
 .nav-item__title {
     padding-left: 16px;
     line-height: 1.2;
-    //align-self: center;
     font-weight: 400;
 }
 
@@ -169,7 +176,7 @@
 }
 
 .progress-wrapper {
-    padding: 8px 0;
+    padding: 2px 0;
     cursor: pointer;
 }
 

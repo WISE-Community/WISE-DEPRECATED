@@ -1,6 +1,6 @@
 // Variables
 $input-action-width: 44px;
-$input-action-vertical-offset: 0;
+$input-action-vertical-offset: 6px;
 $input-action-vertical-offset-richtext: -7px;
 
 // Base
@@ -97,8 +97,4 @@ $input-action-vertical-offset-richtext: -7px;
     &.input-label--focused {
         color: color('primary');
     }
-}
-
-.input--focused {
-    //border-color: color('primary');
 }

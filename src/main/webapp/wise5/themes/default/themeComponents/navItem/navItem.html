@@ -59,7 +59,7 @@
         </md-card>
 
         <md-list-item ng-switch-when="list" ng-click="navitemCtrl.itemClicked($event)"
-                      class="md-long-text noright nav-item--list md-whiteframe-z1"
+                      class="md-long-text noright list-item md-whiteframe-z1"
                       aria-label="{{navitemCtrl.planningMode && navitemCtrl.isPlanningInstance ? 'Move' : 'Go to'}} {{navitemCtrl.nodeTitle}}"
                       ng-class="{'nav-item--list--group':navitemCtrl.isGroup, 'nav-item--planning-mode': navitemCtrl.planningMode && navitemCtrl.isPlanningInstance}">
             <img ng-if="navitemCtrl.nodeStatus.icon.type === 'img'" ng-class="navitemCtrl.isGroup ? 'avatar--square' : ''" class="md-avatar" ng-src="{{navitemCtrl.nodeStatus.icon.imgSrc}}" alt="{{navitemCtrl.nodeStatus.icon.imgAlt}}" />

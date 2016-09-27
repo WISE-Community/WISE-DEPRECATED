@@ -167,7 +167,6 @@ var EmbeddedController = function () {
 
         // get the authoring component content
         this.authoringComponentContent = this.$scope.authoringComponentContent;
-        this.authoringComponentContentJSONString = this.$scope.authoringComponentContentJSONString;
 
         /*
          * get the original component content. this is used when showing
@@ -196,7 +195,16 @@ var EmbeddedController = function () {
                 // TODO: watch for new annotations and update accordingly
                 this.latestAnnotations = this.$scope.$parent.nodeController.getLatestComponentAnnotations(this.componentId);
                 this.isSnipModelButtonVisible = true;
-            } else if (this.mode === 'authoring') {} else if (this.mode === 'grading') {
+            } else if (this.mode === 'authoring') {
+                this.updateAdvancedAuthoringView();
+
+                $scope.$watch(function () {
+                    return this.authoringComponentContent;
+                }.bind(this), function (newValue, oldValue) {
+                    this.componentContent = this.ProjectService.injectAssetPaths(newValue);
+                    this.setURL(this.componentContent.url);
+                }.bind(this), true);
+            } else if (this.mode === 'grading') {
                 this.isSnipModelButtonVisible = false;
             } else if (this.mode === 'onlyShowWork') {
                 this.isSnipModelButtonVisible = false;
@@ -551,17 +559,12 @@ var EmbeddedController = function () {
 
             // update the JSON string in the advanced authoring view textarea
             this.updateAdvancedAuthoringView();
-        }
-    }, {
-        key: 'updateAdvancedAuthoringView',
 
-
-        /**
-         * Update the component JSON string that will be displayed in the advanced authoring view textarea
-         */
-        value: function updateAdvancedAuthoringView() {
-            this.authoringComponentContentJSONString = angular.toJson(this.authoringComponentContent, 4);
-            this.advancedAuthoringViewComponentChanged();
+            /*
+             * notify the parent node that the content has changed which will save
+             * the project to the server
+             */
+            this.$scope.$parent.nodeAuthoringController.authoringViewNodeChanged();
         }
     }, {
         key: 'advancedAuthoringViewComponentChanged',
@@ -592,6 +595,16 @@ var EmbeddedController = function () {
                  */
                 this.$scope.$parent.nodeAuthoringController.authoringViewNodeChanged();
             } catch (e) {}
+        }
+    }, {
+        key: 'updateAdvancedAuthoringView',
+
+
+        /**
+         * Update the component JSON string that will be displayed in the advanced authoring view textarea
+         */
+        value: function updateAdvancedAuthoringView() {
+            this.authoringComponentContentJSONString = angular.toJson(this.authoringComponentContent, 4);
         }
     }, {
         key: 'snipModel',

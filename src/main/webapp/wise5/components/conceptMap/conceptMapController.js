@@ -38,7 +38,7 @@ this.modalWidth=800;this.modalHeight=600;/*
          */this.tempOffsetX=0;this.tempOffsetY=0;var themePath=this.ProjectService.getThemePath();// get the current node and node id
 var currentNode=this.StudentDataService.getCurrentNode();if(currentNode!=null){this.nodeId=currentNode.id;}else{this.nodeId=this.$scope.nodeId;}// get the component content from the scope
 this.componentContent=this.$scope.componentContent;// get the authoring component content
-this.authoringComponentContent=this.$scope.authoringComponentContent;this.authoringComponentContentJSONString=this.$scope.authoringComponentContentJSONString;/*
+this.authoringComponentContent=this.$scope.authoringComponentContent;/*
          * get the original component content. this is used when showing
          * previous work from another component.
          */this.originalComponentContent=this.$scope.originalComponentContent;// the mode to load the component in e.g. 'student', 'grading', 'onlyShowWork'
@@ -48,7 +48,7 @@ this.autoFeedbackString='';if(this.componentContent!=null){// get the component 
 this.componentId=this.componentContent.id;if(this.componentContent.width!=null){this.width=this.componentContent.width;}if(this.componentContent.height!=null){this.height=this.componentContent.height;}// setup the svg
 this.setupSVG();if(this.mode==='student'){this.isPromptVisible=true;this.isSaveButtonVisible=this.componentContent.showSaveButton;this.isSubmitButtonVisible=this.componentContent.showSubmitButton;this.availableNodes=this.componentContent.nodes;this.availableLinks=this.componentContent.links;// get the latest annotations
 // TODO: watch for new annotations and update accordingly
-this.latestAnnotations=this.$scope.$parent.nodeController.getLatestComponentAnnotations(this.componentId);}else if(this.mode==='grading'){this.isPromptVisible=true;this.isSaveButtonVisible=false;this.isSubmitButtonVisible=false;this.isDisabled=true;}else if(this.mode==='onlyShowWork'){this.isPromptVisible=false;this.isSaveButtonVisible=false;this.isSubmitButtonVisible=false;this.isDisabled=true;}else if(this.mode==='showPreviousWork'){this.isPromptVisible=true;this.isSaveButtonVisible=false;this.isSubmitButtonVisible=false;this.isDisabled=true;}else if(this.mode==='authoring'){this.availableNodes=this.componentContent.nodes;this.availableLinks=this.componentContent.links;}var componentState=null;// set whether rich text is enabled
+this.latestAnnotations=this.$scope.$parent.nodeController.getLatestComponentAnnotations(this.componentId);}else if(this.mode==='grading'){this.isPromptVisible=true;this.isSaveButtonVisible=false;this.isSubmitButtonVisible=false;this.isDisabled=true;}else if(this.mode==='onlyShowWork'){this.isPromptVisible=false;this.isSaveButtonVisible=false;this.isSubmitButtonVisible=false;this.isDisabled=true;}else if(this.mode==='showPreviousWork'){this.isPromptVisible=true;this.isSaveButtonVisible=false;this.isSubmitButtonVisible=false;this.isDisabled=true;}else if(this.mode==='authoring'){this.availableNodes=this.componentContent.nodes;this.availableLinks=this.componentContent.links;this.updateAdvancedAuthoringView();$scope.$watch(function(){return this.authoringComponentContent;}.bind(this),function(newValue,oldValue){this.componentContent=this.ProjectService.injectAssetPaths(newValue);this.availableNodes=this.componentContent.nodes;this.availableLinks=this.componentContent.links;this.setupSVG();}.bind(this),true);}var componentState=null;// set whether rich text is enabled
 this.isRichTextEnabled=this.componentContent.isRichTextEnabled;// set whether studentAttachment is enabled
 this.isStudentAttachmentEnabled=this.componentContent.isStudentAttachmentEnabled;// get the component state from the scope
 componentState=this.$scope.componentState;if(componentState==null){/*
@@ -312,9 +312,10 @@ this.setStudentWork(populatedComponentState);}}}}}},{key:'getComponentId',/**
      */value:function getComponentId(){return this.componentContent.id;}},{key:'authoringViewComponentChanged',/**
      * The component has changed in the regular authoring view so we will save the project
      */value:function authoringViewComponentChanged(){// update the JSON string in the advanced authoring view textarea
-this.updateAdvancedAuthoringView();}},{key:'updateAdvancedAuthoringView',/**
-     * Update the component JSON string that will be displayed in the advanced authoring view textarea
-     */value:function updateAdvancedAuthoringView(){this.authoringComponentContentJSONString=angular.toJson(this.authoringComponentContent,4);this.advancedAuthoringViewComponentChanged();}},{key:'advancedAuthoringViewComponentChanged',/**
+this.updateAdvancedAuthoringView();/*
+         * notify the parent node that the content has changed which will save
+         * the project to the server
+         */this.$scope.$parent.nodeAuthoringController.authoringViewNodeChanged();}},{key:'advancedAuthoringViewComponentChanged',/**
      * The component has changed in the advanced authoring view so we will update
      * the component and save the project.
      */value:function advancedAuthoringViewComponentChanged(){try{/*
@@ -322,7 +323,7 @@ this.updateAdvancedAuthoringView();}},{key:'updateAdvancedAuthoringView',/**
              * authoring view into a JSON object
              */var editedComponentContent=angular.fromJson(this.authoringComponentContentJSONString);// replace the component in the project
 this.ProjectService.replaceComponent(this.nodeId,this.componentId,editedComponentContent);// set the new component into the controller
-this.componentContent=editedComponentContent;this.availableNodes=this.componentContent.nodes;this.availableLinks=this.componentContent.links;this.setupSVG();/*
+this.componentContent=editedComponentContent;/*
              * notify the parent node that the content has changed which will save
              * the project to the server
              */this.$scope.$parent.nodeAuthoringController.authoringViewNodeChanged();}catch(e){}}},{key:'authoringShowPreviousWorkNodeIdChanged',/**
@@ -523,10 +524,12 @@ this.authoringViewComponentChanged();}}}/**
      * @param nodeId the node id to check
      * @returns whether the node is an application node
      */},{key:'isApplicationNode',value:function isApplicationNode(nodeId){var result=this.ProjectService.isApplicationNode(nodeId);return result;}/**
+     * Update the component JSON string that will be displayed in the advanced authoring view textarea
+     */},{key:'updateAdvancedAuthoringView',value:function updateAdvancedAuthoringView(){this.authoringComponentContentJSONString=angular.toJson(this.authoringComponentContent,4);}},{key:'setSaveMessage',/**
      * Set the message next to the save button
      * @param message the message to display
      * @param time the time to display
-     */},{key:'setSaveMessage',value:function setSaveMessage(message,time){this.saveMessage.text=message;this.saveMessage.time=time;}},{key:'isCRaterEnabled',/**
+     */value:function setSaveMessage(message,time){this.saveMessage.text=message;this.saveMessage.time=time;}},{key:'isCRaterEnabled',/**
      * Check if CRater is enabled for this component
      * @returns whether CRater is enabled for this component
      */value:function isCRaterEnabled(){var result=false;if(this.CRaterService.isCRaterEnabled(this.componentContent)){result=true;}return result;}/**
@@ -566,7 +569,16 @@ if(!this.initializedDisplayLinkTypeChooserModalOverlay){// we have not initializ
 this.setLinkTypeChooserOverlayStyle();this.initializedDisplayLinkTypeChooserModalOverlay=true;}/*
          * initialize the top left of the link chooser popup to show up on
          * the top right of the svg element
-         */var leftNumber=600;var topNumber=20;var left=leftNumber+'px';var top=topNumber+'px';this.linkTypeChooserStyle['top']=top;this.linkTypeChooserStyle['left']=left;this.displayLinkTypeChooser=true;}/**
+         */var leftNumber=600;var topNumber=20;var left=leftNumber+'px';var top=topNumber+'px';if(this.mode==='authoring'){/*
+             * if we are in authoring mode we need to include the offset of
+             * the container for some reason.
+             * TODO: figure out why the offset is required in authoring mode
+             * but not in student mode.
+             */// get the concept map container
+var conceptMapContainer=angular.element('#conceptMapContainer');// get the offset of the container relative to the whole page
+var offset=conceptMapContainer.offset();// get the left and top of the offset
+var offsetLeft=offset.left;var offsetTop=offset.top;// add the offset to the left and top values
+left=leftNumber+offsetLeft+'px';top=topNumber+offsetTop+'px';}this.linkTypeChooserStyle['top']=top;this.linkTypeChooserStyle['left']=left;this.displayLinkTypeChooser=true;}/**
      * Hide the link type chooser popup
      */},{key:'hideLinkTypeChooser',value:function hideLinkTypeChooser(){// hide the link type chooser
 this.displayLinkTypeChooser=false;this.displayLinkTypeChooserModalOverlay=false;this.newlyCreatedLink=null;if(!this.$scope.$$phase){// TODO GK (from HT) this line was causing a lot of js errors ( $digest already in progress ), so I commented it out

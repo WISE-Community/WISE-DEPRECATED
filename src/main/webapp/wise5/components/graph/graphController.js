@@ -3,7 +3,7 @@
 //import angularHighcharts from 'highcharts-ng';
 //import Highcharts from '../../lib/highcharts@4.2.1';
 //import draggablePoints from 'highcharts/draggable-points';
-var GraphController=function(){function GraphController($q,$rootScope,$scope,ConfigService,GraphService,NodeService,NotebookService,ProjectService,StudentAssetService,StudentDataService,UtilService){var _this=this;_classCallCheck(this,GraphController);this.$q=$q;this.$rootScope=$rootScope;this.$scope=$scope;this.ConfigService=ConfigService;this.GraphService=GraphService;this.NodeService=NodeService;this.NotebookService=NotebookService;this.ProjectService=ProjectService;this.StudentAssetService=StudentAssetService;this.StudentDataService=StudentDataService;this.UtilService=UtilService;this.idToOrder=this.ProjectService.idToOrder;// the node id of the current node
+var GraphController=function(){function GraphController($q,$rootScope,$scope,$timeout,ConfigService,GraphService,NodeService,NotebookService,ProjectService,StudentAssetService,StudentDataService,UtilService){var _this=this;_classCallCheck(this,GraphController);this.$q=$q;this.$rootScope=$rootScope;this.$scope=$scope;this.$timeout=$timeout;this.ConfigService=ConfigService;this.GraphService=GraphService;this.NodeService=NodeService;this.NotebookService=NotebookService;this.ProjectService=ProjectService;this.StudentAssetService=StudentAssetService;this.StudentDataService=StudentDataService;this.UtilService=UtilService;this.idToOrder=this.ProjectService.idToOrder;// the node id of the current node
 this.nodeId=null;// the component id
 this.componentId=null;// field that will hold the component content
 this.componentContent=null;// field that will hold the authoring component content
@@ -28,28 +28,28 @@ this.isResetGraphButtonVisible=false;// whether the select series input is shown
 this.isSelectSeriesVisible=false;// whether the snip drawing button is shown or not
 this.isSnipDrawingButtonVisible=true;// the id of the chart element
 this.chartId='chart1';// the width of the graph
-this.width=800;// the height of the graph
-this.height=500;// get the current node and node id
+this.width=null;// the height of the graph
+this.height=null;// get the current node and node id
 var currentNode=this.StudentDataService.getCurrentNode();if(currentNode!=null){this.nodeId=currentNode.id;}else{this.nodeId=this.$scope.nodeId;}// get the component content from the scope
 this.componentContent=this.$scope.componentContent;// get the authoring component content
-this.authoringComponentContent=this.$scope.authoringComponentContent;this.authoringComponentContentJSONString=this.$scope.authoringComponentContentJSONString;/*
+this.authoringComponentContent=this.$scope.authoringComponentContent;/*
          * get the original component content. this is used when showing
          * previous work from another component.
          */this.originalComponentContent=this.$scope.originalComponentContent;// the mode to load the component in e.g. 'student', 'grading', 'onlyShowWork'
-this.mode=this.$scope.mode;this.workgroupId=this.$scope.workgroupId;this.teacherWorkgroupId=this.$scope.teacherWorkgroupId;this.trials=[];this.activeTrial=null;this.studentDataVersion=2;this.canCreateNewTrials=false;this.canDeleteTrials=false;if(this.componentContent!=null){// get the component id
+this.mode=this.$scope.mode;this.workgroupId=this.$scope.workgroupId;this.teacherWorkgroupId=this.$scope.teacherWorkgroupId;this.trials=[];this.activeTrial=null;this.trialIdsToShow=[];this.selectedTrialsText="";this.studentDataVersion=2;this.canCreateNewTrials=false;this.canDeleteTrials=false;if(this.componentContent!=null){// get the component id
 this.componentId=this.componentContent.id;// set the chart id
 this.chartId='chart'+this.componentId;if(this.componentContent.canCreateNewTrials){this.canCreateNewTrials=this.componentContent.canCreateNewTrials;}if(this.componentContent.canDeleteTrials){this.canDeleteTrials=this.componentContent.canDeleteTrials;}if(this.mode==='student'){this.isPromptVisible=true;this.isSaveButtonVisible=this.componentContent.showSaveButton;this.isSubmitButtonVisible=this.componentContent.showSubmitButton;//this.isResetGraphButtonVisible = true;
-this.isResetSeriesButtonVisible=true;this.isSelectSeriesVisible=true;// get the latest annotations
+this.isResetSeriesButtonVisible=this.componentContent.showResetSeriesButton;this.isSelectSeriesVisible=true;// get the latest annotations
 // TODO: watch for new annotations and update accordingly
 this.latestAnnotations=this.$scope.$parent.nodeController.getLatestComponentAnnotations(this.componentId);}else if(this.mode==='grading'){this.isPromptVisible=true;this.isSaveButtonVisible=false;this.isSubmitButtonVisible=false;//this.isResetGraphButtonVisible = false;
-this.isResetSeriesButtonVisible=false;this.isSelectSeriesVisible=false;this.isDisabled=true;this.isSnipDrawingButtonVisible=false;}else if(this.mode==='onlyShowWork'){this.isPromptVisible=true;this.isSaveButtonVisible=false;this.isSubmitButtonVisible=false;this.isResetGraphButtonVisible=false;this.isResetSeriesButtonVisible=false;this.isSelectSeriesVisible=false;this.isDisabled=true;this.isSnipDrawingButtonVisible=false;}else if(this.mode==='showPreviousWork'){this.isPromptVisible=true;this.isSaveButtonVisible=false;this.isSubmitButtonVisible=false;this.isDisabled=true;}else if(this.mode==='authoring'){}var componentState=null;// get the component state from the scope
+this.isResetSeriesButtonVisible=false;this.isSelectSeriesVisible=false;this.isDisabled=true;this.isSnipDrawingButtonVisible=false;}else if(this.mode==='onlyShowWork'){this.isPromptVisible=true;this.isSaveButtonVisible=false;this.isSubmitButtonVisible=false;this.isResetGraphButtonVisible=false;this.isResetSeriesButtonVisible=false;this.isSelectSeriesVisible=false;this.isDisabled=true;this.isSnipDrawingButtonVisible=false;}else if(this.mode==='showPreviousWork'){this.isPromptVisible=true;this.isSaveButtonVisible=false;this.isSubmitButtonVisible=false;this.isDisabled=true;}else if(this.mode==='authoring'){this.updateAdvancedAuthoringView();$scope.$watch(function(){return this.authoringComponentContent;}.bind(this),function(newValue,oldValue){this.componentContent=this.ProjectService.injectAssetPaths(newValue);this.series=null;this.xAxis=null;this.yAxis=null;this.setupGraph();}.bind(this),true);}var componentState=null;// get the component state from the scope
 componentState=this.$scope.componentState;// set whether studentAttachment is enabled
 this.isStudentAttachmentEnabled=this.componentContent.isStudentAttachmentEnabled;if(componentState==null){/*
                  * only import work if the student does not already have
                  * work for this component
                  */// check if we need to import work
 var importWorkNodeId=this.componentContent.importWorkNodeId;var importWorkComponentId=this.componentContent.importWorkComponentId;if(importWorkNodeId!=null&&importWorkComponentId!=null){// import the work from the other component
-this.importWork();}else{/* 
+this.importWork();}else{/*
                      * trials are enabled so we will create an empty trial
                      * since there is no student work
                      */this.newTrial();}}else{// populate the student work into this component
@@ -87,7 +87,7 @@ if(componentState!=null){/*
                          */componentState=this.UtilService.makeCopyOfJSONObject(componentState);// get the student data
 var studentData=componentState.studentData;// parse the latest trial and set it into the component
 this.parseLatestTrial(studentData);/*
-                         * notify the controller that the student data has 
+                         * notify the controller that the student data has
                          * changed so that it will perform any necessary saving
                          */this.studentDataChanged();}}}}.bind(this);/**
          * Get the component state from this component. The parent node will
@@ -140,7 +140,7 @@ this.height=this.componentContent.height;}/*
          * event for the graph
          */var thisGraphController=this;// get all the series from the student data
 var series=this.getSeries();if(this.componentContent.enableTrials){/*
-             * trials are enabled so we will show the ones the student 
+             * trials are enabled so we will show the ones the student
              * has checked
              */series=[];var trials=this.trials;// loop through all the trials
 for(var t=0;t<trials.length;t++){var trial=trials[t];if(trial!=null){if(trial.show){/*
@@ -175,7 +175,7 @@ this.clearSeriesIds(allSeries);// give all series ids
 this.setSeriesIds(allSeries);/*
          * update the min and max x and y values if necessary so that all
          * points are visible
-         */this.updateMinMaxAxisValues(allSeries,xAxis,yAxis);this.chartConfig={options:{tooltip:{formatter:function formatter(){/*
+         */this.updateMinMaxAxisValues(allSeries,xAxis,yAxis);var timeout=this.$timeout;this.chartConfig={options:{tooltip:{formatter:function formatter(){/*
                          * When the user mouseovers a point, display a tooltip that looks like
                          *
                          * x: 10
@@ -216,7 +216,7 @@ var target=e.target;if(target!=null){/*
 var index=target.index;// get the series data
 var data=activeSeries.data;if(data!=null){// update the point
 data[index]=[x,y];// tell the controller the student data has changed
-thisGraphController.studentDataChanged();}}}}}}}}}},series:allSeries,title:{text:title},xAxis:xAxis,yAxis:yAxis,loading:false};}},{key:'addPointToSeries0',/**
+thisGraphController.studentDataChanged();}}}}}}}}}},series:allSeries,title:{text:title},xAxis:xAxis,yAxis:yAxis,loading:false,func:function func(chart){timeout(function(){chart.reflow();},1000);}};}},{key:'addPointToSeries0',/**
      * Add a point to a series. The point will be inserted into the series
      * in the appropriate position that will keep the series data sorted.
      * @param series the series
@@ -281,7 +281,7 @@ data.splice(index,1);/*
 tempSeries.point=point;}}}}}},{key:'canEdit',/**
      * Check whether the student is allowed to edit a given series
      * @param series the series to check
-     * @return whether the series can edit the series
+     * @return whether the student can edit the series
      */value:function canEdit(series){var result=false;if(series!=null&&series.canEdit){result=true;}return result;}},{key:'setSeries',/**
      * Set all the series
      * @param series an array of series
@@ -315,9 +315,18 @@ index=t;break;}}}return index;}/**
      */},{key:'setActiveTrialByIndex',value:function setActiveTrialByIndex(index){if(index!=null){// get the trial
 var trial=this.trials[index];if(trial!=null){// make the trial the active trial
 this.activeTrial=trial;}}}/**
+     * Check whether the student is allowed to edit a given trial
+     * @param trial the trial object to check
+     * @return boolean whether the student can edit the trial
+     */},{key:'canEditTrial',value:function canEditTrial(trial){var result=false;var series=trial.series;for(var i=0;i<series.length;i++){var currentSeries=series[i];if(currentSeries.canEdit){// at least one series in this trial is editable
+result=true;break;}}return result;}},{key:'showActiveTrialSelect',/**
+     * Set whether to show the active trial select menu
+     * @return whether to show the active trial select menu
+     */value:function showActiveTrialSelect(){var result=false;var editableTrials=0;for(var i=0;i<this.trials.length;i++){var trial=this.trials[i];if(this.canEditTrial(trial)){editableTrials++;if(editableTrials>1){// there are more than one editable trials, so show the menu
+result=true;break;}}}return result;}},{key:'setXAxis',/**
      * Set the xAxis object
      * @param xAxis the xAxis object that can be used to render the graph
-     */},{key:'setXAxis',value:function setXAxis(xAxis){this.xAxis=this.UtilService.makeCopyOfJSONObject(xAxis);}},{key:'getXAxis',/**
+     */value:function setXAxis(xAxis){this.xAxis=this.UtilService.makeCopyOfJSONObject(xAxis);}},{key:'getXAxis',/**
      * Get the xAxis object
      * @return the xAxis object that can be used to render the graph
      */value:function getXAxis(){return this.xAxis;}},{key:'setYAxis',/**
@@ -373,7 +382,7 @@ var activeTrialIndex=studentData.activeTrialIndex;if(activeTrialIndex==null){/*
 this.setActiveTrialByIndex(studentData.trials.length-1);}}else{// there is an active trial index
 this.setActiveTrialByIndex(activeTrialIndex);}if(this.activeTrial!=null&&this.activeTrial.series!=null){// set the active trial series to be the series to display
 this.series=this.activeTrial.series;}// redraw the graph
-this.setupGraph();}}this.setXAxis(studentData.xAxis);this.setYAxis(studentData.yAxis);this.setActiveSeriesByIndex(studentData.activeSeriesIndex);this.processLatestSubmit();}}}},{key:'processLatestSubmit',/**
+this.setupGraph();}}this.setTrialIdsToShow();this.setXAxis(studentData.xAxis);this.setYAxis(studentData.yAxis);this.setActiveSeriesByIndex(studentData.activeSeriesIndex);this.processLatestSubmit();}}}},{key:'processLatestSubmit',/**
      * Check if latest component state is a submission and set isSubmitDirty accordingly
      */value:function processLatestSubmit(){var latestState=this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId,this.componentId);if(latestState){var serverSaveTime=latestState.serverSaveTime;var clientSaveTime=this.ConfigService.convertToClientTimestamp(serverSaveTime);if(latestState.isSubmit){// latest state is a submission, so set isSubmitDirty to false and notify node
 this.isSubmitDirty=false;this.$scope.$emit('componentSubmitDirty',{componentId:this.componentId,isDirty:false});// set save message
@@ -421,7 +430,7 @@ var componentState=this.NodeService.createNewComponentState();if(componentState!
 studentData.series=this.UtilService.makeCopyOfJSONObject(this.getSeries());}else{if(this.trials!=null){// make a copy of the trials
 studentData.trials=this.UtilService.makeCopyOfJSONObject(this.trials);// remember which trial is being shown
 var activeTrialIndex=this.getTrialIndex(this.activeTrial);studentData.activeTrialIndex=activeTrialIndex;}}/*
-            
+
             // remove high-charts assigned id's from each series before saving
             for (var s = 0; s < studentData.series.length; s++) {
                 var series = studentData.series[s];
@@ -601,20 +610,24 @@ for(var i=0;i<indexes.length;i++){index=indexes[i];if(data!=null){data.splice(in
      */value:function getComponentId(){return this.componentContent.id;}},{key:'authoringViewComponentChanged',/**
      * The component has changed in the regular authoring view so we will save the project
      */value:function authoringViewComponentChanged(){// update the JSON string in the advanced authoring view textarea
-this.updateAdvancedAuthoringView();}},{key:'updateAdvancedAuthoringView',/**
-     * Update the component JSON string that will be displayed in the advanced authoring view textarea
-     */value:function updateAdvancedAuthoringView(){this.authoringComponentContentJSONString=angular.toJson(this.authoringComponentContent,4);this.advancedAuthoringViewComponentChanged();}},{key:'advancedAuthoringViewComponentChanged',/**
+this.updateAdvancedAuthoringView();/*
+         * notify the parent node that the content has changed which will save
+         * the project to the server
+         */this.$scope.$parent.nodeAuthoringController.authoringViewNodeChanged();}},{key:'advancedAuthoringViewComponentChanged',/**
      * The component has changed in the advanced authoring view so we will update
      * the component and save the project.
      */value:function advancedAuthoringViewComponentChanged(){try{/*
              * create a new component by converting the JSON string in the advanced
              * authoring view into a JSON object
              */var authoringComponentContent=angular.fromJson(this.authoringComponentContentJSONString);// replace the component in the project
-this.ProjectService.replaceComponent(this.nodeId,this.componentId,authoringComponentContent);// set the new component into the controller
+this.ProjectService.replaceComponent(this.nodeId,this.componentId,authoringComponentContent);// set the new authoring component content
+this.authoringComponentContent=authoringComponentContent;// set the new component into the controller
 this.componentContent=authoringComponentContent;/*
              * notify the parent node that the content has changed which will save
              * the project to the server
-             */this.$scope.$parent.nodeAuthoringController.authoringViewNodeChanged();}catch(e){}}},{key:'authoringShowPreviousWorkNodeIdChanged',/**
+             */this.$scope.$parent.nodeAuthoringController.authoringViewNodeChanged();}catch(e){}}},{key:'updateAdvancedAuthoringView',/**
+     * Update the component JSON string that will be displayed in the advanced authoring view textarea
+     */value:function updateAdvancedAuthoringView(){this.authoringComponentContentJSONString=angular.toJson(this.authoringComponentContent,4);}},{key:'authoringShowPreviousWorkNodeIdChanged',/**
      * The show previous work node id has changed
      */value:function authoringShowPreviousWorkNodeIdChanged(){if(this.authoringComponentContent.showPreviousWorkNodeId==null||this.authoringComponentContent.showPreviousWorkNodeId==''){/*
              * the show previous work node id is null so we will also set the
@@ -693,21 +706,22 @@ var match=trialNameRegex.exec(tempTrialName);if(match!=null&&match.length>0){// 
                          * the trial number is 2
                          */trialNumbers.push(parseInt(tempTrialNumber));}}}}// sort the trial numbers from smallest to largest
 trialNumbers.sort();var maxTrialNumber=0;if(trialNumbers.length>0){// get the highest trial number
-maxTrialNumber=trialNumbers[trialNumbers.length-1];}if(!this.componentContent.showAllTrialsOnNewTrial){// we only want to show the latest trial
+maxTrialNumber=trialNumbers[trialNumbers.length-1];}if(this.componentContent.hideAllTrialsOnNewTrial){// we only want to show the latest trial
 // loop through all the existing trials and hide them
 for(var t=0;t<this.trials.length;t++){var tempTrial=this.trials[t];if(tempTrial!=null){tempTrial.show=false;}}}// make a new trial with a trial number one larger than the existing max
-var trial={};trial.name='Trial '+(maxTrialNumber+1);trial.series=series;trial.show=true;// add the trial to the array of trials
+var trial={};trial.name='Trial '+(maxTrialNumber+1);trial.series=series;trial.show=true;trial.id=this.UtilService.generateKey(10);// add the trial to the array of trials
 this.trials.push(trial);// set the new trial to be the active trial
 this.activeTrial=trial;// set the series to be displayed
 this.series=series;var activeSeriesIndex=0;if(this.activeSeries!=null){// get the index of the active series
-activeSeriesIndex=this.getSeriesIndex(this.activeSeries);}this.setActiveSeriesByIndex(activeSeriesIndex);// redraw the graph
+activeSeriesIndex=this.getSeriesIndex(this.activeSeries);}this.setActiveSeriesByIndex(activeSeriesIndex);this.setTrialIdsToShow();// redraw the graph
 this.setupGraph();/*
-         * notify the controller that the student data has 
+         * notify the controller that the student data has
          * changed so that it will perform any necessary saving
          */this.studentDataChanged();// tell the parent node that this component wants to save
 //this.$scope.$emit('componentSaveTriggered', {nodeId: this.nodeId, componentId: this.componentId});
 }/**
      * Delete a trial
+     * @param trialIndex the index (in the trials array) of the trial to delete
      */},{key:'deleteTrial',value:function deleteTrial(trialIndex){/*
          * get the index of the active trial which will be the trial we are
          * going to delete
@@ -720,8 +734,8 @@ if(trialIndex>this.trials.length-1){/*
                      * the trial index is higher than any available index
                      * in the trials array so we will just use the last index
                      */this.activeTrial=this.trials[this.trials.length-1];this.activeTrialChanged(this.trials.length-1);}else{// make the next highest trial the active trial
-this.activeTrial=this.trials[trialIndex];this.activeTrialChanged(trialIndex);}}}/*
-         * notify the controller that the student data has 
+this.activeTrial=this.trials[trialIndex];this.activeTrialChanged(trialIndex);}}this.setTrialIdsToShow();}/*
+         * notify the controller that the student data has
          * changed so that it will perform any necessary saving
          */this.studentDataChanged();// tell the parent node that this component wants to save
 //this.$scope.$emit('componentSaveTriggered', {nodeId: this.nodeId, componentId: this.componentId});
@@ -736,14 +750,29 @@ this.series=series;/*
              * is the same as before.
              */this.setActiveSeriesByIndex(activeSeriesIndex);// redraw the graph
 this.setupGraph();}/*
-         * notify the controller that the student data has 
+         * notify the controller that the student data has
          * changed so that it will perform any necessary saving
          */this.studentDataChanged();// tell the parent node that this component wants to save
 //this.$scope.$emit('componentSaveTriggered', {nodeId: this.nodeId, componentId: this.componentId});
 }/**
+     * The student has selected different trials to view
+     */},{key:'trialIdsToShowChanged',value:function trialIdsToShowChanged(){// get the trial indexes to show
+var trialIdsToShow=this.trialIdsToShow;var trials=this.trials;// update the trials
+for(var i=0;i<trials.length;i++){var trial=trials[i];var id=trial.id;if(trialIdsToShow.indexOf(id)>-1){trial.show=true;}else{trial.show=false;}}// hack: for some reason, the ids to show model gets out of sync when deleting a trial, for example
+// TODO: figure out why this check is sometimes necessary and remove
+for(var a=0;a<trialIdsToShow.length;a++){var idToShow=trialIdsToShow[a];if(!this.getTrialById(idToShow)){trialIdsToShow.splice(a,1);}this.trialIdsToShow=trialIdsToShow;}/*
+         * notify the controller that the student data has
+         * changed so that it will perform any necessary saving
+         */this.studentDataChanged();// update the selected trial text
+this.selectedTrialsText=this.getSelectedTrialsText();}},{key:'setTrialIdsToShow',/**
+     * Set which trials are selected in the trial select model
+     */value:function setTrialIdsToShow(){var idsToShow=[];var trials=this.trials;for(var i=0;i<trials.length;i++){var trial=trials[i];if(trial.show){// trial is visible on graph, so add it to the ids to show model
+var id=trial.id;idsToShow.push(id);}}this.trialIdsToShow=idsToShow;}},{key:'getSelectedTrialsText',/**
+     * Get the text to show in the trials select dropdown
+     */value:function getSelectedTrialsText(){if(this.trialIdsToShow.length===1){var id=this.trialIdsToShow[0];var name=this.getTrialById(id).name;return name;}else if(this.trialIdsToShow.length>1){return this.trialIdsToShow.length+" trials shown";}else{return"Select trials to show";}}},{key:'parseTrials0',/**
      * Parse the trials and set it into the component
      * @param studentData the student data object that has a trials field
-     */},{key:'parseTrials0',value:function parseTrials0(studentData){if(studentData!=null){// get the trials
+     */value:function parseTrials0(studentData){if(studentData!=null){// get the trials
 var trials=studentData.trials;if(trials!=null){this.trials=[];// loop through all the trials in the student data
 for(var t=0;t<trials.length;t++){var tempTrial=trials[t];if(tempTrial!=null){// create a trial object
 var newTrial={};if(tempTrial.name!=null){// set the trial name
@@ -767,16 +796,16 @@ latestStudentDataTrial=studentData.trials[studentData.trials.length-1];}if(lates
                  * will be a blank trial.
                  */if(this.trials.length>0){// get the first trial
 var firstTrial=this.trials[0];if(firstTrial!=null){/*
-                         * check if the trial has an id. if the trial doesn't
-                         * have an id it means it was automatically created by
+                         * check if the trial has any series. if the trial doesn't
+                         * have any series it means it was automatically created by
                          * the component.
-                         */if(firstTrial.id==null){// delete the first trial
+                         */if(!firstTrial.series.length){// delete the first trial
 this.trials.shift();}}}// get the latest student data trial id
 var latestStudentDataTrialId=latestStudentDataTrial.id;// get the trial with the given trial id
-var latestTrial=this.getTrialById(latestStudentDataTrialId);if(latestTrial==null){/* 
+var latestTrial=this.getTrialById(latestStudentDataTrialId);if(latestTrial==null){/*
                      * we did not find a trial with the given id which means
                      * this is a new trial
-                     */if(!this.componentContent.showAllTrialsOnNewTrial){// we only show the latest trial when a new trial starts
+                     */if(this.componentContent.hideAllTrialsOnNewTrial){// we only show the latest trial when a new trial starts
 // loop through all the existing trials and hide them
 for(var t=0;t<this.trials.length;t++){var tempTrial=this.trials[t];if(tempTrial!=null){tempTrial.show=false;}}}// create the new trial
 latestTrial={};latestTrial.id=latestStudentDataTrialId;latestTrial.show=true;this.setXAxis(this.componentContent.xAxis);this.setYAxis(this.componentContent.yAxis);// add the trial to the array of trials
@@ -788,7 +817,7 @@ var singleSeries=tempSeries[s];if(singleSeries!=null){// get the series name and
 var seriesName=singleSeries.name;var seriesData=singleSeries.data;var seriesColor=singleSeries.color;// make a series object
 var newSeries={};newSeries.name=seriesName;newSeries.data=seriesData;newSeries.color=seriesColor;newSeries.canEdit=false;newSeries.allowPointSelect=false;// add the series to the trial
 latestTrial.series.push(newSeries);}}}}}if(this.trials.length>0){// make the last trial the active trial
-this.activeTrial=this.trials[this.trials.length-1];this.activeTrial.show=true;}// redraw the graph so that the active trial gets displayed
+this.activeTrial=this.trials[this.trials.length-1];this.activeTrial.show=true;}this.setTrialIdsToShow();// redraw the graph so that the active trial gets displayed
 this.activeTrialChanged();}}/**
      * Get the trial by id
      * @param id the trial id
@@ -865,7 +894,7 @@ tempSeries.id=null;}}}}/**
      * The "Enable Trials" checkbox was clicked
      */},{key:'authoringViewEnableTrialsClicked',value:function authoringViewEnableTrialsClicked(){if(this.authoringComponentContent.enableTrials){// trials are now enabled
 this.authoringComponentContent.canCreateNewTrials=true;this.authoringComponentContent.canDeleteTrials=true;}else{// trials are now disabled
-this.authoringComponentContent.canCreateNewTrials=false;this.authoringComponentContent.canDeleteTrials=false;this.authoringComponentContent.showAllTrialsOnNewTrial=false;}this.authoringViewComponentChanged();}/**
+this.authoringComponentContent.canCreateNewTrials=false;this.authoringComponentContent.canDeleteTrials=false;this.authoringComponentContent.hideAllTrialsOnNewTrial=false;}this.authoringViewComponentChanged();}/**
      * Check whether we need to show the snip drawing button
      * @return whether to show the snip drawing button
      */},{key:'showSnipDrawingButton',value:function showSnipDrawingButton(){if(this.NotebookService.isNotebookEnabled()&&this.isSnipDrawingButtonVisible){return true;}else{return false;}}/**
@@ -876,5 +905,5 @@ var highchartsDiv=angular.element('#'+this.chartId).find('.highcharts-container'
 (0,_html2canvas2.default)(highchartsDiv).then(function(canvas){// get the canvas as a base64 string
 var img_b64=canvas.toDataURL('image/png');// get the image object
 var imageObject=_this4.UtilService.getImageObjectFromBase64String(img_b64);// create a notebook item with the image populated into it
-_this4.NotebookService.addNewItem($event,imageObject);});}}}]);return GraphController;}();GraphController.$inject=['$q','$rootScope','$scope','ConfigService','GraphService','NodeService','NotebookService','ProjectService','StudentAssetService','StudentDataService','UtilService'];exports.default=GraphController;
+_this4.NotebookService.addNewItem($event,imageObject);});}}}]);return GraphController;}();GraphController.$inject=['$q','$rootScope','$scope','$timeout','ConfigService','GraphService','NodeService','NotebookService','ProjectService','StudentAssetService','StudentDataService','UtilService'];exports.default=GraphController;
 //# sourceMappingURL=graphController.js.map
