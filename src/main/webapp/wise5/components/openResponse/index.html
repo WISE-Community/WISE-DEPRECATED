@@ -59,16 +59,18 @@
                 <br/>
                 Show Save Button:
                 <input type='checkbox'
-                       ng-model='openResponseController.authoringComponentContent.showSaveButton'/>
+                       ng-model='openResponseController.authoringComponentContent.showSaveButton'
+                       ng-change='openResponseController.authoringViewComponentChanged()'/>
                 <br/>
                 Show Submit Button:
                 <input type='checkbox'
-                       ng-model='openResponseController.authoringComponentContent.showSubmitButton'/>
+                       ng-model='openResponseController.authoringComponentContent.showSubmitButton'
+                       ng-change='openResponseController.authoringViewComponentChanged()'/>
                 <br/>
                 Enable CRater:
                 <input type='checkbox'
                        ng-model='openResponseController.authoringComponentContent.enableCRater'
-                       ng-change='openResponseController.authoringViewComponentChanged()'/>
+                       ng-change='openResponseController.authoringViewEnableCRaterClicked()'/>
                 <div ng-show='openResponseController.authoringComponentContent.enableCRater'>
                     Type: 
                     <input type='radio'
@@ -101,10 +103,12 @@
                            ng-change='openResponseController.authoringViewComponentChanged()'/> Change
                     <br/>
                     <input type='checkbox'
-                           ng-model='openResponseController.authoringComponentContent.cRater.showScore'/> Show Score
+                           ng-model='openResponseController.authoringComponentContent.cRater.showScore'
+                           ng-change='openResponseController.authoringViewComponentChanged()'/> Show Score
                     <br/>
                     <input type='checkbox'
-                           ng-model='openResponseController.authoringComponentContent.cRater.showFeedback'/> Show Feedback
+                           ng-model='openResponseController.authoringComponentContent.cRater.showFeedback'
+                           ng-change='openResponseController.authoringViewComponentChanged()'/> Show Feedback
                     <br/>
                     <button ng-click='openResponseController.authoringAddScoringRule()'>Add Scoring Rule</button>
                     <div ng-repeat='scoringRule in openResponseController.authoringComponentContent.cRater.scoringRules'>
@@ -128,7 +132,8 @@
                     <br/>
                     Enable Multiple Attempt Feedback
                     <input type='checkbox'
-                           ng-model='openResponseController.authoringComponentContent.cRater.enableMultipleAttemptScoringRules'/>
+                           ng-model='openResponseController.authoringComponentContent.cRater.enableMultipleAttemptScoringRules'
+                           ng-click='openResponseController.enableMultipleAttemptScoringRulesClicked()'/>
                     <br/>
                     <button ng-click='openResponseController.authoringAddMultipleAttemptScoringRule()'
                             ng-show='openResponseController.authoringComponentContent.cRater.enableMultipleAttemptScoringRules'>

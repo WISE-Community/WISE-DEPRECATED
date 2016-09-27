@@ -1428,6 +1428,69 @@ class OpenResponseController {
             }
         }
     }
+    
+    /**
+     * The "Enable CRater" checkbox was clicked
+     */
+    authoringViewEnableCRaterClicked() {
+        
+        if (this.authoringComponentContent.enableCRater) {
+            // CRater was turned on
+            
+            if (this.authoringComponentContent.cRater == null) {
+                /*
+                 * the cRater object does not exist in the component content
+                 * so we will create it
+                 */
+                
+                // create the cRater object
+                var cRater = {};
+                cRater.itemType = "CRATER";
+                cRater.itemId = "";
+                cRater.scoreOn = "submit";
+                cRater.showScore = true;
+                cRater.showFeedback = true;
+                cRater.scoringRules = [];
+                cRater.enableMultipleAttemptScoringRules = false;
+                cRater.multipleAttemptScoringRules = []
+                
+                // set the cRater object into the component content
+                this.authoringComponentContent.cRater = cRater;
+            }
+            
+            // turn on the submit button
+            this.authoringComponentContent.showSubmitButton = true;
+        }
+        
+        /*
+         * the author has made changes so we will save the component
+         * content
+         */
+        this.authoringViewComponentChanged();
+    }
+    
+    /**
+     * The "Enable Multiple Attempt Feedback" checkbox was clicked
+     */
+    enableMultipleAttemptScoringRulesClicked() {
+        
+        // get the cRater object from the component content
+        var cRater = this.authoringComponentContent.cRater;
+        
+        if (cRater != null && cRater.multipleAttemptScoringRules == null) {
+            /*
+             * the multiple attempt scoring rules array does not exist so
+             * we will create it
+             */
+            cRater.multipleAttemptScoringRules = [];
+        }
+        
+        /*
+         * the author has made changes so we will save the component
+         * content
+         */
+        this.authoringViewComponentChanged();
+    }
 };
 
 OpenResponseController.$inject = [
