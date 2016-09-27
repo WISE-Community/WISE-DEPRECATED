@@ -182,10 +182,10 @@
             <div class="component__actions">
                 <md-select ng-model="graphController.activeSeries"
                            ng-change='graphController.activeSeriesChanged()'
+                           ng-if="graphController.showSelectSeries()"
                            class="graph-select">
                     <md-option ng-repeat="series in graphController.series"
-                               ng-value="series"
-                               ng-if="graphController.showSelectSeries()">
+                               ng-value="series">
                         {{series.name}}
                     </md-option>
                 </md-select>
