@@ -14,18 +14,21 @@ describe('WISE5 Student VLE Preview', function () {
     var nextButton = element(by.xpath('//button[@aria-label="Next Item"]'));
     var closeButton = element(by.xpath('//button[@aria-label="Go to project plan"]'));
     var accountButton = element(by.xpath('//button[@aria-label="Open user menu"]'));
-    var accountMenu = element.all(by.css('._md-open-menu-container')).get(1);
+    var accountMenu = element(by.cssContainingText('.md-open-menu-container', 'Preview Team'));
+    var notificationButton = element(by.xpath('//button[@aria-label="View notifications"]'));
+    var notificationMenu = element(by.cssContainingText('.md-open-menu-container', 'Alerts'));
 
     it('should load the vle and go to node 1', function () {
         var nodeDropDownMenu = element(by.model("stepToolsCtrl.toNodeId"));
         browser.wait(nodeDropDownMenu.isPresent(), 5000); // give it at most 5 seconds to load.
         expect(browser.getTitle()).toEqual('WISE');
-        expect(nodeDropDownMenu.getText()).toBe('1.1: Introduction to Newton Scooters');
+        expect(nodeDropDownMenu.getText()).toBe('1.1: HTML Step');
     });
 
     it('should have UI elements on the page', function () {
         // Check that previous, next, close, and account buttons are on the page and have the right md-icons
         expect(previousButton.getText()).toBe('arrow_back');
+        expect(nextButton.getText()).toBe('arrow_forward');
         expect(nextButton.getText()).toBe('arrow_forward');
         expect(closeButton.getText()).toBe('home');
         expect(accountButton.getText()).toBe('account_circle');
@@ -34,8 +37,9 @@ describe('WISE5 Student VLE Preview', function () {
 
     it('should show step content on the page', function () {
         // Check that the html content is displayed on the page
-        var nodeContent = element(by.cssContainingText('.node-content', 'Why Study Newton Scooters?'));
+        var nodeContent = element(by.cssContainingText('.node-content', 'This is a step where authors can enter their own html.'));
         expect(nodeContent.isPresent()).toBeTruthy();
+        expect(previousButton.getAttribute("disabled")).toBe("true"); // the previous button should be disabled on the first step.
     });
 
     it('should navigate next and previous steps using the buttons', function () {
@@ -43,32 +47,34 @@ describe('WISE5 Student VLE Preview', function () {
         // Click on the next button and expect to go to the next step
         nextButton.click();
         expect(browser.getCurrentUrl()).toEqual('http://localhost:8080/wise/project/demo#/vle/node2');
-        expect(element(by.model("stepToolsCtrl.toNodeId")).getText()).toBe('1.2: Initial Ideas');
+        expect(element(by.model("stepToolsCtrl.toNodeId")).getText()).toBe('1.2: Open Response Step');
+        expect(previousButton.getAttribute("disabled")).toBe(null); // the previous button should be enabled on the second step.
 
-        var nodeContent = element(by.cssContainingText('.node-content', 'Watch a video of a rubber band car!'));
+
+        var nodeContent = element(by.cssContainingText('.node-content', 'This is a step where students enter text.'));
         expect(nodeContent.isPresent()).toBeTruthy();
 
         nextButton.click();
         expect(browser.getCurrentUrl()).toEqual('http://localhost:8080/wise/project/demo#/vle/node3');
-        expect(element(by.model("stepToolsCtrl.toNodeId")).getText()).toBe('2.1: Newton Scooter Concepts');
+        expect(element(by.model("stepToolsCtrl.toNodeId")).getText()).toBe('1.3: Open Response Step Auto Graded');
 
-        nodeContent = element(by.cssContainingText('.node-content', 'When you test your scooter'));
+        nodeContent = element(by.cssContainingText('.node-content', 'Explain how the sun helps animals survive.'));
         expect(nodeContent.isPresent()).toBeTruthy();
 
         // Click on the previous button and expect to go back to the previous step
         previousButton.click();
         expect(browser.getCurrentUrl()).toEqual('http://localhost:8080/wise/project/demo#/vle/node2');
-        expect(element(by.model("stepToolsCtrl.toNodeId")).getText()).toBe('1.2: Initial Ideas');
+        expect(element(by.model("stepToolsCtrl.toNodeId")).getText()).toBe('1.2: Open Response Step');
     });
 
     it('should allow user to jump to a step using the navigation drop-down menu', function () {
         var stepSelectMenu = $("#stepSelectMenu");
         stepSelectMenu.click();
         element.all(by.repeater("item in stepToolsCtrl.idToOrder | toArray | orderBy : 'order'")).then(function (stepSelectOptions) {
-            expect(stepSelectOptions[1].element(by.css('.node-select__text')).getText()).toBe("1.1: Introduction to Newton Scooters");
-            expect(stepSelectOptions[7].element(by.css('.node-select__text')).getText()).toBe("2.4: What is potential energy?");
-            stepSelectOptions[7].element(by.css('.node-select__text')).click(); // Click on step 2.4 in the step select menu
-            expect(browser.getCurrentUrl()).toEqual('http://localhost:8080/wise/project/demo#/vle/node6');
+            expect(stepSelectOptions[1].element(by.css('.node-select__text')).getText()).toBe("1.1: HTML Step");
+            expect(stepSelectOptions[7].element(by.css('.node-select__text')).getText()).toBe("1.7: Challenge Question Step");
+            stepSelectOptions[7].element(by.css('.node-select__text')).click(); // Click on step 1.7 in the step select menu
+            expect(browser.getCurrentUrl()).toEqual('http://localhost:8080/wise/project/demo#/vle/node7');
         });
     });
 
@@ -76,75 +82,75 @@ describe('WISE5 Student VLE Preview', function () {
         // Click on the close button and expect to go to the group view
         closeButton.click();
         browser.waitForAngular(); // wait for Angular to load
-        expect(browser.getCurrentUrl()).toEqual('http://localhost:8080/wise/project/demo#/vle/group2');
+        expect(browser.getCurrentUrl()).toEqual('http://localhost:8080/wise/project/demo#/vle/group1');
 
         element.all(by.repeater('id in navCtrl.rootNode.ids')).then(function (groupNavItems) {
             var activity1 = groupNavItems[0];
             var activity2 = groupNavItems[1];
-            var activity3 = groupNavItems[2];
 
-            expect(activity1.element(by.className('md-title')).getText()).toEqual('1: Introduction to Newton Scooters');
-            expect(activity2.element(by.className('md-title')).getText()).toEqual('2: Powering Your Newton Scooter');
-            expect(activity3.element(by.className('md-title')).getText()).toEqual('3: Planning Your Newton Scooter');
+            expect(activity1.element(by.className('md-title')).getText()).toEqual('1: Example Steps');
+            expect(activity2.element(by.className('md-title')).getText()).toEqual('2: Example Features');
 
-            // Click on activity 1 to expand it
-            expect(hasClass(activity1, 'expanded')).toBe(false);
-            activity1.element(by.className('nav-item--card__content')).click();
+            // Activity 1 should be expanded, Activity 2 should be collapsed
             expect(hasClass(activity1, 'expanded')).toBe(true);
+            expect(hasClass(activity2, 'expanded')).toBe(false);
             expect(browser.getCurrentUrl()).toEqual('http://localhost:8080/wise/project/demo#/vle/group1');
 
             // Check for completion icons for steps in Activity 1
             activity1.all(by.repeater('childId in navitemCtrl.item.ids')).then(function (stepNavItems) {
 
                 // step 1.1 should be completed because it's an HTML step and we visited it
-                expect(stepNavItems[0].getText()).toBe('chrome_reader_mode\n1.1: Introduction to Newton Scooters check_circle');
+                expect(stepNavItems[0].getText()).toBe('school\n1.1: HTML Step check_circle');
                 expect(stepNavItems[0].element(by.cssContainingText('.material-icons', 'check_circle')).isPresent()).toBeTruthy();
 
                 // step 1.2 should not be completed yet
-                expect(stepNavItems[1].getText()).toBe('assignment\n1.2: Initial Ideas');
+                expect(stepNavItems[1].getText()).toBe('school\n1.2: Open Response Step');
                 expect(stepNavItems[1].element(by.cssContainingText('.material-icons', 'check_circle')).isPresent()).toBeFalsy();
+
+                // step 1.7 node7 (the previous step we were on) should be highlighted because we came from it
+                expect(stepNavItems[6].getText()).toBe('school\n1.7: Challenge Question Step');
+                expect(hasClass(stepNavItems[6], 'prev')).toBe(true); // should have 'prev' class
+                expect(stepNavItems[6].element(by.cssContainingText('.material-icons', 'check_circle')).isPresent()).toBeFalsy();
             });
 
-            // Activity 2 should be expanded because we came to the group view from step 2.4
+            // Activity 2 should not be expanded yet, so expand it
+            activity2.element(by.className('nav-item--card__content')).click();
             expect(hasClass(activity2, 'expanded')).toBe(true);
+            expect(hasClass(activity1, 'expanded')).toBe(true); // activity 1 should also be expanded still
 
             // Check that steps in activity 2 displays the step title and icon
             activity2.all(by.repeater('childId in navitemCtrl.item.ids')).then(function (stepNavItems) {
-                // step 2.1 should be completed because it's an HTML step and we visited it
-                expect(stepNavItems[0].getText()).toBe('chrome_reader_mode\n2.1: Newton Scooter Concepts check_circle');
-                expect(stepNavItems[0].element(by.cssContainingText('.material-icons', 'check_circle')).isPresent()).toBeTruthy();
 
-                // step 2.4 node6 (the previous step we were on) should be highlighted because we came from it
-                expect(stepNavItems[3].getText()).toBe('assignment\n2.4: What is potential energy?');
-                expect(hasClass(stepNavItems[3], 'prev')).toBe(true); // should have 'prev' class
+                expect(stepNavItems[0].getText()).toBe('school\n2.1: Show Previous Work 1');
 
-                expect(stepNavItems[2].getText()).toBe('gamepad\n2.3: Explore the concepts');
+                expect(stepNavItems[1].getText()).toBe('school\n2.2: Show Previous Work 2');
+                expect(stepNavItems[2].getText()).toBe('school\n2.3: Import Work 1');
                 stepNavItems[2].element(by.tagName('button')).click(); // Go to step 2.3.
-                expect(browser.getCurrentUrl()).toEqual('http://localhost:8080/wise/project/demo#/vle/node5');
+                expect(browser.getCurrentUrl()).toEqual('http://localhost:8080/wise/project/demo#/vle/node22');
             });
         });
     });
 
     it('should allow user to jump to a step by changing the URL path', function () {
-        browser.get('http://localhost:8080/wise/project/demo#/vle/node24'); // User changes the URL
+        browser.get('http://localhost:8080/wise/project/demo#/vle/node11'); // User changes the URL
         var nodeDropDownMenu = element(by.model("stepToolsCtrl.toNodeId"));
         browser.wait(nodeDropDownMenu.isPresent(), 5000); // give it at most 5 seconds to load.
         expect(browser.getTitle()).toEqual('WISE');
-        expect(nodeDropDownMenu.getText()).toBe('3.4: Feature Selection');
+        expect(nodeDropDownMenu.getText()).toBe('1.11: Draw Step');
 
         // Click on the next button and expect to go to the next step
         nextButton.click();
-        expect(browser.getCurrentUrl()).toEqual('http://localhost:8080/wise/project/demo#/vle/node25');
-        expect(element(by.model("stepToolsCtrl.toNodeId")).getText()).toBe('4.1: Sketch Your Design');
+        expect(browser.getCurrentUrl()).toEqual('http://localhost:8080/wise/project/demo#/vle/node12');
+        expect(element(by.model("stepToolsCtrl.toNodeId")).getText()).toBe('1.12: Draw Step Auto Graded');
 
         nextButton.click();
-        expect(browser.getCurrentUrl()).toEqual('http://localhost:8080/wise/project/demo#/vle/node26');
-        expect(element(by.model("stepToolsCtrl.toNodeId")).getText()).toBe('4.2: Scooter Materials List');
+        expect(browser.getCurrentUrl()).toEqual('http://localhost:8080/wise/project/demo#/vle/node13');
+        expect(element(by.model("stepToolsCtrl.toNodeId")).getText()).toBe('1.13: Brainstorm Step');
 
         // Click on the previous button and expect to go back to the previous step
         previousButton.click();
-        expect(browser.getCurrentUrl()).toEqual('http://localhost:8080/wise/project/demo#/vle/node25');
-        expect(element(by.model("stepToolsCtrl.toNodeId")).getText()).toBe('4.1: Sketch Your Design');
+        expect(browser.getCurrentUrl()).toEqual('http://localhost:8080/wise/project/demo#/vle/node12');
+        expect(element(by.model("stepToolsCtrl.toNodeId")).getText()).toBe('1.12: Draw Step Auto Graded');
     });
 
     it('should allow preview user to view the account menu', function () {
@@ -173,6 +179,31 @@ describe('WISE5 Student VLE Preview', function () {
         // Clicking outside of the Account Menu should dismiss the Account Menu
         element(by.xpath('//body')).click();
         expect(accountMenu.getAttribute('aria-hidden')).toEqual("true"); // Account Menu should be hidden
+    });
+
+    it('should allow preview user to view the notification menu', function () {
+        notificationButton.click(); // Open the Notification Menu by clicking on the notification button
+        expect(notificationMenu.getAttribute('aria-hidden')).toEqual("false"); // Notification Menu should be displayed
+
+        // The notification menu should have the Alerts title and say that there are no alerts.
+        var notificationDialogTitle = element(by.xpath('//md-toolbar/span/span[@translate="notificationsTitle"]'));
+        expect(notificationDialogTitle.isDisplayed()).toBeTruthy();
+        expect(notificationDialogTitle.getText()).toEqual("Alerts");
+
+        var notificationDialogContent = element(by.xpath('//md-content/div/span[@translate="noAlerts"]'));
+        expect(notificationDialogContent.isDisplayed()).toBeTruthy();
+        expect(notificationDialogContent.getText()).toEqual("Hi there! You currently have no alerts.");
+
+        // Hitting the escape key should dismiss the notification menu
+        browser.actions().sendKeys(protractor.Key.ESCAPE).perform();
+        expect(notificationMenu.getAttribute('aria-hidden')).toEqual("true"); // Notification Menu should be hidden
+
+        notificationButton.click(); // Open the Notification Menu by clicking on the notification button
+        expect(notificationMenu.getAttribute('aria-hidden')).toEqual("false"); // Notification Menu should be displayed
+
+        // Clicking outside of the Notification Menu should dismiss the Notification Menu
+        element(by.xpath('//body')).click();
+        expect(notificationMenu.getAttribute('aria-hidden')).toEqual("true"); // Notification Menu should be hidden
     });
 });
 //# sourceMappingURL=previewVLE.spec.js.map
