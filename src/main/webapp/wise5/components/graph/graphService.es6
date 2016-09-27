@@ -720,7 +720,7 @@ class GraphService extends NodeService {
                     let state = componentStates[i];
                     if (state.isSubmit && state.studentData) {
                         // component state is a submission
-                        if (this.hasSeriesData(studentData)) {
+                        if (this.hasSeriesData(studentData) || this.hasTrialData(studentData)) {
                             // there is series data so the component is completed
                             result = true;
                             break;
@@ -735,7 +735,7 @@ class GraphService extends NodeService {
                 let studentData = componentState.studentData;
 
                 if (studentData) {
-                    if (this.hasSeriesData(studentData)) {
+                    if (this.hasSeriesData(studentData) || this.hasTrialData(studentData)) {
                         // there is series data so the component is completed
                         result = true;
                     }
@@ -747,9 +747,9 @@ class GraphService extends NodeService {
     };
 
     /**
-     * Check if student data contains any graph series with dataType
-     * @param studentData an object of student data from a component state
-     * @returns result boolean
+     * Check if student data contains any series data
+     * @param studentData student data from a component state
+     * @returns whether the student data has series data
      */
     hasSeriesData(studentData) {
         let result = false;
@@ -770,6 +770,52 @@ class GraphService extends NodeService {
 
         return result;
     };
+    
+    /**
+     * Check if the student data contains any trial data
+     * @param studentData student data from a component state
+     * @return whether the student data has trial data
+     */
+    hasTrialData(studentData) {
+        var result = false;
+        
+        if (studentData != null) {
+            var trials = studentData.trials;
+            
+            if (trials != null) {
+                
+                // loop through all the trials
+                for (var t = 0; t < trials.length; t++) {
+                    
+                    var trial = trials[t];
+                    
+                    if (trial != null) {
+                        var series = trial.series;
+                        
+                        // loop through all the series
+                        for (var s = 0; s < series.length; s++) {
+                            
+                            // get a single series
+                            var singleSeries = series[s];
+                            
+                            if (singleSeries != null) {
+                                
+                                // get the data from the single series
+                                var data = singleSeries.data;
+                                
+                                if (data != null && data.length > 0) {
+                                    // the single series has data
+                                    return true;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        return result;
+    }
 }
 
 GraphService.$inject = [
