@@ -57,19 +57,19 @@
                 <br/>
                 <div ng-show='graphController.authoringComponentContent.enableTrials'>
                     Can Student Create Trials <input type='checkbox'
-                                         ng-model='graphController.authoringComponentContent.canCreateNewTrials'
-                                         ng-show='graphController.authoringComponentContent.enableTrials'
-                                         ng-change='graphController.authoringViewComponentChanged()'/>
+                                                     ng-model='graphController.authoringComponentContent.canCreateNewTrials'
+                                                     ng-show='graphController.authoringComponentContent.enableTrials'
+                                                     ng-change='graphController.authoringViewComponentChanged()'/>
                     <br/>
                     Can Student Delete Trials <input type='checkbox'
-                                         ng-model='graphController.authoringComponentContent.canDeleteTrials'
-                                         ng-show='graphController.authoringComponentContent.enableTrials'
-                                         ng-change='graphController.authoringViewComponentChanged()'/>
+                                                     ng-model='graphController.authoringComponentContent.canDeleteTrials'
+                                                     ng-show='graphController.authoringComponentContent.enableTrials'
+                                                     ng-change='graphController.authoringViewComponentChanged()'/>
                     <br/>
-                    Show All Trials On New Trial <input type='checkbox'
-                                         ng-model='graphController.authoringComponentContent.showAllTrialsOnNewTrial'
-                                         ng-show='graphController.authoringComponentContent.enableTrials'
-                                         ng-change='graphController.authoringViewComponentChanged()'/>
+                    Hide Existing Trials On New Trial <input type='checkbox'
+                                                             ng-model='graphController.authoringComponentContent.hideAllTrialsOnNewTrial'
+                                                             ng-show='graphController.authoringComponentContent.enableTrials'
+                                                             ng-change='graphController.authoringViewComponentChanged()'/>
                 </div>
                 <br/>
                 Series
@@ -156,17 +156,7 @@
                         </md-option>
                     </md-select>
                 </md-input-container>
-                <md-button class="md-accent"
-                           ng-click='graphController.newTrial()'
-                           ng-show='graphController.componentContent.canCreateNewTrials'>
-                    <md-icon> add </md-icon> New Trial
-                </md-button>
-                <md-button class="md-accent"
-                           ng-click='graphController.resetGraph()'
-                           ng-show='graphController.showResetGraphButton()'>
-                    <md-icon> restore </md-icon> Reset Graph
-                </md-button>
-                <md-input-container ng-if='graphController.componentContent.enableTrials && graphController.showActiveTrialSelect()'>
+                <md-input-container ng-if="graphController.componentContent.enableTrials && graphController.showSelectActiveTrials()">
                     <label>Select trial to edit</label>
                     <md-select ng-model="graphController.activeTrial"
                                ng-change='graphController.activeTrialChanged()'
@@ -178,17 +168,17 @@
                         </md-option>
                     </md-select>
                 </md-input-container>
-            </div>
-            <div class="component__actions">
-                <md-select ng-model="graphController.activeSeries"
-                           ng-change='graphController.activeSeriesChanged()'
-                           ng-if="graphController.showSelectSeries()"
-                           class="graph-select">
-                    <md-option ng-repeat="series in graphController.series"
-                               ng-value="series">
-                        {{series.name}}
-                    </md-option>
-                </md-select>
+                <md-input-container ng-if="graphController.showSelectSeries()">
+                    <label>Select series to edit</label>
+                    <md-select ng-model="graphController.activeSeries"
+                               ng-change='graphController.activeSeriesChanged()'
+                               class="graph-select">
+                        <md-option ng-repeat="series in graphController.series"
+                                   ng-value="series">
+                            {{series.name}}
+                        </md-option>
+                    </md-select>
+                </md-input-container>
                 <md-button class="md-accent"
                            ng-click='graphController.resetSeries()'
                            ng-if='graphController.showResetSeriesButton() && graphController.activeSeries.canEdit'>
@@ -196,6 +186,16 @@
                 </md-button>
             </div>
             <div class="component__actions">
+                <md-button class="md-accent"
+                           ng-click='graphController.newTrial()'
+                           ng-show='graphController.componentContent.canCreateNewTrials'>
+                    <md-icon> add </md-icon> New Trial
+                </md-button>
+                <md-button class="md-accent"
+                           ng-click='graphController.resetGraph()'
+                           ng-show='graphController.showResetGraphButton()'>
+                    <md-icon> restore </md-icon> Reset Graph
+                </md-button>
                 <md-button class="md-accent md-primary"
                         ng-click='graphController.snipDrawing($event)'
                         ng-if='graphController.showSnipDrawingButton()'>

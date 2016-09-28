@@ -1,4 +1,4 @@
-<div ng-show="projectController.$state.current.name == 'root.project'">  <!-- show this only when we're in the project view -->
+<div style="padding:0px 5px" ng-show="projectController.$state.current.name == 'root.project'">  <!-- show this only when we're in the project view -->
     <style>
         #commitDiv {
             padding: 10px 0px;
@@ -24,8 +24,12 @@
                 ng-disabled="projectController.insertGroupMode || projectController.insertNodeMode"></button>
         <button id="manageAssetsButton" ng-click='projectController.viewProjectAssets()' translate="manageAssets"
                 ng-disabled="projectController.insertGroupMode || projectController.insertNodeMode"></button>
+        <button id="editNotebookSettingsButton" ng-click='projectController.viewNotebookSettings()' translate="notebook"
+                ng-disabled="projectController.insertGroupMode || projectController.insertNodeMode"></button>
+        <!-- commented out history button until we can make good use out of this some day.
         <button id="viewHistoryButton" ng-click='projectController.viewProjectHistory()' translate="viewHistory"
                 ng-disabled="projectController.insertGroupMode || projectController.insertNodeMode"></button>
+                -->
     </div>
     <div id="commitDiv" style="display:none">
         <label id="editMessageLabel">Edit Message:</label>

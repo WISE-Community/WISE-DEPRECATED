@@ -40,14 +40,56 @@ var AuthoringToolNewProjectController = function () {
             }],
             "constraints": [],
             "startGroupId": "group0",
-            "startNodeId": "node1",
+            "startNodeId": "group0",
             "navigationMode": "guided",
             "layout": {
                 "template": "starmap|leftNav|rightNav"
             },
             "metadata": {
                 "title": "My New Project!"
-            }
+            },
+            "notebook": {
+                "enabled": false,
+                "label": "Notebook",
+                "itemTypes": {
+                    "note": {
+                        "enabled": true,
+                        "enableAddNote": true,
+                        "enableClipping": true,
+                        "enableStudentUploads": true,
+                        "label": {
+                            "singular": "note",
+                            "plural": "notes",
+                            "link": "Notes"
+                        }
+                    },
+                    "question": {
+                        "enabled": false,
+                        "label": {
+                            "singular": "question",
+                            "plural": "questions",
+                            "link": "Questions"
+                        }
+                    },
+                    "report": {
+                        "enabled": false,
+                        "label": {
+                            "singular": "report",
+                            "plural": "reports",
+                            "link": "Report"
+                        },
+                        "notes": [{
+                            "reportId": "finalReport",
+                            "title": "Final Report",
+                            "description": "Final summary report of what you learned in this project",
+                            "prompt": "Use this space to write your final report using evidence from your notebook.",
+                            "content": "<h3>This is a heading</h3><p>This is a paragraph.</p>"
+                        }]
+                    }
+                }
+            },
+            "inactiveGroups": [],
+            "inactiveNodes": []
         };
 
         this.project = this.newProjectTemplate1;

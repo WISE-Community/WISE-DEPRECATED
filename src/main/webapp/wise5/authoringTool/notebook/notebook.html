@@ -1,0 +1,31 @@
+<button id="closeNotebookSettingsButton" style="float:right" ng-click='authorNotebookController.exit()' translate="save"></button>
+
+<h4>Notebook Settings</h4>
+
+<input id="enableNotebookCheckbox" type="checkbox" ng-model="authorNotebookController.project.notebook.enabled"/>Enable Notebook
+
+<ul ng-show="authorNotebookController.project.notebook.enabled">
+    <li>Notebook label: <input ng-model="authorNotebookController.project.notebook.label" /></li>
+    <li><input type="checkbox" ng-model="authorNotebookController.project.notebook.itemTypes.note.enabled"/>Enable Note Item Type</li>
+    <ul id="notebookNoteItemType" ng-show="authorNotebookController.project.notebook.itemTypes.note.enabled">
+        <li>Label (singular)<input ng-model="authorNotebookController.project.notebook.itemTypes.note.label.singular" /></li>
+        <li>Label (plural)<input ng-model="authorNotebookController.project.notebook.itemTypes.note.label.plural" /></li>
+        <li>Label (link)<input ng-model="authorNotebookController.project.notebook.itemTypes.note.label.link" /></li>
+        <li><input type="checkbox" ng-model="authorNotebookController.project.notebook.itemTypes.note.enableAddNote"/>Enable Add Note</li>
+        <li><input type="checkbox" ng-model="authorNotebookController.project.notebook.itemTypes.note.enableClipping"/>Enable Clipping</li>
+        <li><input type="checkbox" ng-model="authorNotebookController.project.notebook.itemTypes.note.enableStudentUploads"/>Enable Student Uploads</li>
+    </ul>
+    <li><input type="checkbox" ng-model="authorNotebookController.project.notebook.itemTypes.report.enabled"/>Enable Report Item Type</li>
+    <ul id="notebookReportItemType" ng-show="authorNotebookController.project.notebook.itemTypes.report.enabled">
+        <li>Label (singular)<input ng-model="authorNotebookController.project.notebook.itemTypes.report.label.singular" /></li>
+        <li>Label (plural)<input ng-model="authorNotebookController.project.notebook.itemTypes.report.label.plural" /></li>
+        <li>Label (link)<input ng-model="authorNotebookController.project.notebook.itemTypes.report.label.link" /></li>
+        <li>Report Notes</li>
+        <ul ng-repeat="reportNote in authorNotebookController.project.notebook.itemTypes.report.notes">
+            <li>Title <input ng-model="reportNote.title" /></li>
+            <li>Description <textarea rows="5" cols="50" ng-model="reportNote.description" /></li>
+            <li>Prompt <textarea rows="5" cols="50" ng-model="reportNote.prompt" /></li>
+            <li>Content <textarea rows="15" cols="50" ng-model="reportNote.content" /></li>
+        </ul>
+    </ul>
+</ul>

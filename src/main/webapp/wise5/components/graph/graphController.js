@@ -26,7 +26,8 @@ this.isSubmitButtonVisible=false;// the latest annotations
 this.latestAnnotations=null;// whether the reset graph button is shown or not
 this.isResetGraphButtonVisible=false;// whether the select series input is shown or not
 this.isSelectSeriesVisible=false;// whether the snip drawing button is shown or not
-this.isSnipDrawingButtonVisible=true;// the id of the chart element
+this.isSnipDrawingButtonVisible=true;// whether to only show the new trial when a new trial is created
+this.hideAllTrialsOnNewTrial=true;// the id of the chart element
 this.chartId='chart1';// the width of the graph
 this.width=null;// the height of the graph
 this.height=null;// get the current node and node id
@@ -38,7 +39,7 @@ this.authoringComponentContent=this.$scope.authoringComponentContent;/*
          */this.originalComponentContent=this.$scope.originalComponentContent;// the mode to load the component in e.g. 'student', 'grading', 'onlyShowWork'
 this.mode=this.$scope.mode;this.workgroupId=this.$scope.workgroupId;this.teacherWorkgroupId=this.$scope.teacherWorkgroupId;this.trials=[];this.activeTrial=null;this.trialIdsToShow=[];this.selectedTrialsText="";this.studentDataVersion=2;this.canCreateNewTrials=false;this.canDeleteTrials=false;if(this.componentContent!=null){// get the component id
 this.componentId=this.componentContent.id;// set the chart id
-this.chartId='chart'+this.componentId;if(this.componentContent.canCreateNewTrials){this.canCreateNewTrials=this.componentContent.canCreateNewTrials;}if(this.componentContent.canDeleteTrials){this.canDeleteTrials=this.componentContent.canDeleteTrials;}if(this.mode==='student'){this.isPromptVisible=true;this.isSaveButtonVisible=this.componentContent.showSaveButton;this.isSubmitButtonVisible=this.componentContent.showSubmitButton;//this.isResetGraphButtonVisible = true;
+this.chartId='chart'+this.componentId;if(this.componentContent.canCreateNewTrials){this.canCreateNewTrials=this.componentContent.canCreateNewTrials;}if(this.componentContent.canDeleteTrials){this.canDeleteTrials=this.componentContent.canDeleteTrials;}if(this.componentContent.hideAllTrialsOnNewTrial===false){this.hideAllTrialsOnNewTrial=false;}if(this.mode==='student'){this.isPromptVisible=true;this.isSaveButtonVisible=this.componentContent.showSaveButton;this.isSubmitButtonVisible=this.componentContent.showSubmitButton;//this.isResetGraphButtonVisible = true;
 this.isResetSeriesButtonVisible=this.componentContent.showResetSeriesButton;this.isSelectSeriesVisible=true;// get the latest annotations
 // TODO: watch for new annotations and update accordingly
 this.latestAnnotations=this.$scope.$parent.nodeController.getLatestComponentAnnotations(this.componentId);}else if(this.mode==='grading'){this.isPromptVisible=true;this.isSaveButtonVisible=false;this.isSubmitButtonVisible=false;//this.isResetGraphButtonVisible = false;
@@ -158,7 +159,7 @@ if(tempSeries!=null){if(tempSeries.regression){if(tempSeries.regressionSettings=
 tempSeries.regressionSettings={};}// get the regression settings object
 var regressionSettings=tempSeries.regressionSettings;// add these regression settings
 regressionSettings.xMin=xAxis.min;regressionSettings.xMax=xAxis.max;regressionSettings.numberOfPoints=100;}if(this.isDisabled){// disable dragging
-tempSeries.draggableX=false;tempSeries.draggableY=false;tempSeries.allowPointSelect=false;}else if(tempSeries.canEdit&&this.isActiveSeriesIndex(s)){// set the fields to allow points to be draggable
+tempSeries.draggableX=false;tempSeries.draggableY=false;tempSeries.allowPointSelect=false;}else if(tempSeries.canEdit&&this.isActiveSeries(tempSeries)){// set the fields to allow points to be draggable
 tempSeries.draggableX=true;tempSeries.draggableY=true;tempSeries.allowPointSelect=true;tempSeries.cursor='move';}else{// make the series uneditable
 tempSeries.draggableX=false;tempSeries.draggableY=false;tempSeries.allowPointSelect=false;}}}/*
          * generate an array of regression series for the series that
@@ -319,10 +320,10 @@ this.activeTrial=trial;}}}/**
      * @param trial the trial object to check
      * @return boolean whether the student can edit the trial
      */},{key:'canEditTrial',value:function canEditTrial(trial){var result=false;var series=trial.series;for(var i=0;i<series.length;i++){var currentSeries=series[i];if(currentSeries.canEdit){// at least one series in this trial is editable
-result=true;break;}}return result;}},{key:'showActiveTrialSelect',/**
+result=true;break;}}return result;}},{key:'showSelectActiveTrials',/**
      * Set whether to show the active trial select menu
      * @return whether to show the active trial select menu
-     */value:function showActiveTrialSelect(){var result=false;var editableTrials=0;for(var i=0;i<this.trials.length;i++){var trial=this.trials[i];if(this.canEditTrial(trial)){editableTrials++;if(editableTrials>1){// there are more than one editable trials, so show the menu
+     */value:function showSelectActiveTrials(){var result=false;var editableTrials=0;for(var i=0;i<this.trials.length;i++){var trial=this.trials[i];if(this.canEditTrial(trial)&&trial.show){editableTrials++;if(editableTrials>1){// there are more than one editable trials, so show the menu
 result=true;break;}}}return result;}},{key:'setXAxis',/**
      * Set the xAxis object
      * @param xAxis the xAxis object that can be used to render the graph
@@ -686,7 +687,7 @@ var result=this.isActiveSeriesIndex(seriesIndex);return result;}/**
 result=true;}return result;}/**
      * Whether to show the select series input
      * @returns whether to show the select series input
-     */},{key:'showSelectSeries',value:function showSelectSeries(){var show=false;if(this.hasEditableSeries()&&this.isSelectSeriesVisible&&this.series.length>1){/*
+     */},{key:'showSelectSeries',value:function showSelectSeries(){var show=false;if(this.trialIdsToShow.length&&this.hasEditableSeries()&&this.isSelectSeriesVisible&&this.series.length>1){/*
              * we are in a mode the shows the select series input and there is
              * more than one series
              */show=true;}return show;}/**
@@ -706,7 +707,7 @@ var match=trialNameRegex.exec(tempTrialName);if(match!=null&&match.length>0){// 
                          * the trial number is 2
                          */trialNumbers.push(parseInt(tempTrialNumber));}}}}// sort the trial numbers from smallest to largest
 trialNumbers.sort();var maxTrialNumber=0;if(trialNumbers.length>0){// get the highest trial number
-maxTrialNumber=trialNumbers[trialNumbers.length-1];}if(this.componentContent.hideAllTrialsOnNewTrial){// we only want to show the latest trial
+maxTrialNumber=trialNumbers[trialNumbers.length-1];}if(this.hideAllTrialsOnNewTrial){// we only want to show the latest trial
 // loop through all the existing trials and hide them
 for(var t=0;t<this.trials.length;t++){var tempTrial=this.trials[t];if(tempTrial!=null){tempTrial.show=false;}}}// make a new trial with a trial number one larger than the existing max
 var trial={};trial.name='Trial '+(maxTrialNumber+1);trial.series=series;trial.show=true;trial.id=this.UtilService.generateKey(10);// add the trial to the array of trials
@@ -740,7 +741,7 @@ this.activeTrial=this.trials[trialIndex];this.activeTrialChanged(trialIndex);}}t
          */this.studentDataChanged();// tell the parent node that this component wants to save
 //this.$scope.$emit('componentSaveTriggered', {nodeId: this.nodeId, componentId: this.componentId});
 }/**
-     * The student has selected a different trial to view
+     * The student has selected a different trial to edit
      */},{key:'activeTrialChanged',value:function activeTrialChanged(){// get the index of the active series
 var activeSeriesIndex=this.getSeriesIndex(this.activeSeries);// get the active trial
 var activeTrial=this.activeTrial;if(activeTrial!=null){// get the series from the trial
@@ -790,7 +791,8 @@ this.activeTrialChanged();}}/**
      * @param studentData the student data object that has a trials field
      */},{key:'parseLatestTrial',value:function parseLatestTrial(studentData){if(studentData!=null){var latestStudentDataTrial=null;if(studentData.trial!=null){// the student data only has one trial
 latestStudentDataTrial=studentData.trial;}if(studentData.trials!=null&&studentData.trials.length>0){// the student data has an array of trials
-latestStudentDataTrial=studentData.trials[studentData.trials.length-1];}if(latestStudentDataTrial!=null){/*
+latestStudentDataTrial=studentData.trials[studentData.trials.length-1];}if(latestStudentDataTrial!=null){// get the latest student data trial id
+var latestStudentDataTrialId=latestStudentDataTrial.id;/*
                  * remove the first default trial that is automatically created
                  * when the student first visits the component otherwise there
                  * will be a blank trial.
@@ -799,13 +801,12 @@ var firstTrial=this.trials[0];if(firstTrial!=null){/*
                          * check if the trial has any series. if the trial doesn't
                          * have any series it means it was automatically created by
                          * the component.
-                         */if(!firstTrial.series.length){// delete the first trial
-this.trials.shift();}}}// get the latest student data trial id
-var latestStudentDataTrialId=latestStudentDataTrial.id;// get the trial with the given trial id
+                         */if(!firstTrial.series.length||firstTrial.series.length===1&&!firstTrial.series[0].data.length){if(firstTrial.id!==latestStudentDataTrialId){// delete the first trial
+this.trials.shift();}}}}// get the trial with the given trial id
 var latestTrial=this.getTrialById(latestStudentDataTrialId);if(latestTrial==null){/*
                      * we did not find a trial with the given id which means
                      * this is a new trial
-                     */if(this.componentContent.hideAllTrialsOnNewTrial){// we only show the latest trial when a new trial starts
+                     */if(this.hideAllTrialsOnNewTrial){// we only show the latest trial when a new trial starts
 // loop through all the existing trials and hide them
 for(var t=0;t<this.trials.length;t++){var tempTrial=this.trials[t];if(tempTrial!=null){tempTrial.show=false;}}}// create the new trial
 latestTrial={};latestTrial.id=latestStudentDataTrialId;latestTrial.show=true;this.setXAxis(this.componentContent.xAxis);this.setYAxis(this.componentContent.yAxis);// add the trial to the array of trials
@@ -894,7 +895,7 @@ tempSeries.id=null;}}}}/**
      * The "Enable Trials" checkbox was clicked
      */},{key:'authoringViewEnableTrialsClicked',value:function authoringViewEnableTrialsClicked(){if(this.authoringComponentContent.enableTrials){// trials are now enabled
 this.authoringComponentContent.canCreateNewTrials=true;this.authoringComponentContent.canDeleteTrials=true;}else{// trials are now disabled
-this.authoringComponentContent.canCreateNewTrials=false;this.authoringComponentContent.canDeleteTrials=false;this.authoringComponentContent.hideAllTrialsOnNewTrial=false;}this.authoringViewComponentChanged();}/**
+this.authoringComponentContent.canCreateNewTrials=false;this.authoringComponentContent.canDeleteTrials=false;this.authoringComponentContent.hideAllTrialsOnNewTrial=true;}this.authoringViewComponentChanged();}/**
      * Check whether we need to show the snip drawing button
      * @return whether to show the snip drawing button
      */},{key:'showSnipDrawingButton',value:function showSnipDrawingButton(){if(this.NotebookService.isNotebookEnabled()&&this.isSnipDrawingButtonVisible){return true;}else{return false;}}/**
