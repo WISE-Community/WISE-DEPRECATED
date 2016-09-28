@@ -18,6 +18,7 @@ import AudioOscillatorComponentModule from '../components/audioOscillator/audioO
 import AuthoringToolController from './authoringToolController';
 import AuthoringToolMainController from './main/authoringToolMainController';
 import AuthoringToolNewProjectController from './main/authoringToolNewProjectController';
+import AuthorNotebookController from './notebook/authorNotebookController';
 import AuthorWebSocketService from '../services/authorWebSocketService';
 import ConceptMapComponentModule from '../components/conceptMap/conceptMapComponentModule';
 import ConfigService from '../services/configService';
@@ -101,6 +102,7 @@ let authoringModule = angular.module('authoring', [
     .controller(AuthoringToolController.name, AuthoringToolController)
     .controller(AuthoringToolMainController.name, AuthoringToolMainController)
     .controller(AuthoringToolNewProjectController.name, AuthoringToolNewProjectController)
+    .controller(AuthorNotebookController.name, AuthorNotebookController)
     .controller(NodeAuthoringController.name, NodeAuthoringController)
     .controller(ProjectAssetController.name, ProjectAssetController)
     .controller(ProjectController.name, ProjectController)
@@ -225,6 +227,14 @@ let authoringModule = angular.module('authoring', [
                     templateUrl: 'wise5/authoringTool/history/history.html',
                     controller: 'ProjectHistoryController',
                     controllerAs: 'projectHistoryController',
+                    resolve: {
+                    }
+                })
+                .state('root.project.notebook', {
+                    url: '/notebook',
+                    templateUrl: 'wise5/authoringTool/notebook/notebook.html',
+                    controller: 'AuthorNotebookController',
+                    controllerAs: 'authorNotebookController',
                     resolve: {
                     }
                 });

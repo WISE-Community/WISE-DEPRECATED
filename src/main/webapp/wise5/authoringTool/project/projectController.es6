@@ -89,6 +89,10 @@ class ProjectController {
         this.$state.go('root.project.history', {projectId:this.projectId});
     };
 
+    viewNotebookSettings() {
+        this.$state.go('root.project.notebook', {projectId:this.projectId});
+    }
+
     saveProject() {
         //let projectJSONString = JSON.stringify(this.project, null, 4);
         let commitMessage = $("#commitMessageInput").val();

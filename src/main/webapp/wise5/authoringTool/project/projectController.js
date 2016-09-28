@@ -112,6 +112,11 @@ var ProjectController = function () {
             this.$state.go('root.project.history', { projectId: this.projectId });
         }
     }, {
+        key: "viewNotebookSettings",
+        value: function viewNotebookSettings() {
+            this.$state.go('root.project.notebook', { projectId: this.projectId });
+        }
+    }, {
         key: "saveProject",
         value: function saveProject() {
             var _this2 = this;

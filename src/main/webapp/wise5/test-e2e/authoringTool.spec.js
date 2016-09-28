@@ -27,7 +27,7 @@ describe('WISE Authoring Tool', function () {
                 });
             });
         });
-    };
+    }
 
     var exitAuthoringToolButton;
     var createNewProjectButton;
@@ -94,7 +94,7 @@ describe('WISE Authoring Tool', function () {
         expect($("#createNewStepButton").isEnabled()).toBe(true);
         expect($("#previewProjectButton").isEnabled()).toBe(true);
         expect($("#manageAssetsButton").isEnabled()).toBe(true);
-        expect($("#viewHistoryButton").isEnabled()).toBe(true);
+        expect($("#editNotebookSettingsButton").isEnabled()).toBe(true);
     });
 
     it('should display my assets', function () {
@@ -102,6 +102,16 @@ describe('WISE Authoring Tool', function () {
         expect(browser.getCurrentUrl()).toMatch('http://localhost:8080/wise/author#/project/[0-9]+/asset');
         expect($(".drop-box").isPresent()).toBeTruthy(); // the drop box for uploading assets should exist.
         $("#closeAssetsButton").click();
+        expect(browser.getCurrentUrl()).toMatch('http://localhost:8080/wise/author#/project/[0-9]+'); // should go back to the project editing view.
+    });
+
+    it('should allow user to edit notebook settings', function () {
+        $("#editNotebookSettingsButton").click();
+        expect(browser.getCurrentUrl()).toMatch('http://localhost:8080/wise/author#/project/[0-9]+/notebook');
+        var enableNotebookCheckbox = $("#enableNotebookCheckbox");
+        expect(enableNotebookCheckbox.isPresent()).toBeTruthy(); // the checkbox for enabling/disabling notebook should exist.
+        // TODO: the checkbox should be unchecked by default.
+        $("#closeNotebookSettingsButton").click();
         expect(browser.getCurrentUrl()).toMatch('http://localhost:8080/wise/author#/project/[0-9]+'); // should go back to the project editing view.
     });
 
