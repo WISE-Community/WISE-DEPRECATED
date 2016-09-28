@@ -237,13 +237,17 @@ var LabelController = function () {
                         canvas.css('border', '1px solid black');
 
                         // add the new canvas
-                        $('#canvasParent').append(canvas);
+                        $('#canvasParent_' + this.canvasId).append(canvas);
+
+                        /*
+                         * clear the background so that setupCanvas() can 
+                         * reapply the background
+                         */
+                        this.backgroundImage = null;
 
                         // setup the new canvas
                         this.setupCanvas();
                     }
-
-                    this.backgroundImage = null;
 
                     if (this.componentContent.canCreateLabels != null) {
                         this.canCreateLabels = this.componentContent.canCreateLabels;
