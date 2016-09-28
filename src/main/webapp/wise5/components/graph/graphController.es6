@@ -2805,12 +2805,10 @@ class GraphController {
                          * have any series it means it was automatically created by
                          * the component.
                          */
-                        if (firstTrial.series.length === 1) {
-                            if (firstTrial.series[0].data.length < 1) {
-                                if (firstTrial.id !== latestStudentDataTrialId) {
-                                    // delete the first trial
-                                    this.trials.shift();
-                                }
+                        if (!firstTrial.series.length || (firstTrial.series.length === 1 && !firstTrial.series[0].data.length)) {
+                            if (firstTrial.id !== latestStudentDataTrialId) {
+                                // delete the first trial
+                                this.trials.shift();
                             }
                         }
                     }

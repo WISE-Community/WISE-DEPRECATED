@@ -801,8 +801,8 @@ var firstTrial=this.trials[0];if(firstTrial!=null){/*
                          * check if the trial has any series. if the trial doesn't
                          * have any series it means it was automatically created by
                          * the component.
-                         */if(firstTrial.series.length===1){if(firstTrial.series[0].data.length<1){if(firstTrial.id!==latestStudentDataTrialId){// delete the first trial
-this.trials.shift();}}}}}// get the trial with the given trial id
+                         */if(!firstTrial.series.length||firstTrial.series.length===1&&!firstTrial.series[0].data.length){if(firstTrial.id!==latestStudentDataTrialId){// delete the first trial
+this.trials.shift();}}}}// get the trial with the given trial id
 var latestTrial=this.getTrialById(latestStudentDataTrialId);if(latestTrial==null){/*
                      * we did not find a trial with the given id which means
                      * this is a new trial
