@@ -58,14 +58,12 @@ class MultipleChoiceService extends NodeService {
             for (var c = 0; c < component.choices.length; c++) {
                 let choice = component.choices[c];
                 let possibleTransitionCriteria = {
-                    "nodeId": nodeId,
-                    "componentId": componentId,
-                    "function": {
-                        "id": "choiceChosen_" + choice.id,
-                        "name": "choiceChosen",
-                        "params": {
-                            "choiceIds": [choice.id]
-                        }
+                    "name": "choiceChosen",
+                    "id": "choiceChosen_" + choice.id,
+                    "params": {
+                        "nodeId": nodeId,
+                        "componentId": componentId,
+                        "choiceIds": [choice.id]
                     },
                     "userFriendlyDescription": "User chose \"" + choice.text + "\" (Choice ID: " + choice.id + ") on this component."
 

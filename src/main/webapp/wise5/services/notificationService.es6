@@ -1,7 +1,8 @@
 class NotificationService {
-    constructor($http, $rootScope, ConfigService, ProjectService, StudentWebSocketService, UtilService) {
+    constructor($http, $q, $rootScope, ConfigService, ProjectService, StudentWebSocketService, UtilService) {
 
         this.$http = $http;
+        this.$q = $q;
         this.$rootScope = $rootScope;
         this.ConfigService = ConfigService;
         this.ProjectService = ProjectService;
@@ -182,43 +183,55 @@ class NotificationService {
      */
     saveNotificationToServer(notification) {
 
-        let config = {};
-        config.method = 'POST';
-        config.url = this.ConfigService.getNotificationURL();
-        config.headers = {'Content-Type': 'application/x-www-form-urlencoded'};
+        if (this.ConfigService.isPreview()) {
 
-        let params = {};
-        if (notification.id != null) {
-            params.notificationId = notification.id;
-        }
-        params.periodId = this.ConfigService.getPeriodId();
-        params.fromWorkgroupId = notification.fromWorkgroupId;
-        params.toWorkgroupId = notification.toWorkgroupId;
-        params.nodeId = notification.nodeId;
-        params.componentId = notification.componentId;
-        params.componentType = notification.componentType;
-        params.type = notification.type;
-        params.message = notification.message;
-        if (notification.data != null) {
-            params.data = angular.toJson(notification.data);
-        }
-        if (notification.groupId != null) {
-            params.groupId = notification.groupId;
-        }
-        params.timeGenerated = notification.timeGenerated;
-        if (notification.timeDismissed != null) {
-            params.timeDismissed = notification.timeDismissed;
-        }
-        config.data = $.param(params);
+            var savedNotificationResponse = notification;
 
-        return this.$http(config).then((result) => {
-            let notification = result.data;
-            if (notification.data != null) {
-                // parse the data string into a JSON object
-                notification.data = angular.fromJson(notification.data);
+            // if we're in preview, don't make any request to the server but pretend we did
+            let deferred = this.$q.defer();
+            deferred.resolve(notification);
+            return deferred.promise;
+
+        } else {
+
+            let config = {};
+            config.method = 'POST';
+            config.url = this.ConfigService.getNotificationURL();
+            config.headers = {'Content-Type': 'application/x-www-form-urlencoded'};
+
+            let params = {};
+            if (notification.id != null) {
+                params.notificationId = notification.id;
             }
-            return notification;
-        })
+            params.periodId = this.ConfigService.getPeriodId();
+            params.fromWorkgroupId = notification.fromWorkgroupId;
+            params.toWorkgroupId = notification.toWorkgroupId;
+            params.nodeId = notification.nodeId;
+            params.componentId = notification.componentId;
+            params.componentType = notification.componentType;
+            params.type = notification.type;
+            params.message = notification.message;
+            if (notification.data != null) {
+                params.data = angular.toJson(notification.data);
+            }
+            if (notification.groupId != null) {
+                params.groupId = notification.groupId;
+            }
+            params.timeGenerated = notification.timeGenerated;
+            if (notification.timeDismissed != null) {
+                params.timeDismissed = notification.timeDismissed;
+            }
+            config.data = $.param(params);
+
+            return this.$http(config).then((result) => {
+                let notification = result.data;
+                if (notification.data != null) {
+                    // parse the data string into a JSON object
+                    notification.data = angular.fromJson(notification.data);
+                }
+                return notification;
+            })
+        }
     }
 
     /**
@@ -264,6 +277,7 @@ class NotificationService {
 
 NotificationService.$inject = [
     '$http',
+    '$q',
     '$rootScope',
     'ConfigService',
     'ProjectService',

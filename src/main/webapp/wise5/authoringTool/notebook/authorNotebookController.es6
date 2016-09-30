@@ -9,12 +9,27 @@ class AuthorNotebookController {
         this.projectId = this.$stateParams.projectId;
         this.ProjectService = ProjectService;
         this.project = this.ProjectService.project;
-        this.originalProject = this.project; // keep a copy of the project
 
-        // Retrieve and display the commit history for the current project.
-        //this.ProjectService.getCommitHistory().then((commitHistoryArray) => {
-        //    this.commitHistory = commitHistoryArray;
-        //});
+        if (this.project.notebook == null) {
+            // some old projects may not have the notebook settings, so copy default settings from template project.
+            let projectTemplate = this.ProjectService.getNewProjectTemplate();
+            this.project.notebook = projectTemplate.notebook;
+        }
+    }
+
+    /**
+     * Adds a new report note item to this project's notebook. Currently we limit 1 report note per project.
+     */
+    addReportNote() {
+        // some old projects may not have the notebook settings, so copy default settings from template project.
+        let projectTemplate = this.ProjectService.getNewProjectTemplate();
+
+        if (this.project.notebook.itemTypes.report.notes == null) {
+            this.project.notebook.itemTypes.report.notes = [];
+        }
+        if (this.project.notebook.itemTypes.report.notes < 1) {
+            this.project.notebook.itemTypes.report.notes.push(projectTemplate.notebook.itemTypes.report.notes[0]);
+        }
     }
 
     exit() {
@@ -25,4 +40,4 @@ class AuthorNotebookController {
 
 AuthorNotebookController.$inject = ['$state', '$stateParams', '$scope', 'ProjectService'];
 
-export default AuthorNotebookController
+export default AuthorNotebookController;

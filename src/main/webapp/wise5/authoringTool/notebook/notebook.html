@@ -21,6 +21,9 @@
         <li>Label (plural)<input ng-model="authorNotebookController.project.notebook.itemTypes.report.label.plural" /></li>
         <li>Label (link)<input ng-model="authorNotebookController.project.notebook.itemTypes.report.label.link" /></li>
         <li>Report Notes</li>
+        <button ng-click="authorNotebookController.addReportNote()"
+                ng-show="authorNotebookController.project.notebook.itemTypes.report.notes == null ||
+            authorNotebookController.project.notebook.itemTypes.report.notes.length < 1">Add Report Note</button>
         <ul ng-repeat="reportNote in authorNotebookController.project.notebook.itemTypes.report.notes">
             <li>Title <input ng-model="reportNote.title" /></li>
             <li>Description <textarea rows="5" cols="50" ng-model="reportNote.description" /></li>

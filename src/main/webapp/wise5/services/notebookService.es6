@@ -20,7 +20,7 @@ class NotebookService {
         // TODO: decide on desired defaults
         // TODO: allow wise instance to set default enabled/disabled for each type in wise config?
         this.config = {
-            enabled: true,
+            enabled: false,
             label: "Notebook",
             enableAddNew: true,
             itemTypes: {
