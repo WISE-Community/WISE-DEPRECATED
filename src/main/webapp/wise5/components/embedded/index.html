@@ -25,7 +25,7 @@
         <md-button class="md-accent md-primary"
                     ng-click='embeddedController.snipModel($event)'
                     ng-show='embeddedController.showSnipModelButton()'>
-            <md-icon> content_cut </md-icon> Add to Notebook
+            <md-icon> content_cut </md-icon>  {{ 'addToNotebook' | translate:{label:embeddedController.notebookConfig.label} }}
         </md-button>
         <iframe ng-attr-id="{{'componentApp_' + embeddedController.componentId}}" ng-src='{{embeddedController.url}}'
                 class="embedded-content__iframe"

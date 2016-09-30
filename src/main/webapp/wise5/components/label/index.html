@@ -118,7 +118,7 @@
         <md-button class="md-accent md-primary"
                 ng-click='labelController.snipImage($event)'
                 ng-if='labelController.showSnipImageButton()'>
-            <md-icon> content_cut </md-icon> Add to Notebook
+            <md-icon> content_cut </md-icon>  {{ 'addToNotebook' | translate:{label:labelController.notebookConfig.label} }}
         </md-button>
         <div id="canvasParent_{{labelController.canvasId}}">
             <canvas id="{{labelController.canvasId}}" width="800" height="600" style="border:1px solid black;"></canvas>

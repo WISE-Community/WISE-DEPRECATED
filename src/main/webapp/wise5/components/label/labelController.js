@@ -89,6 +89,9 @@ var LabelController = function () {
         // whether the snip image button is shown or not
         this.isSnipImageButtonVisible = true;
 
+        // the label for the notebook in thos project
+        this.notebookConfig = this.NotebookService.getNotebookConfig();
+
         // whether the student can create new labels
         this.canCreateLabels = true;
 
@@ -240,7 +243,7 @@ var LabelController = function () {
                         $('#canvasParent_' + this.canvasId).append(canvas);
 
                         /*
-                         * clear the background so that setupCanvas() can 
+                         * clear the background so that setupCanvas() can
                          * reapply the background
                          */
                         this.backgroundImage = null;

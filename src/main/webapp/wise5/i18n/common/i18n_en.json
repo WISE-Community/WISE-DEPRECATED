@@ -1,6 +1,7 @@
 {
   "actionRequired": "Action Required",
   "add": "Add",
+  "addToNotebook": "Add to {{label}}",
   "notificationsTitle": "Alerts",
   "assetUploadSuccessful": "Successfully uploaded: {{assetFilenames}}",
   "assetUsageMessage": "You are using {{usage}} out of {{max}} ({{percentage}}%)",

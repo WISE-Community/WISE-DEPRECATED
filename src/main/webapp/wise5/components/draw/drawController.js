@@ -72,6 +72,9 @@ var DrawController = function () {
         // whether the snip drawing button is shown or not
         this.isSnipDrawingButtonVisible = true;
 
+        // the label for the notebook in thos project
+        this.notebookConfig = this.NotebookService.getNotebookConfig();
+
         // message to show next to save/submit buttons
         this.saveMessage = {
             text: '',
@@ -135,7 +138,6 @@ var DrawController = function () {
                 this.drawingToolId = "drawingtool_" + this.nodeId + "_" + this.componentId;
 
                 // get the latest annotations
-                // TODO: watch for new annotations and update accordingly
                 this.latestAnnotations = this.$scope.$parent.nodeController.getLatestComponentAnnotations(this.componentId);
             } else if (this.mode === 'grading' || this.mode === "onlyShowWork") {
                 // get the component state from the scope
