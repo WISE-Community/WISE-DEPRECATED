@@ -91,8 +91,8 @@ var imgMatcher=new RegExp('<img.*?src=\\\\?[\'"](.*?)\\\\?[\'"].*?>','gi');// re
 contentString=contentString.replace(imgMatcher,function(matchedString,matchGroup1){/*
                      * insert the ng-click attribute
                      * Before: <img src="abc.png"/>
-                     * After: <img ng-click="vleController.snipImage($event)"/>
-                     */var newString=matchedString.replace('img','img ng-click=\\\"vleController.snipImage($event)\\\"');return newString;});}return contentString;}/**
+                     * After: <img ng-click="vleController.snipImage($event)" src="abc.png" />
+                     */var newString=matchedString.replace('img','img ng-click=\\\"$emit(\'snipImage\', $event)\\\"');return newString;});}return contentString;}/**
      * Returns the node specified by the nodeId
      * Return null if nodeId param is null or the specified node does not exist in the project.
      */},{key:'getNodeById',value:function getNodeById(nodeId){var element=null;if(nodeId!=null&&this.idToNode[nodeId]){element=this.idToNode[nodeId];}return element;}},{key:'getNodeTitleByNodeId',/**

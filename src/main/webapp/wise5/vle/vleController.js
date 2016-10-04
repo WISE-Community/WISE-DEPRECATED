@@ -508,31 +508,6 @@ var VLEController = function () {
             this.$mdDialog.hide(this.pauseDialog, "finished");
             this.pauseDialog = undefined;
         }
-
-        /**
-         * Snip an image from the VLE
-         * @param $event the click event from the student clicking on the image
-         */
-
-    }, {
-        key: 'snipImage',
-        value: function snipImage($event) {
-
-            // get the target that was clicked
-            var imageElement = $event.target;
-
-            if (imageElement != null) {
-
-                // create an image object
-                var imageObject = this.UtilService.getImageObjectFromImageElement(imageElement);
-
-                if (imageObject != null) {
-
-                    // create a notebook item with the image populated into it
-                    this.NotebookService.addNewItem($event, imageObject);
-                }
-            }
-        }
     }]);
 
     return VLEController;

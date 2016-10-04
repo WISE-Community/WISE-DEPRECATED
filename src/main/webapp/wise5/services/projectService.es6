@@ -680,9 +680,9 @@ class ProjectService {
                     /*
                      * insert the ng-click attribute
                      * Before: <img src="abc.png"/>
-                     * After: <img ng-click="vleController.snipImage($event)"/>
+                     * After: <img ng-click="vleController.snipImage($event)" src="abc.png" />
                      */
-                    var newString = matchedString.replace('img', 'img ng-click=\\\"vleController.snipImage($event)\\\"');
+                    var newString = matchedString.replace('img', 'img ng-click=\\\"$emit(\'snipImage\', $event)\\\"');
 
                     return newString;
                 }

@@ -280,10 +280,15 @@ var NotebookService = function () {
             if (this.ConfigService.isPreview()) {
                 return this.$q(function (resolve, reject) {
                     var notebookItem = {
-                        type: type,
-                        content: content
+                        content: content,
+                        localNotebookItemId: localNotebookItemId,
+                        nodeId: nodeId,
+                        notebookItemId: notebookItemId,
+                        title: title,
+                        type: type
                     };
-                    _this2.notebook.items.push(notebookItem);
+                    _this2.notebook.allItems.push(notebookItem);
+                    _this2.groupNotebookItems();
                     _this2.$rootScope.$broadcast('notebookUpdated', { notebook: _this2.notebook });
                     resolve();
                 });
