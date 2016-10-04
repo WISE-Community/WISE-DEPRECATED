@@ -31,7 +31,7 @@ class NodeAuthoringController {
         this.nodeCopy = null;
         this.undoStack = [];
         this.howToChooseAmongAvailablePathsOptions = [null, "random", "workgroupId", "firstAvailable", "lastAvailable"];
-        this.whenToChoosePathOptions = [null, "enterNode", "exitNode", "studentDataChanged"];
+        this.whenToChoosePathOptions = [null, "enterNode", "exitNode", "scoreChanged", "studentDataChanged"];
         this.canChangePathOptions = [null, true, false];
 
         // the array of component types that can be created
@@ -173,13 +173,24 @@ class NodeAuthoringController {
                     nodeTransition.criteria = [];
                 }
                 let newTransitionCriteria = {
-                    "nodeId": "",
-                    "componentId": "",
-                    "function": {}
+                    "name":"",
+                    "params": {
+                        "nodeId": "",
+                        "componentId": ""
+                    }
                 };
                 nodeTransition.criteria.push(newTransitionCriteria);
             }
         }
+    }
+
+    /**
+     * Author chose/updated a transition criteria, which is saved in this.selectedTransitionCriteria.
+     * The original transitionCriteria is passed in as originalTransitionCriteria parameter.
+     * @param originalTransitionCriteria
+     */
+    transitionCriteriaChanged(transitionIndex, criteriaIndex, newTransitionCriteria) {
+        this.node.transitionLogic.transitions[transitionIndex].criteria[criteriaIndex] = newTransitionCriteria;
     }
 
     /**

@@ -41,9 +41,7 @@ var NotebookController = function () {
         });
 
         // retrieve assets when notebook is opened
-        if (!this.ConfigService.isPreview()) {
-            this.retrieveNotebookItems();
-        }
+        this.retrieveNotebookItems();
     }
 
     _createClass(NotebookController, [{
@@ -57,11 +55,15 @@ var NotebookController = function () {
             var _this2 = this;
 
             // fetch all assets first because a subset of it will be referenced by a notebook item
-            this.StudentAssetService.retrieveAssets().then(function (studentAssets) {
-                _this2.NotebookService.retrieveNotebookItems().then(function (notebook) {
-                    _this2.notebook = notebook;
+            if (!this.ConfigService.isPreview()) {
+                this.StudentAssetService.retrieveAssets().then(function (studentAssets) {
+                    _this2.NotebookService.retrieveNotebookItems().then(function (notebook) {
+                        _this2.notebook = notebook;
+                    });
                 });
-            });
+            } else {
+                this.notebook = this.NotebookService.notebook;
+            }
         }
     }, {
         key: 'deleteStudentAsset',

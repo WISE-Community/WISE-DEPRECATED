@@ -26,7 +26,8 @@ this.isSubmitButtonVisible=false;// the latest annotations
 this.latestAnnotations=null;// whether the reset graph button is shown or not
 this.isResetGraphButtonVisible=false;// whether the select series input is shown or not
 this.isSelectSeriesVisible=false;// whether the snip drawing button is shown or not
-this.isSnipDrawingButtonVisible=true;// whether to only show the new trial when a new trial is created
+this.isSnipDrawingButtonVisible=true;// the label for the notebook in thos project
+this.notebookConfig=this.NotebookService.getNotebookConfig();// whether to only show the new trial when a new trial is created
 this.hideAllTrialsOnNewTrial=true;// the id of the chart element
 this.chartId='chart1';// the width of the graph
 this.width=null;// the height of the graph
@@ -742,14 +743,12 @@ this.activeTrial=this.trials[trialIndex];this.activeTrialChanged(trialIndex);}}t
 //this.$scope.$emit('componentSaveTriggered', {nodeId: this.nodeId, componentId: this.componentId});
 }/**
      * The student has selected a different trial to edit
-     */},{key:'activeTrialChanged',value:function activeTrialChanged(){// get the index of the active series
-var activeSeriesIndex=this.getSeriesIndex(this.activeSeries);// get the active trial
+     */},{key:'activeTrialChanged',value:function activeTrialChanged(){// get the active trial
 var activeTrial=this.activeTrial;if(activeTrial!=null){// get the series from the trial
 var series=activeTrial.series;// set the series to be displayed
 this.series=series;/*
-             * set the active series index so that the the active series
-             * is the same as before.
-             */this.setActiveSeriesByIndex(activeSeriesIndex);// redraw the graph
+             * set the active series index to the first series in the active trial
+             */this.setActiveSeriesByIndex(0);// redraw the graph
 this.setupGraph();}/*
          * notify the controller that the student data has
          * changed so that it will perform any necessary saving

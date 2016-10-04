@@ -38,9 +38,7 @@ class NotebookController {
         });
 
         // retrieve assets when notebook is opened
-        if (!this.ConfigService.isPreview()) {
-            this.retrieveNotebookItems();
-        }
+        this.retrieveNotebookItems();
     }
 
     getTemplateUrl() {
@@ -49,11 +47,16 @@ class NotebookController {
 
     retrieveNotebookItems() {
         // fetch all assets first because a subset of it will be referenced by a notebook item
-        this.StudentAssetService.retrieveAssets().then((studentAssets) => {
-            this.NotebookService.retrieveNotebookItems().then((notebook) => {
-                this.notebook = notebook;
+        if (!this.ConfigService.isPreview()) {
+            this.StudentAssetService.retrieveAssets().then((studentAssets) => {
+                this.NotebookService.retrieveNotebookItems().then((notebook) => {
+                    this.notebook = notebook;
+                });
             });
-        });
+        } else {
+            this.notebook = this.NotebookService.notebook;
+        }
+
     }
 
     deleteStudentAsset(studentAsset) {

@@ -85,6 +85,9 @@ class TableController {
         // whether the snip table button is shown or not
         this.isSnipTableButtonVisible = true;
 
+        // the label for the notebook in thos project
+        this.notebookConfig = this.NotebookService.getNotebookConfig();
+
         // get the current node and node id
         var currentNode = this.StudentDataService.getCurrentNode();
         if (currentNode != null) {

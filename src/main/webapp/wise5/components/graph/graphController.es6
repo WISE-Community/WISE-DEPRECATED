@@ -106,6 +106,9 @@ class GraphController {
         // whether the snip drawing button is shown or not
         this.isSnipDrawingButtonVisible = true;
 
+        // the label for the notebook in thos project
+        this.notebookConfig = this.NotebookService.getNotebookConfig();
+
         // whether to only show the new trial when a new trial is created
         this.hideAllTrialsOnNewTrial = true;
 
@@ -2575,9 +2578,6 @@ class GraphController {
      */
     activeTrialChanged() {
 
-        // get the index of the active series
-        var activeSeriesIndex  = this.getSeriesIndex(this.activeSeries);
-
         // get the active trial
         var activeTrial = this.activeTrial;
 
@@ -2590,10 +2590,9 @@ class GraphController {
             this.series = series;
 
             /*
-             * set the active series index so that the the active series
-             * is the same as before.
+             * set the active series index to the first series in the active trial
              */
-            this.setActiveSeriesByIndex(activeSeriesIndex);
+            this.setActiveSeriesByIndex(0);
 
             // redraw the graph
             this.setupGraph();

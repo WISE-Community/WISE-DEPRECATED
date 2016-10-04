@@ -73,6 +73,9 @@ var EmbeddedController = function () {
         // whether the snip model button is shown or not
         this.isSnipModelButtonVisible = true;
 
+        // the label for the notebook in thos project
+        this.notebookConfig = this.NotebookService.getNotebookConfig();
+
         // message to show next to save/submit buttons
         this.saveMessage = {
             text: '',

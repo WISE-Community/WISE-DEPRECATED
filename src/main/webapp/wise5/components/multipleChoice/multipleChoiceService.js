@@ -91,14 +91,12 @@ var MultipleChoiceService = function (_NodeService) {
                 for (var c = 0; c < component.choices.length; c++) {
                     var choice = component.choices[c];
                     var possibleTransitionCriteria = {
-                        "nodeId": nodeId,
-                        "componentId": componentId,
-                        "function": {
-                            "id": "choiceChosen_" + choice.id,
-                            "name": "choiceChosen",
-                            "params": {
-                                "choiceIds": [choice.id]
-                            }
+                        "name": "choiceChosen",
+                        "id": "choiceChosen_" + choice.id,
+                        "params": {
+                            "nodeId": nodeId,
+                            "componentId": componentId,
+                            "choiceIds": [choice.id]
                         },
                         "userFriendlyDescription": "User chose \"" + choice.text + "\" (Choice ID: " + choice.id + ") on this component."
 

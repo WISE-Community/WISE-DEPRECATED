@@ -118,43 +118,71 @@ var StudentAssetService = function () {
         value: function uploadAsset(file) {
             var _this2 = this;
 
-            var studentAssetsURL = this.ConfigService.getStudentAssetsURL();
-            var deferred = this.$q.defer();
+            if (this.ConfigService.isPreview()) {
+                return this.$q(function (resolve, reject) {
+                    var reader = new FileReader();
 
-            this.Upload.upload({
-                url: studentAssetsURL,
-                fields: {
-                    'runId': this.ConfigService.getRunId(),
-                    'workgroupId': this.ConfigService.getWorkgroupId(),
-                    'periodId': this.ConfigService.getPeriodId(),
-                    'clientSaveTime': Date.parse(new Date())
-                },
-                file: file
-            }).success(function (asset, status, headers, config) {
-                if (asset === "error") {
-                    alert("There was an error uploading.");
-                } else {
-                    var studentUploadsBaseURL = _this2.ConfigService.getStudentUploadsBaseURL();
-                    asset.url = studentUploadsBaseURL + asset.filePath;
-                    if (_this2.isImage(asset)) {
-                        asset.type = 'image';
-                        asset.iconURL = asset.url;
-                    } else if (_this2.isAudio(asset)) {
-                        asset.type = 'audio';
-                        asset.iconURL = 'wise5/vle/notebook/audio.png';
+                    // Closure to capture the file information.
+                    reader.onload = function (theFile) {
+                        return function (e) {
+                            var fileSrc = e.target.result;
+                            var fileName = theFile.name;
+
+                            var asset = {};
+                            asset.file = file;
+                            asset.url = fileSrc;
+                            // assume this is an image for now. in the future, support audio and other file formats.
+                            asset.type = 'image';
+                            asset.iconURL = asset.url;
+
+                            _this2.allAssets.push(asset);
+                            _this2.$rootScope.$broadcast('studentAssetsUpdated');
+                            return resolve(asset);
+                        };
+                    }(file);
+
+                    // Read in the image file as a data URL.
+                    reader.readAsDataURL(file);
+                });
+            } else {
+                var studentAssetsURL = this.ConfigService.getStudentAssetsURL();
+                var deferred = this.$q.defer();
+
+                this.Upload.upload({
+                    url: studentAssetsURL,
+                    fields: {
+                        'runId': this.ConfigService.getRunId(),
+                        'workgroupId': this.ConfigService.getWorkgroupId(),
+                        'periodId': this.ConfigService.getPeriodId(),
+                        'clientSaveTime': Date.parse(new Date())
+                    },
+                    file: file
+                }).success(function (asset, status, headers, config) {
+                    if (asset === "error") {
+                        alert("There was an error uploading.");
                     } else {
-                        asset.type = 'file';
-                        asset.iconURL = 'wise5/vle/notebook/file.png';
+                        var studentUploadsBaseURL = _this2.ConfigService.getStudentUploadsBaseURL();
+                        asset.url = studentUploadsBaseURL + asset.filePath;
+                        if (_this2.isImage(asset)) {
+                            asset.type = 'image';
+                            asset.iconURL = asset.url;
+                        } else if (_this2.isAudio(asset)) {
+                            asset.type = 'audio';
+                            asset.iconURL = 'wise5/vle/notebook/audio.png';
+                        } else {
+                            asset.type = 'file';
+                            asset.iconURL = 'wise5/vle/notebook/file.png';
+                        }
+                        _this2.allAssets.push(asset);
+                        _this2.$rootScope.$broadcast('studentAssetsUpdated');
+                        deferred.resolve(asset);
                     }
-                    _this2.allAssets.push(asset);
-                    _this2.$rootScope.$broadcast('studentAssetsUpdated');
-                    deferred.resolve(asset);
-                }
-            }).error(function (asset, status, headers, config) {
-                alert("There was an error uploading. You might have reached your file upload limit or the file you tried to upload was too large. Please ask your teacher for help.");
-            });
+                }).error(function (asset, status, headers, config) {
+                    alert("There was an error uploading. You might have reached your file upload limit or the file you tried to upload was too large. Please ask your teacher for help.");
+                });
 
-            return deferred.promise;
+                return deferred.promise;
+            }
         }
     }, {
         key: 'uploadAssets',
@@ -189,40 +217,46 @@ var StudentAssetService = function () {
         value: function copyAssetForReference(studentAsset) {
             var _this4 = this;
 
-            var config = {};
-            config.method = 'POST';
-            config.url = this.ConfigService.getStudentAssetsURL() + '/copy';
-            config.headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
-            var params = {};
-            params.studentAssetId = studentAsset.id;
-            params.workgroupId = this.ConfigService.getWorkgroupId();
-            params.periodId = this.ConfigService.getPeriodId();
-            params.clientSaveTime = Date.parse(new Date());
+            if (this.ConfigService.isPreview()) {
+                return this.$q(function (resolve, reject) {
+                    return resolve(studentAsset);
+                });
+            } else {
+                var config = {};
+                config.method = 'POST';
+                config.url = this.ConfigService.getStudentAssetsURL() + '/copy';
+                config.headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
+                var params = {};
+                params.studentAssetId = studentAsset.id;
+                params.workgroupId = this.ConfigService.getWorkgroupId();
+                params.periodId = this.ConfigService.getPeriodId();
+                params.clientSaveTime = Date.parse(new Date());
 
-            config.data = $.param(params);
+                config.data = $.param(params);
 
-            return this.$http(config).then(function (result) {
-                var copiedAsset = result.data;
-                if (copiedAsset != null) {
-                    var studentUploadsBaseURL = _this4.ConfigService.getStudentUploadsBaseURL();
-                    if (copiedAsset.isReferenced && copiedAsset.fileName !== '.DS_Store') {
-                        copiedAsset.url = studentUploadsBaseURL + copiedAsset.filePath;
-                        if (_this4.isImage(copiedAsset)) {
-                            copiedAsset.type = 'image';
-                            copiedAsset.iconURL = copiedAsset.url;
-                        } else if (_this4.isAudio(copiedAsset)) {
-                            copiedAsset.type = 'audio';
-                            copiedAsset.iconURL = 'wise5/vle/notebook/audio.png';
-                        } else {
-                            copiedAsset.type = 'file';
-                            copiedAsset.iconURL = 'wise5/vle/notebook/file.png';
+                return this.$http(config).then(function (result) {
+                    var copiedAsset = result.data;
+                    if (copiedAsset != null) {
+                        var studentUploadsBaseURL = _this4.ConfigService.getStudentUploadsBaseURL();
+                        if (copiedAsset.isReferenced && copiedAsset.fileName !== '.DS_Store') {
+                            copiedAsset.url = studentUploadsBaseURL + copiedAsset.filePath;
+                            if (_this4.isImage(copiedAsset)) {
+                                copiedAsset.type = 'image';
+                                copiedAsset.iconURL = copiedAsset.url;
+                            } else if (_this4.isAudio(copiedAsset)) {
+                                copiedAsset.type = 'audio';
+                                copiedAsset.iconURL = 'wise5/vle/notebook/audio.png';
+                            } else {
+                                copiedAsset.type = 'file';
+                                copiedAsset.iconURL = 'wise5/vle/notebook/file.png';
+                            }
+                            //this.$rootScope.$broadcast('studentAssetsUpdated');
+                            return copiedAsset;
                         }
-                        //this.$rootScope.$broadcast('studentAssetsUpdated');
-                        return copiedAsset;
                     }
-                }
-                return null;
-            });
+                    return null;
+                });
+            }
         }
     }, {
         key: 'deleteAsset',

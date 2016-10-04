@@ -1,6 +1,6 @@
 
 class ComponentController {
-    constructor($injector, $scope, $compile, $element, ConfigService, NodeService, NotebookService, ProjectService, StudentDataService) {
+    constructor($injector, $scope, $compile, $element, ConfigService, NodeService, NotebookService, ProjectService, StudentDataService, UtilService) {
         this.$injector = $injector;
         this.$compile = $compile;
         this.ConfigService = ConfigService;
@@ -8,12 +8,34 @@ class ComponentController {
         this.NotebookService = NotebookService;
         this.ProjectService = ProjectService;
         this.StudentDataService = StudentDataService;
+        this.UtilService = UtilService;
 
         if (this.mode) {
             $scope.mode = this.mode;
         } else {
             $scope.mode = "student";
         }
+
+        /**
+         * Snip an image from the VLE
+         * @param $event the click event from the student clicking on the image
+         */
+        $scope.$on("snipImage", (event, $eventArgs) => {
+            // get the target that was clicked
+            var imageElement = $eventArgs.target;
+
+            if (imageElement != null) {
+
+                // create an image object
+                var imageObject = this.UtilService.getImageObjectFromImageElement(imageElement);
+
+                if (imageObject != null) {
+
+                    // create a notebook item with the image populated into it
+                    this.NotebookService.addNewItem($eventArgs, imageObject);
+                }
+            }
+        });
 
         if (this.workgroupId != null) {
             try {
@@ -89,7 +111,7 @@ class ComponentController {
     }
 }
 
-ComponentController.$inject = ['$injector', '$scope', '$compile', '$element', 'ConfigService', 'NodeService', 'NotebookService', 'ProjectService', 'StudentDataService'];
+ComponentController.$inject = ['$injector', '$scope', '$compile', '$element', 'ConfigService', 'NodeService', 'NotebookService', 'ProjectService', 'StudentDataService', 'UtilService'];
 
 const Component = {
     bindings: {

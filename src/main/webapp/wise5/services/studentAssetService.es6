@@ -97,43 +97,71 @@ class StudentAssetService {
     };
 
     uploadAsset(file) {
-        var studentAssetsURL = this.ConfigService.getStudentAssetsURL();
-        var deferred = this.$q.defer();
+        if (this.ConfigService.isPreview()) {
+            return this.$q((resolve, reject) => {
+                var reader = new FileReader();
 
-        this.Upload.upload({
-            url: studentAssetsURL,
-            fields: {
-                'runId': this.ConfigService.getRunId(),
-                'workgroupId': this.ConfigService.getWorkgroupId(),
-                'periodId': this.ConfigService.getPeriodId(),
-                'clientSaveTime': Date.parse(new Date())
-            },
-            file: file
-        }).success((asset, status, headers, config) => {
-            if (asset === "error") {
-                alert("There was an error uploading.");
-            } else {
-                var studentUploadsBaseURL = this.ConfigService.getStudentUploadsBaseURL();
-                asset.url = studentUploadsBaseURL + asset.filePath;
-                if (this.isImage(asset)) {
-                    asset.type = 'image';
-                    asset.iconURL = asset.url;
-                } else if (this.isAudio(asset)) {
-                    asset.type = 'audio';
-                    asset.iconURL = 'wise5/vle/notebook/audio.png';
+                // Closure to capture the file information.
+                reader.onload = ( (theFile) => {
+                    return (e) => {
+                        let fileSrc = e.target.result;
+                        let fileName = theFile.name;
+
+                        let asset = {};
+                        asset.file = file;
+                        asset.url = fileSrc;
+                        // assume this is an image for now. in the future, support audio and other file formats.
+                        asset.type = 'image';
+                        asset.iconURL = asset.url;
+
+                        this.allAssets.push(asset);
+                        this.$rootScope.$broadcast('studentAssetsUpdated');
+                        return resolve(asset);
+                    };
+                })(file);
+
+                // Read in the image file as a data URL.
+                reader.readAsDataURL(file);
+            });
+        } else {
+            var studentAssetsURL = this.ConfigService.getStudentAssetsURL();
+            var deferred = this.$q.defer();
+
+            this.Upload.upload({
+                url: studentAssetsURL,
+                fields: {
+                    'runId': this.ConfigService.getRunId(),
+                    'workgroupId': this.ConfigService.getWorkgroupId(),
+                    'periodId': this.ConfigService.getPeriodId(),
+                    'clientSaveTime': Date.parse(new Date())
+                },
+                file: file
+            }).success((asset, status, headers, config) => {
+                if (asset === "error") {
+                    alert("There was an error uploading.");
                 } else {
-                    asset.type = 'file';
-                    asset.iconURL = 'wise5/vle/notebook/file.png';
+                    var studentUploadsBaseURL = this.ConfigService.getStudentUploadsBaseURL();
+                    asset.url = studentUploadsBaseURL + asset.filePath;
+                    if (this.isImage(asset)) {
+                        asset.type = 'image';
+                        asset.iconURL = asset.url;
+                    } else if (this.isAudio(asset)) {
+                        asset.type = 'audio';
+                        asset.iconURL = 'wise5/vle/notebook/audio.png';
+                    } else {
+                        asset.type = 'file';
+                        asset.iconURL = 'wise5/vle/notebook/file.png';
+                    }
+                    this.allAssets.push(asset);
+                    this.$rootScope.$broadcast('studentAssetsUpdated');
+                    deferred.resolve(asset);
                 }
-                this.allAssets.push(asset);
-                this.$rootScope.$broadcast('studentAssetsUpdated');
-                deferred.resolve(asset);
-            }
-        }).error((asset, status, headers, config) => {
-            alert("There was an error uploading. You might have reached your file upload limit or the file you tried to upload was too large. Please ask your teacher for help.");
-        });
+            }).error((asset, status, headers, config) => {
+                alert("There was an error uploading. You might have reached your file upload limit or the file you tried to upload was too large. Please ask your teacher for help.");
+            });
 
-        return deferred.promise;
+            return deferred.promise;
+        }
     };
 
     uploadAssets(files) {
@@ -160,40 +188,46 @@ class StudentAssetService {
 
     // given asset, makes a copy of it so steps can use for reference. Returns newly-copied asset.
     copyAssetForReference(studentAsset) {
-        var config = {};
-        config.method = 'POST';
-        config.url = this.ConfigService.getStudentAssetsURL() + '/copy';
-        config.headers = {'Content-Type': 'application/x-www-form-urlencoded'};
-        var params = {};
-        params.studentAssetId = studentAsset.id;
-        params.workgroupId = this.ConfigService.getWorkgroupId();
-        params.periodId = this.ConfigService.getPeriodId();
-        params.clientSaveTime = Date.parse(new Date());
+        if (this.ConfigService.isPreview()) {
+            return this.$q((resolve, reject) => {
+                return resolve(studentAsset);
+            });
+        } else {
+            var config = {};
+            config.method = 'POST';
+            config.url = this.ConfigService.getStudentAssetsURL() + '/copy';
+            config.headers = {'Content-Type': 'application/x-www-form-urlencoded'};
+            var params = {};
+            params.studentAssetId = studentAsset.id;
+            params.workgroupId = this.ConfigService.getWorkgroupId();
+            params.periodId = this.ConfigService.getPeriodId();
+            params.clientSaveTime = Date.parse(new Date());
 
-        config.data = $.param(params);
+            config.data = $.param(params);
 
-        return this.$http(config).then((result) => {
-            var copiedAsset = result.data;
-            if (copiedAsset != null) {
-                var studentUploadsBaseURL = this.ConfigService.getStudentUploadsBaseURL();
-                if (copiedAsset.isReferenced && copiedAsset.fileName !== '.DS_Store') {
-                    copiedAsset.url = studentUploadsBaseURL + copiedAsset.filePath;
-                    if (this.isImage(copiedAsset)) {
-                        copiedAsset.type = 'image';
-                        copiedAsset.iconURL = copiedAsset.url;
-                    } else if (this.isAudio(copiedAsset)) {
-                        copiedAsset.type = 'audio';
-                        copiedAsset.iconURL = 'wise5/vle/notebook/audio.png';
-                    } else {
-                        copiedAsset.type = 'file';
-                        copiedAsset.iconURL = 'wise5/vle/notebook/file.png';
+            return this.$http(config).then((result) => {
+                var copiedAsset = result.data;
+                if (copiedAsset != null) {
+                    var studentUploadsBaseURL = this.ConfigService.getStudentUploadsBaseURL();
+                    if (copiedAsset.isReferenced && copiedAsset.fileName !== '.DS_Store') {
+                        copiedAsset.url = studentUploadsBaseURL + copiedAsset.filePath;
+                        if (this.isImage(copiedAsset)) {
+                            copiedAsset.type = 'image';
+                            copiedAsset.iconURL = copiedAsset.url;
+                        } else if (this.isAudio(copiedAsset)) {
+                            copiedAsset.type = 'audio';
+                            copiedAsset.iconURL = 'wise5/vle/notebook/audio.png';
+                        } else {
+                            copiedAsset.type = 'file';
+                            copiedAsset.iconURL = 'wise5/vle/notebook/file.png';
+                        }
+                        //this.$rootScope.$broadcast('studentAssetsUpdated');
+                        return copiedAsset;
                     }
-                    //this.$rootScope.$broadcast('studentAssetsUpdated');
-                    return copiedAsset;
                 }
-            }
-            return null;
-        });
+                return null;
+            });
+        }
     };
 
     deleteAsset(studentAsset) {

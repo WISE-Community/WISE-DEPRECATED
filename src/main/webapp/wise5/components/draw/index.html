@@ -166,7 +166,7 @@
     <md-button class="md-accent md-primary"
             ng-click='drawController.snipDrawing($event)'
             ng-if='drawController.showSnipDrawingButton()'>
-        <md-icon> content_cut </md-icon> Add to Notebook
+        <md-icon> content_cut </md-icon> {{ 'addToNotebook' | translate:{label:drawController.notebookConfig.label} }}
     </md-button>
     <div data-drop="true"
          jqyoui-droppable="{onDrop: 'drawController.dropCallback(item, $index)'}">

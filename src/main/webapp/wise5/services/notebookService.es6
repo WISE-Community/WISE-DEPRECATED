@@ -20,7 +20,7 @@ class NotebookService {
         // TODO: decide on desired defaults
         // TODO: allow wise instance to set default enabled/disabled for each type in wise config?
         this.config = {
-            enabled: true,
+            enabled: false,
             label: "Notebook",
             enableAddNew: true,
             itemTypes: {
@@ -247,10 +247,15 @@ class NotebookService {
         if (this.ConfigService.isPreview()) {
             return this.$q((resolve, reject) => {
                 let notebookItem = {
-                    type: type,
-                    content: content
+                    content: content,
+                    localNotebookItemId: localNotebookItemId,
+                    nodeId: nodeId,
+                    notebookItemId: notebookItemId,
+                    title: title,
+                    type: type
                 };
-                this.notebook.items.push(notebookItem);
+                this.notebook.allItems.push(notebookItem);
+                this.groupNotebookItems();
                 this.$rootScope.$broadcast('notebookUpdated', {notebook: this.notebook});
                 resolve();
             });
