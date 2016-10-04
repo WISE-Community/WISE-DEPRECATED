@@ -66,6 +66,12 @@ describe('WISE5 Notebook in Preview Mode', function () {
         // check that UI elements are displayed
         expect(addNoteDialog.isPresent()).toBeTruthy();
         expect(addNoteDialog.isDisplayed()).toBeTruthy();
+        var noteTextarea = element(by.xpath('//textarea[@placeholder="Note text..."]'));
+        expect(noteTextarea.isPresent()).toBeTruthy();
+
+        var saveNoteDialogButton = element(by.xpath('//md-dialog-actions/button[@aria-label="Save"]'));
+        expect(saveNoteDialogButton.isPresent()).toBeTruthy();
+        expect(saveNoteDialogButton.getAttribute("disabled")).toBe("true"); // the save button should be disabled because user hasn't typed anything.
 
         var closeNoteDialogButton = element(by.xpath('//md-dialog-actions/button[@aria-label="Cancel"]'));
         expect(closeNoteDialogButton.isPresent()).toBeTruthy();
@@ -74,6 +80,42 @@ describe('WISE5 Notebook in Preview Mode', function () {
         closeNoteDialogButton.click();
         expect(addNoteDialog.isPresent()).toBeFalsy();
         expect(browser.getCurrentUrl()).toEqual('http://localhost:8080/wise/project/demo#/vle/node1');
+    });
+
+    it('should add text note', function () {
+        // Click on the add note icon to open the add note dialog
+        addNoteButton.click();
+        // the url should stay the same
+        expect(browser.getCurrentUrl()).toEqual('http://localhost:8080/wise/project/demo#/vle/node1');
+        // check that UI elements are displayed
+        expect(addNoteDialog.isPresent()).toBeTruthy();
+        expect(addNoteDialog.isDisplayed()).toBeTruthy();
+        var noteTextarea = element(by.xpath('//textarea[@placeholder="Note text..."]'));
+        expect(noteTextarea.isPresent()).toBeTruthy();
+
+        var saveNoteDialogButton = element(by.xpath('//md-dialog-actions/button[@aria-label="Save"]'));
+        expect(saveNoteDialogButton.isPresent()).toBeTruthy();
+        expect(saveNoteDialogButton.getAttribute("disabled")).toBe("true"); // the save button should be disabled because user hasn't typed anything.
+
+        noteTextarea.sendKeys('This is my text note!');
+        saveNoteDialogButton.click();
+
+        expect(addNoteDialog.isPresent()).toBeFalsy(); // clicking on the save button shoud hide the note.
+        expect(browser.getCurrentUrl()).toEqual('http://localhost:8080/wise/project/demo#/vle/node1');
+
+        // Click on the notebook icon to open the notebook notes view
+        notebookButton.click();
+        // the url should change to /notebook
+        expect(browser.getCurrentUrl()).toEqual('http://localhost:8080/wise/project/demo#/notebook/');
+
+        // Check to see that the new note shows up in the notes view
+        var newNoteItemDiv = element(by.xpath('//notebook-item/ng-include/md-card/md-card-content'));
+        expect(newNoteItemDiv.isPresent()).toBeTruthy();
+        expect(newNoteItemDiv.getText()).toBe('This is my text note!');
+        var deleteNotebookItemButton = element(by.xpath('//md-card-actions/button[@aria-label="Delete notebook item"]'));
+        expect(deleteNotebookItemButton.isPresent()).toBeTruthy();
+        var notebookItemContentLocation = element(by.cssContainingText('.notebook-item__content__location', '1.1'));
+        expect(notebookItemContentLocation.isPresent()).toBeTruthy();
     });
 });
 //# sourceMappingURL=notebook.spec.js.map
