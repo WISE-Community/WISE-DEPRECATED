@@ -1898,8 +1898,8 @@ var StudentDataService = function () {
                     // get all the components in the node
                     var components = this.ProjectService.getComponentsByNodeId(nodeId);
 
-                    var tempResult = false;
-                    var firstResult = true;
+                    // we will default to is completed true
+                    var tempResult = true;
 
                     /*
                      * All components must be completed in order for the node to be completed
@@ -1916,6 +1916,7 @@ var StudentDataService = function () {
                             var showPreviousWorkComponentId = component.showPreviousWorkComponentId;
 
                             var tempNodeId = nodeId;
+                            var tempNode = node;
                             var tempComponentId = componentId;
                             var tempComponent = component;
 
@@ -1926,6 +1927,7 @@ var StudentDataService = function () {
                                  */
                                 tempNodeId = showPreviousWorkNodeId;
                                 tempComponentId = showPreviousWorkComponentId;
+                                tempNode = this.ProjectService.getNodeById(tempNodeId);
                                 tempComponent = this.ProjectService.getComponentByNodeIdAndComponentId(tempNodeId, tempComponentId);
                             }
 
@@ -1950,16 +1952,9 @@ var StudentDataService = function () {
                                         var nodeEvents = this.getEventsByNodeId(tempNodeId);
 
                                         // check if the component is completed
-                                        var isComponentCompleted = service.isCompleted(tempComponent, componentStates, componentEvents, nodeEvents, node);
+                                        var isComponentCompleted = service.isCompleted(tempComponent, componentStates, componentEvents, nodeEvents, tempNode);
 
-                                        if (firstResult) {
-                                            // this is the first component we have looked at
-                                            tempResult = isComponentCompleted;
-                                            firstResult = false;
-                                        } else {
-                                            // this is not the first component we have looked at
-                                            tempResult = tempResult && isComponentCompleted;
-                                        }
+                                        tempResult = tempResult && isComponentCompleted;
                                     }
                                 } catch (e) {
                                     console.log('Error: Could not calculate isCompleted() for component with id ' + tempComponentId);
