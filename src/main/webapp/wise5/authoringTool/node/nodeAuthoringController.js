@@ -33,6 +33,116 @@ var NodeAuthoringController = function () {
         this.whenToChoosePathOptions = [null, "enterNode", "exitNode", "scoreChanged", "studentDataChanged"];
         this.canChangePathOptions = [null, true, false];
 
+        // the available constraint actions
+        this.constraintActions = [{
+            value: "makeThisNodeNotVisible",
+            text: "Make this node not visible"
+        }, {
+            value: "makeThisNodeNotVisitable",
+            text: "Make this node not visitable"
+        }, {
+            value: "makeAllNodesAfterThisNotVisible",
+            text: "Make all nodes after this not visible"
+        }, {
+            value: "makeAllNodesAfterThisNotVisitable",
+            text: "Make all nodes after this not visitable"
+        }, {
+            value: "makeAllOtherNodesNotVisible",
+            text: "Make all other nodes not visible"
+        }, {
+            value: "makeAllOtherNodesNotVisitable",
+            text: "Make all other nodes not visitable"
+        }];
+
+        // the available removal conditionals
+        this.removalConditionals = [{
+            value: "any",
+            text: "Any"
+        }, {
+            value: "all",
+            text: "All"
+        }];
+
+        // the available removal criteria
+        this.removalCriteria = [{
+            value: "isCompleted",
+            text: "Is Completed",
+            params: [{
+                value: "nodeId",
+                text: "Node Id"
+            }]
+        }, {
+            value: "score",
+            text: "Score",
+            params: [{
+                value: "nodeId",
+                text: "Node Id"
+            }, {
+                value: "componentId",
+                text: "Component Id"
+            }, {
+                value: "scores",
+                text: "Score(s)"
+            }]
+        }, {
+            value: "branchPathTaken",
+            text: "Branch Path Taken",
+            params: [{
+                value: "fromNodeId",
+                text: "From Node Id"
+            }, {
+                value: "toNodeId",
+                text: "To Node Id"
+            }]
+        }, {
+            value: "choiceChosen",
+            text: "Choice Chosen",
+            params: [{
+                value: "nodeId",
+                text: "Node Id"
+            }, {
+                value: "componentId",
+                text: "Component Id"
+            }, {
+                value: "choiceIds",
+                text: "Choices"
+            }]
+        }, {
+            value: "isCorrect",
+            text: "Is Correct",
+            params: [{
+                value: "nodeId",
+                text: "Node Id"
+            }, {
+                value: "componentId",
+                text: "Component Id"
+            }]
+        }, {
+            value: "isVisible",
+            text: "Is Visible",
+            params: [{
+                value: "nodeId",
+                text: "Node Id"
+            }]
+        }, {
+            value: "isVisitable",
+            text: "Is Visitable",
+            params: [{
+                value: "nodeId",
+                text: "Node Id"
+            }]
+        }, {
+            value: "isVisited",
+            text: "Is Visited",
+            params: [{
+                value: "nodeId",
+                text: "Node Id"
+            }]
+        }, {
+            value: "isPlanningActivityCompleted",
+            text: "Is Planning Activity Completed"
+        }];
+
         // the array of component types that can be created
         this.componentTypes = [{ componentType: 'AudioOscillator', componentName: 'Audio Oscillator' }, { componentType: 'ConceptMap', componentName: 'Concept Map' }, { componentType: 'Discussion', componentName: 'Discussion' }, { componentType: 'Draw', componentName: 'Draw' }, { componentType: 'Embedded', componentName: 'Embedded' }, { componentType: 'Graph', componentName: 'Graph' }, { componentType: 'HTML', componentName: 'HTML' }, { componentType: 'Label', componentName: 'Label' }, { componentType: 'Match', componentName: 'Match' }, { componentType: 'MultipleChoice', componentName: 'Multiple Choice' }, { componentType: 'OpenResponse', componentName: 'Open Response' }, { componentType: 'OutsideURL', componentName: 'Outside URL' }, { componentType: 'Table', componentName: 'Table' }];
 
@@ -375,6 +485,292 @@ var NodeAuthoringController = function () {
                     }
                 });
             }
+        }
+
+        /**
+         * Get the removal criteria params for a removal criteria name
+         * @param name a removal criteria name e.g. 'isCompleted', 'score', 'branchPathTaken'
+         * @return the params for the given removal criteria name
+         */
+
+    }, {
+        key: "getRemovalCriteriaParamsByName",
+        value: function getRemovalCriteriaParamsByName(name) {
+            var params = [];
+
+            if (name != null) {
+
+                // loop through all the available removal criteria
+                for (var r = 0; r < this.removalCriteria.length; r++) {
+
+                    // get a single removal criteria
+                    var singleRemovalCriteria = this.removalCriteria[r];
+
+                    if (singleRemovalCriteria != null) {
+
+                        if (singleRemovalCriteria.value == name) {
+                            /*
+                             * we have found the removal criteria we are looking for
+                             * so we will get its params
+                             */
+                            params = singleRemovalCriteria.params;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            return params;
+        }
+
+        /**
+         * Get the choices of a component
+         * @param nodeId the node id
+         * @param componentId the component id
+         * @return the choices from the component
+         */
+
+    }, {
+        key: "getChoicesByNodeIdAndComponentId",
+        value: function getChoicesByNodeIdAndComponentId(nodeId, componentId) {
+
+            var choices = [];
+
+            // get the component
+            var component = this.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
+
+            if (component != null && component.choices != null) {
+                // get the choices
+                choices = component.choices;
+            }
+
+            return choices;
+        }
+
+        /**
+         * Get the choice type of a component
+         * @param nodeId the node id
+         * @param componentId the component id
+         * @return the choice type e.g. 'radio' or 'checkbox'
+         */
+
+    }, {
+        key: "getChoiceTypeByNodeIdAndComponentId",
+        value: function getChoiceTypeByNodeIdAndComponentId(nodeId, componentId) {
+
+            var choiceType = null;
+
+            // get the component
+            var component = this.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
+
+            if (component != null && component.choiceType != null) {
+                // get the choice type
+                choiceType = component.choiceType;
+            }
+
+            return choiceType;
+        }
+
+        /**
+         * Get the next available constraint id for a node
+         * @param nodeId the node id
+         * @return a constraint id that hasn't been used yet
+         */
+
+    }, {
+        key: "getNewNodeConstraintId",
+        value: function getNewNodeConstraintId(nodeId) {
+
+            var newNodeConstraintId = null;
+
+            var usedConstraintIds = [];
+
+            // get the node content
+            var node = this.ProjectService.getNodeById(nodeId);
+
+            if (node != null) {
+
+                // get the constraints
+                var constraints = node.constraints;
+
+                if (constraints != null) {
+
+                    // loop through all the constraints
+                    for (var c = 0; c < constraints.length; c++) {
+
+                        // get a constraint
+                        var constraint = constraints[c];
+
+                        if (constraint != null) {
+
+                            // get the id of the constraint
+                            var constraintId = constraint.id;
+
+                            // add the constraint id to the array of used constraint ids
+                            usedConstraintIds.push(constraintId);
+                        }
+                    }
+                }
+            }
+
+            // counter used for finding a constraint id that hasn't been used yet
+            var constraintCounter = 1;
+
+            // loop until we have found an unused constraint id
+            while (newNodeConstraintId == null) {
+
+                // create a potential constraint id
+                var potentialNewNodeConstraintId = nodeId + 'Constraint' + constraintCounter;
+
+                // check if the constraint id has been used already
+                if (usedConstraintIds.indexOf(potentialNewNodeConstraintId) == -1) {
+                    // the constraint id has not been used so we can use it
+                    newNodeConstraintId = potentialNewNodeConstraintId;
+                } else {
+                    /*
+                     * the constraint id has been used so we will increment the 
+                     * counter to try another contraint id
+                     */
+                    constraintCounter++;
+                }
+            }
+
+            return newNodeConstraintId;
+        }
+
+        /**
+         * Add a constraint
+         */
+
+    }, {
+        key: "addConstraint",
+        value: function addConstraint() {
+
+            // get a new constraint id
+            var newNodeConstraintId = this.getNewNodeConstraintId(this.nodeId);
+
+            // create the constraint object
+            var constraint = {};
+            constraint.id = newNodeConstraintId;
+            constraint.action = null;
+            constraint.targetId = this.nodeId;
+            constraint.removalConditional = "all";
+            constraint.removalCriteria = [];
+
+            // create a removal criteria
+            var removalCriteria = {};
+            removalCriteria.name = "";
+            removalCriteria.params = {};
+
+            // add the removal criteria to the constraint
+            constraint.removalCriteria.push(removalCriteria);
+
+            // create the constraints array if it does not exist
+            if (this.node.constraints == null) {
+                this.node.constraints = [];
+            }
+
+            // add the constraint to the node
+            this.node.constraints.push(constraint);
+
+            // save the project
+            this.ProjectService.saveProject();
+        }
+
+        /**
+         * Delete a constraint
+         * @param constraintIndex delete the constraint at the index
+         */
+
+    }, {
+        key: "deleteConstraint",
+        value: function deleteConstraint(constraintIndex) {
+
+            if (constraintIndex != null) {
+                // get the node content
+                var node = this.ProjectService.getNodeById(this.nodeId);
+
+                if (node != null) {
+
+                    // get the constraints
+                    var constraints = node.constraints;
+
+                    if (constraints != null) {
+
+                        // remove the constraint at the given index
+                        constraints.splice(constraintIndex, 1);
+                    }
+                }
+            }
+
+            // save the project
+            this.ProjectService.saveProject();
+        }
+
+        /**
+         * Add a removal criteria
+         * @param constraint add the removal criteria to this constraint
+         */
+
+    }, {
+        key: "addRemovalCriteria",
+        value: function addRemovalCriteria(constraint) {
+
+            if (constraint != null) {
+
+                // create the removal criteria
+                var removalCriteria = {};
+                removalCriteria.name = "";
+                removalCriteria.params = {};
+
+                // add the removal criteria to the constraint
+                constraint.removalCriteria.push(removalCriteria);
+            }
+
+            // save the project
+            this.ProjectService.saveProject();
+        }
+
+        /**
+         * Delete a removal criteria from a constraint
+         * @param constraint remove the removal criteria from this constraint
+         * @param removalCriteriaIndex the index of the removal criteria to remove
+         */
+
+    }, {
+        key: "deleteRemovalCriteria",
+        value: function deleteRemovalCriteria(constraint, removalCriteriaIndex) {
+            if (constraint != null) {
+
+                // get all the removal criteria
+                var removalCriteria = constraint.removalCriteria;
+
+                if (removalCriteria != null) {
+                    // remove the single removal criteria
+                    removalCriteria.splice(removalCriteriaIndex, 1);
+                }
+            }
+
+            // save the project
+            this.ProjectService.saveProject();
+        }
+
+        /**
+         * A removal criteria name has changed so we will clear the params so
+         * that the params from the previous removal criteria name do not persist
+         */
+
+    }, {
+        key: "removalCriteriaNameChanged",
+        value: function removalCriteriaNameChanged(criteria) {
+
+            if (criteria != null) {
+                // clear the params
+                criteria.params = {};
+            }
+
+            // save the project
+            this.authoringViewNodeChanged();
         }
     }]);
 
