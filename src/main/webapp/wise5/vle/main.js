@@ -328,7 +328,7 @@ var vleModule = _angular2.default.module('vle', [(0, _angularDragula2.default)(_
         'en_US': 'en',
         'en_UK': 'en'
     });
-    $translateProvider.useSanitizeValueStrategy('escape');
+    $translateProvider.useSanitizeValueStrategy('sanitizeParameters', 'escape');
 
     // ngMaterial default theme configuration
     // TODO: make dynamic and support alternate themes; allow projects to specify theme parameters and settings
