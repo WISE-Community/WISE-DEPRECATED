@@ -1,7 +1,6 @@
 'use strict';Object.defineProperty(exports,"__esModule",{value:true});var _typeof=typeof Symbol==="function"&&typeof Symbol.iterator==="symbol"?function(obj){return typeof obj;}:function(obj){return obj&&typeof Symbol==="function"&&obj.constructor===Symbol?"symbol":typeof obj;};var _createClass=function(){function defineProperties(target,props){for(var i=0;i<props.length;i++){var descriptor=props[i];descriptor.enumerable=descriptor.enumerable||false;descriptor.configurable=true;if("value"in descriptor)descriptor.writable=true;Object.defineProperty(target,descriptor.key,descriptor);}}return function(Constructor,protoProps,staticProps){if(protoProps)defineProperties(Constructor.prototype,protoProps);if(staticProps)defineProperties(Constructor,staticProps);return Constructor;};}();function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError("Cannot call a class as a function");}}var ProjectService=function(){function ProjectService($http,$injector,$q,$rootScope,ConfigService){_classCallCheck(this,ProjectService);this.$http=$http;this.$injector=$injector;this.$q=$q;this.$rootScope=$rootScope;this.ConfigService=ConfigService;this.project=null;this.transitions=[];this.applicationNodes=[];this.groupNodes=[];this.idToNode={};this.idToElement={};this.metadata={};this.activeConstraints=[];this.rootNode=null;this.idToPosition={};this.idToOrder={};this.nodeCount=0;// filtering options for navigation displays
-this.filters=[{'name':'all','label':'All'},//{'name': 'todo', 'label': 'Todo'},
-//{'name': 'completed', 'label': 'Completed'},
-{'name':'bookmark','label':'Bookmarks'}// TODO: Add when bookmarks are active
+this.filters=[{'name':'all','label':'All'}//{'name': 'todo', 'label': 'Todo'},
+//{'name': 'completed', 'label': 'Completed'}
 ];}_createClass(ProjectService,[{key:'setProject',value:function setProject(project){this.project=project;this.parseProject();}},{key:'clearProjectFields',/**
      * Initialize the data structures used to hold project information
      */value:function clearProjectFields(){this.transitions=[];this.applicationNodes=[];this.groupNodes=[];this.idToNode={};this.idToElement={};this.metadata={};this.activeConstraints=[];this.rootNode=null;this.idToPosition={};this.idToOrder={};this.nodeCount=0;}},{key:'getStyle',value:function getStyle(){var style='';var project=this.project;if(project!=null){style=project.style;}return style;}},{key:'getFilters',value:function getFilters(){return this.filters;}},{key:'getProjectTitle',/**
@@ -24,7 +23,8 @@ this.setNodeOrder(this.rootNode,this.nodeCount);//this.nodeCount = 0;
 var n=nodes.length;var branches=this.getBranches();var branchNodeIds=[];// set node positions
 var id,pos;while(n--){id=nodes[n].id;if(id===this.rootNode.id){this.setIdToPosition(id,'0');}else if(this.isNodeIdInABranch(branches,id)){// node is in a branch, so process later
 branchNodeIds.push(id);}else{pos=this.getPositionById(id);this.setIdToPosition(id,pos);}}// set branch node positions
-var b=branchNodeIds.length;while(b--){id=branchNodeIds[b];pos=this.getBranchNodePositionById(id);this.setIdToPosition(id,pos);}}}},{key:'setNodeOrder',value:function setNodeOrder(node){this.idToOrder[node.id]={'order':this.nodeCount};this.nodeCount++;if(this.isGroupNode(node.id)){var childIds=node.ids;for(var i=0;i<childIds.length;i++){var child=this.getNodeById(childIds[i]);this.setNodeOrder(child);}}}},{key:'getPositionById',/**
+var b=branchNodeIds.length;while(b--){id=branchNodeIds[b];pos=this.getBranchNodePositionById(id);this.setIdToPosition(id,pos);}}}},{key:'setNodeOrder',value:function setNodeOrder(node){this.idToOrder[node.id]={'order':this.nodeCount};this.nodeCount++;if(this.isGroupNode(node.id)){var childIds=node.ids;for(var i=0;i<childIds.length;i++){var child=this.getNodeById(childIds[i]);this.setNodeOrder(child);}if(this.ConfigService.getMode()==='classroomMonitor'){// we're viewing the classroom monitor, so include planning nodes in the project structure
+var planningIds=node.availablePlanningNodes;if(planningIds){for(var a=0;a<planningIds.length;a++){var _child=this.getNodeById(planningIds[a].nodeId);this.setNodeOrder(_child);}}}}}},{key:'getPositionById',/**
      * Returns the position in the project for the node with the given id. Returns null if no node with id exists.
      * @param id a node id
      * @return string position of the given node id in the project
@@ -47,7 +47,7 @@ var integerToAlpha=function integerToAlpha(int){var alphabet=['A','B','C','D','E
      * @param path the position of the given node
      * @param id the node id to search for
      * @return string path of the given node id in the project
-     */value:function getPathToNode(node,path,id){if(node.id===id){return path+'';}else if(node.type==='group'){var num=0;var branches=this.getBranches();for(var i=0;i<node.ids.length;i++){var nodeId=node.ids[i];if(this.isNodeIdInABranch(branches,nodeId)){this.getBranchNodePositionById(nodeId);}else{++num;var pos=this.getPathToNode(this.getNodeById(nodeId),path+'.'+num,id);if(pos){return pos;}}}}}},{key:'setIdToPosition',value:function setIdToPosition(id,pos){if(id!=null){this.idToPosition[id]=pos;}}},{key:'getNodePositionById',value:function getNodePositionById(id){if(id!=null){return this.idToPosition[id];}}},{key:'setIdToNode',value:function setIdToNode(id,element){if(id!=null){this.idToNode[id]=element;}}},{key:'setIdToElement',value:function setIdToElement(id,element){if(id!=null){this.idToElement[id]=element;}}},{key:'injectAssetPaths',/**
+     */value:function getPathToNode(node,path,id){if(node.id===id){return path+'';}else if(node.type==='group'){var num=0;var branches=this.getBranches();for(var i=0;i<node.ids.length;i++){var nodeId=node.ids[i];if(this.isNodeIdInABranch(branches,nodeId)){this.getBranchNodePositionById(nodeId);}else{++num;var pos=this.getPathToNode(this.getNodeById(nodeId),path+'.'+num,id);if(pos){return pos;}}}}}},{key:'setIdToPosition',value:function setIdToPosition(id,pos){if(id!=null){this.idToPosition[id]=pos;}}},{key:'getNodePositionById',value:function getNodePositionById(id){if(id!=null){return this.idToPosition[id]?this.idToPosition[id]:null;}}},{key:'setIdToNode',value:function setIdToNode(id,element){if(id!=null){this.idToNode[id]=element;}}},{key:'setIdToElement',value:function setIdToElement(id,element){if(id!=null){this.idToElement[id]=element;}}},{key:'injectAssetPaths',/**
      * Replace relative asset paths with absolute paths
      * e.g.
      * assets/myimage.jpg
@@ -1213,7 +1213,7 @@ this.recalculatePositionsInGroup(parentGroupId);}/*
      * e.g. if the step is seen as 1.3: Gather Evidence, then 1.3
      * is the position
      * @param groupId recalculate all the children of this group
-     */},{key:'recalculatePositionsInGroup',value:function recalculatePositionsInGroup(groupId){if(groupId!=null){var childIds=this.getChildNodeIdsById(groupId);// loop througha all the children
+     */},{key:'recalculatePositionsInGroup',value:function recalculatePositionsInGroup(groupId){if(groupId!=null){var childIds=this.getChildNodeIdsById(groupId);// loop through all the children
 for(var c=0;c<childIds.length;c++){var childId=childIds[c];// calculate the position of the child id
 var pos=this.getPositionById(childId);// set the mapping of node id to position
 this.setIdToPosition(childId,pos);}}}/**
