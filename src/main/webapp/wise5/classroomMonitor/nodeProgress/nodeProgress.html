@@ -1,66 +1,47 @@
-<style>
-.node {
-    fill: #ccc;
-    stroke: #fff;
-    stroke-width: 2px;
-}
+<div class="view-content--with-sidemenu" ng-if="nodeProgressController.isGroupNode(nodeProgressController.nodeId)">
+    <div class="l-constrained l-constrained-md md-padding nav">
+        <div class="flex md-subhead content-head" layout="row" layout-align="start center" layout-wrap layout-margin>
+            <h2 class="accent-2">{{nodeProgressController.getNodeCompletion('group0')}}% <span class="md-subhead" translate="completion"></span></h2>
+            <span flex></span>
+            <div>
+                <md-switch aria-label="Lock student screens switch"
+                           ng-model="nodeProgressController.isPaused"
+                           ng-change="nodeProgressController.pauseScreensChanged(nodeProgressController.isPaused)">
+                    <md-icon ng-class="{'accent-1': nodeProgressController.isPaused}"> lock </md-icon>
+                    <md-tooltip ng-if="!nodeProgressController.isPaused" md-direction="top">
+                        <span translate="pauseStudentScreens"></span>
+                    </md-tooltip>
+                    <md-tooltip ng-if="nodeProgressController.isPaused" md-direction="top">
+                        <span translate="unpauseStudentScreens"></span>
+                    </md-tooltip>
+                </md-switch>
+            </div>
+            <div layout="row" layout-align="end center" flex-xs="100" layout-margin>
+                <span class="text-secondary">
+                    <ng-pluralize count="nodeProgressController.getNumberOfStudentsOnNode(nodeProgressController.rootNode.id)"
+                        when="{'0': '{{&quot;numberOfTeams_0&quot; | translate}}',
+                            'one': '{{&quot;numberOfTeams_1&quot; | translate}}',
+                            'other': '{{&quot;numberOfTeams_other&quot; | translate:{count:nodeProgressController.getNumberOfStudentsOnNode(nodeProgressController.rootNode.id)} }}'}">
+                    </ng-pluralize>
+                </span>
+                <span hide-gt-xs flex></span>
+                <period-select></period-select>
+            </div>
+        </div>
 
-.link {
-    stroke: #777;
-    stroke-width: 2px;
-}
-.node-select--group {
-    font-weight: bold
-}
-
-.node-select--node {
-    margin-left: 10px
-}
-.active {
-    background-color: yellow;
-}
-
-.online {
-    background-color: lightgreen;
-}
-
-table {
-    border-collapse: collapse;
-    border: 1px solid black;
-}
-table td, table th {
-    border: 1px solid black;
-}
-
-table tr {
-    cursor: pointer;
-}
-</style>
-
-<div>
-    <button ng-repeat='period in nodeProgressController.periods'
-            ng-click='nodeProgressController.setCurrentPeriod(period)'
-            ng-class="{'active': period.periodName == nodeProgressController.getCurrentPeriod().periodName}">
-        {{period.periodName}}
-    </button>
+        <div class="nav-contents nav-contents--root">
+            <div layout="row" layout-wrap layout-align="center start">
+                <nav-item ng-repeat="id in nodeProgressController.rootNode.ids"
+                          class="nav-item nav-item--root"
+                          ng-class="{'expanded': itemExpanded}"
+                          show-position="true"
+                          node-id="id" type="'card'"
+                          flex="100" flex-sm="50" flex-gt-sm="50"></nav-item>
+            </div>
+        </div>
+    </div>
 </div>
-<table>
-    <tr>
-        <th translate="step" />
-        <th translate="numberOfStudentOnStep" />
-        <th translate="completion" />
-        <th translate="averageScore " />
-    </tr>
-    <tr ng-repeat='item in nodeProgressController.items | toArray | orderBy : "order"'
-         ng-class='{online: nodeProgressController.isWorkgroupOnlineOnNode(item.$key)}'
-        ng-if='item.order!==0'
-        ng-click='nodeProgressController.nodeClicked(item.$key)'
-        style='cursor: pointer'>
-        <td>{{nodeProgressController.getNodePositionById(item.$key)}} {{nodeProgressController.getNodeTitleByNodeId(item.$key)}}</td>
-        <td align='right'>{{nodeProgressController.getNumberOfStudentsOnNode(item.$key)}}</td>
-        <td align='right'>{{nodeProgressController.getNodeCompletion(item.$key)}}%</td>
-        <td align='right'>{{nodeProgressController.getNodeAverageScore(item.$key)}}</td>
-    </tr>
-</table>
 
-</group>
+<div ng-if="nodeProgressController.isApplicationNode(nodeProgressController.nodeId)">
+    <div class="md-padding" ng-cloak ui-view="nodeView"></div>
+</div>

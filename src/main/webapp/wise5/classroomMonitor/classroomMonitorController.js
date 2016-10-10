@@ -27,11 +27,60 @@ var ClassroomMonitorController = function () {
         this.SessionService = SessionService;
         this.TeacherDataService = TeacherDataService;
         this.TeacherWebSocketService = TeacherWebSocketService;
-        this.$translate('pauseStudentScreens').then(function (pauseStudentScreens) {
-            _this.pauseScreenButtonText = pauseStudentScreens;
+
+        this.projectName = this.ProjectService.getProjectTitle();
+        this.runId = this.ConfigService.getRunId();
+
+        this.numberProject = true; // TODO: make dynamic or remove
+
+        this.menuOpen = false; // boolean to indicate whether monitor nav menu is open
+        this.showSideMenu = true; // boolean to indicate whether to show the monitor side menu
+        this.showMonitorToolbar = true; // boolean to indicate whether to show the monitor toolbar
+        this.showStepToolbar = true; // boolean to indicate whether to show the step toolbar
+
+        // ui-views and their corresponding names, labels, and icons
+        this.$translate(['dashboardView', 'dashboardViewLabel', 'projectView', 'projectViewLabel', 'studentView', 'studentViewLabel', 'notebookView', 'notebookViewLabel', 'exportView', 'exportViewLabel', 'notesTipsView', 'notesTipsViewLabel']).then(function (translation) {
+            _this.views = {
+                'root.dashboard': {
+                    name: translation.dashboardView,
+                    label: translation.dashboardViewLabel,
+                    icon: 'dashboard',
+                    type: 'primary'
+                },
+                'root.nodeProgress': {
+                    name: translation.projectView,
+                    label: translation.projectViewLabel,
+                    icon: 'assignment_turned_in',
+                    type: 'primary'
+                },
+                'root.studentProgress': {
+                    name: translation.studentView,
+                    label: translation.studentViewLabel,
+                    icon: 'people',
+                    type: 'primary'
+                },
+                'root.notebooks': {
+                    name: translation.notebookView,
+                    label: translation.notebookViewLabel,
+                    icon: 'chrome_reader_mode',
+                    type: 'secondary'
+                },
+                'root.export': {
+                    name: translation.exportView,
+                    label: translation.exportViewLabel,
+                    icon: 'file_download',
+                    type: 'secondary'
+                },
+                'root.notes': {
+                    name: translation.notesTipsView,
+                    label: translation.notesTipsViewLabel,
+                    icon: 'speaker_notes',
+                    type: 'secondary'
+                }
+            };
         });
 
-        $scope.$on('showSessionWarning', function () {
+        this.$scope.$on('showSessionWarning', function () {
             // Appending dialog to document.body
             var confirm = $mdDialog.confirm().parent(angular.element(document.body)).title('Session Timeout').content('You have been inactive for a long time. Do you want to stay logged in?').ariaLabel('Session Timeout').ok('YES').cancel('No');
             $mdDialog.show(confirm).then(function () {
@@ -41,14 +90,16 @@ var ClassroomMonitorController = function () {
             });
         });
 
-        // listen for the periodChanged event
-        $scope.$on('periodChanged', function (event, args) {
-            // the period has changed so we will update the paused/unpaused button
-            _this.updatePauseButton();
+        // listen for state change events
+        this.$rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
+            // close the menu when the state changes
+            _this.menuOpen = false;
+
+            _this.processUI();
         });
 
-        // update the text of the pause/unpause button
-        this.updatePauseButton();
+        // update UI items; TODO: remove eventually
+        this.processUI();
 
         this.themePath = this.ProjectService.getThemePath();
 
@@ -62,6 +113,32 @@ var ClassroomMonitorController = function () {
     }
 
     _createClass(ClassroomMonitorController, [{
+        key: 'processUI',
+
+
+        /**
+         * Update UI items based on state, show or hide relevant menus and toolbars
+         * TODO: remove/rework this and put items in their own ui states
+         */
+        value: function processUI() {
+            if (this.$state.$current.name === 'root.nodeProgress') {
+                var nodeId = this.$state.params.nodeId;
+                var showMenu = true;
+                var showMonitorToolbar = true;
+                var showStepToolbar = false;
+                if (nodeId) {
+                    if (this.ProjectService.isApplicationNode(nodeId)) {
+                        showMenu = false;
+                        showMonitorToolbar = false;
+                        showStepToolbar = true;
+                    }
+                }
+                this.showSideMenu = showMenu;
+                this.showMonitorToolbar = showMonitorToolbar;
+                this.showStepToolbar = showStepToolbar;
+            }
+        }
+    }, {
         key: 'hello',
         value: function hello() {
             ocpu.seturl("//128.32.189.240:81/ocpu/user/wiser/library/wiser/R");
@@ -305,99 +382,6 @@ var ClassroomMonitorController = function () {
         }
 
         /**
-         * The pause screen button was clicked. This button is used to toggle
-         * pause screen on and off.
-         */
-
-    }, {
-        key: 'pauseScreenButtonClicked',
-        value: function pauseScreenButtonClicked() {
-
-            // get the currently selected period
-            var currentPeriod = this.TeacherDataService.getCurrentPeriod();
-            var periodId = currentPeriod.periodId;
-
-            // get the previous value of whether the period was paused or unpaused
-            var isPaused = this.TeacherDataService.isPeriodPaused(periodId);
-
-            // toggle the value
-            var newIsPausedValue = !isPaused;
-
-            // update the run status
-            this.TeacherDataService.updatePausedRunStatusValue(periodId, newIsPausedValue);
-
-            // update the pause/unpause button text
-            this.updatePauseButton();
-
-            if (newIsPausedValue) {
-                // pause the student screens
-                this.TeacherWebSocketService.pauseScreens(periodId);
-            } else {
-                // unpause the student screens
-                this.TeacherWebSocketService.unPauseScreens(periodId);
-            }
-
-            // save the run status to the server
-            this.TeacherDataService.sendRunStatus();
-        }
-
-        /**
-         * Update the pause button to reflect the pause/unpaused state of the period
-         */
-
-    }, {
-        key: 'updatePauseButton',
-        value: function updatePauseButton() {
-            // get the currently selected period
-            var currentPeriod = this.TeacherDataService.getCurrentPeriod();
-
-            // default to all periods
-            var periodId = -1;
-
-            if (currentPeriod != null) {
-                periodId = currentPeriod.periodId;
-            }
-
-            // whether the period is paused or unpaused
-            var isPaused = this.TeacherDataService.isPeriodPaused(periodId);
-
-            // update the paused/unpaused button text
-            if (isPaused) {
-                this.displayUnPauseButton();
-            } else if (!isPaused) {
-                this.displayPauseButton();
-            }
-        }
-
-        /**
-         * Change the text of the button to display 'Pause Screens'
-         */
-
-    }, {
-        key: 'displayPauseButton',
-        value: function displayPauseButton() {
-            var _this4 = this;
-
-            this.$translate('pauseStudentScreens').then(function (pauseStudentScreens) {
-                _this4.pauseScreenButtonText = pauseStudentScreens;
-            });
-        }
-
-        /**
-         * Change the text of the button to display 'Unpause Screens'
-         */
-
-    }, {
-        key: 'displayUnPauseButton',
-        value: function displayUnPauseButton() {
-            var _this5 = this;
-
-            this.$translate('unPauseStudentScreens').then(function (unPauseStudentScreens) {
-                _this5.pauseScreenButtonText = unPauseStudentScreens;
-            });
-        }
-
-        /**
          * Returns true iff there are new notifications
          */
 
@@ -426,15 +410,15 @@ var ClassroomMonitorController = function () {
     }, {
         key: 'confirmDismissAllNotifications',
         value: function confirmDismissAllNotifications(ev) {
-            var _this6 = this;
+            var _this4 = this;
 
             if (this.getNewNotifications().length > 1) {
                 this.$translate(["dismissNotificationsTitle", "dismissNotificationsMessage", "yes", "no"]).then(function (translations) {
-                    var confirm = _this6.$mdDialog.confirm().parent(angular.element($('._md-open-menu-container._md-active'))) // TODO: hack for now (showing md-dialog on top of md-menu)
+                    var confirm = _this4.$mdDialog.confirm().parent(angular.element($('._md-open-menu-container._md-active'))) // TODO: hack for now (showing md-dialog on top of md-menu)
                     .ariaLabel(translations.dismissNotificationsTitle).textContent(translations.dismissNotificationsMessage).targetEvent(ev).ok(translations.yes).cancel(translations.no);
 
-                    _this6.$mdDialog.show(confirm).then(function () {
-                        _this6.dismissAllNotifications();
+                    _this4.$mdDialog.show(confirm).then(function () {
+                        _this4.dismissAllNotifications();
                     });
                 });
             } else {
@@ -449,11 +433,11 @@ var ClassroomMonitorController = function () {
     }, {
         key: 'dismissAllNotifications',
         value: function dismissAllNotifications() {
-            var _this7 = this;
+            var _this5 = this;
 
             var newNotifications = this.getNewNotifications();
             newNotifications.map(function (newNotification) {
-                _this7.dismissNotification(newNotification);
+                _this5.dismissNotification(newNotification);
             });
         }
 
@@ -467,7 +451,6 @@ var ClassroomMonitorController = function () {
         value: function dismissNotification(notification) {
             this.NotificationService.dismissNotification(notification);
         }
-
         /**
          * The user has moved the mouse so we will notify the Session Service
          * so that it can refresh the session

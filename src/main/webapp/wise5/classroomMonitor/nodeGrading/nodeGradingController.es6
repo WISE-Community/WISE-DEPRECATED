@@ -2,7 +2,14 @@
 
 class NodeGradingController {
 
-    constructor($state, $stateParams, AnnotationService, ConfigService, NodeService, ProjectService, TeacherDataService) {
+    constructor($state,
+                $stateParams,
+                AnnotationService,
+                ConfigService,
+                NodeService,
+                ProjectService,
+                StudentStatusService,
+                TeacherDataService) {
 
         this.$state = $state;
         this.$stateParams = $stateParams;
@@ -10,65 +17,67 @@ class NodeGradingController {
         this.ConfigService = ConfigService;
         this.NodeService = NodeService;
         this.ProjectService = ProjectService;
+        this.StudentStatusService = StudentStatusService;
         this.TeacherDataService = TeacherDataService;
 
         this.nodeId = this.$stateParams.nodeId;
 
-        this.nodeTitle = null;
-
-        // field that will hold the node content
-        this.nodeContent = null;
-
-        this.teacherWorkgroupId = this.ConfigService.getWorkgroupId();
-
-        this.periods = [];
-
-        var node = this.ProjectService.getNodeById(this.nodeId);
-
-        if (node != null) {
-            var position = this.ProjectService.getPositionById(this.nodeId);
-
-            if (position != null) {
-                this.nodeTitle = position + ' ' + node.title;
-            } else {
-                this.nodeTitle = node.title;
-            }
-
+        // TODO: add loading indicator
+        this.TeacherDataService.retrieveStudentDataByNodeId(this.nodeId).then(result => {
+            this.nodeTitle = null;
 
             // field that will hold the node content
-            this.nodeContent = node;
-        }
+            this.nodeContent = null;
 
-        this.workgroupIds = this.ConfigService.getClassmateWorkgroupIds();
-        
-        this.canViewStudentNames = true;
-        this.canGradeStudentWork = true;
-        
-        // get the role of the teacher for the run e.g. 'owner', 'write', 'read'
-        var role = this.ConfigService.getTeacherRole(this.teacherWorkgroupId);
-        
-        if (role === 'owner') {
-            // the teacher is the owner of the run and has full access
+            this.teacherWorkgroupId = this.ConfigService.getWorkgroupId();
+
+            this.periods = [];
+
+            var node = this.ProjectService.getNodeById(this.nodeId);
+
+            if (node != null) {
+                var position = this.ProjectService.getPositionById(this.nodeId);
+
+                if (position != null) {
+                    this.nodeTitle = position + ' ' + node.title;
+                } else {
+                    this.nodeTitle = node.title;
+                }
+
+
+                // field that will hold the node content
+                this.nodeContent = node;
+            }
+
+            this.workgroupIds = this.ConfigService.getClassmateWorkgroupIds();
+
             this.canViewStudentNames = true;
             this.canGradeStudentWork = true;
-        } else if (role === 'write') {
-            // the teacher is a shared teacher that can grade the student work
-            this.canViewStudentNames = true;
-            this.canGradeStudentWork = true;
-        } else if (role === 'read') {
-            // the teacher is a shared teacher that can only view the student work
-            this.canViewStudentNames = false;
-            this.canGradeStudentWork = false;
-        }
 
-        this.annotationMappings = {};
+            // get the role of the teacher for the run e.g. 'owner', 'write', 'read'
+            var role = this.ConfigService.getTeacherRole(this.teacherWorkgroupId);
 
-        this.componentStateHistory = [];
-        // initialize the periods
-        this.initializePeriods();
+            if (role === 'owner') {
+                // the teacher is the owner of the run and has full access
+                this.canViewStudentNames = true;
+                this.canGradeStudentWork = true;
+            } else if (role === 'write') {
+                // the teacher is a shared teacher that can grade the student work
+                this.canViewStudentNames = true;
+                this.canGradeStudentWork = true;
+            } else if (role === 'read') {
+                // the teacher is a shared teacher that can only view the student work
+                this.canViewStudentNames = false;
+                this.canGradeStudentWork = false;
+            }
 
-        // scroll to the top of the page when the page loads
-        document.body.scrollTop = document.documentElement.scrollTop = 0;
+            this.annotationMappings = {};
+
+            this.componentStateHistory = [];
+
+            // scroll to the top of the page when the page loads
+            document.body.scrollTop = document.documentElement.scrollTop = 0;
+        });
     }
 
     /**
@@ -78,7 +87,7 @@ class NodeGradingController {
      */
     getComponentTemplatePath(componentType) {
         return this.NodeService.getComponentTemplatePath(componentType);
-    };
+    }
 
     /**
      * Get the components for this node.
@@ -108,7 +117,7 @@ class NodeGradingController {
         }
 
         return components;
-    };
+    }
 
     getComponentById(componentId) {
         var component = null;
@@ -131,7 +140,7 @@ class NodeGradingController {
         }
 
         return component;
-    };
+    }
 
     /**
      * Get the student data for a specific part
@@ -148,7 +157,7 @@ class NodeGradingController {
         }
 
         return componentState;
-    };
+    }
 
     /**
      * Get the student data for a specific part
@@ -166,7 +175,7 @@ class NodeGradingController {
         }
 
         return componentState;
-    };
+    }
 
     getComponentStatesByWorkgroupIdAndNodeId(workgroupId, nodeId) {
         var componentStates = this.TeacherDataService.getComponentStatesByWorkgroupIdAndNodeId(workgroupId, nodeId);
@@ -174,20 +183,20 @@ class NodeGradingController {
         //AnnotationService.populateAnnotationMappings(this.annotationMappings, workgroupId, componentStates);
 
         return componentStates;
-    };
+    }
 
     getUserNameByWorkgroupId(workgroupId) {
         return this.ConfigService.getUserNameByWorkgroupId(workgroupId);
-    };
+    }
 
     getAnnotationByStepWorkIdAndType(stepWorkId, type) {
         return this.AnnotationService.getAnnotationByStepWorkIdAndType(stepWorkId, type);
-    };
+    }
 
     scoreChanged(stepWorkId) {
         var annotation = this.annotationMappings[stepWorkId + '-score'];
         this.AnnotationService.saveAnnotation(annotation);
-    };
+    }
 
     commentChanged(stepWorkId) {
         var annotation = this.annotationMappings[stepWorkId + '-comment'];
@@ -196,7 +205,7 @@ class NodeGradingController {
 
     setupComponentStateHistory() {
         this.getComponentStatesByWorkgroupIdAndNodeId()
-    };
+    }
 
     /**
      * Get the period id for a workgroup id
@@ -205,48 +214,41 @@ class NodeGradingController {
      */
     getPeriodIdByWorkgroupId(workgroupId) {
         return this.ConfigService.getPeriodIdByWorkgroupId(workgroupId);
-    };
-
-    /**
-     * Initialize the periods
-     */
-    initializePeriods() {
-
-        // create an option for all periods
-        var allPeriodOption = {
-            periodId: -1,
-            periodName: 'All'
-        };
-
-        this.periods.push(allPeriodOption);
-
-        this.periods = this.periods.concat(this.ConfigService.getPeriods());
-
-        // set the current period if it hasn't been set yet
-        if (this.getCurrentPeriod() == null) {
-            if (this.periods != null && this.periods.length > 0) {
-                // set it to the all periods option
-                this.setCurrentPeriod(this.periods[0]);
-            }
-        }
-    };
-
-    /**
-     * Set the current period
-     * @param period the period object
-     */
-    setCurrentPeriod(period) {
-        this.TeacherDataService.setCurrentPeriod(period);
-    };
+    }
 
     /**
      * Get the current period
      */
     getCurrentPeriod() {
         return this.TeacherDataService.getCurrentPeriod();
-    };
+    }
+
+    /**
+     * Get the percentage of the class or period that has completed the node
+     * @param nodeId the node id
+     * @returns the percentage of the class or period that has completed the node
+     */
+    getNodeCompletion(nodeId) {
+        // get the currently selected period
+        var currentPeriod = this.getCurrentPeriod();
+        var periodId = currentPeriod.periodId;
+
+        // get the percentage of the class or period that has completed the node
+        var completionPercentage = this.StudentStatusService.getNodeCompletion(nodeId, periodId);
+
+        return completionPercentage;
+    }
 }
 
-NodeGradingController.$inject = ['$state', '$stateParams', 'AnnotationService', 'ConfigService', 'NodeService', 'ProjectService', 'TeacherDataService'];
+NodeGradingController.$inject = [
+    '$state',
+    '$stateParams',
+    'AnnotationService',
+    'ConfigService',
+    'NodeService',
+    'ProjectService',
+    'StudentStatusService',
+    'TeacherDataService'
+];
 
 export default NodeGradingController;

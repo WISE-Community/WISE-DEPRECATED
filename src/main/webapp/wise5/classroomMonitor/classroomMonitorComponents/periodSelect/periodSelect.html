@@ -1,0 +1,10 @@
+<md-select ng-model="$ctrl.currentPeriod"
+           ng-model-options="{trackBy: '$value.periodId'}"
+           class="md-no-underline md-button md-raised"
+           ng-change="$ctrl.currentPeriodChanged()"
+           placeholder="{{'selectPeriod' | translate}}">
+    <md-option ng-repeat="period in $ctrl.periods" ng-value="period">
+        <span ng-if="period.periodId === -1" translate="allPeriods"></span>
+        <span ng-if="period.periodId != -1" translate="periodLabel" translate-value-name="{{period.periodName}}"></span>
+    </md-option>
+</md-select>

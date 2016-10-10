@@ -20,41 +20,40 @@
     }
 </style>
 
-<div>
+<div class="view-content view-content--with-sidemenu">
+    <div class="l-constrained" layout="column">
+        <div>
+            <button ng-repeat='period in studentProgressController.periods'
+                    ng-click='studentProgressController.setCurrentPeriod(period)'
+                    ng-class="{'active': period.periodName == studentProgressController.getCurrentPeriod().periodName}">
+                {{period.periodName}}
+            </button>
+        </div>
 
-<div>
-    <button ng-repeat='period in studentProgressController.periods'
-            ng-click='studentProgressController.setCurrentPeriod(period)'
-            ng-class="{'active': period.periodName == studentProgressController.getCurrentPeriod().periodName}">
-        {{period.periodName}}
-    </button>
-</div>
+        <table>
+            <tr>
+                <th translate="team" />
+                <th translate="currentLocation" />
+                <th translate="timeSpent" />
+                <th translate="projectCompletion" />
+                <th translate="score" ng-if='studentProgressController.maxScore !== null' />
+            </tr>
+            <tr ng-class="{online: studentProgressController.isWorkgroupOnline(workgroup.workgroupId)}"
+                ng-repeat="workgroup in studentProgressController.workgroups"
+                ng-click="studentProgressController.studentRowClicked(workgroup)"
+                ng-show="studentProgressController.getCurrentPeriod().periodName == 'All' || workgroup.periodId == studentProgressController.getCurrentPeriod().periodId">
+                <td ng-if="studentProgressController.canViewStudentNames">{{workgroup.userName}} ({{workgroup.workgroupId}})</td>
+                <td ng-if="!studentProgressController.canViewStudentNames">{{workgroup.workgroupId}}</td>
+                <td>{{studentProgressController.getCurrentNodeForWorkgroupId(workgroup.workgroupId)}}</td>
+                <td align='right'><div ng-show='studentProgressController.isWorkgroupOnline(workgroup.workgroupId)'>{{studentProgressController.getStudentTimeSpent(workgroup.workgroupId)}}</div></td>
+                <td align='right'><div ng-if='studentProgressController.getStudentProjectCompletion(workgroup.workgroupId)'>{{studentProgressController.getStudentProjectCompletion(workgroup.workgroupId)}}%</div></td>
+                <td align='right' ng-if='studentProgressController.maxScore !== null'><div>{{studentProgressController.getStudentTotalScore(workgroup.workgroupId)}}/{{studentProgressController.maxScore}}</div></td>
+            </tr>
+        </table>
 
-<table>
-    <tr>
-        <th translate="team" />
-        <th translate="currentLocation" />
-        <th translate="timeSpent" />
-        <th translate="projectCompletion" />
-        <th translate="score" />
-    </tr>
-    <tr ng-class="{online: studentProgressController.isWorkgroupOnline(workgroup.workgroupId)}"
-        ng-repeat="workgroup in studentProgressController.workgroups"
-        ng-click="studentProgressController.studentRowClicked(workgroup)"
-        ng-show="studentProgressController.getCurrentPeriod().periodName == 'All' || workgroup.periodId == studentProgressController.getCurrentPeriod().periodId">
-        <td ng-if="studentProgressController.canViewStudentNames">{{workgroup.userName}} ({{workgroup.workgroupId}})</td>
-        <td ng-if="!studentProgressController.canViewStudentNames">{{workgroup.workgroupId}}</td>
-        <td>{{studentProgressController.getCurrentNodeForWorkgroupId(workgroup.workgroupId)}}</td>
-        <td align='right'><div ng-show='studentProgressController.isWorkgroupOnline(workgroup.workgroupId)'>{{studentProgressController.getStudentTimeSpent(workgroup.workgroupId)}}</div></td>
-        <td align='right'><div ng-if='studentProgressController.getStudentProjectCompletion(workgroup.workgroupId)'>{{studentProgressController.getStudentProjectCompletion(workgroup.workgroupId)}}%</div></td>
-        <td align='right'><div ng-show='studentProgressController.maxScore != null'>{{studentProgressController.getStudentTotalScore(workgroup.workgroupId)}}/{{studentProgressController.maxScore}}</div></td>
-        <!--
-        <td>{{studentProgressController.getStudentProjectCompletion(workgroup.workgroupId)}}</td>
-        -->
-    </tr>
-</table>
-
-    <!-- TODO: get this working again -->
-<div translate="newWorkCounter"
-     translate-value-count="0"></div>
+            <!-- TODO: get this working again -->
+        <!--<div translate="newWorkCounter"
+             translate-value-count="0"></div>
+        </div>-->
+    </div>
 </div>

@@ -4,6 +4,8 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
+require('../themes/default/js/webfonts');
+
 var _jquery = require('jquery');
 
 var _jquery2 = _interopRequireDefault(_jquery);
@@ -60,6 +62,10 @@ var _audioOscillatorComponentModule = require('../components/audioOscillator/aud
 
 var _audioOscillatorComponentModule2 = _interopRequireDefault(_audioOscillatorComponentModule);
 
+var _classroomMonitorComponents = require('./classroomMonitorComponents');
+
+var _classroomMonitorComponents2 = _interopRequireDefault(_classroomMonitorComponents);
+
 var _classroomMonitorController = require('./classroomMonitorController');
 
 var _classroomMonitorController2 = _interopRequireDefault(_classroomMonitorController);
@@ -79,6 +85,10 @@ var _cRaterService2 = _interopRequireDefault(_cRaterService);
 var _components = require('../directives/components');
 
 var _components2 = _interopRequireDefault(_components);
+
+var _dashboardController = require('./dashboard/dashboardController');
+
+var _dashboardController2 = _interopRequireDefault(_dashboardController);
 
 var _discussionComponentModule = require('../components/discussion/discussionComponentModule');
 
@@ -120,13 +130,13 @@ var _multipleChoiceComponentModule = require('../components/multipleChoice/multi
 
 var _multipleChoiceComponentModule2 = _interopRequireDefault(_multipleChoiceComponentModule);
 
-var _nodeProgressController = require('./nodeProgress/nodeProgressController');
-
-var _nodeProgressController2 = _interopRequireDefault(_nodeProgressController);
-
 var _nodeGradingController = require('./nodeGrading/nodeGradingController');
 
 var _nodeGradingController2 = _interopRequireDefault(_nodeGradingController);
+
+var _nodeProgressController = require('./nodeProgress/nodeProgressController');
+
+var _nodeProgressController2 = _interopRequireDefault(_nodeProgressController);
 
 var _nodeService = require('../services/nodeService');
 
@@ -196,9 +206,13 @@ var _utilService = require('../services/utilService');
 
 var _utilService2 = _interopRequireDefault(_utilService);
 
+var _moment = require('moment');
+
+var _moment2 = _interopRequireDefault(_moment);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var classroomMonitorModule = _angular2.default.module('classroomMonitor', [(0, _angularDragula2.default)(_angular2.default), 'angularMoment', 'angular-toArrayFilter', 'audioOscillatorComponentModule', 'components', 'conceptMapComponentModule', 'discussionComponentModule', 'drawComponentModule', 'embeddedComponentModule', 'graphComponentModule', 'highcharts-ng', 'htmlComponentModule', 'labelComponentModule', 'matchComponentModule', 'multipleChoiceComponentModule', 'ngAnimate', 'ngAria', 'ngFileUpload', 'ngMaterial', 'ngSanitize', 'ngWebSocket', 'openResponseComponentModule', 'outsideURLComponentModule', 'pascalprecht.translate', 'tableComponentModule', 'ui.router']).service(_annotationService2.default.name, _annotationService2.default).service(_configService2.default.name, _configService2.default).service(_cRaterService2.default.name, _cRaterService2.default).service(_nodeService2.default.name, _nodeService2.default).service(_notebookService2.default.name, _notebookService2.default).service(_notificationService2.default.name, _notificationService2.default).service(_projectService2.default.name, _projectService2.default).service(_sessionService2.default.name, _sessionService2.default).service(_studentAssetService2.default.name, _studentAssetService2.default).service(_studentDataService2.default.name, _studentDataService2.default).service(_studentStatusService2.default.name, _studentStatusService2.default).service(_studentWebSocketService2.default.name, _studentWebSocketService2.default).service(_teacherDataService2.default.name, _teacherDataService2.default).service(_teacherWebSocketService2.default.name, _teacherWebSocketService2.default).service(_utilService2.default.name, _utilService2.default).controller(_classroomMonitorController2.default.name, _classroomMonitorController2.default).controller(_nodeGradingController2.default.name, _nodeGradingController2.default).controller(_nodeProgressController2.default.name, _nodeProgressController2.default).controller(_studentGradingController2.default.name, _studentGradingController2.default).controller(_studentProgressController2.default.name, _studentProgressController2.default).config(['$urlRouterProvider', '$stateProvider', '$translateProvider', '$translatePartialLoaderProvider', '$controllerProvider', '$mdThemingProvider', function ($urlRouterProvider, $stateProvider, $translateProvider, $translatePartialLoaderProvider, $controllerProvider, $mdThemingProvider) {
+var classroomMonitorModule = _angular2.default.module('classroomMonitor', [(0, _angularDragula2.default)(_angular2.default), 'angularMoment', 'angular-toArrayFilter', 'audioOscillatorComponentModule', 'components', 'conceptMapComponentModule', 'classroomMonitor.components', 'discussionComponentModule', 'drawComponentModule', 'embeddedComponentModule', 'graphComponentModule', 'highcharts-ng', 'htmlComponentModule', 'labelComponentModule', 'matchComponentModule', 'multipleChoiceComponentModule', 'ngAnimate', 'ngAria', 'ngFileUpload', 'ngMaterial', 'ngSanitize', 'ngWebSocket', 'openResponseComponentModule', 'outsideURLComponentModule', 'pascalprecht.translate', 'tableComponentModule', 'ui.router']).service(_annotationService2.default.name, _annotationService2.default).service(_configService2.default.name, _configService2.default).service(_cRaterService2.default.name, _cRaterService2.default).service(_nodeService2.default.name, _nodeService2.default).service(_notebookService2.default.name, _notebookService2.default).service(_notificationService2.default.name, _notificationService2.default).service(_projectService2.default.name, _projectService2.default).service(_sessionService2.default.name, _sessionService2.default).service(_studentAssetService2.default.name, _studentAssetService2.default).service(_studentDataService2.default.name, _studentDataService2.default).service(_studentStatusService2.default.name, _studentStatusService2.default).service(_studentWebSocketService2.default.name, _studentWebSocketService2.default).service(_teacherDataService2.default.name, _teacherDataService2.default).service(_teacherWebSocketService2.default.name, _teacherWebSocketService2.default).service(_utilService2.default.name, _utilService2.default).controller(_classroomMonitorController2.default.name, _classroomMonitorController2.default).controller(_nodeGradingController2.default.name, _nodeGradingController2.default).controller(_nodeProgressController2.default.name, _nodeProgressController2.default).controller(_studentGradingController2.default.name, _studentGradingController2.default).controller(_studentProgressController2.default.name, _studentProgressController2.default).config(['$urlRouterProvider', '$stateProvider', '$translateProvider', '$translatePartialLoaderProvider', '$controllerProvider', '$mdThemingProvider', function ($urlRouterProvider, $stateProvider, $translateProvider, $translatePartialLoaderProvider, $controllerProvider, $mdThemingProvider) {
 
     $urlRouterProvider.otherwise('/studentProgress');
 
@@ -235,18 +249,16 @@ var classroomMonitorModule = _angular2.default.module('classroomMonitor', [(0, _
             },
             sessionTimers: function sessionTimers(SessionService, config) {
                 return SessionService.initializeSession();
+            },
+            annotations: function annotations(TeacherDataService, config) {
+                return TeacherDataService.retrieveAnnotations();
             }
         }
     }).state('root.studentProgress', {
         url: '/studentProgress',
         templateUrl: 'wise5/classroomMonitor/studentProgress/studentProgress.html',
         controller: 'StudentProgressController',
-        controllerAs: 'studentProgressController',
-        resolve: {
-            studentData: function studentData($stateParams, TeacherDataService, config) {
-                return TeacherDataService.retrieveAnnotations();
-            }
-        }
+        controllerAs: 'studentProgressController'
     }).state('root.studentGrading', {
         url: '/studentGrading/:workgroupId',
         templateUrl: 'wise5/classroomMonitor/studentGrading/studentGrading.html',
@@ -258,25 +270,19 @@ var classroomMonitorModule = _angular2.default.module('classroomMonitor', [(0, _
             }
         }
     }).state('root.nodeProgress', {
-        url: '/nodeProgress',
-        templateUrl: 'wise5/classroomMonitor/nodeProgress/nodeProgress.html',
-        controller: 'NodeProgressController',
-        controllerAs: 'nodeProgressController',
-        resolve: {
-            studentData: function studentData($stateParams, TeacherDataService, config) {
-                return TeacherDataService.retrieveAnnotations();
+        url: '/project/:nodeId?periodId&workgroupId',
+        views: {
+            'nodeView': {
+                templateUrl: 'wise5/classroomMonitor/nodeGrading/nodeGrading.html',
+                controller: 'NodeGradingController',
+                controllerAs: 'nodeGradingController'
             }
         }
-    }).state('root.nodeGrading', {
-        url: '/nodeGrading/:nodeId',
-        templateUrl: 'wise5/classroomMonitor/nodeGrading/nodeGrading.html',
-        controller: 'NodeGradingController',
-        controllerAs: 'nodeGradingController',
-        resolve: {
-            studentData: function studentData($stateParams, TeacherDataService, config, project) {
-                return TeacherDataService.retrieveStudentDataByNodeId($stateParams.nodeId);
-            }
-        }
+    }).state('root.dashboard', {
+        url: '/dashboard',
+        templateUrl: 'wise5/classroomMonitor/dashboard/dashboard.html',
+        controller: 'DashboardController',
+        controllerAs: 'dashboardController'
     });
 
     // Set up Translations
@@ -290,10 +296,9 @@ var classroomMonitorModule = _angular2.default.module('classroomMonitor', [(0, _
         'en_US': 'en',
         'en_UK': 'en'
     });
-    $translateProvider.useSanitizeValueStrategy('escape');
+    $translateProvider.useSanitizeValueStrategy('sanitizeParameters', 'escape');
 
     // ngMaterial default theme configuration
-    // TODO: make dynamic and support alternate themes; allow projects to specify theme parameters and settings
     $mdThemingProvider.definePalette('primary', {
         '50': 'e1f0f4',
         '100': 'b8dbe4',
@@ -352,6 +357,33 @@ var classroomMonitorModule = _angular2.default.module('classroomMonitor', [(0, _
     }).accentPalette('primary');
 
     $mdThemingProvider.setDefaultTheme('default');
+
+    // moment.js default overrides
+    _moment2.default.locale('en', {
+        calendar: {
+            lastDay: '[Yesterday at] LT',
+            sameDay: '[Today at] LT',
+            nextDay: '[Tomorrow at] LT',
+            lastWeek: '[Last] dddd [at] LT',
+            nextWeek: 'dddd [at] LT',
+            sameElse: 'MMM D, YYYY [at] LT'
+        },
+        relativeTime: {
+            future: "in %s",
+            past: "%s",
+            s: "seconds ago",
+            m: "1 minute ago",
+            mm: "%d minutes ago",
+            h: "1 hour ago",
+            hh: "%d hours ago",
+            d: "1 day ago",
+            dd: "%d days ago",
+            M: "1 month ago",
+            MM: "%d months ago",
+            y: "1 year ago",
+            yy: "%d years ago"
+        }
+    });
 }]);
 
 exports.default = classroomMonitorModule;

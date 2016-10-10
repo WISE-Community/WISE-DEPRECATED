@@ -1,21 +1,33 @@
-<div>
-    <button ng-repeat='period in nodeGradingController.periods'
-            ng-click='nodeGradingController.setCurrentPeriod(period)'
-            ng-class="{'active': period.periodName == nodeGradingController.getCurrentPeriod().periodName}">
-        {{period.periodName}}
-    </button>
-</div>
-
-<div style='margin-left: 20px'><h3>{{nodeGradingController.nodeTitle}}</h3></div>
-
-<div ng-repeat='workgroupId in nodeGradingController.workgroupIds'>
-    <div ng-show='nodeGradingController.getCurrentPeriod().periodName == "All" || nodeGradingController.getPeriodIdByWorkgroupId(workgroupId) == nodeGradingController.getCurrentPeriod().periodId'>
-        <hr style='height: 1px; background-color: black'/>
-        <div ng-if='nodeGradingController.canViewStudentNames' style='margin-left: 20px'><h4>{{nodeGradingController.getUserNameByWorkgroupId(workgroupId)}} (Workgroup ID: {{workgroupId}})</h4></div>
-        <div ng-if='!nodeGradingController.canViewStudentNames' style='margin-left: 20px'><h4>{{workgroupId}}</h4></div>
-        <div id="{{component.id}}" class="component" ng-repeat='component in nodeGradingController.getComponents()'>
-            <component ng-if='component.showPreviousWorkNodeId != null && component.showPreviousWorkComponentId != null' node-id='{{component.showPreviousWorkNodeId}}' component-id='{{component.showPreviousWorkComponentId}}' component-state='{{nodeGradingController.getLatestComponentStateByWorkgroupIdAndNodeIdAndComponentId(workgroupId, component.showPreviousWorkNodeId, component.showPreviousWorkComponentId)}}' workgroup-id='{{workgroupId}}' teacher-workgroup-id='{{nodeGradingController.teacherWorkgroupId}}' mode='grading'></component>
-            <component ng-if='component.showPreviousWorkNodeId == null || component.showPreviousWorkComponentId == null' node-id='{{nodeGradingController.nodeId}}' component-id='{{component.id}}' a='b' component-state='{{nodeGradingController.getLatestComponentStateByWorkgroupIdAndComponentId(workgroupId, component.id)}}' workgroup-id='{{workgroupId}}' teacher-workgroup-id='{{nodeGradingController.teacherWorkgroupId}}' mode='grading'></component>
+<div class="l-constrained">
+    <div class="flex md-subhead content-head" layout="row" layout-align="start center" layout-wrap layout-margin>
+        <h2 class="accent-2">{{nodeGradingController.getNodeCompletion(nodeGradingController.nodeId)}}% <span class="md-subhead" translate="completion"></span></h2>
+        <span flex></span>
+        <div layout="row" layout-align="end center" flex-xs="100" layout-margin>
+            <!--<span class="text-secondary">
+                <ng-pluralize count="nodeProgressController.getNumberOfStudentsOnNode(nodeProgressController.rootNode.id)"
+                    when="{'0': '{{&quot;numberOfTeams_0&quot; | translate}}',
+                        'one': '{{&quot;numberOfTeams_1&quot; | translate}}',
+                        'other': '{{&quot;numberOfTeams_other&quot; | translate:{count:nodeProgressController.getNumberOfStudentsOnNode(nodeProgressController.rootNode.id)} }}'}">
+                </ng-pluralize>
+            </span>-->
+            <span hide-gt-xs flex></span>
+            <period-select></period-select>
         </div>
     </div>
+
+    <div style='margin-left: 20px'><h3>{{nodeGradingController.nodeTitle}}</h3></div>
+
+    <md-content ng-repeat='workgroupId in nodeGradingController.workgroupIds'
+                class="node-content md-whiteframe-1dp" style="border-color: {{nodeController.nodeStatus.icon.color}}"
+                layout="row" layout-wrap>
+        <div ng-show='nodeGradingController.getCurrentPeriod().periodName == "All" || nodeGradingController.getPeriodIdByWorkgroupId(workgroupId) == nodeGradingController.getCurrentPeriod().periodId' flex>
+            <hr style='height: 1px; background-color: black'/>
+            <div ng-if='nodeGradingController.canViewStudentNames' style='margin-left: 20px'><h4>{{nodeGradingController.getUserNameByWorkgroupId(workgroupId)}} (Workgroup ID: {{workgroupId}})</h4></div>
+            <div ng-if='!nodeGradingController.canViewStudentNames' style='margin-left: 20px'><h4>{{workgroupId}}</h4></div>
+            <div id="{{component.id}}_{{workgroupId}}" class="component" ng-repeat='component in nodeGradingController.getComponents()'>
+                <component ng-if='component.showPreviousWorkNodeId != null && component.showPreviousWorkComponentId != null' node-id='{{component.showPreviousWorkNodeId}}' component-id='{{component.showPreviousWorkComponentId}}' component-state='{{nodeGradingController.getLatestComponentStateByWorkgroupIdAndNodeIdAndComponentId(workgroupId, component.showPreviousWorkNodeId, component.showPreviousWorkComponentId)}}' workgroup-id='{{workgroupId}}' teacher-workgroup-id='{{nodeGradingController.teacherWorkgroupId}}' mode='grading'></component>
+                <component ng-if='component.showPreviousWorkNodeId == null || component.showPreviousWorkComponentId == null' node-id='{{nodeGradingController.nodeId}}' component-id='{{component.id}}' a='b' component-state='{{nodeGradingController.getLatestComponentStateByWorkgroupIdAndComponentId(workgroupId, component.id)}}' workgroup-id='{{workgroupId}}' teacher-workgroup-id='{{nodeGradingController.teacherWorkgroupId}}' mode='grading'></component>
+            </div>
+        </div>
+    </md-content>
 </div>

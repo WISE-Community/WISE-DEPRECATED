@@ -181,27 +181,24 @@ var VLEController = function () {
 
         if (runStatus != null) {
             var pause = false;
-            if (runStatus.allPeriodsPaused) {
-                pause = true;
-            } else {
-                // get the signed in user's period id
-                var periodId = this.ConfigService.getPeriodId();
 
-                if (periodId != null) {
-                    var periods = runStatus.periods;
+            // get the signed in user's period id
+            var periodId = this.ConfigService.getPeriodId();
 
-                    if (periods != null) {
+            if (periodId != null) {
+                var periods = runStatus.periods;
 
-                        // loop through all the periods in the run status
-                        for (var p = 0; p < periods.length; p++) {
-                            var tempPeriod = periods[p];
+                if (periods != null) {
 
-                            if (periodId === tempPeriod.periodId) {
-                                if (tempPeriod.paused) {
-                                    // our period is paused so we will pause the screen
-                                    pause = true;
-                                    break;
-                                }
+                    // loop through all the periods in the run status
+                    for (var p = 0; p < periods.length; p++) {
+                        var tempPeriod = periods[p];
+
+                        if (periodId === tempPeriod.periodId) {
+                            if (tempPeriod.paused) {
+                                // our period is paused so we will pause the screen
+                                pause = true;
+                                break;
                             }
                         }
                     }
