@@ -362,7 +362,7 @@ var NodeService = function () {
 
                             if (!parentHasTransitionLogic) {
                                 /*
-                                 * the parent does not have any transition logic so 
+                                 * the parent does not have any transition logic so
                                  * there is no next node from the parent
                                  */
                                 deferred.resolve(null);
@@ -500,7 +500,7 @@ var NodeService = function () {
 
             if (transitionResult == null || transitionLogic != null && transitionLogic.canChangePath == true) {
                 /*
-                 * we have not previously calculated the transition or the 
+                 * we have not previously calculated the transition or the
                  * transition logic allows the student to change branch paths
                  * so we will calculate the transition again
                  */
@@ -587,7 +587,7 @@ var NodeService = function () {
                             } else {
 
                                 /**
-                                 * Controller that handles the dialog popup that lets the user 
+                                 * Controller that handles the dialog popup that lets the user
                                  * which branch path to go to.
                                  * @param $scope the scope
                                  * @param $mdDialog the dialog popup object
@@ -635,7 +635,7 @@ var NodeService = function () {
 
                                 resolvePromiseNow = false;
 
-                                var chooseBranchPathTemplateUrl = this.ProjectService.getThemePath() + '/themeComponents/branchPathTools/branchPathChooser.html';
+                                var chooseBranchPathTemplateUrl = this.ProjectService.getThemePath() + '/templates/branchPathChooser.html';
 
                                 var dialogOptions = {
                                     templateUrl: chooseBranchPathTemplateUrl,
@@ -869,8 +869,8 @@ var NodeService = function () {
         }
 
         /**
-         * Get the promise that was created for a specific node when the 
-         * chooseTransition() function was called. This promise has not been 
+         * Get the promise that was created for a specific node when the
+         * chooseTransition() function was called. This promise has not been
          * resolved yet.
          * @param nodeId the node id
          * @returns the promise that was created when chooseTransition() was called
@@ -884,8 +884,8 @@ var NodeService = function () {
         }
 
         /**
-         * Set the promise that was created for a specific node when the 
-         * chooseTransition() function was called. This promise has not been 
+         * Set the promise that was created for a specific node when the
+         * chooseTransition() function was called. This promise has not been
          * resolved yet.
          * @param nodeId the node id
          * @param promise the promise

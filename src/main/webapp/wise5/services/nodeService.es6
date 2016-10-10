@@ -1,11 +1,11 @@
 class NodeService {
 
-    constructor($http, 
-                $injector, 
+    constructor($http,
+                $injector,
                 $mdDialog,
-                $q, 
-                ConfigService, 
-                ProjectService, 
+                $q,
+                ConfigService,
+                ProjectService,
                 StudentDataService) {
         this.$http = $http;
         this.$injector = $injector;
@@ -14,7 +14,7 @@ class NodeService {
         this.ConfigService = ConfigService;
         this.ProjectService = ProjectService;
         this.StudentDataService = StudentDataService;
-        
+
         this.transitionResults = {};
         this.chooseTransitionPromises = {};
     }
@@ -225,11 +225,11 @@ class NodeService {
      * @returns a promise that returns the next node id
      */
     getNextNodeId() {
-        
+
         // create a promise that will return the next node id
         var deferred = this.$q.defer();
         var promise = deferred.promise;
-        
+
         var nextNodeId = null;
 
         // get the current node
@@ -237,26 +237,26 @@ class NodeService {
 
         if (currentNode != null) {
             var currentNodeId = currentNode.id;
-            
+
             // get the transition logic from the current node
             var transitionLogic = this.ProjectService.getTransitionLogicByFromNodeId(currentNodeId);
-            
+
             // get all the branchPathTaken events for the current node
             var branchPathTakenEvents = this.StudentDataService.getBranchPathTakenEventsByNodeId(currentNodeId);
-            
-            if (branchPathTakenEvents != null && branchPathTakenEvents.length > 0 && 
+
+            if (branchPathTakenEvents != null && branchPathTakenEvents.length > 0 &&
                 (transitionLogic != null && transitionLogic.canChangePath != true)) {
                 // the student has branched on this node before and they are not allowed to change paths
-                
+
                 // loop through all the branchPathTaken events from newest to oldest
                 for (var b = branchPathTakenEvents.length - 1; b >= 0; b--) {
                     var branchPathTakenEvent = branchPathTakenEvents[b];
-                    
+
                     if (branchPathTakenEvent != null) {
-                        
+
                         // get the data from the event
                         var data = branchPathTakenEvent.data;
-                        
+
                         if (data != null) {
                             // get the to node id
                             var toNodeId = data.toNodeId;
@@ -271,39 +271,39 @@ class NodeService {
 
                 if (transitionLogic != null) {
                     var transitions = transitionLogic.transitions;
-                    
+
                     if (transitions == null || transitions.length == 0) {
                         /*
                          * this node does not have any transitions so we will
                          * check if the parent group has transitions
                          */
-                        
+
                         // get the parent group id
                         var parentGroupId = this.ProjectService.getParentGroupId(currentNodeId);
                         var parentHasTransitionLogic = false;
-                        
+
                         if (parentGroupId != null) {
-                            
+
                             // get the transition logic from the parent
                             var parentTransitionLogic = this.ProjectService.getTransitionLogicByFromNodeId(parentGroupId);
-                            
+
                             if (parentTransitionLogic != null) {
-                                
+
                                 parentHasTransitionLogic = true;
-                                
+
                                 // choose a transition
                                 this.chooseTransition(parentGroupId, parentTransitionLogic).then((transition) => {
-                                    
+
                                     if (transition != null) {
                                         // get the to node id
                                         var transitionToNodeId = transition.to;
-                                        
+
                                         if (this.ProjectService.isGroupNode(transitionToNodeId)) {
                                             // the to node is a group
-                                            
+
                                             // get the start id of the group
                                             var startId = this.ProjectService.getGroupStartId(transitionToNodeId);
-                                            
+
                                             if (startId == null || startId == '') {
                                                 // the group does not have a start id so we will just use the group
                                                 nextNodeId = transitionToNodeId;
@@ -316,16 +316,16 @@ class NodeService {
                                             nextNodeId = transitionToNodeId;
                                         }
                                     }
-                                    
+
                                     // resolve the promise with the next node id
                                     deferred.resolve(nextNodeId);
                                 });
                             }
                         }
-                        
+
                         if (!parentHasTransitionLogic) {
                             /*
-                             * the parent does not have any transition logic so 
+                             * the parent does not have any transition logic so
                              * there is no next node from the parent
                              */
                             deferred.resolve(null);
@@ -333,11 +333,11 @@ class NodeService {
                     } else {
                         // choose a transition
                         this.chooseTransition(currentNodeId, transitionLogic).then((transition) => {
-                            
+
                             if (transition != null) {
                                 // move the student to the toNodeId
                                 nextNodeId = transition.to;
-                                
+
                                 // resolve the promise with the next node id
                                 deferred.resolve(nextNodeId);
                             }
@@ -374,25 +374,25 @@ class NodeService {
         if (currentNode != null) {
 
             var currentNodeId = currentNode.id;
-            
+
             // get all the nodes that transition to the current node
             var nodeIdsByToNodeId = this.ProjectService.getNodeIdsByToNodeId(currentNodeId);
-            
+
             if (nodeIdsByToNodeId == null) {
-                
+
             } else if (nodeIdsByToNodeId.length === 1) {
                 // there is only one node that transitions to the current node
                 prevNodeId = nodeIdsByToNodeId[0];
             } else if (nodeIdsByToNodeId.length > 1) {
                 // there are multiple nodes that transition to the current node
-                
+
                 // get the stack history
                 var stackHistory = this.StudentDataService.getStackHistory();
-                
+
                 // loop through the stack history node ids from newest to oldest
                 for (var s = stackHistory.length - 1; s >= 0; s--) {
                     var stackHistoryNodeId = stackHistory[s];
-                    
+
                     if (nodeIdsByToNodeId.indexOf(stackHistoryNodeId) != -1) {
                         // we have found a node that we previously visited that transitions to the current node
                         prevNodeId = stackHistoryNodeId;
@@ -432,12 +432,12 @@ class NodeService {
      * @returns a promise that will return a transition
      */
     chooseTransition(nodeId, transitionLogic) {
-        
+
         var deferred = this.$q.defer();
-        
+
         // see if there is already a promise for this step
         var promise = this.getChooseTransitionPromise(nodeId);
-        
+
         if (promise == null) {
             // there is no existing promise for this step so we will create one
             promise = deferred.promise;
@@ -445,15 +445,15 @@ class NodeService {
             // there is an existing promise for this step so we will use it
             return promise;
         }
-        
+
         var resolvePromiseNow = true;
-        
+
         // check if the transition was already previously calculated
         var transitionResult = this.getTransitionResultByNodeId(nodeId);
-        
+
         if (transitionResult == null || (transitionLogic != null && transitionLogic.canChangePath == true)) {
             /*
-             * we have not previously calculated the transition or the 
+             * we have not previously calculated the transition or the
              * transition logic allows the student to change branch paths
              * so we will calculate the transition again
              */
@@ -515,7 +515,7 @@ class NodeService {
                         }
                     }
                 }
-                
+
                 if (availableTransitions.length == 0) {
                     // there are no available transitions for the student
                     transitionResult = null;
@@ -524,13 +524,13 @@ class NodeService {
                     transitionResult = availableTransitions[0];
                 } else if (availableTransitions.length > 1) {
                     // there are multiple available transitions for the student
-                    
+
                     if (this.ConfigService.isPreview()) {
                         /*
                          * we are in preview mode so we will let the user choose
                          * the branch path to go to
                          */
-                         
+
                          if (transitionResult != null) {
                              /*
                               * the user has previously chosen the branch path
@@ -539,11 +539,11 @@ class NodeService {
                               */
                          } else {
                              // ask the user which branch path to go to
-                             
+
                              resolvePromiseNow = false;
-                             
-                             let chooseBranchPathTemplateUrl = this.ProjectService.getThemePath() + '/themeComponents/branchPathTools/branchPathChooser.html';
-                             
+
+                             let chooseBranchPathTemplateUrl = this.ProjectService.getThemePath() + '/templates/branchPathChooser.html';
+
                              var dialogOptions = {
                                  templateUrl: chooseBranchPathTemplateUrl,
                                  controller: ChooseBranchPathController,
@@ -553,9 +553,9 @@ class NodeService {
                                      nodeId: nodeId
                                  }
                              };
-                             
+
                              /**
-                              * Controller that handles the dialog popup that lets the user 
+                              * Controller that handles the dialog popup that lets the user
                               * which branch path to go to.
                               * @param $scope the scope
                               * @param $mdDialog the dialog popup object
@@ -565,42 +565,42 @@ class NodeService {
                               * @param nodeId the current node
                               */
                              function ChooseBranchPathController($scope, $mdDialog, NodeService, ProjectService, availableTransitions, deferred, nodeId) {
-                                 
+
                                  $scope.availableTransitions = availableTransitions;
                                  $scope.NodeService = NodeService;
                                  $scope.ProjectService = ProjectService;
-                                 
+
                                  // called when the user clicks on a branch path
                                  $scope.chooseBranchPath = (transitionResult) => {
                                      // remember the transition that was chosen
                                      $scope.NodeService.setTransitionResult(nodeId, transitionResult);
-                                     
+
                                      // resolve the promise
                                      deferred.resolve(transitionResult);
-                                     
+
                                      /*
                                       * don't remember the promise for this step anymore
                                       * since we have resolved it
                                       */
                                      $scope.NodeService.setChooseTransitionPromise(nodeId, null);
-                                     
+
                                      // close the dialog
                                      $mdDialog.hide();
                                  }
-                                 
+
                                  // obtains the step number and title
                                  $scope.getNodePositionAndTitleByNodeId = (nodeId) => {
                                      return $scope.ProjectService.getNodePositionAndTitleByNodeId(nodeId);
                                  }
-                                 
+
                                  // called when the dialog is closed
                                  $scope.close = () => {
                                      $mdDialog.hide();
                                  }
                              }
-                             
+
                              ChooseBranchPathController.$inject = ['$scope', '$mdDialog', 'NodeService', 'ProjectService', 'availableTransitions', 'deferred', 'nodeId'];
-                             
+
                              /*
                               * show the popup dialog that lets the user choose the
                               * branch path
@@ -612,11 +612,11 @@ class NodeService {
                          * we are in regular student run mode so we will choose
                          * the branch according to how the step was authored
                          */
-                        
+
                         var howToChooseAmongAvailablePaths = transitionLogic.howToChooseAmongAvailablePaths;
 
-                        if (howToChooseAmongAvailablePaths == null || 
-                            howToChooseAmongAvailablePaths === '' || 
+                        if (howToChooseAmongAvailablePaths == null ||
+                            howToChooseAmongAvailablePaths === '' ||
                             howToChooseAmongAvailablePaths === 'random') {
                             // choose a random transition
 
@@ -627,10 +627,10 @@ class NodeService {
 
                             // get the workgroup id
                             var workgroupId = this.ConfigService.getWorkgroupId();
-                            
+
                             // choose the transition index
                             var index = workgroupId % availableTransitions.length;
-                            
+
                             transitionResult = availableTransitions[index];
                         } else if (howToChooseAmongAvailablePaths === 'firstAvailable') {
                             // choose the first available transition
@@ -645,11 +645,11 @@ class NodeService {
                 }
             }
         }
-        
+
         if (resolvePromiseNow) {
             // remember the transition that was chosen for this step
             this.setTransitionResult(nodeId, transitionResult);
-            
+
             // resolve the promise immediately
             deferred.resolve(transitionResult);
         } else {
@@ -660,7 +660,7 @@ class NodeService {
              */
             this.setChooseTransitionPromise(nodeId, promise);
         }
-        
+
         return promise;
     };
 
@@ -685,7 +685,7 @@ class NodeService {
      * path taken events if necessary.
      */
     evaluateTransitionLogic() {
-        
+
         // get the current node
         var currentNode = this.StudentDataService.getCurrentNode();
 
@@ -700,7 +700,7 @@ class NodeService {
                 var transitions = transitionLogic.transitions;
                 var canChangePath = transitionLogic.canChangePath;
                 var alreadyBranched = false;
-                
+
                 // get all the branchPathTaken events for the current node
                 var events = this.StudentDataService.getBranchPathTakenEventsByNodeId(currentNode.id);
 
@@ -719,7 +719,7 @@ class NodeService {
 
                         // choose a transition
                         this.chooseTransition(nodeId, transitionLogic).then((transition) => {
-                            
+
                             if (transition != null) {
                                 fromNodeId = currentNode.id;
                                 toNodeId = transition.to;
@@ -737,7 +737,7 @@ class NodeService {
 
                     // choose a transition
                     this.chooseTransition(nodeId, transitionLogic).then((transition) => {
-                        
+
                         if (transition != null) {
                             fromNodeId = currentNode.id;
                             toNodeId = transition.to;
@@ -750,7 +750,7 @@ class NodeService {
             }
         }
     };
-    
+
     /**
      * Create a branchPathTaken event
      * @param fromNodeId the from node id
@@ -795,7 +795,7 @@ class NodeService {
     getTransitionResultByNodeId(nodeId) {
         return this.transitionResults[nodeId];
     }
-    
+
     /**
      * Set the transition result for a node
      * @param nodeId the node id
@@ -806,10 +806,10 @@ class NodeService {
             this.transitionResults[nodeId] = transitionResult;
         }
     }
-    
+
     /**
-     * Get the promise that was created for a specific node when the 
-     * chooseTransition() function was called. This promise has not been 
+     * Get the promise that was created for a specific node when the
+     * chooseTransition() function was called. This promise has not been
      * resolved yet.
      * @param nodeId the node id
      * @returns the promise that was created when chooseTransition() was called
@@ -818,10 +818,10 @@ class NodeService {
     getChooseTransitionPromise(nodeId) {
         return this.chooseTransitionPromises[nodeId];
     }
-    
+
     /**
-     * Set the promise that was created for a specific node when the 
-     * chooseTransition() function was called. This promise has not been 
+     * Set the promise that was created for a specific node when the
+     * chooseTransition() function was called. This promise has not been
      * resolved yet.
      * @param nodeId the node id
      * @param promise the promise
