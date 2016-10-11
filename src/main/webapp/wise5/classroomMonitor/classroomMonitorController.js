@@ -36,7 +36,7 @@ var ClassroomMonitorController = function () {
         this.menuOpen = false; // boolean to indicate whether monitor nav menu is open
         this.showSideMenu = true; // boolean to indicate whether to show the monitor side menu
         this.showMonitorToolbar = true; // boolean to indicate whether to show the monitor toolbar
-        this.showStepToolbar = true; // boolean to indicate whether to show the step toolbar
+        this.showStepToolbar = false; // boolean to indicate whether to show the step toolbar
 
         // ui-views and their corresponding names, labels, and icons
         this.$translate(['dashboardView', 'dashboardViewLabel', 'projectView', 'projectViewLabel', 'studentView', 'studentViewLabel', 'notebookView', 'notebookViewLabel', 'exportView', 'exportViewLabel', 'notesTipsView', 'notesTipsViewLabel']).then(function (translation) {
