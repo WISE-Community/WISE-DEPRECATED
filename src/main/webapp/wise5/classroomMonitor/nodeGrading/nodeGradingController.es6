@@ -2,7 +2,8 @@
 
 class NodeGradingController {
 
-    constructor($state,
+    constructor($filter,
+                $state,
                 $stateParams,
                 AnnotationService,
                 ConfigService,
@@ -11,6 +12,7 @@ class NodeGradingController {
                 StudentStatusService,
                 TeacherDataService) {
 
+        this.$filter = $filter;
         this.$state = $state;
         this.$stateParams = $stateParams;
         this.AnnotationService = AnnotationService;
@@ -21,6 +23,9 @@ class NodeGradingController {
         this.TeacherDataService = TeacherDataService;
 
         this.nodeId = this.$stateParams.nodeId;
+
+        // the max score for the node
+        this.maxScore = this.ProjectService.getMaxScoreForNode(this.nodeId);
 
         // TODO: add loading indicator
         this.TeacherDataService.retrieveStudentDataByNodeId(this.nodeId).then(result => {
@@ -230,17 +235,34 @@ class NodeGradingController {
      */
     getNodeCompletion(nodeId) {
         // get the currently selected period
-        var currentPeriod = this.getCurrentPeriod();
-        var periodId = currentPeriod.periodId;
+        let currentPeriod = this.getCurrentPeriod();
+        let periodId = currentPeriod.periodId;
 
         // get the percentage of the class or period that has completed the node
-        var completionPercentage = this.StudentStatusService.getNodeCompletion(nodeId, periodId);
+        let completionPercentage = this.StudentStatusService.getNodeCompletion(nodeId, periodId);
 
         return completionPercentage;
+    }
+
+    /**
+     * Get the average score for the node
+     * @param nodeId the node id
+     * @returns the average score for the node
+     */
+    getNodeAverageScore() {
+        // get the currently selected period
+        let currentPeriod = this.TeacherDataService.getCurrentPeriod();
+        let periodId = currentPeriod.periodId;
+
+        // get the average score for the node
+        let averageScore = this.StudentStatusService.getNodeAverageScore(this.nodeId, periodId);
+
+        return (averageScore === null ? 'N/A' : this.$filter('number')(averageScore, 1));
     }
 }
 
 NodeGradingController.$inject = [
+    '$filter',
     '$state',
     '$stateParams',
     'AnnotationService',

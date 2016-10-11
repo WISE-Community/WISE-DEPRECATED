@@ -1,24 +1,27 @@
 "use strict";
 
 class NavItemController {
-    constructor($rootScope,
+    constructor($element,
+                $filter,
+                $mdDialog,
+                $rootScope,
                 $scope,
                 $state,
                 $translate,
-                $element,
                 ConfigService,
                 NodeService,
                 ProjectService,
                 StudentDataService,
                 StudentStatusService,
                 TeacherDataService,
-                TeacherWebSocketService,
-                $mdDialog) {
+                TeacherWebSocketService) {
 
+        this.$element = $element;
+        this.$filter = $filter;
+        this.$mdDialog = $mdDialog;
         this.$rootScope = $rootScope;
         this.$scope = $scope;
         this.$state = $state;
-        this.$element = $element;
         this.$translate = $translate;
         this.ConfigService = ConfigService;
         this.NodeService = NodeService;
@@ -27,7 +30,6 @@ class NavItemController {
         this.StudentStatusService = StudentStatusService;
         this.TeacherDataService = TeacherDataService;
         this.TeacherWebSocketService = TeacherWebSocketService;
-        this.$mdDialog = $mdDialog;
 
         this.expanded = false;
 
@@ -291,6 +293,8 @@ class NavItemController {
         if (this.maxScore != null) {
             if (averageScore === null) {
                 averageScore = "-";
+            } else {
+                averageScore = this.$filter('number')(averageScore, 1);
             }
             // create the average score display e.g. 8/10
             averageScoreDisplay = averageScore + '/' + this.maxScore;
@@ -347,19 +351,20 @@ class NavItemController {
 }
 
 NavItemController.$inject = [
+    '$element',
+    '$filter',
+    '$mdDialog',
     '$rootScope',
     '$scope',
     '$state',
     '$translate',
-    '$element',
     'ConfigService',
     'NodeService',
     'ProjectService',
     'StudentDataService',
     'StudentStatusService',
     'TeacherDataService',
-    'TeacherWebSocketService',
-    '$mdDialog'
+    'TeacherWebSocketService'
 ];
 
 export default NavItemController;

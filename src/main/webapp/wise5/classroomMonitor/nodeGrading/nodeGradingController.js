@@ -9,11 +9,12 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var NodeGradingController = function () {
-    function NodeGradingController($state, $stateParams, AnnotationService, ConfigService, NodeService, ProjectService, StudentStatusService, TeacherDataService) {
+    function NodeGradingController($filter, $state, $stateParams, AnnotationService, ConfigService, NodeService, ProjectService, StudentStatusService, TeacherDataService) {
         var _this = this;
 
         _classCallCheck(this, NodeGradingController);
 
+        this.$filter = $filter;
         this.$state = $state;
         this.$stateParams = $stateParams;
         this.AnnotationService = AnnotationService;
@@ -24,6 +25,9 @@ var NodeGradingController = function () {
         this.TeacherDataService = TeacherDataService;
 
         this.nodeId = this.$stateParams.nodeId;
+
+        // the max score for the node
+        this.maxScore = this.ProjectService.getMaxScoreForNode(this.nodeId);
 
         // TODO: add loading indicator
         this.TeacherDataService.retrieveStudentDataByNodeId(this.nodeId).then(function (result) {
@@ -269,12 +273,31 @@ var NodeGradingController = function () {
 
             return completionPercentage;
         }
+
+        /**
+         * Get the average score for the node
+         * @param nodeId the node id
+         * @returns the average score for the node
+         */
+
+    }, {
+        key: 'getNodeAverageScore',
+        value: function getNodeAverageScore() {
+            // get the currently selected period
+            var currentPeriod = this.TeacherDataService.getCurrentPeriod();
+            var periodId = currentPeriod.periodId;
+
+            // get the average score for the node
+            var averageScore = this.StudentStatusService.getNodeAverageScore(this.nodeId, periodId);
+
+            return averageScore === null ? 'N/A' : this.$filter('number')(averageScore, 1);
+        }
     }]);
 
     return NodeGradingController;
 }();
 
-NodeGradingController.$inject = ['$state', '$stateParams', 'AnnotationService', 'ConfigService', 'NodeService', 'ProjectService', 'StudentStatusService', 'TeacherDataService'];
+NodeGradingController.$inject = ['$filter', '$state', '$stateParams', 'AnnotationService', 'ConfigService', 'NodeService', 'ProjectService', 'StudentStatusService', 'TeacherDataService'];
 
 exports.default = NodeGradingController;
 //# sourceMappingURL=nodeGradingController.js.map

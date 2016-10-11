@@ -2,6 +2,7 @@
 
 import PeriodSelectController from './classroomMonitorComponents/periodSelect/periodSelectController';
 import NavItemController from './classroomMonitorComponents/navItem/navItemController';
+import StepToolsController from './classroomMonitorComponents/stepTools/stepToolsController';
 import WorkgroupsOnNodeController from './classroomMonitorComponents/workgroupsOnNode/workgroupsOnNodeController';
 
 const PeriodSelect = {
@@ -18,6 +19,14 @@ const NavItem = {
     },
     templateUrl: 'wise5/classroomMonitor/classroomMonitorComponents/navItem/navItem.html',
     controller: 'NavItemController'
+};
+
+const StepTools = {
+    bindings: {
+        showPosition: '<'
+    },
+    templateUrl: 'wise5/classroomMonitor/classroomMonitorComponents/stepTools/stepTools.html',
+    controller: 'StepToolsCtrl'
 };
 
 const WorkgroupsOnNode = {
@@ -37,6 +46,8 @@ ClassroomMonitorComponents
     .component('periodSelect', PeriodSelect)
     .controller(NavItemController.name, NavItemController)
     .component('navItem', NavItem)
+    .controller(StepToolsController.name, StepToolsController)
+    .component('stepTools', StepTools)
     .controller(WorkgroupsOnNodeController.name, WorkgroupsOnNodeController)
     .component('workgroupsOnNode', WorkgroupsOnNode);
 

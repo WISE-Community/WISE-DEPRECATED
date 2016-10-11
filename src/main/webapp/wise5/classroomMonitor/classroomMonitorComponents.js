@@ -12,6 +12,10 @@ var _navItemController = require('./classroomMonitorComponents/navItem/navItemCo
 
 var _navItemController2 = _interopRequireDefault(_navItemController);
 
+var _stepToolsController = require('./classroomMonitorComponents/stepTools/stepToolsController');
+
+var _stepToolsController2 = _interopRequireDefault(_stepToolsController);
+
 var _workgroupsOnNodeController = require('./classroomMonitorComponents/workgroupsOnNode/workgroupsOnNodeController');
 
 var _workgroupsOnNodeController2 = _interopRequireDefault(_workgroupsOnNodeController);
@@ -34,6 +38,14 @@ var NavItem = {
     controller: 'NavItemController'
 };
 
+var StepTools = {
+    bindings: {
+        showPosition: '<'
+    },
+    templateUrl: 'wise5/classroomMonitor/classroomMonitorComponents/stepTools/stepTools.html',
+    controller: 'StepToolsCtrl'
+};
+
 var WorkgroupsOnNode = {
     bindings: {
         nodeTitle: '<',
@@ -46,7 +58,7 @@ var WorkgroupsOnNode = {
 
 var ClassroomMonitorComponents = angular.module('classroomMonitor.components', []);
 
-ClassroomMonitorComponents.controller(_periodSelectController2.default.name, _periodSelectController2.default).component('periodSelect', PeriodSelect).controller(_navItemController2.default.name, _navItemController2.default).component('navItem', NavItem).controller(_workgroupsOnNodeController2.default.name, _workgroupsOnNodeController2.default).component('workgroupsOnNode', WorkgroupsOnNode);
+ClassroomMonitorComponents.controller(_periodSelectController2.default.name, _periodSelectController2.default).component('periodSelect', PeriodSelect).controller(_navItemController2.default.name, _navItemController2.default).component('navItem', NavItem).controller(_stepToolsController2.default.name, _stepToolsController2.default).component('stepTools', StepTools).controller(_workgroupsOnNodeController2.default.name, _workgroupsOnNodeController2.default).component('workgroupsOnNode', WorkgroupsOnNode);
 
 exports.default = ClassroomMonitorComponents;
 //# sourceMappingURL=classroomMonitorComponents.js.map

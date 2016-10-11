@@ -1,6 +1,9 @@
 <div class="l-constrained">
     <div class="flex md-subhead content-head" layout="row" layout-align="start center" layout-wrap layout-margin>
-        <h2 class="accent-2">{{nodeGradingController.getNodeCompletion(nodeGradingController.nodeId)}}% <span class="md-subhead" translate="completion"></span></h2>
+        <h2 class="accent-2" layout="row">
+            <div class="content-head__item">{{nodeGradingController.getNodeCompletion(nodeGradingController.nodeId)}}%</span><span class="md-subhead" translate="completion"></div>
+            <div class="content-head__item" ng-if="nodeGradingController.maxScore !== null" layout="row" layout-align="start center"><md-icon class="score md-48">grade</md-icon> <div>{{nodeGradingController.getNodeAverageScore()}}<span class="md-subhead">mean score</div>
+        </h2>
         <span flex></span>
         <div layout="row" layout-align="end center" flex-xs="100" layout-margin>
             <!--<span class="text-secondary">

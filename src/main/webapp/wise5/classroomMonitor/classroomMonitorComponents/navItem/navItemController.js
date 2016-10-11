@@ -9,15 +9,17 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var NavItemController = function () {
-    function NavItemController($rootScope, $scope, $state, $translate, $element, ConfigService, NodeService, ProjectService, StudentDataService, StudentStatusService, TeacherDataService, TeacherWebSocketService, $mdDialog) {
+    function NavItemController($element, $filter, $mdDialog, $rootScope, $scope, $state, $translate, ConfigService, NodeService, ProjectService, StudentDataService, StudentStatusService, TeacherDataService, TeacherWebSocketService) {
         var _this = this;
 
         _classCallCheck(this, NavItemController);
 
+        this.$element = $element;
+        this.$filter = $filter;
+        this.$mdDialog = $mdDialog;
         this.$rootScope = $rootScope;
         this.$scope = $scope;
         this.$state = $state;
-        this.$element = $element;
         this.$translate = $translate;
         this.ConfigService = ConfigService;
         this.NodeService = NodeService;
@@ -26,7 +28,6 @@ var NavItemController = function () {
         this.StudentStatusService = StudentStatusService;
         this.TeacherDataService = TeacherDataService;
         this.TeacherWebSocketService = TeacherWebSocketService;
-        this.$mdDialog = $mdDialog;
 
         this.expanded = false;
 
@@ -311,6 +312,8 @@ var NavItemController = function () {
             if (this.maxScore != null) {
                 if (averageScore === null) {
                     averageScore = "-";
+                } else {
+                    averageScore = this.$filter('number')(averageScore, 1);
                 }
                 // create the average score display e.g. 8/10
                 averageScoreDisplay = averageScore + '/' + this.maxScore;
@@ -375,7 +378,7 @@ var NavItemController = function () {
     return NavItemController;
 }();
 
-NavItemController.$inject = ['$rootScope', '$scope', '$state', '$translate', '$element', 'ConfigService', 'NodeService', 'ProjectService', 'StudentDataService', 'StudentStatusService', 'TeacherDataService', 'TeacherWebSocketService', '$mdDialog'];
+NavItemController.$inject = ['$element', '$filter', '$mdDialog', '$rootScope', '$scope', '$state', '$translate', 'ConfigService', 'NodeService', 'ProjectService', 'StudentDataService', 'StudentStatusService', 'TeacherDataService', 'TeacherWebSocketService'];
 
 exports.default = NavItemController;
 //# sourceMappingURL=navItemController.js.map

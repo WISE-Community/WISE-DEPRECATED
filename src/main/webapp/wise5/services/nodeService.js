@@ -9,7 +9,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var NodeService = function () {
-    function NodeService($http, $injector, $mdDialog, $q, ConfigService, ProjectService, StudentDataService) {
+    function NodeService($http, $injector, $mdDialog, $q, ConfigService, ProjectService, StudentDataService, TeacherDataService) {
         _classCallCheck(this, NodeService);
 
         this.$http = $http;
@@ -19,6 +19,7 @@ var NodeService = function () {
         this.ConfigService = ConfigService;
         this.ProjectService = ProjectService;
         this.StudentDataService = StudentDataService;
+        this.TeacherDataService = TeacherDataService;
 
         this.transitionResults = {};
         this.chooseTransitionPromises = {};
@@ -247,7 +248,11 @@ var NodeService = function () {
 
             this.getNextNodeId().then(function (nextNodeId) {
                 if (nextNodeId != null) {
-                    _this.StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(nextNodeId);
+                    if (_this.ConfigService.getMode() === 'classroomMonitor') {
+                        _this.TeacherDataService.endCurrentNodeAndSetCurrentNodeByNodeId(nextNodeId);
+                    } else {
+                        _this.StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(nextNodeId);
+                    }
                 }
             });
         }
@@ -257,11 +262,12 @@ var NodeService = function () {
 
         /**
          * Get the next node in the project sequence. We return a promise because
-         * in preview mode we allow the user to specify which branch path they
-         * want to go to. In all other cases we will resolve the promise immediately.
+         * in preview mode we allow the user to specify which branch path they want
+         * to go to. In all other cases we will resolve the promise immediately.
+         * @param currentId (optional)
          * @returns a promise that returns the next node id
          */
-        value: function getNextNodeId() {
+        value: function getNextNodeId(currentId) {
             var _this2 = this;
 
             // create a promise that will return the next node id
@@ -269,119 +275,157 @@ var NodeService = function () {
             var promise = deferred.promise;
 
             var nextNodeId = null;
+            var currentNodeId = null;
+            var mode = this.ConfigService.getMode();
 
-            // get the current node
-            var currentNode = this.StudentDataService.getCurrentNode();
+            if (currentId) {
+                // a current node id was passed in
+                currentNodeId = currentId;
+            } else {
+                // no current id was passed in, so get current node
+                var currentNode = null;
 
-            if (currentNode != null) {
-                var currentNodeId = currentNode.id;
+                if (mode === 'classroomMonitor') {
+                    currentNode = this.TeacherDataService.getCurrentNode();
+                } else {
+                    currentNode = this.StudentDataService.getCurrentNode();
+                }
+                if (currentNode) {
+                    currentNodeId = currentNode.id;
+                }
+            }
 
-                // get the transition logic from the current node
-                var transitionLogic = this.ProjectService.getTransitionLogicByFromNodeId(currentNodeId);
+            if (currentNodeId) {
+                if (mode === 'classroomMonitor') {
+                    var currentNodeOrder = this.ProjectService.getNodeOrderById(currentNodeId);
 
-                // get all the branchPathTaken events for the current node
-                var branchPathTakenEvents = this.StudentDataService.getBranchPathTakenEventsByNodeId(currentNodeId);
+                    if (currentNodeOrder) {
+                        var nextNodeOrder = currentNodeOrder + 1;
+                        var nextId = this.ProjectService.getNodeIdByOrder(nextNodeOrder);
 
-                if (branchPathTakenEvents != null && branchPathTakenEvents.length > 0 && transitionLogic != null && transitionLogic.canChangePath != true) {
-                    // the student has branched on this node before and they are not allowed to change paths
-
-                    // loop through all the branchPathTaken events from newest to oldest
-                    for (var b = branchPathTakenEvents.length - 1; b >= 0; b--) {
-                        var branchPathTakenEvent = branchPathTakenEvents[b];
-
-                        if (branchPathTakenEvent != null) {
-
-                            // get the data from the event
-                            var data = branchPathTakenEvent.data;
-
-                            if (data != null) {
-                                // get the to node id
-                                var toNodeId = data.toNodeId;
-                                nextNodeId = toNodeId;
-                                deferred.resolve(nextNodeId);
-                                break;
+                        if (nextId) {
+                            if (this.ProjectService.isApplicationNode(nextId)) {
+                                // node is a step, so set it as the next node
+                                nextNodeId = nextId;
+                            } else if (this.ProjectService.isGroupNode(nextId)) {
+                                // node is an activity, so get next nodeId
+                                nextNodeId = this.getNextNodeId(nextId);
                             }
                         }
                     }
+
+                    // resolve the promise with the next node id
+                    deferred.resolve(nextNodeId);
                 } else {
-                    // the student has not branched on this node before
+                    // get the transition logic from the current node
+                    var transitionLogic = this.ProjectService.getTransitionLogicByFromNodeId(currentNodeId);
 
-                    if (transitionLogic != null) {
-                        var transitions = transitionLogic.transitions;
+                    // get all the branchPathTaken events for the current node
+                    var branchPathTakenEvents = this.StudentDataService.getBranchPathTakenEventsByNodeId(currentNodeId);
 
-                        if (transitions == null || transitions.length == 0) {
-                            /*
-                             * this node does not have any transitions so we will
-                             * check if the parent group has transitions
-                             */
+                    if (branchPathTakenEvents != null && branchPathTakenEvents.length > 0 && transitionLogic != null && transitionLogic.canChangePath != true) {
+                        // the student has branched on this node before and they are not allowed to change paths
 
-                            // get the parent group id
-                            var parentGroupId = this.ProjectService.getParentGroupId(currentNodeId);
-                            var parentHasTransitionLogic = false;
+                        // loop through all the branchPathTaken events from newest to oldest
+                        for (var b = branchPathTakenEvents.length - 1; b >= 0; b--) {
+                            var branchPathTakenEvent = branchPathTakenEvents[b];
 
-                            if (parentGroupId != null) {
+                            if (branchPathTakenEvent != null) {
 
-                                // get the transition logic from the parent
-                                var parentTransitionLogic = this.ProjectService.getTransitionLogicByFromNodeId(parentGroupId);
+                                // get the data from the event
+                                var data = branchPathTakenEvent.data;
 
-                                if (parentTransitionLogic != null) {
+                                if (data != null) {
+                                    // get the to node id
+                                    var toNodeId = data.toNodeId;
+                                    nextNodeId = toNodeId;
+                                    deferred.resolve(nextNodeId);
+                                    break;
+                                }
+                            }
+                        }
+                    } else {
+                        // the student has not branched on this node before
 
-                                    parentHasTransitionLogic = true;
+                        if (transitionLogic != null) {
+                            var transitions = transitionLogic.transitions;
 
-                                    // choose a transition
-                                    this.chooseTransition(parentGroupId, parentTransitionLogic).then(function (transition) {
+                            if (transitions == null || transitions.length == 0) {
+                                /*
+                                 * this node does not have any transitions so we will
+                                 * check if the parent group has transitions
+                                 */
 
-                                        if (transition != null) {
-                                            // get the to node id
-                                            var transitionToNodeId = transition.to;
+                                // get the parent group id
+                                var parentGroupId = this.ProjectService.getParentGroupId(currentNodeId);
+                                var parentHasTransitionLogic = false;
 
-                                            if (_this2.ProjectService.isGroupNode(transitionToNodeId)) {
-                                                // the to node is a group
+                                if (parentGroupId != null) {
 
-                                                // get the start id of the group
-                                                var startId = _this2.ProjectService.getGroupStartId(transitionToNodeId);
+                                    // get the transition logic from the parent
+                                    var parentTransitionLogic = this.ProjectService.getTransitionLogicByFromNodeId(parentGroupId);
 
-                                                if (startId == null || startId == '') {
-                                                    // the group does not have a start id so we will just use the group
-                                                    nextNodeId = transitionToNodeId;
+                                    if (parentTransitionLogic != null) {
+
+                                        parentHasTransitionLogic = true;
+
+                                        // choose a transition
+                                        this.chooseTransition(parentGroupId, parentTransitionLogic).then(function (transition) {
+
+                                            if (transition != null) {
+                                                // get the to node id
+                                                var transitionToNodeId = transition.to;
+
+                                                if (_this2.ProjectService.isGroupNode(transitionToNodeId)) {
+                                                    // the to node is a group
+
+                                                    // get the start id of the group
+                                                    var startId = _this2.ProjectService.getGroupStartId(transitionToNodeId);
+
+                                                    if (startId == null || startId == '') {
+                                                        // the group does not have a start id so we will just use the group
+                                                        nextNodeId = transitionToNodeId;
+                                                    } else {
+                                                        // the group has a start id so we will use the start id
+                                                        nextNodeId = startId;
+                                                    }
                                                 } else {
-                                                    // the group has a start id so we will use the start id
-                                                    nextNodeId = startId;
+                                                    // the to node is a step
+                                                    nextNodeId = transitionToNodeId;
                                                 }
-                                            } else {
-                                                // the to node is a step
-                                                nextNodeId = transitionToNodeId;
                                             }
-                                        }
+
+                                            // resolve the promise with the next node id
+                                            deferred.resolve(nextNodeId);
+                                        });
+                                    }
+                                }
+
+                                if (!parentHasTransitionLogic) {
+                                    /*
+                                     * the parent does not have any transition logic so
+                                     * there is no next node from the parent
+                                     */
+                                    deferred.resolve(null);
+                                }
+                            } else {
+                                // choose a transition
+                                this.chooseTransition(currentNodeId, transitionLogic).then(function (transition) {
+
+                                    if (transition != null) {
+                                        // move the student to the toNodeId
+                                        nextNodeId = transition.to;
 
                                         // resolve the promise with the next node id
                                         deferred.resolve(nextNodeId);
-                                    });
-                                }
+                                    }
+                                });
                             }
-
-                            if (!parentHasTransitionLogic) {
-                                /*
-                                 * the parent does not have any transition logic so
-                                 * there is no next node from the parent
-                                 */
-                                deferred.resolve(null);
-                            }
-                        } else {
-                            // choose a transition
-                            this.chooseTransition(currentNodeId, transitionLogic).then(function (transition) {
-
-                                if (transition != null) {
-                                    // move the student to the toNodeId
-                                    nextNodeId = transition.to;
-
-                                    // resolve the promise with the next node id
-                                    deferred.resolve(nextNodeId);
-                                }
-                            });
                         }
                     }
                 }
+            } else {
+                deferred.resolve(null);
             }
 
             return promise;
@@ -396,7 +440,9 @@ var NodeService = function () {
         value: function goToPrevNode() {
 
             var prevNodeId = this.getPrevNodeId();
-            if (prevNodeId != null) {
+            if (this.ConfigService.getMode() === 'classroomMonitor') {
+                this.TeacherDataService.endCurrentNodeAndSetCurrentNodeByNodeId(prevNodeId);
+            } else {
                 this.StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(prevNodeId);
             }
         }
@@ -406,38 +452,70 @@ var NodeService = function () {
 
         /**
          * Get the previous node in the project sequence
+         * @param currentId (optional)
          */
-        value: function getPrevNodeId() {
-
+        value: function getPrevNodeId(currentId) {
             var prevNodeId = null;
+            var currentNodeId = null;
+            var mode = this.ConfigService.getMode();
 
-            // get the current node
-            var currentNode = this.StudentDataService.getCurrentNode();
+            if (currentId) {
+                // a current node id was passed in
+                currentNodeId = currentId;
+            } else {
+                // no current id was passed in, so get current node
+                var currentNode = null;
 
-            if (currentNode != null) {
+                if (mode === 'classroomMonitor') {
+                    currentNode = this.TeacherDataService.getCurrentNode();
+                } else {
+                    currentNode = this.StudentDataService.getCurrentNode();
+                }
+                if (currentNode) {
+                    currentNodeId = currentNode.id;
+                }
+            }
 
-                var currentNodeId = currentNode.id;
+            if (currentNodeId) {
+                if (mode === 'classroomMonitor') {
+                    var currentNodeOrder = this.ProjectService.getNodeOrderById(currentNodeId);
 
-                // get all the nodes that transition to the current node
-                var nodeIdsByToNodeId = this.ProjectService.getNodeIdsByToNodeId(currentNodeId);
+                    if (currentNodeOrder) {
+                        var prevNodeOrder = currentNodeOrder - 1;
+                        var prevId = this.ProjectService.getNodeIdByOrder(prevNodeOrder);
 
-                if (nodeIdsByToNodeId == null) {} else if (nodeIdsByToNodeId.length === 1) {
-                    // there is only one node that transitions to the current node
-                    prevNodeId = nodeIdsByToNodeId[0];
-                } else if (nodeIdsByToNodeId.length > 1) {
-                    // there are multiple nodes that transition to the current node
+                        if (prevId) {
+                            if (this.ProjectService.isApplicationNode(prevId)) {
+                                // node is a step, so set it as the next node
+                                prevNodeId = prevId;
+                            } else if (this.ProjectService.isGroupNode(prevId)) {
+                                // node is an activity, so get next nodeId
+                                prevNodeId = this.getPrevNodeId(prevId);
+                            }
+                        }
+                    }
+                } else {
+                    // get all the nodes that transition to the current node
+                    var nodeIdsByToNodeId = this.ProjectService.getNodeIdsByToNodeId(currentNodeId);
 
-                    // get the stack history
-                    var stackHistory = this.StudentDataService.getStackHistory();
+                    if (nodeIdsByToNodeId == null) {} else if (nodeIdsByToNodeId.length === 1) {
+                        // there is only one node that transitions to the current node
+                        prevNodeId = nodeIdsByToNodeId[0];
+                    } else if (nodeIdsByToNodeId.length > 1) {
+                        // there are multiple nodes that transition to the current node
 
-                    // loop through the stack history node ids from newest to oldest
-                    for (var s = stackHistory.length - 1; s >= 0; s--) {
-                        var stackHistoryNodeId = stackHistory[s];
+                        // get the stack history
+                        var stackHistory = this.StudentDataService.getStackHistory();
 
-                        if (nodeIdsByToNodeId.indexOf(stackHistoryNodeId) != -1) {
-                            // we have found a node that we previously visited that transitions to the current node
-                            prevNodeId = stackHistoryNodeId;
-                            break;
+                        // loop through the stack history node ids from newest to oldest
+                        for (var s = stackHistory.length - 1; s >= 0; s--) {
+                            var stackHistoryNodeId = stackHistory[s];
+
+                            if (nodeIdsByToNodeId.indexOf(stackHistoryNodeId) != -1) {
+                                // we have found a node that we previously visited that transitions to the current node
+                                prevNodeId = stackHistoryNodeId;
+                                break;
+                            }
                         }
                     }
                 }
@@ -453,7 +531,15 @@ var NodeService = function () {
          * Close the current node (and open the current node's parent group)
          */
         value: function closeNode() {
-            var currentNode = this.StudentDataService.getCurrentNode();
+            var mode = this.ConfigService.getMode();
+            var currentNode = null;
+
+            if (mode === 'classroomMonitor') {
+                currentNode = this.TeacherDataService.getCurrentNode();
+            } else {
+                currentNode = this.StudentDataService.getCurrentNode();
+            }
+
             if (currentNode) {
 
                 var currentNodeId = currentNode.id;
@@ -464,7 +550,11 @@ var NodeService = function () {
                 var parentNodeId = parentNode.id;
 
                 // set the current node to the parent node
-                this.StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(parentNodeId);
+                if (mode === 'classroomMonitor') {
+                    this.TeacherDataService.endCurrentNodeAndSetCurrentNodeByNodeId(parentNodeId);
+                } else {
+                    this.StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(parentNodeId);
+                }
             }
         }
     }, {
@@ -903,7 +993,7 @@ var NodeService = function () {
     return NodeService;
 }();
 
-NodeService.$inject = ['$http', '$injector', '$mdDialog', '$q', 'ConfigService', 'ProjectService', 'StudentDataService'];
+NodeService.$inject = ['$http', '$injector', '$mdDialog', '$q', 'ConfigService', 'ProjectService', 'StudentDataService', 'TeacherDataService'];
 
 exports.default = NodeService;
 //# sourceMappingURL=nodeService.js.map
