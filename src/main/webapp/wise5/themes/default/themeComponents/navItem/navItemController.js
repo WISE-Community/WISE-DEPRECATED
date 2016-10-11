@@ -99,36 +99,40 @@ var NavItemController = function () {
             _this.currentNode = newNode;
             _this.previousNode = oldNode;
             _this.isCurrentNode = _this.nodeId === newNode.id;
+            var isPrev = false;
 
             if (_this.ProjectService.isApplicationNode(newNode.id)) {
                 return;
             }
 
             if (oldNode) {
-                var isPrev = _this.nodeId === oldNode.id;
+                isPrev = _this.nodeId === oldNode.id;
 
                 if (_this.StudentDataService.previousStep) {
                     _this.$scope.$parent.isPrevStep = _this.nodeId === _this.StudentDataService.previousStep.id;
-                }
-
-                if (isPrev && !_this.isGroup) {
-                    _this.zoomToElement();
                 }
             }
 
             if (_this.isGroup) {
                 var prevNodeisGroup = !oldNode || _this.ProjectService.isGroupNode(oldNode.id);
+                var prevNodeIsDescendant = _this.ProjectService.isNodeDescendentOfGroup(oldNode, _this.item);
                 if (_this.isCurrentNode) {
                     _this.expanded = true;
-                    if (prevNodeisGroup) {
+                    if (prevNodeisGroup || !prevNodeIsDescendant) {
                         _this.zoomToElement();
                     }
-                } else if (!prevNodeisGroup) {
-                    if (_this.ProjectService.isNodeDescendentOfGroup(oldNode, _this.item)) {
-                        _this.expanded = true;
-                    } else {
-                        _this.expanded = false;
+                } else {
+                    if (!prevNodeisGroup) {
+                        if (prevNodeIsDescendant) {
+                            _this.expanded = true;
+                        } else {
+                            _this.expanded = false;
+                        }
                     }
+                }
+            } else {
+                if (isPrev && _this.ProjectService.isNodeDescendentOfGroup(_this.item, newNode)) {
+                    _this.zoomToElement();
                 }
             }
         });
@@ -217,7 +221,7 @@ var NavItemController = function () {
                 $('#content').animate({
                     scrollTop: location
                 }, delay, 'linear');
-            }, 250);
+            }, 500);
         }
     }, {
         key: 'itemClicked',

@@ -10,7 +10,9 @@
         <!--<span>{{ $ctrl.showPosition ? $ctrl.getNodePositionById($ctrl.nodeId) + ': ' : '' }}{{ $ctrl.getNodeTitleByNodeId($ctrl.nodeId) }}</span>-->
 
         <md-select id="stepSelectMenu" md-theme="default" class="node-select md-subhead"
-                   ng-model="$ctrl.toNodeId" aria-label="Project item select"
+                   aria-label="Project item select"
+                   ng-model="$ctrl.toNodeId"
+                   ng-change="$ctrl.toNodeIdChanged()"
                    md-selected-text="$ctrl.getSelectedText()">
             <md-option ng-repeat="item in $ctrl.idToOrder | toArray | orderBy : 'order'"
                        ng-init="icon = $ctrl.getIcon(item.$key)"

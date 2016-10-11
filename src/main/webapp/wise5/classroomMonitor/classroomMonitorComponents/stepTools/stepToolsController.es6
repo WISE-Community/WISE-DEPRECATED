@@ -18,25 +18,19 @@ class StepToolsCtrl {
 
         this.updateModel();
 
-        this.$scope.$watch(
-            () => { return this.toNodeId; },
-            (newId, oldId) => {
-                if (newId !== oldId) {
-                    // selected node id has changed, so open new node
-                    this.TeacherDataService.endCurrentNodeAndSetCurrentNodeByNodeId(newId);
-                }
-            }
-        );
-
         this.$scope.$on('currentNodeChanged', (event, args) => {
             this.updateModel();
         });
     }
 
     /*toggleStepNav() {
-        this.$mdSidenav('stepNav')
-          .toggle();
+        this.$mdSidenav('stepNav').toggle();
     }*/
+
+    toNodeIdChanged() {
+        // selected node id has changed, so open new node
+        this.TeacherDataService.endCurrentNodeAndSetCurrentNodeByNodeId(this.toNodeId);
+    }
 
     updateModel() {
         var nodeId = this.TeacherDataService.getCurrentNodeId();

@@ -20,16 +20,6 @@ class StepToolsCtrl {
 
         this.updateModel();
 
-        this.$scope.$watch(
-            () => { return this.toNodeId; },
-            (newId, oldId) => {
-                if (newId !== oldId) {
-                    // selected node id has changed, so open new node
-                    this.StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(newId);
-                }
-            }
-        );
-
         this.$scope.$on('currentNodeChanged', (event, args) => {
             this.updateModel();
         });
@@ -39,9 +29,13 @@ class StepToolsCtrl {
         })
     }
 
-    toggleStepNav() {
-        this.$mdSidenav('stepNav')
-          .toggle();
+    /*toggleStepNav() {
+        this.$mdSidenav('stepNav').toggle();
+    }*/
+
+    toNodeIdChanged() {
+        // selected node id has changed, so open new node
+        this.StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(this.toNodeId);
     }
 
     updateModel() {
@@ -59,39 +53,39 @@ class StepToolsCtrl {
             // model variable for selected node id
             this.toNodeId = this.nodeId;
         }
-    };
+    }
 
     getSelectedText() {
         return (this.showPosition ? this.getNodePositionById(this.nodeId) + ': ' : '') + this.getNodeTitleByNodeId(this.nodeId);
-    };
+    }
 
     getTemplateUrl(){
         return this.ProjectService.getThemePath() + '/themeComponents/stepTools/stepTools.html';
-    };
+    }
 
     getNodeTitleByNodeId(nodeId) {
         return this.ProjectService.getNodeTitleByNodeId(nodeId);
-    };
+    }
 
     getNodePositionById(nodeId) {
         return this.ProjectService.getNodePositionById(nodeId);
-    };
+    }
 
     isGroupNode(nodeId) {
         return this.ProjectService.isGroupNode(nodeId);
-    };
+    }
 
     goToPrevNode() {
         this.NodeService.goToPrevNode();
-    };
+    }
 
     goToNextNode() {
         this.NodeService.goToNextNode();
-    };
+    }
 
     closeNode() {
         this.NodeService.closeNode();
-    };
+    }
 }
 
 StepToolsCtrl.$inject = [

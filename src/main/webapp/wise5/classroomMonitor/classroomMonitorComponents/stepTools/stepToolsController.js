@@ -25,26 +25,22 @@ var StepToolsCtrl = function () {
 
         this.updateModel();
 
-        this.$scope.$watch(function () {
-            return _this.toNodeId;
-        }, function (newId, oldId) {
-            if (newId !== oldId) {
-                // selected node id has changed, so open new node
-                _this.TeacherDataService.endCurrentNodeAndSetCurrentNodeByNodeId(newId);
-            }
-        });
-
         this.$scope.$on('currentNodeChanged', function (event, args) {
             _this.updateModel();
         });
     }
 
     /*toggleStepNav() {
-        this.$mdSidenav('stepNav')
-          .toggle();
+        this.$mdSidenav('stepNav').toggle();
     }*/
 
     _createClass(StepToolsCtrl, [{
+        key: 'toNodeIdChanged',
+        value: function toNodeIdChanged() {
+            // selected node id has changed, so open new node
+            this.TeacherDataService.endCurrentNodeAndSetCurrentNodeByNodeId(this.toNodeId);
+        }
+    }, {
         key: 'updateModel',
         value: function updateModel() {
             var _this2 = this;
