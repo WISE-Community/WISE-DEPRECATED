@@ -24,6 +24,8 @@
   "dropAssetMessage": "Drop image or file here or click to upload!",
   "exit": "Exit",
   "ok": "OK",
+  "online": "online",
+  "offline": "offline",
   "move": "Move",
   "new": "New",
   "no": "No",

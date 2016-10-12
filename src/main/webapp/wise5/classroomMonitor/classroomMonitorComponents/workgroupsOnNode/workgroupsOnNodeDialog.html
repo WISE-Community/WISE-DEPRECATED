@@ -1,0 +1,25 @@
+<md-dialog aria-label="{{'teamsOnItem' | translate}}">
+    <md-toolbar md-theme="light">
+        <div class="md-toolbar-tools">
+            <h2>{{$ctrl.data.nodeTitle}}</h2>
+        </div>
+    </md-toolbar>
+    <md-dialog-content class="md-dialog-content gray-light-bg md-body-2">
+        <p ng-if="!$ctrl.data.workgroups.length" class="center" translate="teamsOnItemNone"></p>
+        <p ng-if="$ctrl.data.workgroups.length" class="center" translate="teamsOnItem" translate-value-total="{{$ctrl.data.workgroups.length}}" translate-value-online="{{($ctrl.data.workgroups | filter:onlineFilter).length}}"></p>
+        <md-list class="user-list">
+            <md-list-item class="list-item md-whiteframe-1dp" ng-repeat="group in $ctrl.data.workgroups | orderBy:'-online'">
+                <div class="md-avatar">
+                    <md-icon class="md-36" style="color: {{group.avatarColor}};"> account_circle </md-icon>
+                </div>
+                <p>
+                    <span ng-repeat="userName in group.usernames">{{userName.name}}<span ng-if="!$last">,&nbsp;</span></span>
+                </p>
+                <md-icon ng-class="{'success': group.online, 'gray-dark': !group.online}" class="md-secondary" title="{{group.online ? ('online' | translate) : ('offline' | translate)}}">fiber_manual_record</md-icon>
+            </md-list-item>
+        </md-list>
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+        <md-button ng-click="$ctrl.close()" class="md-primary" aria-label="{{'close' | translate}}" translate="close"></md-button>
+    </md-dialog-actions>
+</md-dialog>

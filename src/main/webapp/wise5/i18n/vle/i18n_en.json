@@ -6,6 +6,7 @@
   "editNotebookItem": "Edit Notebook Item",
   "itemLocked": "Item Locked",
   "newNote": "Add New Note",
+  "noNotes": "Hello! You haven't created any {{term}} yet.",
   "planningModeOnlyOnePlanningModeAllowed": "You can only work on one Planning Activity at a time. Turn off Planning Mode on the existing Planning Activity before working on this one.",
   "planningModeStepsUnVisitable": "You are not allowed to view items while in Planning Mode. Please turn off Planning Mode and try again.",
   "projectCompletion": "Project Completion",

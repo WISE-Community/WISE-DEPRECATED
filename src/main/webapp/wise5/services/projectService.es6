@@ -23,10 +23,9 @@ class ProjectService {
 
         // filtering options for navigation displays
         this.filters = [
-            {'name': 'all', 'label': 'All'},
+            {'name': 'all', 'label': 'All'}
             //{'name': 'todo', 'label': 'Todo'},
-            //{'name': 'completed', 'label': 'Completed'},
-            {'name': 'bookmark', 'label': 'Bookmarks'} // TODO: Add when bookmarks are active
+            //{'name': 'completed', 'label': 'Completed'}
         ];
     };
 
@@ -398,10 +397,21 @@ class ProjectService {
         this.idToOrder[node.id] = {'order': this.nodeCount};
         this.nodeCount++;
         if (this.isGroupNode(node.id)) {
-            var childIds = node.ids;
-            for (var i = 0; i < childIds.length; i++) {
-                var child = this.getNodeById(childIds[i]);
+            let childIds = node.ids;
+            for (let i = 0; i < childIds.length; i++) {
+                let child = this.getNodeById(childIds[i]);
                 this.setNodeOrder(child);
+            }
+
+            if (this.ConfigService.getMode() === 'classroomMonitor') {
+                // we're viewing the classroom monitor, so include planning nodes in the project structure
+                let planningIds = node.availablePlanningNodes;
+                if (planningIds) {
+                    for (let a = 0; a < planningIds.length; a++) {
+                        let child = this.getNodeById(planningIds[a].nodeId);
+                        this.setNodeOrder(child);
+                    }
+                }
             }
         }
     };
@@ -529,9 +539,38 @@ class ProjectService {
     };
 
     getNodePositionById(id) {
+        let position = null;
+
         if (id != null) {
-            return this.idToPosition[id];
+            position = this.idToPosition[id] ? this.idToPosition[id] : null;
         }
+
+        return position;
+    };
+
+    getNodeIdByOrder(order) {
+        let id = null;
+
+        if (order != null) {
+            for (let [nodeId, value] of Object.entries(this.idToOrder)) {
+                if (value.order === order) {
+                    id = nodeId;
+                    break;
+                }
+            }
+        }
+
+        return id;
+    }
+
+    getNodeOrderById(id) {
+        let order = null;
+
+        if (id != null) {
+            order = this.idToOrder[id] ? this.idToOrder[id].order : null;
+        }
+
+        return order;
     };
 
     setIdToNode(id, element) {
@@ -4981,14 +5020,14 @@ class ProjectService {
     recalculatePositionsInGroup(groupId) {
 
         if (groupId != null) {
-            var childIds = this.getChildNodeIdsById(groupId);
+            let childIds = this.getChildNodeIdsById(groupId);
 
-            // loop througha all the children
-            for (var c = 0; c < childIds.length; c++) {
-                var childId = childIds[c];
+            // loop through all the children
+            for (let c = 0; c < childIds.length; c++) {
+                let childId = childIds[c];
 
                 // calculate the position of the child id
-                var pos = this.getPositionById(childId);
+                let pos = this.getPositionById(childId);
 
                 // set the mapping of node id to position
                 this.setIdToPosition(childId, pos);
@@ -6310,29 +6349,29 @@ class ProjectService {
 
         return nodeIdAndComponentIds;
     }
-    
+
     /**
      * Check if we need to display the annotation to the student
      * @param annotation the annotation
      * @returns whether we need to display the annotation to the student
      */
     displayAnnotation(annotation) {
-        
+
         var result = true;
-        
+
         if (annotation != null) {
             var nodeId = annotation.nodeId;
             var componentId = annotation.componentId;
-            
+
             // get the component content
             var component = this.getComponentByNodeIdAndComponentId(nodeId, componentId);
-            
+
             if (component != null) {
                 var componentType = component.type;
-                
+
                 // get the component service
                 var componentService = this.$injector.get(componentType + 'Service');
-                
+
                 if (componentService != null && componentService.displayAnnotation != null) {
                     // check if we need to display the annotation to the student
                     result = componentService.displayAnnotation(component, annotation);
@@ -6342,7 +6381,7 @@ class ProjectService {
                 }
             }
         }
-        
+
         return result;
     }
 

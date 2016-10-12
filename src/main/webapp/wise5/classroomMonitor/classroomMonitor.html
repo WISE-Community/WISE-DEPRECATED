@@ -1,34 +1,23 @@
-<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 <link rel="stylesheet" href="wise5/themes/default/style/angular-material.css">
-<link rel="stylesheet" href="wise5/themes/default/style/vle.css">
+<link rel="stylesheet" href="wise5/themes/default/style/monitor.css">
 
-<style>
-    body {
-        overflow: auto;
-    }
-
-    .active {
-        background-color: yellow;
-    }
-</style>
-
-<div ng-mousemove='classroomMonitorController.mouseMoved()'>
-<button ui-sref-active="active" ui-sref='root.studentProgress' translate="gradeByWorkgroup" id="gradeByWorkgroupButton"></button>
-<button ui-sref-active="active" ui-sref='root.nodeProgress' translate="gradeByStep" id="gradeByStepButton"></button>
-<div style="float:right">
-    <button ng-click='classroomMonitorController.pauseScreenButtonClicked()' id="pauseScreensButton">{{classroomMonitorController.pauseScreenButtonText}}</button>
-    <button ng-click='classroomMonitorController.export("latestStudentWork")' translate="downloadLatestStudentWork" id="downloadLatestStudentWorkButton"></button>
-    <button ng-click='classroomMonitorController.export("allStudentWork")' translate="downloadStudentWork" id="downloadStudentWorkButton"></button>
-    <button ng-click='classroomMonitorController.exportEvents()' translate="downloadEvents" id="downloadStudentEventsButton"></button>
-    <md-menu md-position-mode="target-right target" md-offset="40 26">
-        <md-button aria-label="View notifications" class="md-icon-button notification-btn" ng-click="$mdOpenMenu()">
-            <span ng-show="classroomMonitorController.hasNewNotifications()" class="notification-count">{{classroomMonitorController.getNewNotifications().length}}</span>
-            <md-icon md-menu-origin> notifications </md-icon>
-        </md-button>
-        <md-menu-content width="5" class="account-menu">
-            <ng-include src="classroomMonitorController.themePath + '/templates/classroomMonitorNotificationMenu.html'"></ng-include>
-        </md-menu-content>
-    </md-menu>
-</div>
-<div ui-view></div>
+<div disable-delete-keypress
+     ng-mousemove='classroomMonitorController.mouseMoved()'
+     role="main" layout="column" layout-fill>
+    <ng-include src="'wise5/classroomMonitor/templates/monitorTopbar.html'"></ng-include>
+    <ng-include ng-if="classroomMonitorController.showMonitorToolbar" src="'wise5/classroomMonitor/templates/monitorToolbar.html'"></ng-include>
+    <step-tools class="layout-tools" show-position="classroomMonitorController.numberProject"
+                ng-if="classroomMonitorController.showStepToolbar"></step-tools>
+    <md-sidenav md-component-id="monitorSidenav"
+                md-is-open="classroomMonitorController.menuOpen"
+                md-whiteframe="4">
+        <ng-include src="'wise5/classroomMonitor/templates/monitorMenu.html'"></ng-include>
+    </md-sidenav>
+    <md-content id="content" flex role="main" layout="column" class="l-main l-main--with-toolbar" flex role="main">
+        <div ui-view></div>
+        <div ng-if="classroomMonitorController.$state.current.name === 'root.nodeProgress'">
+            <ng-include src="'wise5/classroomMonitor/nodeProgress/nodeProgress.html'" ng-controller="NodeProgressController as nodeProgressController"></ng-include>
+        </div>
+    </md-content>
+    <ng-include ng-if="classroomMonitorController.showSideMenu" src="'wise5/classroomMonitor/templates/monitorSideMenu.html'"></ng-include>
 </div>

@@ -103,6 +103,10 @@
 //.nav-item--list {
 //}
 
+.nav-item--list__info-item {
+    padding: 0 12px;
+}
+
 .nav-item--list__reorder {
     margin-left: 8px;
     color: color('text-disabled');
@@ -143,24 +147,24 @@
     border-bottom-left-radius: $card-border-radius;
     padding: 8px 16px;
     min-height: 40px;
-
-    md-progress-linear {
-        width: 48px;
-
-        > .md-container {
-            top: 0;
-        }
-    }
 }
 
 .nav-item__users {
     height: auto;
     cursor: pointer;
     color: #ffffff;
+    margin: 0;
+    padding: 1px 6px;
 
     > md-icon {
         padding-right: 4px;
         color: #ffffff;
+    }
+
+    &:hover, &:focus {
+        &.success-bg {
+            background-color: color('success');
+        }
     }
 }
 
@@ -171,8 +175,20 @@
 }
 
 .nav-item__info {
-    color: color('text-secondary');
     padding: 0 8px;
+}
+
+.nav-item__progress {
+    width: 48px;
+
+    > .md-container {
+        top: 0;
+    }
+}
+
+.nav-item__progress-value {
+    margin-left: 8px;
+    width: 36px;
 }
 
 .progress-wrapper {

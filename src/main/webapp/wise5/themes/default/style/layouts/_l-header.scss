@@ -13,6 +13,8 @@
     .logo-link {
         min-width: auto;
         display: none;
+        padding: 0 4px;
+        margin-right: 12px;
 
         @media only screen and (min-width: ($layout-breakpoint-xs)) {
             display: block;

@@ -5,6 +5,7 @@ class TeacherWebSocketService {
         this.ConfigService = ConfigService;
         this.StudentStatusService = StudentStatusService;
         this.dataStream = null;
+        this.studentsOnlineArray = [];
     }
 
     initialize() {
@@ -49,11 +50,16 @@ class TeacherWebSocketService {
     };
 
     getStudentsOnline() {
-        var studentsOnline = [];
-        if (this.studentsOnlineArray != null) {
-            studentsOnline = this.studentsOnlineArray;
-        }
-        return studentsOnline;
+        return this.studentsOnlineArray;
+    };
+
+    /**
+    * Check to see if a given workgroup is currently online
+    * @param workgroupId the workgroup id
+    * @returns boolean whether a workgroup is online
+    */
+    isStudentOnline(workgroupId) {
+        return (this.studentsOnlineArray.indexOf(workgroupId) > -1);
     };
 
     /**
@@ -124,7 +130,7 @@ class TeacherWebSocketService {
             messageJSON.periodId = periodId;
             messageJSON.messageParticipants = 'teacherToStudentsInPeriod';
         }
-        
+
         // send the websocket message
         this.sendMessage(messageJSON);
     }

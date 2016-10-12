@@ -12,7 +12,6 @@
                             ng-model="editNotebookItemController.item.content.text"
                             ng-model-options='{ debounce: 100 }'
                             ng-change="editNotebookItemController.update()"
-                            rows="3"
                             md-select-on-focus></textarea>
             </md-input-container>
             <div class="notebook-item__attachment" ng-repeat="attachment in editNotebookItemController.item.content.attachments">

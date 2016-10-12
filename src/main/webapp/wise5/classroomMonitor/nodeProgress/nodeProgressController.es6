@@ -4,7 +4,7 @@ class NodeProgressController {
 
     constructor($scope,
                 $state,
-                ConfigService,
+                $translate,
                 ProjectService,
                 StudentStatusService,
                 TeacherDataService,
@@ -12,52 +12,41 @@ class NodeProgressController {
 
         this.$scope = $scope;
         this.$state = $state;
-        this.ConfigService = ConfigService;
+        this.$translate = $translate;
         this.ProjectService = ProjectService;
         this.StudentStatusService = StudentStatusService;
         this.TeacherDataService = TeacherDataService;
         this.TeacherWebSocketService = TeacherWebSocketService;
         this.currentGroup = null;
-        this.items = null;
-        this.periods = [];
-
-        // initialize the periods
-        this.initializePeriods();
 
         this.items = this.ProjectService.idToOrder;
 
-        this.$scope.$on('currentNodeChanged', (event, args) => {
-            var previousNode = args.previousNode;
-            var currentNode = args.currentNode;
-            if (previousNode != null && previousNode.type === 'group') {
-                var nodeId = previousNode.id;
-            }
+        this.nodeId = null;
+        let stateParams = null;
+        let stateParamNodeId = null;
 
-            if (currentNode != null) {
+        if (this.$state != null) {
+            stateParams = this.$state.params;
+        }
 
-                var currentNodeId = currentNode.id;
+        if (stateParams != null) {
+            stateParamNodeId = stateParams.nodeId;
+        }
 
-                if (this.ProjectService.isGroupNode(currentNodeId)) {
-                    // current node is a group
+        if (stateParamNodeId != null && stateParamNodeId !== '') {
+            this.nodeId = stateParamNodeId;
+        }
 
-                    this.currentGroup = currentNode;
-                    this.currentGroupId = this.currentGroup.id;
-                    this.$scope.currentgroupid = this.currentGroupId;
-                } else if (this.ProjectService.isApplicationNode(currentNodeId)) {
-                    // current node is an application node
-                    // load the step grading view
-                    this.$state.go('root.nodeGrading', {nodeId: currentNodeId});
-                }
-            }
+        if (this.nodeId == null || this.nodeId === '') {
+            this.nodeId = this.ProjectService.rootNode.id;
+        }
 
-            this.$scope.$apply();
-        });
+        this.TeacherDataService.setCurrentNodeByNodeId(this.nodeId);
 
-        var startNodeId = this.ProjectService.getStartNodeId();
-        var rootNode = this.ProjectService.getRootNode(startNodeId);
+        let startNodeId = this.ProjectService.getStartNodeId();
+        this.rootNode = this.ProjectService.getRootNode(startNodeId);
 
-        this.currentGroup = rootNode;
-
+        this.currentGroup = this.rootNode;
 
         if (this.currentGroup != null) {
             this.currentGroupId = this.currentGroup.id;
@@ -68,62 +57,83 @@ class NodeProgressController {
         //console.log(JSON.stringify(flattenedProjectNodeIds, null, 4));
 
         var branches = this.ProjectService.getBranches();
-    }
 
-    getNodeTitleByNodeId(nodeId) {
-        return this.ProjectService.getNodeTitleByNodeId(nodeId);
-    };
+        let currentPeriod = this.getCurrentPeriod();
+
+        if (currentPeriod) {
+            this.isPaused = this.TeacherDataService.isPeriodPaused(currentPeriod.periodId);
+        }
+
+        /**
+         * Listen for current node changed event
+         */
+        this.$scope.$on('currentNodeChanged', (event, args) => {
+            let previousNode = args.previousNode;
+            let currentNode = args.currentNode;
+            if (previousNode != null && previousNode.type === 'group') {
+                let nodeId = previousNode.id;
+            }
+
+            if (currentNode != null) {
+
+                this.nodeId = currentNode.id;
+                this.TeacherDataService.setCurrentNode(currentNode);
+
+                if (this.isGroupNode(this.nodeId)) {
+                    // current node is a group
+
+                    this.currentGroup = currentNode;
+                    this.currentGroupId = this.currentGroup.id;
+                    this.$scope.currentgroupid = this.currentGroupId;
+                //} else if (this.isApplicationNode(this.nodeId)) {
+                }
+            }
+
+            this.$state.go('root.nodeProgress', {nodeId: this.nodeId});
+        });
+
+        /**
+         * Listen for current period changed event
+         */
+        this.$scope.$on('currentPeriodChanged', (event, args) => {
+            let currentPeriod = args.currentPeriod;
+            this.isPaused = this.TeacherDataService.isPeriodPaused(currentPeriod.periodId);
+        });
+
+        /**
+         * Listen for state change event
+         */
+        this.$scope.$on('$stateChangeSuccess', (event, toState, toParams, fromState, fromParams) => {
+            let toNodeId = toParams.nodeId;
+            let fromNodeId = fromParams.nodeId;
+            if (toNodeId && fromNodeId && toNodeId !== fromNodeId) {
+                this.TeacherDataService.endCurrentNodeAndSetCurrentNodeByNodeId(toNodeId);
+            }
+
+            if (toState.name === 'root.project') {
+                let nodeId = toParams.nodeId;
+                if (this.ProjectService.isApplicationNode(nodeId)) {
+                    // scroll to top when viewing a new step
+                    document.getElementById('content').scrollTop = 0;
+                }
+            }
+        });
+    }
 
     isGroupNode(nodeId) {
         return this.ProjectService.isGroupNode(nodeId);
-    };
+    }
 
-    getNodePositionById(nodeId) {
-        return this.ProjectService.getNodePositionById(nodeId);
-    };
-
-    /**
-     * Initialize the periods
-     */
-    initializePeriods() {
-
-        // create an option for all periods
-        var allPeriodOption = {
-            periodId: -1,
-            periodName: 'All'
-        };
-
-        this.periods.push(allPeriodOption);
-
-        this.periods = this.periods.concat(this.ConfigService.getPeriods());
-
-        // set the current period if it hasn't been set yet
-        if (this.getCurrentPeriod() == null) {
-            if (this.periods != null && this.periods.length > 0) {
-                // set it to the all periods option
-                this.setCurrentPeriod(this.periods[0]);
-            }
-        }
-    };
-
-    /**
-     * Set the current period
-     * @param period the period object
-     */
-    setCurrentPeriod(period) {
-        this.TeacherDataService.setCurrentPeriod(period);
-    };
+    isApplicationNode(nodeId) {
+        return this.ProjectService.isApplicationNode(nodeId);
+    }
 
     /**
      * Get the current period
      */
     getCurrentPeriod() {
         return this.TeacherDataService.getCurrentPeriod();
-    };
-
-    nodeClicked(nodeId) {
-        this.$state.go('root.nodeGrading', {nodeId:nodeId});
-    };
+    }
 
     /**
      * Get the number of students on the node
@@ -136,7 +146,7 @@ class NodeProgressController {
         var periodId = currentPeriod.periodId;
 
         // get the number of students that are on the node in the period
-        var count = this.StudentStatusService.getNumberOfStudentsOnNode(nodeId, periodId);
+        var count = this.StudentStatusService.getWorkgroupIdsOnNode(nodeId, periodId).length;
 
         return count;
     }
@@ -158,55 +168,17 @@ class NodeProgressController {
     }
 
     /**
-     * Check if there are any online students on the node
-     * @param nodeId the node id
-     * @returns whether there are any online students on the node
+     * The pause screen status was changed. Update period(s) accordingly.
      */
-    isWorkgroupOnlineOnNode(nodeId) {
-        // get the currently selected period
-        var currentPeriod = this.getCurrentPeriod();
-        var periodId = currentPeriod.periodId;
-
-        // get the workgroup ids that are online
-        var studentsOnline = this.TeacherWebSocketService.getStudentsOnline();
-
-        // check if there are any online students on the node in the period
-        var isOnline = this.StudentStatusService.isWorkgroupOnlineOnNode(studentsOnline, nodeId, periodId);
-
-        return isOnline;
-    }
-
-    /**
-     * Get the average score for the node
-     * @param nodeId the node id
-     * @returns the average score for the node
-     */
-    getNodeAverageScore(nodeId) {
-        // get the currently selected period
-        var currentPeriod = this.getCurrentPeriod();
-        var periodId = currentPeriod.periodId;
-
-        // get the max score for the node
-        var nodeMaxScore = this.ProjectService.getMaxScoreForNode(nodeId);
-
-        // get the average score for the node
-        var averageScore = this.StudentStatusService.getNodeAverageScore(nodeId, periodId);
-
-        var averageScoreDisplay = null;
-
-        if (averageScore != null && nodeMaxScore != null) {
-            // create the average score display e.g. 8/10
-            averageScoreDisplay = averageScore + '/' + nodeMaxScore;
-        }
-
-        return averageScoreDisplay;
+    pauseScreensChanged(isPaused) {
+        this.TeacherDataService.pauseScreensChanged(isPaused);
     }
 }
 
 NodeProgressController.$inject = [
     '$scope',
     '$state',
-    'ConfigService',
+    '$translate',
     'ProjectService',
     'StudentStatusService',
     'TeacherDataService',

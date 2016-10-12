@@ -43,6 +43,20 @@ label {
     font-size: rem(1.4);
     font-weight: 500;
     background-color: color('gray-dark');
+
+    &.md-button {
+        min-width: 0;
+        min-height: 0;
+        line-height: inherit;
+
+        &:hover, &:focus {
+            background-color: color('gray-dark');
+        }
+
+        &:focus {
+            outline: 1px dotted color('gray-dark');
+        }
+    }
 }
 
 .center {
@@ -166,12 +180,9 @@ md-toolbar.md-light-theme:not(.md-menu-toolbar) {
 }
 
 // hacks for now
-md-icon {
-  &.md-primary {
+md-icon, .md-button:not([disabled]) {
+  &.primary {
     color: color('primary') !important;
-  }
-  &.md-accent {
-    color: color('accent-1') !important;
   }
   &.success {
     color: color('success') !important;
@@ -265,5 +276,5 @@ md-select-menu.md-default-theme md-option[selected], md-select-menu md-option[se
 }
 
 .transition-all {
-    transition: 0.5s linear all;
+    transition: 0.25s linear all;
 }

@@ -1,0 +1,41 @@
+@charset "UTF-8";
+
+// Angular Material variables and overrides we want to use in our theme styles
+@import "material/config";
+
+/*
+ WISE Project Styles
+ */
+
+// 1. Base
+@import "base/helpers",
+        "base/config",
+        "base/presets";
+
+// 2. Layouts
+@import "layouts/l-default",
+        "layouts/l-footer",
+        "layouts/l-header",
+        "layouts/l-main",
+        "layouts/l-nav",
+        "layouts/l-notebook",
+        "layouts/l-sidebar";
+
+// 3. Modules
+@import "modules/dragula",
+        "modules/dialog",
+        "modules/inputs",
+        "modules/toolbar",
+        "modules/list",
+        "modules/nav",
+        "modules/menu",
+        "modules/node",
+        "modules/notebook",
+        "modules/notifications",
+        "modules/account-menu",
+        "modules/annotations",
+        "modules/component",
+        "modules/component--discussion",
+        "modules/component--embedded",
+        "modules/component--match",
+        "modules/notebook-toolbar";
