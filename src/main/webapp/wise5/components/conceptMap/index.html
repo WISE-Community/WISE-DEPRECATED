@@ -186,7 +186,7 @@
                 <br/>
                 <textarea ng-model='conceptMapController.authoringComponentContentJSONString'
                           ng-change='conceptMapController.advancedAuthoringViewComponentChanged()'
-                          ng-model-options='{ debounce: 1000 }'
+                          ng-model-options="{ updateOn: 'blur' }"
                           rows='10'
                           cols='200'></textarea>
             </div>

@@ -584,6 +584,179 @@ var AnnotationService = function () {
 
             return scoreValue;
         }
+
+        /**
+         * Get all global annotations that are active and inactive for a specified node and component
+         * @returns all global annotations that are active and inactive for a specified node and component
+         */
+
+    }, {
+        key: 'getAllGlobalAnnotationsByNodeIdAndComponentId',
+        value: function getAllGlobalAnnotationsByNodeIdAndComponentId(nodeId, componentId) {
+            var allGlobalAnnotations = this.getAllGlobalAnnotations();
+            var globalAnnotationsByNodeIdAndComponentId = allGlobalAnnotations.filter(function (globalAnnotation) {
+                return globalAnnotation.nodeId === nodeId && globalAnnotation.componentId === componentId;
+            });
+            return globalAnnotationsByNodeIdAndComponentId;
+        }
+    }, {
+        key: 'getAllGlobalAnnotations',
+
+
+        /**
+         * Get all global annotations that are active and inactive
+         * @returns all global annotations that are active and inactive
+         */
+        value: function getAllGlobalAnnotations() {
+            var globalAnnotations = [];
+
+            for (var a = 0; a < this.annotations.length; a++) {
+                var annotation = this.annotations[a];
+                if (annotation != null && annotation.data != null) {
+                    if (annotation.data.isGlobal) {
+                        globalAnnotations.push(annotation);
+                    }
+                }
+            }
+
+            return globalAnnotations;
+        }
+    }, {
+        key: 'getAllGlobalAnnotationGroups',
+
+
+        /**
+         * Get all global annotations that are active and inactive and groups them by annotation group name
+         * @returns all global annotations that are active and inactive
+         */
+        value: function getAllGlobalAnnotationGroups() {
+            var globalAnnotationGroups = [];
+
+            for (var a = 0; a < this.annotations.length; a++) {
+                var annotation = this.annotations[a];
+                if (annotation != null && annotation.data != null) {
+                    if (annotation.data.isGlobal) {
+                        // check if this global annotation can be grouped (has the same annotationGroupName as another that we've seen before)
+                        if (annotation.data.annotationGroupName != null && annotation.data.annotationGroupCreatedTime != null) {
+                            var sameGroupFound = false;
+                            for (var g = 0; g < globalAnnotationGroups.length; g++) {
+                                var globalAnnotationGroup = globalAnnotationGroups[g];
+                                if (globalAnnotationGroup.annotationGroupNameAndTime == annotation.data.annotationGroupName + annotation.data.annotationGroupCreatedTime) {
+                                    // push this annotation to the end of the group
+                                    globalAnnotationGroup.annotations.push(annotation);
+                                    sameGroupFound = true;
+                                }
+                            }
+                            if (!sameGroupFound) {
+                                var annotationGroup = {
+                                    "annotationGroupNameAndTime": annotation.data.annotationGroupName + annotation.data.annotationGroupCreatedTime,
+                                    "annotations": [annotation]
+                                };
+                                globalAnnotationGroups.push(annotationGroup);
+                            }
+                        } else {
+                            // each global annotation should have a name, so it shouldn't get here
+                            console.error("Global annotation does not have a name: " + annotation);
+                        }
+                    }
+                }
+            }
+
+            return globalAnnotationGroups;
+        }
+    }, {
+        key: 'getActiveGlobalAnnotationGroups',
+
+
+        /**
+         * Get all global annotations that are active
+         * @returns all global annotations that are active, in a group
+         * [
+         * {
+         *   annotationGroupName:"score1",
+         *   annotations:[
+         *   {
+         *     type:autoScore,
+         *     value:1
+         *   },
+         *   {
+         *     type:autoComment,
+         *     value:"you received a score of 1."
+         *   }
+         *   ]
+         * },
+         * {
+         *   annotationGroupName:"score2",
+         *   annotations:[...]
+         * }
+         * ]
+         */
+        value: function getActiveGlobalAnnotationGroups() {
+            return this.activeGlobalAnnotationGroups;
+        }
+    }, {
+        key: 'calculateActiveGlobalAnnoationGroups',
+
+
+        /**
+         * Calculates the active global annotations and groups them by annotation group name
+         */
+        value: function calculateActiveGlobalAnnoationGroups() {
+            this.activeGlobalAnnotationGroups = [];
+
+            for (var a = 0; a < this.annotations.length; a++) {
+                var annotation = this.annotations[a];
+                if (annotation != null && annotation.data != null) {
+                    if (annotation.data.isGlobal && annotation.data.unGlobalizedTimestamp == null) {
+                        // check if this global annotation can be grouped (has the same annotationGroupName as another that we've seen before)
+                        if (annotation.data.annotationGroupName != null) {
+                            var sameGroupFound = false;
+                            for (var ag = 0; ag < this.activeGlobalAnnotationGroups.length; ag++) {
+                                var activeGlobalAnnotationGroup = this.activeGlobalAnnotationGroups[ag];
+                                if (activeGlobalAnnotationGroup.annotationGroupName == annotation.data.annotationGroupName) {
+                                    // push this annotation to the end of the group
+                                    activeGlobalAnnotationGroup.annotations.push(annotation);
+                                    sameGroupFound = true;
+                                }
+                            }
+                            if (!sameGroupFound) {
+                                var annotationGroup = {
+                                    "annotationGroupName": annotation.data.annotationGroupName,
+                                    "annotations": [annotation]
+                                };
+                                this.activeGlobalAnnotationGroups.push(annotationGroup);
+                            }
+                        } else {
+                            // each global annotation should have a name, so it shouldn't get here
+                            console.error("Global annotation does not have a name: " + annotation);
+                        }
+                    }
+                }
+            }
+        }
+
+        /**
+         * Get all global annotations that are in-active
+         * @returns all global annotations that are in-active
+         * In-active global annotations has data.isGlobal = false and data.unGlobalizedTimestamp is set.
+         */
+
+    }, {
+        key: 'getInActiveGlobalAnnotations',
+        value: function getInActiveGlobalAnnotations() {
+            var inActiveGlobalAnnotations = [];
+
+            for (var a = 0; a < this.annotations.length; a++) {
+                var annotation = this.annotations[a];
+                if (annotation != null && annotation.data != null) {
+                    if (annotation.data.isGlobal && annotation.data.unGlobalizedTimestamp != null) {
+                        inActiveGlobalAnnotations.push(annotation);
+                    }
+                }
+            }
+
+            return inActiveGlobalAnnotations;
+        }
     }]);
 
     return AnnotationService;

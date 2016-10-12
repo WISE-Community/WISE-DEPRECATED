@@ -9,12 +9,14 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var ComponentAnnotationsController = function () {
-    function ComponentAnnotationsController($scope, $element, $translate, ConfigService, ProjectService, StudentDataService) {
+    function ComponentAnnotationsController($scope, $element, // TODO remove after verifying that this is not being used
+    $mdDialog, $timeout, $translate, ConfigService, ProjectService, StudentDataService) {
         var _this = this;
 
         _classCallCheck(this, ComponentAnnotationsController);
 
         this.$scope = $scope;
+        this.$mdDialog = $mdDialog;
         this.$translate = $translate;
         this.ConfigService = ConfigService;
         this.ProjectService = ProjectService;
@@ -52,6 +54,24 @@ var ComponentAnnotationsController = function () {
             }
         });
 
+        /* used to pop up annotation
+        $timeout(() => {
+            this.$mdDialog.show({
+                contentElement: '#componentAnnotationsCard',
+                parent: angular.element(document.body)
+            });
+        });
+        */
+
+        /* uncomment me and use me instead of timeout when we switch to angular 2
+        this.$onAfterViewInit = () => {
+            this.$mdDialog.show({
+                contentElement: '#componentAnnotationsCard',
+                parent: angular.element(document.body)
+            });
+        };
+        */
+
         this.$onChanges = function (changes) {
             //if (changes.annotations) {
             //this.annotations = angular.copy(changes.annotations.currentValue);
@@ -60,13 +80,18 @@ var ComponentAnnotationsController = function () {
         };
     }
 
-    /**
-     * Get the most recent annotation (from the current score and comment annotations)
-     * @return Object (latest annotation)
-     */
-
-
     _createClass(ComponentAnnotationsController, [{
+        key: 'closeDialog',
+        value: function closeDialog() {
+            this.$mdDialog.hide();
+        }
+
+        /**
+         * Get the most recent annotation (from the current score and comment annotations)
+         * @return Object (latest annotation)
+         */
+
+    }, {
         key: 'getLatestAnnotation',
         value: function getLatestAnnotation() {
             var latest = null;
@@ -224,7 +249,7 @@ var ComponentAnnotationsController = function () {
     return ComponentAnnotationsController;
 }();
 
-ComponentAnnotationsController.$inject = ['$scope', '$element', '$translate', 'ConfigService', 'ProjectService', 'StudentDataService'];
+ComponentAnnotationsController.$inject = ['$scope', '$element', '$mdDialog', '$timeout', '$translate', 'ConfigService', 'ProjectService', 'StudentDataService'];
 
 var ComponentAnnotations = {
     bindings: {

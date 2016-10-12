@@ -6336,11 +6336,72 @@ class ProjectService {
                 if (componentService != null && componentService.displayAnnotation != null) {
                     // check if we need to display the annotation to the student
                     result = componentService.displayAnnotation(component, annotation);
+                    if (annotation.data != null && annotation.data.isGlobal && annotation.data.isPopup) {
+                        result = false;  // don't display annotation inline; it will be displayed in a popup
+                    }
                 }
             }
         }
         
         return result;
+    }
+
+    /**
+     * Get the global annotation properties for the specified component and score, if exists.
+     * @param component the component content
+     * @param score the score we want the annotation properties for
+     * @returns the annotation properties for the given score
+     */
+    getGlobalAnnotationGroupByScore(component, score) {
+
+        let annotationGroup = null;
+
+        if (component.globalAnnotationSettings != null && component.globalAnnotationSettings.globalAnnotationGroups != null) {
+            let globalAnnotationGroups = component.globalAnnotationSettings.globalAnnotationGroups;
+            for (let g = 0; g < globalAnnotationGroups.length; g++) {
+                let globalAnnotationGroup = globalAnnotationGroups[g];
+                if (globalAnnotationGroup.enableCriteria != null && globalAnnotationGroup.enableCriteria.score != null) {
+                    let enableCriteriaScoreArray = globalAnnotationGroup.enableCriteria.score;
+                    for (let s = 0; s < enableCriteriaScoreArray.length; s++) {
+                        let enableCriteriaScore = enableCriteriaScoreArray[s];
+                        if (enableCriteriaScore == score) {
+                            annotationGroup = globalAnnotationGroup;
+                        }
+                    }
+                }
+            }
+        }
+
+        return annotationGroup;
+    }
+
+    /**
+     * Get the notification for the given score, if exists.
+     * @param component the component content
+     * @param score the score we want notification for
+     * @returns the notification for the given score
+     */
+    getNotificationsByScore(component, score) {
+
+        let notificationsByScore = [];
+
+        if (component.notificationSettings != null && component.notificationSettings.notifications != null) {
+            let notifications = component.notificationSettings.notifications;
+            for (let n = 0; n < notifications.length; n++) {
+                let notification = notifications[n];
+                if (notification.enableCriteria != null && notification.enableCriteria.score != null) {
+                    let enableCriteriaScoreArray = notification.enableCriteria.score;
+                    for (let s = 0; s < enableCriteriaScoreArray.length; s++) {
+                        let enableCriteriaScore = enableCriteriaScoreArray[s];
+                        if (enableCriteriaScore == score) {
+                            notificationsByScore.push(notification);
+                        }
+                    }
+                }
+            }
+        }
+
+        return notificationsByScore;
     }
 
     /**
