@@ -186,12 +186,15 @@ class GraphController {
                 this.isSaveButtonVisible = this.componentContent.showSaveButton;
                 this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
                 //this.isResetGraphButtonVisible = true;
-                this.isResetSeriesButtonVisible = this.componentContent.showResetSeriesButton;
+                //this.isResetGraphButtonVisible = this.componentContent.showResetGraphButton;
+                //this.isResetSeriesButtonVisible = this.componentContent.showResetSeriesButton;
+                this.isResetSeriesButtonVisible = true;
                 this.isSelectSeriesVisible = true;
 
                 // get the latest annotations
                 // TODO: watch for new annotations and update accordingly
                 this.latestAnnotations = this.$scope.$parent.nodeController.getLatestComponentAnnotations(this.componentId);
+                this.backgroundImage = this.componentContent.backgroundImage;
             } else if (this.mode === 'grading') {
                 this.isPromptVisible = true;
                 this.isSaveButtonVisible = false;
@@ -210,11 +213,13 @@ class GraphController {
                 this.isSelectSeriesVisible = false;
                 this.isDisabled = true;
                 this.isSnipDrawingButtonVisible = false;
+                this.backgroundImage = this.componentContent.backgroundImage;
             } else if (this.mode === 'showPreviousWork') {
                 this.isPromptVisible = true;
                 this.isSaveButtonVisible = false;
                 this.isSubmitButtonVisible = false;
                 this.isDisabled = true;
+                this.backgroundImage = this.componentContent.backgroundImage;
             } else if (this.mode === 'authoring') {
                 this.updateAdvancedAuthoringView()
 
@@ -609,7 +614,7 @@ class GraphController {
              * the student does not have x axis data so we will use the
              * x axis from the component content
              */
-            xAxis = this.componentContent.xAxis;
+            xAxis = this.UtilService.makeCopyOfJSONObject(this.componentContent.xAxis);
             this.xAxis = xAxis;
         }
 
@@ -623,7 +628,7 @@ class GraphController {
              * the student does not have y axis data so we will use the
              * y axis from the component content
              */
-            yAxis = this.componentContent.yAxis;
+            yAxis = this.UtilService.makeCopyOfJSONObject(this.componentContent.yAxis);
             this.yAxis = yAxis;
         }
 
@@ -770,8 +775,6 @@ class GraphController {
         this.updateMinMaxAxisValues(allSeries, xAxis, yAxis);
         let timeout = this.$timeout;
         
-        this.backgroundImage = this.componentContent.backgroundImage;
-
         this.chartConfig = {
             options: {
                 tooltip: {
@@ -1356,6 +1359,9 @@ class GraphController {
 
         // set the active series to null so that the default series will become selected later
         this.setActiveSeries(null);
+        
+        // set the background image
+        this.backgroundImage = this.componentContent.backgroundImage;
 
         /*
          * notify the controller that the student data has changed
@@ -1407,7 +1413,20 @@ class GraphController {
                      * is the same as before.
                      */
                     this.setActiveSeriesByIndex(activeSeriesIndex);
+                    
+                    if (this.componentContent.xAxis != null) {
+                        // reset the x axis
+                        this.setXAxis(this.componentContent.xAxis);
+                    }
 
+                    if (this.componentContent.yAxis != null) {
+                        // reset the y axis
+                        this.setYAxis(this.componentContent.yAxis);
+                    }
+                    
+                    // reset the background image
+                    this.backgroundImage = this.componentContent.backgroundImage;
+                    
                     /*
                      * notify the controller that the student data has changed
                      * so that the graph will be redrawn
@@ -1484,6 +1503,11 @@ class GraphController {
                 this.setYAxis(studentData.yAxis);
                 this.setActiveSeriesByIndex(studentData.activeSeriesIndex);
 
+                if (studentData.backgroundImage != null) {
+                    // set the background from the student data
+                    this.backgroundImage = studentData.backgroundImage;
+                }
+                
                 this.processLatestSubmit();
             }
         }

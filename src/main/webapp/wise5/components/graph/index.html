@@ -62,10 +62,6 @@
                                      ng-model='graphController.authoringComponentContent.enableTrials'
                                      ng-change='graphController.authoringViewEnableTrialsClicked()'/>
                 <br/>
-                Enable File Upload <input type='checkbox'
-                                     ng-model='graphController.authoringComponentContent.enableFileUpload'
-                                     ng-change='graphController.authoringViewComponentChanged()'/>
-                <br/>
                 <div ng-show='graphController.authoringComponentContent.enableTrials'>
                     Can Student Create Trials <input type='checkbox'
                                                      ng-model='graphController.authoringComponentContent.canCreateNewTrials'
@@ -82,6 +78,10 @@
                                                              ng-show='graphController.authoringComponentContent.enableTrials'
                                                              ng-change='graphController.authoringViewComponentChanged()'/>
                 </div>
+                <br/>
+                Enable File Upload <input type='checkbox'
+                                     ng-model='graphController.authoringComponentContent.enableFileUpload'
+                                     ng-change='graphController.authoringViewComponentChanged()'/>
                 <br/>
                 Series
                 <button ng-click='graphController.authoringAddSeriesClicked()'>Add Series</button>

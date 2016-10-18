@@ -41,10 +41,12 @@ this.authoringComponentContent=this.$scope.authoringComponentContent;/*
 this.mode=this.$scope.mode;this.workgroupId=this.$scope.workgroupId;this.teacherWorkgroupId=this.$scope.teacherWorkgroupId;this.trials=[];this.activeTrial=null;this.trialIdsToShow=[];this.selectedTrialsText="";this.studentDataVersion=2;this.canCreateNewTrials=false;this.canDeleteTrials=false;this.uploadedFileName=null;this.backgroundImage=null;if(this.componentContent!=null){// get the component id
 this.componentId=this.componentContent.id;// set the chart id
 this.chartId='chart'+this.componentId;if(this.componentContent.canCreateNewTrials){this.canCreateNewTrials=this.componentContent.canCreateNewTrials;}if(this.componentContent.canDeleteTrials){this.canDeleteTrials=this.componentContent.canDeleteTrials;}if(this.componentContent.hideAllTrialsOnNewTrial===false){this.hideAllTrialsOnNewTrial=false;}if(this.mode==='student'){this.isPromptVisible=true;this.isSaveButtonVisible=this.componentContent.showSaveButton;this.isSubmitButtonVisible=this.componentContent.showSubmitButton;//this.isResetGraphButtonVisible = true;
-this.isResetSeriesButtonVisible=this.componentContent.showResetSeriesButton;this.isSelectSeriesVisible=true;// get the latest annotations
+//this.isResetGraphButtonVisible = this.componentContent.showResetGraphButton;
+//this.isResetSeriesButtonVisible = this.componentContent.showResetSeriesButton;
+this.isResetSeriesButtonVisible=true;this.isSelectSeriesVisible=true;// get the latest annotations
 // TODO: watch for new annotations and update accordingly
-this.latestAnnotations=this.$scope.$parent.nodeController.getLatestComponentAnnotations(this.componentId);}else if(this.mode==='grading'){this.isPromptVisible=true;this.isSaveButtonVisible=false;this.isSubmitButtonVisible=false;//this.isResetGraphButtonVisible = false;
-this.isResetSeriesButtonVisible=false;this.isSelectSeriesVisible=false;this.isDisabled=true;this.isSnipDrawingButtonVisible=false;}else if(this.mode==='onlyShowWork'){this.isPromptVisible=true;this.isSaveButtonVisible=false;this.isSubmitButtonVisible=false;this.isResetGraphButtonVisible=false;this.isResetSeriesButtonVisible=false;this.isSelectSeriesVisible=false;this.isDisabled=true;this.isSnipDrawingButtonVisible=false;}else if(this.mode==='showPreviousWork'){this.isPromptVisible=true;this.isSaveButtonVisible=false;this.isSubmitButtonVisible=false;this.isDisabled=true;}else if(this.mode==='authoring'){this.updateAdvancedAuthoringView();$scope.$watch(function(){return this.authoringComponentContent;}.bind(this),function(newValue,oldValue){this.componentContent=this.ProjectService.injectAssetPaths(newValue);this.series=null;this.xAxis=null;this.yAxis=null;this.setupGraph();}.bind(this),true);}var componentState=null;// get the component state from the scope
+this.latestAnnotations=this.$scope.$parent.nodeController.getLatestComponentAnnotations(this.componentId);this.backgroundImage=this.componentContent.backgroundImage;}else if(this.mode==='grading'){this.isPromptVisible=true;this.isSaveButtonVisible=false;this.isSubmitButtonVisible=false;//this.isResetGraphButtonVisible = false;
+this.isResetSeriesButtonVisible=false;this.isSelectSeriesVisible=false;this.isDisabled=true;this.isSnipDrawingButtonVisible=false;}else if(this.mode==='onlyShowWork'){this.isPromptVisible=true;this.isSaveButtonVisible=false;this.isSubmitButtonVisible=false;this.isResetGraphButtonVisible=false;this.isResetSeriesButtonVisible=false;this.isSelectSeriesVisible=false;this.isDisabled=true;this.isSnipDrawingButtonVisible=false;this.backgroundImage=this.componentContent.backgroundImage;}else if(this.mode==='showPreviousWork'){this.isPromptVisible=true;this.isSaveButtonVisible=false;this.isSubmitButtonVisible=false;this.isDisabled=true;this.backgroundImage=this.componentContent.backgroundImage;}else if(this.mode==='authoring'){this.updateAdvancedAuthoringView();$scope.$watch(function(){return this.authoringComponentContent;}.bind(this),function(newValue,oldValue){this.componentContent=this.ProjectService.injectAssetPaths(newValue);this.series=null;this.xAxis=null;this.yAxis=null;this.setupGraph();}.bind(this),true);}var componentState=null;// get the component state from the scope
 componentState=this.$scope.componentState;// set whether studentAttachment is enabled
 this.isStudentAttachmentEnabled=this.componentContent.isStudentAttachmentEnabled;if(componentState==null){/*
                  * only import work if the student does not already have
@@ -160,11 +162,11 @@ var graphType=this.componentContent.graphType;// get the x and y axis attributes
 var xAxis=this.xAxis;var yAxis=this.yAxis;if(this.xAxis==null&&this.componentContent.xAxis!=null){/*
              * the student does not have x axis data so we will use the
              * x axis from the component content
-             */xAxis=this.componentContent.xAxis;this.xAxis=xAxis;}if(this.xAxis!=null){// do not display decimals on the x axis
+             */xAxis=this.UtilService.makeCopyOfJSONObject(this.componentContent.xAxis);this.xAxis=xAxis;}if(this.xAxis!=null){// do not display decimals on the x axis
 this.xAxis.allowDecimals=false;}if(this.yAxis==null&&this.componentContent.yAxis!=null){/*
              * the student does not have y axis data so we will use the
              * y axis from the component content
-             */yAxis=this.componentContent.yAxis;this.yAxis=yAxis;}if(this.yAxis!=null){// do not display decimals on the y axis
+             */yAxis=this.UtilService.makeCopyOfJSONObject(this.componentContent.yAxis);this.yAxis=yAxis;}if(this.yAxis!=null){// do not display decimals on the y axis
 this.yAxis.allowDecimals=false;}if(this.componentContent.width!=null){// set the width of the graph
 this.width=this.componentContent.width;}if(this.componentContent.height!=null){// set the height of the graph
 this.height=this.componentContent.height;}/*
@@ -207,7 +209,7 @@ this.clearSeriesIds(allSeries);// give all series ids
 this.setSeriesIds(allSeries);/*
          * update the min and max x and y values if necessary so that all
          * points are visible
-         */this.updateMinMaxAxisValues(allSeries,xAxis,yAxis);var timeout=this.$timeout;this.backgroundImage=this.componentContent.backgroundImage;this.chartConfig={options:{tooltip:{formatter:function formatter(){/*
+         */this.updateMinMaxAxisValues(allSeries,xAxis,yAxis);var timeout=this.$timeout;this.chartConfig={options:{tooltip:{formatter:function formatter(){/*
                          * When the user mouseovers a point, display a tooltip that looks like
                          *
                          * x: 10
@@ -379,7 +381,8 @@ var series=this.getSeriesByIndex(index);if(series==null){this.setActiveSeries(nu
      * Reset the table data to its initial state from the component content
      */value:function resetGraph(){// get the original series from the component content
 this.setSeries(this.UtilService.makeCopyOfJSONObject(this.componentContent.series));if(this.componentContent.xAxis!=null){this.setXAxis(this.componentContent.xAxis);}if(this.componentContent.yAxis!=null){this.setYAxis(this.componentContent.yAxis);}// set the active series to null so that the default series will become selected later
-this.setActiveSeries(null);/*
+this.setActiveSeries(null);// set the background image
+this.backgroundImage=this.componentContent.backgroundImage;/*
          * notify the controller that the student data has changed
          * so that the graph will be redrawn
          */this.studentDataChanged();}},{key:'resetSeries',/**
@@ -394,7 +397,10 @@ originalSeries=this.UtilService.makeCopyOfJSONObject(originalSeries);// set the 
 this.setSeriesByIndex(originalSeries,activeSeriesIndex);/*
                      * set the active series index so that the the active series
                      * is the same as before.
-                     */this.setActiveSeriesByIndex(activeSeriesIndex);/*
+                     */this.setActiveSeriesByIndex(activeSeriesIndex);if(this.componentContent.xAxis!=null){// reset the x axis
+this.setXAxis(this.componentContent.xAxis);}if(this.componentContent.yAxis!=null){// reset the y axis
+this.setYAxis(this.componentContent.yAxis);}// reset the background image
+this.backgroundImage=this.componentContent.backgroundImage;/*
                      * notify the controller that the student data has changed
                      * so that the graph will be redrawn
                      */this.studentDataChanged();}}}}/**
@@ -414,7 +420,8 @@ var activeTrialIndex=studentData.activeTrialIndex;if(activeTrialIndex==null){/*
 this.setActiveTrialByIndex(studentData.trials.length-1);}}else{// there is an active trial index
 this.setActiveTrialByIndex(activeTrialIndex);}if(this.activeTrial!=null&&this.activeTrial.series!=null){// set the active trial series to be the series to display
 this.series=this.activeTrial.series;}// redraw the graph
-this.setupGraph();}}this.setTrialIdsToShow();this.setXAxis(studentData.xAxis);this.setYAxis(studentData.yAxis);this.setActiveSeriesByIndex(studentData.activeSeriesIndex);this.processLatestSubmit();}}}},{key:'processLatestSubmit',/**
+this.setupGraph();}}this.setTrialIdsToShow();this.setXAxis(studentData.xAxis);this.setYAxis(studentData.yAxis);this.setActiveSeriesByIndex(studentData.activeSeriesIndex);if(studentData.backgroundImage!=null){// set the background from the student data
+this.backgroundImage=studentData.backgroundImage;}this.processLatestSubmit();}}}},{key:'processLatestSubmit',/**
      * Check if latest component state is a submission and set isSubmitDirty accordingly
      */value:function processLatestSubmit(){var latestState=this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId,this.componentId);if(latestState){var serverSaveTime=latestState.serverSaveTime;var clientSaveTime=this.ConfigService.convertToClientTimestamp(serverSaveTime);if(latestState.isSubmit){// latest state is a submission, so set isSubmitDirty to false and notify node
 this.isSubmitDirty=false;this.$scope.$emit('componentSubmitDirty',{componentId:this.componentId,isDirty:false});// set save message
