@@ -92,13 +92,19 @@ class NotebookItemReportController {
                         $(this).summernote('saveRange');
                     }
                 }
-            }
+            };
 
             this.$scope.$watch(() => {
                 return this.reportItem.content.content;
             }, (newValue, oldValue) => {
                 if (newValue !== oldValue) {
                     this.dirty = true;
+                }
+            });
+
+            this.$scope.$on('toggleNotebook', () => {
+                if (this.dirty) {
+                    this.saveNotebookReportItem();
                 }
             });
 

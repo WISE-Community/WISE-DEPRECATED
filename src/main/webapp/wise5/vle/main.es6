@@ -158,6 +158,17 @@ let vleModule = angular.module('vle', [
                         studentData: function (StudentDataService, config, project) {
                             return StudentDataService.retrieveStudentData();
                         },
+                        notebook: function (NotebookService, ConfigService, StudentAssetService, studentData, config, project) {
+                            if (!ConfigService.isPreview()) {
+                                StudentAssetService.retrieveAssets().then((studentAssets) => {
+                                    NotebookService.retrieveNotebookItems().then((notebook) => {
+                                        return notebook;
+                                    });
+                                });
+                            } else {
+                                return NotebookService.notebook;
+                            }
+                        },
                         notifications: function (NotificationService, studentData, config, project) {
                             return NotificationService.retrieveNotifications();
                         },

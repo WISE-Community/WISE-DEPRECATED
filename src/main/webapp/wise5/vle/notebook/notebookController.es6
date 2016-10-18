@@ -30,33 +30,18 @@ class NotebookController {
         $scope.$on('notebookUpdated', (event, args) => {
             this.notebook = args.notebook;
         });
-        //this.notebook = this.NotebookService.notebook;
 
         this.logOutListener = $scope.$on('logOut', (event, args) => {
             this.logOutListener();
             this.$rootScope.$broadcast('componentDoneUnloading');
         });
 
-        // retrieve assets when notebook is opened
-        this.retrieveNotebookItems();
+        // by this time, the notebook and student assets have been retrieved.
+        this.notebook = this.NotebookService.notebook;
     }
 
     getTemplateUrl() {
         return this.templateUrl;
-    }
-
-    retrieveNotebookItems() {
-        // fetch all assets first because a subset of it will be referenced by a notebook item
-        if (!this.ConfigService.isPreview()) {
-            this.StudentAssetService.retrieveAssets().then((studentAssets) => {
-                this.NotebookService.retrieveNotebookItems().then((notebook) => {
-                    this.notebook = notebook;
-                });
-            });
-        } else {
-            this.notebook = this.NotebookService.notebook;
-        }
-
     }
 
     deleteStudentAsset(studentAsset) {
