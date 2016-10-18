@@ -534,6 +534,7 @@ class GraphController {
                     
                     var reader = new FileReader();
                     
+                    // this is the callback function for reader.readAsText()
                     reader.onload = function() {
                         
                         // get the file contente
@@ -548,6 +549,11 @@ class GraphController {
                         // redraw the graph
                         this.scope.graphController.setupGraph();
                         
+                        /*
+                         * notify the controller that the student data has
+                         * changed so that it will perform any necessary saving
+                         */
+                        this.scope.graphController.studentDataChanged();
                     }
                     
                     /*
@@ -560,6 +566,8 @@ class GraphController {
                     // read the text from the file
                     reader.readAsText(files[0]);
                     
+                    // upload the file to the studentuploads folder
+                    this.graphController.StudentAssetService.uploadAsset(files[0]);
                 }
             }
             

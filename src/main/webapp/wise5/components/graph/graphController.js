@@ -132,17 +132,22 @@ if(this.graphController!=null&&this.graphController.activeSeries!=null&&this.gra
                      */var answer=confirm("Are you sure you want to overwrite the current line data?");if(!answer){// the student does not want to overwrite the data
 overwrite=false;}}}if(overwrite){// obtain the file content and overwrite the data in the graph
 // get the files from the file input element
-var files=element.files;if(files!=null&&files.length>0){var reader=new FileReader();reader.onload=function(){// get the file contente
+var files=element.files;if(files!=null&&files.length>0){var reader=new FileReader();// this is the callback function for reader.readAsText()
+reader.onload=function(){// get the file contente
 var fileContent=reader.result;/*
                          * read the csv file content and load the data into
                          * the active series
                          */this.scope.graphController.readCSV(fileContent);// redraw the graph
-this.scope.graphController.setupGraph();};/*
+this.scope.graphController.setupGraph();/*
+                         * notify the controller that the student data has
+                         * changed so that it will perform any necessary saving
+                         */this.scope.graphController.studentDataChanged();};/*
                      * save a reference to this scope in the reader so that we
                      * have access to the scope and graphController in the
                      * reader.onload() function
                      */reader.scope=this;// read the text from the file
-reader.readAsText(files[0]);}}/*
+reader.readAsText(files[0]);// upload the file to the studentuploads folder
+this.graphController.StudentAssetService.uploadAsset(files[0]);}}/*
              * clear the file input element value so that onchange() will be
              * called again if the student wants to upload the same file again
              */element.value=null;};}/**
