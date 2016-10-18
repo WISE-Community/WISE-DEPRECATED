@@ -1659,6 +1659,10 @@ class GraphController {
                 // set the uploaded file name
                 studentData.uploadedFileName = uploadedFileName;
             }
+            
+            if (this.backgroundImage != null) {
+                studentData.backgroundImage = this.backgroundImage;
+            }
 
             if (this.isSubmit) {
                 // the student submitted this work

@@ -474,7 +474,7 @@ studentData.yAxis=this.getYAxis();// get the active series index
 var activeSeriesIndex=this.getSeriesIndex(this.activeSeries);if(activeSeriesIndex!=null){// set the active series index
 studentData.activeSeriesIndex=activeSeriesIndex;}// get the uploaded file name if any
 var uploadedFileName=this.getUploadedFileName();if(uploadedFileName!=null){// set the uploaded file name
-studentData.uploadedFileName=uploadedFileName;}if(this.isSubmit){// the student submitted this work
+studentData.uploadedFileName=uploadedFileName;}if(this.backgroundImage!=null){studentData.backgroundImage=this.backgroundImage;}if(this.isSubmit){// the student submitted this work
 componentState.isSubmit=this.isSubmit;/*
                  * reset the isSubmit value so that the next component state
                  * doesn't maintain the same value
