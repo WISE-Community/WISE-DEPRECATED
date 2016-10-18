@@ -97,6 +97,7 @@ describe('WISE5 Notebook in Preview Mode', function () {
         expect(saveNoteDialogButton.isPresent()).toBeTruthy();
         expect(saveNoteDialogButton.getAttribute("disabled")).toBe("true"); // the save button should be disabled because user hasn't typed anything.
 
+        noteTextarea.clear();
         noteTextarea.sendKeys('This is my text note!');
         saveNoteDialogButton.click();
 
