@@ -158,6 +158,8 @@ class GraphController {
         this.canDeleteTrials = false;
         
         this.uploadedFileName = null;
+        
+        this.backgroundImage = null;
 
         if (this.componentContent != null) {
 
@@ -767,6 +769,8 @@ class GraphController {
          */
         this.updateMinMaxAxisValues(allSeries, xAxis, yAxis);
         let timeout = this.$timeout;
+        
+        this.backgroundImage = this.componentContent.backgroundImage;
 
         this.chartConfig = {
             options: {
@@ -789,6 +793,7 @@ class GraphController {
                     width: this.width,
                     height: this.height,
                     type: graphType,
+                    plotBackgroundImage: this.backgroundImage,
                     events: {
                         click: function(e) {
                             // get the current time

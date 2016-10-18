@@ -38,7 +38,7 @@ this.authoringComponentContent=this.$scope.authoringComponentContent;/*
          * get the original component content. this is used when showing
          * previous work from another component.
          */this.originalComponentContent=this.$scope.originalComponentContent;// the mode to load the component in e.g. 'student', 'grading', 'onlyShowWork'
-this.mode=this.$scope.mode;this.workgroupId=this.$scope.workgroupId;this.teacherWorkgroupId=this.$scope.teacherWorkgroupId;this.trials=[];this.activeTrial=null;this.trialIdsToShow=[];this.selectedTrialsText="";this.studentDataVersion=2;this.canCreateNewTrials=false;this.canDeleteTrials=false;this.uploadedFileName=null;if(this.componentContent!=null){// get the component id
+this.mode=this.$scope.mode;this.workgroupId=this.$scope.workgroupId;this.teacherWorkgroupId=this.$scope.teacherWorkgroupId;this.trials=[];this.activeTrial=null;this.trialIdsToShow=[];this.selectedTrialsText="";this.studentDataVersion=2;this.canCreateNewTrials=false;this.canDeleteTrials=false;this.uploadedFileName=null;this.backgroundImage=null;if(this.componentContent!=null){// get the component id
 this.componentId=this.componentContent.id;// set the chart id
 this.chartId='chart'+this.componentId;if(this.componentContent.canCreateNewTrials){this.canCreateNewTrials=this.componentContent.canCreateNewTrials;}if(this.componentContent.canDeleteTrials){this.canDeleteTrials=this.componentContent.canDeleteTrials;}if(this.componentContent.hideAllTrialsOnNewTrial===false){this.hideAllTrialsOnNewTrial=false;}if(this.mode==='student'){this.isPromptVisible=true;this.isSaveButtonVisible=this.componentContent.showSaveButton;this.isSubmitButtonVisible=this.componentContent.showSubmitButton;//this.isResetGraphButtonVisible = true;
 this.isResetSeriesButtonVisible=this.componentContent.showResetSeriesButton;this.isSelectSeriesVisible=true;// get the latest annotations
@@ -207,13 +207,13 @@ this.clearSeriesIds(allSeries);// give all series ids
 this.setSeriesIds(allSeries);/*
          * update the min and max x and y values if necessary so that all
          * points are visible
-         */this.updateMinMaxAxisValues(allSeries,xAxis,yAxis);var timeout=this.$timeout;this.chartConfig={options:{tooltip:{formatter:function formatter(){/*
+         */this.updateMinMaxAxisValues(allSeries,xAxis,yAxis);var timeout=this.$timeout;this.backgroundImage=this.componentContent.backgroundImage;this.chartConfig={options:{tooltip:{formatter:function formatter(){/*
                          * When the user mouseovers a point, display a tooltip that looks like
                          *
                          * x: 10
                          * y: 15
                          *
-                         */var x=thisGraphController.roundToNearestTenth(this.x);var y=thisGraphController.roundToNearestTenth(this.y);return'x: '+x+'<br/>y: '+y;}},chart:{width:this.width,height:this.height,type:graphType,events:{click:function click(e){// get the current time
+                         */var x=thisGraphController.roundToNearestTenth(this.x);var y=thisGraphController.roundToNearestTenth(this.y);return'x: '+x+'<br/>y: '+y;}},chart:{width:this.width,height:this.height,type:graphType,plotBackgroundImage:this.backgroundImage,events:{click:function click(e){// get the current time
 var currentTime=new Date().getTime();// check if a drop event recently occurred
 if(thisGraphController.lastDropTime!=null){// check if the last drop event was not within the last 100 milliseconds
 if(currentTime-thisGraphController.lastDropTime<100){/*

@@ -51,6 +51,13 @@
                               ng-change='graphController.authoringViewComponentChanged()'/>
                 <br/>
                 <br/>
+                Background Image: <input type='text'
+                                         size='80'
+                                         ng-model='graphController.authoringComponentContent.backgroundImage'
+                                         ng-model-options='{ debounce: 1000 }'
+                                         ng-change='graphController.authoringViewComponentChanged()'/>
+                <br/>
+                <br/>
                 Enable Trials <input type='checkbox'
                                      ng-model='graphController.authoringComponentContent.enableTrials'
                                      ng-change='graphController.authoringViewEnableTrialsClicked()'/>
