@@ -2758,7 +2758,51 @@
             "transitionLogic": {
                 "transitions": [
                     {
-                        "to": "node52"
+                        "to": "node47",
+                        "criteria": [
+                            {
+                                "name": "score",
+                                "params": {
+                                    "nodeId": "node46",
+                                    "componentId": "znco1zpt4n",
+                                    "scores": [
+                                        1,
+                                        2
+                                    ]
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "to": "node48",
+                        "criteria": [
+                            {
+                                "name": "score",
+                                "params": {
+                                    "nodeId": "node46",
+                                    "componentId": "znco1zpt4n",
+                                    "scores": [
+                                        3
+                                    ]
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "to": "node49",
+                        "criteria": [
+                            {
+                                "name": "score",
+                                "params": {
+                                    "nodeId": "node46",
+                                    "componentId": "znco1zpt4n",
+                                    "scores": [
+                                        4,
+                                        5
+                                    ]
+                                }
+                            }
+                        ]
                     }
                 ],
                 "howToChooseAmongAvailablePaths": "random",
@@ -2772,6 +2816,200 @@
                     "id": "znco1zpt4n",
                     "type": "OpenResponse",
                     "prompt": "GREENROOF-II\n<br/><br/>\n5 points\n<br/>\nThe plants get the light energy from the sun and transform the energy to a new kind of energy called chemical energy. Also carbon dioxide, water, and the light energy come together and make the plants food, a sugar named glucose. They say that glucose is so energy rich because the light energy that was turned into chemical energy can be stored int the glucose for later and thats why these people have plants growing on there roof.\n<br/><br/>\n4 points\n<br/>\nThe energy comes from the sun and the energy transfers from place to place by bouncing off one another. The energy goes into the plant and is stored and is stored as chemical energy. Energy changes from light energy to chemical energy by the other energy's together..\n<br/><br/>\n3 points\n<br/>\nenergy comes from pre-existing energy that transforms, energy is stored in molecules. Energy explodes and the chemicals inside change.\n<br/><br/>\n2 points\n<br/>\nit would lower the energy use because it goes t the plants before it gets to the building\n<br/><br/>\n1 point\n<br/>\nhello",
+                    "showSaveButton": false,
+                    "showSubmitButton": true,
+                    "starterSentence": null,
+                    "isStudentAttachmentEnabled": false,
+                    "maxScore": 5,
+                    "enableNotifications": true,
+                    "notificationSettings": {
+                        "notifications": [
+                            {
+                                "notificationType": "CRaterResult",
+                                "enableCriteria": {
+                                    "score": [
+                                        1
+                                    ]
+                                },
+                                "isAmbient": true,
+                                "dismissCode": "apple",
+                                "isNotifyTeacher": true,
+                                "isNotifyStudent": true,
+                                "notificationMessageToStudent": "1. Please talk to your teacher about this CRater item!",
+                                "notificationMessageToTeacher": "1. {{username}} received score of {{score}}. Requires dismissal with code {{dismissCode}}."
+                            },
+                            {
+                                "notificationType": "CRaterResult",
+                                "enableCriteria": {
+                                    "score": [
+                                        2
+                                    ]
+                                },
+                                "isAmbient": true,
+                                "dismissCode": "apple",
+                                "isNotifyTeacher": true,
+                                "isNotifyStudent": true,
+                                "notificationMessageToStudent": "2. Please talk to your teacher about this CRater item!",
+                                "notificationMessageToTeacher": "2. {{username}} received score of {{score}}. Requires dismissal with code {{dismissCode}}."
+                            },
+                            {
+                                "notificationType": "CRaterResult",
+                                "enableCriteria": {
+                                    "score": [
+                                        3
+                                    ]
+                                },
+                                "isAmbient": true,
+                                "dismissCode": "apple",
+                                "isNotifyTeacher": true,
+                                "isNotifyStudent": true,
+                                "notificationMessageToStudent": "3. Please talk to your teacher about this CRater item!",
+                                "notificationMessageToTeacher": "3. {{username}} received score of {{score}}. Requires dismissal with code {{dismissCode}}."
+                            }
+                        ]
+                    },
+                    "enableGlobalAnnotations": true,
+                    "globalAnnotationSettings": {
+                        "globalAnnotationMaxCount": 2,
+                        "globalAnnotationGroups": [
+                            {
+                                "annotationGroupName": "score1-2",
+                                "enableCriteria": {
+                                    "score": [
+                                        1,
+                                        2
+                                    ]
+                                },
+                                "maxCount": 1,
+                                "isPopup": true,
+                                "isGlobal": true,
+                                "unGlobalizeConditional": "all",
+                                "unGlobalizeCriteria": [
+                                    {
+                                        "name": "isVisitedAndRevisedAfter",
+                                        "params": {
+                                            "isVisitedAfterNodeId": "node14",
+                                            "isRevisedAfterNodeId": "node46",
+                                            "isRevisedAfterComponentId": "znco1zpt4n"
+                                        }
+                                    }
+                                ]
+                            },
+                            {
+                                "annotationGroupName": "score3",
+                                "enableCriteria": {
+                                    "score": [
+                                        3
+                                    ]
+                                },
+                                "maxCount": 1,
+                                "isPopup": true,
+                                "isGlobal": true,
+                                "unGlobalizeConditional": "all",
+                                "unGlobalizeCriteria": [
+                                    {
+                                        "name": "isVisitedAndRevisedAfter",
+                                        "params": {
+                                            "isVisitedAfterNodeId": "node15",
+                                            "isRevisedAfterNodeId": "node46",
+                                            "isRevisedAfterComponentId": "znco1zpt4n"
+                                        }
+                                    }
+                                ]
+                            },
+                            {
+                                "annotationGroupName": "score4-5",
+                                "enableCriteria": {
+                                    "score": [
+                                        4,
+                                        5
+                                    ]
+                                },
+                                "maxCount": 1,
+                                "isPopup": true,
+                                "isGlobal": true,
+                                "unGlobalizeConditional": "all",
+                                "unGlobalizeCriteria": [
+                                    {
+                                        "name": "isVisitedAfter",
+                                        "params": {
+                                            "isVisitedAfterNodeId": "node15"
+                                        }
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    "cRater": {
+                        "itemType": "HENRY",
+                        "itemId": "GREENROOF-II",
+                        "scoreOn": "submit",
+                        "showScore": true,
+                        "showFeedback": true,
+                        "scoringRules": [
+                            {
+                                "concepts": "1",
+                                "score": "1",
+                                "feedbackText": "You got a score of 1. {{studentFirstNames}}, redo.<br><br> Think about the Sun’s rays. Where do they go? How do they move? Check out <wiselink node-id='node14' link-text='table step'></wiselink> for a hint. Then come back to <wiselink node-id='node46' link-text='this CRater step'></wiselink> and rewrite your story.",
+                                "studentAction": "revise"
+                            },
+                            {
+                                "concepts": "2",
+                                "score": "2",
+                                "feedbackText": "You got a score of 2. {{studentFirstNames}}, redo.<br><br> Think about the Sun’s rays. Where do they go? How do they move? Check out <wiselink node-id='node14' link-text='table step'></wiselink> for a hint. Then come back to <wiselink node-id='node46' link-text='this CRater step'></wiselink> and rewrite your story.",
+                                "studentAction": "revise"
+                            },
+                            {
+                                "concepts": "3",
+                                "score": "3",
+                                "feedbackText": "You got a score of 3. {{studentFirstNames}}, redo.<br><br> Think about the Sun’s rays. Where do they go? How do they move? Check out <wiselink node-id='node15' link-text='graph step'></wiselink> for a hint. Then come back to <wiselink node-id='node46' link-text='this CRater step'></wiselink> and rewrite your story.",
+                                "studentAction": "revise"
+                            },
+                            {
+                                "concepts": "4",
+                                "score": "4",
+                                "feedbackText": "You got a score of 4. {{studentFirstNames}}, redo.<br><br> Think about the Sun’s rays. Where do they go? How do they move? Check out <wiselink node-id='node15' link-text='graph step'></wiselink> for a hint",
+                                "studentAction": "revise"
+                            },
+                            {
+                                "concepts": "5",
+                                "score": "5",
+                                "feedbackText": "You got a score of 5. {{studentFirstNames}}, redo.<br><br> Think about the Sun’s rays. Where do they go? How do they move? Check out <wiselink node-id='node15' link-text='graph step'></wiselink> for a hint",
+                                "studentAction": "revise"
+                            },
+                            {
+                                "concepts": "",
+                                "score": "0",
+                                "feedbackText": "<br>{{studentFirstNames}}, expand your story.<br><br>How does the energy change inside the chloroplast? Check out <a onclick=\"view.goToStep('3.2')\">here</a> for a hint. Then, revise your story below.",
+                                "studentAction": "revise"
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "id": "node46-old",
+            "title": "CRater",
+            "type": "node",
+            "constraints": [],
+            "transitionLogic": {
+                "transitions": [
+                    {
+                        "to": "node52"
+                    }
+                ],
+                "howToChooseAmongAvailablePaths": "random",
+                "whenToChoosePath": "scoreChanged",
+                "canChangePath": true
+            },
+            "showSaveButton": true,
+            "showSubmitButton": false,
+            "components": [
+                {
+                    "id": "znco1zpt4n",
+                    "type": "OpenResponse",
+                    "prompt": "GREENROOF-II\n<br/><br/>\n5 points\n<br/>\nThe plants get the light energy from the sun and transform the energy to a new kind of energy called chemical energy. Also carbon dioxide, water, and the light energy come together and make the plants food, a sugar named glucose. They say that glucose is so energy rich because the light energy that was turned into chemical energy can be stored int the glucose for later and that's why these people have plants growing on their roof.\n<br/><br/>\n4 points\n<br/>\nThe energy comes from the sun and the energy transfers from place to place by bouncing off one another. The energy goes into the plant and is stored and is stored as chemical energy. Energy changes from light energy to chemical energy by the other energy's together.\n<br/><br/>\n3 points\n<br/>\nEnergy comes from pre-existing energy that transforms, energy is stored in molecules. Energy explodes and the chemicals inside change.\n<br/><br/>\n2 points\n<br/>\nIt would lower the energy use because it goes to the plants before it gets to the building.\n<br/><br/>\n1 point\n<br/>\nHello",
                     "showSaveButton": false,
                     "showSubmitButton": true,
                     "starterSentence": null,
@@ -2966,13 +3204,13 @@
                     "isStudentAttachmentEnabled": false,
                     "width": 800,
                     "height": 600,
-                    "background": "Nickelodeon_SpongeBob_SquarePants_Characters_Cast.png",
+                    "background": "Nickelodeon_SpongeBob_SquarePants_Characters_Cast.jpg",
                     "stretchBackground": true,
                     "nodes": [
                         {
                             "id": "node1",
-                            "label": "Sun",
-                            "fileName": "Sun.png",
+                            "label": "sun",
+                            "fileName": "sun.png",
                             "width": 100,
                             "height": 100
                         },
@@ -3056,7 +3294,7 @@
                             {
                                 "originalId": "node1",
                                 "instanceId": "studentNode1",
-                                "fileName": "Sun.png",
+                                "fileName": "sun.png",
                                 "filePath": "/wise/curriculum/108/assets/Sun.png",
                                 "label": "Sun",
                                 "x": 135,
@@ -3173,9 +3411,7 @@
                             }
                         ]
                     },
-                    "customRuleEvaluator": "var result = {};\n\nif (all(\"Contains Sun\", \"Sun (SR) Space\", \"Contains Space\")) {\n    result.score = 3;\n    result.feedback = \"Good Job\";\n} else if (all(\"Contains Sun\") && any(\"Contains Space\")) {\n    result.score = 2;\n    result.feedback = \"Missing Link\";\n} else if (any(\"Contains Sun\")) {\n    result.score = 1;\n    result.feedback = \"Missing Space\";\n} else if (any(\"Contains Space\")) {\n    result.score = 1;\n    result.feedback = \"Missing Sun\";\n} else {\n    result.score = 0;\n    result.feedback = \"Missing Everything\";\n}\n\nsetResult(result);",
-                    "showPreviousWorkNodeId": "",
-                    "showPreviousWorkComponentId": ""
+                    "customRuleEvaluator": "var result = {};\n\nif (all(\"Contains Sun\", \"Sun (SR) Space\", \"Contains Space\")) {\n    result.score = 3;\n    result.feedback = \"Good Job\";\n} else if (all(\"Contains Sun\") && any(\"Contains Space\")) {\n    result.score = 2;\n    result.feedback = \"Missing Link\";\n} else if (any(\"Contains Sun\")) {\n    result.score = 1;\n    result.feedback = \"Missing Space\";\n} else if (any(\"Contains Space\")) {\n    result.score = 1;\n    result.feedback = \"Missing Sun\";\n} else {\n    result.score = 0;\n    result.feedback = \"Missing Everything\";\n}\n\nsetResult(result);"
                 }
             ]
         },
@@ -3351,7 +3587,7 @@
                 {
                     "id": "8f287moaq1",
                     "type": "OpenResponse",
-                    "prompt": "GREENROOF-II\n<br/><br/>\n5 points\n<br/>\nThe plants get the light energy from the sun and transform the energy to a new kind of energy called chemical energy. Also carbon dioxide, water, and the light energy come together and make the plants food, a sugar named glucose. They say that glucose is so energy rich because the light energy that was turned into chemical energy can be stored int the glucose for later and thats why these people have plants growing on there roof.\n<br/><br/>\n4 points\n<br/>\nThe energy comes from the sun and the energy transfers from place to place by bouncing off one another. The energy goes into the plant and is stored and is stored as chemical energy. Energy changes from light energy to chemical energy by the other energy's together..\n<br/><br/>\n3 points\n<br/>\nenergy comes from pre-existing energy that transforms, energy is stored in molecules. Energy explodes and the chemicals inside change.\n<br/><br/>\n2 points\n<br/>\nit would lower the energy use because it goes t the plants before it gets to the building\n<br/><br/>\n1 point\n<br/>\nhello",
+                    "prompt": "GREENROOF-II\n<br/><br/>\n5 points\n<br/>\nThe plants get the light energy from the sun and transform the energy to a new kind of energy called chemical energy. Also carbon dioxide, water, and the light energy come together and make the plants food, a sugar named glucose. They say that glucose is so energy rich because the light energy that was turned into chemical energy can be stored int the glucose for later and that's why these people have plants growing on their roof.\n<br/><br/>\n4 points\n<br/>\nThe energy comes from the sun and the energy transfers from place to place by bouncing off one another. The energy goes into the plant and is stored and is stored as chemical energy. Energy changes from light energy to chemical energy by the other energy's together.\n<br/><br/>\n3 points\n<br/>\nEnergy comes from pre-existing energy that transforms, energy is stored in molecules. Energy explodes and the chemicals inside change.\n<br/><br/>\n2 points\n<br/>\nIt would lower the energy use because it goes to the plants before it gets to the building.\n<br/><br/>\n1 point\n<br/>\nHello",
                     "showSaveButton": false,
                     "showSubmitButton": true,
                     "starterSentence": null,

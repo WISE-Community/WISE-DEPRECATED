@@ -214,7 +214,7 @@
                         <div id="selectNodeBar" style="flex: 10; border: 1px solid black">
                             <div ng-repeat="availableNode in conceptMapController.availableNodes"
                                  style="text-align: center; border: 1px solid black">
-                                <img src="{{availableNode.fileName}}"
+                                <img ng-src="{{availableNode.fileName}}"
                                     style="cursor: pointer"
                                     ng-mousedown="conceptMapController.selectNode($event, availableNode)"
                                     width="{{availableNode.width}}"
@@ -227,7 +227,15 @@
                             <svg id="svg1"
                                  width="800"
                                  height="600"
-                                 style="background-image: url('{{conceptMapController.componentContent.background}}'); background-size: {{conceptMapController.backgroundSize}}; background-repeat: no-repeat; border: 1px solid black; -moz-user-select: none; -webkit-user-select: none; -ms-user-select:none; user-select:none; -o-user-select:none;">
+                                 ng-style="{'background-image': 'url(' + conceptMapController.componentContent.background +')',
+                                 'background-size': conceptMapController.backgroundSize,
+                                 'background-repeat': 'no-repeat',
+                                 'border': '1px solid black',
+                                 '-moz-user-select': 'none',
+                                 '-webkit-user-select': 'none',
+                                 '-ms-user-select':'none',
+                                 'user-select':'none',
+                                 '-o-user-select':'none'}">
                             </svg>
                         </div>
                         <div id="linkTypeChooserModalOverlay"
