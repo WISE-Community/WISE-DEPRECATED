@@ -128,7 +128,7 @@ nodeIcon.type='font';}}return nodeIcon;}},{key:'getParentGroup',value:function g
      * @returns whether the node is affected by the constraint
      */value:function isNodeAffectedByConstraint(node,constraint){var result=false;if(node!=null&&constraint!=null){var nodeId=node.id;var targetId=constraint.targetId;var action=constraint.action;if(action==='makeAllNodesAfterThisNotVisible'){if(this.isNodeIdAfter(targetId,node.id)){result=true;}}else if(action==='makeAllNodesAfterThisNotVisitable'){if(this.isNodeIdAfter(targetId,node.id)){result=true;}}else{var targetNode=this.getNodeById(targetId);if(targetNode!=null){var nodeType=targetNode.type;if(nodeType==='node'){// the target is an application
 if(nodeId===targetId){result=true;}}else if(nodeType==='group'){// the target is a group
-if(this.isNodeDescendentOfGroup(node,targetNode)){result=true;}}}}}return result;}},{key:'isNodeIdAfter',/**
+if(nodeId===targetId){result=true;}if(this.isNodeDescendentOfGroup(node,targetNode)){result=true;}}}}}return result;}},{key:'isNodeIdAfter',/**
      * Check if a node id comes after another node id in the project
      * @param nodeIdBefore the node id before
      * @param nodeIdAfter the node id after

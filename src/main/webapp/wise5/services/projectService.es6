@@ -1094,6 +1094,10 @@ class ProjectService {
                     } else if (nodeType === 'group') {
                         // the target is a group
 
+                        if (nodeId === targetId) {
+                            result = true;
+                        }
+                        
                         if (this.isNodeDescendentOfGroup(node, targetNode)) {
                             result = true;
                         }
