@@ -156,6 +156,8 @@ class GraphController {
 
         this.canCreateNewTrials = false;
         this.canDeleteTrials = false;
+        
+        this.uploadedFileName = null;
 
         if (this.componentContent != null) {
 
@@ -546,6 +548,9 @@ class GraphController {
                          */
                         this.scope.graphController.readCSV(fileContent);
                         
+                        // remember the file name
+                        this.scope.graphController.setUploadedFileName(this.fileName);
+                        
                         // redraw the graph
                         this.scope.graphController.setupGraph();
                         
@@ -562,6 +567,9 @@ class GraphController {
                      * reader.onload() function
                      */
                     reader.scope = this;
+                    
+                    // remember the file name
+                    reader.fileName = files[0].name;
                     
                     // read the text from the file
                     reader.readAsText(files[0]);
@@ -1637,6 +1645,14 @@ class GraphController {
             if (activeSeriesIndex != null) {
                 // set the active series index
                 studentData.activeSeriesIndex = activeSeriesIndex;
+            }
+            
+            // get the uploaded file name if any
+            var uploadedFileName = this.getUploadedFileName();
+            
+            if (uploadedFileName != null) {
+                // set the uploaded file name
+                studentData.uploadedFileName = uploadedFileName;
             }
 
             if (this.isSubmit) {
@@ -3331,6 +3347,22 @@ class GraphController {
                 }
             }
         }
+    }
+    
+    /**
+     * Set the uploaded file name
+     * @param fileName the file name
+     */
+    setUploadedFileName(fileName) {
+        this.uploadedFileName = fileName;
+    }
+    
+    /**
+     * Get the uploaded file name
+     * @return the uploaded file name
+     */
+    getUploadedFileName() {
+        return this.uploadedFileName;
     }
 }
 

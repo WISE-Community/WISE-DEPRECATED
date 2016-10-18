@@ -38,7 +38,7 @@ this.authoringComponentContent=this.$scope.authoringComponentContent;/*
          * get the original component content. this is used when showing
          * previous work from another component.
          */this.originalComponentContent=this.$scope.originalComponentContent;// the mode to load the component in e.g. 'student', 'grading', 'onlyShowWork'
-this.mode=this.$scope.mode;this.workgroupId=this.$scope.workgroupId;this.teacherWorkgroupId=this.$scope.teacherWorkgroupId;this.trials=[];this.activeTrial=null;this.trialIdsToShow=[];this.selectedTrialsText="";this.studentDataVersion=2;this.canCreateNewTrials=false;this.canDeleteTrials=false;if(this.componentContent!=null){// get the component id
+this.mode=this.$scope.mode;this.workgroupId=this.$scope.workgroupId;this.teacherWorkgroupId=this.$scope.teacherWorkgroupId;this.trials=[];this.activeTrial=null;this.trialIdsToShow=[];this.selectedTrialsText="";this.studentDataVersion=2;this.canCreateNewTrials=false;this.canDeleteTrials=false;this.uploadedFileName=null;if(this.componentContent!=null){// get the component id
 this.componentId=this.componentContent.id;// set the chart id
 this.chartId='chart'+this.componentId;if(this.componentContent.canCreateNewTrials){this.canCreateNewTrials=this.componentContent.canCreateNewTrials;}if(this.componentContent.canDeleteTrials){this.canDeleteTrials=this.componentContent.canDeleteTrials;}if(this.componentContent.hideAllTrialsOnNewTrial===false){this.hideAllTrialsOnNewTrial=false;}if(this.mode==='student'){this.isPromptVisible=true;this.isSaveButtonVisible=this.componentContent.showSaveButton;this.isSubmitButtonVisible=this.componentContent.showSubmitButton;//this.isResetGraphButtonVisible = true;
 this.isResetSeriesButtonVisible=this.componentContent.showResetSeriesButton;this.isSelectSeriesVisible=true;// get the latest annotations
@@ -137,7 +137,8 @@ reader.onload=function(){// get the file contente
 var fileContent=reader.result;/*
                          * read the csv file content and load the data into
                          * the active series
-                         */this.scope.graphController.readCSV(fileContent);// redraw the graph
+                         */this.scope.graphController.readCSV(fileContent);// remember the file name
+this.scope.graphController.setUploadedFileName(this.fileName);// redraw the graph
 this.scope.graphController.setupGraph();/*
                          * notify the controller that the student data has
                          * changed so that it will perform any necessary saving
@@ -145,7 +146,8 @@ this.scope.graphController.setupGraph();/*
                      * save a reference to this scope in the reader so that we
                      * have access to the scope and graphController in the
                      * reader.onload() function
-                     */reader.scope=this;// read the text from the file
+                     */reader.scope=this;// remember the file name
+reader.fileName=files[0].name;// read the text from the file
 reader.readAsText(files[0]);// upload the file to the studentuploads folder
 this.graphController.StudentAssetService.uploadAsset(files[0]);}}/*
              * clear the file input element value so that onchange() will be
@@ -470,7 +472,9 @@ var activeTrialIndex=this.getTrialIndex(this.activeTrial);studentData.activeTria
 studentData.xAxis=this.getXAxis();// insert the y axis data
 studentData.yAxis=this.getYAxis();// get the active series index
 var activeSeriesIndex=this.getSeriesIndex(this.activeSeries);if(activeSeriesIndex!=null){// set the active series index
-studentData.activeSeriesIndex=activeSeriesIndex;}if(this.isSubmit){// the student submitted this work
+studentData.activeSeriesIndex=activeSeriesIndex;}// get the uploaded file name if any
+var uploadedFileName=this.getUploadedFileName();if(uploadedFileName!=null){// set the uploaded file name
+studentData.uploadedFileName=uploadedFileName;}if(this.isSubmit){// the student submitted this work
 componentState.isSubmit=this.isSubmit;/*
                  * reset the isSubmit value so that the next component state
                  * doesn't maintain the same value
@@ -944,5 +948,11 @@ var line=lines[lineNumber];if(line!=null){// split the line to get the values
 var values=line.split(",");if(values!=null){// get the x and y values
 var x=parseFloat(values[0]);var y=parseFloat(values[1]);if(!isNaN(x)&&!isNaN(y)){// make the data point
 var dataPoint=[x,y];// add the data point to the active series
-this.activeSeries.data.push(dataPoint);}}}}}}}]);return GraphController;}();GraphController.$inject=['$q','$rootScope','$scope','$timeout','ConfigService','GraphService','NodeService','NotebookService','ProjectService','StudentAssetService','StudentDataService','UtilService'];exports.default=GraphController;
+this.activeSeries.data.push(dataPoint);}}}}}}/**
+     * Set the uploaded file name
+     * @param fileName the file name
+     */},{key:'setUploadedFileName',value:function setUploadedFileName(fileName){this.uploadedFileName=fileName;}/**
+     * Get the uploaded file name
+     * @return the uploaded file name
+     */},{key:'getUploadedFileName',value:function getUploadedFileName(){return this.uploadedFileName;}}]);return GraphController;}();GraphController.$inject=['$q','$rootScope','$scope','$timeout','ConfigService','GraphService','NodeService','NotebookService','ProjectService','StudentAssetService','StudentDataService','UtilService'];exports.default=GraphController;
 //# sourceMappingURL=graphController.js.map
