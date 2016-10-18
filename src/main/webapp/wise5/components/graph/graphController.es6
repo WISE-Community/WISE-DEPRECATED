@@ -493,6 +493,82 @@ class GraphController {
             // destroy the delete key pressed listener
             this.deleteKeyPressedListenerDestroyer();
         }));
+        
+        /**
+         * The student has changed the file input
+         * @param element the file input element
+         */
+        this.$scope.fileUploadChanged = function(element) {
+            
+            var overwrite = true;
+            
+            // check if the active series already has data
+            if (this.graphController != null &&
+                this.graphController.activeSeries != null &&
+                this.graphController.activeSeries.data != null) {
+                
+                var activeSeriesData = this.graphController.activeSeries.data;
+                
+                if (activeSeriesData.length > 0) {
+                    /*
+                     * the active series already has data so we will ask the 
+                     * student if they want to overwrite the data
+                     */
+                    
+                    var answer = confirm("Are you sure you want to overwrite the current line data?");
+                    
+                    if (!answer) {
+                        // the student does not want to overwrite the data
+                        overwrite = false;
+                    }
+                }
+            }
+            
+            if (overwrite) {
+                // obtain the file content and overwrite the data in the graph
+                
+                // get the files from the file input element
+                var files = element.files;
+                
+                if (files != null && files.length > 0) {
+                    
+                    var reader = new FileReader();
+                    
+                    reader.onload = function() {
+                        
+                        // get the file contente
+                        var fileContent = reader.result;
+                        
+                        /*
+                         * read the csv file content and load the data into
+                         * the active series
+                         */
+                        this.scope.graphController.readCSV(fileContent);
+                        
+                        // redraw the graph
+                        this.scope.graphController.setupGraph();
+                        
+                    }
+                    
+                    /*
+                     * save a reference to this scope in the reader so that we
+                     * have access to the scope and graphController in the
+                     * reader.onload() function
+                     */
+                    reader.scope = this;
+                    
+                    // read the text from the file
+                    reader.readAsText(files[0]);
+                    
+                }
+            }
+            
+            /*
+             * clear the file input element value so that onchange() will be
+             * called again if the student wants to upload the same file again
+             */
+            element.value = null;
+        }
     }
 
     /**
@@ -3202,6 +3278,50 @@ class GraphController {
                 // create a notebook item with the image populated into it
                 this.NotebookService.addNewItem($event, imageObject);
             });
+        }
+    }
+    
+    /**
+     * Read a csv string and load the data into the active series
+     * @param csv a csv string
+     */
+    readCSV(csv) {
+        
+        if (csv != null) {
+            
+            // splite the string into lines
+            var lines = csv.split(/\r\n|\n/);
+            
+            // clear the data in the active series
+            this.activeSeries.data = [];
+            
+            // loop through all the lines
+            for (var lineNumber = 0; lineNumber < lines.length; lineNumber++) {
+                
+                // get a line
+                var line = lines[lineNumber];
+                
+                if (line != null) {
+                    
+                    // split the line to get the values
+                    var values = line.split(",");
+                    
+                    if (values != null) {
+                        
+                        // get the x and y values
+                        var x = parseFloat(values[0]);
+                        var y = parseFloat(values[1]);
+                        
+                        if (!isNaN(x) && !isNaN(y)) {
+                            // make the data point
+                            var dataPoint = [x, y];
+                            
+                            // add the data point to the active series
+                            this.activeSeries.data.push(dataPoint);
+                        }
+                    }
+                }
+            }
         }
     }
 }

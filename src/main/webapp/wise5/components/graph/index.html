@@ -55,6 +55,10 @@
                                      ng-model='graphController.authoringComponentContent.enableTrials'
                                      ng-change='graphController.authoringViewEnableTrialsClicked()'/>
                 <br/>
+                Enable File Upload <input type='checkbox'
+                                     ng-model='graphController.authoringComponentContent.enableFileUpload'
+                                     ng-change='graphController.authoringViewComponentChanged()'/>
+                <br/>
                 <div ng-show='graphController.authoringComponentContent.enableTrials'>
                     Can Student Create Trials <input type='checkbox'
                                                      ng-model='graphController.authoringComponentContent.canCreateNewTrials'
@@ -136,6 +140,10 @@
                 <possible-score max-score="graphController.componentContent.maxScore"
                                 ng-if="graphController.mode === 'student' && !graphController.latestAnnotations.score"></possible-score>
             </div>
+            <input type="file"
+                   accept=".csv"
+                   ng-show="graphController.componentContent.enableFileUpload"
+                   onchange="angular.element(this).scope().fileUploadChanged(this)"/>
             <hr />
             <div class="component__actions">
                 <md-input-container ng-if='graphController.componentContent.enableTrials'>
