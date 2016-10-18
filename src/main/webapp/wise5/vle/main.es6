@@ -49,6 +49,7 @@ import StudentStatusService from '../services/studentStatusService';
 import StudentWebSocketService from '../services/studentWebSocketService';
 import TableComponentModule from '../components/table/tableComponentModule';
 import TeacherDataService from '../services/teacherDataService';
+import TeacherWebSocketService from '../services/teacherWebSocketService';
 import UtilService from '../services/utilService';
 import VLEController from './vleController';
 import ocLazyLoad from 'oclazyload';
@@ -105,6 +106,7 @@ let vleModule = angular.module('vle', [
     .service(StudentStatusService.name, StudentStatusService)
     .service(StudentWebSocketService.name, StudentWebSocketService)
     .service(TeacherDataService.name, TeacherDataService)
+    .service(TeacherWebSocketService.name, TeacherWebSocketService)
     .service(UtilService.name, UtilService)
     .controller(NavigationController.name, NavigationController)
     .controller(NodeController.name, NodeController)
@@ -240,7 +242,7 @@ let vleModule = angular.module('vle', [
                 'en_US': 'en',
                 'en_UK': 'en'
             });
-            $translateProvider.useSanitizeValueStrategy('escape');
+            $translateProvider.useSanitizeValueStrategy('sanitizeParameters', 'escape');
 
             // ngMaterial default theme configuration
             // TODO: make dynamic and support alternate themes; allow projects to specify theme parameters and settings

@@ -18,7 +18,7 @@
             <br/>
             <textarea ng-model='embeddedController.authoringComponentContentJSONString'
                       ng-change='embeddedController.advancedAuthoringViewComponentChanged()'
-                      ng-model-options='{ debounce: 1000 }'
+                      ng-model-options="{ updateOn: 'blur' }"
                       rows='10'
                       cols='100'></textarea>
         </div>

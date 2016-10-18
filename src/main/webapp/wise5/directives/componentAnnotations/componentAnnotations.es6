@@ -2,12 +2,15 @@
 
 class ComponentAnnotationsController {
     constructor($scope,
-                $element,
+                $element,   // TODO remove after verifying that this is not being used
+                $mdDialog,
+                $timeout,
                 $translate,
                 ConfigService,
                 ProjectService,
                 StudentDataService) {
         this.$scope = $scope;
+        this.$mdDialog = $mdDialog;
         this.$translate = $translate;
         this.ConfigService = ConfigService;
         this.ProjectService = ProjectService;
@@ -45,12 +48,34 @@ class ComponentAnnotationsController {
             }
         });
 
+        /* used to pop up annotation
+        $timeout(() => {
+            this.$mdDialog.show({
+                contentElement: '#componentAnnotationsCard',
+                parent: angular.element(document.body)
+            });
+        });
+        */
+
+        /* uncomment me and use me instead of timeout when we switch to angular 2
+        this.$onAfterViewInit = () => {
+            this.$mdDialog.show({
+                contentElement: '#componentAnnotationsCard',
+                parent: angular.element(document.body)
+            });
+        };
+        */
+
         this.$onChanges = (changes) => {
             //if (changes.annotations) {
                 //this.annotations = angular.copy(changes.annotations.currentValue);
                 this.processAnnotations();
             //}
         };
+    }
+
+    closeDialog() {
+        this.$mdDialog.hide();
     }
 
     /**
@@ -195,6 +220,8 @@ class ComponentAnnotationsController {
 ComponentAnnotationsController.$inject = [
     '$scope',
     '$element',
+    '$mdDialog',
+    '$timeout',
     '$translate',
     'ConfigService',
     'ProjectService',

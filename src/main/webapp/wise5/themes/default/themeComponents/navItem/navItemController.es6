@@ -99,36 +99,40 @@ class NavItemController {
                 this.currentNode = newNode;
                 this.previousNode = oldNode;
                 this.isCurrentNode = (this.nodeId === newNode.id);
+                let isPrev = false;
 
                 if (this.ProjectService.isApplicationNode(newNode.id)) {
                     return;
                 }
 
                 if (oldNode) {
-                    let isPrev = (this.nodeId === oldNode.id);
+                    isPrev = (this.nodeId === oldNode.id);
 
                     if (this.StudentDataService.previousStep) {
                         this.$scope.$parent.isPrevStep = (this.nodeId === this.StudentDataService.previousStep.id);
-                    }
-
-                    if (isPrev && !this.isGroup) {
-                        this.zoomToElement();
                     }
                 }
 
                 if (this.isGroup) {
                     let prevNodeisGroup = (!oldNode || this.ProjectService.isGroupNode(oldNode.id));
+                    let prevNodeIsDescendant = this.ProjectService.isNodeDescendentOfGroup(oldNode, this.item);
                     if (this.isCurrentNode) {
                         this.expanded = true;
-                        if (prevNodeisGroup) {
+                        if (prevNodeisGroup || !prevNodeIsDescendant) {
                             this.zoomToElement();
                         }
-                    } else if (!prevNodeisGroup) {
-                        if (this.ProjectService.isNodeDescendentOfGroup(oldNode, this.item)) {
-                            this.expanded = true;
-                        } else {
-                            this.expanded = false;
+                    } else {
+                        if (!prevNodeisGroup) {
+                            if (prevNodeIsDescendant) {
+                                this.expanded = true;
+                            } else {
+                                this.expanded = false;
+                            }
                         }
+                    }
+                } else {
+                    if (isPrev && this.ProjectService.isNodeDescendentOfGroup(this.item, newNode)) {
+                        this.zoomToElement();
                     }
                 }
             }
@@ -216,7 +220,7 @@ class NavItemController {
             $('#content').animate({
                 scrollTop: location
             }, delay, 'linear');
-        }, 250);
+        }, 500);
     };
 
     itemClicked(event) {

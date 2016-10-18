@@ -558,6 +558,161 @@ class AnnotationService {
         
         return scoreValue;
     }
+
+    /**
+     * Get all global annotations that are active and inactive for a specified node and component
+     * @returns all global annotations that are active and inactive for a specified node and component
+     */
+    getAllGlobalAnnotationsByNodeIdAndComponentId(nodeId, componentId) {
+        let allGlobalAnnotations = this.getAllGlobalAnnotations();
+        let globalAnnotationsByNodeIdAndComponentId = allGlobalAnnotations.filter((globalAnnotation) => {
+            return globalAnnotation.nodeId === nodeId && globalAnnotation.componentId === componentId;
+        });
+        return globalAnnotationsByNodeIdAndComponentId;
+    };
+
+    /**
+     * Get all global annotations that are active and inactive
+     * @returns all global annotations that are active and inactive
+     */
+    getAllGlobalAnnotations() {
+        let globalAnnotations = [];
+
+        for (let a = 0; a < this.annotations.length; a++) {
+            let annotation = this.annotations[a];
+            if (annotation != null && annotation.data != null) {
+                if (annotation.data.isGlobal) {
+                    globalAnnotations.push(annotation);
+                }
+            }
+        }
+
+        return globalAnnotations;
+    };
+
+    /**
+     * Get all global annotations that are active and inactive and groups them by annotation group name
+     * @returns all global annotations that are active and inactive
+     */
+    getAllGlobalAnnotationGroups() {
+        let globalAnnotationGroups = [];
+
+        for (let a = 0; a < this.annotations.length; a++) {
+            let annotation = this.annotations[a];
+            if (annotation != null && annotation.data != null) {
+                if (annotation.data.isGlobal) {
+                    // check if this global annotation can be grouped (has the same annotationGroupName as another that we've seen before)
+                    if (annotation.data.annotationGroupName != null && annotation.data.annotationGroupCreatedTime != null) {
+                        let sameGroupFound = false;
+                        for (let g = 0; g < globalAnnotationGroups.length; g++) {
+                            let globalAnnotationGroup = globalAnnotationGroups[g];
+                            if (globalAnnotationGroup.annotationGroupNameAndTime == (annotation.data.annotationGroupName + annotation.data.annotationGroupCreatedTime)) {
+                                // push this annotation to the end of the group
+                                globalAnnotationGroup.annotations.push(annotation);
+                                sameGroupFound = true;
+                            }
+                        }
+                        if (!sameGroupFound) {
+                            let annotationGroup = {
+                                "annotationGroupNameAndTime": (annotation.data.annotationGroupName + annotation.data.annotationGroupCreatedTime),
+                                "annotations": [annotation]
+                            };
+                            globalAnnotationGroups.push(annotationGroup);
+                        }
+                    } else {
+                        // each global annotation should have a name, so it shouldn't get here
+                        console.error("Global annotation does not have a name: " + annotation);
+                    }
+                }
+            }
+        }
+
+        return globalAnnotationGroups;
+    };
+
+    /**
+     * Get all global annotations that are active
+     * @returns all global annotations that are active, in a group
+     * [
+     * {
+     *   annotationGroupName:"score1",
+     *   annotations:[
+     *   {
+     *     type:autoScore,
+     *     value:1
+     *   },
+     *   {
+     *     type:autoComment,
+     *     value:"you received a score of 1."
+     *   }
+     *   ]
+     * },
+     * {
+     *   annotationGroupName:"score2",
+     *   annotations:[...]
+     * }
+     * ]
+     */
+    getActiveGlobalAnnotationGroups() {
+        return this.activeGlobalAnnotationGroups;
+    };
+
+    /**
+     * Calculates the active global annotations and groups them by annotation group name
+     */
+    calculateActiveGlobalAnnoationGroups() {
+        this.activeGlobalAnnotationGroups = [];
+
+        for (let a = 0; a < this.annotations.length; a++) {
+            let annotation = this.annotations[a];
+            if (annotation != null && annotation.data != null) {
+                if (annotation.data.isGlobal && annotation.data.unGlobalizedTimestamp == null) {
+                    // check if this global annotation can be grouped (has the same annotationGroupName as another that we've seen before)
+                    if (annotation.data.annotationGroupName != null) {
+                        let sameGroupFound = false;
+                        for (let ag = 0; ag < this.activeGlobalAnnotationGroups.length; ag++) {
+                            let activeGlobalAnnotationGroup = this.activeGlobalAnnotationGroups[ag];
+                            if (activeGlobalAnnotationGroup.annotationGroupName == annotation.data.annotationGroupName) {
+                                // push this annotation to the end of the group
+                                activeGlobalAnnotationGroup.annotations.push(annotation);
+                                sameGroupFound = true;
+                            }
+                        }
+                        if (!sameGroupFound) {
+                            let annotationGroup = {
+                                "annotationGroupName": annotation.data.annotationGroupName,
+                                "annotations": [annotation]
+                            };
+                            this.activeGlobalAnnotationGroups.push(annotationGroup);
+                        }
+                    } else {
+                        // each global annotation should have a name, so it shouldn't get here
+                        console.error("Global annotation does not have a name: " + annotation);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Get all global annotations that are in-active
+     * @returns all global annotations that are in-active
+     * In-active global annotations has data.isGlobal = false and data.unGlobalizedTimestamp is set.
+     */
+    getInActiveGlobalAnnotations() {
+        let inActiveGlobalAnnotations = [];
+
+        for (let a = 0; a < this.annotations.length; a++) {
+            let annotation = this.annotations[a];
+            if (annotation != null && annotation.data != null) {
+                if (annotation.data.isGlobal && annotation.data.unGlobalizedTimestamp != null) {
+                    inActiveGlobalAnnotations.push(annotation);
+                }
+            }
+        }
+
+        return inActiveGlobalAnnotations;
+    };
 }
 
 AnnotationService.$inject = [

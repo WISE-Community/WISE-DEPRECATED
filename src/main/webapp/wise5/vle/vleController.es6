@@ -7,6 +7,7 @@ class VLEController {
                 $mdMenu,
                 $state,
                 $translate,
+                AnnotationService,
                 ConfigService,
                 NotebookService,
                 NotificationService,
@@ -21,6 +22,7 @@ class VLEController {
         this.$mdMenu = $mdMenu;
         this.$state = $state;
         this.$translate = $translate;
+        this.AnnotationService = AnnotationService;
         this.ConfigService = ConfigService;
         this.NotebookService = NotebookService;
         this.NotificationService = NotificationService;
@@ -54,6 +56,7 @@ class VLEController {
             this.StudentDataService.updateVisitedNodesHistory(currentNodeId);
             this.StudentDataService.updateNodeStatuses();
             this.StudentDataService.saveStudentStatus();
+            //this.AnnotationService.updateAnnotations();
 
             this.$state.go('root.vle', {nodeId:currentNodeId});
 
@@ -98,6 +101,55 @@ class VLEController {
 
         this.$scope.$on('componentStudentDataChanged', () => {
             this.StudentDataService.updateNodeStatuses();
+        });
+
+        // listen for the display global annotation event
+        this.$scope.$on('displayGlobalAnnotations', (event, args) => {
+            this.showGlobalAnnotations();
+        });
+
+        this.$rootScope.$on('nodeStatusesChanged', (event, args) => {
+            // calculate active global annotations and group them by group name as needed
+            this.AnnotationService.calculateActiveGlobalAnnoationGroups();
+
+            // go through the global annotations and see if they can be un-globalized by checking if their criterias have been met.
+            let globalAnnotationGroups = this.AnnotationService.getActiveGlobalAnnotationGroups();
+            globalAnnotationGroups.map((globalAnnotationGroup) => {
+                let globalAnnotations = globalAnnotationGroup.annotations;
+                globalAnnotations.map((globalAnnotation) => {
+                    if (globalAnnotation.data != null && globalAnnotation.data.isGlobal) {
+                        let unGlobalizeConditional = globalAnnotation.data.unGlobalizeConditional;
+                        let unGlobalizeCriteriaArray = globalAnnotation.data.unGlobalizeCriteria;
+                        if (unGlobalizeCriteriaArray != null) {
+                            if (unGlobalizeConditional === "any") {
+                                // at least one criteria in unGlobalizeCriteriaArray must be satisfied in any order before un-globalizing this annotation
+                                let anySatified = false;
+                                for (let i = 0; i < unGlobalizeCriteriaArray.length; i++) {
+                                    let unGlobalizeCriteria = unGlobalizeCriteriaArray[i];
+                                    let unGlobalizeCriteriaResult = this.StudentDataService.evaluateCriteria(unGlobalizeCriteria);
+                                    anySatified = anySatified || unGlobalizeCriteriaResult;
+                                }
+                                if (anySatified) {
+                                    globalAnnotation.data.unGlobalizedTimestamp = Date.parse(new Date());  // save when criteria was satisfied
+                                    this.StudentDataService.saveAnnotations([globalAnnotation]);  // save changes to server
+                                }
+                            } else if (unGlobalizeConditional === "all") {
+                                // all one criteria in unGlobalizeCriteriaArray must be satisfied in any order before un-globalizing this annotation
+                                let allSatified = true;
+                                for (let i = 0; i < unGlobalizeCriteriaArray.length; i++) {
+                                    let unGlobalizeCriteria = unGlobalizeCriteriaArray[i];
+                                    let unGlobalizeCriteriaResult = this.StudentDataService.evaluateCriteria(unGlobalizeCriteria);
+                                    allSatified = allSatified && unGlobalizeCriteriaResult;
+                                }
+                                if (allSatified) {
+                                    globalAnnotation.data.unGlobalizedTimestamp = Date.parse(new Date());  // save when criteria was satisfied
+                                    this.StudentDataService.saveAnnotations([globalAnnotation]);  // save changes to server
+                                }
+                            }
+                        }
+                    }
+                });
+            })
         });
 
         // listen for the pause screen event
@@ -185,27 +237,24 @@ class VLEController {
 
         if (runStatus != null) {
             var pause = false;
-            if (runStatus.allPeriodsPaused) {
-                pause = true;
-            } else {
-                // get the signed in user's period id
-                var periodId = this.ConfigService.getPeriodId();
 
-                if (periodId != null) {
-                    var periods = runStatus.periods;
+            // get the signed in user's period id
+            var periodId = this.ConfigService.getPeriodId();
 
-                    if (periods != null) {
+            if (periodId != null) {
+                var periods = runStatus.periods;
 
-                        // loop through all the periods in the run status
-                        for (var p = 0; p < periods.length; p++) {
-                            var tempPeriod = periods[p];
+                if (periods != null) {
 
-                            if (periodId === tempPeriod.periodId) {
-                                if (tempPeriod.paused) {
-                                    // our period is paused so we will pause the screen
-                                    pause = true;
-                                    break;
-                                }
+                    // loop through all the periods in the run status
+                    for (var p = 0; p < periods.length; p++) {
+                        var tempPeriod = periods[p];
+
+                        if (periodId === tempPeriod.periodId) {
+                            if (tempPeriod.paused) {
+                                // our period is paused so we will pause the screen
+                                pause = true;
+                                break;
                             }
                         }
                     }
@@ -455,13 +504,33 @@ class VLEController {
     }
 
     /**
+     * Return an array containing active annotations
+     */
+    getActiveGlobalAnnotationGroups() {
+        return this.AnnotationService.getActiveGlobalAnnotationGroups();
+    }
+
+    /**
+     * Shows the global annotations popup
+     */
+    showGlobalAnnotations() {
+        this.isGlobalAnnotationsDisplayed = true;
+    }
+
+    /**
+     * Hides the global annotations popup
+     */
+    hideGlobalAnnotations() {
+        this.isGlobalAnnotationsDisplayed = false;
+    }
+
+    /**
      * Pause the screen
      */
     pauseScreen() {
         // TODO: i18n
         this.pauseDialog = this.$mdDialog.show({
             template: '<md-dialog aria-label="Screen Paused"><md-dialog-content><div class="md-dialog-content">Your teacher has paused all the screens in the class.</div></md-dialog-content></md-dialog>',
-            fullscreen: true,
             escapeToClose: false
         });
     }
@@ -482,6 +551,7 @@ VLEController.$inject = [
     '$mdMenu',
     '$state',
     '$translate',
+    'AnnotationService',
     'ConfigService',
     'NotebookService',
     'NotificationService',

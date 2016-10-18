@@ -652,6 +652,45 @@ var OpenResponseController = function () {
                                 autoScoreAnnotationData.autoGrader = 'cRater';
 
                                 var autoScoreAnnotation = _this3.createAutoScoreAnnotation(autoScoreAnnotationData);
+
+                                var annotationGroupForScore = null;
+
+                                if (_this3.componentContent.enableGlobalAnnotations && _this3.componentContent.globalAnnotationSettings != null) {
+                                    var globalAnnotationMaxCount = 0;
+                                    if (_this3.componentContent.globalAnnotationSettings.globalAnnotationMaxCount != null) {
+                                        globalAnnotationMaxCount = _this3.componentContent.globalAnnotationSettings.globalAnnotationMaxCount;
+                                    }
+                                    // get the annotation properties for the score that the student got.
+                                    annotationGroupForScore = _this3.ProjectService.getGlobalAnnotationGroupByScore(_this3.componentContent, score);
+
+                                    // check if we need to apply this globalAnnotationSetting to this annotation: we don't need to if we've already reached the maxCount
+                                    if (annotationGroupForScore != null) {
+                                        var globalAnnotationGroupsByNodeIdAndComponentId = _this3.AnnotationService.getAllGlobalAnnotationGroups(_this3.nodeId, _this3.componentId);
+                                        annotationGroupForScore.annotationGroupCreatedTime = autoScoreAnnotation.clientSaveTime; // save annotation creation time
+
+                                        if (globalAnnotationGroupsByNodeIdAndComponentId.length >= globalAnnotationMaxCount) {
+                                            // we've already applied this annotation properties to maxCount annotations, so we don't need to apply it any more.
+                                            annotationGroupForScore = null;
+                                        }
+                                    }
+
+                                    if (annotationGroupForScore != null && annotationGroupForScore.isGlobal && annotationGroupForScore.unGlobalizeCriteria != null) {
+                                        // check if this annotation is global and what criteria needs to be met to un-globalize.
+                                        annotationGroupForScore.unGlobalizeCriteria.map(function (unGlobalizeCriteria) {
+                                            // if the un-globalize criteria is time-based (e.g. isVisitedAfter, isRevisedAfter, isVisitedAndRevisedAfter, etc), store the timestamp of this annotation in the criteria
+                                            // so we can compare it when we check for criteria satisfaction.
+                                            if (unGlobalizeCriteria.params != null) {
+                                                unGlobalizeCriteria.params.criteriaCreatedTimestamp = autoScoreAnnotation.clientSaveTime; // save annotation creation time to criteria
+                                            }
+                                        });
+                                    }
+
+                                    if (annotationGroupForScore != null) {
+                                        // copy over the annotation properties into the autoScoreAnnotation's data
+                                        angular.merge(autoScoreAnnotation.data, annotationGroupForScore);
+                                    }
+                                }
+
                                 componentState.annotations.push(autoScoreAnnotation);
 
                                 var autoComment = null;
@@ -691,11 +730,18 @@ var OpenResponseController = function () {
                                     autoCommentAnnotationData.autoGrader = 'cRater';
 
                                     var autoCommentAnnotation = _this3.createAutoCommentAnnotation(autoCommentAnnotationData);
+
+                                    if (_this3.componentContent.enableGlobalAnnotations) {
+                                        if (annotationGroupForScore != null) {
+                                            // copy over the annotation properties into the autoCommentAnnotation's data
+                                            angular.merge(autoCommentAnnotation.data, annotationGroupForScore);
+                                        }
+                                    }
                                     componentState.annotations.push(autoCommentAnnotation);
                                 }
 
-                                // get the notification
-                                var notificationsForScore = _this3.CRaterService.getNotificationsByScore(_this3.componentContent, score);
+                                // get the notification properties for the score that the student got.
+                                var notificationsForScore = _this3.ProjectService.getNotificationsByScore(_this3.componentContent, score);
 
                                 if (notificationsForScore != null) {
                                     for (var n = 0; n < notificationsForScore.length; n++) {
@@ -705,6 +751,11 @@ var OpenResponseController = function () {
                                         notificationForScore.componentId = _this3.componentId;
                                         _this3.NotificationService.sendNotificationForScore(notificationForScore);
                                     }
+                                }
+
+                                // display global annotations dialog if needed
+                                if (_this3.componentContent.enableGlobalAnnotations && annotationGroupForScore != null && annotationGroupForScore.isGlobal && annotationGroupForScore.isPopup) {
+                                    _this3.$scope.$emit('displayGlobalAnnotations');
                                 }
                             }
                         }

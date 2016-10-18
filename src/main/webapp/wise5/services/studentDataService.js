@@ -538,6 +538,10 @@ var StudentDataService = function () {
                     result = this.evaluateBranchPathTakenCriteria(criteria);
                 } else if (functionName === 'isVisible') {} else if (functionName === 'isVisitable') {} else if (functionName === 'isVisited') {
                     result = this.evaluateIsVisitedCriteria(criteria);
+                } else if (functionName === 'isVisitedAfter') {
+                    result = this.evaluateIsVisitedAfterCriteria(criteria);
+                } else if (functionName === 'isVisitedAndRevisedAfter') {
+                    result = this.evaluateIsVisitedAndRevisedAfterCriteria(criteria);
                 } else if (functionName === 'isCompleted') {
                     result = this.evaluateIsCompletedCriteria(criteria);
                 } else if (functionName === 'isCorrect') {} else if (functionName === 'choiceChosen') {
@@ -766,6 +770,92 @@ var StudentDataService = function () {
             }
 
             return isVisited;
+        }
+
+        /**
+         * Check if the isVisitedAfter criteria was satisfied
+         * @param criteria the isVisitedAfter criteria
+         * @returns whether the node id is visited after the criteriaCreatedTimestamp
+         */
+
+    }, {
+        key: 'evaluateIsVisitedAfterCriteria',
+        value: function evaluateIsVisitedAfterCriteria(criteria) {
+
+            var isVisitedAfter = false;
+
+            if (criteria != null && criteria.params != null) {
+
+                // get the node id we want to check if was visited
+                var isVisitedAfterNodeId = criteria.params.isVisitedAfterNodeId;
+                var criteriaCreatedTimestamp = criteria.params.criteriaCreatedTimestamp;
+
+                // get all the events
+                var events = this.studentData.events;
+
+                if (events != null) {
+
+                    // loop through all the events
+                    for (var e = 0; e < events.length; e++) {
+                        var event = events[e];
+
+                        if (event != null) {
+                            if (isVisitedAfterNodeId == event.nodeId && 'nodeEntered' === event.event && event.clientSaveTime > criteriaCreatedTimestamp) {
+                                // the student has entered the node after the criteriaCreatedTimestamp
+                                isVisitedAfter = true;
+                            }
+                        }
+                    }
+                }
+            }
+
+            return isVisitedAfter;
+        }
+
+        /**
+         * Check if the isVisitedAndRevisedAfter criteria was satisfied
+         * @param criteria the isVisitedAndRevisedAfter criteria
+         * @returns whether the specified nodes were visited and specified node&component was revisted after the criteriaCreatedTimestamp
+         */
+
+    }, {
+        key: 'evaluateIsVisitedAndRevisedAfterCriteria',
+        value: function evaluateIsVisitedAndRevisedAfterCriteria(criteria) {
+
+            var isVisitedAndRevisedAfter = false;
+
+            if (criteria != null && criteria.params != null) {
+
+                // get the node id we want to check if was visited
+                var isVisitedAfterNodeId = criteria.params.isVisitedAfterNodeId;
+                var isRevisedAfterNodeId = criteria.params.isRevisedAfterNodeId;
+                var isRevisedAfterComponentId = criteria.params.isRevisedAfterComponentId;
+                var criteriaCreatedTimestamp = criteria.params.criteriaCreatedTimestamp;
+
+                // get all the events
+                var events = this.studentData.events;
+
+                if (events != null) {
+
+                    // loop through all the events
+                    for (var e = 0; e < events.length; e++) {
+                        var event = events[e];
+
+                        if (event != null) {
+                            if (isVisitedAfterNodeId == event.nodeId && 'nodeEntered' === event.event && event.clientSaveTime > criteriaCreatedTimestamp) {
+                                // the student has entered the node after the criteriaCreatedTimestamp.
+                                // now check if student has revised the work after this event
+                                var latestComponentStateForRevisedComponent = this.getLatestComponentStateByNodeIdAndComponentId(isRevisedAfterNodeId, isRevisedAfterComponentId);
+                                if (latestComponentStateForRevisedComponent.clientSaveTime > event.clientSaveTime) {
+                                    isVisitedAndRevisedAfter = true;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            return isVisitedAndRevisedAfter;
         }
 
         /**
@@ -1175,7 +1265,10 @@ var StudentDataService = function () {
 
                     if (annotation != null) {
                         annotation.requestToken = this.UtilService.generateKey(); // use this to keep track of unsaved annotations.
-                        this.addAnnotation(annotation);
+                        if (annotation.id == null) {
+                            // add to local annotation array if this annotation has not been saved to the server before.
+                            this.addAnnotation(annotation);
+                        }
                     }
                 }
             } else {

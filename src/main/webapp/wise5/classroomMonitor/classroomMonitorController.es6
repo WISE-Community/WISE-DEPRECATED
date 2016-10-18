@@ -25,11 +25,62 @@ class ClassroomMonitorController {
         this.SessionService = SessionService;
         this.TeacherDataService = TeacherDataService;
         this.TeacherWebSocketService = TeacherWebSocketService;
-        this.$translate('pauseStudentScreens').then((pauseStudentScreens) => {
-            this.pauseScreenButtonText = pauseStudentScreens;
+
+        this.projectName = this.ProjectService.getProjectTitle();
+        this.runId = this.ConfigService.getRunId();
+
+        this.numberProject = true; // TODO: make dynamic or remove
+
+        this.menuOpen = false; // boolean to indicate whether monitor nav menu is open
+        this.showSideMenu = true; // boolean to indicate whether to show the monitor side menu
+        this.showMonitorToolbar = true; // boolean to indicate whether to show the monitor toolbar
+        this.showStepToolbar = false; // boolean to indicate whether to show the step toolbar
+
+        // ui-views and their corresponding names, labels, and icons
+        this.$translate(['dashboardView', 'dashboardViewLabel', 'projectView', 'projectViewLabel',
+            'studentView', 'studentViewLabel', 'notebookView', 'notebookViewLabel',
+            'exportView', 'exportViewLabel', 'notesTipsView', 'notesTipsViewLabel']).then((translation) => {
+                this.views = {
+                    'root.dashboard': {
+                        name: translation.dashboardView,
+                        label: translation.dashboardViewLabel,
+                        icon: 'dashboard',
+                        type: 'primary'
+                    },
+                    'root.nodeProgress': {
+                        name: translation.projectView,
+                        label: translation.projectViewLabel,
+                        icon: 'assignment_turned_in',
+                        type: 'primary'
+                    },
+                    'root.studentProgress': {
+                        name: translation.studentView,
+                        label: translation.studentViewLabel,
+                        icon: 'people',
+                        type: 'primary'
+                    },
+                    'root.notebooks': {
+                        name: translation.notebookView,
+                        label: translation.notebookViewLabel,
+                        icon: 'chrome_reader_mode',
+                        type: 'secondary'
+                    },
+                    'root.export': {
+                        name: translation.exportView,
+                        label: translation.exportViewLabel,
+                        icon: 'file_download',
+                        type: 'secondary'
+                    },
+                    'root.notes': {
+                        name: translation.notesTipsView,
+                        label: translation.notesTipsViewLabel,
+                        icon: 'speaker_notes',
+                        type: 'secondary'
+                    }
+                };
         });
 
-        $scope.$on('showSessionWarning', () => {
+        this.$scope.$on('showSessionWarning', () => {
             // Appending dialog to document.body
             let confirm = $mdDialog.confirm()
                 .parent(angular.element(document.body))
@@ -45,14 +96,16 @@ class ClassroomMonitorController {
             });
         });
 
-        // listen for the periodChanged event
-        $scope.$on('periodChanged', (event, args) => {
-            // the period has changed so we will update the paused/unpaused button
-            this.updatePauseButton();
+        // listen for state change events
+        this.$rootScope.$on('$stateChangeSuccess', (event, toState, toParams, fromState, fromParams) => {
+            // close the menu when the state changes
+            this.menuOpen = false;
+
+            this.processUI();
         });
 
-        // update the text of the pause/unpause button
-        this.updatePauseButton();
+        // update UI items; TODO: remove eventually
+        this.processUI();
 
         this.themePath = this.ProjectService.getThemePath();
 
@@ -66,6 +119,29 @@ class ClassroomMonitorController {
                 this.notifications = this.NotificationService.notifications;
             }
         );
+    };
+
+    /**
+     * Update UI items based on state, show or hide relevant menus and toolbars
+     * TODO: remove/rework this and put items in their own ui states
+     */
+    processUI() {
+        if (this.$state.$current.name === 'root.nodeProgress') {
+            let nodeId = this.$state.params.nodeId;
+            let showMenu = true;
+            let showMonitorToolbar = true;
+            let showStepToolbar = false;
+            if (nodeId) {
+                if (this.ProjectService.isApplicationNode(nodeId)) {
+                    showMenu = false;
+                    showMonitorToolbar = false;
+                    showStepToolbar = true;
+                }
+            }
+            this.showSideMenu = showMenu;
+            this.showMonitorToolbar = showMonitorToolbar;
+            this.showStepToolbar = showStepToolbar;
+        }
     };
 
     hello() {
@@ -303,83 +379,6 @@ class ClassroomMonitorController {
     }
 
     /**
-     * The pause screen button was clicked. This button is used to toggle
-     * pause screen on and off.
-     */
-    pauseScreenButtonClicked() {
-
-        // get the currently selected period
-        var currentPeriod = this.TeacherDataService.getCurrentPeriod();
-        var periodId = currentPeriod.periodId;
-
-        // get the previous value of whether the period was paused or unpaused
-        var isPaused = this.TeacherDataService.isPeriodPaused(periodId);
-
-        // toggle the value
-        var newIsPausedValue = !isPaused;
-
-        // update the run status
-        this.TeacherDataService.updatePausedRunStatusValue(periodId, newIsPausedValue);
-
-        // update the pause/unpause button text
-        this.updatePauseButton();
-
-        if (newIsPausedValue) {
-            // pause the student screens
-            this.TeacherWebSocketService.pauseScreens(periodId);
-        } else {
-            // unpause the student screens
-            this.TeacherWebSocketService.unPauseScreens(periodId);
-        }
-
-        // save the run status to the server
-        this.TeacherDataService.sendRunStatus();
-    }
-
-    /**
-     * Update the pause button to reflect the pause/unpaused state of the period
-     */
-    updatePauseButton() {
-        // get the currently selected period
-        var currentPeriod = this.TeacherDataService.getCurrentPeriod();
-
-        // default to all periods
-        var periodId = -1;
-
-        if (currentPeriod != null) {
-            periodId = currentPeriod.periodId;
-        }
-
-        // whether the period is paused or unpaused
-        var isPaused = this.TeacherDataService.isPeriodPaused(periodId);
-
-        // update the paused/unpaused button text
-        if (isPaused) {
-            this.displayUnPauseButton();
-        } else if (!isPaused) {
-            this.displayPauseButton();
-        }
-    }
-
-    /**
-     * Change the text of the button to display 'Pause Screens'
-     */
-    displayPauseButton() {
-        this.$translate('pauseStudentScreens').then((pauseStudentScreens) => {
-            this.pauseScreenButtonText = pauseStudentScreens;
-        });
-    }
-
-    /**
-     * Change the text of the button to display 'Unpause Screens'
-     */
-    displayUnPauseButton() {
-        this.$translate('unPauseStudentScreens').then((unPauseStudentScreens) => {
-            this.pauseScreenButtonText = unPauseStudentScreens;
-        });
-    }
-
-    /**
      * Returns true iff there are new notifications
      */
     hasNewNotifications() {
@@ -437,7 +436,6 @@ class ClassroomMonitorController {
     dismissNotification(notification) {
         this.NotificationService.dismissNotification(notification);
     }
-
     /**
      * The user has moved the mouse so we will notify the Session Service
      * so that it can refresh the session

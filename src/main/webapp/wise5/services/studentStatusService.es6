@@ -127,16 +127,14 @@ class StudentStatusService {
     }
 
     /**
-     * Get the number of students on a node in the given period
+     * Get the workgroups on a node in the given period
      * @param nodeId the node id
      * @param periodId the period id. pass in -1 to select all periods.
-     * @returns the number of students on a node in a period
+     * @returns an array of workgroup ids on a node in a period
      */
-    getNumberOfStudentsOnNode(nodeId, periodId) {
-
-        var count = 0;
-
-        var studentStatuses = this.studentStatuses;
+    getWorkgroupIdsOnNode(nodeId, periodId) {
+        let workgroupIds = [];
+        let studentStatuses = this.studentStatuses;
 
         // loop through all the student statuses
         for (var ss = 0; ss < studentStatuses.length; ss++) {
@@ -146,15 +144,24 @@ class StudentStatusService {
 
                 if (periodId == -1 || periodId == studentStatus.periodId) {
                     // the period matches the one we are looking for
-                    if (nodeId === studentStatus.currentNodeId) {
+                    let currentNodeId = studentStatus.currentNodeId;
+                    if (nodeId === currentNodeId) {
                         // the node id matches the one we are looking for
-                        count++;
+                        workgroupIds.push(studentStatus.workgroupId);
+                    } else if (this.ProjectService.isGroupNode(nodeId)) {
+                        let currentNode = this.ProjectService.getNodeById(currentNodeId);
+                        let group = this.ProjectService.getNodeById(nodeId);
+
+                        if (this.ProjectService.isNodeDescendentOfGroup(currentNode, group)) {
+                            // the node id is a descendent of the group we're looking for
+                            workgroupIds.push(studentStatus.workgroupId);
+                        }
                     }
                 }
             }
         }
 
-        return count;
+        return workgroupIds;
     }
 
     /**
@@ -165,31 +172,41 @@ class StudentStatusService {
      * this value will be an integer between 0-100.
      */
     getNodeCompletion(nodeId, periodId) {
-        var numStudentsCompleted = 0;
-        var numStudentsInPeriod = 0;
+        let numCompleted = 0;
+        let numTotal = 0;
+        let isGroupNode = this.ProjectService.isGroupNode(nodeId);
 
-        var studentStatuses = this.studentStatuses;
+        let studentStatuses = this.studentStatuses;
 
         // loop through all the student statuses
-        for (var ss = 0; ss < studentStatuses.length; ss++) {
-            var studentStatus = studentStatuses[ss];
+        for (let ss = 0; ss < studentStatuses.length; ss++) {
+            let studentStatus = studentStatuses[ss];
 
-            if (studentStatus != null) {
+            if (studentStatus) {
 
                 if (periodId == -1 || periodId == studentStatus.periodId) {
                     // the period matches the one we are looking for
-                    numStudentsInPeriod++;
 
-                    var nodeStatuses = studentStatus.nodeStatuses;
+                    let nodeStatuses = studentStatus.nodeStatuses;
 
-                    if (nodeStatuses != null) {
+                    if (nodeStatuses) {
                         // get the node status for the node
-                        var nodeStatus = nodeStatuses[nodeId];
+                        let nodeStatus = nodeStatuses[nodeId];
 
                         if (nodeStatus != null) {
-                            if (nodeStatus.isCompleted) {
-                                // the student has completed the node
-                                numStudentsCompleted++;
+                            if (isGroupNode) {
+                                let progress = nodeStatus.progress;
+                                if (progress) {
+                                    numTotal += progress.totalItems;
+                                    numCompleted += progress.completedItems;
+                                }
+                            } else {
+                                numTotal++;
+
+                                if (nodeStatus.isCompleted) {
+                                    // the student has completed the node
+                                    numCompleted++;
+                                }
                             }
                         }
                     }
@@ -201,37 +218,60 @@ class StudentStatusService {
          * generate the percentage number rounded down to the nearest integer.
          * the value will be between 0-100
          */
-        var completionPercentage = Math.floor(100 * numStudentsCompleted / numStudentsInPeriod);
+        let completionPercentage = (numTotal > 0 ? Math.floor(100 * numCompleted / numTotal) : 0);
 
         return completionPercentage;
     }
 
     /**
-     * Check if there is a workgroup that is online and on the node
-     * @param studentsOnline the workgroup ids that are online
+     * Get the total number of steps that are descendants of a given node
      * @param nodeId the node id
+     * @returns the total number of step (application node) descendants; returns
      * @param periodId the period id. pass in -1 to select all periods.
-     * @returns whether there is a workgroup that is online and on the node
+     * an average for all students in the selected period if the group is a
+     * planning activity
      */
-    isWorkgroupOnlineOnNode(studentsOnline, nodeId, periodId) {
+    /*getTotalApplicationNodeDescendents(nodeId, periodId) {
+        let numTotal = 0;
+        let numWorkgroups = 0;
 
-        if (studentsOnline != null) {
+        let isGroupNode = this.ProjectService.isGroupNode(nodeId);
 
-            // loop through all the students that are online
-            for (var s = 0; s < studentsOnline.length; s++) {
-                var workgroupId = studentsOnline[s];
+        if (isGroupNode) {
+            let isPlanning = this.ProjectService.isPlanning(nodeId);
+            let studentStatuses = this.studentStatuses;
 
-                if (workgroupId != null) {
+            // loop through all the student statuses
+            for (let ss = 0; ss < studentStatuses.length; ss++) {
+                let studentStatus = studentStatuses[ss];
 
-                    var studentStatus = this.getStudentStatusForWorkgroupId(workgroupId);
+                if (studentStatus) {
 
-                    if (studentStatus != null) {
+                    if (periodId == -1 || periodId == studentStatus.periodId) {
+                        // the period matches the one we are looking for
 
-                        if (periodId == -1 || periodId == studentStatus.periodId) {
-                            // the period matches the one we are looking for
-                            if (nodeId === studentStatus.currentNodeId) {
-                                // the student is on the node we are looking for
-                                return true;
+                        let nodeStatuses = studentStatus.nodeStatuses;
+
+                        if (nodeStatuses) {
+                            // get the node status for the node
+                            let nodeStatus = nodeStatuses[nodeId];
+
+                            if (nodeStatus) {
+                                let progress = nodeStatus.progress;
+                                if (progress) {
+                                    let totalItems = progress.totalItems;
+                                    if (totalItems) {
+                                        numWorkgroups++;
+
+                                        if (isPlanning) {
+                                            numTotal += progress.totalItems;
+                                        } else {
+                                            // this is not a planning activity, so we can assume the total number of items is the same for all students
+                                            numTotal = progress.totalItems;
+                                            break;
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
@@ -239,7 +279,44 @@ class StudentStatusService {
             }
         }
 
-        return false;
+        return (numWorkgroups > 0 ? numTotal/numWorkgroups : 0);
+    };*/
+
+    /**
+     * Check if there is a workgroup that is online and on the node
+     * @param workgroupsOnline the workgroup ids that are online
+     * @param nodeId the node id
+     * @param periodId the period id. pass in -1 to select all periods.
+     * @returns whether there is a workgroup that is online and on the node
+     */
+    isWorkgroupOnlineOnNode(workgroupsOnline, nodeId, periodId) {
+        let result = false;
+
+        // find workgroups online in the given period
+        let workgroupsOnlineInPeriod = [];
+        let n = workgroupsOnline.length;
+        for (let i = 0; i < n; i++) {
+            let workgroup = workgroupsOnline[i];
+            let studentStatus = this.getStudentStatusForWorkgroupId(workgroup);
+            if (studentStatus) {
+                let pId = studentStatus.periodId;
+                if (periodId == -1 || pId == periodId) {
+                    workgroupsOnlineInPeriod.push(workgroup);
+                }
+            }
+        }
+
+        if (workgroupsOnlineInPeriod.length) {
+            // get workgroups on the given node
+            let workgroupsOnNode = this.getWorkgroupIdsOnNode(nodeId, periodId);
+
+            // check if any online workgroups in the current period are on this node
+            result = workgroupsOnNode.some(w => {
+                return workgroupsOnlineInPeriod.indexOf(w) > -1;
+            });
+        }
+
+        return result;
     }
 
     /**

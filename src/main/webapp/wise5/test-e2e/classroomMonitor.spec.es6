@@ -27,7 +27,7 @@ describe('WISE Classroom Monitor', () => {
                 });
             }
         );
-    };
+    }
 
     it('should log in using preview username and password and open the classroom monitor tool', () => {
         browser.ignoreSynchronization = true;  // doesn't use Angular
@@ -54,10 +54,19 @@ describe('WISE Classroom Monitor', () => {
                 expect(browser.getTitle()).toEqual('WISE Classroom Monitor');
 
                 // check for elements on the page
-                expect($("#gradeByWorkgroupButton").isPresent()).toBeTruthy();
-                expect($("#gradeByStepButton").isPresent()).toBeTruthy();
-                expect($("#pauseScreensButton").isPresent()).toBeTruthy();
+                expect($("#downloadLatestStudentWorkButton").isPresent()).toBeTruthy();
                 expect($("#downloadStudentWorkButton").isPresent()).toBeTruthy();
+                expect($("#downloadStudentEventsButton").isPresent()).toBeTruthy();
+
+                let notificationButton = element(by.xpath('//button[@aria-label="View notifications"]'));
+                let notificationMenu = element(by.cssContainingText('.md-open-menu-container','Alerts'));
+                expect(notificationMenu.getAttribute('aria-hidden')).toEqual("true");  // Notification menu should be hidden
+
+                notificationButton.click();   // Open the Notification Menu by clicking on the notification button
+                expect(notificationMenu.getAttribute('aria-hidden')).toEqual("false");  // Notification Menu should be displayed
+
+                let accountButton = element(by.xpath('//button[@aria-label="Open user menu"]'));
+                expect(accountButton.isPresent()).toBeTruthy();
 
                 // close the current window
                 browser.driver.close().then(() => {

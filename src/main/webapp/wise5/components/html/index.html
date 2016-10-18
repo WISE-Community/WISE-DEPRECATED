@@ -7,7 +7,7 @@
                   cols='100'></textarea>
         <textarea ng-model='htmlController.authoringComponentContentJSONString'
                   ng-change='htmlController.advancedAuthoringViewComponentChanged()'
-                  ng-model-options='{ debounce: 1000 }'
+                  ng-model-options="{ updateOn: 'blur' }"
                   rows='10'
                   cols='100'></textarea>
     </div>

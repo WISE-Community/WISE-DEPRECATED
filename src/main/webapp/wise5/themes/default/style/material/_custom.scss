@@ -1,10 +1,21 @@
 // Angular Material customizations and additions
+
+// 1. Config
+@mixin md-shadow-bottom-z-1() {
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.26);
+}
+
+@mixin md-shadow-bottom-z-2() {
+  box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.4);
+}
+
+// 2. Base
 body {
     font-size: rem(1.6); // TODO: remove when bootstrap is not being loaded
 }
 
 h1 {
-    font-size: $display-1-font-size-base;
+    font-size: $display-3-font-size-base;
 }
 
 h2 {
@@ -12,7 +23,7 @@ h2 {
 }
 
 h3 {
-    font-size: $display-3-font-size-base;
+    font-size: $display-1-font-size-base;
 }
 
 h4 {
@@ -25,6 +36,13 @@ h5 {
 
 h6 {
     font-size: $subhead-font-size-base;
+}
+
+.md-shadow-bottom-z-1 {
+  @include md-shadow-bottom-z-1();
+}
+.md-shadow-bottom-z-2 {
+  @include md-shadow-bottom-z-2();
 }
 
 // Rules for sizing material icons
@@ -112,12 +130,20 @@ md-progress-linear:not([md-mode="indeterminate"]) {
     }
 }
 
-md-list-item ._md-list-item-inner p {
-    line-height: 24px;
-}
+md-list-item {
+    ._md-list-item-inner p {
+        line-height: 24px;
+    }
 
-md-list-item ._md-list-item-inner>.md-avatar:first-child, md-list-item>.md-avatar:first-child {
-    display: flex;
+    ._md-list-item-inner>.md-avatar:first-child, md-list-item>.md-avatar:first-child {
+        display: flex;
+    }
+
+    > .md-no-style.md-button {
+        &:hover, &:focus {
+            background-color: transparent;
+        }
+    }
 }
 
 md-input-container {
@@ -146,15 +172,33 @@ md-input-container {
 }
 
 .md-button {
-    /*@media (max-width: $layout-breakpoint-sm - 1) {
-    min-width: 60px;
-    min-height: 28px;
-    line-height: 28px;
-}*/
+    padding: 0 8px;
 
-> md-icon {
-    margin-top: -2px;
-}
+    &.md-raised {
+        &:not([disabled]) {
+            @include md-shadow-bottom-z-1();
+        }
+    }
+
+    &.md-fab {
+        @include md-shadow-bottom-z-1();
+    }
+
+    &:not([disabled]) {
+        &.md-raised,
+        &.md-fab {
+            &.md-focused {
+                @include md-shadow-bottom-z-1();
+            }
+            &:active {
+                @include md-shadow-bottom-z-2();
+            }
+        }
+    }
+
+    > md-icon {
+        margin-top: -2px;
+    }
 }
 
 md-select-menu md-option[selected] {
@@ -219,4 +263,20 @@ md-list-item .md-list-item-inner .md-avatar-icon {
 
 md-list-item .md-list-item-inner {
     line-height: 1.5;
+}
+
+md-select {
+    &.md-button {
+        text-transform: none;
+        margin: 0;
+        max-width: 200px;
+
+        .md-select-value .md-select-icon {
+            margin: 0;
+        }
+
+        &:hover, &:focus {
+            background-color: rgba(158,158,158,0.2);
+        }
+    }
 }

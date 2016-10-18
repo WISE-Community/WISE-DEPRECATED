@@ -622,7 +622,7 @@ class OpenResponseController {
                         var concepts = data.concepts;
 
                         if (score != null) {
-                            
+
                             // create the auto score annotation
                             var autoScoreAnnotationData = {};
                             autoScoreAnnotationData.value = score;
@@ -631,6 +631,46 @@ class OpenResponseController {
                             autoScoreAnnotationData.autoGrader = 'cRater';
 
                             var autoScoreAnnotation = this.createAutoScoreAnnotation(autoScoreAnnotationData);
+
+                            let annotationGroupForScore = null;
+
+                            if (this.componentContent.enableGlobalAnnotations && this.componentContent.globalAnnotationSettings != null) {
+                                let globalAnnotationMaxCount = 0;
+                                if (this.componentContent.globalAnnotationSettings.globalAnnotationMaxCount != null) {
+                                    globalAnnotationMaxCount = this.componentContent.globalAnnotationSettings.globalAnnotationMaxCount;
+                                }
+                                // get the annotation properties for the score that the student got.
+                                annotationGroupForScore = this.ProjectService.getGlobalAnnotationGroupByScore(this.componentContent, score);
+
+                                // check if we need to apply this globalAnnotationSetting to this annotation: we don't need to if we've already reached the maxCount
+                                if (annotationGroupForScore != null) {
+                                    let globalAnnotationGroupsByNodeIdAndComponentId = this.AnnotationService.getAllGlobalAnnotationGroups(this.nodeId, this.componentId);
+                                    annotationGroupForScore.annotationGroupCreatedTime = autoScoreAnnotation.clientSaveTime;  // save annotation creation time
+
+                                    if (globalAnnotationGroupsByNodeIdAndComponentId.length >= globalAnnotationMaxCount) {
+                                        // we've already applied this annotation properties to maxCount annotations, so we don't need to apply it any more.
+                                        annotationGroupForScore = null;
+                                    }
+                                }
+
+                                if (annotationGroupForScore != null && annotationGroupForScore.isGlobal && annotationGroupForScore.unGlobalizeCriteria != null) {
+                                    // check if this annotation is global and what criteria needs to be met to un-globalize.
+                                    annotationGroupForScore.unGlobalizeCriteria.map( (unGlobalizeCriteria) => {
+                                        // if the un-globalize criteria is time-based (e.g. isVisitedAfter, isRevisedAfter, isVisitedAndRevisedAfter, etc), store the timestamp of this annotation in the criteria
+                                        // so we can compare it when we check for criteria satisfaction.
+                                        if (unGlobalizeCriteria.params != null) {
+                                            unGlobalizeCriteria.params.criteriaCreatedTimestamp = autoScoreAnnotation.clientSaveTime;  // save annotation creation time to criteria
+                                        }
+                                    });
+                                }
+
+                                if (annotationGroupForScore != null) {
+                                    // copy over the annotation properties into the autoScoreAnnotation's data
+                                    angular.merge(autoScoreAnnotation.data, annotationGroupForScore);
+                                }
+
+                            }
+
                             componentState.annotations.push(autoScoreAnnotation);
 
                             var autoComment = null;
@@ -671,11 +711,18 @@ class OpenResponseController {
                                 autoCommentAnnotationData.autoGrader = 'cRater';
 
                                 var autoCommentAnnotation = this.createAutoCommentAnnotation(autoCommentAnnotationData);
+
+                                if (this.componentContent.enableGlobalAnnotations) {
+                                    if (annotationGroupForScore != null) {
+                                        // copy over the annotation properties into the autoCommentAnnotation's data
+                                        angular.merge(autoCommentAnnotation.data, annotationGroupForScore);
+                                    }
+                                }
                                 componentState.annotations.push(autoCommentAnnotation);
                             }
 
-                            // get the notification
-                            var notificationsForScore = this.CRaterService.getNotificationsByScore(this.componentContent, score);
+                            // get the notification properties for the score that the student got.
+                            var notificationsForScore = this.ProjectService.getNotificationsByScore(this.componentContent, score);
 
                             if (notificationsForScore != null) {
                                 for (var n = 0; n < notificationsForScore.length; n++) {
@@ -685,6 +732,11 @@ class OpenResponseController {
                                     notificationForScore.componentId = this.componentId;
                                     this.NotificationService.sendNotificationForScore(notificationForScore);
                                 }
+                            }
+
+                            // display global annotations dialog if needed
+                            if (this.componentContent.enableGlobalAnnotations && annotationGroupForScore != null && annotationGroupForScore.isGlobal && annotationGroupForScore.isPopup) {
+                                this.$scope.$emit('displayGlobalAnnotations');
                             }
                         }
                     }

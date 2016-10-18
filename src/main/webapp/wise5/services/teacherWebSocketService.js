@@ -17,6 +17,7 @@ var TeacherWebSocketService = function () {
         this.ConfigService = ConfigService;
         this.StudentStatusService = StudentStatusService;
         this.dataStream = null;
+        this.studentsOnlineArray = [];
     }
 
     _createClass(TeacherWebSocketService, [{
@@ -67,11 +68,19 @@ var TeacherWebSocketService = function () {
     }, {
         key: "getStudentsOnline",
         value: function getStudentsOnline() {
-            var studentsOnline = [];
-            if (this.studentsOnlineArray != null) {
-                studentsOnline = this.studentsOnlineArray;
-            }
-            return studentsOnline;
+            return this.studentsOnlineArray;
+        }
+    }, {
+        key: "isStudentOnline",
+
+
+        /**
+        * Check to see if a given workgroup is currently online
+        * @param workgroupId the workgroup id
+        * @returns boolean whether a workgroup is online
+        */
+        value: function isStudentOnline(workgroupId) {
+            return this.studentsOnlineArray.indexOf(workgroupId) > -1;
         }
     }, {
         key: "handleStudentStatusReceived",

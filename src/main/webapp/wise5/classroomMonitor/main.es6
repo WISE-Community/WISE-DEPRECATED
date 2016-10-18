@@ -1,5 +1,6 @@
 'use strict';
 
+import '../themes/default/js/webfonts';
 import $ from 'jquery';
 import angular from 'angular';
 import angularDragula from 'angular-dragula';
@@ -14,11 +15,13 @@ import angularTranslateLoaderPartial from 'angular-translate-loader-partial';
 import ngWebSocket from 'angular-websocket';
 import AnnotationService from '../services/annotationService';
 import AudioOscillatorComponentModule from '../components/audioOscillator/audioOscillatorComponentModule';
+import ClassroomMonitorComponents from './classroomMonitorComponents';
 import ClassroomMonitorController from './classroomMonitorController';
 import ConceptMapComponentModule from '../components/conceptMap/conceptMapComponentModule';
 import ConfigService from '../services/configService';
 import CRaterService from '../services/cRaterService';
 import Components from '../directives/components';
+import DashboardController from './dashboard/dashboardController';
 import DiscussionComponentModule from '../components/discussion/discussionComponentModule';
 import DrawComponentModule from '../components/draw/drawComponentModule';
 import EmbeddedComponentModule from '../components/embedded/embeddedComponentModule';
@@ -29,8 +32,8 @@ import HTMLComponentModule from '../components/html/htmlComponentModule';
 import LabelComponentModule from '../components/label/labelComponentModule';
 import MatchComponentModule from '../components/match/matchComponentModule';
 import MultipleChoiceComponentModule from '../components/multipleChoice/multipleChoiceComponentModule';
-import NodeProgressController from './nodeProgress/nodeProgressController';
 import NodeGradingController from './nodeGrading/nodeGradingController';
+import NodeProgressController from './nodeProgress/nodeProgressController';
 import NodeService from '../services/nodeService';
 import NotebookService from '../services/notebookService';
 import NotificationService from '../services/notificationService';
@@ -49,6 +52,8 @@ import TeacherDataService from '../services/teacherDataService';
 import TeacherWebSocketService from '../services/teacherWebSocketService';
 import UtilService from '../services/utilService';
 
+import moment from 'moment';
+
 let classroomMonitorModule = angular.module('classroomMonitor', [
         angularDragula(angular),
         'angularMoment',
@@ -56,6 +61,7 @@ let classroomMonitorModule = angular.module('classroomMonitor', [
         'audioOscillatorComponentModule',
         'components',
         'conceptMapComponentModule',
+        'classroomMonitor.components',
         'discussionComponentModule',
         'drawComponentModule',
         'embeddedComponentModule',
@@ -147,6 +153,9 @@ let classroomMonitorModule = angular.module('classroomMonitor', [
                         },
                         sessionTimers: (SessionService, config) => {
                             return SessionService.initializeSession();
+                        },
+                        annotations: function(TeacherDataService, config) {
+                            return TeacherDataService.retrieveAnnotations();
                         }
                     }
                 })
@@ -154,12 +163,7 @@ let classroomMonitorModule = angular.module('classroomMonitor', [
                     url: '/studentProgress',
                     templateUrl: 'wise5/classroomMonitor/studentProgress/studentProgress.html',
                     controller: 'StudentProgressController',
-                    controllerAs: 'studentProgressController',
-                    resolve: {
-                        studentData: function($stateParams, TeacherDataService, config) {
-                            return TeacherDataService.retrieveAnnotations();
-                        }
-                    }
+                    controllerAs: 'studentProgressController'
                 })
                 .state('root.studentGrading', {
                     url: '/studentGrading/:workgroupId',
@@ -173,26 +177,20 @@ let classroomMonitorModule = angular.module('classroomMonitor', [
                     }
                 })
                 .state('root.nodeProgress', {
-                    url: '/nodeProgress',
-                    templateUrl: 'wise5/classroomMonitor/nodeProgress/nodeProgress.html',
-                    controller: 'NodeProgressController',
-                    controllerAs: 'nodeProgressController',
-                    resolve: {
-                        studentData: function($stateParams, TeacherDataService, config) {
-                            return TeacherDataService.retrieveAnnotations();
+                    url: '/project/:nodeId?periodId&workgroupId',
+                    views: {
+                        'nodeView': {
+                            templateUrl: 'wise5/classroomMonitor/nodeGrading/nodeGrading.html',
+                            controller: 'NodeGradingController',
+                            controllerAs: 'nodeGradingController'
                         }
                     }
                 })
-                .state('root.nodeGrading', {
-                    url: '/nodeGrading/:nodeId',
-                    templateUrl: 'wise5/classroomMonitor/nodeGrading/nodeGrading.html',
-                    controller: 'NodeGradingController',
-                    controllerAs: 'nodeGradingController',
-                    resolve: {
-                        studentData: function($stateParams, TeacherDataService, config, project) {
-                            return TeacherDataService.retrieveStudentDataByNodeId($stateParams.nodeId);
-                        }
-                    }
+                .state('root.dashboard', {
+                    url: '/dashboard',
+                    templateUrl: 'wise5/classroomMonitor/dashboard/dashboard.html',
+                    controller: 'DashboardController',
+                    controllerAs: 'dashboardController'
                 });
 
             // Set up Translations
@@ -206,10 +204,9 @@ let classroomMonitorModule = angular.module('classroomMonitor', [
                 'en_US': 'en',
                 'en_UK': 'en'
             });
-            $translateProvider.useSanitizeValueStrategy('escape');
+            $translateProvider.useSanitizeValueStrategy('sanitizeParameters', 'escape');
 
             // ngMaterial default theme configuration
-            // TODO: make dynamic and support alternate themes; allow projects to specify theme parameters and settings
             $mdThemingProvider.definePalette('primary', {
                 '50': 'e1f0f4',
                 '100': 'b8dbe4',
@@ -274,6 +271,33 @@ let classroomMonitorModule = angular.module('classroomMonitor', [
                 .accentPalette('primary');
 
             $mdThemingProvider.setDefaultTheme('default');
+
+            // moment.js default overrides
+            moment.locale('en', {
+                calendar : {
+                    lastDay : '[Yesterday at] LT',
+                    sameDay : '[Today at] LT',
+                    nextDay : '[Tomorrow at] LT',
+                    lastWeek : '[Last] dddd [at] LT',
+                    nextWeek : 'dddd [at] LT',
+                    sameElse : 'MMM D, YYYY [at] LT'
+                },
+                relativeTime : {
+                    future: "in %s",
+                    past:   "%s",
+                    s:  "seconds ago",
+                    m:  "1 minute ago",
+                    mm: "%d minutes ago",
+                    h:  "1 hour ago",
+                    hh: "%d hours ago",
+                    d:  "1 day ago",
+                    dd: "%d days ago",
+                    M:  "1 month ago",
+                    MM: "%d months ago",
+                    y:  "1 year ago",
+                    yy: "%d years ago"
+                }
+            });
         }]);
 
 export default classroomMonitorModule;

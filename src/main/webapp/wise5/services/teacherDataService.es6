@@ -6,16 +6,25 @@ class TeacherDataService {
                 $rootScope,
                 AnnotationService,
                 ConfigService,
-                ProjectService) {
+                ProjectService,
+                StudentDataService,
+                TeacherWebSocketService) {
         this.$http = $http;
         this.$rootScope = $rootScope;
         this.AnnotationService = AnnotationService;
         this.ConfigService = ConfigService;
         this.ProjectService = ProjectService;
+        this.StudentDataService = StudentDataService;
+        this.TeacherWebSocketService = TeacherWebSocketService;
 
         this.studentData = {};
         this.currentPeriod = null;
-        this.runStatus == null;
+        this.currentNode = null;
+        this.previousStep = null;
+        this.runStatus = null;
+        this.periods = [];
+
+        this.initializePeriods();
     }
 
     /**
@@ -54,10 +63,10 @@ class TeacherDataService {
         if (this.currentPeriod != null && this.currentPeriod.periodName != 'All') {
             periodId = this.currentPeriod.periodId;
         }
-        
+
         // get the node ids and component ids in the node
         var nodeIdsAndComponentIds = this.ProjectService.getNodeIdsAndComponentIds(nodeId);
-        
+
         // get the show previous work node ids and component ids in the node
         var showPreviousWorkNodeIdsAndComponentIds = this.ProjectService.getShowPreviousWorkNodeIdsAndComponentIds(nodeId);
 
@@ -261,7 +270,7 @@ class TeacherDataService {
         } else {
             return [];
         }
-    };
+    }
 
     getComponentStatesByNodeId(nodeId) {
         var componentStatesByNodeId = this.studentData.componentStatesByNodeId[nodeId];
@@ -270,7 +279,7 @@ class TeacherDataService {
         } else {
             return [];
         }
-    };
+    }
 
     /**
      * Get the component stats for a component id
@@ -287,7 +296,7 @@ class TeacherDataService {
         }
 
         return componentStates;
-    };
+    }
 
     getLatestComponentStateByWorkgroupIdNodeIdAndComponentId(workgroupId, nodeId, componentId) {
         var latestComponentState = null;
@@ -315,7 +324,7 @@ class TeacherDataService {
         }
 
         return latestComponentState;
-    };
+    }
 
     getComponentStatesByWorkgroupIdAndNodeId(workgroupId, nodeId) {
 
@@ -326,7 +335,7 @@ class TeacherDataService {
         return componentStatesByWorkgroupId.filter((n) => {
             return componentStatesByNodeId.indexOf(n) != -1;
         });
-    };
+    }
 
     /**
      * Get component states for a workgroup id and component id
@@ -379,7 +388,7 @@ class TeacherDataService {
         } else {
             return [];
         }
-    };
+    }
 
     getAnnotationsByNodeId(nodeId) {
         var annotationsByNodeId = this.studentData.annotationsByNodeId[nodeId];
@@ -388,7 +397,7 @@ class TeacherDataService {
         } else {
             return [];
         }
-    };
+    }
 
     getAnnotationsToWorkgroupIdAndNodeId(workgroupId, nodeId) {
         var annotationsToWorkgroupId = this.getAnnotationsToWorkgroupId(workgroupId);
@@ -398,15 +407,136 @@ class TeacherDataService {
         return annotationsToWorkgroupId.filter((n) => {
             return annotationsByNodeId.indexOf(n) != -1;
         });
-    };
+    }
+
+    /**
+     * Initialize the periods
+     */
+    initializePeriods() {
+        let periods = this.ConfigService.getPeriods();
+        let currentPeriod = null;
+
+        if (periods.length) {
+            currentPeriod = periods[0];
+        }
+
+        if (periods.length > 1) {
+            // create an option for all periods
+            let allPeriodsOption = {
+                periodId: -1,
+                periodName: 'All'
+            };
+
+            periods.unshift(allPeriodsOption);
+        }
+
+        this.periods = periods;
+
+        // set the current period
+        if (currentPeriod) {
+            this.setCurrentPeriod(currentPeriod);
+        }
+    }
 
     setCurrentPeriod(period) {
+        let previousPeriod = this.currentPeriod;
         this.currentPeriod = period;
-    };
+
+        // broadcast the event that the current period has changed
+        this.$rootScope.$broadcast('currentPeriodChanged', {previousPeriod: previousPeriod, currentPeriod: this.currentPeriod});
+    }
 
     getCurrentPeriod() {
         return this.currentPeriod;
-    };
+    }
+
+    getPeriods() {
+        return this.periods;
+    }
+
+    /**
+     * Get the current node
+     * @returns the current node object
+     */
+    getCurrentNode() {
+        return this.currentNode;
+    }
+
+    /**
+     * Get the current node id
+     * @returns the current node id
+     */
+    getCurrentNodeId() {
+        var currentNodeId = null;
+
+        if (this.currentNode != null) {
+            currentNodeId = this.currentNode.id;
+        }
+
+        return currentNodeId;
+    }
+
+    /**
+     * Set the current node
+     * @param nodeId the node id
+     */
+    setCurrentNodeByNodeId(nodeId) {
+        if (nodeId != null) {
+            let node = this.ProjectService.getNodeById(nodeId);
+
+            this.setCurrentNode(node);
+        }
+    }
+
+    /**
+     * Set the current node
+     * @param node the node object
+     */
+    setCurrentNode(node) {
+        let previousCurrentNode = this.currentNode;
+
+        if (previousCurrentNode !== node) {
+            // the current node is about to change
+
+            if (previousCurrentNode && !this.ProjectService.isGroupNode(previousCurrentNode.id)){
+                // set the previous node to the current node
+                this.previousStep = previousCurrentNode;
+            }
+
+            // set the current node to the new node
+            this.currentNode = node;
+
+            // broadcast the event that the current node has changed
+            this.$rootScope.$broadcast('currentNodeChanged', {previousNode: previousCurrentNode, currentNode: this.currentNode});
+        }
+    }
+
+    /**
+     * End the current node
+     */
+    endCurrentNode() {
+
+        // get the current node
+        var previousCurrentNode = this.currentNode;
+
+        if (previousCurrentNode != null) {
+
+            // tell the node to exit
+            this.$rootScope.$broadcast('exitNode', {nodeToExit: previousCurrentNode});
+        }
+    }
+
+    /**
+     * End the current node and set the current node
+     * @param nodeId the node id of the new current node
+     */
+    endCurrentNodeAndSetCurrentNodeByNodeId(nodeId) {
+        // end the current node
+        this.endCurrentNode();
+
+        // set the current node
+        this.setCurrentNodeByNodeId(nodeId);
+    }
 
     /**
      * Get the total score for a workgroup
@@ -443,33 +573,64 @@ class TeacherDataService {
      */
     isPeriodPaused(periodId) {
 
-        var isPaused = false;
+        let isPaused = false;
 
         // get the run status
-        var runStatus = this.runStatus;
+        let runStatus = this.runStatus;
 
-        if (runStatus != null) {
-            if (periodId == -1) {
-                // -1 represents all periods
-                isPaused = runStatus.allPeriodsPaused;
-            } else {
-                var periods = runStatus.periods;
+        if (runStatus && runStatus.periods) {
+            let periods = runStatus.periods;
+            let nPeriods = periods.length;
+            let nPeriodsPaused = 0;
 
-                // loop through all the periods
-                for (var p = 0; p < periods.length; p++) {
-                    var period = periods[p];
+            // loop through all the periods
+            for (let p = 0; p < periods.length; p++) {
+                let period = periods[p];
 
-                    if (period != null) {
-                        if (periodId == period.periodId) {
-                            // we have found the period we are looking for
-                            isPaused = period.paused;
+                if (period != null) {
+                    isPaused = period.paused;
+                    if (periodId == period.periodId) {
+                        // we have found the period we are looking for
+                        break;
+                    } else {
+                        if (isPaused) {
+                            nPeriodsPaused++;
+                        } else {
+                            break;
                         }
                     }
                 }
             }
+
+            if (periodId === -1 && nPeriods === nPeriodsPaused) {
+                isPaused = true;
+            }
         }
 
         return isPaused;
+    }
+
+    /**
+     * The pause screen status was changed. update period(s) accordingly.
+     */
+    pauseScreensChanged(isPaused) {
+
+        // get the currently selected period Id
+        let periodId = this.currentPeriod.periodId;
+
+        // update the run status
+        this.updatePausedRunStatusValue(periodId, isPaused);
+
+        if (isPaused) {
+            // pause the student screens
+            this.TeacherWebSocketService.pauseScreens(periodId);
+        } else {
+            // unpause the student screens
+            this.TeacherWebSocketService.unPauseScreens(periodId);
+        }
+
+        // save the run status to the server
+        this.sendRunStatus();
     }
 
     /**
@@ -479,17 +640,14 @@ class TeacherDataService {
     createRunStatus() {
         var runStatus = {};
 
-        //get the run id
+        // get the run id
         runStatus.runId = this.ConfigService.getConfigParam('runId');
 
-        //set this to default to not paused
-        runStatus.allPeriodsPaused = false;
-
-        //get all the periods objects
+        // get all the periods objects
         var periods = this.ConfigService.getPeriods();
 
         //loop through all the periods
-        for(var x = 0; x < periods.length; x++) {
+        for (var x = 0; x < periods.length; x++) {
             //get a period
             var period = periods[x];
 
@@ -497,10 +655,10 @@ class TeacherDataService {
             period.paused = false;
         }
 
-        //set the periods into the run status
+        // set the periods into the run status
         runStatus.periods = periods;
 
-        //set the run status into the view so we can access it later
+        // set the run status into the view so we can access it later
         this.runStatus = runStatus;
 
         return this.runStatus;
@@ -513,39 +671,28 @@ class TeacherDataService {
      */
     updatePausedRunStatusValue(periodId, value) {
         //create the local run status object if necessary
-        if(this.runStatus == null) {
+        if (this.runStatus == null) {
             this.createRunStatus();
         }
 
         //get the local run status object
-        var runStatus = this.runStatus;
+        let runStatus = this.runStatus;
 
-        if(periodId == null || periodId == -1) {
-            //we are updating the all periods value
-            runStatus.allPeriodsPaused = value;
+        let periods = runStatus.periods;
 
-            //set all the periods to the value as well
-            //this.setAllPeriodsPaused(value);
-        } else {
-            //we are updating a specific period
+        if (periods) {
+            //loop through all the periods
+            for (let x = 0; x < periods.length; x++) {
+                //get a period
+                let tempPeriod = periods[x];
 
-            //get all the periods
-            var periods = runStatus.periods;
+                //get the period id
+                let tempPeriodId = tempPeriod.periodId;
 
-            if(periods != null) {
-                //loop through all the periods
-                for(var x = 0; x < periods.length; x++) {
-                    //get a period
-                    var tempPeriod = periods[x];
-
-                    //get the period id
-                    var tempPeriodId = tempPeriod.periodId;
-
-                    //check if the period id matches the one we need to update
-                    if(periodId == tempPeriodId) {
-                        //we have found the period we want to update
-                        tempPeriod.paused = value;
-                    }
+                //check if the period id matches the one we need to update or if all periods has been selected
+                if (periodId === tempPeriodId || periodId === -1) {
+                    //we have found the period we want to update
+                    tempPeriod.paused = value;
                 }
             }
         }
@@ -595,7 +742,9 @@ TeacherDataService.$inject = ['$http',
     '$rootScope',
     'AnnotationService',
     'ConfigService',
-    'ProjectService'
+    'ProjectService',
+    'StudentDataService',
+    'TeacherWebSocketService'
 ];
 
 export default TeacherDataService;
