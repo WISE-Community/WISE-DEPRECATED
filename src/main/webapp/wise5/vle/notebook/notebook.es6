@@ -14,7 +14,7 @@ const NotebookItem = {
     },
     template: '<ng-include src="notebookItemController.getTemplateUrl()"></ng-include>',
     controller: 'NotebookItemController as notebookItemController'
-}
+};
 
 let notebookModule = angular.module('notebook', [])
     .directive('notebook', () => {

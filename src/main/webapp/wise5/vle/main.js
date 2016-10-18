@@ -254,6 +254,17 @@ var vleModule = _angular2.default.module('vle', [(0, _angularDragula2.default)(_
             studentData: function studentData(StudentDataService, config, project) {
                 return StudentDataService.retrieveStudentData();
             },
+            notebook: function notebook(NotebookService, ConfigService, StudentAssetService, studentData, config, project) {
+                if (!ConfigService.isPreview()) {
+                    StudentAssetService.retrieveAssets().then(function (studentAssets) {
+                        NotebookService.retrieveNotebookItems().then(function (notebook) {
+                            return notebook;
+                        });
+                    });
+                } else {
+                    return NotebookService.notebook;
+                }
+            },
             notifications: function notifications(NotificationService, studentData, config, project) {
                 return NotificationService.retrieveNotifications();
             },
