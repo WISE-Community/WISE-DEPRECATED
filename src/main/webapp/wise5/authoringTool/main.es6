@@ -52,6 +52,7 @@ import StudentStatusService from '../services/studentStatusService';
 import StudentWebSocketService from '../services/studentWebSocketService';
 import TableComponentModule from '../components/table/tableComponentModule';
 import TeacherDataService from '../services/teacherDataService';
+import TeacherWebSocketService from '../services/teacherWebSocketService';
 import UtilService from '../services/utilService';
 
 let authoringModule = angular.module('authoring', [
@@ -98,6 +99,7 @@ let authoringModule = angular.module('authoring', [
     .service(StudentStatusService.name, StudentStatusService)
     .service(StudentWebSocketService.name, StudentWebSocketService)
     .service(TeacherDataService.name, TeacherDataService)
+    .service(TeacherWebSocketService.name, TeacherWebSocketService)
     .service(UtilService.name, UtilService)
     .controller(AuthoringToolController.name, AuthoringToolController)
     .controller(AuthoringToolMainController.name, AuthoringToolMainController)
