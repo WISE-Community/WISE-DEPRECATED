@@ -790,11 +790,13 @@ class ConceptMapController {
         
         // set the background data into the student data
         if (this.componentContent.background != null) {
+            var background = this.componentContent.background;
+            
             // this is the background file name e.g. background.png
-            studentData.background = this.componentContent.background;
+            studentData.background = background.substring(background.lastIndexOf('/') + 1);
             
             // this is the background path e.g. /wise/curriculum/108/assets/background.png
-            studentData.backgroundPath = this.componentContent.background;
+            studentData.backgroundPath = background;
             
             // whether to stretch the background to fill the svg element
             studentData.stretchBackground = this.componentContent.stretchBackground;
