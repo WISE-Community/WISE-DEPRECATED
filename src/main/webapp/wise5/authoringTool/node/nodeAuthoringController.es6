@@ -252,6 +252,9 @@ class NodeAuthoringController {
      */
     close() {
         // perform any node cleanup if necessary
+        let commitMessage = "Made changes to Step.";
+        this.ProjectService.saveProject(commitMessage);
+
         this.$scope.$broadcast('exitNode', {nodeToExit: this.node});
         
         this.$state.go('root.project', {projectId: this.projectId});

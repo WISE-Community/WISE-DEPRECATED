@@ -205,7 +205,7 @@ for(var n=0;n<nodes.length;n++){var node=nodes[n];if(node!=null){nodeIds.push(no
              */projectURL+='?noCache='+new Date().getTime();}return this.$http.get(projectURL).then(function(result){var projectJSON=result.data;_this.setProject(projectJSON);return projectJSON;});}},{key:'saveProject',/**
      * Saves the project to Config.saveProjectURL and returns commit history promise.
      * if Config.saveProjectURL or Config.projectId are undefined, does not save and returns null
-     */value:function saveProject(){var commitMessage=arguments.length<=0||arguments[0]===undefined?"Made changes via WISE5 Authoring Tool":arguments[0];// perform any cleanup before saving the project
+     */value:function saveProject(){var commitMessage=arguments.length<=0||arguments[0]===undefined?"":arguments[0];// perform any cleanup before saving the project
 this.cleanupBeforeSave();var projectId=this.ConfigService.getProjectId();var saveProjectURL=this.ConfigService.getConfigParam('saveProjectURL');if(projectId==null||saveProjectURL==null){return null;}// Get the project from this service
 var projectJSONString=angular.toJson(this.project,4);var httpParams={};httpParams.method='POST';httpParams.url=saveProjectURL;httpParams.headers={'Content-Type':'application/x-www-form-urlencoded'};var params={};params.projectId=projectId;params.commitMessage=commitMessage;params.projectJSONString=projectJSONString;httpParams.data=$.param(params);return this.$http(httpParams).then(function(result){var commitHistory=result.data;return commitHistory;});}},{key:'getCurrentAuthors',/**
      * Get the current authors for this project

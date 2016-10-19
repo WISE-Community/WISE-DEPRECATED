@@ -33,7 +33,9 @@ class AuthorNotebookController {
     }
 
     exit() {
-        this.ProjectService.saveProject();
+        let commitMessage = "Made changes to Notebook.";
+
+        this.ProjectService.saveProject(commitMessage);
         this.$state.go('root.project', {projectId: this.projectId});
     }
 }

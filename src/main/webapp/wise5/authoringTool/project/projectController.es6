@@ -95,7 +95,8 @@ class ProjectController {
 
     saveProject() {
         //let projectJSONString = JSON.stringify(this.project, null, 4);
-        let commitMessage = $("#commitMessageInput").val();
+        //let commitMessage = $("#commitMessageInput").val();
+        let commitMessage = "Made changes to Project.";
         try {
             // if projectJSONString is bad json, it will throw an exception and not save.
             //this.ProjectService.project = this.project;
