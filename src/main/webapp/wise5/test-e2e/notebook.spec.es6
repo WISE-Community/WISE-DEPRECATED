@@ -111,8 +111,8 @@ describe('WISE5 Notebook in Preview Mode', () => {
         let newNoteItemDiv = element(by.xpath('//notebook-item/ng-include/md-card/md-card-content'));
         expect(newNoteItemDiv.isPresent()).toBeTruthy();
         expect(newNoteItemDiv.getText()).toBe('This is my text note!');
-        let deleteNotebookItemButton = element(by.xpath('//md-card-actions/button[@aria-label="Delete notebook item"]'));
-        expect(deleteNotebookItemButton.isPresent()).toBeTruthy();
+        //let deleteNotebookItemButton = element(by.xpath('//md-card-actions/button[@aria-label="Delete notebook item"]'));
+        //expect(deleteNotebookItemButton.isPresent()).toBeTruthy();
         var notebookItemContentLocation = element(by.cssContainingText('.notebook-item__content__location','1.1'));
         expect(notebookItemContentLocation.isPresent()).toBeTruthy();
     });
