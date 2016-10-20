@@ -1,6 +1,6 @@
 <div class="l-constrained l-constrained-md" layout="column">
     <div ng-if="notebookController.filter === 'note'" layout="row" layout-wrap layout-align="start start">
-        <p class="center flex md-heading" ng-if="!notebookController.notebook.items.length" translate="noNotes" translate-value-term="{{notebookController.notebookConfig.itemTypes.note.label.plural}}"></p>
+        <p class="center flex md-heading" ng-if="notebookController.notebook.items.length < 1" translate="noNotes" translate-value-term="{{notebookController.notebookConfig.itemTypes.note.label.plural}}"></p>
         <notebook-item ng-repeat="(localNotebookItemId, notebookItems) in notebookController.notebook.items"
                        ng-if="(notebookController.filter === 'note') && notebookItems.last().type == 'note'"
                        item-id="localNotebookItemId"
