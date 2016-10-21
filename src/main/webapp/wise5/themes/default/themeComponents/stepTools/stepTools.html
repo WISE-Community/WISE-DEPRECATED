@@ -10,7 +10,7 @@
         <!--<span>{{ stepToolsCtrl.showPosition ? stepToolsCtrl.getNodePositionById(stepToolsCtrl.nodeId) + ': ' : '' }}{{ stepToolsCtrl.getNodeTitleByNodeId(stepToolsCtrl.nodeId) }}</span>-->
 
         <md-select id="stepSelectMenu" md-theme="default" class="node-select md-subhead"
-                   aria-label="Project item select"
+                   aria-label="{{ 'projectItemSelect' | translate }}"
                    ng-model="stepToolsCtrl.toNodeId"
                    ng-change="stepToolsCtrl.toNodeIdChanged()"
                    md-selected-text="stepToolsCtrl.getSelectedText($value)">
@@ -33,16 +33,17 @@
         </md-button> TODO: Add notifications and score when operational-->
         <node-status-icon node-id="stepToolsCtrl.nodeId"></node-status-icon>
         <span flex></span>
-        <md-button aria-label="Previous Item" class="md-icon-button node-nav"
+        <md-button aria-label="{{ 'previousItem' | translate }}" class="md-icon-button node-nav"
                    ng-disabled="!stepToolsCtrl.prevId" ng-click="stepToolsCtrl.goToPrevNode()">
             <md-icon> arrow_back </md-icon>
         </md-button>
-        <md-button aria-label="Next Item" class="md-icon-button node-nav"
+        <md-button aria-label="{{ 'nextItem' | translate }}" class="md-icon-button node-nav"
                    ng-disabled="!stepToolsCtrl.nextId" ng-click="stepToolsCtrl.goToNextNode()">
             <md-icon> arrow_forward </md-icon>
         </md-button>
-        <md-button aria-label="Go to project plan" class="md-icon-button node-nav" ng-click="stepToolsCtrl.closeNode()">
-            <md-icon md-theme="default"> home </md-icon>
+        <md-button aria-label="{{ 'projectPlan' | translate }}" class="md-icon-button node-nav" ng-click="stepToolsCtrl.closeNode()">
+            <md-icon md-theme="default"> view_list </md-icon>
+            <md-tooltip md-direction="down">{{ 'projectPlan' | translate }}</md-tooltip>
         </md-button>
     </div>
 </md-toolbar>
