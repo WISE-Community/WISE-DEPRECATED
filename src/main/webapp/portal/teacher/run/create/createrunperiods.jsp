@@ -10,16 +10,10 @@
 
 <link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
 <link href="${contextPath}/<spring:theme code="stylesheet"/>" media="screen" rel="stylesheet" type="text/css" />
-<link href="${contextPath}/<spring:theme code="teacherprojectstylesheet" />" media="screen" rel="stylesheet" type="text/css" />
-<link href="${contextPath}/<spring:theme code="teacherhomepagestylesheet" />" media="screen" rel="stylesheet" type="text/css" />
-<link href="${contextPath}/<spring:theme code="teacherrunstylesheet"/>" media="screen" rel="stylesheet"  type="text/css" />
-<link href="${contextPath}/<spring:theme code="jquerystylesheet"/>" media="screen" rel="stylesheet" type="text/css" >
 <link href="${contextPath}/<spring:theme code="superfishstylesheet"/>" rel="stylesheet" type="text/css" >
     
 <script src="${contextPath}/<spring:theme code="jquerysource"/>" type="text/javascript"></script>
-<script src="${contextPath}/<spring:theme code="jqueryuisource"/>" type="text/javascript"></script>
 <script src="${contextPath}/<spring:theme code="superfishsource"/>" type="text/javascript"></script>
-<script src="${contextPath}/<spring:theme code="generalsource"/>" type="text/javascript"></script>
 
 <script type="text/javascript">
 function checkIfTextAreaEmpty (form) {
@@ -67,7 +61,7 @@ function checkIfTextAreaEmpty (form) {
 						<div id="setUpRunBox">
 							<div id="stepNumber" class="sectionHead"><spring:message code="teacher.run.create.createrunperiods.step3Of5"/>&nbsp;<spring:message code="teacher.run.create.createrunperiods.selectPeriods"/></div>
 							<div class="sectionContent">
-								<h5><spring:message code="teacher.run.create.createrunperiods.selectPeriods"/><spring:message code="teacher.run.create.createrunperiods.next"/>.</h5>
+								<h5><spring:message code="teacher.run.create.createrunperiods.selectPeriods"/></h5>
 								
 							    <div style="margin:1em;">
 							          <div id="periodBoxes">

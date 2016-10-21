@@ -8,7 +8,6 @@
 <title><spring:message code="teacher.index.wiseTeacherDashboard" /></title>
 
 <link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
-<link href="${contextPath}/<spring:theme code="stylesheet"/>" media="screen" rel="stylesheet"  type="text/css" />
 <link href="${contextPath}/<spring:theme code="jquerystylesheet"/>" media="screen" rel="stylesheet" type="text/css" />
 <link href="${contextPath}/<spring:theme code="teacherhomepagestylesheet" />" media="screen" rel="stylesheet" type="text/css" />
 <link href="${contextPath}/<spring:theme code="superfishstylesheet"/>" media="screen" rel="stylesheet" type="text/css" >
@@ -17,8 +16,6 @@
 <script type="text/javascript" src="${contextPath}/<spring:theme code="jqueryuisource"/>"></script>
 <script type="text/javascript" src="${contextPath}/<spring:theme code="superfishsource"/>"></script>
 <script type="text/javascript" src="${contextPath}/<spring:theme code="jquerymigrate.js"/>"></script>
-<script type="text/javascript" src="${contextPath}/<spring:theme code="generalsource"/>"></script>
-<script type="text/javascript" src="${contextPath}/<spring:theme code="browserdetectsource"/>"></script>
 
 <script type='text/javascript'>
 var isTeacherIndex = true; //global var used by spawned pages (i.e. archive run)
