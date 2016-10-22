@@ -20,6 +20,7 @@ class ProjectService {
         this.idToPosition = {};
         this.idToOrder = {};
         this.nodeCount = 0;
+        this.componentServices = {};
 
         // filtering options for navigation displays
         this.filters = [
@@ -6547,6 +6548,149 @@ class ProjectService {
             "inactiveGroups": [],
             "inactiveNodes": []
         };
+    }
+    
+    /**
+     * Check if a node generates work by looking at all of its components
+     * @param nodeId the node id
+     * @return whether the node generates work
+     */
+    nodeHasWork(nodeId) {
+        var result = false;
+        
+        if (nodeId != null) {
+            
+            // get the node content object
+            var nodeContent = this.getNodeContentByNodeId(nodeId);
+            
+            if (nodeContent != null) {
+                var components = nodeContent.components;
+                
+                if (components != null) {
+                    
+                    // loop through all the components in the node
+                    for (var c = 0; c < components.length; c++) {
+                        var component = components[c];
+                        
+                        if (component != null) {
+                            
+                            // check if the component generates work
+                            var componentHasWork = this.componentHasWork(component);
+                            
+                            if (componentHasWork) {
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        return result;
+    }
+    
+    /**
+     * Check if a component generates work
+     * @param nodeId the node id
+     * @param componentId the component id
+     * @return whether the component generates work
+     */
+    componentHasWorkByNodeIdAndComponentId(nodeId, componentId) {
+        var result = false;
+        
+        if (nodeId != null) {
+            
+            // get the node content object
+            var nodeContent = this.getNodeContentByNodeId(nodeId);
+            
+            if (nodeContent != null) {
+                var components = nodeContent.components;
+                
+                if (components != null) {
+                    
+                    // loop through the components
+                    for (var c = 0; c < components.length; c++) {
+                        var component = components[c];
+                        
+                        if (component != null && componentId == component.id) {
+                            // we have found the component we are looking for
+                            
+                            // check if the component generates work
+                            var componentHasWork = this.componentHasWork(component);
+                            
+                            if (componentHasWork) {
+                                // the component generates work
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        return result;
+    }
+    
+    /**
+     * Check if a component generates work
+     * @param component check if this component generates work
+     * @return whether the component generates work
+     */
+    componentHasWork(component) {
+        var result = false;
+        
+        if (component != null) {
+            var componentType = component.type;
+            
+            // get the component service
+            var componentService = this.getComponentService(componentType);
+            
+            if (componentService != null) {
+                // check if the component generates work
+                result = componentService.componentHasWork(component);
+            }
+        }
+        
+        return result;
+    }
+    
+    /**
+     * Get a component service
+     * @param componentType the component type
+     * @return the component service
+     */
+    getComponentService(componentType) {
+        
+        var componentService = null;
+        
+        if (componentType != null) {
+            
+            // get the component service name e.g. 'OpenResponseService'
+            var componentServiceName = componentType + 'Service';
+            
+            /*
+             * check if we have previously retrieved the component service.
+             * if have previously retrieved the component service it will
+             * be in the componentServices map
+             */
+            componentService = this.componentServices[componentServiceName];
+            
+            if (componentService == null) {
+                /*
+                 * we have not previously retrieved the component service so
+                 * we will get it now
+                 */
+                componentService = this.$injector.get(componentServiceName);
+                
+                /*
+                 * save the component service to the map so we can easily
+                 * retrieve it later
+                 */
+                this.componentServices[componentServiceName] = componentService;
+            }
+        }
+        
+        return componentService;
     }
 }
 

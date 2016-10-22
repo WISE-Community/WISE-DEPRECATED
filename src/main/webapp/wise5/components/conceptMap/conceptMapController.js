@@ -326,13 +326,52 @@ this.ProjectService.replaceComponent(this.nodeId,this.componentId,editedComponen
 this.componentContent=editedComponentContent;/*
              * notify the parent node that the content has changed which will save
              * the project to the server
-             */this.$scope.$parent.nodeAuthoringController.authoringViewNodeChanged();}catch(e){}}},{key:'authoringShowPreviousWorkNodeIdChanged',/**
+             */this.$scope.$parent.nodeAuthoringController.authoringViewNodeChanged();}catch(e){}}},{key:'authoringShowPreviousWorkClicked',/**
+     * The show previous work checkbox was clicked
+     */value:function authoringShowPreviousWorkClicked(){if(!this.authoringComponentContent.showPreviousWork){/*
+             * show previous work has been turned off so we will clear the
+             * show previous work node id, show previous work component id, and 
+             * show previous work prompt values
+             */this.authoringComponentContent.showPreviousWorkNodeId=null;this.authoringComponentContent.showPreviousWorkComponentId=null;this.authoringComponentContent.showPreviousWorkPrompt=null;// the authoring component content has changed so we will save the project
+this.authoringViewComponentChanged();}}/**
      * The show previous work node id has changed
-     */value:function authoringShowPreviousWorkNodeIdChanged(){if(this.authoringComponentContent.showPreviousWorkNodeId==null||this.authoringComponentContent.showPreviousWorkNodeId==''){/*
+     */},{key:'authoringShowPreviousWorkNodeIdChanged',value:function authoringShowPreviousWorkNodeIdChanged(){if(this.authoringComponentContent.showPreviousWorkNodeId==null||this.authoringComponentContent.showPreviousWorkNodeId==''){/*
              * the show previous work node id is null so we will also set the 
              * show previous component id to null
              */this.authoringComponentContent.showPreviousWorkComponentId='';}// the authoring component content has changed so we will save the project
 this.authoringViewComponentChanged();}/**
+     * The show previous work component id has changed
+     */},{key:'authoringShowPreviousWorkComponentIdChanged',value:function authoringShowPreviousWorkComponentIdChanged(){// get the show previous work node id
+var showPreviousWorkNodeId=this.authoringComponentContent.showPreviousWorkNodeId;// get the show previous work prompt boolean value
+var showPreviousWorkPrompt=this.authoringComponentContent.showPreviousWorkPrompt;// get the old show previous work component id
+var oldShowPreviousWorkComponentId=this.componentContent.showPreviousWorkComponentId;// get the new show previous work component id
+var newShowPreviousWorkComponentId=this.authoringComponentContent.showPreviousWorkComponentId;// get the new show previous work component
+var newShowPreviousWorkComponent=this.ProjectService.getComponentByNodeIdAndComponentId(showPreviousWorkNodeId,newShowPreviousWorkComponentId);if(newShowPreviousWorkComponent==null||newShowPreviousWorkComponent==''){// the new show previous work component is empty
+// save the component
+this.authoringViewComponentChanged();}else if(newShowPreviousWorkComponent!=null){// get the current component type
+var currentComponentType=this.componentContent.type;// get the new component type
+var newComponentType=newShowPreviousWorkComponent.type;// check if the component types are different
+if(newComponentType!=currentComponentType){/*
+                 * the component types are different so we will need to change
+                 * the whole component
+                 */// make sure the author really wants to change the component type
+var answer=confirm('Are you sure you want to change this component type?');if(answer){// the author wants to change the component type
+/*
+                     * get the component service so we can make a new instance
+                     * of the component
+                     */var componentService=this.$injector.get(newComponentType+'Service');if(componentService!=null){// create a new component
+var newComponent=componentService.createComponent();// set move over the values we need to keep
+newComponent.id=this.authoringComponentContent.id;newComponent.showPreviousWork=true;newComponent.showPreviousWorkNodeId=showPreviousWorkNodeId;newComponent.showPreviousWorkComponentId=newShowPreviousWorkComponentId;newComponent.showPreviousWorkPrompt=showPreviousWorkPrompt;/*
+                         * update the authoring component content JSON string to
+                         * change the component
+                         */this.authoringComponentContentJSONString=JSON.stringify(newComponent);// update the component in the project and save the project
+this.advancedAuthoringViewComponentChanged();}}else{/*
+                     * the author does not want to change the component type so
+                     * we will rollback the showPreviousWorkComponentId value
+                     */this.authoringComponentContent.showPreviousWorkComponentId=oldShowPreviousWorkComponentId;}}else{/*
+                 * the component types are the same so we do not need to change
+                 * the component type and can just save
+                 */this.authoringViewComponentChanged();}}}/**
      * A node up button was clicked in the authoring tool so we will move the 
      * node up
      * @param index the index of the node that we will move
@@ -1168,5 +1207,9 @@ this.autoFeedbackString=resultString;}/**
      * Show the auto feedback that was generated when the student previously
      * clicked "Check Answer".
      */},{key:'showAutoFeedback',value:function showAutoFeedback(){// show the auto feedback in a modal dialog
-this.$mdDialog.show(this.$mdDialog.alert().parent(angular.element(document.querySelector('#feedbackDiv'))).clickOutsideToClose(true).title('Feedback').htmlContent(this.autoFeedbackString).ariaLabel('Feedback').ok('Close'));}}]);return ConceptMapController;}();;ConceptMapController.$inject=['$injector','$mdDialog','$q','$rootScope','$scope','$timeout','AnnotationService','ConceptMapService','ConfigService','CRaterService','NodeService','ProjectService','StudentAssetService','StudentDataService'];exports.default=ConceptMapController;
+this.$mdDialog.show(this.$mdDialog.alert().parent(angular.element(document.querySelector('#feedbackDiv'))).clickOutsideToClose(true).title('Feedback').htmlContent(this.autoFeedbackString).ariaLabel('Feedback').ok('Close'));}/**
+     * Check if a component generates student work
+     * @param component the component
+     * @return whether the component generates student work
+     */},{key:'componentHasWork',value:function componentHasWork(component){var result=true;if(component!=null){result=this.ProjectService.componentHasWork(component);}return result;}}]);return ConceptMapController;}();;ConceptMapController.$inject=['$injector','$mdDialog','$q','$rootScope','$scope','$timeout','AnnotationService','ConceptMapService','ConfigService','CRaterService','NodeService','ProjectService','StudentAssetService','StudentDataService'];exports.default=ConceptMapController;
 //# sourceMappingURL=conceptMapController.js.map

@@ -6,7 +6,7 @@
                 {{openResponseController.nodeContent.style}}
             </style>
 
-            <div ng-if='openResponseController.mode === "authoring"'>
+            <div ng-if='openResponseController.mode === "authoring" && !openResponseController.authoringComponentContent.showPreviousWork'>
                 Prompt:
                 <br/>
                 <textarea ng-model='openResponseController.authoringComponentContent.prompt'
@@ -29,33 +29,6 @@
                        ng-change='openResponseController.authoringViewComponentChanged()'
                        ng-model-options='{ debounce: 1000 }'
                        style='width: 3em'/>
-                <br/>
-                Show Previous Work Step:
-                <select ng-model='openResponseController.authoringComponentContent.showPreviousWorkNodeId'
-                        ng-change='openResponseController.authoringShowPreviousWorkNodeIdChanged()'>
-                    <option></option>
-                    <option ng-repeat='item in openResponseController.idToOrder | toArray | orderBy : "order"'
-                            value='{{item.$key}}'
-                            ng-if='openResponseController.isApplicationNode(item.$key)'>{{openResponseController.getNodePositionAndTitleByNodeId(item.$key)}}</option>
-                </select>
-                <br/>
-                Show Previous Work Component:
-                <select ng-model='openResponseController.authoringComponentContent.showPreviousWorkComponentId'
-                        ng-change='openResponseController.authoringViewComponentChanged()'>
-                    <option></option>
-                    <option ng-repeat='component in openResponseController.getComponentsByNodeId(openResponseController.authoringComponentContent.showPreviousWorkNodeId)' value='{{component.id}}'>{{component.type}}</option>
-                </select>
-                <br/>
-                Show Previous Work Prompt:
-                <input type='checkbox'
-                       ng-model='openResponseController.authoringComponentContent.showPreviousWorkPrompt'
-                       ng-change='openResponseController.authoringViewComponentChanged()'/>
-                <br/>
-                <textarea ng-model='openResponseController.authoringComponentContentJSONString'
-                          ng-change='openResponseController.advancedAuthoringViewComponentChanged()'
-                          ng-model-options="{ updateOn: 'blur' }"
-                          rows='10'
-                          cols='100'></textarea>
                 <br/>
                 Show Save Button:
                 <input type='checkbox'
@@ -168,6 +141,43 @@
                             Add Multiple Attempt Scoring Rule
                     </button>
                 </div>
+            </div>
+            <div ng-if='openResponseController.mode === "authoring"'>
+                Show Previous Work:
+                <input type='checkbox'
+                       ng-model='openResponseController.authoringComponentContent.showPreviousWork'
+                       ng-click='openResponseController.authoringShowPreviousWorkClicked()'
+                       ng-change='openResponseController.authoringViewComponentChanged()'/>
+            </div>
+            <div ng-if='openResponseController.mode === "authoring" && openResponseController.authoringComponentContent.showPreviousWork'>
+                Show Previous Work Step:
+                <select ng-model='openResponseController.authoringComponentContent.showPreviousWorkNodeId'
+                        ng-change='openResponseController.authoringShowPreviousWorkNodeIdChanged()'>
+                    <option></option>
+                    <option ng-repeat='item in openResponseController.idToOrder | toArray | orderBy : "order"'
+                            value='{{item.$key}}'
+                            ng-if='openResponseController.isApplicationNode(item.$key)'>{{openResponseController.getNodePositionAndTitleByNodeId(item.$key)}}</option>
+                </select>
+                <br/>
+                Show Previous Work Component:
+                <select ng-model='openResponseController.authoringComponentContent.showPreviousWorkComponentId'
+                        ng-change='openResponseController.authoringShowPreviousWorkComponentIdChanged()'
+                        ng-options='component.id as component.type disable when !openResponseController.componentHasWork(component) for component in openResponseController.getComponentsByNodeId(openResponseController.authoringComponentContent.showPreviousWorkNodeId)'>
+                    <option></option>
+                </select>
+                <br/>
+                Show Previous Work Prompt:
+                <input type='checkbox'
+                       ng-model='openResponseController.authoringComponentContent.showPreviousWorkPrompt'
+                       ng-change='openResponseController.authoringViewComponentChanged()'/>
+            </div>
+            <div ng-if='openResponseController.mode === "authoring"'>
+                <br/>
+                <textarea ng-model='openResponseController.authoringComponentContentJSONString'
+                       ng-change='openResponseController.advancedAuthoringViewComponentChanged()'
+                       ng-model-options="{ updateOn: 'blur' }"
+                       rows='10'
+                       cols='100'></textarea>
             </div>
             <md-input-container class="input-container md-block input-container--open-response input-container--component md-no-float">
                 <label class="input-label md-no-float" ng-disabled="openResponseController.isDisabled"

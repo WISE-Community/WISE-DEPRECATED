@@ -1,6 +1,6 @@
 <div ng-controller='AudioOscillatorController as audioOscillatorController' style='display: flex'>
     <div style='flex: 1'>
-        <div ng-if='audioOscillatorController.mode === "authoring"'>
+        <div ng-if='audioOscillatorController.mode === "authoring" && !audioOscillatorController.authoringComponentContent.showPreviousWork'>
             <textarea ng-model='audioOscillatorController.authoringComponentContent.prompt'
                       ng-change='audioOscillatorController.authoringViewComponentChanged()'
                       ng-model-options='{ debounce: 1000 }'
@@ -54,7 +54,15 @@
                    ng-change='audioOscillatorController.authoringViewComponentChanged()'
                    ng-model-options='{ debounce: 1000 }'
                    style='width: 3em'/>
-            <br/>
+        </div>
+        <div ng-if='audioOscillatorController.mode === "authoring"'>
+            Show Previous Work:
+            <input type='checkbox'
+                   ng-model='audioOscillatorController.authoringComponentContent.showPreviousWork'
+                   ng-click='audioOscillatorController.authoringShowPreviousWorkClicked()'
+                   ng-change='audioOscillatorController.authoringViewComponentChanged()'/>
+        </div>
+        <div ng-if='audioOscillatorController.mode === "authoring" && audioOscillatorController.authoringComponentContent.showPreviousWork'>
             Show Previous Work Step:
             <select ng-model='audioOscillatorController.authoringComponentContent.showPreviousWorkNodeId'
                     ng-change='audioOscillatorController.authoringShowPreviousWorkNodeIdChanged()'>
@@ -66,16 +74,17 @@
             <br/>
             Show Previous Work Component:
             <select ng-model='audioOscillatorController.authoringComponentContent.showPreviousWorkComponentId'
-                    ng-change='audioOscillatorController.authoringViewComponentChanged()'>
+                    ng-change='audioOscillatorController.authoringShowPreviousWorkComponentIdChanged()'
+                    ng-options='component.id as component.type disable when !audioOscillatorController.componentHasWork(component) for component in audioOscillatorController.getComponentsByNodeId(audioOscillatorController.authoringComponentContent.showPreviousWorkNodeId)'>
                 <option></option>
-                <option ng-repeat='component in audioOscillatorController.getComponentsByNodeId(audioOscillatorController.authoringComponentContent.showPreviousWorkNodeId)' value='{{component.id}}'>{{component.type}}</option>
             </select>
             <br/>
             Show Previous Work Prompt:
             <input type='checkbox'
                    ng-model='audioOscillatorController.authoringComponentContent.showPreviousWorkPrompt'
                    ng-change='audioOscillatorController.authoringViewComponentChanged()'/>
-            <br/>
+        </div>
+        <div ng-if='audioOscillatorController.mode === "authoring"'>
             <textarea ng-model='audioOscillatorController.authoringComponentContentJSONString'
                       ng-change='audioOscillatorController.advancedAuthoringViewComponentChanged()'
                       ng-model-options="{ updateOn: 'blur' }"

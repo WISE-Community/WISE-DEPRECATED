@@ -6,7 +6,7 @@
                 {{conceptMapController.nodeContent.style}}
             </style>
 
-            <div ng-if='conceptMapController.mode === "authoring"'>
+            <div ng-if='conceptMapController.mode === "authoring" && !conceptMapController.authoringComponentContent.showPreviousWork'>
                 Prompt:
                 <br/>
                 <textarea ng-model='conceptMapController.authoringComponentContent.prompt'
@@ -21,27 +21,6 @@
                        ng-change='conceptMapController.authoringViewComponentChanged()'
                        ng-model-options='{ debounce: 1000 }'
                        style='width: 3em'/>
-                <br/>
-                Show Previous Work Step:
-                <select ng-model='conceptMapController.authoringComponentContent.showPreviousWorkNodeId'
-                        ng-change='conceptMapController.authoringShowPreviousWorkNodeIdChanged()'>
-                    <option></option>
-                    <option ng-repeat='item in conceptMapController.idToOrder | toArray | orderBy : "order"'
-                            value='{{item.$key}}'
-                            ng-if='conceptMapController.isApplicationNode(item.$key)'>{{conceptMapController.getNodePositionAndTitleByNodeId(item.$key)}}</option>
-                </select>
-                <br/>
-                Show Previous Work Component:
-                <select ng-model='conceptMapController.authoringComponentContent.showPreviousWorkComponentId'
-                        ng-change='conceptMapController.authoringViewComponentChanged()'>
-                    <option></option>
-                    <option ng-repeat='component in conceptMapController.getComponentsByNodeId(conceptMapController.authoringComponentContent.showPreviousWorkNodeId)' value='{{component.id}}'>{{component.type}}</option>
-                </select>
-                <br/>
-                Show Previous Work Prompt:
-                <input type='checkbox'
-                       ng-model='conceptMapController.authoringComponentContent.showPreviousWorkPrompt'
-                       ng-change='conceptMapController.authoringViewComponentChanged()'/>
                 <br/>
                 Background Image: <input ng-model='conceptMapController.authoringComponentContent.background'
                                          ng-change='conceptMapController.authoringViewComponentChanged()'
@@ -183,7 +162,37 @@
                           rows='10'
                           cols='200'
                           ng-model-options='{ debounce: 1000 }'></textarea>
+            </div>
+            <div ng-if='conceptMapController.mode === "authoring"'>
+                Show Previous Work:
+                <input type='checkbox'
+                       ng-model='conceptMapController.authoringComponentContent.showPreviousWork'
+                       ng-click='conceptMapController.authoringShowPreviousWorkClicked()'
+                       ng-change='conceptMapController.authoringViewComponentChanged()'/>
+            </div>
+            <div ng-if='conceptMapController.mode === "authoring" && conceptMapController.authoringComponentContent.showPreviousWork'>
+                Show Previous Work Step:
+                <select ng-model='conceptMapController.authoringComponentContent.showPreviousWorkNodeId'
+                        ng-change='conceptMapController.authoringShowPreviousWorkNodeIdChanged()'>
+                    <option></option>
+                    <option ng-repeat='item in conceptMapController.idToOrder | toArray | orderBy : "order"'
+                            value='{{item.$key}}'
+                            ng-if='conceptMapController.isApplicationNode(item.$key)'>{{conceptMapController.getNodePositionAndTitleByNodeId(item.$key)}}</option>
+                </select>
                 <br/>
+                Show Previous Work Component:
+                <select ng-model='conceptMapController.authoringComponentContent.showPreviousWorkComponentId'
+                        ng-change='conceptMapController.authoringShowPreviousWorkComponentIdChanged()'
+                        ng-options='component.id as component.type disable when !conceptMapController.componentHasWork(component) for component in conceptMapController.getComponentsByNodeId(conceptMapController.authoringComponentContent.showPreviousWorkNodeId)'>
+                    <option></option>
+                </select>
+                <br/>
+                Show Previous Work Prompt:
+                <input type='checkbox'
+                       ng-model='conceptMapController.authoringComponentContent.showPreviousWorkPrompt'
+                       ng-change='conceptMapController.authoringViewComponentChanged()'/>
+            </div>
+            <div ng-if='conceptMapController.mode === "authoring"'>
                 <textarea ng-model='conceptMapController.authoringComponentContentJSONString'
                           ng-change='conceptMapController.advancedAuthoringViewComponentChanged()'
                           ng-model-options="{ updateOn: 'blur' }"

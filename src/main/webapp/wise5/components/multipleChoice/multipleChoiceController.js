@@ -9,9 +9,10 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var MultipleChoiceController = function () {
-    function MultipleChoiceController($q, $scope, ConfigService, MultipleChoiceService, NodeService, ProjectService, StudentDataService, UtilService) {
+    function MultipleChoiceController($injector, $q, $scope, ConfigService, MultipleChoiceService, NodeService, ProjectService, StudentDataService, UtilService) {
         _classCallCheck(this, MultipleChoiceController);
 
+        this.$injector = $injector;
         this.$q = $q;
         this.$scope = $scope;
         this.ConfigService = ConfigService;
@@ -1561,6 +1562,161 @@ var MultipleChoiceController = function () {
              */
             this.exitListener = this.$scope.$on('exit', angular.bind(this, function (event, args) {}));
         }
+    }, {
+        key: 'authoringShowPreviousWorkClicked',
+
+
+        /**
+         * The show previous work checkbox was clicked
+         */
+        value: function authoringShowPreviousWorkClicked() {
+
+            if (!this.authoringComponentContent.showPreviousWork) {
+                /*
+                 * show previous work has been turned off so we will clear the
+                 * show previous work node id, show previous work component id, and 
+                 * show previous work prompt values
+                 */
+                this.authoringComponentContent.showPreviousWorkNodeId = null;
+                this.authoringComponentContent.showPreviousWorkComponentId = null;
+                this.authoringComponentContent.showPreviousWorkPrompt = null;
+
+                // the authoring component content has changed so we will save the project
+                this.authoringViewComponentChanged();
+            }
+        }
+
+        /**
+         * The show previous work node id has changed
+         */
+
+    }, {
+        key: 'authoringShowPreviousWorkNodeIdChanged',
+        value: function authoringShowPreviousWorkNodeIdChanged() {
+
+            if (this.authoringComponentContent.showPreviousWorkNodeId == null || this.authoringComponentContent.showPreviousWorkNodeId == '') {
+
+                /*
+                 * the show previous work node id is null so we will also set the
+                 * show previous component id to null
+                 */
+                this.authoringComponentContent.showPreviousWorkComponentId = '';
+            }
+
+            // the authoring component content has changed so we will save the project
+            this.authoringViewComponentChanged();
+        }
+
+        /**
+         * The show previous work component id has changed
+         */
+
+    }, {
+        key: 'authoringShowPreviousWorkComponentIdChanged',
+        value: function authoringShowPreviousWorkComponentIdChanged() {
+
+            // get the show previous work node id
+            var showPreviousWorkNodeId = this.authoringComponentContent.showPreviousWorkNodeId;
+
+            // get the show previous work prompt boolean value
+            var showPreviousWorkPrompt = this.authoringComponentContent.showPreviousWorkPrompt;
+
+            // get the old show previous work component id
+            var oldShowPreviousWorkComponentId = this.componentContent.showPreviousWorkComponentId;
+
+            // get the new show previous work component id
+            var newShowPreviousWorkComponentId = this.authoringComponentContent.showPreviousWorkComponentId;
+
+            // get the new show previous work component
+            var newShowPreviousWorkComponent = this.ProjectService.getComponentByNodeIdAndComponentId(showPreviousWorkNodeId, newShowPreviousWorkComponentId);
+
+            if (newShowPreviousWorkComponent == null || newShowPreviousWorkComponent == '') {
+                // the new show previous work component is empty
+
+                // save the component
+                this.authoringViewComponentChanged();
+            } else if (newShowPreviousWorkComponent != null) {
+
+                // get the current component type
+                var currentComponentType = this.componentContent.type;
+
+                // get the new component type
+                var newComponentType = newShowPreviousWorkComponent.type;
+
+                // check if the component types are different
+                if (newComponentType != currentComponentType) {
+                    /*
+                     * the component types are different so we will need to change
+                     * the whole component
+                     */
+
+                    // make sure the author really wants to change the component type
+                    var answer = confirm('Are you sure you want to change this component type?');
+
+                    if (answer) {
+                        // the author wants to change the component type
+
+                        /*
+                         * get the component service so we can make a new instance
+                         * of the component
+                         */
+                        var componentService = this.$injector.get(newComponentType + 'Service');
+
+                        if (componentService != null) {
+
+                            // create a new component
+                            var newComponent = componentService.createComponent();
+
+                            // set move over the values we need to keep
+                            newComponent.id = this.authoringComponentContent.id;
+                            newComponent.showPreviousWork = true;
+                            newComponent.showPreviousWorkNodeId = showPreviousWorkNodeId;
+                            newComponent.showPreviousWorkComponentId = newShowPreviousWorkComponentId;
+                            newComponent.showPreviousWorkPrompt = showPreviousWorkPrompt;
+
+                            /*
+                             * update the authoring component content JSON string to
+                             * change the component
+                             */
+                            this.authoringComponentContentJSONString = JSON.stringify(newComponent);
+
+                            // update the component in the project and save the project
+                            this.advancedAuthoringViewComponentChanged();
+                        }
+                    } else {
+                        /*
+                         * the author does not want to change the component type so
+                         * we will rollback the showPreviousWorkComponentId value
+                         */
+                        this.authoringComponentContent.showPreviousWorkComponentId = oldShowPreviousWorkComponentId;
+                    }
+                } else {
+                    /*
+                     * the component types are the same so we do not need to change
+                     * the component type and can just save
+                     */
+                    this.authoringViewComponentChanged();
+                }
+            }
+        }
+
+        /**
+         * Check if a component generates student work
+         * @param component the component
+         * @return whether the component generates student work
+         */
+
+    }, {
+        key: 'componentHasWork',
+        value: function componentHasWork(component) {
+            var result = true;
+
+            if (component != null) {
+                result = this.ProjectService.componentHasWork(component);
+            }
+
+            return result;
+        }
     }]);
 
     return MultipleChoiceController;
@@ -1568,7 +1724,7 @@ var MultipleChoiceController = function () {
 
 ;
 
-MultipleChoiceController.$inject = ['$q', '$scope', 'ConfigService', 'MultipleChoiceService', 'NodeService', 'ProjectService', 'StudentDataService', 'UtilService'];
+MultipleChoiceController.$inject = ['$injector', '$q', '$scope', 'ConfigService', 'MultipleChoiceService', 'NodeService', 'ProjectService', 'StudentDataService', 'UtilService'];
 
 exports.default = MultipleChoiceController;
 //# sourceMappingURL=multipleChoiceController.js.map

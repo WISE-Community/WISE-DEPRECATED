@@ -2,7 +2,8 @@ import iframeResizer from 'iframe-resizer';
 import html2canvas from 'html2canvas';
 
 class EmbeddedController {
-    constructor($q,
+    constructor($injector,
+                $q,
                 $scope,
                 $sce,
                 $window,
@@ -14,6 +15,7 @@ class EmbeddedController {
                 StudentDataService,
                 UtilService) {
 
+        this.$injector = $injector;
         this.$q = $q;
         this.$scope = $scope;
         this.$sce = $sce;
@@ -25,6 +27,7 @@ class EmbeddedController {
         this.ProjectService = ProjectService;
         this.StudentDataService = StudentDataService;
         this.UtilService = UtilService;
+        this.idToOrder = this.ProjectService.idToOrder;
 
         // the node id of the current node
         this.nodeId = null;
@@ -629,10 +632,187 @@ class EmbeddedController {
 
         }));
     };
+    
+    /**
+     * Check if a node is a step node
+     * @param nodeId the node id to check
+     * @returns whether the node is an application node
+     */
+    isApplicationNode(nodeId) {
+        var result = this.ProjectService.isApplicationNode(nodeId);
 
+        return result;
+    }
+    
+    /**
+     * Get the step number and title
+     * @param nodeId get the step number and title for this node
+     * @returns the step number and title
+     */
+    getNodePositionAndTitleByNodeId(nodeId) {
+        var nodePositionAndTitle = this.ProjectService.getNodePositionAndTitleByNodeId(nodeId);
+
+        return nodePositionAndTitle;
+    }
+
+    /**
+     * Get the components in a step
+     * @param nodeId get the components in the step
+     * @returns the components in the step
+     */
+    getComponentsByNodeId(nodeId) {
+        var components = this.ProjectService.getComponentsByNodeId(nodeId);
+
+        return components;
+    }
+    
+    /**
+     * The show previous work checkbox was clicked
+     */
+    authoringShowPreviousWorkClicked() {
+        
+        if (!this.authoringComponentContent.showPreviousWork) {
+            /*
+             * show previous work has been turned off so we will clear the
+             * show previous work node id, show previous work component id, and 
+             * show previous work prompt values
+             */
+            this.authoringComponentContent.showPreviousWorkNodeId = null;
+            this.authoringComponentContent.showPreviousWorkComponentId = null;
+            this.authoringComponentContent.showPreviousWorkPrompt = null;
+            
+            // the authoring component content has changed so we will save the project
+            this.authoringViewComponentChanged();
+        }
+    }
+    
+    /**
+     * The show previous work node id has changed
+     */
+    authoringShowPreviousWorkNodeIdChanged() {
+
+        if (this.authoringComponentContent.showPreviousWorkNodeId == null ||
+            this.authoringComponentContent.showPreviousWorkNodeId == '') {
+
+            /*
+             * the show previous work node id is null so we will also set the
+             * show previous component id to null
+             */
+            this.authoringComponentContent.showPreviousWorkComponentId = '';
+        }
+
+        // the authoring component content has changed so we will save the project
+        this.authoringViewComponentChanged();
+    }
+
+    /**
+     * The show previous work component id has changed
+     */
+    authoringShowPreviousWorkComponentIdChanged() {
+        
+        // get the show previous work node id
+        var showPreviousWorkNodeId = this.authoringComponentContent.showPreviousWorkNodeId;
+        
+        // get the show previous work prompt boolean value
+        var showPreviousWorkPrompt = this.authoringComponentContent.showPreviousWorkPrompt;
+        
+        // get the old show previous work component id
+        var oldShowPreviousWorkComponentId = this.componentContent.showPreviousWorkComponentId;
+        
+        // get the new show previous work component id
+        var newShowPreviousWorkComponentId = this.authoringComponentContent.showPreviousWorkComponentId;
+        
+        // get the new show previous work component
+        var newShowPreviousWorkComponent = this.ProjectService.getComponentByNodeIdAndComponentId(showPreviousWorkNodeId, newShowPreviousWorkComponentId);
+        
+        if (newShowPreviousWorkComponent == null || newShowPreviousWorkComponent == '') {
+            // the new show previous work component is empty
+            
+            // save the component
+            this.authoringViewComponentChanged();
+        } else if (newShowPreviousWorkComponent != null) {
+            
+            // get the current component type
+            var currentComponentType = this.componentContent.type;
+            
+            // get the new component type
+            var newComponentType = newShowPreviousWorkComponent.type;
+            
+            // check if the component types are different
+            if (newComponentType != currentComponentType) {
+                /*
+                 * the component types are different so we will need to change
+                 * the whole component
+                 */
+                
+                // make sure the author really wants to change the component type
+                var answer = confirm('Are you sure you want to change this component type?');
+                
+                if (answer) {
+                    // the author wants to change the component type
+                    
+                    /*
+                     * get the component service so we can make a new instance
+                     * of the component
+                     */
+                    var componentService = this.$injector.get(newComponentType + 'Service');
+                    
+                    if (componentService != null) {
+                        
+                        // create a new component
+                        var newComponent = componentService.createComponent();
+                        
+                        // set move over the values we need to keep
+                        newComponent.id = this.authoringComponentContent.id;
+                        newComponent.showPreviousWork = true;
+                        newComponent.showPreviousWorkNodeId = showPreviousWorkNodeId;
+                        newComponent.showPreviousWorkComponentId = newShowPreviousWorkComponentId;
+                        newComponent.showPreviousWorkPrompt = showPreviousWorkPrompt;
+                        
+                        /*
+                         * update the authoring component content JSON string to
+                         * change the component
+                         */
+                        this.authoringComponentContentJSONString = JSON.stringify(newComponent);
+                        
+                        // update the component in the project and save the project
+                        this.advancedAuthoringViewComponentChanged();
+                    }
+                } else {
+                    /*
+                     * the author does not want to change the component type so
+                     * we will rollback the showPreviousWorkComponentId value
+                     */
+                    this.authoringComponentContent.showPreviousWorkComponentId = oldShowPreviousWorkComponentId;
+                }
+            } else {
+                /*
+                 * the component types are the same so we do not need to change
+                 * the component type and can just save
+                 */
+                this.authoringViewComponentChanged();
+            }
+        }
+    }
+    
+    /**
+     * Check if a component generates student work
+     * @param component the component
+     * @return whether the component generates student work
+     */
+    componentHasWork(component) {
+        var result = true;
+        
+        if (component != null) {
+            result = this.ProjectService.componentHasWork(component);
+        }
+        
+        return result;
+    }
 }
 
 EmbeddedController.$inject = [
+    '$injector',
     '$q',
     '$scope',
     '$sce',

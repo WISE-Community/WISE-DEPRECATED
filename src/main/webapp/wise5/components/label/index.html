@@ -3,7 +3,7 @@
 </style>
 
 <div class='openResponse' ng-controller='LabelController as labelController' flex>
-    <div ng-if='labelController.mode === "authoring"'>
+    <div ng-if='labelController.mode === "authoring" && !labelController.authoringComponentContent.showPreviousWork'>
         <textarea ng-model='labelController.authoringComponentContent.prompt'
                   ng-change='labelController.authoringViewComponentChanged()'
                   ng-model-options='{ debounce: 1000 }'
@@ -72,7 +72,15 @@
                ng-change='labelController.authoringViewComponentChanged()'
                ng-model-options='{ debounce: 1000 }'
                style='width: 3em'/>
-        <br/>
+    </div>
+    <div ng-if='labelController.mode === "authoring"'>
+        Show Previous Work:
+        <input type='checkbox'
+               ng-model='labelController.authoringComponentContent.showPreviousWork'
+               ng-click='labelController.authoringShowPreviousWorkClicked()'
+               ng-change='labelController.authoringViewComponentChanged()'/>
+    </div>
+    <div ng-if='labelController.mode === "authoring" && labelController.authoringComponentContent.showPreviousWork'>
         Show Previous Work Step:
         <select ng-model='labelController.authoringComponentContent.showPreviousWorkNodeId'
                 ng-change='labelController.authoringShowPreviousWorkNodeIdChanged()'>
@@ -84,16 +92,17 @@
         <br/>
         Show Previous Work Component:
         <select ng-model='labelController.authoringComponentContent.showPreviousWorkComponentId'
-                ng-change='labelController.authoringViewComponentChanged()'>
+                ng-change='labelController.authoringShowPreviousWorkComponentIdChanged()'
+                ng-options='component.id as component.type disable when !labelController.componentHasWork(component) for component in labelController.getComponentsByNodeId(labelController.authoringComponentContent.showPreviousWorkNodeId)'>
             <option></option>
-            <option ng-repeat='component in labelController.getComponentsByNodeId(labelController.authoringComponentContent.showPreviousWorkNodeId)' value='{{component.id}}'>{{component.type}}</option>
         </select>
         <br/>
         Show Previous Work Prompt:
         <input type='checkbox'
                ng-model='labelController.authoringComponentContent.showPreviousWorkPrompt'
                ng-change='labelController.authoringViewComponentChanged()'/>
-        <br/>
+    </div>
+    <div ng-if='labelController.mode === "authoring"'>
         <textarea ng-model='labelController.authoringComponentContentJSONString'
                   ng-change='labelController.advancedAuthoringViewComponentChanged()'
                   ng-model-options="{ updateOn: 'blur' }"

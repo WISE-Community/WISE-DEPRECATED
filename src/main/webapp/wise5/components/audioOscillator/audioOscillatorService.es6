@@ -115,6 +115,16 @@ class AudioOscillatorService extends NodeService {
         return result;
     };
 
+    /**
+     * Whether this component generates student work
+     * @param component (optional) the component object. if the component object
+     * is not provided, we will use the default value of whether the 
+     * component type usually has work.
+     * @return whether this component generates student work
+     */
+    componentHasWork(component) {
+        return true;
+    }
 }
 
 AudioOscillatorService.$inject = [

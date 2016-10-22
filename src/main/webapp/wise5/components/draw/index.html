@@ -1,7 +1,7 @@
 <link rel="stylesheet" type="text/css" href="wise5/lib/drawingTool/drawing-tool.css">
 
 <div ng-controller='DrawController as drawController' flex>
-    <div ng-if='drawController.mode === "authoring"'>
+    <div ng-if='drawController.mode === "authoring" && !drawController.authoringComponentContent.showPreviousWork'>
                 <textarea ng-model='drawController.authoringComponentContent.prompt'
                           ng-change='drawController.authoringViewComponentChanged()'
                           ng-model-options='{ debounce: 1000 }'
@@ -119,33 +119,42 @@
                        ng-change='drawController.authoringViewComponentChanged()'
                        ng-model-options='{ debounce: 1000 }'
                        style='width: 3em'/>
-                <br/>
-                Show Previous Work Step:
-                <select ng-model='drawController.authoringComponentContent.showPreviousWorkNodeId'
-                        ng-change='drawController.authoringShowPreviousWorkNodeIdChanged()'>
-                    <option></option>
-                    <option ng-repeat='item in drawController.idToOrder | toArray | orderBy : "order"'
-                            value='{{item.$key}}'
-                            ng-if='drawController.isApplicationNode(item.$key)'>{{drawController.getNodePositionAndTitleByNodeId(item.$key)}}</option>
-                </select>
-                <br/>
-                Show Previous Work Component:
-                <select ng-model='drawController.authoringComponentContent.showPreviousWorkComponentId'
-                        ng-change='drawController.authoringViewComponentChanged()'>
-                    <option></option>
-                    <option ng-repeat='component in drawController.getComponentsByNodeId(drawController.authoringComponentContent.showPreviousWorkNodeId)' value='{{component.id}}'>{{component.type}}</option>
-                </select>
-                <br/>
-                Show Previous Work Prompt:
-                <input type='checkbox'
-                       ng-model='drawController.authoringComponentContent.showPreviousWorkPrompt'
-                       ng-change='drawController.authoringViewComponentChanged()'/>
-                <br/>
-                <textarea ng-model='drawController.authoringComponentContentJSONString'
-                          ng-change='drawController.advancedAuthoringViewComponentChanged()'
-                          ng-model-options="{ updateOn: 'blur' }"
-                          rows='10'
-                          cols='100'></textarea>
+    </div>
+    <div ng-if='drawController.mode === "authoring"'>
+        Show Previous Work:
+        <input type='checkbox'
+               ng-model='drawController.authoringComponentContent.showPreviousWork'
+               ng-click='drawController.authoringShowPreviousWorkClicked()'
+               ng-change='drawController.authoringViewComponentChanged()'/>
+    </div>
+    <div ng-if='drawController.mode === "authoring" && drawController.authoringComponentContent.showPreviousWork'>
+        Show Previous Work Step:
+        <select ng-model='drawController.authoringComponentContent.showPreviousWorkNodeId'
+                ng-change='drawController.authoringShowPreviousWorkNodeIdChanged()'>
+            <option></option>
+            <option ng-repeat='item in drawController.idToOrder | toArray | orderBy : "order"'
+                    value='{{item.$key}}'
+                    ng-if='drawController.isApplicationNode(item.$key)'>{{drawController.getNodePositionAndTitleByNodeId(item.$key)}}</option>
+        </select>
+        <br/>
+        Show Previous Work Component:
+        <select ng-model='drawController.authoringComponentContent.showPreviousWorkComponentId'
+                ng-change='drawController.authoringShowPreviousWorkComponentIdChanged()'
+                ng-options='component.id as component.type disable when !drawController.componentHasWork(component) for component in drawController.getComponentsByNodeId(drawController.authoringComponentContent.showPreviousWorkNodeId)'>
+            <option></option>
+        </select>
+        <br/>
+        Show Previous Work Prompt:
+        <input type='checkbox'
+               ng-model='drawController.authoringComponentContent.showPreviousWorkPrompt'
+               ng-change='drawController.authoringViewComponentChanged()'/>
+    </div>
+    <div ng-if='drawController.mode === "authoring"'>
+        <textarea ng-model='drawController.authoringComponentContentJSONString'
+                  ng-change='drawController.advancedAuthoringViewComponentChanged()'
+                  ng-model-options="{ updateOn: 'blur' }"
+                  rows='10'
+                  cols='100'></textarea>
     </div>
     <div class="component__prompt">
         <div class="component__prompt__content"><compile data='drawController.getPrompt()'></compile></div>

@@ -1,5 +1,5 @@
 <div ng-controller='MatchController as matchController' flex>
-    <div ng-if='matchController.mode === "authoring"'>
+    <div ng-if='matchController.mode === "authoring" && !matchController.authoringComponentContent.showPreviousWork'>
         <textarea ng-model='matchController.authoringComponentContent.prompt'
                   ng-change='matchController.authoringViewComponentChanged()'
                   ng-model-options='{ debounce: 1000 }'
@@ -72,7 +72,15 @@
                ng-change='matchController.authoringViewComponentChanged()'
                ng-model-options='{ debounce: 1000 }'
                style='width: 3em'/>
-        <br/>
+    </div>
+    <div ng-if='matchController.mode === "authoring"'>
+        Show Previous Work:
+        <input type='checkbox'
+               ng-model='matchController.authoringComponentContent.showPreviousWork'
+               ng-click='matchController.authoringShowPreviousWorkClicked()'
+               ng-change='matchController.authoringViewComponentChanged()'/>
+    </div>
+    <div ng-if='matchController.mode === "authoring" && matchController.authoringComponentContent.showPreviousWork'>
         Show Previous Work Step:
         <select ng-model='matchController.authoringComponentContent.showPreviousWorkNodeId'
                 ng-change='matchController.authoringShowPreviousWorkNodeIdChanged()'>
@@ -84,23 +92,23 @@
         <br/>
         Show Previous Work Component:
         <select ng-model='matchController.authoringComponentContent.showPreviousWorkComponentId'
-                ng-change='matchController.authoringViewComponentChanged()'>
+                ng-change='matchController.authoringShowPreviousWorkComponentIdChanged()'
+                ng-options='component.id as component.type disable when !matchController.componentHasWork(component) for component in matchController.getComponentsByNodeId(matchController.authoringComponentContent.showPreviousWorkNodeId)'>
             <option></option>
-            <option ng-repeat='component in matchController.getComponentsByNodeId(matchController.authoringComponentContent.showPreviousWorkNodeId)' value='{{component.id}}'>{{component.type}}</option>
         </select>
         <br/>
         Show Previous Work Prompt:
         <input type='checkbox'
                ng-model='matchController.authoringComponentContent.showPreviousWorkPrompt'
                ng-change='matchController.authoringViewComponentChanged()'/>
-        <br/>
+    </div>
+    <div ng-if='matchController.mode === "authoring"'>
         <textarea ng-model='matchController.authoringComponentContentJSONString'
                   ng-change='matchController.advancedAuthoringViewComponentChanged()'
                   ng-model-options="{ updateOn: 'blur' }"
                   rows='10'
                   cols='100'></textarea>
     </div>
-
     <div class="component__prompt">
         <div class="component__prompt__content"><compile data='matchController.getPrompt()'></compile></div>
         <possible-score max-score="matchController.componentContent.maxScore"

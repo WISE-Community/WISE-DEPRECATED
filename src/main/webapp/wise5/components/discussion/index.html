@@ -1,5 +1,5 @@
 <div ng-controller="DiscussionController as discussionController">
-    <div ng-if='discussionController.mode === "authoring"'>
+    <div ng-if='discussionController.mode === "authoring" && !discussionController.authoringComponentContent.showPreviousWork'>
             <textarea ng-model='discussionController.authoringComponentContent.prompt'
                       ng-change='discussionController.authoringViewComponentChanged()'
                       ng-model-options='{ debounce: 1000 }'
@@ -18,6 +18,42 @@
                       ng-model-options="{ updateOn: 'blur' }"
                       rows='10'
                       cols='100'></textarea>
+    </div>
+    <div ng-if='discussionController.mode === "authoring"'>
+        Show Previous Work:
+        <input type='checkbox'
+               ng-model='discussionController.authoringComponentContent.showPreviousWork'
+               ng-click='discussionController.authoringShowPreviousWorkClicked()'
+               ng-change='discussionController.authoringViewComponentChanged()'/>
+    </div>
+    <div ng-if='discussionController.mode === "authoring" && discussionController.authoringComponentContent.showPreviousWork'>
+        Show Previous Work Step:
+        <select ng-model='discussionController.authoringComponentContent.showPreviousWorkNodeId'
+                ng-change='discussionController.authoringShowPreviousWorkNodeIdChanged()'>
+            <option></option>
+            <option ng-repeat='item in discussionController.idToOrder | toArray | orderBy : "order"'
+                    value='{{item.$key}}'
+                    ng-if='discussionController.isApplicationNode(item.$key)'>{{discussionController.getNodePositionAndTitleByNodeId(item.$key)}}</option>
+        </select>
+        <br/>
+        Show Previous Work Component:
+        <select ng-model='discussionController.authoringComponentContent.showPreviousWorkComponentId'
+                ng-change='discussionController.authoringShowPreviousWorkComponentIdChanged()'
+                ng-options='component.id as component.type disable when !discussionController.componentHasWork(component) for component in discussionController.getComponentsByNodeId(discussionController.authoringComponentContent.showPreviousWorkNodeId)'>
+            <option></option>
+        </select>
+        <br/>
+        Show Previous Work Prompt:
+        <input type='checkbox'
+               ng-model='discussionController.authoringComponentContent.showPreviousWorkPrompt'
+               ng-change='discussionController.authoringViewComponentChanged()'/>
+    </div>
+    <div ng-if='discussionController.mode === "authoring"'>
+        <textarea ng-model='discussionController.authoringComponentContentJSONString'
+                  ng-change='discussionController.advancedAuthoringViewComponentChanged()'
+                  ng-model-options="{ updateOn: 'blur' }"
+                  rows='10'
+                  cols='100'></textarea>
     </div>
     <div class="component__prompt">
         <div class="component__prompt__content"><compile data='discussionController.getPrompt()'></compile></div>

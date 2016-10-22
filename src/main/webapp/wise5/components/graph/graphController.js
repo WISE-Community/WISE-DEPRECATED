@@ -3,7 +3,7 @@
 //import angularHighcharts from 'highcharts-ng';
 //import Highcharts from '../../lib/highcharts@4.2.1';
 //import draggablePoints from 'highcharts/draggable-points';
-var GraphController=function(){function GraphController($q,$rootScope,$scope,$timeout,ConfigService,GraphService,NodeService,NotebookService,ProjectService,StudentAssetService,StudentDataService,UtilService){var _this=this;_classCallCheck(this,GraphController);this.$q=$q;this.$rootScope=$rootScope;this.$scope=$scope;this.$timeout=$timeout;this.ConfigService=ConfigService;this.GraphService=GraphService;this.NodeService=NodeService;this.NotebookService=NotebookService;this.ProjectService=ProjectService;this.StudentAssetService=StudentAssetService;this.StudentDataService=StudentDataService;this.UtilService=UtilService;this.idToOrder=this.ProjectService.idToOrder;// the node id of the current node
+var GraphController=function(){function GraphController($injector,$q,$rootScope,$scope,$timeout,ConfigService,GraphService,NodeService,NotebookService,ProjectService,StudentAssetService,StudentDataService,UtilService){var _this=this;_classCallCheck(this,GraphController);this.$injector=$injector;this.$q=$q;this.$rootScope=$rootScope;this.$scope=$scope;this.$timeout=$timeout;this.ConfigService=ConfigService;this.GraphService=GraphService;this.NodeService=NodeService;this.NotebookService=NotebookService;this.ProjectService=ProjectService;this.StudentAssetService=StudentAssetService;this.StudentDataService=StudentDataService;this.UtilService=UtilService;this.idToOrder=this.ProjectService.idToOrder;// the node id of the current node
 this.nodeId=null;// the component id
 this.componentId=null;// field that will hold the component content
 this.componentContent=null;// field that will hold the authoring component content
@@ -46,7 +46,7 @@ this.chartId='chart'+this.componentId;if(this.componentContent.canCreateNewTrial
 this.isResetSeriesButtonVisible=true;this.isSelectSeriesVisible=true;// get the latest annotations
 // TODO: watch for new annotations and update accordingly
 this.latestAnnotations=this.$scope.$parent.nodeController.getLatestComponentAnnotations(this.componentId);this.backgroundImage=this.componentContent.backgroundImage;}else if(this.mode==='grading'){this.isPromptVisible=true;this.isSaveButtonVisible=false;this.isSubmitButtonVisible=false;//this.isResetGraphButtonVisible = false;
-this.isResetSeriesButtonVisible=false;this.isSelectSeriesVisible=false;this.isDisabled=true;this.isSnipDrawingButtonVisible=false;}else if(this.mode==='onlyShowWork'){this.isPromptVisible=true;this.isSaveButtonVisible=false;this.isSubmitButtonVisible=false;this.isResetGraphButtonVisible=false;this.isResetSeriesButtonVisible=false;this.isSelectSeriesVisible=false;this.isDisabled=true;this.isSnipDrawingButtonVisible=false;this.backgroundImage=this.componentContent.backgroundImage;}else if(this.mode==='showPreviousWork'){this.isPromptVisible=true;this.isSaveButtonVisible=false;this.isSubmitButtonVisible=false;this.isDisabled=true;this.backgroundImage=this.componentContent.backgroundImage;}else if(this.mode==='authoring'){this.updateAdvancedAuthoringView();$scope.$watch(function(){return this.authoringComponentContent;}.bind(this),function(newValue,oldValue){this.componentContent=this.ProjectService.injectAssetPaths(newValue);this.series=null;this.xAxis=null;this.yAxis=null;this.setupGraph();}.bind(this),true);}var componentState=null;// get the component state from the scope
+this.isResetSeriesButtonVisible=false;this.isSelectSeriesVisible=false;this.isDisabled=true;this.isSnipDrawingButtonVisible=false;}else if(this.mode==='onlyShowWork'){this.isPromptVisible=true;this.isSaveButtonVisible=false;this.isSubmitButtonVisible=false;this.isResetGraphButtonVisible=false;this.isResetSeriesButtonVisible=false;this.isSelectSeriesVisible=false;this.isDisabled=true;this.isSnipDrawingButtonVisible=false;this.backgroundImage=this.componentContent.backgroundImage;}else if(this.mode==='showPreviousWork'){this.isPromptVisible=true;this.isSaveButtonVisible=false;this.isSubmitButtonVisible=false;this.isDisabled=true;this.backgroundImage=this.componentContent.backgroundImage;}else if(this.mode==='authoring'){this.backgroundImage=this.componentContent.backgroundImage;this.updateAdvancedAuthoringView();$scope.$watch(function(){return this.authoringComponentContent;}.bind(this),function(newValue,oldValue){this.componentContent=this.ProjectService.injectAssetPaths(newValue);this.series=null;this.xAxis=null;this.yAxis=null;this.backgroundImage=this.componentContent.backgroundImage;this.setupGraph();}.bind(this),true);}var componentState=null;// get the component state from the scope
 componentState=this.$scope.componentState;// set whether studentAttachment is enabled
 this.isStudentAttachmentEnabled=this.componentContent.isStudentAttachmentEnabled;if(componentState==null){/*
                  * only import work if the student does not already have
@@ -668,13 +668,52 @@ this.componentContent=authoringComponentContent;/*
              * the project to the server
              */this.$scope.$parent.nodeAuthoringController.authoringViewNodeChanged();}catch(e){}}},{key:'updateAdvancedAuthoringView',/**
      * Update the component JSON string that will be displayed in the advanced authoring view textarea
-     */value:function updateAdvancedAuthoringView(){this.authoringComponentContentJSONString=angular.toJson(this.authoringComponentContent,4);}},{key:'authoringShowPreviousWorkNodeIdChanged',/**
+     */value:function updateAdvancedAuthoringView(){this.authoringComponentContentJSONString=angular.toJson(this.authoringComponentContent,4);}},{key:'authoringShowPreviousWorkClicked',/**
+     * The show previous work checkbox was clicked
+     */value:function authoringShowPreviousWorkClicked(){if(!this.authoringComponentContent.showPreviousWork){/*
+             * show previous work has been turned off so we will clear the
+             * show previous work node id, show previous work component id, and 
+             * show previous work prompt values
+             */this.authoringComponentContent.showPreviousWorkNodeId=null;this.authoringComponentContent.showPreviousWorkComponentId=null;this.authoringComponentContent.showPreviousWorkPrompt=null;// the authoring component content has changed so we will save the project
+this.authoringViewComponentChanged();}}/**
      * The show previous work node id has changed
-     */value:function authoringShowPreviousWorkNodeIdChanged(){if(this.authoringComponentContent.showPreviousWorkNodeId==null||this.authoringComponentContent.showPreviousWorkNodeId==''){/*
+     */},{key:'authoringShowPreviousWorkNodeIdChanged',value:function authoringShowPreviousWorkNodeIdChanged(){if(this.authoringComponentContent.showPreviousWorkNodeId==null||this.authoringComponentContent.showPreviousWorkNodeId==''){/*
              * the show previous work node id is null so we will also set the
              * show previous component id to null
              */this.authoringComponentContent.showPreviousWorkComponentId='';}// the authoring component content has changed so we will save the project
 this.authoringViewComponentChanged();}/**
+     * The show previous work component id has changed
+     */},{key:'authoringShowPreviousWorkComponentIdChanged',value:function authoringShowPreviousWorkComponentIdChanged(){// get the show previous work node id
+var showPreviousWorkNodeId=this.authoringComponentContent.showPreviousWorkNodeId;// get the show previous work prompt boolean value
+var showPreviousWorkPrompt=this.authoringComponentContent.showPreviousWorkPrompt;// get the old show previous work component id
+var oldShowPreviousWorkComponentId=this.componentContent.showPreviousWorkComponentId;// get the new show previous work component id
+var newShowPreviousWorkComponentId=this.authoringComponentContent.showPreviousWorkComponentId;// get the new show previous work component
+var newShowPreviousWorkComponent=this.ProjectService.getComponentByNodeIdAndComponentId(showPreviousWorkNodeId,newShowPreviousWorkComponentId);if(newShowPreviousWorkComponent==null||newShowPreviousWorkComponent==''){// the new show previous work component is empty
+// save the component
+this.authoringViewComponentChanged();}else if(newShowPreviousWorkComponent!=null){// get the current component type
+var currentComponentType=this.componentContent.type;// get the new component type
+var newComponentType=newShowPreviousWorkComponent.type;// check if the component types are different
+if(newComponentType!=currentComponentType){/*
+                 * the component types are different so we will need to change
+                 * the whole component
+                 */// make sure the author really wants to change the component type
+var answer=confirm('Are you sure you want to change this component type?');if(answer){// the author wants to change the component type
+/*
+                     * get the component service so we can make a new instance
+                     * of the component
+                     */var componentService=this.$injector.get(newComponentType+'Service');if(componentService!=null){// create a new component
+var newComponent=componentService.createComponent();// set move over the values we need to keep
+newComponent.id=this.authoringComponentContent.id;newComponent.showPreviousWork=true;newComponent.showPreviousWorkNodeId=showPreviousWorkNodeId;newComponent.showPreviousWorkComponentId=newShowPreviousWorkComponentId;newComponent.showPreviousWorkPrompt=showPreviousWorkPrompt;/*
+                         * update the authoring component content JSON string to
+                         * change the component
+                         */this.authoringComponentContentJSONString=JSON.stringify(newComponent);// update the component in the project and save the project
+this.advancedAuthoringViewComponentChanged();}}else{/*
+                     * the author does not want to change the component type so
+                     * we will rollback the showPreviousWorkComponentId value
+                     */this.authoringComponentContent.showPreviousWorkComponentId=oldShowPreviousWorkComponentId;}}else{/*
+                 * the component types are the same so we do not need to change
+                 * the component type and can just save
+                 */this.authoringViewComponentChanged();}}}/**
      * Get all the step node ids in the project
      * @returns all the step node ids
      */},{key:'getStepNodeIds',value:function getStepNodeIds(){var stepNodeIds=this.ProjectService.getNodeIds();return stepNodeIds;}/**
@@ -961,5 +1000,9 @@ this.activeSeries.data.push(dataPoint);}}}}}}/**
      */},{key:'setUploadedFileName',value:function setUploadedFileName(fileName){this.uploadedFileName=fileName;}/**
      * Get the uploaded file name
      * @return the uploaded file name
-     */},{key:'getUploadedFileName',value:function getUploadedFileName(){return this.uploadedFileName;}}]);return GraphController;}();GraphController.$inject=['$q','$rootScope','$scope','$timeout','ConfigService','GraphService','NodeService','NotebookService','ProjectService','StudentAssetService','StudentDataService','UtilService'];exports.default=GraphController;
+     */},{key:'getUploadedFileName',value:function getUploadedFileName(){return this.uploadedFileName;}/**
+     * Check if a component generates student work
+     * @param component the component
+     * @return whether the component generates student work
+     */},{key:'componentHasWork',value:function componentHasWork(component){var result=true;if(component!=null){result=this.ProjectService.componentHasWork(component);}return result;}}]);return GraphController;}();GraphController.$inject=['$injector','$q','$rootScope','$scope','$timeout','ConfigService','GraphService','NodeService','NotebookService','ProjectService','StudentAssetService','StudentDataService','UtilService'];exports.default=GraphController;
 //# sourceMappingURL=graphController.js.map

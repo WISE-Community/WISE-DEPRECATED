@@ -1,7 +1,7 @@
 <div ng-controller='GraphController as graphController' flex>
     <listen-for-delete-keypress>
         <div>
-            <div ng-if='graphController.mode === "authoring"'>
+            <div ng-if='graphController.mode === "authoring" && !graphController.authoringComponentContent.showPreviousWork'>
                 <textarea ng-model='graphController.authoringComponentContent.prompt'
                           ng-change='graphController.authoringViewComponentChanged()'
                           ng-model-options='{ debounce: 1000 }'
@@ -114,7 +114,15 @@
                        ng-change='graphController.authoringViewComponentChanged()'
                        ng-model-options='{ debounce: 1000 }'
                        style='width: 3em'/>
-                <br/>
+            </div>
+            <div ng-if='graphController.mode === "authoring"'>
+                Show Previous Work:
+                <input type='checkbox'
+                       ng-model='graphController.authoringComponentContent.showPreviousWork'
+                       ng-click='graphController.authoringShowPreviousWorkClicked()'
+                       ng-change='graphController.authoringViewComponentChanged()'/>
+            </div>
+            <div ng-if='graphController.mode === "authoring" && graphController.authoringComponentContent.showPreviousWork'>
                 Show Previous Work Step:
                 <select ng-model='graphController.authoringComponentContent.showPreviousWorkNodeId'
                         ng-change='graphController.authoringShowPreviousWorkNodeIdChanged()'>
@@ -126,16 +134,17 @@
                 <br/>
                 Show Previous Work Component:
                 <select ng-model='graphController.authoringComponentContent.showPreviousWorkComponentId'
-                        ng-change='graphController.authoringViewComponentChanged()'>
+                        ng-change='graphController.authoringShowPreviousWorkComponentIdChanged()'
+                        ng-options='component.id as component.type disable when !graphController.componentHasWork(component) for component in graphController.getComponentsByNodeId(graphController.authoringComponentContent.showPreviousWorkNodeId)'>
                     <option></option>
-                    <option ng-repeat='component in graphController.getComponentsByNodeId(graphController.authoringComponentContent.showPreviousWorkNodeId)' value='{{component.id}}'>{{component.type}}</option>
                 </select>
                 <br/>
                 Show Previous Work Prompt:
                 <input type='checkbox'
                        ng-model='graphController.authoringComponentContent.showPreviousWorkPrompt'
                        ng-change='graphController.authoringViewComponentChanged()'/>
-                <br/>
+            </div>
+            <div ng-if='graphController.mode === "authoring"'>
                 <textarea ng-model='graphController.authoringComponentContentJSONString'
                           ng-change='graphController.advancedAuthoringViewComponentChanged()'
                           ng-model-options="{ updateOn: 'blur' }"

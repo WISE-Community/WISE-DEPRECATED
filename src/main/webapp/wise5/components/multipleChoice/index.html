@@ -3,7 +3,7 @@
     <body>
         <div ng-controller="MultipleChoiceController as multipleChoiceController" flex>
 
-            <div ng-if='multipleChoiceController.mode === "authoring"'>
+            <div ng-if='multipleChoiceController.mode === "authoring" && !multipleChoiceController.authoringComponentContent.showPreviousWork'>
 
                 <textarea ng-model='multipleChoiceController.authoringComponentContent.prompt'
                           ng-change='multipleChoiceController.authoringViewComponentChanged()'
@@ -43,7 +43,15 @@
                        ng-change='multipleChoiceController.authoringViewComponentChanged()'
                        ng-model-options='{ debounce: 1000 }'
                        style='width: 3em'/>
-                <br/>
+            </div>
+            <div ng-if='multipleChoiceController.mode === "authoring"'>
+                Show Previous Work:
+                <input type='checkbox'
+                       ng-model='multipleChoiceController.authoringComponentContent.showPreviousWork'
+                       ng-change='multipleChoiceController.authoringViewComponentChanged()'
+                       ng-click='multipleChoiceController.authoringShowPreviousWorkClicked()'/>
+            </div>
+            <div ng-if='multipleChoiceController.mode === "authoring" && multipleChoiceController.authoringComponentContent.showPreviousWork'>
                 Show Previous Work Step:
                 <select ng-model='multipleChoiceController.authoringComponentContent.showPreviousWorkNodeId'
                         ng-change='multipleChoiceController.authoringShowPreviousWorkNodeIdChanged()'>
@@ -55,16 +63,17 @@
                 <br/>
                 Show Previous Work Component:
                 <select ng-model='multipleChoiceController.authoringComponentContent.showPreviousWorkComponentId'
-                        ng-change='multipleChoiceController.authoringViewComponentChanged()'>
+                        ng-change='multipleChoiceController.authoringShowPreviousWorkComponentIdChanged()'
+                        ng-options='component.id as component.type disable when !multipleChoiceController.componentHasWork(component) for component in multipleChoiceController.getComponentsByNodeId(multipleChoiceController.authoringComponentContent.showPreviousWorkNodeId)'>
                     <option></option>
-                    <option ng-repeat='component in multipleChoiceController.getComponentsByNodeId(multipleChoiceController.authoringComponentContent.showPreviousWorkNodeId)' value='{{component.id}}'>{{component.type}}</option>
                 </select>
                 <br/>
                 Show Previous Work Prompt:
                 <input type='checkbox'
                        ng-model='multipleChoiceController.authoringComponentContent.showPreviousWorkPrompt'
                        ng-change='multipleChoiceController.authoringViewComponentChanged()'/>
-                <br/>
+            </div>
+            <div ng-if='multipleChoiceController.mode === "authoring"'>
                 <textarea ng-model='multipleChoiceController.authoringComponentContentJSONString'
                           ng-change='multipleChoiceController.advancedAuthoringViewComponentChanged()'
                           ng-model-options="{ updateOn: 'blur' }"
