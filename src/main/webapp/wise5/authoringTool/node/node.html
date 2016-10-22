@@ -39,7 +39,7 @@ TODO: implement me. Allow authors to view assets while authoring node conent. Pe
 </div>
 
 <button ng-click='nodeAuthoringController.showEditTransitions = true'
-        ng-show='!projectController.isGroupNode(nodeAuthoringController.node.id) && !nodeAuthoringController.showCreateComponent && !nodeAuthoringController.showEditTransitions' translate="editTransitions"></button>
+        ng-show='!nodeAuthoringController.showCreateComponent && !nodeAuthoringController.showEditTransitions' translate="editTransitions"></button>
 <div ng-show='nodeAuthoringController.showEditTransitions'>
     <span>{{'transitions' | translate}}:</span>
     <div id="transitions" style="margin-left:40px; margin-bottom:10px; background-color:lightgray; width:700px" ng-repeat='(transitionIndex, transition) in nodeAuthoringController.node.transitionLogic.transitions'>

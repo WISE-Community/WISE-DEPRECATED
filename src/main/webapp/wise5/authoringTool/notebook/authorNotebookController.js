@@ -47,7 +47,9 @@ var AuthorNotebookController = function () {
     }, {
         key: 'exit',
         value: function exit() {
-            this.ProjectService.saveProject();
+            var commitMessage = "Made changes to Notebook.";
+
+            this.ProjectService.saveProject(commitMessage);
             this.$state.go('root.project', { projectId: this.projectId });
         }
     }]);

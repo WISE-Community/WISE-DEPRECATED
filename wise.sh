@@ -8,19 +8,33 @@ PWD=`pwd`
 PROPERTIES_FILE="src/main/resources/wise.properties"
 SAMPLE_PROPERTIES_FILE="src/main/resources/wise_sample_embedded_tomcat.properties"
 
-if [ \( $# -eq 0 \) -o \( $1 != "reset" -a $1 != "run" \) ]
+# check for no arguments
+if [ "$#" -ne 1 ]
+then
+        echo "Usage: ./wise.sh {reset|run}"
+        exit 0
+fi
+
+# check for valid arguments
+if [ $1 != "reset" -a $1 != "run" ]
 then
     echo "Usage: ./wise.sh {reset|run}"
     exit 0
 fi
 
-
 if [ $1 = "reset" ]
+then
+# confirm reset with user
+read -p "Are you sure? This will delete all existing users, projects, and student work. [y/n]: " -n 1 -r
+echo    # (optional) move to a new line
+if [[ $REPLY =~ ^[Yy]$ ]]
 then
   # clear out curriculum and student uploads directories and any existing properties file
   find src/main/webapp/curriculum/ ! \( -name README -o -name .gitignore \) -type d \( -path demo \) -delete
   find src/main/webapp/studentuploads/ ! \( -name README -o -name .gitignore \) -delete
   rm $PROPERTIES_FILE
+fi
+
 else
   if [ ! -f $PROPERTIES_FILE ]
   then
