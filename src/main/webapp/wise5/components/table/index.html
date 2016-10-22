@@ -84,9 +84,9 @@
             <br/>
             Show Previous Work Prompt:
             <input type='checkbox'
-                   ng-model='openResponseController.authoringComponentContent.showPreviousWorkPrompt'
+                   ng-model='tableController.authoringComponentContent.showPreviousWorkPrompt'
                    ng-model-options='{ debounce: 1000 }'
-                   ng-change='openResponseController.authoringViewComponentChanged()'/>
+                   ng-change='tableController.authoringViewComponentChanged()'/>
         </div>
         <div ng-if='tableController.mode === "authoring"'>
             <textarea ng-model='tableController.authoringComponentContentJSONString'
