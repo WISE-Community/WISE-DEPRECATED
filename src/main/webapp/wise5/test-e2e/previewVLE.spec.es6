@@ -10,7 +10,7 @@ describe('WISE5 Student VLE Preview', () => {
     browser.get('http://localhost:8080/wise/project/demo#/vle/node1');
     var previousButton = element(by.xpath('//button[@aria-label="Previous Item"]'));
     var nextButton = element(by.xpath('//button[@aria-label="Next Item"]'));
-    var closeButton = element(by.xpath('//button[@aria-label="Go to project plan"]'));
+    var closeButton = element(by.xpath('//button[@aria-label="Project Plan"]'));
     var accountButton = element(by.xpath('//button[@aria-label="Open user menu"]'));
     var accountMenu = element(by.cssContainingText('.md-open-menu-container','Preview Team'));
     var notificationButton = element(by.xpath('//button[@aria-label="View notifications"]'));
@@ -28,7 +28,7 @@ describe('WISE5 Student VLE Preview', () => {
         expect(previousButton.getText()).toBe('arrow_back');
         expect(nextButton.getText()).toBe('arrow_forward');
         expect(nextButton.getText()).toBe('arrow_forward');
-        expect(closeButton.getText()).toBe('home');
+        expect(closeButton.getText()).toBe('view_list');
         expect(accountButton.getText()).toBe('account_circle');
         expect(accountMenu.getAttribute('aria-hidden')).toEqual("true");  // Account menu should be hidden
     });
@@ -160,9 +160,9 @@ describe('WISE5 Student VLE Preview', () => {
             expect(workgroupNames[0].getText()).toBe('Preview Team');
         });
 
-        let exitButton = element(by.xpath('//button[@aria-label="Exit"]'));
+        let exitButton = element(by.xpath('//button[@aria-label="Go Home"]'));
         expect(exitButton.isPresent()).toBeTruthy();
-        expect(exitButton.getText()).toEqual("EXIT");
+        expect(exitButton.getText()).toEqual("GO HOME");
         let logOutButton = element(by.xpath('//button[@aria-label="Sign Out"]'));
         expect(logOutButton.isPresent()).toBeTruthy();
         expect(logOutButton.getText()).toEqual("SIGN OUT");
