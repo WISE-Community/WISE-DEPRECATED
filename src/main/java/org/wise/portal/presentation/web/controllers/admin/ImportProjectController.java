@@ -29,6 +29,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Enumeration;
 import java.util.Properties;
@@ -36,6 +39,8 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -59,6 +64,9 @@ import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.module.CurnitService;
 import org.wise.portal.service.project.ProjectService;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 /**
  * Admin tool for uploading a zipped WISE project.
  * Unzips to curriculum_base_dir and registers the project (ie creates project in DB).
@@ -66,7 +74,6 @@ import org.wise.portal.service.project.ProjectService;
  * @author Hiroki Terashima
  */
 @Controller
-@RequestMapping("/admin/project/import")
 public class ImportProjectController {
 
 	@Autowired
@@ -78,58 +85,114 @@ public class ImportProjectController {
 	@Autowired
 	private Properties wiseProperties;
 
-	@RequestMapping(method = RequestMethod.POST)
+	private String getWISEProjectsURL = "http://wise5.org/wiseup/getProject.php";
+
+	@RequestMapping(value = "/admin/project/importFromHub", method = RequestMethod.POST)
+	protected String importFromHub(
+			@RequestParam(value = "importableProjectId", required = true) String importableProjectId,
+			ModelMap modelMap
+	) throws Exception {
+
+		// URL to get the importableProject zip file
+		String getImportableProjectURL = getWISEProjectsURL + "?id=" + importableProjectId;
+
+		try {
+			URL url = new URL(getImportableProjectURL);
+			URLConnection conn = url.openConnection();
+			InputStream in = conn.getInputStream();
+			URL downloadFileUrl = conn.getURL();
+			String downloadFileUrlString = downloadFileUrl.toString();
+			String zipFilename = downloadFileUrlString.substring(downloadFileUrlString.lastIndexOf("/") + 1);
+
+			byte[] fileBytes = IOUtils.toByteArray(in);
+			String msg = "Upload project complete!";
+
+			Project project = importProject(zipFilename, fileBytes);
+			if (project == null) {
+				System.err.println("Error occured during project import.");
+				msg = "Error occured during project import. Check the log for more information.";
+			}
+
+			modelMap.put("msg", msg);
+			modelMap.put("newProject", project);
+			return "admin/project/import";
+		} catch (IOException e) {
+			System.err.println("Error occured during project import.");
+			e.printStackTrace();
+		}
+
+		return "admin/project/import";
+	}
+
+	@RequestMapping(value = "/admin/project/import", method = RequestMethod.POST)
 	protected String onSubmit(
             @ModelAttribute("projectZipFile") ProjectUpload projectUpload,
-            @RequestParam(value = "projectVersion", required = true) String projectVersion,
             ModelMap modelMap
 		) throws Exception {
-		// probably should do some kind of virus check. but for now, it's only
-		// accessible to admin.
+		// TODO: check zip contents for maliciousness. For now, it's only accessible to admin.
 
 		// uploaded file must be a zip file and have a .zip extension
 		MultipartFile file = projectUpload.getFile();
+		String zipFilename = file.getOriginalFilename();
+		byte[] fileBytes = file.getBytes();
+		String msg = "Upload project complete!";
+
+		Project project = importProject(zipFilename, fileBytes);
+		if (project == null) {
+			System.err.println("Error occured during project import.");
+			msg = "Error occured during project import. Check the log for more information.";
+		}
+
+		modelMap.put("msg", msg);
+		modelMap.put("newProject", project);
+		return "admin/project/import";
+	}
+
+	private Project importProject(String zipFilename,
+								  byte[] fileBytes
+								  ) throws Exception {
 
 		// upload the zipfile to curriculum_base_dir
 		String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
 
-		File uploadDir = new File(curriculumBaseDir);
-		if (!uploadDir.exists()) {
+		// make sure the curriculum_base_dir exists
+		if (!new File(curriculumBaseDir).exists()) {
 			throw new Exception("Curriculum upload directory \"" + curriculumBaseDir + "\" does not exist. Please verify the path you specified for curriculum_base_dir in wise.properties.");
 		}
 
 		// save the upload zip file in the curriculum folder.
 		String sep = "/";
 		long timeInMillis = Calendar.getInstance().getTimeInMillis();
-		String zipFilename = file.getOriginalFilename();
 		String filename = zipFilename.substring(0, zipFilename.indexOf(".zip"));
 		String newFilename = filename;
 		if (new File(curriculumBaseDir + sep + filename).exists()) {
 			// if this directory already exists, add a date time in milliseconds to the filename to make it unique
 			newFilename = filename + "-" + timeInMillis;
 		}
-		String newFileFullPath = curriculumBaseDir + sep + newFilename + ".zip"; 
-		
+		String newFileFullPath = curriculumBaseDir + sep + newFilename + ".zip";
+
 		// copy the zip file inside curriculum_base_dir temporarily
 		File uploadedFile = new File(newFileFullPath);
 		uploadedFile.createNewFile();
-		FileCopyUtils.copy(file.getBytes(),uploadedFile);
+		FileCopyUtils.copy(fileBytes,uploadedFile);
 
 		// make a new folder where the contents of the zip should go
 		String newFileFullDir = curriculumBaseDir + sep + newFilename;
 		File newFileFullDirFile = new File(newFileFullDir);
 		newFileFullDirFile.mkdir();
 
+		Integer projectVersion = 0;
+
 		// unzip the zip file
 		try {
 			ZipFile zipFile = new ZipFile(newFileFullPath);
 			Enumeration entries = zipFile.entries();
-			
+
 			int i = 0;  // index used later to check for first folder in the zip file
 
 			while (entries.hasMoreElements()) {
 				ZipEntry entry = (ZipEntry) entries.nextElement();
-				
+
 				if (entry.getName().startsWith("__MACOSX")) {
 					// if this entry starts with __MACOSX, this zip file was created by a user using mac's "compress" feature.
 					// ignore it.
@@ -144,7 +207,7 @@ public class ImportProjectController {
 						if (!entry.getName().startsWith(filename)) {
 						    throw new Exception("Zip file name \"" + entry.getName() + "\" does not match folder name \"" + filename + "\". Do not change zip filename");
 						}
-						i++;						
+						i++;
 					}
 
 					// Assume directories are stored parents first then children.
@@ -152,6 +215,12 @@ public class ImportProjectController {
 					// This is not robust, just for demonstration purposes.
 					(new File(entry.getName().replace(filename, newFileFullDir))).mkdir();
 					continue;
+				}
+
+				if ("wise4.project.json".equals(entry.getName().substring(entry.getName().lastIndexOf(sep) + 1))) {
+					projectVersion = 4;
+				} else if ("project.json".equals(entry.getName().substring(entry.getName().lastIndexOf(sep) + 1))) {
+					projectVersion = 5;
 				}
 
 				System.out.println("Extracting file: " + entry.getName() );
@@ -168,26 +237,29 @@ public class ImportProjectController {
 
 		// remove the temp zip file
 		uploadedFile.delete();
-		
+
 		// now create a project in the db
 		String path = "";
 		String name = "";
 
 		// get the project path and name from zip file
 		try {
-            if ("wise4".equals(projectVersion)) {
+            if (projectVersion == 4) {
                 path = sep +  newFilename + sep + "wise4.project.json";
                 String projectJSONFilePath = newFileFullDir + sep + "wise4.project.json";
                 String projectJSONStr = FileUtils.readFileToString(new File(projectJSONFilePath));
                 JSONObject projectJSONObj = new JSONObject(projectJSONStr);
                 name = projectJSONObj.getString("title");
-            } else if ("wise5".equals(projectVersion)) {
+            } else if (projectVersion == 5) {
                 path = sep +  newFilename + sep + "project.json";
                 String projectJSONFilePath = newFileFullDir + sep + "project.json";
                 String projectJSONStr = FileUtils.readFileToString(new File(projectJSONFilePath));
                 JSONObject projectJSONObj = new JSONObject(projectJSONStr);
                 name = projectJSONObj.getJSONObject("metadata").getString("title");
-            }
+            } else if (projectVersion == 0) {
+				System.err.println("Could not determine project version during project import.");
+				return null;
+			}
 		} catch (Exception e) {
 			// there was an error getting project title.
 			name = "Undefined";
@@ -198,30 +270,25 @@ public class ImportProjectController {
 		ModuleParameters mParams = new ModuleParameters();
 		mParams.setUrl(path);
 		Curnit curnit = curnitService.createCurnit(mParams);
-		
+
 		ProjectParameters pParams = new ProjectParameters();
 		pParams.setCurnitId(curnit.getId());
 		pParams.setOwner(signedInUser);
 		pParams.setProjectname(name);
 		pParams.setProjectType(ProjectType.LD);
+		pParams.setWiseVersion(projectVersion);
 
-        if ("wise4".equals(projectVersion)) {
-            pParams.setWiseVersion(new Integer(4));
-        } else if ("wise5".equals(projectVersion)) {
-            pParams.setWiseVersion(new Integer(5));
-        }
-
-        ProjectMetadata metadata = null;
+		ProjectMetadata metadata = null;
 
 		// see if a file called wise4.project-meta.json exists. if yes, try parsing it.
 		try {
             metadata = new ProjectMetadataImpl();
-            if ("wise4".equals(projectVersion)) {
+            if (projectVersion == 4) {
                 String projectMetadataFilePath = newFileFullDir + sep + "wise4.project-meta.json";
                 String projectMetadataStr = FileUtils.readFileToString(new File(projectMetadataFilePath));
                 JSONObject metadataJSONObj = new JSONObject(projectMetadataStr);
                 metadata.populateFromJSON(metadataJSONObj);
-            } else if ("wise5".equals(projectVersion)) {
+            } else if (projectVersion == 5) {
                 String projectFilePath = newFileFullDir + sep + "project.json";
                 String projectStr = FileUtils.readFileToString(new File(projectFilePath));
                 JSONObject projectJSONObj = new JSONObject(projectStr);
@@ -230,11 +297,13 @@ public class ImportProjectController {
             }
 		} catch (Exception e) {
 			// if there is any error during the parsing of the metadata, set the metadata to null
+			System.err.println("Error parsing metadata while import project.");
+			e.printStackTrace();
 			metadata = null;
 		}
-		
+
 		// If metadata is null at this point, either wise4.project-meta.json was not
-		// found in the zip file, or there was an error parsing. 
+		// found in the zip file, or there was an error parsing.
 		// Set a new fresh metadata object
 		if (metadata == null) {
 			metadata = new ProjectMetadataImpl();
@@ -243,16 +312,26 @@ public class ImportProjectController {
 
 		pParams.setMetadata(metadata);
 
-		Project project = projectService.createProject(pParams);
-
-		modelMap.put("msg", "Upload project complete!");
-		modelMap.put("newProject", project);
-		return "admin/project/import";
+		return projectService.createProject(pParams);
 	}
-	
-	
-    @RequestMapping(method = RequestMethod.GET)
+
+	@RequestMapping(value = "/admin/project/getImportableProjects", method = RequestMethod.GET)
+	public void getImportableProjects(HttpServletResponse response) {
+		try {
+			URL url = new URL(getWISEProjectsURL);
+			URLConnection conn = url.openConnection();
+			InputStream in = conn.getInputStream();
+			String projectsString = IOUtils.toString(in, "UTF-8");
+			response.getWriter().print(projectsString);
+			in.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+    @RequestMapping(value = "/admin/project/import", method = RequestMethod.GET)
     public void initializeForm(ModelMap modelMap) {
+
     	modelMap.put("projectZipFile", new ProjectUpload());
     }
 
