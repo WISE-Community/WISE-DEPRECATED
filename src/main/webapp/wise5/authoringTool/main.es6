@@ -1,5 +1,6 @@
 'use strict';
 
+import '../themes/default/js/webfonts';
 import $ from 'jquery';
 import angular from 'angular';
 import angularDragula from 'angular-dragula';
