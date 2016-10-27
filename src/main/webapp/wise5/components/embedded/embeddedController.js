@@ -20,6 +20,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var EmbeddedController = function () {
     function EmbeddedController($injector, $q, $scope, $sce, $window, ConfigService, NodeService, NotebookService, EmbeddedService, ProjectService, StudentDataService, UtilService) {
+        var _this = this;
+
         _classCallCheck(this, EmbeddedController);
 
         this.$injector = $injector;
@@ -93,6 +95,12 @@ var EmbeddedController = function () {
         // the id of the embedded application's iframe
         this.embeddedApplicationIFrameId = '';
 
+        // whether the save button is shown or not
+        this.isSaveButtonVisible = false;
+
+        // whether the submit button is shown or not
+        this.isSubmitButtonVisible = false;
+
         this.messageEventListener = angular.bind(this, function (messageEvent) {
             // handle messages received from iframe
             var messageEventData = messageEvent.data;
@@ -153,6 +161,17 @@ var EmbeddedController = function () {
                 this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: isDirty });
             } else if (messageEventData.messageType === "studentDataChanged") {
                 this.studentDataChanged(messageEventData.studentData);
+            } else if (messageEventData.messageType === "getStudentWork") {
+                // the embedded application is requesting the student work
+
+                // get the student work
+                var studentWork = this.getStudentWork();
+
+                var message = studentWork;
+                message.messageType = 'studentWork';
+
+                // send the student work to the embedded application
+                this.sendMessageToApplication(message);
             }
         });
 
@@ -196,6 +215,9 @@ var EmbeddedController = function () {
             this.componentType = this.componentContent.type;
 
             if (this.mode === 'student') {
+                this.isSaveButtonVisible = this.componentContent.showSaveButton;
+                this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
+
                 // get the latest annotations
                 // TODO: watch for new annotations and update accordingly
                 this.latestAnnotations = this.$scope.$parent.nodeController.getLatestComponentAnnotations(this.componentId);
@@ -210,10 +232,16 @@ var EmbeddedController = function () {
                     this.setURL(this.componentContent.url);
                 }.bind(this), true);
             } else if (this.mode === 'grading') {
+                this.isSaveButtonVisible = false;
+                this.isSubmitButtonVisible = false;
                 this.isSnipModelButtonVisible = false;
             } else if (this.mode === 'onlyShowWork') {
+                this.isSaveButtonVisible = false;
+                this.isSubmitButtonVisible = false;
                 this.isSnipModelButtonVisible = false;
             } else if (this.mode === 'showPreviousWork') {
+                this.isSaveButtonVisible = false;
+                this.isSubmitButtonVisible = false;
                 this.isSnipModelButtonVisible = false;
             }
 
@@ -249,64 +277,67 @@ var EmbeddedController = function () {
             var nodeId = args.nodeId;
 
             // make sure the node id matches our parent node
-            if (this.nodeId === nodeId) {
-                this.isSubmit = true;
+            if (_this.nodeId === nodeId) {
+                _this.isSubmit = true;
             }
-        }.bind(this));
 
-        /**
-         * Listen for saveComponentStateSuccess event from node controller, set dirty and save message accordingly
-         */
-        this.$scope.$on('saveComponentStateSuccess', angular.bind(this, function (event, args) {
+            var studentWork = _this.getStudentWork();
 
-            // get the component states that were saved
-            var componentStates = args.componentStates;
-            for (var i = 0, l = componentStates.length; i < l; i++) {
-                var currentState = componentStates[i];
-                if (currentState.componentId === this.componentId) {
+            var message = studentWork;
+            message.messageType = 'nodeSubmitClicked';
+
+            _this.sendMessageToApplication(message);
+        });
+
+        this.$scope.$on('studentWorkSavedToServer', function (event, args) {
+
+            var componentState = args.studentWork;
+
+            if (componentState != null) {
+                if (componentState.componentId === _this.componentId) {
                     // a component state for this component was saved
 
                     // set isDirty to false because the component state was just saved and notify node
-                    this.isDirty = false;
-                    this.$scope.$emit('componentDirty', { componentId: this.componentId, isDirty: false });
+                    _this.isDirty = false;
+                    _this.$scope.$emit('componentDirty', { componentId: _this.componentId, isDirty: false });
 
                     // clear out current componentState
-                    this.$scope.embeddedController.componentState = null;
+                    _this.$scope.embeddedController.componentState = null;
 
-                    var isAutoSave = currentState.isAutoSave;
-                    var isSubmit = currentState.isSubmit;
+                    var isAutoSave = componentState.isAutoSave;
+                    var isSubmit = componentState.isSubmit;
                     var serverSaveTime = componentState.serverSaveTime;
-                    var clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
+                    var clientSaveTime = _this.ConfigService.convertToClientTimestamp(serverSaveTime);
 
                     // set save message
                     if (isSubmit) {
-                        this.setSaveMessage('Submitted', clientSaveTime);
+                        _this.setSaveMessage('Submitted', clientSaveTime);
 
-                        this.submit();
+                        _this.submit();
 
                         // set isSubmitDirty to false because the component state was just submitted and notify node
-                        this.isSubmitDirty = false;
-                        this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: false });
+                        _this.isSubmitDirty = false;
+                        _this.$scope.$emit('componentSubmitDirty', { componentId: _this.componentId, isDirty: false });
                     } else if (isAutoSave) {
-                        this.setSaveMessage('Auto-saved', clientSaveTime);
+                        _this.setSaveMessage('Auto-saved', clientSaveTime);
                     } else {
-                        this.setSaveMessage('Saved', clientSaveTime);
+                        _this.setSaveMessage('Saved', clientSaveTime);
                     }
 
                     // Tell application that this componentState was successfully saved to server;
                     // include saved state and updated save message
                     var successMessage = {
                         messageType: "componentStateSaved",
-                        componentState: currentState,
-                        saveMessage: this.saveMessage
+                        componentState: componentState,
+                        saveMessage: _this.saveMessage
                     };
-                    this.sendMessageToApplication(successMessage);
+                    _this.sendMessageToApplication(successMessage);
 
                     // clear out componentState
-                    this.componentState = {};
+                    _this.componentState = {};
                 }
             }
-        }));
+        });
 
         /**
          * Get the component state from this component. The parent node will
@@ -419,7 +450,7 @@ var EmbeddedController = function () {
          * Called when the student changes their work
          */
         value: function studentDataChanged(data) {
-            var _this = this;
+            var _this2 = this;
 
             /*
              * set the dirty flags so we will know we need to save or submit the
@@ -450,7 +481,7 @@ var EmbeddedController = function () {
 
             // create a component state populated with the student data
             this.createComponentState(action).then(function (componentState) {
-                _this.$scope.$emit('componentStudentDataChanged', { componentId: componentId, componentState: componentState });
+                _this2.$scope.$emit('componentStudentDataChanged', { componentId: componentId, componentState: componentState });
             });
         }
     }, {
@@ -620,7 +651,7 @@ var EmbeddedController = function () {
          * @param $event the click event
          */
         value: function snipModel($event) {
-            var _this2 = this;
+            var _this3 = this;
 
             // get the iframe
             var iframe = $('#componentApp_' + this.componentId);
@@ -640,10 +671,10 @@ var EmbeddedController = function () {
                         var img_b64 = canvas.toDataURL('image/png');
 
                         // get the image object
-                        var imageObject = _this2.UtilService.getImageObjectFromBase64String(img_b64);
+                        var imageObject = _this3.UtilService.getImageObjectFromBase64String(img_b64);
 
                         // create a notebook item with the image populated into it
-                        _this2.NotebookService.addNewItem($event, imageObject);
+                        _this3.NotebookService.addNewItem($event, imageObject);
                     });
                 }
             }
@@ -875,6 +906,143 @@ var EmbeddedController = function () {
             }
 
             return result;
+        }
+
+        /**
+         * Check whether we need to show the save button
+         * @return whether to show the save button
+         */
+
+    }, {
+        key: 'showSaveButton',
+        value: function showSaveButton() {
+            return this.isSaveButtonVisible;
+        }
+    }, {
+        key: 'showSubmitButton',
+
+
+        /**
+         * Check whether we need to show the submit button
+         * @return whether to show the submit button
+         */
+        value: function showSubmitButton() {
+            return this.isSubmitButtonVisible;
+        }
+    }, {
+        key: 'isLockAfterSubmit',
+
+
+        /**
+         * Check whether we need to lock the component after the student
+         * submits an answer.
+         */
+        value: function isLockAfterSubmit() {
+            var result = false;
+
+            if (this.componentContent != null) {
+
+                // check the lockAfterSubmit field in the component content
+                if (this.componentContent.lockAfterSubmit) {
+                    result = true;
+                }
+            }
+
+            return result;
+        }
+
+        /**
+         * Called when the student clicks the save button
+         */
+
+    }, {
+        key: 'saveButtonClicked',
+        value: function saveButtonClicked() {
+            this.isSubmit = false;
+
+            // tell the parent node that this component wants to save
+            this.$scope.$emit('componentSaveTriggered', { nodeId: this.nodeId, componentId: this.componentId });
+        }
+    }, {
+        key: 'submitButtonClicked',
+
+
+        /**
+         * Called when the student clicks the submit button
+         */
+        value: function submitButtonClicked() {
+            this.isSubmit = true;
+
+            // tell the parent node that this component wants to submit
+            this.$scope.$emit('componentSubmitTriggered', { nodeId: this.nodeId, componentId: this.componentId });
+        }
+    }, {
+        key: 'getStudentWork',
+
+
+        /**
+         * Get the student work from the components in this node and potentially
+         * from other components
+         * @return an object containing work from the components in this node and 
+         * potentially from other components
+         */
+        value: function getStudentWork() {
+
+            var studentWork = {};
+
+            // get the latest component states from this node
+            var studentWorkFromThisNode = this.StudentDataService.getLatestComponentStatesByNodeId(this.nodeId);
+            studentWork.studentWorkFromThisNode = studentWorkFromThisNode;
+
+            /*
+             * this is an array that contains objects with a nodeId and componentId
+             * fields. this specifies what student data we need to obtain.
+             */
+            var getStudentWorkFromOtherComponents = this.componentContent.getStudentWorkFromOtherComponents;
+
+            if (getStudentWorkFromOtherComponents != null) {
+                var studentWorkFromOtherComponents = [];
+
+                // loop through all the objects
+                for (var c = 0; c < getStudentWorkFromOtherComponents.length; c++) {
+                    var otherComponent = getStudentWorkFromOtherComponents[c];
+
+                    if (otherComponent != null) {
+
+                        // get the node id and component id
+                        var tempNodeId = otherComponent.nodeId;
+                        var tempComponentId = otherComponent.componentId;
+
+                        if (tempNodeId != null) {
+
+                            if (tempComponentId != null) {
+
+                                // get the latest component state for the given component
+                                var tempComponentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(tempNodeId, tempComponentId);
+
+                                if (tempComponentState == null) {
+                                    /*
+                                     * there is no component state for the component
+                                     * so we will just add an object with a node id field
+                                     * and component id field and no other fields to show
+                                     * that there is no student data for the component.
+                                     */
+                                    tempComponentState = {};
+                                    tempComponentState.nodeId = tempNodeId;
+                                    tempComponentState.componentId = tempComponentId;
+                                }
+
+                                // add the component state to the array
+                                studentWorkFromOtherComponents.push(tempComponentState);
+                            }
+                        }
+                    }
+                }
+
+                studentWork.studentWorkFromOtherComponents = studentWorkFromOtherComponents;
+            }
+
+            return studentWork;
         }
     }]);
 

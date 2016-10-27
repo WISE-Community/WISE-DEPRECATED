@@ -2389,6 +2389,65 @@ var StudentDataService = function () {
 
             return annotations;
         }
+
+        /**
+         * Get the latest component states for a node
+         * @param nodeId get the component states for the node i
+         * @return an array containing the work for the node
+         */
+
+    }, {
+        key: 'getLatestComponentStatesByNodeId',
+        value: function getLatestComponentStatesByNodeId(nodeId) {
+
+            var latestComponentStates = [];
+
+            if (nodeId) {
+                var studentData = this.studentData;
+
+                if (studentData) {
+
+                    // get the node
+                    var node = this.ProjectService.getNodeById(nodeId);
+
+                    if (node != null) {
+
+                        // get the components in the node
+                        var components = node.components;
+
+                        if (components != null) {
+
+                            // loop through all the components
+                            for (var c = 0; c < components.length; c++) {
+                                var component = components[c];
+
+                                if (component != null) {
+                                    var componentId = component.id;
+
+                                    // get the latest component state for the component
+                                    var componentState = this.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
+
+                                    if (componentState == null) {
+                                        /*
+                                         * there is no component state for the component so we will
+                                         * create an object that just contains the node id and 
+                                         * component id
+                                         */
+                                        componentState = {};
+                                        componentState.nodeId = nodeId;
+                                        componentState.componentId = componentId;
+                                    }
+
+                                    latestComponentStates.push(componentState);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            return latestComponentStates;
+        }
     }]);
 
     return StudentDataService;

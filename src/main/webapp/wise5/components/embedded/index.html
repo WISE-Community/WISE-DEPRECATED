@@ -60,6 +60,25 @@
         <iframe ng-attr-id="{{'componentApp_' + embeddedController.componentId}}" ng-src='{{embeddedController.url}}'
                 class="embedded-content__iframe"
                 style="width: {{embeddedController.width}}; height: {{embeddedController.height}}; max-width: {{embeddedController.maxWidth}}; max-height: {{embeddedController.maxHeight}};"></iframe>
+        <div ng-if="embeddedController.showSaveButton() || embeddedController.showSubmitButton()"
+             class="component__actions" layout="row" layout-align="start center">
+            <md-button class="md-raised md-primary"
+                       ng-click="embeddedController.submitButtonClicked()"
+                       ng-disabled="embeddedController.isDisabled || !embeddedController.isSubmitDirty"
+                       ng-if="embeddedController.showSubmitButton()"
+                       aria-label="Submit"
+                       translate="submit"></md-button>
+            <md-button class="md-primary md-raised"
+                       ng-click="embeddedController.saveButtonClicked()"
+                       ng-disabled="embeddedController.isDisabled || !embeddedController.isDirty"
+                       ng-if="embeddedController.showSaveButton()"
+                       aria-label="Save"
+                       translate="save"></md-button>
+            <span ng-show="embeddedController.saveMessage.text"
+                  class="component__actions__info md-caption">
+                  {{embeddedController.saveMessage.text}} <span class="component__actions__more"><md-tooltip md-direction="top">{{ embeddedController.saveMessage.time | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip><span am-time-ago="embeddedController.saveMessage.time"></span></span>
+            </span>
+        </div>
         <component-annotations ng-if="embeddedController.mode === 'student'"
                                score-annotation='embeddedController.latestAnnotations.score'
                                comment-annotation='embeddedController.latestAnnotations.comment'
