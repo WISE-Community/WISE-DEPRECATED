@@ -4,6 +4,8 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
+require('../themes/default/js/webfonts');
+
 var _jquery = require('jquery');
 
 var _jquery2 = _interopRequireDefault(_jquery);

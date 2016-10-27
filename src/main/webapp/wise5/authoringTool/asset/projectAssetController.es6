@@ -91,7 +91,7 @@ class ProjectAssetController {
      * Show asset image in a popup dialog and give author an option to delete it.
      */
     viewAsset(assetItem) {
-        this.$translate(['close', 'delete']).then((translations) => {
+        this.$translate(['close']).then((translations) => {
             // Append dialog to document.body
             let assetFullURL = this.ProjectAssetService.getFullAssetItemURL(assetItem);
             let appropriateFileSize = this.$filter('appropriateSizeText')(assetItem.fileSize);
@@ -100,12 +100,10 @@ class ProjectAssetController {
                 .title(assetItem.fileName + " (" + appropriateFileSize + ")")
                 .htmlContent("<img src=\"" + assetFullURL + "\" />")
                 .ok(translations.close)
-                .cancel(translations.delete);
             this.$mdDialog.show(confirm).then(() => {
                 // Author wants to simply close the dialog
             }, () => {
-                // Author wants to delete this item
-                this.deleteAsset(assetItem);
+                // Author wants to simply close the dialog
             });
         });
     }

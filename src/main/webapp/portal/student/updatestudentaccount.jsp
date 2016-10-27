@@ -35,8 +35,8 @@
 				<form:form method="post" action="updatestudentaccount.html"
 					commandName="studentAccountForm" id="studentRegForm"
 					autocomplete='off'>
-	<table>
-<tr>
+						<table>
+							<tr>
 						    	<td><label for="language" id="language"><spring:message code="student.index.language" /></label></td>
 								<td>
 									<form:select path="userDetails.language" id="language">           
@@ -45,7 +45,7 @@
 							          	</c:forEach>
 						        	</form:select>
 						    </tr>
-						    </table>
+						</table>
 					<div>
 						<form:input path="newAccount" type="hidden" value="0" />
 						<input type="submit" value="<spring:message code='save' />" />

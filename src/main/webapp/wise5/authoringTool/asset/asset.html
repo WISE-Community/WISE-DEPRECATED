@@ -38,7 +38,7 @@
 <ul>
     <li ng-repeat='assetItem in projectAssetController.projectAssets.files'>
         {{assetItem.fileName}} ({{assetItem.fileSize | appropriateSizeText}})
-        <button ng-click='projectAssetController.viewAsset(assetItem)'>View</button>
-        <button ng-click='projectAssetController.deleteAsset(assetItem)'>Delete</button>
+        <md-icon ng-click='projectAssetController.viewAsset(assetItem)' class="md-16" style="cursor:pointer"> zoom_in </md-icon>
+        <md-icon ng-click='projectAssetController.deleteAsset(assetItem)' class="md-16" style="cursor:pointer"> delete </md-icon>
     </li>
 </ul>

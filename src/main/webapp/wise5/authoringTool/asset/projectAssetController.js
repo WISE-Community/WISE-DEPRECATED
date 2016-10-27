@@ -107,16 +107,15 @@ var ProjectAssetController = function () {
         value: function viewAsset(assetItem) {
             var _this3 = this;
 
-            this.$translate(['close', 'delete']).then(function (translations) {
+            this.$translate(['close']).then(function (translations) {
                 // Append dialog to document.body
                 var assetFullURL = _this3.ProjectAssetService.getFullAssetItemURL(assetItem);
                 var appropriateFileSize = _this3.$filter('appropriateSizeText')(assetItem.fileSize);
-                var confirm = _this3.$mdDialog.confirm().parent(angular.element(document.body)).title(assetItem.fileName + " (" + appropriateFileSize + ")").htmlContent("<img src=\"" + assetFullURL + "\" />").ok(translations.close).cancel(translations.delete);
+                var confirm = _this3.$mdDialog.confirm().parent(angular.element(document.body)).title(assetItem.fileName + " (" + appropriateFileSize + ")").htmlContent("<img src=\"" + assetFullURL + "\" />").ok(translations.close);
                 _this3.$mdDialog.show(confirm).then(function () {
                     // Author wants to simply close the dialog
                 }, function () {
-                    // Author wants to delete this item
-                    _this3.deleteAsset(assetItem);
+                    // Author wants to simply close the dialog
                 });
             });
         }

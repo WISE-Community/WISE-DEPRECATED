@@ -142,19 +142,16 @@
 								</select>
 								<input type="text" name="projectLookupValue" id="projectLookupValue" size="20"></input>
 								<input type="Submit" value="Go"></input>
-							</form>
-							<br />
+							</form> |
+							<a href="${contextPath}/admin/project/manageallprojects.html"><spring:message
+									code='admin.index.manageAllProjects' /></a>
 							<h5>
-								<a href="${contextPath}/admin/project/manageallprojects.html"><spring:message
-										code='admin.index.manageAllProjects' /></a>
+								<a href="${contextPath}/admin/project/currentlyAuthoredProjects.html"><spring:message
+										code='admin.index.viewCurrentAuthors' /></a>
 							</h5>
 							<h5>
 								<a href="${contextPath}/admin/project/import"><spring:message
 										code='admin.index.importProject' /></a>
-							</h5>
-							<h5>
-								<a href="${contextPath}/admin/project/currentlyAuthoredProjects.html"><spring:message
-										code='admin.index.viewCurrentAuthors' /></a>
 							</h5>
 						</div>
 					</sec:authorize>
