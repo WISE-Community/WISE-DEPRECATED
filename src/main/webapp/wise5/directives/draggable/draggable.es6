@@ -16,7 +16,7 @@ class DraggableController {
         // set the attributes into the element so we can access them later
         //this.attributes = attr;
 
-        $element.bind('mousedown', $.proxy((event) => {
+        $element.bind('mousedown', (event) => {
 
             // Prevent default dragging of selected content
             event.preventDefault();
@@ -64,7 +64,7 @@ class DraggableController {
                 this.$document.on('mousemove', $.proxy(this.mousemove, this));
                 this.$document.on('mouseup', $.proxy(this.mouseup, this));
             }
-        }, this));
+        });
     }
 
     mousemove(event) {

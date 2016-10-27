@@ -30,7 +30,7 @@ var DraggableController = function () {
         // set the attributes into the element so we can access them later
         //this.attributes = attr;
 
-        $element.bind('mousedown', $.proxy(function (event) {
+        $element.bind('mousedown', function (event) {
 
             // Prevent default dragging of selected content
             event.preventDefault();
@@ -78,7 +78,7 @@ var DraggableController = function () {
                 _this.$document.on('mousemove', $.proxy(_this.mousemove, _this));
                 _this.$document.on('mouseup', $.proxy(_this.mouseup, _this));
             }
-        }, this));
+        });
     }
 
     _createClass(DraggableController, [{

@@ -236,7 +236,7 @@
                             <svg id="svg1"
                                  width="800"
                                  height="600"
-                                 ng-style="{'background-image': 'url(' + conceptMapController.componentContent.background +')',
+                                 ng-style="{'background-image': conceptMapController.componentContent.background != null ? 'url(' + conceptMapController.componentContent.background + ')' : '',
                                  'background-size': conceptMapController.backgroundSize,
                                  'background-repeat': 'no-repeat',
                                  'border': '1px solid black',
