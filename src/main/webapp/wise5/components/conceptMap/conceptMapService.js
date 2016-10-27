@@ -1190,18 +1190,25 @@ var ConceptMapNode = function () {
             this.textGroup.add(this.textRect);
             this.textGroup.add(this.text);
 
-            // get the bounding box around the text element
-            var textBBox = this.text.node.getBBox();
-
-            /*
-             * set the width of the rectangle to be a little larger than the width
-             * of the text element
-             */
-            var width = textBBox.width;
-            this.textRect.attr('width', width + 10);
-
             // add the text group to the link group
             this.group.add(this.textGroup);
+
+            var width = 0;
+
+            try {
+                // get the width of the bounding box of the text node
+                var textBBox = this.text.node.getBBox();
+                width = textBBox.width + 10;
+            } catch (e) {
+                /*
+                 * we were unable to get the bounding box (likely because
+                 * Firefox threw an error when trying to call getBBox())
+                 * so we will calculate the width based on the label text
+                 */
+                width = this.calculateTextRectWidth(this.label);
+            }
+
+            this.textRect.attr('width', width);
 
             // set the position of the text group
             var x = this.getImageWidth() / 2;
@@ -1278,15 +1285,22 @@ var ConceptMapNode = function () {
             // set the label into the text element
             this.text.text(label);
 
-            // get the bounding box around the text element
-            var textBBox = this.text.node.getBBox();
+            var width = 0;
 
-            /*
-             * set the width of the rectangle to be a little larger than the width
-             * of the text element
-             */
-            var width = textBBox.width;
-            this.textRect.attr('width', width + 10);
+            try {
+                // get the width of the bounding box of the text node
+                var textBBox = this.text.node.getBBox();
+                width = textBBox.width + 10;
+            } catch (e) {
+                /*
+                 * we were unable to get the bounding box (likely because
+                 * Firefox threw an error when trying to call getBBox())
+                 * so we will calculate the width based on the label text
+                 */
+                width = this.calculateTextRectWidth(this.label);
+            }
+
+            this.textRect.attr('width', width);
 
             // set the position of the text group
             var x = this.getImageWidth() / 2;
@@ -2101,6 +2115,24 @@ var ConceptMapNode = function () {
 
             return linksToDestination;
         }
+
+        /**
+         * Calculate the width that the text rectangle should be set to
+         * @param labelText the label text that will be displayed in the rectangle
+         * @return the width that the text rectangle should be set to
+         */
+
+    }, {
+        key: 'calculateTextRectWidth',
+        value: function calculateTextRectWidth(labelText) {
+            var width = 0;
+
+            if (labelText != null) {
+                width = labelText.length * 6 + 10;
+            }
+
+            return width;
+        }
     }]);
 
     return ConceptMapNode;
@@ -2884,9 +2916,22 @@ var ConceptMapLink = function () {
                 this.showTextGroup();
 
                 // reset the width to adjust to the new text length
-                var textBBox = this.text.node.getBBox();
-                var width = textBBox.width;
-                this.textRect.attr('width', width + 10);
+                var width = 0;
+
+                try {
+                    // get the width of the bounding box of the text node
+                    var textBBox = this.text.node.getBBox();
+                    width = textBBox.width + 10;
+                } catch (e) {
+                    /*
+                     * we were unable to get the bounding box (likely because
+                     * Firefox threw an error when trying to call getBBox())
+                     * so we will calculate the width based on the label text
+                     */
+                    width = this.calculateTextRectWidth(this.label);
+                }
+
+                this.textRect.attr('width', width);
 
                 // recalculate the position of the svg text object
                 var totalLength = this.path.node.getTotalLength();
@@ -3228,8 +3273,10 @@ var ConceptMapLink = function () {
             this.textRect.attr('height', 20);
             this.textRect.radius(5);
 
+            var label = "";
+
             // create the text element
-            this.text = this.draw.text("");
+            this.text = this.draw.text(label);
             this.text.attr('x', 5);
             this.text.attr('y', 9);
             this.text.font({
@@ -3246,15 +3293,22 @@ var ConceptMapLink = function () {
             this.textGroup.add(this.textRect);
             this.textGroup.add(this.text);
 
-            // get the bounding box around the text element
-            var textBBox = this.text.node.getBBox();
+            var width = 0;
 
-            /*
-             * set the width of the rectangle to be a little larger than the width
-             * of the text element
-             */
-            var width = textBBox.width;
-            this.textRect.attr('width', width + 10);
+            try {
+                // get the width of the bounding box of the text node
+                var textBBox = this.text.node.getBBox();
+                width = textBBox.width + 10;
+            } catch (e) {
+                /*
+                 * we were unable to get the bounding box (likely because
+                 * Firefox threw an error when trying to call getBBox())
+                 * so we will calculate the width based on the label text
+                 */
+                width = this.calculateTextRectWidth(this.label);
+            }
+
+            this.textRect.attr('width', width);
 
             // set the location of the text to be somewhere along the line of the link
             var totalLength = this.path.node.getTotalLength();
@@ -3354,6 +3408,24 @@ var ConceptMapLink = function () {
                 // remove the link group
                 this.group.remove();
             }
+        }
+
+        /**
+         * Calculate the width that the text rectangle should be set to
+         * @param labelText the label text that will be displayed in the rectangle
+         * @return the width that the text rectangle should be set to
+         */
+
+    }, {
+        key: 'calculateTextRectWidth',
+        value: function calculateTextRectWidth(labelText) {
+            var width = 0;
+
+            if (labelText != null) {
+                width = labelText.length * 6 + 10;
+            }
+
+            return width;
         }
     }]);
 
