@@ -160,12 +160,16 @@ var OpenResponseController = function () {
 
                 // get the latest annotations
                 // TODO: watch for new annotations and update accordingly
-                this.latestAnnotations = this.$scope.$parent.nodeController.getLatestComponentAnnotations(this.componentId);
+                this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
             } else if (this.mode === 'grading') {
                 this.isPromptVisible = true;
                 this.isSaveButtonVisible = false;
                 this.isSubmitButtonVisible = false;
                 this.isDisabled = true;
+
+                // get the latest annotations
+                // TODO: watch for new annotations and update accordingly
+                this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
             } else if (this.mode === 'onlyShowWork') {
                 this.isPromptVisible = false;
                 this.isSaveButtonVisible = false;
@@ -354,7 +358,7 @@ var OpenResponseController = function () {
                     if (_this.nodeId === annotationNodeId && _this.componentId === annotationComponentId) {
 
                         // get latest score and comment annotations for this component
-                        _this.latestAnnotations = _this.$scope.$parent.nodeController.getLatestComponentAnnotations(_this.componentId);
+                        _this.latestAnnotations = _this.AnnotationService.getLatestComponentAnnotations(_this.nodeId, _this.componentId, _this.workgroupId);
                     }
                 }
             }
@@ -402,7 +406,11 @@ var OpenResponseController = function () {
                         this.attachments = attachments;
                     }
 
-                    this.processLatestSubmit();
+                    if (this.mode === 'grading') {
+                        this.processLatestSubmit(componentState);
+                    } else {
+                        this.processLatestSubmit();
+                    }
                 }
             }
         }
@@ -412,9 +420,15 @@ var OpenResponseController = function () {
 
         /**
          * Check if latest component state is a submission and set isSubmitDirty accordingly
+         * @param componentState (optional)
          */
-        value: function processLatestSubmit() {
-            var latestState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
+        value: function processLatestSubmit(componentState) {
+            var latestState = null;
+            if (componentState) {
+                latestState = componentState;
+            } else {
+                latestState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
+            }
 
             if (latestState) {
                 var serverSaveTime = latestState.serverSaveTime;
@@ -1146,7 +1160,7 @@ var OpenResponseController = function () {
             if (!this.authoringComponentContent.showPreviousWork) {
                 /*
                  * show previous work has been turned off so we will clear the
-                 * show previous work node id, show previous work component id, and 
+                 * show previous work node id, show previous work component id, and
                  * show previous work prompt values
                  */
                 this.authoringComponentContent.showPreviousWorkNodeId = null;
@@ -1802,6 +1816,17 @@ var OpenResponseController = function () {
             }
 
             return result;
+        }
+
+        /**
+         * Returns all the revisions made by this user for the specified component
+         */
+
+    }, {
+        key: 'getRevisions',
+        value: function getRevisions() {
+            // get the component states for this component
+            return this.StudentDataService.getComponentStatesByNodeIdAndComponentId(this.nodeId, this.componentId);
         }
     }]);
 

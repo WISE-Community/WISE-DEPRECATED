@@ -6,18 +6,22 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var TeacherDataService = function () {
-    function TeacherDataService($http, $rootScope, AnnotationService, ConfigService, ProjectService, StudentDataService, TeacherWebSocketService) {
+    function TeacherDataService($http, $rootScope, AnnotationService, ConfigService, NotificationService, ProjectService, TeacherWebSocketService) {
+        var _this = this;
+
         _classCallCheck(this, TeacherDataService);
 
         this.$http = $http;
         this.$rootScope = $rootScope;
         this.AnnotationService = AnnotationService;
         this.ConfigService = ConfigService;
+        this.NotificationService = NotificationService;
         this.ProjectService = ProjectService;
-        this.StudentDataService = StudentDataService;
         this.TeacherWebSocketService = TeacherWebSocketService;
 
         this.studentData = {};
@@ -28,6 +32,39 @@ var TeacherDataService = function () {
         this.periods = [];
 
         this.initializePeriods();
+
+        /**
+         * Listen for the 'annotationSavedToServer' event which is fired when
+         * we receive the response from saving an annotation to the server
+         */
+        this.$rootScope.$on('annotationSavedToServer', function (event, args) {
+
+            if (args) {
+
+                // get the annotation that was saved to the server
+                var annotation = args.annotation;
+
+                // add the annotation to the local annotations array
+                _this.studentData.annotations.push(annotation);
+
+                var toWorkgroupId = annotation.toWorkgroupId;
+                if (_this.studentData.annotationsToWorkgroupId[toWorkgroupId] == null) {
+                    _this.studentData.annotationsToWorkgroupId[toWorkgroupId] = new Array();
+                }
+                _this.studentData.annotationsToWorkgroupId[toWorkgroupId].push(annotation);
+
+                var nodeId = annotation.nodeId;
+                if (_this.studentData.annotationsByNodeId[nodeId] == null) {
+                    _this.studentData.annotationsByNodeId[nodeId] = new Array();
+                }
+                _this.studentData.annotationsByNodeId[nodeId].push(annotation);
+
+                _this.AnnotationService.setAnnotations(_this.studentData.annotations);
+
+                // broadcast the event that a new annotation has been received
+                _this.$rootScope.$broadcast('annotationReceived', _defineProperty({ annotation: annotation }, 'annotation', annotation));
+            }
+        });
     }
 
     /**
@@ -68,11 +105,11 @@ var TeacherDataService = function () {
          */
         value: function retrieveStudentDataByNodeId(nodeId) {
 
-            var periodId = null;
+            //var periodId = null;
 
-            if (this.currentPeriod != null && this.currentPeriod.periodName != 'All') {
-                periodId = this.currentPeriod.periodId;
-            }
+            //if (this.currentPeriod != null && this.currentPeriod.periodName != 'All') {
+            //periodId = this.currentPeriod.periodId;
+            //}
 
             // get the node ids and component ids in the node
             var nodeIdsAndComponentIds = this.ProjectService.getNodeIdsAndComponentIds(nodeId);
@@ -86,7 +123,8 @@ var TeacherDataService = function () {
 
             var params = {};
             params.runId = this.ConfigService.getRunId();
-            params.periodId = periodId;
+            //params.periodId = periodId;
+            params.periodId = null;
             params.workgroupId = null;
             params.components = components;
 
@@ -143,7 +181,7 @@ var TeacherDataService = function () {
          * @returns a promise
          */
         value: function retrieveStudentData(params) {
-            var _this = this;
+            var _this2 = this;
 
             var studentDataURL = this.ConfigService.getConfigParam('teacherDataURL');
 
@@ -168,85 +206,85 @@ var TeacherDataService = function () {
                 var resultData = result.data;
                 if (resultData != null) {
 
-                    if (_this.studentData == null) {
-                        _this.studentData = {};
+                    if (_this2.studentData == null) {
+                        _this2.studentData = {};
                     }
 
                     if (resultData.studentWorkList != null) {
                         var componentStates = resultData.studentWorkList;
 
                         // populate allComponentStates, componentStatesByWorkgroupId and componentStatesByNodeId arrays
-                        _this.studentData.componentStates = componentStates;
-                        _this.studentData.componentStatesByWorkgroupId = {};
-                        _this.studentData.componentStatesByNodeId = {};
-                        _this.studentData.componentStatesByComponentId = {};
+                        _this2.studentData.componentStates = componentStates;
+                        _this2.studentData.componentStatesByWorkgroupId = {};
+                        _this2.studentData.componentStatesByNodeId = {};
+                        _this2.studentData.componentStatesByComponentId = {};
 
                         for (var i = 0; i < componentStates.length; i++) {
                             var componentState = componentStates[i];
 
                             var componentStateWorkgroupId = componentState.workgroupId;
-                            if (_this.studentData.componentStatesByWorkgroupId[componentStateWorkgroupId] == null) {
-                                _this.studentData.componentStatesByWorkgroupId[componentStateWorkgroupId] = new Array();
+                            if (_this2.studentData.componentStatesByWorkgroupId[componentStateWorkgroupId] == null) {
+                                _this2.studentData.componentStatesByWorkgroupId[componentStateWorkgroupId] = new Array();
                             }
-                            _this.studentData.componentStatesByWorkgroupId[componentStateWorkgroupId].push(componentState);
+                            _this2.studentData.componentStatesByWorkgroupId[componentStateWorkgroupId].push(componentState);
 
                             var componentStateNodeId = componentState.nodeId;
-                            if (_this.studentData.componentStatesByNodeId[componentStateNodeId] == null) {
-                                _this.studentData.componentStatesByNodeId[componentStateNodeId] = new Array();
+                            if (_this2.studentData.componentStatesByNodeId[componentStateNodeId] == null) {
+                                _this2.studentData.componentStatesByNodeId[componentStateNodeId] = new Array();
                             }
-                            _this.studentData.componentStatesByNodeId[componentStateNodeId].push(componentState);
+                            _this2.studentData.componentStatesByNodeId[componentStateNodeId].push(componentState);
 
                             var componentId = componentState.componentId;
-                            if (_this.studentData.componentStatesByComponentId[componentId] == null) {
-                                _this.studentData.componentStatesByComponentId[componentId] = new Array();
+                            if (_this2.studentData.componentStatesByComponentId[componentId] == null) {
+                                _this2.studentData.componentStatesByComponentId[componentId] = new Array();
                             }
-                            _this.studentData.componentStatesByComponentId[componentId].push(componentState);
+                            _this2.studentData.componentStatesByComponentId[componentId].push(componentState);
                         }
                     }
 
                     if (resultData.events != null) {
                         // populate allEvents, eventsByWorkgroupId, and eventsByNodeId arrays
-                        _this.studentData.allEvents = resultData.events;
-                        _this.studentData.eventsByWorkgroupId = {};
-                        _this.studentData.eventsByNodeId = {};
+                        _this2.studentData.allEvents = resultData.events;
+                        _this2.studentData.eventsByWorkgroupId = {};
+                        _this2.studentData.eventsByNodeId = {};
                         for (var i = 0; i < resultData.events.length; i++) {
                             var event = resultData.events[i];
                             var eventWorkgroupId = event.workgroupId;
-                            if (_this.studentData.eventsByWorkgroupId[eventWorkgroupId] == null) {
-                                _this.studentData.eventsByWorkgroupId[eventWorkgroupId] = new Array();
+                            if (_this2.studentData.eventsByWorkgroupId[eventWorkgroupId] == null) {
+                                _this2.studentData.eventsByWorkgroupId[eventWorkgroupId] = new Array();
                             }
-                            _this.studentData.eventsByWorkgroupId[eventWorkgroupId].push(event);
+                            _this2.studentData.eventsByWorkgroupId[eventWorkgroupId].push(event);
 
                             var eventNodeId = event.nodeId;
-                            if (_this.studentData.eventsByNodeId[eventNodeId] == null) {
-                                _this.studentData.eventsByNodeId[eventNodeId] = new Array();
+                            if (_this2.studentData.eventsByNodeId[eventNodeId] == null) {
+                                _this2.studentData.eventsByNodeId[eventNodeId] = new Array();
                             }
-                            _this.studentData.eventsByNodeId[eventNodeId].push(event);
+                            _this2.studentData.eventsByNodeId[eventNodeId].push(event);
                         }
                     }
 
                     if (resultData.annotations != null) {
                         // populate annotations, annotationsByWorkgroupId, and annotationsByNodeId arrays
-                        _this.studentData.annotations = resultData.annotations;
-                        _this.studentData.annotationsToWorkgroupId = {};
-                        _this.studentData.annotationsByNodeId = {};
+                        _this2.studentData.annotations = resultData.annotations;
+                        _this2.studentData.annotationsToWorkgroupId = {};
+                        _this2.studentData.annotationsByNodeId = {};
                         for (var i = 0; i < resultData.annotations.length; i++) {
                             var annotation = resultData.annotations[i];
                             var annotationWorkgroupId = annotation.toWorkgroupId;
-                            if (_this.studentData.annotationsToWorkgroupId[annotationWorkgroupId] == null) {
-                                _this.studentData.annotationsToWorkgroupId[annotationWorkgroupId] = new Array();
+                            if (!_this2.studentData.annotationsToWorkgroupId[annotationWorkgroupId]) {
+                                _this2.studentData.annotationsToWorkgroupId[annotationWorkgroupId] = new Array();
                             }
-                            _this.studentData.annotationsToWorkgroupId[annotationWorkgroupId].push(annotation);
+                            _this2.studentData.annotationsToWorkgroupId[annotationWorkgroupId].push(annotation);
 
                             var annotationNodeId = annotation.nodeId;
-                            if (_this.studentData.annotationsByNodeId[annotationNodeId] == null) {
-                                _this.studentData.annotationsByNodeId[annotationNodeId] = new Array();
+                            if (!_this2.studentData.annotationsByNodeId[annotationNodeId]) {
+                                _this2.studentData.annotationsByNodeId[annotationNodeId] = new Array();
                             }
-                            _this.studentData.annotationsByNodeId[annotationNodeId].push(annotation);
+                            _this2.studentData.annotationsByNodeId[annotationNodeId].push(annotation);
                         }
                     }
 
-                    _this.AnnotationService.setAnnotations(_this.studentData.annotations);
+                    _this2.AnnotationService.setAnnotations(_this2.studentData.annotations);
                 }
             });
         }
@@ -258,7 +296,7 @@ var TeacherDataService = function () {
          * Retrieve the run status from the server
          */
         value: function retrieveRunStatus() {
-            var _this2 = this;
+            var _this3 = this;
 
             var runStatusURL = this.ConfigService.getConfigParam('runStatusURL');
             var runId = this.ConfigService.getConfigParam('runId');
@@ -280,7 +318,7 @@ var TeacherDataService = function () {
                     var data = result.data;
                     if (data != null) {
                         // save the run status
-                        _this2.runStatus = data;
+                        _this3.runStatus = data;
                     }
                 }
             });
@@ -347,6 +385,33 @@ var TeacherDataService = function () {
 
                         // compare the node id and component id
                         if (nodeId == componentStateNodeId && componentId == componentStateComponentId) {
+                            latestComponentState = componentState;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            return latestComponentState;
+        }
+    }, {
+        key: 'getLatestComponentStateByWorkgroupIdNodeId',
+        value: function getLatestComponentStateByWorkgroupIdNodeId(workgroupId, nodeId) {
+            var latestComponentState = null;
+
+            var componentStates = this.getComponentStatesByWorkgroupIdAndNodeId(workgroupId, nodeId);
+
+            if (componentStates != null) {
+
+                // loop through all the component states from newest to oldest
+                for (var c = componentStates.length - 1; c >= 0; c--) {
+                    var componentState = componentStates[c];
+
+                    if (componentState != null) {
+                        var componentStateNodeId = componentState.nodeId;
+
+                        // compare the node id and component id
+                        if (nodeId == componentStateNodeId) {
                             latestComponentState = componentState;
                             break;
                         }
@@ -460,10 +525,6 @@ var TeacherDataService = function () {
             var periods = this.ConfigService.getPeriods();
             var currentPeriod = null;
 
-            if (periods.length) {
-                currentPeriod = periods[0];
-            }
-
             if (periods.length > 1) {
                 // create an option for all periods
                 var allPeriodsOption = {
@@ -472,6 +533,7 @@ var TeacherDataService = function () {
                 };
 
                 periods.unshift(allPeriodsOption);
+                currentPeriod = periods[0];
             }
 
             this.periods = periods;
@@ -827,7 +889,7 @@ var TeacherDataService = function () {
     return TeacherDataService;
 }();
 
-TeacherDataService.$inject = ['$http', '$rootScope', 'AnnotationService', 'ConfigService', 'ProjectService', 'StudentDataService', 'TeacherWebSocketService'];
+TeacherDataService.$inject = ['$http', '$rootScope', 'AnnotationService', 'ConfigService', 'NotificationService', 'ProjectService', 'TeacherWebSocketService'];
 
 exports.default = TeacherDataService;
 //# sourceMappingURL=teacherDataService.js.map

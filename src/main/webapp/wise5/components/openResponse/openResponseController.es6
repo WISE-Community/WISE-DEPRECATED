@@ -92,7 +92,7 @@ class OpenResponseController {
 
         // used to hold a message dialog if we need to use one
         this.messageDialog = null;
-        
+
         // counter to keep track of the number of submits
         this.submitCounter = 0;
 
@@ -164,12 +164,16 @@ class OpenResponseController {
 
                 // get the latest annotations
                 // TODO: watch for new annotations and update accordingly
-                this.latestAnnotations = this.$scope.$parent.nodeController.getLatestComponentAnnotations(this.componentId);
+                this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
             } else if (this.mode === 'grading') {
                 this.isPromptVisible = true;
                 this.isSaveButtonVisible = false;
                 this.isSubmitButtonVisible = false;
                 this.isDisabled = true;
+
+                // get the latest annotations
+                // TODO: watch for new annotations and update accordingly
+                this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
             } else if (this.mode === 'onlyShowWork') {
                 this.isPromptVisible = false;
                 this.isSaveButtonVisible = false;
@@ -360,7 +364,7 @@ class OpenResponseController {
                         this.componentId === annotationComponentId) {
 
                         // get latest score and comment annotations for this component
-                        this.latestAnnotations = this.$scope.$parent.nodeController.getLatestComponentAnnotations(this.componentId);
+                        this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
                     }
                 }
             }
@@ -392,9 +396,9 @@ class OpenResponseController {
                     // populate the text the student previously typed
                     this.studentResponse = response;
                 }
-                
+
                 var submitCounter = studentData.submitCounter;
-                
+
                 if (submitCounter != null) {
                     // populate the submit counter
                     this.submitCounter = submitCounter;
@@ -406,16 +410,26 @@ class OpenResponseController {
                     this.attachments = attachments;
                 }
 
-                this.processLatestSubmit();
+                if (this.mode === 'grading') {
+                    this.processLatestSubmit(componentState);
+                } else {
+                    this.processLatestSubmit();
+                }
             }
         }
     };
 
     /**
      * Check if latest component state is a submission and set isSubmitDirty accordingly
+     * @param componentState (optional)
      */
-    processLatestSubmit() {
-        let latestState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
+    processLatestSubmit(componentState) {
+        let latestState = null;
+        if (componentState) {
+            latestState = componentState;
+        } else {
+            latestState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
+        }
 
         if (latestState) {
             let serverSaveTime = latestState.serverSaveTime;
@@ -528,17 +542,17 @@ class OpenResponseController {
         if (this.isSubmit) {
             // the student submitted this work
             componentState.isSubmit = this.isSubmit;
-            
+
             // increment the submit counter
             this.submitCounter++;
-            
+
             /*
              * reset the isSubmit value so that the next component state
              * doesn't maintain the same value
              */
             this.isSubmit = false;
         }
-        
+
         // set the submit counter
         studentData.submitCounter = this.submitCounter;
 
@@ -677,32 +691,32 @@ class OpenResponseController {
 
                             // get the submit counter
                             var submitCounter = this.submitCounter;
-                            
+
                             if (this.componentContent.cRater.enableMultipleAttemptScoringRules && submitCounter > 1) {
                                 /*
                                  * this step has multiple attempt scoring rules and this is
                                  * a subsequent submit
                                  */
-                                
+
                                 // get the previous score and comment annotations
                                 var latestAnnotations = this.$scope.$parent.nodeController.getLatestComponentAnnotations(this.componentId);
-                                
+
                                 var previousScore = null;
-                                
+
                                 if (latestAnnotations != null && latestAnnotations.score != null &&
                                     latestAnnotations.score.data != null) {
-                                    
+
                                     // get the previous score annotation value
                                     previousScore = latestAnnotations.score.data.value;
                                 }
-                                
+
                                 // get the feedback based upon the previous score and current score
                                 autoComment = this.CRaterService.getMultipleAttemptCRaterFeedbackTextByScore(this.componentContent, previousScore, score);
                             } else {
                                 // get the feedback text
                                 autoComment = this.CRaterService.getCRaterFeedbackTextByScore(this.componentContent, score);
                             }
-                            
+
                             if (autoComment != null) {
                                 // create the auto comment annotation
                                 var autoCommentAnnotationData = {};
@@ -1071,22 +1085,22 @@ class OpenResponseController {
      * The show previous work checkbox was clicked
      */
     authoringShowPreviousWorkClicked() {
-        
+
         if (!this.authoringComponentContent.showPreviousWork) {
             /*
              * show previous work has been turned off so we will clear the
-             * show previous work node id, show previous work component id, and 
+             * show previous work node id, show previous work component id, and
              * show previous work prompt values
              */
             this.authoringComponentContent.showPreviousWorkNodeId = null;
             this.authoringComponentContent.showPreviousWorkComponentId = null;
             this.authoringComponentContent.showPreviousWorkPrompt = null;
-            
+
             // the authoring component content has changed so we will save the project
             this.authoringViewComponentChanged();
         }
     }
-    
+
     /**
      * The show previous work node id has changed
      */
@@ -1110,72 +1124,72 @@ class OpenResponseController {
      * The show previous work component id has changed
      */
     authoringShowPreviousWorkComponentIdChanged() {
-        
+
         // get the show previous work node id
         var showPreviousWorkNodeId = this.authoringComponentContent.showPreviousWorkNodeId;
-        
+
         // get the show previous work prompt boolean value
         var showPreviousWorkPrompt = this.authoringComponentContent.showPreviousWorkPrompt;
-        
+
         // get the old show previous work component id
         var oldShowPreviousWorkComponentId = this.componentContent.showPreviousWorkComponentId;
-        
+
         // get the new show previous work component id
         var newShowPreviousWorkComponentId = this.authoringComponentContent.showPreviousWorkComponentId;
-        
+
         // get the new show previous work component
         var newShowPreviousWorkComponent = this.ProjectService.getComponentByNodeIdAndComponentId(showPreviousWorkNodeId, newShowPreviousWorkComponentId);
-        
+
         if (newShowPreviousWorkComponent == null || newShowPreviousWorkComponent == '') {
             // the new show previous work component is empty
-            
+
             // save the component
             this.authoringViewComponentChanged();
         } else if (newShowPreviousWorkComponent != null) {
-            
+
             // get the current component type
             var currentComponentType = this.componentContent.type;
-            
+
             // get the new component type
             var newComponentType = newShowPreviousWorkComponent.type;
-            
+
             // check if the component types are different
             if (newComponentType != currentComponentType) {
                 /*
                  * the component types are different so we will need to change
                  * the whole component
                  */
-                
+
                 // make sure the author really wants to change the component type
                 var answer = confirm('Are you sure you want to change this component type?');
-                
+
                 if (answer) {
                     // the author wants to change the component type
-                    
+
                     /*
                      * get the component service so we can make a new instance
                      * of the component
                      */
                     var componentService = this.$injector.get(newComponentType + 'Service');
-                    
+
                     if (componentService != null) {
-                        
+
                         // create a new component
                         var newComponent = componentService.createComponent();
-                        
+
                         // set move over the values we need to keep
                         newComponent.id = this.authoringComponentContent.id;
                         newComponent.showPreviousWork = true;
                         newComponent.showPreviousWorkNodeId = showPreviousWorkNodeId;
                         newComponent.showPreviousWorkComponentId = newShowPreviousWorkComponentId;
                         newComponent.showPreviousWorkPrompt = showPreviousWorkPrompt;
-                        
+
                         /*
                          * update the authoring component content JSON string to
                          * change the component
                          */
                         this.authoringComponentContentJSONString = JSON.stringify(newComponent);
-                        
+
                         // update the component in the project and save the project
                         this.advancedAuthoringViewComponentChanged();
                     }
@@ -1340,23 +1354,23 @@ class OpenResponseController {
 
         });
     };
-    
+
     /**
      * Add a scoring rule
      */
     authoringAddScoringRule() {
-        
-        if (this.authoringComponentContent.cRater != null && 
+
+        if (this.authoringComponentContent.cRater != null &&
             this.authoringComponentContent.cRater.scoringRules != null) {
-            
+
             // create a scoring rule object
             var newScoringRule = {};
             newScoringRule.score = "";
             newScoringRule.feedbackText = "";
-            
+
             // add the new scoring rule object
             this.authoringComponentContent.cRater.scoringRules.push(newScoringRule);
-            
+
             /*
              * the author has made changes so we will save the component
              * content
@@ -1364,29 +1378,29 @@ class OpenResponseController {
             this.authoringViewComponentChanged();
         }
     }
-    
+
     /**
      * Move a scoring rule up
      * @param index the index of the scoring rule
      */
     authoringViewScoringRuleUpClicked(index) {
-        
-        if (this.authoringComponentContent.cRater != null && 
+
+        if (this.authoringComponentContent.cRater != null &&
             this.authoringComponentContent.cRater.scoringRules != null) {
-            
+
             // make sure the scoring rule is not already at the top
             if (index != 0) {
                 // the scoring rule is not at the top so we can move it up
-                
+
                 // get the scoring rule
                 var scoringRule = this.authoringComponentContent.cRater.scoringRules[index];
-                
+
                 // remove the scoring rule
                 this.authoringComponentContent.cRater.scoringRules.splice(index, 1);
-                
+
                 // add the scoring rule back at the position one index back
                 this.authoringComponentContent.cRater.scoringRules.splice(index - 1, 0, scoringRule);
-                
+
                 /*
                  * the author has made changes so we will save the component
                  * content
@@ -1395,28 +1409,28 @@ class OpenResponseController {
             }
         }
     }
-    
+
     /**
      * Move a scoring rule down
      * @param index the index of the scoring rule
      */
     authoringViewScoringRuleDownClicked(index) {
-        
-        if (this.authoringComponentContent.cRater != null && 
+
+        if (this.authoringComponentContent.cRater != null &&
             this.authoringComponentContent.cRater.scoringRules != null) {
-            
+
             // make sure the scoring rule is not already at the end
             if (index != this.authoringComponentContent.cRater.scoringRules.length - 1) {
-                
+
                 // get the scoring rule
                 var scoringRule = this.authoringComponentContent.cRater.scoringRules[index];
-                
+
                 // remove the scoring rule
                 this.authoringComponentContent.cRater.scoringRules.splice(index, 1);
-                
+
                 // add the scoring rule back at the position one index forward
                 this.authoringComponentContent.cRater.scoringRules.splice(index + 1, 0, scoringRule);
-                
+
                 /*
                  * the author has made changes so we will save the component
                  * content
@@ -1425,32 +1439,32 @@ class OpenResponseController {
             }
         }
     }
-    
+
     /**
      * Delete a scoring rule
      * @param index the index of the scoring rule
      */
     authoringViewScoringRuleDeleteClicked(index) {
-        
-        if (this.authoringComponentContent.cRater != null && 
+
+        if (this.authoringComponentContent.cRater != null &&
             this.authoringComponentContent.cRater.scoringRules != null) {
-            
+
             // get the scoring rule
             var scoringRule = this.authoringComponentContent.cRater.scoringRules[index];
-            
+
             if (scoringRule != null) {
-                
+
                 // get the score and feedback text
                 var score = scoringRule.score;
                 var feedbackText = scoringRule.feedbackText;
-                
+
                 // make sure the author really wants to delete the scoring rule
                 var answer = confirm('Are you sure you want to delete this scoring rule?\n\nScore: ' + score + '\n\n' + 'Feedback Text: ' + feedbackText);
-                
+
                 if (answer) {
                     // the author answered yes to delete the scoring rule
                     this.authoringComponentContent.cRater.scoringRules.splice(index, 1);
-                    
+
                     /*
                      * the author has made changes so we will save the component
                      * content
@@ -1460,23 +1474,23 @@ class OpenResponseController {
             }
         }
     }
-    
+
     /**
      * Add a multiple attempt scoring rule
      */
     authoringAddMultipleAttemptScoringRule() {
-        
-        if (this.authoringComponentContent.cRater != null && 
+
+        if (this.authoringComponentContent.cRater != null &&
             this.authoringComponentContent.cRater.multipleAttemptScoringRules != null) {
-            
+
             // create a new multiple attempt scoring rule
             var newMultipleAttemptScoringRule = {};
             newMultipleAttemptScoringRule.scoreSequence = ["", ""];
             newMultipleAttemptScoringRule.feedbackText = "";
-            
+
             // add the new multiple attempt scoring rule
             this.authoringComponentContent.cRater.multipleAttemptScoringRules.push(newMultipleAttemptScoringRule);
-            
+
             /*
              * the author has made changes so we will save the component
              * content
@@ -1490,23 +1504,23 @@ class OpenResponseController {
      * @param index
      */
     authoringViewMultipleAttemptScoringRuleUpClicked(index) {
-        
-        if (this.authoringComponentContent.cRater != null && 
+
+        if (this.authoringComponentContent.cRater != null &&
             this.authoringComponentContent.cRater.multipleAttemptScoringRules != null) {
-            
+
             // make sure the multiple attempt scoring rule is not already at the top
             if (index != 0) {
                 // the multiple attempt scoring rule is not at the top
-                
+
                 // get the multiple attempt scoring rule
                 var multipleAttemptScoringRule = this.authoringComponentContent.cRater.multipleAttemptScoringRules[index];
-                
+
                 // remove the multiple attempt scoring rule
                 this.authoringComponentContent.cRater.multipleAttemptScoringRules.splice(index, 1);
-                
+
                 // add the multiple attempt scoring rule back at the position one index back
                 this.authoringComponentContent.cRater.multipleAttemptScoringRules.splice(index - 1, 0, multipleAttemptScoringRule);
-                
+
                 /*
                  * the author has made changes so we will save the component
                  * content
@@ -1521,23 +1535,23 @@ class OpenResponseController {
      * @param index the index of the multiple attempt scoring rule
      */
     authoringViewMultipleAttemptScoringRuleDownClicked(index) {
-        
-        if (this.authoringComponentContent.cRater != null && 
+
+        if (this.authoringComponentContent.cRater != null &&
             this.authoringComponentContent.cRater.multipleAttemptScoringRules != null) {
-            
+
             // make sure the multiple attempt scoring rule is not at the end
             if (index != this.authoringComponentContent.cRater.multipleAttemptScoringRules.length - 1) {
                 // the multiple attempt scoring rule is not at the end
-                
+
                 // get the multiple attempt scoring rule
                 var multipleAttemptScoringRule = this.authoringComponentContent.cRater.multipleAttemptScoringRules[index];
-                
+
                 // remove the multiple attempt scoring rule
                 this.authoringComponentContent.cRater.multipleAttemptScoringRules.splice(index, 1);
-                
+
                 // add the multiple attempt scoring rule back at the position one index forward
                 this.authoringComponentContent.cRater.multipleAttemptScoringRules.splice(index + 1, 0, multipleAttemptScoringRule);
-                
+
                 /*
                  * the author has made changes so we will save the component
                  * content
@@ -1552,35 +1566,35 @@ class OpenResponseController {
      * @param index the index of the mulitple attempt scoring rule
      */
     authoringViewMultipleAttemptScoringRuleDeleteClicked(index) {
-        
-        if (this.authoringComponentContent.cRater != null && 
+
+        if (this.authoringComponentContent.cRater != null &&
             this.authoringComponentContent.cRater.multipleAttemptScoringRules != null) {
-            
+
             // get the multiple attempt scoring rule
             var multipleAttemptScoringRule = this.authoringComponentContent.cRater.multipleAttemptScoringRules[index];
-            
+
             if (multipleAttemptScoringRule != null) {
-                
+
                 // get the score sequence
                 var scoreSequence = multipleAttemptScoringRule.scoreSequence;
                 var previousScore = "";
                 var currentScore = "";
-                
+
                 if (scoreSequence != null) {
                     previousScore = scoreSequence[0];
                     currentScore = scoreSequence[1];
                 }
-                
+
                 // get the feedback text
                 var feedbackText = multipleAttemptScoringRule.feedbackText;
-                
+
                 // make sure the author really wants to delete the multiple attempt scoring rul
                 var answer = confirm('Are you sure you want to delete this scoring rule?\n\nPrevious Score: ' + previousScore + '\n\nCurrent Score: ' + currentScore + '\n\nFeedback Text: ' + feedbackText);
-                
+
                 if (answer) {
                     // the author answered yes to delete the multiple attempt scoring rule
                     this.authoringComponentContent.cRater.multipleAttemptScoringRules.splice(index, 1);
-                    
+
                     /*
                      * the author has made changes so we will save the component
                      * content
@@ -1590,21 +1604,21 @@ class OpenResponseController {
             }
         }
     }
-    
+
     /**
      * The "Enable CRater" checkbox was clicked
      */
     authoringViewEnableCRaterClicked() {
-        
+
         if (this.authoringComponentContent.enableCRater) {
             // CRater was turned on
-            
+
             if (this.authoringComponentContent.cRater == null) {
                 /*
                  * the cRater object does not exist in the component content
                  * so we will create it
                  */
-                
+
                 // create the cRater object
                 var cRater = {};
                 cRater.itemType = "CRATER";
@@ -1615,30 +1629,30 @@ class OpenResponseController {
                 cRater.scoringRules = [];
                 cRater.enableMultipleAttemptScoringRules = false;
                 cRater.multipleAttemptScoringRules = []
-                
+
                 // set the cRater object into the component content
                 this.authoringComponentContent.cRater = cRater;
             }
-            
+
             // turn on the submit button
             this.authoringComponentContent.showSubmitButton = true;
         }
-        
+
         /*
          * the author has made changes so we will save the component
          * content
          */
         this.authoringViewComponentChanged();
     }
-    
+
     /**
      * The "Enable Multiple Attempt Feedback" checkbox was clicked
      */
     enableMultipleAttemptScoringRulesClicked() {
-        
+
         // get the cRater object from the component content
         var cRater = this.authoringComponentContent.cRater;
-        
+
         if (cRater != null && cRater.multipleAttemptScoringRules == null) {
             /*
              * the multiple attempt scoring rules array does not exist so
@@ -1646,14 +1660,14 @@ class OpenResponseController {
              */
             cRater.multipleAttemptScoringRules = [];
         }
-        
+
         /*
          * the author has made changes so we will save the component
          * content
          */
         this.authoringViewComponentChanged();
     }
-    
+
     /**
      * Check if a component generates student work
      * @param component the component
@@ -1661,13 +1675,21 @@ class OpenResponseController {
      */
     componentHasWork(component) {
         var result = true;
-        
+
         if (component != null) {
             result = this.ProjectService.componentHasWork(component);
         }
-        
+
         return result;
     }
+
+    /**
+     * Returns all the revisions made by this user for the specified component
+     */
+    getRevisions() {
+        // get the component states for this component
+        return this.StudentDataService.getComponentStatesByNodeIdAndComponentId(this.nodeId, this.componentId);
+    };
 };
 
 OpenResponseController.$inject = [

@@ -4,7 +4,6 @@ class NodeProgressController {
 
     constructor($scope,
                 $state,
-                $translate,
                 ProjectService,
                 StudentStatusService,
                 TeacherDataService,
@@ -12,7 +11,6 @@ class NodeProgressController {
 
         this.$scope = $scope;
         this.$state = $state;
-        this.$translate = $translate;
         this.ProjectService = ProjectService;
         this.StudentStatusService = StudentStatusService;
         this.TeacherDataService = TeacherDataService;
@@ -178,7 +176,6 @@ class NodeProgressController {
 NodeProgressController.$inject = [
     '$scope',
     '$state',
-    '$translate',
     'ProjectService',
     'StudentStatusService',
     'TeacherDataService',

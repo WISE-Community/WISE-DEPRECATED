@@ -383,6 +383,7 @@ var ClassroomMonitorController = function () {
 
         /**
          * Returns true iff there are new notifications
+         * TODO: move to TeacherDataService
          */
 
     }, {
@@ -392,14 +393,17 @@ var ClassroomMonitorController = function () {
         }
 
         /**
-         * Returns all notifications that have not been dismissed yet
+         * Returns all teacher notifications that have not been dismissed yet
+         * TODO: move to TeacherDataService, take into account shared teacher users
          */
 
     }, {
         key: 'getNewNotifications',
         value: function getNewNotifications() {
+            var _this4 = this;
+
             return this.notifications.filter(function (notification) {
-                return notification.timeDismissed == null;
+                return notification.timeDismissed == null && notification.toWorkgroupId === _this4.ConfigService.getWorkgroupId();
             });
         }
 
@@ -410,15 +414,15 @@ var ClassroomMonitorController = function () {
     }, {
         key: 'confirmDismissAllNotifications',
         value: function confirmDismissAllNotifications(ev) {
-            var _this4 = this;
+            var _this5 = this;
 
             if (this.getNewNotifications().length > 1) {
                 this.$translate(["dismissNotificationsTitle", "dismissNotificationsMessage", "yes", "no"]).then(function (translations) {
-                    var confirm = _this4.$mdDialog.confirm().parent(angular.element($('._md-open-menu-container._md-active'))) // TODO: hack for now (showing md-dialog on top of md-menu)
+                    var confirm = _this5.$mdDialog.confirm().parent(angular.element($('._md-open-menu-container._md-active'))) // TODO: hack for now (showing md-dialog on top of md-menu)
                     .ariaLabel(translations.dismissNotificationsTitle).textContent(translations.dismissNotificationsMessage).targetEvent(ev).ok(translations.yes).cancel(translations.no);
 
-                    _this4.$mdDialog.show(confirm).then(function () {
-                        _this4.dismissAllNotifications();
+                    _this5.$mdDialog.show(confirm).then(function () {
+                        _this5.dismissAllNotifications();
                     });
                 });
             } else {
@@ -433,11 +437,11 @@ var ClassroomMonitorController = function () {
     }, {
         key: 'dismissAllNotifications',
         value: function dismissAllNotifications() {
-            var _this5 = this;
+            var _this6 = this;
 
             var newNotifications = this.getNewNotifications();
             newNotifications.map(function (newNotification) {
-                _this5.dismissNotification(newNotification);
+                _this6.dismissNotification(newNotification);
             });
         }
 

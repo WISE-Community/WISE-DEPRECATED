@@ -1,0 +1,18 @@
+.component--grading {
+    border-top: 1px solid color('gray-light');
+    padding-top: 16px;
+
+    .component-wrapper {
+        padding: 0;
+        margin: 0;
+    }
+
+    .component {
+        padding: 16px;
+    }
+
+    .component__actions__info {
+        margin-left: 0;
+        font-style: normal;
+    }
+}

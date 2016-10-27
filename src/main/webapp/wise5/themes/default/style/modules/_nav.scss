@@ -54,16 +54,19 @@
             background-color: color('selected-bg');
 
             &._md-button-wrap>div.md-button:first-child {
-                border-left: 3px solid color('primary');
-                margin-left: -3px;
+                border-left: 4px solid color('primary');
+                margin-left: -4px;
             }
         }
     }
 }
 
 .nav-item__status-icon {
-    margin-left: 2px;
-    vertical-align: bottom;
+    margin-left: 4px;
+}
+
+.nav-item__status-icon--action {
+    z-index: 1;
 }
 
 .nav-item--card__content {

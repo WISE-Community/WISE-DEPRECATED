@@ -238,7 +238,8 @@ var classroomMonitorModule = _angular2.default.module('classroomMonitor', [(0, _
                 return StudentStatusService.retrieveStudentStatuses();
             },
             notifications: function notifications(NotificationService, ConfigService, studentStatuses, config, project) {
-                return NotificationService.retrieveNotifications(ConfigService.getWorkgroupId());
+                //return NotificationService.retrieveNotifications(ConfigService.getWorkgroupId());
+                return NotificationService.retrieveNotifications();
             },
             webSocket: function webSocket(TeacherWebSocketService, config) {
                 return TeacherWebSocketService.initialize();

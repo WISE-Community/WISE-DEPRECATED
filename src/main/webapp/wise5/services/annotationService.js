@@ -56,9 +56,36 @@ var AnnotationService = function () {
                         var tempAnnotation = annotations[a];
 
                         if (tempAnnotation != null) {
+                            var match = true;
 
-                            if (tempAnnotation.nodeId === nodeId && tempAnnotation.componentId === componentId && tempAnnotation.fromWorkgroupId === fromWorkgroupId && tempAnnotation.toWorkgroupId === toWorkgroupId && tempAnnotation.type === type) {
+                            if (nodeId && tempAnnotation.nodeId !== nodeId) {
+                                match = false;
+                            }
+                            if (match && componentId && tempAnnotation.componentId !== componentId) {
+                                match = false;
+                            }
+                            if (match && fromWorkgroupId && tempAnnotation.fromWorkgroupId !== fromWorkgroupId) {
+                                match = false;
+                            }
+                            if (match && toWorkgroupId && tempAnnotation.toWorkgroupId !== toWorkgroupId) {
+                                match = false;
+                            }
+                            if (match && type) {
+                                if (type.constructor === Array) {
+                                    for (var i = 0; i < type.length; i++) {
+                                        var thisType = type[i];
+                                        if (tempAnnotation.type !== thisType) {
+                                            match = false;
+                                        }
+                                    }
+                                } else {
+                                    if (tempAnnotation.type !== type) {
+                                        match = false;
+                                    }
+                                }
+                            }
 
+                            if (match) {
                                 annotation = tempAnnotation;
                                 break;
                             }
@@ -170,7 +197,15 @@ var AnnotationService = function () {
                                     for (var y = localAnnotations.length - 1; y >= 0; y--) {
                                         localAnnotation = localAnnotations[y];
 
-                                        if (localAnnotation.requestToken != null && localAnnotation.requestToken === savedAnnotation.requestToken) {
+                                        if (localAnnotation.id != null && localAnnotation.id === savedAnnotation.id) {
+
+                                            // we have found the matching local annotation so we will update it
+                                            localAnnotation.serverSaveTime = savedAnnotation.serverSaveTime;
+                                            //localAnnotation.requestToken = null; // requestToken is no longer needed.
+
+                                            this.$rootScope.$broadcast('annotationSavedToServer', { annotation: localAnnotation });
+                                            break;
+                                        } else if (localAnnotation.requestToken != null && localAnnotation.requestToken === savedAnnotation.requestToken) {
 
                                             // we have found the matching local annotation so we will update it
                                             localAnnotation.id = savedAnnotation.id;
@@ -343,7 +378,7 @@ var AnnotationService = function () {
                     if (annotation != null && annotation.toWorkgroupId == workgroupId) {
 
                         // check that the annotation is a score annotation
-                        if (annotation.type === 'score') {
+                        if (annotation.type === 'score' || annotation.type === 'autoScore') {
 
                             var tempNodeId = annotation.nodeId;
 
@@ -438,20 +473,51 @@ var AnnotationService = function () {
         }
 
         /**
+         * Get the latest annotations for a given component (as an object)
+         * @param nodeId the node id
+         * @param componentId the component id
+         * @param workgroupId the workgroup id
+         * @param scoreType (optional) the type of score
+         * e.g.
+         * 'autoScore' for auto graded score
+         * 'score' for teacher graded score
+         * 'any' for auto graded score or teacher graded score
+         * @return object containing the component's latest score and comment annotations
+         */
+
+    }, {
+        key: 'getLatestComponentAnnotations',
+        value: function getLatestComponentAnnotations(nodeId, componentId, workgroupId, scoreType) {
+            var latestScoreAnnotation = null;
+            var latestCommentAnnotation = null;
+
+            // get the latest score annotation for this component
+            latestScoreAnnotation = this.getLatestScoreAnnotation(nodeId, componentId, workgroupId, scoreType);
+
+            // get the latest comment annotation for this component
+            latestCommentAnnotation = this.getLatestCommentAnnotation(nodeId, componentId, workgroupId, scoreType);
+
+            return {
+                'score': latestScoreAnnotation,
+                'comment': latestCommentAnnotation
+            };
+        }
+    }, {
+        key: 'getLatestScoreAnnotation',
+
+
+        /**
          * Get the latest score annotation
          * @param nodeId the node id
          * @param componentId the component id
          * @param workgroupId the workgroup id
-         * @param scoreType (optional) the type of score 
+         * @param scoreType (optional) the type of score
          * e.g.
          * 'autoScore' for auto graded score
          * 'score' for teacher graded score
          * 'any' for auto graded score or teacher graded score
          * @returns the latest score annotation
          */
-
-    }, {
-        key: 'getLatestScoreAnnotation',
         value: function getLatestScoreAnnotation(nodeId, componentId, workgroupId, scoreType) {
 
             var annotation = null;
@@ -505,7 +571,7 @@ var AnnotationService = function () {
          * @param nodeId the node id
          * @param componentId the component id
          * @param workgroupId the workgroup id
-         * @param commentType (optional) the type of comment 
+         * @param commentType (optional) the type of comment
          * e.g.
          * 'autoComment' for auto graded comment
          * 'comment' for teacher graded comment

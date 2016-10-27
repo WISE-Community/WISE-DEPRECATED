@@ -1,0 +1,13 @@
+.annotations--grading {
+    margin: 16px -16px -16px;
+    background-color: color('gray-lightest');
+    //background-color: transparentize(color('primary'), .92);
+    border-top: 1px dashed color('gray-dark');
+    padding: 16px;
+}
+
+.annotations--grading__score {
+    input {
+        width: 46px;
+    }
+}

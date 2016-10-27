@@ -380,18 +380,20 @@ class ClassroomMonitorController {
 
     /**
      * Returns true iff there are new notifications
+     * TODO: move to TeacherDataService
      */
     hasNewNotifications() {
         return this.getNewNotifications().length > 0;
     }
 
     /**
-     * Returns all notifications that have not been dismissed yet
+     * Returns all teacher notifications that have not been dismissed yet
+     * TODO: move to TeacherDataService, take into account shared teacher users
      */
     getNewNotifications() {
         return this.notifications.filter(
-            function(notification) {
-                return notification.timeDismissed == null;
+            notification => {
+                return (notification.timeDismissed == null && notification.toWorkgroupId === this.ConfigService.getWorkgroupId());
             }
         );
     }

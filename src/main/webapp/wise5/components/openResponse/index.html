@@ -1,268 +1,271 @@
-<html>
-    <head></head>
-    <body>
-        <div class='openResponse' ng-controller='OpenResponseController as openResponseController' flex>
-            <style>
-                {{openResponseController.nodeContent.style}}
-            </style>
+<div class='openResponse' ng-controller='OpenResponseController as openResponseController' flex>
+    <style>
+        {{openResponseController.nodeContent.style}}
+    </style>
 
-            <div ng-if='openResponseController.mode === "authoring" && !openResponseController.authoringComponentContent.showPreviousWork'>
-                Prompt:
-                <br/>
-                <textarea ng-model='openResponseController.authoringComponentContent.prompt'
-                          ng-change='openResponseController.authoringViewComponentChanged()'
-                          ng-model-options='{ debounce: 1000 }'
-                          rows='10'
-                          cols='100'></textarea>
-                <br/>
-                Starter Sentence (Optional):
-                <br/>
-                <textarea ng-model='openResponseController.authoringComponentContent.starterSentence'
-                          ng-change='openResponseController.authoringViewComponentChanged()'
-                          ng-model-options='{ debounce: 1000 }'
-                          rows='2'
-                          cols='100'></textarea>
-                <br/>
-                Max Score:
-                <input type='number'
-                       ng-model='openResponseController.authoringComponentContent.maxScore'
-                       ng-change='openResponseController.authoringViewComponentChanged()'
-                       ng-model-options='{ debounce: 1000 }'
-                       style='width: 3em'/>
-                <br/>
-                Show Save Button:
-                <input type='checkbox'
-                       ng-model='openResponseController.authoringComponentContent.showSaveButton'
-                       ng-change='openResponseController.authoringViewComponentChanged()'/>
-                <br/>
-                Show Submit Button:
-                <input type='checkbox'
-                       ng-model='openResponseController.authoringComponentContent.showSubmitButton'
-                       ng-change='openResponseController.authoringViewComponentChanged()'/>
-                <br/>
-                Enable CRater:
-                <input type='checkbox'
-                       ng-model='openResponseController.authoringComponentContent.enableCRater'
-                       ng-change='openResponseController.authoringViewEnableCRaterClicked()'/>
-                <div ng-show='openResponseController.authoringComponentContent.enableCRater'>
-                    Type: 
-                    <input type='radio'
-                           ng-model='openResponseController.authoringComponentContent.cRater.itemType'
-                           value='CRATER'
-                           ng-change='openResponseController.authoringViewComponentChanged()'/> CRater
-                    <input type='radio'
-                           ng-model='openResponseController.authoringComponentContent.cRater.itemType'
-                           value='HENRY'
-                           ng-change='openResponseController.authoringViewComponentChanged()'/> HENRY
-                    <br/>
-                    Item Id:
-                    <input type='text'
-                           ng-model='openResponseController.authoringComponentContent.cRater.itemId'
-                           ng-change='openResponseController.authoringViewComponentChanged()'
-                           size='30'/>
-                    <br/>
-                    Score On:
-                    <input type='radio'
-                           ng-model='openResponseController.authoringComponentContent.cRater.scoreOn'
-                           value='submit'
-                           ng-change='openResponseController.authoringViewComponentChanged()'/> Submit
-                    <input type='radio'
-                           ng-model='openResponseController.authoringComponentContent.cRater.scoreOn'
-                           value='save'
-                           ng-change='openResponseController.authoringViewComponentChanged()'/> Save
-                    <input type='radio'
-                           ng-model='openResponseController.authoringComponentContent.cRater.scoreOn'
-                           value='change'
-                           ng-change='openResponseController.authoringViewComponentChanged()'/> Change
-                    <br/>
-                    <input type='checkbox'
-                           ng-model='openResponseController.authoringComponentContent.cRater.showScore'
-                           ng-change='openResponseController.authoringViewComponentChanged()'/> Show Score
-                    <br/>
-                    <input type='checkbox'
-                           ng-model='openResponseController.authoringComponentContent.cRater.showFeedback'
-                           ng-change='openResponseController.authoringViewComponentChanged()'/> Show Feedback
-                    <br/>
-                    <button ng-click='openResponseController.authoringAddScoringRule()'>Add Scoring Rule</button>
-                    <div ng-repeat='scoringRule in openResponseController.authoringComponentContent.cRater.scoringRules'>
-                        Score: <input type='text'
-                                      ng-model='scoringRule.score'
+    <div ng-if='openResponseController.mode === "authoring" && !openResponseController.authoringComponentContent.showPreviousWork'>
+        Prompt:
+        <br/>
+        <textarea ng-model='openResponseController.authoringComponentContent.prompt'
+                  ng-change='openResponseController.authoringViewComponentChanged()'
+                  ng-model-options='{ debounce: 1000 }'
+                  rows='10'
+                  cols='100'></textarea>
+        <br/>
+        Starter Sentence (Optional):
+        <br/>
+        <textarea ng-model='openResponseController.authoringComponentContent.starterSentence'
+                  ng-change='openResponseController.authoringViewComponentChanged()'
+                  ng-model-options='{ debounce: 1000 }'
+                  rows='2'
+                  cols='100'></textarea>
+        <br/>
+        Max Score:
+        <input type='number'
+               ng-model='openResponseController.authoringComponentContent.maxScore'
+               ng-change='openResponseController.authoringViewComponentChanged()'
+               ng-model-options='{ debounce: 1000 }'
+               style='width: 3em'/>
+        <br/>
+        Show Save Button:
+        <input type='checkbox'
+               ng-model='openResponseController.authoringComponentContent.showSaveButton'
+               ng-change='openResponseController.authoringViewComponentChanged()'/>
+        <br/>
+        Show Submit Button:
+        <input type='checkbox'
+               ng-model='openResponseController.authoringComponentContent.showSubmitButton'
+               ng-change='openResponseController.authoringViewComponentChanged()'/>
+        <br/>
+        Enable CRater:
+        <input type='checkbox'
+               ng-model='openResponseController.authoringComponentContent.enableCRater'
+               ng-change='openResponseController.authoringViewEnableCRaterClicked()'/>
+        <div ng-show='openResponseController.authoringComponentContent.enableCRater'>
+            Type:
+            <input type='radio'
+                   ng-model='openResponseController.authoringComponentContent.cRater.itemType'
+                   value='CRATER'
+                   ng-change='openResponseController.authoringViewComponentChanged()'/> CRater
+            <input type='radio'
+                   ng-model='openResponseController.authoringComponentContent.cRater.itemType'
+                   value='HENRY'
+                   ng-change='openResponseController.authoringViewComponentChanged()'/> HENRY
+            <br/>
+            Item Id:
+            <input type='text'
+                   ng-model='openResponseController.authoringComponentContent.cRater.itemId'
+                   ng-change='openResponseController.authoringViewComponentChanged()'
+                   size='30'/>
+            <br/>
+            Score On:
+            <input type='radio'
+                   ng-model='openResponseController.authoringComponentContent.cRater.scoreOn'
+                   value='submit'
+                   ng-change='openResponseController.authoringViewComponentChanged()'/> Submit
+            <input type='radio'
+                   ng-model='openResponseController.authoringComponentContent.cRater.scoreOn'
+                   value='save'
+                   ng-change='openResponseController.authoringViewComponentChanged()'/> Save
+            <input type='radio'
+                   ng-model='openResponseController.authoringComponentContent.cRater.scoreOn'
+                   value='change'
+                   ng-change='openResponseController.authoringViewComponentChanged()'/> Change
+            <br/>
+            <input type='checkbox'
+                   ng-model='openResponseController.authoringComponentContent.cRater.showScore'
+                   ng-change='openResponseController.authoringViewComponentChanged()'/> Show Score
+            <br/>
+            <input type='checkbox'
+                   ng-model='openResponseController.authoringComponentContent.cRater.showFeedback'
+                   ng-change='openResponseController.authoringViewComponentChanged()'/> Show Feedback
+            <br/>
+            <button ng-click='openResponseController.authoringAddScoringRule()'>Add Scoring Rule</button>
+            <div ng-repeat='scoringRule in openResponseController.authoringComponentContent.cRater.scoringRules'>
+                Score: <input type='text'
+                              ng-model='scoringRule.score'
+                              ng-model-options='{ debounce: 500 }'
+                              ng-change='openResponseController.authoringViewComponentChanged()'
+                              style='width: 3em'/>
+                Feedback Text: <textarea type='text'
+                                 ng-model='scoringRule.feedbackText'
+                                 rows='5'
+                                 cols='100'
+                                 ng-model-options='{ debounce: 500 }'
+                                 ng-change='openResponseController.authoringViewComponentChanged()'/>
+                <button ng-click='openResponseController.authoringViewScoringRuleUpClicked($index)'>Up</button>
+                <button ng-click='openResponseController.authoringViewScoringRuleDownClicked($index)'>Down</button>
+                <button ng-click='openResponseController.authoringViewScoringRuleDeleteClicked($index)'>Delete</button>
+            </div>
+            <button ng-click='openResponseController.authoringAddScoringRule()'>Add Scoring Rule</button>
+            <br/>
+            <br/>
+            Enable Multiple Attempt Feedback
+            <input type='checkbox'
+                   ng-model='openResponseController.authoringComponentContent.cRater.enableMultipleAttemptScoringRules'
+                   ng-click='openResponseController.enableMultipleAttemptScoringRulesClicked()'/>
+            <br/>
+            <button ng-click='openResponseController.authoringAddMultipleAttemptScoringRule()'
+                    ng-show='openResponseController.authoringComponentContent.cRater.enableMultipleAttemptScoringRules'>
+                    Add Multiple Attempt Scoring Rule
+            </button>
+            <br/>
+            <div ng-repeat='multipleAttemptScoringRule in openResponseController.authoringComponentContent.cRater.multipleAttemptScoringRules'
+                 ng-show='openResponseController.authoringComponentContent.cRater.enableMultipleAttemptScoringRules'>
+                Previous Score: <input type='text'
+                                       ng-model='multipleAttemptScoringRule.scoreSequence[0]'
+                                       size='5'
+                                       ng-model-options='{ debounce: 500 }'
+                                       ng-change='openResponseController.authoringViewComponentChanged()'/>
+                Current Score: <input type='text'
+                                      ng-model='multipleAttemptScoringRule.scoreSequence[1]'
+                                      size='5'
                                       ng-model-options='{ debounce: 500 }'
-                                      ng-change='openResponseController.authoringViewComponentChanged()'
-                                      style='width: 3em'/>
-                        Feedback Text: <textarea type='text'
-                                         ng-model='scoringRule.feedbackText'
+                                      ng-change='openResponseController.authoringViewComponentChanged()'/>
+                Feedback Text: <textarea type='text'
+                                         ng-model='multipleAttemptScoringRule.feedbackText'
                                          rows='5'
                                          cols='100'
                                          ng-model-options='{ debounce: 500 }'
                                          ng-change='openResponseController.authoringViewComponentChanged()'/>
-                        <button ng-click='openResponseController.authoringViewScoringRuleUpClicked($index)'>Up</button>
-                        <button ng-click='openResponseController.authoringViewScoringRuleDownClicked($index)'>Down</button>
-                        <button ng-click='openResponseController.authoringViewScoringRuleDeleteClicked($index)'>Delete</button>
-                    </div>
-                    <button ng-click='openResponseController.authoringAddScoringRule()'>Add Scoring Rule</button>
-                    <br/>
-                    <br/>
-                    Enable Multiple Attempt Feedback
-                    <input type='checkbox'
-                           ng-model='openResponseController.authoringComponentContent.cRater.enableMultipleAttemptScoringRules'
-                           ng-click='openResponseController.enableMultipleAttemptScoringRulesClicked()'/>
-                    <br/>
-                    <button ng-click='openResponseController.authoringAddMultipleAttemptScoringRule()'
-                            ng-show='openResponseController.authoringComponentContent.cRater.enableMultipleAttemptScoringRules'>
-                            Add Multiple Attempt Scoring Rule
-                    </button>
-                    <br/>
-                    <div ng-repeat='multipleAttemptScoringRule in openResponseController.authoringComponentContent.cRater.multipleAttemptScoringRules'
-                         ng-show='openResponseController.authoringComponentContent.cRater.enableMultipleAttemptScoringRules'>
-                        Previous Score: <input type='text'
-                                               ng-model='multipleAttemptScoringRule.scoreSequence[0]'
-                                               size='5'
-                                               ng-model-options='{ debounce: 500 }'
-                                               ng-change='openResponseController.authoringViewComponentChanged()'/>
-                        Current Score: <input type='text'
-                                              ng-model='multipleAttemptScoringRule.scoreSequence[1]'
-                                              size='5'
-                                              ng-model-options='{ debounce: 500 }'
-                                              ng-change='openResponseController.authoringViewComponentChanged()'/>
-                        Feedback Text: <textarea type='text'
-                                                 ng-model='multipleAttemptScoringRule.feedbackText'
-                                                 rows='5'
-                                                 cols='100'
-                                                 ng-model-options='{ debounce: 500 }'
-                                                 ng-change='openResponseController.authoringViewComponentChanged()'/>
-                         <button ng-click='openResponseController.authoringViewMultipleAttemptScoringRuleUpClicked($index)'>Up</button>
-                         <button ng-click='openResponseController.authoringViewMultipleAttemptScoringRuleDownClicked($index)'>Down</button>
-                         <button ng-click='openResponseController.authoringViewMultipleAttemptScoringRuleDeleteClicked($index)'>Delete</button>
-                    </div>
-                    <br/>
-                    <button ng-click='openResponseController.authoringAddMultipleAttemptScoringRule()'
-                            ng-show='openResponseController.authoringComponentContent.cRater.enableMultipleAttemptScoringRules'>
-                            Add Multiple Attempt Scoring Rule
-                    </button>
-                </div>
+                 <button ng-click='openResponseController.authoringViewMultipleAttemptScoringRuleUpClicked($index)'>Up</button>
+                 <button ng-click='openResponseController.authoringViewMultipleAttemptScoringRuleDownClicked($index)'>Down</button>
+                 <button ng-click='openResponseController.authoringViewMultipleAttemptScoringRuleDeleteClicked($index)'>Delete</button>
             </div>
-            <div ng-if='openResponseController.mode === "authoring"'>
-                Show Previous Work:
-                <input type='checkbox'
-                       ng-model='openResponseController.authoringComponentContent.showPreviousWork'
-                       ng-click='openResponseController.authoringShowPreviousWorkClicked()'
-                       ng-change='openResponseController.authoringViewComponentChanged()'/>
-            </div>
-            <div ng-if='openResponseController.mode === "authoring" && openResponseController.authoringComponentContent.showPreviousWork'>
-                Show Previous Work Step:
-                <select ng-model='openResponseController.authoringComponentContent.showPreviousWorkNodeId'
-                        ng-change='openResponseController.authoringShowPreviousWorkNodeIdChanged()'>
-                    <option></option>
-                    <option ng-repeat='item in openResponseController.idToOrder | toArray | orderBy : "order"'
-                            value='{{item.$key}}'
-                            ng-if='openResponseController.isApplicationNode(item.$key)'>{{openResponseController.getNodePositionAndTitleByNodeId(item.$key)}}</option>
-                </select>
-                <br/>
-                Show Previous Work Component:
-                <select ng-model='openResponseController.authoringComponentContent.showPreviousWorkComponentId'
-                        ng-change='openResponseController.authoringShowPreviousWorkComponentIdChanged()'
-                        ng-options='component.id as component.type disable when !openResponseController.componentHasWork(component) for component in openResponseController.getComponentsByNodeId(openResponseController.authoringComponentContent.showPreviousWorkNodeId)'>
-                    <option></option>
-                </select>
-                <br/>
-                Show Previous Work Prompt:
-                <input type='checkbox'
-                       ng-model='openResponseController.authoringComponentContent.showPreviousWorkPrompt'
-                       ng-change='openResponseController.authoringViewComponentChanged()'/>
-            </div>
-            <div ng-if='openResponseController.mode === "authoring"'>
-                <br/>
-                <textarea ng-model='openResponseController.authoringComponentContentJSONString'
-                       ng-change='openResponseController.advancedAuthoringViewComponentChanged()'
-                       ng-model-options="{ updateOn: 'blur' }"
-                       rows='10'
-                       cols='100'></textarea>
-            </div>
-            <md-input-container class="input-container md-block input-container--open-response input-container--component md-no-float">
-                <label class="input-label md-no-float" ng-disabled="openResponseController.isDisabled"
-                       ng-if="openResponseController.showPrompt()"><compile data="openResponseController.getPrompt()"></compile></label>
-                <possible-score max-score="openResponseController.componentContent.maxScore"
-                                ng-if="openResponseController.mode === 'student' && !openResponseController.latestAnnotations.score"></possible-score>
-                <div class="input-wrapper" ng-class="{'input-wrapper--richtext': openResponseController.isRichTextEnabled}">
-                    <textarea ng-if="openResponseController.isRichTextEnabled && !openResponseController.isDisabled"
-                              ui-tinymce="openResponseController.tinymceOptions"
-                              ng-model="openResponseController.studentResponse"
-                              ng-model-options='{ debounce: 100 }'
-                              ng-change="openResponseController.studentDataChanged()"></textarea>
-                    <div ng-if="openResponseController.isRichTextEnabled && openResponseController.isDisabled"
-                         class="input--textarea input--textarea--disabled">
-                    </div>
-                    <textarea ng-if="!openResponseController.isRichTextEnabled"
-                              class="input--textarea input--textarea--hasaction"
-                              rows="{{openResponseController.getNumRows() || 3}}"
-                              ng-model="openResponseController.studentResponse"
-                              ng-model-options='{ debounce: 100 }'
-                              ng-disabled="openResponseController.isDisabled"
-                              ng-change="openResponseController.studentDataChanged()"
-                              md-no-autogrow></textarea>
-                    <md-button class="input--textarea__action input--textarea__action--revision md-icon-button"
-                               ng-click='nodeController.showRevisions($event, component.id, openResponseController.isDisabled)'
-                               ng-if="nodeController.getRevisions(component.id).length > 1">
-                        <md-icon> history </md-icon>
-                        <md-tooltip md-direction="left">{{nodeController.getRevisions(component.id).length}} Versions</md-tooltip>
-                    </md-button>
-                </div>
-            </md-input-container>
-            <div class="component__actions" ng-show="openResponseController.isStudentAttachmentEnabled" layout="row" layout-wrap="true">
-                <div class="component__add-attachment">
-                    <md-button class="md-accent"
-                               ng-click="nodeController.showStudentAssets($event, component.id, openResponseController.isDisabled)">
-                        <md-icon>image</md-icon> <span>Add File</span>
-                    </md-button>
-                </div>
-                <div class="component__attachment" ng-repeat="attachment in openResponseController.attachments">
-                    <img ng-src="{{attachment.iconURL}}" class="component__attachment__content" />
-                    <md-button ng-show="!openResponseController.isDisabled" class="component__attachment__delete" ng-click='openResponseController.removeAttachment(attachment)' title="Remove file"><md-icon>cancel</md-icon></md-button>
-                </div>
-            </div>
-            <div ng-if="openResponseController.showSaveButton() || openResponseController.showSubmitButton()"
-                 class="component__actions" layout="row" layout-align="start center">
-                <md-button class="md-raised md-primary"
-                           ng-click="openResponseController.submitButtonClicked()"
-                           ng-disabled="openResponseController.isDisabled || !openResponseController.isSubmitDirty"
-                           ng-if="openResponseController.showSubmitButton()"
-                           aria-label="Submit"
-                           translate="submit"></md-button>
-                <md-button class="md-primary md-raised"
-                           ng-click="openResponseController.saveButtonClicked()"
-                           ng-disabled="openResponseController.isDisabled || !openResponseController.isDirty"
-                           ng-if="openResponseController.showSaveButton()"
-                           aria-label="Save"
-                           translate="save"></md-button>
-                <span ng-show="openResponseController.saveMessage.text"
-                      class="component__actions__info md-caption">
-                      {{openResponseController.saveMessage.text}} <span class="component__actions__more"><md-tooltip md-direction="top">{{ openResponseController.saveMessage.time | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip><span am-time-ago="openResponseController.saveMessage.time"></span></span>
-                </span>
-            </div>
-            <component-annotations ng-if="openResponseController.mode === 'student'"
-                                   annotations='openResponseController.latestAnnotations'
-                                   max-score="openResponseController.componentContent.maxScore"></component-annotations>
-            <div ng-if='openResponseController.mode === "grading"'>
-                <annotation ng-if='openResponseController.componentContent.maxScore > -1'
-                            type='score'
-                            mode='openResponseController.mode'
-                            node-id='openResponseController.nodeId'
-                            component-id='openResponseController.componentId'
-                            from-workgroup-id='teacherWorkgroupId'
-                            to-workgroup-id='workgroupId'
-                            component-state-id='componentState.id'
-                            active='true'></annotation>
-                <br ng-if='openResponseController.componentContent.maxScore > -1'/>
-                <annotation type='comment'
-                            mode='openResponseController.mode'
-                            node-id='openResponseController.nodeId'
-                            component-id='openResponseController.componentId'
-                            from-workgroup-id='teacherWorkgroupId'
-                            to-workgroup-id='workgroupId'
-                            component-state-id='componentState.id'
-                            active='true'></annotation>
-            </div>
+            <br/>
+            <button ng-click='openResponseController.authoringAddMultipleAttemptScoringRule()'
+                    ng-show='openResponseController.authoringComponentContent.cRater.enableMultipleAttemptScoringRules'>
+                    Add Multiple Attempt Scoring Rule
+            </button>
         </div>
-    </body>
-</html>
+    </div>
+    <div ng-if='openResponseController.mode === "authoring"'>
+        Show Previous Work:
+        <input type='checkbox'
+               ng-model='openResponseController.authoringComponentContent.showPreviousWork'
+               ng-click='openResponseController.authoringShowPreviousWorkClicked()'
+               ng-change='openResponseController.authoringViewComponentChanged()'/>
+    </div>
+    <div ng-if='openResponseController.mode === "authoring" && openResponseController.authoringComponentContent.showPreviousWork'>
+        Show Previous Work Step:
+        <select ng-model='openResponseController.authoringComponentContent.showPreviousWorkNodeId'
+                ng-change='openResponseController.authoringShowPreviousWorkNodeIdChanged()'>
+            <option></option>
+            <option ng-repeat='item in openResponseController.idToOrder | toArray | orderBy : "order"'
+                    value='{{item.$key}}'
+                    ng-if='openResponseController.isApplicationNode(item.$key)'>{{openResponseController.getNodePositionAndTitleByNodeId(item.$key)}}</option>
+        </select>
+        <br/>
+        Show Previous Work Component:
+        <select ng-model='openResponseController.authoringComponentContent.showPreviousWorkComponentId'
+                ng-change='openResponseController.authoringShowPreviousWorkComponentIdChanged()'
+                ng-options='component.id as component.type disable when !openResponseController.componentHasWork(component) for component in openResponseController.getComponentsByNodeId(openResponseController.authoringComponentContent.showPreviousWorkNodeId)'>
+            <option></option>
+        </select>
+        <br/>
+        Show Previous Work Prompt:
+        <input type='checkbox'
+               ng-model='openResponseController.authoringComponentContent.showPreviousWorkPrompt'
+               ng-change='openResponseController.authoringViewComponentChanged()'/>
+    </div>
+    <div ng-if='openResponseController.mode === "authoring"'>
+        <br/>
+        <textarea ng-model='openResponseController.authoringComponentContentJSONString'
+               ng-change='openResponseController.advancedAuthoringViewComponentChanged()'
+               ng-model-options="{ updateOn: 'blur' }"
+               rows='10'
+               cols='100'></textarea>
+    </div>
+    <md-input-container class="input-container md-block input-container--open-response input-container--component md-no-float">
+        <label class="input-label md-no-float" ng-disabled="openResponseController.isDisabled"
+               ng-if="openResponseController.showPrompt()"><compile data="openResponseController.getPrompt()"></compile></label>
+        <possible-score max-score="openResponseController.componentContent.maxScore"
+                        ng-if="openResponseController.mode === 'student' && !openResponseController.latestAnnotations.score"></possible-score>
+        <div class="input-wrapper" ng-class="{'input-wrapper--richtext': openResponseController.isRichTextEnabled}">
+            <textarea ng-if="openResponseController.isRichTextEnabled && !openResponseController.isDisabled"
+                      ui-tinymce="openResponseController.tinymceOptions"
+                      ng-model="openResponseController.studentResponse"
+                      ng-model-options='{ debounce: 100 }'
+                      ng-change="openResponseController.studentDataChanged()"></textarea>
+            <div ng-if="openResponseController.isRichTextEnabled && openResponseController.isDisabled"
+                 class="input--textarea input--textarea--disabled">
+            </div>
+            <textarea ng-if="!openResponseController.isRichTextEnabled"
+                      class="input--textarea input--textarea--hasaction"
+                      rows="{{openResponseController.getNumRows() || 3}}"
+                      ng-model="openResponseController.studentResponse"
+                      ng-model-options='{ debounce: 100 }'
+                      ng-disabled="openResponseController.isDisabled"
+                      ng-change="openResponseController.studentDataChanged()"
+                      md-no-autogrow></textarea>
+        </div>
+    </md-input-container>
+    <div ng-if="nodeController.getRevisions().length > 1" layout="row" layout-align="center end">
+        <a ng-click="nodeController.showRevisions($event, component.id, openResponseController.isDisabled)">
+           + Previous versions: {{nodeController.getRevisions().length - 1}}
+       </a>
+    </div>
+
+    <div class="component__actions" ng-show="openResponseController.isStudentAttachmentEnabled" layout="row" layout-wrap="true">
+        <div class="component__add-attachment">
+            <md-button class="md-accent"
+                       ng-click="nodeController.showStudentAssets($event, component.id, openResponseController.isDisabled)">
+                <md-icon>image</md-icon> <span>Add File</span>
+            </md-button>
+        </div>
+        <div class="component__attachment" ng-repeat="attachment in openResponseController.attachments">
+            <img ng-src="{{attachment.iconURL}}" class="component__attachment__content" />
+            <md-button ng-show="!openResponseController.isDisabled" class="component__attachment__delete" ng-click='openResponseController.removeAttachment(attachment)' title="Remove file"><md-icon>cancel</md-icon></md-button>
+        </div>
+    </div>
+    <div ng-if="openResponseController.showSaveButton() || openResponseController.showSubmitButton()"
+         class="component__actions" layout="row" layout-align="start center">
+        <md-button class="md-raised md-primary"
+                   ng-click="openResponseController.submitButtonClicked()"
+                   ng-disabled="openResponseController.isDisabled || !openResponseController.isSubmitDirty"
+                   ng-if="openResponseController.showSubmitButton()"
+                   aria-label="Submit"
+                   translate="submit"></md-button>
+        <md-button class="md-primary md-raised"
+                   ng-click="openResponseController.saveButtonClicked()"
+                   ng-disabled="openResponseController.isDisabled || !openResponseController.isDirty"
+                   ng-if="openResponseController.showSaveButton()"
+                   aria-label="Save"
+                   translate="save"></md-button>
+        <span ng-show="openResponseController.saveMessage.text"
+              class="component__actions__info md-caption">
+              {{openResponseController.saveMessage.text}} <span class="component__actions__more"><md-tooltip md-direction="top">{{ openResponseController.saveMessage.time | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip><span am-time-ago="openResponseController.saveMessage.time"></span></span>
+        </span>
+    </div>
+    <component-annotations ng-if="openResponseController.mode === 'student'"
+                           annotations='openResponseController.latestAnnotations'
+                           max-score="openResponseController.componentContent.maxScore"></component-annotations>
+    <component-grading ng-if="openResponseController.mode === 'grading'"
+                       node-id='openResponseController.nodeId'
+                       component-id='openResponseController.componentId'
+                       max-score="openResponseController.componentContent.maxScore"
+                       from-workgroup-id='teacherWorkgroupId'
+                       to-workgroup-id='workgroupId'
+                       component-state-id='componentState.id'
+                       active="true"></component-grading>
+   <!--<div ng-if='openResponseController.mode === "grading"'>
+       <annotation ng-if='openResponseController.componentContent.maxScore > -1'
+                   type='score'
+                   mode='openResponseController.mode'
+                   node-id='openResponseController.nodeId'
+                   component-id='openResponseController.componentId'
+                   from-workgroup-id='teacherWorkgroupId'
+                   to-workgroup-id='workgroupId'
+                   component-state-id='componentState.id'
+                   active='true'></annotation>
+       <br ng-if='openResponseController.componentContent.maxScore > -1'/>
+       <annotation type='comment'
+                   mode='openResponseController.mode'
+                   node-id='openResponseController.nodeId'
+                   component-id='openResponseController.componentId'
+                   from-workgroup-id='teacherWorkgroupId'
+                   to-workgroup-id='workgroupId'
+                   component-state-id='componentState.id'
+                   active='true'></annotation>
+   </div>-->
+</div>
