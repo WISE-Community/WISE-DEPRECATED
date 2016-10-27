@@ -1,0 +1,64 @@
+<div ng-if="$ctrl.componentStates.length > 0"
+     class="component__actions__info md-body-1"
+     layout="row"
+     layout-align="center start">
+    <div>
+        Saved: <span class="component__actions__more" am-time-ago="$ctrl.latestComponentStateTime"></span>
+        <md-tooltip md-direction="top">{{ $ctrl.latestComponentStateTime | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip>
+    </div>
+    <span flex></span>
+    <a class=" md-body-2"
+       ng-if="$ctrl.componentStates.length > 1"
+       ng-click="$ctrl.showRevisions($event)">
+       + Previous versions: {{($ctrl.componentStates.length - 1)}}
+   </a>
+</div>
+<div class="annotations--grading">
+    <div ng-if="$ctrl.hasNewWork()" class="info-bg">Note: Team has new work since latest feedback was sent.</div>
+    <div layout="row" flex>
+        <div flex>
+            <div ng-if="$ctrl.latestAnnotations.comment.type === 'autoComment'">
+                <div class="md-body-2">
+                    <md-icon class="score">flash_on</md-icon>Auto Feedback <a ng-if="$ctrl.active" ng-click="$ctrl.edit = !$ctrl.edit">Edit</a>
+                </div>
+                <blockquote>
+                    <compile data="$ctrl.latestAnnotations.comment.data.value"></compile>
+                </blockquote>
+            </div>
+            <md-input-container class="input-container md-block md-no-float"
+                                flex>
+                <div ng-show="!$ctrl.latestAnnotations.comment || $ctrl.latestAnnotations.comment.type === 'comment' || $ctrl.edit">
+                    <label class="input-label md-no-float" ng-disabled="!$ctrl.active">Teacher Feedback</label>
+                    <div class="input-wrapper">
+                        <textarea md-detect-hidden
+                                  placeholder="Enter comment here"
+                                  ng-model="$ctrl.comment"
+                                  ng-disabled="!$ctrl.active"
+                                  ng-change="$ctrl.postAnnotation('comment')"
+                                  ng-model-options="{ debounce: 10000 }"></textarea>
+                    </div>
+                </div>
+            </md-input-container>
+        </div>
+        <div ng-if="$ctrl.hasMaxScore" flex="20" layout="row" layout-align="center start">
+            <md-input-container class="md-no-float">
+                <label class="input-label md-no-float"><md-icon class="score" ng-if="$ctrl.latestAnnotations.score.type === 'autoScore'">flash_on</md-icon>Score</label>
+                <input class="input--textarea"
+                       type="number"
+                       ng-model="$ctrl.score"
+                       ng-disabled="!$ctrl.active"
+                       ng-change="$ctrl.postAnnotation('score')"
+                       ng-model-options="{ debounce: 5000 }">
+            </md-input-container>
+        </div>
+    </div>
+    <!-- TODO: add timestamp -->
+    <!--<hr />
+    <div class="annotations--student__score md-body-2"
+         layout="row" laoyut-align="start center">
+        <span flex></span>
+        <span>
+            <span class="annotations__info" am-time-ago="$ctrl.getLatestAnnotationTime()"></span>
+            <md-tooltip md-direction="top">{{ $ctrl.getLatestAnnotationTime() | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip>
+    </div> -->
+</div>

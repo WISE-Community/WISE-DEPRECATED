@@ -78,6 +78,23 @@ label {
     }
 }
 
+// Set classes for common font weights
+.light {
+    font-weight: 300;
+}
+
+.normal {
+    font-weight: 400;
+}
+
+.heavy {
+    font-weight: 500;
+}
+
+.bold {
+    font-weight: 600;
+}
+
 // Links
 a {
   color: color('primary');

@@ -1,0 +1,8 @@
+.thead {
+    background-color: color('gray-darker');
+    color: color('text-light');
+    font-size: rem(1.4);
+    font-weight: 600;
+    min-height: $wise-toolbar-height;
+    height: $wise-toolbar-height;
+}

@@ -9,14 +9,13 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var NodeProgressController = function () {
-    function NodeProgressController($scope, $state, $translate, ProjectService, StudentStatusService, TeacherDataService, TeacherWebSocketService) {
+    function NodeProgressController($scope, $state, ProjectService, StudentStatusService, TeacherDataService, TeacherWebSocketService) {
         var _this = this;
 
         _classCallCheck(this, NodeProgressController);
 
         this.$scope = $scope;
         this.$state = $state;
-        this.$translate = $translate;
         this.ProjectService = ProjectService;
         this.StudentStatusService = StudentStatusService;
         this.TeacherDataService = TeacherDataService;
@@ -197,7 +196,7 @@ var NodeProgressController = function () {
     return NodeProgressController;
 }();
 
-NodeProgressController.$inject = ['$scope', '$state', '$translate', 'ProjectService', 'StudentStatusService', 'TeacherDataService', 'TeacherWebSocketService'];
+NodeProgressController.$inject = ['$scope', '$state', 'ProjectService', 'StudentStatusService', 'TeacherDataService', 'TeacherWebSocketService'];
 
 exports.default = NodeProgressController;
 //# sourceMappingURL=nodeProgressController.js.map

@@ -26,10 +26,10 @@ class NodeGradingController {
 
         // the max score for the node
         this.maxScore = this.ProjectService.getMaxScoreForNode(this.nodeId);
+        this.hasMaxScore = (typeof this.maxScore === 'number');
 
         // TODO: add loading indicator
         this.TeacherDataService.retrieveStudentDataByNodeId(this.nodeId).then(result => {
-            this.nodeTitle = null;
 
             // field that will hold the node content
             this.nodeContent = null;
@@ -41,13 +41,6 @@ class NodeGradingController {
             var node = this.ProjectService.getNodeById(this.nodeId);
 
             if (node != null) {
-                var position = this.ProjectService.getPositionById(this.nodeId);
-
-                if (position != null) {
-                    this.nodeTitle = position + ' ' + node.title;
-                } else {
-                    this.nodeTitle = node.title;
-                }
 
 
                 // field that will hold the node content
@@ -198,6 +191,11 @@ class NodeGradingController {
         return this.AnnotationService.getAnnotationByStepWorkIdAndType(stepWorkId, type);
     }
 
+    getNodeScoreByWorkgroupIdAndNodeId(workgroupId, nodeId) {
+        let score = this.AnnotationService.getScore(workgroupId, nodeId);
+        return (typeof score === 'number' ? score : '-');
+    }
+
     scoreChanged(stepWorkId) {
         var annotation = this.annotationMappings[stepWorkId + '-score'];
         this.AnnotationService.saveAnnotation(annotation);
@@ -258,6 +256,16 @@ class NodeGradingController {
         let averageScore = this.StudentStatusService.getNodeAverageScore(this.nodeId, periodId);
 
         return (averageScore === null ? 'N/A' : this.$filter('number')(averageScore, 1));
+    }
+
+    /**
+     * Checks whether a workgroup is in the current period
+     * @param workgroupId the workgroupId to look for
+     * @returns boolean whether the workgroup is in the current period
+     */
+    isWorkgroupInCurrentPeriod(workgroupId) {
+        return (this.getCurrentPeriod().periodName === "All" ||
+            this.getPeriodIdByWorkgroupId(workgroupId) === this.getCurrentPeriod().periodId);
     }
 }
 

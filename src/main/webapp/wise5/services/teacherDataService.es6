@@ -6,15 +6,15 @@ class TeacherDataService {
                 $rootScope,
                 AnnotationService,
                 ConfigService,
+                NotificationService,
                 ProjectService,
-                StudentDataService,
                 TeacherWebSocketService) {
         this.$http = $http;
         this.$rootScope = $rootScope;
         this.AnnotationService = AnnotationService;
         this.ConfigService = ConfigService;
+        this.NotificationService = NotificationService;
         this.ProjectService = ProjectService;
-        this.StudentDataService = StudentDataService;
         this.TeacherWebSocketService = TeacherWebSocketService;
 
         this.studentData = {};
@@ -25,6 +25,40 @@ class TeacherDataService {
         this.periods = [];
 
         this.initializePeriods();
+
+        /**
+         * Listen for the 'annotationSavedToServer' event which is fired when
+         * we receive the response from saving an annotation to the server
+         */
+        this.$rootScope.$on('annotationSavedToServer', (event, args) => {
+
+            if (args) {
+
+                // get the annotation that was saved to the server
+                let annotation = args.annotation;
+
+                // add the annotation to the local annotations array
+                this.studentData.annotations.push(annotation);
+
+                let toWorkgroupId = annotation.toWorkgroupId;
+                if (this.studentData.annotationsToWorkgroupId[toWorkgroupId] == null) {
+                    this.studentData.annotationsToWorkgroupId[toWorkgroupId] = new Array();
+                }
+                this.studentData.annotationsToWorkgroupId[toWorkgroupId].push(annotation);
+
+                let nodeId = annotation.nodeId;
+                if (this.studentData.annotationsByNodeId[nodeId] == null) {
+                    this.studentData.annotationsByNodeId[nodeId] = new Array();
+                }
+                this.studentData.annotationsByNodeId[nodeId].push(annotation);
+                
+                this.AnnotationService.setAnnotations(this.studentData.annotations);
+
+
+                // broadcast the event that a new annotation has been received
+                this.$rootScope.$broadcast('annotationReceived', {annotation, annotation});
+            }
+        });
     }
 
     /**
@@ -58,11 +92,11 @@ class TeacherDataService {
      */
     retrieveStudentDataByNodeId(nodeId) {
 
-        var periodId = null;
+        //var periodId = null;
 
-        if (this.currentPeriod != null && this.currentPeriod.periodName != 'All') {
-            periodId = this.currentPeriod.periodId;
-        }
+        //if (this.currentPeriod != null && this.currentPeriod.periodName != 'All') {
+            //periodId = this.currentPeriod.periodId;
+        //}
 
         // get the node ids and component ids in the node
         var nodeIdsAndComponentIds = this.ProjectService.getNodeIdsAndComponentIds(nodeId);
@@ -76,7 +110,8 @@ class TeacherDataService {
 
         var params = {};
         params.runId = this.ConfigService.getRunId();
-        params.periodId = periodId;
+        //params.periodId = periodId;
+        params.periodId = null;
         params.workgroupId = null;
         params.components = components;
 
@@ -212,13 +247,13 @@ class TeacherDataService {
                     for (var i = 0; i < resultData.annotations.length; i++) {
                         var annotation = resultData.annotations[i];
                         var annotationWorkgroupId = annotation.toWorkgroupId;
-                        if (this.studentData.annotationsToWorkgroupId[annotationWorkgroupId] == null) {
+                        if (!this.studentData.annotationsToWorkgroupId[annotationWorkgroupId]) {
                             this.studentData.annotationsToWorkgroupId[annotationWorkgroupId] = new Array();
                         }
                         this.studentData.annotationsToWorkgroupId[annotationWorkgroupId].push(annotation);
 
                         var annotationNodeId = annotation.nodeId;
-                        if (this.studentData.annotationsByNodeId[annotationNodeId] == null) {
+                        if (!this.studentData.annotationsByNodeId[annotationNodeId]) {
                             this.studentData.annotationsByNodeId[annotationNodeId] = new Array();
                         }
                         this.studentData.annotationsByNodeId[annotationNodeId].push(annotation);
@@ -326,6 +361,32 @@ class TeacherDataService {
         return latestComponentState;
     }
 
+    getLatestComponentStateByWorkgroupIdNodeId(workgroupId, nodeId) {
+        var latestComponentState = null;
+
+        var componentStates = this.getComponentStatesByWorkgroupIdAndNodeId(workgroupId, nodeId);
+
+        if (componentStates != null) {
+
+            // loop through all the component states from newest to oldest
+            for (var c = componentStates.length - 1; c >= 0; c--) {
+                var componentState = componentStates[c];
+
+                if (componentState != null) {
+                    var componentStateNodeId = componentState.nodeId;
+
+                    // compare the node id and component id
+                    if (nodeId == componentStateNodeId) {
+                        latestComponentState = componentState;
+                        break;
+                    }
+                }
+            }
+        }
+
+        return latestComponentState;
+    }
+
     getComponentStatesByWorkgroupIdAndNodeId(workgroupId, nodeId) {
 
         var componentStatesByWorkgroupId = this.getComponentStatesByWorkgroupId(workgroupId);
@@ -416,10 +477,6 @@ class TeacherDataService {
         let periods = this.ConfigService.getPeriods();
         let currentPeriod = null;
 
-        if (periods.length) {
-            currentPeriod = periods[0];
-        }
-
         if (periods.length > 1) {
             // create an option for all periods
             let allPeriodsOption = {
@@ -428,6 +485,7 @@ class TeacherDataService {
             };
 
             periods.unshift(allPeriodsOption);
+            currentPeriod = periods[0];
         }
 
         this.periods = periods;
@@ -742,8 +800,8 @@ TeacherDataService.$inject = ['$http',
     '$rootScope',
     'AnnotationService',
     'ConfigService',
+    'NotificationService',
     'ProjectService',
-    'StudentDataService',
     'TeacherWebSocketService'
 ];
 

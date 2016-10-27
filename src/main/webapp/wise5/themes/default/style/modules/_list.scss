@@ -3,6 +3,24 @@
     border-bottom: 1px solid color('gray-lighter');
 }
 
+.list-item--info {
+    &._md-button-wrap>div.md-button:first-child {
+        border-left: 4px solid color('info') !important;
+        margin-left: -4px;
+    }
+}
+
+.list-item--warn {
+    &._md-button-wrap>div.md-button:first-child {
+        border-left: 4px solid color('warn') !important;
+        margin-left: -4px;
+    }
+}
+
+.list-item--expanded {
+    border-bottom-width: 0;
+}
+
 .user-list {
     font-size: rem(1.5);
 }

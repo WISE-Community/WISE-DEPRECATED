@@ -28,10 +28,10 @@ var NodeGradingController = function () {
 
         // the max score for the node
         this.maxScore = this.ProjectService.getMaxScoreForNode(this.nodeId);
+        this.hasMaxScore = typeof this.maxScore === 'number';
 
         // TODO: add loading indicator
         this.TeacherDataService.retrieveStudentDataByNodeId(this.nodeId).then(function (result) {
-            _this.nodeTitle = null;
 
             // field that will hold the node content
             _this.nodeContent = null;
@@ -43,13 +43,6 @@ var NodeGradingController = function () {
             var node = _this.ProjectService.getNodeById(_this.nodeId);
 
             if (node != null) {
-                var position = _this.ProjectService.getPositionById(_this.nodeId);
-
-                if (position != null) {
-                    _this.nodeTitle = position + ' ' + node.title;
-                } else {
-                    _this.nodeTitle = node.title;
-                }
 
                 // field that will hold the node content
                 _this.nodeContent = node;
@@ -216,6 +209,12 @@ var NodeGradingController = function () {
             return this.AnnotationService.getAnnotationByStepWorkIdAndType(stepWorkId, type);
         }
     }, {
+        key: 'getNodeScoreByWorkgroupIdAndNodeId',
+        value: function getNodeScoreByWorkgroupIdAndNodeId(workgroupId, nodeId) {
+            var score = this.AnnotationService.getScore(workgroupId, nodeId);
+            return typeof score === 'number' ? score : '-';
+        }
+    }, {
         key: 'scoreChanged',
         value: function scoreChanged(stepWorkId) {
             var annotation = this.annotationMappings[stepWorkId + '-score'];
@@ -291,6 +290,18 @@ var NodeGradingController = function () {
             var averageScore = this.StudentStatusService.getNodeAverageScore(this.nodeId, periodId);
 
             return averageScore === null ? 'N/A' : this.$filter('number')(averageScore, 1);
+        }
+
+        /**
+         * Checks whether a workgroup is in the current period
+         * @param workgroupId the workgroupId to look for
+         * @returns boolean whether the workgroup is in the current period
+         */
+
+    }, {
+        key: 'isWorkgroupInCurrentPeriod',
+        value: function isWorkgroupInCurrentPeriod(workgroupId) {
+            return this.getCurrentPeriod().periodName === "All" || this.getPeriodIdByWorkgroupId(workgroupId) === this.getCurrentPeriod().periodId;
         }
     }]);
 

@@ -1,0 +1,66 @@
+<ng-switch on="$ctrl.type">
+    <md-card ng-switch-when="card"
+             class="nav-item--card"
+             ng-class="{'nav-item--card--group':$ctrl.isGroup, 'expanded md-whiteframe-z3':$ctrl.expanded}">
+        <md-card-content class="nav-item--card__content" ng-click="$ctrl.itemClicked($event)" role="button" md-ink-ripple>
+            <div layout="row">
+                <img ng-if="$ctrl.icon.type === 'img'" ng-animate-ref="{{ $ctrl.nodeId }}" ng-class="$ctrl.isGroup ? 'avatar--square' : ''" class="md-36 avatar nav-item__avatar" ng-src="{{$ctrl.icon.imgSrc}}" alt="{{$ctrl.icon.imgAlt}}" />
+                <div ng-if="$ctrl.icon.type === 'font'" ng-animate-ref="{{ $ctrl.nodeId }}" ng-class="$ctrl.isGroup ? 'avatar--square' : ''" style="background-color: {{$ctrl.icon.color}};" class="md-36 avatar avatar--icon nav-item__avatar">
+                    <md-icon md-font-set="{{$ctrl.icon.fontSet}}" class="md-36 md-light">{{$ctrl.icon.fontName}}</md-icon>
+                </div>
+                <div class="md-title nav-item__title" style="color: {{$ctrl.icon.color}};" flex>
+                    <span>{{ $ctrl.nodeTitle }}</span> <workgroup-status-icon alert-status="$ctrl.alertStatus"></workgroup-status-icon>
+                </div>
+                <md-icon class="nav-item__collapse" ng-show="$ctrl.isGroup && $ctrl.expanded" aria-label="collapse">remove</md-icon>
+            </div>
+        </md-card-content>
+        <md-card-content ng-if="$ctrl.isGroup" ng-show="$ctrl.expanded" class="nav-contents nav-contents--group">
+            <div ng-if="$ctrl.isPlanning" class="md-padding" layout="column" layout-align="center center">
+                Note: This activity includes student planning.
+            </div>
+            <md-list class="nav-contents__list">
+                <nav-item ng-repeat="childId in $ctrl.item.ids"
+                          ng-class="{'expanded': itemExpanded, 'prev': isPrevStep}"
+                          aria-label="{{ isPrevNode ? 'Last Viewed Item' : null }}"
+                          show-position="$ctrl.showPosition"
+                          node-id="childId" type="'list'" ng-animate-ref="{{ childId }}"
+                          class="nav-item"
+                          data-nodeid="{{ childId }}">
+                </nav-item>
+                <nav-item ng-if="$ctrl.item.planning"
+                          ng-repeat="planningNode in $ctrl.item.availablePlanningNodes"
+                          ng-class="{'expanded': itemExpanded, 'prev': isPrevStep}"
+                          aria-label="{{ isPrevNode ? 'Last Viewed Item' : null }}"
+                          node-id="planningNode.nodeId" type="'list'" is-planning-node="true"
+                          ng-animate-ref="{{ planningNode.nodeId }}"
+                          class="nav-item"
+                          data-nodeid="{{ planningNode.nodeId }}">
+                </nav-item>
+            </md-list>
+        </md-card-content>
+        <md-card-footer class="nav-item__more md-body-1" layout="row" layout-align="center center" flex>
+            <ng-include src="'wise5/classroomMonitor/classroomMonitorComponents/nodeProgress/navItem/navItemProgress.html'"></ng-include>
+            <span flex></span>
+            <workgroups-on-node node-title="$ctrl.nodeTitle" workgroups="$ctrl.workgroupsOnNodeData" online="$ctrl.isWorkgroupOnlineOnNode"></workgroups-on-node>
+        </md-card-footer>
+    </md-card>
+
+    <md-list-item ng-switch-when="list" ng-click="$ctrl.itemClicked($event)"
+                  class="md-long-text noright list-item md-whiteframe-z1"
+                  aria-label="View {{$ctrl.nodeTitle}}"
+                  ng-class="{'nav-item--list--group': $ctrl.isGroup, 'nav-item--planning-mode': $ctrl.planningMode && $ctrl.isPlanningInstance, 'list-item--warn': $ctrl.alertStatus === 'new'}">
+        <img ng-if="$ctrl.icon.type === 'img'" ng-class="$ctrl.isGroup ? 'avatar--square' : ''" class="md-avatar" ng-src="{{$ctrl.icon.imgSrc}}" alt="{{$ctrl.icon.imgAlt}}" />
+        <div ng-if="$ctrl.icon.type === 'font'" ng-class="$ctrl.isGroup ? 'avatar--square' : ''" style="background-color: {{$ctrl.icon.color}};" class="md-avatar">
+            <md-icon md-font-set="{{$ctrl.icon.fontSet}}" class="md-light">{{$ctrl.icon.fontName}}</md-icon>
+        </div>
+        <p flex layout="row" layout-align="start center">
+            <span>{{ $ctrl.nodeTitle }}</span> <workgroup-status-icon alert-status="$ctrl.alertStatus"></workgroup-status-icon>
+            <span flex></span>
+            <span class="nav-item--list__info-item" ng-if="$ctrl.maxScore !== null" ng-include="'wise5/classroomMonitor/classroomMonitorComponents/nodeProgress/navItem/navItemScore.html'"></span>
+            <span class="nav-item--list__info-item" ng-include="'wise5/classroomMonitor/classroomMonitorComponents/nodeProgress/navItem/navItemProgress.html'"></span>
+            <workgroups-on-node node-title="$ctrl.nodeTitle"
+                                workgroups="$ctrl.workgroupsOnNodeData"
+                                online="$ctrl.isWorkgroupOnlineOnNode"></workgroups-on-node>
+        </p>
+    </md-list-item>
+</ng-switch>

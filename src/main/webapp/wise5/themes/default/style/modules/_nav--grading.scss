@@ -1,0 +1,17 @@
+.nav-item__grading {
+    background-color: #ffffff;
+    margin-bottom: 16px;
+
+    .component {
+        padding: 0;
+    }
+}
+
+.nav-item__grading__info {
+    padding: 12px;
+    background-color: color('gray-lightest');
+}
+
+.nav-item__grading__timestamp {
+    border-bottom: 1px dotted;
+}

@@ -28,24 +28,28 @@ var NotificationService = function () {
          */
         this.$rootScope.$on('newNotification', function (event, notification) {
             if (notification != null) {
-                if (_this.ConfigService.getWorkgroupId() === notification.toWorkgroupId) {
-                    notification.nodePosition = _this.ProjectService.getNodePositionById(notification.nodeId);
-                    notification.nodePositionAndTitle = _this.ProjectService.getNodePositionAndTitleByNodeId(notification.nodeId);
-                    // check if this notification is new or is an update
-                    var isNotificationNew = true;
-                    for (var n = 0; n < _this.notifications.length; n++) {
-                        var currentNotification = _this.notifications[n];
-                        if (currentNotification.id == notification.id) {
-                            // existing notification (with same id) found, so it's an update
-                            _this.notifications[n] = notification;
-                            isNotificationNew = false;
-                        }
-                    }
-                    if (isNotificationNew) {
-                        // this is a new notification
-                        _this.notifications.push(notification);
+                //let workgroupId = this.ConfigService.getWorkgroupId();
+                //if (workgroupId === notification.toWorkgroupId) {
+                notification.nodePosition = _this.ProjectService.getNodePositionById(notification.nodeId);
+                notification.nodePositionAndTitle = _this.ProjectService.getNodePositionAndTitleByNodeId(notification.nodeId);
+                // check if this notification is new or is an update
+                var isNotificationNew = true;
+                for (var n = 0; n < _this.notifications.length; n++) {
+                    var currentNotification = _this.notifications[n];
+                    if (currentNotification.id == notification.id) {
+                        // existing notification (with same id) found, so it's an update
+                        _this.notifications[n] = notification;
+                        isNotificationNew = false;
+                        _this.$rootScope.$broadcast('notificationChanged', notification);
+                        break;
                     }
                 }
+                if (isNotificationNew) {
+                    // this is a new notification
+                    _this.notifications.push(notification);
+                    _this.$rootScope.$broadcast('notificationAdded', notification);
+                }
+                //}
             }
         });
     }
@@ -120,7 +124,7 @@ var NotificationService = function () {
                 config.params = {};
                 if (toWorkgroupId != null) {
                     config.params.toWorkgroupId = toWorkgroupId;
-                } else {
+                } else if (this.ConfigService.getMode() !== 'classroomMonitor') {
                     config.params.toWorkgroupId = this.ConfigService.getWorkgroupId();
                     config.params.periodId = this.ConfigService.getPeriodId();
                 }
@@ -310,6 +314,56 @@ var NotificationService = function () {
                 }
                 return notification;
             });
+        }
+
+        /**
+         * Returns all notifications for a given nodeId and workgroupId
+         * @param nodeId the nodeId to look for (optional)
+         * @param workgroupId the workgroupId to look for (optional)
+         * TODO: update this to allow for more parameters (like periodId, maybe componentID?)
+         */
+
+    }, {
+        key: 'getNotifications',
+        value: function getNotifications(nodeId, workgroupId) {
+            if (nodeId || workgroupId) {
+                return this.notifications.filter(function (notification) {
+                    if (nodeId && workgroupId) {
+                        return notification.nodeId === nodeId && notification.toWorkgroupId === workgroupId;
+                    } else if (nodeId) {
+                        return notification.nodeId === nodeId;
+                    } else if (workgroupId) {
+                        return notification.toWorkgroupId === workgroupId;
+                    }
+                });
+            } else {
+                return this.notifications;
+            }
+        }
+
+        /**
+         * Returns all CRaterResult notifications for given workgroup and node
+         * TODO: expand to encompass other notification types that should be shown in classroom monitor
+         * @param nodeId the nodeId to of the notification (optional)
+         * @param workgroupId the workgroupId of the notification (optional)
+         * @returns array of cRater notificaitons
+         */
+
+    }, {
+        key: 'getAlertNotifications',
+        value: function getAlertNotifications(args) {
+            // get all CRaterResult notifications for the giver parameters
+            // TODO: expand to encompass other notification types that should be shown to teacher
+            var notifications = this.getNotifications(args.nodeId, args.workgroupId);
+            var alertNotifications = notifications.filter(function (notification) {
+                if (args.periodId && args.periodId !== -1) {
+                    return notification.type === 'CRaterResult' && notification.periodId === args.periodId;
+                } else {
+                    return notification.type === 'CRaterResult';
+                }
+            });
+
+            return alertNotifications;
         }
     }]);
 

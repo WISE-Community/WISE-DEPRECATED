@@ -54,5 +54,6 @@
   "teacherFeedbackLabel": "Teacher Feedback",
   "automatedFeedbackLabel": "Computer Feedback",
   "timeSpent": "Time Spent",
+  "worgkroupIdDisplay": "Workgoup ID: {{id}}",
   "yes": "Yes"
 }
