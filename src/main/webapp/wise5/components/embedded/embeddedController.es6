@@ -272,11 +272,13 @@ class EmbeddedController {
                 this.isSubmit = true;
             }
             
+            // get the student work
             var studentWork = this.getStudentWork();
             
             var message = studentWork;
             message.messageType = 'nodeSubmitClicked';
             
+            // send the student data to the embedded application
             this.sendMessageToApplication(message);
         });
         
@@ -328,6 +330,15 @@ class EmbeddedController {
                     this.componentState = {};
                 }
             }
+            
+            // get the student work
+            var studentWork = this.getStudentWork();
+            
+            var message = studentWork;
+            message.messageType = 'studentWork';
+            
+            // send the student work to the embedded application
+            this.sendMessageToApplication(message);
         });
 
         /**

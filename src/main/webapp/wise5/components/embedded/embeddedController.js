@@ -281,11 +281,13 @@ var EmbeddedController = function () {
                 _this.isSubmit = true;
             }
 
+            // get the student work
             var studentWork = _this.getStudentWork();
 
             var message = studentWork;
             message.messageType = 'nodeSubmitClicked';
 
+            // send the student data to the embedded application
             _this.sendMessageToApplication(message);
         });
 
@@ -337,6 +339,15 @@ var EmbeddedController = function () {
                     _this.componentState = {};
                 }
             }
+
+            // get the student work
+            var studentWork = _this.getStudentWork();
+
+            var message = studentWork;
+            message.messageType = 'studentWork';
+
+            // send the student work to the embedded application
+            _this.sendMessageToApplication(message);
         });
 
         /**
