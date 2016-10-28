@@ -87,6 +87,9 @@ class OpenResponseController {
         // whether the submit button is shown or not
         this.isSubmitButtonVisible = false;
 
+        // whether the submit button is disabled
+        this.isSubmitButtonDisabled = false;
+        
         // the latest annotations
         this.latestAnnotations = null;
 
@@ -95,7 +98,7 @@ class OpenResponseController {
 
         // counter to keep track of the number of submits
         this.submitCounter = 0;
-
+        
         //var scope = this;
         let themePath = this.ProjectService.getThemePath();
 
@@ -228,6 +231,15 @@ class OpenResponseController {
             } else {
                 // populate the student work into this component
                 this.setStudentWork(componentState);
+            }
+            
+            // check if the student has used up all of their submits
+            if (this.componentContent.maxSubmitCount != null && this.submitCounter >= this.componentContent.maxSubmitCount) {
+                /*
+                 * the student has used up all of their chances to submit so we 
+                 * will disable the submit button
+                 */
+                this.isSubmitButtonDisabled = true;
             }
 
             // check if we need to lock this component
@@ -464,10 +476,53 @@ class OpenResponseController {
      * Called when the student clicks the submit button
      */
     submitButtonClicked() {
-        this.isSubmit = true;
+        
+        var performSubmit = true;
+        
+        if (this.componentContent.maxSubmitCount != null) {
+            // there is a max submit count
+            
+            // calculate the number of submits this student has left
+            var numberOfSubmitsLeft = this.componentContent.maxSubmitCount - this.submitCounter;
+            
+            var message = '';
+            
+            if (numberOfSubmitsLeft <= 0) {
+                
+                // the student does not have any more chances to submit
+                alert('You do not have any more chances to receive feedback on your answer.');
+                performSubmit = false;
+            } else if (numberOfSubmitsLeft == 1) {
+                
+                // ask the student if they are sure they want to submit
+                message = 'You have ' + numberOfSubmitsLeft + ' chance to receive feedback on your answer so this this should be your best work.\n\nAre you ready to receive feedback on this answer?';
+                performSubmit = confirm(message);
+            } else if (numberOfSubmitsLeft > 1) {
+                
+                // ask the student if they are sure they want to submit
+                message = 'You have ' + numberOfSubmitsLeft + ' chances to receive feedback on your answer so this this should be your best work.\n\nAre you ready to receive feedback on this answer?';
+                performSubmit = confirm(message);
+            }
+        }
+        
+        if (performSubmit) {
+            // increment the submit counter
+            this.submitCounter++;
+            
+            // check if the student has used up all of their submits
+            if (this.componentContent.maxSubmitCount != null && this.submitCounter >= this.componentContent.maxSubmitCount) {
+                /*
+                 * the student has used up all of their submits so we will
+                 * disable the submit button
+                 */
+                this.isSubmitButtonDisabled = true;
+            }
+            
+            this.isSubmit = true;
 
-        // tell the parent node that this component wants to submit
-        this.$scope.$emit('componentSubmitTriggered', {nodeId: this.nodeId, componentId: this.componentId});
+            // tell the parent node that this component wants to submit
+            this.$scope.$emit('componentSubmitTriggered', {nodeId: this.nodeId, componentId: this.componentId});
+        }
     };
 
     submit() {
@@ -543,9 +598,6 @@ class OpenResponseController {
             // the student submitted this work
             componentState.isSubmit = this.isSubmit;
 
-            // increment the submit counter
-            this.submitCounter++;
-
             /*
              * reset the isSubmit value so that the next component state
              * doesn't maintain the same value
@@ -595,6 +647,11 @@ class OpenResponseController {
             if (this.isCRaterScoreOnChange(this.componentContent)) {
                 performCRaterScoring = true;
             }
+        }
+        
+        if (this.submitCounter > this.componentContent.maxSubmitCount) {
+            // the student has used up all their chances to submit
+            performCRaterScoring = false;
         }
 
         if (performCRaterScoring) {

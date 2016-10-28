@@ -36,6 +36,13 @@
         <input type='checkbox'
                ng-model='openResponseController.authoringComponentContent.showSubmitButton'
                ng-change='openResponseController.authoringViewComponentChanged()'/>
+        <div ng-show='openResponseController.authoringComponentContent.showSubmitButton'
+             style='display:inline'>
+            Max Submit:
+            <input type='number'
+                   ng-model='openResponseController.authoringComponentContent.maxSubmitCount'
+                   ng-change='openResponseController.authoringViewComponentChanged()'/>
+        </div>
         <br/>
         Enable CRater:
         <input type='checkbox'
@@ -220,18 +227,18 @@
     </div>
     <div ng-if="openResponseController.showSaveButton() || openResponseController.showSubmitButton()"
          class="component__actions" layout="row" layout-align="start center">
-        <md-button class="md-raised md-primary"
-                   ng-click="openResponseController.submitButtonClicked()"
-                   ng-disabled="openResponseController.isDisabled || !openResponseController.isSubmitDirty"
-                   ng-if="openResponseController.showSubmitButton()"
-                   aria-label="Submit"
-                   translate="submit"></md-button>
         <md-button class="md-primary md-raised"
                    ng-click="openResponseController.saveButtonClicked()"
                    ng-disabled="openResponseController.isDisabled || !openResponseController.isDirty"
                    ng-if="openResponseController.showSaveButton()"
                    aria-label="Save"
                    translate="save"></md-button>
+        <md-button class="md-raised md-primary"
+                   ng-click="openResponseController.submitButtonClicked()"
+                   ng-disabled="openResponseController.isDisabled || !openResponseController.isSubmitDirty || openResponseController.isSubmitButtonDisabled"
+                   ng-if="openResponseController.showSubmitButton()"
+                   aria-label="Submit"
+                   translate="submit"></md-button>
         <span ng-show="openResponseController.saveMessage.text"
               class="component__actions__info md-caption">
               {{openResponseController.saveMessage.text}} <span class="component__actions__more"><md-tooltip md-direction="top">{{ openResponseController.saveMessage.time | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip><span am-time-ago="openResponseController.saveMessage.time"></span></span>
