@@ -306,23 +306,40 @@ class NotificationService {
     /**
      * Returns all CRaterResult notifications for given workgroup and node
      * TODO: expand to encompass other notification types that should be shown in classroom monitor
-     * @param nodeId the nodeId to of the notification (optional)
-     * @param workgroupId the workgroupId of the notification (optional)
+     * @param args object of optional parameters to filter on (nodeId, workgroupId, periodId)
      * @returns array of cRater notificaitons
      */
     getAlertNotifications(args) {
         // get all CRaterResult notifications for the giver parameters
         // TODO: expand to encompass other notification types that should be shown to teacher
-        let notifications = this.getNotifications(args.nodeId, args.workgroupId);
-        let alertNotifications = notifications.filter(
-            notification => {
-                if (args.periodId && args.periodId !== -1) {
-                    return (notification.type === 'CRaterResult' && notification.periodId === args.periodId);
-                } else {
-                    return (notification.type === 'CRaterResult');
-                }
+        let notifications = [];
+        let alertNotifications = [];
+        let nodeId = args.nodeId;
+        let workgroupId = args.workgroupId;
+        let periodId = args.periodId;
+
+        if (nodeId && this.ProjectService.isGroupNode(nodeId)) {
+            let groupNode = this.ProjectService.getNodeById(nodeId);
+            let children = groupNode.ids;
+            let n = children.length;
+
+            for (let i = 0; i < n; i++) {
+                let childId = children[i];
+                let childAlerts = this.getAlertNotifications({nodeId: childId, workgroupId: workgroupId, periodId: periodId});
+                alertNotifications = alertNotifications.concat(childAlerts);
             }
-        );
+        } else {
+            notifications = this.getNotifications(nodeId, workgroupId);
+            alertNotifications = notifications.filter(
+                notification => {
+                    if (periodId && periodId !== -1) {
+                        return (notification.type === 'CRaterResult' && notification.periodId === periodId);
+                    } else {
+                        return (notification.type === 'CRaterResult');
+                    }
+                }
+            );
+        }
 
         return alertNotifications;
     }
