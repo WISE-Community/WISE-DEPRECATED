@@ -116,6 +116,11 @@ class NodeProgressController {
                 }
             }
         });
+
+        // save event when node progress view is displayed
+        let context = "ClassroomMonitor", nodeId = this.nodeId, componentId = null, componentType = null,
+            category = "Navigation", event = "nodeProgressViewDisplayed", data = { nodeId: this.nodeId };
+        this.TeacherDataService.saveEvent(context, nodeId, componentId, componentType, category, event, data);
     }
 
     isGroupNode(nodeId) {

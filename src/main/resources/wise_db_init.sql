@@ -109,7 +109,7 @@
         event varchar(255) not null,
         nodeId varchar(30),
         serverSaveTime datetime not null,
-        periodId bigint not null,
+        periodId bigint,
         runId bigint not null,
         workgroupId bigint not null,
         primary key (id)

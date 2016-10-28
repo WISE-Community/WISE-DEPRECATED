@@ -177,7 +177,8 @@ public class TeacherDataController {
             HttpServletResponse response,
             @RequestParam(value = "workgroupId", required = true) Integer workgroupId,
             @RequestParam(value = "runId", required = true) Integer runId,
-            @RequestParam(value = "annotations", required = true) String annotations
+            @RequestParam(value = "annotations", required = false) String annotations,
+            @RequestParam(value = "events", required = false) String events
     ) {
 
         JSONObject result = new JSONObject();
@@ -192,65 +193,102 @@ public class TeacherDataController {
 
             if (owner.equals(signedInUser) || sharedOwners.contains(signedInUser)) {
 
-                // handle POST'ed annotations
-                JSONArray annotationsJSONArray = new JSONArray(annotations);
-                if (annotationsJSONArray != null) {
-                    JSONArray annotationsResultJSONArray = new JSONArray();
-                    for (int a = 0; a < annotationsJSONArray.length(); a++) {
-                        try {
-                            JSONObject annotationJSONObject = annotationsJSONArray.getJSONObject(a);
-                            String requestToken = annotationJSONObject.getString("requestToken");
-
-                            Annotation annotation = vleService.saveAnnotation(
-                                    annotationJSONObject.isNull("id") ? null : annotationJSONObject.getInt("id"),
-                                    annotationJSONObject.isNull("runId") ? null : annotationJSONObject.getInt("runId"),
-                                    annotationJSONObject.isNull("periodId") ? null : annotationJSONObject.getInt("periodId"),
-                                    annotationJSONObject.isNull("fromWorkgroupId") ? null : annotationJSONObject.getInt("fromWorkgroupId"),
-                                    annotationJSONObject.isNull("toWorkgroupId") ? null : annotationJSONObject.getInt("toWorkgroupId"),
-                                    annotationJSONObject.isNull("nodeId") ? null : annotationJSONObject.getString("nodeId"),
-                                    annotationJSONObject.isNull("componentId") ? null : annotationJSONObject.getString("componentId"),
-                                    annotationJSONObject.isNull("studentWorkId") ? null : annotationJSONObject.getInt("studentWorkId"),
-                                    annotationJSONObject.isNull("type") ? null : annotationJSONObject.getString("type"),
-                                    annotationJSONObject.isNull("data") ? null : annotationJSONObject.getString("data"),
-                                    annotationJSONObject.isNull("clientSaveTime") ? null : annotationJSONObject.getString("clientSaveTime"));
-
-                            // before returning saved Annotation, strip all fields except id, responseToken, and serverSaveTime to minimize response size
-                            JSONObject savedAnnotationJSONObject = new JSONObject();
-                            savedAnnotationJSONObject.put("id", annotation.getId());
-                            savedAnnotationJSONObject.put("requestToken", requestToken);
-                            savedAnnotationJSONObject.put("serverSaveTime", annotation.getServerSaveTime().getTime());
-                            annotationsResultJSONArray.put(savedAnnotationJSONObject);
-
-                            // create notification for each annotation so the students will be notified
-                            // and send it in real-time over the websocket
+                if (annotations != null) {
+                    // handle POST'ed annotations
+                    JSONArray annotationsJSONArray = new JSONArray(annotations);
+                    if (annotationsJSONArray != null) {
+                        JSONArray annotationsResultJSONArray = new JSONArray();
+                        for (int a = 0; a < annotationsJSONArray.length(); a++) {
                             try {
-                                Notification notification = this.createNotificationForAnnotation(annotation);
-                                if (webSocketHandler != null) {
-                                    WISEWebSocketHandler wiseWebSocketHandler = (WISEWebSocketHandler) webSocketHandler;
+                                JSONObject annotationJSONObject = annotationsJSONArray.getJSONObject(a);
+                                String requestToken = annotationJSONObject.getString("requestToken");
 
-                                    if (wiseWebSocketHandler != null) {
-                                        // send this message to websockets
-                                        JSONObject notificationJSON = notification.toJSON();
-                                        JSONObject webSocketMessageJSON = new JSONObject();
-                                        webSocketMessageJSON.put("messageType", "annotationNotification");
-                                        webSocketMessageJSON.put("messageParticipants", "teacherToStudent");
-                                        webSocketMessageJSON.put("toWorkgroupId", notification.getToWorkgroup().getId());
-                                        webSocketMessageJSON.put("notificationData", notificationJSON);
-                                        webSocketMessageJSON.put("annotationData", annotation.toJSON());
-                                        wiseWebSocketHandler.handleMessage(signedInUser, webSocketMessageJSON.toString());
+                                Annotation annotation = vleService.saveAnnotation(
+                                        annotationJSONObject.isNull("id") ? null : annotationJSONObject.getInt("id"),
+                                        annotationJSONObject.isNull("runId") ? null : annotationJSONObject.getInt("runId"),
+                                        annotationJSONObject.isNull("periodId") ? null : annotationJSONObject.getInt("periodId"),
+                                        annotationJSONObject.isNull("fromWorkgroupId") ? null : annotationJSONObject.getInt("fromWorkgroupId"),
+                                        annotationJSONObject.isNull("toWorkgroupId") ? null : annotationJSONObject.getInt("toWorkgroupId"),
+                                        annotationJSONObject.isNull("nodeId") ? null : annotationJSONObject.getString("nodeId"),
+                                        annotationJSONObject.isNull("componentId") ? null : annotationJSONObject.getString("componentId"),
+                                        annotationJSONObject.isNull("studentWorkId") ? null : annotationJSONObject.getInt("studentWorkId"),
+                                        annotationJSONObject.isNull("type") ? null : annotationJSONObject.getString("type"),
+                                        annotationJSONObject.isNull("data") ? null : annotationJSONObject.getString("data"),
+                                        annotationJSONObject.isNull("clientSaveTime") ? null : annotationJSONObject.getString("clientSaveTime"));
+
+                                // before returning saved Annotation, strip all fields except id, responseToken, and serverSaveTime to minimize response size
+                                JSONObject savedAnnotationJSONObject = new JSONObject();
+                                savedAnnotationJSONObject.put("id", annotation.getId());
+                                savedAnnotationJSONObject.put("requestToken", requestToken);
+                                savedAnnotationJSONObject.put("serverSaveTime", annotation.getServerSaveTime().getTime());
+                                annotationsResultJSONArray.put(savedAnnotationJSONObject);
+
+                                // create notification for each annotation so the students will be notified
+                                // and send it in real-time over the websocket
+                                try {
+                                    Notification notification = this.createNotificationForAnnotation(annotation);
+                                    if (webSocketHandler != null) {
+                                        WISEWebSocketHandler wiseWebSocketHandler = (WISEWebSocketHandler) webSocketHandler;
+
+                                        if (wiseWebSocketHandler != null) {
+                                            // send this message to websockets
+                                            JSONObject notificationJSON = notification.toJSON();
+                                            JSONObject webSocketMessageJSON = new JSONObject();
+                                            webSocketMessageJSON.put("messageType", "annotationNotification");
+                                            webSocketMessageJSON.put("messageParticipants", "teacherToStudent");
+                                            webSocketMessageJSON.put("toWorkgroupId", notification.getToWorkgroup().getId());
+                                            webSocketMessageJSON.put("notificationData", notificationJSON);
+                                            webSocketMessageJSON.put("annotationData", annotation.toJSON());
+                                            wiseWebSocketHandler.handleMessage(signedInUser, webSocketMessageJSON.toString());
+                                        }
                                     }
+
+                                } catch (Exception e) {
+                                    // if something fails during creating annotation and sending to websocket,
+                                    // allow the rest to continue
                                 }
 
                             } catch (Exception e) {
-                                // if something fails during creating annotation and sending to websocket,
-                                // allow the rest to continue
+                                e.printStackTrace();
                             }
-
-                        } catch (Exception e) {
-                            e.printStackTrace();
                         }
+                        result.put("annotations", annotationsResultJSONArray);
                     }
-                    result.put("annotations", annotationsResultJSONArray);
+                } else if (events != null) {
+                    // handle POST'ed events
+                    JSONArray eventsJSONArray = new JSONArray(events);
+                    if (eventsJSONArray != null) {
+                        JSONArray eventsResultJSONArray = new JSONArray();
+                        for (int e = 0; e < eventsJSONArray.length(); e++) {
+                            try {
+                                JSONObject eventJSONObject = eventsJSONArray.getJSONObject(e);
+
+                                Event event = vleService.saveEvent(
+                                        eventJSONObject.isNull("id") ? null : eventJSONObject.getInt("id"),
+                                        eventJSONObject.isNull("runId") ? null : eventJSONObject.getInt("runId"),
+                                        eventJSONObject.isNull("periodId") ? null : eventJSONObject.getInt("periodId"),
+                                        eventJSONObject.isNull("workgroupId") ? null : eventJSONObject.getInt("workgroupId"),
+                                        eventJSONObject.isNull("nodeId") ? null : eventJSONObject.getString("nodeId"),
+                                        eventJSONObject.isNull("componentId") ? null : eventJSONObject.getString("componentId"),
+                                        eventJSONObject.isNull("componentType") ? null : eventJSONObject.getString("componentType"),
+                                        eventJSONObject.isNull("context") ? null : eventJSONObject.getString("context"),
+                                        eventJSONObject.isNull("category") ? null : eventJSONObject.getString("category"),
+                                        eventJSONObject.isNull("event") ? null : eventJSONObject.getString("event"),
+                                        eventJSONObject.isNull("data") ? null : eventJSONObject.getString("data"),
+                                        eventJSONObject.isNull("clientSaveTime") ? null : eventJSONObject.getString("clientSaveTime"));
+
+                                // before returning saved Event, strip all fields except id, responseToken, and serverSaveTime to minimize response size
+                                JSONObject savedEventJSONObject = new JSONObject();
+                                savedEventJSONObject.put("id", event.getId());
+                                savedEventJSONObject.put("serverSaveTime", event.getServerSaveTime().getTime());
+                                eventsResultJSONArray.put(savedEventJSONObject);
+
+                            } catch (Exception ex) {
+                                ex.printStackTrace();
+                            }
+                        }
+                        result.put("events", eventsResultJSONArray);
+                    }
                 }
             }
         } catch (ObjectNotFoundException e) {

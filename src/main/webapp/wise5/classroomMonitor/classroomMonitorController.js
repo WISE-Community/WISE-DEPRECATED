@@ -110,16 +110,26 @@ var ClassroomMonitorController = function () {
         }, function (newValue, oldValue) {
             _this.notifications = _this.NotificationService.notifications;
         });
+
+        // save event when classroom monitor session is started
+        var context = "ClassroomMonitor",
+            nodeId = null,
+            componentId = null,
+            componentType = null,
+            category = "Navigation",
+            event = "sessionStarted",
+            data = {};
+        this.TeacherDataService.saveEvent(context, nodeId, componentId, componentType, category, event, data);
     }
+
+    /**
+     * Update UI items based on state, show or hide relevant menus and toolbars
+     * TODO: remove/rework this and put items in their own ui states
+     */
+
 
     _createClass(ClassroomMonitorController, [{
         key: 'processUI',
-
-
-        /**
-         * Update UI items based on state, show or hide relevant menus and toolbars
-         * TODO: remove/rework this and put items in their own ui states
-         */
         value: function processUI() {
             if (this.$state.$current.name === 'root.nodeProgress') {
                 var nodeId = this.$state.params.nodeId;

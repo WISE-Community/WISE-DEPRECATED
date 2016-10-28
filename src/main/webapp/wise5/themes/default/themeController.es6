@@ -299,12 +299,20 @@ class ThemeController {
                         if (!$scope.hasDismissCode || ($scope.input.dismissCode == notification.data.dismissCode)) {
                             NotificationService.dismissNotification(notification);
                             $mdDialog.hide();
+                            // log currentAmbientNotificationDimissed event
+                            var nodeId = null;
+                            var componentId = null;
+                            var componentType = null;
+                            var category = "Notification";
+                            var event = "currentAmbientNotificationDimissedWithCode";
+                            var eventData = {};
+                            StudentDataService.saveVLEEvent(nodeId, componentId, componentType, category, event, eventData);
                         } else {
                             $translate(["dismissNotificationInvalidDismissCode"]).then((translations) => {
                                 $scope.errorMessage = translations.dismissNotificationInvalidDismissCode;
                             });
                         }
-                    }
+                    };
                     $scope.visitNode = function() {
                         if (!$scope.hasDismissCode) {
                             // only dismiss notifications that don't require a dismiss code, but still allow them to move to the node
@@ -319,10 +327,28 @@ class ThemeController {
 
                     $scope.closeDialog = function() {
                         $mdDialog.hide();
+
+                        // log currentAmbientNotificationWindowClosed event
+                        var nodeId = null;
+                        var componentId = null;
+                        var componentType = null;
+                        var category = "Notification";
+                        var event = "currentAmbientNotificationWindowClosed";
+                        var eventData = {};
+                        StudentDataService.saveVLEEvent(nodeId, componentId, componentType, category, event, eventData);
                     }
                 }
 
                 this.$mdDialog.show(dismissCodePrompt);
+
+                // log currentAmbientNotificationWindowOpened event
+                var nodeId = null;
+                var componentId = null;
+                var componentType = null;
+                var category = "Notification";
+                var event = "currentAmbientNotificationWindowOpened";
+                var eventData = {};
+                this.StudentDataService.saveVLEEvent(nodeId, componentId, componentType, category, event, eventData);
             });
         });
 

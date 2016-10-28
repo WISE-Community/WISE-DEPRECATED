@@ -81,9 +81,6 @@ var TeacherDataService = function () {
             exportURL += "/" + runId + "/" + exportType;
 
             var params = {};
-            params.getStudentWork = true;
-            params.getEvents = false;
-            params.getAnnotations = true;
 
             var httpParams = {};
             httpParams.method = 'GET';
@@ -92,6 +89,60 @@ var TeacherDataService = function () {
 
             return this.$http(httpParams).then(function (result) {
                 return result.data;
+            });
+        }
+    }, {
+        key: 'saveEvent',
+
+
+        /**
+         * Save events that occur in the Classroom Monitor to the server
+         * @param event the event object
+         * @returns a promise
+         */
+        value: function saveEvent(context, nodeId, componentId, componentType, category, event, data) {
+            var newEvent = {
+                runId: this.ConfigService.getRunId(),
+                workgroupId: this.ConfigService.getWorkgroupId(),
+                clientSaveTime: Date.parse(new Date()),
+                context: context,
+                nodeId: nodeId,
+                componentId: componentId,
+                type: componentType,
+                category: category,
+                event: event,
+                data: data
+            };
+
+            var events = [newEvent];
+
+            var params = {
+                runId: this.ConfigService.getRunId(),
+                workgroupId: this.ConfigService.getWorkgroupId(),
+                events: angular.toJson(events)
+            };
+
+            var httpParams = {};
+            httpParams.method = 'POST';
+            httpParams.url = this.ConfigService.getConfigParam('teacherDataURL');
+            httpParams.headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
+            httpParams.data = $.param(params);
+
+            return this.$http(httpParams).then(function (result) {
+
+                var savedEvents = null;
+
+                if (result != null && result.data != null) {
+                    var _data = result.data;
+
+                    if (_data != null) {
+
+                        // get the saved events
+                        savedEvents = _data.events;
+                    }
+                }
+
+                return savedEvents;
             });
         }
     }, {
