@@ -344,8 +344,7 @@ var NotificationService = function () {
         /**
          * Returns all CRaterResult notifications for given workgroup and node
          * TODO: expand to encompass other notification types that should be shown in classroom monitor
-         * @param nodeId the nodeId to of the notification (optional)
-         * @param workgroupId the workgroupId of the notification (optional)
+         * @param args object of optional parameters to filter on (nodeId, workgroupId, periodId)
          * @returns array of cRater notificaitons
          */
 
@@ -354,14 +353,32 @@ var NotificationService = function () {
         value: function getAlertNotifications(args) {
             // get all CRaterResult notifications for the giver parameters
             // TODO: expand to encompass other notification types that should be shown to teacher
-            var notifications = this.getNotifications(args.nodeId, args.workgroupId);
-            var alertNotifications = notifications.filter(function (notification) {
-                if (args.periodId && args.periodId !== -1) {
-                    return notification.type === 'CRaterResult' && notification.periodId === args.periodId;
-                } else {
-                    return notification.type === 'CRaterResult';
+            var notifications = [];
+            var alertNotifications = [];
+            var nodeId = args.nodeId;
+            var workgroupId = args.workgroupId;
+            var periodId = args.periodId;
+
+            if (nodeId && this.ProjectService.isGroupNode(nodeId)) {
+                var groupNode = this.ProjectService.getNodeById(nodeId);
+                var children = groupNode.ids;
+                var n = children.length;
+
+                for (var i = 0; i < n; i++) {
+                    var childId = children[i];
+                    var childAlerts = this.getAlertNotifications({ nodeId: childId, workgroupId: workgroupId, periodId: periodId });
+                    alertNotifications = alertNotifications.concat(childAlerts);
                 }
-            });
+            } else {
+                notifications = this.getNotifications(nodeId, workgroupId);
+                alertNotifications = notifications.filter(function (notification) {
+                    if (periodId && periodId !== -1) {
+                        return notification.type === 'CRaterResult' && notification.periodId === periodId;
+                    } else {
+                        return notification.type === 'CRaterResult';
+                    }
+                });
+            }
 
             return alertNotifications;
         }
