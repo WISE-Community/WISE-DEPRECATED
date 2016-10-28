@@ -286,6 +286,14 @@ var ThemeController = function () {
                         if (!$scope.hasDismissCode || $scope.input.dismissCode == notification.data.dismissCode) {
                             NotificationService.dismissNotification(notification);
                             $mdDialog.hide();
+                            // log currentAmbientNotificationDimissed event
+                            var nodeId = null;
+                            var componentId = null;
+                            var componentType = null;
+                            var category = "Notification";
+                            var event = "currentAmbientNotificationDimissedWithCode";
+                            var eventData = {};
+                            StudentDataService.saveVLEEvent(nodeId, componentId, componentType, category, event, eventData);
                         } else {
                             $translate(["dismissNotificationInvalidDismissCode"]).then(function (translations) {
                                 $scope.errorMessage = translations.dismissNotificationInvalidDismissCode;
@@ -306,10 +314,28 @@ var ThemeController = function () {
 
                     $scope.closeDialog = function () {
                         $mdDialog.hide();
+
+                        // log currentAmbientNotificationWindowClosed event
+                        var nodeId = null;
+                        var componentId = null;
+                        var componentType = null;
+                        var category = "Notification";
+                        var event = "currentAmbientNotificationWindowClosed";
+                        var eventData = {};
+                        StudentDataService.saveVLEEvent(nodeId, componentId, componentType, category, event, eventData);
                     };
                 }
 
                 _this.$mdDialog.show(dismissCodePrompt);
+
+                // log currentAmbientNotificationWindowOpened event
+                var nodeId = null;
+                var componentId = null;
+                var componentType = null;
+                var category = "Notification";
+                var event = "currentAmbientNotificationWindowOpened";
+                var eventData = {};
+                _this.StudentDataService.saveVLEEvent(nodeId, componentId, componentType, category, event, eventData);
             });
         });
 

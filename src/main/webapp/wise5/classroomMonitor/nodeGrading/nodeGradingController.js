@@ -77,6 +77,16 @@ var NodeGradingController = function () {
             // scroll to the top of the page when the page loads
             document.body.scrollTop = document.documentElement.scrollTop = 0;
         });
+
+        // save event when node grading view is displayed and save the nodeId that is displayed
+        var context = "ClassroomMonitor",
+            nodeId = this.nodeId,
+            componentId = null,
+            componentType = null,
+            category = "Navigation",
+            event = "studentProgressViewDisplayed",
+            data = { nodeId: this.nodeId };
+        this.TeacherDataService.saveEvent(context, nodeId, componentId, componentType, category, event, data);
     }
 
     /**

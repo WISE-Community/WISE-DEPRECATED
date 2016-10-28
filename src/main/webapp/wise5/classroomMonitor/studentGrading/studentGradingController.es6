@@ -58,6 +58,11 @@ class StudentGradingController {
 
         // scroll to the top of the page when the page loads2
         document.body.scrollTop = document.documentElement.scrollTop = 0;
+
+        // save event when student grading view is displayed
+        let context = "ClassroomMonitor", nodeId = null, componentId = null, componentType = null,
+            category = "Navigation", event = "studentGradingViewDisplayed", data = { workgroupId: this.workgroupId };
+        this.TeacherDataService.saveEvent(context, nodeId, componentId, componentType, category, event, data);
     }
 
     /**

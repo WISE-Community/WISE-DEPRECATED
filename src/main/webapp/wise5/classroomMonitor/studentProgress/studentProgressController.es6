@@ -124,13 +124,18 @@ class StudentProgressController {
         this.updateTimeSpent();
 
         // update the time spent values every x seconds
-        this.updateTimeSpentIntervalId = setInterval(angular.bind(this, function() {
+        this.updateTimeSpentIntervalId = setInterval(() => {
             // update the time spent values in the view
             this.updateTimeSpent();
 
             // refresh the view
             this.$scope.$apply();
-        }), this.updateTimeSpentInterval);
+        }, this.updateTimeSpentInterval);
+
+        // save event when student progress view is displayed
+        let context = "ClassroomMonitor", nodeId = null, componentId = null, componentType = null,
+            category = "Navigation", event = "studentProgressViewDisplayed", data = {};
+        this.TeacherDataService.saveEvent(context, nodeId, componentId, componentType, category, event, data);
     }
 
     getCurrentNodeForWorkgroupId(workgroupId) {

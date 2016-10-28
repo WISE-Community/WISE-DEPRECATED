@@ -74,7 +74,7 @@ var NodeProgressController = function () {
             var previousNode = args.previousNode;
             var currentNode = args.currentNode;
             if (previousNode != null && previousNode.type === 'group') {
-                var nodeId = previousNode.id;
+                var _nodeId = previousNode.id;
             }
 
             if (currentNode != null) {
@@ -114,13 +114,23 @@ var NodeProgressController = function () {
             }
 
             if (toState.name === 'root.project') {
-                var nodeId = toParams.nodeId;
-                if (_this.ProjectService.isApplicationNode(nodeId)) {
+                var _nodeId2 = toParams.nodeId;
+                if (_this.ProjectService.isApplicationNode(_nodeId2)) {
                     // scroll to top when viewing a new step
                     document.getElementById('content').scrollTop = 0;
                 }
             }
         });
+
+        // save event when node progress view is displayed
+        var context = "ClassroomMonitor",
+            nodeId = this.nodeId,
+            componentId = null,
+            componentType = null,
+            category = "Navigation",
+            event = "nodeProgressViewDisplayed",
+            data = { nodeId: this.nodeId };
+        this.TeacherDataService.saveEvent(context, nodeId, componentId, componentType, category, event, data);
     }
 
     _createClass(NodeProgressController, [{

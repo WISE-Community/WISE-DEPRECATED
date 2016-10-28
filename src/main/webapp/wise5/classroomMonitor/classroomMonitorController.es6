@@ -40,44 +40,44 @@ class ClassroomMonitorController {
         this.$translate(['dashboardView', 'dashboardViewLabel', 'projectView', 'projectViewLabel',
             'studentView', 'studentViewLabel', 'notebookView', 'notebookViewLabel',
             'exportView', 'exportViewLabel', 'notesTipsView', 'notesTipsViewLabel']).then((translation) => {
-                this.views = {
-                    'root.dashboard': {
-                        name: translation.dashboardView,
-                        label: translation.dashboardViewLabel,
-                        icon: 'dashboard',
-                        type: 'primary'
-                    },
-                    'root.nodeProgress': {
-                        name: translation.projectView,
-                        label: translation.projectViewLabel,
-                        icon: 'assignment_turned_in',
-                        type: 'primary'
-                    },
-                    'root.studentProgress': {
-                        name: translation.studentView,
-                        label: translation.studentViewLabel,
-                        icon: 'people',
-                        type: 'primary'
-                    },
-                    'root.notebooks': {
-                        name: translation.notebookView,
-                        label: translation.notebookViewLabel,
-                        icon: 'chrome_reader_mode',
-                        type: 'secondary'
-                    },
-                    'root.export': {
-                        name: translation.exportView,
-                        label: translation.exportViewLabel,
-                        icon: 'file_download',
-                        type: 'secondary'
-                    },
-                    'root.notes': {
-                        name: translation.notesTipsView,
-                        label: translation.notesTipsViewLabel,
-                        icon: 'speaker_notes',
-                        type: 'secondary'
-                    }
-                };
+            this.views = {
+                'root.dashboard': {
+                    name: translation.dashboardView,
+                    label: translation.dashboardViewLabel,
+                    icon: 'dashboard',
+                    type: 'primary'
+                },
+                'root.nodeProgress': {
+                    name: translation.projectView,
+                    label: translation.projectViewLabel,
+                    icon: 'assignment_turned_in',
+                    type: 'primary'
+                },
+                'root.studentProgress': {
+                    name: translation.studentView,
+                    label: translation.studentViewLabel,
+                    icon: 'people',
+                    type: 'primary'
+                },
+                'root.notebooks': {
+                    name: translation.notebookView,
+                    label: translation.notebookViewLabel,
+                    icon: 'chrome_reader_mode',
+                    type: 'secondary'
+                },
+                'root.export': {
+                    name: translation.exportView,
+                    label: translation.exportViewLabel,
+                    icon: 'file_download',
+                    type: 'secondary'
+                },
+                'root.notes': {
+                    name: translation.notesTipsView,
+                    label: translation.notesTipsViewLabel,
+                    icon: 'speaker_notes',
+                    type: 'secondary'
+                }
+            };
         });
 
         this.$scope.$on('showSessionWarning', () => {
@@ -119,7 +119,12 @@ class ClassroomMonitorController {
                 this.notifications = this.NotificationService.notifications;
             }
         );
-    };
+
+        // save event when classroom monitor session is started
+        let context = "ClassroomMonitor", nodeId = null, componentId = null, componentType = null,
+            category = "Navigation", event = "sessionStarted", data = {};
+        this.TeacherDataService.saveEvent(context, nodeId, componentId, componentType, category, event, data);
+    }
 
     /**
      * Update UI items based on state, show or hide relevant menus and toolbars

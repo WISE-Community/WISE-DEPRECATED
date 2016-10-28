@@ -54,7 +54,6 @@ class TeacherDataService {
                 
                 this.AnnotationService.setAnnotations(this.studentData.annotations);
 
-
                 // broadcast the event that a new annotation has been received
                 this.$rootScope.$broadcast('annotationReceived', {annotation, annotation});
             }
@@ -71,9 +70,6 @@ class TeacherDataService {
         exportURL += "/" + runId + "/" + exportType;
 
         var params = {};
-        params.getStudentWork = true;
-        params.getEvents = false;
-        params.getAnnotations = true;
 
         var httpParams = {};
         httpParams.method = 'GET';
@@ -82,6 +78,57 @@ class TeacherDataService {
 
         return this.$http(httpParams).then((result) => {
             return result.data;
+        });
+    };
+
+    /**
+     * Save events that occur in the Classroom Monitor to the server
+     * @param event the event object
+     * @returns a promise
+     */
+    saveEvent(context, nodeId, componentId, componentType, category, event, data) {
+        let newEvent = {
+            runId : this.ConfigService.getRunId(),
+            workgroupId : this.ConfigService.getWorkgroupId(),
+            clientSaveTime : Date.parse(new Date()),
+            context : context,
+            nodeId : nodeId,
+            componentId : componentId,
+            type : componentType,
+            category : category,
+            event : event,
+            data : data
+        };
+
+        let events = [newEvent];
+
+        let params = {
+             runId : this.ConfigService.getRunId(),
+             workgroupId : this.ConfigService.getWorkgroupId(),
+             events : angular.toJson(events)
+        };
+
+        let httpParams = {};
+        httpParams.method = 'POST';
+        httpParams.url = this.ConfigService.getConfigParam('teacherDataURL');
+        httpParams.headers = {'Content-Type': 'application/x-www-form-urlencoded'};
+        httpParams.data = $.param(params);
+
+        return this.$http(httpParams).then((result) => {
+
+            var savedEvents = null;
+
+            if (result != null && result.data != null) {
+                let data = result.data;
+
+                if (data != null) {
+
+                    // get the saved events
+                    savedEvents = data.events;
+                }
+            }
+
+            return savedEvents;
         });
     };
 
@@ -275,7 +322,7 @@ class TeacherDataService {
         //create the params for the request
         var params = {
             runId:runId
-        }
+        };
 
         var httpParams = {};
         httpParams.method = 'GET';
@@ -764,13 +811,13 @@ class TeacherDataService {
         //get the run status url we will use to make the request
         var runStatusURL = this.ConfigService.getConfigParam('runStatusURL');
 
-        if(runStatusURL != null) {
+        if (runStatusURL != null) {
             //make the request to the server for the student statuses
 
             //get the run id
             var runId = this.ConfigService.getConfigParam('runId');
 
-            if(customPauseMessage != null) {
+            if (customPauseMessage != null) {
                 //set the pause message if one was provided
                 this.runStatus.pauseMessage = customPauseMessage;
             }
@@ -782,7 +829,7 @@ class TeacherDataService {
             var runStatusParams = {
                 runId:runId,
                 status:runStatus
-            }
+            };
 
             var httpParams = {};
             httpParams.method = 'POST';
