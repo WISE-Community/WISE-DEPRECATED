@@ -303,18 +303,19 @@
             </div>
             <div ng-if="conceptMapController.showSaveButton() || conceptMapController.showSubmitButton()"
                  class="component__actions" layout="row" layout-align="start center">
-                <md-button class="md-raised md-primary"
-                           ng-click="conceptMapController.submitButtonClicked()"
-                           ng-disabled="conceptMapController.isDisabled || !conceptMapController.isSubmitDirty"
-                           ng-if="conceptMapController.showSubmitButton()"
-                           aria-label="Submit"
-                           translate="submit"></md-button>
                 <md-button class="md-primary md-raised"
                            ng-click="conceptMapController.saveButtonClicked()"
                            ng-disabled="conceptMapController.isDisabled || !conceptMapController.isDirty"
                            ng-if="conceptMapController.showSaveButton()"
                            aria-label="Save"
                            translate="save"></md-button>
+                <md-button class="md-raised md-primary"
+                           ng-click="conceptMapController.submitButtonClicked()"
+                           ng-disabled="conceptMapController.isDisabled || !conceptMapController.isSubmitDirty"
+                           ng-if="conceptMapController.showSubmitButton()"
+                           aria-label="Submit"
+                           translate="submit"></md-button>
+
                 <span ng-show="conceptMapController.saveMessage.text"
                       class="component__actions__info md-caption">
                       {{conceptMapController.saveMessage.text}} <span class="component__actions__more"><md-tooltip md-direction="top">{{ conceptMapController.saveMessage.time | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip><span am-time-ago="conceptMapController.saveMessage.time"></span></span>

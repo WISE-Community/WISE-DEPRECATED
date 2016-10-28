@@ -119,14 +119,13 @@
         <canvas id='{{audioOscillatorController.oscilloscopeId}}' width={{audioOscillatorController.oscilloscopeWidth}} height={{audioOscillatorController.oscilloscopeHeight}} style="border:1px solid lightgrey"></canvas>
         <div class="component-content__actions" layout="row" layout-align="start center">
             <md-button class="md-raised md-primary"
-                       ng-click='audioOscillatorController.submitButtonClicked()'
-                       ng-if='audioOscillatorController.showSubmitButton()'
-                       ng-disabled='audioOscillatorController.isDisabled || !audioOscillatorController.isSubmitDirty'>Submit</md-button>
-            <md-button class="md-primary"
-                       ng-class="{'md-raised': !audioOscillatorController.showSubmitButton()}"
                        ng-click='audioOscillatorController.saveButtonClicked()'
                        ng-if='audioOscillatorController.showSaveButton()'
                        ng-disabled='audioOscillatorController.isDisabled || !audioOscillatorController.isDirty'>Save</md-button>
+            <md-button class="md-raised md-primary"
+                       ng-click='audioOscillatorController.submitButtonClicked()'
+                       ng-if='audioOscillatorController.showSubmitButton()'
+                       ng-disabled='audioOscillatorController.isDisabled || !audioOscillatorController.isSubmitDirty'>Submit</md-button>
             <span ng-if="audioOscillatorController.showSaveButton() || audioOscillatorController.showSubmitButton()"
                       ng-show="audioOscillatorController.saveMessage.text"
                       class="component-content__actions__info md-caption">

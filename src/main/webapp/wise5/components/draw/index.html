@@ -202,20 +202,19 @@
         <md-tooltip md-direction="top">{{nodeController.getRevisions(component.id).length}} Versions</md-tooltip>
     </md-button>
     <div class="component__actions" layout="row" layout-align="start center">
-      <md-button class="md-raised md-primary"
-                 ng-click='drawController.submitButtonClicked()'
-                 ng-disabled='drawController.isDisabled || !drawController.isSubmitDirty'
-                 ng-show='drawController.showSubmitButton()'>Submit</md-button>
-      <md-button class="md-primary"
-                 ng-class="{'md-raised': !drawController.showSubmitButton()}"
-                 ng-click='drawController.saveButtonClicked()'
-                 ng-disabled='drawController.isDisabled || !drawController.isDirty'
-                 ng-show='drawController.showSaveButton()'>Save</md-button>
-           <span ng-if="drawController.showSaveButton() || drawController.showSubmitButton()"
-                 ng-show="drawController.saveMessage.text"
-                 class="component__actions__info md-caption">
-                 {{drawController.saveMessage.text}} <span class="component__actions__more"><md-tooltip md-direction="top">{{ drawController.saveMessage.time | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip><span am-time-ago="drawController.saveMessage.time"></span></span>
-           </span>
+        <md-button class="md-raised md-primary"
+                   ng-click='drawController.saveButtonClicked()'
+                   ng-disabled='drawController.isDisabled || !drawController.isDirty'
+                   ng-show='drawController.showSaveButton()'>Save</md-button>
+        <md-button class="md-raised md-primary"
+                   ng-click='drawController.submitButtonClicked()'
+                   ng-disabled='drawController.isDisabled || !drawController.isSubmitDirty'
+                   ng-show='drawController.showSubmitButton()'>Submit</md-button>
+        <span ng-if="drawController.showSaveButton() || drawController.showSubmitButton()"
+              ng-show="drawController.saveMessage.text"
+              class="component__actions__info md-caption">
+              {{drawController.saveMessage.text}} <span class="component__actions__more"><md-tooltip md-direction="top">{{ drawController.saveMessage.time | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip><span am-time-ago="drawController.saveMessage.time"></span></span>
+        </span>
     </div>
     <component-annotations ng-if="drawController.mode === 'student'"
                            annotations='drawController.latestAnnotations'

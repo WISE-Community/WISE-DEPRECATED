@@ -147,14 +147,13 @@
         </div>
         <div class="component__actions" layout="row" layout-align="start center">
             <md-button class="md-raised md-primary"
-                       ng-click='labelController.submitButtonClicked()'
-                       ng-if='labelController.showSubmitButton()'
-                       ng-disabled='labelController.isDisabled || !labelController.isSubmitDirty'>Submit</md-button>
-            <md-button class="md-primary"
-                       ng-class="{'md-raised': !labelController.showSubmitButton()}"
                        ng-click='labelController.saveButtonClicked()'
                        ng-if='labelController.showSaveButton()'
                        ng-disabled='labelController.isDisabled || !labelController.isDirty'>Save</md-button>
+            <md-button class="md-raised md-primary"
+                       ng-click='labelController.submitButtonClicked()'
+                       ng-if='labelController.showSubmitButton()'
+                       ng-disabled='labelController.isDisabled || !labelController.isSubmitDirty'>Submit</md-button>
             <span ng-if="labelController.showSaveButton() || labelController.showSubmitButton()"
                      ng-show="labelController.saveMessage.text"
                      class="component__actions__info md-caption">

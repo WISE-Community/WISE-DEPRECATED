@@ -233,14 +233,13 @@
             <highchart id="{{graphController.chartId}}" config="graphController.chartConfig"></highchart>
             <div class="component__actions" layout="row" layout-align="start center">
                 <md-button class="md-raised md-primary"
-                           ng-click='graphController.submitButtonClicked()'
-                           ng-if='graphController.showSubmitButton()'
-                           ng-disabled='graphController.isDisabled || !graphController.isSubmitDirty'>Submit</md-button>
-                <md-button class="md-primary"
-                           ng-class="{'md-raised': !graphController.showSubmitButton()}"
                            ng-click='graphController.saveButtonClicked()'
                            ng-if='graphController.showSaveButton()'
                            ng-disabled='graphController.isDisabled || !graphController.isDirty'>Save</md-button>
+                <md-button class="md-raised md-primary"
+                           ng-click='graphController.submitButtonClicked()'
+                           ng-if='graphController.showSubmitButton()'
+                           ng-disabled='graphController.isDisabled || !graphController.isSubmitDirty'>Submit</md-button>
                 <span ng-if="graphController.showSaveButton() || graphController.showSubmitButton()"
                           ng-show="graphController.saveMessage.text"
                           class="component__actions__info md-caption">
