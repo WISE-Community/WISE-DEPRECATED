@@ -45,6 +45,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.acls.domain.BasePermission;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.multipart.MultipartFile;
@@ -57,6 +60,7 @@ import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.module.Curnit;
 import org.wise.portal.domain.module.impl.CurnitGetCurnitUrlVisitor;
 import org.wise.portal.domain.module.impl.ModuleParameters;
+import org.wise.portal.domain.portal.Portal;
 import org.wise.portal.domain.project.FamilyTag;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.project.ProjectMetadata;
@@ -74,6 +78,7 @@ import org.wise.portal.presentation.web.listeners.WISESessionListener;
 import org.wise.portal.service.acl.AclService;
 import org.wise.portal.service.authentication.UserDetailsService;
 import org.wise.portal.service.module.CurnitService;
+import org.wise.portal.service.portal.PortalService;
 import org.wise.portal.service.project.ProjectService;
 import org.wise.vle.utils.FileManager;
 import org.wise.vle.web.AssetManager;
@@ -94,6 +99,9 @@ public class AuthorProjectController {
 	private static final String FORWARD = "forward";
 
 	private static final String COMMAND = "command";
+
+	@Autowired
+	private PortalService portalService;
 
 	@Autowired
 	private ProjectService projectService;
@@ -124,6 +132,22 @@ public class AuthorProjectController {
 	protected ModelAndView handleRequestInternal(
 			HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
+
+		// if login is disallowed, log out user and redirect them to the home page
+		try {
+			Portal portal = portalService.getById(new Integer(1));
+			if (!portal.isLoginAllowed()) {
+				Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+				if (auth != null){
+					new SecurityContextLogoutHandler().logout(request, response, auth);
+				}
+				SecurityContextHolder.getContext().setAuthentication(null);
+				return new ModelAndView("redirect:/index.html");
+			}
+		} catch (ObjectNotFoundException e) {
+			// do nothing
+		}
+
 		User user = ControllerUtil.getSignedInUser();
 
 		String projectIdStr = request.getParameter(PROJECT_ID_PARAM_NAME);
