@@ -11,6 +11,14 @@
                           rows='10'
                           cols='100'></textarea>
                 <br/>
+                Show Save Button: <input type='checkbox'
+                                         ng-model='multipleChoiceController.authoringComponentContent.showSaveButton'
+                                         ng-change='multipleChoiceController.authoringViewComponentChanged()'/>
+                <br/>
+                Show Submit Button: <input type='checkbox'
+                                           ng-model='multipleChoiceController.authoringComponentContent.showSubmitButton'
+                                           ng-change='multipleChoiceController.authoringViewComponentChanged()'/>
+                <br/>
                 Radio: <input type='radio' name='choiceType' ng-model='multipleChoiceController.authoringComponentContent.choiceType' value='radio' ng-change='multipleChoiceController.authoringViewComponentChanged()'/>
                 Checkbox: <input type='radio' name='choiceType' ng-model='multipleChoiceController.authoringComponentContent.choiceType' value='checkbox' ng-change='multipleChoiceController.authoringViewComponentChanged()'/>
                 <br/>
@@ -28,14 +36,6 @@
                 Show Feedback: <input type='checkbox'
                                       ng-model='multipleChoiceController.authoringComponentContent.showFeedback'
                                       ng-change='multipleChoiceController.authoringViewComponentChanged()'/>
-                <br/>
-                Show Save Button: <input type='checkbox'
-                                         ng-model='multipleChoiceController.authoringComponentContent.showSaveButton'
-                                         ng-change='multipleChoiceController.authoringViewComponentChanged()'/>
-                <br/>
-                Show Submit Button: <input type='checkbox'
-                                           ng-model='multipleChoiceController.authoringComponentContent.showSubmitButton'
-                                           ng-change='multipleChoiceController.authoringViewComponentChanged()'/>
                 <br/>
                 Max Score:
                 <input type='number'

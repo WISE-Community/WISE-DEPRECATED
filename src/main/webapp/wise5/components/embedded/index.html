@@ -9,6 +9,16 @@
                    ng-model-options='{ debounce: 1000 }'
                    size='50'/>
             <br/>
+            Show Save Button:
+            <input type='checkbox'
+                   ng-model='embeddedController.authoringComponentContent.showSaveButton'
+                   ng-change='embeddedController.authoringViewComponentChanged()'/>
+            <br/>
+            Show Submit Button:
+            <input type='checkbox'
+                   ng-model='embeddedController.authoringComponentContent.showSubmitButton'
+                   ng-change='embeddedController.authoringViewComponentChanged()'/>
+            <br/>
             Max Score:
             <input type='number'
                    ng-model='embeddedController.authoringComponentContent.maxScore'

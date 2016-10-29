@@ -8,6 +8,16 @@
                           rows='10'
                           cols='100'></textarea>
                 <br/>
+                Show Save Button:
+                <input type='checkbox'
+                       ng-model='graphController.authoringComponentContent.showSaveButton'
+                       ng-change='graphController.authoringViewComponentChanged()'/>
+                <br/>
+                Show Submit Button:
+                <input type='checkbox'
+                       ng-model='graphController.authoringComponentContent.showSubmitButton'
+                       ng-change='graphController.authoringViewComponentChanged()'/>
+                <br/>
                 Graph Title: <input ng-model='graphController.authoringComponentContent.title'
                                     ng-change='graphController.authoringViewComponentChanged()'
                                     ng-model-options='{ debounce: 1000 }'

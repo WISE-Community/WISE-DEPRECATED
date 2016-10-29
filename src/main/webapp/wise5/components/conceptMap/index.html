@@ -15,6 +15,16 @@
                           rows='10'
                           cols='100'></textarea>
                 <br/>
+                Show Save Button:
+                <input type='checkbox'
+                       ng-model='conceptMapController.authoringComponentContent.showSaveButton'
+                       ng-change='conceptMapController.authoringViewComponentChanged()'/>
+                <br/>
+                Show Submit Button:
+                <input type='checkbox'
+                       ng-model='conceptMapController.authoringComponentContent.showSubmitButton'
+                       ng-change='conceptMapController.authoringViewComponentChanged()'/>
+                <br/>
                 Max Score:
                 <input type='number'
                        ng-model='conceptMapController.authoringComponentContent.maxScore'

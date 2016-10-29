@@ -12,12 +12,6 @@
                    ng-change='discussionController.authoringViewComponentChanged()'
                    ng-model-options='{ debounce: 1000 }'
                    style='width: 3em'/>
-            <br/>
-            <textarea ng-model='discussionController.authoringComponentContentJSONString'
-                      ng-change='discussionController.advancedAuthoringViewComponentChanged()'
-                      ng-model-options="{ updateOn: 'blur' }"
-                      rows='10'
-                      cols='100'></textarea>
     </div>
     <div ng-if='discussionController.mode === "authoring"'>
         Show Previous Work:

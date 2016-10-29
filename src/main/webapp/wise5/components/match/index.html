@@ -6,6 +6,15 @@
                   rows='10'
                   cols='100'></textarea>
         <br/>
+        Show Save Button:
+        <input type='checkbox'
+               ng-model='matchController.authoringComponentContent.showSaveButton'
+               ng-change='matchController.authoringViewComponentChanged()'/>
+        <br/>
+        Show Submit Button:
+        <input type='checkbox'
+               ng-model='matchController.authoringComponentContent.showSubmitButton'
+               ng-change='matchController.authoringViewComponentChanged()'/>
         <br/>
         Label for choices bucket: <input ng-model='matchController.authoringComponentContent.choicesLabel'
                ng-change='matchController.authoringViewComponentChanged()'

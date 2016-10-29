@@ -7,6 +7,16 @@
                               rows='10'
                               cols='100'></textarea>
                     <br/>
+                    Show Save Button:
+                    <input type='checkbox'
+                           ng-model='tableController.authoringComponentContent.showSaveButton'
+                           ng-change='tableController.authoringViewComponentChanged()'/>
+                    <br/>
+                    Show Submit Button:
+                    <input type='checkbox'
+                           ng-model='tableController.authoringComponentContent.showSubmitButton'
+                           ng-change='tableController.authoringViewComponentChanged()'/>
+                    <br/>
                     Columns: <input type='number'
                                     ng-model='tableController.authoringComponentContent.numColumns'
                                     ng-change='tableController.authoringViewTableSizeConfirmChange("columns", {{tableController.authoringComponentContent.numColumns}})'

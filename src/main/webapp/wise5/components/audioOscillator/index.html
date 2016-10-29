@@ -7,6 +7,16 @@
                       rows='10'
                       cols='100'></textarea>
             <br/>
+            Show Save Button:
+            <input type='checkbox'
+                   ng-model='audioOscillatorController.authoringComponentContent.showSaveButton'
+                   ng-change='audioOscillatorController.authoringViewComponentChanged()'/>
+            <br/>
+            Show Submit Button:
+            <input type='checkbox'
+                   ng-model='audioOscillatorController.authoringComponentContent.showSubmitButton'
+                   ng-change='audioOscillatorController.authoringViewComponentChanged()'/>
+            <br/>
             Oscillator Types <button ng-click='audioOscillatorController.authoringOpenAddOscillatorType()'>Add Oscillator Type</button>
             <span ng-show='audioOscillatorController.showOscillatorTypeChooser'>
                 <select ng-model='audioOscillatorController.oscillatorTypeToAdd'>

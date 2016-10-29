@@ -8,6 +8,16 @@
                           rows='10'
                           cols='100'></textarea>
                 <br/>
+                Show Save Button:
+                <input type='checkbox'
+                       ng-model='drawController.authoringComponentContent.showSaveButton'
+                       ng-change='drawController.authoringViewComponentChanged()'/>
+                <br/>
+                Show Submit Button:
+                <input type='checkbox'
+                       ng-model='drawController.authoringComponentContent.showSubmitButton'
+                       ng-change='drawController.authoringViewComponentChanged()'/>
+                <br/>
                 <label>
                     <input type='checkbox'
                        ng-model='drawController.authoringComponentContent.tools.select'

@@ -20,13 +20,6 @@
                   rows='2'
                   cols='100'></textarea>
         <br/>
-        Max Score:
-        <input type='number'
-               ng-model='openResponseController.authoringComponentContent.maxScore'
-               ng-change='openResponseController.authoringViewComponentChanged()'
-               ng-model-options='{ debounce: 1000 }'
-               style='width: 3em'/>
-        <br/>
         Show Save Button:
         <input type='checkbox'
                ng-model='openResponseController.authoringComponentContent.showSaveButton'
@@ -43,6 +36,14 @@
                    ng-model='openResponseController.authoringComponentContent.maxSubmitCount'
                    ng-change='openResponseController.authoringViewComponentChanged()'/>
         </div>
+        <br/>
+        Max Score:
+        <input type='number'
+               ng-model='openResponseController.authoringComponentContent.maxScore'
+               ng-change='openResponseController.authoringViewComponentChanged()'
+               ng-model-options='{ debounce: 1000 }'
+               style='width: 3em'/>
+        <br/>
         <br/>
         Enable CRater:
         <input type='checkbox'
