@@ -1178,7 +1178,7 @@ class MatchController {
              */
             this.$scope.$parent.nodeAuthoringController.authoringViewNodeChanged();
         } catch(e) {
-
+            this.$scope.$parent.nodeAuthoringController.showSaveErrorAdvancedAuthoring();
         }
     };
 

@@ -40,11 +40,11 @@ const WorkgroupInfo = {
                     <span ng-repeat="userName in $ctrl.userNames">{{userName.name}}<span ng-if="!$last">,&nbsp;</span></span>
                     <md-tooltip md-direction="top" ng-if='$ctrl.canViewStudentNames'>Workgroup ID: {{$ctrl.workgroupId}}</md-tooltip>
                 </div>
-                <workgroup-status-icon message="$ctrl.statusMsg" alert-status="$ctrl.alertStatus"></workgroup-status-icon>
+                <alert-status-icon message="$ctrl.statusMsg" alert-status="$ctrl.alertStatus"></alert-status-icon>
             </div>
             <div ng-if='!$ctrl.canViewStudentNames' class="heavy">
                 {{$ctrl.userNames}}
-                <workgroup-status-icon message="$ctrl.statusMsg" alert-status="$ctrl.alertStatus"></workgroup-status-icon>
+                <alert-status-icon message="$ctrl.statusMsg" alert-status="$ctrl.alertStatus"></alert-status-icon>
             </div>
         </div>`,
     controller: WorkgroupInfoController

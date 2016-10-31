@@ -641,7 +641,9 @@ var EmbeddedController = function () {
                  * the project to the server
                  */
                 this.$scope.$parent.nodeAuthoringController.authoringViewNodeChanged();
-            } catch (e) {}
+            } catch (e) {
+                this.$scope.$parent.nodeAuthoringController.showSaveErrorAdvancedAuthoring();
+            }
         }
     }, {
         key: 'updateAdvancedAuthoringView',

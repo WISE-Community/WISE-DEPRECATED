@@ -1,0 +1,76 @@
+.status-icon {
+    margin-left: 4px;
+    z-index: 1;
+}
+
+.status-corner-wrapper {
+    position: absolute;
+    z-index: 1;
+    overflow: hidden;
+}
+
+.status-corner {
+    width: 0;
+    height: 0;
+    border-top-color: color('text-disabled');
+    border-bottom-color: color('text-disabled');
+    color: color('text-disabled');
+
+    &:after {
+        content: '!';
+        color: #ffffff;
+        top: 2px;
+        right: 10px;
+        position: absolute;
+        font-weight: 600;
+    }
+}
+
+.status-corner--warn {
+    border-top-color: color('warn') !important;
+    border-bottom-color: color('warn') !important;
+}
+
+.status-corner-top-right {
+    top: 0;
+    right: 0;
+    border-top-right-radius: $card-border-radius;
+
+    .status-corner {
+        border-top: 36px solid;
+        border-left: 36px solid transparent;
+    }
+}
+
+.status-corner-top-left {
+    top: 0;
+    left: 0;
+    border-top-left-radius: $card-border-radius;
+
+    .status-corner {
+        border-top: 36px solid;
+        border-right: 36px solid transparent;
+    }
+}
+
+.status-corner-bottom-right {
+    bottom: 0;
+    right: 0;
+    border-bottom-right-radius: $card-border-radius;
+
+    .status-corner {
+        border-bottom: 36px solid;
+        border-left: 36px solid transparent;
+    }
+}
+
+.status-corner-bottom-left {
+    bottom: 0;
+    left: 0;
+    border-bottom-left-radius: $card-border-radius;
+
+    .status-corner {
+        border-bottom: 36px solid;
+        border-right: 36px solid transparent;
+    }
+}

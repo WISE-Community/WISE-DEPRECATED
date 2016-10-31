@@ -261,6 +261,15 @@ class NodeAuthoringController {
     };
 
     /**
+     * Display an error saving during advanced authoring, most-likely due to malformed JSON
+     */
+    showSaveErrorAdvancedAuthoring() {
+        this.$translate('saveErrorAdvancedAuthoring').then((saveErrorAdvancedAuthoringMsg) => {
+            alert(saveErrorAdvancedAuthoringMsg);
+        });
+    };
+
+    /**
      * The author has clicked the cancel button which will revert all
      * the recent changes since they opened the node.
      */

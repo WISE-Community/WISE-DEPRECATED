@@ -666,7 +666,7 @@ this.authoringComponentContent=authoringComponentContent;// set the new componen
 this.componentContent=authoringComponentContent;/*
              * notify the parent node that the content has changed which will save
              * the project to the server
-             */this.$scope.$parent.nodeAuthoringController.authoringViewNodeChanged();}catch(e){}}},{key:'updateAdvancedAuthoringView',/**
+             */this.$scope.$parent.nodeAuthoringController.authoringViewNodeChanged();}catch(e){this.$scope.$parent.nodeAuthoringController.showSaveErrorAdvancedAuthoring();}}},{key:'updateAdvancedAuthoringView',/**
      * Update the component JSON string that will be displayed in the advanced authoring view textarea
      */value:function updateAdvancedAuthoringView(){this.authoringComponentContentJSONString=angular.toJson(this.authoringComponentContent,4);}},{key:'authoringShowPreviousWorkClicked',/**
      * The show previous work checkbox was clicked

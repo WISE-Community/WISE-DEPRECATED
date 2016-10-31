@@ -213,6 +213,18 @@ var NodeAuthoringController = function () {
             this.$state.go('root.project', { projectId: this.projectId });
         }
     }, {
+        key: "showSaveErrorAdvancedAuthoring",
+
+
+        /**
+         * Display an error saving during advanced authoring, most-likely due to malformed JSON
+         */
+        value: function showSaveErrorAdvancedAuthoring() {
+            this.$translate('saveErrorAdvancedAuthoring').then(function (saveErrorAdvancedAuthoringMsg) {
+                alert(saveErrorAdvancedAuthoringMsg);
+            });
+        }
+    }, {
         key: "cancel",
 
 
