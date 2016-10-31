@@ -187,7 +187,7 @@ var OutsideURLController = function () {
                  */
                 this.$scope.$parent.nodeAuthoringController.authoringViewNodeChanged();
             } catch (e) {
-                console.error(e.toString());
+                this.$scope.$parent.nodeAuthoringController.showSaveErrorAdvancedAuthoring();
             }
         }
     }, {

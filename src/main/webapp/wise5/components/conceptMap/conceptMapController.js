@@ -326,7 +326,7 @@ this.ProjectService.replaceComponent(this.nodeId,this.componentId,editedComponen
 this.componentContent=editedComponentContent;/*
              * notify the parent node that the content has changed which will save
              * the project to the server
-             */this.$scope.$parent.nodeAuthoringController.authoringViewNodeChanged();}catch(e){}}},{key:'authoringShowPreviousWorkClicked',/**
+             */this.$scope.$parent.nodeAuthoringController.authoringViewNodeChanged();}catch(e){this.$scope.$parent.nodeAuthoringController.showSaveErrorAdvancedAuthoring();}}},{key:'authoringShowPreviousWorkClicked',/**
      * The show previous work checkbox was clicked
      */value:function authoringShowPreviousWorkClicked(){if(!this.authoringComponentContent.showPreviousWork){/*
              * show previous work has been turned off so we will clear the

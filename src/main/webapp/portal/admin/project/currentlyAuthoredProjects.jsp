@@ -8,12 +8,8 @@
 <title><spring:message code="wiseAdmin" /></title>
 
 <link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
-<link href="${contextPath}/<spring:theme code="stylesheet"/>" media="screen" rel="stylesheet" type="text/css" />
-<link href="${contextPath}/<spring:theme code="jquerystylesheet"/>" media="screen" rel="stylesheet" type="text/css" >
 <link href="${contextPath}/<spring:theme code="superfishstylesheet"/>" rel="stylesheet" type="text/css" >
 
-<script src="${contextPath}/<spring:theme code="jquerysource"/>" type="text/javascript"></script>
-<script src="${contextPath}/<spring:theme code="jqueryuisource"/>" type="text/javascript"></script>
 <script src="${contextPath}/<spring:theme code="superfishsource"/>" type="text/javascript"></script>
 <script src="${contextPath}/<spring:theme code="generalsource" />" type="text/javascript"></script>
 
@@ -30,10 +26,10 @@ table, tr, td {
 </style>
 </head>
 <body>
+<%@ include file="../../headermain.jsp"%>
 <div id="page">
 <div id="pageContent" class="contentPanel">
 
-<%@ include file="../../headermain.jsp"%>
 
 <h5 style="color:#0000CC;"><a href="${contextPath}/admin"><spring:message code="returnToMainAdminPage" /></a></h5>
 

@@ -33,6 +33,7 @@
   "previewProjectWithoutConstraints": "Preview Project Without Constraints",
   "previewStep": "Preview Step",
   "previewStepWithoutConstraints": "Preview Step Without Constraints",
+  "saveErrorAdvancedAuthoring": "Error saving advanced authoring, possibly due to malformed JSON content. Check that your JSON is valid. Your changes have not been saved.",
   "sharedProjectsHeading": "Shared Projects",
   "sortAssets": "Sort Assets",
   "stepTitle": "Step Title",
