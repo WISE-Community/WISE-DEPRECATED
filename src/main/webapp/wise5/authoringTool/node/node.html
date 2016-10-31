@@ -25,9 +25,16 @@ TODO: implement me. Allow authors to view assets while authoring node conent. Pe
      {{nodeAuthoringController.nodePosition}}:
      <input ng-model='nodeAuthoringController.node.title' ng-change='nodeAuthoringController.authoringViewNodeChanged()' ng-model-options='{ debounce: 1000 }' size='60' />
 </div>
-<button ng-click='nodeAuthoringController.showCreateComponent = true'
-        ng-show='!projectController.isGroupNode(nodeAuthoringController.node.id) && !nodeAuthoringController.showCreateComponent && !nodeAuthoringController.showEditTransitions'
+<button ng-click='nodeAuthoringController.nodeAuthoringViewButtonClicked("addComponent")'
+        ng-show='!projectController.isGroupNode(nodeAuthoringController.node.id)'
         translate="addNewComponent"></button>
+<button ng-click='nodeAuthoringController.nodeAuthoringViewButtonClicked("editTransitions")'
+        translate="editTransitions"></button>
+<button ng-click='nodeAuthoringController.nodeAuthoringViewButtonClicked("editConstraints")'
+        translate="editConstraints"></button>
+<button ng-click='nodeAuthoringController.nodeAuthoringViewButtonClicked("editButtons")'
+        translate="editButtons"></button>
+
 <div ng-show='nodeAuthoringController.showCreateComponent'>
     <select ng-model='nodeAuthoringController.selectedComponent'>
         <option ng-repeat='componentType in nodeAuthoringController.componentTypes' value='{{componentType.componentType}}'>
@@ -38,8 +45,7 @@ TODO: implement me. Allow authors to view assets while authoring node conent. Pe
     <button ng-click='nodeAuthoringController.showCreateComponent = false' translate="cancel"></button>
 </div>
 
-<button ng-click='nodeAuthoringController.showEditTransitions = true'
-        ng-show='!nodeAuthoringController.showCreateComponent && !nodeAuthoringController.showEditTransitions' translate="editTransitions"></button>
+
 <div ng-show='nodeAuthoringController.showEditTransitions'>
     <span>{{'transitions' | translate}}:</span>
     <div id="transitions" style="margin-left:40px; margin-bottom:10px; background-color:lightgray; width:700px" ng-repeat='(transitionIndex, transition) in nodeAuthoringController.node.transitionLogic.transitions'>
@@ -152,7 +158,6 @@ TODO: implement me. Allow authors to view assets while authoring node conent. Pe
     <button ng-click='nodeAuthoringController.saveTransitions()' translate="save"></button>
 </div>
 
-<button ng-click='nodeAuthoringController.showConstraints = !nodeAuthoringController.showConstraints'>Edit Constraints</button>
 <div ng-show='nodeAuthoringController.showConstraints' style='width:700px'>
     Constraints
     <br/>
@@ -305,6 +310,19 @@ TODO: implement me. Allow authors to view assets while authoring node conent. Pe
         <button ng-click='nodeAuthoringController.addRemovalCriteria(constraint)'>Add Removal Criteria</button>
     </div>
     <button ng-click='nodeAuthoringController.addConstraint()'>Add Constraint</button>
+</div>
+
+<div ng-show='nodeAuthoringController.showEditButtons'>
+    <br/>
+    Show Save Button: 
+    <input type='checkbox'
+           ng-model='nodeAuthoringController.node.showSaveButton'
+           ng-change='nodeAuthoringController.authoringViewNodeChanged()'/>
+    <br/>
+    Show Submit Button:
+    <input type='checkbox'
+           ng-model='nodeAuthoringController.node.showSubmitButton'
+           ng-change='nodeAuthoringController.authoringViewNodeChanged()'/>
 </div>
 
 <div ng-repeat='component in nodeAuthoringController.components'>

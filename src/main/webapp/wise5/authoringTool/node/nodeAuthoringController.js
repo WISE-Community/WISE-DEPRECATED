@@ -775,6 +775,42 @@ var NodeAuthoringController = function () {
             // save the project
             this.authoringViewNodeChanged();
         }
+
+        /**
+         * A button to author a specific view of the node was clicked
+         * @param view the view name
+         */
+
+    }, {
+        key: "nodeAuthoringViewButtonClicked",
+        value: function nodeAuthoringViewButtonClicked(view) {
+
+            if (view == 'addComponent') {
+                // toggle the add component view and hide all the other views
+                this.showCreateComponent = !this.showCreateComponent;
+                this.showEditTransitions = false;
+                this.showConstraints = false;
+                this.showEditButtons = false;
+            } else if (view == 'editTransitions') {
+                // toggle the edit transitions view and hide all the other views
+                this.showCreateComponent = false;
+                this.showEditTransitions = !this.showEditTransitions;
+                this.showConstraints = false;
+                this.showEditButtons = false;
+            } else if (view == 'editConstraints') {
+                // toggle the edit constraints view and hide all the other views
+                this.showCreateComponent = false;
+                this.showEditTransitions = false;
+                this.showConstraints = !this.showConstraints;
+                this.showEditButtons = false;
+            } else if (view == 'editButtons') {
+                // toggle the edit buttons view and hide all the other views
+                this.showCreateComponent = false;
+                this.showEditTransitions = false;
+                this.showConstraints = false;
+                this.showEditButtons = !this.showEditButtons;
+            }
+        }
     }]);
 
     return NodeAuthoringController;

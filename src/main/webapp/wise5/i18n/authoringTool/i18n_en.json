@@ -15,6 +15,8 @@
   "createNewProject": "Create a New Project",
   "createNewStep": "Create New Step",
   "deleteTransition": "Delete path",
+  "editButtons": "Edit Buttons",
+  "editConstraints": "Edit Constraints",
   "editTransitions": "Edit Paths",
   "fileNameAToZ": "File Name A->Z",
   "fileNameZToA": "File Name Z->A",
