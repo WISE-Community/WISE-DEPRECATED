@@ -6422,30 +6422,56 @@ class ProjectService {
     /**
      * Get the notification for the given score, if exists.
      * @param component the component content
-     * @param score the score we want notification for
+     * @param previousScore the previousScore we want notification for, can be null, which means we just want to look at
+     * the currentScore
+     * @param currentScore the currentScore we want notification for
      * @returns the notification for the given score
      */
-    getNotificationsByScore(component, score) {
+    getNotificationByScore(component, previousScore, currentScore) {
 
-        let notificationsByScore = [];
+        let notificationResult = null;
 
         if (component.notificationSettings != null && component.notificationSettings.notifications != null) {
             let notifications = component.notificationSettings.notifications;
             for (let n = 0; n < notifications.length; n++) {
                 let notification = notifications[n];
-                if (notification.enableCriteria != null && notification.enableCriteria.score != null) {
-                    let enableCriteriaScoreArray = notification.enableCriteria.score;
-                    for (let s = 0; s < enableCriteriaScoreArray.length; s++) {
-                        let enableCriteriaScore = enableCriteriaScoreArray[s];
-                        if (enableCriteriaScore == score) {
-                            notificationsByScore.push(notification);
+                if (notification.enableCriteria != null && notification.enableCriteria.scoreSequence != null) {
+                    let scoreSequence = notification.enableCriteria.scoreSequence;
+
+                    if (scoreSequence != null) {
+
+                        /*
+                         * get the expected previous score and current score
+                         * that will satisfy the rule
+                         */
+                        let previousScoreMatch = scoreSequence[0];
+                        let currentScoreMatch = scoreSequence[1];
+
+                        if (previousScore == null) {
+                            // just matching on the current score
+                            if (previousScoreMatch == "" &&
+                                currentScore.toString().match("[" + currentScoreMatch + "]")) {
+                                // found a match
+                                notificationResult = notification;
+                                break;
+                            }
+                        } else {
+                            if (previousScore.toString().match("[" + previousScoreMatch + "]") &&
+                                currentScore.toString().match("[" + currentScoreMatch + "]")) {
+                                /*
+                                 * the previous score and current score match the
+                                 * expected scores so we have found the rule we want
+                                 */
+                                notificationResult = notification;
+                                break;
+                            }
                         }
                     }
                 }
             }
         }
 
-        return notificationsByScore;
+        return notificationResult;
     }
 
     /**
