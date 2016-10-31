@@ -22,19 +22,18 @@
                        mode='student'></component>
         </div>
         <div class="node-content__actions" layout="row" layout-align="start center" flex="100">
+            <md-button class="md-raised md-primary"
+                   ng-click='nodeController.saveButtonClicked()'
+                   ng-disabled='nodeController.isDisabled || !nodeController.dirtyComponentIds.length'
+                   ng-if='nodeController.showSaveButton()'
+                   aria-label="Save"
+                   translate="save"></md-button>
              <md-button class="md-raised md-primary"
                   ng-click='nodeController.submitButtonClicked()'
                   ng-disabled='nodeController.isDisabled || !nodeController.dirtySubmitComponentIds.length'
                   ng-if='nodeController.showSubmitButton()'
                   aria-label="Submit"
                   translate="submit"></md-button>
-             <md-button class="md-primary"
-                    ng-class="{'md-raised': !nodeController.showSubmitButton()}"
-                    ng-click='nodeController.saveButtonClicked()'
-                    ng-disabled='nodeController.isDisabled || !nodeController.dirtyComponentIds.length'
-                    ng-if='nodeController.showSaveButton()'
-                    aria-label="Save"
-                    translate="save"></md-button>
             <span ng-if="nodeController.showSaveButton() || nodeController.showSubmitButton()"
                   ng-show="nodeController.saveMessage.text"
                   class="node-content__actions__info md-caption">
