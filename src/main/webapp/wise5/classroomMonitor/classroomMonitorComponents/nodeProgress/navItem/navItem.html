@@ -9,10 +9,11 @@
                     <md-icon md-font-set="{{$ctrl.icon.fontSet}}" class="md-36 md-light">{{$ctrl.icon.fontName}}</md-icon>
                 </div>
                 <div class="md-title nav-item__title" style="color: {{$ctrl.icon.color}};" flex>
-                    <span>{{ $ctrl.nodeTitle }}</span> <workgroup-status-icon alert-status="$ctrl.alertStatus"></workgroup-status-icon>
+                    <span>{{ $ctrl.nodeTitle }}</span>
                 </div>
                 <md-icon class="nav-item__collapse" ng-show="$ctrl.isGroup && $ctrl.expanded" aria-label="collapse">remove</md-icon>
             </div>
+            <alert-status-corner alert-status="$ctrl.alertStatus"></alert-status-corner>
         </md-card-content>
         <md-card-content ng-if="$ctrl.isGroup" ng-show="$ctrl.expanded" class="nav-contents nav-contents--group">
             <div ng-if="$ctrl.isPlanning" class="md-padding" layout="column" layout-align="center center">
@@ -54,7 +55,7 @@
             <md-icon md-font-set="{{$ctrl.icon.fontSet}}" class="md-light">{{$ctrl.icon.fontName}}</md-icon>
         </div>
         <p flex layout="row" layout-align="start center">
-            <span>{{ $ctrl.nodeTitle }}</span> <workgroup-status-icon alert-status="$ctrl.alertStatus"></workgroup-status-icon>
+            <span>{{ $ctrl.nodeTitle }}</span> <alert-status-icon alert-status="$ctrl.alertStatus"></alert-status-icon>
             <span flex></span>
             <span class="nav-item--list__info-item" ng-if="$ctrl.maxScore !== null" ng-include="'wise5/classroomMonitor/classroomMonitorComponents/nodeProgress/navItem/navItemScore.html'"></span>
             <span class="nav-item--list__info-item" ng-include="'wise5/classroomMonitor/classroomMonitorComponents/nodeProgress/navItem/navItemProgress.html'"></span>

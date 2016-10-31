@@ -66,7 +66,7 @@
             <div ng-if="navitemCtrl.nodeStatus.icon.type === 'font'" ng-class="navitemCtrl.isGroup ? 'avatar--square' : ''" style="background-color: {{navitemCtrl.nodeStatus.icon.color}};" class="md-avatar">
                 <md-icon md-font-set="{{navitemCtrl.nodeStatus.icon.fontSet}}" class="md-light">{{navitemCtrl.nodeStatus.icon.fontName}}</md-icon>
             </div>
-            <p>{{ navitemCtrl.nodeTitle }} <node-status-icon node-id="navitemCtrl.nodeId" class="nav-item__status-icon"></node-status-icon><md-icon class="nav-item__status-icon" ng-if="!navitemCtrl.nodeStatus.isVisitable" aria-label="Item is locked"> lock </md-icon></p>
+            <p>{{ navitemCtrl.nodeTitle }} <node-status-icon node-id="navitemCtrl.nodeId" class="status-icon"></node-status-icon><md-icon class="status-icon" ng-if="!navitemCtrl.nodeStatus.isVisitable" aria-label="Item is locked"> lock </md-icon></p>
             <md-icon class="md-secondary animate-show" ng-if="navitemCtrl.isParentGroupPlanning"
                      aria-label="Delete Item"
                      ng-show="navitemCtrl.planningMode && navitemCtrl.isPlanningInstance"

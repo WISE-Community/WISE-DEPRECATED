@@ -23,7 +23,8 @@
         "layouts/l-sidebar";
 
 // 3. Modules
-@import "modules/dragula",
+@import "modules/alerts",
+        "modules/dragula",
         "modules/dialog",
         "modules/inputs",
         "modules/table",
