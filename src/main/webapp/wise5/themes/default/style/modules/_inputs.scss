@@ -52,6 +52,10 @@ $input-action-vertical-offset-richtext: -7px;
     &:focus {
         background-color: #ffffff;
     }
+
+    &[disabled] {
+        color: color('text-secondary');
+    }
 }
 
 .input-container textarea.input--textarea {

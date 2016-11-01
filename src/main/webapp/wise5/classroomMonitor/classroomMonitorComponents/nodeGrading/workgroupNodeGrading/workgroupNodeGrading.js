@@ -29,6 +29,10 @@ var WorkgroupNodeGradingController = function () {
             if (changesObj.latestWorkTime) {
                 _this.latestWork = _this.convertToClientTimestamp(changesObj.latestWorkTime.currentValue);
             }
+
+            if (changesObj.hiddenComponents) {
+                _this.hiddenComponents = changesObj.hiddenComponents.currentValue;
+            }
         };
     }
 
@@ -124,6 +128,30 @@ var WorkgroupNodeGradingController = function () {
         value: function convertToClientTimestamp(time) {
             return this.ConfigService.convertToClientTimestamp(time);
         }
+    }, {
+        key: 'isComponentVisible',
+        value: function isComponentVisible(componentId) {
+            var result = true;
+
+            var index = this.hiddenComponents.indexOf(componentId);
+            if (index > -1) {
+                result = false;
+            }
+
+            return result;
+        }
+    }, {
+        key: 'toggleComponentVisibility',
+        value: function toggleComponentVisibility(componentId) {
+            var index = this.hiddenComponents.indexOf(componentId);
+            if (index > -1) {
+                this.hiddenComponents.splice(index, 1);
+            } else {
+                this.hiddenComponents.push(componentId);
+            }
+
+            this.onUpdate({ value: this.hiddenComponents });
+        }
     }]);
 
     return WorkgroupNodeGradingController;
@@ -135,9 +163,12 @@ var WorkgroupNodeGrading = {
     bindings: {
         workgroupId: '<',
         nodeId: '@',
-        latestWorkTime: '<'
+        latestWorkTime: '<',
+        visibleComponents: '<',
+        hiddenComponents: '<',
+        onUpdate: '&'
     },
-    template: '<div class="nav-item__grading md-whiteframe-1dp">\n            <!--<div class="nav-item__grading__info md-body-1 accent-2">\n                <span ng-if="$ctrl.latestWork">\n                    <span translate="latestWork"></span>&nbsp;<span class="nav-item__grading__timestamp" am-time-ago="$ctrl.latestWork"></span>\n                    <md-tooltip md-direction="right">{{ $ctrl.latestWork | amDateFormat:\'ddd, MMM D YYYY, h:mm a\' }}</md-tooltip>\n                </span>\n                <span ng-if="!$ctrl.latestWork" translate="teamNoWorkSubmitted"></span>\n            </div>-->\n            <div id="{{component.id}}_{{$ctrl.workgroupId}}" class="component--grading" ng-repeat=\'component in $ctrl.components\'>\n                <component ng-if=\'component.showPreviousWorkNodeId != null && component.showPreviousWorkComponentId != null && component.showPreviousWorkNodeId != "" && component.showPreviousWorkComponentId != ""\'\n                           node-id=\'{{component.showPreviousWorkNodeId}}\'\n                           component-id=\'{{component.showPreviousWorkComponentId}}\'\n                           component-state=\'{{$ctrl.getLatestComponentStateByWorkgroupIdAndNodeIdAndComponentId($ctrl.workgroupId, component.showPreviousWorkNodeId, component.showPreviousWorkComponentId)}}\'\n                           workgroup-id=\'{{$ctrl.workgroupId}}\'\n                           teacher-workgroup-id=\'{{$ctrl.teacherWorkgroupId}}\'\n                           mode=\'grading\'></component>\n                <component ng-if=\'component.showPreviousWorkNodeId == null || component.showPreviousWorkComponentId == null || component.showPreviousWorkNodeId == "" || component.showPreviousWorkComponentId == ""\'\n                           node-id=\'{{$ctrl.nodeId}}\'\n                           component-id=\'{{component.id}}\'\n                           component-state=\'{{$ctrl.getLatestComponentStateByWorkgroupIdAndComponentId($ctrl.workgroupId, component.id)}}\'\n                           workgroup-id=\'{{$ctrl.workgroupId}}\'\n                           teacher-workgroup-id=\'{{$ctrl.teacherWorkgroupId}}\'\n                           mode=\'grading\'></component>\n\n            </div>\n        </div>',
+    template: '<div class="nav-item__grading md-whiteframe-1dp">\n            <div id="{{component.id}}_{{$ctrl.workgroupId}}" class="component--grading" ng-repeat=\'component in $ctrl.components\'>\n                <div ng-if="$ctrl.components.length > 1" layout="row" layout-align="center center">\n                    <md-button ng-click="$ctrl.toggleComponentVisibility(component.id)"\n                               class="component--grading__toggle transform--none md-primary"\n                               aria-label="Hide section"\n                               flex="100">\n                        <span ng-if="$ctrl.isComponentVisible(component.id)">\n                            <md-icon>expand_less</md-icon> Hide Section\n                        </span>\n                        <span ng-if="!$ctrl.isComponentVisible(component.id)">\n                            <md-icon>expand_more</md-icon> Show Section\n                        </span>\n                    </md-button>\n                </div>\n                <component ng-if=\'component.showPreviousWorkNodeId != null && component.showPreviousWorkComponentId != null && component.showPreviousWorkNodeId != "" && component.showPreviousWorkComponentId != ""\'\n                           ng-show="$ctrl.isComponentVisible(component.id)"\n                           class="component-container animate-show"\n                           node-id=\'{{component.showPreviousWorkNodeId}}\'\n                           component-id=\'{{component.showPreviousWorkComponentId}}\'\n                           component-state=\'{{$ctrl.getLatestComponentStateByWorkgroupIdAndNodeIdAndComponentId($ctrl.workgroupId, component.showPreviousWorkNodeId, component.showPreviousWorkComponentId)}}\'\n                           workgroup-id=\'{{$ctrl.workgroupId}}\'\n                           teacher-workgroup-id=\'{{$ctrl.teacherWorkgroupId}}\'\n                           mode=\'grading\'></component>\n                <component ng-if=\'component.showPreviousWorkNodeId == null || component.showPreviousWorkComponentId == null || component.showPreviousWorkNodeId == "" || component.showPreviousWorkComponentId == ""\'\n                           ng-show="$ctrl.isComponentVisible(component.id)"\n                           class="component-container animate-show"\n                           node-id=\'{{$ctrl.nodeId}}\'\n                           component-id=\'{{component.id}}\'\n                           component-state=\'{{$ctrl.getLatestComponentStateByWorkgroupIdAndComponentId($ctrl.workgroupId, component.id)}}\'\n                           workgroup-id=\'{{$ctrl.workgroupId}}\'\n                           teacher-workgroup-id=\'{{$ctrl.teacherWorkgroupId}}\'\n                           mode=\'grading\'></component>\n\n            </div>\n        </div>',
     controller: WorkgroupNodeGradingController
 };
 

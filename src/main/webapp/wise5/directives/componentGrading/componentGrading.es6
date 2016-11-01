@@ -30,18 +30,44 @@ class ComponentGradingController {
                 this.hasMaxScore = (typeof this.maxScore === 'number');
             }
 
-            this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.toWorkgroupId);
-            this.processAnnotations();
-
             this.componentStates = this.TeacherDataService.getComponentStatesByWorkgroupIdAndComponentId(this.toWorkgroupId, this.componentId);
             this.latestComponentStateTime = this.getLatestComponentStateTime();
+
+            this.processAnnotations();
         };
+
+        this.$scope.$on('annotationSavedToServer', (event, args) => {
+            // TODO: we're watching this here and in the parent component's controller; probably want to optimize!
+            if (args != null ) {
+
+                // get the annotation that was saved to the server
+                let annotation = args.annotation;
+
+                if (annotation != null) {
+
+                    // get the node id and component id of the annotation
+                    let annotationNodeId = annotation.nodeId;
+                    let annotationComponentId = annotation.componentId;
+
+                    // make sure the annotation was for this component
+                    if (this.nodeId === annotationNodeId &&
+                        this.componentId === annotationComponentId) {
+
+                        // get latest score and comment annotations for this component
+                        this.processAnnotations();
+                    }
+                }
+            }
+        });
     }
 
     processAnnotations() {
+        this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.toWorkgroupId);
+
         if (this.latestAnnotations && this.latestAnnotations.comment) {
-            if (this.latestAnnotations.comment.type === 'comment') {
-                this.comment = this.latestAnnotations.comment.data.value;
+            let latestComment = this.latestAnnotations.comment;
+            if (latestComment.type === 'comment') {
+                this.comment = latestComment.data.value;
             } else {
                 this.comment = null;
             }
@@ -53,31 +79,66 @@ class ComponentGradingController {
     }
 
     hasNewWork() {
+        let result = false;
+
         if (this.latestComponentStateTime) {
-            let latestAnnotationTime = this.getLatestAnnotationTime();
-            if (latestAnnotationTime && this.latestComponentStateTime > latestAnnotationTime) {
-                return true;
+            // there is work for this component
+
+            let latestTeacherAnnotationTime = this.getLatestTeacherAnnotationTime();
+            if (latestTeacherAnnotationTime) {
+                if (this.latestComponentStateTime > latestTeacherAnnotationTime) {
+                    // latest component state is newer than latest annotation, so work is new
+                    result = true;
+                    this.comment = null;
+                }
+            } else {
+                // there are no annotations, so work is new
+                result = true;
             }
-        } else {
-            return false;
         }
+
+        return result;
     }
 
     /**
-     * Get the most recent annotation (from the current score and comment annotations)
-     * @return Object (latest annotation)
+     * Returns true if the latest comment is an auto comment and it's
+     * studentWorkId matches the latest component state's id
      */
-    getLatestAnnotation() {
-        let latest = null;
+    showAutoComment() {
+        let result = false;
+        let latestComment = this.latestAnnotations.comment;
+        if (latestComment && latestComment.type === 'autoComment') {
+            let n = this.componentStates.length;
+            if (n > 0) {
+                let latestComponentState = this.componentStates[n-1]
+                if (latestComponentState.id === latestComment.studentWorkId) {
+                    result = true;
+                }
+            }
+        }
 
-        if (this.latestAnnotations.comment || this.latestAnnotations.score) {
-            let commentSaveTime = this.latestAnnotations.comment ? this.latestAnnotations.comment.serverSaveTime : 0;
-            let scoreSaveTime = this.latestAnnotations.score ? this.latestAnnotations.score.serverSaveTime : 0;
+        return result;
+    }
+
+    /**
+     * Get the most recent teacher annotation (from the current score and comment annotations)
+     * @return Object (latest teacher annotation)
+     */
+    getLatestTeacherAnnotation() {
+        let latest = null;
+        let latestComment = this.latestAnnotations.comment;
+        let latestScore = this.latestAnnotations.score;
+        let latestTeacherComment = (latestComment && latestComment.type === 'comment') ? latestComment : null;
+        let latestTeacherScore = (latestScore && latestScore.type === 'score') ? latestScore : null;
+
+        if (latestTeacherComment || latestTeacherScore) {
+            let commentSaveTime = latestTeacherComment ? latestTeacherComment.serverSaveTime : 0;
+            let scoreSaveTime = latestTeacherScore ? latestTeacherScore.serverSaveTime : 0;
 
             if (commentSaveTime >= scoreSaveTime) {
-                latest = this.latestAnnotations.comment;
+                latest = latestTeacherComment;
             } else if (scoreSaveTime > commentSaveTime) {
-                latest = this.latestAnnotations.score;
+                latest = latestTeacherScore;
             }
         }
 
@@ -85,12 +146,12 @@ class ComponentGradingController {
     }
 
     /**
-     * Calculate the save time of the latest annotation
-     * @return Number (latest annotation post time)
+     * Calculate the save time of the latest teacher annotation
+     * @return Number (latest teacher annotation post time)
      */
-    getLatestAnnotationTime() {
-        let latest = this.getLatestAnnotation();
-        let time = null;
+    getLatestTeacherAnnotationTime() {
+        let latest = this.getLatestTeacherAnnotation();
+        let time = 0;
 
         if (latest) {
             let serverSaveTime = latest.serverSaveTime;
@@ -149,7 +210,7 @@ class ComponentGradingController {
                 value = this.comment;
             }
 
-            if (value) {
+            if ((type === 'comment' && value) || (type === 'score' && typeof value === 'number' && value >= 0)) {
                 let data = {};
                 data.value = value;
 
@@ -169,13 +230,15 @@ class ComponentGradingController {
 
                 // save the annotation to the server
                 this.AnnotationService.saveAnnotation(annotation).then(result => {
-                    var localAnnotation = result;
+                    let localAnnotation = result;
 
                     if (localAnnotation != null) {
                         if (this.annotationId == null) {
                             // set the annotation id if there was no annotation id
                             this.annotationId = localAnnotation.id;
                         }
+
+                        this.processAnnotations();
                     }
                 });
             }

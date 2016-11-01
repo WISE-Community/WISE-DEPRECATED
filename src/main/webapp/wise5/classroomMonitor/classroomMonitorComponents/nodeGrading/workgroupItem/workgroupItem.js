@@ -34,6 +34,13 @@ var WorkgroupItemController = function () {
             _this.getAlertNotifications();
         };
 
+        this.$onChanges = function (changesObj) {
+
+            if (changesObj.hiddenComponents) {
+                _this.hiddenComponents = angular.copy(changesObj.hiddenComponents.currentValue);
+            }
+        };
+
         this.$scope.$on('notificationAdded', function (event, notification) {
             if (notification.toWorkgroupId === _this.workgroupId && notification.type === 'CRaterResult') {
                 // there is a new notification for this workgroup and it is a CRaterResult
@@ -116,7 +123,7 @@ var WorkgroupItemController = function () {
                     _this2.statusText = partiallyCompleted;
                 });
             } else {
-                if (this.nodeHasWork) {
+                if (this.node) {
                     this.$translate('noWork').then(function (noWork) {
                         _this2.statusText = noWork;
                     });
@@ -216,6 +223,11 @@ var WorkgroupItemController = function () {
             var score = this.AnnotationService.getScore(workgroupId, nodeId);
             return typeof score === 'number' ? score : '-';
         }
+    }, {
+        key: 'updateHiddenCompnents',
+        value: function updateHiddenCompnents(value) {
+            this.onUpdate({ value: value });
+        }
     }]);
 
     return WorkgroupItemController;
@@ -230,10 +242,12 @@ var WorkgroupItem = {
         maxScore: '<',
         nodeId: '<',
         workgroupId: '<',
-        showWork: '<'
+        showWork: '<',
+        hiddenComponents: '<',
+        onUpdate: '&'
     },
     controller: WorkgroupItemController,
-    template: '<md-list-item class="list-item list-item-condensed md-whiteframe-z1"\n                       ng-class="{\'list-item--warn\': $ctrl.statusClass === \'warn\', \'list-item--info\': $ctrl.statusClass === \'info\', \'list-item--expanded\': $ctrl.showWork}"\n                       ng-click="$ctrl.showWork = !$ctrl.showWork"\n                       layout-wrap>\n            <div class="md-list-item-text" layout="row" flex>\n                <div flex layout="row" layout-align="start center">\n                    <workgroup-info workgroup-id="$ctrl.workgroupId" can-view-student-names="$ctrl.canViewStudentNames" alert-status="{{$ctrl.alertStatus}}"></workgroup-info>\n                </div>\n                <div flex="30" layout="row" layout-align="center center">\n                    <workgroup-node-status status-text="{{$ctrl.statusText}}" status-class="{{$ctrl.statusClass}}"></workgroup-node-status>\n                </div>\n                <div ng-if="$ctrl.hasMaxScore" flex="20" layout="row" layout-align="center center">\n                    <workgroup-node-score score="{{$ctrl.score}}" max-score="{{$ctrl.maxScore}}"></workgroup-node-score>\n                </div>\n            </div>\n        </md-list-item>\n        <workgroup-node-grading workgroup-id="$ctrl.workgroupId"\n                                node-id="{{$ctrl.nodeId}}"\n                                latest-work-time="$ctrl.latestWorkTime"\n                                ng-show="$ctrl.showWork"></workgroup-node-grading>'
+    template: '<md-list-item class="list-item list-item-condensed md-whiteframe-z1"\n                       ng-class="{\'list-item--warn\': $ctrl.statusClass === \'warn\', \'list-item--info\': $ctrl.statusClass === \'info\', \'list-item--expanded\': $ctrl.showWork}"\n                       ng-click="$ctrl.showWork = !$ctrl.showWork"\n                       layout-wrap>\n            <div class="md-list-item-text" layout="row" flex>\n                <div flex layout="row" layout-align="start center">\n                    <workgroup-info workgroup-id="$ctrl.workgroupId" can-view-student-names="$ctrl.canViewStudentNames" alert-status="{{$ctrl.alertStatus}}"></workgroup-info>\n                </div>\n                <div flex="30" layout="row" layout-align="center center">\n                    <workgroup-node-status status-text="{{$ctrl.statusText}}" status-class="{{$ctrl.statusClass}}"></workgroup-node-status>\n                </div>\n                <div ng-if="$ctrl.hasMaxScore" flex="20" layout="row" layout-align="center center">\n                    <workgroup-node-score score="{{$ctrl.score}}" max-score="{{$ctrl.maxScore}}"></workgroup-node-score>\n                </div>\n            </div>\n        </md-list-item>\n        <workgroup-node-grading workgroup-id="$ctrl.workgroupId"\n                                node-id="{{$ctrl.nodeId}}"\n                                latest-work-time="$ctrl.latestWorkTime"\n                                ng-show="$ctrl.showWork"\n                                hidden-components="$ctrl.hiddenComponents"\n                                on-update="$ctrl.updateHiddenCompnents(value)"></workgroup-node-grading>'
 };
 
 exports.default = WorkgroupItem;

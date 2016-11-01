@@ -1,13 +1,52 @@
 .annotations--grading {
-    margin: 16px -16px -16px;
-    background-color: color('gray-lightest');
-    //background-color: transparentize(color('primary'), .92);
-    border-top: 1px dashed color('gray-dark');
-    padding: 16px;
+    //margin: 8px -16px -16px;
+    //padding: 16px;
+    //border-top: 1px dashed color('gray-light');
+
+    //margin: 12px 4px 0;
+    //border: 1px solid color('gray-light');
+
+    margin: 8px 2px 4px;
+    padding: 12px 8px 8px;
+    border-top: 8px solid color('primary');
+    background-color: lighten(color('primary'), 58%);
+
+    md-input-container {
+        margin-bottom: 0;
+    }
+}
+
+.annotations--grading__info {
+    margin-top: 8px;
+    color: color('info');
+    font-weight: 600;
 }
 
 .annotations--grading__score {
-    input {
-        width: 46px;
+    @media only screen and (min-width: $layout-breakpoint-xs) {
+        margin-left: 16px;
+        min-width: 108px;
     }
+
+    .input-label {
+        margin: 3px 0;
+    }
+
+    input {
+        font-size: rem(1.8);
+        width: 54px;
+    }
+}
+
+.annotations--grading__score__max {
+    position: relative;
+    top: 12px;
+    margin-left: 4px;
+}
+
+.annotations--grading__auto-comment {
+    margin: 12px 4px 16px;
+    padding: 0 8px;
+    color: color('text-secondary');
+    border-left: 3px solid color('gray-dark');
 }

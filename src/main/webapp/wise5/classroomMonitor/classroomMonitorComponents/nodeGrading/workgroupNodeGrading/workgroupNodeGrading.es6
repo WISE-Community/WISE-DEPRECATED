@@ -19,6 +19,10 @@ class WorkgroupNodeGradingController {
             if (changesObj.latestWorkTime) {
                 this.latestWork = this.convertToClientTimestamp(changesObj.latestWorkTime.currentValue);
             }
+
+            if (changesObj.hiddenComponents) {
+                this.hiddenComponents = changesObj.hiddenComponents.currentValue;
+            }
         };
     };
 
@@ -102,6 +106,28 @@ class WorkgroupNodeGradingController {
     convertToClientTimestamp(time) {
         return this.ConfigService.convertToClientTimestamp(time);
     }
+
+    isComponentVisible(componentId) {
+        let result = true;
+
+        let index = this.hiddenComponents.indexOf(componentId);
+        if (index > -1) {
+            result = false;
+        }
+
+        return result;
+    }
+
+    toggleComponentVisibility(componentId) {
+        let index = this.hiddenComponents.indexOf(componentId);
+        if (index > -1) {
+            this.hiddenComponents.splice(index, 1);
+        } else {
+            this.hiddenComponents.push(componentId);
+        }
+
+        this.onUpdate({value: this.hiddenComponents});
+    }
 }
 
 WorkgroupNodeGradingController.$inject = [
@@ -114,19 +140,30 @@ const WorkgroupNodeGrading = {
     bindings: {
         workgroupId: '<',
         nodeId: '@',
-        latestWorkTime: '<'
+        latestWorkTime: '<',
+        visibleComponents: '<',
+        hiddenComponents: '<',
+        onUpdate: '&'
     },
     template:
         `<div class="nav-item__grading md-whiteframe-1dp">
-            <!--<div class="nav-item__grading__info md-body-1 accent-2">
-                <span ng-if="$ctrl.latestWork">
-                    <span translate="latestWork"></span>&nbsp;<span class="nav-item__grading__timestamp" am-time-ago="$ctrl.latestWork"></span>
-                    <md-tooltip md-direction="right">{{ $ctrl.latestWork | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip>
-                </span>
-                <span ng-if="!$ctrl.latestWork" translate="teamNoWorkSubmitted"></span>
-            </div>-->
             <div id="{{component.id}}_{{$ctrl.workgroupId}}" class="component--grading" ng-repeat='component in $ctrl.components'>
+                <div ng-if="$ctrl.components.length > 1" layout="row" layout-align="center center">
+                    <md-button ng-click="$ctrl.toggleComponentVisibility(component.id)"
+                               class="component--grading__toggle transform--none md-primary"
+                               aria-label="Hide section"
+                               flex="100">
+                        <span ng-if="$ctrl.isComponentVisible(component.id)">
+                            <md-icon>expand_less</md-icon> Hide Section
+                        </span>
+                        <span ng-if="!$ctrl.isComponentVisible(component.id)">
+                            <md-icon>expand_more</md-icon> Show Section
+                        </span>
+                    </md-button>
+                </div>
                 <component ng-if='component.showPreviousWorkNodeId != null && component.showPreviousWorkComponentId != null && component.showPreviousWorkNodeId != "" && component.showPreviousWorkComponentId != ""'
+                           ng-show="$ctrl.isComponentVisible(component.id)"
+                           class="component-container animate-show"
                            node-id='{{component.showPreviousWorkNodeId}}'
                            component-id='{{component.showPreviousWorkComponentId}}'
                            component-state='{{$ctrl.getLatestComponentStateByWorkgroupIdAndNodeIdAndComponentId($ctrl.workgroupId, component.showPreviousWorkNodeId, component.showPreviousWorkComponentId)}}'
@@ -134,6 +171,8 @@ const WorkgroupNodeGrading = {
                            teacher-workgroup-id='{{$ctrl.teacherWorkgroupId}}'
                            mode='grading'></component>
                 <component ng-if='component.showPreviousWorkNodeId == null || component.showPreviousWorkComponentId == null || component.showPreviousWorkNodeId == "" || component.showPreviousWorkComponentId == ""'
+                           ng-show="$ctrl.isComponentVisible(component.id)"
+                           class="component-container animate-show"
                            node-id='{{$ctrl.nodeId}}'
                            component-id='{{component.id}}'
                            component-state='{{$ctrl.getLatestComponentStateByWorkgroupIdAndComponentId($ctrl.workgroupId, component.id)}}'
