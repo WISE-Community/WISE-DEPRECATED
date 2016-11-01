@@ -30,20 +30,20 @@ class ConfigService {
                 // add the timestamp diff to the config object
                 configJSON.timestampDiff = timestampDiff;
             }
-            
+
             var constraints = true;
-            
+
             // get the full url
             var absURL = this.$location.$$absUrl;
-            
+
             // regex to match constraints=false in the url
             var regEx = new RegExp("constraints=false", 'gi');
-            
+
             if (absURL != null && absURL.match(regEx)) {
                 // the url contains constraints=false
                 constraints = false;
             }
-            
+
             // set the constraints value into the config so we can access it later
             configJSON.constraints = constraints;
 
@@ -227,7 +227,7 @@ class ConfigService {
         }
         return teacherUserInfo;
     };
-    
+
     /**
      * Get the shared teacher user infos for the run
      */
@@ -472,47 +472,47 @@ class ConfigService {
 
         return clientTimestamp;
     }
-    
+
     /**
      * Check if the workgroup is the owner of the run
      * @param workgroupId the workgroup id
      * @returns whether the workgroup is the owner of the run
      */
     isRunOwner(workgroupId) {
-        
+
         var result = false;
-        
+
         if (workgroupId != null) {
             var teacherUserInfo = this.getTeacherUserInfo();
-            
+
             if (teacherUserInfo != null) {
-                
+
                 if (workgroupId == teacherUserInfo.workgroupId) {
                     result = true;
                 }
             }
         }
-        
+
         return result;
     }
-    
+
     /**
      * Check if the workgroup is a shared teacher for the run
      * @param workgroupId the workgroup id
      * @returns whether the workgroup is a shared teacher of the run
      */
     isRunSharedTeacher(workgroupId) {
-        
+
         var result = false;
-        
+
         if (workgroupId != null) {
             var sharedTeacherUserInfos = this.getSharedTeacherUserInfos();
-            
+
             if (sharedTeacherUserInfos != null) {
-                
+
                 for (var s = 0; s < sharedTeacherUserInfos.length; s++) {
                     var sharedTeacherUserInfo = sharedTeacherUserInfos[s];
-                    
+
                     if (sharedTeacherUserInfo != null) {
                         if (workgroupId == sharedTeacherUserInfo.workgroupId) {
                             result = true;
@@ -521,10 +521,10 @@ class ConfigService {
                 }
             }
         }
-        
+
         return result;
     }
-    
+
     /**
      * Get the teacher role for the run
      * @param workgroupId the workgroup id
@@ -533,7 +533,7 @@ class ConfigService {
      */
     getTeacherRole(workgroupId) {
         var role = null;
-        
+
         if (this.isRunOwner(workgroupId)) {
             // the teacher is the owner of the run
             role = 'owner';
@@ -541,10 +541,10 @@ class ConfigService {
             // the teacher is a shared teacher so their role may be 'write' or 'read'
             role = this.getSharedTeacherRole(workgroupId);
         }
-        
+
         return role;
     }
-    
+
     /**
      * Get the shared teacher role for the run
      * @param workgroupId the workgroup id
@@ -553,15 +553,15 @@ class ConfigService {
      */
     getSharedTeacherRole(workgroupId) {
         var role = null;
-        
+
         if (workgroupId != null) {
             var sharedTeacherUserInfos = this.getSharedTeacherUserInfos();
-            
+
             if (sharedTeacherUserInfos != null) {
-                
+
                 for (var s = 0; s < sharedTeacherUserInfos.length; s++) {
                     var sharedTeacherUserInfo = sharedTeacherUserInfos[s];
-                    
+
                     if (sharedTeacherUserInfo != null) {
                         if (workgroupId == sharedTeacherUserInfo.workgroupId) {
                             role = sharedTeacherUserInfo.role;
@@ -570,13 +570,13 @@ class ConfigService {
                 }
             }
         }
-        
+
         return role;
     }
-    
-    /** 
+
+    /**
      * Replace student names in the content.
-     * For example, we will replace instances of {{firstStudentFirstName}} 
+     * For example, we will replace instances of {{firstStudentFirstName}}
      * with the actual first name of the first student in the workgroup.
      * @param content a content object or string
      * @return an updated content object or string
@@ -590,49 +590,49 @@ class ConfigService {
                 // get the content as a string
                 contentString = JSON.stringify(content);
             }
-            
+
             if (contentString != null) {
 
                 // get the workgroup id
                 var workgroupId = this.getWorkgroupId();
-                
+
                 // get all the first names
                 var firstNames = this.getStudentFirstNamesByWorkgroupId(workgroupId);
-                
+
                 if (firstNames.length >= 1) {
                     /*
-                     * there are 1 or more students in the workgroup so we can 
+                     * there are 1 or more students in the workgroup so we can
                      * replace the first student first name with the actual
                      * name
                      */
                     contentString = contentString.replace(new RegExp('{{firstStudentFirstName}}', 'gi'), firstNames[0]);
-                    
+
                     /*
-                     * there are 1 or more students in the workgroup so we can 
+                     * there are 1 or more students in the workgroup so we can
                      * replace the student first names with the actual names
                      */
                     contentString = contentString.replace(new RegExp('{{studentFirstNames}}', 'gi'), firstNames.join(", "));
                 }
-                
+
                 if (firstNames.length >= 2) {
                     /*
-                     * there are 2 or more students in the workgroup so we can 
+                     * there are 2 or more students in the workgroup so we can
                      * replace the second student first name with the actual
                      * name
                      */
                     contentString = contentString.replace(new RegExp('{{secondStudentFirstName}}', 'gi'), firstNames[1]);
                 }
-                
+
                 if (firstNames.length >= 3) {
                     /*
-                     * there are 3 or more students in the workgroup so we can 
+                     * there are 3 or more students in the workgroup so we can
                      * replace the third student first name with the actual
                      * name
                      */
                     contentString = contentString.replace(new RegExp('{{thirdStudentFirstName}}', 'gi'), firstNames[2]);
                 }
             }
-            
+
             if (typeof content === 'object') {
                 // convert the content string back into an object
                 content = JSON.parse(contentString);
@@ -643,6 +643,12 @@ class ConfigService {
         }
 
         return content;
+    }
+
+    getAvatarColorForWorkgroupId(workgroupId) {
+        var avatarColors = ['#E91E63', '#9C27B0', '#CDDC39', '#2196F3', '#FDD835', '#43A047', '#795548', '#EF6C00', '#C62828', '#607D8B'];
+        var modulo = workgroupId % 10;
+        return avatarColors[modulo];
     }
 };
 

@@ -19,7 +19,7 @@ class ClassResponseController {
     }
 
     getAvatarColorForWorkgroupId(workgroupId) {
-        return this.StudentStatusService.getAvatarColorForWorkgroupId(workgroupId);
+        return this.ConfigService.getAvatarColorForWorkgroupId(workgroupId);
     }
 
     replyEntered($event, response) {
