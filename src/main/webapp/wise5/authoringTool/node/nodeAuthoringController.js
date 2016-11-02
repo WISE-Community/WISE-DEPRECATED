@@ -143,6 +143,35 @@ var NodeAuthoringController = function () {
             text: "Is Planning Activity Completed"
         }];
 
+        // available transitionCriterias
+        this.transitionCriterias = [{
+            value: "score",
+            text: "Score",
+            params: [{
+                value: "nodeId",
+                text: "Node Id"
+            }, {
+                value: "componentId",
+                text: "Component Id"
+            }, {
+                value: "scores",
+                text: "Score(s)"
+            }]
+        }, {
+            value: "choiceChosen",
+            text: "Choice Chosen",
+            params: [{
+                value: "nodeId",
+                text: "Node Id"
+            }, {
+                value: "componentId",
+                text: "Component Id"
+            }, {
+                value: "choiceIds",
+                text: "Choices"
+            }]
+        }];
+
         // the array of component types that can be created
         this.componentTypes = [{ componentType: 'AudioOscillator', componentName: 'Audio Oscillator' }, { componentType: 'ConceptMap', componentName: 'Concept Map' }, { componentType: 'Discussion', componentName: 'Discussion' }, { componentType: 'Draw', componentName: 'Draw' }, { componentType: 'Embedded', componentName: 'Embedded' }, { componentType: 'Graph', componentName: 'Graph' }, { componentType: 'HTML', componentName: 'HTML' }, { componentType: 'Label', componentName: 'Label' }, { componentType: 'Match', componentName: 'Match' }, { componentType: 'MultipleChoice', componentName: 'Multiple Choice' }, { componentType: 'OpenResponse', componentName: 'Open Response' }, { componentType: 'OutsideURL', componentName: 'Outside URL' }, { componentType: 'Table', componentName: 'Table' }];
 
@@ -312,6 +341,8 @@ var NodeAuthoringController = function () {
                     nodeTransition.criteria.push(newTransitionCriteria);
                 }
             }
+            // save changes
+            this.authoringViewNodeChanged();
         }
 
         /**
@@ -339,6 +370,8 @@ var NodeAuthoringController = function () {
             if (index > -1) {
                 nodeTransitions.splice(index, 1);
             }
+            // save changes
+            this.authoringViewNodeChanged();
         }
 
         /**
@@ -529,6 +562,42 @@ var NodeAuthoringController = function () {
                              * so we will get its params
                              */
                             params = singleRemovalCriteria.params;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            return params;
+        }
+
+        /**
+         * Get the transition criteria params for a transition criteria name
+         * @param name a transition criteria name e.g.  'score', 'choiceChosen'
+         * @return the params for the given transition criteria name
+         */
+
+    }, {
+        key: "getTransitionCriteriaParamsByName",
+        value: function getTransitionCriteriaParamsByName(name) {
+            var params = [];
+
+            if (name != null) {
+
+                // loop through all the available transition criteria
+                for (var t = 0; t < this.transitionCriterias.length; t++) {
+
+                    // get a single transition criteria
+                    var singleTransitionCriteria = this.transitionCriterias[t];
+
+                    if (singleTransitionCriteria != null) {
+
+                        if (singleTransitionCriteria.value == name) {
+                            /*
+                             * we have found the removal criteria we are looking for
+                             * so we will get its params
+                             */
+                            params = singleTransitionCriteria.params;
                             break;
                         }
                     }
@@ -771,6 +840,30 @@ var NodeAuthoringController = function () {
         }
 
         /**
+         * Delete a transition criteria from a transition
+         * @param constraint remove the removal criteria from this constraint
+         * @param removalCriteriaIndex the index of the removal criteria to remove
+         */
+
+    }, {
+        key: "deleteTransitionCriteria",
+        value: function deleteTransitionCriteria(transition, transitionCriteriaIndex) {
+            if (transition != null) {
+
+                // get all the transition criteria
+                var transitionCriterias = transition.criteria;
+
+                if (transitionCriterias != null) {
+                    // remove the single transition criteria
+                    transitionCriterias.splice(transitionCriteriaIndex, 1);
+                }
+            }
+
+            // save the project
+            this.ProjectService.saveProject();
+        }
+
+        /**
          * A removal criteria name has changed so we will clear the params so
          * that the params from the previous removal criteria name do not persist
          */
@@ -782,6 +875,24 @@ var NodeAuthoringController = function () {
             if (criteria != null) {
                 // clear the params
                 criteria.params = {};
+            }
+
+            // save the project
+            this.authoringViewNodeChanged();
+        }
+
+        /**
+         * A removal criteria name has changed so we will clear the params so
+         * that the params from the previous removal criteria name do not persist
+         */
+
+    }, {
+        key: "transitionCriteriaNameChanged",
+        value: function transitionCriteriaNameChanged(transitionCriteria) {
+
+            if (transitionCriteria != null) {
+                // clear the params
+                transitionCriteria.params = {};
             }
 
             // save the project

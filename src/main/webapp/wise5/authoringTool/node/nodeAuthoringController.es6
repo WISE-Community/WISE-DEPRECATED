@@ -186,6 +186,46 @@ class NodeAuthoringController {
             }
         ];
 
+        // available transitionCriterias
+        this.transitionCriterias = [
+            {
+                value: "score",
+                text: "Score",
+                params: [
+                    {
+                        value: "nodeId",
+                        text: "Node Id"
+                    },
+                    {
+                        value: "componentId",
+                        text: "Component Id"
+                    },
+                    {
+                        value: "scores",
+                        text: "Score(s)"
+                    }
+                ]
+            },
+            {
+                value: "choiceChosen",
+                text: "Choice Chosen",
+                params: [
+                    {
+                        value: "nodeId",
+                        text: "Node Id"
+                    },
+                    {
+                        value: "componentId",
+                        text: "Component Id"
+                    },
+                    {
+                        value: "choiceIds",
+                        text: "Choices"
+                    }
+                ]
+            }
+        ];
+
         // the array of component types that can be created
         this.componentTypes = [
             {componentType: 'AudioOscillator', componentName: 'Audio Oscillator'},
@@ -346,6 +386,8 @@ class NodeAuthoringController {
                 nodeTransition.criteria.push(newTransitionCriteria);
             }
         }
+        // save changes
+        this.authoringViewNodeChanged();
     }
 
     /**
@@ -367,6 +409,8 @@ class NodeAuthoringController {
         if (index > -1) {
             nodeTransitions.splice(index, 1);
         }
+        // save changes
+        this.authoringViewNodeChanged();
     }
 
 
@@ -538,6 +582,39 @@ class NodeAuthoringController {
             }
         }
         
+        return params;
+    }
+
+    /**
+     * Get the transition criteria params for a transition criteria name
+     * @param name a transition criteria name e.g.  'score', 'choiceChosen'
+     * @return the params for the given transition criteria name
+     */
+    getTransitionCriteriaParamsByName(name) {
+        let params = [];
+
+        if (name != null) {
+
+            // loop through all the available transition criteria
+            for (let t = 0; t < this.transitionCriterias.length; t++) {
+
+                // get a single transition criteria
+                let singleTransitionCriteria = this.transitionCriterias[t];
+
+                if (singleTransitionCriteria != null) {
+
+                    if (singleTransitionCriteria.value == name) {
+                        /*
+                         * we have found the removal criteria we are looking for
+                         * so we will get its params
+                         */
+                        params = singleTransitionCriteria.params;
+                        break;
+                    }
+                }
+            }
+        }
+
         return params;
     }
     
@@ -751,6 +828,27 @@ class NodeAuthoringController {
         // save the project
         this.ProjectService.saveProject();
     }
+
+    /**
+     * Delete a transition criteria from a transition
+     * @param constraint remove the removal criteria from this constraint
+     * @param removalCriteriaIndex the index of the removal criteria to remove
+     */
+    deleteTransitionCriteria(transition, transitionCriteriaIndex) {
+        if (transition != null) {
+
+            // get all the transition criteria
+            var transitionCriterias = transition.criteria;
+
+            if (transitionCriterias != null) {
+                // remove the single transition criteria
+                transitionCriterias.splice(transitionCriteriaIndex, 1);
+            }
+        }
+
+        // save the project
+        this.ProjectService.saveProject();
+    }
     
     /**
      * A removal criteria name has changed so we will clear the params so
@@ -766,7 +864,22 @@ class NodeAuthoringController {
         // save the project
         this.authoringViewNodeChanged();
     }
-    
+
+    /**
+     * A removal criteria name has changed so we will clear the params so
+     * that the params from the previous removal criteria name do not persist
+     */
+    transitionCriteriaNameChanged(transitionCriteria) {
+
+        if (transitionCriteria != null) {
+            // clear the params
+            transitionCriteria.params = {};
+        }
+
+        // save the project
+        this.authoringViewNodeChanged();
+    }
+
     /**
      * A button to author a specific view of the node was clicked
      * @param view the view name
