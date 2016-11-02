@@ -21,7 +21,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var DiscussionService = function (_NodeService) {
     _inherits(DiscussionService, _NodeService);
 
-    function DiscussionService($http, $rootScope, $q, ConfigService, NotificationService, StudentDataService, TeacherDataService, UtilService) {
+    function DiscussionService($http, $rootScope, $q, $injector, ConfigService, StudentDataService, UtilService) {
         _classCallCheck(this, DiscussionService);
 
         var _this = _possibleConstructorReturn(this, (DiscussionService.__proto__ || Object.getPrototypeOf(DiscussionService)).call(this));
@@ -29,11 +29,15 @@ var DiscussionService = function (_NodeService) {
         _this.$http = $http;
         _this.$rootScope = $rootScope;
         _this.$q = $q;
+        _this.$injector = $injector;
         _this.ConfigService = ConfigService;
-        _this.NotificationService = NotificationService;
         _this.StudentDataService = StudentDataService;
-        _this.TeacherDataService = TeacherDataService;
         _this.UtilService = UtilService;
+
+        if (_this.ConfigService != null && _this.ConfigService.getMode() == "classroomMonitor") {
+            // in the classroom monitor, we need access to the TeacherDataService so it can retrieve posts and replies for all students
+            _this.TeacherDataService = _this.$injector.get('TeacherDataService');
+        }
         return _this;
     }
 
@@ -288,7 +292,7 @@ var DiscussionService = function (_NodeService) {
     return DiscussionService;
 }(_nodeService2.default);
 
-DiscussionService.$inject = ['$http', '$rootScope', '$q', 'ConfigService', 'NotificationService', 'StudentDataService', 'TeacherDataService', 'UtilService'];
+DiscussionService.$inject = ['$http', '$rootScope', '$q', '$injector', 'ConfigService', 'StudentDataService', 'UtilService'];
 
 exports.default = DiscussionService;
 //# sourceMappingURL=discussionService.js.map

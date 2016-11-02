@@ -4,21 +4,24 @@ class DiscussionService extends NodeService {
     constructor($http,
                 $rootScope,
                 $q,
+                $injector,
                 ConfigService,
-                NotificationService,
                 StudentDataService,
-                TeacherDataService,
                 UtilService) {
         super();
 
         this.$http = $http;
         this.$rootScope = $rootScope;
         this.$q = $q;
+        this.$injector = $injector;
         this.ConfigService = ConfigService;
-        this.NotificationService = NotificationService;
         this.StudentDataService = StudentDataService;
-        this.TeacherDataService = TeacherDataService;
         this.UtilService = UtilService;
+
+        if (this.ConfigService != null && this.ConfigService.getMode() == "classroomMonitor") {
+            // in the classroom monitor, we need access to the TeacherDataService so it can retrieve posts and replies for all students
+            this.TeacherDataService = this.$injector.get('TeacherDataService');
+        }
     }
 
     /**
@@ -252,10 +255,9 @@ DiscussionService.$inject = [
     '$http',
     '$rootScope',
     '$q',
+    '$injector',
     'ConfigService',
-    'NotificationService',
     'StudentDataService',
-    'TeacherDataService',
     'UtilService'
 ];
 

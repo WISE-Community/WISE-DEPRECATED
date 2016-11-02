@@ -233,8 +233,6 @@ var NotificationService = function () {
 
             if (this.ConfigService.isPreview()) {
 
-                var savedNotificationResponse = notification;
-
                 // if we're in preview, don't make any request to the server but pretend we did
                 var deferred = this.$q.defer();
                 deferred.resolve(notification);
@@ -290,38 +288,45 @@ var NotificationService = function () {
         key: 'dismissNotificationToServer',
         value: function dismissNotificationToServer(notification) {
 
-            if (notification.id == null) {
-                // cannot dismiss a notification that hasn't been saved to db yet
-                return;
-            }
+            notification.timeDismissed = Date.parse(new Date()); // set dismissed time to now.
 
-            var timeNow = Date.parse(new Date());
-            notification.timeDismissed = timeNow;
+            if (this.ConfigService.isPreview()) {
 
-            var config = {};
-            config.method = 'POST';
-            config.url = this.ConfigService.getNotificationURL() + "/dismiss";
-            config.headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
-
-            var params = {};
-            params.notificationId = notification.id;
-            params.fromWorkgroupId = notification.fromWorkgroupId;
-            params.toWorkgroupId = notification.toWorkgroupId;
-            params.type = notification.type;
-            if (notification.groupId != null) {
-                params.groupId = notification.groupId;
-            }
-            params.timeDismissed = notification.timeDismissed;
-            config.data = $.param(params);
-
-            return this.$http(config).then(function (result) {
-                var notification = result.data;
-                if (notification.data != null) {
-                    // parse the data string into a JSON object
-                    notification.data = angular.fromJson(notification.data);
+                // if we're in preview, don't make any request to the server but pretend we did
+                var deferred = this.$q.defer();
+                deferred.resolve(notification);
+                return deferred.promise;
+            } else {
+                if (notification.id == null) {
+                    // cannot dismiss a notification that hasn't been saved to db yet
+                    return;
                 }
-                return notification;
-            });
+
+                var config = {};
+                config.method = 'POST';
+                config.url = this.ConfigService.getNotificationURL() + "/dismiss";
+                config.headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
+
+                var params = {};
+                params.notificationId = notification.id;
+                params.fromWorkgroupId = notification.fromWorkgroupId;
+                params.toWorkgroupId = notification.toWorkgroupId;
+                params.type = notification.type;
+                if (notification.groupId != null) {
+                    params.groupId = notification.groupId;
+                }
+                params.timeDismissed = notification.timeDismissed;
+                config.data = $.param(params);
+
+                return this.$http(config).then(function (result) {
+                    var notification = result.data;
+                    if (notification.data != null) {
+                        // parse the data string into a JSON object
+                        notification.data = angular.fromJson(notification.data);
+                    }
+                    return notification;
+                });
+            }
         }
 
         /**

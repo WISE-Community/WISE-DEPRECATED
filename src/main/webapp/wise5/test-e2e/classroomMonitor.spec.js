@@ -54,9 +54,11 @@ describe('WISE Classroom Monitor', function () {
                 expect(browser.getTitle()).toEqual('WISE Classroom Monitor');
 
                 // check for elements on the page
-                expect($("#downloadLatestStudentWorkButton").isPresent()).toBeTruthy();
-                expect($("#downloadStudentWorkButton").isPresent()).toBeTruthy();
-                expect($("#downloadStudentEventsButton").isPresent()).toBeTruthy();
+                expect(element(by.xpath('//button[@aria-label="Classroom Monitor menu"]')).isPresent()).toBeTruthy();
+                expect(element(by.xpath('//a[@aria-label="View Dashboard"]')).isPresent()).toBeTruthy();
+                expect(element(by.xpath('//a[@aria-label="View Project Status"]')).isPresent()).toBeTruthy();
+                expect(element(by.xpath('//a[@aria-label="View Student Progress"]')).isPresent()).toBeTruthy();
+                expect(element(by.xpath('//md-switch[@aria-label="Lock student screens switch"]')).isPresent()).toBeTruthy();
 
                 var notificationButton = element(by.xpath('//button[@aria-label="View notifications"]'));
                 var notificationMenu = element(by.cssContainingText('.md-open-menu-container', 'Alerts'));

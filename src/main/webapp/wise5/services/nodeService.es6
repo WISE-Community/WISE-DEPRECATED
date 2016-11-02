@@ -6,8 +6,7 @@ class NodeService {
                 $q,
                 ConfigService,
                 ProjectService,
-                StudentDataService,
-                TeacherDataService) {
+                StudentDataService) {
         this.$http = $http;
         this.$injector = $injector;
         this.$mdDialog = $mdDialog;
@@ -15,7 +14,11 @@ class NodeService {
         this.ConfigService = ConfigService;
         this.ProjectService = ProjectService;
         this.StudentDataService = StudentDataService;
-        this.TeacherDataService = TeacherDataService;
+
+        if (this.ConfigService != null && this.ConfigService.getMode() == "classroomMonitor") {
+            // in the classroom monitor, we need access to the TeacherDataService
+            this.TeacherDataService = this.$injector.get('TeacherDataService');
+        }
 
         this.transitionResults = {};
         this.chooseTransitionPromises = {};
@@ -930,8 +933,7 @@ NodeService.$inject = [
     '$q',
     'ConfigService',
     'ProjectService',
-    'StudentDataService',
-    'TeacherDataService'
+    'StudentDataService'
 ];
 
 export default NodeService;
