@@ -1,16 +1,16 @@
 <div class="component__actions__info md-body-1"
      layout="row"
      layout-align="center start">
-    <div ng-if="$ctrl.componentStates.length > 0">
+    <div ng-if="$ctrl.componentStates.length > 0" class="animate-fade">
         Saved: <span class="component__actions__more" am-time-ago="$ctrl.latestComponentStateTime"></span>
         <md-tooltip md-direction="top">{{ $ctrl.latestComponentStateTime | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip>
         &nbsp;<span ng-if="$ctrl.hasNewWork()" class="badge badge--info animate-fade">New</span>
     </div>
-    <div ng-if="$ctrl.componentStates.length === 0">
+    <div ng-if="$ctrl.componentStates.length === 0" class="animate-fade">
         Team has not saved any work
     </div>
     <span flex></span>
-    <a class="md-body-2"
+    <a class="md-body-2 animate-fade"
        ng-if="$ctrl.componentStates.length > 1"
        ng-click="$ctrl.showRevisions($event)">
        Previous Versions: {{($ctrl.componentStates.length-1)}}
@@ -18,97 +18,64 @@
 </div>
 
 <div class="annotations--grading">
-    <!--<md-card>
-        <md-card-content class="md-body-1">-->
-            <div layout="row" layout-wrap flex>
-                <div flex flex-xs="100">
-                    <div class="animate-fade"
-                         ng-if="$ctrl.showAutoComment()">
-                        <div class="heavy">
-                            <md-icon class="md-accent">keyboard</md-icon> Auto Feedback &nbsp;<a ng-if="$ctrl.active" ng-click="$ctrl.edit = !$ctrl.edit">Edit</a>
-                        </div>
-                        <div class="annotations--grading__auto-comment">
-                            <compile data="$ctrl.latestAnnotations.comment.data.value"></compile>
-                        </div>
-                    </div>
-                    <md-input-container class="input-container md-block md-no-float animate-fade"
-                                        ng-show="!$ctrl.latestAnnotations.comment || $ctrl.latestAnnotations.comment.type === 'comment' || $ctrl.edit"
-                                        flex>
-                        <label class="input-label md-no-float" ng-disabled="!$ctrl.active"><md-icon class="md-accent">account_box</md-icon>
-                            <span ng-if="$ctrl.comment">Teacher Feedback</span>
-                            <span ng-if="!$ctrl.comment">Give Feedback</span>
-                        </label>
-                        <div class="input-wrapper">
-                            <textarea md-detect-hidden
-                                      placeholder="Enter comment here"
-                                      ng-model="$ctrl.comment"
-                                      ng-disabled="!$ctrl.active"
-                                      ng-change="$ctrl.postAnnotation('comment')"
-                                      ng-model-options="{ debounce: 10000 }"></textarea>
-                        </div>
-                    </md-input-container>
+    <div layout="row" layout-wrap flex>
+        <div flex flex-xs="100">
+            <div class="animate-fade"
+                 ng-if="$ctrl.showAutoComment()">
+                <div class="heavy">
+                    <md-icon class="md-accent">keyboard</md-icon> Auto Comment
+                    <span ng-if="$ctrl.active">
+                        &nbsp;<a ng-click="$ctrl.edit = !$ctrl.edit">Edit</a>&nbsp;
+                        <!--<span>
+                            <md-icon class="info">info</md-icon>
+                            <md-tooltip md-direction="top">Team received automated feedback for this work. To send your own comment, click or tap 'Edit'.</md-tooltip>
+                        </span>-->
+                    </span>
                 </div>
-                <div class="annotations--grading__score" flex-xs="100" ng-if="$ctrl.hasMaxScore" layout="row" layout-align="start start">
-                    <md-input-container class="md-no-float">
-                        <label class="input-label md-no-float">
-                            <span ng-if="$ctrl.latestAnnotations.score.type === 'autoScore'">Auto Score</span>
-                            <span ng-if="$ctrl.latestAnnotations.score.type !== 'autoScore'">
-                                <span ng-if="$ctrl.score != null">Score</span>
-                                <span ng-if="$ctrl.score == null">Set Score</span>
-                            </span>
-                        </label>
-                        <input type="number"
-                               placeholder="0"
-                               ng-model="$ctrl.score"
-                               ng-disabled="!$ctrl.active"
-                               ng-change="$ctrl.postAnnotation('score')"
-                               ng-model-options="{ debounce: 5000 }">
-                        <span class="annotations--grading__score__max md-subhead text-secondary"> /{{$ctrl.maxScore}}</span>
-                    </md-input-container>
-                </div>
-            </div>
-        <!--</md-card-content>
-    </md-card>-->
-</div>
-
-
-<!--<div class="annotations--grading">
-    <div ng-if="$ctrl.hasNewWork()" class="info-bg">Note: Team has new work since latest feedback was sent.</div>
-    <div layout="row" flex>
-        <div flex>
-            <div ng-if="$ctrl.latestAnnotations.comment.type === 'autoComment'">
-                <div class="md-body-2">
-                    <md-icon class="score">flash_on</md-icon>Auto Feedback <a ng-if="$ctrl.active" ng-click="$ctrl.edit = !$ctrl.edit">Edit</a>
-                </div>
-                <blockquote>
+                <div class="annotations--grading__auto-comment">
                     <compile data="$ctrl.latestAnnotations.comment.data.value"></compile>
-                </blockquote>
+                </div>
             </div>
-            <md-input-container class="input-container md-block md-no-float"
+            <md-input-container class="input-container md-block md-no-float animate-fade"
+                                ng-show="!$ctrl.latestAnnotations.comment || $ctrl.latestAnnotations.comment.type === 'comment' || $ctrl.edit"
                                 flex>
-                <div ng-show="!$ctrl.latestAnnotations.comment || $ctrl.latestAnnotations.comment.type === 'comment' || $ctrl.edit">
-                    <label class="input-label md-no-float" ng-disabled="!$ctrl.active">Teacher Feedback</label>
-                    <div class="input-wrapper">
-                        <textarea md-detect-hidden
-                                  placeholder="Enter comment here"
-                                  ng-model="$ctrl.comment"
-                                  ng-disabled="!$ctrl.active"
-                                  ng-change="$ctrl.postAnnotation('comment')"
-                                  ng-model-options="{ debounce: 10000 }"></textarea>
-                    </div>
+                <label class="input-label md-no-float" ng-disabled="!$ctrl.active"><md-icon class="md-accent">account_box</md-icon>
+                    <span ng-if="$ctrl.comment" class="animate-fade">Teacher Comment</span>
+                    <span ng-if="!$ctrl.comment" class="animate-fade">Send Comment</span>
+                </label>
+                <div class="input-wrapper">
+                    <textarea md-detect-hidden
+                              placeholder="Enter comment here"
+                              ng-model="$ctrl.comment"
+                              ng-disabled="!$ctrl.active"
+                              ng-change="$ctrl.postAnnotation('comment')"
+                              ng-model-options="{ debounce: 10000 }"></textarea>
                 </div>
             </md-input-container>
         </div>
-        <div ng-if="$ctrl.hasMaxScore" flex="20" layout="row" layout-align="center start">
+        <div class="annotations--grading__score" flex-xs="100" ng-if="$ctrl.hasMaxScore" layout="row" layout-align="start start">
             <md-input-container class="md-no-float">
-                <label class="input-label md-no-float"><md-icon class="score" ng-if="$ctrl.latestAnnotations.score.type === 'autoScore'">flash_on</md-icon>Score</label>
-                <input class="input--textarea"
-                       type="number"
+                <label class="input-label md-no-float">
+                    <span ng-if="$ctrl.latestAnnotations.score.type === 'autoScore'" class="animate-fade">Auto Score</span>
+                    <span ng-if="$ctrl.latestAnnotations.score.type !== 'autoScore'">
+                        <span ng-if="$ctrl.score != null" class="animate-fade">Score</span>
+                        <span ng-if="$ctrl.score == null" class="animate-fade">Set Score</span>
+                    </span>
+                </label>
+                <input type="number"
+                       placeholder="0"
                        ng-model="$ctrl.score"
                        ng-disabled="!$ctrl.active"
                        ng-change="$ctrl.postAnnotation('score')"
                        ng-model-options="{ debounce: 5000 }">
+                <span class="annotations--grading__score__max md-subhead text-secondary"> /{{$ctrl.maxScore}}</span>
             </md-input-container>
         </div>
     </div>
-</div>-->
+    <!--<div ng-if="$ctrl.latestTeacherAnnotationTime" layout="row" layout-align="end center" class="animate-fade">
+        <div class="annotations--grading__info md-caption text-secondary">
+            Feedback Sent: <span class="component__actions__more" am-time-ago="$ctrl.latestTeacherAnnotationTime"></span>
+            <md-tooltip md-direction="top">{{ $ctrl.latestTeacherAnnotationTime | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip>
+        </div>
+    </div>-->
+</div>

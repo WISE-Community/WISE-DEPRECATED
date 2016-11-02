@@ -5,3 +5,7 @@ md-dialog {
 .dialog--wide {
     width: $layout-breakpoint-sm;
 }
+
+.dialog--wider {
+    width: $layout-breakpoint-md;
+}

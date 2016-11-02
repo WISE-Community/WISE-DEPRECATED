@@ -9,11 +9,12 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var ComponentGradingController = function () {
-    function ComponentGradingController($scope, $translate, AnnotationService, ConfigService, TeacherDataService, UtilService) {
+    function ComponentGradingController($mdDialog, $scope, $translate, AnnotationService, ConfigService, TeacherDataService, UtilService) {
         var _this = this;
 
         _classCallCheck(this, ComponentGradingController);
 
+        this.$mdDialog = $mdDialog;
         this.$scope = $scope;
         this.$translate = $translate;
         this.AnnotationService = AnnotationService;
@@ -84,6 +85,8 @@ var ComponentGradingController = function () {
             if (this.latestAnnotations && this.latestAnnotations.score) {
                 this.score = this.latestAnnotations.score.data.value;
             }
+
+            this.latestTeacherAnnotationTime = this.getLatestTeacherAnnotationTime();
         }
     }, {
         key: 'hasNewWork',
@@ -93,9 +96,8 @@ var ComponentGradingController = function () {
             if (this.latestComponentStateTime) {
                 // there is work for this component
 
-                var latestTeacherAnnotationTime = this.getLatestTeacherAnnotationTime();
-                if (latestTeacherAnnotationTime) {
-                    if (this.latestComponentStateTime > latestTeacherAnnotationTime) {
+                if (this.latestTeacherAnnotationTime) {
+                    if (this.latestComponentStateTime > this.latestTeacherAnnotationTime) {
                         // latest component state is newer than latest annotation, so work is new
                         result = true;
                         this.comment = null;
@@ -201,6 +203,34 @@ var ComponentGradingController = function () {
 
             return time;
         }
+    }, {
+        key: 'showRevisions',
+        value: function showRevisions($event) {
+            var workgroupId = this.toWorkgroupId;
+            var componentId = this.componentId;
+            var maxScore = this.maxScore;
+
+            this.$mdDialog.show({
+                parent: angular.element(document.body),
+                targetEvent: $event,
+                template: '<md-dialog aria-label="Revisions Dialog" class="dialog--wider">\n                    <md-toolbar md-theme="light">\n                        <div class="md-toolbar-tools">\n                            <h2>Revisions</h2>\n                            <span flex></span>\n                            <md-button class="md-icon-button" ng-click="close()">\n                                <md-icon aria-label="Close dialog"> close </md-icon>\n                            </md-button>\n                        </div>\n                    </md-toolbar>\n                    <md-dialog-content class="md-dialog-content gray-light-bg">\n                        <workgroup-component-revisions workgroup-id="workgroupId" component-id="{{componentId}}" max-score="maxScore"></workgroup-component-revisions>\n                    </md-dialog-content>\n                    <md-dialog-actions layout="row">\n                        <md-button ng-click="close()" class="md-primary">Close</md-button>\n                    </md-dialog-actions>\n                </md-dialog>',
+                locals: {
+                    workgroupId: workgroupId,
+                    componentId: componentId,
+                    maxScore: maxScore
+                },
+                controller: RevisionsController
+            });
+            function RevisionsController($scope, $mdDialog, workgroupId, componentId, maxScore) {
+                $scope.workgroupId = workgroupId;
+                $scope.componentId = componentId;
+                $scope.maxScore = maxScore;
+                $scope.close = function () {
+                    $mdDialog.hide();
+                };
+            }
+            RevisionsController.$inject = ["$scope", "$mdDialog", "workgroupId", "componentId", "maxScore"];
+        }
 
         /**
          * Save the annotation to the server
@@ -258,7 +288,7 @@ var ComponentGradingController = function () {
     return ComponentGradingController;
 }();
 
-ComponentGradingController.$inject = ['$scope', '$translate', 'AnnotationService', 'ConfigService', 'TeacherDataService', 'UtilService'];
+ComponentGradingController.$inject = ['$mdDialog', '$scope', '$translate', 'AnnotationService', 'ConfigService', 'TeacherDataService', 'UtilService'];
 
 var ComponentGrading = {
     bindings: {
