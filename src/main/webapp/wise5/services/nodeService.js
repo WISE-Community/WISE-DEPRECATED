@@ -9,7 +9,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var NodeService = function () {
-    function NodeService($http, $injector, $mdDialog, $q, ConfigService, ProjectService, StudentDataService, TeacherDataService) {
+    function NodeService($http, $injector, $mdDialog, $q, ConfigService, ProjectService, StudentDataService) {
         _classCallCheck(this, NodeService);
 
         this.$http = $http;
@@ -19,7 +19,11 @@ var NodeService = function () {
         this.ConfigService = ConfigService;
         this.ProjectService = ProjectService;
         this.StudentDataService = StudentDataService;
-        this.TeacherDataService = TeacherDataService;
+
+        if (this.ConfigService != null && this.ConfigService.getMode() == "classroomMonitor") {
+            // in the classroom monitor, we need access to the TeacherDataService
+            this.TeacherDataService = this.$injector.get('TeacherDataService');
+        }
 
         this.transitionResults = {};
         this.chooseTransitionPromises = {};
@@ -993,7 +997,7 @@ var NodeService = function () {
     return NodeService;
 }();
 
-NodeService.$inject = ['$http', '$injector', '$mdDialog', '$q', 'ConfigService', 'ProjectService', 'StudentDataService', 'TeacherDataService'];
+NodeService.$inject = ['$http', '$injector', '$mdDialog', '$q', 'ConfigService', 'ProjectService', 'StudentDataService'];
 
 exports.default = NodeService;
 //# sourceMappingURL=nodeService.js.map

@@ -48,8 +48,6 @@ import StudentDataService from '../services/studentDataService';
 import StudentStatusService from '../services/studentStatusService';
 import StudentWebSocketService from '../services/studentWebSocketService';
 import TableComponentModule from '../components/table/tableComponentModule';
-import TeacherDataService from '../services/teacherDataService';
-import TeacherWebSocketService from '../services/teacherWebSocketService';
 import UtilService from '../services/utilService';
 import VLEController from './vleController';
 import ocLazyLoad from 'oclazyload';
@@ -105,8 +103,6 @@ let vleModule = angular.module('vle', [
     .service(StudentDataService.name, StudentDataService)
     .service(StudentStatusService.name, StudentStatusService)
     .service(StudentWebSocketService.name, StudentWebSocketService)
-    .service(TeacherDataService.name, TeacherDataService)
-    .service(TeacherWebSocketService.name, TeacherWebSocketService)
     .service(UtilService.name, UtilService)
     .controller(NavigationController.name, NavigationController)
     .controller(NodeController.name, NodeController)
