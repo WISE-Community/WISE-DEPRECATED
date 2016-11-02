@@ -117,7 +117,7 @@ let classroomMonitorModule = angular.module('classroomMonitor', [
                  $controllerProvider,
                  $mdThemingProvider) {
 
-            $urlRouterProvider.otherwise('/studentProgress');
+            $urlRouterProvider.otherwise('/project/');
 
             $stateProvider
                 .state('root', {
