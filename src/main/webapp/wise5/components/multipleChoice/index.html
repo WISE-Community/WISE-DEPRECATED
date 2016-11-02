@@ -45,6 +45,30 @@
                        style='width: 3em'/>
             </div>
             <div ng-if='multipleChoiceController.mode === "authoring"'>
+                Import Previous Work:
+                <input type='checkbox'
+                       ng-model='multipleChoiceController.authoringComponentContent.importPreviousWork'
+                       ng-click='multipleChoiceController.authoringImportPreviousWorkClicked()'
+                       ng-change='multipleChoiceController.authoringViewComponentChanged()'/>
+            </div>
+            <div ng-if='multipleChoiceController.mode === "authoring" && multipleChoiceController.authoringComponentContent.importPreviousWork'>
+                Import Previous Work Step:
+                <select ng-model='multipleChoiceController.authoringComponentContent.importPreviousWorkNodeId'
+                        ng-change='multipleChoiceController.authoringImportPreviousWorkNodeIdChanged()'>
+                    <option></option>
+                    <option ng-repeat='item in multipleChoiceController.idToOrder | toArray | orderBy : "order"'
+                            value='{{item.$key}}'
+                            ng-if='multipleChoiceController.isApplicationNode(item.$key)'>{{multipleChoiceController.getNodePositionAndTitleByNodeId(item.$key)}}</option>
+                </select>
+                <br/>
+                Import Previous Work Component:
+                <select ng-model='multipleChoiceController.authoringComponentContent.importPreviousWorkComponentId'
+                        ng-change='multipleChoiceController.authoringImportPreviousWorkComponentIdChanged()'
+                        ng-options='component.id as component.type disable when !multipleChoiceController.componentHasWork(component) for component in multipleChoiceController.getComponentsByNodeId(multipleChoiceController.authoringComponentContent.importPreviousWorkNodeId)'>
+                    <option></option>
+                </select>
+            </div>
+            <div ng-if='multipleChoiceController.mode === "authoring"'>
                 Show Previous Work:
                 <input type='checkbox'
                        ng-model='multipleChoiceController.authoringComponentContent.showPreviousWork'

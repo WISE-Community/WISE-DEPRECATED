@@ -161,10 +161,26 @@ class MultipleChoiceController {
                  */
 
                 // check if we need to import work
-                var importWorkNodeId = this.componentContent.importWorkNodeId;
-                var importWorkComponentId = this.componentContent.importWorkComponentId;
-
-                if (importWorkNodeId != null && importWorkComponentId != null) {
+                var importPreviousWorkNodeId = this.componentContent.importPreviousWorkNodeId;
+                var importPreviousWorkComponentId = this.componentContent.importPreviousWorkComponentId;
+                
+                if (importPreviousWorkNodeId == null || importPreviousWorkNodeId == '') {
+                    /*
+                     * check if the node id is in the field that we used to store
+                     * the import previous work node id in
+                     */
+                    importPreviousWorkNodeId = this.componentContent.importWorkNodeId;
+                }
+                
+                if (importPreviousWorkComponentId == null || importPreviousWorkComponentId == '') {
+                    /*
+                     * check if the component id is in the field that we used to store
+                     * the import previous work component id in
+                     */
+                    importPreviousWorkComponentId = this.componentContent.importWorkComponentId;
+                }
+                
+                if (importPreviousWorkNodeId != null && importPreviousWorkComponentId != null) {
                     // import the work from the other component
                     this.importWork();
                 }
@@ -1014,6 +1030,50 @@ class MultipleChoiceController {
 
         return choice;
     };
+    
+    /**
+     * Get a choice by choice text
+     * @param text the choice text
+     * @return the choice with the given text
+     */
+    getChoiceByText(text) {
+        
+        var choice = null;
+        
+        if (text != null) {
+            // get the component content
+            var componentContent = this.componentContent;
+
+            if (componentContent != null) {
+
+                // get the choices
+                var choices = componentContent.choices;
+
+                // loop through all the choices
+                for (var c = 0; c < choices.length; c++) {
+                    // get a choice
+                    var tempChoice = choices[c];
+
+                    if (tempChoice != null) {
+                        // get a choice text
+                        var tempChoiceText = tempChoice.text;
+
+                        // check if the choice text matches
+                        if (text == tempChoiceText) {
+                            /*
+                             * the choice text matches so we will return this
+                             * choice
+                             */
+                            choice = tempChoice;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        
+        return choice;
+    }
 
     /**
      * Get the choice type for this component ('radio' or 'checkbox')
@@ -1169,10 +1229,33 @@ class MultipleChoiceController {
 
         if (componentContent != null) {
 
-            var importWorkNodeId = componentContent.importWorkNodeId;
-            var importWorkComponentId = componentContent.importWorkComponentId;
+            // get the import previous work node id and component id
+            var importPreviousWorkNodeId = componentContent.importPreviousWorkNodeId;
+            var importPreviousWorkComponentId = componentContent.importPreviousWorkComponentId;
+            
+            if (importPreviousWorkNodeId == null || importPreviousWorkNodeId == '') {
+                
+                /*
+                 * check if the node id is in the field that we used to store
+                 * the import previous work node id in
+                 */
+                if (componentContent.importWorkNodeId != null && componentContent.importWorkNodeId != '') {
+                    importPreviousWorkNodeId = componentContent.importWorkNodeId;
+                }
+            }
+            
+            if (importPreviousWorkComponentId == null || importPreviousWorkComponentId == '') {
+                
+                /*
+                 * check if the component id is in the field that we used to store
+                 * the import previous work component id in
+                 */
+                if (componentContent.importWorkComponentId != null && componentContent.importWorkComponentId != '') {
+                    importPreviousWorkComponentId = componentContent.importWorkComponentId;
+                }
+            }
 
-            if (importWorkNodeId != null && importWorkComponentId != null) {
+            if (importPreviousWorkNodeId != null && importPreviousWorkComponentId != null) {
 
                 // get the latest component state for this component
                 var componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
@@ -1185,7 +1268,7 @@ class MultipleChoiceController {
                     // the student has not done any work for this component
 
                     // get the latest component state from the component we are importing from
-                    var importWorkComponentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(importWorkNodeId, importWorkComponentId);
+                    var importWorkComponentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(importPreviousWorkNodeId, importPreviousWorkComponentId);
 
                     if (importWorkComponentState != null) {
                         /*
@@ -1194,6 +1277,14 @@ class MultipleChoiceController {
                          */
                         var populatedComponentState = this.MultipleChoiceService.populateComponentState(importWorkComponentState);
 
+                        /*
+                         * update the choice ids so that it uses the choice ids
+                         * from this component. we need to do this because the choice
+                         * ids are likely to be different. we update the choice ids
+                         * by matching the choice text.
+                         */
+                        this.updateChoiceIdsFromImportedWork(populatedComponentState);
+
                         // populate the component state into this component
                         this.setStudentWork(populatedComponentState);
                     }
@@ -1201,6 +1292,54 @@ class MultipleChoiceController {
             }
         }
     };
+    
+    /**
+     * Update the choice ids to use the choice ids from this component.
+     * We will use the choice text to match the choices.
+     * @param componentState the component state
+     */
+    updateChoiceIdsFromImportedWork(componentState) {
+        
+        if (componentState != null) {
+            
+            // get the student data
+            var studentData = componentState.studentData;
+            
+            if (studentData != null) {
+                
+                // get the choices the student chose
+                var studentChoices = studentData.studentChoices;
+                
+                if (studentChoices != null) {
+                    
+                    // loop through all the choices the student chose
+                    for (var s = 0; s < studentChoices.length; s++) {
+                        
+                        // get a choice the student chose
+                        var studentChoice = studentChoices[s];
+                        
+                        if (studentChoice != null) {
+                            
+                            // get the choice text
+                            var studentChoiceText = studentChoice.text;
+                            
+                            // get the choice in this component with the given tetxt
+                            var choice = this.getChoiceByText(studentChoiceText);
+                            
+                            if (choice != null) {
+                                
+                                // get the choice id
+                                var choiceId = choice.id;
+                                
+                                // update the id to have the id from this component
+                                studentChoice.id = choiceId;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     /**
      * Get the component id
@@ -1563,6 +1702,52 @@ class MultipleChoiceController {
         }
         
         return result;
+    }
+    /**
+     * The import previous work checkbox was clicked
+     */
+    authoringImportPreviousWorkClicked() {
+
+        if (!this.authoringComponentContent.importPreviousWork) {
+            /*
+             * import previous work has been turned off so we will clear the
+             * import previous work node id, and import previous work 
+             * component id
+             */
+            this.authoringComponentContent.importPreviousWorkNodeId = null;
+            this.authoringComponentContent.importPreviousWorkComponentId = null;
+
+            // the authoring component content has changed so we will save the project
+            this.authoringViewComponentChanged();
+        }
+    }
+    
+    /**
+     * The import previous work node id has changed
+     */
+    authoringImportPreviousWorkNodeIdChanged() {
+        
+        if (this.authoringComponentContent.importPreviousWorkNodeId == null ||
+            this.authoringComponentContent.importPreviousWorkNodeId == '') {
+
+            /*
+             * the import previous work node id is null so we will also set the
+             * import previous component id to null
+             */
+            this.authoringComponentContent.importPreviousWorkComponentId = '';
+        }
+
+        // the authoring component content has changed so we will save the project
+        this.authoringViewComponentChanged();
+    }
+    
+    /**
+     * The import previous work component id has changed
+     */
+    authoringImportPreviousWorkComponentIdChanged() {
+        
+        // the authoring component content has changed so we will save the project
+        this.authoringViewComponentChanged();
     }
 };
 

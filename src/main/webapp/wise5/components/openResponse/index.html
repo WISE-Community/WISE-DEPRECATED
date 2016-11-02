@@ -148,6 +148,30 @@
         </div>
     </div>
     <div ng-if='openResponseController.mode === "authoring"'>
+        Import Previous Work:
+        <input type='checkbox'
+               ng-model='openResponseController.authoringComponentContent.importPreviousWork'
+               ng-click='openResponseController.authoringImportPreviousWorkClicked()'
+               ng-change='openResponseController.authoringViewComponentChanged()'/>
+    </div>
+    <div ng-if='openResponseController.mode === "authoring" && openResponseController.authoringComponentContent.importPreviousWork'>
+        Import Previous Work Step:
+        <select ng-model='openResponseController.authoringComponentContent.importPreviousWorkNodeId'
+                ng-change='openResponseController.authoringImportPreviousWorkNodeIdChanged()'>
+            <option></option>
+            <option ng-repeat='item in openResponseController.idToOrder | toArray | orderBy : "order"'
+                    value='{{item.$key}}'
+                    ng-if='openResponseController.isApplicationNode(item.$key)'>{{openResponseController.getNodePositionAndTitleByNodeId(item.$key)}}</option>
+        </select>
+        <br/>
+        Import Previous Work Component:
+        <select ng-model='openResponseController.authoringComponentContent.importPreviousWorkComponentId'
+                ng-change='openResponseController.authoringImportPreviousWorkComponentIdChanged()'
+                ng-options='component.id as component.type disable when !openResponseController.componentHasWork(component) for component in openResponseController.getComponentsByNodeId(openResponseController.authoringComponentContent.importPreviousWorkNodeId)'>
+            <option></option>
+        </select>
+    </div>
+    <div ng-if='openResponseController.mode === "authoring"'>
         Show Previous Work:
         <input type='checkbox'
                ng-model='openResponseController.authoringComponentContent.showPreviousWork'

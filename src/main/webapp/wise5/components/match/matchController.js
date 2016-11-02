@@ -178,10 +178,26 @@ var MatchController = function () {
                  */
 
                 // check if we need to import work
-                var importWorkNodeId = this.componentContent.importWorkNodeId;
-                var importWorkComponentId = this.componentContent.importWorkComponentId;
+                var importPreviousWorkNodeId = this.componentContent.importPreviousWorkNodeId;
+                var importPreviousWorkComponentId = this.componentContent.importPreviousWorkComponentId;
 
-                if (importWorkNodeId != null && importWorkComponentId != null) {
+                if (importPreviousWorkNodeId == null || importPreviousWorkNodeId == '') {
+                    /*
+                     * check if the node id is in the field that we used to store
+                     * the import previous work node id in
+                     */
+                    importPreviousWorkNodeId = this.componentContent.importWorkNodeId;
+                }
+
+                if (importPreviousWorkComponentId == null || importPreviousWorkComponentId == '') {
+                    /*
+                     * check if the component id is in the field that we used to store
+                     * the import previous work component id in
+                     */
+                    importPreviousWorkComponentId = this.componentContent.importWorkComponentId;
+                }
+
+                if (importPreviousWorkNodeId != null && importPreviousWorkComponentId != null) {
                     // import the work from the other component
                     this.importWork();
                 }
@@ -1176,10 +1192,33 @@ var MatchController = function () {
 
             if (componentContent != null) {
 
-                var importWorkNodeId = componentContent.importWorkNodeId;
-                var importWorkComponentId = componentContent.importWorkComponentId;
+                // get the import previous work node id and component id
+                var importPreviousWorkNodeId = componentContent.importPreviousWorkNodeId;
+                var importPreviousWorkComponentId = componentContent.importPreviousWorkComponentId;
 
-                if (importWorkNodeId != null && importWorkComponentId != null) {
+                if (importPreviousWorkNodeId == null || importPreviousWorkNodeId == '') {
+
+                    /*
+                     * check if the node id is in the field that we used to store
+                     * the import previous work node id in
+                     */
+                    if (componentContent.importWorkNodeId != null && componentContent.importWorkNodeId != '') {
+                        importPreviousWorkNodeId = componentContent.importWorkNodeId;
+                    }
+                }
+
+                if (importPreviousWorkComponentId == null || importPreviousWorkComponentId == '') {
+
+                    /*
+                     * check if the component id is in the field that we used to store
+                     * the import previous work component id in
+                     */
+                    if (componentContent.importWorkComponentId != null && componentContent.importWorkComponentId != '') {
+                        importPreviousWorkComponentId = componentContent.importWorkComponentId;
+                    }
+                }
+
+                if (importPreviousWorkNodeId != null && importPreviousWorkComponentId != null) {
 
                     // get the latest component state for this component
                     var componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
@@ -1192,7 +1231,7 @@ var MatchController = function () {
                         // the student has not done any work for this component
 
                         // get the latest component state from the component we are importing from
-                        var importWorkComponentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(importWorkNodeId, importWorkComponentId);
+                        var importWorkComponentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(importPreviousWorkNodeId, importPreviousWorkComponentId);
 
                         if (importWorkComponentState != null) {
                             /*
@@ -1200,6 +1239,14 @@ var MatchController = function () {
                              * imported component state
                              */
                             var populatedComponentState = this.MatchService.populateComponentState(importWorkComponentState);
+
+                            /*
+                             * update the choice ids so that it uses the choice ids
+                             * from this component. we need to do this because the choice
+                             * ids are likely to be different. we update the choice ids
+                             * by matching the choice text.
+                             */
+                            this.updateIdsFromImportedWork(populatedComponentState);
 
                             // populate the component state into this component
                             this.setStudentWork(populatedComponentState);
@@ -1209,13 +1256,87 @@ var MatchController = function () {
             }
         }
     }, {
-        key: 'getComponentId',
+        key: 'updateIdsFromImportedWork',
 
+
+        /**
+         * Update the choice ids and bucket ids to use the ids from this component.
+         * We will use the choice text and bucket text to perform matching.
+         * @param componentState the component state
+         */
+        value: function updateIdsFromImportedWork(componentState) {
+
+            if (componentState != null) {
+
+                // get the student data
+                var studentData = componentState.studentData;
+
+                if (studentData != null) {
+
+                    // get the buckets from the student data
+                    var studentBuckets = studentData.buckets;
+
+                    if (studentBuckets != null) {
+
+                        // loop through all the student buckets
+                        for (var b = 0; b < studentBuckets.length; b++) {
+
+                            // get a student bucket
+                            var studentBucket = studentBuckets[b];
+
+                            if (studentBucket != null) {
+
+                                // get the text of the student bucket
+                                var tempStudentBucketText = studentBucket.value;
+
+                                // get the bucket from this component that has the matching text
+                                var bucket = this.getBucketByText(tempStudentBucketText);
+
+                                if (bucket != null) {
+                                    // change the id of the student bucket
+                                    studentBucket.id = bucket.id;
+                                }
+
+                                // get the choices the student put into this bucket
+                                var studentChoices = studentBucket.items;
+
+                                if (studentChoices != null) {
+
+                                    // loop through the choices in the bucket
+                                    for (var c = 0; c < studentChoices.length; c++) {
+
+                                        // get a student choice
+                                        var studentChoice = studentChoices[c];
+
+                                        if (studentChoice != null) {
+
+                                            // get the text of the student choice
+                                            var tempStudentChoiceText = studentChoice.value;
+
+                                            // get the choice from this component that has the matching text
+                                            var choice = this.getChoiceByText(tempStudentChoiceText);
+
+                                            if (choice != null) {
+                                                // change the id of the student choice
+                                                studentChoice.id = choice.id;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
         /**
          * Get the component id
          * @return the component id
          */
+
+    }, {
+        key: 'getComponentId',
         value: function getComponentId() {
             return this.componentContent.id;
         }
@@ -1624,6 +1745,43 @@ var MatchController = function () {
         }
 
         /**
+         * Get the choice by text
+         * @param text look for a choice with this text
+         * @returns the choice with the given text
+         */
+
+    }, {
+        key: 'getChoiceByText',
+        value: function getChoiceByText(text) {
+
+            var choice = null;
+
+            if (text != null) {
+
+                // get the choices from the component content
+                var choices = this.componentContent.choices;
+
+                if (choices != null) {
+
+                    // loop through all the choices
+                    for (var c = 0; c < choices.length; c++) {
+                        var tempChoice = choices[c];
+
+                        if (tempChoice != null) {
+                            if (text == tempChoice.value) {
+                                // we have found the choice we want
+                                choice = tempChoice;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+
+            return choice;
+        }
+
+        /**
          * Get the bucket by id from the authoring component content
          * @param id the bucket id
          * @returns the bucket object from the authoring component content
@@ -1647,6 +1805,43 @@ var MatchController = function () {
                         // we have found the bucket we want
                         bucket = tempBucket;
                         break;
+                    }
+                }
+            }
+
+            return bucket;
+        }
+
+        /**
+         * Get the bucket by text
+         * @param text look for a bucket with this text
+         * @returns the bucket with the given text
+         */
+
+    }, {
+        key: 'getBucketByText',
+        value: function getBucketByText(text) {
+
+            var bucket = null;
+
+            if (text != null) {
+
+                // get the buckets from the component content
+                var buckets = this.componentContent.buckets;
+
+                if (buckets != null) {
+
+                    // loop throgh all the buckets
+                    for (var b = 0; b < buckets.length; b++) {
+                        var tempBucket = buckets[b];
+
+                        if (tempBucket != null) {
+                            if (text == tempBucket.value) {
+                                // we have found the bucket we want
+                                bucket = tempBucket;
+                                break;
+                            }
+                        }
                     }
                 }
             }
@@ -1935,6 +2130,61 @@ var MatchController = function () {
             }
 
             return result;
+        }
+
+        /**
+         * The import previous work checkbox was clicked
+         */
+
+    }, {
+        key: 'authoringImportPreviousWorkClicked',
+        value: function authoringImportPreviousWorkClicked() {
+
+            if (!this.authoringComponentContent.importPreviousWork) {
+                /*
+                 * import previous work has been turned off so we will clear the
+                 * import previous work node id, and import previous work 
+                 * component id
+                 */
+                this.authoringComponentContent.importPreviousWorkNodeId = null;
+                this.authoringComponentContent.importPreviousWorkComponentId = null;
+
+                // the authoring component content has changed so we will save the project
+                this.authoringViewComponentChanged();
+            }
+        }
+
+        /**
+         * The import previous work node id has changed
+         */
+
+    }, {
+        key: 'authoringImportPreviousWorkNodeIdChanged',
+        value: function authoringImportPreviousWorkNodeIdChanged() {
+
+            if (this.authoringComponentContent.importPreviousWorkNodeId == null || this.authoringComponentContent.importPreviousWorkNodeId == '') {
+
+                /*
+                 * the import previous work node id is null so we will also set the
+                 * import previous component id to null
+                 */
+                this.authoringComponentContent.importPreviousWorkComponentId = '';
+            }
+
+            // the authoring component content has changed so we will save the project
+            this.authoringViewComponentChanged();
+        }
+
+        /**
+         * The import previous work component id has changed
+         */
+
+    }, {
+        key: 'authoringImportPreviousWorkComponentIdChanged',
+        value: function authoringImportPreviousWorkComponentIdChanged() {
+
+            // the authoring component content has changed so we will save the project
+            this.authoringViewComponentChanged();
         }
     }]);
 

@@ -215,10 +215,26 @@ class OpenResponseController {
                  */
 
                 // check if we need to import work
-                var importWorkNodeId = this.componentContent.importWorkNodeId;
-                var importWorkComponentId = this.componentContent.importWorkComponentId;
+                var importPreviousWorkNodeId = this.componentContent.importPreviousWorkNodeId;
+                var importPreviousWorkComponentId = this.componentContent.importPreviousWorkComponentId;
+                
+                if (importPreviousWorkNodeId == null || importPreviousWorkNodeId == '') {
+                    /*
+                     * check if the node id is in the field that we used to store
+                     * the import previous work node id in
+                     */
+                    importPreviousWorkNodeId = this.componentContent.importWorkNodeId;
+                }
+                
+                if (importPreviousWorkComponentId == null || importPreviousWorkComponentId == '') {
+                    /*
+                     * check if the component id is in the field that we used to store
+                     * the import previous work component id in
+                     */
+                    importPreviousWorkComponentId = this.componentContent.importWorkComponentId;
+                }
 
-                if (importWorkNodeId != null && importWorkComponentId != null) {
+                if (importPreviousWorkNodeId != null && importPreviousWorkComponentId != null) {
                     // import the work from the other component
                     this.importWork();
                 } else if (this.componentContent.starterSentence != null) {
@@ -1053,10 +1069,33 @@ class OpenResponseController {
 
         if (componentContent != null) {
 
-            var importWorkNodeId = componentContent.importWorkNodeId;
-            var importWorkComponentId = componentContent.importWorkComponentId;
+            // get the import previous work node id and component id
+            var importPreviousWorkNodeId = componentContent.importPreviousWorkNodeId;
+            var importPreviousWorkComponentId = componentContent.importPreviousWorkComponentId;
+            
+            if (importPreviousWorkNodeId == null || importPreviousWorkNodeId == '') {
+                
+                /*
+                 * check if the node id is in the field that we used to store
+                 * the import previous work node id in
+                 */
+                if (componentContent.importWorkNodeId != null && componentContent.importWorkNodeId != '') {
+                    importPreviousWorkNodeId = componentContent.importWorkNodeId;
+                }
+            }
+            
+            if (importPreviousWorkComponentId == null || importPreviousWorkComponentId == '') {
+                
+                /*
+                 * check if the component id is in the field that we used to store
+                 * the import previous work component id in
+                 */
+                if (componentContent.importWorkComponentId != null && componentContent.importWorkComponentId != '') {
+                    importPreviousWorkComponentId = componentContent.importWorkComponentId;
+                }
+            }
 
-            if (importWorkNodeId != null && importWorkComponentId != null) {
+            if (importPreviousWorkNodeId != null && importPreviousWorkComponentId != null) {
 
                 // get the latest component state for this component
                 var componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
@@ -1069,7 +1108,7 @@ class OpenResponseController {
                     // the student has not done any work for this component
 
                     // get the latest component state from the component we are importing from
-                    var importWorkComponentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(importWorkNodeId, importWorkComponentId);
+                    var importWorkComponentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(importPreviousWorkNodeId, importPreviousWorkComponentId);
 
                     if (importWorkComponentState != null) {
                         /*
@@ -1747,6 +1786,53 @@ class OpenResponseController {
         // get the component states for this component
         return this.StudentDataService.getComponentStatesByNodeIdAndComponentId(this.nodeId, this.componentId);
     };
+    
+    /**
+     * The import previous work checkbox was clicked
+     */
+    authoringImportPreviousWorkClicked() {
+
+        if (!this.authoringComponentContent.importPreviousWork) {
+            /*
+             * import previous work has been turned off so we will clear the
+             * import previous work node id, and import previous work 
+             * component id
+             */
+            this.authoringComponentContent.importPreviousWorkNodeId = null;
+            this.authoringComponentContent.importPreviousWorkComponentId = null;
+
+            // the authoring component content has changed so we will save the project
+            this.authoringViewComponentChanged();
+        }
+    }
+    
+    /**
+     * The import previous work node id has changed
+     */
+    authoringImportPreviousWorkNodeIdChanged() {
+        
+        if (this.authoringComponentContent.importPreviousWorkNodeId == null ||
+            this.authoringComponentContent.importPreviousWorkNodeId == '') {
+
+            /*
+             * the import previous work node id is null so we will also set the
+             * import previous component id to null
+             */
+            this.authoringComponentContent.importPreviousWorkComponentId = '';
+        }
+
+        // the authoring component content has changed so we will save the project
+        this.authoringViewComponentChanged();
+    }
+    
+    /**
+     * The import previous work component id has changed
+     */
+    authoringImportPreviousWorkComponentIdChanged() {
+        
+        // the authoring component content has changed so we will save the project
+        this.authoringViewComponentChanged();
+    }
 };
 
 OpenResponseController.$inject = [

@@ -72,8 +72,8 @@ class LabelService extends NodeService {
             // get the component type of the other component state
             var otherComponentType = componentStateFromOtherComponent.componentType;
 
-            if (otherComponentType === 'OpenResponse') {
-                // the other component is an OpenResponse component
+            if (otherComponentType === 'Label') {
+                // the other component is an Label component
 
                 // get the student data from the other component state
                 var studentData = componentStateFromOtherComponent.studentData;

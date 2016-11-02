@@ -55,7 +55,13 @@ componentState=this.$scope.componentState;if(componentState==null){/*
                  * only import work if the student does not already have
                  * work for this component
                  */// check if we need to import work
-var importWorkNodeId=this.componentContent.importWorkNodeId;var importWorkComponentId=this.componentContent.importWorkComponentId;if(importWorkNodeId!=null&&importWorkComponentId!=null){// import the work from the other component
+var importPreviousWorkNodeId=this.componentContent.importPreviousWorkNodeId;var importPreviousWorkComponentId=this.componentContent.importPreviousWorkComponentId;if(importPreviousWorkNodeId==null||importPreviousWorkNodeId==''){/*
+                     * check if the node id is in the field that we used to store
+                     * the import previous work node id in
+                     */importPreviousWorkNodeId=this.componentContent.importWorkNodeId;}if(importPreviousWorkComponentId==null||importPreviousWorkComponentId==''){/*
+                     * check if the component id is in the field that we used to store
+                     * the import previous work component id in
+                     */importPreviousWorkComponentId=this.componentContent.importWorkComponentId;}if(importPreviousWorkNodeId!=null&&importPreviousWorkComponentId!=null){// import the work from the other component
 this.importWork();}else if(this.componentContent.starterConceptMap!=null){/*
                      * the student has not done any work and there is a starter 
                      * concept map so we will populate the concept map with
@@ -296,16 +302,26 @@ prompt=this.originalComponentContent.prompt;}}else if(this.componentContent!=nul
      */value:function getResponse(){var response=null;if(this.studentResponse!=null){response=this.studentResponse;}return response;}},{key:'importWork',/**
      * Import work from another component
      */value:function importWork(){// get the component content
-var componentContent=this.componentContent;if(componentContent!=null){var importWorkNodeId=componentContent.importWorkNodeId;var importWorkComponentId=componentContent.importWorkComponentId;if(importWorkNodeId!=null&&importWorkComponentId!=null){// get the latest component state for this component
+var componentContent=this.componentContent;if(componentContent!=null){// get the import previous work node id and component id
+var importPreviousWorkNodeId=componentContent.importPreviousWorkNodeId;var importPreviousWorkComponentId=componentContent.importPreviousWorkComponentId;if(importPreviousWorkNodeId==null||importPreviousWorkNodeId==''){/*
+                 * check if the node id is in the field that we used to store
+                 * the import previous work node id in
+                 */if(componentContent.importWorkNodeId!=null&&componentContent.importWorkNodeId!=''){importPreviousWorkNodeId=componentContent.importWorkNodeId;}}if(importPreviousWorkComponentId==null||importPreviousWorkComponentId==''){/*
+                 * check if the component id is in the field that we used to store
+                 * the import previous work component id in
+                 */if(componentContent.importWorkComponentId!=null&&componentContent.importWorkComponentId!=''){importPreviousWorkComponentId=componentContent.importWorkComponentId;}}if(importPreviousWorkNodeId!=null&&importPreviousWorkComponentId!=null){// get the latest component state for this component
 var componentState=this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId,this.componentId);/*
                  * we will only import work into this component if the student
                  * has not done any work for this component
                  */if(componentState==null){// the student has not done any work for this component
 // get the latest component state from the component we are importing from
-var importWorkComponentState=this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(importWorkNodeId,importWorkComponentId);if(importWorkComponentState!=null){/*
+var importWorkComponentState=this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(importPreviousWorkNodeId,importPreviousWorkComponentId);if(importWorkComponentState!=null){/*
                          * populate a new component state with the work from the
                          * imported component state
-                         */var populatedComponentState=this.ConceptMapService.populateComponentState(importWorkComponentState);// populate the component state into this component
+                         */var populatedComponentState=this.ConceptMapService.populateComponentState(importWorkComponentState);/*
+                         * inject the asset paths so that the node file names change from
+                         * 'Sun.png' to '/wise/curriculum/129/assets/Sun.png'
+                         */populatedComponentState=this.ProjectService.injectAssetPaths(populatedComponentState);// populate the component state into this component
 this.setStudentWork(populatedComponentState);}}}}}},{key:'getComponentId',/**
      * Get the component id
      * @return the component id
@@ -1211,5 +1227,21 @@ this.$mdDialog.show(this.$mdDialog.alert().parent(angular.element(document.query
      * Check if a component generates student work
      * @param component the component
      * @return whether the component generates student work
-     */},{key:'componentHasWork',value:function componentHasWork(component){var result=true;if(component!=null){result=this.ProjectService.componentHasWork(component);}return result;}}]);return ConceptMapController;}();;ConceptMapController.$inject=['$injector','$mdDialog','$q','$rootScope','$scope','$timeout','AnnotationService','ConceptMapService','ConfigService','CRaterService','NodeService','ProjectService','StudentAssetService','StudentDataService'];exports.default=ConceptMapController;
+     */},{key:'componentHasWork',value:function componentHasWork(component){var result=true;if(component!=null){result=this.ProjectService.componentHasWork(component);}return result;}/**
+     * The import previous work checkbox was clicked
+     */},{key:'authoringImportPreviousWorkClicked',value:function authoringImportPreviousWorkClicked(){if(!this.authoringComponentContent.importPreviousWork){/*
+             * import previous work has been turned off so we will clear the
+             * import previous work node id, and import previous work 
+             * component id
+             */this.authoringComponentContent.importPreviousWorkNodeId=null;this.authoringComponentContent.importPreviousWorkComponentId=null;// the authoring component content has changed so we will save the project
+this.authoringViewComponentChanged();}}/**
+     * The import previous work node id has changed
+     */},{key:'authoringImportPreviousWorkNodeIdChanged',value:function authoringImportPreviousWorkNodeIdChanged(){if(this.authoringComponentContent.importPreviousWorkNodeId==null||this.authoringComponentContent.importPreviousWorkNodeId==''){/*
+             * the import previous work node id is null so we will also set the
+             * import previous component id to null
+             */this.authoringComponentContent.importPreviousWorkComponentId='';}// the authoring component content has changed so we will save the project
+this.authoringViewComponentChanged();}/**
+     * The import previous work component id has changed
+     */},{key:'authoringImportPreviousWorkComponentIdChanged',value:function authoringImportPreviousWorkComponentIdChanged(){// the authoring component content has changed so we will save the project
+this.authoringViewComponentChanged();}}]);return ConceptMapController;}();;ConceptMapController.$inject=['$injector','$mdDialog','$q','$rootScope','$scope','$timeout','AnnotationService','ConceptMapService','ConfigService','CRaterService','NodeService','ProjectService','StudentAssetService','StudentDataService'];exports.default=ConceptMapController;
 //# sourceMappingURL=conceptMapController.js.map

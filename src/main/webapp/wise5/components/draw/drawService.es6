@@ -64,7 +64,7 @@ class DrawService extends NodeService {
         if (componentStateFromOtherComponent != null) {
 
             // create an empty component state
-            componentState = StudentDataService.createComponentState();
+            componentState = this.StudentDataService.createComponentState();
 
             // get the component type of the other component state
             var otherComponentType = componentStateFromOtherComponent.componentType;

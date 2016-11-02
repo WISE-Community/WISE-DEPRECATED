@@ -52,7 +52,13 @@ this.isStudentAttachmentEnabled=this.componentContent.isStudentAttachmentEnabled
                  * only import work if the student does not already have
                  * work for this component
                  */// check if we need to import work
-var importWorkNodeId=this.componentContent.importWorkNodeId;var importWorkComponentId=this.componentContent.importWorkComponentId;if(importWorkNodeId!=null&&importWorkComponentId!=null){// import the work from the other component
+var importPreviousWorkNodeId=this.componentContent.importPreviousWorkNodeId;var importPreviousWorkComponentId=this.componentContent.importPreviousWorkComponentId;if(importPreviousWorkNodeId==null||importPreviousWorkNodeId==''){/*
+                     * check if the node id is in the field that we used to store
+                     * the import previous work node id in
+                     */importPreviousWorkNodeId=this.componentContent.importWorkNodeId;}if(importPreviousWorkComponentId==null||importPreviousWorkComponentId==''){/*
+                     * check if the component id is in the field that we used to store
+                     * the import previous work component id in
+                     */importPreviousWorkComponentId=this.componentContent.importWorkComponentId;}if(importPreviousWorkNodeId!=null&&importPreviousWorkComponentId!=null){// import the work from the other component
 this.importWork();}else{/*
                      * trials are enabled so we will create an empty trial
                      * since there is no student work
@@ -549,13 +555,20 @@ var seriesArray=this.getSeries();if(seriesArray!=null&&seriesArray.length>0){// 
 series=seriesArray[index];}}return series;}/**
      * Import work from another component
      */},{key:'importWork',value:function importWork(){// get the component content
-var componentContent=this.componentContent;if(componentContent!=null){var importWorkNodeId=componentContent.importWorkNodeId;var importWorkComponentId=componentContent.importWorkComponentId;if(importWorkNodeId!=null&&importWorkComponentId!=null){// get the latest component state for this component
+var componentContent=this.componentContent;if(componentContent!=null){// get the import previous work node id and component id
+var importPreviousWorkNodeId=componentContent.importPreviousWorkNodeId;var importPreviousWorkComponentId=componentContent.importPreviousWorkComponentId;if(importPreviousWorkNodeId==null||importPreviousWorkNodeId==''){/*
+                 * check if the node id is in the field that we used to store
+                 * the import previous work node id in
+                 */if(componentContent.importWorkNodeId!=null&&componentContent.importWorkNodeId!=''){importPreviousWorkNodeId=componentContent.importWorkNodeId;}}if(importPreviousWorkComponentId==null||importPreviousWorkComponentId==''){/*
+                 * check if the component id is in the field that we used to store
+                 * the import previous work component id in
+                 */if(componentContent.importWorkComponentId!=null&&componentContent.importWorkComponentId!=''){importPreviousWorkComponentId=componentContent.importWorkComponentId;}}if(importPreviousWorkNodeId!=null&&importPreviousWorkComponentId!=null){// get the latest component state for this component
 var componentState=this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId,this.componentId);/*
                  * we will only import work into this component if the student
                  * has not done any work for this component
                  */if(componentState==null){// the student has not done any work for this component
 // get the latest component state from the component we are importing from
-var importWorkComponentState=this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(importWorkNodeId,importWorkComponentId);if(importWorkComponentState!=null){/*
+var importWorkComponentState=this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(importPreviousWorkNodeId,importPreviousWorkComponentId);if(importWorkComponentState!=null){/*
                          * populate a new component state with the work from the
                          * imported component state
                          */var populatedComponentState=this.GraphService.populateComponentState(importWorkComponentState);// populate the component state into this component
@@ -1004,5 +1017,21 @@ this.activeSeries.data.push(dataPoint);}}}}}}/**
      * Check if a component generates student work
      * @param component the component
      * @return whether the component generates student work
-     */},{key:'componentHasWork',value:function componentHasWork(component){var result=true;if(component!=null){result=this.ProjectService.componentHasWork(component);}return result;}}]);return GraphController;}();GraphController.$inject=['$injector','$q','$rootScope','$scope','$timeout','ConfigService','GraphService','NodeService','NotebookService','ProjectService','StudentAssetService','StudentDataService','UtilService'];exports.default=GraphController;
+     */},{key:'componentHasWork',value:function componentHasWork(component){var result=true;if(component!=null){result=this.ProjectService.componentHasWork(component);}return result;}/**
+     * The import previous work checkbox was clicked
+     */},{key:'authoringImportPreviousWorkClicked',value:function authoringImportPreviousWorkClicked(){if(!this.authoringComponentContent.importPreviousWork){/*
+             * import previous work has been turned off so we will clear the
+             * import previous work node id, and import previous work 
+             * component id
+             */this.authoringComponentContent.importPreviousWorkNodeId=null;this.authoringComponentContent.importPreviousWorkComponentId=null;// the authoring component content has changed so we will save the project
+this.authoringViewComponentChanged();}}/**
+     * The import previous work node id has changed
+     */},{key:'authoringImportPreviousWorkNodeIdChanged',value:function authoringImportPreviousWorkNodeIdChanged(){if(this.authoringComponentContent.importPreviousWorkNodeId==null||this.authoringComponentContent.importPreviousWorkNodeId==''){/*
+             * the import previous work node id is null so we will also set the
+             * import previous component id to null
+             */this.authoringComponentContent.importPreviousWorkComponentId='';}// the authoring component content has changed so we will save the project
+this.authoringViewComponentChanged();}/**
+     * The import previous work component id has changed
+     */},{key:'authoringImportPreviousWorkComponentIdChanged',value:function authoringImportPreviousWorkComponentIdChanged(){// the authoring component content has changed so we will save the project
+this.authoringViewComponentChanged();}}]);return GraphController;}();GraphController.$inject=['$injector','$q','$rootScope','$scope','$timeout','ConfigService','GraphService','NodeService','NotebookService','ProjectService','StudentAssetService','StudentDataService','UtilService'];exports.default=GraphController;
 //# sourceMappingURL=graphController.js.map

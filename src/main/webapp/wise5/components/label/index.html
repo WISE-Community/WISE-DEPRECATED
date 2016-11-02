@@ -84,6 +84,30 @@
                style='width: 3em'/>
     </div>
     <div ng-if='labelController.mode === "authoring"'>
+        Import Previous Work:
+        <input type='checkbox'
+               ng-model='labelController.authoringComponentContent.importPreviousWork'
+               ng-click='labelController.authoringImportPreviousWorkClicked()'
+               ng-change='labelController.authoringViewComponentChanged()'/>
+    </div>
+    <div ng-if='labelController.mode === "authoring" && labelController.authoringComponentContent.importPreviousWork'>
+        Import Previous Work Step:
+        <select ng-model='labelController.authoringComponentContent.importPreviousWorkNodeId'
+                ng-change='labelController.authoringImportPreviousWorkNodeIdChanged()'>
+            <option></option>
+            <option ng-repeat='item in labelController.idToOrder | toArray | orderBy : "order"'
+                    value='{{item.$key}}'
+                    ng-if='labelController.isApplicationNode(item.$key)'>{{labelController.getNodePositionAndTitleByNodeId(item.$key)}}</option>
+        </select>
+        <br/>
+        Import Previous Work Component:
+        <select ng-model='labelController.authoringComponentContent.importPreviousWorkComponentId'
+                ng-change='labelController.authoringImportPreviousWorkComponentIdChanged()'
+                ng-options='component.id as component.type disable when !labelController.componentHasWork(component) for component in labelController.getComponentsByNodeId(labelController.authoringComponentContent.importPreviousWorkNodeId)'>
+            <option></option>
+        </select>
+    </div>
+    <div ng-if='labelController.mode === "authoring"'>
         Show Previous Work:
         <input type='checkbox'
                ng-model='labelController.authoringComponentContent.showPreviousWork'

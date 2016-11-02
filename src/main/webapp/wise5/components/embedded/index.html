@@ -26,14 +26,38 @@
                    ng-model-options='{ debounce: 1000 }'
                    style='width: 3em'/>
         </div>
-        <div ng-if='embeddedController.mode === "authoring"'>
+        <div ng-if='embeddedController.mode === "authoring2"'>
+            Import Previous Work:
+            <input type='checkbox'
+                   ng-model='embeddedController.authoringComponentContent.importPreviousWork'
+                   ng-click='embeddedController.authoringImportPreviousWorkClicked()'
+                   ng-change='embeddedController.authoringViewComponentChanged()'/>
+        </div>
+        <div ng-if='embeddedController.mode === "authoring2" && embeddedController.authoringComponentContent.importPreviousWork'>
+            Import Previous Work Step:
+            <select ng-model='embeddedController.authoringComponentContent.importPreviousWorkNodeId'
+                    ng-change='embeddedController.authoringImportPreviousWorkNodeIdChanged()'>
+                <option></option>
+                <option ng-repeat='item in embeddedController.idToOrder | toArray | orderBy : "order"'
+                        value='{{item.$key}}'
+                        ng-if='embeddedController.isApplicationNode(item.$key)'>{{embeddedController.getNodePositionAndTitleByNodeId(item.$key)}}</option>
+            </select>
+            <br/>
+            Import Previous Work Component:
+            <select ng-model='embeddedController.authoringComponentContent.importPreviousWorkComponentId'
+                    ng-change='embeddedController.authoringImportPreviousWorkComponentIdChanged()'
+                    ng-options='component.id as component.type disable when !embeddedController.componentHasWork(component) for component in embeddedController.getComponentsByNodeId(embeddedController.authoringComponentContent.importPreviousWorkNodeId)'>
+                <option></option>
+            </select>
+        </div>
+        <div ng-if='embeddedController.mode === "authoring2"'>
             Show Previous Work:
             <input type='checkbox'
                    ng-model='embeddedController.authoringComponentContent.showPreviousWork'
                    ng-click='embeddedController.authoringShowPreviousWorkClicked()'
                    ng-change='embeddedController.authoringViewComponentChanged()'/>
         </div>
-        <div ng-if='embeddedController.mode === "authoring" && embeddedController.authoringComponentContent.showPreviousWork'>
+        <div ng-if='embeddedController.mode === "authoring2" && embeddedController.authoringComponentContent.showPreviousWork'>
             Show Previous Work Step:
             <select ng-model='embeddedController.authoringComponentContent.showPreviousWorkNodeId'
                     ng-change='embeddedController.authoringShowPreviousWorkNodeIdChanged()'>
