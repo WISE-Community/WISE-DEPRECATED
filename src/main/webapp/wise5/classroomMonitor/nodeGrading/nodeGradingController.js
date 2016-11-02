@@ -30,6 +30,8 @@ var NodeGradingController = function () {
         this.maxScore = this.ProjectService.getMaxScoreForNode(this.nodeId);
         this.hasMaxScore = typeof this.maxScore === 'number';
 
+        this.hiddenComponents = [];
+
         // TODO: add loading indicator
         this.TeacherDataService.retrieveStudentDataByNodeId(this.nodeId).then(function (result) {
 
@@ -312,6 +314,12 @@ var NodeGradingController = function () {
         key: 'isWorkgroupInCurrentPeriod',
         value: function isWorkgroupInCurrentPeriod(workgroupId) {
             return this.getCurrentPeriod().periodName === "All" || this.getPeriodIdByWorkgroupId(workgroupId) === this.getCurrentPeriod().periodId;
+        }
+    }, {
+        key: 'onUpdateHiddenComponents',
+        value: function onUpdateHiddenComponents(value) {
+            this.hiddenComponents = value;
+            this.hiddenComponents = angular.copy(this.hiddenComponents);
         }
     }]);
 

@@ -78,6 +78,8 @@
     background-color: #ffffff;
     display: inline-block;
     margin-left: 8px;
+    margin: 0 6px;
+    font-size: rem(1.4);
 
     &.ng-enter, &.ng-leave {
         transition: all 1s;

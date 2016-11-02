@@ -48,9 +48,11 @@ TODO: implement me. Allow authors to view assets while authoring node conent. Pe
 
 <div ng-show='nodeAuthoringController.showEditTransitions'>
     <span>{{'transitions' | translate}}:</span>
-    <div id="transitions" style="margin-left:40px; margin-bottom:10px; background-color:lightgray; width:700px" ng-repeat='(transitionIndex, transition) in nodeAuthoringController.node.transitionLogic.transitions'>
+    <div id="transitions" style="margin-left:40px; margin-bottom:10px; background-color:lightgray; width:700px"
+         ng-repeat='(transitionIndex, transition) in nodeAuthoringController.node.transitionLogic.transitions'>
         {{transitionIndex+1}}. {{'transitionToStep' | translate}}:
         <md-select id="stepSelectMenu" md-theme="default" class="node-select md-subhead" ng-model="transition.to"
+                   ng-change='nodeAuthoringController.authoringViewNodeChanged()'
                    aria-label="Transitions" style="margin-left:30px; width:600px">
             <md-option ng-repeat="item in projectController.items | toArray | orderBy : 'order'"
                        value="{{ item.$key }}"
@@ -62,59 +64,110 @@ TODO: implement me. Allow authors to view assets while authoring node conent. Pe
             </md-option>
         </md-select>
         <br/>
-        <div ng-repeat='(criteriaIndex, transitionCriteria) in transition.criteria'>
+        <div ng-repeat='(criteriaIndex, transitionCriteria) in transition.criteria' style="margin:10px; border: .5px dotted gray">
+
             {{'transitionCriteriaStep' | translate}}:
-            <md-select id="stepSelectMenu" md-theme="default" class="node-select md-subhead"
-                       ng-model="transitionCriteria.params.nodeId"
-                       aria-label="TransitionCriteriaNode" style="margin-left:30px; width:600px">
-                <md-option ng-repeat="item in projectController.items | toArray | orderBy : 'order'"
-                           value="{{ item.$key }}"
-                           ng-class="{'node-select-option--group': projectController.isGroupNode(item.$key), 'node-select-option--node': !projectController.isGroupNode(item.$key)}">
+            <md-select ng-model='transitionCriteria.name'
+                       ng-change='nodeAuthoringController.transitionCriteriaNameChanged(transitionCriteria)'
+                       class="node-select md-subhead">
+                <md-option ng-repeat='availableTransitionCriteriaName in nodeAuthoringController.transitionCriterias'
+                           ng-value='availableTransitionCriteriaName.value'>
                 <span layout="row" layout-align="start center">
-                    <span class="node-select__text">{{ projectController.getNodePositionById(item.$key) + ': '}}{{ projectController.getNodeTitleByNodeId(item.$key) }} ({{item.$key}})</span>
-                    <node-status-icon node-id="item.$key" custom-class="'node-select__status'"></node-status-icon>
+                   <span class="node-select__text">{{availableTransitionCriteriaName.text}}</span>
                 </span>
                 </md-option>
             </md-select>
-            <div ng-if="transitionCriteria.params.nodeId != null && transitionCriteria.params.nodeId != ''">
-            {{'transitionCriteriaComponent' | translate }}:
-            <md-select id="stepSelectMenu" md-theme="default" class="node-select md-subhead"
-                       ng-model="transitionCriteria.params.componentId"
-                       aria-label="TransitionCriteriaComponent" style="margin-left:30px; width:600px">
-                <md-option ng-repeat="component in projectController.getComponentsByNodeId(transitionCriteria.params.nodeId)"
-                           value="{{ component.id }}">
-                <span layout="row" layout-align="start center">
-                    <span class="node-select__text">ID: {{component.id}} | Type: {{component.type}} | Prompt: {{component.prompt}}</span>
-                </span>
-                </md-option>
-            </md-select>
+            <div ng-repeat='param in nodeAuthoringController.getTransitionCriteriaParamsByName(transitionCriteria.name)'>
+                {{param.text}}:
+                <div ng-if='param.value == "nodeId"'>
+                    <md-select id="nodeIdSelectMenu"
+                               md-theme="default"
+                               class="node-select md-subhead"
+                               ng-model="transitionCriteria.params.nodeId"
+                               ng-change='nodeAuthoringController.authoringViewNodeChanged()'
+                               aria-label="TransitionCriteriaNode"
+                               style="margin-left:30px; width:600px">
+                        <md-option ng-repeat="item in projectController.items | toArray | orderBy : 'order'"
+                                   value="{{ item.$key }}"
+                                   ng-class="{'node-select-option--group': projectController.isGroupNode(item.$key), 'node-select-option--node': !projectController.isGroupNode(item.$key)}">
+                        <span layout="row" layout-align="start center">
+                            <span class="node-select__text">{{ projectController.getNodePositionById(item.$key) + ': '}}{{ projectController.getNodeTitleByNodeId(item.$key) }} ({{item.$key}})</span>
+                            <node-status-icon node-id="item.$key" custom-class="'node-select__status'"></node-status-icon>
+                        </span>
+                        </md-option>
+                    </md-select>
+                </div>
+                <div ng-if='param.value == "componentId"'>
+                    <md-select id="componentIdSelectMenu"
+                               md-theme="default"
+                               class="node-select md-subhead"
+                               ng-model="transitionCriteria.params.componentId"
+                               ng-change='nodeAuthoringController.authoringViewNodeChanged()'
+                               aria-label="TransitionCriteriaComponent"
+                               style="margin-left:30px; width:600px">
+                        <md-option ng-repeat="component in projectController.getComponentsByNodeId(transitionCriteria.params.nodeId)"
+                                   value="{{ component.id }}">
+                        <span layout="row" layout-align="start center">
+                            <span class="node-select__text">ID: {{component.id}} | Type: {{component.type}} | Prompt: {{component.prompt}}</span>
+                        </span>
+                        </md-option>
+                    </md-select>
+                </div>
+                <div ng-if='param.value == "scores"'>
+                    <input type='text'
+                           ng-model='transitionCriteria.params.scores'
+                           ng-model-options='{ debounce: 1000 }'
+                           ng-change='nodeAuthoringController.authoringViewNodeChanged()'
+                           ng-list=','/>
+                </div>
+                <div ng-if='param.value == "choiceIds" && "radio" == nodeAuthoringController.getChoiceTypeByNodeIdAndComponentId(transitionCriteria.params.nodeId, transitionCriteria.params.componentId)'>
+                    <md-select id="radioChoiceIdsSelectMenu"
+                               md-theme="default"
+                               class="node-select md-subhead"
+                               ng-model="transitionCriteria.params.choiceIds"
+                               ng-change='nodeAuthoringController.authoringViewNodeChanged()'
+                               aria-label="TransitionCriteriaNode"
+                               style="margin-left:30px; width:600px">
+                        <md-optgroup>
+                            <md-option ng-value="choice.id" ng-repeat="choice in nodeAuthoringController.getChoicesByNodeIdAndComponentId(transitionCriteria.params.nodeId, transitionCriteria.params.componentId)">{{choice.text}}</md-option>
+                        </md-optgroup>
+                    </md-select>
+                </div>
+                <div ng-if='param.value == "choiceIds" && "checkbox" == nodeAuthoringController.getChoiceTypeByNodeIdAndComponentId(transitionCriteria.params.nodeId, transitionCriteria.params.componentId)'>
+                    <md-select id="checkboxChoiceIdsSelectMenu"
+                               md-theme="default"
+                               class="node-select md-subhead"
+                               ng-model="transitionCriteria.params.choiceIds"
+                               ng-change='nodeAuthoringController.authoringViewNodeChanged()'
+                               aria-label="TransitionCriteriaNode"
+                               style="margin-left:30px; width:600px"
+                               multiple={{nodeAuthoringController.getChoiceTypeByNodeIdAndComponentId(transitionCriteria.params.nodeId, transitionCriteria.params.componentId)}}>
+                        <md-optgroup>
+                            <md-option ng-value="choice.id" ng-repeat="choice in nodeAuthoringController.getChoicesByNodeIdAndComponentId(transitionCriteria.params.nodeId, transitionCriteria.params.componentId)">{{choice.text}}</md-option>
+                        </md-optgroup>
+                    </md-select>
+                </div>
             </div>
-            <div ng-if="transitionCriteria.params.nodeId != null && transitionCriteria.params.nodeId != '' &&
-                            transitionCriteria.params.componentId != null && transitionCriteria.params.componentId != ''"
-                 ng-init="possibleTransitionCriterias = projectController.getPossibleTransitionCriteria(transitionCriteria.params.nodeId, transitionCriteria.params.componentId)">
-            {{'transitionCriteria' | translate }}:
-            <md-select id="stepSelectMenu" md-theme="default" class="node-select md-subhead"
-                       ng-model="transitionCriteria"
-                       ng-model-options="{trackBy: '$value.id'}"
-                       ng-change="nodeAuthoringController.transitionCriteriaChanged(transitionIndex, criteriaIndex, transitionCriteria)"
-                       aria-label="TransitionCriteriaFunctionName" style="margin-left:30px; width:600px">
-                <md-option ng-repeat="possibleTransitionCriteria in possibleTransitionCriterias"
-                           ng-value='possibleTransitionCriteria'>
-                <span layout="row" layout-align="start center">
-                    <span class="node-select__text">{{ possibleTransitionCriteria.userFriendlyDescription }}</span>
-                </span>
-                </md-option>
-            </md-select>
-            </div>
+            <br/>
+            <button ng-click='nodeAuthoringController.deleteTransitionCriteria(transition, criteriaIndex)'
+                    translate="deleteTransitionCriteria"></button>
         </div>
-        <button ng-click="nodeAuthoringController.addNewTransitionCriteria(transition)" translate="addNewTransitionCriteria"></button><br/><br/>
-        <button ng-click="nodeAuthoringController.deleteTransition(transition)" translate="deleteTransition"></button>
+
+        <button ng-click="nodeAuthoringController.addNewTransitionCriteria(transition)"
+                translate="addNewTransitionCriteria"></button><br/><br/>
+        <button ng-click="nodeAuthoringController.deleteTransition(transition)"
+                translate="deleteTransition"></button>
     </div>
-    <button style="margin-left:40px; margin-bottom:10px" ng-click='nodeAuthoringController.addNewTransition()' translate="addNewTransition"></button>
+
+
+    <button style="margin-left:40px; margin-bottom:10px"
+            ng-click='nodeAuthoringController.addNewTransition()' translate="addNewTransition"></button>
 
     <div id="howToChooseAmongAvailablePaths" style="margin-left:40px">
         <span>{{'howToChooseAmongAvailablePaths' | translate}}:</span>
-        <md-select id="stepSelectMenu" md-theme="default" class="node-select md-subhead" ng-model="nodeAuthoringController.node.transitionLogic.howToChooseAmongAvailablePaths"
+        <md-select id="stepSelectMenu" md-theme="default" class="node-select md-subhead"
+                   ng-model="nodeAuthoringController.node.transitionLogic.howToChooseAmongAvailablePaths"
+                   ng-change="nodeAuthoringController.authoringViewNodeChanged()"
                    aria-label="howToChooseAmongAvailablePaths" style="margin-left:30px; width:600px">
             <md-option ng-repeat="item in nodeAuthoringController.howToChooseAmongAvailablePathsOptions"
                        value="{{ item }}">
@@ -127,7 +180,9 @@ TODO: implement me. Allow authors to view assets while authoring node conent. Pe
 
     <div id="whenToChoosePath" style="margin-left:40px">
         <span>{{'whenToChoosePath' | translate}}:</span>
-        <md-select id="stepSelectMenu" md-theme="default" class="node-select md-subhead" ng-model="nodeAuthoringController.node.transitionLogic.whenToChoosePath"
+        <md-select id="stepSelectMenu" md-theme="default" class="node-select md-subhead"
+                   ng-model="nodeAuthoringController.node.transitionLogic.whenToChoosePath"
+                   ng-change="nodeAuthoringController.authoringViewNodeChanged()"
                    aria-label="whenToChoosePath" style="margin-left:30px; width:600px">
             <md-option ng-repeat="item in nodeAuthoringController.whenToChoosePathOptions"
                        value="{{ item }}">
@@ -140,7 +195,9 @@ TODO: implement me. Allow authors to view assets while authoring node conent. Pe
 
     <div id="canChangePath" style="margin-left:40px">
         <span>{{'canChangePath' | translate}}:</span>
-        <md-select id="stepSelectMenu" md-theme="default" class="node-select md-subhead" ng-model="nodeAuthoringController.node.transitionLogic.canChangePath"
+        <md-select id="stepSelectMenu" md-theme="default" class="node-select md-subhead"
+                   ng-model="nodeAuthoringController.node.transitionLogic.canChangePath"
+                   ng-change="nodeAuthoringController.authoringViewNodeChanged()"
                    aria-label="canChangePath" style="margin-left:30px; width:600px">
             <md-option ng-repeat="item in nodeAuthoringController.canChangePathOptions"
                        ng-value="item">
@@ -152,7 +209,9 @@ TODO: implement me. Allow authors to view assets while authoring node conent. Pe
     </div>
 
     <div><span translate="maxPathsVisitable"></span> :
-        <input ng-model='nodeAuthoringController.node.transitionLogic.maxPathsVisitable' ng-model-options='{ debounce: 1000 }' size='60' />
+        <input ng-model="nodeAuthoringController.node.transitionLogic.maxPathsVisitable"
+               ng-change="nodeAuthoringController.authoringViewNodeChanged()"
+               ng-model-options='{ debounce: 1000 }' size='60' />
     </div>
 
     <button ng-click='nodeAuthoringController.saveTransitions()' translate="save"></button>
@@ -273,6 +332,7 @@ TODO: implement me. Allow authors to view assets while authoring node conent. Pe
                 <div ng-if='param.value == "scores"'>
                     <input type='text'
                            ng-model='criteria.params.scores'
+                           ng-model-options='{ debounce: 1000 }'
                            ng-change='nodeAuthoringController.authoringViewNodeChanged()'
                            ng-list=','/>
                 </div>

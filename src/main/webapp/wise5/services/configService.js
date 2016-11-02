@@ -653,9 +653,9 @@ var ConfigService = function () {
             return role;
         }
 
-        /** 
+        /**
          * Replace student names in the content.
-         * For example, we will replace instances of {{firstStudentFirstName}} 
+         * For example, we will replace instances of {{firstStudentFirstName}}
          * with the actual first name of the first student in the workgroup.
          * @param content a content object or string
          * @return an updated content object or string
@@ -683,14 +683,14 @@ var ConfigService = function () {
 
                     if (firstNames.length >= 1) {
                         /*
-                         * there are 1 or more students in the workgroup so we can 
+                         * there are 1 or more students in the workgroup so we can
                          * replace the first student first name with the actual
                          * name
                          */
                         contentString = contentString.replace(new RegExp('{{firstStudentFirstName}}', 'gi'), firstNames[0]);
 
                         /*
-                         * there are 1 or more students in the workgroup so we can 
+                         * there are 1 or more students in the workgroup so we can
                          * replace the student first names with the actual names
                          */
                         contentString = contentString.replace(new RegExp('{{studentFirstNames}}', 'gi'), firstNames.join(", "));
@@ -698,7 +698,7 @@ var ConfigService = function () {
 
                     if (firstNames.length >= 2) {
                         /*
-                         * there are 2 or more students in the workgroup so we can 
+                         * there are 2 or more students in the workgroup so we can
                          * replace the second student first name with the actual
                          * name
                          */
@@ -707,7 +707,7 @@ var ConfigService = function () {
 
                     if (firstNames.length >= 3) {
                         /*
-                         * there are 3 or more students in the workgroup so we can 
+                         * there are 3 or more students in the workgroup so we can
                          * replace the third student first name with the actual
                          * name
                          */
@@ -725,6 +725,13 @@ var ConfigService = function () {
             }
 
             return content;
+        }
+    }, {
+        key: 'getAvatarColorForWorkgroupId',
+        value: function getAvatarColorForWorkgroupId(workgroupId) {
+            var avatarColors = ['#E91E63', '#9C27B0', '#CDDC39', '#2196F3', '#FDD835', '#43A047', '#795548', '#EF6C00', '#C62828', '#607D8B'];
+            var modulo = workgroupId % 10;
+            return avatarColors[modulo];
         }
     }]);
 

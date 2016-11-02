@@ -410,7 +410,7 @@ var ThemeController = function () {
     }, {
         key: 'getAvatarColorForWorkgroupId',
         value: function getAvatarColorForWorkgroupId(workgroupId) {
-            return this.StudentStatusService.getAvatarColorForWorkgroupId(workgroupId);
+            return this.ConfigService.getAvatarColorForWorkgroupId(workgroupId);
         }
 
         /**

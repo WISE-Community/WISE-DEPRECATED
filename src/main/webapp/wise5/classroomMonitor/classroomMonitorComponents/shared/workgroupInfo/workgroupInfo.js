@@ -15,7 +15,7 @@ var WorkgroupInfoController = function WorkgroupInfoController(ConfigService, St
     this.StudentStatusService = StudentStatusService;
 
     this.$onInit = function () {
-        _this.avatarColor = _this.StudentStatusService.getAvatarColorForWorkgroupId(_this.workgroupId);
+        _this.avatarColor = _this.ConfigService.getAvatarColorForWorkgroupId(_this.workgroupId);
         _this.userNames = [];
         if (_this.canViewStudentNames) {
             _this.userNames = _this.ConfigService.getUserNamesByWorkgroupId(_this.workgroupId);

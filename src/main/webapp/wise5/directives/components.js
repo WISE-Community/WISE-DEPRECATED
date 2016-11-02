@@ -20,6 +20,10 @@ var _component = require('./component/component');
 
 var _component2 = _interopRequireDefault(_component);
 
+var _componentGrading = require('./componentGrading/componentGrading');
+
+var _componentGrading2 = _interopRequireDefault(_componentGrading);
+
 var _disableDeleteKeypress = require('./disableDeleteKeypress/disableDeleteKeypress');
 
 var _disableDeleteKeypress2 = _interopRequireDefault(_disableDeleteKeypress);
@@ -28,9 +32,9 @@ var _draggable = require('./draggable/draggable');
 
 var _draggable2 = _interopRequireDefault(_draggable);
 
-var _componentGrading = require('./componentGrading/componentGrading');
+var _globalAnnotations = require('./globalAnnotations/globalAnnotations');
 
-var _componentGrading2 = _interopRequireDefault(_componentGrading);
+var _globalAnnotations2 = _interopRequireDefault(_globalAnnotations);
 
 var _listenForDeleteKeypress = require('./listenForDeleteKeypress/listenForDeleteKeypress');
 
@@ -55,6 +59,7 @@ Components.component('componentAnnotations', _componentAnnotations2.default);
 Components.component('componentGrading', _componentGrading2.default);
 Components.component('disableDeleteKeypress', _disableDeleteKeypress2.default);
 Components.component('draggable', _draggable2.default);
+Components.component('globalAnnotations', _globalAnnotations2.default);
 Components.component('listenForDeleteKeypress', _listenForDeleteKeypress2.default);
 Components.component('possibleScore', _possibleScore2.default);
 Components.component('wiselink', _wiselink2.default);

@@ -7,7 +7,7 @@ class WorkgroupInfoController {
         this.StudentStatusService = StudentStatusService;
 
         this.$onInit = () => {
-            this.avatarColor = this.StudentStatusService.getAvatarColorForWorkgroupId(this.workgroupId);
+            this.avatarColor = this.ConfigService.getAvatarColorForWorkgroupId(this.workgroupId);
             this.userNames = [];
             if (this.canViewStudentNames) {
                 this.userNames = this.ConfigService.getUserNamesByWorkgroupId(this.workgroupId);

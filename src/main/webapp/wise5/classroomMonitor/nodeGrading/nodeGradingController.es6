@@ -28,6 +28,8 @@ class NodeGradingController {
         this.maxScore = this.ProjectService.getMaxScoreForNode(this.nodeId);
         this.hasMaxScore = (typeof this.maxScore === 'number');
 
+        this.hiddenComponents = [];
+
         // TODO: add loading indicator
         this.TeacherDataService.retrieveStudentDataByNodeId(this.nodeId).then(result => {
 
@@ -270,6 +272,11 @@ class NodeGradingController {
     isWorkgroupInCurrentPeriod(workgroupId) {
         return (this.getCurrentPeriod().periodName === "All" ||
             this.getPeriodIdByWorkgroupId(workgroupId) === this.getCurrentPeriod().periodId);
+    }
+
+    onUpdateHiddenComponents(value) {
+        this.hiddenComponents = value;
+        this.hiddenComponents = angular.copy(this.hiddenComponents);
     }
 }
 

@@ -826,13 +826,22 @@ var OpenResponseController = function () {
                                     }
                                     componentState.annotations.push(autoCommentAnnotation);
                                 }
+                                if (_this3.componentContent.enableNotifications) {
+                                    // get the previous score and comment annotations
+                                    var latestAnnotations = _this3.$scope.$parent.nodeController.getLatestComponentAnnotations(_this3.componentId);
 
-                                // get the notification properties for the score that the student got.
-                                var notificationsForScore = _this3.ProjectService.getNotificationsByScore(_this3.componentContent, score);
+                                    var previousScore = null;
 
-                                if (notificationsForScore != null) {
-                                    for (var n = 0; n < notificationsForScore.length; n++) {
-                                        var notificationForScore = notificationsForScore[n];
+                                    if (latestAnnotations != null && latestAnnotations.score != null && latestAnnotations.score.data != null) {
+
+                                        // get the previous score annotation value
+                                        previousScore = latestAnnotations.score.data.value;
+                                    }
+
+                                    // get the notification properties for the score that the student got.
+                                    var notificationForScore = _this3.ProjectService.getNotificationByScore(_this3.componentContent, previousScore, score);
+
+                                    if (notificationForScore != null) {
                                         notificationForScore.score = score;
                                         notificationForScore.nodeId = _this3.nodeId;
                                         notificationForScore.componentId = _this3.componentId;
@@ -1692,6 +1701,39 @@ var OpenResponseController = function () {
         }
 
         /**
+         * Add a new notification. Currently assumes this is a notification based on CRaterResult, but
+         * we can add different types in the future.
+         */
+
+    }, {
+        key: 'authoringAddNotification',
+        value: function authoringAddNotification() {
+
+            if (this.authoringComponentContent.notificationSettings != null && this.authoringComponentContent.notificationSettings.notifications != null) {
+
+                // create a new notification
+                var newNotification = {
+                    notificationType: "CRaterResult",
+                    enableCriteria: {
+                        scoreSequence: ["", ""]
+                    },
+                    isAmbient: false,
+                    dismissCode: "apple",
+                    isNotifyTeacher: true,
+                    isNotifyStudent: true,
+                    notificationMessageToStudent: "{{username}}, you got a score of {{score}}. Please talk to your teacher.",
+                    notificationMessageToTeacher: "{{username}} got a score of {{score}}."
+                };
+
+                // add the new notification
+                this.authoringComponentContent.notificationSettings.notifications.push(newNotification);
+
+                // the author has made changes so we will save the component content
+                this.authoringViewComponentChanged();
+            }
+        }
+
+        /**
          * Add a multiple attempt scoring rule
          */
 
@@ -1830,6 +1872,106 @@ var OpenResponseController = function () {
         }
 
         /**
+         * Move a notification up
+         * @param index of the notification
+         */
+
+    }, {
+        key: 'authoringViewNotificationUpClicked',
+        value: function authoringViewNotificationUpClicked(index) {
+
+            if (this.authoringComponentContent.notificationSettings != null && this.authoringComponentContent.notificationSettings.notifications != null) {
+
+                // make sure the notification is not already at the top
+                if (index != 0) {
+                    // the notification is not at the top
+
+                    // get the notification
+                    var notification = this.authoringComponentContent.notificationSettings.notifications[index];
+
+                    // remove the notification
+                    this.authoringComponentContent.notificationSettings.notifications.splice(index, 1);
+
+                    // add the notification back at the position one index back
+                    this.authoringComponentContent.notificationSettings.notifications.splice(index - 1, 0, notification);
+
+                    // the author has made changes so we will save the component content
+                    this.authoringViewComponentChanged();
+                }
+            }
+        }
+
+        /**
+         * Move a notification down
+         * @param index the index of the notification
+         */
+
+    }, {
+        key: 'authoringViewNotificationDownClicked',
+        value: function authoringViewNotificationDownClicked(index) {
+
+            if (this.authoringComponentContent.notificationSettings != null && this.authoringComponentContent.notificationSettings.notifications != null) {
+
+                // make sure the notification is not at the end
+                if (index != this.authoringComponentContent.notificationSettings.notifications.length - 1) {
+                    // the notification is not at the end
+
+                    // get the notification
+                    var notification = this.authoringComponentContent.notificationSettings.notifications[index];
+
+                    // remove the notification
+                    this.authoringComponentContent.notificationSettings.notifications.splice(index, 1);
+
+                    // add the notification back at the position one index forward
+                    this.authoringComponentContent.notificationSettings.notifications.splice(index + 1, 0, notification);
+
+                    // the author has made changes so we will save the component content
+                    this.authoringViewComponentChanged();
+                }
+            }
+        }
+
+        /**
+         * Delete a notification
+         * @param index the index of the notification
+         */
+
+    }, {
+        key: 'authoringViewNotificationDeleteClicked',
+        value: function authoringViewNotificationDeleteClicked(index) {
+
+            if (this.authoringComponentContent.notificationSettings != null && this.authoringComponentContent.notificationSettings.notifications != null) {
+
+                // get the notification
+                var notification = this.authoringComponentContent.notificationSettings.notifications[index];
+
+                if (notification != null) {
+
+                    // get the score sequence
+                    var scoreSequence = notification.enableCriteria.scoreSequence;
+                    var previousScore = "";
+                    var currentScore = "";
+
+                    if (scoreSequence != null) {
+                        previousScore = scoreSequence[0];
+                        currentScore = scoreSequence[1];
+                    }
+
+                    // make sure the author really wants to delete the notification
+                    var answer = confirm('Are you sure you want to delete this scoring rule?\n\nPrevious Score: ' + previousScore + '\n\nCurrent Score: ' + currentScore);
+
+                    if (answer) {
+                        // the author answered yes to delete the notification
+                        this.authoringComponentContent.notificationSettings.notifications.splice(index, 1);
+
+                        // the author has made changes so we will save the component content
+                        this.authoringViewComponentChanged();
+                    }
+                }
+            }
+        }
+
+        /**
          * The "Enable CRater" checkbox was clicked
          */
 
@@ -1889,6 +2031,35 @@ var OpenResponseController = function () {
                  * we will create it
                  */
                 cRater.multipleAttemptScoringRules = [];
+            }
+
+            /*
+             * the author has made changes so we will save the component
+             * content
+             */
+            this.authoringViewComponentChanged();
+        }
+
+        /**
+         * The "Enable Notifications" checkbox was clicked
+         */
+
+    }, {
+        key: 'authoringViewEnableNotificationsClicked',
+        value: function authoringViewEnableNotificationsClicked() {
+
+            if (this.authoringComponentContent.enableNotifications) {
+                // Notifications was turned on
+
+                if (this.authoringComponentContent.notificationSettings == null) {
+                    /*
+                     * the NotificationSettings object does not exist in the component content
+                     * so we will create it
+                     */
+                    this.authoringComponentContent.notificationSettings = {
+                        notifications: []
+                    };
+                }
             }
 
             /*

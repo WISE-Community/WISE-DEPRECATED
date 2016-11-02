@@ -130,7 +130,7 @@
                                       size='5'
                                       ng-model-options='{ debounce: 500 }'
                                       ng-change='openResponseController.authoringViewComponentChanged()'/>
-                Feedback Text: <textarea type='text'
+                Feedback to Student: <textarea type='text'
                                          ng-model='multipleAttemptScoringRule.feedbackText'
                                          rows='5'
                                          cols='100'
@@ -145,7 +145,69 @@
                     ng-show='openResponseController.authoringComponentContent.cRater.enableMultipleAttemptScoringRules'>
                     Add Multiple Attempt Scoring Rule
             </button>
+            <br/>
+            <br/>
+            Enable Notifications:
+            <input type='checkbox'
+                   ng-model='openResponseController.authoringComponentContent.enableNotifications'
+                   ng-change='openResponseController.authoringViewEnableNotificationsClicked()'/>
+            <div ng-show='openResponseController.authoringComponentContent.enableNotifications'>
+                <div style="border:.5px dotted; padding: 5px" ng-repeat='notification in openResponseController.authoringComponentContent.notificationSettings.notifications'>
+                    Previous Score: <input type='text'
+                                           ng-model='notification.enableCriteria.scoreSequence[0]'
+                                           size='5'
+                                           ng-model-options='{ debounce: 500 }'
+                                           ng-change='openResponseController.authoringViewComponentChanged()'/>
+                    Current Score: <input type='text'
+                                          ng-model='notification.enableCriteria.scoreSequence[1]'
+                                          size='5'
+                                          ng-model-options='{ debounce: 500 }'
+                                          ng-change='openResponseController.authoringViewComponentChanged()'/>
+                    <br/>
+                    Enable Ambient Display Dismiss Mode
+                    <input type='checkbox'
+                           ng-model='notification.isAmbient' />
+                    <div ng-show='notification.isAmbient'>
+                        Dismiss Code:
+                        <input ng-model='notification.dismissCode'
+                               ng-model-options='{ debounce: 500 }'
+                               ng-change='openResponseController.authoringViewComponentChanged()' />
+                    </div>
+                    <br/>
+                    Notify Student
+                    <input type='checkbox'
+                           ng-model='notification.isNotifyStudent' />
+                    <br/>
+                    <div ng-show='notification.isNotifyStudent'>
+                    Feedback to Student: <textarea type='text'
+                                     ng-model='notification.notificationMessageToStudent'
+                                     rows='5'
+                                     cols='100'
+                                     ng-model-options='{ debounce: 500 }'
+                                     ng-change='openResponseController.authoringViewComponentChanged()'/>
+                    </div>
+                    Notify Teacher
+                    <input type='checkbox'
+                           ng-model='notification.isNotifyTeacher' />
+                    <div ng-show='notification.isNotifyTeacher'>
+                    Feedback to Teacher: <textarea type='text'
+                                                        ng-model='notification.notificationMessageToTeacher'
+                                                        rows='5'
+                                                        cols='100'
+                                                        ng-model-options='{ debounce: 500 }'
+                                                        ng-change='openResponseController.authoringViewComponentChanged()'/>
+                    </div>
+                    <br/>
+                    <button ng-click='openResponseController.authoringViewNotificationUpClicked($index)'>Up</button>
+                    <button ng-click='openResponseController.authoringViewNotificationDownClicked($index)'>Down</button>
+                    <button ng-click='openResponseController.authoringViewNotificationDeleteClicked($index)'>Delete</button>
+                 </div>
+                <button ng-click='openResponseController.authoringAddNotification()'>
+                    Add New Notification
+                </button>
+            </div>
         </div>
+        <br/>
     </div>
     <div ng-if='openResponseController.mode === "authoring"'>
         Import Previous Work:

@@ -294,7 +294,7 @@ class ThemeController {
                         }
                     }
                     $scope.nodePositionAndTitle = ProjectService.getNodePositionAndTitleByNodeId(notification.nodeId);
-                    
+
                     $scope.checkDismissCode = function() {
                         if (!$scope.hasDismissCode || ($scope.input.dismissCode == notification.data.dismissCode)) {
                             NotificationService.dismissNotification(notification);
@@ -412,7 +412,7 @@ class ThemeController {
     }
 
     getAvatarColorForWorkgroupId(workgroupId) {
-        return this.StudentStatusService.getAvatarColorForWorkgroupId(workgroupId);
+        return this.ConfigService.getAvatarColorForWorkgroupId(workgroupId);
     }
 
     /**

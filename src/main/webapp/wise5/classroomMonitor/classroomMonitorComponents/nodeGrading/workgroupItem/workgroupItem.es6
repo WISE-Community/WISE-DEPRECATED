@@ -29,6 +29,13 @@ class WorkgroupItemController {
             this.getAlertNotifications();
         };
 
+        this.$onChanges = (changesObj) => {
+
+            if (changesObj.hiddenComponents) {
+                this.hiddenComponents = angular.copy(changesObj.hiddenComponents.currentValue);
+            }
+        };
+
         this.$scope.$on('notificationAdded', (event, notification) => {
             if (notification.toWorkgroupId === this.workgroupId && notification.type === 'CRaterResult') {
                 // there is a new notification for this workgroup and it is a CRaterResult
@@ -106,7 +113,7 @@ class WorkgroupItemController {
                 this.statusText = partiallyCompleted;
             });
         } else {
-            if (this.nodeHasWork) {
+            if (this.node) {
                 this.$translate('noWork').then(noWork => {
                     this.statusText = noWork;
                 });
@@ -201,6 +208,10 @@ class WorkgroupItemController {
         let score = this.AnnotationService.getScore(workgroupId, nodeId);
         return (typeof score === 'number' ? score : '-');
     }
+
+    updateHiddenCompnents(value) {
+        this.onUpdate({value: value});
+    }
 }
 
 WorkgroupItemController.$inject = [
@@ -221,7 +232,9 @@ const WorkgroupItem = {
         maxScore: '<',
         nodeId: '<',
         workgroupId: '<',
-        showWork: '<'
+        showWork: '<',
+        hiddenComponents: '<',
+        onUpdate: '&'
     },
     controller: WorkgroupItemController,
     template:
@@ -244,7 +257,9 @@ const WorkgroupItem = {
         <workgroup-node-grading workgroup-id="$ctrl.workgroupId"
                                 node-id="{{$ctrl.nodeId}}"
                                 latest-work-time="$ctrl.latestWorkTime"
-                                ng-show="$ctrl.showWork"></workgroup-node-grading>`
+                                ng-show="$ctrl.showWork"
+                                hidden-components="$ctrl.hiddenComponents"
+                                on-update="$ctrl.updateHiddenCompnents(value)"></workgroup-node-grading>`
 };
 
 export default WorkgroupItem;

@@ -15,6 +15,7 @@
   "createNewProject": "Create a New Project",
   "createNewStep": "Create New Step",
   "deleteTransition": "Delete path",
+  "deleteTransitionCriteria": "Delete this logic for choosing a path",
   "editButtons": "Edit Buttons",
   "editConstraints": "Edit Constraints",
   "editTransitions": "Edit Paths",

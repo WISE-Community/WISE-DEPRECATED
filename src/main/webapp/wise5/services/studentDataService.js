@@ -947,8 +947,8 @@ var StudentDataService = function () {
                         // get the score value
                         var scoreValue = this.AnnotationService.getScoreValueFromScoreAnnotation(latestScoreAnnotation);
 
-                        // check if the score value matches what the criteria is looking for
-                        if (scores.indexOf(scoreValue) != -1) {
+                        // check if the score value matches what the criteria is looking for. works when scores is array of integers or integer strings
+                        if (scores.indexOf(scoreValue) != -1 || scoreValue != null && scores.indexOf(scoreValue.toString()) != -1) {
                             /*
                              * the student has received a score that matches a score
                              * we're looking for

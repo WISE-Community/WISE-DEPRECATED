@@ -37,11 +37,16 @@ label {
     margin-bottom: none;
 }
 
+.transform--none {
+    text-transform: none;
+}
+
 .badge {
     border-radius: $card-border-radius;
-    padding: 0 6px;
-    font-size: rem(1.4);
+    padding: 2px 6px;
+    font-size: rem(1.2);
     font-weight: 500;
+    font-style: normal;
     background-color: color('gray-dark');
 
     &.md-button {
@@ -57,6 +62,21 @@ label {
             outline: 1px dotted color('gray-dark');
         }
     }
+}
+
+.badge--info {
+    background-color: color('info');
+    color: #ffffff;
+}
+
+.badge--warn {
+    background-color: color('warn');
+    color: #ffffff;
+}
+
+.badge--success {
+    background-color: color('success');
+    color: #ffffff;
 }
 
 .center {
@@ -275,21 +295,27 @@ md-select-menu.md-default-theme md-option[selected], md-select-menu md-option[se
   opacity:1;
 }
 
-.animate-fade.ng-enter {
-  transition: 0.5s linear all;
-  opacity: 0;
-}
+.animate-fade {
+    &.ng-hide-add, &.ng-hide-remove {
+        transition: all 250ms;
+    }
 
-.animate-fade.ng-enter.ng-enter-active {
-  opacity: 1;
-}
+    &.ng-enter, &.ng-hide {
+        opacity: 0;
+    }
 
-.animate-fade.ng-leave {
-  transition: 0.5s linear all;
-  opacity: 1;
-}
-.animate-fade.ng-leave.ng-leave-active {
-  opacity: 0;
+    &.ng-enter.ng-enter-active {
+      opacity: 1;
+    }
+
+    &.ng-leave {
+      transition: 0.5s linear all;
+      opacity: 1;
+    }
+
+    &.ng-leave.ng-leave-active {
+      opacity: 0;
+    }
 }
 
 .transition-all {

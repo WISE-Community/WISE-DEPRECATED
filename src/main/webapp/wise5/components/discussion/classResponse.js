@@ -32,7 +32,7 @@ var ClassResponseController = function () {
     _createClass(ClassResponseController, [{
         key: 'getAvatarColorForWorkgroupId',
         value: function getAvatarColorForWorkgroupId(workgroupId) {
-            return this.StudentStatusService.getAvatarColorForWorkgroupId(workgroupId);
+            return this.ConfigService.getAvatarColorForWorkgroupId(workgroupId);
         }
     }, {
         key: 'replyEntered',

@@ -37,20 +37,45 @@ var ComponentGradingController = function () {
                 _this.hasMaxScore = typeof _this.maxScore === 'number';
             }
 
-            _this.latestAnnotations = _this.AnnotationService.getLatestComponentAnnotations(_this.nodeId, _this.componentId, _this.toWorkgroupId);
-            _this.processAnnotations();
-
             _this.componentStates = _this.TeacherDataService.getComponentStatesByWorkgroupIdAndComponentId(_this.toWorkgroupId, _this.componentId);
             _this.latestComponentStateTime = _this.getLatestComponentStateTime();
+
+            _this.processAnnotations();
         };
+
+        this.$scope.$on('annotationSavedToServer', function (event, args) {
+            // TODO: we're watching this here and in the parent component's controller; probably want to optimize!
+            if (args != null) {
+
+                // get the annotation that was saved to the server
+                var annotation = args.annotation;
+
+                if (annotation != null) {
+
+                    // get the node id and component id of the annotation
+                    var annotationNodeId = annotation.nodeId;
+                    var annotationComponentId = annotation.componentId;
+
+                    // make sure the annotation was for this component
+                    if (_this.nodeId === annotationNodeId && _this.componentId === annotationComponentId) {
+
+                        // get latest score and comment annotations for this component
+                        _this.processAnnotations();
+                    }
+                }
+            }
+        });
     }
 
     _createClass(ComponentGradingController, [{
         key: 'processAnnotations',
         value: function processAnnotations() {
+            this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.toWorkgroupId);
+
             if (this.latestAnnotations && this.latestAnnotations.comment) {
-                if (this.latestAnnotations.comment.type === 'comment') {
-                    this.comment = this.latestAnnotations.comment.data.value;
+                var latestComment = this.latestAnnotations.comment;
+                if (latestComment.type === 'comment') {
+                    this.comment = latestComment.data.value;
                 } else {
                     this.comment = null;
                 }
@@ -63,34 +88,72 @@ var ComponentGradingController = function () {
     }, {
         key: 'hasNewWork',
         value: function hasNewWork() {
+            var result = false;
+
             if (this.latestComponentStateTime) {
-                var latestAnnotationTime = this.getLatestAnnotationTime();
-                if (latestAnnotationTime && this.latestComponentStateTime > latestAnnotationTime) {
-                    return true;
+                // there is work for this component
+
+                var latestTeacherAnnotationTime = this.getLatestTeacherAnnotationTime();
+                if (latestTeacherAnnotationTime) {
+                    if (this.latestComponentStateTime > latestTeacherAnnotationTime) {
+                        // latest component state is newer than latest annotation, so work is new
+                        result = true;
+                        this.comment = null;
+                    }
+                } else {
+                    // there are no annotations, so work is new
+                    result = true;
                 }
-            } else {
-                return false;
             }
+
+            return result;
         }
 
         /**
-         * Get the most recent annotation (from the current score and comment annotations)
-         * @return Object (latest annotation)
+         * Returns true if the latest comment is an auto comment and it's
+         * studentWorkId matches the latest component state's id
          */
 
     }, {
-        key: 'getLatestAnnotation',
-        value: function getLatestAnnotation() {
-            var latest = null;
+        key: 'showAutoComment',
+        value: function showAutoComment() {
+            var result = false;
+            var latestComment = this.latestAnnotations.comment;
+            if (latestComment && latestComment.type === 'autoComment') {
+                var n = this.componentStates.length;
+                if (n > 0) {
+                    var latestComponentState = this.componentStates[n - 1];
+                    if (latestComponentState.id === latestComment.studentWorkId) {
+                        result = true;
+                    }
+                }
+            }
 
-            if (this.latestAnnotations.comment || this.latestAnnotations.score) {
-                var commentSaveTime = this.latestAnnotations.comment ? this.latestAnnotations.comment.serverSaveTime : 0;
-                var scoreSaveTime = this.latestAnnotations.score ? this.latestAnnotations.score.serverSaveTime : 0;
+            return result;
+        }
+
+        /**
+         * Get the most recent teacher annotation (from the current score and comment annotations)
+         * @return Object (latest teacher annotation)
+         */
+
+    }, {
+        key: 'getLatestTeacherAnnotation',
+        value: function getLatestTeacherAnnotation() {
+            var latest = null;
+            var latestComment = this.latestAnnotations.comment;
+            var latestScore = this.latestAnnotations.score;
+            var latestTeacherComment = latestComment && latestComment.type === 'comment' ? latestComment : null;
+            var latestTeacherScore = latestScore && latestScore.type === 'score' ? latestScore : null;
+
+            if (latestTeacherComment || latestTeacherScore) {
+                var commentSaveTime = latestTeacherComment ? latestTeacherComment.serverSaveTime : 0;
+                var scoreSaveTime = latestTeacherScore ? latestTeacherScore.serverSaveTime : 0;
 
                 if (commentSaveTime >= scoreSaveTime) {
-                    latest = this.latestAnnotations.comment;
+                    latest = latestTeacherComment;
                 } else if (scoreSaveTime > commentSaveTime) {
-                    latest = this.latestAnnotations.score;
+                    latest = latestTeacherScore;
                 }
             }
 
@@ -98,15 +161,15 @@ var ComponentGradingController = function () {
         }
 
         /**
-         * Calculate the save time of the latest annotation
-         * @return Number (latest annotation post time)
+         * Calculate the save time of the latest teacher annotation
+         * @return Number (latest teacher annotation post time)
          */
 
     }, {
-        key: 'getLatestAnnotationTime',
-        value: function getLatestAnnotationTime() {
-            var latest = this.getLatestAnnotation();
-            var time = null;
+        key: 'getLatestTeacherAnnotationTime',
+        value: function getLatestTeacherAnnotationTime() {
+            var latest = this.getLatestTeacherAnnotation();
+            var time = 0;
 
             if (latest) {
                 var serverSaveTime = latest.serverSaveTime;
@@ -167,7 +230,7 @@ var ComponentGradingController = function () {
                     value = this.comment;
                 }
 
-                if (value) {
+                if (type === 'comment' && value || type === 'score' && typeof value === 'number' && value >= 0) {
                     var data = {};
                     data.value = value;
 
@@ -183,6 +246,8 @@ var ComponentGradingController = function () {
                                 // set the annotation id if there was no annotation id
                                 _this2.annotationId = localAnnotation.id;
                             }
+
+                            _this2.processAnnotations();
                         }
                     });
                 }
