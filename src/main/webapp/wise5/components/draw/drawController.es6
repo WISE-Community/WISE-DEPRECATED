@@ -1445,6 +1445,102 @@ class DrawController {
         // the authoring component content has changed so we will save the project
         this.authoringViewComponentChanged();
     }
+    
+    /**
+     * Add a stamp in the authoring
+     */
+    authoringAddStampButtonClicked() {
+        
+        // create the stamps field in the content if it does not exist
+        if (this.authoringComponentContent != null) {
+            
+            // create a stamps object if it does not exist
+            if (this.authoringComponentContent.stamps == null) {
+                this.authoringComponentContent.stamps = {};
+            }
+            
+            // create the Stamps array if it does not exist
+            if (this.authoringComponentContent.stamps.Stamps == null) {
+                this.authoringComponentContent.stamps.Stamps = [];
+            }
+        }
+        
+        /*
+         * create the stamp as an empty string that the author will replace
+         * with a file name or url
+         */
+        this.authoringComponentContent.stamps.Stamps.push('');
+        
+        // the authoring component content has changed so we will save the project
+        this.authoringViewComponentChanged();
+    }
+    
+    /**
+     * Move a stamp up in the authoring view
+     * @param index the index of the stamp
+     */
+    authoringStampUpClicked(index) {
+        
+        // check if the stamp is not already at the top
+        if (index != 0) {
+            // the stamp is not at the top
+            
+            // get the stamp string
+            var stamp = this.authoringComponentContent.stamps.Stamps[index];
+            
+            // remove the stamp
+            this.authoringComponentContent.stamps.Stamps.splice(index, 1);
+            
+            // insert the stamp back into the array
+            this.authoringComponentContent.stamps.Stamps.splice(index - 1, 0, stamp);
+            
+            // the authoring component content has changed so we will save the project
+            this.authoringViewComponentChanged();
+        }
+    }
+    
+    /**
+     * Move the stamp down in the authoring view
+     * @param index the index of the stamp
+     */
+    authoringStampDownClicked(index) {
+        
+        // check if the stamp is already at the bottom
+        if (index != this.authoringComponentContent.stamps.Stamps.length - 1) {
+            // the stamp is not at the bottom
+            
+            // get the stamp string
+            var stamp = this.authoringComponentContent.stamps.Stamps[index];
+            
+            // remove the stamp
+            this.authoringComponentContent.stamps.Stamps.splice(index, 1);
+            
+            // insert the stamp back into the array
+            this.authoringComponentContent.stamps.Stamps.splice(index + 1, 0, stamp);
+            
+            // the authoring component content has changed so we will save the project
+            this.authoringViewComponentChanged();
+        }
+    }
+    
+    /**
+     * Delete a stamp from the authoring view
+     * @param index the index of the stamp
+     */
+    authoringDeleteStampClicked(index) {
+        
+        // ask the author if they are sure they want to delete the stamp
+        var answer = confirm('Are you sure you want to delete this stamp?\n\n' + this.authoringComponentContent.stamps.Stamps[index]);
+        
+        if (answer) {
+            
+            // remove the stamp
+            this.authoringComponentContent.stamps.Stamps.splice(index, 1);
+            
+            // the authoring component content has changed so we will save the project
+            this.authoringViewComponentChanged();
+        }
+    }
 }
 
 DrawController.$inject = [

@@ -18,6 +18,22 @@
                        ng-model='drawController.authoringComponentContent.showSubmitButton'
                        ng-change='drawController.authoringViewComponentChanged()'/>
                 <br/>
+                Background:
+                <input type='text'
+                       size='80'
+                       ng-model='drawController.authoringComponentContent.background'
+                       ng-change='drawController.authoringViewComponentChanged()'/>
+                <br/>
+                <button ng-click='drawController.authoringAddStampButtonClicked()'>Add Stamp</button>
+                <div ng-repeat='stamp in drawController.authoringComponentContent.stamps.Stamps track by $index'>
+                    <input type='text'
+                           size='50'
+                           ng-model='drawController.authoringComponentContent.stamps.Stamps[$index]'
+                           ng-change='drawController.authoringViewComponentChanged()'/>
+                    <button ng-click='drawController.authoringStampUpClicked($index)'>Up</button>
+                    <button ng-click='drawController.authoringStampDownClicked($index)'>Down</button>
+                    <button ng-click='drawController.authoringDeleteStampClicked($index)'>Delete</button>
+                </div>
                 <label>
                     <input type='checkbox'
                        ng-model='drawController.authoringComponentContent.tools.select'
