@@ -34,6 +34,10 @@
                     <button ng-click='drawController.authoringStampDownClicked($index)'>Down</button>
                     <button ng-click='drawController.authoringDeleteStampClicked($index)'>Delete</button>
                 </div>
+                <br/>
+                <button ng-click='drawController.authoringEnableAllToolsButtonClicked()'>Enable All Tools</button>
+                <button ng-click='drawController.authoringDisableAllToolsButtonClicked()'>Disable All Tools</button>
+                <br/>
                 <label>
                     <input type='checkbox'
                        ng-model='drawController.authoringComponentContent.tools.select'

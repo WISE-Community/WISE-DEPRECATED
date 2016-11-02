@@ -1541,6 +1541,55 @@ class DrawController {
             this.authoringViewComponentChanged();
         }
     }
+    
+    /**
+     * Enable all the tools
+     */
+    authoringEnableAllToolsButtonClicked() {
+        
+        // enable all the tools
+        this.authoringComponentContent.tools.select = true;
+        this.authoringComponentContent.tools.line = true;
+        this.authoringComponentContent.tools.shape = true;
+        this.authoringComponentContent.tools.freeHand = true;
+        this.authoringComponentContent.tools.text = true;
+        this.authoringComponentContent.tools.stamp = true;
+        this.authoringComponentContent.tools.strokeColor = true;
+        this.authoringComponentContent.tools.fillColor = true;
+        this.authoringComponentContent.tools.clone = true;
+        this.authoringComponentContent.tools.strokeWidth = true;
+        this.authoringComponentContent.tools.sendBack = true;
+        this.authoringComponentContent.tools.sendForward = true;
+        this.authoringComponentContent.tools.undo = true;
+        this.authoringComponentContent.tools.redo = true;
+        this.authoringComponentContent.tools.delete = true;
+        
+        // the authoring component content has changed so we will save the project
+        this.authoringViewComponentChanged();
+    }
+    
+    /**
+     * Disable all the tools
+     */
+    authoringDisableAllToolsButtonClicked() {
+        
+        // disable all the tools
+        this.authoringComponentContent.tools.select = false;
+        this.authoringComponentContent.tools.line = false;
+        this.authoringComponentContent.tools.shape = false;
+        this.authoringComponentContent.tools.freeHand = false;
+        this.authoringComponentContent.tools.text = false;
+        this.authoringComponentContent.tools.stamp = false;
+        this.authoringComponentContent.tools.strokeColor = false;
+        this.authoringComponentContent.tools.fillColor = false;
+        this.authoringComponentContent.tools.clone = false;
+        this.authoringComponentContent.tools.strokeWidth = false;
+        this.authoringComponentContent.tools.sendBack = false;
+        this.authoringComponentContent.tools.sendForward = false;
+        this.authoringComponentContent.tools.undo = false;
+        this.authoringComponentContent.tools.redo = false;
+        this.authoringComponentContent.tools.delete = false;
+    }
 }
 
 DrawController.$inject = [

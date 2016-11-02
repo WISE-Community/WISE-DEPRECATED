@@ -21,6 +21,22 @@ class DrawService extends NodeService {
         component.showSubmitButton = false;
         component.stamps = {};
         component.stamps.Stamps = [];
+        component.tools = {};
+        component.tools.select = true;
+        component.tools.line = true;
+        component.tools.shape = true;
+        component.tools.freeHand = true;
+        component.tools.text = true;
+        component.tools.stamp = true;
+        component.tools.strokeColor = true;
+        component.tools.fillColor = true;
+        component.tools.clone = true;
+        component.tools.strokeWidth = true;
+        component.tools.sendBack = true;
+        component.tools.sendForward = true;
+        component.tools.undo = true;
+        component.tools.redo = true;
+        component.tools.delete = true;
         return component;
     }
 
