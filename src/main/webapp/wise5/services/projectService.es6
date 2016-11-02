@@ -11,6 +11,7 @@ class ProjectService {
         this.project = null;
         this.transitions = [];
         this.applicationNodes = [];
+        this.inactiveNodes = [];
         this.groupNodes = [];
         this.idToNode = {};
         this.idToElement = {};
@@ -41,6 +42,7 @@ class ProjectService {
     clearProjectFields() {
         this.transitions = [];
         this.applicationNodes = [];
+        this.inactiveNodes = [];
         this.groupNodes = [];
         this.idToNode = {};
         this.idToElement = {};
@@ -3741,6 +3743,28 @@ class ProjectService {
                 }
             }
         }
+        
+        // get all the inactive node ids
+        var inactiveNodeIds = this.getInactiveNodeIds();
+        
+        for (var i = 0; i < inactiveNodeIds.length; i++) {
+            var inactiveNodeId = inactiveNodeIds[i];
+            
+            // get the number from the node id e.g. the number of 'node2' would be 2
+            var nodeIdNumber = inactiveNodeId.replace('node', '');
+
+            // make sure the number is an actual number
+            if (!isNaN(nodeIdNumber)) {
+                nodeIdNumber = parseInt(nodeIdNumber);
+
+                // update the largest node id number if necessary
+                if (largestNodeIdNumber == null) {
+                    largestNodeIdNumber = nodeIdNumber;
+                } else if (nodeIdNumber > largestNodeIdNumber) {
+                    largestNodeIdNumber = nodeIdNumber;
+                }
+            }
+        }
 
         // create the next available node id
         var nextAvailableNodeId = 'node' + (largestNodeIdNumber + 1);
@@ -3771,6 +3795,35 @@ class ProjectService {
             }
         }
 
+        return nodeIds;
+    }
+    
+    /**
+     * Get all the node ids from inactive steps
+     * @returns an array with all the inactive node ids
+     */
+    getInactiveNodeIds() {
+        
+        var nodeIds = [];
+        
+        var inactiveNodes = this.inactiveNodes;
+        
+        if (inactiveNodes != null) {
+            
+            // loop through all the inactive nodes
+            for (var n = 0; n < inactiveNodes.length; n++) {
+                var inactiveNode = inactiveNodes[n];
+                
+                if (inactiveNode != null) {
+                    var nodeId = inactiveNode.id;
+                    
+                    if (nodeId != null) {
+                        nodeIds.push(nodeId);
+                    }
+                }
+            }
+        }
+        
         return nodeIds;
     }
 
@@ -5812,6 +5865,8 @@ class ProjectService {
                     // set the node into the mapping data structures
                     this.setIdToNode(nodeId, node);
                     this.setIdToElement(nodeId, node);
+                    
+                    this.inactiveNodes.push(node);
                 }
             }
         }
