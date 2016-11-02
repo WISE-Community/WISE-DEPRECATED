@@ -28,28 +28,29 @@ var NotificationService = function () {
          */
         this.$rootScope.$on('newNotification', function (event, notification) {
             if (notification != null) {
-                //let workgroupId = this.ConfigService.getWorkgroupId();
-                //if (workgroupId === notification.toWorkgroupId) {
-                notification.nodePosition = _this.ProjectService.getNodePositionById(notification.nodeId);
-                notification.nodePositionAndTitle = _this.ProjectService.getNodePositionAndTitleByNodeId(notification.nodeId);
-                // check if this notification is new or is an update
-                var isNotificationNew = true;
-                for (var n = 0; n < _this.notifications.length; n++) {
-                    var currentNotification = _this.notifications[n];
-                    if (currentNotification.id == notification.id) {
-                        // existing notification (with same id) found, so it's an update
-                        _this.notifications[n] = notification;
-                        isNotificationNew = false;
-                        _this.$rootScope.$broadcast('notificationChanged', notification);
-                        break;
+                var workgroupId = _this.ConfigService.getWorkgroupId();
+                var mode = _this.ConfigService.getMode();
+                if (mode === 'classroomMonitor' || workgroupId === notification.toWorkgroupId) {
+                    notification.nodePosition = _this.ProjectService.getNodePositionById(notification.nodeId);
+                    notification.nodePositionAndTitle = _this.ProjectService.getNodePositionAndTitleByNodeId(notification.nodeId);
+                    // check if this notification is new or is an update
+                    var isNotificationNew = true;
+                    for (var n = 0; n < _this.notifications.length; n++) {
+                        var currentNotification = _this.notifications[n];
+                        if (currentNotification.id == notification.id) {
+                            // existing notification (with same id) found, so it's an update
+                            _this.notifications[n] = notification;
+                            isNotificationNew = false;
+                            _this.$rootScope.$broadcast('notificationChanged', notification);
+                            break;
+                        }
+                    }
+                    if (isNotificationNew) {
+                        // this is a new notification
+                        _this.notifications.push(notification);
+                        _this.$rootScope.$broadcast('notificationAdded', notification);
                     }
                 }
-                if (isNotificationNew) {
-                    // this is a new notification
-                    _this.notifications.push(notification);
-                    _this.$rootScope.$broadcast('notificationAdded', notification);
-                }
-                //}
             }
         });
     }
