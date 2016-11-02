@@ -1,12 +1,14 @@
 'use strict';
 
 class ComponentGradingController {
-    constructor($scope,
+    constructor($mdDialog,
+                $scope,
                 $translate,
                 AnnotationService,
                 ConfigService,
                 TeacherDataService,
                 UtilService,) {
+        this.$mdDialog = $mdDialog;
         this.$scope = $scope;
         this.$translate = $translate;
         this.AnnotationService = AnnotationService;
@@ -76,6 +78,8 @@ class ComponentGradingController {
         if (this.latestAnnotations && this.latestAnnotations.score) {
             this.score = this.latestAnnotations.score.data.value;
         }
+
+        this.latestTeacherAnnotationTime = this.getLatestTeacherAnnotationTime();
     }
 
     hasNewWork() {
@@ -84,9 +88,8 @@ class ComponentGradingController {
         if (this.latestComponentStateTime) {
             // there is work for this component
 
-            let latestTeacherAnnotationTime = this.getLatestTeacherAnnotationTime();
-            if (latestTeacherAnnotationTime) {
-                if (this.latestComponentStateTime > latestTeacherAnnotationTime) {
+            if (this.latestTeacherAnnotationTime) {
+                if (this.latestComponentStateTime > this.latestTeacherAnnotationTime) {
                     // latest component state is newer than latest annotation, so work is new
                     result = true;
                     this.comment = null;
@@ -181,6 +184,50 @@ class ComponentGradingController {
         return time;
     }
 
+    showRevisions($event) {
+        let workgroupId = this.toWorkgroupId;
+        let componentId = this.componentId;
+        let maxScore  = this.maxScore;
+
+        this.$mdDialog.show({
+            parent: angular.element(document.body),
+            targetEvent: $event,
+            template:
+                `<md-dialog aria-label="Revisions Dialog" class="dialog--wider">
+                    <md-toolbar md-theme="light">
+                        <div class="md-toolbar-tools">
+                            <h2>Revisions</h2>
+                            <span flex></span>
+                            <md-button class="md-icon-button" ng-click="close()">
+                                <md-icon aria-label="Close dialog"> close </md-icon>
+                            </md-button>
+                        </div>
+                    </md-toolbar>
+                    <md-dialog-content class="md-dialog-content gray-light-bg">
+                        <workgroup-component-revisions workgroup-id="workgroupId" component-id="{{componentId}}" max-score="maxScore"></workgroup-component-revisions>
+                    </md-dialog-content>
+                    <md-dialog-actions layout="row">
+                        <md-button ng-click="close()" class="md-primary">Close</md-button>
+                    </md-dialog-actions>
+                </md-dialog>`,
+            locals: {
+                workgroupId: workgroupId,
+                componentId: componentId,
+                maxScore: maxScore
+            },
+            controller: RevisionsController
+        });
+        function RevisionsController($scope, $mdDialog, workgroupId, componentId, maxScore) {
+            $scope.workgroupId = workgroupId;
+            $scope.componentId = componentId;
+            $scope.maxScore = maxScore;
+            $scope.close = () => {
+                $mdDialog.hide();
+            };
+        }
+        RevisionsController.$inject = ["$scope", "$mdDialog", "workgroupId", "componentId", "maxScore"];
+    }
+
     /**
      * Save the annotation to the server
      * @param type String to indicate which type of annotation to post
@@ -247,6 +294,7 @@ class ComponentGradingController {
 }
 
 ComponentGradingController.$inject = [
+    '$mdDialog',
     '$scope',
     '$translate',
     'AnnotationService',
