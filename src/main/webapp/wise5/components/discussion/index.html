@@ -6,6 +6,12 @@
                       rows='10'
                       cols='100'></textarea>
             <br/>
+            Students can upload and use images in their posts.
+            <input type='checkbox'
+                   ng-model='discussionController.authoringComponentContent.isStudentAttachmentEnabled'
+                   ng-change='discussionController.authoringViewComponentChanged()'/>
+            <br/>
+
             Max Score:
             <input type='number'
                    ng-model='discussionController.authoringComponentContent.maxScore'
@@ -96,7 +102,7 @@
                     </div>
                     <div class="discussion-new__actions" layout="row" layout-align="end center">
                         <md-button class="md-accent md-icon-button"
-                                   ng-click='nodeController.showStudentAssets($event, component.id, discussionController.isDisabled)'
+                                   ng-click='nodeController.showStudentAssets($event, discussionController.componentId, discussionController.isDisabled)'
                                    ng-if="discussionController.isStudentAttachmentEnabled"
                                    title="Add picture">
                             <md-icon>image</md-icon>
