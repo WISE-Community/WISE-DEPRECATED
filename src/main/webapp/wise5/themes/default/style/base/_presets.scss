@@ -29,6 +29,12 @@ blockquote {
     border-width: 0 0 0 3px;
 }
 
+.overflow--ellipsis {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
 // TODO: remove once bootstrap dependency is removed
 label {
     font-weight: 400;
