@@ -6263,7 +6263,55 @@ class ProjectService {
                     nodeToRemoveTransitions = nodeToRemoveTransitionLogic.transitions;
                 }
 
-                if (nodeToRemoveTransitions.length > 0) {
+                if (nodeToRemoveTransitions.length == 0) {
+                    /*
+                     * The group we are moving is the last group in the project 
+                     * and does not have any transitions. We will loop through
+                     * all the nodes that transition into this group and remove 
+                     * those transitions.
+                     */
+                    
+                    // get child ids of the group that comes before the group we are moving
+                    var childIds = groupThatTransitionsToGroupWeAreMoving.ids;
+
+                    if (childIds != null) {
+
+                        // loop through all the children
+                        for (var c = 0; c < childIds.length; c++) {
+                            var childId = childIds[c];
+
+                            var transitionsFromChild = this.getTransitionsByFromNodeId(childId);
+
+                            if (transitionsFromChild != null) {
+
+                                // loop through all the transitions from the child
+                                for (var tfc = 0; tfc < transitionsFromChild.length; tfc++) {
+                                    var transitionFromChild = transitionsFromChild[tfc];
+
+                                    if (transitionFromChild != null) {
+                                        var toNodeId = transitionFromChild.to;
+
+                                        // get the parent group id of the toNodeId
+                                        var toNodeIdParentGroupId = this.getParentGroupId(toNodeId);
+
+                                        if (groupIdWeAreMoving === toNodeIdParentGroupId) {
+                                            // the transition is to a child in the group we are moving
+                                            
+                                            // remove the transition
+                                            transitionsFromChild.splice(tfc, 1);
+                                            
+                                            /*
+                                             * move the counter back one because we have just removed an
+                                             * element from the array
+                                             */
+                                            tfc--;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } else if (nodeToRemoveTransitions.length > 0) {
 
                     // get the first group that comes after the group we are removing
                     var firstNodeToRemoveTransition = nodeToRemoveTransitions[0];
