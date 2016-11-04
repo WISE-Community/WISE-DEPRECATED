@@ -1534,9 +1534,9 @@ transitions.splice(t,1);t--;}}}}}}}}}}}/*
      */},{key:'updateChildrenTransitionsIntoGroupWeAreMoving',value:function updateChildrenTransitionsIntoGroupWeAreMoving(groupThatTransitionsToGroupWeAreMoving,groupIdWeAreMoving){if(groupThatTransitionsToGroupWeAreMoving!=null&&groupIdWeAreMoving!=null){var group=this.getNodeById(groupIdWeAreMoving);if(group!=null){// get all the nodes that have a transition to the node we are removing
 var nodesByToNodeId=this.getNodesByToNodeId(groupIdWeAreMoving);// get the transitions of the node we are removing
 var nodeToRemoveTransitionLogic=group.transitionLogic;var nodeToRemoveTransitions=[];if(nodeToRemoveTransitionLogic!=null&&nodeToRemoveTransitionLogic.transitions!=null){nodeToRemoveTransitions=nodeToRemoveTransitionLogic.transitions;}if(nodeToRemoveTransitions.length==0){/*
-                     * The group we are moving is the last group in the project 
+                     * The group we are moving is the last group in the project
                      * and does not have any transitions. We will loop through
-                     * all the nodes that transition into this group and remove 
+                     * all the nodes that transition into this group and remove
                      * those transitions.
                      */// get child ids of the group that comes before the group we are moving
 var childIds=groupThatTransitionsToGroupWeAreMoving.ids;if(childIds!=null){// loop through all the children
@@ -1580,8 +1580,9 @@ nodeIdAndComponentIds.push(nodeIdAndComponentId);}}}}}}return nodeIdAndComponent
      */},{key:'displayAnnotation',value:function displayAnnotation(annotation){var result=true;if(annotation!=null){var nodeId=annotation.nodeId;var componentId=annotation.componentId;// get the component content
 var component=this.getComponentByNodeIdAndComponentId(nodeId,componentId);if(component!=null){var componentType=component.type;// get the component service
 var componentService=this.$injector.get(componentType+'Service');if(componentService!=null&&componentService.displayAnnotation!=null){// check if we need to display the annotation to the student
-result=componentService.displayAnnotation(component,annotation);if(annotation.data!=null&&annotation.data.isGlobal&&annotation.data.isPopup){result=false;// don't display annotation inline; it will be displayed in a popup
-}}}}return result;}/**
+result=componentService.displayAnnotation(component,annotation);/*if (annotation.data != null && annotation.data.isGlobal && annotation.data.isPopup) {
+                        result = false;  // don't display annotation inline; it will be displayed in a popup
+                    }*/}}}return result;}/**
      * Get the global annotation properties for the specified component and score, if exists.
      * @param component the component content
      * @param score the score we want the annotation properties for
