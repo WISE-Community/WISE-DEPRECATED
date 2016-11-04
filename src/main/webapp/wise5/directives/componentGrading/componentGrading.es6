@@ -24,6 +24,12 @@ class ComponentGradingController {
                 // set the period id
                 this.periodId = toUserInfo.periodId;
             }
+
+            // get the workgroup user names
+            let userNamesArray = this.ConfigService.getUserNamesByWorkgroupId(this.toWorkgroupId);
+            this.userNames = userNamesArray.map( (obj) => {
+                return obj.name;
+            }).join(', ');
         };
 
         this.$onChanges = (changes) => {
@@ -188,15 +194,17 @@ class ComponentGradingController {
         let workgroupId = this.toWorkgroupId;
         let componentId = this.componentId;
         let maxScore  = this.maxScore;
+        let userNames = this.userNames;
 
         this.$mdDialog.show({
             parent: angular.element(document.body),
             targetEvent: $event,
+            fullscreen: true,
             template:
-                `<md-dialog aria-label="Revisions Dialog" class="dialog--wider">
+                `<md-dialog aria-label="Revisions for {{userNames}}" class="dialog--wider">
                     <md-toolbar md-theme="light">
                         <div class="md-toolbar-tools">
-                            <h2>Revisions</h2>
+                            <h2 class="overflow--ellipsis">Revisions for {{userNames}}</h2>
                             <span flex></span>
                             <md-button class="md-icon-button" ng-click="close()">
                                 <md-icon aria-label="Close dialog"> close </md-icon>
@@ -213,19 +221,21 @@ class ComponentGradingController {
             locals: {
                 workgroupId: workgroupId,
                 componentId: componentId,
-                maxScore: maxScore
+                maxScore: maxScore,
+                userNames: userNames
             },
             controller: RevisionsController
         });
-        function RevisionsController($scope, $mdDialog, workgroupId, componentId, maxScore) {
+        function RevisionsController($scope, $mdDialog, workgroupId, componentId, maxScore, userNames) {
             $scope.workgroupId = workgroupId;
             $scope.componentId = componentId;
             $scope.maxScore = maxScore;
+            $scope.userNames = userNames;
             $scope.close = () => {
                 $mdDialog.hide();
             };
         }
-        RevisionsController.$inject = ["$scope", "$mdDialog", "workgroupId", "componentId", "maxScore"];
+        RevisionsController.$inject = ["$scope", "$mdDialog", "workgroupId", "componentId", "maxScore", "userNames"];
     }
 
     /**
@@ -277,7 +287,7 @@ class ComponentGradingController {
 
                 // save the annotation to the server
                 this.AnnotationService.saveAnnotation(annotation).then(result => {
-                    let localAnnotation = result;
+                    /*let localAnnotation = result;
 
                     if (localAnnotation != null) {
                         if (this.annotationId == null) {
@@ -286,7 +296,7 @@ class ComponentGradingController {
                         }
 
                         this.processAnnotations();
-                    }
+                    }*/
                 });
             }
         }

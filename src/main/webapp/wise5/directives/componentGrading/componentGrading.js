@@ -30,6 +30,12 @@ var ComponentGradingController = function () {
                 // set the period id
                 _this.periodId = toUserInfo.periodId;
             }
+
+            // get the workgroup user names
+            var userNamesArray = _this.ConfigService.getUserNamesByWorkgroupId(_this.toWorkgroupId);
+            _this.userNames = userNamesArray.map(function (obj) {
+                return obj.name;
+            }).join(', ');
         };
 
         this.$onChanges = function (changes) {
@@ -209,27 +215,31 @@ var ComponentGradingController = function () {
             var workgroupId = this.toWorkgroupId;
             var componentId = this.componentId;
             var maxScore = this.maxScore;
+            var userNames = this.userNames;
 
             this.$mdDialog.show({
                 parent: angular.element(document.body),
                 targetEvent: $event,
-                template: '<md-dialog aria-label="Revisions Dialog" class="dialog--wider">\n                    <md-toolbar md-theme="light">\n                        <div class="md-toolbar-tools">\n                            <h2>Revisions</h2>\n                            <span flex></span>\n                            <md-button class="md-icon-button" ng-click="close()">\n                                <md-icon aria-label="Close dialog"> close </md-icon>\n                            </md-button>\n                        </div>\n                    </md-toolbar>\n                    <md-dialog-content class="md-dialog-content gray-light-bg">\n                        <workgroup-component-revisions workgroup-id="workgroupId" component-id="{{componentId}}" max-score="maxScore"></workgroup-component-revisions>\n                    </md-dialog-content>\n                    <md-dialog-actions layout="row">\n                        <md-button ng-click="close()" class="md-primary">Close</md-button>\n                    </md-dialog-actions>\n                </md-dialog>',
+                fullscreen: true,
+                template: '<md-dialog aria-label="Revisions for {{userNames}}" class="dialog--wider">\n                    <md-toolbar md-theme="light">\n                        <div class="md-toolbar-tools">\n                            <h2 class="overflow--ellipsis">Revisions for {{userNames}}</h2>\n                            <span flex></span>\n                            <md-button class="md-icon-button" ng-click="close()">\n                                <md-icon aria-label="Close dialog"> close </md-icon>\n                            </md-button>\n                        </div>\n                    </md-toolbar>\n                    <md-dialog-content class="md-dialog-content gray-light-bg">\n                        <workgroup-component-revisions workgroup-id="workgroupId" component-id="{{componentId}}" max-score="maxScore"></workgroup-component-revisions>\n                    </md-dialog-content>\n                    <md-dialog-actions layout="row">\n                        <md-button ng-click="close()" class="md-primary">Close</md-button>\n                    </md-dialog-actions>\n                </md-dialog>',
                 locals: {
                     workgroupId: workgroupId,
                     componentId: componentId,
-                    maxScore: maxScore
+                    maxScore: maxScore,
+                    userNames: userNames
                 },
                 controller: RevisionsController
             });
-            function RevisionsController($scope, $mdDialog, workgroupId, componentId, maxScore) {
+            function RevisionsController($scope, $mdDialog, workgroupId, componentId, maxScore, userNames) {
                 $scope.workgroupId = workgroupId;
                 $scope.componentId = componentId;
                 $scope.maxScore = maxScore;
+                $scope.userNames = userNames;
                 $scope.close = function () {
                     $mdDialog.hide();
                 };
             }
-            RevisionsController.$inject = ["$scope", "$mdDialog", "workgroupId", "componentId", "maxScore"];
+            RevisionsController.$inject = ["$scope", "$mdDialog", "workgroupId", "componentId", "maxScore", "userNames"];
         }
 
         /**
@@ -240,7 +250,6 @@ var ComponentGradingController = function () {
     }, {
         key: 'postAnnotation',
         value: function postAnnotation(type) {
-            var _this2 = this;
 
             if (this.runId != null && this.periodId != null && this.nodeId != null && this.componentId != null && this.toWorkgroupId != null && type) {
 
@@ -269,16 +278,14 @@ var ComponentGradingController = function () {
 
                     // save the annotation to the server
                     this.AnnotationService.saveAnnotation(annotation).then(function (result) {
-                        var localAnnotation = result;
-
-                        if (localAnnotation != null) {
-                            if (_this2.annotationId == null) {
+                        /*let localAnnotation = result;
+                         if (localAnnotation != null) {
+                            if (this.annotationId == null) {
                                 // set the annotation id if there was no annotation id
-                                _this2.annotationId = localAnnotation.id;
+                                this.annotationId = localAnnotation.id;
                             }
-
-                            _this2.processAnnotations();
-                        }
+                             this.processAnnotations();
+                        }*/
                     });
                 }
             }

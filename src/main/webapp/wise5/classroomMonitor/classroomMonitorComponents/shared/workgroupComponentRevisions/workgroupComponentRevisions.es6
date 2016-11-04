@@ -31,19 +31,71 @@ class WorkgroupComponentRevisionsController {
             let componentState = this.componentStates[i];
             let id = componentState.id;
             this.data[id] = {
-                time: componentState.serverSaveTime,
+                clientSaveTime: this.convertToClientTimestamp(componentState.serverSaveTime),
                 componentState: componentState,
-                annotations: []
+                annotations: {
+                    autoComment: null,
+                    autoScore: null,
+                    comment: null,
+                    score: null
+                }
             };
         }
 
-        // add annotations to the data object
+        // add annotations to the data object (only latest of each annotation type for each componentState)
         let a = annotations.length;
         for (let x = 0; x < a; x++) {
             let annotation = annotations[x];
+            let type = annotation.type;
             let id = annotation.studentWorkId;
             if (id && this.data[id]) {
-                this.data[id].annotations.push(annotation);
+                let data = this.data[id];
+                let existing = null;
+
+                switch (type) {
+                    case 'autoComment':
+                        existing = data.annotations.autoComment;
+                        if (existing) {
+                            if (annotation.serverSaveTime > existing.serverSaveTime) {
+                                data.annotations.autoComment = annotation;
+                            }
+                        } else {
+                            data.annotations.autoComment = annotation;
+                        }
+                        break;
+                    case 'autoScore':
+                        existing = data.annotations.autoScore;
+                        if (existing) {
+                            if (annotation.serverSaveTime > existing.serverSaveTime) {
+                                data.annotations.autoScore = annotation;
+                            }
+                        } else {
+                            data.annotations.autoScore = annotation;
+                        }
+                        break;
+                    case 'comment':
+                        existing = data.annotations.comment;
+                        if (existing) {
+                            if (annotation.serverSaveTime > existing.serverSaveTime) {
+                                data.annotations.comment = annotation;
+                            }
+                        } else {
+                            data.annotations.comment = annotation;
+                        }
+                        break;
+                    case 'score':
+                        existing = data.annotations.score;
+                        if (existing) {
+                            if (annotation.serverSaveTime > existing.serverSaveTime) {
+                                data.annotations.score = annotation;
+                            }
+                        } else {
+                            data.annotations.score = annotation;
+                        }
+                        break;
+                    default:
+                        break;
+                }
             }
         }
     }
@@ -65,37 +117,54 @@ const WorkgroupComponentRevisions = {
         maxScore: '<'
     },
     template:
-        `<div class="component-revisions" ng-repeat="item in $ctrl.data | toArray | orderBy: '-time'">
-            <md-card>
-                <md-card-content>
-                    <div class="md-card-title">
-                        Version {{$ctrl.componentStates.length - $index}}
-                        <span ng-if="$first"> (Latest Work)</span>
-                    </div>
-                    <div>
-                        <component component-state="{{item.componentState}}" mode="onlyShowWork">
-                    </div>
-                    <div>
-                        <div ng-repeat="annotation in item.annotations | orderBy: '-serverSaveTime'">
-                            <div ng-if="annotation.type === 'comment'">
-                                Teacher Comment: {{annotation.data.value}}
+        `<md-list class="component-revisions">
+            <div  ng-repeat="item in $ctrl.data | toArray | orderBy: '-clientSaveTime'">
+                <md-list-item class="list-item md-3-line md-whiteframe-1dp component-revisions__item" ng-class="{'component-revisions__item--latest': $first}">
+                    <div class="md-list-item-text component-revisions__item__text">
+                        <div layout="row">
+                            <span class="md-body-2 text-secondary">
+                                #{{$ctrl.componentStates.length - $index}}
+                                <span ng-if="$first"> (Latest)</span>
+                            </span>
+                            <span flex></span>
+                            <span>
+                                <span class="component__actions__info component__actions__more md-body-1" am-time-ago="item.clientSaveTime"></span>
+                                <md-tooltip md-direction="top">{{ item.clientSaveTime | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip>
+                            </span>
+                        </div>
+                        <div>
+                            <component component-state="{{item.componentState}}" mode="onlyShowWork">
+                        </div>
+                        <div ng-if="item.annotations.comment || item.annotations.score || item.annotations.autoComment || item.annotations.autoScore"
+                             class="annotations--grading md-body-1">
+                            <div ng-if="item.annotations.comment || item.annotations.score">
+                                <div ng-if="item.annotations.comment" layout="row" layout-wrap>
+                                    <span class="component-revisions__annotation-label heavy">Teacher Comment: </span>{{item.annotations.comment.data.value}}
+                                </div>
+                                <div ng-if="item.annotations.score">
+                                    <span class="heavy">Score: </span>{{item.annotations.score.data.value}}/{{$ctrl.maxScore}}
+                                </div>
                             </div>
-                            <div ng-if="annotation.type === 'autoComment'">
-                                Auto Comment:
-                                <compile data="annotation.data.value"></compile>
-                            </div>
-                            <div ng-if="annotation.type === 'score'">
-                                Teacher Score: {{annotation.data.value}}/{{$ctrl.maxScore}}
-                            </div>
-                            <div ng-if="annotation.type === 'autoScore'">
-                                Auto Score: {{annotation.data.value}}/{{$ctrl.maxScore}}
+
+                            <div ng-if="item.annotations.autoComment || item.annotations.autoScore"
+                                 ng-class="{'component-revisions__has-auto-and-teacher': item.annotations.comment || item.annotations.score}">
+                                <div ng-if="item.annotations.autoComment">
+                                    <div class="component-revisions__annotation-label heavy">
+                                        Auto Comment:
+                                    </div>
+                                    <div class="annotations--grading__auto-comment">
+                                        <compile data="item.annotations.autoComment.data.value"></compile>
+                                    </div>
+                                </div>
+                                <div ng-if="item.annotations.autoScore">
+                                    <span class="heavy">Auto Score: </span>{{item.annotations.autoScore.data.value}}/{{$ctrl.maxScore}}
+                                </div>
                             </div>
                         </div>
                     </div>
-                </md-card-content>
-            </md-card>
-            <md-divider ng-if="$first" class="component-revisions__divider"></md-divider>
-        </div>`,
+                </md-list-item>
+            </div>
+        </md-list>`,
     controller: WorkgroupComponentRevisionsController
 };
 

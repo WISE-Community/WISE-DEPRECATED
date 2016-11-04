@@ -1,14 +1,32 @@
 .component-revisions {
     .component-wrapper {
         padding: 0;
-        margin-top: 0;
+        margin: 0;
     }
 
     .component {
         padding: 0;
     }
+
+    .md-resize-handle {
+        display: none;
+    }
 }
 
-.component-revisions__divider {
-    margin: 24px 0;
+.component-revisions__item--latest {
+    margin-bottom: 24px;
+}
+
+.component-revisions__item__text {
+    padding: 16px 0;
+}
+
+.component-revisions__annotation-label {
+    margin-right: 8px;
+}
+
+.component-revisions__has-auto-and-teacher {
+    padding-top: 8px;
+    margin-top: 8px;
+    border-top: 1px solid color('gray-light');
 }
