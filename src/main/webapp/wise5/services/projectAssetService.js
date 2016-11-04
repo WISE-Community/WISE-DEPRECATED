@@ -20,7 +20,6 @@ var ProjectAssetService = function () {
         this.ConfigService = ConfigService;
         this.Upload = Upload;
         this.projectAssets = {};
-        this.projectAssetURL = this.ConfigService.getConfigParam('projectAssetURL');
         this.projectAssetTotalSizeMax = this.ConfigService.getConfigParam('projectAssetTotalSizeMax');
         this.projectAssetUsagePercentage = 0;
     }
@@ -30,9 +29,11 @@ var ProjectAssetService = function () {
         value: function deleteAssetItem(assetItem) {
             var _this = this;
 
+            var projectAssetURL = this.ConfigService.getConfigParam('projectAssetURL');
+
             var httpParams = {};
             httpParams.method = 'POST';
-            httpParams.url = this.projectAssetURL;
+            httpParams.url = projectAssetURL;
             httpParams.headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
 
             var params = {};
@@ -55,7 +56,9 @@ var ProjectAssetService = function () {
         value: function retrieveProjectAssets() {
             var _this2 = this;
 
-            return this.$http.get(this.projectAssetURL).then(function (result) {
+            var projectAssetURL = this.ConfigService.getConfigParam('projectAssetURL');
+
+            return this.$http.get(projectAssetURL).then(function (result) {
                 var projectAssetsJSON = result.data;
                 _this2.projectAssets = projectAssetsJSON;
                 return projectAssetsJSON;
@@ -66,9 +69,11 @@ var ProjectAssetService = function () {
         value: function uploadAssets(files) {
             var _this3 = this;
 
+            var projectAssetURL = this.ConfigService.getConfigParam('projectAssetURL');
+
             var promises = files.map(function (file) {
                 return _this3.Upload.upload({
-                    url: _this3.projectAssetURL,
+                    url: projectAssetURL,
                     fields: {},
                     file: file
                 }).progress(function (evt) {
