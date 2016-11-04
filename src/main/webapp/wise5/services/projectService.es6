@@ -3108,17 +3108,31 @@ class ProjectService {
      * @param nodeId the node id of the group to create the node in
      */
     createNodeInside(node, nodeId) {
-        // add the node to the project
-        this.addNode(node);
+        
+        if (nodeId == 'inactiveNodes') {
+            // add the node to the inactive nodes
+            
+            // add the node to the inactive nodes
+            this.addInactiveNode(node);
+            
+            // add the node to our mapping of node id to node
+            this.setIdToNode(node.id, node);
+            this.setIdToElement(node.id, node);
+        } else {
+            // add the node to the active nodes
+            
+            // add the node to the project
+            this.addNode(node);
 
-        // add the node to our mapping of node id to node
-        this.setIdToNode(node.id, node);
+            // add the node to our mapping of node id to node
+            this.setIdToNode(node.id, node);
 
-        // create the transitions for the node
-        this.insertNodeInsideInTransitions(node.id, nodeId);
+            // create the transitions for the node
+            this.insertNodeInsideInTransitions(node.id, nodeId);
 
-        // add the node to the group
-        this.insertNodeInsideInGroups(node.id, nodeId);
+            // add the node to the group
+            this.insertNodeInsideInGroups(node.id, nodeId);
+        }
     }
 
     /**
@@ -3128,17 +3142,29 @@ class ProjectService {
      */
     createNodeAfter(node, nodeId) {
 
-        // add the node to the project
-        this.addNode(node);
+        if (this.isInactive(nodeId)) {
+            // we are adding the node after a node that is inactive
+            
+            // add the node to the inactive nodes
+            this.addInactiveNode(node, nodeId);
+            
+            this.setIdToNode(node.id, node);
+            this.setIdToElement(node.id, node);
+        } else {
+            // we are adding the node after a node that is active
+            
+            // add the node to the project
+            this.addNode(node);
 
-        // add the node to our mapping of node id to node
-        this.setIdToNode(node.id, node);
+            // add the node to our mapping of node id to node
+            this.setIdToNode(node.id, node);
 
-        // insert the new node id into the array of children ids
-        this.insertNodeAfterInGroups(node.id, nodeId);
+            // insert the new node id into the array of children ids
+            this.insertNodeAfterInGroups(node.id, nodeId);
 
-        // create the transition to the node
-        this.insertNodeAfterInTransitions(node, nodeId);
+            // create the transition to the node
+            this.insertNodeAfterInTransitions(node, nodeId);
+        }
 
         if (this.isGroupNode(node.id)) {
             /*
@@ -3806,7 +3832,7 @@ class ProjectService {
         
         var nodeIds = [];
         
-        var inactiveNodes = this.inactiveNodes;
+        var inactiveNodes = this.project.inactiveNodes;
         
         if (inactiveNodes != null) {
             
@@ -4428,6 +4454,24 @@ class ProjectService {
                 if (nodeId === node.id) {
                     // we have found the node we want to remove
                     nodes.splice(n, 1);
+                }
+            }
+        }
+        
+        // get all the inactive nodes
+        var inactiveNodes = this.project.inactiveNodes;
+        
+        if (inactiveNodes != null) {
+            
+            // loop through all the inactive nodes
+            for (var i = 0; i < inactiveNodes.length; i++) {
+                var inactiveNode = inactiveNodes[i];
+                
+                if (inactiveNode != null) {
+                    if (nodeId === inactiveNode.id) {
+                        // we have found the inactive node we want to remove
+                        inactiveNodes.splice(i, 1);
+                    }
                 }
             }
         }
@@ -5970,7 +6014,7 @@ class ProjectService {
 
             if (inactiveNodes != null) {
 
-                if (nodeIdToInsertAfter == null || nodeIdToInsertAfter === 'inactiveSteps') {
+                if (nodeIdToInsertAfter == null || nodeIdToInsertAfter === 'inactiveSteps' || nodeIdToInsertAfter === 'inactiveNodes') {
                     // put the node at the beginning of the inactive steps
                     inactiveNodes.splice(0, 0, node);
                 } else {
@@ -6031,7 +6075,7 @@ class ProjectService {
 
                 // add the node back into the inactive nodes
 
-                if (nodeIdToInsertAfter == null || nodeIdToInsertAfter === 'inactiveSteps') {
+                if (nodeIdToInsertAfter == null || nodeIdToInsertAfter === 'inactiveSteps' || nodeIdToInsertAfter === 'inactiveNodes') {
                     // put the node at the beginning of the inactive nodes
                     inactiveNodes.splice(0, 0, node);
                 } else {
@@ -6820,6 +6864,40 @@ class ProjectService {
         }
         
         return componentService;
+    }
+    
+    /**
+     * Check if a node is inactive. At the moment only step nodes can be
+     * inactive.
+     * @param nodeId the node id of the step
+     */
+    isInactive(nodeId) {
+        
+        var result = false;
+        
+        if (nodeId != null && this.project.inactiveNodes != null) {
+            
+            // loop through all the inactive nodes
+            for (var i = 0; i < this.project.inactiveNodes.length; i++) {
+                
+                // get an inactive node
+                var inactiveNode = this.project.inactiveNodes[i];
+                
+                if (inactiveNode != null) {
+                    
+                    if (nodeId === inactiveNode.id) {
+                        /*
+                         * we have found the node id we are looking for which
+                         * means the node is inactive
+                         */
+                        result = true;
+                        break;
+                    }
+                }
+            }
+        }
+        
+        return result;
     }
 }
 

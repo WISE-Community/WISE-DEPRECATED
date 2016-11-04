@@ -704,19 +704,26 @@ var newNode={};newNode.id=newNodeId;newNode.title=title;newNode.type='node';newN
      * Create a node inside the group
      * @param node the new node
      * @param nodeId the node id of the group to create the node in
-     */value:function createNodeInside(node,nodeId){// add the node to the project
+     */value:function createNodeInside(node,nodeId){if(nodeId=='inactiveNodes'){// add the node to the inactive nodes
+// add the node to the inactive nodes
+this.addInactiveNode(node);// add the node to our mapping of node id to node
+this.setIdToNode(node.id,node);this.setIdToElement(node.id,node);}else{// add the node to the active nodes
+// add the node to the project
 this.addNode(node);// add the node to our mapping of node id to node
 this.setIdToNode(node.id,node);// create the transitions for the node
 this.insertNodeInsideInTransitions(node.id,nodeId);// add the node to the group
-this.insertNodeInsideInGroups(node.id,nodeId);}/**
+this.insertNodeInsideInGroups(node.id,nodeId);}}/**
      * Create a node after the given node id
      * @param node the new node
      * @param nodeId the node to add after
-     */},{key:'createNodeAfter',value:function createNodeAfter(node,nodeId){// add the node to the project
+     */},{key:'createNodeAfter',value:function createNodeAfter(node,nodeId){if(this.isInactive(nodeId)){// we are adding the node after a node that is inactive
+// add the node to the inactive nodes
+this.addInactiveNode(node,nodeId);this.setIdToNode(node.id,node);this.setIdToElement(node.id,node);}else{// we are adding the node after a node that is active
+// add the node to the project
 this.addNode(node);// add the node to our mapping of node id to node
 this.setIdToNode(node.id,node);// insert the new node id into the array of children ids
 this.insertNodeAfterInGroups(node.id,nodeId);// create the transition to the node
-this.insertNodeAfterInTransitions(node,nodeId);if(this.isGroupNode(node.id)){/*
+this.insertNodeAfterInTransitions(node,nodeId);}if(this.isGroupNode(node.id)){/*
              * we are creating a group node so we will update/create the
              * transitions that traverse from the previous group to this group
              */var oldToGroupIds=[];// get the transitions that come out of the previous group
@@ -879,7 +886,7 @@ var nextAvailableNodeId='node'+(largestNodeIdNumber+1);return nextAvailableNodeI
 for(var n=0;n<nodes.length;n++){var node=nodes[n];if(node!=null){var nodeId=node.id;if(nodeId!=null){nodeIds.push(nodeId);}}}return nodeIds;}/**
      * Get all the node ids from inactive steps
      * @returns an array with all the inactive node ids
-     */},{key:'getInactiveNodeIds',value:function getInactiveNodeIds(){var nodeIds=[];var inactiveNodes=this.inactiveNodes;if(inactiveNodes!=null){// loop through all the inactive nodes
+     */},{key:'getInactiveNodeIds',value:function getInactiveNodeIds(){var nodeIds=[];var inactiveNodes=this.project.inactiveNodes;if(inactiveNodes!=null){// loop through all the inactive nodes
 for(var n=0;n<inactiveNodes.length;n++){var inactiveNode=inactiveNodes[n];if(inactiveNode!=null){var nodeId=inactiveNode.id;if(nodeId!=null){nodeIds.push(nodeId);}}}}return nodeIds;}/**
      * Move nodes inside a group node
      * @param nodeIds the node ids to move
@@ -1051,7 +1058,10 @@ group.startId=to;hasSetNewStartId=true;}}}}}if(!hasSetNewStartId){/*
      */},{key:'removeNodeIdFromNodes',value:function removeNodeIdFromNodes(nodeId){// get all the nodes in the project
 var nodes=this.project.nodes;// loop through all the nodes
 for(var n=0;n<nodes.length;n++){var node=nodes[n];if(node!=null){if(nodeId===node.id){// we have found the node we want to remove
-nodes.splice(n,1);}}}}/**
+nodes.splice(n,1);}}}// get all the inactive nodes
+var inactiveNodes=this.project.inactiveNodes;if(inactiveNodes!=null){// loop through all the inactive nodes
+for(var i=0;i<inactiveNodes.length;i++){var inactiveNode=inactiveNodes[i];if(inactiveNode!=null){if(nodeId===inactiveNode.id){// we have found the inactive node we want to remove
+inactiveNodes.splice(i,1);}}}}}/**
      * Remove the node from the inactive nodes array
      * @param nodeId the node to remove from the inactive nodes array
      */},{key:'removeNodeIdFromInactiveNodes',value:function removeNodeIdFromInactiveNodes(nodeId){// get the inactive nodes array
@@ -1445,7 +1455,7 @@ this.addInactiveNode(node,nodeIdToInsertAfter);}}}/**
      * Add the node to the inactive nodes array
      * @param node the node to move
      * @param nodeIdToInsertAfter place the node after this
-     */},{key:'addInactiveNode',value:function addInactiveNode(node,nodeIdToInsertAfter){if(node!=null){var inactiveNodes=this.project.inactiveNodes;if(inactiveNodes!=null){if(nodeIdToInsertAfter==null||nodeIdToInsertAfter==='inactiveSteps'){// put the node at the beginning of the inactive steps
+     */},{key:'addInactiveNode',value:function addInactiveNode(node,nodeIdToInsertAfter){if(node!=null){var inactiveNodes=this.project.inactiveNodes;if(inactiveNodes!=null){if(nodeIdToInsertAfter==null||nodeIdToInsertAfter==='inactiveSteps'||nodeIdToInsertAfter==='inactiveNodes'){// put the node at the beginning of the inactive steps
 inactiveNodes.splice(0,0,node);}else{// put the node after one of the inactive nodes
 var added=false;// loop through all the inactive nodes
 for(var i=0;i<inactiveNodes.length;i++){var inactiveNode=inactiveNodes[i];if(inactiveNode!=null){if(nodeIdToInsertAfter===inactiveNode.id){// we have found the position to place the node
@@ -1460,7 +1470,7 @@ inactiveNodes.splice(i+1,0,node);added=true;}}}if(!added){/*
 // loop through all the inactive nodes
 for(var i=0;i<inactiveNodes.length;i++){var inactiveNode=inactiveNodes[i];if(inactiveNode!=null){if(node.id===inactiveNode.id){// we have found the node we want to remove
 inactiveNodes.splice(i,1);}}}// add the node back into the inactive nodes
-if(nodeIdToInsertAfter==null||nodeIdToInsertAfter==='inactiveSteps'){// put the node at the beginning of the inactive nodes
+if(nodeIdToInsertAfter==null||nodeIdToInsertAfter==='inactiveSteps'||nodeIdToInsertAfter==='inactiveNodes'){// put the node at the beginning of the inactive nodes
 inactiveNodes.splice(0,0,node);}else{// put the node after one of the inactive nodes
 var added=false;// loop through all the inactive nodes
 for(var i=0;i<inactiveNodes.length;i++){var inactiveNode=inactiveNodes[i];if(inactiveNode!=null){if(nodeIdToInsertAfter===inactiveNode.id){// we have found the position to place the node
@@ -1631,5 +1641,14 @@ var componentServiceName=componentType+'Service';/*
                  */componentService=this.$injector.get(componentServiceName);/*
                  * save the component service to the map so we can easily
                  * retrieve it later
-                 */this.componentServices[componentServiceName]=componentService;}}return componentService;}}]);return ProjectService;}();ProjectService.$inject=['$http','$injector','$q','$rootScope','ConfigService'];exports.default=ProjectService;
+                 */this.componentServices[componentServiceName]=componentService;}}return componentService;}/**
+     * Check if a node is inactive. At the moment only step nodes can be
+     * inactive.
+     * @param nodeId the node id of the step
+     */},{key:'isInactive',value:function isInactive(nodeId){var result=false;if(nodeId!=null&&this.project.inactiveNodes!=null){// loop through all the inactive nodes
+for(var i=0;i<this.project.inactiveNodes.length;i++){// get an inactive node
+var inactiveNode=this.project.inactiveNodes[i];if(inactiveNode!=null){if(nodeId===inactiveNode.id){/*
+                         * we have found the node id we are looking for which
+                         * means the node is inactive
+                         */result=true;break;}}}}return result;}}]);return ProjectService;}();ProjectService.$inject=['$http','$injector','$q','$rootScope','ConfigService'];exports.default=ProjectService;
 //# sourceMappingURL=projectService.js.map
