@@ -720,7 +720,7 @@ class AnnotationService {
     /**
      * Calculates the active global annotations and groups them by annotation group name
      */
-    calculateActiveGlobalAnnoationGroups() {
+    calculateActiveGlobalAnnotationGroups() {
         this.activeGlobalAnnotationGroups = [];
 
         for (let a = 0; a < this.annotations.length; a++) {
@@ -732,7 +732,7 @@ class AnnotationService {
                         let sameGroupFound = false;
                         for (let ag = 0; ag < this.activeGlobalAnnotationGroups.length; ag++) {
                             let activeGlobalAnnotationGroup = this.activeGlobalAnnotationGroups[ag];
-                            if (activeGlobalAnnotationGroup.annotationGroupName == annotation.data.annotationGroupName) {
+                            if (activeGlobalAnnotationGroup.annotationGroupName == (annotation.data.annotationGroupName + '_' + annotation.data.annotationGroupCreatedTime)) {
                                 // push this annotation to the end of the group
                                 activeGlobalAnnotationGroup.annotations.push(annotation);
                                 sameGroupFound = true;
@@ -740,8 +740,11 @@ class AnnotationService {
                         }
                         if (!sameGroupFound) {
                             let annotationGroup = {
-                                "annotationGroupName": annotation.data.annotationGroupName,
-                                "annotations": [annotation]
+                                "annotationGroupName": annotation.data.annotationGroupName + '_' + annotation.data.annotationGroupCreatedTime,
+                                "annotations": [annotation],
+                                "nodeId": annotation.nodeId,
+                                "componentId": annotation.componentId,
+                                "serverSaveTime": annotation.serverSaveTime
                             };
                             this.activeGlobalAnnotationGroups.push(annotationGroup);
                         }

@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 Object.defineProperty(exports, "__esModule", {
     value: true
@@ -10,6 +10,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var StudentDataService = function () {
     function StudentDataService($http, $injector, $q, $rootScope, AnnotationService, ConfigService, ProjectService, UtilService) {
+        var _this = this;
+
         _classCallCheck(this, StudentDataService);
 
         this.$http = $http;
@@ -30,12 +32,57 @@ var StudentDataService = function () {
         this.runStatus = null;
 
         this.maxPlanningNodeNumber = 0;
+
+        // listen for node status changes
+        this.$rootScope.$on('nodeStatusesChanged', function (event, args) {
+            // calculate active global annotations and group them by group name as needed
+            _this.AnnotationService.calculateActiveGlobalAnnotationGroups();
+
+            // go through the global annotations and see if they can be un-globalized by checking if their criterias have been met.
+            var globalAnnotationGroups = _this.AnnotationService.getActiveGlobalAnnotationGroups();
+            globalAnnotationGroups.map(function (globalAnnotationGroup) {
+                var globalAnnotations = globalAnnotationGroup.annotations;
+                globalAnnotations.map(function (globalAnnotation) {
+                    if (globalAnnotation.data != null && globalAnnotation.data.isGlobal) {
+                        var unGlobalizeConditional = globalAnnotation.data.unGlobalizeConditional;
+                        var unGlobalizeCriteriaArray = globalAnnotation.data.unGlobalizeCriteria;
+                        if (unGlobalizeCriteriaArray != null) {
+                            if (unGlobalizeConditional === "any") {
+                                // at least one criteria in unGlobalizeCriteriaArray must be satisfied in any order before un-globalizing this annotation
+                                var anySatified = false;
+                                for (var i = 0; i < unGlobalizeCriteriaArray.length; i++) {
+                                    var unGlobalizeCriteria = unGlobalizeCriteriaArray[i];
+                                    var unGlobalizeCriteriaResult = _this.evaluateCriteria(unGlobalizeCriteria);
+                                    anySatified = anySatified || unGlobalizeCriteriaResult;
+                                }
+                                if (anySatified) {
+                                    globalAnnotation.data.unGlobalizedTimestamp = Date.parse(new Date()); // save when criteria was satisfied
+                                    _this.saveAnnotations([globalAnnotation]); // save changes to server
+                                }
+                            } else if (unGlobalizeConditional === "all") {
+                                // all criteria in unGlobalizeCriteriaArray must be satisfied in any order before un-globalizing this annotation
+                                var allSatisfied = true;
+                                for (var _i = 0; _i < unGlobalizeCriteriaArray.length; _i++) {
+                                    var _unGlobalizeCriteria = unGlobalizeCriteriaArray[_i];
+                                    var _unGlobalizeCriteriaResult = _this.evaluateCriteria(_unGlobalizeCriteria);
+                                    allSatisfied = allSatisfied && _unGlobalizeCriteriaResult;
+                                }
+                                if (allSatisfied) {
+                                    globalAnnotation.data.unGlobalizedTimestamp = Date.parse(new Date()); // save when criteria was satisfied
+                                    _this.saveAnnotations([globalAnnotation]); // save changes to server
+                                }
+                            }
+                        }
+                    }
+                });
+            });
+        });
     }
 
     _createClass(StudentDataService, [{
-        key: 'retrieveStudentData',
+        key: "retrieveStudentData",
         value: function retrieveStudentData() {
-            var _this = this;
+            var _this2 = this;
 
             if (this.ConfigService.isPreview()) {
                 // we are previewing the project
@@ -82,28 +129,28 @@ var StudentDataService = function () {
                     var resultData = result.data;
                     if (resultData != null) {
 
-                        _this.studentData = {};
+                        _this2.studentData = {};
 
                         // get student work
-                        _this.studentData.componentStates = [];
-                        _this.studentData.nodeStates = [];
+                        _this2.studentData.componentStates = [];
+                        _this2.studentData.nodeStates = [];
                         var studentWorkList = resultData.studentWorkList;
                         for (var s = 0; s < studentWorkList.length; s++) {
                             var studentWork = studentWorkList[s];
                             if (studentWork.componentId != null) {
-                                _this.studentData.componentStates.push(studentWork);
+                                _this2.studentData.componentStates.push(studentWork);
                             } else {
-                                _this.studentData.nodeStates.push(studentWork);
+                                _this2.studentData.nodeStates.push(studentWork);
                             }
                         }
 
                         // Check to see if this Project contains any Planning activities
-                        if (_this.ProjectService.project.nodes != null && _this.ProjectService.project.nodes.length > 0) {
+                        if (_this2.ProjectService.project.nodes != null && _this2.ProjectService.project.nodes.length > 0) {
                             // Overload/add new nodes based on student's work in the NodeState for the planning group.
-                            for (var p = 0; p < _this.ProjectService.project.nodes.length; p++) {
-                                var planningGroupNode = _this.ProjectService.project.nodes[p];
+                            for (var p = 0; p < _this2.ProjectService.project.nodes.length; p++) {
+                                var planningGroupNode = _this2.ProjectService.project.nodes[p];
                                 if (planningGroupNode.planning) {
-                                    var lastestNodeStateForPlanningGroupNode = _this.getLatestNodeStateByNodeId(planningGroupNode.id);
+                                    var lastestNodeStateForPlanningGroupNode = _this2.getLatestNodeStateByNodeId(planningGroupNode.id);
                                     if (lastestNodeStateForPlanningGroupNode != null) {
                                         var studentModifiedNodes = lastestNodeStateForPlanningGroupNode.studentData.nodes;
                                         if (studentModifiedNodes != null) {
@@ -112,15 +159,15 @@ var StudentDataService = function () {
                                                 var studentModifiedNodeId = studentModifiedNode.id;
                                                 if (studentModifiedNode.planning) {
                                                     // If this is a Planning Node that exists in the project, replace the one in the original project with this one.
-                                                    for (var n = 0; n < _this.ProjectService.project.nodes.length; n++) {
-                                                        if (_this.ProjectService.project.nodes[n].id === studentModifiedNodeId) {
+                                                    for (var n = 0; n < _this2.ProjectService.project.nodes.length; n++) {
+                                                        if (_this2.ProjectService.project.nodes[n].id === studentModifiedNodeId) {
                                                             // Only overload the ids. This will allow authors to add more planningNodes during the run if needed.
-                                                            _this.ProjectService.project.nodes[n].ids = studentModifiedNode.ids;
+                                                            _this2.ProjectService.project.nodes[n].ids = studentModifiedNode.ids;
                                                         }
                                                     }
                                                 } else {
                                                     // Otherwise, this is an instance of a PlanningNode template, so just append it to the end of the Project.nodes
-                                                    _this.ProjectService.project.nodes.push(studentModifiedNode);
+                                                    _this2.ProjectService.project.nodes.push(studentModifiedNode);
                                                 }
                                             }
                                         }
@@ -128,37 +175,37 @@ var StudentDataService = function () {
                                 }
                             }
                             // Re-parse the project with the modified changes
-                            _this.ProjectService.parseProject();
+                            _this2.ProjectService.parseProject();
                         }
 
                         // get events
-                        _this.studentData.events = resultData.events;
+                        _this2.studentData.events = resultData.events;
 
                         // get annotations
-                        _this.studentData.annotations = resultData.annotations;
+                        _this2.studentData.annotations = resultData.annotations;
 
-                        _this.AnnotationService.setAnnotations(_this.studentData.annotations);
+                        _this2.AnnotationService.setAnnotations(_this2.studentData.annotations);
 
                         // populate the student history
-                        _this.populateHistories(_this.studentData.events);
+                        _this2.populateHistories(_this2.studentData.events);
 
                         // update the node statuses
-                        _this.updateNodeStatuses();
+                        _this2.updateNodeStatuses();
                     }
 
-                    return _this.studentData;
+                    return _this2.studentData;
                 });
             }
         }
     }, {
-        key: 'retrieveRunStatus',
+        key: "retrieveRunStatus",
 
 
         /**
          * Retrieve the run status
          */
         value: function retrieveRunStatus() {
-            var _this2 = this;
+            var _this3 = this;
 
             if (this.ConfigService.isPreview()) {
                 // we are previewing the project
@@ -185,19 +232,19 @@ var StudentDataService = function () {
                         var data = result.data;
                         if (data != null) {
                             // remember the run status
-                            _this2.runStatus = data;
+                            _this3.runStatus = data;
                         }
                     }
                 });
             }
         }
     }, {
-        key: 'getNodeStatuses',
+        key: "getNodeStatuses",
         value: function getNodeStatuses() {
             return this.nodeStatuses;
         }
     }, {
-        key: 'setNodeStatusByNodeId',
+        key: "setNodeStatusByNodeId",
         value: function setNodeStatusByNodeId(nodeId, nodeStatus) {
 
             if (nodeId != null && nodeStatus != null) {
@@ -209,7 +256,7 @@ var StudentDataService = function () {
             }
         }
     }, {
-        key: 'getNodeStatusByNodeId',
+        key: "getNodeStatusByNodeId",
         value: function getNodeStatusByNodeId(nodeId) {
             var nodeStatus = null;
 
@@ -222,7 +269,7 @@ var StudentDataService = function () {
             return nodeStatus;
         }
     }, {
-        key: 'updateNodeStatuses',
+        key: "updateNodeStatuses",
         value: function updateNodeStatuses() {
             var nodes = this.ProjectService.getNodes();
             var planningNodes = this.ProjectService.getPlanningNodes();
@@ -262,7 +309,7 @@ var StudentDataService = function () {
             this.$rootScope.$broadcast('nodeStatusesChanged');
         }
     }, {
-        key: 'updateNodeStatusByNode',
+        key: "updateNodeStatusByNode",
 
 
         /**
@@ -371,7 +418,7 @@ var StudentDataService = function () {
             //return nodeStatus;
         }
     }, {
-        key: 'evaluateConstraint',
+        key: "evaluateConstraint",
 
 
         /**
@@ -395,7 +442,7 @@ var StudentDataService = function () {
             return result;
         }
     }, {
-        key: 'evaluateGuidedNavigationConstraint',
+        key: "evaluateGuidedNavigationConstraint",
 
 
         /**
@@ -463,7 +510,7 @@ var StudentDataService = function () {
             return result;
         }
     }, {
-        key: 'evaluateNodeConstraint',
+        key: "evaluateNodeConstraint",
 
 
         /**
@@ -518,7 +565,7 @@ var StudentDataService = function () {
             return result;
         }
     }, {
-        key: 'evaluateCriteria',
+        key: "evaluateCriteria",
 
 
         /**
@@ -556,7 +603,7 @@ var StudentDataService = function () {
             return result;
         }
     }, {
-        key: 'evaluateIsCompletedCriteria',
+        key: "evaluateIsCompletedCriteria",
 
 
         /**
@@ -584,7 +631,7 @@ var StudentDataService = function () {
          */
 
     }, {
-        key: 'evaluateIsPlanningActivityCompletedCriteria',
+        key: "evaluateIsPlanningActivityCompletedCriteria",
         value: function evaluateIsPlanningActivityCompletedCriteria(criteria) {
             var result = false;
 
@@ -694,7 +741,7 @@ var StudentDataService = function () {
          */
 
     }, {
-        key: 'evaluateBranchPathTakenCriteria',
+        key: "evaluateBranchPathTakenCriteria",
         value: function evaluateBranchPathTakenCriteria(criteria) {
             var result = false;
 
@@ -733,7 +780,7 @@ var StudentDataService = function () {
             return result;
         }
     }, {
-        key: 'evaluateIsVisitedCriteria',
+        key: "evaluateIsVisitedCriteria",
 
 
         /**
@@ -779,7 +826,7 @@ var StudentDataService = function () {
          */
 
     }, {
-        key: 'evaluateIsVisitedAfterCriteria',
+        key: "evaluateIsVisitedAfterCriteria",
         value: function evaluateIsVisitedAfterCriteria(criteria) {
 
             var isVisitedAfter = false;
@@ -819,7 +866,7 @@ var StudentDataService = function () {
          */
 
     }, {
-        key: 'evaluateIsVisitedAndRevisedAfterCriteria',
+        key: "evaluateIsVisitedAndRevisedAfterCriteria",
         value: function evaluateIsVisitedAndRevisedAfterCriteria(criteria) {
 
             var isVisitedAndRevisedAfter = false;
@@ -865,7 +912,7 @@ var StudentDataService = function () {
          */
 
     }, {
-        key: 'getBranchPathTakenEventsByNodeId',
+        key: "getBranchPathTakenEventsByNodeId",
         value: function getBranchPathTakenEventsByNodeId(fromNodeId) {
 
             var branchPathTakenEvents = [];
@@ -896,7 +943,7 @@ var StudentDataService = function () {
          */
 
     }, {
-        key: 'evaluateChoiceChosenCriteria',
+        key: "evaluateChoiceChosenCriteria",
         value: function evaluateChoiceChosenCriteria(criteria) {
 
             var result = false;
@@ -915,7 +962,7 @@ var StudentDataService = function () {
             return result;
         }
     }, {
-        key: 'evaluateScoreCriteria',
+        key: "evaluateScoreCriteria",
 
 
         /**
@@ -962,7 +1009,7 @@ var StudentDataService = function () {
             return result;
         }
     }, {
-        key: 'populateHistories',
+        key: "populateHistories",
 
 
         /**
@@ -993,7 +1040,7 @@ var StudentDataService = function () {
             }
         }
     }, {
-        key: 'getStackHistoryAtIndex',
+        key: "getStackHistoryAtIndex",
         value: function getStackHistoryAtIndex(index) {
             if (index < 0) {
                 index = this.stackHistory.length + index;
@@ -1005,12 +1052,12 @@ var StudentDataService = function () {
             return stackHistoryResult;
         }
     }, {
-        key: 'getStackHistory',
+        key: "getStackHistory",
         value: function getStackHistory() {
             return this.stackHistory;
         }
     }, {
-        key: 'updateStackHistory',
+        key: "updateStackHistory",
         value: function updateStackHistory(nodeId) {
             var indexOfNodeId = this.stackHistory.indexOf(nodeId);
             if (indexOfNodeId === -1) {
@@ -1020,7 +1067,7 @@ var StudentDataService = function () {
             }
         }
     }, {
-        key: 'updateVisitedNodesHistory',
+        key: "updateVisitedNodesHistory",
         value: function updateVisitedNodesHistory(nodeId) {
             var indexOfNodeId = this.visitedNodesHistory.indexOf(nodeId);
             if (indexOfNodeId === -1) {
@@ -1028,12 +1075,12 @@ var StudentDataService = function () {
             }
         }
     }, {
-        key: 'getVisitedNodesHistory',
+        key: "getVisitedNodesHistory",
         value: function getVisitedNodesHistory() {
             return this.visitedNodesHistory;
         }
     }, {
-        key: 'isNodeVisited',
+        key: "isNodeVisited",
         value: function isNodeVisited(nodeId) {
             var result = false;
             var visitedNodesHistory = this.visitedNodesHistory;
@@ -1049,7 +1096,7 @@ var StudentDataService = function () {
             return result;
         }
     }, {
-        key: 'createComponentState',
+        key: "createComponentState",
         value: function createComponentState() {
             var componentState = {};
 
@@ -1058,7 +1105,7 @@ var StudentDataService = function () {
             return componentState;
         }
     }, {
-        key: 'addComponentState',
+        key: "addComponentState",
         value: function addComponentState(componentState) {
             if (this.studentData != null && this.studentData.componentStates != null) {
                 this.studentData.componentStates.push(componentState);
@@ -1067,7 +1114,7 @@ var StudentDataService = function () {
             }
         }
     }, {
-        key: 'addNodeState',
+        key: "addNodeState",
         value: function addNodeState(nodeState) {
             if (this.studentData != null && this.studentData.nodeStates != null) {
                 this.studentData.nodeStates.push(nodeState);
@@ -1076,7 +1123,7 @@ var StudentDataService = function () {
             }
         }
     }, {
-        key: 'getNodeStates',
+        key: "getNodeStates",
 
 
         /**
@@ -1093,7 +1140,7 @@ var StudentDataService = function () {
             return nodeStates;
         }
     }, {
-        key: 'getNodeStatesByNodeId',
+        key: "getNodeStatesByNodeId",
 
 
         /**
@@ -1123,21 +1170,21 @@ var StudentDataService = function () {
             return nodeStatesByNodeId;
         }
     }, {
-        key: 'addEvent',
+        key: "addEvent",
         value: function addEvent(event) {
             if (this.studentData != null && this.studentData.events != null) {
                 this.studentData.events.push(event);
             }
         }
     }, {
-        key: 'addAnnotation',
+        key: "addAnnotation",
         value: function addAnnotation(annotation) {
             if (this.studentData != null && this.studentData.annotations != null) {
                 this.studentData.annotations.push(annotation);
             }
         }
     }, {
-        key: 'saveComponentEvent',
+        key: "saveComponentEvent",
         value: function saveComponentEvent(component, category, event, data) {
             if (component == null || category == null || event == null) {
                 alert("StudentDataService.saveComponentEvent: component, category, event args must not be null");
@@ -1154,7 +1201,7 @@ var StudentDataService = function () {
             this.saveEvent(context, nodeId, componentId, componentType, category, event, data);
         }
     }, {
-        key: 'saveVLEEvent',
+        key: "saveVLEEvent",
         value: function saveVLEEvent(nodeId, componentId, componentType, category, event, data) {
             if (category == null || event == null) {
                 alert("StudentDataService.saveVLEEvent: category and event args must not be null");
@@ -1164,7 +1211,7 @@ var StudentDataService = function () {
             this.saveEvent(context, nodeId, componentId, componentType, category, event, data);
         }
     }, {
-        key: 'saveEvent',
+        key: "saveEvent",
         value: function saveEvent(context, nodeId, componentId, componentType, category, event, data) {
             var events = [];
             var newEvent = this.createNewEvent();
@@ -1182,7 +1229,7 @@ var StudentDataService = function () {
             this.saveToServer(componentStates, nodeStates, events, annotations);
         }
     }, {
-        key: 'createNewEvent',
+        key: "createNewEvent",
 
 
         /**
@@ -1200,7 +1247,7 @@ var StudentDataService = function () {
             return event;
         }
     }, {
-        key: 'saveNodeStates',
+        key: "saveNodeStates",
         value: function saveNodeStates(nodeStates) {
             var componentStates = null;
             var events = null;
@@ -1208,7 +1255,7 @@ var StudentDataService = function () {
             this.saveToServer(componentStates, nodeStates, events, annotations);
         }
     }, {
-        key: 'saveAnnotations',
+        key: "saveAnnotations",
         value: function saveAnnotations(annotations) {
             var componentStates = null;
             var nodeStates = null;
@@ -1216,9 +1263,9 @@ var StudentDataService = function () {
             this.saveToServer(componentStates, nodeStates, events, annotations);
         }
     }, {
-        key: 'saveToServer',
+        key: "saveToServer",
         value: function saveToServer(componentStates, nodeStates, events, annotations) {
-            var _this3 = this;
+            var _this4 = this;
 
             // merge componentStates and nodeStates into StudentWork before posting
             var studentWorkList = [];
@@ -1309,7 +1356,7 @@ var StudentDataService = function () {
                     if (result != null && result.data != null) {
                         var savedStudentDataResponse = result.data;
 
-                        _this3.saveToServerSuccess(savedStudentDataResponse);
+                        _this4.saveToServerSuccess(savedStudentDataResponse);
 
                         return savedStudentDataResponse;
                     }
@@ -1320,7 +1367,7 @@ var StudentDataService = function () {
             }
         }
     }, {
-        key: 'saveToServerSuccess',
+        key: "saveToServerSuccess",
         value: function saveToServerSuccess(savedStudentDataResponse) {
             // set dummy serverSaveTime for use if we're in preview mode
             var serverSaveTime = Date.parse(new Date());
@@ -1413,7 +1460,7 @@ var StudentDataService = function () {
             this.updateNodeStatuses();
         }
     }, {
-        key: 'saveStudentStatus',
+        key: "saveStudentStatus",
 
 
         /**
@@ -1484,10 +1531,10 @@ var StudentDataService = function () {
             }
         }
     }, {
-        key: 'retrieveComponentStates',
+        key: "retrieveComponentStates",
         value: function retrieveComponentStates(runId, periodId, workgroupId) {}
     }, {
-        key: 'getLatestComponentState',
+        key: "getLatestComponentState",
         value: function getLatestComponentState() {
             var latestComponentState = null;
 
@@ -1504,7 +1551,7 @@ var StudentDataService = function () {
             return latestComponentState;
         }
     }, {
-        key: 'isComponentSubmitDirty',
+        key: "isComponentSubmitDirty",
 
 
         /**
@@ -1522,7 +1569,7 @@ var StudentDataService = function () {
             return submitDirty;
         }
     }, {
-        key: 'getLatestNodeStateByNodeId',
+        key: "getLatestNodeStateByNodeId",
 
 
         /**
@@ -1539,7 +1586,7 @@ var StudentDataService = function () {
             return latestNodeState;
         }
     }, {
-        key: 'getLatestComponentStateByNodeIdAndComponentId',
+        key: "getLatestComponentStateByNodeIdAndComponentId",
 
 
         /**
@@ -1590,7 +1637,7 @@ var StudentDataService = function () {
             return latestComponentState;
         }
     }, {
-        key: 'getStudentWorkByStudentWorkId',
+        key: "getStudentWorkByStudentWorkId",
 
 
         /**
@@ -1632,7 +1679,7 @@ var StudentDataService = function () {
             return null;
         }
     }, {
-        key: 'getComponentStates',
+        key: "getComponentStates",
 
 
         /**
@@ -1642,7 +1689,7 @@ var StudentDataService = function () {
             return this.studentData.componentStates;
         }
     }, {
-        key: 'getComponentStatesByNodeId',
+        key: "getComponentStatesByNodeId",
 
 
         /**
@@ -1684,7 +1731,7 @@ var StudentDataService = function () {
             return componentStatesByNodeId;
         }
     }, {
-        key: 'getComponentStatesByNodeIdAndComponentId',
+        key: "getComponentStatesByNodeIdAndComponentId",
 
 
         /**
@@ -1729,7 +1776,7 @@ var StudentDataService = function () {
             return componentStatesByNodeIdAndComponentId;
         }
     }, {
-        key: 'getEvents',
+        key: "getEvents",
 
 
         /**
@@ -1744,7 +1791,7 @@ var StudentDataService = function () {
             }
         }
     }, {
-        key: 'getEventsByNodeId',
+        key: "getEventsByNodeId",
 
 
         /**
@@ -1781,7 +1828,7 @@ var StudentDataService = function () {
             return eventsByNodeId;
         }
     }, {
-        key: 'getEventsByNodeIdAndComponentId',
+        key: "getEventsByNodeIdAndComponentId",
 
 
         /**
@@ -1820,7 +1867,7 @@ var StudentDataService = function () {
             return eventsByNodeId;
         }
     }, {
-        key: 'canVisitNode',
+        key: "canVisitNode",
 
 
         /**
@@ -1847,7 +1894,7 @@ var StudentDataService = function () {
             return result;
         }
     }, {
-        key: 'getNodeStatusByNodeId',
+        key: "getNodeStatusByNodeId",
 
 
         /**
@@ -1866,7 +1913,7 @@ var StudentDataService = function () {
             return nodeStatus;
         }
     }, {
-        key: 'getNodeProgressById',
+        key: "getNodeProgressById",
 
 
         /**
@@ -1910,7 +1957,7 @@ var StudentDataService = function () {
             return progress;
         }
     }, {
-        key: 'isCompleted',
+        key: "isCompleted",
 
 
         /**
@@ -2063,7 +2110,7 @@ var StudentDataService = function () {
             return result;
         }
     }, {
-        key: 'getCurrentNode',
+        key: "getCurrentNode",
 
 
         /**
@@ -2074,7 +2121,7 @@ var StudentDataService = function () {
             return this.currentNode;
         }
     }, {
-        key: 'getCurrentNodeId',
+        key: "getCurrentNodeId",
 
 
         /**
@@ -2091,7 +2138,7 @@ var StudentDataService = function () {
             return currentNodeId;
         }
     }, {
-        key: 'setCurrentNodeByNodeId',
+        key: "setCurrentNodeByNodeId",
 
 
         /**
@@ -2106,7 +2153,7 @@ var StudentDataService = function () {
             }
         }
     }, {
-        key: 'setCurrentNode',
+        key: "setCurrentNode",
 
 
         /**
@@ -2132,7 +2179,7 @@ var StudentDataService = function () {
             }
         }
     }, {
-        key: 'endCurrentNode',
+        key: "endCurrentNode",
 
 
         /**
@@ -2150,7 +2197,7 @@ var StudentDataService = function () {
             }
         }
     }, {
-        key: 'endCurrentNodeAndSetCurrentNodeByNodeId',
+        key: "endCurrentNodeAndSetCurrentNodeByNodeId",
 
 
         /**
@@ -2173,7 +2220,7 @@ var StudentDataService = function () {
             }
         }
     }, {
-        key: 'nodeClickLocked',
+        key: "nodeClickLocked",
 
 
         /**
@@ -2184,7 +2231,7 @@ var StudentDataService = function () {
             this.$rootScope.$broadcast('nodeClickLocked', { nodeId: nodeId });
         }
     }, {
-        key: 'CSVToArray',
+        key: "CSVToArray",
 
 
         /**
@@ -2263,7 +2310,7 @@ var StudentDataService = function () {
             return arrData;
         }
     }, {
-        key: 'getTotalScore',
+        key: "getTotalScore",
 
 
         /**
@@ -2282,7 +2329,7 @@ var StudentDataService = function () {
          */
 
     }, {
-        key: 'getProjectCompletion',
+        key: "getProjectCompletion",
         value: function getProjectCompletion() {
 
             // group0 is always the root node of the whole project
@@ -2299,7 +2346,7 @@ var StudentDataService = function () {
          */
 
     }, {
-        key: 'getRunStatus',
+        key: "getRunStatus",
         value: function getRunStatus() {
             return this.runStatus;
         }
@@ -2310,7 +2357,7 @@ var StudentDataService = function () {
          */
 
     }, {
-        key: 'getNextAvailablePlanningNodeId',
+        key: "getNextAvailablePlanningNodeId",
         value: function getNextAvailablePlanningNodeId() {
 
             // used to keep track of the highest planning node number we have found, which is 1-based
@@ -2379,7 +2426,7 @@ var StudentDataService = function () {
          */
 
     }, {
-        key: 'getAnnotations',
+        key: "getAnnotations",
         value: function getAnnotations() {
             var annotations = null;
 
@@ -2397,7 +2444,7 @@ var StudentDataService = function () {
          */
 
     }, {
-        key: 'getLatestComponentStatesByNodeId',
+        key: "getLatestComponentStatesByNodeId",
         value: function getLatestComponentStatesByNodeId(nodeId) {
 
             var latestComponentStates = [];
@@ -2430,7 +2477,7 @@ var StudentDataService = function () {
                                     if (componentState == null) {
                                         /*
                                          * there is no component state for the component so we will
-                                         * create an object that just contains the node id and 
+                                         * create an object that just contains the node id and
                                          * component id
                                          */
                                         componentState = {};

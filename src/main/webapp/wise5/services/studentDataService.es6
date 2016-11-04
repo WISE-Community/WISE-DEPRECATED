@@ -19,6 +19,51 @@ class StudentDataService {
         this.runStatus = null;
 
         this.maxPlanningNodeNumber = 0;
+
+        // listen for node status changes
+        this.$rootScope.$on('nodeStatusesChanged', (event, args) => {
+            // calculate active global annotations and group them by group name as needed
+            this.AnnotationService.calculateActiveGlobalAnnotationGroups();
+
+            // go through the global annotations and see if they can be un-globalized by checking if their criterias have been met.
+            let globalAnnotationGroups = this.AnnotationService.getActiveGlobalAnnotationGroups();
+            globalAnnotationGroups.map((globalAnnotationGroup) => {
+                let globalAnnotations = globalAnnotationGroup.annotations;
+                globalAnnotations.map((globalAnnotation) => {
+                    if (globalAnnotation.data != null && globalAnnotation.data.isGlobal) {
+                        let unGlobalizeConditional = globalAnnotation.data.unGlobalizeConditional;
+                        let unGlobalizeCriteriaArray = globalAnnotation.data.unGlobalizeCriteria;
+                        if (unGlobalizeCriteriaArray != null) {
+                            if (unGlobalizeConditional === "any") {
+                                // at least one criteria in unGlobalizeCriteriaArray must be satisfied in any order before un-globalizing this annotation
+                                let anySatified = false;
+                                for (let i = 0; i < unGlobalizeCriteriaArray.length; i++) {
+                                    let unGlobalizeCriteria = unGlobalizeCriteriaArray[i];
+                                    let unGlobalizeCriteriaResult = this.evaluateCriteria(unGlobalizeCriteria);
+                                    anySatified = anySatified || unGlobalizeCriteriaResult;
+                                }
+                                if (anySatified) {
+                                    globalAnnotation.data.unGlobalizedTimestamp = Date.parse(new Date());  // save when criteria was satisfied
+                                    this.saveAnnotations([globalAnnotation]);  // save changes to server
+                                }
+                            } else if (unGlobalizeConditional === "all") {
+                                // all criteria in unGlobalizeCriteriaArray must be satisfied in any order before un-globalizing this annotation
+                                let allSatisfied = true;
+                                for (let i = 0; i < unGlobalizeCriteriaArray.length; i++) {
+                                    let unGlobalizeCriteria = unGlobalizeCriteriaArray[i];
+                                    let unGlobalizeCriteriaResult = this.evaluateCriteria(unGlobalizeCriteria);
+                                    allSatisfied = allSatisfied && unGlobalizeCriteriaResult;
+                                }
+                                if (allSatisfied) {
+                                    globalAnnotation.data.unGlobalizedTimestamp = Date.parse(new Date());  // save when criteria was satisfied
+                                    this.saveAnnotations([globalAnnotation]);  // save changes to server
+                                }
+                            }
+                        }
+                    }
+                });
+            })
+        });
     }
 
     retrieveStudentData() {
@@ -2245,52 +2290,52 @@ class StudentDataService {
 
         return annotations;
     }
-    
+
     /**
      * Get the latest component states for a node
      * @param nodeId get the component states for the node i
      * @return an array containing the work for the node
      */
     getLatestComponentStatesByNodeId(nodeId) {
-        
+
         var latestComponentStates = [];
 
         if (nodeId) {
             var studentData = this.studentData;
 
             if (studentData) {
-                
+
                 // get the node
                 var node = this.ProjectService.getNodeById(nodeId);
-                
+
                 if (node != null) {
-                    
+
                     // get the components in the node
                     var components = node.components;
-                    
+
                     if (components != null) {
-                        
+
                         // loop through all the components
                         for (var c = 0; c < components.length; c++) {
                             var component = components[c];
-                            
+
                             if (component != null) {
                                 var componentId = component.id;
-                                
+
                                 // get the latest component state for the component
                                 var componentState = this.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
-                                
+
                                 if (componentState == null) {
                                     /*
                                      * there is no component state for the component so we will
-                                     * create an object that just contains the node id and 
+                                     * create an object that just contains the node id and
                                      * component id
                                      */
                                     componentState = {};
                                     componentState.nodeId = nodeId;
                                     componentState.componentId = componentId;
                                 }
-                                
+
                                 latestComponentStates.push(componentState);
                             }
                         }

@@ -12,6 +12,7 @@ $input-action-vertical-offset-richtext: -7px;
 
     @media only screen and (min-width: $layout-breakpoint-xs) {
         padding: 24px 16px;
+        margin-bottom: 32px;
     }
 
     @media only screen and (min-width: $layout-breakpoint-sm) {
@@ -29,7 +30,7 @@ $input-action-vertical-offset-richtext: -7px;
 }
 
 .node-content {
-    padding: 0 0 24px;
+    padding: 0 0 48px;
     background-color: #ffffff;
     border-radius: $button-border-radius;
 

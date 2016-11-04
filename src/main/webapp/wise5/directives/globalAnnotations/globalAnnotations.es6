@@ -5,77 +5,64 @@ class GlobalAnnotationsController {
                 $rootScope,
                 $scope,
                 $translate,
-                AnnotationService,
-                StudentDataService) {
+                AnnotationService) {
         this.$mdDialog = $mdDialog;
         this.$rootScope = $rootScope;
         this.$scope = $scope;
         this.$translate = $translate;
         this.AnnotationService = AnnotationService;
-        this.StudentDataService = StudentDataService;
+
+        this.active = false;
+
+        this.$onInit = () => {
+            this.setModel();
+        }
+
+        // list for new annotations or updates
+        this.$scope.$on('annotationSavedToServer', (event, args) => {
+            this.setModel();
+        });
+
+        // listen for node status changes
+        this.$rootScope.$on('nodeStatusesChanged', (event, args) => {
+            this.setModel();
+        });
 
         // listen for the display global annotation event
         this.$rootScope.$on('displayGlobalAnnotations', (event, args) => {
             this.show(event);
         });
-
-        this.$scope.$on('nodeStatusesChanged', (event, args) => {
-            // calculate active global annotations and group them by group name as needed
-            this.AnnotationService.calculateActiveGlobalAnnoationGroups();
-
-            // go through the global annotations and see if they can be un-globalized by checking if their criterias have been met.
-            let globalAnnotationGroups = this.AnnotationService.getActiveGlobalAnnotationGroups();
-            globalAnnotationGroups.map((globalAnnotationGroup) => {
-                let globalAnnotations = globalAnnotationGroup.annotations;
-                globalAnnotations.map((globalAnnotation) => {
-                    if (globalAnnotation.data != null && globalAnnotation.data.isGlobal) {
-                        let unGlobalizeConditional = globalAnnotation.data.unGlobalizeConditional;
-                        let unGlobalizeCriteriaArray = globalAnnotation.data.unGlobalizeCriteria;
-                        if (unGlobalizeCriteriaArray != null) {
-                            if (unGlobalizeConditional === "any") {
-                                // at least one criteria in unGlobalizeCriteriaArray must be satisfied in any order before un-globalizing this annotation
-                                let anySatified = false;
-                                for (let i = 0; i < unGlobalizeCriteriaArray.length; i++) {
-                                    let unGlobalizeCriteria = unGlobalizeCriteriaArray[i];
-                                    let unGlobalizeCriteriaResult = this.StudentDataService.evaluateCriteria(unGlobalizeCriteria);
-                                    anySatified = anySatified || unGlobalizeCriteriaResult;
-                                }
-                                if (anySatified) {
-                                    globalAnnotation.data.unGlobalizedTimestamp = Date.parse(new Date());  // save when criteria was satisfied
-                                    this.StudentDataService.saveAnnotations([globalAnnotation]);  // save changes to server
-                                }
-                            } else if (unGlobalizeConditional === "all") {
-                                // all criteria in unGlobalizeCriteriaArray must be satisfied in any order before un-globalizing this annotation
-                                let allSatified = true;
-                                for (let i = 0; i < unGlobalizeCriteriaArray.length; i++) {
-                                    let unGlobalizeCriteria = unGlobalizeCriteriaArray[i];
-                                    let unGlobalizeCriteriaResult = this.StudentDataService.evaluateCriteria(unGlobalizeCriteria);
-                                    allSatified = allSatified && unGlobalizeCriteriaResult;
-                                }
-                                if (allSatified) {
-                                    globalAnnotation.data.unGlobalizedTimestamp = Date.parse(new Date());  // save when criteria was satisfied
-                                    this.StudentDataService.saveAnnotations([globalAnnotation]);  // save changes to server
-                                }
-                            }
-                        }
-                    }
-                });
-            })
-        });
     };
 
+    setModel() {
+        let activeGlobalAnnotationGroups = this.AnnotationService.getActiveGlobalAnnotationGroups();
+
+        if (activeGlobalAnnotationGroups.length) {
+            this.visible = true;
+        } else {
+            this.visible = false;
+            this.$mdDialog.hide();
+        }
+    }
+
     show($event) {
-        let latestGlobalAnnotationGroup = this.getLatestGlobalAnnotationGroup();
         //this.$translate(['itemLocked', 'ok']).then((translations) => {
             this.$mdDialog.show({
                 targetEvent: $event,
                 template:
                     `<md-dialog aria-label="Global Feedback Dialog">
-                        <md-dialog-content class="md-dialog-content">
-                            <div ng-repeat="globalAnnotation in latestGlobalAnnotationGroup.annotations">
-                                <div ng-if="globalAnnotation.type == 'autoScore'">Score: {{globalAnnotation.data.value}}</div>
-                                <compile ng-if="globalAnnotation.type == 'autoComment'" data="globalAnnotation.data.value"></compile>
+                        <!--<md-toolbar md-theme="light">
+                            <div class="md-toolbar-tools">
+                                <h2>Feedback</h2>
+                                <span flex></span>
+                                <md-button class="md-icon-button" ng-click="close()">
+                                    <md-icon aria-label="Close dialog"> close </md-icon>
+                                </md-button>
                             </div>
+                        </md-toolbar>-->
+                        <md-dialog-content class="md-dialog-content">
+                            <h2 class="md-title">Feedback</h2>
+                            <global-annotations-list></global-annotations-list>
                         </md-dialog-content>
                         <md-dialog-actions>
                             <md-button ng-click="close()" class="md-primary">
@@ -83,38 +70,17 @@ class GlobalAnnotationsController {
                             </md-button>
                         </md-dialog-actions>
                     </md-dialog>`,
-                controller: GlobalAnnotationsDialogController,
-                locals: {
-                    latestGlobalAnnotationGroup: latestGlobalAnnotationGroup
-                }
+                controller: GlobalAnnotationsDialogController
             });
 
-            function GlobalAnnotationsDialogController($scope, $mdDialog, latestGlobalAnnotationGroup) {
-                $scope.latestGlobalAnnotationGroup = latestGlobalAnnotationGroup;
-
+            function GlobalAnnotationsDialogController($scope, $mdDialog) {
                 $scope.close = function() {
                     $mdDialog.hide();
                 }
             }
 
-            GlobalAnnotationsDialogController.$inject = ["$scope", "$mdDialog", "latestGlobalAnnotationGroup"];
+            GlobalAnnotationsDialogController.$inject = ["$scope", "$mdDialog"];
         //})
-    }
-
-    /**
-     * Return an array containing active annotations
-     */
-    getLatestGlobalAnnotationGroup() {
-        let latest = null;
-
-        let annotations = this.AnnotationService.getActiveGlobalAnnotationGroups();
-        let total = annotations.length;
-
-        if (total) {
-            latest = annotations[total - 1];
-        }
-
-        return latest;
     }
 }
 
@@ -123,12 +89,18 @@ GlobalAnnotationsController.$inject = [
     '$rootScope',
     '$scope',
     '$translate',
-    'AnnotationService',
-    'StudentDataService'
+    'AnnotationService'
 ];
 
 const GlobalAnnotations = {
     bindings: {},
+    template:
+        `<md-button class="md-fab md-fab-bottom-right animate-fade"
+                    aria-label="View Messages"
+                    ng-if="$ctrl.visible && !$ctrl.active" ng-click="$ctrl.show($event)">
+            <md-icon>forum</md-icon>
+            <md-tooltip md-direction="left">Feedback</md-tooltip>
+        </md-button>`,
     controller: GlobalAnnotationsController
 };
 
