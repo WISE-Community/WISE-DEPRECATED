@@ -4,11 +4,13 @@ class GlobalAnnotationsController {
     constructor($mdDialog,
                 $rootScope,
                 $scope,
+                $timeout,
                 $translate,
                 AnnotationService) {
         this.$mdDialog = $mdDialog;
         this.$rootScope = $rootScope;
         this.$scope = $scope;
+        this.$timeout = $timeout;
         this.$translate = $translate;
         this.AnnotationService = AnnotationService;
 
@@ -30,7 +32,12 @@ class GlobalAnnotationsController {
 
         // listen for the display global annotation event
         this.$rootScope.$on('displayGlobalAnnotations', (event, args) => {
-            this.show(event);
+            this.$timeout(() => {
+                /* waiting slightly here to make sure the #globalMsgTrigger is
+                 * shown and $mdDialog can get it's position upon opening
+                 */
+                this.show();
+            }, 300);
         });
     };
 
@@ -44,10 +51,9 @@ class GlobalAnnotationsController {
         }
     }
 
-    show($event) {
+    show() {
         //this.$translate(['itemLocked', 'ok']).then((translations) => {
             this.$mdDialog.show({
-                targetEvent: $event,
                 template:
                     `<md-dialog aria-label="Global Feedback Dialog">
                         <!--<md-toolbar md-theme="light">
@@ -69,6 +75,8 @@ class GlobalAnnotationsController {
                             </md-button>
                         </md-dialog-actions>
                     </md-dialog>`,
+                closeTo: angular.element(document.querySelector('#globalMsgTrigger')),
+                openFrom: angular.element(document.querySelector('#globalMsgTrigger')),
                 controller: GlobalAnnotationsDialogController
             });
 
@@ -87,6 +95,7 @@ GlobalAnnotationsController.$inject = [
     '$mdDialog',
     '$rootScope',
     '$scope',
+    '$timeout',
     '$translate',
     'AnnotationService'
 ];
@@ -94,9 +103,10 @@ GlobalAnnotationsController.$inject = [
 const GlobalAnnotations = {
     bindings: {},
     template:
-        `<md-button class="md-fab md-fab-bottom-right animate-fade"
+        `<md-button id="globalMsgTrigger"
+                    class="md-fab md-fab-bottom-right animate-fade"
                     aria-label="View Messages"
-                    ng-if="$ctrl.visible && !$ctrl.active" ng-click="$ctrl.show($event)">
+                    ng-if="$ctrl.visible && !$ctrl.active" ng-click="$ctrl.show()">
             <md-icon>forum</md-icon>
             <md-tooltip md-direction="left">Feedback</md-tooltip>
         </md-button>`,
