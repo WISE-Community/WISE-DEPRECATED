@@ -6,16 +6,16 @@ class ProjectAssetService {
         this.ConfigService = ConfigService;
         this.Upload = Upload;
         this.projectAssets = {};
-        this.projectAssetURL = this.ConfigService.getConfigParam('projectAssetURL');
         this.projectAssetTotalSizeMax = this.ConfigService.getConfigParam('projectAssetTotalSizeMax');
         this.projectAssetUsagePercentage = 0;
     }
 
     deleteAssetItem(assetItem) {
+        var projectAssetURL = this.ConfigService.getConfigParam('projectAssetURL');
 
         var httpParams = {};
         httpParams.method = 'POST';
-        httpParams.url = this.projectAssetURL;
+        httpParams.url = projectAssetURL;
         httpParams.headers = {'Content-Type': 'application/x-www-form-urlencoded'};
 
         var params = {};
@@ -34,8 +34,9 @@ class ProjectAssetService {
     }
 
     retrieveProjectAssets() {
+        var projectAssetURL = this.ConfigService.getConfigParam('projectAssetURL');
 
-        return this.$http.get(this.projectAssetURL).then((result) => {
+        return this.$http.get(projectAssetURL).then((result) => {
             var projectAssetsJSON = result.data;
             this.projectAssets = projectAssetsJSON;
             return projectAssetsJSON;
@@ -43,9 +44,11 @@ class ProjectAssetService {
     }
 
     uploadAssets(files) {
+        var projectAssetURL = this.ConfigService.getConfigParam('projectAssetURL');
+
         var promises = files.map((file) => {
             return this.Upload.upload({
-                url: this.projectAssetURL,
+                url: projectAssetURL,
                 fields: {
                 },
                 file: file

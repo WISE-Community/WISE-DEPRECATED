@@ -103,55 +103,6 @@ class VLEController {
             this.StudentDataService.updateNodeStatuses();
         });
 
-        // listen for the display global annotation event
-        this.$scope.$on('displayGlobalAnnotations', (event, args) => {
-            this.showGlobalAnnotations();
-        });
-
-        this.$rootScope.$on('nodeStatusesChanged', (event, args) => {
-            // calculate active global annotations and group them by group name as needed
-            this.AnnotationService.calculateActiveGlobalAnnoationGroups();
-
-            // go through the global annotations and see if they can be un-globalized by checking if their criterias have been met.
-            let globalAnnotationGroups = this.AnnotationService.getActiveGlobalAnnotationGroups();
-            globalAnnotationGroups.map((globalAnnotationGroup) => {
-                let globalAnnotations = globalAnnotationGroup.annotations;
-                globalAnnotations.map((globalAnnotation) => {
-                    if (globalAnnotation.data != null && globalAnnotation.data.isGlobal) {
-                        let unGlobalizeConditional = globalAnnotation.data.unGlobalizeConditional;
-                        let unGlobalizeCriteriaArray = globalAnnotation.data.unGlobalizeCriteria;
-                        if (unGlobalizeCriteriaArray != null) {
-                            if (unGlobalizeConditional === "any") {
-                                // at least one criteria in unGlobalizeCriteriaArray must be satisfied in any order before un-globalizing this annotation
-                                let anySatified = false;
-                                for (let i = 0; i < unGlobalizeCriteriaArray.length; i++) {
-                                    let unGlobalizeCriteria = unGlobalizeCriteriaArray[i];
-                                    let unGlobalizeCriteriaResult = this.StudentDataService.evaluateCriteria(unGlobalizeCriteria);
-                                    anySatified = anySatified || unGlobalizeCriteriaResult;
-                                }
-                                if (anySatified) {
-                                    globalAnnotation.data.unGlobalizedTimestamp = Date.parse(new Date());  // save when criteria was satisfied
-                                    this.StudentDataService.saveAnnotations([globalAnnotation]);  // save changes to server
-                                }
-                            } else if (unGlobalizeConditional === "all") {
-                                // all one criteria in unGlobalizeCriteriaArray must be satisfied in any order before un-globalizing this annotation
-                                let allSatified = true;
-                                for (let i = 0; i < unGlobalizeCriteriaArray.length; i++) {
-                                    let unGlobalizeCriteria = unGlobalizeCriteriaArray[i];
-                                    let unGlobalizeCriteriaResult = this.StudentDataService.evaluateCriteria(unGlobalizeCriteria);
-                                    allSatified = allSatified && unGlobalizeCriteriaResult;
-                                }
-                                if (allSatified) {
-                                    globalAnnotation.data.unGlobalizedTimestamp = Date.parse(new Date());  // save when criteria was satisfied
-                                    this.StudentDataService.saveAnnotations([globalAnnotation]);  // save changes to server
-                                }
-                            }
-                        }
-                    }
-                });
-            })
-        });
-
         // listen for the pause screen event
         this.$scope.$on('pauseScreen', (event, args) => {
             this.pauseScreen();
@@ -501,27 +452,6 @@ class VLEController {
         if (goToNodeId != null) {
             this.StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(goToNodeId);
         }
-    }
-
-    /**
-     * Return an array containing active annotations
-     */
-    getActiveGlobalAnnotationGroups() {
-        return this.AnnotationService.getActiveGlobalAnnotationGroups();
-    }
-
-    /**
-     * Shows the global annotations popup
-     */
-    showGlobalAnnotations() {
-        this.isGlobalAnnotationsDisplayed = true;
-    }
-
-    /**
-     * Hides the global annotations popup
-     */
-    hideGlobalAnnotations() {
-        this.isGlobalAnnotationsDisplayed = false;
     }
 
     /**

@@ -1100,7 +1100,7 @@ class ProjectService {
                         if (nodeId === targetId) {
                             result = true;
                         }
-                        
+
                         if (this.isNodeDescendentOfGroup(node, targetNode)) {
                             result = true;
                         }
@@ -3108,19 +3108,19 @@ class ProjectService {
      * @param nodeId the node id of the group to create the node in
      */
     createNodeInside(node, nodeId) {
-        
+
         if (nodeId == 'inactiveNodes') {
             // add the node to the inactive nodes
-            
+
             // add the node to the inactive nodes
             this.addInactiveNode(node);
-            
+
             // add the node to our mapping of node id to node
             this.setIdToNode(node.id, node);
             this.setIdToElement(node.id, node);
         } else {
             // add the node to the active nodes
-            
+
             // add the node to the project
             this.addNode(node);
 
@@ -3144,15 +3144,15 @@ class ProjectService {
 
         if (this.isInactive(nodeId)) {
             // we are adding the node after a node that is inactive
-            
+
             // add the node to the inactive nodes
             this.addInactiveNode(node, nodeId);
-            
+
             this.setIdToNode(node.id, node);
             this.setIdToElement(node.id, node);
         } else {
             // we are adding the node after a node that is active
-            
+
             // add the node to the project
             this.addNode(node);
 
@@ -3769,13 +3769,13 @@ class ProjectService {
                 }
             }
         }
-        
+
         // get all the inactive node ids
         var inactiveNodeIds = this.getInactiveNodeIds();
-        
+
         for (var i = 0; i < inactiveNodeIds.length; i++) {
             var inactiveNodeId = inactiveNodeIds[i];
-            
+
             // get the number from the node id e.g. the number of 'node2' would be 2
             var nodeIdNumber = inactiveNodeId.replace('node', '');
 
@@ -3823,33 +3823,33 @@ class ProjectService {
 
         return nodeIds;
     }
-    
+
     /**
      * Get all the node ids from inactive steps
      * @returns an array with all the inactive node ids
      */
     getInactiveNodeIds() {
-        
+
         var nodeIds = [];
-        
+
         var inactiveNodes = this.project.inactiveNodes;
-        
+
         if (inactiveNodes != null) {
-            
+
             // loop through all the inactive nodes
             for (var n = 0; n < inactiveNodes.length; n++) {
                 var inactiveNode = inactiveNodes[n];
-                
+
                 if (inactiveNode != null) {
                     var nodeId = inactiveNode.id;
-                    
+
                     if (nodeId != null) {
                         nodeIds.push(nodeId);
                     }
                 }
             }
         }
-        
+
         return nodeIds;
     }
 
@@ -4457,16 +4457,16 @@ class ProjectService {
                 }
             }
         }
-        
+
         // get all the inactive nodes
         var inactiveNodes = this.project.inactiveNodes;
-        
+
         if (inactiveNodes != null) {
-            
+
             // loop through all the inactive nodes
             for (var i = 0; i < inactiveNodes.length; i++) {
                 var inactiveNode = inactiveNodes[i];
-                
+
                 if (inactiveNode != null) {
                     if (nodeId === inactiveNode.id) {
                         // we have found the inactive node we want to remove
@@ -5909,7 +5909,7 @@ class ProjectService {
                     // set the node into the mapping data structures
                     this.setIdToNode(nodeId, node);
                     this.setIdToElement(nodeId, node);
-                    
+
                     this.inactiveNodes.push(node);
                 }
             }
@@ -6309,12 +6309,12 @@ class ProjectService {
 
                 if (nodeToRemoveTransitions.length == 0) {
                     /*
-                     * The group we are moving is the last group in the project 
+                     * The group we are moving is the last group in the project
                      * and does not have any transitions. We will loop through
-                     * all the nodes that transition into this group and remove 
+                     * all the nodes that transition into this group and remove
                      * those transitions.
                      */
-                    
+
                     // get child ids of the group that comes before the group we are moving
                     var childIds = groupThatTransitionsToGroupWeAreMoving.ids;
 
@@ -6340,10 +6340,10 @@ class ProjectService {
 
                                         if (groupIdWeAreMoving === toNodeIdParentGroupId) {
                                             // the transition is to a child in the group we are moving
-                                            
+
                                             // remove the transition
                                             transitionsFromChild.splice(tfc, 1);
-                                            
+
                                             /*
                                              * move the counter back one because we have just removed an
                                              * element from the array
@@ -6527,9 +6527,9 @@ class ProjectService {
                 if (componentService != null && componentService.displayAnnotation != null) {
                     // check if we need to display the annotation to the student
                     result = componentService.displayAnnotation(component, annotation);
-                    if (annotation.data != null && annotation.data.isGlobal && annotation.data.isPopup) {
+                    /*if (annotation.data != null && annotation.data.isGlobal && annotation.data.isPopup) {
                         result = false;  // don't display annotation inline; it will be displayed in a popup
-                    }
+                    }*/
                 }
             }
         }
@@ -6540,23 +6540,50 @@ class ProjectService {
     /**
      * Get the global annotation properties for the specified component and score, if exists.
      * @param component the component content
-     * @param score the score we want the annotation properties for
+     * @param previousScore the previousScore we want the annotation properties for, can be null, which means we just want to look at
+     * the currentScore
+     * @param currentScore the currentScore we want the annotation properties for
      * @returns the annotation properties for the given score
      */
-    getGlobalAnnotationGroupByScore(component, score) {
+    getGlobalAnnotationGroupByScore(component, previousScore, currentScore) {
 
         let annotationGroup = null;
 
         if (component.globalAnnotationSettings != null && component.globalAnnotationSettings.globalAnnotationGroups != null) {
             let globalAnnotationGroups = component.globalAnnotationSettings.globalAnnotationGroups;
+
             for (let g = 0; g < globalAnnotationGroups.length; g++) {
                 let globalAnnotationGroup = globalAnnotationGroups[g];
-                if (globalAnnotationGroup.enableCriteria != null && globalAnnotationGroup.enableCriteria.score != null) {
-                    let enableCriteriaScoreArray = globalAnnotationGroup.enableCriteria.score;
-                    for (let s = 0; s < enableCriteriaScoreArray.length; s++) {
-                        let enableCriteriaScore = enableCriteriaScoreArray[s];
-                        if (enableCriteriaScore == score) {
-                            annotationGroup = globalAnnotationGroup;
+
+                if (globalAnnotationGroup.enableCriteria != null && globalAnnotationGroup.enableCriteria.scoreSequence != null) {
+                    let scoreSequence = globalAnnotationGroup.enableCriteria.scoreSequence;
+
+                    if (scoreSequence != null) {
+                        /*
+                         * get the expected previous score and current score
+                         * that will satisfy the rule
+                         */
+                        let previousScoreMatch = scoreSequence[0];
+                        let currentScoreMatch = scoreSequence[1];
+
+                        if (previousScore == null) {
+                            // just matching on the current score
+                            if (previousScoreMatch == "" &&
+                                currentScore.toString().match("[" + currentScoreMatch + "]")) {
+                                // found a match
+                                annotationGroup = globalAnnotationGroup;
+                                break;
+                            }
+                        } else {
+                            if (previousScore.toString().match("[" + previousScoreMatch + "]") &&
+                                currentScore.toString().match("[" + currentScoreMatch + "]")) {
+                                /*
+                                 * the previous score and current score match the
+                                 * expected scores so we have found the rule we want
+                                 */
+                                annotationGroup = globalAnnotationGroup;
+                                break;
+                            }
                         }
                     }
                 }
@@ -6722,7 +6749,7 @@ class ProjectService {
             "inactiveNodes": []
         };
     }
-    
+
     /**
      * Check if a node generates work by looking at all of its components
      * @param nodeId the node id
@@ -6730,26 +6757,26 @@ class ProjectService {
      */
     nodeHasWork(nodeId) {
         var result = false;
-        
+
         if (nodeId != null) {
-            
+
             // get the node content object
             var nodeContent = this.getNodeContentByNodeId(nodeId);
-            
+
             if (nodeContent != null) {
                 var components = nodeContent.components;
-                
+
                 if (components != null) {
-                    
+
                     // loop through all the components in the node
                     for (var c = 0; c < components.length; c++) {
                         var component = components[c];
-                        
+
                         if (component != null) {
-                            
+
                             // check if the component generates work
                             var componentHasWork = this.componentHasWork(component);
-                            
+
                             if (componentHasWork) {
                                 return true;
                             }
@@ -6758,10 +6785,10 @@ class ProjectService {
                 }
             }
         }
-        
+
         return result;
     }
-    
+
     /**
      * Check if a component generates work
      * @param nodeId the node id
@@ -6770,27 +6797,27 @@ class ProjectService {
      */
     componentHasWorkByNodeIdAndComponentId(nodeId, componentId) {
         var result = false;
-        
+
         if (nodeId != null) {
-            
+
             // get the node content object
             var nodeContent = this.getNodeContentByNodeId(nodeId);
-            
+
             if (nodeContent != null) {
                 var components = nodeContent.components;
-                
+
                 if (components != null) {
-                    
+
                     // loop through the components
                     for (var c = 0; c < components.length; c++) {
                         var component = components[c];
-                        
+
                         if (component != null && componentId == component.id) {
                             // we have found the component we are looking for
-                            
+
                             // check if the component generates work
                             var componentHasWork = this.componentHasWork(component);
-                            
+
                             if (componentHasWork) {
                                 // the component generates work
                                 return true;
@@ -6800,10 +6827,10 @@ class ProjectService {
                 }
             }
         }
-        
+
         return result;
     }
-    
+
     /**
      * Check if a component generates work
      * @param component check if this component generates work
@@ -6811,50 +6838,50 @@ class ProjectService {
      */
     componentHasWork(component) {
         var result = false;
-        
+
         if (component != null) {
             var componentType = component.type;
-            
+
             // get the component service
             var componentService = this.getComponentService(componentType);
-            
+
             if (componentService != null) {
                 // check if the component generates work
                 result = componentService.componentHasWork(component);
             }
         }
-        
+
         return result;
     }
-    
+
     /**
      * Get a component service
      * @param componentType the component type
      * @return the component service
      */
     getComponentService(componentType) {
-        
+
         var componentService = null;
-        
+
         if (componentType != null) {
-            
+
             // get the component service name e.g. 'OpenResponseService'
             var componentServiceName = componentType + 'Service';
-            
+
             /*
              * check if we have previously retrieved the component service.
              * if have previously retrieved the component service it will
              * be in the componentServices map
              */
             componentService = this.componentServices[componentServiceName];
-            
+
             if (componentService == null) {
                 /*
                  * we have not previously retrieved the component service so
                  * we will get it now
                  */
                 componentService = this.$injector.get(componentServiceName);
-                
+
                 /*
                  * save the component service to the map so we can easily
                  * retrieve it later
@@ -6862,29 +6889,29 @@ class ProjectService {
                 this.componentServices[componentServiceName] = componentService;
             }
         }
-        
+
         return componentService;
     }
-    
+
     /**
      * Check if a node is inactive. At the moment only step nodes can be
      * inactive.
      * @param nodeId the node id of the step
      */
     isInactive(nodeId) {
-        
+
         var result = false;
-        
+
         if (nodeId != null && this.project.inactiveNodes != null) {
-            
+
             // loop through all the inactive nodes
             for (var i = 0; i < this.project.inactiveNodes.length; i++) {
-                
+
                 // get an inactive node
                 var inactiveNode = this.project.inactiveNodes[i];
-                
+
                 if (inactiveNode != null) {
-                    
+
                     if (nodeId === inactiveNode.id) {
                         /*
                          * we have found the node id we are looking for which
@@ -6896,7 +6923,7 @@ class ProjectService {
                 }
             }
         }
-        
+
         return result;
     }
 }

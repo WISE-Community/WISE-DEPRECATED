@@ -36,6 +36,10 @@ var _globalAnnotations = require('./globalAnnotations/globalAnnotations');
 
 var _globalAnnotations2 = _interopRequireDefault(_globalAnnotations);
 
+var _globalAnnotationsList = require('./globalAnnotationsList/globalAnnotationsList');
+
+var _globalAnnotationsList2 = _interopRequireDefault(_globalAnnotationsList);
+
 var _listenForDeleteKeypress = require('./listenForDeleteKeypress/listenForDeleteKeypress');
 
 var _listenForDeleteKeypress2 = _interopRequireDefault(_listenForDeleteKeypress);
@@ -60,6 +64,7 @@ Components.component('componentGrading', _componentGrading2.default);
 Components.component('disableDeleteKeypress', _disableDeleteKeypress2.default);
 Components.component('draggable', _draggable2.default);
 Components.component('globalAnnotations', _globalAnnotations2.default);
+Components.component('globalAnnotationsList', _globalAnnotationsList2.default);
 Components.component('listenForDeleteKeypress', _listenForDeleteKeypress2.default);
 Components.component('possibleScore', _possibleScore2.default);
 Components.component('wiselink', _wiselink2.default);

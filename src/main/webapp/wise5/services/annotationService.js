@@ -761,13 +761,13 @@ var AnnotationService = function () {
             return this.activeGlobalAnnotationGroups;
         }
     }, {
-        key: 'calculateActiveGlobalAnnoationGroups',
+        key: 'calculateActiveGlobalAnnotationGroups',
 
 
         /**
          * Calculates the active global annotations and groups them by annotation group name
          */
-        value: function calculateActiveGlobalAnnoationGroups() {
+        value: function calculateActiveGlobalAnnotationGroups() {
             this.activeGlobalAnnotationGroups = [];
 
             for (var a = 0; a < this.annotations.length; a++) {
@@ -779,7 +779,7 @@ var AnnotationService = function () {
                             var sameGroupFound = false;
                             for (var ag = 0; ag < this.activeGlobalAnnotationGroups.length; ag++) {
                                 var activeGlobalAnnotationGroup = this.activeGlobalAnnotationGroups[ag];
-                                if (activeGlobalAnnotationGroup.annotationGroupName == annotation.data.annotationGroupName) {
+                                if (activeGlobalAnnotationGroup.annotationGroupName == annotation.data.annotationGroupName + '_' + annotation.data.annotationGroupCreatedTime) {
                                     // push this annotation to the end of the group
                                     activeGlobalAnnotationGroup.annotations.push(annotation);
                                     sameGroupFound = true;
@@ -787,8 +787,11 @@ var AnnotationService = function () {
                             }
                             if (!sameGroupFound) {
                                 var annotationGroup = {
-                                    "annotationGroupName": annotation.data.annotationGroupName,
-                                    "annotations": [annotation]
+                                    "annotationGroupName": annotation.data.annotationGroupName + '_' + annotation.data.annotationGroupCreatedTime,
+                                    "annotations": [annotation],
+                                    "nodeId": annotation.nodeId,
+                                    "componentId": annotation.componentId,
+                                    "serverSaveTime": annotation.serverSaveTime
                                 };
                                 this.activeGlobalAnnotationGroups.push(annotationGroup);
                             }
