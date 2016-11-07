@@ -151,6 +151,15 @@ var OpenResponseService = function (_NodeService) {
                 }
             }
 
+            if (component.completionCriteria != null) {
+                /* 
+                 * there is a special completion criteria authored in this component
+                 * so we will evaluate the completion criteria to see if the student
+                 * has completed this component
+                 */
+                result = this.StudentDataService.isCompletionCriteriaSatisfied(component.completionCriteria);
+            }
+
             return result;
         }
     }, {
