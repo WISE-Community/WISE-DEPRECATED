@@ -41,7 +41,6 @@ class GlobalAnnotationsController {
             this.visible = true;
         } else {
             this.visible = false;
-            this.$mdDialog.hide();
         }
     }
 

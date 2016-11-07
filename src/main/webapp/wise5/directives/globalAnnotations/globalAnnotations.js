@@ -51,7 +51,6 @@ var GlobalAnnotationsController = function () {
                 this.visible = true;
             } else {
                 this.visible = false;
-                this.$mdDialog.hide();
             }
         }
     }, {
