@@ -6540,23 +6540,50 @@ class ProjectService {
     /**
      * Get the global annotation properties for the specified component and score, if exists.
      * @param component the component content
-     * @param score the score we want the annotation properties for
+     * @param previousScore the previousScore we want the annotation properties for, can be null, which means we just want to look at
+     * the currentScore
+     * @param currentScore the currentScore we want the annotation properties for
      * @returns the annotation properties for the given score
      */
-    getGlobalAnnotationGroupByScore(component, score) {
+    getGlobalAnnotationGroupByScore(component, previousScore, currentScore) {
 
         let annotationGroup = null;
 
         if (component.globalAnnotationSettings != null && component.globalAnnotationSettings.globalAnnotationGroups != null) {
             let globalAnnotationGroups = component.globalAnnotationSettings.globalAnnotationGroups;
+
             for (let g = 0; g < globalAnnotationGroups.length; g++) {
                 let globalAnnotationGroup = globalAnnotationGroups[g];
-                if (globalAnnotationGroup.enableCriteria != null && globalAnnotationGroup.enableCriteria.score != null) {
-                    let enableCriteriaScoreArray = globalAnnotationGroup.enableCriteria.score;
-                    for (let s = 0; s < enableCriteriaScoreArray.length; s++) {
-                        let enableCriteriaScore = enableCriteriaScoreArray[s];
-                        if (enableCriteriaScore == score) {
-                            annotationGroup = globalAnnotationGroup;
+
+                if (globalAnnotationGroup.enableCriteria != null && globalAnnotationGroup.enableCriteria.scoreSequence != null) {
+                    let scoreSequence = globalAnnotationGroup.enableCriteria.scoreSequence;
+
+                    if (scoreSequence != null) {
+                        /*
+                         * get the expected previous score and current score
+                         * that will satisfy the rule
+                         */
+                        let previousScoreMatch = scoreSequence[0];
+                        let currentScoreMatch = scoreSequence[1];
+
+                        if (previousScore == null) {
+                            // just matching on the current score
+                            if (previousScoreMatch == "" &&
+                                currentScore.toString().match("[" + currentScoreMatch + "]")) {
+                                // found a match
+                                annotationGroup = globalAnnotationGroup;
+                                break;
+                            }
+                        } else {
+                            if (previousScore.toString().match("[" + previousScoreMatch + "]") &&
+                                currentScore.toString().match("[" + currentScoreMatch + "]")) {
+                                /*
+                                 * the previous score and current score match the
+                                 * expected scores so we have found the rule we want
+                                 */
+                                annotationGroup = globalAnnotationGroup;
+                                break;
+                            }
                         }
                     }
                 }

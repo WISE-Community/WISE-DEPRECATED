@@ -711,23 +711,36 @@ class OpenResponseController {
                         if (score != null) {
 
                             // create the auto score annotation
-                            var autoScoreAnnotationData = {};
+                            let autoScoreAnnotationData = {};
                             autoScoreAnnotationData.value = score;
                             autoScoreAnnotationData.maxAutoScore = this.ProjectService.getMaxScoreForComponent(this.nodeId, this.componentId);
                             autoScoreAnnotationData.concepts = concepts;
                             autoScoreAnnotationData.autoGrader = 'cRater';
 
-                            var autoScoreAnnotation = this.createAutoScoreAnnotation(autoScoreAnnotationData);
+                            let autoScoreAnnotation = this.createAutoScoreAnnotation(autoScoreAnnotationData);
 
                             let annotationGroupForScore = null;
 
+                            // get the previous score and comment annotations
+                            let latestAnnotations = this.$scope.$parent.nodeController.getLatestComponentAnnotations(this.componentId);
+
+                            let previousScore = null;
+
+                            if (latestAnnotations != null && latestAnnotations.score != null &&
+                                latestAnnotations.score.data != null) {
+
+                                // get the previous score annotation value
+                                previousScore = latestAnnotations.score.data.value;
+                            }
+
                             if (this.componentContent.enableGlobalAnnotations && this.componentContent.globalAnnotationSettings != null) {
+
                                 let globalAnnotationMaxCount = 0;
                                 if (this.componentContent.globalAnnotationSettings.globalAnnotationMaxCount != null) {
                                     globalAnnotationMaxCount = this.componentContent.globalAnnotationSettings.globalAnnotationMaxCount;
                                 }
                                 // get the annotation properties for the score that the student got.
-                                annotationGroupForScore = this.ProjectService.getGlobalAnnotationGroupByScore(this.componentContent, score);
+                                annotationGroupForScore = this.ProjectService.getGlobalAnnotationGroupByScore(this.componentContent, previousScore, score);
 
                                 // check if we need to apply this globalAnnotationSetting to this annotation: we don't need to if we've already reached the maxCount
                                 if (annotationGroupForScore != null) {
@@ -770,19 +783,6 @@ class OpenResponseController {
                                  * this step has multiple attempt scoring rules and this is
                                  * a subsequent submit
                                  */
-
-                                // get the previous score and comment annotations
-                                var latestAnnotations = this.$scope.$parent.nodeController.getLatestComponentAnnotations(this.componentId);
-
-                                var previousScore = null;
-
-                                if (latestAnnotations != null && latestAnnotations.score != null &&
-                                    latestAnnotations.score.data != null) {
-
-                                    // get the previous score annotation value
-                                    previousScore = latestAnnotations.score.data.value;
-                                }
-
                                 // get the feedback based upon the previous score and current score
                                 autoComment = this.CRaterService.getMultipleAttemptCRaterFeedbackTextByScore(this.componentContent, previousScore, score);
                             } else {
@@ -808,18 +808,6 @@ class OpenResponseController {
                                 componentState.annotations.push(autoCommentAnnotation);
                             }
                             if (this.componentContent.enableNotifications) {
-                                // get the previous score and comment annotations
-                                var latestAnnotations = this.$scope.$parent.nodeController.getLatestComponentAnnotations(this.componentId);
-
-                                var previousScore = null;
-
-                                if (latestAnnotations != null && latestAnnotations.score != null &&
-                                    latestAnnotations.score.data != null) {
-
-                                    // get the previous score annotation value
-                                    previousScore = latestAnnotations.score.data.value;
-                                }
-
                                 // get the notification properties for the score that the student got.
                                 let notificationForScore = this.ProjectService.getNotificationByScore(this.componentContent, previousScore, score);
 
