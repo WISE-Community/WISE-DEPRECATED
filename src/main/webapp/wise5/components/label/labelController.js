@@ -406,6 +406,73 @@ var LabelController = function () {
          * when the student exits the parent node.
          */
         this.$scope.$on('exitNode', angular.bind(this, function (event, args) {}));
+
+        /**
+         * The student has changed the file input
+         * @param element the file input element
+         */
+        this.$scope.fileUploadChanged = function (element) {
+            var _this2 = this;
+
+            // get the current background image if any
+            var backgroundImage = this.labelController.getBackgroundImage();
+
+            var overwrite = true;
+
+            if (backgroundImage != null && backgroundImage != '') {
+                /*
+                 * there is an existing background image so we will ask the
+                 * student if they want to change it
+                 */
+                var answer = confirm("Are you sure you want to change the background image?");
+
+                if (answer) {
+                    // the student wants to change the background image
+                    overwrite = true;
+                } else {
+                    // the student does not want to change the background image
+                    overwrite = false;
+
+                    /* 
+                     * clear the input file value otherwise it will show the
+                     * name of the file they recently selected but decided not
+                     * to use because they decided not to change the background
+                     * image
+                     */
+                    element.value = null;
+                }
+            }
+
+            if (overwrite) {
+                // we will change the current background
+
+                // get the files from the file input element
+                var files = element.files;
+
+                if (files != null && files.length > 0) {
+
+                    // upload the file to the studentuploads folder
+                    this.labelController.StudentAssetService.uploadAsset(files[0]).then(function (unreferencedAsset) {
+
+                        // make a referenced copy of the unreferenced asset
+                        _this2.labelController.StudentAssetService.copyAssetForReference(unreferencedAsset).then(function (referencedAsset) {
+
+                            if (referencedAsset != null) {
+                                // get the url of the referenced asset
+                                var imageURL = referencedAsset.url;
+
+                                if (imageURL != null && imageURL != '') {
+
+                                    // set the referenced asset as the background image
+                                    _this2.labelController.setBackgroundImage(imageURL);
+                                    _this2.labelController.studentDataChanged();
+                                }
+                            }
+                        });
+                    });
+                }
+            }
+        };
     }
 
     _createClass(LabelController, [{
@@ -646,7 +713,7 @@ var LabelController = function () {
          * Called when the student changes their work
          */
         value: function studentDataChanged() {
-            var _this2 = this;
+            var _this3 = this;
 
             /*
              * set the dirty flags so we will know we need to save or submit the
@@ -675,8 +742,8 @@ var LabelController = function () {
             // create a component state populated with the student data
             this.createComponentState(action).then(function (componentState) {
 
-                _this2.processLatestSubmit();
-                _this2.$scope.$emit('componentStudentDataChanged', { componentId: componentId, componentState: componentState });
+                _this3.processLatestSubmit();
+                _this3.$scope.$emit('componentStudentDataChanged', { componentId: componentId, componentState: componentState });
             });
         }
     }, {
@@ -969,7 +1036,7 @@ var LabelController = function () {
     }, {
         key: 'attachStudentAsset',
         value: function attachStudentAsset(studentAsset) {
-            var _this3 = this;
+            var _this4 = this;
 
             if (studentAsset != null) {
                 this.StudentAssetService.copyAssetForReference(studentAsset).then(function (copiedAsset) {
@@ -979,8 +1046,8 @@ var LabelController = function () {
                             iconURL: copiedAsset.iconURL
                         };
 
-                        _this3.attachments.push(attachment);
-                        _this3.studentDataChanged();
+                        _this4.attachments.push(attachment);
+                        _this4.studentDataChanged();
                     }
                 });
             }
@@ -1131,12 +1198,29 @@ var LabelController = function () {
             // listen for the mouse down event
             canvas.on('mouse:down', angular.bind(this, function (options) {
 
+                // get the object that was clicked on if any
+                var activeObject = this.canvas.getActiveObject();
+
+                if (activeObject == null) {
+                    /*
+                     * no objects in the canvas were clicked. the user clicked
+                     * on a blank area of the canvas so we will unselect any label
+                     * that was selected and turn off edit label mode
+                     */
+                    this.selectedLabel = null;
+                    this.editLabelMode = false;
+                }
+
                 // check if the student is in create label mode
                 if (this.createLabelMode) {
                     /*
                      * the student is in create label mode so we will create a new label
                      * where they have clicked
                      */
+
+                    // turn off create label mode and hide the cancel button
+                    this.createLabelMode = false;
+                    this.isCancelButtonVisible = false;
 
                     var event = options.e;
 
@@ -1158,13 +1242,15 @@ var LabelController = function () {
                         // add the label to the canvas
                         this.addLabelToCanvas(this.canvas, newLabel);
 
+                        /* 
+                         * make the new label selected so that the student can edit
+                         * the text
+                         */
+                        this.selectLabel(newLabel);
+
                         // notify others that the student data has changed
                         this.studentDataChanged();
                     }
-
-                    // turn off create label mode and hide the cancel button
-                    this.createLabelMode = false;
-                    this.isCancelButtonVisible = false;
                 }
             }));
 
@@ -1400,6 +1486,7 @@ var LabelController = function () {
                 originX: 'center',
                 originY: 'center',
                 hasControls: false,
+                borderColor: 'red',
                 hasBorders: true,
                 selectable: true
             });
@@ -1423,8 +1510,11 @@ var LabelController = function () {
                 backgroundColor: color,
                 width: 100,
                 hasControls: false,
-                hasBorders: false,
-                selectable: true
+                hasBorders: true,
+                borderColor: 'red',
+                selectable: true,
+                cursorWidth: 0,
+                editable: false
             });
 
             // give the circle a reference to the line and text elements
@@ -1452,6 +1542,7 @@ var LabelController = function () {
          * and Fabric itext elements
          */
         value: function addLabelToCanvas(canvas, label) {
+            var _this5 = this;
 
             if (canvas != null && label != null) {
 
@@ -1472,18 +1563,84 @@ var LabelController = function () {
 
                     // refresh the canvas
                     canvas.renderAll();
+
+                    circle.on('selected', function () {
+                        /*
+                         * the circle was clicked so we will make the associated
+                         * label selected
+                         */
+                        _this5.selectLabel(label);
+                    });
+
+                    text.on('selected', function () {
+                        /*
+                         * the text was clicked so we will make the associated
+                         * label selected
+                         */
+                        _this5.selectLabel(label);
+                    });
                 }
             }
         }
     }, {
-        key: 'removeLabelFromCanvas',
+        key: 'selectLabel',
 
+
+        /**
+         * Make the label selected which means we will show the UI elements to 
+         * allow the text to be edited and the label to deleted.
+         * @param label the label object
+         */
+        value: function selectLabel(label) {
+
+            // create a reference to the selected label
+            this.selectedLabel = label;
+
+            /*
+             * remember the label text before the student changes it in case the
+             * student wants to cancel any changes they make
+             */
+            this.selectedLabelText = label.text.text;
+
+            // turn on edit label mode
+            this.editLabelMode = true;
+
+            /*
+             * force angular to refresh, otherwise angular will wait until the
+             * user generates another input (such as moving the mouse) before 
+             * refreshing
+             */
+            this.$scope.$apply();
+        }
+
+        /**
+         * The student has changed the label text on the selected label
+         * @param textObject the label's canvas text object
+         * @param text the text string
+         */
+
+    }, {
+        key: 'selectedLabelTextChanged',
+        value: function selectedLabelTextChanged(textObject, text) {
+
+            // set the text into the object
+            textObject.setText(text);
+
+            // notify the controller that the student data has changed
+            this.studentDataChanged();
+
+            // refresh the canvas
+            this.canvas.renderAll();
+        }
 
         /**
          * Remove a label from the canvas
          * @param canvas the canvas
          * @param label the Fabric circle element that represents the label
          */
+
+    }, {
+        key: 'removeLabelFromCanvas',
         value: function removeLabelFromCanvas(canvas, label) {
 
             if (canvas != null && label != null) {
@@ -1966,6 +2123,122 @@ var LabelController = function () {
 
             // the authoring component content has changed so we will save the project
             this.authoringViewComponentChanged();
+        }
+
+        /**
+         * The student clicked the save button in the edit label mode
+         */
+
+    }, {
+        key: 'saveLabelButtonClicked',
+        value: function saveLabelButtonClicked() {
+
+            if (this.selectedLabel != null) {
+                /*
+                 * we do not need to perform any saving of the text since it has
+                 * already been handled by the ng-model for the label text
+                 */
+
+                /*
+                 * remove the reference to the selected label since it will no
+                 * longer be selected
+                 */
+                this.selectedLabel = null;
+
+                // turn off edit label mode
+                this.editLabelMode = false;
+
+                // make the canvas object no longer the active object
+                this.canvas.discardActiveObject();
+            }
+        }
+
+        /**
+         * The student clicked the cancel button in the edit label mode
+         */
+
+    }, {
+        key: 'cancelLabelButtonClicked',
+        value: function cancelLabelButtonClicked() {
+
+            if (this.selectedLabel != null) {
+
+                // get the label text before the student recently made changes to it
+                var selectedLabelText = this.selectedLabelText;
+
+                // revert the label text to what it was before
+                this.selectedLabel.text.setText(selectedLabelText);
+
+                // clear the label text holder
+                this.selectedLabelText = null;
+
+                /*
+                 * remove the reference to the selected label since it will no
+                 * longer be selected
+                 */
+                this.selectedLabel = null;
+
+                // turn off edit label mode
+                this.editLabelMode = false;
+
+                // make the canvas object no longer the active object
+                this.canvas.discardActiveObject();
+
+                // notify others that the student data has changed
+                this.studentDataChanged();
+
+                // refresh the canvas
+                this.canvas.renderAll();
+            }
+        }
+
+        /**
+         * The student clicked the delete button in the edit label mode
+         */
+
+    }, {
+        key: 'deleteLabelButtonClicked',
+        value: function deleteLabelButtonClicked() {
+
+            if (this.selectedLabel != null) {
+
+                // get the text from the label we are going to delete
+                var selectedLabelText = this.selectedLabel.text.text;
+
+                // confirm with the student that they want to delete the label
+                var answer = confirm('Are you sure you want to delete this label?\n\n' + selectedLabelText);
+
+                if (answer) {
+                    // the student is sure they want to delete the label
+
+                    /*
+                     * get the circle from the label since the circle has
+                     * references to the line and text for the label
+                     */
+                    var circle = this.selectedLabel.circle;
+
+                    if (circle != null) {
+
+                        // remove the label from the canvas
+                        this.removeLabelFromCanvas(this.canvas, circle);
+
+                        /*
+                         * remove the reference to the selected label since it will no
+                         * longer be selected
+                         */
+                        this.selectedLabel = null;
+
+                        // turn off edit label mode
+                        this.editLabelMode = false;
+
+                        // make the canvas object no longer the active object
+                        this.canvas.discardActiveObject();
+
+                        // notify others that the student data has changed
+                        this.studentDataChanged();
+                    }
+                }
+            }
         }
     }]);
 

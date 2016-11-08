@@ -25,6 +25,11 @@
                                  ng-model-options='{ debounce: 1000 }'
                                  size='50'/>
         <br/>
+        Allow Student to Upload Image for Background 
+        <input type='checkbox'
+               ng-model='labelController.authoringComponentContent.enableStudentUploadBackground'
+               ng-change='labelController.authoringViewComponentChanged()'/>
+        <br/>
         Can Student Create Labels: <input type='checkbox'
                                           ng-model='labelController.authoringComponentContent.canCreateLabels'
                                           ng-change='labelController.authoringViewComponentChanged()'/>
@@ -152,17 +157,45 @@
         <md-button class="md-raised md-primary"
                    ng-click="labelController.newLabelButtonClicked()"
                    ng-disabled="labelController.isDisabled"
-                   ng-if="labelController.showNewLabelButton()">New Label</md-button>
+                   ng-if="labelController.showNewLabelButton() && !labelController.createLabelMode && labelController.selectedLabel == null">New Label</md-button>
         <span ng-show="labelController.createLabelMode">{{labelController.newLabelMessage}}</span>
         <md-button class="md-raised md-primary"
                    ng-click="labelController.cancelButtonClicked()"
                    ng-disabled="labelController.isDisabled"
                    ng-if="labelController.showCancelButton()">Cancel</md-button>
+        <span ng-show="labelController.editLabelMode">Label Text:</span>
+        <input type="text"
+               id="editLabelTextInput"
+               ng-model="labelController.selectedLabel.text.text"
+               ng-show="labelController.editLabelMode"
+               ng-change="labelController.selectedLabelTextChanged(labelController.selectedLabel.text, labelController.selectedLabel.text.text)"
+               size="50"/>
+        <md-button class="md-raised md-primary"
+                   ng-click="labelController.saveLabelButtonClicked()"
+                   ng-disabled="labelController.isDisabled"
+                   ng-show="labelController.editLabelMode">Save</md-button>
+        <md-button class="md-raised md-primary"
+                   ng-click="labelController.cancelLabelButtonClicked()"
+                   ng-disabled="labelController.isDisabled"
+                   ng-show="labelController.editLabelMode">Cancel</md-button>
+        <md-button class="md-raised md-primary"
+                   ng-click="labelController.deleteLabelButtonClicked()"
+                   ng-disabled="labelController.isDisabled"
+                   ng-show="labelController.editLabelMode">Delete</md-button>
         <md-button class="md-accent md-primary"
                 ng-click='labelController.snipImage($event)'
                 ng-if='labelController.showSnipImageButton()'>
             <md-icon> content_cut </md-icon>  {{ 'addToNotebook' | translate:{label:labelController.notebookConfig.label} }}
         </md-button>
+        <br/>
+        <div ng-show="labelController.componentContent.enableStudentUploadBackground">
+            Upload Background Image:
+            <input type="file"
+                   ng-show="labelController.componentContent.enableStudentUploadBackground"
+                   onchange="angular.element(this).scope().fileUploadChanged(this)"
+                   style="display:inline"/>
+        </div>
+        <br/>
         <div id="canvasParent_{{labelController.canvasId}}">
             <canvas id="{{labelController.canvasId}}" width="800" height="600" style="border:1px solid black;"></canvas>
         </div>
