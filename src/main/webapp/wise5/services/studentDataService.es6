@@ -555,6 +555,8 @@ class StudentDataService {
                 result = this.evaluateIsVisitedCriteria(criteria);
             } else if (functionName === 'isVisitedAfter') {
                 result = this.evaluateIsVisitedAfterCriteria(criteria);
+            } else if (functionName === 'isRevisedAfter') {
+                result = this.evaluateIsRevisedAfterCriteria(criteria);
             } else if (functionName === 'isVisitedAndRevisedAfter') {
                 result = this.evaluateIsVisitedAndRevisedAfterCriteria(criteria);
             } else if (functionName === 'isCompleted') {
@@ -814,6 +816,33 @@ class StudentDataService {
         }
 
         return isVisitedAfter;
+    }
+
+    /**
+     * Check if the isRevisedAfter criteria was satisfied
+     * @param criteria the isRevisedAfter criteria
+     * @returns whether the specified node&component was revisted after the criteriaCreatedTimestamp
+     */
+    evaluateIsRevisedAfterCriteria(criteria) {
+
+        let isRevisedAfter = false;
+
+        if (criteria != null && criteria.params != null) {
+
+            // get the node id we want to check if was visited
+            let isRevisedAfterNodeId = criteria.params.isRevisedAfterNodeId;
+            let isRevisedAfterComponentId = criteria.params.isRevisedAfterComponentId;
+            let criteriaCreatedTimestamp = criteria.params.criteriaCreatedTimestamp;
+
+            // the student has entered the node after the criteriaCreatedTimestamp.
+            // now check if student has revised the work after this event
+            let latestComponentStateForRevisedComponent = this.getLatestComponentStateByNodeIdAndComponentId(isRevisedAfterNodeId, isRevisedAfterComponentId);
+            if (latestComponentStateForRevisedComponent.clientSaveTime > criteriaCreatedTimestamp) {
+                isRevisedAfter = true;
+            }
+        }
+
+        return isRevisedAfter;
     }
 
     /**
