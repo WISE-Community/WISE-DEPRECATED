@@ -211,8 +211,10 @@ class ClassroomMonitorController {
                     }
                 }).reverse();
                 exportFilename = "latest_work_" + runId + ".csv";
-            } else {
+            } else if (exportType === "allStudentWork") {
                 exportFilename = "all_work_" + runId + ".csv";
+            } else if (exportType === "studentAssets") {
+                return; // no further processing necessary
             }
 
             var csvString = "";  // resulting csv string

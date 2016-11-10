@@ -988,6 +988,7 @@
 				<sec:intercept-url pattern="/student.html" access="ROLE_ANONYMOUS,ROLE_USER" />
 				<sec:intercept-url pattern="/teacher/join" access="ROLE_ANONYMOUS,ROLE_USER" />
 				<sec:intercept-url pattern="/teacher*" access="ROLE_TEACHER,ROLE_ADMINISTRATOR,ROLE_RESEARCHER" />
+				<sec:intercept-url pattern="/teacher/**" access="ROLE_TEACHER,ROLE_ADMINISTRATOR,ROLE_RESEARCHER" />
 				<sec:intercept-url pattern="/author/**" access="ROLE_TEACHER,ROLE_ADMINISTRATOR,ROLE_RESEARCHER" />
 				<sec:intercept-url pattern="/notification/**" access="ROLE_STUDENT,ROLE_TEACHER,ROLE_ADMINISTRATOR,ROLE_RESEARCHER" />
 				<sec:intercept-url pattern="/portal/javascript/**" access="ROLE_ANONYMOUS,ROLE_USER" />
