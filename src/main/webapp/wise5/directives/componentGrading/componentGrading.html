@@ -37,7 +37,7 @@
                 </div>
             </div>
             <md-input-container class="input-container md-block md-no-float animate-fade"
-                                ng-show="!$ctrl.latestAnnotations.comment || $ctrl.latestAnnotations.comment.type === 'comment' || $ctrl.edit"
+                                ng-show="$ctrl.edit || !$ctrl.showAutoComment()"
                                 flex>
                 <label class="input-label md-no-float" ng-disabled="!$ctrl.active"><md-icon class="md-accent">account_box</md-icon>
                     <span ng-if="$ctrl.comment" class="animate-fade">Teacher Comment</span>
