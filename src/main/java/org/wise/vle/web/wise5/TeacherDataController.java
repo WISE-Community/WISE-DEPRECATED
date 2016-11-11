@@ -18,6 +18,7 @@ import org.wise.portal.service.websocket.WISEWebSocketHandler;
 import org.wise.vle.domain.annotation.wise5.Annotation;
 import org.wise.vle.domain.notification.Notification;
 import org.wise.vle.domain.work.Event;
+import org.wise.vle.domain.work.NotebookItem;
 import org.wise.vle.domain.work.StudentWork;
 
 import javax.servlet.ServletOutputStream;
@@ -83,6 +84,11 @@ public class TeacherDataController {
                     writer.close();
                 } else if ("events".equals(exportType)) {
                     JSONArray resultArray = vleService.getStudentEventExport(runId);
+                    PrintWriter writer = response.getWriter();
+                    writer.write(resultArray.toString());
+                    writer.close();
+                } else if ("notebookItems".equals(exportType)) {
+                    JSONArray resultArray = vleService.getNotebookExport(runId);
                     PrintWriter writer = response.getWriter();
                     writer.write(resultArray.toString());
                     writer.close();

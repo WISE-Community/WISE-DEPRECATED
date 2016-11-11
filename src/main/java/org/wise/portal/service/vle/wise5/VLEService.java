@@ -52,7 +52,12 @@ public interface VLEService {
     /**
      * @return JSONArray of student work for researcher export
      */
-    public JSONArray getStudentWorkExport(Integer runId);
+    JSONArray getStudentWorkExport(Integer runId);
+
+    /**
+     * @return JSON array of notebook items for researcher export
+     */
+    JSONArray getNotebookExport(Integer runId);
 
     /**
 	 * Saves StudentWork in the data store
@@ -74,7 +79,7 @@ public interface VLEService {
     /**
      * @return JSONArray of student events for researcher export
      */
-    public JSONArray getStudentEventExport(Integer runId);
+    JSONArray getStudentEventExport(Integer runId);
 
     /**
      * Saves Event in the data store
