@@ -40,6 +40,8 @@
         ng-disabled="projectController.insertGroupMode || projectController.insertNodeMode"></button>
 <button id="createNewStepButton" ng-click='projectController.toggleCreateNode()' translate="createNewStep"
         ng-disabled="projectController.insertGroupMode || projectController.insertNodeMode"></button>
+<button id="importStepButton" ng-click='projectController.toggleImportView()' translate="importStep"
+        ng-disabled="projectController.insertGroupMode || projectController.insertNodeMode"></button>
 <button id="moveButton" ng-click='projectController.move()' translate="move"
         ng-disabled="projectController.getSelectedItems().length == 0 || projectController.insertGroupMode || projectController.insertNodeMode"></button>
 <button id="copyButton" ng-click='projectController.copy()' translate="copy"
@@ -63,8 +65,36 @@
 <div ng-show='projectController.insertGroupMode || projectController.insertNodeMode'>
     <span translate="chooseNewLocation"></span> <button ng-click='projectController.cancelMove()' translate="cancel"></button>
 </div>
+<div ng-show='projectController.importMode'>
+    Import Step(s)
+    <br/>
+    <br/>
+    Authorable Projects
+    <br/>
+    <select ng-model='projectController.importProjectId'
+            ng-options='project.id as project.id + " " + project.name + (project.runId ? " (Run ID: " + project.runId + ")" : "") for project in projectController.getAuthorableProjects()'
+            ng-change='projectController.showImportProject()'>
+    </select>
+    <br/>
+    <br/>
+    {{projectController.importProject.metadata.title}}
+    <button ng-click='projectController.importSteps()'>Import Step(s)</button>
+    <div ng-repeat='importItem in projectController.importProjectIdToOrder'>
+        <input type='checkbox'
+               ng-model='importItem.checked'
+               ng-if='importItem.order != 0 && importItem.node.type != "group"' />
+        <h6 style='display: inline; cursor: pointer'
+            ng-if='importItem.order != 0'>
+            {{importItem.stepNumber}}: {{importItem.node.title}}
+        </h6>
+        <button ng-if='importItem.node.type != "group"'
+                ng-click='projectController.previewImportNode(importItem.node)'>Preview</button>
+    </div>
+    <button ng-click='projectController.importSteps()'>Import Step(s)</button>
+</div>
 <div ng-repeat='item in projectController.items | toArray | orderBy : "order"'
-     ng-class='{"node-select--group": projectController.isGroupNode(item.$key), "node-select--node": !projectController.isGroupNode(item.$key)}'>
+     ng-class='{"node-select--group": projectController.isGroupNode(item.$key), "node-select--node": !projectController.isGroupNode(item.$key)}'
+     ng-show='!projectController.importMode'>
     <input type='checkbox'
            ng-model='item.checked'
            ng-if='item.order!==0'
@@ -104,19 +134,21 @@
         {{projectController.getNodeTitleByNodeId(inactiveGroup.id)}}
     </h6>
 </div>
+<div ng-show='!projectController.importMode'>
 <h6 style='display:inline'>Inactive Steps</h6>
-<button ng-show='projectController.insertNodeMode'
-        ng-click='projectController.insertInside("inactiveNodes")'>Insert Inside</button>
-<div ng-repeat='inactiveNode in projectController.inactiveNodes'>
-    <input type='checkbox'
-           ng-model='inactiveNode.checked'/>
-    <h6 ng-click='projectController.nodeClicked(inactiveNode.id)'
-        style='display:inline; cursor:pointer'
-        class='stepHeader'>
-        {{projectController.getNodeTitleByNodeId(inactiveNode.id)}}
-    </h6>
-    <button ng-show='(projectController.insertNodeMode && !projectController.isGroupNode(inactiveNode.id))' 
-            ng-click='projectController.insertAfter(inactiveNode.id)' translate="insertAfter"></button>
+    <button ng-show='projectController.insertNodeMode'
+            ng-click='projectController.insertInside("inactiveNodes")'>Insert Inside</button>
+    <div ng-repeat='inactiveNode in projectController.inactiveNodes'>
+        <input type='checkbox'
+               ng-model='inactiveNode.checked'/>
+        <h6 ng-click='projectController.nodeClicked(inactiveNode.id)'
+            style='display:inline; cursor:pointer'
+            class='stepHeader'>
+            {{projectController.getNodeTitleByNodeId(inactiveNode.id)}}
+        </h6>
+        <button ng-show='(projectController.insertNodeMode && !projectController.isGroupNode(inactiveNode.id))' 
+                ng-click='projectController.insertAfter(inactiveNode.id)' translate="insertAfter"></button>
+    </div>
 </div>
     <div id="projectJSONStringDiv" style="display:none">Project JSON:
         <textarea id="project" rows="40" cols="150" ng-model="projectController.projectAsText"></textarea>

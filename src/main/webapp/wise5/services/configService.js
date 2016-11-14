@@ -236,6 +236,28 @@ var ConfigService = function () {
             return myUserInfo;
         }
     }, {
+        key: 'getMyUserName',
+
+
+        /**
+         * Get the user name of the signed in user
+         * @return the user name of the signed in user
+         */
+        value: function getMyUserName() {
+
+            var userName = null;
+
+            // get my user info
+            var myUserInfo = this.getMyUserInfo();
+
+            if (myUserInfo != null) {
+                // get the user name
+                userName = myUserInfo.userName;
+            }
+
+            return userName;
+        }
+    }, {
         key: 'getClassmateUserInfos',
         value: function getClassmateUserInfos() {
             var classmateUserInfos = null;
@@ -732,6 +754,27 @@ var ConfigService = function () {
             var avatarColors = ['#E91E63', '#9C27B0', '#CDDC39', '#2196F3', '#FDD835', '#43A047', '#795548', '#EF6C00', '#C62828', '#607D8B'];
             var modulo = workgroupId % 10;
             return avatarColors[modulo];
+        }
+
+        /**
+         * Get the library projects
+         */
+
+    }, {
+        key: 'getLibraryProjects',
+        value: function getLibraryProjects() {
+
+            // get the URL to get the list of library projects
+            var getLibraryProjectsURL = this.getConfigParam('getLibraryProjectsURL');
+
+            if (getLibraryProjectsURL != null) {
+
+                // request the list of library projects
+                return this.$http.get(getLibraryProjectsURL).then(function (result) {
+                    //console.log(result.data);
+                    return result.data;
+                });
+            }
         }
     }]);
 

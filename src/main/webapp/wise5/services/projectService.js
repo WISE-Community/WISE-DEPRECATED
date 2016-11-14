@@ -1,4 +1,4 @@
-'use strict';Object.defineProperty(exports,"__esModule",{value:true});var _typeof=typeof Symbol==="function"&&typeof Symbol.iterator==="symbol"?function(obj){return typeof obj;}:function(obj){return obj&&typeof Symbol==="function"&&obj.constructor===Symbol?"symbol":typeof obj;};var _slicedToArray=function(){function sliceIterator(arr,i){var _arr=[];var _n=true;var _d=false;var _e=undefined;try{for(var _i=arr[Symbol.iterator](),_s;!(_n=(_s=_i.next()).done);_n=true){_arr.push(_s.value);if(i&&_arr.length===i)break;}}catch(err){_d=true;_e=err;}finally{try{if(!_n&&_i["return"])_i["return"]();}finally{if(_d)throw _e;}}return _arr;}return function(arr,i){if(Array.isArray(arr)){return arr;}else if(Symbol.iterator in Object(arr)){return sliceIterator(arr,i);}else{throw new TypeError("Invalid attempt to destructure non-iterable instance");}};}();var _createClass=function(){function defineProperties(target,props){for(var i=0;i<props.length;i++){var descriptor=props[i];descriptor.enumerable=descriptor.enumerable||false;descriptor.configurable=true;if("value"in descriptor)descriptor.writable=true;Object.defineProperty(target,descriptor.key,descriptor);}}return function(Constructor,protoProps,staticProps){if(protoProps)defineProperties(Constructor.prototype,protoProps);if(staticProps)defineProperties(Constructor,staticProps);return Constructor;};}();function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError("Cannot call a class as a function");}}var ProjectService=function(){function ProjectService($http,$injector,$q,$rootScope,ConfigService){_classCallCheck(this,ProjectService);this.$http=$http;this.$injector=$injector;this.$q=$q;this.$rootScope=$rootScope;this.ConfigService=ConfigService;this.project=null;this.transitions=[];this.applicationNodes=[];this.inactiveNodes=[];this.groupNodes=[];this.idToNode={};this.idToElement={};this.metadata={};this.activeConstraints=[];this.rootNode=null;this.idToPosition={};this.idToOrder={};this.nodeCount=0;this.componentServices={};// filtering options for navigation displays
+'use strict';Object.defineProperty(exports,"__esModule",{value:true});var _typeof=typeof Symbol==="function"&&typeof Symbol.iterator==="symbol"?function(obj){return typeof obj;}:function(obj){return obj&&typeof Symbol==="function"&&obj.constructor===Symbol?"symbol":typeof obj;};var _slicedToArray=function(){function sliceIterator(arr,i){var _arr=[];var _n=true;var _d=false;var _e=undefined;try{for(var _i=arr[Symbol.iterator](),_s;!(_n=(_s=_i.next()).done);_n=true){_arr.push(_s.value);if(i&&_arr.length===i)break;}}catch(err){_d=true;_e=err;}finally{try{if(!_n&&_i["return"])_i["return"]();}finally{if(_d)throw _e;}}return _arr;}return function(arr,i){if(Array.isArray(arr)){return arr;}else if(Symbol.iterator in Object(arr)){return sliceIterator(arr,i);}else{throw new TypeError("Invalid attempt to destructure non-iterable instance");}};}();var _createClass=function(){function defineProperties(target,props){for(var i=0;i<props.length;i++){var descriptor=props[i];descriptor.enumerable=descriptor.enumerable||false;descriptor.configurable=true;if("value"in descriptor)descriptor.writable=true;Object.defineProperty(target,descriptor.key,descriptor);}}return function(Constructor,protoProps,staticProps){if(protoProps)defineProperties(Constructor.prototype,protoProps);if(staticProps)defineProperties(Constructor,staticProps);return Constructor;};}();function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError("Cannot call a class as a function");}}var ProjectService=function(){function ProjectService($http,$injector,$q,$rootScope,ConfigService,UtilService){_classCallCheck(this,ProjectService);this.$http=$http;this.$injector=$injector;this.$q=$q;this.$rootScope=$rootScope;this.ConfigService=ConfigService;this.UtilService=UtilService;this.project=null;this.transitions=[];this.applicationNodes=[];this.inactiveNodes=[];this.groupNodes=[];this.idToNode={};this.idToElement={};this.metadata={};this.activeConstraints=[];this.rootNode=null;this.idToPosition={};this.idToOrder={};this.nodeCount=0;this.componentServices={};// filtering options for navigation displays
 this.filters=[{'name':'all','label':'All'}//{'name': 'todo', 'label': 'Todo'},
 //{'name': 'completed', 'label': 'Completed'}
 ];}_createClass(ProjectService,[{key:'setProject',value:function setProject(project){this.project=project;this.parseProject();}},{key:'clearProjectFields',/**
@@ -24,11 +24,46 @@ var n=nodes.length;var branches=this.getBranches();var branchNodeIds=[];// set n
 var id,pos;while(n--){id=nodes[n].id;if(id===this.rootNode.id){this.setIdToPosition(id,'0');}else if(this.isNodeIdInABranch(branches,id)){// node is in a branch, so process later
 branchNodeIds.push(id);}else{pos=this.getPositionById(id);this.setIdToPosition(id,pos);}}// set branch node positions
 var b=branchNodeIds.length;while(b--){id=branchNodeIds[b];pos=this.getBranchNodePositionById(id);this.setIdToPosition(id,pos);}}}},{key:'setNodeOrder',value:function setNodeOrder(node){this.idToOrder[node.id]={'order':this.nodeCount};this.nodeCount++;if(this.isGroupNode(node.id)){var childIds=node.ids;for(var i=0;i<childIds.length;i++){var child=this.getNodeById(childIds[i]);this.setNodeOrder(child);}if(this.ConfigService.getMode()==='classroomMonitor'){// we're viewing the classroom monitor, so include planning nodes in the project structure
-var planningIds=node.availablePlanningNodes;if(planningIds){for(var a=0;a<planningIds.length;a++){var _child=this.getNodeById(planningIds[a].nodeId);this.setNodeOrder(_child);}}}}}},{key:'getPositionById',/**
+var planningIds=node.availablePlanningNodes;if(planningIds){for(var a=0;a<planningIds.length;a++){var _child=this.getNodeById(planningIds[a].nodeId);this.setNodeOrder(_child);}}}}}},{key:'getNodeOrderOfProject',/**
+     * Get the node order mappings of the project
+     * @param project the project JSOn
+     * @return an object containing the idToOrder mapping and also the array
+     * of nodes
+     */value:function getNodeOrderOfProject(project){var idToOrder={};// initialize the node count used for counting the nodes
+idToOrder.nodeCount=0;// get the start group id
+var startGroupId=project.startGroupId;// get the root node
+var rootNode=this.getNodeById(startGroupId,project);// initialize the step number
+var stepNumber='';// initialize the nodes
+var nodes=[];// recursively traverse the project to calculate the node counts and step numbers
+var importProjectIdToOrder=this.getNodeOrderOfProjectHelper(project,rootNode,idToOrder,stepNumber,nodes);// remove the node count from the mapping since we don't need it anymore
+delete importProjectIdToOrder.nodeCount;// create the object we will return
+var result={};result.idToOrder=importProjectIdToOrder;result.nodes=nodes;return result;}/**
+     * Recursively traverse the project to calculate the node order and step numbers
+     * @param project the project JSON
+     * @param node the current node we are on
+     * @param idToOrder the mapping of node id to item
+     * @param stepNumber the current step number
+     * @param nodes the array of nodes
+     */},{key:'getNodeOrderOfProjectHelper',value:function getNodeOrderOfProjectHelper(project,node,idToOrder,stepNumber,nodes){/*
+         * Create the item that we will add to the idToOrder mapping.
+         * The 'order' field determines how the project nodes are displayed
+         * when we flatten the project for displaying.
+         */var item={'order':idToOrder.nodeCount,'node':node,'stepNumber':stepNumber};// set the mapping of node id to item
+idToOrder[node.id]=item;// increment the node count
+idToOrder.nodeCount++;// add the item to the nodes array
+nodes.push(item);if(node.type=='group'){// the node is group so we also need to loop through its children
+// get the child node ids
+var childIds=node.ids;// loop through all the children
+for(var c=0;c<childIds.length;c++){var childId=childIds[c];// get a child node
+var child=this.getNodeById(childId,project);// get the current step number e.g. 1
+var childStepNumber=stepNumber;if(childStepNumber!=''){// add the . separator for the step number e.g. 1.
+childStepNumber+='.';}// update the step number e.g. 1.1
+childStepNumber+=c+1;// recursively traverse the child
+this.getNodeOrderOfProjectHelper(project,child,idToOrder,childStepNumber,nodes);}}return idToOrder;}/**
      * Returns the position in the project for the node with the given id. Returns null if no node with id exists.
      * @param id a node id
      * @return string position of the given node id in the project
-     */value:function getPositionById(id){for(var i=0;i<this.rootNode.ids.length;i++){var node=this.getNodeById(this.rootNode.ids[i]);var path=this.getPathToNode(node,i+1,id);if(path!=undefined&&path!=null){return path;}}return null;}},{key:'getOrderById',/**
+     */},{key:'getPositionById',value:function getPositionById(id){for(var i=0;i<this.rootNode.ids.length;i++){var node=this.getNodeById(this.rootNode.ids[i]);var path=this.getPathToNode(node,i+1,id);if(path!=undefined&&path!=null){return path;}}return null;}},{key:'getOrderById',/**
      * Returns the order of the given node id in the project. Returns null if no node with id exists.
      * @param id String node id
      * @return Number order of the given node id in the project
@@ -94,8 +129,20 @@ contentString=contentString.replace(imgMatcher,function(matchedString,matchGroup
                      * After: <img ng-click="vleController.snipImage($event)" src="abc.png" />
                      */var newString=matchedString.replace('img','img ng-click=\\\"$emit(\'snipImage\', $event)\\\"');return newString;});}return contentString;}/**
      * Returns the node specified by the nodeId
+     * @param nodeId get the node with this node id
+     * @param (optional) the project to retrieve the node from. this is used in
+     * the case when we want the node from another project such as when we are
+     * importing a step from another project
      * Return null if nodeId param is null or the specified node does not exist in the project.
-     */},{key:'getNodeById',value:function getNodeById(nodeId){var element=null;if(nodeId!=null&&this.idToNode[nodeId]){element=this.idToNode[nodeId];}return element;}},{key:'getNodeTitleByNodeId',/**
+     */},{key:'getNodeById',value:function getNodeById(nodeId,project){var element=null;if(project==null){// the project argument is null so we will get it from the current project
+if(nodeId!=null&&this.idToNode[nodeId]){element=this.idToNode[nodeId];}}else{/*
+             * the project argument is not null so we will get the node from
+             * project that was passed in
+             */// loop through all the active nodes in the project
+for(var n=0;n<project.nodes.length;n++){var tempNode=project.nodes[n];if(tempNode!=null&&tempNode.id==nodeId){// we have found the node we are looking for
+return tempNode;}}// loop through all the inactive nodes in the project
+for(var n=0;n<project.inactiveNodes.length;n++){var tempNode=project.inactiveNodes[n];if(tempNode!=null&&tempNode.id==nodeId){// we have found the node we are looking for
+return tempNode;}}}return element;}},{key:'getNodeTitleByNodeId',/**
      * Returns the title of the node with the nodeId
      * Return null if nodeId param is null or the specified node does not exist in the project.
      */value:function getNodeTitleByNodeId(nodeId){var title=null;var node=this.getNodeById(nodeId);if(node!=null){title=node.title;}return title;}},{key:'getNodePositionAndTitleByNodeId',/**
@@ -202,22 +249,34 @@ for(var n=0;n<nodes.length;n++){var node=nodes[n];if(node!=null){nodeIds.push(no
              * add a unique GET parameter value so that it always retrieves the
              * latest version of the project file from the server and never
              * retrieves the project from cache.
-             */projectURL+='?noCache='+new Date().getTime();}return this.$http.get(projectURL).then(function(result){var projectJSON=result.data;_this.setProject(projectJSON);return projectJSON;});}},{key:'saveProject',/**
+             */projectURL+='?noCache='+new Date().getTime();}return this.$http.get(projectURL).then(function(result){var projectJSON=result.data;_this.setProject(projectJSON);return projectJSON;});}},{key:'retrieveProjectById',/**
+     * Retrieve the project JSON
+     * @param projectId retrieve the project JSON with this id
+     * @return a promise to return the project JSON
+     */value:function retrieveProjectById(projectId){var _this2=this;if(projectId!=null){// get the config URL for the project
+var configURL=window.configURL+'/'+projectId;// get the config for the project
+return this.$http.get(configURL).then(function(result){var configJSON=result.data;if(configJSON!=null){// get the project URL and preview project URL
+var projectURL=configJSON.projectURL;var previewProjectURL=configJSON.previewProjectURL;if(projectURL!=null){// get the project JSON
+return _this2.$http.get(projectURL).then(function(result){var projectJSON=result.data;/*
+                             * set the preview project URL into the project JSON
+                             * so that we easily obtain the preview project URL
+                             * later
+                             */projectJSON.previewProjectURL=previewProjectURL;return projectJSON;});}}});}}/**
      * Saves the project to Config.saveProjectURL and returns commit history promise.
      * if Config.saveProjectURL or Config.projectId are undefined, does not save and returns null
-     */value:function saveProject(){var commitMessage=arguments.length<=0||arguments[0]===undefined?"":arguments[0];// perform any cleanup before saving the project
+     */},{key:'saveProject',value:function saveProject(){var commitMessage=arguments.length<=0||arguments[0]===undefined?"":arguments[0];// perform any cleanup before saving the project
 this.cleanupBeforeSave();var projectId=this.ConfigService.getProjectId();var saveProjectURL=this.ConfigService.getConfigParam('saveProjectURL');if(projectId==null||saveProjectURL==null){return null;}// Get the project from this service
 var projectJSONString=angular.toJson(this.project,4);var httpParams={};httpParams.method='POST';httpParams.url=saveProjectURL;httpParams.headers={'Content-Type':'application/x-www-form-urlencoded'};var params={};params.projectId=projectId;params.commitMessage=commitMessage;params.projectJSONString=projectJSONString;httpParams.data=$.param(params);return this.$http(httpParams).then(function(result){var commitHistory=result.data;return commitHistory;});}},{key:'getCurrentAuthors',/**
      * Get the current authors for this project
      * @param projectId
-     */value:function getCurrentAuthors(){var _this2=this;var projectId=arguments.length<=0||arguments[0]===undefined?null:arguments[0];return this.$q(function(resolve,reject){if(projectId==null){if(_this2.project!=null){projectId=_this2.ConfigService.getProjectId();}else{// we're not editing any projects, so there are no authors
-resolve([]);}}var notifyProjectEndURL=_this2.ConfigService.getConfigParam('getCurrentAuthorsURL')+projectId;var httpParams={};httpParams.method='GET';httpParams.url=notifyProjectEndURL;_this2.$http(httpParams).then(function(result){resolve(result.data);});});}},{key:'notifyAuthorProjectBegin',/**
+     */value:function getCurrentAuthors(){var _this3=this;var projectId=arguments.length<=0||arguments[0]===undefined?null:arguments[0];return this.$q(function(resolve,reject){if(projectId==null){if(_this3.project!=null){projectId=_this3.ConfigService.getProjectId();}else{// we're not editing any projects, so there are no authors
+resolve([]);}}var notifyProjectEndURL=_this3.ConfigService.getConfigParam('getCurrentAuthorsURL')+projectId;var httpParams={};httpParams.method='GET';httpParams.url=notifyProjectEndURL;_this3.$http(httpParams).then(function(result){resolve(result.data);});});}},{key:'notifyAuthorProjectBegin',/**
      * Notifies others that the specified project is being authored
      * @param projectId id of the project
      */value:function notifyAuthorProjectBegin(){var projectId=arguments.length<=0||arguments[0]===undefined?null:arguments[0];if(projectId==null){if(this.project!=null){projectId=this.project.id;}else{return;}}var notifyProjectBeginURL=this.ConfigService.getConfigParam('notifyProjectBeginURL')+projectId;var httpParams={};httpParams.method='POST';httpParams.url=notifyProjectBeginURL;return this.$http(httpParams).then(function(result){var otherAuthors=result.data;return otherAuthors;});}/**
      * Notifies others that the specified project is being authored
      * @param projectId id of the project
-     */},{key:'notifyAuthorProjectEnd',value:function notifyAuthorProjectEnd(){var _this3=this;var projectId=arguments.length<=0||arguments[0]===undefined?null:arguments[0];return this.$q(function(resolve,reject){if(projectId==null){if(_this3.project!=null){projectId=_this3.ConfigService.getProjectId();}else{resolve();}}var notifyProjectEndURL=_this3.ConfigService.getConfigParam('notifyProjectEndURL')+projectId;var httpParams={};httpParams.method='POST';httpParams.url=notifyProjectEndURL;_this3.$http(httpParams).then(function(){resolve();});});}/**
+     */},{key:'notifyAuthorProjectEnd',value:function notifyAuthorProjectEnd(){var _this4=this;var projectId=arguments.length<=0||arguments[0]===undefined?null:arguments[0];return this.$q(function(resolve,reject){if(projectId==null){if(_this4.project!=null){projectId=_this4.ConfigService.getProjectId();}else{resolve();}}var notifyProjectEndURL=_this4.ConfigService.getConfigParam('notifyProjectEndURL')+projectId;var httpParams={};httpParams.method='POST';httpParams.url=notifyProjectEndURL;_this4.$http(httpParams).then(function(){resolve();});});}/**
      * Perform any necessary cleanup before we save the project.
      * For example we need to remove the checked field in the inactive node
      * objects.
@@ -1455,7 +1514,8 @@ this.addInactiveNode(node,nodeIdToInsertAfter);}}}/**
      * Add the node to the inactive nodes array
      * @param node the node to move
      * @param nodeIdToInsertAfter place the node after this
-     */},{key:'addInactiveNode',value:function addInactiveNode(node,nodeIdToInsertAfter){if(node!=null){var inactiveNodes=this.project.inactiveNodes;if(inactiveNodes!=null){if(nodeIdToInsertAfter==null||nodeIdToInsertAfter==='inactiveSteps'||nodeIdToInsertAfter==='inactiveNodes'){// put the node at the beginning of the inactive steps
+     */},{key:'addInactiveNode',value:function addInactiveNode(node,nodeIdToInsertAfter){if(node!=null){var inactiveNodes=this.project.inactiveNodes;if(inactiveNodes!=null){// clear the transitions from this node
+if(node.transitionLogic!=null){node.transitionLogic.transitions=[];}if(nodeIdToInsertAfter==null||nodeIdToInsertAfter==='inactiveSteps'||nodeIdToInsertAfter==='inactiveNodes'){// put the node at the beginning of the inactive steps
 inactiveNodes.splice(0,0,node);}else{// put the node after one of the inactive nodes
 var added=false;// loop through all the inactive nodes
 for(var i=0;i<inactiveNodes.length;i++){var inactiveNode=inactiveNodes[i];if(inactiveNode!=null){if(nodeIdToInsertAfter===inactiveNode.id){// we have found the position to place the node
@@ -1661,5 +1721,40 @@ for(var i=0;i<this.project.inactiveNodes.length;i++){// get an inactive node
 var inactiveNode=this.project.inactiveNodes[i];if(inactiveNode!=null){if(nodeId===inactiveNode.id){/*
                          * we have found the node id we are looking for which
                          * means the node is inactive
-                         */result=true;break;}}}}return result;}}]);return ProjectService;}();ProjectService.$inject=['$http','$injector','$q','$rootScope','ConfigService'];exports.default=ProjectService;
+                         */result=true;break;}}}}return result;}/**
+     * Get an unused component id
+     * @return a component id that isn't already being used in the project
+     */},{key:'getUnusedComponentId',value:function getUnusedComponentId(){// we want to make an id with 10 characters
+var idLength=10;// generate a new id
+var newComponentId=this.UtilService.generateKey(idLength);// check if the component id is already used in the project
+if(this.isComponentIdUsed(newComponentId)){/*
+             * the component id is already used in the project so we need to
+             * try generating another one
+             */var alreadyUsed=true;/*
+             * keep trying to generate a new component id until we have found
+             * one that isn't already being used
+             */while(!alreadyUsed){// generate a new id
+newComponentId=this.UtilService.generateKey(idLength);// check if the id is already being used in the project
+alreadyUsed=this.isComponentIdUsed(newComponentId);}}return newComponentId;}/**
+     * Check if the component id is already being used in the project
+     * @param componentId check if this component id is already being used in
+     * the project
+     * @return whether the component id is already being used in the project
+     */},{key:'isComponentIdUsed',value:function isComponentIdUsed(componentId){var isUsed=false;// loop through all the active nodes
+for(var n=0;n<this.project.nodes.length;n++){// get an active node
+var node=this.project.nodes[n];if(node!=null){var components=node.components;if(components!=null){// loop through all the components
+for(var c=0;c<components.length;c++){var component=components[c];if(component!=null){if(componentId===component.id){// the component id is already being used
+isUsed=true;}}}}}}// loop through all the inactive nodes
+for(var n=0;n<this.project.inactiveNodes.length;n++){// get an inactive node
+var node=this.project.inactiveNodes[n];if(node!=null){var components=node.components;if(components!=null){// loop through all the components
+for(var c=0;c<components.length;c++){var component=components[c];if(component!=null){if(componentId===component.id){// the component id is already being used
+isUsed=true;}}}}}}return isUsed;}/**
+     * Check if a node id is already being used in the project
+     * @param nodeId check if this node id is already being used in the project
+     * @return whether the node id is already being used in the project
+     */},{key:'isNodeIdUsed',value:function isNodeIdUsed(nodeId){var isUsed=false;// loop through all the active nodes
+for(var n=0;n<this.project.nodes.length;n++){// get an active node
+var node=this.project.nodes[n];if(node!=null){if(nodeId===node.id){return true;}}}// loop through all the inactive nodes
+for(var n=0;n<this.project.inactiveNodes.length;n++){// get an inactive node
+var node=this.project.inactiveNodes[n];if(node!=null){if(nodeId===node.id){return true;}}}return isUsed;}}]);return ProjectService;}();ProjectService.$inject=['$http','$injector','$q','$rootScope','ConfigService','UtilService'];exports.default=ProjectService;
 //# sourceMappingURL=projectService.js.map

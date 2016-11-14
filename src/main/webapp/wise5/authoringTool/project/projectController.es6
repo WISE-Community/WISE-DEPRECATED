@@ -2,7 +2,7 @@
 
 class ProjectController {
 
-    constructor($interval, $q, $scope, $state, $stateParams, $translate, AuthorWebSocketService, ConfigService, ProjectService) {
+    constructor($interval, $q, $scope, $state, $stateParams, $translate, AuthorWebSocketService, ConfigService, ProjectService, UtilService) {
         this.$interval = $interval;
         this.$q = $q;
         this.$scope = $scope;
@@ -12,6 +12,7 @@ class ProjectController {
         this.AuthorWebSocketService = AuthorWebSocketService;
         this.ConfigService = ConfigService;
         this.ProjectService = ProjectService;
+        this.UtilService = UtilService;
 
         this.projectId = this.$stateParams.projectId;
         this.runId = this.ConfigService.getRunId();
@@ -29,8 +30,25 @@ class ProjectController {
                 this.currentAuthorsMessage = "";
             } else {
                 // TODO: internationalize me
-                this.currentAuthorsMessage = currentAuthors.join(",") + " is currently editing this project.";
-                alert(currentAuthors.join(",") + " is currently editing this project. Please be careful not to overwrite each other's work!");
+                
+                var showWarningMessage = true;
+                
+                // get the user name of the signed in user
+                var myUserName = this.ConfigService.getMyUserName();
+                
+                // check if the signed in user is the current author
+                if (currentAuthors.length == 1 && currentAuthors[0] == myUserName) {
+                    /*
+                     * the signed in user is the current author so we do not need
+                     * to display the warning message
+                     */
+                    showWarningMessage = false;
+                }
+                
+                if (showWarningMessage) {
+                    this.currentAuthorsMessage = currentAuthors.join(",") + " is currently editing this project.";
+                    alert(currentAuthors.join(",") + " is currently editing this project. Please be careful not to overwrite each other's work!");
+                }
             }
         });
 
@@ -46,7 +64,24 @@ class ProjectController {
                 if (currentAuthors.length == 0) {
                     this.currentAuthorsMessage = "";
                 } else {
-                    this.currentAuthorsMessage = currentAuthors.join(",") + " is currently editing this project.";
+                    
+                    var showWarningMessage = true;
+                    
+                    // get the user name of the signed in user
+                    var myUserName = this.ConfigService.getMyUserName();
+                    
+                    // check if the signed in user is the current author
+                    if (currentAuthors.length == 1 && currentAuthors[0] == myUserName) {
+                        /*
+                         * the signed in user is the current author so we do not need
+                         * to display the warning message
+                         */
+                        showWarningMessage = false;
+                    }
+                    
+                    if (showWarningMessage) {
+                        this.currentAuthorsMessage = currentAuthors.join(",") + " is currently editing this project.";
+                    }
                 }
             });
         }, 15000);
@@ -784,9 +819,218 @@ class ProjectController {
         // save the project
         this.ProjectService.saveProject();
     }
+    
+    /**
+     * Toggle the import view
+     */
+    toggleImportView() {
+        this.importMode = !this.importMode;
+    }
+    
+    /**
+     * Get all the authorable projects
+     */
+    getAuthorableProjects() {
+        return this.ConfigService.getConfigParam('projects');
+    }
+    
+    /**
+     * Get all the library projects
+     */
+    getLibraryProjects() {
+        this.ConfigService.getLibraryProjects().then((libraryProjects) => {
+            this.libraryProjects = libraryProjects;
+        });
+    }
+    
+    /**
+     * Show the project we want to import steps from
+     */
+    showImportProject() {
+        
+        if (this.importProjectId != null) {
+            
+            // get the import project
+            this.ProjectService.retrieveProjectById(this.importProjectId).then((projectJSON) => {
+                
+                // create the mapping of node id to order for the import project
+                this.importProjectIdToOrder = {};
+                this.importProject = projectJSON;
+                
+                // calculate the node order of the import project
+                var result = this.ProjectService.getNodeOrderOfProject(this.importProject);
+                this.importProjectIdToOrder = result.idToOrder;
+                this.importProjectItems = result.nodes;
+            });
+        }
+    }
+    
+    /**
+     * Preview the step
+     * @param node
+     */
+    previewImportNode(node) {
+        
+        if (node != null) {
+            
+            // get the node id
+            var nodeId = node.id;
+            
+            // get the preview project url for the import project
+            var previewProjectURL = this.importProject.previewProjectURL;
+            
+            // create the url to preview the step
+            var previewStepURL  = previewProjectURL + "#/vle/" + nodeId;
+            
+            // open the preview step in a new tab
+            window.open(previewStepURL);
+        }
+    }
+    
+    /**
+     * Import the selected steps
+     */
+    importSteps() {
+        
+        // get the nodes that were selected
+        var selectedNodes = this.getSelectedNodesToImport();
+        
+        var selectedNodeTitles = '';
+        
+        // loop through all the selected nodes
+        for (var s = 0; s < selectedNodes.length; s++) {
+            var selectedNode = selectedNodes[s];
+            
+            if (selectedNode != null) {
+                
+                var stepNumber = null;
+                var title = selectedNode.title;
+                
+                if (this.importProjectIdToOrder[selectedNode.id] != null) {
+                    // get the step number
+                    stepNumber = this.importProjectIdToOrder[selectedNode.id].stepNumber;
+                }
+                
+                if (selectedNodeTitles != '') {
+                    selectedNodeTitles += '\n';
+                }
+                
+                // get the step number and title
+                selectedNodeTitles += stepNumber + ': ' + title;
+            }
+        }
+        
+        // ask the author if they are sure they want to import these steps
+        var answer = confirm('Are you sure you want to import these steps?\n\n' + selectedNodeTitles);
+        
+        if (answer) {
+            // the author answered yes to import
+            
+            // get the inactive nodes from the project
+            var inactiveNodes = this.ProjectService.getInactiveNodes();
+            
+            var nodeIdToInsertAfter = 'inactiveSteps';
+            
+            // loop through the nodes we will import
+            for (var n = 0; n < selectedNodes.length; n++) {
+                
+                var selectedNode = selectedNodes[n];
+                
+                if (selectedNode != null) {
+                    
+                    var tempNodeId = selectedNode.id;
+                    
+                    // get the item which contains the node we want to import
+                    var tempItem = this.importProjectIdToOrder[tempNodeId];
+                    
+                    if (tempItem != null) {
+                        
+                        // find where to insert the imported node
+                        if (inactiveNodes != null && inactiveNodes.length > 0) {
+                            nodeIdToInsertAfter = inactiveNodes[inactiveNodes.length - 1];
+                        }
+                        
+                        // make a copy of the node so that we don't modify the source
+                        var tempNode = this.UtilService.makeCopyOfJSONObject(tempItem.node);
+                        
+                        // check if the node id is already being used in the current project
+                        if (this.ProjectService.isNodeIdUsed(tempNode.id)) {
+                            // the node id is already being used in the current project
+                            
+                            // get the next available node id
+                            var nextAvailableNodeId = this.ProjectService.getNextAvailableNodeId();
+                            
+                            // change the node id of the node we are importing
+                            tempNode.id = nextAvailableNodeId;
+                        }
+                        
+                        var tempComponents = tempNode.components;
+                        
+                        if (tempComponents != null) {
+                            
+                            // loop through all the components in the node we are importing
+                            for (var c = 0; c < tempComponents.length; c++) {
+                                var tempComponent = tempComponents[c];
+                                
+                                if (tempComponent != null) {
+                                    
+                                    // check if the component id is already being used
+                                    if (this.ProjectService.isComponentIdUsed(tempComponent.id)) {
+                                        // we are already using the component id so we will need to change it
+                                        
+                                        // find a component id that isn't currently being used
+                                        var newComponentId = this.ProjectService.getUnusedComponentId();
+                                        
+                                        // set the new component id into the component
+                                        tempComponent.id = newComponentId;
+                                    }
+                                }
+                            }
+                        }
+                        
+                        // add the imported node to the end of the inactive nodes
+                        this.ProjectService.addInactiveNode(tempNode, nodeIdToInsertAfter);
+                    }
+                }
+            }
+            
+            // save the project
+            this.ProjectService.saveProject();
+
+            // refresh the project
+            this.ProjectService.parseProject();
+            this.items = this.ProjectService.idToOrder;
+            
+            // turn off import mode
+            this.importMode = false;
+        }
+    }
+    
+    /**
+     * Get the selected nodes to import
+     * @return an array of selected nodes
+     */
+    getSelectedNodesToImport() {
+        var selectedNodes = [];
+        
+        // loop through all the import project items
+        for (var n = 0; n < this.importProjectItems.length; n++) {
+            var item = this.importProjectItems[n];
+            
+            if (item.checked) {
+                /*
+                 * this item is checked so we will add it to the array of nodes
+                 * that we will import
+                 */
+                selectedNodes.push(item.node);
+            }
+        }
+        
+        return selectedNodes;
+    }
 };
 
 ProjectController.$inject = ['$interval', '$q', '$scope', '$state', '$stateParams', '$translate',
-    'AuthorWebSocketService', 'ConfigService', 'ProjectService'];
+    'AuthorWebSocketService', 'ConfigService', 'ProjectService', 'UtilService'];
 
 export default ProjectController;
