@@ -188,81 +188,146 @@ var ClassroomMonitorController = function () {
                     alert("Error retrieving result");
                     return;
                 }
-                var COLUMN_INDEX_NODE_ID = 1;
-                var COLUMN_INDEX_COMPONENT_ID = 2;
-                var COLUMN_INDEX_STEP_NUMBER = 4;
-                var COLUMN_INDEX_STEP_TITLE = 5;
-                var COLUMN_INDEX_COMPONENT_PART_NUMBER = 6;
-                var COLUMN_INDEX_STUDENT_DATA = 11;
-                var COLUMN_INDEX_WORKGROUP_ID = 14;
-                var COLUMN_INDEX_WISE_IDS = 18;
-                var COLUMN_INDEX_WISE_ID_1 = 18;
-                var COLUMN_INDEX_WISE_ID_2 = 19;
-                var COLUMN_INDEX_WISE_ID_3 = 20;
-                var COLUMN_INDEX_STUDENT_RESPONSE = 21;
-                var runId = _this2.ConfigService.getRunId();
 
-                var exportFilename = "";
-                if (exportType === "latestStudentWork") {
-                    var hash = {}; // store latestStudentWork. Assume that key = (nodeId, componentId, workgroupId)
-                    result = result.reverse().filter(function (studentWorkRow) {
-                        var hashKey = studentWorkRow[COLUMN_INDEX_NODE_ID] + "_" + studentWorkRow[COLUMN_INDEX_COMPONENT_ID] + "_" + studentWorkRow[COLUMN_INDEX_WORKGROUP_ID];
-                        if (!hash.hasOwnProperty(hashKey)) {
-                            // remember in hash
-                            hash[hashKey] = studentWorkRow;
-                            return true;
-                        } else {
-                            // we already have the latest, so we can disregard this studentWorkRow.
-                            return false;
-                        }
-                    }).reverse();
-                    exportFilename = "latest_work_" + runId + ".csv";
-                } else {
-                    exportFilename = "all_work_" + runId + ".csv";
+                if (exportType === "studentAssets") {
+                    return; // no further processing necessary
                 }
+                var runId = _this2.ConfigService.getRunId();
+                var exportFilename = "";
 
                 var csvString = ""; // resulting csv string
 
-                for (var rowIndex = 0; rowIndex < result.length; rowIndex++) {
+                if (exportType === "latestStudentWork" || exportType === "allStudentWork") {
+                    var COLUMN_INDEX_NODE_ID = 1;
+                    var COLUMN_INDEX_COMPONENT_ID = 2;
+                    var COLUMN_INDEX_STEP_NUMBER = 4;
+                    var COLUMN_INDEX_STEP_TITLE = 5;
+                    var COLUMN_INDEX_COMPONENT_PART_NUMBER = 6;
+                    var COLUMN_INDEX_STUDENT_DATA = 11;
+                    var COLUMN_INDEX_WORKGROUP_ID = 14;
+                    var COLUMN_INDEX_WISE_IDS = 18;
+                    var COLUMN_INDEX_WISE_ID_1 = 18;
+                    var COLUMN_INDEX_WISE_ID_2 = 19;
+                    var COLUMN_INDEX_WISE_ID_3 = 20;
+                    var COLUMN_INDEX_STUDENT_RESPONSE = 21;
 
-                    var row = result[rowIndex];
-
-                    if (rowIndex === 0) {
-                        // append additional header columns
-                        row[COLUMN_INDEX_WISE_ID_1] = "WISE ID 1";
-                        row[COLUMN_INDEX_WISE_ID_2] = "WISE ID 2";
-                        row[COLUMN_INDEX_WISE_ID_3] = "WISE ID 3";
-                        row[COLUMN_INDEX_STUDENT_RESPONSE] = "response";
-                    } else {
-                        // for all non-header rows, fill in step numbers, titles, and component part numbers.
-                        var nodeId = row[COLUMN_INDEX_NODE_ID];
-                        var componentId = row[COLUMN_INDEX_COMPONENT_ID];
-                        row[COLUMN_INDEX_STEP_NUMBER] = _this2.ProjectService.getNodePositionById(nodeId);
-                        row[COLUMN_INDEX_STEP_TITLE] = _this2.ProjectService.getNodeTitleByNodeId(nodeId);
-                        row[COLUMN_INDEX_COMPONENT_PART_NUMBER] = _this2.ProjectService.getComponentPositionByNodeIdAndComponentId(nodeId, componentId) + 1; // make it 1-indexed for researchers
-                        var workgroupId = row[COLUMN_INDEX_WORKGROUP_ID];
-                        var wiseIDs = row[COLUMN_INDEX_WISE_IDS];
-                        var wiseIDsArray = wiseIDs.split(",");
-                        row[COLUMN_INDEX_WISE_ID_1] = wiseIDsArray[0];
-                        row[COLUMN_INDEX_WISE_ID_2] = wiseIDsArray[1] || "";
-                        row[COLUMN_INDEX_WISE_ID_3] = wiseIDsArray[2] || "";
-
-                        // get the student data JSON and extract responses into its own column
-                        var studentDataJSONCell = row[COLUMN_INDEX_STUDENT_DATA];
-                        row[COLUMN_INDEX_STUDENT_RESPONSE] = studentDataJSONCell.response || "";
+                    if (exportType === "latestStudentWork") {
+                        var hash = {}; // store latestStudentWork. Assume that key = (nodeId, componentId, workgroupId)
+                        result = result.reverse().filter(function (studentWorkRow) {
+                            var hashKey = studentWorkRow[COLUMN_INDEX_NODE_ID] + "_" + studentWorkRow[COLUMN_INDEX_COMPONENT_ID] + "_" + studentWorkRow[COLUMN_INDEX_WORKGROUP_ID];
+                            if (!hash.hasOwnProperty(hashKey)) {
+                                // remember in hash
+                                hash[hashKey] = studentWorkRow;
+                                return true;
+                            } else {
+                                // we already have the latest, so we can disregard this studentWorkRow.
+                                return false;
+                            }
+                        }).reverse();
+                        exportFilename = "latest_work_" + runId + ".csv";
+                    } else if (exportType === "allStudentWork") {
+                        exportFilename = "all_work_" + runId + ".csv";
                     }
 
-                    // append row to csvString
-                    for (var cellIndex = 0; cellIndex < row.length; cellIndex++) {
-                        var cell = row[cellIndex];
-                        if ((typeof cell === 'undefined' ? 'undefined' : _typeof(cell)) === "object") {
-                            cell = "\"" + JSON.stringify(cell).replace(/"/g, '""') + "\"";
-                        } else if (typeof cell === "string") {
-                            cell = "\"" + cell + "\"";
+                    for (var rowIndex = 0; rowIndex < result.length; rowIndex++) {
+                        var row = result[rowIndex];
+
+                        if (rowIndex === 0) {
+                            // append additional header columns
+                            row[COLUMN_INDEX_WISE_ID_1] = "WISE ID 1";
+                            row[COLUMN_INDEX_WISE_ID_2] = "WISE ID 2";
+                            row[COLUMN_INDEX_WISE_ID_3] = "WISE ID 3";
+                            row[COLUMN_INDEX_STUDENT_RESPONSE] = "response";
+                        } else {
+                            // for all non-header rows, fill in step numbers, titles, and component part numbers.
+                            var nodeId = row[COLUMN_INDEX_NODE_ID];
+                            var componentId = row[COLUMN_INDEX_COMPONENT_ID];
+                            row[COLUMN_INDEX_STEP_NUMBER] = _this2.ProjectService.getNodePositionById(nodeId);
+                            row[COLUMN_INDEX_STEP_TITLE] = _this2.ProjectService.getNodeTitleByNodeId(nodeId);
+                            row[COLUMN_INDEX_COMPONENT_PART_NUMBER] = _this2.ProjectService.getComponentPositionByNodeIdAndComponentId(nodeId, componentId) + 1; // make it 1-indexed for researchers
+                            var workgroupId = row[COLUMN_INDEX_WORKGROUP_ID];
+                            var wiseIDs = row[COLUMN_INDEX_WISE_IDS];
+                            var wiseIDsArray = wiseIDs.split(",");
+                            row[COLUMN_INDEX_WISE_ID_1] = wiseIDsArray[0];
+                            row[COLUMN_INDEX_WISE_ID_2] = wiseIDsArray[1] || "";
+                            row[COLUMN_INDEX_WISE_ID_3] = wiseIDsArray[2] || "";
+
+                            // get the student data JSON and extract responses into its own column
+                            var studentDataJSONCell = row[COLUMN_INDEX_STUDENT_DATA];
+                            row[COLUMN_INDEX_STUDENT_RESPONSE] = studentDataJSONCell.response || "";
                         }
-                        csvString += cell + ",";
+
+                        // append row to csvString
+                        for (var cellIndex = 0; cellIndex < row.length; cellIndex++) {
+                            var cell = row[cellIndex];
+                            if ((typeof cell === 'undefined' ? 'undefined' : _typeof(cell)) === "object") {
+                                cell = "\"" + JSON.stringify(cell).replace(/"/g, '""') + "\"";
+                            } else if (typeof cell === "string") {
+                                cell = "\"" + cell + "\"";
+                            }
+                            csvString += cell + ",";
+                        }
+                        csvString += "\r\n";
                     }
-                    csvString += "\r\n";
+                } else if (exportType === "notebookItems") {
+                    exportFilename = "notebook_" + runId + ".csv";
+
+                    var _COLUMN_INDEX_NODE_ID = 1;
+                    var _COLUMN_INDEX_COMPONENT_ID = 2;
+                    var _COLUMN_INDEX_STEP_NUMBER = 3;
+                    var _COLUMN_INDEX_STEP_TITLE = 4;
+                    var _COLUMN_INDEX_COMPONENT_PART_NUMBER = 5;
+                    var COLUMN_INDEX_TYPE = 8;
+                    var _COLUMN_INDEX_STUDENT_DATA = 9;
+                    var _COLUMN_INDEX_WISE_IDS = 16;
+                    var _COLUMN_INDEX_WISE_ID_ = 16;
+                    var _COLUMN_INDEX_WISE_ID_2 = 17;
+                    var _COLUMN_INDEX_WISE_ID_3 = 18;
+                    var _COLUMN_INDEX_STUDENT_RESPONSE = 19;
+
+                    for (var _rowIndex = 0; _rowIndex < result.length; _rowIndex++) {
+                        var _row = result[_rowIndex];
+
+                        if (_rowIndex === 0) {
+                            // append additional header columns
+                            _row[_COLUMN_INDEX_WISE_ID_] = "WISE ID 1";
+                            _row[_COLUMN_INDEX_WISE_ID_2] = "WISE ID 2";
+                            _row[_COLUMN_INDEX_WISE_ID_3] = "WISE ID 3";
+                            _row[_COLUMN_INDEX_STUDENT_RESPONSE] = "response";
+                        } else {
+                            // for all non-header rows, fill in step numbers, titles, and component part numbers.
+                            var _nodeId = _row[_COLUMN_INDEX_NODE_ID];
+                            var _componentId = _row[_COLUMN_INDEX_COMPONENT_ID];
+                            _row[_COLUMN_INDEX_STEP_NUMBER] = _this2.ProjectService.getNodePositionById(_nodeId);
+                            _row[_COLUMN_INDEX_STEP_TITLE] = _this2.ProjectService.getNodeTitleByNodeId(_nodeId);
+                            _row[_COLUMN_INDEX_COMPONENT_PART_NUMBER] = _this2.ProjectService.getComponentPositionByNodeIdAndComponentId(_nodeId, _componentId) + 1; // make it 1-indexed for researchers
+                            var _wiseIDs = _row[_COLUMN_INDEX_WISE_IDS];
+                            var _wiseIDsArray = _wiseIDs.split(",");
+                            _row[_COLUMN_INDEX_WISE_ID_] = _wiseIDsArray[0];
+                            _row[_COLUMN_INDEX_WISE_ID_2] = _wiseIDsArray[1] || "";
+                            _row[_COLUMN_INDEX_WISE_ID_3] = _wiseIDsArray[2] || "";
+
+                            // get the student data JSON and extract responses into its own column
+                            var _studentDataJSONCell = _row[_COLUMN_INDEX_STUDENT_DATA];
+                            if (_row[COLUMN_INDEX_TYPE] === "report") {
+                                _row[_COLUMN_INDEX_STUDENT_RESPONSE] = _studentDataJSONCell.content || "";
+                            } else if (_row[COLUMN_INDEX_TYPE] === "note") {
+                                _row[_COLUMN_INDEX_STUDENT_RESPONSE] = _studentDataJSONCell.text || "";
+                            }
+                        }
+
+                        // append row to csvString
+                        for (var _cellIndex = 0; _cellIndex < _row.length; _cellIndex++) {
+                            var _cell = _row[_cellIndex];
+                            if ((typeof _cell === 'undefined' ? 'undefined' : _typeof(_cell)) === "object") {
+                                _cell = "\"" + JSON.stringify(_cell).replace(/"/g, '""') + "\"";
+                            } else if (typeof _cell === "string") {
+                                _cell = "\"" + _cell + "\"";
+                            }
+                            csvString += _cell + ",";
+                        }
+                        csvString += "\r\n";
+                    }
                 }
 
                 var csvBlob = new Blob([csvString], { type: 'text/csv' });

@@ -3,6 +3,7 @@
 class TeacherDataService {
 
     constructor($http,
+                $q,
                 $rootScope,
                 AnnotationService,
                 ConfigService,
@@ -10,6 +11,7 @@ class TeacherDataService {
                 ProjectService,
                 TeacherWebSocketService) {
         this.$http = $http;
+        this.$q = $q;
         this.$rootScope = $rootScope;
         this.AnnotationService = AnnotationService;
         this.ConfigService = ConfigService;
@@ -65,20 +67,27 @@ class TeacherDataService {
      * @param exportType
      */
     getExport(exportType) {
-        var exportURL = this.ConfigService.getConfigParam('runDataExportURL');
-        var runId = this.ConfigService.getRunId();
+        let exportURL = this.ConfigService.getConfigParam('runDataExportURL');
+        let runId = this.ConfigService.getRunId();
         exportURL += "/" + runId + "/" + exportType;
 
-        var params = {};
+        if (exportType === "studentAssets") {
+            window.location.href = exportURL;
+            let deferred = this.$q.defer();
+            let promise = deferred.promise;
+            deferred.resolve([]);
+            return promise;
+        } else {
+            let httpParams = {
+                method : 'GET',
+                url : exportURL,
+                params : {}
+            };
 
-        var httpParams = {};
-        httpParams.method = 'GET';
-        httpParams.url = exportURL;
-        httpParams.params = params;
-
-        return this.$http(httpParams).then((result) => {
-            return result.data;
-        });
+            return this.$http(httpParams).then((result) => {
+                return result.data;
+            });
+        }
     };
 
     /**
@@ -843,7 +852,9 @@ class TeacherDataService {
     };
 }
 
-TeacherDataService.$inject = ['$http',
+TeacherDataService.$inject = [
+    '$http',
+    '$q',
     '$rootScope',
     'AnnotationService',
     'ConfigService',

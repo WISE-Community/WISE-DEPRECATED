@@ -11,12 +11,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var TeacherDataService = function () {
-    function TeacherDataService($http, $rootScope, AnnotationService, ConfigService, NotificationService, ProjectService, TeacherWebSocketService) {
+    function TeacherDataService($http, $q, $rootScope, AnnotationService, ConfigService, NotificationService, ProjectService, TeacherWebSocketService) {
         var _this = this;
 
         _classCallCheck(this, TeacherDataService);
 
         this.$http = $http;
+        this.$q = $q;
         this.$rootScope = $rootScope;
         this.AnnotationService = AnnotationService;
         this.ConfigService = ConfigService;
@@ -80,16 +81,23 @@ var TeacherDataService = function () {
             var runId = this.ConfigService.getRunId();
             exportURL += "/" + runId + "/" + exportType;
 
-            var params = {};
+            if (exportType === "studentAssets") {
+                window.location.href = exportURL;
+                var deferred = this.$q.defer();
+                var promise = deferred.promise;
+                deferred.resolve([]);
+                return promise;
+            } else {
+                var httpParams = {
+                    method: 'GET',
+                    url: exportURL,
+                    params: {}
+                };
 
-            var httpParams = {};
-            httpParams.method = 'GET';
-            httpParams.url = exportURL;
-            httpParams.params = params;
-
-            return this.$http(httpParams).then(function (result) {
-                return result.data;
-            });
+                return this.$http(httpParams).then(function (result) {
+                    return result.data;
+                });
+            }
         }
     }, {
         key: 'saveEvent',
@@ -940,7 +948,7 @@ var TeacherDataService = function () {
     return TeacherDataService;
 }();
 
-TeacherDataService.$inject = ['$http', '$rootScope', 'AnnotationService', 'ConfigService', 'NotificationService', 'ProjectService', 'TeacherWebSocketService'];
+TeacherDataService.$inject = ['$http', '$q', '$rootScope', 'AnnotationService', 'ConfigService', 'NotificationService', 'ProjectService', 'TeacherWebSocketService'];
 
 exports.default = TeacherDataService;
 //# sourceMappingURL=teacherDataService.js.map

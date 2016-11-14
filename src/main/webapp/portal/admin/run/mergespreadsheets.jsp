@@ -4,23 +4,15 @@
 <html dir="${textDirection}">
 <head>
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
-    <script type="text/javascript" src="${contextPath}/<spring:theme code="jquerysource"/>"></script>
 
     <link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet" type="text/css"/>
-    <link href="${contextPath}/<spring:theme code="stylesheet"/>" media="screen" rel="stylesheet" type="text/css"/>
-    <link href="${contextPath}/<spring:theme code="teacherprojectstylesheet" />" media="screen" rel="stylesheet"
-          type="text/css"/>
-    <link href="${contextPath}/<spring:theme code="teacherhomepagestylesheet" />" media="screen" rel="stylesheet"
-          type="text/css"/>
     <link rel="shortcut icon" href="${contextPath}/<spring:theme code="favicon"/>"/>
-
-    <script src="${contextPath}/<spring:theme code="generalsource" />" type="text/javascript"></script>
 
     <title><spring:message code="wiseAdmin"/></title>
 
     <script type='text/javascript'>
         function validateForm() {
-            if ($("#uploadFile").val() === "") {
+            if (document.getElementById("uploadFile").value === "") {
                 alert("Please specify a file to upload.");
                 return false;
             }

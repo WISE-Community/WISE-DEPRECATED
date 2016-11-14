@@ -125,6 +125,29 @@ public class VLEServiceImpl implements VLEService {
                 isAutoSave, isSubmit, nodeId, componentId, componentType, components);
     }
 
+    public JSONArray getNotebookExport(Integer runId) {
+        SimpleDateFormat df = new SimpleDateFormat("YYYY/MM/dd HH:mm:ss");
+        List<Object[]> notebookItemExport = notebookItemDao.getNotebookItemExport(runId);
+        for (int i = 1; i < notebookItemExport.size(); i++) {
+            // skip header row
+            Object[] notebookItemExportRow = notebookItemExport.get(i);
+
+            // format the timestamps so they don't have a trailing ".0" at the end and mess up display in excel
+            Timestamp notebookItemExportRowClientSaveTimeTimestamp = (Timestamp) notebookItemExportRow[6];
+            notebookItemExportRow[6] = df.format(notebookItemExportRowClientSaveTimeTimestamp);
+            Timestamp notebookItemExportRowServerSaveTimeTimestamp = (Timestamp) notebookItemExportRow[7];
+            notebookItemExportRow[7] = df.format(notebookItemExportRowServerSaveTimeTimestamp);
+
+            String notebookItemExportRowStudentDataString = (String) notebookItemExportRow[9];
+            try {
+                notebookItemExportRow[9] = new JSONObject(notebookItemExportRowStudentDataString);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return new JSONArray(notebookItemExport);
+    }
+
     public JSONArray getStudentWorkExport(Integer runId) {
         SimpleDateFormat df = new SimpleDateFormat("YYYY/MM/dd HH:mm:ss");
         List<Object[]> studentWorkExport = studentWorkDao.getStudentWorkExport(runId);

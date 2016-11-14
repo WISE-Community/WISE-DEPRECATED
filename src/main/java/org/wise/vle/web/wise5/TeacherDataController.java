@@ -1,5 +1,6 @@
 package org.wise.vle.web.wise5;
 
+import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -17,15 +18,19 @@ import org.wise.portal.service.websocket.WISEWebSocketHandler;
 import org.wise.vle.domain.annotation.wise5.Annotation;
 import org.wise.vle.domain.notification.Notification;
 import org.wise.vle.domain.work.Event;
+import org.wise.vle.domain.work.NotebookItem;
 import org.wise.vle.domain.work.StudentWork;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Properties;
 import java.util.Set;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 /**
  * Controller for handling GET and POST of WISE5 Teacher related data
@@ -42,6 +47,9 @@ public class TeacherDataController {
 
     @Autowired
     private WebSocketHandler webSocketHandler;
+
+    @Autowired
+    private Properties wiseProperties;
 
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET, value = "/teacher/export/{runId}/{exportType}")
@@ -60,21 +68,84 @@ public class TeacherDataController {
             HttpServletResponse response) {
 
         try {
-            if ("allStudentWork".equals(exportType) || "latestStudentWork".equals(exportType)) {
-                JSONArray resultArray = vleService.getStudentWorkExport(runId);
-                PrintWriter writer = response.getWriter();
-                writer.write(resultArray.toString());
-                writer.close();
-            } else if ("events".equals(exportType)) {
-                JSONArray resultArray = vleService.getStudentEventExport(runId);
-                PrintWriter writer = response.getWriter();
-                writer.write(resultArray.toString());
-                writer.close();
+            // make sure the signed-in user has access to the run
+            User signedInUser = ControllerUtil.getSignedInUser();
+
+            Run run = runService.retrieveById(new Long(runId));
+
+            User owner = run.getOwner();
+            Set<User> sharedOwners = run.getSharedowners();
+
+            if (owner.equals(signedInUser) || sharedOwners.contains(signedInUser) || signedInUser.isAdmin()) {
+                if ("allStudentWork".equals(exportType) || "latestStudentWork".equals(exportType)) {
+                    JSONArray resultArray = vleService.getStudentWorkExport(runId);
+                    PrintWriter writer = response.getWriter();
+                    writer.write(resultArray.toString());
+                    writer.close();
+                } else if ("events".equals(exportType)) {
+                    JSONArray resultArray = vleService.getStudentEventExport(runId);
+                    PrintWriter writer = response.getWriter();
+                    writer.write(resultArray.toString());
+                    writer.close();
+                } else if ("notebookItems".equals(exportType)) {
+                    JSONArray resultArray = vleService.getNotebookExport(runId);
+                    PrintWriter writer = response.getWriter();
+                    writer.write(resultArray.toString());
+                    writer.close();
+                } else if ("studentAssets".equals(exportType)) {
+                    // send student assets directory for this run in a zip file
+                    String studentUploadsBaseDir = wiseProperties.getProperty("studentuploads_base_dir");
+                    String sep = System.getProperty("file.separator");
+                    String runStudentAssetsDir = studentUploadsBaseDir + sep + runId.toString() + sep;
+                    String zipFileName = "student_uploads_" + runId.toString() + ".zip";
+                    response.setContentType("application/zip");
+                    response.addHeader("Content-Disposition", "attachment;filename=\"" + zipFileName + "\"");
+
+                    // zip the folder and write to response outputstream
+                    ServletOutputStream outputStream = response.getOutputStream();
+
+                    //create ZipOutputStream object
+                    ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(outputStream));
+
+                    //path to the folder to be zipped
+                    File zipFolder = new File(runStudentAssetsDir);
+
+                    addFolderToZip(zipFolder, out, runStudentAssetsDir);
+                    out.close();
+                }
+            } else {
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "You are not authorized to access this page");
             }
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (ObjectNotFoundException onfe) {
+            onfe.printStackTrace();
         }
     }
+
+    private void addFolderToZip(File folder, ZipOutputStream zip, String baseName) throws IOException {
+        File[] files = folder.listFiles();
+        if (files != null) {
+            for (File file : files) {
+                if (file.isDirectory()) {
+                    // add folder to zip
+                    String name = file.getAbsolutePath().substring(baseName.length());
+                    ZipEntry zipEntry = new ZipEntry(name + "/");
+                    zip.putNextEntry(zipEntry);
+                    zip.closeEntry();
+                    addFolderToZip(file, zip, baseName);
+                } else {
+                    // it's a file.
+                    String fileName = file.getAbsolutePath().substring(baseName.length());
+                    ZipEntry zipEntry = new ZipEntry(fileName);
+                    zip.putNextEntry(zipEntry);
+                    IOUtils.copy(new FileInputStream(file), zip);
+                    zip.closeEntry();
+                }
+            }
+        }
+    }
+
 
     @RequestMapping(method = RequestMethod.GET, value = "/teacher/data")
     public void getWISE5TeacherData(
@@ -102,73 +173,88 @@ public class TeacherDataController {
 
     ) {
 
-        JSONObject result = new JSONObject();
-        if (getStudentWork) {
-            List<StudentWork> studentWorkList = vleService.getStudentWorkList(id, runId, periodId, workgroupId,
-                    isAutoSave, isSubmit, nodeId, componentId, componentType, components);
-            
-            JSONArray studentWorkJSONArray = new JSONArray();
-
-            // loop through all the component states
-            for (int c = 0; c < studentWorkList.size(); c++) {
-                StudentWork studentWork = studentWorkList.get(c);
-
-                // get the JSON representation of the component state and add to studentWorkJSONArray
-                studentWorkJSONArray.put(studentWork.toJSON());
-            }
-            try {
-                result.put("studentWorkList", studentWorkJSONArray);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-        if (getEvents) {
-            List<Event> events = vleService.getEvents(id, runId, periodId, workgroupId,
-                    nodeId, componentId, componentType, context, category, event);
-
-            JSONArray eventsJSONArray = new JSONArray();
-
-            // loop through all the events
-            for (int e = 0; e < events.size(); e++) {
-                Event eventObject = events.get(e);
-
-                // get the JSON representation of the event and add to eventsJSONArray
-                eventsJSONArray.put(eventObject.toJSON());
-            }
-            try {
-                result.put("events", eventsJSONArray);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-        if (getAnnotations) {
-            List<Annotation> annotations = vleService.getAnnotations(
-                    id, runId, periodId, fromWorkgroupId, toWorkgroupId,
-                    nodeId, componentId, studentWorkId, annotationType);
-
-            JSONArray annotationsJSONArray = new JSONArray();
-
-            // loop through all the annotations
-            for (int a = 0; a < annotations.size(); a++) {
-                Annotation annotationObject = annotations.get(a);
-
-                // get the JSON representation of the annotation and add to annotationsJSONArray
-                annotationsJSONArray.put(annotationObject.toJSON());
-            }
-            try {
-                result.put("annotations", annotationsJSONArray);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-
-        // write the result to the response
         try {
-            PrintWriter writer = response.getWriter();
-            writer.write(result.toString());
-            writer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+            // make sure the signed-in user has access to the run
+            User signedInUser = ControllerUtil.getSignedInUser();
+
+            Run run = runService.retrieveById(new Long(runId));
+
+            User owner = run.getOwner();
+            Set<User> sharedOwners = run.getSharedowners();
+
+            if (owner.equals(signedInUser) || sharedOwners.contains(signedInUser) || signedInUser.isAdmin()) {
+
+                JSONObject result = new JSONObject();
+                if (getStudentWork) {
+                    List<StudentWork> studentWorkList = vleService.getStudentWorkList(id, runId, periodId, workgroupId,
+                            isAutoSave, isSubmit, nodeId, componentId, componentType, components);
+
+                    JSONArray studentWorkJSONArray = new JSONArray();
+
+                    // loop through all the component states
+                    for (int c = 0; c < studentWorkList.size(); c++) {
+                        StudentWork studentWork = studentWorkList.get(c);
+
+                        // get the JSON representation of the component state and add to studentWorkJSONArray
+                        studentWorkJSONArray.put(studentWork.toJSON());
+                    }
+                    try {
+                        result.put("studentWorkList", studentWorkJSONArray);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+                if (getEvents) {
+                    List<Event> events = vleService.getEvents(id, runId, periodId, workgroupId,
+                            nodeId, componentId, componentType, context, category, event);
+
+                    JSONArray eventsJSONArray = new JSONArray();
+
+                    // loop through all the events
+                    for (int e = 0; e < events.size(); e++) {
+                        Event eventObject = events.get(e);
+
+                        // get the JSON representation of the event and add to eventsJSONArray
+                        eventsJSONArray.put(eventObject.toJSON());
+                    }
+                    try {
+                        result.put("events", eventsJSONArray);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+                if (getAnnotations) {
+                    List<Annotation> annotations = vleService.getAnnotations(
+                            id, runId, periodId, fromWorkgroupId, toWorkgroupId,
+                            nodeId, componentId, studentWorkId, annotationType);
+
+                    JSONArray annotationsJSONArray = new JSONArray();
+
+                    // loop through all the annotations
+                    for (int a = 0; a < annotations.size(); a++) {
+                        Annotation annotationObject = annotations.get(a);
+
+                        // get the JSON representation of the annotation and add to annotationsJSONArray
+                        annotationsJSONArray.put(annotationObject.toJSON());
+                    }
+                    try {
+                        result.put("annotations", annotationsJSONArray);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                // write the result to the response
+                try {
+                    PrintWriter writer = response.getWriter();
+                    writer.write(result.toString());
+                    writer.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (ObjectNotFoundException onfe) {
+            onfe.printStackTrace();
         }
     }
 
@@ -184,6 +270,7 @@ public class TeacherDataController {
         JSONObject result = new JSONObject();
 
         try {
+            // make sure the signed-in user has access to the run
             User signedInUser = ControllerUtil.getSignedInUser();
 
             Run run = runService.retrieveById(new Long(runId));

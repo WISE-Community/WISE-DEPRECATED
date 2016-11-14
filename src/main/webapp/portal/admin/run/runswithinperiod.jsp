@@ -9,11 +9,9 @@
 
 <link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
 <link href="${contextPath}/<spring:theme code="stylesheet"/>" media="screen" rel="stylesheet" type="text/css" />
-<link href="${contextPath}/<spring:theme code="jquerystylesheet"/>" media="screen" rel="stylesheet" type="text/css" >
 <link href="${contextPath}/<spring:theme code="superfishstylesheet"/>" rel="stylesheet" type="text/css" >
 
 <script src="${contextPath}/<spring:theme code="jquerysource"/>" type="text/javascript"></script>
-<script src="${contextPath}/<spring:theme code="jqueryuisource"/>" type="text/javascript"></script>
 <script src="${contextPath}/<spring:theme code="superfishsource"/>" type="text/javascript"></script>
 
 <style>
@@ -34,7 +32,7 @@ th {
 <table id="runStatsTable" border="1">
 	<thead>
 		<tr><th><spring:message code="run_id" /> (<spring:message code="run_accessCode" />)</th>
-			<th><spring:message code="run_name" /></th>
+			<th><spring:message code="run_name" /> (<spring:message code="wiseVersion" />)</th>
 			<th><spring:message code="admin.run.owners" /></th>
 			<c:if test="${period!=null}">
 				<th><spring:message code="admin.run.accessCount" /> ${period}</th>
@@ -46,7 +44,7 @@ th {
 		<c:forEach var="run" items="${runs}">
 			<tr>
 				<td>${run.id} (${run.runcode})</td>
-				<td>${run.name}</td>
+				<td>${run.name} (${run.project.wiseVersion})</td>
 				<td>
 						<a href="${contextPath}/login/impersonate?username=${run.owner.userDetails.username}">${run.owner.userDetails.username}</a><br/>
 						(${run.owner.userDetails.schoolname}, ${run.owner.userDetails.city}, ${run.owner.userDetails.state},${run.owner.userDetails.country})
