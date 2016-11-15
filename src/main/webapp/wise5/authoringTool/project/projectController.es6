@@ -821,35 +821,79 @@ class ProjectController {
     }
     
     /**
-     * Toggle the import view
+     * Toggle the import view and load the project drop downs if necessary
      */
     toggleImportView() {
         this.importMode = !this.importMode;
+        
+        if (this.authorableProjectsList == null) {
+            // populate the authorable projects drop down
+            this.getAuthorableProjects();
+        }
+        
+        if (this.libraryProjectsList == null) {
+            // populate the library projects drop down
+            this.getLibraryProjects();
+        }
     }
     
     /**
      * Get all the authorable projects
      */
     getAuthorableProjects() {
-        return this.ConfigService.getConfigParam('projects');
+        this.authorableProjectsList = this.ConfigService.getConfigParam('projects');
     }
     
     /**
      * Get all the library projects
      */
     getLibraryProjects() {
-        this.ConfigService.getLibraryProjects().then((libraryProjects) => {
-            this.libraryProjects = libraryProjects;
+        this.ConfigService.getLibraryProjects().then((libraryProjectsList) => {
+            this.libraryProjectsList = libraryProjectsList;
         });
     }
     
     /**
-     * Show the project we want to import steps from
+     * The author has chosen an authorable project to import from
+     * @param importProjectId the project id to import from
      */
-    showImportProject() {
+    showAuthorableImportProject(importProjectId) {
         
-        if (this.importProjectId != null) {
-            
+        // clear the select drop down for the library project
+        this.importLibraryProjectId = null;
+        
+        // show the import project
+        this.showImportProject(importProjectId);
+    }
+    
+    /**
+     * The author has chosen a library project to import from
+     * @param importProjectId the project id to import from
+     */
+    showLibraryImportProject(importProjectId) {
+        this.importAuthorableProjectId = null;
+        
+        // show the import project
+        this.showImportProject(importProjectId);
+    }
+    
+    /**
+     * Show the project we want to import steps from
+     * @param importProjectId the import project id
+     */
+    showImportProject(importProjectId) {
+        
+        this.importProjectId = importProjectId;
+        
+        if (this.importProjectId == null) {
+            // clear all the import project values
+            this.importProjectIdToOrder = {};
+            this.importProjectItems = [];
+            this.importAuthorableProjectId = null;
+            this.importLibraryProjectId = null;
+            this.importProjectId = null;
+            this.importProject = null;
+        } else {
             // get the import project
             this.ProjectService.retrieveProjectById(this.importProjectId).then((projectJSON) => {
                 
@@ -862,6 +906,20 @@ class ProjectController {
                 this.importProjectIdToOrder = result.idToOrder;
                 this.importProjectItems = result.nodes;
             });
+        }
+    }
+    
+    /**
+     * Preview the import project
+     */
+    previewImportProject() {
+    
+        if (this.importProject != null) {
+            // get the preview project url for the import project
+            var previewProjectURL = this.importProject.previewProjectURL;
+            
+            // open the preview step in a new tab
+            window.open(previewProjectURL);
         }
     }
     
@@ -895,114 +953,139 @@ class ProjectController {
         // get the nodes that were selected
         var selectedNodes = this.getSelectedNodesToImport();
         
-        var selectedNodeTitles = '';
-        
-        // loop through all the selected nodes
-        for (var s = 0; s < selectedNodes.length; s++) {
-            var selectedNode = selectedNodes[s];
+        if (selectedNodes == null || selectedNodes.length == 0) {
+            // the author did not select any steps to import
+            alert('Please select a step to import.');
+        } else {
+            var selectedNodeTitles = '';
             
-            if (selectedNode != null) {
-                
-                var stepNumber = null;
-                var title = selectedNode.title;
-                
-                if (this.importProjectIdToOrder[selectedNode.id] != null) {
-                    // get the step number
-                    stepNumber = this.importProjectIdToOrder[selectedNode.id].stepNumber;
-                }
-                
-                if (selectedNodeTitles != '') {
-                    selectedNodeTitles += '\n';
-                }
-                
-                // get the step number and title
-                selectedNodeTitles += stepNumber + ': ' + title;
-            }
-        }
-        
-        // ask the author if they are sure they want to import these steps
-        var answer = confirm('Are you sure you want to import these steps?\n\n' + selectedNodeTitles);
-        
-        if (answer) {
-            // the author answered yes to import
-            
-            // get the inactive nodes from the project
-            var inactiveNodes = this.ProjectService.getInactiveNodes();
-            
-            var nodeIdToInsertAfter = 'inactiveSteps';
-            
-            // loop through the nodes we will import
-            for (var n = 0; n < selectedNodes.length; n++) {
-                
-                var selectedNode = selectedNodes[n];
+            // loop through all the selected nodes
+            for (var s = 0; s < selectedNodes.length; s++) {
+                var selectedNode = selectedNodes[s];
                 
                 if (selectedNode != null) {
                     
-                    var tempNodeId = selectedNode.id;
+                    var stepNumber = null;
+                    var title = selectedNode.title;
                     
-                    // get the item which contains the node we want to import
-                    var tempItem = this.importProjectIdToOrder[tempNodeId];
-                    
-                    if (tempItem != null) {
-                        
-                        // find where to insert the imported node
-                        if (inactiveNodes != null && inactiveNodes.length > 0) {
-                            nodeIdToInsertAfter = inactiveNodes[inactiveNodes.length - 1];
-                        }
-                        
-                        // make a copy of the node so that we don't modify the source
-                        var tempNode = this.UtilService.makeCopyOfJSONObject(tempItem.node);
-                        
-                        // check if the node id is already being used in the current project
-                        if (this.ProjectService.isNodeIdUsed(tempNode.id)) {
-                            // the node id is already being used in the current project
-                            
-                            // get the next available node id
-                            var nextAvailableNodeId = this.ProjectService.getNextAvailableNodeId();
-                            
-                            // change the node id of the node we are importing
-                            tempNode.id = nextAvailableNodeId;
-                        }
-                        
-                        var tempComponents = tempNode.components;
-                        
-                        if (tempComponents != null) {
-                            
-                            // loop through all the components in the node we are importing
-                            for (var c = 0; c < tempComponents.length; c++) {
-                                var tempComponent = tempComponents[c];
-                                
-                                if (tempComponent != null) {
-                                    
-                                    // check if the component id is already being used
-                                    if (this.ProjectService.isComponentIdUsed(tempComponent.id)) {
-                                        // we are already using the component id so we will need to change it
-                                        
-                                        // find a component id that isn't currently being used
-                                        var newComponentId = this.ProjectService.getUnusedComponentId();
-                                        
-                                        // set the new component id into the component
-                                        tempComponent.id = newComponentId;
-                                    }
-                                }
-                            }
-                        }
-                        
-                        // add the imported node to the end of the inactive nodes
-                        this.ProjectService.addInactiveNode(tempNode, nodeIdToInsertAfter);
+                    if (this.importProjectIdToOrder[selectedNode.id] != null) {
+                        // get the step number
+                        stepNumber = this.importProjectIdToOrder[selectedNode.id].stepNumber;
                     }
+                    
+                    if (selectedNodeTitles != '') {
+                        selectedNodeTitles += '\n';
+                    }
+                    
+                    // get the step number and title
+                    selectedNodeTitles += stepNumber + ': ' + title;
                 }
             }
             
-            // save the project
-            this.ProjectService.saveProject();
-
-            // refresh the project
-            this.ProjectService.parseProject();
-            this.items = this.ProjectService.idToOrder;
+            var message = '';
             
-            // turn off import mode
-            this.importMode = false;
+            if (selectedNodes.length == 1) {
+                // one step is being imported
+                message = 'Are you sure you want to import this step?\n\n' + selectedNodeTitles + '\n\nThe imported step will be placed in the Inactive Steps section.';
+            } else {
+                // multiple steps are being imported
+                message = 'Are you sure you want to import these steps?\n\n' + selectedNodeTitles + '\n\nThe imported steps will be placed in the Inactive Steps section.';
+            }
+            
+            // ask the author if they are sure they want to import these steps
+            var answer = confirm(message);
+            
+            if (answer) {
+                // the author answered yes to import
+                
+                // get the inactive nodes from the project
+                var inactiveNodes = this.ProjectService.getInactiveNodes();
+                
+                var nodeIdToInsertAfter = 'inactiveSteps';
+                
+                // loop through the nodes we will import
+                for (var n = 0; n < selectedNodes.length; n++) {
+                    
+                    var selectedNode = selectedNodes[n];
+                    
+                    if (selectedNode != null) {
+                        
+                        var tempNodeId = selectedNode.id;
+                        
+                        // get the item which contains the node we want to import
+                        var tempItem = this.importProjectIdToOrder[tempNodeId];
+                        
+                        if (tempItem != null) {
+                            
+                            // find where to insert the imported node
+                            if (inactiveNodes != null && inactiveNodes.length > 0) {
+                                nodeIdToInsertAfter = inactiveNodes[inactiveNodes.length - 1];
+                            }
+                            
+                            // make a copy of the node so that we don't modify the source
+                            var tempNode = this.UtilService.makeCopyOfJSONObject(tempItem.node);
+                            
+                            // check if the node id is already being used in the current project
+                            if (this.ProjectService.isNodeIdUsed(tempNode.id)) {
+                                // the node id is already being used in the current project
+                                
+                                // get the next available node id
+                                var nextAvailableNodeId = this.ProjectService.getNextAvailableNodeId();
+                                
+                                // change the node id of the node we are importing
+                                tempNode.id = nextAvailableNodeId;
+                            }
+                            
+                            var tempComponents = tempNode.components;
+                            
+                            if (tempComponents != null) {
+                                
+                                // loop through all the components in the node we are importing
+                                for (var c = 0; c < tempComponents.length; c++) {
+                                    var tempComponent = tempComponents[c];
+                                    
+                                    if (tempComponent != null) {
+                                        
+                                        // check if the component id is already being used
+                                        if (this.ProjectService.isComponentIdUsed(tempComponent.id)) {
+                                            // we are already using the component id so we will need to change it
+                                            
+                                            // find a component id that isn't currently being used
+                                            var newComponentId = this.ProjectService.getUnusedComponentId();
+                                            
+                                            // set the new component id into the component
+                                            tempComponent.id = newComponentId;
+                                        }
+                                    }
+                                }
+                            }
+                            
+                            // clear the constraints
+                            tempNode.constraints = [];
+                            
+                            // add the imported node to the end of the inactive nodes
+                            this.ProjectService.addInactiveNode(tempNode, nodeIdToInsertAfter);
+                        }
+                    }
+                }
+                
+                // save the project
+                this.ProjectService.saveProject();
+
+                // refresh the project
+                this.ProjectService.parseProject();
+                this.items = this.ProjectService.idToOrder;
+                
+                // turn off import mode
+                this.importMode = false;
+                
+                this.importProjectIdToOrder = {};
+                this.importProjectItems = [];
+                this.importAuthorableProjectId = null;
+                this.importLibraryProjectId = null;
+                this.importProjectId = null;
+                this.importProject = null;
+            }
         }
     }
     

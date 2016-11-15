@@ -1123,6 +1123,7 @@ public class AuthorProjectController {
 	 */
 	private ModelAndView handleProjectList(HttpServletRequest request, HttpServletResponse response) throws Exception{
 		String projectTag = request.getParameter("projectTag");
+		String wiseVersion = request.getParameter("wiseVersion");
 
 		JSONArray projects = new JSONArray();
 
@@ -1131,7 +1132,7 @@ public class AuthorProjectController {
 			projects = getAuthorableProjects();
 		} else if (projectTag.equals("library")) {
 			//get all the library projects
-			projects = getLibraryProjects();
+			projects = getLibraryProjects(wiseVersion);
 		} else if (projectTag.equals("authorable")) {
 			//get all the projects the current user can author
 			projects = getAuthorableProjects();
@@ -1140,7 +1141,7 @@ public class AuthorProjectController {
 			JSONArray authorableProjects = getAuthorableProjects();
 
 			//get all the library projects
-			JSONArray libraryProjects = getLibraryProjects();
+			JSONArray libraryProjects = getLibraryProjects(wiseVersion);
 
 			//add the authorable projects to the array
 			for (int x=0; x<authorableProjects.length(); x++) {
@@ -1227,15 +1228,19 @@ public class AuthorProjectController {
 	 * @throws Exception
 	 * @return the JSONArray of library projects
 	 */
-	private JSONArray getLibraryProjects() throws Exception {
+	private JSONArray getLibraryProjects(String wiseVersion) throws Exception {
 
 		List<Project> libraryProjects = projectService.getLibraryProjectList();
-
+		
+		if (wiseVersion == null) {
+			wiseVersion = "4";
+		}
+		
 		//an array to hold the information for the projects
 		JSONArray libraryProjectArray = new JSONArray();
 
 		for (Project libraryProject : libraryProjects) {
-			if (libraryProject.getProjectType() == ProjectType.LD && (libraryProject.getWiseVersion() == null || libraryProject.getWiseVersion().equals(new Integer(4)))) {
+			if (libraryProject.getProjectType() == ProjectType.LD && ((libraryProject.getWiseVersion() == null && "4".equals(wiseVersion)) || (new Integer(wiseVersion)).equals(libraryProject.getWiseVersion()))) {
 				/*
 				 * get the relative project url
 				 * e.g.

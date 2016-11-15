@@ -485,6 +485,7 @@ public class WISE5AuthorProjectController {
             config.put("notifyProjectBeginURL", wiseBaseURL + "/project/notifyAuthorBegin/");
             config.put("notifyProjectEndURL", wiseBaseURL + "/project/notifyAuthorEnd/");
             config.put("getCurrentAuthorsURL", wiseBaseURL + "/project/currentAuthors/");
+            config.put("getLibraryProjectsURL", wiseBaseURL + "/author/authorproject.html?command=projectList&projectPaths=&projectTag=library&wiseVersion=5");
 
             // add this teachers's info in config.userInfo.myUserInfo object
             JSONObject myUserInfo = new JSONObject();
