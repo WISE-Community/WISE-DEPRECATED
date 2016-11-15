@@ -38,7 +38,6 @@ input[type="text"] {
 	left: 0;
 	right: 0;
 	bottom: 40px;
-    overflow: hidden;
 }
 
 #tools_top, #tools_bottom, #editor_panel, #history_panel, #tools_left {
@@ -142,4 +141,8 @@ input[type="text"] {
 	margin-right: 5px;
 	margin-top: 2px;
 	font-size: 15px;
+}
+
+#text {
+    display: none;
 }
