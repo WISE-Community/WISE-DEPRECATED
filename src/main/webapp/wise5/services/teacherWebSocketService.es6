@@ -35,6 +35,10 @@ class TeacherWebSocketService {
             this.handleStudentDisconnected(data);
         } else if (messageType === 'notification' || messageType === 'CRaterResultNotification') {
             this.$rootScope.$broadcast('newNotification', data.data);
+        } else if (messageType === 'newAnnotation') {
+            this.$rootScope.$broadcast('newAnnotationReceived', {annotation: data.annotation});
+        } else if (messageType === 'newStudentWork') {
+            this.$rootScope.$broadcast('newStudentWorkReceived', {studentWork: data.studentWork});
         }
     };
 

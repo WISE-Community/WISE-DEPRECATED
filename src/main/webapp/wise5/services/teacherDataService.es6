@@ -19,7 +19,12 @@ class TeacherDataService {
         this.ProjectService = ProjectService;
         this.TeacherWebSocketService = TeacherWebSocketService;
 
-        this.studentData = {};
+        this.studentData = {
+            componentStatesByWorkgroupId: {},
+            componentStatesByNodeId: {},
+            componentStatesByComponentId: {}
+        };
+
         this.currentPeriod = null;
         this.currentNode = null;
         this.previousStep = null;
@@ -35,31 +40,61 @@ class TeacherDataService {
         this.$rootScope.$on('annotationSavedToServer', (event, args) => {
 
             if (args) {
-
                 // get the annotation that was saved to the server
                 let annotation = args.annotation;
-
-                // add the annotation to the local annotations array
-                this.studentData.annotations.push(annotation);
-
-                let toWorkgroupId = annotation.toWorkgroupId;
-                if (this.studentData.annotationsToWorkgroupId[toWorkgroupId] == null) {
-                    this.studentData.annotationsToWorkgroupId[toWorkgroupId] = new Array();
-                }
-                this.studentData.annotationsToWorkgroupId[toWorkgroupId].push(annotation);
-
-                let nodeId = annotation.nodeId;
-                if (this.studentData.annotationsByNodeId[nodeId] == null) {
-                    this.studentData.annotationsByNodeId[nodeId] = new Array();
-                }
-                this.studentData.annotationsByNodeId[nodeId].push(annotation);
-                
-                this.AnnotationService.setAnnotations(this.studentData.annotations);
-
-                // broadcast the event that a new annotation has been received
-                this.$rootScope.$broadcast('annotationReceived', {annotation, annotation});
+                this.handleAnnotationReceived(annotation);
             }
         });
+
+        /**
+         * Listen for the 'newAnnotationReceived' event which is fired when
+         * teacher receives a new annotation (usually on a student work) from the server
+         */
+        this.$rootScope.$on('newAnnotationReceived', (event, args) => {
+
+            if (args) {
+                // get the annotation that was saved to the server
+                let annotation = args.annotation;
+                this.handleAnnotationReceived(annotation);
+            }
+        });
+
+        /**
+         * Listen for the 'newStudentWorkReceived' event which is fired when
+         * teacher receives a new student work from the server
+         */
+        this.$rootScope.$on('newStudentWorkReceived', (event, args) => {
+
+            if (args) {
+                // get the student work (component state) that was saved to the server
+                let studentWork = args.studentWork;
+                this.addOrUpdateComponentState(studentWork);
+                // broadcast the event that a new work has been received
+                this.$rootScope.$broadcast('studentWorkReceived', {studentWork: studentWork});
+            }
+        });
+    }
+
+    handleAnnotationReceived(annotation) {
+        // add the annotation to the local annotations array
+        this.studentData.annotations.push(annotation);
+
+        let toWorkgroupId = annotation.toWorkgroupId;
+        if (this.studentData.annotationsToWorkgroupId[toWorkgroupId] == null) {
+            this.studentData.annotationsToWorkgroupId[toWorkgroupId] = new Array();
+        }
+        this.studentData.annotationsToWorkgroupId[toWorkgroupId].push(annotation);
+
+        let nodeId = annotation.nodeId;
+        if (this.studentData.annotationsByNodeId[nodeId] == null) {
+            this.studentData.annotationsByNodeId[nodeId] = new Array();
+        }
+        this.studentData.annotationsByNodeId[nodeId].push(annotation);
+
+        this.AnnotationService.setAnnotations(this.studentData.annotations);
+
+        // broadcast the event that a new annotation has been received
+        this.$rootScope.$broadcast('annotationReceived', {annotation: annotation});
     }
 
     /**
@@ -215,7 +250,7 @@ class TeacherDataService {
      * @returns a promise
      */
     retrieveStudentData(params) {
-        var studentDataURL = this.ConfigService.getConfigParam('teacherDataURL');
+        let studentDataURL = this.ConfigService.getConfigParam('teacherDataURL');
 
         if (params.getStudentWork == null) {
             params.getStudentWork = true;
@@ -229,48 +264,23 @@ class TeacherDataService {
             params.getAnnotations = true;
         }
 
-        var httpParams = {};
-        httpParams.method = 'GET';
-        httpParams.url = studentDataURL;
-        httpParams.params = params;
+        let httpParams = {
+            "method": "GET",
+            "url": studentDataURL,
+            "params": params
+        };
 
         return this.$http(httpParams).then((result) => {
             var resultData = result.data;
             if (resultData != null) {
 
-                if (this.studentData == null) {
-                    this.studentData = {};
-                }
-
                 if (resultData.studentWorkList != null) {
                     var componentStates = resultData.studentWorkList;
 
-                    // populate allComponentStates, componentStatesByWorkgroupId and componentStatesByNodeId arrays
-                    this.studentData.componentStates = componentStates;
-                    this.studentData.componentStatesByWorkgroupId = {};
-                    this.studentData.componentStatesByNodeId = {};
-                    this.studentData.componentStatesByComponentId = {};
-
+                    // populate allComponentStates, componentStatesByWorkgroupId and componentStatesByNodeId objects
                     for (var i = 0; i < componentStates.length; i++) {
                         var componentState = componentStates[i];
-
-                        var componentStateWorkgroupId = componentState.workgroupId;
-                        if (this.studentData.componentStatesByWorkgroupId[componentStateWorkgroupId] == null) {
-                            this.studentData.componentStatesByWorkgroupId[componentStateWorkgroupId] = new Array();
-                        }
-                        this.studentData.componentStatesByWorkgroupId[componentStateWorkgroupId].push(componentState);
-
-                        var componentStateNodeId = componentState.nodeId;
-                        if (this.studentData.componentStatesByNodeId[componentStateNodeId] == null) {
-                            this.studentData.componentStatesByNodeId[componentStateNodeId] = new Array();
-                        }
-                        this.studentData.componentStatesByNodeId[componentStateNodeId].push(componentState);
-
-                        var componentId = componentState.componentId;
-                        if (this.studentData.componentStatesByComponentId[componentId] == null) {
-                            this.studentData.componentStatesByComponentId[componentId] = new Array();
-                        }
-                        this.studentData.componentStatesByComponentId[componentId].push(componentState);
+                        this.addOrUpdateComponentState(componentState);
                     }
                 }
 
@@ -319,6 +329,66 @@ class TeacherDataService {
                 this.AnnotationService.setAnnotations(this.studentData.annotations);
             }
         });
+    };
+
+    /**
+     * Add ComponentState to local bookkeeping
+     * @param componentState the ComponentState to add
+     */
+    addOrUpdateComponentState(componentState) {
+        var componentStateWorkgroupId = componentState.workgroupId;
+        if (this.studentData.componentStatesByWorkgroupId[componentStateWorkgroupId] == null) {
+            this.studentData.componentStatesByWorkgroupId[componentStateWorkgroupId] = new Array();
+        }
+        let found = false;
+        for (let w = 0; w < this.studentData.componentStatesByWorkgroupId[componentStateWorkgroupId].length; w++) {
+            let cs = this.studentData.componentStatesByWorkgroupId[componentStateWorkgroupId][w];
+            if (cs.id != null && cs.id === componentState.id) {
+                // found the same component id, so just update it in place.
+                this.studentData.componentStatesByWorkgroupId[componentStateWorkgroupId][w] = componentState;
+                found = true;  // remember this so we don't insert later.
+                break;
+            }
+        }
+        if (!found) {
+            this.studentData.componentStatesByWorkgroupId[componentStateWorkgroupId].push(componentState);
+        }
+
+        var componentStateNodeId = componentState.nodeId;
+        if (this.studentData.componentStatesByNodeId[componentStateNodeId] == null) {
+            this.studentData.componentStatesByNodeId[componentStateNodeId] = new Array();
+        }
+        found = false;  // reset
+        for (let n = 0; n < this.studentData.componentStatesByNodeId[componentStateNodeId].length; n++) {
+            let cs = this.studentData.componentStatesByNodeId[componentStateNodeId][n];
+            if (cs.id != null && cs.id === componentState.id) {
+                // found the same component id, so just update it in place.
+                this.studentData.componentStatesByNodeId[componentStateNodeId][n] = componentState;
+                found = true; // remember this so we don't insert later.
+                break;
+            }
+        }
+        if (!found) {
+            this.studentData.componentStatesByNodeId[componentStateNodeId].push(componentState);
+        }
+
+        var componentId = componentState.componentId;
+        if (this.studentData.componentStatesByComponentId[componentId] == null) {
+            this.studentData.componentStatesByComponentId[componentId] = new Array();
+        }
+        found = false;  // reset
+        for (let c = 0; c < this.studentData.componentStatesByComponentId[componentId].length; c++) {
+            let cs = this.studentData.componentStatesByComponentId[componentId][c];
+            if (cs.id != null && cs.id === componentState.id) {
+                // found the same component id, so just update it in place.
+                this.studentData.componentStatesByComponentId[componentId][c] = componentState
+                found = true; // remember this so we don't insert later.
+                break;
+            }
+        }
+        if (!found) {
+            this.studentData.componentStatesByComponentId[componentId].push(componentState);
+        }
     };
 
     /**

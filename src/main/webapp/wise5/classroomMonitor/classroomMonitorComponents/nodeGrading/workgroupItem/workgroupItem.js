@@ -74,6 +74,19 @@ var WorkgroupItemController = function () {
                 var workgroupId = annotation.toWorkgroupId;
                 var nodeId = annotation.nodeId;
                 if (workgroupId === _this.workgroupId && nodeId === _this.nodeId) {
+                    // workgroup has a new annotation for this node
+                    _this.updateModel();
+                }
+            }
+        });
+
+        this.$scope.$on('studentWorkReceived', function (event, args) {
+            var studentWork = args.studentWork;
+
+            if (studentWork != null) {
+                var workgroupId = studentWork.workgroupId;
+                var nodeId = studentWork.nodeId;
+                if (workgroupId === _this.workgroupId && nodeId === _this.nodeId) {
                     // workgroup has a new componentState for this node
                     _this.updateModel();
                 }

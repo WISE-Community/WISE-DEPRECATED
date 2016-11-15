@@ -6,8 +6,6 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var TeacherDataService = function () {
@@ -25,7 +23,12 @@ var TeacherDataService = function () {
         this.ProjectService = ProjectService;
         this.TeacherWebSocketService = TeacherWebSocketService;
 
-        this.studentData = {};
+        this.studentData = {
+            componentStatesByWorkgroupId: {},
+            componentStatesByNodeId: {},
+            componentStatesByComponentId: {}
+        };
+
         this.currentPeriod = null;
         this.currentNode = null;
         this.previousStep = null;
@@ -41,40 +44,71 @@ var TeacherDataService = function () {
         this.$rootScope.$on('annotationSavedToServer', function (event, args) {
 
             if (args) {
-
                 // get the annotation that was saved to the server
                 var annotation = args.annotation;
+                _this.handleAnnotationReceived(annotation);
+            }
+        });
 
-                // add the annotation to the local annotations array
-                _this.studentData.annotations.push(annotation);
+        /**
+         * Listen for the 'newAnnotationReceived' event which is fired when
+         * teacher receives a new annotation (usually on a student work) from the server
+         */
+        this.$rootScope.$on('newAnnotationReceived', function (event, args) {
 
-                var toWorkgroupId = annotation.toWorkgroupId;
-                if (_this.studentData.annotationsToWorkgroupId[toWorkgroupId] == null) {
-                    _this.studentData.annotationsToWorkgroupId[toWorkgroupId] = new Array();
-                }
-                _this.studentData.annotationsToWorkgroupId[toWorkgroupId].push(annotation);
+            if (args) {
+                // get the annotation that was saved to the server
+                var annotation = args.annotation;
+                _this.handleAnnotationReceived(annotation);
+            }
+        });
 
-                var nodeId = annotation.nodeId;
-                if (_this.studentData.annotationsByNodeId[nodeId] == null) {
-                    _this.studentData.annotationsByNodeId[nodeId] = new Array();
-                }
-                _this.studentData.annotationsByNodeId[nodeId].push(annotation);
+        /**
+         * Listen for the 'newStudentWorkReceived' event which is fired when
+         * teacher receives a new student work from the server
+         */
+        this.$rootScope.$on('newStudentWorkReceived', function (event, args) {
 
-                _this.AnnotationService.setAnnotations(_this.studentData.annotations);
-
-                // broadcast the event that a new annotation has been received
-                _this.$rootScope.$broadcast('annotationReceived', _defineProperty({ annotation: annotation }, 'annotation', annotation));
+            if (args) {
+                // get the student work (component state) that was saved to the server
+                var studentWork = args.studentWork;
+                _this.addOrUpdateComponentState(studentWork);
+                // broadcast the event that a new work has been received
+                _this.$rootScope.$broadcast('studentWorkReceived', { studentWork: studentWork });
             }
         });
     }
 
-    /**
-     * Retrieves the export given the export Type
-     * @param exportType
-     */
-
-
     _createClass(TeacherDataService, [{
+        key: 'handleAnnotationReceived',
+        value: function handleAnnotationReceived(annotation) {
+            // add the annotation to the local annotations array
+            this.studentData.annotations.push(annotation);
+
+            var toWorkgroupId = annotation.toWorkgroupId;
+            if (this.studentData.annotationsToWorkgroupId[toWorkgroupId] == null) {
+                this.studentData.annotationsToWorkgroupId[toWorkgroupId] = new Array();
+            }
+            this.studentData.annotationsToWorkgroupId[toWorkgroupId].push(annotation);
+
+            var nodeId = annotation.nodeId;
+            if (this.studentData.annotationsByNodeId[nodeId] == null) {
+                this.studentData.annotationsByNodeId[nodeId] = new Array();
+            }
+            this.studentData.annotationsByNodeId[nodeId].push(annotation);
+
+            this.AnnotationService.setAnnotations(this.studentData.annotations);
+
+            // broadcast the event that a new annotation has been received
+            this.$rootScope.$broadcast('annotationReceived', { annotation: annotation });
+        }
+
+        /**
+         * Retrieves the export given the export Type
+         * @param exportType
+         */
+
+    }, {
         key: 'getExport',
         value: function getExport(exportType) {
             var exportURL = this.ConfigService.getConfigParam('runDataExportURL');
@@ -256,48 +290,23 @@ var TeacherDataService = function () {
                 params.getAnnotations = true;
             }
 
-            var httpParams = {};
-            httpParams.method = 'GET';
-            httpParams.url = studentDataURL;
-            httpParams.params = params;
+            var httpParams = {
+                "method": "GET",
+                "url": studentDataURL,
+                "params": params
+            };
 
             return this.$http(httpParams).then(function (result) {
                 var resultData = result.data;
                 if (resultData != null) {
 
-                    if (_this2.studentData == null) {
-                        _this2.studentData = {};
-                    }
-
                     if (resultData.studentWorkList != null) {
                         var componentStates = resultData.studentWorkList;
 
-                        // populate allComponentStates, componentStatesByWorkgroupId and componentStatesByNodeId arrays
-                        _this2.studentData.componentStates = componentStates;
-                        _this2.studentData.componentStatesByWorkgroupId = {};
-                        _this2.studentData.componentStatesByNodeId = {};
-                        _this2.studentData.componentStatesByComponentId = {};
-
+                        // populate allComponentStates, componentStatesByWorkgroupId and componentStatesByNodeId objects
                         for (var i = 0; i < componentStates.length; i++) {
                             var componentState = componentStates[i];
-
-                            var componentStateWorkgroupId = componentState.workgroupId;
-                            if (_this2.studentData.componentStatesByWorkgroupId[componentStateWorkgroupId] == null) {
-                                _this2.studentData.componentStatesByWorkgroupId[componentStateWorkgroupId] = new Array();
-                            }
-                            _this2.studentData.componentStatesByWorkgroupId[componentStateWorkgroupId].push(componentState);
-
-                            var componentStateNodeId = componentState.nodeId;
-                            if (_this2.studentData.componentStatesByNodeId[componentStateNodeId] == null) {
-                                _this2.studentData.componentStatesByNodeId[componentStateNodeId] = new Array();
-                            }
-                            _this2.studentData.componentStatesByNodeId[componentStateNodeId].push(componentState);
-
-                            var componentId = componentState.componentId;
-                            if (_this2.studentData.componentStatesByComponentId[componentId] == null) {
-                                _this2.studentData.componentStatesByComponentId[componentId] = new Array();
-                            }
-                            _this2.studentData.componentStatesByComponentId[componentId].push(componentState);
+                            _this2.addOrUpdateComponentState(componentState);
                         }
                     }
 
@@ -346,6 +355,69 @@ var TeacherDataService = function () {
                     _this2.AnnotationService.setAnnotations(_this2.studentData.annotations);
                 }
             });
+        }
+    }, {
+        key: 'addOrUpdateComponentState',
+
+
+        /**
+         * Add ComponentState to local bookkeeping
+         * @param componentState the ComponentState to add
+         */
+        value: function addOrUpdateComponentState(componentState) {
+            var componentStateWorkgroupId = componentState.workgroupId;
+            if (this.studentData.componentStatesByWorkgroupId[componentStateWorkgroupId] == null) {
+                this.studentData.componentStatesByWorkgroupId[componentStateWorkgroupId] = new Array();
+            }
+            var found = false;
+            for (var w = 0; w < this.studentData.componentStatesByWorkgroupId[componentStateWorkgroupId].length; w++) {
+                var cs = this.studentData.componentStatesByWorkgroupId[componentStateWorkgroupId][w];
+                if (cs.id != null && cs.id === componentState.id) {
+                    // found the same component id, so just update it in place.
+                    this.studentData.componentStatesByWorkgroupId[componentStateWorkgroupId][w] = componentState;
+                    found = true; // remember this so we don't insert later.
+                    break;
+                }
+            }
+            if (!found) {
+                this.studentData.componentStatesByWorkgroupId[componentStateWorkgroupId].push(componentState);
+            }
+
+            var componentStateNodeId = componentState.nodeId;
+            if (this.studentData.componentStatesByNodeId[componentStateNodeId] == null) {
+                this.studentData.componentStatesByNodeId[componentStateNodeId] = new Array();
+            }
+            found = false; // reset
+            for (var n = 0; n < this.studentData.componentStatesByNodeId[componentStateNodeId].length; n++) {
+                var _cs = this.studentData.componentStatesByNodeId[componentStateNodeId][n];
+                if (_cs.id != null && _cs.id === componentState.id) {
+                    // found the same component id, so just update it in place.
+                    this.studentData.componentStatesByNodeId[componentStateNodeId][n] = componentState;
+                    found = true; // remember this so we don't insert later.
+                    break;
+                }
+            }
+            if (!found) {
+                this.studentData.componentStatesByNodeId[componentStateNodeId].push(componentState);
+            }
+
+            var componentId = componentState.componentId;
+            if (this.studentData.componentStatesByComponentId[componentId] == null) {
+                this.studentData.componentStatesByComponentId[componentId] = new Array();
+            }
+            found = false; // reset
+            for (var c = 0; c < this.studentData.componentStatesByComponentId[componentId].length; c++) {
+                var _cs2 = this.studentData.componentStatesByComponentId[componentId][c];
+                if (_cs2.id != null && _cs2.id === componentState.id) {
+                    // found the same component id, so just update it in place.
+                    this.studentData.componentStatesByComponentId[componentId][c] = componentState;
+                    found = true; // remember this so we don't insert later.
+                    break;
+                }
+            }
+            if (!found) {
+                this.studentData.componentStatesByComponentId[componentId].push(componentState);
+            }
         }
     }, {
         key: 'retrieveRunStatus',

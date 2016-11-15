@@ -69,6 +69,19 @@ class WorkgroupItemController {
                 let workgroupId = annotation.toWorkgroupId;
                 let nodeId = annotation.nodeId;
                 if (workgroupId === this.workgroupId && nodeId === this.nodeId) {
+                    // workgroup has a new annotation for this node
+                    this.updateModel();
+                }
+            }
+        });
+
+        this.$scope.$on('studentWorkReceived', (event, args) => {
+            let studentWork = args.studentWork;
+
+            if (studentWork != null) {
+                let workgroupId = studentWork.workgroupId;
+                let nodeId = studentWork.nodeId;
+                if (workgroupId === this.workgroupId && nodeId === this.nodeId) {
                     // workgroup has a new componentState for this node
                     this.updateModel();
                 }
