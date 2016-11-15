@@ -66,19 +66,31 @@
     <span translate="chooseNewLocation"></span> <button ng-click='projectController.cancelMove()' translate="cancel"></button>
 </div>
 <div ng-show='projectController.importMode'>
-    Import Step(s)
-    <br/>
-    <br/>
+    <h4>Import Step(s)</h4>
     Authorable Projects
     <br/>
-    <select ng-model='projectController.importProjectId'
-            ng-options='project.id as project.id + " " + project.name + (project.runId ? " (Run ID: " + project.runId + ")" : "") for project in projectController.getAuthorableProjects()'
-            ng-change='projectController.showImportProject()'>
+    <select ng-model='projectController.importAuthorableProjectId'
+            ng-options='project.id as project.id + " " + project.name + (project.runId ? " (Run ID: " + project.runId + ")" : "") for project in projectController.authorableProjectsList'
+            ng-change='projectController.showAuthorableImportProject(projectController.importAuthorableProjectId)'>
+            <option value=''>Select Authorable Project</option>
+    </select>
+    <br/>
+    Library Projects
+    <br/>
+    <select ng-model='projectController.importLibraryProjectId'
+            ng-options='project.id as project.id + " " + project.title + (project.runId ? " (Run ID: " + project.runId + ")" : "") for project in projectController.libraryProjectsList'
+            ng-change='projectController.showLibraryImportProject(projectController.importLibraryProjectId)'>
+            <option value=''>Select Library Project</option>
     </select>
     <br/>
     <br/>
-    {{projectController.importProject.metadata.title}}
-    <button ng-click='projectController.importSteps()'>Import Step(s)</button>
+    <button ng-if='projectController.importProject != null'
+            ng-click='projectController.importSteps()'>Import Step(s)</button>
+    <br/>
+    <h4 style='display:inline'>{{projectController.importProject.metadata.title}}</h4>
+    <button ng-if='projectController.importProject != null'
+            ng-click='projectController.previewImportProject()'>Preview</button>
+    <br/>
     <div ng-repeat='importItem in projectController.importProjectIdToOrder'>
         <input type='checkbox'
                ng-model='importItem.checked'
@@ -90,7 +102,8 @@
         <button ng-if='importItem.node.type != "group"'
                 ng-click='projectController.previewImportNode(importItem.node)'>Preview</button>
     </div>
-    <button ng-click='projectController.importSteps()'>Import Step(s)</button>
+    <button ng-if='projectController.importProject != null'
+            ng-click='projectController.importSteps()'>Import Step(s)</button>
 </div>
 <div ng-repeat='item in projectController.items | toArray | orderBy : "order"'
      ng-class='{"node-select--group": projectController.isGroupNode(item.$key), "node-select--node": !projectController.isGroupNode(item.$key)}'
