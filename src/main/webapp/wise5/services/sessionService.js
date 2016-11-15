@@ -213,12 +213,17 @@ var SessionService = function () {
             var renewSessionURL = this.ConfigService.getConfigParam('renewSessionURL');
             // make a request to the log out url
             this.$http.get(renewSessionURL).then(function (result) {
-                var isRenewSessionSuccessful = result.data;
+                var renewSessionResult = result.data;
 
-                if (isRenewSessionSuccessful === 'true') {
+                if (renewSessionResult === 'true') {
+                    // Session is active, restart local timers.
                     _this2.clearTimers();
                     _this2.startTimers();
+                } else if (renewSessionResult === "requestLogout") {
+                    // WISE server is requesting that we log out
+                    _this2.$rootScope.$broadcast('showRequestLogout');
                 } else {
+                    // User is no longer logged in (session is inactive)
                     _this2.forceLogOut();
                 }
             });

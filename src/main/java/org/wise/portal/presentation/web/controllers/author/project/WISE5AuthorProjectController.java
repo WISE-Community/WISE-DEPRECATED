@@ -453,6 +453,7 @@ public class WISE5AuthorProjectController {
             config.put("previewProjectURL", previewProjectURL);
             config.put("saveProjectURL", saveProjectURL);
             config.put("commitProjectURL", commitProjectURL);
+            config.put("mode", "author");
 
             if (runId != null) {
                 config.put("runId", runId);

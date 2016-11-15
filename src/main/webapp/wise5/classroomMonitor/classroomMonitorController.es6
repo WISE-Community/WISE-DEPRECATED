@@ -96,6 +96,27 @@ class ClassroomMonitorController {
             });
         });
 
+        // alert user when inactive for a long time
+        this.$scope.$on('showRequestLogout', (ev) => {
+            this.$translate(["serverUpdate", "serverUpdateRequestLogoutMessage", "ok"]).then((translations) => {
+
+                let alert = $mdDialog.confirm()
+                    .parent(angular.element(document.body))
+                    .title(translations.serverUpdate)
+                    .textContent(translations.serverUpdateRequestLogoutMessage)
+                    .ariaLabel(translations.serverUpdate)
+                    .targetEvent(ev)
+                    .ok(translations.ok);
+
+                $mdDialog.show(alert).then(() => {
+                    // do nothing
+                }, () => {
+                    // do nothing
+                });
+
+            });
+        });
+
         // listen for state change events
         this.$rootScope.$on('$stateChangeSuccess', (event, toState, toParams, fromState, fromParams) => {
             // close the menu when the state changes
