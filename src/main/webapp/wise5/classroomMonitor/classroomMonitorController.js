@@ -90,6 +90,20 @@ var ClassroomMonitorController = function () {
             });
         });
 
+        // alert user when inactive for a long time
+        this.$scope.$on('showRequestLogout', function (ev) {
+            _this.$translate(["serverUpdate", "serverUpdateRequestLogoutMessage", "ok"]).then(function (translations) {
+
+                var alert = $mdDialog.confirm().parent(angular.element(document.body)).title(translations.serverUpdate).textContent(translations.serverUpdateRequestLogoutMessage).ariaLabel(translations.serverUpdate).targetEvent(ev).ok(translations.ok);
+
+                $mdDialog.show(alert).then(function () {
+                    // do nothing
+                }, function () {
+                    // do nothing
+                });
+            });
+        });
+
         // listen for state change events
         this.$rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
             // close the menu when the state changes

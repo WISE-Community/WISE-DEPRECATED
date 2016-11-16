@@ -64,10 +64,7 @@ var ProjectController = function () {
         });
 
         // notify others that this project is being authored
-        this.ProjectService.notifyAuthorProjectBegin(this.projectId).then(function (otherAuthors) {
-            // also send a websocket message to other online authors
-            //this.AuthorWebSocketService.notifyAuthorProjectBegin(this.projectId);
-        });
+        this.ProjectService.notifyAuthorProjectBegin(this.projectId);
 
         // temprary polling until we get websocket working
         this.checkOtherAuthorsIntervalId = this.$interval(function () {

@@ -142,3 +142,7 @@ input[type="text"] {
 	margin-top: 2px;
 	font-size: 15px;
 }
+
+#text {
+    display: none;
+}

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2006-2015 Encore Research Group, University of Toronto
+ * Copyright (c) 2006-2016 Encore Research Group, University of Toronto
  *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
@@ -27,12 +27,18 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.wise.portal.dao.ObjectNotFoundException;
+import org.wise.portal.domain.portal.Portal;
 import org.wise.portal.domain.user.User;
+import org.wise.portal.service.portal.PortalService;
 
 /**
  * Controller that backs the Log-In form, for when user fails to log in.
@@ -45,7 +51,10 @@ public class LoginController {
 
 	@Autowired
 	private Properties wiseProperties;
-	
+
+	@Autowired
+	PortalService portalService;
+
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
 	public String handleLogIn(
 			HttpServletRequest request,
@@ -106,8 +115,21 @@ public class LoginController {
 	public void handleLogIn(HttpServletResponse response) throws IOException {
         User loggedInUser = ControllerUtil.getSignedInUser();
         if (loggedInUser != null) {
-            response.getWriter().print("true");
+			// user is logged in.
+			// if login is disallowed (by admin), ask the user (student, teacher, author) to log out soon
+			try {
+				Portal portal = portalService.getById(new Integer(1));
+				if (!portal.isLoginAllowed()) {
+					response.getWriter().print("requestLogout");
+				} else {
+					// otherwise, user can continue their session
+					response.getWriter().print("true");
+				}
+			} catch (ObjectNotFoundException e) {
+				// do nothing
+			}
         } else {
+			// user is not logged in.
             response.getWriter().print("false");
         }
     }

@@ -38,6 +38,26 @@ class AuthoringToolController {
 
             });
         });
+
+        // alert user when inactive for a long time
+        this.$scope.$on('showRequestLogout', (ev) => {
+            this.$translate(["serverUpdate", "serverUpdateRequestLogoutMessage", "ok"]).then((translations) => {
+                let alert = this.$mdDialog.confirm()
+                    .parent(angular.element(document.body))
+                    .title(translations.serverUpdate)
+                    .textContent(translations.serverUpdateRequestLogoutMessage)
+                    .ariaLabel(translations.serverUpdate)
+                    .targetEvent(ev)
+                    .ok(translations.ok);
+
+                this.$mdDialog.show(alert).then(() => {
+                    // do nothing
+                }, () => {
+                    // do nothing
+                });
+
+            });
+        });
     }
     
     /**
