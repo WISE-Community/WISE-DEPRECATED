@@ -1,3 +1,4 @@
+<div style="color:red">{{projectController.currentAuthorsMessage}}</div>
 <div style="padding:0px 5px" ng-show="projectController.$state.current.name == 'root.project'">  <!-- show this only when we're in the project view -->
     <style>
         #commitDiv {
@@ -16,7 +17,6 @@
             margin-left: 20px;
         }
     </style>
-    <div style="color:red">{{projectController.currentAuthorsMessage}}</div>
     <div style="float:right">
         <button id="previewProjectButton" ng-click='projectController.previewProject()' translate="previewProject"
                 ng-disabled="projectController.insertGroupMode || projectController.insertNodeMode"></button>

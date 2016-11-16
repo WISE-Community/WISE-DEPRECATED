@@ -7,6 +7,7 @@
   "backToTeacherHome": "Back to Teacher Home",
   "canChangePath": "Can change path",
   "chooseNewLocation": "Choose the new location",
+  "concurrentAuthorsWarning": "{{currentAuthors}} is also currently editing this project. Be careful not to overwrite each other's work!",
   "confirmDeleteComponent": "Are you sure you want to delete this component?",
   "confirmUpdateStartStep": "Would you like to update the project start step to '{{startStepTitle}}'?",
   "confirmUndo": "Are you sure you want to undo all the recent changes?",
