@@ -23,14 +23,13 @@ class ProjectController {
         this.projectTitle = this.ProjectService.getProjectTitle();
         this.inactiveGroups = this.ProjectService.getInactiveGroups();
         this.inactiveNodes = this.ProjectService.getInactiveNodes();
+        this.currentAuthorsMessage = "";  // show a message when there is more than one author currently authoring this project
 
         // check to see if there are other authors right now.
         this.ProjectService.getCurrentAuthors(this.projectId).then((currentAuthors) => {
             if (currentAuthors.length == 0) {
                 this.currentAuthorsMessage = "";
             } else {
-                // TODO: internationalize me
-                
                 var showWarningMessage = true;
                 
                 // get the user name of the signed in user
@@ -46,8 +45,10 @@ class ProjectController {
                 }
                 
                 if (showWarningMessage) {
-                    this.currentAuthorsMessage = currentAuthors.join(",") + " is currently editing this project.";
-                    alert(currentAuthors.join(",") + " is currently editing this project. Please be careful not to overwrite each other's work!");
+                    this.$translate('concurrentAuthorsWarning', { currentAuthors: currentAuthors.join(", ") }).then((concurrentAuthorsWarning) => {
+                        alert(concurrentAuthorsWarning);
+                        this.currentAuthorsMessage = concurrentAuthorsWarning;
+                    });
                 }
             }
         });
@@ -77,11 +78,13 @@ class ProjectController {
                     }
                     
                     if (showWarningMessage) {
-                        this.currentAuthorsMessage = currentAuthors.join(",") + " is currently editing this project.";
+                        this.$translate('concurrentAuthorsWarning', { currentAuthors: currentAuthors.join(", ") }).then((concurrentAuthorsWarning) => {
+                            this.currentAuthorsMessage = concurrentAuthorsWarning;
+                        });
                     }
                 }
             });
-        }, 15000);
+        }, 20000);
 
         this.$scope.$on("$destroy", () => {
             // cancel the checkOtherAuthorsInterval
