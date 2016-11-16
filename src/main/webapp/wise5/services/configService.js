@@ -53,15 +53,34 @@ var ConfigService = function () {
                 var absURL = _this.$location.$$absUrl;
 
                 // regex to match constraints=false in the url
-                var regEx = new RegExp("constraints=false", 'gi');
+                var constraintsRegEx = new RegExp("constraints=false", 'gi');
 
-                if (absURL != null && absURL.match(regEx)) {
+                if (absURL != null && absURL.match(constraintsRegEx)) {
                     // the url contains constraints=false
                     constraints = false;
                 }
 
                 // set the constraints value into the config so we can access it later
                 configJSON.constraints = constraints;
+
+                // regex to match showProjectPath=true in the url
+                var showProjectPathRegEx = new RegExp("showProjectPath=true", 'gi');
+
+                if (absURL != null && absURL.match(showProjectPathRegEx)) {
+                    // the url contains showProjectPath=true
+
+                    // get the host e.g. http://wise.berkeley.edu
+                    var host = location.origin;
+
+                    // get the project URL e.g. /wise/curriculum/123/project.json
+                    var projectURL = configJSON.projectURL;
+
+                    // get the full project path
+                    var projectPath = host + projectURL;
+
+                    // output the full project path to the console
+                    console.log(projectPath);
+                }
 
                 _this.setConfig(configJSON);
 
