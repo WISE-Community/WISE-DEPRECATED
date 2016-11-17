@@ -51,12 +51,13 @@ public class NotebookController {
         User signedInUser = ControllerUtil.getSignedInUser();
         try {
             Run run = runService.retrieveById(new Long(runId));
-            Workgroup workgroup = workgroupService.retrieveById(new Long(workgroupId));
-            if (signedInUser.getUserDetails() instanceof StudentUserDetails &&
-                    (!run.isStudentAssociatedToThisRun(signedInUser) || !workgroup.getMembers().contains(signedInUser))
-                    ) {
-                // user is student and is not in this run or not in the specified workgroup, so deny access
-                return;
+            if (signedInUser.isStudent()) {
+                Workgroup workgroup = workgroupService.retrieveById(new Long(workgroupId));
+                if ((!run.isStudentAssociatedToThisRun(signedInUser) || !workgroup.getMembers().contains(signedInUser))
+                        ) {
+                    // user is student and is not in this run or not in the specified workgroup, so deny access
+                    return;
+                }
             }
         } catch (ObjectNotFoundException e) {
             e.printStackTrace();

@@ -22,13 +22,6 @@
 
 <div class="view-content view-content--with-sidemenu">
     <div class="l-constrained" layout="column">
-        <div style="float:right">
-            <button ng-click='classroomMonitorController.export("latestStudentWork")' translate="downloadLatestStudentWork" id="downloadLatestStudentWorkButton"></button>
-            <button ng-click='classroomMonitorController.export("allStudentWork")' translate="downloadStudentWork" id="downloadStudentWorkButton"></button>
-            <button ng-click='classroomMonitorController.export("studentAssets")' translate="downloadStudentAssets" id="downloadStudentAssetsButton"></button>
-            <button ng-click='classroomMonitorController.export("notebookItems")' translate="downloadNotebook" id="downloadNotebookButton"></button>
-            <button ng-click='classroomMonitorController.exportEvents()' translate="downloadEvents" id="downloadStudentEventsButton"></button>
-        </div>
         <div>
             <button ng-repeat='period in studentProgressController.periods'
                     ng-click='studentProgressController.setCurrentPeriod(period)'

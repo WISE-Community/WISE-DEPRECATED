@@ -157,7 +157,7 @@ let vleModule = angular.module('vle', [
                         notebook: function (NotebookService, ConfigService, StudentAssetService, studentData, config, project) {
                             if (!ConfigService.isPreview()) {
                                 StudentAssetService.retrieveAssets().then((studentAssets) => {
-                                    NotebookService.retrieveNotebookItems().then((notebook) => {
+                                    NotebookService.retrieveNotebookItems(ConfigService.getWorkgroupId()).then((notebook) => {
                                         return notebook;
                                     });
                                 });

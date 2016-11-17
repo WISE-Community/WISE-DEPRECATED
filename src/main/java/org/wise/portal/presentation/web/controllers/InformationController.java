@@ -633,6 +633,7 @@ public class InformationController {
 							this.runService.hasRunPermission(run, signedInUser, BasePermission.READ)) {
 						config.put("teacherDataURL", wiseBaseURL + "/teacher/data");
 						config.put("runDataExportURL", wiseBaseURL + "/teacher/export");
+						config.put("studentNotebookURL", wiseBaseURL + "/teacher/notebook/" + runId);
 					}
 				}
 
