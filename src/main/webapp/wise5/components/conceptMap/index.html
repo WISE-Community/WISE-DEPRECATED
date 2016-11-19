@@ -248,7 +248,10 @@
                          class="input--textarea input--textarea--disabled">
                     </div>
                     <button ng-click="conceptMapController.resetConceptMap()">Reset</button>
-                    <button ng-click="conceptMapController.checkAnswer()">Check Answer</button>
+                    <button ng-click="conceptMapController.checkAnswer()"
+                            ng-show="conceptMapController.componentContent.showAutoScore || conceptMapController.componentContent.showAutoFeedback">
+                            Check Answer
+                    </button>
                     <button ng-click="conceptMapController.showAutoFeedback()"
                             ng-show="conceptMapController.autoFeedbackString != null && conceptMapController.autoFeedbackString != ''">
                             Show Feedback
