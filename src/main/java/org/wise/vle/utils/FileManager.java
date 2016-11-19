@@ -1553,7 +1553,7 @@ public class FileManager {
 	 * @return the name of the asset file that was created in the to project asset folder
 	 * or null if we were unable to create the asset in the to project asset folder
 	 */
-	private static String importAssetInContent(String fromAssetFileName, String fromAssetFileContent, File fromProjectAssetsFolder, File toProjectAssetsFolder) {
+	public static String importAssetInContent(String fromAssetFileName, String fromAssetFileContent, File fromProjectAssetsFolder, File toProjectAssetsFolder) {
 		String toAssetFileName = null;
 		String toAssetFileContent = null;
 

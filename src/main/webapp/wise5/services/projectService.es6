@@ -7246,6 +7246,118 @@ class ProjectService {
         
         return isUsed;
     }
+    
+    /**
+     * Copy the nodes into the project
+     * @param selectedNodes the nodes to import
+     * @param fromProjectId copy the nodes from this project
+     * @param toProjectId copy the nodes into this project
+     */
+    copyNodes(selectedNodes, fromProjectId, toProjectId) {
+        
+        // get the import steps URL
+        var importStepsURL = this.ConfigService.getConfigParam('importStepsURL');
+        
+        var httpParams = {};
+        httpParams.method = 'POST';
+        httpParams.url = importStepsURL;
+        httpParams.headers = {'Content-Type': 'application/x-www-form-urlencoded'};
+
+        // set the POST params
+        var params = {};
+        params.steps = angular.toJson(selectedNodes);
+        params.fromProjectId = fromProjectId;
+        params.toProjectId = toProjectId;
+        httpParams.data = $.param(params);
+        
+        /*
+         * Make the request to import the steps. This will copy the asset files
+         * and change file names if necessary. If an asset file with the same 
+         * name exists in both projects we will check if their content is the
+         * same. If the content is the same we don't need to copy the file. If
+         * the content is different, we need to make a copy of the file with a
+         * new name and change all the references in the steps to use the new
+         * name.
+         */
+        return this.$http(httpParams).then((result) => {
+            
+            // get the selected nodes from the result that may have been modified
+            selectedNodes = result.data;
+            
+            // get the inactive nodes from the project
+            var inactiveNodes = this.getInactiveNodes();
+            
+            // we will insert the steps into the inactive steps
+            var nodeIdToInsertAfter = 'inactiveSteps';
+            
+            // loop through the nodes we will import
+            for (var n = 0; n < selectedNodes.length; n++) {
+                
+                // get a node
+                var selectedNode = selectedNodes[n];
+                
+                if (selectedNode != null) {
+                    
+                    /*
+                     * Insert the node after the last inactive node. If there
+                     * are no inactive nodes it will just be placed in the
+                     * inactive nodes section. In the latter case we do this by
+                     * setting nodeIdToInsertAfter to 'inactiveSteps'.
+                     */
+                    if (inactiveNodes != null && inactiveNodes.length > 0) {
+                        nodeIdToInsertAfter = inactiveNodes[inactiveNodes.length - 1];
+                    }
+
+                    // make a copy of the node so that we don't modify the source
+                    var tempNode = this.UtilService.makeCopyOfJSONObject(selectedNode);
+
+                    // check if the node id is already being used in the current project
+                    if (this.isNodeIdUsed(tempNode.id)) {
+                        // the node id is already being used in the current project
+                        
+                        // get the next available node id
+                        var nextAvailableNodeId = this.getNextAvailableNodeId();
+                        
+                        // change the node id of the node we are importing
+                        tempNode.id = nextAvailableNodeId;
+                    }
+
+                    // get the components in the node
+                    var tempComponents = tempNode.components;
+
+                    if (tempComponents != null) {
+                        
+                        // loop through all the components in the node we are importing
+                        for (var c = 0; c < tempComponents.length; c++) {
+                            
+                            // get a component
+                            var tempComponent = tempComponents[c];
+                            
+                            if (tempComponent != null) {
+                                
+                                // check if the component id is already being used
+                                if (this.isComponentIdUsed(tempComponent.id)) {
+                                    // we are already using the component id so we will need to change it
+                                    
+                                    // find a component id that isn't currently being used
+                                    var newComponentId = this.getUnusedComponentId();
+                                    
+                                    // set the new component id into the component
+                                    tempComponent.id = newComponentId;
+                                }
+                            }
+                        }
+                    }
+
+                    // clear the constraints
+                    tempNode.constraints = [];
+
+                    // add the imported node to the end of the inactive nodes
+                    this.addInactiveNode(tempNode, nodeIdToInsertAfter);
+                }
+            }
+        });
+    }
 }
 
 ProjectService.$inject = [

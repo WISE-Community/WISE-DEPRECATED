@@ -1088,6 +1088,7 @@ var ProjectController = function () {
     }, {
         key: "importSteps",
         value: function importSteps() {
+            var _this7 = this;
 
             // get the nodes that were selected
             var selectedNodes = this.getSelectedNodesToImport();
@@ -1137,93 +1138,33 @@ var ProjectController = function () {
                 if (answer) {
                     // the author answered yes to import
 
-                    // get the inactive nodes from the project
-                    var inactiveNodes = this.ProjectService.getInactiveNodes();
+                    // get the project id we are importing into
+                    var toProjectId = this.ConfigService.getConfigParam('projectId');
 
-                    var nodeIdToInsertAfter = 'inactiveSteps';
+                    // get the project id we are importing from
+                    var fromProjectId = this.importProjectId;
 
-                    // loop through the nodes we will import
-                    for (var n = 0; n < selectedNodes.length; n++) {
+                    // copy the nodes into the project
+                    this.ProjectService.copyNodes(selectedNodes, fromProjectId, toProjectId, this.importProjectIdToOrder).then(function () {
 
-                        var selectedNode = selectedNodes[n];
+                        // save the project
+                        _this7.ProjectService.saveProject();
 
-                        if (selectedNode != null) {
+                        // refresh the project
+                        _this7.ProjectService.parseProject();
+                        _this7.items = _this7.ProjectService.idToOrder;
 
-                            var tempNodeId = selectedNode.id;
+                        // turn off import mode
+                        _this7.importMode = false;
 
-                            // get the item which contains the node we want to import
-                            var tempItem = this.importProjectIdToOrder[tempNodeId];
-
-                            if (tempItem != null) {
-
-                                // find where to insert the imported node
-                                if (inactiveNodes != null && inactiveNodes.length > 0) {
-                                    nodeIdToInsertAfter = inactiveNodes[inactiveNodes.length - 1];
-                                }
-
-                                // make a copy of the node so that we don't modify the source
-                                var tempNode = this.UtilService.makeCopyOfJSONObject(tempItem.node);
-
-                                // check if the node id is already being used in the current project
-                                if (this.ProjectService.isNodeIdUsed(tempNode.id)) {
-                                    // the node id is already being used in the current project
-
-                                    // get the next available node id
-                                    var nextAvailableNodeId = this.ProjectService.getNextAvailableNodeId();
-
-                                    // change the node id of the node we are importing
-                                    tempNode.id = nextAvailableNodeId;
-                                }
-
-                                var tempComponents = tempNode.components;
-
-                                if (tempComponents != null) {
-
-                                    // loop through all the components in the node we are importing
-                                    for (var c = 0; c < tempComponents.length; c++) {
-                                        var tempComponent = tempComponents[c];
-
-                                        if (tempComponent != null) {
-
-                                            // check if the component id is already being used
-                                            if (this.ProjectService.isComponentIdUsed(tempComponent.id)) {
-                                                // we are already using the component id so we will need to change it
-
-                                                // find a component id that isn't currently being used
-                                                var newComponentId = this.ProjectService.getUnusedComponentId();
-
-                                                // set the new component id into the component
-                                                tempComponent.id = newComponentId;
-                                            }
-                                        }
-                                    }
-                                }
-
-                                // clear the constraints
-                                tempNode.constraints = [];
-
-                                // add the imported node to the end of the inactive nodes
-                                this.ProjectService.addInactiveNode(tempNode, nodeIdToInsertAfter);
-                            }
-                        }
-                    }
-
-                    // save the project
-                    this.ProjectService.saveProject();
-
-                    // refresh the project
-                    this.ProjectService.parseProject();
-                    this.items = this.ProjectService.idToOrder;
-
-                    // turn off import mode
-                    this.importMode = false;
-
-                    this.importProjectIdToOrder = {};
-                    this.importProjectItems = [];
-                    this.importAuthorableProjectId = null;
-                    this.importLibraryProjectId = null;
-                    this.importProjectId = null;
-                    this.importProject = null;
+                        // clear the import fields
+                        _this7.importProjectIdToOrder = {};
+                        _this7.importProjectItems = [];
+                        _this7.importAuthorableProjectId = null;
+                        _this7.importLibraryProjectId = null;
+                        _this7.importProjectId = null;
+                        _this7.importProject = null;
+                    });
                 }
             }
         }
