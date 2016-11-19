@@ -170,16 +170,17 @@ class NotebookService {
         return this.config.enabled;
     };
 
-    retrieveNotebookItems(workgroupId = null) {
-        var config = {};
-        config.method = 'GET';
-        config.url = this.ConfigService.getStudentNotebookURL();
-        config.params = {};
+    retrieveNotebookItems(workgroupId = null, periodId = null) {
+        let config = {
+            method : 'GET',
+            url : this.ConfigService.getStudentNotebookURL(),
+            params : {}
+        };
         if (workgroupId != null) {
             config.params.workgroupId = workgroupId;
-        } else {
-            config.params.workgroupId = this.ConfigService.getWorkgroupId();
-            config.params.periodId = this.ConfigService.getPeriodId();
+        }
+        if (periodId != null) {
+            config.params.periodId = periodId;
         }
         return this.$http(config).then((response) => {
             // loop through the assets and make them into JSON object with more details

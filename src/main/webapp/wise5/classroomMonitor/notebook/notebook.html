@@ -1,0 +1,24 @@
+<style>
+    .active {
+        background-color: yellow;
+    }
+</style>
+
+<div class="view-content">
+    <div class="l-constrained" layout="column">
+        <div>
+            <button ng-repeat='period in notebookGradingController.periods'
+                    ng-click='notebookGradingController.setCurrentPeriod(period)'
+                    ng-class="{'active': period.periodName == notebookGradingController.getCurrentPeriod().periodName}">
+                {{period.periodName}}
+            </button>
+        </div>
+
+        <div ng-repeat="workgroup in notebookGradingController.workgroups"
+            ng-show="notebookGradingController.getCurrentPeriod().periodName == 'All' || workgroup.periodId == notebookGradingController.getCurrentPeriod().periodId">
+            <span ng-if="notebookGradingController.canViewStudentNames">{{workgroup.userName}} ({{workgroup.workgroupId}})</span>
+            <span ng-if="!notebookGradingController.canViewStudentNames">{{workgroup.workgroupId}}</span>
+        </div>
+
+    </div>
+</div>

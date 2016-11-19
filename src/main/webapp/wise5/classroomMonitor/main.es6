@@ -22,6 +22,7 @@ import ConfigService from '../services/configService';
 import CRaterService from '../services/cRaterService';
 import Components from '../directives/components';
 import DashboardController from './dashboard/dashboardController';
+import DataExportController from './dataExport/dataExportController';
 import DiscussionComponentModule from '../components/discussion/discussionComponentModule';
 import DrawComponentModule from '../components/draw/drawComponentModule';
 import EmbeddedComponentModule from '../components/embedded/embeddedComponentModule';
@@ -35,6 +36,7 @@ import MultipleChoiceComponentModule from '../components/multipleChoice/multiple
 import NodeGradingController from './nodeGrading/nodeGradingController';
 import NodeProgressController from './nodeProgress/nodeProgressController';
 import NodeService from '../services/nodeService';
+import NotebookGradingController from './notebook/notebookGradingController';
 import NotebookService from '../services/notebookService';
 import NotificationService from '../services/notificationService';
 import OpenResponseComponentModule from '../components/openResponse/openResponseComponentModule';
@@ -99,8 +101,10 @@ let classroomMonitorModule = angular.module('classroomMonitor', [
     .service(TeacherWebSocketService.name, TeacherWebSocketService)
     .service(UtilService.name, UtilService)
     .controller(ClassroomMonitorController.name, ClassroomMonitorController)
+    .controller(DataExportController.name, DataExportController)
     .controller(NodeGradingController.name, NodeGradingController)
     .controller(NodeProgressController.name, NodeProgressController)
+    .controller(NotebookGradingController.name, NotebookGradingController)
     .controller(StudentGradingController.name, StudentGradingController)
     .controller(StudentProgressController.name, StudentProgressController)
     .config([
@@ -192,6 +196,18 @@ let classroomMonitorModule = angular.module('classroomMonitor', [
                     templateUrl: 'wise5/classroomMonitor/dashboard/dashboard.html',
                     controller: 'DashboardController',
                     controllerAs: 'dashboardController'
+                })
+                .state('root.export', {
+                    url: '/export',
+                    templateUrl: 'wise5/classroomMonitor/dataExport/dataExport.html',
+                    controller: 'DataExportController',
+                    controllerAs: 'DataExportController'
+                })
+                .state('root.notebooks', {
+                    url: '/notebook',
+                    templateUrl: 'wise5/classroomMonitor/notebook/notebook.html',
+                    controller: 'NotebookGradingController',
+                    controllerAs: 'notebookGradingController'
                 });
 
             // Set up Translations

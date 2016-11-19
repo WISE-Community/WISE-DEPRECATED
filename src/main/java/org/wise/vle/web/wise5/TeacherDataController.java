@@ -5,12 +5,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.acls.domain.BasePermission;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.socket.WebSocketHandler;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
+import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.vle.wise5.VLEService;
@@ -391,6 +393,37 @@ public class TeacherDataController {
             writer.close();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/teacher/notebook/{runId}")
+    protected void getNotebookItems(
+            @PathVariable Integer runId,
+            @RequestParam(value = "id", required = false) Integer id,
+            @RequestParam(value = "periodId", required = false) Integer periodId,
+            @RequestParam(value = "workgroupId", required = false) Integer workgroupId,
+            @RequestParam(value = "nodeId", required = false) String nodeId,
+            @RequestParam(value = "componentId", required = false) String componentId,
+            HttpServletResponse response) throws IOException {
+
+        User signedInUser = ControllerUtil.getSignedInUser();
+        try {
+
+            Run run = runService.retrieveById(new Long(runId));
+            if (signedInUser.isAdmin() ||
+                    this.runService.hasRunPermission(run, signedInUser, BasePermission.WRITE) ||
+                    this.runService.hasRunPermission(run, signedInUser, BasePermission.READ)) {
+                List<NotebookItem> notebookItemList = vleService.getNotebookItems(
+                        id, runId, periodId, workgroupId, nodeId, componentId);
+                JSONArray notebookItems = new JSONArray();
+                for (NotebookItem notebookItem : notebookItemList) {
+                    notebookItems.put(notebookItem.toJSON());
+                }
+                response.getWriter().write(notebookItems.toString());
+            }
+        } catch (ObjectNotFoundException e) {
+            e.printStackTrace();
+            return;
         }
     }
 

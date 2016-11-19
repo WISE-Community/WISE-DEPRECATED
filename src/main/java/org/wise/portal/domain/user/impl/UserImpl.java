@@ -82,6 +82,13 @@ public class UserImpl implements User {
     /**
      * @see net.sf.sail.webapp.domain.User#isAdmin()
      */
+    public boolean isStudent(){
+        return this.userDetails.hasGrantedAuthority(UserDetailsService.STUDENT_ROLE);
+    }
+
+    /**
+     * @see net.sf.sail.webapp.domain.User#isAdmin()
+     */
     public boolean isAdmin(){
     	return this.userDetails.hasGrantedAuthority(UserDetailsService.ADMIN_ROLE);
     }

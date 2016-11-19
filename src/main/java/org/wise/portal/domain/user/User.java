@@ -55,7 +55,14 @@ public interface User extends Persistable {
      * @return boolean
      */
     boolean isAdmin();
-    
+
+    /**
+     * Returns true if this use is an student, false otherwise.
+     *
+     * @return boolean
+     */
+    boolean isStudent();
+
     /**
      * Returns true if this use is a trusted author, false otherwise
      * 

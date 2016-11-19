@@ -1,0 +1,11 @@
+<div class="view-content">
+    <div class="l-constrained" layout="column">
+        <div style="float:right">
+            <md-button class="md-raised" ng-click='classroomMonitorController.export("latestStudentWork")' translate="downloadLatestStudentWork" id="downloadLatestStudentWorkButton"></md-button><br/>
+            <md-button class="md-raised" ng-click='classroomMonitorController.export("allStudentWork")' translate="downloadStudentWork" id="downloadStudentWorkButton"></md-button><br/>
+            <md-button class="md-raised" ng-click='classroomMonitorController.exportEvents()' translate="downloadEvents" id="downloadStudentEventsButton"></md-button><br/>
+            <md-button class="md-raised" ng-click='classroomMonitorController.export("notebookItems")' translate="downloadNotebook" id="downloadNotebookButton"></md-button><br/>
+            <md-button class="md-raised" ng-click='classroomMonitorController.export("studentAssets")' translate="downloadStudentAssets" id="downloadStudentAssetsButton"></md-button><br/>
+        </div>
+    </div>
+</div>

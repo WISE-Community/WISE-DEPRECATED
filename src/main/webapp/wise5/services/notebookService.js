@@ -196,16 +196,18 @@ var NotebookService = function () {
             var _this = this;
 
             var workgroupId = arguments.length <= 0 || arguments[0] === undefined ? null : arguments[0];
+            var periodId = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
 
-            var config = {};
-            config.method = 'GET';
-            config.url = this.ConfigService.getStudentNotebookURL();
-            config.params = {};
+            var config = {
+                method: 'GET',
+                url: this.ConfigService.getStudentNotebookURL(),
+                params: {}
+            };
             if (workgroupId != null) {
                 config.params.workgroupId = workgroupId;
-            } else {
-                config.params.workgroupId = this.ConfigService.getWorkgroupId();
-                config.params.periodId = this.ConfigService.getPeriodId();
+            }
+            if (periodId != null) {
+                config.params.periodId = periodId;
             }
             return this.$http(config).then(function (response) {
                 // loop through the assets and make them into JSON object with more details
