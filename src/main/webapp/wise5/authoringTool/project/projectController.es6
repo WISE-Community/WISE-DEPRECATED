@@ -509,7 +509,7 @@ class ProjectController {
                 confirmMessage = 'Are you sure you want to delete the selected item?';
             } else if (selectedNodeIds.length > 1) {
                 // the user selected multiple items
-                confirmMessage = 'Are you sure you want to delete the selected items?';
+                confirmMessage = 'Are you sure you want to delete the ' + selectedNodeIds.length + ' selected items?';
             }
             
             if (confirmMessage != null) {
