@@ -1062,6 +1062,7 @@ IdeaBasket.prototype.openEditDialog = function(context,id,$clicked){
 				
 				//bind the function to make the idea public
 				$('#makePublicButton').click({idea:idea, thisView:this.view, id:id}, function(event) {
+					$('#sharingStatus').attr("isPublic", true);
 					$('#sharingStatus').html(publicLabel);
 				});
 
@@ -1075,13 +1076,16 @@ IdeaBasket.prototype.openEditDialog = function(context,id,$clicked){
 				
 				//bind the function to make the idea private
 				$('#makePrivateButton').click({idea:idea, thisView:this.view, id:id}, function(event) {
+					$('#sharingStatus').attr("isPublic", false);
 					$('#sharingStatus').html(privateLabel);
 				});
 				
 				//set the text to show whether this idea is currently public or private
 				if(idea.isPublishedToPublic) {
-					$('#sharingStatus').html(publicLabel);				
+					$('#sharingStatus').attr("isPublic", true);
+					$('#sharingStatus').html(publicLabel);
 				} else {
+					$('#sharingStatus').attr("isPublic", false);
 					$('#sharingStatus').html(privateLabel);
 				}
 			} else {
@@ -1553,15 +1557,15 @@ IdeaBasket.prototype.isIdeaChangedV2 = function(idea, text, attributes) {
 	var sharingStatusChanged = false;
 	
 	//get the value of the sharing status from the edit idea dialog
-	var sharingStatus = $('#sharingStatus').html();
+	var sharingStatus = $('#sharingStatus').attr("isPublic");
 
 	//if sharing status is null it means public basket is not enabled
 	if(sharingStatus !== null) {
 		//get whether the idea was previously public
 		var isPublishedToPublic = idea.isPublishedToPublic;
 		
-		//check if the sharing status is 'Public'
-		var sharingStatusIsPublic = sharingStatus == 'Public';
+		//check if the sharing status is public
+		var sharingStatusIsPublic = sharingStatus == 'true';
 		
 		if(isPublishedToPublic !== sharingStatusIsPublic) {
 			//the sharing status has changed
@@ -1793,10 +1797,10 @@ IdeaBasket.prototype.editV2 = function(index,text,attributes,$tr) {
 				var isPublishedToPublic = idea.isPublishedToPublic;
 				
 				//get the value of the sharing status from the edit idea dialog
-				var sharingStatus = $('#sharingStatus').html();
+				var sharingStatus = $('#sharingStatus').attr("isPublic");
 				
-				//check if the sharing status is 'Public'
-				var sharingStatusIsPublic = sharingStatus == 'Public';
+				//check if the sharing status is public
+				var sharingStatusIsPublic = sharingStatus == 'true';
 				
 				if(isPublishedToPublic !== sharingStatusIsPublic) {
 					//the sharing status has changed
