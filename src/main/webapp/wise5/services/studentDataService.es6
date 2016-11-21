@@ -1788,6 +1788,55 @@ class StudentDataService {
 
         return eventsByNodeId;
     };
+    
+    /**
+     * Get the node id of the latest node entered event for an active node that 
+     * exists in the project. We need to check if the node exists in the project
+     * in case the node has been deleted from the project. We also need to check
+     * that the node is active in case the node has been moved to the inactive
+     * section of the project.
+     * @return the node id of the latest node entered event for an active node 
+     * that exists in the project
+     */
+    getLatestNodeEnteredEventNodeIdWithExistingNode() {
+        
+        // get all the events
+        var events = this.studentData.events;
+
+        // loop through all the events newest to oldest
+        for (var e = events.length - 1; e >= 0; e--) {
+            
+            // get an event
+            var event = events[e];
+
+            if (event != null) {
+                
+                // get the event name
+                var eventName = event.event;
+                
+                if (eventName == 'nodeEntered') {
+                    // we have found a nodeEntered event
+                    
+                    // get the node id of the event
+                    var nodeId = event.nodeId;
+                    
+                    // check if the node exists in the project
+                    var node = this.ProjectService.getNodeById(nodeId);
+                    
+                    if (node != null) {
+                        
+                        // check if the node is active
+                        if (this.ProjectService.isActive(nodeId)) {
+                            // the node exists in the project and is active
+                            return nodeId;
+                        }
+                    }
+                }
+            }
+        }
+        
+        return null;
+    }
 
     /**
      * Check if the student can visit the node

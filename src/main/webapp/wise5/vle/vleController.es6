@@ -170,11 +170,11 @@ class VLEController {
         if (stateParamNodeId != null && stateParamNodeId !== '') {
             nodeId = stateParamNodeId;
         } else {
-            var latestComponentState = this.StudentDataService.getLatestComponentState();
-
-            if (latestComponentState != null) {
-                nodeId = latestComponentState.nodeId;
-            }
+            /*
+             * get the node id for the latest node entered event for an active
+             * node that exists in the project
+             */
+            nodeId = this.StudentDataService.getLatestNodeEnteredEventNodeIdWithExistingNode();
         }
 
         if (nodeId == null || nodeId === '') {
