@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2016 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -31,7 +31,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Enumeration;
 import java.util.Properties;
@@ -40,7 +39,6 @@ import java.util.zip.ZipFile;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -64,7 +62,6 @@ import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.module.CurnitService;
 import org.wise.portal.service.project.ProjectService;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
@@ -105,7 +102,7 @@ public class ImportProjectController {
 			String zipFilename = downloadFileUrlString.substring(downloadFileUrlString.lastIndexOf("/") + 1);
 
 			byte[] fileBytes = IOUtils.toByteArray(in);
-			String msg = "Upload project complete!";
+			String msg = "Import project complete!";
 
 			Project project = importProject(zipFilename, fileBytes);
 			if (project == null) {
@@ -135,7 +132,7 @@ public class ImportProjectController {
 		MultipartFile file = projectUpload.getFile();
 		String zipFilename = file.getOriginalFilename();
 		byte[] fileBytes = file.getBytes();
-		String msg = "Upload project complete!";
+		String msg = "Import project complete!";
 
 		Project project = importProject(zipFilename, fileBytes);
 		if (project == null) {

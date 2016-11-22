@@ -35,6 +35,12 @@ var AuthoringToolMainController = function () {
             });
         }
     }, {
+        key: "downloadProject",
+        value: function downloadProject(projectId) {
+            var exportProjectURL = this.ConfigService.getWISEBaseURL() + "/project/export/" + projectId;
+            window.location.href = exportProjectURL;
+        }
+    }, {
         key: "createNewProject",
         value: function createNewProject() {
             this.$state.go('root.new');
