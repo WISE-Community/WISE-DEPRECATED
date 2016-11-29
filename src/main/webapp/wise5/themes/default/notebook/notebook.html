@@ -5,6 +5,7 @@
                        ng-if="(notebookController.filter === 'note') && notebookItems.last().type == 'note'"
                        item-id="localNotebookItemId"
                        on-select="notebookController.editItem($ev, $itemId)"
+                       on-delete="notebookController.deleteItem($ev, $itemId)"
                        flex="100" flex-sm="50" flex-md="33" flex-gt-md="33"></notebook-item>
     </div>
 

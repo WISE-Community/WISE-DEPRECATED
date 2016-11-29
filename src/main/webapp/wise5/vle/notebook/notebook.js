@@ -24,6 +24,7 @@ var NotebookItem = {
         isChooseMode: '<',
         templateUrl: '<',
         componentController: '<',
+        onDelete: '&',
         onSelect: '&'
     },
     template: '<ng-include src="notebookItemController.getTemplateUrl()"></ng-include>',

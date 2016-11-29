@@ -37,7 +37,9 @@ var NotebookItemController = function () {
 
         this.$rootScope.$on('notebookUpdated', function (event, args) {
             var notebook = args.notebook;
-            _this.item = notebook.items[_this.itemId].last();
+            if (notebook.items[_this.itemId]) {
+                _this.item = notebook.items[_this.itemId].last();
+            }
         });
     }
 
@@ -91,9 +93,12 @@ var NotebookItemController = function () {
             }
         }
     }, {
-        key: 'delete',
-        value: function _delete(ev) {
-            // TODO: add archiving/deleting notebook items
+        key: 'doDelete',
+        value: function doDelete(ev) {
+            if (this.onDelete) {
+                ev.stopPropagation(); // don't follow-through on the doSelect callback after this
+                this.onDelete({ $ev: ev, $itemId: this.item.localNotebookItemId });
+            }
         }
     }]);
 

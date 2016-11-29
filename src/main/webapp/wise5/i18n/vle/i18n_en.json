@@ -3,6 +3,7 @@
   "accountMenuPoints": "{{point}} points",
   "accountMenuTotalScore": "Total Score",
   "addNewNote": "Add New Note",
+  "deleteNoteConfirmMessage": "Are you sure you want to delete this note?",
   "editNotebookItem": "Edit Notebook Item",
   "itemLocked": "Item Locked",
   "newNote": "Add New Note",

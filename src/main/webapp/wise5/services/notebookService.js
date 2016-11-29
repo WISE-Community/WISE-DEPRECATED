@@ -77,7 +77,7 @@ var NotebookService = function () {
         this.notebook = {};
         this.notebook.allItems = [];
         this.notebook.items = {};
-        this.notebook.deletedItems = [];
+        this.notebook.deletedItems = {};
 
         this.notebookConfig = {};
         if (this.ProjectService.project) {
@@ -94,7 +94,6 @@ var NotebookService = function () {
         key: "addItem",
         value: function addItem(notebookItem) {
             this.notebook.allItems.push(notebookItem);
-
             this.groupNotebookItems();
 
             // the current node is about to change
@@ -154,11 +153,12 @@ var NotebookService = function () {
             for (var i = 0; i < reportNotes.length; i++) {
                 var reportNote = reportNotes[i];
                 if (reportNote.reportId == reportId) {
-                    templateReportItem = {};
-                    templateReportItem.id = null;
-                    templateReportItem.type = "report";
-                    templateReportItem.localNotebookItemId = reportId;
-                    templateReportItem.content = reportNote;
+                    templateReportItem = {
+                        id: null,
+                        type: "report",
+                        localNotebookItemId: reportId,
+                        content: reportNote
+                    };
                     break;
                 }
             }
@@ -224,16 +224,10 @@ var NotebookService = function () {
                     } else if (notebookItem.type === "note" || notebookItem.type === "report") {
                         notebookItem.content = angular.fromJson(notebookItem.content);
                     }
-                    if (notebookItem.serverDeleteTime == null) {
-                        _this.notebook.allItems.push(notebookItem);
-                    } else {
-                        _this.notebook.deletedItems.push(notebookItem);
-                    }
+                    _this.notebook.allItems.push(notebookItem);
                 }
                 _this.calculateTotalUsage();
-
-                // now group notebook items based on item.localNotebookItemId
-                _this.groupNotebookItems();
+                _this.groupNotebookItems(); // group notebook items based on item.localNotebookItemId
 
                 return _this.notebook;
             });
@@ -250,7 +244,8 @@ var NotebookService = function () {
          * }
          */
         value: function groupNotebookItems() {
-            this.notebook.items = {};
+            this.notebook.items = {}; // reset items
+            this.notebook.deletedItems = {}; // reset deleted items
             for (var ni = 0; ni < this.notebook.allItems.length; ni++) {
                 var notebookItem = this.notebook.allItems[ni];
                 var notebookItemLocalNotebookItemId = notebookItem.localNotebookItemId;
@@ -260,6 +255,21 @@ var NotebookService = function () {
                 } else {
                     // otherwise, we'll create a new field and add the item to the array
                     this.notebook.items[notebookItemLocalNotebookItemId] = [notebookItem];
+                }
+            }
+            // now go through the items and look at the last revision of each item. If it's deleted, then move the entire item array to deletedItems
+            for (var notebookItemLocalNotebookItemIdKey in this.notebook.items) {
+                if (this.notebook.items.hasOwnProperty(notebookItemLocalNotebookItemIdKey)) {
+                    // get the last note revision
+                    var allRevisionsForThisLocalNotebookItemId = this.notebook.items[notebookItemLocalNotebookItemIdKey];
+                    if (allRevisionsForThisLocalNotebookItemId != null) {
+                        var lastRevision = allRevisionsForThisLocalNotebookItemId[allRevisionsForThisLocalNotebookItemId.length - 1];
+                        if (lastRevision != null && lastRevision.serverDeleteTime != null) {
+                            // the last revision for this not deleted, so move the entire note (with all its revisions) to deletedItems
+                            this.notebook.deletedItems[notebookItemLocalNotebookItemIdKey] = allRevisionsForThisLocalNotebookItemId;
+                            delete this.notebook.items[notebookItemLocalNotebookItemIdKey]; // then remove it from the items array
+                        }
+                    }
                 }
             }
         }
@@ -279,6 +289,9 @@ var NotebookService = function () {
         value: function saveNotebookItem(notebookItemId, nodeId, localNotebookItemId, type, title, content) {
             var _this2 = this;
 
+            var clientSaveTime = arguments.length <= 6 || arguments[6] === undefined ? null : arguments[6];
+            var clientDeleteTime = arguments.length <= 7 || arguments[7] === undefined ? null : arguments[7];
+
             if (this.ConfigService.isPreview()) {
                 return this.$q(function (resolve, reject) {
                     var notebookItem = {
@@ -287,7 +300,9 @@ var NotebookService = function () {
                         nodeId: nodeId,
                         notebookItemId: notebookItemId,
                         title: title,
-                        type: type
+                        type: type,
+                        clientSaveTime: clientSaveTime,
+                        clientDeleteTime: clientDeleteTime
                     };
                     _this2.notebook.allItems.push(notebookItem);
                     _this2.groupNotebookItems();
@@ -295,20 +310,26 @@ var NotebookService = function () {
                     resolve();
                 });
             } else {
-                var config = {};
-                config.method = 'POST';
-                config.url = this.ConfigService.getStudentNotebookURL();
-                config.headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
-                var params = {};
-                params.workgroupId = this.ConfigService.getWorkgroupId();
-                params.periodId = this.ConfigService.getPeriodId();
-                params.notebookItemId = notebookItemId;
-                params.localNotebookItemId = localNotebookItemId;
-                params.nodeId = nodeId;
-                params.type = type;
-                params.title = title;
-                params.content = angular.toJson(content);
-                params.clientSaveTime = Date.parse(new Date());
+                var config = {
+                    method: "POST",
+                    url: this.ConfigService.getStudentNotebookURL(),
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+                };
+                var params = {
+                    workgroupId: this.ConfigService.getWorkgroupId(),
+                    periodId: this.ConfigService.getPeriodId(),
+                    notebookItemId: notebookItemId,
+                    localNotebookItemId: localNotebookItemId,
+                    nodeId: nodeId,
+                    type: type,
+                    title: title,
+                    content: angular.toJson(content),
+                    clientSaveTime: Date.parse(new Date()),
+                    clientDeleteTime: clientDeleteTime
+                };
+                if (params.clientSaveTime == null) {
+                    params.clientSaveTime = Date.parse(new Date());
+                }
                 config.data = $.param(params);
 
                 return this.$http(config).then(function (result) {
@@ -334,16 +355,17 @@ var NotebookService = function () {
 
             this.StudentAssetService.uploadAsset(file).then(function (studentAsset) {
 
-                var config = {};
-                config.method = 'POST';
-                config.url = _this3.ConfigService.getStudentNotebookURL();
-                config.headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
-                var params = {};
-                params.workgroupId = _this3.ConfigService.getWorkgroupId();
-                params.periodId = _this3.ConfigService.getPeriodId();
-                params.studentAssetId = studentAsset.id;
-                params.clientSaveTime = Date.parse(new Date());
-
+                var config = {
+                    method: 'POST',
+                    url: _this3.ConfigService.getStudentNotebookURL(),
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+                };
+                var params = {
+                    workgroupId: _this3.ConfigService.getWorkgroupId(),
+                    periodId: _this3.ConfigService.getPeriodId(),
+                    studentAssetId: studentAsset.id,
+                    clientSaveTime: Date.parse(new Date())
+                };
                 config.data = $.param(params);
 
                 return _this3.$http(config).then(function (result) {
@@ -361,13 +383,13 @@ var NotebookService = function () {
     }, {
         key: "saveNotebookToggleEvent",
         value: function saveNotebookToggleEvent(isOpen, currentNode) {
-            var nodeId = null;
-            var componentId = null;
-            var componentType = null;
-            var category = "Notebook";
-            var eventData = {};
-            eventData.curentNodeId = currentNode == null ? null : currentNode.id;
-
+            var nodeId = null,
+                componentId = null,
+                componentType = null,
+                category = "Notebook";
+            var eventData = {
+                curentNodeId: currentNode == null ? null : currentNode.id
+            };
             var event = isOpen ? "notebookOpened" : "notebookClosed";
 
             // save notebook open/close event

@@ -242,7 +242,7 @@ var NotebookItemReportController = function () {
 
             // save new report notebook item
             this.reportItem.content.clientSaveTime = Date.parse(new Date()); // set save timestamp
-            this.NotebookService.saveNotebookItem(this.reportItem.id, this.reportItem.nodeId, this.reportItem.localNotebookItemId, this.reportItem.type, this.reportItem.title, this.reportItem.content).then(function (result) {
+            this.NotebookService.saveNotebookItem(this.reportItem.id, this.reportItem.nodeId, this.reportItem.localNotebookItemId, this.reportItem.type, this.reportItem.title, this.reportItem.content, this.reportItem.content.clientSaveTime).then(function (result) {
                 if (result) {
                     //this.$translate(['ok']).then((translations) => {
                     _this3.dirty = false;

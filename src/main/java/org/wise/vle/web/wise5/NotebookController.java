@@ -90,6 +90,7 @@ public class NotebookController {
             @RequestParam(value = "title", required = false) String title,
             @RequestParam(value = "content", required = false) String content,
             @RequestParam(value = "clientSaveTime", required = true) String clientSaveTime,
+            @RequestParam(value = "clientDeleteTime", required = false) String clientDeleteTime,
             HttpServletResponse response) throws IOException {
 
         User signedInUser = ControllerUtil.getSignedInUser();
@@ -107,7 +108,6 @@ public class NotebookController {
             return;
         }
 
-        String clientDeleteTime = null;
         NotebookItem notebookItem = vleService.saveNotebookItem(
                 notebookItemId,
                 runId,

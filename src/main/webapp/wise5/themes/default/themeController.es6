@@ -279,6 +279,13 @@ class ThemeController {
             this.editNote(null, true, file, ev);
         });
 
+        // show delete note confirm dialog on 'deleteNote' event
+        this.$scope.$on('deleteNote', (event, args) => {
+            let itemId = args.itemId;
+            let ev = args.ev;
+            this.deleteNote(itemId, ev);
+        });
+
         // a group node has turned on or off planning mode
         this.$scope.$on('togglePlanningMode', (event, args) => {
             this.planningMode = args.planningMode;
@@ -452,10 +459,35 @@ class ThemeController {
     }
 
     /**
-    * Open or close the notebook nav menu
-    */
+     * Open or close the notebook nav menu
+     */
     toggleNotebookNav() {
         this.notebookNavOpen = !this.notebookNavOpen;
+    }
+
+    /**
+     * Delete the note specified by the itemId.
+     */
+    deleteNote(itemId, ev) {
+        this.$translate(["deleteNoteConfirmMessage", "delete", "cancel"]).then((translations) => {
+            let confirm = this.$mdDialog.confirm()
+                .title(translations.deleteNoteConfirmMessage)
+                .ariaLabel('delete note confirmation')
+                .targetEvent(ev)
+                .ok(translations.delete)
+                .cancel(translations.cancel);
+
+            this.$mdDialog.show(confirm).then(() => {
+                let noteCopy = angular.copy(this.NotebookService.getLatestNotebookItemByLocalNotebookItemId(itemId));
+                noteCopy.id = null; // set to null so we're creating a new notebook item. An edit to a notebook item results in a new entry in the db.
+                noteCopy.content.clientSaveTime = Date.parse(new Date());  // set save timestamp
+                let clientDeleteTime = Date.parse(new Date());  // set delete timestamp
+                this.NotebookService.saveNotebookItem(noteCopy.id, noteCopy.nodeId, noteCopy.localNotebookItemId,
+                    noteCopy.type, noteCopy.title, noteCopy.content, noteCopy.content.clientSaveTime, clientDeleteTime);
+            }, () => {
+                // they chose not to delete. Do nothing, the dialog will close.
+            });
+        });
     }
 
     editNote(itemId, isEditMode, file, ev) {

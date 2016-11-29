@@ -224,7 +224,7 @@ class NotebookItemReportController {
         saveNotebookReportItem() {
             // save new report notebook item
             this.reportItem.content.clientSaveTime = Date.parse(new Date());  // set save timestamp
-            this.NotebookService.saveNotebookItem(this.reportItem.id, this.reportItem.nodeId, this.reportItem.localNotebookItemId, this.reportItem.type, this.reportItem.title, this.reportItem.content)
+            this.NotebookService.saveNotebookItem(this.reportItem.id, this.reportItem.nodeId, this.reportItem.localNotebookItemId, this.reportItem.type, this.reportItem.title, this.reportItem.content, this.reportItem.content.clientSaveTime)
             .then((result) => {
                 if(result) {
                     //this.$translate(['ok']).then((translations) => {
