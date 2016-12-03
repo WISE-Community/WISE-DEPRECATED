@@ -6,8 +6,6 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var NotebookItemReportController = function () {
@@ -39,9 +37,13 @@ var NotebookItemReportController = function () {
 
         this.reportItem = this.NotebookService.getLatestNotebookReportItemByReportId(this.reportId);
         if (this.reportItem) {
-            var serverSaveTime = this.reportItem.serverSaveTime;
-            var clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
-            this.setSaveMessage('Last saved', clientSaveTime);
+            (function () {
+                var serverSaveTime = _this.reportItem.serverSaveTime;
+                var clientSaveTime = _this.ConfigService.convertToClientTimestamp(serverSaveTime);
+                _this.$translate(['lastSaved']).then(function (translations) {
+                    _this.setSaveMessage(translations.lastSaved, clientSaveTime);
+                });
+            })();
         } else {
             // Student doesn't have work for this report yet, so we'll use the template.
             this.reportItem = this.NotebookService.getTemplateReportItemByReportId(this.reportId);
@@ -122,8 +124,8 @@ var NotebookItemReportController = function () {
         }
 
         /**
-        * Returns this NotebookItem's position and title.
-        */
+         * Returns this NotebookItem's position and title.
+         */
 
     }, {
         key: 'getItemNodePositionAndTitle',
@@ -142,14 +144,12 @@ var NotebookItemReportController = function () {
     }, {
         key: 'addNotebookItemContent',
         value: function addNotebookItemContent(ev) {
-            var _$mdBottomSheet$show;
-
             var notebookItems = this.NotebookService.notebook.items;
             var templateUrl = this.themePath + '/notebook/notebookItemChooser.html';
             var reportTextareaCursorPosition = angular.element('textarea.report').prop("selectionStart"); // insert the notebook item at the cursor position later
             var $reportElement = $('#' + this.reportId);
 
-            this.$mdBottomSheet.show((_$mdBottomSheet$show = {
+            this.$mdBottomSheet.show({
                 parent: angular.element(document.body),
                 templateUrl: templateUrl,
                 locals: {
@@ -159,23 +159,23 @@ var NotebookItemReportController = function () {
                     themePath: this.themePath,
                     notebookConfig: this.notebookConfig
                 },
-                controller: 'GridBottomSheetCtrl'
-            }, _defineProperty(_$mdBottomSheet$show, 'controller', NotebookItemChooserController), _defineProperty(_$mdBottomSheet$show, 'controllerAs', 'notebookItemChooserController'), _defineProperty(_$mdBottomSheet$show, 'bindToController', true), _$mdBottomSheet$show));
+                controller: NotebookItemChooserController,
+                controllerAs: 'notebookItemChooserController',
+                bindToController: true
+            });
 
-            function NotebookItemChooserController($rootScope, $mdBottomSheet, $scope, notebookItems, reportItem, reportTextareaCursorPosition, themePath) {
+            function NotebookItemChooserController($mdBottomSheet, $scope, notebookItems, reportItem, reportTextareaCursorPosition, themePath) {
                 $scope.notebookItems = notebookItems;
                 $scope.reportItem = reportItem;
                 $scope.reportTextareaCursorPosition = reportTextareaCursorPosition;
                 $scope.themePath = themePath;
                 $scope.chooseNotebookItem = function (notebookItem) {
-                    //let notebookItemHTML = '<notebook-item item-id="\'' + notebookItem.localNotebookItemId + '\'" is-edit-allowed="true"></notebook-item>';
                     var $item = $('<div></div>').css('text-align', 'center');
                     if (notebookItem.content && notebookItem.content.attachments) {
                         for (var a = 0; a < notebookItem.content.attachments.length; a++) {
                             var notebookItemAttachment = notebookItem.content.attachments[a];
                             var $img = $('<img src="' + notebookItemAttachment.iconURL + '" alt="notebook image" style="width: 75%; max-width: 100%; height: auto; border: 1px solid #aaaaaa; padding: 8px; margin-bottom: 4px;" />');
                             $img.addClass('notebook-item--report__note-img');
-                            //$reportElement.find('.note-editable').trigger('focus');
                             $item.append($img);
                         }
                     }
@@ -183,9 +183,7 @@ var NotebookItemReportController = function () {
                         var $caption = $('<div><b>' + notebookItem.content.text + '</b></div>').css({ 'text-align': 'center' });
                         $item.append($caption);
                     }
-                    //theEditor.content.insertHtmlAtCursor(notebookItemHTML);
-                    //$rootScope.$broadcast("notebookItemChosen", {"notebookItemHTML": notebookItemHTML});
-                    //$scope.reportItem.content.content = $scope.reportItem.content.content.substring(0, reportTextareaCursorPosition) + notebookItemHTML + $scope.reportItem.content.content.substring(reportTextareaCursorPosition);
+
                     $reportElement.summernote('focus');
                     $reportElement.summernote('restoreRange');
                     $reportElement.summernote('insertNode', $item[0]);
@@ -194,12 +192,13 @@ var NotebookItemReportController = function () {
                     $mdBottomSheet.hide();
                 };
             }
-            NotebookItemChooserController.$inject = ["$rootScope", "$mdBottomSheet", "$scope", "notebookItems", "reportItem", "reportTextareaCursorPosition", "themePath"];
+
+            NotebookItemChooserController.$inject = ["$mdBottomSheet", "$scope", "notebookItems", "reportItem", "reportTextareaCursorPosition", "themePath"];
         }
 
         /**
-        * Start the auto save interval for this report
-        */
+         * Start the auto save interval for this report
+         */
 
     }, {
         key: 'startAutoSaveInterval',
@@ -210,12 +209,8 @@ var NotebookItemReportController = function () {
             this.autoSaveIntervalId = setInterval(function () {
                 // check if the student work is dirty
                 if (_this2.dirty) {
-                    // the student work is dirty so we will save
-
-                    /*
-                    * obtain the component states from the children and save them
-                    * to the server
-                    */
+                    // the student work is dirty so we will save.
+                    // obtain the component states from the children and save them to the server
                     _this2.saveNotebookReportItem();
                 }
             }, this.autoSaveInterval);
@@ -225,8 +220,8 @@ var NotebookItemReportController = function () {
 
 
         /**
-        * Stop the auto save interval for this report
-        */
+         * Stop the auto save interval for this report
+         */
         value: function stopAutoSaveInterval() {
             clearInterval(this.autoSaveIntervalId);
         }
@@ -235,8 +230,8 @@ var NotebookItemReportController = function () {
 
 
         /**
-        * Save the notebook report item to server
-        */
+         * Save the notebook report item to server
+         */
         value: function saveNotebookReportItem() {
             var _this3 = this;
 
@@ -244,15 +239,15 @@ var NotebookItemReportController = function () {
             this.reportItem.content.clientSaveTime = Date.parse(new Date()); // set save timestamp
             this.NotebookService.saveNotebookItem(this.reportItem.id, this.reportItem.nodeId, this.reportItem.localNotebookItemId, this.reportItem.type, this.reportItem.title, this.reportItem.content, this.reportItem.content.clientSaveTime).then(function (result) {
                 if (result) {
-                    //this.$translate(['ok']).then((translations) => {
-                    _this3.dirty = false;
-                    _this3.reportItem.id = result.id; // set the reportNotebookItemId to the newly-incremented id so that future saves during this visit will be an update instead of an insert.
-                    var serverSaveTime = result.serverSaveTime;
-                    var clientSaveTime = _this3.ConfigService.convertToClientTimestamp(serverSaveTime);
+                    _this3.$translate(['saved']).then(function (translations) {
+                        _this3.dirty = false;
+                        _this3.reportItem.id = result.id; // set the reportNotebookItemId to the newly-incremented id so that future saves during this visit will be an update instead of an insert.
+                        var serverSaveTime = result.serverSaveTime;
+                        var clientSaveTime = _this3.ConfigService.convertToClientTimestamp(serverSaveTime);
 
-                    // set save message
-                    _this3.setSaveMessage('Saved', clientSaveTime);
-                    //})
+                        // set save message
+                        _this3.setSaveMessage(translations.saved, clientSaveTime);
+                    });
                 }
             });
         }
@@ -270,10 +265,10 @@ var NotebookItemReportController = function () {
         }
 
         /**
-        * Set the message next to the save button
-        * @param message the message to display
-        * @param time the time to display
-        */
+         * Set the message next to the save button
+         * @param message the message to display
+         * @param time the time to display
+         */
 
     }, {
         key: 'setSaveMessage',

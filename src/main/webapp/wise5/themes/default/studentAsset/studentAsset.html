@@ -2,11 +2,10 @@
     .drop-box {
         background: #F8F8F8;
         border: 5px dashed #DDD;
-        width: 90%;
         height: 100px;
         text-align: center;
-        padding-top: 50px;
-        margin: 10px;
+        padding-top: 30px;
+        margin-top: 10px;
         bottom: 0px;
     }
 
@@ -23,8 +22,7 @@
         width: auto;
         min-height: 200px;
         max-height: 200px;
-        max-width: 450px;
-        border: 5px solid #DDD;
+        border: 3px solid #DDD;
         overflow:auto;
         list-style-type: none;
         padding:0px;
@@ -37,7 +35,7 @@
         max-height: 100px;
         padding: 10px;
         margin: 5px;
-        border: 3px solid #DDD;
+        border: 1px solid #DDD;
         overflow:auto;
     }
 
@@ -58,16 +56,15 @@
         cursor:pointer;
     }
 </style>
-<ul class='studentAssets' ng-show="studentAssetController.studentAssets.length" >
-    <li ng-repeat="studentAsset in studentAssetController.studentAssets" class='studentAssetLI'
-        ng-click='studentAssetController.attachStudentAssetToComponent($event, studentAsset)'>
-        <img ng-show="studentAsset != null"
-             ng-src='{{studentAsset.iconURL}}'
-             class='studentAsset'
-             title='{{studentAsset.iconURL}}'>
-        </img>
-    </li>
-</ul>
+<div class='studentAssets' ng-show="studentAssetController.studentAssets.length" >
+    <img ng-repeat="studentAsset in studentAssetController.studentAssets"
+         ng-click='studentAssetController.attachStudentAssetToComponent($event, studentAsset)'
+         ng-show="studentAsset != null"
+         ng-src='{{studentAsset.iconURL}}'
+         class='studentAsset'
+         title="{{ 'useThisFile' | translate }}">
+    </img>
+</div>
 <div>
     <div ng-show="studentAssetController.mode != 'preview'" ngf-drop ngf-select ngf-change="studentAssetController.uploadStudentAssets($files)" class="drop-box"
          drag-over-class="dragover" ngf-multiple="true" allow-dir="false"

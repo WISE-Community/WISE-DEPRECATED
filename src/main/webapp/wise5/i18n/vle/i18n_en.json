@@ -3,15 +3,17 @@
   "accountMenuPoints": "{{point}} points",
   "accountMenuTotalScore": "Total Score",
   "addNewNote": "Add New Note",
+  "chooseNotebookItemToAdd": "Choose an item to add",
   "deleteNoteConfirmMessage": "Are you sure you want to delete this note?",
   "editNotebookItem": "Edit Notebook Item",
   "itemLocked": "Item Locked",
-  "newNote": "Add New Note",
+  "newNote": "New Note",
   "noNotes": "Hello! You haven't created any {{term}} yet.",
   "planningModeOnlyOnePlanningModeAllowed": "You can only work on one Planning Activity at a time. Turn off Planning Mode on the existing Planning Activity before working on this one.",
   "planningModeStepsUnVisitable": "You are not allowed to view items while in Planning Mode. Please turn off Planning Mode and try again.",
   "projectCompletion": "Project Completion",
   "projectItemSelect": "Project item select",
   "projectPlan": "Project Plan",
-  "typeYourNoteHere": "Note text..."
+  "typeYourNoteHere": "Note text...",
+  "useThisFile": "Use this file"
 }

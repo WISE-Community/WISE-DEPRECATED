@@ -26,7 +26,7 @@
     <md-divider ng-if="notebookMenuCtrl.addNewDividerEnabled"></md-divider>
     <md-button ng-if="notebookMenuCtrl.addNewEnabled" aria-label="Add Notebook item" class="md-icon-button" ng-click="notebookMenuCtrl.addNewNote($event)">
         <md-icon class="accent-1"> note_add </md-icon>
-        <md-tooltip md-direction="left"><span>New Note</span></md-tooltip>
+        <md-tooltip md-direction="left"><span>{{ 'newNote' | translate }}</span></md-tooltip>
     </md-button>
     <!--<md-fab-speed-dial class="md-scale" md-theme="default" md-direction="up" md-open="notebookMenuCtrl.addMode"
                        ng-mouseenter="notebookMenuCtrl.addMode=true" ng-mouseleave="notebookMenuCtrl.addMode=false">
@@ -79,7 +79,7 @@
     <md-list>
         <md-list-item aria-label="Close {{notebookMenuCtrl.notebookConfig.label}}" ng-click="notebookMenuCtrl.toggleNotebook($event)">
             <md-icon class="menu-sidenav__icon"> close </md-icon>
-            <p class="menu-sidenav__item">Close</p>
+            <p class="menu-sidenav__item">{{ 'close' | translate }}</p>
         </md-list-item>
     </md-list>
 </md-content>
@@ -92,5 +92,9 @@
                ng-click="notebookMenuCtrl.openNotebook($event, item.$key)">
         <md-icon style="color: {{notebookMenuCtrl.notebookFilter === item.$key ? item.label.color + ' !important' : 'auto'}}"> {{item.label.icon}} </md-icon>
         <md-tooltip md-direction="right">{{item.label.link}}</md-tooltip>
+    </md-button>
+    <md-button ng-if="notebookMenuCtrl.addNewEnabled" aria-label="Add Notebook item" class="md-icon-button" ng-click="notebookMenuCtrl.addNewNote($event)">
+        <md-icon class="accent-1"> note_add </md-icon>
+        <md-tooltip md-direction="right"><span>{{ 'newNote' | translate }}</span></md-tooltip>
     </md-button>
 </div>

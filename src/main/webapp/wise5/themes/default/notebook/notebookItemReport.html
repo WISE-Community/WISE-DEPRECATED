@@ -4,8 +4,6 @@
             style="color: {{notebookItemReportController.label.color}};">{{notebookItemReportController.reportItem.content.title}}</p>
         <p class="text-secondary">{{notebookItemReportController.reportItem.content.prompt}}</p>
     </div>
-
-    <!--<textarea tbio class="notebook-item--report__content" ng-model="notebookItemReportController.reportItem.content.content" rows="30" cols="20" id="notebookReportTextarea" name="notebookReportTextarea" configuration="simple"></textarea>-->
     <div class="notebook-item--report__container" ui-scrollpoint ui-scrollpoint-action="notebookItemReportController.setEditorPosition">
         <div class="notebook-item--report__toolbar">
             <div id="{{notebookItemReportController.reportId}}-toolbar" class="l-constrained l-constrained-md"></div>
@@ -15,15 +13,10 @@
                     ng-model="notebookItemReportController.reportItem.content.content"
                     config="notebookItemReportController.summernoteOptions"></summernote>
     </div>
-    <!--
-    <br/>
-    Preview:
-    <div><compile data="notebookItemReportController.reportItem.content.content"></compile></div>
-    -->
     <div class="component__actions">
         <md-button class="md-primary md-raised" aria-label="Save {{notebookItemReportController.label.link}}"
                    ng-click="notebookItemReportController.saveNotebookReportItem()"
-                   ng-disabled="!notebookItemReportController.dirty">Save</md-button>
+                   ng-disabled="!notebookItemReportController.dirty">{{ 'save' | translate }}</md-button>
         <span ng-show="notebookItemReportController.saveMessage.text"
               class="component__actions__info md-caption">
               {{notebookItemReportController.saveMessage.text}} <span class="component__actions__more"><md-tooltip md-direction="top">{{ notebookItemReportController.saveMessage.time | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip><span am-time-ago="notebookItemReportController.saveMessage.time"></span></span>
