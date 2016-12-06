@@ -91,8 +91,7 @@ public class GradeWorkController {
 				this.runService.hasRunPermission(run, user, BasePermission.READ)) {
 
 			String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
-
-			String getClassroomMonitorConfigUrl = wiseBaseURL + "/vleconfig?runId=" + run.getId().toString() + "&mode=classroomMonitor";
+			String getClassroomMonitorConfigUrl = wiseBaseURL + "/config/classroomMonitor/" + runId;
 
 			ModelAndView modelAndView = new ModelAndView("classroomMonitor");
 			modelAndView.addObject("configURL", getClassroomMonitorConfigUrl);

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2016 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3,
@@ -99,7 +99,7 @@ public class VLEController {
             @PathVariable Long runId,
             ModelMap modelMap) throws ObjectNotFoundException {
         String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
-        String configURL = wiseBaseURL + "/vleconfig?runId=" + runId + "&mode=run";
+        String configURL = wiseBaseURL + "/config/studentRun/" + runId;
         modelMap.put("configURL", configURL);
         return "student";
     }
@@ -121,13 +121,13 @@ public class VLEController {
 			}
 			// get the vle config url
 			String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
-			String configURL = wiseBaseURL + "/vleconfig?projectId=" + projectId + "&mode=preview";
+			String configURL = wiseBaseURL + "/config/preview/" + projectId;
 
 			// set the view to the student vle
 			modelMap.put("configURL", configURL);
 			return "student";
 		} catch (ObjectNotFoundException onfe) {
-			// If project does not exist, show error page
+			// if project does not exist, show error page
 			onfe.printStackTrace();
 			return "errors/friendlyError";
 		}
