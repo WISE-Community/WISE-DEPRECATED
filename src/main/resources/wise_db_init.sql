@@ -189,6 +189,7 @@
         clientSaveTime datetime not null,
         componentId varchar(30),
         content text,
+        localNotebookItemId varchar(30),
         nodeId varchar(30),
         serverDeleteTime datetime,
         serverSaveTime datetime not null,

@@ -97,7 +97,7 @@ public class ListStudentNamesController {
 		Date endTime = run.getEndtime();
 
 		int rowCounter = 0;
-		short columnCounter = 0;
+		int columnCounter = 0;
 		
 		//the max number of columns used
 		int maxColumn = 0;

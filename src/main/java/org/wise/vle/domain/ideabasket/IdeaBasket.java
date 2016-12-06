@@ -27,14 +27,8 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Calendar;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
-import org.hibernate.annotations.Index;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wise.vle.domain.PersistableDomain;
@@ -43,12 +37,7 @@ import org.wise.vle.domain.PersistableDomain;
  * @author Geoffrey Kwan
  */
 @Entity
-@Table(name="ideabasket")
-@org.hibernate.annotations.Table(appliesTo="ideabasket",
-	indexes = {
-		@Index(name="runIdAndWorkgroupIdIndex", columnNames={"runId", "workgroupId"})	
-	}
-)
+@Table(name = "ideabasket", indexes = { @Index(columnList = "runId,workgroupId", name = "runIdAndWorkgroupIdIndex") } )
 public class IdeaBasket extends PersistableDomain implements Serializable {
 
 	private static final long serialVersionUID = 1L;

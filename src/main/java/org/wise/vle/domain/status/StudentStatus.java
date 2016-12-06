@@ -26,21 +26,16 @@ package org.wise.vle.domain.status;
 import java.sql.Timestamp;
 import java.util.Calendar;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
-import org.hibernate.annotations.Index;
 import org.wise.vle.domain.PersistableDomain;
 
 /**
  * @author Geoffrey Kwan
  */
 @Entity
-@Table(name="studentstatus")
+@Table(name = "studentstatus",
+		indexes = { @Index(columnList = "runId", name = "runIdIndex"), @Index(columnList = "workgroupId", name = "workgroupIdIndex")} )
 public class StudentStatus extends PersistableDomain {
 
 	@Id
@@ -48,14 +43,12 @@ public class StudentStatus extends PersistableDomain {
 	private Long id = null;
 	
 	@Column(name="runId")
-	@Index(name="runIdIndex")
 	private Long runId = null;
 	
 	@Column(name="periodId")
 	private Long periodId = null;
 	
 	@Column(name="workgroupId")
-	@Index(name="workgroupIdIndex")
 	private Long workgroupId = null;
 	
 	@Column(name="timestamp")

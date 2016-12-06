@@ -26,35 +26,28 @@ package org.wise.vle.domain.status;
 import java.sql.Timestamp;
 import java.util.Calendar;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
-import org.hibernate.annotations.Index;
 import org.wise.vle.domain.PersistableDomain;
 
 /**
  * @author Geoffrey Kwan
  */
 @Entity
-@Table(name="runstatus")
+@Table(name = "runstatus", indexes = { @Index(columnList = "runId", name = "runIdIndex") } )
 public class RunStatus extends PersistableDomain {
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id = null;
 	
-	@Column(name="runId")
-	@Index(name="runIdIndex")
+	@Column(name = "runId")
 	private Long runId = null;
 	
-	@Column(name="timestamp")
+	@Column(name = "timestamp")
 	private Timestamp timestamp = null;
 	
-    @Column(name="status", length=5120000, columnDefinition = "mediumtext")
+    @Column(name = "status", length = 5120000, columnDefinition = "mediumtext")
 	private String status = null;
 	
 	/**

@@ -854,6 +854,7 @@
 				<sec:intercept-url pattern="/metadata.html" access="ROLE_ANONYMOUS,ROLE_USER" />
 				<sec:intercept-url pattern="/runInfo" access="ROLE_ANONYMOUS,ROLE_USER" />
 				<sec:intercept-url pattern="/vleconfig" access="ROLE_ANONYMOUS,ROLE_USER" />
+				<sec:intercept-url pattern="/config/**" access="ROLE_ANONYMOUS,ROLE_USER" />
 				<sec:intercept-url pattern="/pages/**" access="ROLE_ANONYMOUS,ROLE_USER" />
 				<sec:intercept-url pattern="/contact/*.html" access="ROLE_ANONYMOUS,ROLE_USER" />
 				<sec:intercept-url pattern="/forgotaccount/**/*.html" access="ROLE_ANONYMOUS,ROLE_USER" />

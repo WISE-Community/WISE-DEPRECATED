@@ -28,7 +28,6 @@ import java.util.Calendar;
 
 import javax.persistence.*;
 
-import org.hibernate.annotations.Index;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wise.vle.domain.PersistableDomain;
@@ -39,12 +38,7 @@ import org.wise.vle.domain.PersistableDomain;
  * @author Eddie Pan
  */
 @Entity
-@Table(name = "portfolio")
-@org.hibernate.annotations.Table(appliesTo = "portfolio",
-indexes = {
-		@Index(name = "runIdAndWorkgroupIdIndex", columnNames = {"runId", "workgroupId"})
-}
-		)
+@Table(name = "portfolio", indexes = { @Index(columnList = "runId,workgroupId", name = "runIdAndWorkgroupIdIndex") } )
 public class Portfolio extends PersistableDomain implements Serializable {
 
 	private static final long serialVersionUID = 1L;

@@ -114,9 +114,9 @@ public class HibernateWorkgroupDao extends AbstractHibernateDao<Workgroup>
 		if (doEagerFetch) {
 			result = (WISEWorkgroupImpl) session.createCriteria(WISEWorkgroupImpl.class)
 					.add( Restrictions.eq("id", workgroupId))
-					.setFetchMode("offering", FetchMode.EAGER)
-					.setFetchMode("group", FetchMode.EAGER)
-					.setFetchMode("period", FetchMode.EAGER)
+					.setFetchMode("offering", FetchMode.JOIN)
+					.setFetchMode("group", FetchMode.JOIN)
+					.setFetchMode("period", FetchMode.JOIN)
 					.uniqueResult();
 		} else {
 			result = (WISEWorkgroupImpl) session.createCriteria(WISEWorkgroupImpl.class)

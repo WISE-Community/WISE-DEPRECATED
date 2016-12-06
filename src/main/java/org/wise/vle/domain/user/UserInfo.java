@@ -23,14 +23,8 @@
  */
 package org.wise.vle.domain.user;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
-import org.hibernate.annotations.Index;
 import org.wise.vle.domain.PersistableDomain;
 
 /**
@@ -38,7 +32,7 @@ import org.wise.vle.domain.PersistableDomain;
  * @author Hiroki Terashima
  */
 @Entity
-@Table(name="userinfo")
+@Table(name = "userinfo", indexes = { @Index(columnList = "workgroupId", name = "workgroupIdIndex") } )
 public class UserInfo extends PersistableDomain {
 
 	@Id
@@ -46,7 +40,6 @@ public class UserInfo extends PersistableDomain {
 	private Long id = null;
 
 	@Column(name="workgroupId", unique=true)
-	@Index(name="workgroupIdIndex")
 	private Long workgroupId = null;
 	
     public Long getId() {

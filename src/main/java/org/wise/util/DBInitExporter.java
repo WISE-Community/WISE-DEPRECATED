@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2015 Encore Research Group, University of Toronto
+ * Copyright (c) 2007-2016 Encore Research Group, University of Toronto
  *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
@@ -27,18 +27,16 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-
-import org.hibernate.cfg.Configuration;
 import org.hibernate.tool.hbm2ddl.SchemaExport;
 import org.springframework.beans.BeanUtils;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.wise.portal.spring.SpringConfiguration;
 
 /**
- * Generates sql file for creating tables and populating them with initial values
- * 
+ * Generates sql file for creating tables and populating them with initial values.
+ * Called when running "mvn exec:java" (defined in pom.xml file)
+ *
  * @author Cynick Young
  * @author Hiroki Terashima
  */
@@ -46,12 +44,9 @@ public class DBInitExporter {
 	
 	static String springConfigClassname = "org.wise.portal.spring.impl.SpringConfigurationImpl";
 	static String outputFilename = "src/main/resources/wise_db_init.sql";
-    /**
-     * @param args
-     */
+
     public static void main(String[] args) {
         try {
-          
             exportSchemaToFile(springConfigClassname, outputFilename);
         } catch (Exception all) {
             System.err.println(all.getLocalizedMessage());
@@ -61,10 +56,9 @@ public class DBInitExporter {
     }
 
     /**
-     * @param springConfigClassname
-     * @param outputFilename
-     * @throws ClassNotFoundException
-     * @throws IOException 
+     * Exports schema definitions to the specified outputFilename.
+     * @param springConfigClassname Spring configuration file
+     * @param outputFilename output file
      */
     public static void exportSchemaToFile(String springConfigClassname,
             String outputFilename) throws ClassNotFoundException,
@@ -75,11 +69,10 @@ public class DBInitExporter {
                     .instantiateClass(Class.forName(springConfigClassname));
             applicationContext = new ClassPathXmlApplicationContext(
                     springConfig.getRootApplicationContextConfigLocations());
-            Configuration hibernateConfig = ((LocalSessionFactoryBean) applicationContext
-                    .getBean("&sessionFactory")).getConfiguration();
 
             final boolean printScriptToConsole = false, exportScriptToDb = false, justDrop = false, justCreate = true;
-            final SchemaExport schemaExport = new SchemaExport(hibernateConfig)
+            final SchemaExport schemaExport = new SchemaExport(MetadataProvider.getMetadata());
+            schemaExport
                     .setDelimiter(";").setFormat(true).setHaltOnError(true)
                     .setOutputFile(outputFilename);
             schemaExport.execute(printScriptToConsole, exportScriptToDb,
@@ -101,17 +94,13 @@ public class DBInitExporter {
     				outputFileWriter.newLine();
     			}
     		}
-     
-    		// close the buffer reader
-    		initialDataFileReader.close();
-     
-    		// close buffer writer
-    		outputFileWriter.close();
+
+    		initialDataFileReader.close(); // close the buffer reader
+    		outputFileWriter.close();    // close buffer writer
         } finally {
             if (applicationContext != null) {
                 applicationContext.close();
             }
         }
     }
-
 }

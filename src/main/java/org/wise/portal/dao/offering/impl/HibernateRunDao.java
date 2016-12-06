@@ -201,11 +201,11 @@ public class HibernateRunDao extends AbstractHibernateDao<Run> implements
         if (doEagerFetch) {
 			Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
         	result = (Run) session.createCriteria(RunImpl.class)
-			.setFetchMode("project", FetchMode.EAGER)
+			.setFetchMode("project", FetchMode.JOIN)
 			.setFetchMode("periods", FetchMode.JOIN)
-			.setFetchMode("owners", FetchMode.EAGER)
-			.setFetchMode("sharedowners", FetchMode.EAGER)
-			.setFetchMode("announcements", FetchMode.EAGER)
+			.setFetchMode("owners", FetchMode.JOIN)
+			.setFetchMode("sharedowners", FetchMode.JOIN)
+			.setFetchMode("announcements", FetchMode.JOIN)
 			.add( Restrictions.eq("id", runId))
 			.uniqueResult();
         } else {

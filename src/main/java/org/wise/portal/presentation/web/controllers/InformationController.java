@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2016 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3,
@@ -43,6 +43,7 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.wise.portal.dao.ObjectNotFoundException;
@@ -100,7 +101,11 @@ public class InformationController {
 	private void handleGetUserInfo(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, NumberFormatException, ObjectNotFoundException{
 
-		JSONObject userInfo = getUserInfo(request);
+		String runIdString = request.getParameter("runId");
+		Long runId = Long.parseLong(runIdString);
+		Run run = this.runService.retrieveById(runId);
+
+		JSONObject userInfo = getUserInfo(request, run);
 
 		if (userInfo == null) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -148,13 +153,9 @@ public class InformationController {
      * @throws ObjectNotFoundException
      * @throws NumberFormatException
      */
-    private JSONObject getUserInfo(HttpServletRequest request) throws ObjectNotFoundException,
+    private JSONObject getUserInfo(HttpServletRequest request, Run run) throws ObjectNotFoundException,
             NumberFormatException {
         JSONObject userInfo = new JSONObject();
-
-		String runIdString = request.getParameter("runId");
-		Long runId = Long.parseLong(runIdString);
-		Run run = this.runService.retrieveById(runId);
 
 		Workgroup workgroup;
 		String workgroupIdStr = request.getParameter("workgroupId");
@@ -174,7 +175,7 @@ public class InformationController {
 		 */
 		String periodId = "";
 
-		//the period number that you would regularly think of as a period
+		//the period number that you would regularly think o157f as a period
 		String periodName = "";
 
 		User loggedInUser = ControllerUtil.getSignedInUser();
@@ -414,7 +415,7 @@ public class InformationController {
     }
 
 	/**
-	 * Handles the get config request from three possible modes: grading, preview and run.
+	 * Handles the get config request from three possible modes for WISE4: grading, preview and run.
 	 * The run and grading requests are almost identical, the preview request is largely handled
 	 * when the projectId is found.
 	 *
@@ -427,7 +428,7 @@ public class InformationController {
 	 * @throws IOException
 	 */
     @RequestMapping("/vleconfig")
-	private void handleGetConfig(HttpServletRequest request, HttpServletResponse response)
+	private void handleGetConfigWISE4(HttpServletRequest request, HttpServletResponse response)
 	        throws ObjectNotFoundException, IOException {
 		String contextPath = request.getContextPath(); //get the context path e.g. /wise
 		User signedInUser = ControllerUtil.getSignedInUser();
@@ -454,12 +455,7 @@ public class InformationController {
 
 
 		if (projectIdString != null) {
-			if ("demo".equals(projectIdString)) {
-				rawProjectUrl = "/demo/project.json";
-				addDummyUserInfoToConfig(config);
-			} else {
-				projectId = Long.parseLong(projectIdString);
-			}
+			projectId = Long.parseLong(projectIdString);
 		}
 
 		// if projectId provided, this is a request for preview
@@ -474,12 +470,6 @@ public class InformationController {
 				config.put("runId", "");
 			} catch (JSONException e) {
 				e.printStackTrace();
-			}
-
-			// if we're previewing a WISE5 project, add a dummy user info
-			Integer wiseVersion = project.getWiseVersion();
-			if (wiseVersion != null && wiseVersion == 5) {
-				addDummyUserInfoToConfig(config);
 			}
 
 		} else if (runId != null) {
@@ -614,29 +604,6 @@ public class InformationController {
 				config.put("runStatusURL", runStatusURL);
 				config.put("postLevel", run.getPostLevel());
 
-				// add userInfo if this is a WISE5 run.
-				Integer wiseVersion = project.getWiseVersion();
-				if (wiseVersion != null && wiseVersion == 5) {
-	                config.put("userInfo", getUserInfo(request));
-					config.put("studentDataURL", wiseBaseURL + "/student/data");
-					config.put("studentAssetsURL", wiseBaseURL + "/student/asset/" + runId);
-					config.put("studentNotebookURL", wiseBaseURL + "/student/notebook/" + runId);
-					config.put("notificationURL", wiseBaseURL + "/notification/" + runId);
-					String openCPUURL = wiseProperties.getProperty("openCPUURL");
-					if (openCPUURL != null) {
-						config.put("openCPUURL", openCPUURL);
-					}
-
-					// check that the user has read or write permission on the run
-					if (signedInUser.isAdmin() ||
-							this.runService.hasRunPermission(run, signedInUser, BasePermission.WRITE) ||
-							this.runService.hasRunPermission(run, signedInUser, BasePermission.READ)) {
-						config.put("teacherDataURL", wiseBaseURL + "/teacher/data");
-						config.put("runDataExportURL", wiseBaseURL + "/teacher/export");
-						config.put("studentNotebookURL", wiseBaseURL + "/teacher/notebook/" + runId);
-					}
-				}
-
 				// add the config fields specific to the teacher grading
 				if ("grading".equals(mode)) {
                     // URL for get/post premade comments
@@ -768,6 +735,233 @@ public class InformationController {
 		response.setDateHeader ("Expires", 0);
 		response.setContentType("application/json");
 		response.getWriter().write(config.toString());
+	}
+
+	/**
+	 * Handles the get config request from these possible modes for WISE5: [preview, studentRun, classroomMonitor]
+	 * Requests with mode = [studentRun, classroomMonitor] are handled almost identically. In this case, id is the run id.
+	 * For requests with mode = preview, the id is the project id.
+	 *
+	 * @param request
+	 * @param response
+	 * @param mode [preview, studentRun, classroomMonitor]
+	 * @param id either project id or run id, depending on mode
+	 * @throws ObjectNotFoundException
+	 * @throws IOException
+	 */
+	@RequestMapping("/config/{mode}/{id}")
+	private void handleGetConfigWISE5(HttpServletRequest request,
+									  HttpServletResponse response,
+									  @PathVariable String mode,
+									  @PathVariable String id)
+			throws ObjectNotFoundException, IOException {
+		try {
+			JSONObject config = new JSONObject();
+			String contextPath = request.getContextPath();  //get the context path e.g. /wise
+			config.put("contextPath", contextPath);
+
+			User signedInUser = ControllerUtil.getSignedInUser();
+			String userSpecifiedLang = request.getParameter("lang");
+
+			String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
+			config.put("wiseBaseURL", wiseBaseURL);
+			config.put("mode", mode);
+			config.put("theme", "WISE");
+
+			String rawProjectUrl = null;
+			Project project = null;
+
+			if ("preview".equals(mode)) {
+				if ("demo".equals(id)) {
+					rawProjectUrl = "/demo/project.json";
+					addDummyUserInfoToConfig(config);
+				} else {
+					Long projectId = Long.parseLong(id);
+					project = projectService.getById(projectId);
+					rawProjectUrl = (String) project.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
+				}
+				addDummyUserInfoToConfig(config);  // add a dummy user info
+				String isConstraintsDisabledStr = request.getParameter("isConstraintsDisabled");
+				if (isConstraintsDisabledStr != null && Boolean.parseBoolean(isConstraintsDisabledStr)) {
+					config.put("isConstraintsDisabled", true);
+				}
+			} else if ("studentRun".equals(mode) || "classroomMonitor".equals(mode) || "author".equals(mode)) {
+				Long runId = Long.parseLong(id);
+				config.put("runId", runId);
+
+				// add non-preview project specific settings
+				String userInfoURL = wiseBaseURL + "/userInfo?runId=" + runId;
+				config.put("userInfoURL", userInfoURL);
+
+				Run run = this.runService.retrieveById(runId);
+				config.put("runName", run.getName());  // set the run name
+				rawProjectUrl = (String) run.getProject().getCurnit().accept(new CurnitGetCurnitUrlVisitor());
+
+				// get the project
+				project = run.getProject();
+
+				Workgroup workgroup = getWorkgroup(request, run);
+				if (workgroup == null) {
+					// the user is not in a workgroup for the run so they should not be
+					// allowed to access the config, unless the user is an admin
+					if (signedInUser == null || !signedInUser.isAdmin()) {
+						// user is not signed in or is not admin so we will not let them proceed
+						return;
+					}
+				}
+
+				// URL to get/post annotations
+				String annotationsURL = wiseBaseURL + "/annotation?type=annotation&runId=" + runId;
+
+				// get the websocket base url e.g. ws://wise4.berkeley.edu:8080
+				String webSocketBaseURL = wiseProperties.getProperty("webSocketBaseUrl");
+
+				if (webSocketBaseURL == null) {
+					/*
+					 * if the websocket base url was not provided in the portal properties
+					 * we will use the default websocket base url.
+					 * e.g.
+					 * ws://localhost:8080/wise
+					 */
+					if (wiseBaseURL.contains("http")) {
+						webSocketBaseURL = wiseBaseURL.replace("http", "ws");
+					} else {
+						String portalContextPath = ControllerUtil.getPortalUrlString(request);
+						webSocketBaseURL = portalContextPath.replace("http", "ws");
+					}
+				}
+
+				// url for websocket connections
+				String webSocketURL = webSocketBaseURL + "/websocket";
+
+				// url for sending and receiving student statuses
+				String studentStatusURL = wiseBaseURL + "/studentStatus";
+
+				// url for sending and receiving run statuses
+				String runStatusURL = wiseBaseURL + "/runStatus";
+
+				config.put("contextPath", contextPath);
+				config.put("annotationsURL", annotationsURL);
+				config.put("runInfo", run.getInfo());
+				config.put("isRealTimeEnabled", run.isRealTimeEnabled());
+				config.put("webSocketURL", webSocketURL);
+				config.put("studentStatusURL", studentStatusURL);
+				config.put("runStatusURL", runStatusURL);
+
+				// add userInfo
+				config.put("userInfo", getUserInfo(request, run));
+				config.put("studentDataURL", wiseBaseURL + "/student/data");  // the url to get/post student data
+				config.put("studentAssetsURL", wiseBaseURL + "/student/asset/" + runId);
+				config.put("studentNotebookURL", wiseBaseURL + "/student/notebook/" + runId);
+				config.put("notificationURL", wiseBaseURL + "/notification/" + runId);
+				String openCPUURL = wiseProperties.getProperty("openCPUURL");
+				if (openCPUURL != null) {
+					config.put("openCPUURL", openCPUURL);
+				}
+
+				// check that the user has read or write permission on the run
+				if (signedInUser.isAdmin() ||
+						this.runService.hasRunPermission(run, signedInUser, BasePermission.WRITE) ||
+						this.runService.hasRunPermission(run, signedInUser, BasePermission.READ)) {
+					config.put("teacherDataURL", wiseBaseURL + "/teacher/data");
+					config.put("runDataExportURL", wiseBaseURL + "/teacher/export");
+					config.put("studentNotebookURL", wiseBaseURL + "/teacher/notebook/" + runId);
+				}
+
+				// add the config fields specific to the teacher grading
+				if ("grade".equals(mode)) {
+					String getStudentListURL = wiseBaseURL + "/teacher/management/studentListExport?runId=" + runId;
+					config.put("getStudentListURL", getStudentListURL);
+				}
+			}
+
+			// set the project URL
+			String curriculumBaseWWW = wiseProperties.getProperty("curriculum_base_www");
+			String projectURL = curriculumBaseWWW + rawProjectUrl;
+
+			// get location of last separator in url
+			int lastIndexOfSlash = projectURL.lastIndexOf("/");
+			if (lastIndexOfSlash == -1) {
+				lastIndexOfSlash = projectURL.lastIndexOf("\\");
+			}
+
+			if (project != null) {
+				config.put("projectId", project.getId());
+				config.put("parentProjectId", project.getParentProjectId());
+			}
+
+			config.put("projectURL", projectURL);
+			// set the projectBaseURL based on the projectURL
+			String projectBaseURL = projectURL.substring(0, lastIndexOfSlash) + "/";
+			config.put("projectBaseURL", projectBaseURL);
+			String studentUploadsBaseWWW = wiseProperties.getProperty("studentuploads_base_www");
+			config.put("studentUploadsBaseURL", studentUploadsBaseWWW);
+			String cRaterRequestURL = wiseBaseURL + "/cRater";  // the url to make CRater requests
+			config.put("cRaterRequestURL", cRaterRequestURL);
+			config.put("mainHomePageURL", contextPath);
+			config.put("renewSessionURL", wiseBaseURL + "/session/renew");
+			config.put("sessionLogOutURL", contextPath + "/logout");
+
+			// set user's locale
+			Locale locale = request.getLocale();
+			if (userSpecifiedLang != null) {
+				// if user specified lang=XX in the url, use it
+				locale = new Locale(userSpecifiedLang);
+			} else {
+				// otherwise, use the locale saved for the user.
+				if (signedInUser != null) {
+					String userLanguage = signedInUser.getUserDetails().getLanguage();
+					if (userLanguage != null) {
+						if (userLanguage.contains("_")) {
+							String language = userLanguage.substring(0, userLanguage.indexOf("_"));
+							String country = userLanguage.substring(userLanguage.indexOf("_") + 1);
+							locale = new Locale(language, country);
+						} else {
+							locale = new Locale(userLanguage);
+						}
+					}
+				}
+			}
+			config.put("locale", locale);
+
+			int maxInactiveInterval = request.getSession().getMaxInactiveInterval() * 1000;
+			config.put("sessionTimeoutInterval", maxInactiveInterval);          // add sessiontimeout interval, in milleseconds
+			int sessionTimeoutCheckInterval = maxInactiveInterval / 20;         // check 20 times during the session.
+			if (sessionTimeoutCheckInterval > 60000) {
+				sessionTimeoutCheckInterval = 60000;  // session should be checked at least every 60 seconds.
+			}
+			config.put("sessionTimeoutCheckInterval", sessionTimeoutCheckInterval); // how often session should be checked...check every minute (1 min=60sec=60000 milliseconds)
+
+			// max size for all assets combined uploaded by student, in bytes
+			Long studentMaxTotalAssetsSize = new Long(wiseProperties.getProperty("student_max_total_assets_size", "5242880"));
+			config.put("studentMaxTotalAssetsSize", studentMaxTotalAssetsSize);
+
+			// add userType {teacher, student, null}
+			if (signedInUser != null) {
+				UserDetails userDetails = (UserDetails) signedInUser.getUserDetails();
+				if (userDetails instanceof StudentUserDetails) {
+					config.put("userType", "student");
+					config.put("indexURL", ControllerUtil.getPortalUrlString(request) + WISEAuthenticationProcessingFilter.STUDENT_DEFAULT_TARGET_PATH);
+
+				} else if (userDetails instanceof TeacherUserDetails) {
+					config.put("userType", "teacher");
+					config.put("indexURL", ControllerUtil.getPortalUrlString(request) + WISEAuthenticationProcessingFilter.TEACHER_DEFAULT_TARGET_PATH);
+				}
+			} else {
+				config.put("userType", "none");
+			}
+
+			Calendar now = Calendar.getInstance();
+			config.put("retrievalTimestamp", now.getTimeInMillis());
+
+			response.setHeader("Cache-Control", "no-cache");
+			response.setHeader("Pragma", "no-cache");
+			response.setDateHeader("Expires", 0);
+			response.setContentType("application/json");
+			response.getWriter().write(config.toString());
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
