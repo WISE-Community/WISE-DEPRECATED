@@ -209,13 +209,16 @@ class DrawController {
 
                 if (componentState == null) {
                     /*
-                     * only import work if the student does not already have
-                     * work for this component
+                     * only import work or use starter draw data if the student 
+                     * does not already have work for this component
                      */
 
                     // check if we need to import work
                     var importPreviousWorkNodeId = this.componentContent.importPreviousWorkNodeId;
                     var importPreviousWorkComponentId = this.componentContent.importPreviousWorkComponentId;
+                    
+                    // get the starter draw data if any
+                    var starterDrawData = this.componentContent.starterDrawData;
                     
                     if (importPreviousWorkNodeId == null || importPreviousWorkNodeId == '') {
                         /*
@@ -236,6 +239,9 @@ class DrawController {
                     if (importPreviousWorkNodeId != null && importPreviousWorkComponentId != null) {
                         // import the work from the other component
                         this.importWork();
+                    } else if (starterDrawData != null) {
+                        // there is starter draw data so we will populate it into the draw tool
+                        this.drawingTool.load(starterDrawData);
                     }
                 } else {
                     // populate the student work into this component
@@ -1589,6 +1595,39 @@ class DrawController {
         this.authoringComponentContent.tools.undo = false;
         this.authoringComponentContent.tools.redo = false;
         this.authoringComponentContent.tools.delete = false;
+    }
+    
+    /**
+     * Save the starter draw data
+     */
+    authoringSaveStarterDrawData() {
+        
+        // get the draw data
+        var drawData = this.getDrawData();
+        
+        // set the starter draw data
+        this.authoringComponentContent.starterDrawData = drawData;
+        
+        // the authoring component content has changed so we will save the project
+        this.authoringViewComponentChanged();
+    }
+    
+    /**
+     * Delete the starter draw data
+     */
+    authoringDeleteStarterDrawData() {
+        
+        // remove the starter draw data
+        this.authoringComponentContent.starterDrawData = null;
+        
+        // clear the drawing
+        this.drawingTool.clear();
+        
+        /*
+         * the author has made changes so we will save the component
+         * content
+         */
+        this.authoringViewComponentChanged();
     }
 }
 
