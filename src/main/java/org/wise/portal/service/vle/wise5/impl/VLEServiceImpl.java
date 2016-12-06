@@ -785,7 +785,7 @@ public class VLEServiceImpl implements VLEService {
         if (content != null) {
             notebookItem.setContent(content);
         }
-        if (clientSaveTime != null) {
+        if (clientSaveTime != null && !clientSaveTime.isEmpty()) {
             Timestamp clientSaveTimestamp = new Timestamp(new Long(clientSaveTime));
             notebookItem.setClientSaveTime(clientSaveTimestamp);
 
@@ -794,14 +794,19 @@ public class VLEServiceImpl implements VLEService {
             Timestamp serverSaveTimestamp = new Timestamp(now.getTimeInMillis());
             notebookItem.setServerSaveTime(serverSaveTimestamp);
         }
-        if (clientDeleteTime != null) {
+        if (clientDeleteTime != null && !clientDeleteTime.isEmpty()) {
             Timestamp clientDeleteTimestamp = new Timestamp(new Long(clientDeleteTime));
             notebookItem.setClientDeleteTime(clientDeleteTimestamp);
 
-            // set serverDeleteTime
-            Calendar now = Calendar.getInstance();
-            Timestamp serverDeleteTimestamp = new Timestamp(now.getTimeInMillis());
-            notebookItem.setServerDeleteTime(serverDeleteTimestamp);
+            // set serverDeleteTime if not set already
+            if (notebookItem.getServerDeleteTime() == null) {
+                Calendar now = Calendar.getInstance();
+                Timestamp serverDeleteTimestamp = new Timestamp(now.getTimeInMillis());
+                notebookItem.setServerDeleteTime(serverDeleteTimestamp);
+            }
+        } else {
+            // user un-deleted the item, so also un-set the server delete time
+            notebookItem.setServerDeleteTime(null);
         }
 
         notebookItemDao.save(notebookItem);

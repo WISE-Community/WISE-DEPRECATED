@@ -55,8 +55,8 @@ class NotebookController {
          */
     }
 
-    deleteItem(item) {
-        this.NotebookService.deleteItem(item);
+    deleteItem(ev, itemId) {
+        this.$rootScope.$broadcast('deleteNote', {itemId: itemId, ev: ev});
     }
 
     editItem(ev, itemId) {

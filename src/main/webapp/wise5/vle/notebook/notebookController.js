@@ -62,8 +62,8 @@ var NotebookController = function () {
         }
     }, {
         key: 'deleteItem',
-        value: function deleteItem(item) {
-            this.NotebookService.deleteItem(item);
+        value: function deleteItem(ev, itemId) {
+            this.$rootScope.$broadcast('deleteNote', { itemId: itemId, ev: ev });
         }
     }, {
         key: 'editItem',

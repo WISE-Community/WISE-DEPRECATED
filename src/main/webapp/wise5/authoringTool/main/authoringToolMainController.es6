@@ -22,6 +22,11 @@ class AuthoringToolMainController {
         });
     }
 
+    downloadProject(projectId) {
+        let exportProjectURL = this.ConfigService.getWISEBaseURL() + "/project/export/" + projectId;
+        window.location.href = exportProjectURL;
+    }
+
     createNewProject() {
         this.$state.go('root.new');
     }

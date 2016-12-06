@@ -26,14 +26,11 @@
                      style="background-color: {{notebookItemController.label.color}}">
         <span class="notebook-item__content__location"><md-icon> place </md-icon><span class="md-body-1">{{notebookItemController.getItemNodePosition()}}</span></span>
         <span flex></span>
-        <!--<md-button class="md-icon-button"
+        <md-button class="md-icon-button"
                    aria-label="Delete notebook item"
-                   ng-if="!notebookItemController.isChooseMode"
-                   ng-click="NotebookItemController">
+                   ng-click="notebookItemController.doDelete($event)">
             <md-icon> delete </md-icon>
-            <md-tooltip md-direction="top">Delete</md-tooltip>
-        </md-button>-->
+            <md-tooltip md-direction="top">{{ 'delete' | translate }}</md-tooltip>
+        </md-button>
     </md-card-actions>
 </md-card>
-
-<!--TODO: add view mode (e.g. view full note content in a dialog)

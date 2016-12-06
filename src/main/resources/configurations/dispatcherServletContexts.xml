@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- 
- * Copyright (c) 2006-2015 Encore Research Group, University of Toronto
+ * Copyright (c) 2006-2016 Encore Research Group, University of Toronto
  *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
@@ -19,9 +19,6 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  -->
-
-<!-- $Id$ -->
-
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 	xmlns:mvc="http://www.springframework.org/schema/mvc"
@@ -118,12 +115,10 @@
 		class="org.wise.portal.spring.impl.WISESimpleMappingExceptionResolver">
 		<property name="exceptionMappings">
 			<props>
-				<!--
 				<prop key="org.springframework.web.multipart.MaxUploadSizeExceededException">errors/maxUploadSizeExceededError</prop>
 				<prop key="java.lang.Exception">errors/friendlyError</prop>
 				<prop key="org.acegisecurity.AccessDeniedException">errors/securityFriendlyError</prop>
 				<prop key="org.wise.portal.presentation.web.exception.NotAuthorizedException">accessdenied</prop>
-				-->
 			</props>
 		</property>
 	</bean>

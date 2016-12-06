@@ -10,7 +10,8 @@ const NotebookItem = {
         isChooseMode: '<',
         templateUrl: '<',
         componentController: '<',
-        onSelect: '&'
+        onDelete: '&',
+        onSelect: '&',
     },
     template: '<ng-include src="notebookItemController.getTemplateUrl()"></ng-include>',
     controller: 'NotebookItemController as notebookItemController'

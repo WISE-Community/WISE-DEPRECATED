@@ -35,7 +35,9 @@ class NotebookItemController {
 
         this.$rootScope.$on('notebookUpdated', (event, args) => {
             let notebook = args.notebook;
-            this.item = notebook.items[this.itemId].last();
+            if (notebook.items[this.itemId]) {
+                this.item = notebook.items[this.itemId].last();
+            }
         });
     }
 
@@ -79,8 +81,11 @@ class NotebookItemController {
         }
     }
 
-    delete(ev) {
-        // TODO: add archiving/deleting notebook items
+    doDelete(ev) {
+        if (this.onDelete) {
+            ev.stopPropagation();  // don't follow-through on the doSelect callback after this
+            this.onDelete({$ev: ev, $itemId: this.item.localNotebookItemId});
+        }
     }
 }
 

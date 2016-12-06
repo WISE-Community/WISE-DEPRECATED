@@ -145,7 +145,7 @@ function updateMaxTotalAssetsSize(projectId, newMaxTotalAssetsSize) {
 		<td>
 		<a href="${contextPath}/author/authorproject.html?projectId=${project.id}">Edit Project</a><br/>
 		<a href="${contextPath}/teacher/projects/customized/shareproject.html?projectId=${project.id}">Manage Shared Teachers</a><br/>
-		<a href="${contextPath}/project/export?projectId=${project.id}">Export project as Zip</a>
+		<a href="${contextPath}/project/export/${project.id}">Export project as Zip</a>
 		</td>		
 	</tr>
 	</c:forEach>

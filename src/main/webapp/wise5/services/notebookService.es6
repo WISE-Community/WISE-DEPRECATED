@@ -70,7 +70,7 @@ class NotebookService {
         this.notebook = {};
         this.notebook.allItems = [];
         this.notebook.items = {};
-        this.notebook.deletedItems = [];
+        this.notebook.deletedItems = {};
 
         this.notebookConfig = {};
         if (this.ProjectService.project) {
@@ -81,12 +81,10 @@ class NotebookService {
                 this.config = angular.merge(this.config, this.notebookConfig);
             }
         }
-
     }
 
     addItem(notebookItem) {
         this.notebook.allItems.push(notebookItem);
-
         this.groupNotebookItems();
 
         // the current node is about to change
@@ -104,10 +102,10 @@ class NotebookService {
     };
 
     deleteItem(itemToDelete) {
-        var items = this.notebook.items;
-        var deletedItems = this.notebook.deletedItems;
-        for (var i = 0; i < items.length; i++) {
-            var item = items[i];
+        let items = this.notebook.items;
+        let deletedItems = this.notebook.deletedItems;
+        for (let i = 0; i < items.length; i++) {
+            let item = items[i];
             if (item === itemToDelete) {
                 items.splice(i, 1);
                 deletedItems.push(itemToDelete);
@@ -136,11 +134,12 @@ class NotebookService {
         for (let i = 0; i < reportNotes.length; i++) {
             let reportNote = reportNotes[i];
             if (reportNote.reportId == reportId) {
-                templateReportItem = {};
-                templateReportItem.id = null;
-                templateReportItem.type = "report";
-                templateReportItem.localNotebookItemId = reportId;
-                templateReportItem.content = reportNote;
+                templateReportItem = {
+                    id: null,
+                    type: "report",
+                    localNotebookItemId: reportId,
+                    content: reportNote
+                };
                 break;
             }
         }
@@ -149,11 +148,11 @@ class NotebookService {
 
     calculateTotalUsage() {
         // get the total size
-        var totalSizeSoFar = 0;
-        for (var i = 0; i < this.notebook.items.length; i++) {
-            var notebookItem = this.notebook.items[i];
+        let totalSizeSoFar = 0;
+        for (let i = 0; i < this.notebook.items.length; i++) {
+            let notebookItem = this.notebook.items[i];
             if (notebookItem.studentAsset != null) {
-                var notebookItemSize = notebookItem.studentAsset.fileSize;
+                let notebookItemSize = notebookItem.studentAsset.fileSize;
                 totalSizeSoFar += notebookItemSize;
             }
         }
@@ -185,9 +184,9 @@ class NotebookService {
         return this.$http(config).then((response) => {
             // loop through the assets and make them into JSON object with more details
             this.notebook.allItems = [];  // clear local notebook items array
-            var allNotebookItems = response.data;
-            for (var n = 0; n < allNotebookItems.length; n++) {
-                var notebookItem = allNotebookItems[n];
+            let allNotebookItems = response.data;
+            for (let n = 0; n < allNotebookItems.length; n++) {
+                let notebookItem = allNotebookItems[n];
                 if (notebookItem.studentAssetId != null) {
                     // if this notebook item is a StudentAsset item, add the association here
                     notebookItem.studentAsset = this.StudentAssetService.getAssetById(notebookItem.studentAssetId);
@@ -197,16 +196,10 @@ class NotebookService {
                 } else if (notebookItem.type === "note" || notebookItem.type === "report") {
                     notebookItem.content = angular.fromJson(notebookItem.content);
                 }
-                if (notebookItem.serverDeleteTime == null) {
-                    this.notebook.allItems.push(notebookItem);
-                } else {
-                    this.notebook.deletedItems.push(notebookItem)
-                }
+                this.notebook.allItems.push(notebookItem);
             }
             this.calculateTotalUsage();
-
-            // now group notebook items based on item.localNotebookItemId
-            this.groupNotebookItems();
+            this.groupNotebookItems(); // group notebook items based on item.localNotebookItemId
 
             return this.notebook;
         });
@@ -220,7 +213,8 @@ class NotebookService {
      * }
      */
     groupNotebookItems() {
-        this.notebook.items = {};
+        this.notebook.items = {}; // reset items
+        this.notebook.deletedItems = {};  // reset deleted items
         for (let ni = 0; ni < this.notebook.allItems.length; ni++) {
             let notebookItem = this.notebook.allItems[ni];
             let notebookItemLocalNotebookItemId = notebookItem.localNotebookItemId;
@@ -232,11 +226,26 @@ class NotebookService {
                 this.notebook.items[notebookItemLocalNotebookItemId] = [notebookItem];
             }
         }
+        // now go through the items and look at the last revision of each item. If it's deleted, then move the entire item array to deletedItems
+        for (let notebookItemLocalNotebookItemIdKey in this.notebook.items) {
+            if (this.notebook.items.hasOwnProperty(notebookItemLocalNotebookItemIdKey)) {
+                // get the last note revision
+                let allRevisionsForThisLocalNotebookItemId = this.notebook.items[notebookItemLocalNotebookItemIdKey];
+                if (allRevisionsForThisLocalNotebookItemId != null) {
+                    let lastRevision = allRevisionsForThisLocalNotebookItemId[allRevisionsForThisLocalNotebookItemId.length - 1];
+                    if (lastRevision != null && lastRevision.serverDeleteTime != null) {
+                        // the last revision for this not deleted, so move the entire note (with all its revisions) to deletedItems
+                        this.notebook.deletedItems[notebookItemLocalNotebookItemIdKey] = allRevisionsForThisLocalNotebookItemId;
+                        delete this.notebook.items[notebookItemLocalNotebookItemIdKey];  // then remove it from the items array
+                    }
+                }
+            }
+        }
     }
 
     hasStudentWorkNotebookItem(studentWork) {
-        for (var i = 0; i < this.notebook.items.length; i++) {
-            var notebookItem = this.notebook.items[i];
+        for (let i = 0; i < this.notebook.items.length; i++) {
+            let notebookItem = this.notebook.items[i];
             if (notebookItem.studentWorkId === studentWork.id) {
                 return true;
             }
@@ -244,7 +253,7 @@ class NotebookService {
         return false;
     };
 
-    saveNotebookItem(notebookItemId, nodeId, localNotebookItemId, type, title, content) {
+    saveNotebookItem(notebookItemId, nodeId, localNotebookItemId, type, title, content, clientSaveTime = null, clientDeleteTime = null) {
         if (this.ConfigService.isPreview()) {
             return this.$q((resolve, reject) => {
                 let notebookItem = {
@@ -253,7 +262,9 @@ class NotebookService {
                     nodeId: nodeId,
                     notebookItemId: notebookItemId,
                     title: title,
-                    type: type
+                    type: type,
+                    clientSaveTime: clientSaveTime,
+                    clientDeleteTime: clientDeleteTime
                 };
                 this.notebook.allItems.push(notebookItem);
                 this.groupNotebookItems();
@@ -261,24 +272,30 @@ class NotebookService {
                 resolve();
             });
         } else {
-            var config = {};
-            config.method = 'POST';
-            config.url = this.ConfigService.getStudentNotebookURL();
-            config.headers = {'Content-Type': 'application/x-www-form-urlencoded'};
-            var params = {};
-            params.workgroupId = this.ConfigService.getWorkgroupId();
-            params.periodId = this.ConfigService.getPeriodId();
-            params.notebookItemId = notebookItemId;
-            params.localNotebookItemId = localNotebookItemId;
-            params.nodeId = nodeId;
-            params.type = type;
-            params.title = title;
-            params.content = angular.toJson(content);
-            params.clientSaveTime = Date.parse(new Date());
+            let config = {
+                method: "POST",
+                url: this.ConfigService.getStudentNotebookURL(),
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+            };
+            let params = {
+                workgroupId: this.ConfigService.getWorkgroupId(),
+                periodId: this.ConfigService.getPeriodId(),
+                notebookItemId: notebookItemId,
+                localNotebookItemId: localNotebookItemId,
+                nodeId: nodeId,
+                type: type,
+                title: title,
+                content: angular.toJson(content),
+                clientSaveTime: Date.parse(new Date()),
+                clientDeleteTime: clientDeleteTime
+            };
+            if (params.clientSaveTime == null) {
+                params.clientSaveTime = Date.parse(new Date());
+            }
             config.data = $.param(params);
 
             return this.$http(config).then((result) => {
-                var notebookItem = result.data;
+                let notebookItem = result.data;
                 if (notebookItem != null) {
                     if (notebookItem.type === "note" || notebookItem.type === "report") {
                         notebookItem.content = angular.fromJson(notebookItem.content);
@@ -297,20 +314,21 @@ class NotebookService {
     uploadStudentAssetNotebookItem(file) {
         this.StudentAssetService.uploadAsset(file).then((studentAsset) => {
 
-            var config = {};
-            config.method = 'POST';
-            config.url = this.ConfigService.getStudentNotebookURL();
-            config.headers = {'Content-Type': 'application/x-www-form-urlencoded'};
-            var params = {};
-            params.workgroupId = this.ConfigService.getWorkgroupId();
-            params.periodId = this.ConfigService.getPeriodId();
-            params.studentAssetId = studentAsset.id;
-            params.clientSaveTime = Date.parse(new Date());
-
+            let config = {
+                method: 'POST',
+                url: this.ConfigService.getStudentNotebookURL(),
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+            };
+            let params = {
+                workgroupId: this.ConfigService.getWorkgroupId(),
+                periodId: this.ConfigService.getPeriodId(),
+                studentAssetId: studentAsset.id,
+                clientSaveTime: Date.parse(new Date())
+            };
             config.data = $.param(params);
 
             return this.$http(config).then((result) => {
-                var notebookItem = result.data;
+                let notebookItem = result.data;
                 if (notebookItem != null) {
                     notebookItem.studentAsset = this.StudentAssetService.getAssetById(notebookItem.studentAssetId);
                     this.notebook.allItems.push(notebookItem);
@@ -323,14 +341,11 @@ class NotebookService {
     }
 
     saveNotebookToggleEvent(isOpen, currentNode) {
-        var nodeId = null;
-        var componentId = null;
-        var componentType = null;
-        var category = "Notebook";
-        var eventData = {};
-        eventData.curentNodeId = currentNode == null ? null : currentNode.id;
-
-        var event = isOpen ? "notebookOpened" : "notebookClosed";
+        let nodeId = null, componentId = null, componentType = null, category = "Notebook";
+        let eventData = {
+            curentNodeId: currentNode == null ? null : currentNode.id
+        };
+        let event = isOpen ? "notebookOpened" : "notebookClosed";
 
         // save notebook open/close event
         this.StudentDataService.saveVLEEvent(nodeId, componentId, componentType, category, event, eventData);

@@ -11,9 +11,22 @@
     {{project.id}}
     {{project.name}}
     <span ng-if="project.runId != null">(Run ID: {{project.runId}})</span>
-    <button ng-click="authoringToolMainController.openProject(project.id)" translate="open"></button>
-    <button ng-click="authoringToolMainController.previewProject(project.id)" translate="preview"></button>
-    <button ng-click="authoringToolMainController.copyProject(project.id)" translate="copy"></button>
+    <span ng-click="authoringToolMainController.openProject(project.id)">
+        <md-tooltip md-direction="left"><span translate="edit"></span></md-tooltip>
+        <md-icon>mode_edit</md-icon>
+    </span>
+    <span ng-click="authoringToolMainController.previewProject(project.id)">
+        <md-tooltip md-direction="left"><span translate="preview"></span></md-tooltip>
+        <md-icon>pageview</md-icon>
+    </span>
+    <span ng-click="authoringToolMainController.copyProject(project.id)">
+        <md-tooltip md-direction="left"><span translate="copy"></span></md-tooltip>
+        <md-icon>content_copy</md-icon>
+    </span>
+    <span>
+        <md-tooltip md-direction="left"><span translate="download"></span></md-tooltip>
+        <md-icon ng-click="authoringToolMainController.downloadProject(project.id)">file_download</md-icon>
+    </span>
 </div>
 
 <h3 translate="sharedProjectsHeading"></h3>
@@ -22,7 +35,20 @@
     {{project.id}}
     {{project.name}}
     <span ng-if="project.runId != null">(Run ID: {{project.runId}})</span>
-    <button ng-show="project.canEdit" ng-click="authoringToolMainController.openProject(project.id)" translate="open"></button>
-    <button ng-click="authoringToolMainController.previewProject(project.id)" translate="preview"></button>
-    <button ng-click="authoringToolMainController.copyProject(project.id)" translate="copy"></button>
+    <span ng-click="authoringToolMainController.openProject(project.id)">
+        <md-tooltip md-direction="left"><span translate="edit"></span></md-tooltip>
+        <md-icon>mode_edit</md-icon>
+    </span>
+    <span ng-click="authoringToolMainController.previewProject(project.id)">
+        <md-tooltip md-direction="left"><span translate="preview"></span></md-tooltip>
+        <md-icon>pageview</md-icon>
+    </span>
+    <span ng-click="authoringToolMainController.copyProject(project.id)">
+        <md-tooltip md-direction="left"><span translate="copy"></span></md-tooltip>
+        <md-icon>content_copy</md-icon>
+    </span>
+    <span>
+        <md-tooltip md-direction="left"><span translate="download"></span></md-tooltip>
+        <md-icon ng-click="authoringToolMainController.downloadProject(project.id)">file_download</md-icon>
+    </span>
 </div>

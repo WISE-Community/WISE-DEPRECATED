@@ -53,12 +53,12 @@
 <button id="closeProjectButton" ng-click='projectController.closeProject()' translate="close"
         ng-disabled="projectController.insertGroupMode || projectController.insertNodeMode"></button>
 <div ng-show='projectController.showCreateGroup'>
-    <label translate="activityTitle"></label>: <input ng-model='projectController.createGroupTitle' size='50'/>
+    <label style="display:initial" translate="activityTitle"></label>: <input ng-model='projectController.createGroupTitle' size='50'/>
     <button ng-click='projectController.createGroup()' translate="create"></button>
     <button ng-click='projectController.hideCreateGroup()'translate="cancel"></button>
 </div>
 <div ng-show='projectController.showCreateNode'>
-    <label translate="stepTitle"></label>: <input ng-model='projectController.createNodeTitle' size='50'/>
+    <label style="display:initial" translate="stepTitle"></label>: <input id="createNodeTitle" ng-model='projectController.createNodeTitle' size='50'/>
     <button ng-click='projectController.createNode()' translate="create"></button>
     <button ng-click='projectController.hideCreateNode()' translate="cancel"></button>
 </div>
@@ -104,10 +104,12 @@
     </div>
     <button ng-if='projectController.importProject != null'
             ng-click='projectController.importSteps()'>Import Step(s)</button>
+    <br/><br/>
+    <button ng-click='projectController.importMode = false' translate='cancel'></button>
 </div>
 <div ng-repeat='item in projectController.items | toArray | orderBy : "order"'
      ng-class='{"node-select--group": projectController.isGroupNode(item.$key), "node-select--node": !projectController.isGroupNode(item.$key)}'
-     ng-show='!projectController.importMode'>
+     ng-show='!projectController.importMode && !projectController.showCreateGroup && !projectController.showCreateNode'>
     <input type='checkbox'
            ng-model='item.checked'
            ng-if='item.order!==0'
@@ -147,7 +149,7 @@
         {{projectController.getNodeTitleByNodeId(inactiveGroup.id)}}
     </h6>
 </div>
-<div ng-show='!projectController.importMode'>
+<div ng-show='!projectController.importMode && !projectController.showCreateGroup && !projectController.showCreateNode'>
 <h6 style='display:inline'>Inactive Steps</h6>
     <button ng-show='projectController.insertNodeMode'
             ng-click='projectController.insertInside("inactiveNodes")'>Insert Inside</button>

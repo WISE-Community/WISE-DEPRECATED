@@ -165,7 +165,7 @@ class EditNotebookItemController {
 
         // make sure all the assets are created before saving the notebook item.
         this.$q.all(uploadAssetPromises).then(() => {
-            this.NotebookService.saveNotebookItem(this.item.id, this.item.nodeId, this.item.localNotebookItemId, this.item.type, this.item.title, this.item.content)
+            this.NotebookService.saveNotebookItem(this.item.id, this.item.nodeId, this.item.localNotebookItemId, this.item.type, this.item.title, this.item.content, this.item.content.clientSaveTime)
                 .then(() => {
                     this.$mdDialog.hide();
                 });

@@ -41,6 +41,7 @@ import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -59,7 +60,7 @@ import org.wise.portal.service.project.ProjectService;
  * @author Hiroki Terashima
  */
 @Controller
-@RequestMapping("/project/export")
+@RequestMapping("/project/export/{projectId}")
 public class ExportProjectController {
 
 	@Autowired
@@ -72,7 +73,7 @@ public class ExportProjectController {
 
 	@RequestMapping(method = RequestMethod.GET)
 	protected ModelAndView handleExportProject(
-			@RequestParam(value = "projectId") String projectId,
+			@PathVariable String projectId,
 			HttpServletResponse response) throws Exception {
 
 		User signedInUser = ControllerUtil.getSignedInUser();
@@ -103,14 +104,17 @@ public class ExportProjectController {
 		response.setContentType("application/zip");
 		response.addHeader("Content-Disposition", "attachment;filename=\"" + foldername+".zip" + "\"");
 
-		//add project metadata to zip
+		// add project metadata to zip
 		ProjectMetadata metadata = project.getMetadata();
 		String metadataJSONString = metadata.toJSONString();
 
-		String metaFileName = projectJSONDir + sep + "wise4.project-meta.json";
-		PrintWriter metaOut = new PrintWriter(metaFileName);
-		metaOut.println(metadataJSONString);
-		metaOut.close();
+		Integer wiseVersion = project.getWiseVersion();
+		if (wiseVersion == null || wiseVersion == 4) {
+			String metaFileName = projectJSONDir + sep + "wise4.project-meta.json";;
+			PrintWriter metaOut = new PrintWriter(metaFileName);
+			metaOut.println(metadataJSONString);
+			metaOut.close();
+		}
 
 		// zip the folder and write to outputstream		
 		ServletOutputStream outputStream = response.getOutputStream();
