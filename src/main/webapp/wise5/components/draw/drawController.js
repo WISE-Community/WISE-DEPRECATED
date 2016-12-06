@@ -114,6 +114,18 @@ var DrawController = function () {
         this.latestConnectedComponentState = null;
         this.latestConnectedComponentParams = null;
 
+        // the default width and height of the canvas
+        this.width = 800;
+        this.height = 600;
+
+        if (this.componentContent.width != null) {
+            this.width = this.componentContent.width;
+        }
+
+        if (this.componentContent.height != null) {
+            this.height = this.componentContent.height;
+        }
+
         // get the current node and node id
         var currentNode = this.StudentDataService.getCurrentNode();
         if (currentNode != null) {
@@ -168,123 +180,9 @@ var DrawController = function () {
                 }.bind(this), true);
             }
 
-            this.$timeout(angular.bind(this, function () {
-                // running this in side a timeout ensures that the code only runs after the markup is rendered.
-                // maybe there's a better way to do this, like with an event?
-
-                // initialize the drawing tool
-                this.drawingTool = new DrawingTool("#" + this.drawingToolId, {
-                    stamps: this.componentContent.stamps || {},
-                    parseSVG: true
-                });
-                var state = null;
-                $("#set-background").on("click", angular.bind(this, function () {
-                    this.drawingTool.setBackgroundImage($("#background-src").val());
-                }));
-                $("#resize-background").on("click", angular.bind(this, function () {
-                    this.drawingTool.resizeBackgroundToCanvas();
-                }));
-                $("#resize-canvas").on("click", angular.bind(this, function () {
-                    this.drawingTool.resizeCanvasToBackground();
-                }));
-                $("#shrink-background").on("click", angular.bind(this, function () {
-                    this.drawingTool.shrinkBackgroundToCanvas();
-                }));
-                $("#clear").on("click", angular.bind(this, function () {
-                    this.drawingTool.clear(true);
-                }));
-                $("#save").on("click", angular.bind(this, function () {
-                    state = _drawingTool2.default.save();
-                    $("#load").removeAttr("disabled");
-                }));
-                $("#load").on("click", angular.bind(this, function () {
-                    if (state === null) return;
-                    this.drawingTool.load(state);
-                }));
-
-                var componentState = null;
-
-                // get the component state from the scope
-                componentState = this.$scope.componentState;
-
-                // set whether studentAttachment is enabled
-                this.isStudentAttachmentEnabled = this.componentContent.isStudentAttachmentEnabled;
-
-                if (this.componentContent.background != null) {
-                    // set the background from the component content
-                    this.drawingTool.setBackgroundImage(this.componentContent.background);
-                }
-
-                if (componentState == null) {
-                    /*
-                     * only import work or use starter draw data if the student 
-                     * does not already have work for this component
-                     */
-
-                    // check if we need to import work
-                    var importPreviousWorkNodeId = this.componentContent.importPreviousWorkNodeId;
-                    var importPreviousWorkComponentId = this.componentContent.importPreviousWorkComponentId;
-
-                    // get the starter draw data if any
-                    var starterDrawData = this.componentContent.starterDrawData;
-
-                    if (importPreviousWorkNodeId == null || importPreviousWorkNodeId == '') {
-                        /*
-                         * check if the node id is in the field that we used to store
-                         * the import previous work node id in
-                         */
-                        importPreviousWorkNodeId = this.componentContent.importWorkNodeId;
-                    }
-
-                    if (importPreviousWorkComponentId == null || importPreviousWorkComponentId == '') {
-                        /*
-                         * check if the component id is in the field that we used to store
-                         * the import previous work component id in
-                         */
-                        importPreviousWorkComponentId = this.componentContent.importWorkComponentId;
-                    }
-
-                    if (importPreviousWorkNodeId != null && importPreviousWorkComponentId != null) {
-                        // import the work from the other component
-                        this.importWork();
-                    } else if (starterDrawData != null) {
-                        // there is starter draw data so we will populate it into the draw tool
-                        this.drawingTool.load(starterDrawData);
-                    }
-                } else {
-                    // populate the student work into this component
-                    this.setStudentWork(componentState);
-                }
-
-                // check if we need to lock this component
-                this.calculateDisabled();
-
-                // register this component with the parent node
-                if (this.$scope.$parent && this.$scope.$parent.nodeController != null) {
-                    this.$scope.$parent.nodeController.registerComponentController(this.$scope, this.componentContent);
-                }
-
-                // listen for the drawing changed event
-                this.drawingTool.on('drawing:changed', angular.bind(this, this.studentDataChanged));
-
-                // listen for selected tool changed event
-                this.drawingTool.on('tool:changed', function (toolName) {
-                    // log this event
-                    var category = "Tool";
-                    var event = "toolSelected";
-                    var data = {};
-                    data.selectedToolName = toolName;
-                    this.StudentDataService.saveComponentEvent(this, category, event, data);
-                }.bind(this));
-
-                if (this.mode === 'grading' || this.mode === 'onlyShowWork') {
-                    // we're in show student work mode, so hide the toolbar and make the drawing non-editable
-                    $(".dt-tools").hide();
-                }
-
-                // show or hide the draw tools
-                this.setupTools();
-            }));
+            // running this in side a timeout ensures that the code only runs after the markup is rendered.
+            // maybe there's a better way to do this, like with an event?
+            this.$timeout(angular.bind(this, this.initializeDrawingTool));
         }
 
         /**
@@ -479,11 +377,134 @@ var DrawController = function () {
     } // end of constructor
 
     /**
-     * Setup the tools that we will make available to the student
+     * Initialize the drawing tool
      */
 
 
     _createClass(DrawController, [{
+        key: 'initializeDrawingTool',
+        value: function initializeDrawingTool() {
+
+            this.drawingTool = new DrawingTool("#" + this.drawingToolId, {
+                stamps: this.componentContent.stamps || {},
+                parseSVG: true,
+                width: this.width,
+                height: this.height
+            });
+            var state = null;
+            $("#set-background").on("click", angular.bind(this, function () {
+                this.drawingTool.setBackgroundImage($("#background-src").val());
+            }));
+            $("#resize-background").on("click", angular.bind(this, function () {
+                this.drawingTool.resizeBackgroundToCanvas();
+            }));
+            $("#resize-canvas").on("click", angular.bind(this, function () {
+                this.drawingTool.resizeCanvasToBackground();
+            }));
+            $("#shrink-background").on("click", angular.bind(this, function () {
+                this.drawingTool.shrinkBackgroundToCanvas();
+            }));
+            $("#clear").on("click", angular.bind(this, function () {
+                this.drawingTool.clear(true);
+            }));
+            $("#save").on("click", angular.bind(this, function () {
+                state = _drawingTool2.default.save();
+                $("#load").removeAttr("disabled");
+            }));
+            $("#load").on("click", angular.bind(this, function () {
+                if (state === null) return;
+                this.drawingTool.load(state);
+            }));
+
+            var componentState = null;
+
+            // get the component state from the scope
+            componentState = this.$scope.componentState;
+
+            // set whether studentAttachment is enabled
+            this.isStudentAttachmentEnabled = this.componentContent.isStudentAttachmentEnabled;
+
+            if (this.componentContent.background != null) {
+                // set the background from the component content
+                this.drawingTool.setBackgroundImage(this.componentContent.background);
+            }
+
+            if (componentState == null) {
+                /*
+                 * only import work or use starter draw data if the student 
+                 * does not already have work for this component
+                 */
+
+                // check if we need to import work
+                var importPreviousWorkNodeId = this.componentContent.importPreviousWorkNodeId;
+                var importPreviousWorkComponentId = this.componentContent.importPreviousWorkComponentId;
+
+                // get the starter draw data if any
+                var starterDrawData = this.componentContent.starterDrawData;
+
+                if (importPreviousWorkNodeId == null || importPreviousWorkNodeId == '') {
+                    /*
+                     * check if the node id is in the field that we used to store
+                     * the import previous work node id in
+                     */
+                    importPreviousWorkNodeId = this.componentContent.importWorkNodeId;
+                }
+
+                if (importPreviousWorkComponentId == null || importPreviousWorkComponentId == '') {
+                    /*
+                     * check if the component id is in the field that we used to store
+                     * the import previous work component id in
+                     */
+                    importPreviousWorkComponentId = this.componentContent.importWorkComponentId;
+                }
+
+                if (importPreviousWorkNodeId != null && importPreviousWorkComponentId != null) {
+                    // import the work from the other component
+                    this.importWork();
+                } else if (starterDrawData != null) {
+                    // there is starter draw data so we will populate it into the draw tool
+                    this.drawingTool.load(starterDrawData);
+                }
+            } else {
+                // populate the student work into this component
+                this.setStudentWork(componentState);
+            }
+
+            // check if we need to lock this component
+            this.calculateDisabled();
+
+            // register this component with the parent node
+            if (this.$scope.$parent && this.$scope.$parent.nodeController != null) {
+                this.$scope.$parent.nodeController.registerComponentController(this.$scope, this.componentContent);
+            }
+
+            // listen for the drawing changed event
+            this.drawingTool.on('drawing:changed', angular.bind(this, this.studentDataChanged));
+
+            // listen for selected tool changed event
+            this.drawingTool.on('tool:changed', function (toolName) {
+                // log this event
+                var category = "Tool";
+                var event = "toolSelected";
+                var data = {};
+                data.selectedToolName = toolName;
+                this.StudentDataService.saveComponentEvent(this, category, event, data);
+            }.bind(this));
+
+            if (this.mode === 'grading' || this.mode === 'onlyShowWork') {
+                // we're in show student work mode, so hide the toolbar and make the drawing non-editable
+                $(".dt-tools").hide();
+            }
+
+            // show or hide the draw tools
+            this.setupTools();
+        }
+
+        /**
+         * Setup the tools that we will make available to the student
+         */
+
+    }, {
         key: 'setupTools',
         value: function setupTools() {
 
@@ -499,135 +520,135 @@ var DrawController = function () {
                 var selectTitle = "Select tool";
 
                 if (tools.select) {
-                    $('#' + this.componentId).find('[title="' + selectTitle + '"]').show();
+                    $('#drawingtool_' + this.nodeId + '_' + this.componentId).find('[title="' + selectTitle + '"]').show();
                 } else {
-                    $('#' + this.componentId).find('[title="' + selectTitle + '"]').hide();
+                    $('#drawingtool_' + this.nodeId + '_' + this.componentId).find('[title="' + selectTitle + '"]').hide();
                 }
 
                 // the title for the line button
                 var lineTitle = "Line tool (click and hold to show available line types)";
 
                 if (tools.line) {
-                    $('#' + this.componentId).find('[title="' + lineTitle + '"]').show();
+                    $('#drawingtool_' + this.nodeId + '_' + this.componentId).find('[title="' + lineTitle + '"]').show();
                 } else {
-                    $('#' + this.componentId).find('[title="' + lineTitle + '"]').hide();
+                    $('#drawingtool_' + this.nodeId + '_' + this.componentId).find('[title="' + lineTitle + '"]').hide();
                 }
 
                 // the title for the shape button
                 var shapeTitle = "Basic shape tool (click and hold to show available shapes)";
 
                 if (tools.shape) {
-                    $('#' + this.componentId).find('[title="' + shapeTitle + '"]').show();
+                    $('#drawingtool_' + this.nodeId + '_' + this.componentId).find('[title="' + shapeTitle + '"]').show();
                 } else {
-                    $('#' + this.componentId).find('[title="' + shapeTitle + '"]').hide();
+                    $('#drawingtool_' + this.nodeId + '_' + this.componentId).find('[title="' + shapeTitle + '"]').hide();
                 }
 
                 // the title for the free hand button
                 var freeHandTitle = "Free hand drawing tool";
 
                 if (tools.freeHand) {
-                    $('#' + this.componentId).find('[title="' + freeHandTitle + '"]').show();
+                    $('#drawingtool_' + this.nodeId + '_' + this.componentId).find('[title="' + freeHandTitle + '"]').show();
                 } else {
-                    $('#' + this.componentId).find('[title="' + freeHandTitle + '"]').hide();
+                    $('#drawingtool_' + this.nodeId + '_' + this.componentId).find('[title="' + freeHandTitle + '"]').hide();
                 }
 
                 // the title for the text button
                 var textTitle = "Text tool (click and hold to show available font sizes)";
 
                 if (tools.text) {
-                    $('#' + this.componentId).find('[title="' + textTitle + '"]').show();
+                    $('#drawingtool_' + this.nodeId + '_' + this.componentId).find('[title="' + textTitle + '"]').show();
                 } else {
-                    $('#' + this.componentId).find('[title="' + textTitle + '"]').hide();
+                    $('#drawingtool_' + this.nodeId + '_' + this.componentId).find('[title="' + textTitle + '"]').hide();
                 }
 
                 // the title for the stamp button
                 var stampTitle = "Stamp tool (click and hold to show available categories)";
 
                 if (tools.stamp) {
-                    $('#' + this.componentId).find('[title="' + stampTitle + '"]').show();
+                    $('#drawingtool_' + this.nodeId + '_' + this.componentId).find('[title="' + stampTitle + '"]').show();
                 } else {
-                    $('#' + this.componentId).find('[title="' + stampTitle + '"]').hide();
+                    $('#drawingtool_' + this.nodeId + '_' + this.componentId).find('[title="' + stampTitle + '"]').hide();
                 }
 
                 // the title for the clone button
                 var cloneTitle = "Clone tool";
 
                 if (tools.clone) {
-                    $('#' + this.componentId).find('[title="' + cloneTitle + '"]').show();
+                    $('#drawingtool_' + this.nodeId + '_' + this.componentId).find('[title="' + cloneTitle + '"]').show();
                 } else {
-                    $('#' + this.componentId).find('[title="' + cloneTitle + '"]').hide();
+                    $('#drawingtool_' + this.nodeId + '_' + this.componentId).find('[title="' + cloneTitle + '"]').hide();
                 }
 
                 // the title for the stroke color button
                 var strokeColorTitle = "Stroke color (click and hold to show available colors)";
 
                 if (tools.strokeColor) {
-                    $('#' + this.componentId).find('[title="' + strokeColorTitle + '"]').show();
+                    $('#drawingtool_' + this.nodeId + '_' + this.componentId).find('[title="' + strokeColorTitle + '"]').show();
                 } else {
-                    $('#' + this.componentId).find('[title="' + strokeColorTitle + '"]').hide();
+                    $('#drawingtool_' + this.nodeId + '_' + this.componentId).find('[title="' + strokeColorTitle + '"]').hide();
                 }
 
                 // the title for the fill color button
                 var fillColorTitle = "Fill color (click and hold to show available colors)";
 
                 if (tools.fillColor) {
-                    $('#' + this.componentId).find('[title="' + fillColorTitle + '"]').show();
+                    $('#drawingtool_' + this.nodeId + '_' + this.componentId).find('[title="' + fillColorTitle + '"]').show();
                 } else {
-                    $('#' + this.componentId).find('[title="' + fillColorTitle + '"]').hide();
+                    $('#drawingtool_' + this.nodeId + '_' + this.componentId).find('[title="' + fillColorTitle + '"]').hide();
                 }
 
                 // the title for the stroke width button
                 var strokeWidthTitle = "Stroke width (click and hold to show available options)";
 
                 if (tools.strokeWidth) {
-                    $('#' + this.componentId).find('[title="' + strokeWidthTitle + '"]').show();
+                    $('#drawingtool_' + this.nodeId + '_' + this.componentId).find('[title="' + strokeWidthTitle + '"]').show();
                 } else {
-                    $('#' + this.componentId).find('[title="' + strokeWidthTitle + '"]').hide();
+                    $('#drawingtool_' + this.nodeId + '_' + this.componentId).find('[title="' + strokeWidthTitle + '"]').hide();
                 }
 
                 // the title for the send back button
                 var sendBackTitle = "Send selected objects to back";
 
                 if (tools.sendBack) {
-                    $('#' + this.componentId).find('[title="' + sendBackTitle + '"]').show();
+                    $('#drawingtool_' + this.nodeId + '_' + this.componentId).find('[title="' + sendBackTitle + '"]').show();
                 } else {
-                    $('#' + this.componentId).find('[title="' + sendBackTitle + '"]').hide();
+                    $('#drawingtool_' + this.nodeId + '_' + this.componentId).find('[title="' + sendBackTitle + '"]').hide();
                 }
 
                 // the title for the send forward button
                 var sendForwardTitle = "Send selected objects to front";
 
                 if (tools.sendForward) {
-                    $('#' + this.componentId).find('[title="' + sendForwardTitle + '"]').show();
+                    $('#drawingtool_' + this.nodeId + '_' + this.componentId).find('[title="' + sendForwardTitle + '"]').show();
                 } else {
-                    $('#' + this.componentId).find('[title="' + sendForwardTitle + '"]').hide();
+                    $('#drawingtool_' + this.nodeId + '_' + this.componentId).find('[title="' + sendForwardTitle + '"]').hide();
                 }
 
                 // the title for the undo button
                 var undoTitle = "Undo";
 
                 if (tools.undo) {
-                    $('#' + this.componentId).find('[title="' + undoTitle + '"]').show();
+                    $('#drawingtool_' + this.nodeId + '_' + this.componentId).find('[title="' + undoTitle + '"]').show();
                 } else {
-                    $('#' + this.componentId).find('[title="' + undoTitle + '"]').hide();
+                    $('#drawingtool_' + this.nodeId + '_' + this.componentId).find('[title="' + undoTitle + '"]').hide();
                 }
 
                 // the title for the redo button
                 var redoTitle = "Redo";
 
                 if (tools.redo) {
-                    $('#' + this.componentId).find('[title="' + redoTitle + '"]').show();
+                    $('#drawingtool_' + this.nodeId + '_' + this.componentId).find('[title="' + redoTitle + '"]').show();
                 } else {
-                    $('#' + this.componentId).find('[title="' + redoTitle + '"]').hide();
+                    $('#drawingtool_' + this.nodeId + '_' + this.componentId).find('[title="' + redoTitle + '"]').hide();
                 }
 
                 // the title for the delete button
                 var deleteTitle = "Delete selected objects";
 
                 if (tools.delete) {
-                    $('#' + this.componentId).find('[title="' + deleteTitle + '"]').show();
+                    $('#drawingtool_' + this.nodeId + '_' + this.componentId).find('[title="' + deleteTitle + '"]').show();
                 } else {
-                    $('#' + this.componentId).find('[title="' + deleteTitle + '"]').hide();
+                    $('#drawingtool_' + this.nodeId + '_' + this.componentId).find('[title="' + deleteTitle + '"]').hide();
                 }
             }
         }
@@ -727,9 +748,15 @@ var DrawController = function () {
                 var latestConnectedComponentState = this.latestConnectedComponentState;
                 var latestConnectedComponentParams = this.latestConnectedComponentParams;
 
+                // get the starter draw data if any
+                var starterDrawData = this.componentContent.starterDrawData;
+
                 if (latestConnectedComponentState && latestConnectedComponentParams) {
                     // reload the student data from the connected component
                     this.setDrawData(latestConnectedComponentState, latestConnectedComponentParams);
+                } else if (starterDrawData != null) {
+                    // there is starter draw data so we will populate it into the draw tool
+                    this.drawingTool.load(starterDrawData);
                 }
             }
         }
@@ -1465,7 +1492,7 @@ var DrawController = function () {
         value: function snipDrawing($event) {
 
             // get the canvas element
-            var canvas = angular.element('#' + this.componentId + ' canvas');
+            var canvas = angular.element('#drawingtool_' + this.nodeId + '_' + this.componentId + ' canvas');
 
             if (canvas != null && canvas.length > 0) {
 
@@ -1775,6 +1802,98 @@ var DrawController = function () {
              * content
              */
             this.authoringViewComponentChanged();
+        }
+
+        /**
+         * The author has changed the width
+         */
+
+    }, {
+        key: 'authoringViewWidthChanged',
+        value: function authoringViewWidthChanged() {
+
+            // update the width
+            this.width = this.authoringComponentContent.width;
+
+            // update the starter draw data if there is any
+            if (this.authoringComponentContent.starterDrawData != null) {
+
+                // get the starter draw data as a JSON object
+                var starterDrawDataJSONObject = angular.fromJson(this.authoringComponentContent.starterDrawData);
+
+                if (starterDrawDataJSONObject != null && starterDrawDataJSONObject.dt != null) {
+
+                    // update the width in the starter draw data
+                    starterDrawDataJSONObject.dt.width = this.width;
+
+                    // set the starter draw data back into the component content
+                    this.authoringComponentContent.starterDrawData = angular.toJson(starterDrawDataJSONObject);
+                }
+            }
+
+            /*
+             * the author has made changes so we will save the component
+             * content
+             */
+            this.authoringViewComponentChanged();
+
+            // re-initialize the drawing tool so the width is updated
+            this.$timeout(angular.bind(this, this.initializeDrawingTool));
+        }
+
+        /**
+         * The author has changed the height
+         */
+
+    }, {
+        key: 'authoringViewHeightChanged',
+        value: function authoringViewHeightChanged() {
+
+            // update the height
+            this.height = this.authoringComponentContent.height;
+
+            // update the starter draw data if there is any
+            if (this.authoringComponentContent.starterDrawData != null) {
+
+                // get the starter draw data as a JSON object
+                var starterDrawDataJSONObject = angular.fromJson(this.authoringComponentContent.starterDrawData);
+
+                if (starterDrawDataJSONObject != null && starterDrawDataJSONObject.dt != null) {
+
+                    // update the height in the starter draw data
+                    starterDrawDataJSONObject.dt.height = this.height;
+
+                    // set the starter draw data back into the component content
+                    this.authoringComponentContent.starterDrawData = angular.toJson(starterDrawDataJSONObject);
+                }
+            }
+
+            /*
+             * the author has made changes so we will save the component
+             * content
+             */
+            this.authoringViewComponentChanged();
+
+            // re-initialize the drawing tool so the height is updated
+            this.$timeout(angular.bind(this, this.initializeDrawingTool));
+        }
+
+        /**
+         * The author has enabled or disabled a tool
+         */
+
+    }, {
+        key: 'authoringViewToolClicked',
+        value: function authoringViewToolClicked() {
+
+            /*
+             * the author has made changes so we will save the component
+             * content
+             */
+            this.authoringViewComponentChanged();
+
+            // re-initialize the drawing tool so the height is updated
+            this.$timeout(angular.bind(this, this.initializeDrawingTool));
         }
     }]);
 
