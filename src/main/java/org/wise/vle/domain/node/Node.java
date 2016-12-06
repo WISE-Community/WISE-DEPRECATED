@@ -23,14 +23,8 @@
  */
 package org.wise.vle.domain.node;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
-import org.hibernate.annotations.Index;
 import org.wise.vle.domain.PersistableDomain;
 
 /**
@@ -38,7 +32,7 @@ import org.wise.vle.domain.PersistableDomain;
  * @author Hiroki Terashima
  */
 @Entity
-@Table(name="node")
+@Table(name = "node", indexes = { @Index(columnList = "runId", name = "runIdIndex") } )
 public class Node extends PersistableDomain {
 
 	@Id
@@ -49,7 +43,6 @@ public class Node extends PersistableDomain {
 	private String nodeId;
 	
 	@Column(name="runId")
-	@Index(name="runIdIndex")
 	private String runId;
 	
 	@Column(name="nodeType")

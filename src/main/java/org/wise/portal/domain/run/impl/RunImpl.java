@@ -42,10 +42,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import org.hibernate.FetchMode;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.Sort;
-import org.hibernate.annotations.SortType;
+import org.hibernate.annotations.SortNatural;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wise.portal.domain.PeriodNotFoundException;
@@ -170,7 +167,7 @@ public class RunImpl extends OfferingImpl implements Run {
 
 	@OneToMany(targetEntity = PersistentGroup.class, fetch = FetchType.LAZY)
     @JoinTable(name = PERIODS_JOIN_TABLE_NAME, joinColumns = { @JoinColumn(name = RUNS_JOIN_COLUMN_NAME, nullable = false) }, inverseJoinColumns = @JoinColumn(name = PERIODS_JOIN_COLUMN_NAME, nullable = false))
-    @Sort(type = SortType.NATURAL)
+	@SortNatural
     private Set<Group> periods = new TreeSet<Group>();
 
 	@ManyToOne(targetEntity = UserImpl.class, fetch = FetchType.LAZY)
@@ -187,7 +184,7 @@ public class RunImpl extends OfferingImpl implements Run {
   
     @OneToMany(targetEntity = AnnouncementImpl.class, fetch = FetchType.LAZY)
     @JoinTable(name = ANNOUNCEMENTS_JOIN_TABLE_NAME, joinColumns = { @JoinColumn(name = RUNS_JOIN_COLUMN_NAME, nullable = false) }, inverseJoinColumns = @JoinColumn(name = ANNOUNCEMENTS_JOIN_COLUMN_NAME, nullable = false))
-    @Sort(type = SortType.NATURAL)
+	@SortNatural
     private Set<Announcement> announcements = new TreeSet<Announcement>();
     
     @Column(name = COLUMN_NAME_RUNNAME)

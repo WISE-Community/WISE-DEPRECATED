@@ -39,7 +39,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -131,7 +131,7 @@ public class ContactWiseController {
 		    // get the user agent from the request
 		    String userAgent = request.getParameter("usersystem");
 
-	        HttpClient client = new DefaultHttpClient();
+	        HttpClient client = HttpClientBuilder.create().build();
 	        HttpPost post = new HttpPost(userAgentParseURL);
 	        
 	        // add the user_key and user_agent parameters to the POST request

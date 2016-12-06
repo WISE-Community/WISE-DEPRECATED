@@ -31,7 +31,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.dao.SystemWideSaltSource;
 import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
-import org.springframework.security.authentication.encoding.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
@@ -80,7 +79,7 @@ public class TeamSignInFormValidator implements Validator {
 	 */
 	public void validate(Object teamSignInFormIn, Errors errors) {
 		TeamSignInForm teamSignInForm = (TeamSignInForm) teamSignInFormIn;
-		PasswordEncoder encoder = new Md5PasswordEncoder();
+		Md5PasswordEncoder encoder = new Md5PasswordEncoder();
 		
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "username1", 
 				"error.teamsignin-username-not-specified");

@@ -41,6 +41,7 @@ import org.apache.commons.httpclient.URIException;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.PutMethod;
+import org.apache.commons.httpclient.methods.StringRequestEntity;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wise.vle.domain.webservice.HttpStatusCodeException;
@@ -165,7 +166,7 @@ public class HttpRestTransportImpl implements HttpRestTransport {
 				new NameValuePair("status","good")					
 			};
 			method.setRequestBody(arr);
-			method.setRequestBody(bodyData);
+			method.setRequestEntity(new StringRequestEntity(bodyData));
 			final int statusCode = this.client.executeMethod(method);
 			httpPostRequestData.isValidResponseStatus(method, statusCode);
 			final Header[] headers = method.getResponseHeaders();

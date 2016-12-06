@@ -27,9 +27,17 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.Field;
 
-import org.hibernate.cfg.Configuration;
+import org.hibernate.SessionFactory;
+import org.hibernate.boot.Metadata;
+import org.hibernate.boot.MetadataSources;
+import org.hibernate.boot.registry.BootstrapServiceRegistryBuilder;
+import org.hibernate.boot.registry.StandardServiceRegistry;
+import org.hibernate.boot.spi.MetadataImplementor;
+import org.hibernate.internal.SessionFactoryImpl;
 import org.hibernate.tool.hbm2ddl.SchemaExport;
+import org.hibernate.tool.hbm2ddl.SchemaUpdate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -51,7 +59,6 @@ public class DBInitExporter {
      */
     public static void main(String[] args) {
         try {
-          
             exportSchemaToFile(springConfigClassname, outputFilename);
         } catch (Exception all) {
             System.err.println(all.getLocalizedMessage());
@@ -75,11 +82,20 @@ public class DBInitExporter {
                     .instantiateClass(Class.forName(springConfigClassname));
             applicationContext = new ClassPathXmlApplicationContext(
                     springConfig.getRootApplicationContextConfigLocations());
-            Configuration hibernateConfig = ((LocalSessionFactoryBean) applicationContext
-                    .getBean("&sessionFactory")).getConfiguration();
+            SessionFactory sf = ((LocalSessionFactoryBean) applicationContext
+                    .getBean("&sessionFactory")).getObject();
 
             final boolean printScriptToConsole = false, exportScriptToDb = false, justDrop = false, justCreate = true;
-            final SchemaExport schemaExport = new SchemaExport(hibernateConfig)
+            StandardServiceRegistry serviceRegistry = sf.getSessionFactoryOptions().getServiceRegistry();
+            MetadataSources metadataSources = new MetadataSources(new BootstrapServiceRegistryBuilder().build());
+            Metadata metadata = metadataSources.buildMetadata(serviceRegistry);
+            SchemaUpdate update=new SchemaUpdate(serviceRegistry, (MetadataImplementor) metadata); //To create SchemaUpdate
+
+            Field field = SessionFactoryImpl.class.getDeclaredField("schemaExport");
+            field.setAccessible(true);
+
+            final SchemaExport schemaExport = (SchemaExport) field.get(serviceRegistry);
+            schemaExport
                     .setDelimiter(";").setFormat(true).setHaltOnError(true)
                     .setOutputFile(outputFilename);
             schemaExport.execute(printScriptToConsole, exportScriptToDb,
@@ -107,6 +123,10 @@ public class DBInitExporter {
      
     		// close buffer writer
     		outputFileWriter.close();
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
         } finally {
             if (applicationContext != null) {
                 applicationContext.close();

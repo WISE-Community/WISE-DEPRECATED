@@ -26,7 +26,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.authentication.dao.SaltSource;
-import org.springframework.security.authentication.encoding.PasswordEncoder;
+import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -63,7 +63,7 @@ public class UserServiceImpl implements UserService {
 	private UserDao<User> userDao;
 
 	@Autowired
-	protected PasswordEncoder passwordEncoder;
+	protected Md5PasswordEncoder passwordEncoder;
 
 	@Autowired
 	private SaltSource saltSource;

@@ -27,7 +27,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.dao.SystemWideSaltSource;
 import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
-import org.springframework.security.authentication.encoding.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
@@ -111,8 +110,8 @@ public class ChangePasswordParametersValidator implements Validator {
 		//if the user is not an admin we need to make sure they typed in the current teacher password
 		if(!userToCheckPasswordFor.isAdmin()) {
 			//the user is not an admin
-			
-			PasswordEncoder encoder = new Md5PasswordEncoder();
+
+			Md5PasswordEncoder encoder = new Md5PasswordEncoder();
 			
 			//get the typed in current password the user has entered
 			String typedInCurrentPassword = params.getPasswd0();
