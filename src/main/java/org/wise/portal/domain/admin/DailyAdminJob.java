@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2016 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -31,21 +31,18 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.text.DateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Properties;
-import java.util.Set;
-import java.util.Vector;
+import java.util.*;
 
 import javax.mail.MessagingException;
 
-import org.apache.commons.httpclient.DefaultHttpMethodRetryHandler;
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpException;
-import org.apache.commons.httpclient.HttpStatus;
-import org.apache.commons.httpclient.methods.PostMethod;
-import org.apache.commons.httpclient.params.HttpMethodParams;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -112,7 +109,7 @@ public class DailyAdminJob {
 	@Autowired
 	private CRaterRequestDao<CRaterRequest> cRaterRequestDao;
 	
-	private static final String WISE_HUB_URL = "http://wise4.org/postWISEStatistics.php";
+	private static final String WISE_HUB_URL = "http://wise5.org/postWISEStatistics.php";
 
 	private boolean DEBUG = false;
 
@@ -126,7 +123,7 @@ public class DailyAdminJob {
 		todayCal.add(Calendar.DATE, -1);
 		yesterday = new java.sql.Date(todayCal.getTimeInMillis());
 	}
-	
+
 	@Transactional
 	public void doJob() {
 
@@ -243,8 +240,6 @@ public class DailyAdminJob {
 	
 	/**
 	 * Get the VLE statistics from the vle tables
-	 * @param context
-	 * @throws JobExecutionException
 	 */
 	public void gatherVLEStatistics() {
 		try {
@@ -677,49 +672,39 @@ public class DailyAdminJob {
 	 */
 	public void postStatistics(String wiseStatisticsString) {
 		
-		if(WISE_HUB_URL != null) {
-			HttpClient client = new HttpClient();
+		if (WISE_HUB_URL != null) {
+			HttpClient client = HttpClientBuilder.create().build();
 
 			// Create a method instance.
-			PostMethod method = new PostMethod(WISE_HUB_URL);
+			HttpPost post = new HttpPost(WISE_HUB_URL);
 
-			// Provide custom retry handler is necessary
-			method.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, new DefaultHttpMethodRetryHandler(3, false));
-		
-			method.addParameter("name", wiseProperties.getProperty("wise.name"));
-			method.addParameter("wiseBaseURL", wiseProperties.getProperty("wiseBaseURL"));
-			method.addParameter("stats", wiseStatisticsString);
-			
+			List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
+			urlParameters.add(new BasicNameValuePair("name", wiseProperties.getProperty("wise.name")));
+			urlParameters.add(new BasicNameValuePair("wiseBaseURL", wiseProperties.getProperty("wiseBaseURL")));
+			urlParameters.add(new BasicNameValuePair("stats", wiseStatisticsString));
+
 			try {
-				
-				// Execute the method.
-				int statusCode = client.executeMethod(method);
+				post.setEntity(new UrlEncodedFormEntity(urlParameters));
 
-				if (statusCode != HttpStatus.SC_OK) {
-					System.err.println("Method failed: " + method.getStatusLine());
+				// Execute the method.
+				HttpResponse response =  client.execute(post);
+
+				if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
+					System.err.println("Method failed: " + response.getStatusLine());
 				}
-				// Read the response body.
-				//byte[] responseBody = null;
-				//responseBody = method.getResponseBody();
-				//String responseString = new String(responseBody);
-				//System.out.println(responseString);
 
 				// Deal with the response.
 				// Use caution: ensure correct character encoding and is not binary data
-			} catch (HttpException e) {
-				System.err.println("Fatal protocol violation: " + e.getMessage());
-				e.printStackTrace();
 			} catch (IOException e) {
 				System.err.println("Fatal transport error: " + e.getMessage());
 				e.printStackTrace();
 			} finally {
 				// Release the connection.
-				method.releaseConnection();
+				post.releaseConnection();
 			}
 		}
 	}
-	
-	
+
 	/**
 	 * A function that outputs the string to System.out if DEBUG is true
 	 * @param output a String to output to System.out

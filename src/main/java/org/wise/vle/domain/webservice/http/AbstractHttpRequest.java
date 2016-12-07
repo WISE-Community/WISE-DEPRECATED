@@ -26,9 +26,9 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 
-import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.http.HttpResponse;
 import org.wise.vle.domain.webservice.BadHeaderException;
 import org.wise.vle.domain.webservice.HttpStatusCodeException;
 
@@ -154,10 +154,8 @@ public abstract class AbstractHttpRequest {
 	 * status code is not the expected one. Override this method to handle
 	 * specific status codes.
 	 * 
-	 * @param method
-	 *            The request sent.
-	 * @param actualStatusCode
-	 *            The status code returned from the request
+	 * @param response
+	 *            The response
 	 * @return true if the status code matches the expected status code
 	 * @throws IOException
 	 *             when the http response body cannot be obtained.
@@ -166,27 +164,28 @@ public abstract class AbstractHttpRequest {
 	 * 
 	 */
 
-	public boolean isValidResponseStatus(HttpMethod method, int actualStatusCode)
+	public boolean isValidResponseStatus(HttpResponse response)
 			throws IOException, HttpStatusCodeException {
+		int actualStatusCode = response.getStatusLine().getStatusCode();
 		if (actualStatusCode == this.expectedResponseStatusCode)
 			return true;
 
-		String statusText = method.getStatusText();
-		logMethodInfo(method, actualStatusCode);
+		String statusText = response.getStatusLine().toString();
+		logMethodInfo(response, actualStatusCode);
 		throw new HttpStatusCodeException(statusText);
 	}
 
 	/**
 	 * Logs the HttpMethod response information
 	 * 
-	 * @param method the HttpMethod response.
+	 * @param response the HttpResponse response.
 	 * @param actualStatusCode The status code retrieved from the response.
 	 * @throws IOException If the response body cannot be retrieved.
 	 */
-	protected void logMethodInfo(HttpMethod method, int actualStatusCode) throws IOException{
+	protected void logMethodInfo(HttpResponse response, int actualStatusCode) throws IOException{
 		if (logger.isWarnEnabled()) {
-			logger.warn(actualStatusCode + ": " + method.getStatusText());
-			logger.warn("body: " + method.getResponseBodyAsString());
+			logger.warn(actualStatusCode + ": " + response.getStatusLine().getStatusCode());
+			logger.warn("body: " + response.getEntity().getContent());
 		}
 	}
 }

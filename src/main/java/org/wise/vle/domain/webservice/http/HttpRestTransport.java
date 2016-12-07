@@ -23,7 +23,7 @@ package org.wise.vle.domain.webservice.http;
 import java.io.InputStream;
 import java.util.Map;
 
-import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.http.HttpResponse;
 import org.wise.vle.domain.webservice.HttpStatusCodeException;
 
 /**
@@ -44,10 +44,8 @@ public interface HttpRestTransport {
 	 *         header name and the value is the header value.
 	 * @throws HttpStatusCodeException
 	 *             for exceptions which should be handled by the calling method.
-	 * @throws RuntimeExceptions
-	 *             for exceptions we can ignore because they are unrecoverable
 	 */
-	PostMethod post(HttpPostRequest httpRequestData)
+	HttpResponse post(HttpPostRequest httpRequestData)
 			throws HttpStatusCodeException;
 
 	/**
@@ -60,8 +58,6 @@ public interface HttpRestTransport {
 	 *             for exceptions which are the result of getting an unexpected
 	 *             HttpStatusCode in the response. These can be handled by the calling
 	 *             method or ignored as required by the situation.
-	 * @throws RuntimeExceptions
-	 *             for exceptions we can ignore because they are unrecoverable
 	 */
 	InputStream get(HttpGetRequest httpRequestData)
 			throws HttpStatusCodeException;
@@ -71,14 +67,11 @@ public interface HttpRestTransport {
 	 * 
 	 * @param httpRequestData
 	 *            All the data required for this put request
-	 * @return A <code>Map</code> of response headers where the key is the
-	 *         header name and the value is the header value.
+	 * @return A HttpResponse response from making the PUT request
 	 * @throws HttpStatusCodeException
 	 *             for exceptions which should be handled by the calling method.
-	 * @throws RuntimeExceptions
-	 *             for exceptions we can ignore because they are unrecoverable
 	 */
-	Map<String, String> put(HttpPutRequest httpRequestData)
+	HttpResponse put(HttpPutRequest httpRequestData)
 			throws HttpStatusCodeException;
 
 	/**
