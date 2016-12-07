@@ -5,7 +5,7 @@
       <directory url="file://$PROJECT_DIR$/src/test" includeSubdirectories="true" />
     </excludeFromCompile>
     <annotationProcessing>
-      <profile name="Annotation profile for wise" enabled="true">
+      <profile name="Maven default annotation processors profile" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />

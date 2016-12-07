@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2016 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -33,10 +33,11 @@ import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpException;
-import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.io.IOUtils;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -166,27 +167,24 @@ public class AdminIndexController {
 	}
 
 	private String retrieveGlobalWISEVersionJSONString() {
-		HttpClient client = new HttpClient();
-		GetMethod method = new GetMethod(MASTER_GET_WISE_INFO_URL);
+		HttpClient client = HttpClientBuilder.create().build();
+		HttpGet request = new HttpGet(MASTER_GET_WISE_INFO_URL);
 		
 		byte[] responseBody = null;
 		String responseString = null;
 
 		try {
-			client.executeMethod(method);
-			
+			HttpResponse response = client.execute(request);
+
 			// Read the response body.
-			InputStream responseBodyAsStream = method.getResponseBodyAsStream();
+			InputStream responseBodyAsStream = response.getEntity().getContent();
 			responseBody = IOUtils.toByteArray(responseBodyAsStream);
-		} catch (HttpException e) {
-			System.err.println("Fatal protocol violation: " + e.getMessage());
-			e.printStackTrace();
 		} catch (IOException e) {
 			System.err.println("Fatal transport error: " + e.getMessage());
 			e.printStackTrace();
 		} finally {
 			// Release the connection.
-			method.releaseConnection();
+			request.releaseConnection();
 		}
 		if (responseBody != null) {
 			responseString = new String(responseBody);
@@ -195,27 +193,24 @@ public class AdminIndexController {
 	}
 	
 	private String retrieveRecentCommitHistoryJSONString() {
-		HttpClient client = new HttpClient();
-		GetMethod method = new GetMethod(WISE_COMMIT_HISTORY_URL);
-		
+		HttpClient client = HttpClientBuilder.create().build();
+		HttpGet request = new HttpGet(WISE_COMMIT_HISTORY_URL);
+
 		byte[] responseBody = null;
 		String responseString = null;
 
 		try {
-			client.executeMethod(method);
+			HttpResponse response = client.execute(request);
 			
 			// Read the response body.
-			InputStream responseBodyAsStream = method.getResponseBodyAsStream();
+			InputStream responseBodyAsStream = response.getEntity().getContent();
 			responseBody = IOUtils.toByteArray(responseBodyAsStream);
-		} catch (HttpException e) {
-			System.err.println("Fatal protocol violation: " + e.getMessage());
-			e.printStackTrace();
 		} catch (IOException e) {
 			System.err.println("Fatal transport error: " + e.getMessage());
 			e.printStackTrace();
 		} finally {
 			// Release the connection.
-			method.releaseConnection();
+			request.releaseConnection();
 		}
 		if (responseBody != null) {
 			responseString = new String(responseBody);

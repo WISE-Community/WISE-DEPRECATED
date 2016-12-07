@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2016 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -25,19 +25,19 @@ package org.wise.vle.domain.webservice.crater;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.apache.commons.httpclient.DefaultHttpMethodRetryHandler;
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpException;
-import org.apache.commons.httpclient.HttpStatus;
-import org.apache.commons.httpclient.methods.PostMethod;
-import org.apache.commons.httpclient.methods.StringRequestEntity;
-import org.apache.commons.httpclient.params.HttpMethodParams;
+import org.apache.commons.io.IOUtils;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -49,7 +49,7 @@ import org.xml.sax.SAXException;
  * @author Hiroki Terashima
  * @author Geoffrey Kwan
  */
-public class CRaterHttpClient extends HttpClient {
+public class CRaterHttpClient {
 
 	/**
 	 * Handles POSTing a CRater Request to the CRater Servlet and returns the 
@@ -63,49 +63,31 @@ public class CRaterHttpClient extends HttpClient {
 		String responseString = null;
 		
 		if(cRaterUrl != null) {
-			HttpClient client = new HttpClient();
+			HttpClient client = HttpClientBuilder.create().build();
 
 			// Create a method instance.
-			PostMethod method = new PostMethod(cRaterUrl);
+			HttpPost post = new HttpPost(cRaterUrl);
 
-			// Provide custom retry handler is necessary
-			method.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, new DefaultHttpMethodRetryHandler(3, false));
-			
 			try {
 				//System.out.println("CRater request bodyData:" + bodyData);
-				method.setRequestEntity(new StringRequestEntity(bodyData, "text/xml", "utf8"));
-			} catch (UnsupportedEncodingException e1) {
-				e1.printStackTrace();
-			}
-			
-			byte[] responseBody = null;
-			try {
-				
-				// Execute the method.
-				int statusCode = client.executeMethod(method);
+				post.setEntity(new StringEntity(bodyData, ContentType.TEXT_XML));
 
-				if (statusCode != HttpStatus.SC_OK) {
-					System.err.println("Method failed: " + method.getStatusLine());
+				// Execute the method.
+				HttpResponse response = client.execute(post);
+
+				if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
+					System.err.println("Method failed: " + response.getStatusLine());
 				}
 
 				// Read the response body.
-				responseBody = method.getResponseBody();
-
-				// Deal with the response.
-				// Use caution: ensure correct character encoding and is not binary data
-			} catch (HttpException e) {
-				System.err.println("Fatal protocol violation: " + e.getMessage());
-				e.printStackTrace();
+				responseString = IOUtils.toString(response.getEntity().getContent());
+				//System.out.println("responseString: " + responseString);
 			} catch (IOException e) {
 				System.err.println("Fatal transport error: " + e.getMessage());
 				e.printStackTrace();
 			} finally {
 				// Release the connection.
-				method.releaseConnection();
-			}
-			
-			if (responseBody != null) {
-				responseString = new String(responseBody);
+				post.releaseConnection();
 			}
 		}
 		

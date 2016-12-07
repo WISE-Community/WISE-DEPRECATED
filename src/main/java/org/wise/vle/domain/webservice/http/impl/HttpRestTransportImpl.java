@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2006-2015 Encore Research Group, University of Toronto
+ * Copyright (c) 2006-2016 Encore Research Group, University of Toronto
  *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
@@ -20,30 +20,23 @@
  */
 package org.wise.vle.domain.webservice.http.impl;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
-
-
-import org.apache.commons.httpclient.Header;
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpException;
-import org.apache.commons.httpclient.HttpMethod;
-import org.apache.commons.httpclient.HttpMethodBase;
-import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
-import org.apache.commons.httpclient.NameValuePair;
-import org.apache.commons.httpclient.URIException;
-import org.apache.commons.httpclient.methods.GetMethod;
-import org.apache.commons.httpclient.methods.PostMethod;
-import org.apache.commons.httpclient.methods.PutMethod;
-import org.apache.commons.httpclient.methods.StringRequestEntity;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
+import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.message.BasicNameValuePair;
 import org.wise.vle.domain.webservice.HttpStatusCodeException;
 import org.wise.vle.domain.webservice.http.AbstractHttpRequest;
 import org.wise.vle.domain.webservice.http.HttpGetRequest;
@@ -72,7 +65,7 @@ public class HttpRestTransportImpl implements HttpRestTransport {
 		// Must manually release the connection by calling releaseConnection()
 		// on the method, otherwise there will be a resource leak. Refer to
 		// http://jakarta.apache.org/commons/httpclient/threading.html
-		this.client = new HttpClient(new MultiThreadedHttpConnectionManager());
+		this.client = HttpClientBuilder.create().build();
 		this.logger = LogFactory.getLog(this.getClass());
 	}
 
@@ -110,23 +103,21 @@ public class HttpRestTransportImpl implements HttpRestTransport {
 			buffer.deleteCharAt(buffer.length() - 1);
 		}
 
-		GetMethod method = new GetMethod(buffer.toString());
+		HttpGet request = new HttpGet(buffer.toString());
 
-		this.setHeaders(httpGetRequestData, method);
+		this.setHeaders(httpGetRequestData, request);
 		try {
 			// Execute the method.
-			logRequest(method, "");
-			int statusCode = this.client.executeMethod(method);
-			httpGetRequestData.isValidResponseStatus(method, statusCode);
-			return new ByteArrayInputStream(method.getResponseBody());
+			logRequest(request, "");
+			HttpResponse response = this.client.execute(request);
+			httpGetRequestData.isValidResponseStatus(response);
+			return response.getEntity().getContent();
 		} catch (HttpStatusCodeException hsce) {
 			logAndThrowRuntimeException(hsce);
-		} catch (HttpException he) {
-			logAndThrowRuntimeException(he);
 		} catch (IOException ioe) {
 			logAndThrowRuntimeException(ioe);
 		} finally {
-			method.releaseConnection();
+			request.releaseConnection();
 		}
 		return null;
 	}
@@ -134,100 +125,87 @@ public class HttpRestTransportImpl implements HttpRestTransport {
 	/**
 	 * @see net.sf.sail.webapp.domain.webservice.http.HttpRestTransport#post(net.sf.sail.webapp.domain.webservice.http.HttpPostRequest)
 	 */
-	public PostMethod post(final HttpPostRequest httpPostRequestData) throws HttpStatusCodeException {
-		final PostMethod method = new PostMethod(this.baseUrl
+	public HttpResponse post(final HttpPostRequest httpPostRequestData) throws HttpStatusCodeException {
+
+		HttpResponse response = null;
+
+		HttpClient client = HttpClientBuilder.create().build();
+		HttpPost post = new HttpPost(this.baseUrl
 				+ httpPostRequestData.getRelativeUrl());
 
-		this.setHeaders(httpPostRequestData, method);
-
-		// set body data
-		final String bodyData = httpPostRequestData.getBodyData();
-		//if (StringUtils.hasText(bodyData)) {
-		//	method.setRequestEntity(new StringRequestEntity(bodyData));
-		//}
+		this.setHeaders(httpPostRequestData, post);
 
 		// set parameters
+		List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
+
 		final Map<String, String> requestParameters = httpPostRequestData
 				.getRequestParameters();
 		if (requestParameters != null && !requestParameters.isEmpty()) {
 			final Set<String> keys = requestParameters.keySet();
 			for (Iterator<String> i = keys.iterator(); i.hasNext();) {
 				String key = i.next();
-				method.addParameter(key, requestParameters.get(key));
+				urlParameters.add(new BasicNameValuePair(key, requestParameters.get(key)));
 			}
 		}
 
 		final Map<String, String> responseHeaders = new HashMap<String, String>();
 		try {
-			// Execute the method.
-			logRequest(method, bodyData);
-			method.addParameter("status", "abc");
-			NameValuePair[] arr = new NameValuePair[]{
-				new NameValuePair("status","good")					
-			};
-			method.setRequestBody(arr);
-			method.setRequestEntity(new StringRequestEntity(bodyData));
-			final int statusCode = this.client.executeMethod(method);
-			httpPostRequestData.isValidResponseStatus(method, statusCode);
-			final Header[] headers = method.getResponseHeaders();
-			for (int i = 0; i < headers.length; i++) {
-				responseHeaders
-						.put(headers[i].getName(), headers[i].getValue());
+			post.setEntity(new UrlEncodedFormEntity(urlParameters));
+
+			// set body data
+			final String bodyData = httpPostRequestData.getBodyData();
+			if (bodyData != null) {
+				post.setEntity(new StringEntity(bodyData));
 			}
-		} catch (HttpException e) {
-			logAndThrowRuntimeException(e);
+
+			// Execute the method.
+			logRequest(post, bodyData);
+			response = client.execute(post);
+			httpPostRequestData.isValidResponseStatus(response);
 		} catch (IOException e) {
 			logAndThrowRuntimeException(e);
 		} finally {
-			method.releaseConnection();
+			post.releaseConnection();
 		}
 
-		return method;
+		return response;
 	}
 
 	/**
 	 * @see net.sf.sail.webapp.domain.webservice.http.HttpRestTransport#put(net.sf.sail.webapp.domain.webservice.http.HttpPutRequest)
 	 */
-	public Map<String, String> put(final HttpPutRequest httpPutRequestData) throws HttpStatusCodeException {
-		final PutMethod method = new PutMethod(this.baseUrl
+	public HttpResponse put(final HttpPutRequest httpPutRequestData) throws HttpStatusCodeException {
+		HttpResponse response = null;
+		HttpClient client = HttpClientBuilder.create().build();
+
+		HttpPut put = new HttpPut(this.baseUrl
 				+ httpPutRequestData.getRelativeUrl());
 
-		this.setHeaders(httpPutRequestData, method);
+		this.setHeaders(httpPutRequestData, put);
 
 		// set body data
 		final String bodyData = httpPutRequestData.getBodyData();
-		//if (StringUtils.hasText(bodyData)) {
-		//	method.setRequestEntity(new StringRequestEntity(bodyData));
-		//}
 
 		final Map<String, String> responseHeaders = new HashMap<String, String>();
 		try {
 			// Execute the method.
-			logRequest(method, bodyData);
-			final int statusCode = this.client.executeMethod(method);
-			httpPutRequestData.isValidResponseStatus(method, statusCode);
-			final Header[] headers = method.getResponseHeaders();
-			for (int i = 0; i < headers.length; i++) {
-				responseHeaders
-						.put(headers[i].getName(), headers[i].getValue());
-			}
-		} catch (HttpException e) {
-			logAndThrowRuntimeException(e);
+			logRequest(put, bodyData);
+			response = this.client.execute(put);
+			httpPutRequestData.isValidResponseStatus(response);
 		} catch (IOException e) {
 			logAndThrowRuntimeException(e);
 		} finally {
-			method.releaseConnection();
+			put.releaseConnection();
 		}
 
-		return responseHeaders;
+		return response;
 	}
 
-	private void logRequest(HttpMethod method, String bodyData)
-			throws URIException {
+	private void logRequest(HttpRequestBase request, String bodyData) {
 		if (logger.isInfoEnabled()) {
-			logger.info(method.getName() + ": " + method.getURI());
+			logger.info(request.getMethod() + ": " + request.getURI());
 			if (bodyData != "")
-				logger.info(method.getName() + ": " + bodyData);
+				logger.info(request.getMethod() + ": " + bodyData);
 		}
 	}
 
@@ -239,15 +217,14 @@ public class HttpRestTransportImpl implements HttpRestTransport {
 	}	
 
 	private void setHeaders(final AbstractHttpRequest httpRequestData,
-			HttpMethodBase method) {
+			HttpRequestBase request) {
 		final Map<String, String> requestHeaders = httpRequestData
 				.getRequestHeaders();
 		if (requestHeaders != null && !requestHeaders.isEmpty()) {
 			Set<String> keys = requestHeaders.keySet();
 			for (String key : keys) {
-				method.addRequestHeader(key, requestHeaders.get(key));
+				request.addHeader(key, requestHeaders.get(key));
 			}
 		}
 	}
-
 }
