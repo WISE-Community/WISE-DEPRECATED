@@ -81,7 +81,7 @@ AnnotatorNode.prototype.renderGradingView = function(displayStudentWorkDiv, node
 				svgString = svgString.replace(/^--lz77--/, "");
 				svgString = lz77.decompress(svgString);
 			}*/
-			
+			/*
 			// only replace local hrefs. leave absolute hrefs alone!
 			svgString = svgString.replace(/(<image.*xlink:href=)"(.*)"(.*\/>)/gmi, function(m,key,value) {
 				if (value.indexOf("http://") == -1) {
@@ -89,6 +89,7 @@ AnnotatorNode.prototype.renderGradingView = function(displayStudentWorkDiv, node
 				}
 				return m;
 			});
+			*/
 			//svgString = svgString.replace(/(marker.*=)"(url\()(.*)(#se_arrow_bk)(\)")/gmi, '$1'+'"'+'$2'+'$4'+'$5');
 			//svgString = svgString.replace(/(marker.*=)"(url\()(.*)(#se_arrow_fw)(\)")/gmi, '$1'+'"'+'$2'+'$4'+'$5');
 			svgString = svgString.replace(/<g>/gmi,'<g transform="scale(0.5)">');
