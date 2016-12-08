@@ -1,4 +1,4 @@
-'use strict';Object.defineProperty(exports,"__esModule",{value:true});var _typeof=typeof Symbol==="function"&&typeof Symbol.iterator==="symbol"?function(obj){return typeof obj;}:function(obj){return obj&&typeof Symbol==="function"&&obj.constructor===Symbol?"symbol":typeof obj;};var _slicedToArray=function(){function sliceIterator(arr,i){var _arr=[];var _n=true;var _d=false;var _e=undefined;try{for(var _i=arr[Symbol.iterator](),_s;!(_n=(_s=_i.next()).done);_n=true){_arr.push(_s.value);if(i&&_arr.length===i)break;}}catch(err){_d=true;_e=err;}finally{try{if(!_n&&_i["return"])_i["return"]();}finally{if(_d)throw _e;}}return _arr;}return function(arr,i){if(Array.isArray(arr)){return arr;}else if(Symbol.iterator in Object(arr)){return sliceIterator(arr,i);}else{throw new TypeError("Invalid attempt to destructure non-iterable instance");}};}();var _createClass=function(){function defineProperties(target,props){for(var i=0;i<props.length;i++){var descriptor=props[i];descriptor.enumerable=descriptor.enumerable||false;descriptor.configurable=true;if("value"in descriptor)descriptor.writable=true;Object.defineProperty(target,descriptor.key,descriptor);}}return function(Constructor,protoProps,staticProps){if(protoProps)defineProperties(Constructor.prototype,protoProps);if(staticProps)defineProperties(Constructor,staticProps);return Constructor;};}();function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError("Cannot call a class as a function");}}var ProjectService=function(){function ProjectService($http,$injector,$q,$rootScope,ConfigService,UtilService){_classCallCheck(this,ProjectService);this.$http=$http;this.$injector=$injector;this.$q=$q;this.$rootScope=$rootScope;this.ConfigService=ConfigService;this.UtilService=UtilService;this.project=null;this.transitions=[];this.applicationNodes=[];this.inactiveNodes=[];this.groupNodes=[];this.idToNode={};this.idToElement={};this.metadata={};this.activeConstraints=[];this.rootNode=null;this.idToPosition={};this.idToOrder={};this.nodeCount=0;this.componentServices={};// filtering options for navigation displays
+'use strict';Object.defineProperty(exports,"__esModule",{value:true});var _typeof=typeof Symbol==="function"&&typeof Symbol.iterator==="symbol"?function(obj){return typeof obj;}:function(obj){return obj&&typeof Symbol==="function"&&obj.constructor===Symbol?"symbol":typeof obj;};var _slicedToArray=function(){function sliceIterator(arr,i){var _arr=[];var _n=true;var _d=false;var _e=undefined;try{for(var _i=arr[Symbol.iterator](),_s;!(_n=(_s=_i.next()).done);_n=true){_arr.push(_s.value);if(i&&_arr.length===i)break;}}catch(err){_d=true;_e=err;}finally{try{if(!_n&&_i["return"])_i["return"]();}finally{if(_d)throw _e;}}return _arr;}return function(arr,i){if(Array.isArray(arr)){return arr;}else if(Symbol.iterator in Object(arr)){return sliceIterator(arr,i);}else{throw new TypeError("Invalid attempt to destructure non-iterable instance");}};}();var _createClass=function(){function defineProperties(target,props){for(var i=0;i<props.length;i++){var descriptor=props[i];descriptor.enumerable=descriptor.enumerable||false;descriptor.configurable=true;if("value"in descriptor)descriptor.writable=true;Object.defineProperty(target,descriptor.key,descriptor);}}return function(Constructor,protoProps,staticProps){if(protoProps)defineProperties(Constructor.prototype,protoProps);if(staticProps)defineProperties(Constructor,staticProps);return Constructor;};}();function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError("Cannot call a class as a function");}}var ProjectService=function(){function ProjectService($filter,$http,$injector,$q,$rootScope,ConfigService,UtilService){_classCallCheck(this,ProjectService);this.$filter=$filter;this.$http=$http;this.$injector=$injector;this.$q=$q;this.$rootScope=$rootScope;this.ConfigService=ConfigService;this.UtilService=UtilService;this.project=null;this.transitions=[];this.applicationNodes=[];this.inactiveNodes=[];this.groupNodes=[];this.idToNode={};this.idToElement={};this.metadata={};this.activeConstraints=[];this.rootNode=null;this.idToPosition={};this.idToOrder={};this.nodeCount=0;this.componentServices={};// filtering options for navigation displays
 this.filters=[{'name':'all','label':'All'}//{'name': 'todo', 'label': 'Todo'},
 //{'name': 'completed', 'label': 'Completed'}
 ];}_createClass(ProjectService,[{key:'setProject',value:function setProject(project){this.project=project;this.parseProject();}},{key:'clearProjectFields',/**
@@ -1795,5 +1795,110 @@ if(_this5.isComponentIdUsed(tempComponent.id)){// we are already using the compo
 var newComponentId=_this5.getUnusedComponentId();// set the new component id into the component
 tempComponent.id=newComponentId;}}}}// clear the constraints
 tempNode.constraints=[];// add the imported node to the end of the inactive nodes
-_this5.addInactiveNode(tempNode,nodeIdToInsertAfter);}}});}}]);return ProjectService;}();ProjectService.$inject=['$http','$injector','$q','$rootScope','ConfigService','UtilService'];exports.default=ProjectService;
+_this5.addInactiveNode(tempNode,nodeIdToInsertAfter);}}});}/**
+     * Get the next available constraint id for a node
+     * @param nodeId get the next available constraint id for this node
+     * e.g. node8Constraint2
+     * @return the next available constraint id for the node
+     */},{key:'getNextAvailableConstraintIdForNodeId',value:function getNextAvailableConstraintIdForNodeId(nodeId){var nextAvailableConstraintId=null;if(nodeId!=null){// an array to hold the constraint ids that are already being used
+var usedConstraintIds=[];// get the node
+var node=this.getNodeById(nodeId);if(node!=null){var constraints=node.constraints;if(constraints!=null){// loop through all the constraints
+for(var c=0;c<constraints.length;c++){var constraint=constraints[c];if(constraint!=null){var constraintId=constraint.id;// add the constraint id to the array of used constraint ids
+usedConstraintIds.push(constraintId);}}}}var foundNextAvailableConstraintId=false;var counter=1;// loop until we have found a constraint id that hasn't been used
+while(!foundNextAvailableConstraintId){// generate a constraint id
+var potentialConstraintId=nodeId+'Constraint'+counter;// check if the constraint id has been used
+if(usedConstraintIds.indexOf(potentialConstraintId)==-1){// we have found a constraint id that has not been used
+nextAvailableConstraintId=potentialConstraintId;// we are done looping
+foundNextAvailableConstraintId=true;}else{// we have found a constraint id that has been used
+counter++;}}}return nextAvailableConstraintId;}/**
+     * Set a field in the transition logic of a node
+     */},{key:'setTransitionLogicField',value:function setTransitionLogicField(nodeId,field,value){if(nodeId!=null&&field!=null){// get the node
+var node=this.getNodeById(nodeId);if(node!=null){// get the transition logic
+var transitionLogic=node.transitionLogic;if(transitionLogic!=null){// set the value of the field
+transitionLogic[field]=value;}}}}/**
+     * Set the criteria params field
+     * @param criteria the criteria object
+     * @param field the field name
+     * @param value the value to set into the field
+     */},{key:'setCriteriaParamsField',value:function setCriteriaParamsField(criteria,field,value){if(criteria!=null){if(criteria.params==null){// create a params field since it does not exist
+criteria.params={};}// set the value of the field
+criteria.params[field]=value;}}/**
+     * Get the criteria params field
+     * @param criteria the criteria object
+     * @param field the field name
+     */},{key:'getCriteriaParamsField',value:function getCriteriaParamsField(criteria,field){if(criteria!=null){// get the params
+var params=criteria.params;if(params!=null){// get the field value
+return params[field];}}return null;}/**
+     * Set the transition to value of a node
+     * @param fromNodeId the from node
+     * @param toNodeId the to node
+     */},{key:'setTransition',value:function setTransition(fromNodeId,toNodeId){var node=this.getNodeById(fromNodeId);if(node!=null){// get the transition logic of the node
+var transitionLogic=node.transitionLogic;if(transitionLogic!=null){// get the transitions
+var transitions=transitionLogic.transitions;if(transitions!=null&&transitions.length>0){// get the first transition. we will assume there is only one transition.
+var transition=transitions[0];if(transition!=null){// set the to value
+transition.to=toNodeId;}}}}}/**
+     * Get the node id that comes after a given node id
+     * @param nodeId get the node id that comes after this node id
+     * @param the node id that comes after the one that is passed in as a parameter
+     */},{key:'getNodeIdAfter',value:function getNodeIdAfter(nodeId){var nodeIdAfter=null;// get an array of ordered items. each item represents a node
+var orderedItems=this.$filter('orderBy')(this.$filter('toArray')(this.idToOrder),'order');if(orderedItems!=null){var foundNodeId=false;// loop through all the items
+for(var i=0;i<orderedItems.length;i++){// get an item
+var item=orderedItems[i];if(item!=null){// get the node id of the item
+var tempNodeId=item.$key;// check if we have found the node id that was passed in as a parameter
+if(foundNodeId){/*
+                         * we have previously found the node id that was passed in which means
+                         * the current temp node id is the one that comes after it
+                         */nodeIdAfter=tempNodeId;break;}else{if(nodeId==tempNodeId){// we have found the node id that was passed in as a parameter
+foundNodeId=true;}}}}}return nodeIdAfter;}/**
+     * Get the node ids in the branch by looking for nodes that have branch
+     * path taken constraints with the given fromNodeId and toNodeId
+     * @param fromNodeId the from node id
+     * @param toNodeId the to node id
+     * @return an array of nodes that are in the branch path
+     */},{key:'getNodeIdsInBranch',value:function getNodeIdsInBranch(fromNodeId,toNodeId){var nodesInBranch=[];// get all the nodes in the project
+var nodes=this.getNodes();if(nodes!=null){// loop through all the nodes
+for(var n=0;n<nodes.length;n++){var node=nodes[n];if(node!=null){if(this.hasBranchPathTakenConstraint(node,fromNodeId,toNodeId)){/*
+                         * this node has the the branch path taken constraint we are
+                         * looking for
+                         */nodesInBranch.push(node.id);}}}}return nodesInBranch;}/**
+     * Check if a node has a branch path taken constraint
+     * @param node the node to check
+     * @param fromNodeId the from node id of the branch path taken
+     * @param toNodeId the to node id of the branch path taken
+     * @return whether the node has a branch path taken constraint with the
+     * given from node id and to node id
+     */},{key:'hasBranchPathTakenConstraint',value:function hasBranchPathTakenConstraint(node,fromNodeId,toNodeId){if(node!=null){// get the constraints in the node
+var constraints=node.constraints;if(constraints!=null){// loop through all the constraints
+for(var c=0;c<constraints.length;c++){var constraint=constraints[c];if(constraint!=null){// get the removal criteria of the constraint
+var removalCriteria=constraint.removalCriteria;if(removalCriteria!=null){// loop through all the removal criterion
+for(var r=0;r<removalCriteria.length;r++){// get a removal criterion
+var removalCriterion=removalCriteria[r];if(removalCriterion!=null){// get the removal criterion name
+var name=removalCriterion.name;if(name=='branchPathTaken'){// this is a branch path taken constraint
+// get the removal criterion params
+var params=removalCriterion.params;if(params!=null){if(fromNodeId==params.fromNodeId&&toNodeId==params.toNodeId){// the params match the from node id and to node id
+return true;}}}}}}}}}}return false;}/**
+     * Add branch path taken constraints to the node
+     * @param targetNodeId the node to add the constraints to
+     * @param fromNodeId the from node id of the branch path taken constraint
+     * @param toNodeId the to node id of the branch path taken constraint
+     */},{key:'addBranchPathTakenConstraints',value:function addBranchPathTakenConstraints(targetNodeId,fromNodeId,toNodeId){if(targetNodeId!=null){// get the node
+var node=this.getNodeById(targetNodeId);if(node!=null){/*
+                 * create the constraint that makes the node not visible until
+                 * the given branch path is taken
+                 */var makeThisNodeNotVisibleConstraint={};makeThisNodeNotVisibleConstraint.id=this.getNextAvailableConstraintIdForNodeId(targetNodeId);makeThisNodeNotVisibleConstraint.action='makeThisNodeNotVisible';makeThisNodeNotVisibleConstraint.targetId=targetNodeId;makeThisNodeNotVisibleConstraint.removalCriteria=[];var noteVisibleRemovalCriterion={};noteVisibleRemovalCriterion.name='branchPathTaken';noteVisibleRemovalCriterion.params={};noteVisibleRemovalCriterion.params.fromNodeId=fromNodeId;noteVisibleRemovalCriterion.params.toNodeId=toNodeId;makeThisNodeNotVisibleConstraint.removalCriteria.push(noteVisibleRemovalCriterion);node.constraints.push(makeThisNodeNotVisibleConstraint);/*
+                 * create the constraint that makes the node not visitable until
+                 * the given branch path is taken
+                 */var makeThisNodeNotVisitableConstraint={};makeThisNodeNotVisitableConstraint.id=this.getNextAvailableConstraintIdForNodeId(targetNodeId);makeThisNodeNotVisitableConstraint.action='makeThisNodeNotVisitable';makeThisNodeNotVisitableConstraint.targetId=targetNodeId;makeThisNodeNotVisitableConstraint.removalCriteria=[];var noteVisitableRemovalCriterion={};noteVisitableRemovalCriterion.name='branchPathTaken';noteVisitableRemovalCriterion.params={};noteVisitableRemovalCriterion.params.fromNodeId=fromNodeId;noteVisitableRemovalCriterion.params.toNodeId=toNodeId;makeThisNodeNotVisitableConstraint.removalCriteria.push(noteVisitableRemovalCriterion);node.constraints.push(makeThisNodeNotVisitableConstraint);}}}/**
+     * Remove the branch path taken constraints from a node
+     * @param nodeId remove the constraints from this node
+     */},{key:'removeBranchPathTakenNodeConstraints',value:function removeBranchPathTakenNodeConstraints(nodeId){// get a node
+var node=this.getNodeById(nodeId);if(node!=null){// get the constraints
+var constraints=node.constraints;if(constraints!=null){// loop through all the constraints
+for(var c=0;c<constraints.length;c++){var constraint=constraints[c];if(constraint!=null){// get the removal criteria
+var removalCriteria=constraint.removalCriteria;if(removalCriteria!=null){// loop through all the removal criteria
+for(var rc=0;rc<removalCriteria.length;rc++){// get a removal criterion
+var removalCriterion=removalCriteria[rc];if(removalCriterion!=null){if(removalCriterion.name=='branchPathTaken'){// this is a branch path taken removal criterion
+var params=removalCriterion.params;// remove the constraint
+constraints.splice(c,1);// move the counter back one because we just removed a constraint
+c--;}}}}}}}}}}]);return ProjectService;}();ProjectService.$inject=['$filter','$http','$injector','$q','$rootScope','ConfigService','UtilService'];exports.default=ProjectService;
 //# sourceMappingURL=projectService.js.map
