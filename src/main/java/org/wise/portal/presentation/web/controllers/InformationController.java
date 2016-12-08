@@ -888,6 +888,8 @@ public class InformationController {
 			if (project != null) {
 				config.put("projectId", project.getId());
 				config.put("parentProjectId", project.getParentProjectId());
+				String previewProjectURL = wiseBaseURL + "/project/" + project.getId();
+				config.put("previewProjectURL", previewProjectURL);
 			}
 
 			config.put("projectURL", projectURL);
