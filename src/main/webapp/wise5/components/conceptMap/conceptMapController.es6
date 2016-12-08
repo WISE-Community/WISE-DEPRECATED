@@ -89,6 +89,9 @@ class ConceptMapController {
 
         // whether the submit button is shown or not
         this.isSubmitButtonVisible = false;
+        
+        // whether the submit button is disabled
+        this.isSubmitButtonDisabled = false;
 
         // the latest annotations
         this.latestAnnotations = null;
@@ -183,6 +186,9 @@ class ConceptMapController {
         
         // the auto feedback string
         this.autoFeedbackString = '';
+        
+        // counter to keep track of the number of submits
+        this.submitCounter = 0;
         
         if (this.componentContent != null) {
 
@@ -308,6 +314,15 @@ class ConceptMapController {
                 
                 // populate the student work into this component
                 this.setStudentWork(componentState);
+            }
+            
+            // check if the student has used up all of their submits
+            if (this.componentContent.maxSubmitCount != null && this.submitCounter >= this.componentContent.maxSubmitCount) {
+                /*
+                 * the student has used up all of their chances to submit so we 
+                 * will disable the submit button
+                 */
+                this.isSubmitButtonDisabled = true;
             }
             
             // make the nodes draggable
@@ -472,6 +487,13 @@ class ConceptMapController {
 
             if (studentData != null) {
                 var conceptMapData = studentData.conceptMapData;
+                
+                var submitCounter = studentData.submitCounter;
+
+                if (submitCounter != null) {
+                    // populate the submit counter
+                    this.submitCounter = submitCounter;
+                }
 
                 if (conceptMapData != null) {
                     
@@ -677,10 +699,146 @@ class ConceptMapController {
      * Called when the student clicks the submit button
      */
     submitButtonClicked() {
-        this.isSubmit = true;
         
-        // tell the parent node that this component wants to submit
-        this.$scope.$emit('componentSubmitTriggered', {nodeId: this.nodeId, componentId: this.componentId});
+        var performSubmit = true;
+        
+        if (this.componentContent.maxSubmitCount != null) {
+            // there is a max submit count
+            
+            // calculate the number of submits this student has left
+            var numberOfSubmitsLeft = this.componentContent.maxSubmitCount - this.submitCounter;
+            
+            var message = '';
+            
+            if (numberOfSubmitsLeft <= 0) {
+                
+                // the student does not have any more chances to submit
+                alert('You do not have any more chances to receive feedback on your answer.');
+                performSubmit = false;
+            } else if (numberOfSubmitsLeft == 1) {
+                
+                // ask the student if they are sure they want to submit
+                message = 'You have ' + numberOfSubmitsLeft + ' chance to receive feedback on your answer so this this should be your best work.\n\nAre you ready to receive feedback on this answer?';
+                performSubmit = confirm(message);
+            } else if (numberOfSubmitsLeft > 1) {
+                
+                // ask the student if they are sure they want to submit
+                message = 'You have ' + numberOfSubmitsLeft + ' chances to receive feedback on your answer so this this should be your best work.\n\nAre you ready to receive feedback on this answer?';
+                performSubmit = confirm(message);
+            }
+        }
+        
+        if (performSubmit) {
+            // increment the submit counter
+            this.submitCounter++;
+            
+            // check if the student has used up all of their submits
+            if (this.componentContent.maxSubmitCount != null && this.submitCounter >= this.componentContent.maxSubmitCount) {
+                /*
+                 * the student has used up all of their submits so we will
+                 * disable the submit button
+                 */
+                this.isSubmitButtonDisabled = true;
+            }
+            
+            // get the custom rule evaluator code that was authored
+            var customRuleEvaluator = this.componentContent.customRuleEvaluator;
+            
+            // get the component content
+            var componentContent = this.componentContent;
+            
+            // get the student concept map
+            var conceptMapData = this.getConceptMapData();
+            
+            var thisConceptMapService = this.ConceptMapService;
+            
+            // the result will be stored in this variable
+            var thisResult = {};
+            
+            /*
+             * create the any function that can be called in the custom rule 
+             * evaluator code. the arguments to the any function are rule names.
+             * for example if we are looking for any of the links below 
+             * Sun (Infrared Radiation) Space
+             * Sun (Heat) Space
+             * Sun (Solar Radiation) Space
+             * we will call the any function like this
+             * any("Sun (Infrared Radiation) Space", "Sun (Heat) Space", "Sun (Solar Radiation) Space")
+             * these dynamic arguments will be placed in the arguments variable
+             */
+            var any = function() {
+                return thisConceptMapService.any(componentContent, conceptMapData, arguments);
+            };
+
+            /*
+             * create the all function that can be called in the custom rule 
+             * evaluator code. the arguments to the all function are rule names.
+             * for example if we are looking for all of the links below
+             * Sun (Infrared Radiation) Space
+             * Sun (Heat) Space
+             * Sun (Solar Radiation) Space
+             * we will call the any function like this
+             * all("Sun (Infrared Radiation) Space", "Sun (Heat) Space", "Sun (Solar Radiation) Space")
+             * these dynamic arguments will be placed in the arguments variable
+             */
+            var all = function() {
+                return thisConceptMapService.all(componentContent, conceptMapData, arguments);
+            }
+            
+            /*
+             * create the setResult function that can be called in the custom rule 
+             * evaluator code
+             */
+            var setResult = function(result) {
+                thisResult = result;
+            }
+            
+            // run the custom rule evaluator
+            eval(customRuleEvaluator);
+            
+            //console.log("thisResult.score=" + thisResult.score);
+            //console.log("thisResult.feedback=" + thisResult.feedback);
+            var resultString = "";
+            
+            if (this.componentContent.showAutoScore && thisResult.score != null) {
+                // display the score
+                resultString += "Score: " + thisResult.score;
+            }
+            
+            if (this.componentContent.showAutoFeedback && thisResult.feedback != null) {
+                if (resultString != "") {
+                    // add a new line if the result string is not empty
+                    resultString += "<br/>";
+                }
+                
+                // display the feedback
+                resultString += "Feedback: " + thisResult.feedback;
+            }
+            
+            // show the result to the student
+            //alert(resultString);
+            
+            if (resultString != "") {
+                // show the auto feedback in a modal dialog
+                this.$mdDialog.show(
+                    this.$mdDialog.alert()
+                    .parent(angular.element(document.querySelector('#feedbackDiv')))
+                    .clickOutsideToClose(true)
+                    .title('Feedback')
+                    .htmlContent(resultString)
+                    .ariaLabel('Feedback')
+                    .ok('Close')
+                );
+            }
+            
+            // remember the feedback string
+            this.autoFeedbackString = resultString;
+            
+            this.isSubmit = true;
+
+            // tell the parent node that this component wants to submit
+            this.$scope.$emit('componentSubmitTriggered', {nodeId: this.nodeId, componentId: this.componentId});
+        }
     };
 
     submit() {
@@ -762,7 +920,10 @@ class ConceptMapController {
              */
             this.isSubmit = false;
         }
-
+        
+        // set the submit counter
+        studentData.submitCounter = this.submitCounter;
+        
         // set the student data into the component state
         componentState.studentData = studentData;
         
@@ -4009,105 +4170,6 @@ class ConceptMapController {
     }
     
     /**
-     * Check the student concept map against the custom rule evaluator
-     */
-    checkAnswer() {
-        
-        // get the custom rule evaluator code that was authored
-        var customRuleEvaluator = this.componentContent.customRuleEvaluator;
-        
-        // get the component content
-        var componentContent = this.componentContent;
-        
-        // get the student concept map
-        var conceptMapData = this.getConceptMapData();
-        
-        var thisConceptMapService = this.ConceptMapService;
-        
-        // the result will be stored in this variable
-        var thisResult = {};
-        
-        /*
-         * create the any function that can be called in the custom rule 
-         * evaluator code. the arguments to the any function are rule names.
-         * for example if we are looking for any of the links below 
-         * Sun (Infrared Radiation) Space
-         * Sun (Heat) Space
-         * Sun (Solar Radiation) Space
-         * we will call the any function like this
-         * any("Sun (Infrared Radiation) Space", "Sun (Heat) Space", "Sun (Solar Radiation) Space")
-         * these dynamic arguments will be placed in the arguments variable
-         */
-        var any = function() {
-            return thisConceptMapService.any(componentContent, conceptMapData, arguments);
-        };
-
-        /*
-         * create the all function that can be called in the custom rule 
-         * evaluator code. the arguments to the all function are rule names.
-         * for example if we are looking for all of the links below
-         * Sun (Infrared Radiation) Space
-         * Sun (Heat) Space
-         * Sun (Solar Radiation) Space
-         * we will call the any function like this
-         * all("Sun (Infrared Radiation) Space", "Sun (Heat) Space", "Sun (Solar Radiation) Space")
-         * these dynamic arguments will be placed in the arguments variable
-         */
-        var all = function() {
-            return thisConceptMapService.all(componentContent, conceptMapData, arguments);
-        }
-        
-        /*
-         * create the setResult function that can be called in the custom rule 
-         * evaluator code
-         */
-        var setResult = function(result) {
-            thisResult = result;
-        }
-        
-        // run the custom rule evaluator
-        eval(customRuleEvaluator);
-        
-        //console.log("thisResult.score=" + thisResult.score);
-        //console.log("thisResult.feedback=" + thisResult.feedback);
-        var resultString = "";
-        
-        if (this.componentContent.showAutoScore && thisResult.score != null) {
-            // display the score
-            resultString += "Score: " + thisResult.score;
-        }
-        
-        if (this.componentContent.showAutoFeedback && thisResult.feedback != null) {
-            if (resultString != "") {
-                // add a new line if the result string is not empty
-                resultString += "<br/>";
-            }
-            
-            // display the feedback
-            resultString += "Feedback: " + thisResult.feedback;
-        }
-        
-        // show the result to the student
-        //alert(resultString);
-        
-        if (resultString != "") {
-            // show the auto feedback in a modal dialog
-            this.$mdDialog.show(
-                this.$mdDialog.alert()
-                .parent(angular.element(document.querySelector('#feedbackDiv')))
-                .clickOutsideToClose(true)
-                .title('Feedback')
-                .htmlContent(resultString)
-                .ariaLabel('Feedback')
-                .ok('Close')
-            );
-        }
-        
-        // remember the feedback string
-        this.autoFeedbackString = resultString;
-    }
-    
-    /**
      * Show the auto feedback that was generated when the student previously
      * clicked "Check Answer".
      */
@@ -4182,6 +4244,23 @@ class ConceptMapController {
      * The import previous work component id has changed
      */
     authoringImportPreviousWorkComponentIdChanged() {
+        
+        // the authoring component content has changed so we will save the project
+        this.authoringViewComponentChanged();
+    }
+    
+    /**
+     * The authoring view show submit button checkbox was clicked
+     */
+    authoringViewShowSubmitButtonClicked() {
+        
+        if (!this.authoringComponentContent.showSubmitButton) {
+            /*
+             * we are not showing the submit button to the student so
+             * we will clear the max submit count
+             */
+            this.authoringComponentContent.maxSubmitCount = null;
+        }
         
         // the authoring component content has changed so we will save the project
         this.authoringViewComponentChanged();

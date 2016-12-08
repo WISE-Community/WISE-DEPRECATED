@@ -23,7 +23,14 @@
                 Show Submit Button:
                 <input type='checkbox'
                        ng-model='conceptMapController.authoringComponentContent.showSubmitButton'
-                       ng-change='conceptMapController.authoringViewComponentChanged()'/>
+                       ng-change='conceptMapController.authoringViewShowSubmitButtonClicked()'/>
+                <div ng-show='conceptMapController.authoringComponentContent.showSubmitButton'
+                     style='display:inline'>
+                    Max Submit:
+                    <input type='number'
+                           ng-model='conceptMapController.authoringComponentContent.maxSubmitCount'
+                           ng-change='conceptMapController.authoringViewComponentChanged()'/>
+                </div>
                 <br/>
                 Max Score:
                 <input type='number'
@@ -247,15 +254,21 @@
                     <div ng-if="conceptMapController.isRichTextEnabled && conceptMapController.isDisabled"
                          class="input--textarea input--textarea--disabled">
                     </div>
-                    <button ng-click="conceptMapController.resetConceptMap()">Reset</button>
-                    <button ng-click="conceptMapController.checkAnswer()"
-                            ng-show="conceptMapController.componentContent.showAutoScore || conceptMapController.componentContent.showAutoFeedback">
-                            Check Answer
-                    </button>
-                    <button ng-click="conceptMapController.showAutoFeedback()"
-                            ng-show="conceptMapController.autoFeedbackString != null && conceptMapController.autoFeedbackString != ''">
-                            Show Feedback
-                    </button>
+                    <md-button class="md-raised md-primary"
+                               ng-click="conceptMapController.resetConceptMap()">
+                               Reset
+                    </md-button>
+                    <md-button class="md-raised md-primary"
+                               ng-click="conceptMapController.submitButtonClicked()"
+                               ng-show="conceptMapController.componentContent.showAutoScore || conceptMapController.componentContent.showAutoFeedback"
+                               ng-disabled="conceptMapController.isDisabled || !conceptMapController.isSubmitDirty || conceptMapController.isSubmitButtonDisabled">
+                               Check Answer
+                    </md-button>
+                    <md-button class="md-raised md-primary"
+                               ng-click="conceptMapController.showAutoFeedback()"
+                               ng-show="conceptMapController.autoFeedbackString != null && conceptMapController.autoFeedbackString != ''">
+                               Show Feedback
+                    </md-button>
                     <div id="conceptMapContainer" style="display: flex">
                         <div id="selectNodeBar" style="flex: 10; border: 1px solid black">
                             <div ng-repeat="availableNode in conceptMapController.availableNodes"
