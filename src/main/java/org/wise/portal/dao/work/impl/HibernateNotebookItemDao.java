@@ -67,7 +67,7 @@ public class HibernateNotebookItemDao
                 "SELECT n.id, n.nodeId, n.componentId, 'step number', 'step title', 'component part number', " +
                         "n.clientSaveTime, n.serverSaveTime, n.type, n.content, n.periodId, n.runId, n.workgroupId, " +
                         "g.name 'Period Name', ud.username 'Teacher Username', r.project_fk 'Project ID', GROUP_CONCAT(gu.user_fk SEPARATOR ', ') 'WISE IDs' " +
-                        "FROM notebookitems n, " +
+                        "FROM notebookItems n, " +
                         "workgroups w, " +
                         "groups_related_to_users gu, " +
                         "groups g, " +
