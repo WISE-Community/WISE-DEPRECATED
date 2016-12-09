@@ -1131,7 +1131,13 @@ var NodeAuthoringController = function () {
         key: "createBranchNumberOfBranchesChanged",
         value: function createBranchNumberOfBranchesChanged() {
 
-            if (this.createBranchNumberOfBranches < this.createBranchBranches.length) {
+            if (this.createBranchNumberOfBranches == 0) {
+                // the author has set the number of branch paths to 0 which is not allowed
+                alert("Error: You can't have 0 branch paths");
+
+                // revert the number of branch paths value
+                this.createBranchNumberOfBranches = this.createBranchBranches.length;
+            } else if (this.createBranchNumberOfBranches < this.createBranchBranches.length) {
                 /*
                  * the author is reducing the number of branches so we want to 
                  * confirm they want to do so
@@ -1141,61 +1147,33 @@ var NodeAuthoringController = function () {
                 if (answer) {
                     // they answered yes
 
-                    // get the transitions in this steps
-                    var transitions = this.node.transitionLogic.transitions;
+                    if (this.createBranchNumberOfBranches == 1) {
+                        /*
+                         * the author has removed all the branch paths so we will
+                         * remove the branch
+                         */
+                        this.removeBranch();
+                    } else {
+                        /*
+                         * the author is reducing the number of branch paths but
+                         * not removing all of them
+                         */
 
-                    // loop through all the transitions
-                    for (var t = 0; t < this.node.transitionLogic.transitions.length; t++) {
+                        // loop through all the branch paths
+                        for (var bp = 0; bp < this.createBranchBranches.length; bp++) {
 
-                        if (t >= this.createBranchNumberOfBranches) {
-                            // this is a transition we want to remove
+                            if (bp >= this.createBranchNumberOfBranches) {
+                                // this is a branch we want to remove
+                                var branch = this.createBranchBranches[bp];
+                                this.removeBranchPath(branch);
 
-                            // get the branch object
-                            var branch = this.createBranchBranches[t];
-
-                            if (branch != null) {
-
-                                // get the checked items in the branch path
-                                var checkedItemsInBranchPath = branch.checkedItemsInBranchPath;
-
-                                if (checkedItemsInBranchPath != null) {
-
-                                    // loop through all the checked items in the branch path
-                                    for (var i = 0; i < checkedItemsInBranchPath.length; i++) {
-
-                                        // get an item in the branch path
-                                        var checkedItem = checkedItemsInBranchPath[i];
-
-                                        if (checkedItem != null) {
-
-                                            // get the node id of the checked item
-                                            var nodeId = checkedItem.$key;
-
-                                            // remove the branchPathTaken constraints from the step
-                                            this.ProjectService.removeBranchPathTakenNodeConstraints(nodeId);
-
-                                            /*
-                                             * update transition of the step to point to the next step
-                                             * in the project. this may be different than the next step
-                                             * if it was still in the branch path.
-                                             */
-                                            var nodeIdAfter = this.ProjectService.getNodeIdAfter(nodeId);
-                                            this.ProjectService.setTransition(nodeId, nodeIdAfter);
-                                        }
-                                    }
-                                }
+                                /*
+                                 * decrement the counter back one because we have
+                                 * just removed a branch path
+                                 */
+                                bp--;
                             }
                         }
-                    }
-
-                    // get the branches that we want to keep
-                    this.createBranchBranches = this.createBranchBranches.slice(0, this.createBranchNumberOfBranches);
-
-                    // get the transitions that we want to keep
-                    this.node.transitionLogic.transitions = this.node.transitionLogic.transitions.slice(0, this.createBranchNumberOfBranches);
-
-                    if (this.createBranchNumberOfBranches == 0) {
-                        this.createBranchMergePointNodeId = null;
                     }
                 } else {
                     // they answered no so we will revert the number of branches value
@@ -1930,6 +1908,167 @@ var NodeAuthoringController = function () {
 
             // save the project
             this.authoringViewNodeChanged();
+        }
+
+        /**
+         * The remove branch button was clicked
+         */
+
+    }, {
+        key: "removeBranchButtonClicked",
+        value: function removeBranchButtonClicked() {
+
+            // ask the user if they are sure they want to remove the branch
+            var message = 'Are you sure you want to remove the branch?';
+            var answer = confirm(message);
+
+            if (answer) {
+                // the user answered yes so we will remove the branch
+                this.removeBranch();
+            }
+        }
+
+        /**
+         * Remove the branch from the step by removing all the branch paths
+         */
+
+    }, {
+        key: "removeBranch",
+        value: function removeBranch() {
+
+            // loop through all the branch paths
+            for (var bp = 0; bp < this.createBranchBranches.length; bp++) {
+
+                // remove a branch path
+                var branchPath = this.createBranchBranches[bp];
+                this.removeBranchPath(branchPath);
+
+                /*
+                 * shift the counter back one because we have just removed a branch
+                 * path
+                 */
+                bp--;
+            }
+
+            // get the node id of this node (which is the branch point)
+            var nodeId = this.node.id;
+
+            // get the node id that comes after this node
+            var nodeIdAfter = this.ProjectService.getNodeIdAfter(nodeId);
+
+            /*
+             * update the transition of this step to point to the next step
+             * in the project. this may be different than the next step
+             * if it was still the branch point.
+             */
+            this.ProjectService.setTransition(nodeId, nodeIdAfter);
+
+            // clear the transition logic fields
+            this.ProjectService.setTransitionLogicField(nodeId, 'howToChooseAmongAvailablePaths', null);
+            this.ProjectService.setTransitionLogicField(nodeId, 'whenToChoosePath', null);
+            this.ProjectService.setTransitionLogicField(nodeId, 'canChangePath', null);
+            this.ProjectService.setTransitionLogicField(nodeId, 'maxPathsVisitable', null);
+
+            // clear the branch authoring fields
+            this.createBranchNumberOfBranches = 1;
+            this.createBranchCriterion = null;
+            this.createBranchNodeId = null;
+            this.createBranchComponentId = null;
+            this.createBranchMergePointNodeId = null;
+
+            /*
+             * branch paths are determined by the transitions. since there is now
+             * just one transition, we will create a single branch object to 
+             * represent it.
+             */
+
+            // create a branch object to hold all the related information for that branch
+            var branch = {};
+
+            // set the branch number for display purposes
+            branch.number = 1;
+
+            /*
+             * set the mapping of all the ids to order for use when choosing which items are
+             * in the branch path
+             */
+            branch.items = this.UtilService.makeCopyOfJSONObject(this.ProjectService.idToOrder);
+
+            // an array that will hold all the checked items in the branch path
+            branch.checkedItemsInBranchPath = [];
+
+            var transition = null;
+
+            // get the transition from the node
+            var transitions = this.ProjectService.getTransitionsByFromNodeId(nodeId);
+
+            if (transitions != null && transitions.length > 0) {
+                transition = transitions[0];
+            }
+
+            // set the transition into the branch so we can access it easily later
+            branch.transition = transition;
+
+            // add the branch to the array of branches
+            this.createBranchBranches.push(branch);
+
+            // save the project
+            this.authoringViewNodeChanged();
+        }
+
+        /**
+         * Remove a branch path by removing all the branch path taken constraints
+         * from the steps in the branch path, resetting the transitions in the
+         * steps in the branch path, and removing the transition corresponding to
+         * the branch path in this branch point node.
+         * @param branch the branch object
+         */
+
+    }, {
+        key: "removeBranchPath",
+        value: function removeBranchPath(branch) {
+
+            if (branch != null) {
+
+                // get the checked items in the branch path
+                var checkedItemsInBranchPath = branch.checkedItemsInBranchPath;
+
+                if (checkedItemsInBranchPath != null) {
+
+                    // loop through all the checked items in the branch path
+                    for (var i = 0; i < checkedItemsInBranchPath.length; i++) {
+
+                        // get an item in the branch path
+                        var checkedItem = checkedItemsInBranchPath[i];
+
+                        if (checkedItem != null) {
+
+                            // get the node id of the checked item
+                            var nodeId = checkedItem.$key;
+
+                            // remove the branchPathTaken constraints from the step
+                            this.ProjectService.removeBranchPathTakenNodeConstraints(nodeId);
+
+                            /*
+                             * update the transition of the step to point to the next step
+                             * in the project. this may be different than the next step
+                             * if it was still in the branch path.
+                             */
+                            var nodeIdAfter = this.ProjectService.getNodeIdAfter(nodeId);
+                            this.ProjectService.setTransition(nodeId, nodeIdAfter);
+                        }
+                    }
+                }
+
+                // get the index of the branch path
+                var branchPathIndex = this.createBranchBranches.indexOf(branch);
+
+                // remove the branch path
+                this.createBranchBranches.splice(branchPathIndex, 1);
+
+                // remove the transition the corresponds to the branch path
+                this.node.transitionLogic.transitions.splice(branchPathIndex, 1);
+            }
         }
     }]);
 

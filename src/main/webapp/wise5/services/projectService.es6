@@ -3537,6 +3537,43 @@ class ProjectService {
 
             // make the before node point to the new node
             previousNode.transitionLogic.transitions.push(transitionObject);
+            
+            // remove the branch path taken constraints from the node we are moving
+            this.removeBranchPathTakenNodeConstraints(node.id);
+            
+            // get the branch path taken constraints from the previous node
+            var branchPathTakenConstraints = this.getBranchPathTakenConstraintsByNodeId(nodeId);
+            
+            /*
+             * if the previous node was in a branch path, we will also put the
+             * inserted node into the branch path
+             */
+            if (branchPathTakenConstraints != null && branchPathTakenConstraints.length > 0) {
+                
+                if (node.constraints == null) {
+                    node.constraints = [];
+                }
+                
+                // loop through all the branch path taken constraints
+                for (var c = 0; c < branchPathTakenConstraints.length; c++) {
+                    
+                    // get a branch path taken constraint
+                    var branchPathTakenConstraint = branchPathTakenConstraints[c];
+                    
+                    if (branchPathTakenConstraint != null) {
+                        
+                        // create a new constraint with the same branch path taken parameters
+                        var newConstraint = {};
+                        newConstraint.id = this.getNextAvailableConstraintIdForNodeId(node.id);
+                        newConstraint.action = branchPathTakenConstraint.action;
+                        newConstraint.targetId = node.id;
+                        newConstraint.removalCriteria = this.UtilService.makeCopyOfJSONObject(branchPathTakenConstraint.removalCriteria);
+                        
+                        // add the constraint to the node
+                        node.constraints.push(newConstraint);
+                    }
+                }
+            }
         }
     }
 
@@ -7506,6 +7543,17 @@ class ProjectService {
                 // get the transitions
                 var transitions = transitionLogic.transitions;
                 
+                if (transitions == null || transitions.length == 0) {
+                    // there are no transitions so we will create one
+                    transitionLogic.transitions = [];
+                    
+                    // create a transition object
+                    var transition = {};
+                    transitionLogic.transitions.push(transition);
+                    
+                    transitions = transitionLogic.transitions;
+                }
+                
                 if (transitions != null && transitions.length > 0) {
                     
                     // get the first transition. we will assume there is only one transition.
@@ -7769,6 +7817,63 @@ class ProjectService {
                 }
             }
         }
+    }
+    
+    /**
+     * Get the branch path taken constraints from a node
+     * @param nodeId get the branch path taken constraints from this node
+     * @return an array of branch path taken constraints from the node
+     */
+    getBranchPathTakenConstraintsByNodeId(nodeId) {
+        
+        var branchPathTakenConstraints = [];
+        
+        if (nodeId != null) {
+            
+            // get the node
+            var node = this.getNodeById(nodeId);
+            
+            if (node != null) {
+                
+                // get the constraints from the node
+                var constraints = node.constraints;
+                
+                if (constraints != null) {
+                    
+                    // loop through all the constraints
+                    for (var c = 0; c < constraints.length; c++) {
+                        var constraint = constraints[c];
+                        
+                        if (constraint != null) {
+                            
+                            // get the removal criteria from the constraint
+                            var removalCriteria = constraint.removalCriteria;
+                            
+                            if (removalCriteria != null) {
+                                
+                                // loop through all the removal criteria
+                                for (var rc = 0; rc < removalCriteria.length; rc++) {
+                                    var removalCriterion = removalCriteria[rc];
+                                    
+                                    if (removalCriterion != null) {
+                                        if (removalCriterion.name == 'branchPathTaken') {
+                                            /*
+                                             * we have found a branch path taken constraint so 
+                                             * we will add the constraint to the array
+                                             */
+                                            branchPathTakenConstraints.push(constraint);
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        return branchPathTakenConstraints;
     }
 }
 
