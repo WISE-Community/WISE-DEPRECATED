@@ -83,7 +83,20 @@ this.setStudentWork(componentState);}// check if the student has used up all of 
 if(this.componentContent.maxSubmitCount!=null&&this.submitCounter>=this.componentContent.maxSubmitCount){/*
                  * the student has used up all of their chances to submit so we 
                  * will disable the submit button
-                 */this.isSubmitButtonDisabled=true;}// make the nodes draggable
+                 */this.isSubmitButtonDisabled=true;}// populate the previous feedback
+if(this.latestAnnotations!=null){var autoFeedbackString="";// obtain the previous score annotation if any
+if(this.latestAnnotations.score!=null){// get the annotation data
+var data=this.latestAnnotations.score.data;if(data!=null){// get the score and max auto score
+var score=data.value;var maxAutoScore=data.maxAutoScore;autoFeedbackString+="Score: "+score;if(maxAutoScore!=null&&maxAutoScore!=''){// show the max score as the denominator
+autoFeedbackString+="/"+maxAutoScore;}}}// obtain the previous comment annotation if any
+if(this.latestAnnotations.comment!=null){// get the annotation data
+var data=this.latestAnnotations.comment.data;if(data!=null){if(autoFeedbackString!=""){// add a new line if the result string is not empty
+autoFeedbackString+="<br/>";}// get the comment
+var comment=data.value;autoFeedbackString+="Feedback: "+comment;}}/*
+                 * set the previous auto feedback into the field that is used
+                 * to display the auto feedback to the student when they click
+                 * on the show feedback button
+                 */this.autoFeedbackString=autoFeedbackString;}// make the nodes draggable
 this.enableNodeDragging();// check if we need to lock this component
 this.calculateDisabled();if(this.$scope.$parent.nodeController!=null){// register this component with the parent node
 this.$scope.$parent.nodeController.registerComponentController(this.$scope,this.componentContent);}}/**
@@ -214,14 +227,12 @@ var thisResult={};/*
              * create the setResult function that can be called in the custom rule 
              * evaluator code
              */var setResult=function setResult(result){thisResult=result;};// run the custom rule evaluator
-eval(customRuleEvaluator);//console.log("thisResult.score=" + thisResult.score);
-//console.log("thisResult.feedback=" + thisResult.feedback);
-var resultString="";if(this.componentContent.showAutoScore&&thisResult.score!=null){// display the score
-resultString+="Score: "+thisResult.score;}if(this.componentContent.showAutoFeedback&&thisResult.feedback!=null){if(resultString!=""){// add a new line if the result string is not empty
+eval(customRuleEvaluator);// remember the auto feedback result
+this.autoFeedbackResult=thisResult;var resultString="";if(this.componentContent.showAutoScore&&thisResult.score!=null){// display the score
+resultString+="Score: "+thisResult.score;if(this.componentContent.maxScore!=null&&this.componentContent.maxScore!=''){// show the max score as the denominator
+resultString+="/"+this.componentContent.maxScore;}}if(this.componentContent.showAutoFeedback&&thisResult.feedback!=null){if(resultString!=""){// add a new line if the result string is not empty
 resultString+="<br/>";}// display the feedback
-resultString+="Feedback: "+thisResult.feedback;}// show the result to the student
-//alert(resultString);
-if(resultString!=""){// show the auto feedback in a modal dialog
+resultString+="Feedback: "+thisResult.feedback;}if(resultString!=""){// show the auto feedback in a modal dialog
 this.$mdDialog.show(this.$mdDialog.alert().parent(angular.element(document.querySelector('#feedbackDiv'))).clickOutsideToClose(true).title('Feedback').htmlContent(resultString).ariaLabel('Feedback').ok('Close'));}// remember the feedback string
 this.autoFeedbackString=resultString;this.isSubmit=true;// tell the parent node that this component wants to submit
 this.$scope.$emit('componentSubmitTriggered',{nodeId:this.nodeId,componentId:this.componentId});}}},{key:'submit',value:function submit(){// check if we need to lock the component after the student submits
@@ -252,7 +263,19 @@ var studentData={};var conceptMapData=this.getConceptMapData();studentData.conce
 componentState.isSubmit=this.isSubmit;/*
              * reset the isSubmit value so that the next component state
              * doesn't maintain the same value
-             */this.isSubmit=false;}// set the submit counter
+             */this.isSubmit=false;if(this.autoFeedbackResult!=null){// there is auto feedback
+if(this.autoFeedbackResult.score!=null||this.autoFeedbackResult.feedback!=null){// there is an auto score or auto feedback
+// get the values used to create an annotation
+var runId=this.ConfigService.getRunId();var periodId=this.ConfigService.getPeriodId();var nodeId=this.nodeId;var componentId=this.componentId;var toWorkgroupId=this.ConfigService.getWorkgroupId();// create an array of annotations to be saved with the component state
+componentState.annotations=[];if(this.autoFeedbackResult.score!=null){// there is an auto score
+// create the data object for the annotation
+var data={};data.value=parseFloat(this.autoFeedbackResult.score);data.autoGrader='conceptMap';if(this.componentContent.maxScore!=null){data.maxAutoScore=parseFloat(this.componentContent.maxScore);}// create the auto score annotation
+var scoreAnnotation=this.AnnotationService.createAutoScoreAnnotation(runId,periodId,nodeId,componentId,toWorkgroupId,data);// add the annotation to the component state
+componentState.annotations.push(scoreAnnotation);}if(this.autoFeedbackResult.feedback!=null){// there is auto feedback
+// create the data object for the annotation
+var data={};data.value=this.autoFeedbackResult.feedback;data.autoGrader='conceptMap';// create the auto score annotation
+var commentAnnotation=this.AnnotationService.createAutoCommentAnnotation(runId,periodId,nodeId,componentId,toWorkgroupId,data);// add the annotation to the component state
+componentState.annotations.push(commentAnnotation);}}}}// set the submit counter
 studentData.submitCounter=this.submitCounter;// set the student data into the component state
 componentState.studentData=studentData;/*
          * perform any additional processing that is required before returning
