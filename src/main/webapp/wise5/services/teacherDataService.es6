@@ -815,6 +815,15 @@ class TeacherDataService {
 
         // save the run status to the server
         this.sendRunStatus();
+
+        // save pause/unpause screen event
+        let context = "ClassroomMonitor", nodeId = null, componentId = null, componentType = null,
+            category = "TeacherAction", data = {};
+        let event = "pauseScreen";
+        if (!isPaused) {
+            event = "unPauseScreen";
+        }
+        this.saveEvent(context, nodeId, componentId, componentType, category, event, data);
     }
 
     /**

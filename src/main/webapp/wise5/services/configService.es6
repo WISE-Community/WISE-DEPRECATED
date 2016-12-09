@@ -693,7 +693,7 @@ class ConfigService {
      * Get the library projects
      */
     getLibraryProjects() {
-        
+
         // get the URL to get the list of library projects
         var getLibraryProjectsURL = this.getConfigParam('getLibraryProjectsURL');
         

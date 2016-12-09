@@ -296,7 +296,7 @@ var classroomMonitorModule = _angular2.default.module('classroomMonitor', [(0, _
         url: '/export',
         templateUrl: 'wise5/classroomMonitor/dataExport/dataExport.html',
         controller: 'DataExportController',
-        controllerAs: 'DataExportController'
+        controllerAs: 'dataExportController'
     }).state('root.notebooks', {
         url: '/notebook',
         templateUrl: 'wise5/classroomMonitor/notebook/notebook.html',
