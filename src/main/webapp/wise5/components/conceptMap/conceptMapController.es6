@@ -231,6 +231,9 @@ class ConceptMapController {
                 this.isSubmitButtonVisible = false;
                 this.isDisabled = true;
             } else if (this.mode === 'authoring') {
+                this.isPromptVisible = true;
+                this.isSaveButtonVisible = this.componentContent.showSaveButton;
+                this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
                 this.availableNodes = this.componentContent.nodes;
                 this.availableLinks = this.componentContent.links;
 
@@ -240,6 +243,8 @@ class ConceptMapController {
                     return this.authoringComponentContent;
                 }.bind(this), function(newValue, oldValue) {
                     this.componentContent = this.ProjectService.injectAssetPaths(newValue);
+                    this.isSaveButtonVisible = this.componentContent.showSaveButton;
+                    this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
                     this.availableNodes = this.componentContent.nodes;
                     this.availableLinks = this.componentContent.links;
                     this.setupSVG();
@@ -4351,6 +4356,15 @@ class ConceptMapController {
      * The import previous work component id has changed
      */
     authoringImportPreviousWorkComponentIdChanged() {
+        
+        // the authoring component content has changed so we will save the project
+        this.authoringViewComponentChanged();
+    }
+    
+    /**
+     * The authoring view show save button checkbox was clicked
+     */
+    authoringViewShowSaveButtonClicked() {
         
         // the authoring component content has changed so we will save the project
         this.authoringViewComponentChanged();

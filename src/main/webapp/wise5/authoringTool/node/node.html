@@ -392,132 +392,135 @@ TODO: implement me. Allow authors to view assets while authoring node conent. Pe
     <br/>
     
     <div>
-        Number of Branches
+        Number of Branch Paths
         <input type='number'
                ng-model='nodeAuthoringController.createBranchNumberOfBranches'
                ng-change='nodeAuthoringController.createBranchNumberOfBranchesChanged()'/>
+        <button ng-click='nodeAuthoringController.removeBranchButtonClicked()'>Remove Branch</button>
     </div>
     
-    <div ng-show='nodeAuthoringController.createBranchNumberOfBranches != null && nodeAuthoringController.createBranchNumberOfBranches != 0'>
-        How to choose among paths
-        <md-select md-theme="default"
-                   class="node-select md-subhead"
-                   style="margin-left:30px; width:600px"
-                   ng-model="nodeAuthoringController.createBranchCriterion"
-                   ng-change="nodeAuthoringController.createBranchCriterionChanged()">
-            <md-option ng-repeat="branchCriterion in nodeAuthoringController.branchCriteria"
-                       value="{{ branchCriterion.value }}">
-                <span layout="row" layout-align="start center">
-                    <span class="node-select__text">{{branchCriterion.text}}</span>
-                </span>
-            </md-option>
-        </md-select>
-    </div>
-    
-    <div ng-show='nodeAuthoringController.createBranchCriterion == "score" || nodeAuthoringController.createBranchCriterion == "choiceChosen"'>
-        Choose Step
-        <md-select md-theme="default"
-                   class="node-select md-subhead"
-                   ng-model="nodeAuthoringController.createBranchNodeId"
-                   ng-change="nodeAuthoringController.createBranchNodeIdChanged()"
-                   style="margin-left:30px; width:600px">
-            <md-option ng-repeat="item in projectController.items | toArray | orderBy : 'order'"
-                       value="{{ item.$key }}"
-                       ng-class="{'node-select-option--group': projectController.isGroupNode(item.$key), 'node-select-option--node': !projectController.isGroupNode(item.$key)}">
-                <span layout="row" layout-align="start center">
-                    <span class="node-select__text">{{ projectController.getNodePositionById(item.$key) + ': '}}{{ projectController.getNodeTitleByNodeId(item.$key) }} ({{item.$key}})</span>
-                    <node-status-icon node-id="item.$key" custom-class="'node-select__status'"></node-status-icon>
-                </span>
-            </md-option>
-        </md-select>
-    </div>
-
-    <div ng-show='nodeAuthoringController.createBranchCriterion == "score" || nodeAuthoringController.createBranchCriterion == "choiceChosen"'>
-        Choose Component
-        <md-select md-theme="default"
-                   class="node-select md-subhead"
-                   ng-model="nodeAuthoringController.createBranchComponentId"
-                   ng-change="nodeAuthoringController.createBranchComponentIdChanged()"
-                   style="margin-left:30px; width:600px">
-            <md-option ng-repeat="component in projectController.getComponentsByNodeId(nodeAuthoringController.createBranchNodeId)"
-                       value="{{ component.id }}">
-                <span layout="row" layout-align="start center">
-                    <span class="node-select__text">ID: {{component.id}} | Type: {{component.type}} | Prompt: {{component.prompt}}</span>
-                </span>
-            </md-option>
-        </md-select>
-    </div>
-    
-    <div ng-repeat='branch in nodeAuthoringController.createBranchBranches'
-         style='border: 1px solid black'>
-        Branch Path {{branch.number}}
-        
-        <div ng-show='nodeAuthoringController.createBranchCriterion == "workgroupId"'>
-            Workgroup Id
-        </div>
-        
-        <div ng-show='nodeAuthoringController.createBranchCriterion == "score"'>
-            Score
-            <input type='text'
-                   ng-model='branch.scores'
-                   ng-change='nodeAuthoringController.createBranchScoreChanged(branch)'
-                   ng-list=','/>
-        </div>
-        
-        <div ng-show='nodeAuthoringController.createBranchCriterion == "choiceChosen"'>
-            Choice Chosen
-            <md-select ng-model='branch.choiceId'>
-                <md-option ng-repeat='choice in branch.choices'
-                           value='{{ choice.id }}'>
-                   <span layout="row" layout-align="start center">
-                       <span class="node-select__text">ID: {{choice.id}} | Text: {{choice.text}} | Is Correct: {{choice.isCorrect}} | Feedback: {{choice.feedback}}</span>
-                   </span>
+    <div ng-show='nodeAuthoringController.createBranchNumberOfBranches > 1'>
+        <div>
+            How to choose among paths
+            <md-select md-theme="default"
+                       class="node-select md-subhead"
+                       style="margin-left:30px; width:600px"
+                       ng-model="nodeAuthoringController.createBranchCriterion"
+                       ng-change="nodeAuthoringController.createBranchCriterionChanged()">
+                <md-option ng-repeat="branchCriterion in nodeAuthoringController.branchCriteria"
+                           value="{{ branchCriterion.value }}">
+                    <span layout="row" layout-align="start center">
+                        <span class="node-select__text">{{branchCriterion.text}}</span>
+                    </span>
                 </md-option>
             </md-select>
         </div>
         
-        <div ng-show='nodeAuthoringController.createBranchCriterion == "random"'>
-            Random
+        <div ng-show='nodeAuthoringController.createBranchCriterion == "score" || nodeAuthoringController.createBranchCriterion == "choiceChosen"'>
+            Choose Step
+            <md-select md-theme="default"
+                       class="node-select md-subhead"
+                       ng-model="nodeAuthoringController.createBranchNodeId"
+                       ng-change="nodeAuthoringController.createBranchNodeIdChanged()"
+                       style="margin-left:30px; width:600px">
+                <md-option ng-repeat="item in projectController.items | toArray | orderBy : 'order'"
+                           value="{{ item.$key }}"
+                           ng-class="{'node-select-option--group': projectController.isGroupNode(item.$key), 'node-select-option--node': !projectController.isGroupNode(item.$key)}">
+                    <span layout="row" layout-align="start center">
+                        <span class="node-select__text">{{ projectController.getNodePositionById(item.$key) + ': '}}{{ projectController.getNodeTitleByNodeId(item.$key) }} ({{item.$key}})</span>
+                        <node-status-icon node-id="item.$key" custom-class="'node-select__status'"></node-status-icon>
+                    </span>
+                </md-option>
+            </md-select>
+        </div>
+
+        <div ng-show='nodeAuthoringController.createBranchCriterion == "score" || nodeAuthoringController.createBranchCriterion == "choiceChosen"'>
+            Choose Component
+            <md-select md-theme="default"
+                       class="node-select md-subhead"
+                       ng-model="nodeAuthoringController.createBranchComponentId"
+                       ng-change="nodeAuthoringController.createBranchComponentIdChanged()"
+                       style="margin-left:30px; width:600px">
+                <md-option ng-repeat="component in projectController.getComponentsByNodeId(nodeAuthoringController.createBranchNodeId)"
+                           value="{{ component.id }}">
+                    <span layout="row" layout-align="start center">
+                        <span class="node-select__text">ID: {{component.id}} | Type: {{component.type}} | Prompt: {{component.prompt}}</span>
+                    </span>
+                </md-option>
+            </md-select>
         </div>
         
-        <button ng-click='branch.openStepsChooser = !branch.openStepsChooser'>{{ branch.openStepsChooser ? 'Close' : 'Open'}} Branch {{branch.number}} Steps Chooser</button>
-        <div ng-show='branch.openStepsChooser'>
-            Choose Steps in Path
-            <br/>
-            <div ng-repeat='item in branch.items | toArray | orderBy : "order"'
-                 ng-class='{"node-select--group": projectController.isGroupNode(item.$key), "node-select--node": !projectController.isGroupNode(item.$key)}'
-                 ng-show='!projectController.importMode'>
-                <input type='checkbox'
-                       ng-model='item.checked'
-                       ng-if='item.order!==0'
-                       ng-click='nodeAuthoringController.createBranchStepClicked(branch, item)'
-                       ng-show='!(projectController.showCreateGroup || projectController.showCreateNode || projectController.insertNodeMode || projectController.insertGroupMode)'/>
-                <h6 ng-click='projectController.nodeClicked(item.$key)'
-                    style='display:inline; cursor:pointer'
-                    ng-class='{"groupHeader": projectController.isGroupNode(item.$key), "stepHeader": !projectController.isGroupNode(item.$key)}'
-                    ng-if='item.order!==0'>
-                    {{projectController.getNodePositionById(item.$key)}} {{projectController.getNodeTitleByNodeId(item.$key)}}
-                </h6>
+        <div ng-repeat='branch in nodeAuthoringController.createBranchBranches'
+             style='border: 1px solid black'>
+            Branch Path {{branch.number}}
+            
+            <div ng-show='nodeAuthoringController.createBranchCriterion == "workgroupId"'>
+                Workgroup Id
             </div>
-            <button ng-click='branch.openStepsChooser = !branch.openStepsChooser'>{{ !branch.openStepsChooser ? 'Close' : 'Open'}} Branch Path {{branch.number}} Steps Chooser</button>
+            
+            <div ng-show='nodeAuthoringController.createBranchCriterion == "score"'>
+                Score
+                <input type='text'
+                       ng-model='branch.scores'
+                       ng-change='nodeAuthoringController.createBranchScoreChanged(branch)'
+                       ng-list=','/>
+            </div>
+            
+            <div ng-show='nodeAuthoringController.createBranchCriterion == "choiceChosen"'>
+                Choice Chosen
+                <md-select ng-model='branch.choiceId'>
+                    <md-option ng-repeat='choice in branch.choices'
+                               value='{{ choice.id }}'>
+                       <span layout="row" layout-align="start center">
+                           <span class="node-select__text">ID: {{choice.id}} | Text: {{choice.text}} | Is Correct: {{choice.isCorrect}} | Feedback: {{choice.feedback}}</span>
+                       </span>
+                    </md-option>
+                </md-select>
+            </div>
+            
+            <div ng-show='nodeAuthoringController.createBranchCriterion == "random"'>
+                Random
+            </div>
+            
+            <button ng-click='branch.openStepsChooser = !branch.openStepsChooser'>{{ branch.openStepsChooser ? 'Close' : 'Open'}} Branch {{branch.number}} Steps Chooser</button>
+            <div ng-show='branch.openStepsChooser'>
+                Choose Steps in Path
+                <br/>
+                <div ng-repeat='item in branch.items | toArray | orderBy : "order"'
+                     ng-class='{"node-select--group": projectController.isGroupNode(item.$key), "node-select--node": !projectController.isGroupNode(item.$key)}'
+                     ng-show='!projectController.importMode'>
+                    <input type='checkbox'
+                           ng-model='item.checked'
+                           ng-if='item.order!==0'
+                           ng-click='nodeAuthoringController.createBranchStepClicked(branch, item)'
+                           ng-show='!(projectController.showCreateGroup || projectController.showCreateNode || projectController.insertNodeMode || projectController.insertGroupMode)'/>
+                    <h6 ng-click='item.checked = !item.checked; nodeAuthoringController.createBranchStepClicked(branch, item)'
+                        style='display:inline; cursor:pointer'
+                        ng-class='{"groupHeader": projectController.isGroupNode(item.$key), "stepHeader": !projectController.isGroupNode(item.$key)}'
+                        ng-if='item.order!==0'>
+                        {{projectController.getNodePositionById(item.$key)}} {{projectController.getNodeTitleByNodeId(item.$key)}}
+                    </h6>
+                </div>
+                <button ng-click='branch.openStepsChooser = !branch.openStepsChooser'>{{ !branch.openStepsChooser ? 'Close' : 'Open'}} Branch Path {{branch.number}} Steps Chooser</button>
+            </div>
         </div>
-    </div>
-    <div ng-show='nodeAuthoringController.createBranchNumberOfBranches != null && nodeAuthoringController.createBranchNumberOfBranches != 0'>
-        Choose Merge Point
-        <md-select md-theme="default"
-                   class="node-select md-subhead"
-                   ng-model="nodeAuthoringController.createBranchMergePointNodeId"
-                   ng-change="nodeAuthoringController.createBranchMergePointNodeIdChanged()"
-                   style="margin-left:30px; width:600px">
-            <md-option ng-repeat="item in projectController.items | toArray | orderBy : 'order'"
-                       value="{{ item.$key }}"
-                       ng-class="{'node-select-option--group': projectController.isGroupNode(item.$key), 'node-select-option--node': !projectController.isGroupNode(item.$key)}">
-                <span layout="row" layout-align="start center">
-                    <span class="node-select__text">{{ projectController.getNodePositionById(item.$key) + ': '}}{{ projectController.getNodeTitleByNodeId(item.$key) }} ({{item.$key}})</span>
-                    <node-status-icon node-id="item.$key" custom-class="'node-select__status'"></node-status-icon>
-                </span>
-            </md-option>
-        </md-select>
+        <div>
+            Choose Merge Point
+            <md-select md-theme="default"
+                       class="node-select md-subhead"
+                       ng-model="nodeAuthoringController.createBranchMergePointNodeId"
+                       ng-change="nodeAuthoringController.createBranchMergePointNodeIdChanged()"
+                       style="margin-left:30px; width:600px">
+                <md-option ng-repeat="item in projectController.items | toArray | orderBy : 'order'"
+                           value="{{ item.$key }}"
+                           ng-class="{'node-select-option--group': projectController.isGroupNode(item.$key), 'node-select-option--node': !projectController.isGroupNode(item.$key)}">
+                    <span layout="row" layout-align="start center">
+                        <span class="node-select__text">{{ projectController.getNodePositionById(item.$key) + ': '}}{{ projectController.getNodeTitleByNodeId(item.$key) }} ({{item.$key}})</span>
+                        <node-status-icon node-id="item.$key" custom-class="'node-select__status'"></node-status-icon>
+                    </span>
+                </md-option>
+            </md-select>
+        </div>
     </div>
 </div>
 

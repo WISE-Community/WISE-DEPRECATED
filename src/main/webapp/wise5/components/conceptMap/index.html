@@ -18,7 +18,7 @@
                 Show Save Button:
                 <input type='checkbox'
                        ng-model='conceptMapController.authoringComponentContent.showSaveButton'
-                       ng-change='conceptMapController.authoringViewComponentChanged()'/>
+                       ng-change='conceptMapController.authoringViewShowSaveButtonClicked()'/>
                 <br/>
                 Show Submit Button:
                 <input type='checkbox'
@@ -257,17 +257,6 @@
                     <md-button class="md-raised md-primary"
                                ng-click="conceptMapController.resetConceptMap()">
                                Reset
-                    </md-button>
-                    <md-button class="md-raised md-primary"
-                               ng-click="conceptMapController.submitButtonClicked()"
-                               ng-show="conceptMapController.componentContent.showAutoScore || conceptMapController.componentContent.showAutoFeedback"
-                               ng-disabled="conceptMapController.isDisabled || !conceptMapController.isSubmitDirty || conceptMapController.isSubmitButtonDisabled">
-                               Check Answer
-                    </md-button>
-                    <md-button class="md-raised md-primary"
-                               ng-click="conceptMapController.showAutoFeedback()"
-                               ng-show="conceptMapController.autoFeedbackString != null && conceptMapController.autoFeedbackString != ''">
-                               Show Feedback
                     </md-button>
                     <div id="conceptMapContainer" style="display: flex">
                         <div id="selectNodeBar" style="flex: 10; border: 1px solid black">

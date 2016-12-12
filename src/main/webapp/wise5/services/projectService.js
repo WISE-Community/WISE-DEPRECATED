@@ -829,7 +829,16 @@ newTransition.to=toNodeId;}}// add the new transition to the node
 node.transitionLogic.transitions.push(newTransition);}}}var newNodeId=node.id;// TODO handle branching case
 // remove the transitions from the before node
 previousNode.transitionLogic.transitions=[];var transitionObject={};transitionObject.to=newNodeId;// make the before node point to the new node
-previousNode.transitionLogic.transitions.push(transitionObject);}}/**
+previousNode.transitionLogic.transitions.push(transitionObject);// remove the branch path taken constraints from the node we are moving
+this.removeBranchPathTakenNodeConstraints(node.id);// get the branch path taken constraints from the previous node
+var branchPathTakenConstraints=this.getBranchPathTakenConstraintsByNodeId(nodeId);/*
+             * if the previous node was in a branch path, we will also put the
+             * inserted node into the branch path
+             */if(branchPathTakenConstraints!=null&&branchPathTakenConstraints.length>0){if(node.constraints==null){node.constraints=[];}// loop through all the branch path taken constraints
+for(var c=0;c<branchPathTakenConstraints.length;c++){// get a branch path taken constraint
+var branchPathTakenConstraint=branchPathTakenConstraints[c];if(branchPathTakenConstraint!=null){// create a new constraint with the same branch path taken parameters
+var newConstraint={};newConstraint.id=this.getNextAvailableConstraintIdForNodeId(node.id);newConstraint.action=branchPathTakenConstraint.action;newConstraint.targetId=node.id;newConstraint.removalCriteria=this.UtilService.makeCopyOfJSONObject(branchPathTakenConstraint.removalCriteria);// add the constraint to the node
+node.constraints.push(newConstraint);}}}}}/**
      * Insert a node into a group
      * @param nodeIdToInsert the node id to insert
      * @param nodeIdToInsertInside the node id of the group we will insert into
@@ -1834,7 +1843,9 @@ return params[field];}}return null;}/**
      * @param toNodeId the to node
      */},{key:'setTransition',value:function setTransition(fromNodeId,toNodeId){var node=this.getNodeById(fromNodeId);if(node!=null){// get the transition logic of the node
 var transitionLogic=node.transitionLogic;if(transitionLogic!=null){// get the transitions
-var transitions=transitionLogic.transitions;if(transitions!=null&&transitions.length>0){// get the first transition. we will assume there is only one transition.
+var transitions=transitionLogic.transitions;if(transitions==null||transitions.length==0){// there are no transitions so we will create one
+transitionLogic.transitions=[];// create a transition object
+var transition={};transitionLogic.transitions.push(transition);transitions=transitionLogic.transitions;}if(transitions!=null&&transitions.length>0){// get the first transition. we will assume there is only one transition.
 var transition=transitions[0];if(transition!=null){// set the to value
 transition.to=toNodeId;}}}}}/**
      * Get the node id that comes after a given node id
@@ -1900,5 +1911,17 @@ for(var rc=0;rc<removalCriteria.length;rc++){// get a removal criterion
 var removalCriterion=removalCriteria[rc];if(removalCriterion!=null){if(removalCriterion.name=='branchPathTaken'){// this is a branch path taken removal criterion
 var params=removalCriterion.params;// remove the constraint
 constraints.splice(c,1);// move the counter back one because we just removed a constraint
-c--;}}}}}}}}}}]);return ProjectService;}();ProjectService.$inject=['$filter','$http','$injector','$q','$rootScope','ConfigService','UtilService'];exports.default=ProjectService;
+c--;}}}}}}}}}/**
+     * Get the branch path taken constraints from a node
+     * @param nodeId get the branch path taken constraints from this node
+     * @return an array of branch path taken constraints from the node
+     */},{key:'getBranchPathTakenConstraintsByNodeId',value:function getBranchPathTakenConstraintsByNodeId(nodeId){var branchPathTakenConstraints=[];if(nodeId!=null){// get the node
+var node=this.getNodeById(nodeId);if(node!=null){// get the constraints from the node
+var constraints=node.constraints;if(constraints!=null){// loop through all the constraints
+for(var c=0;c<constraints.length;c++){var constraint=constraints[c];if(constraint!=null){// get the removal criteria from the constraint
+var removalCriteria=constraint.removalCriteria;if(removalCriteria!=null){// loop through all the removal criteria
+for(var rc=0;rc<removalCriteria.length;rc++){var removalCriterion=removalCriteria[rc];if(removalCriterion!=null){if(removalCriterion.name=='branchPathTaken'){/*
+                                             * we have found a branch path taken constraint so 
+                                             * we will add the constraint to the array
+                                             */branchPathTakenConstraints.push(constraint);break;}}}}}}}}}return branchPathTakenConstraints;}}]);return ProjectService;}();ProjectService.$inject=['$filter','$http','$injector','$q','$rootScope','ConfigService','UtilService'];exports.default=ProjectService;
 //# sourceMappingURL=projectService.js.map
