@@ -2809,20 +2809,38 @@ class GraphController {
      * @param trialIndex the index (in the trials array) of the trial to delete
      */
     deleteTrial(trialIndex) {
-        /*
-         * get the index of the active trial which will be the trial we are
-         * going to delete
-         */
-        //var trialIndex = this.trials.indexOf(this.activeTrial);
 
         if (trialIndex == null) {
             trialIndex = this.trials.indexOf(this.activeTrial);
         }
 
         if (trialIndex != null && trialIndex != -1) {
+            
+            // get the trial to remove
+            var trialToRemove = this.trials[trialIndex];
+            
+            // get the trial id of the trial to remove
+            var trialToRemoveId = trialToRemove.id;
+            
             // remove the trial from the array of trials
             this.trials.splice(trialIndex, 1);
-
+            
+            // remove the trial id from the trial ids to show array
+            for (var t = 0; t < this.trialIdsToShow.length; t++) {
+                if (trialToRemoveId == this.trialIdsToShow[t]) {
+                    // remove the trial id
+                    this.trialIdsToShow.splice(t, 1);
+                    
+                    /*
+                     * move the counter back one because we have just removed
+                     * an element from the array. a trial id should never show
+                     * up more than once in the trialIdsToShow array but we
+                     * will go through the whole array just to be safe.
+                     */
+                    t--;
+                }
+            }
+            
             if (this.trials.length == 0) {
                 // there are no more trials so we will create a new empty trial
                 this.newTrial();
@@ -2831,18 +2849,60 @@ class GraphController {
                 this.setXAxis(this.componentContent.xAxis);
                 this.setYAxis(this.componentContent.yAxis);
             } else if (this.trials.length > 0) {
-                // set the active trial to the next highest trial number
-                if (trialIndex > (this.trials.length - 1)) {
-                    /*
-                     * the trial index is higher than any available index
-                     * in the trials array so we will just use the last index
-                     */
-                    this.activeTrial = this.trials[this.trials.length - 1];
-                    this.activeTrialChanged(this.trials.length - 1);
-                } else {
-                    // make the next highest trial the active trial
-                    this.activeTrial = this.trials[trialIndex];
-                    this.activeTrialChanged(trialIndex);
+                if (trialToRemove == this.activeTrial) {
+                    // remove the references to the trial that we are deleting
+                    this.activeTrial = null;
+                    this.activeSeries = null;
+                    this.series = null;
+                    
+                    // make the highest shown trial the active trial
+                    var highestTrialIndex = null;
+                    var highestTrial = null;
+                    
+                    // loop through the shown trials
+                    for (var t = 0; t < this.trialIdsToShow.length; t++) {
+                        var trialId = this.trialIdsToShow[t];
+                        
+                        // get one of the shown trials
+                        var trial = this.getTrialById(trialId);
+                        
+                        if (trial != null) {
+                            
+                            // get the trial index
+                            var trialIndex = this.getTrialIndex(trial);
+                            
+                            if (trialIndex != null) {
+                                
+                                if (highestTrialIndex == null || trialIndex > highestTrialIndex) {
+                                    /*
+                                     * this is the highest trial we have seen so
+                                     * far so we will remember it
+                                     */
+                                    highestTrialIndex = trialIndex;
+                                    highestTrial = trial;
+                                }
+                            }
+                        }
+                    }
+                    
+                    if (highestTrial != null) {
+                        /*
+                         * get the index of the active series so that we can set the
+                         * same series to be active in the new active trial
+                         */
+                        var seriesIndex = this.getSeriesIndex(this.activeSeries);
+                        
+                        // set the highest shown trial to be the active trial
+                        this.activeTrial = highestTrial;
+                        
+                        // set the series
+                        this.setSeries(this.activeTrial.series);
+                        
+                        if (seriesIndex != null) {
+                            // set the active series
+                            this.setActiveSeriesByIndex(seriesIndex);
+                        }
+                    }
                 }
             }
 
@@ -2854,6 +2914,9 @@ class GraphController {
          * changed so that it will perform any necessary saving
          */
         this.studentDataChanged();
+        
+        // update the selected trial text
+        this.selectedTrialsText = this.getSelectedTrialsText();
 
         // tell the parent node that this component wants to save
         //this.$scope.$emit('componentSaveTriggered', {nodeId: this.nodeId, componentId: this.componentId});
@@ -2869,6 +2932,14 @@ class GraphController {
 
         if (activeTrial != null) {
 
+            // get the index of the active series
+            var seriesIndex = this.getSeriesIndex(this.activeSeries);
+
+            if (seriesIndex == null) {
+                // default the index to 0
+                seriesIndex = 0;
+            }
+
             // get the series from the trial
             var series = activeTrial.series;
 
@@ -2876,9 +2947,10 @@ class GraphController {
             this.series = series;
 
             /*
-             * set the active series index to the first series in the active trial
+             * set the active series index to the same series index of the
+             * previously active series
              */
-            this.setActiveSeriesByIndex(0);
+            this.setActiveSeriesByIndex(seriesIndex);
 
             // redraw the graph
             this.setupGraph();
@@ -2906,13 +2978,49 @@ class GraphController {
         for (let i = 0; i < trials.length; i++) {
             let trial = trials[i];
             let id = trial.id;
+            
             if (trialIdsToShow.indexOf(id) > -1) {
                 trial.show = true;
             } else {
                 trial.show = false;
+                
+                if (this.activeTrial != null && this.activeTrial.id == id) {
+                    // the active trial is no longer shown
+                    this.activeTrial = null;
+                    this.activeSeries = null;
+                    this.series = null;
+                }
             }
         }
-
+        
+        // get the latest trial that was checked and make it the active trial
+        if (this.trialIdsToShow.length > 0) {
+            
+            // get the latest trial that was checked
+            var lastShownTrialId = this.trialIdsToShow[this.trialIdsToShow.length - 1];
+            var lastShownTrial = this.getTrialById(lastShownTrialId);
+            
+            if (lastShownTrial != null) {
+                
+                /*
+                 * get the index of the active series so that we can set the
+                 * same series to active in the new active trial
+                 */
+                var seriesIndex = this.getSeriesIndex(this.activeSeries);
+                
+                // set the last shown trial to be the active trial
+                this.activeTrial = lastShownTrial;
+                
+                // set the series
+                this.setSeries(this.activeTrial.series);
+                
+                if (seriesIndex != null) {
+                    // set the active series
+                    this.setActiveSeriesByIndex(seriesIndex);
+                }
+            }
+        }
+        
         // hack: for some reason, the ids to show model gets out of sync when deleting a trial, for example
         // TODO: figure out why this check is sometimes necessary and remove
         for (let a = 0; a < trialIdsToShow.length; a++) {
