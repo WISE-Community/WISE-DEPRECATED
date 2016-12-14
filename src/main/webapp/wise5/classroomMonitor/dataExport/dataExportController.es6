@@ -247,9 +247,17 @@ class DataExportController {
                         // get the student data JSON and extract responses into its own column
                         let studentDataJSONCell = row[COLUMN_INDEX_STUDENT_DATA];
                         if (row[COLUMN_INDEX_TYPE] === "report") {
-                            row[COLUMN_INDEX_STUDENT_RESPONSE] = studentDataJSONCell.content || "";
+                            if (studentDataJSONCell.content != null) {
+                                row[COLUMN_INDEX_STUDENT_RESPONSE] = this.escapeContent(studentDataJSONCell.content);
+                            } else {
+                                row[COLUMN_INDEX_STUDENT_RESPONSE] = "";
+                            }
                         } else if (row[COLUMN_INDEX_TYPE] === "note") {
-                            row[COLUMN_INDEX_STUDENT_RESPONSE] = studentDataJSONCell.text || "";
+                            if (studentDataJSONCell.text != null) {
+                                row[COLUMN_INDEX_STUDENT_RESPONSE] = this.escapeContent(studentDataJSONCell.text);
+                            } else {
+                                row[COLUMN_INDEX_STUDENT_RESPONSE] = "";
+                            }
                         }
                     }
 
@@ -311,6 +319,13 @@ class DataExportController {
              });
              */
         });
+    }
+
+    escapeContent(str) {
+        return str
+            .replace(/[\n]/g, '\\n')
+            .replace(/[\r]/g, '\\r')
+            .replace(/[\t]/g, '\\t');
     }
 
     /**
