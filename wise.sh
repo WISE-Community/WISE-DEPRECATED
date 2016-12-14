@@ -45,15 +45,18 @@ else
     # copy sample property file and set paths automatically
     cp $SAMPLE_PROPERTIES_FILE $PROPERTIES_FILE
     sed -i.bak '/wiseBaseDir=.*/d' $PROPERTIES_FILE
-    echo "wiseBaseDir=$PWD/src/main/webapp/" >> $PROPERTIES_FILE
+    echo "wiseBaseDir=src/main/webapp/" >> $PROPERTIES_FILE
     sed -i.bak '/curriculum_base_dir=.*/d' $PROPERTIES_FILE
-    echo "curriculum_base_dir=$PWD/src/main/webapp/curriculum" >> $PROPERTIES_FILE
+    echo "curriculum_base_dir=src/main/webapp/curriculum" >> $PROPERTIES_FILE
     sed -i.bak '/studentuploads_base_dir=.*/d' $PROPERTIES_FILE
-    echo "studentuploads_base_dir=$PWD/src/main/webapp/studentuploads" >> $PROPERTIES_FILE
+    echo "studentuploads_base_dir=src/main/webapp/studentuploads" >> $PROPERTIES_FILE
 
     # prepare to recreate db tables
     sed -i.bak '/hibernate.hbm2ddl.auto=[none|create]/d' $PROPERTIES_FILE
     echo "hibernate.hbm2ddl.auto=create" >> $PROPERTIES_FILE
+
+    # starts npm watch-all in background, which transpiles es6 to js and watches changes to sass files
+    npm run watch-all&
 
     # start embedded tomcat
     mvn clean compile tomcat7:run
@@ -62,6 +65,9 @@ else
     # make sure db tables are not wiped out
     sed -i.bak '/hibernate.hbm2ddl.auto=[none|create]/d' $PROPERTIES_FILE
     echo "hibernate.hbm2ddl.auto=none" >> $PROPERTIES_FILE
+
+    # starts npm watch-all in background, which transpiles es6 to js and watches changes to sass files
+    npm run watch-all&
 
     # start embedded tomcat
     mvn clean compile tomcat7:run
