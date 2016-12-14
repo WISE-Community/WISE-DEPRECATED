@@ -275,9 +275,17 @@ var DataExportController = function () {
                             // get the student data JSON and extract responses into its own column
                             var studentDataJSONCell = row[_COLUMN_INDEX_STUDENT_DATA];
                             if (row[COLUMN_INDEX_TYPE] === "report") {
-                                row[_COLUMN_INDEX_STUDENT_RESPONSE] = studentDataJSONCell.content || "";
+                                if (studentDataJSONCell.content != null) {
+                                    row[_COLUMN_INDEX_STUDENT_RESPONSE] = _this2.escapeContent(studentDataJSONCell.content);
+                                } else {
+                                    row[_COLUMN_INDEX_STUDENT_RESPONSE] = "";
+                                }
                             } else if (row[COLUMN_INDEX_TYPE] === "note") {
-                                row[_COLUMN_INDEX_STUDENT_RESPONSE] = studentDataJSONCell.text || "";
+                                if (studentDataJSONCell.text != null) {
+                                    row[_COLUMN_INDEX_STUDENT_RESPONSE] = _this2.escapeContent(studentDataJSONCell.text);
+                                } else {
+                                    row[_COLUMN_INDEX_STUDENT_RESPONSE] = "";
+                                }
                             }
                         }
 
@@ -336,6 +344,11 @@ var DataExportController = function () {
                  });
                  */
             });
+        }
+    }, {
+        key: "escapeContent",
+        value: function escapeContent(str) {
+            return str.replace(/[\n]/g, '\\n').replace(/[\r]/g, '\\r').replace(/[\t]/g, '\\t');
         }
 
         /**
