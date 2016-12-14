@@ -2669,7 +2669,7 @@ class GraphController {
 
         var result = false;
 
-        if (this.series.indexOf(this.activeSeries) === seriesIndex) {
+        if (this.series != null && this.series.indexOf(this.activeSeries) === seriesIndex) {
             // the series is the active series
             result = true;
         }

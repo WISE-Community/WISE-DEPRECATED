@@ -775,7 +775,7 @@ var result=this.isActiveSeriesIndex(seriesIndex);return result;}/**
      * one active series.
      * @param seriesIndex the series index
      * @returns whether the series is the active series
-     */},{key:'isActiveSeriesIndex',value:function isActiveSeriesIndex(seriesIndex){var result=false;if(this.series.indexOf(this.activeSeries)===seriesIndex){// the series is the active series
+     */},{key:'isActiveSeriesIndex',value:function isActiveSeriesIndex(seriesIndex){var result=false;if(this.series!=null&&this.series.indexOf(this.activeSeries)===seriesIndex){// the series is the active series
 result=true;}return result;}/**
      * Whether to show the select series input
      * @returns whether to show the select series input
