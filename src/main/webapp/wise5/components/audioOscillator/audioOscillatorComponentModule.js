@@ -14,7 +14,9 @@ var _audioOscillatorController2 = _interopRequireDefault(_audioOscillatorControl
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var audioOscillatorComponentModule = angular.module('audioOscillatorComponentModule', []).service(_audioOscillatorService2.default.name, _audioOscillatorService2.default).controller(_audioOscillatorController2.default.name, _audioOscillatorController2.default);
+var audioOscillatorComponentModule = angular.module('audioOscillatorComponentModule', ['pascalprecht.translate']).service(_audioOscillatorService2.default.name, _audioOscillatorService2.default).controller(_audioOscillatorController2.default.name, _audioOscillatorController2.default).config(['$translatePartialLoaderProvider', function ($translatePartialLoaderProvider) {
+    $translatePartialLoaderProvider.addPart('components/audioOscillator/i18n');
+}]);
 
 exports.default = audioOscillatorComponentModule;
 //# sourceMappingURL=audioOscillatorComponentModule.js.map

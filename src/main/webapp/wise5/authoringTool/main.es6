@@ -84,7 +84,7 @@ let authoringModule = angular.module('authoring', [
     'pascalprecht.translate',
     'tableComponentModule',
     'ui.router'
-])
+    ])
     .service(AnnotationService.name, AnnotationService)
     .service(AuthorWebSocketService.name, AuthorWebSocketService)
     .service(ConfigService.name, ConfigService)
@@ -110,18 +110,19 @@ let authoringModule = angular.module('authoring', [
     .controller(ProjectAssetController.name, ProjectAssetController)
     .controller(ProjectController.name, ProjectController)
     .controller(ProjectHistoryController.name, ProjectHistoryController)
-    .config(['$urlRouterProvider',
+    .config([
+        '$urlRouterProvider',
         '$stateProvider',
         '$translateProvider',
         '$translatePartialLoaderProvider',
         '$controllerProvider',
         '$mdThemingProvider',
-        function($urlRouterProvider,
-                 $stateProvider,
-                 $translateProvider,
-                 $translatePartialLoaderProvider,
-                 $controllerProvider,
-                 $mdThemingProvider) {
+        ($urlRouterProvider,
+         $stateProvider,
+         $translateProvider,
+         $translatePartialLoaderProvider,
+         $controllerProvider,
+         $mdThemingProvider) => {
 
             $urlRouterProvider.otherwise('/');
 
@@ -243,17 +244,18 @@ let authoringModule = angular.module('authoring', [
                 });
 
             // Set up Translations
-            $translatePartialLoaderProvider.addPart('common');
-            $translatePartialLoaderProvider.addPart('authoringTool');
+            $translatePartialLoaderProvider.addPart('i18n/common');
+            $translatePartialLoaderProvider.addPart('i18n/authoringTool');
             $translateProvider.useLoader('$translatePartialLoader', {
-                urlTemplate: 'wise5/i18n/{part}/i18n_{lang}.json'
-            });
-            $translateProvider.fallbackLanguage(['en']);
-            $translateProvider.registerAvailableLanguageKeys(['en','es','ja','ko','pt','tr','zh_CN'], {
+                urlTemplate: 'wise5/{part}/i18n_{lang}.json'
+            })
+            .fallbackLanguage(['en'])
+            .registerAvailableLanguageKeys(['en','es','ja','ko','pt','tr','zh_CN'], {
                 'en_US': 'en',
                 'en_UK': 'en'
-            });
-            $translateProvider.useSanitizeValueStrategy('sanitizeParameters', 'escape');
+            })
+            .determinePreferredLanguage()
+            .useSanitizeValueStrategy('sanitizeParameters', 'escape');
 
             // ngMaterial default theme configuration
             // TODO: make dynamic and support alternate themes; allow projects to specify theme parameters and settings

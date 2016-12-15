@@ -14,7 +14,9 @@ var _embeddedController2 = _interopRequireDefault(_embeddedController);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var embeddedComponentModule = angular.module('embeddedComponentModule', []).service(_embeddedService2.default.name, _embeddedService2.default).controller(_embeddedController2.default.name, _embeddedController2.default);
+var embeddedComponentModule = angular.module('embeddedComponentModule', ['pascalprecht.translate']).service(_embeddedService2.default.name, _embeddedService2.default).controller(_embeddedController2.default.name, _embeddedController2.default).config(['$translatePartialLoaderProvider', function ($translatePartialLoaderProvider) {
+    $translatePartialLoaderProvider.addPart('components/embedded/i18n');
+}]);
 
 exports.default = embeddedComponentModule;
 //# sourceMappingURL=embeddedComponentModule.js.map

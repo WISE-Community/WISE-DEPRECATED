@@ -20,7 +20,7 @@
                   rows='2'
                   cols='100'></textarea>
         <br/>
-        Show Save Button:
+        {{ 'showSaveButton' | translate }}:
         <input type='checkbox'
                ng-model='openResponseController.authoringComponentContent.showSaveButton'
                ng-change='openResponseController.authoringViewComponentChanged()'/>

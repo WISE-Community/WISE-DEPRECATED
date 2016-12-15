@@ -7,7 +7,7 @@
                               rows='10'
                               cols='100'></textarea>
                     <br/>
-                    Show Save Button:
+                    {{ 'showSaveButton' | translate }}:
                     <input type='checkbox'
                            ng-model='tableController.authoringComponentContent.showSaveButton'
                            ng-change='tableController.authoringViewComponentChanged()'/>
@@ -141,7 +141,7 @@
             </md-button>
         </div>
         <md-button class="md-accent" ng-click='tableController.resetTable()' ng-show='tableController.showResetTableButton()'>
-            <md-icon> restore </md-icon> Reset
+            <md-icon> restore </md-icon> {{ 'reset' | translate }}
         </md-button>
         <md-button class="md-accent"
                    ng-click='tableController.snipTable($event)'
