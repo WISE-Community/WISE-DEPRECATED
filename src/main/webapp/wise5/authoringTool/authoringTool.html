@@ -2,12 +2,33 @@
 <link rel="stylesheet" href="wise5/themes/default/style/angular-material.css">
 <link rel="stylesheet" href="wise5/themes/default/style/vle.css">
 
+<style>
+.global-message.ng-change {
+    transition: 2s linear all;
+    background: red;
+}
+</style>
+
 <div ng-mousemove="authoringToolController.mouseMoved()">
-<button id="exitAuthoringToolButton" ng-click="authoringToolController.exit()" translate="backToTeacherHome"></button>
-<button id="backToMyProjectsAuthoringToolButton" 
-    ng-click="authoringToolController.goToMyProjects()" 
-    ng-show="!authoringToolController.isAuthorOnMyProjectsPage()"
-    translate="backToMyProjects"></button>
+    <table style="width:100%">
+        <tr>
+            <td style="width:15%">
+                <button id="exitAuthoringToolButton" ng-click="authoringToolController.exit()" translate="backToTeacherHome"></button>
+            </td>
+            <td style="width:15%">
+                <button id="backToMyProjectsAuthoringToolButton" 
+                    ng-click="authoringToolController.goToMyProjects()" 
+                    ng-show="!authoringToolController.isAuthorOnMyProjectsPage()"
+                    translate="backToMyProjects"></button>
+            </td>
+            <td style="width:70%;text-align:right">
+                <span ng-show="authoringToolController.globalMessage.text"
+                      class="component__actions__info md-caption global-message">
+                      {{authoringToolController.globalMessage.text}} <span class="component__actions__more"><md-tooltip md-direction="top">{{ authoringToolController.globalMessage.time | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip><span am-time-ago="authoringToolController.globalMessage.time"></span></span>
+                </span>
+            </td>
+        </tr>
+    </table>
 <hr/>
 <div ui-view></div>
 </div>

@@ -9,7 +9,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var AuthoringToolController = function () {
-    function AuthoringToolController($location, $mdDialog, $scope, $translate, ConfigService, ProjectService, SessionService) {
+    function AuthoringToolController($location, $mdDialog, $scope, $timeout, $translate, ConfigService, ProjectService, SessionService) {
         var _this = this;
 
         _classCallCheck(this, AuthoringToolController);
@@ -17,10 +17,17 @@ var AuthoringToolController = function () {
         this.$location = $location;
         this.$mdDialog = $mdDialog;
         this.$scope = $scope;
+        this.$timeout = $timeout;
         this.$translate = $translate;
         this.ConfigService = ConfigService;
         this.ProjectService = ProjectService;
         this.SessionService = SessionService;
+
+        // the global message that shows up at the top right of the authoring tool
+        this.globalMessage = {
+            text: '',
+            time: ''
+        };
 
         $scope.$on('showSessionWarning', function () {
 
@@ -46,6 +53,35 @@ var AuthoringToolController = function () {
                     // do nothing
                 });
             });
+        });
+
+        /*
+         * Listen for the savingProject event which means the authoring tool
+         * is in the process of saving the project
+         */
+        this.$scope.$on('savingProject', function () {
+            // display the message to show that the project is being saved
+            _this.setGlobalMessage('Saving...', null);
+        });
+
+        /*
+         * Listen for the projectSaved event which means the project has just
+         * been saved to the server
+         */
+        this.$scope.$on('projectSaved', function () {
+
+            /*
+             * Wait half a second before changing the message to 'Saved' so that
+             * the 'Saving...' message stays up long enough for the author to
+             * see that the project is saving. If we don't perform this wait,
+             * it will always say 'Saved' and authors may wonder whether the
+             * project ever gets saved.
+             */
+            _this.$timeout(function () {
+                // get the current time stamp and set the 'Saved' message
+                var clientSaveTime = new Date().getTime();
+                _this.setGlobalMessage('Saved', clientSaveTime);
+            }, 500);
         });
     }
 
@@ -109,12 +145,25 @@ var AuthoringToolController = function () {
                 window.location = teacherHomePageURL;
             });
         }
+
+        /**
+         * Set the global message at the top right
+         * @param message the message to display
+         * @param time the time to display
+         */
+
+    }, {
+        key: 'setGlobalMessage',
+        value: function setGlobalMessage(message, time) {
+            this.globalMessage.text = message;
+            this.globalMessage.time = time;
+        }
     }]);
 
     return AuthoringToolController;
 }();
 
-AuthoringToolController.$inject = ['$location', '$mdDialog', '$scope', '$translate', 'ConfigService', 'ProjectService', 'SessionService'];
+AuthoringToolController.$inject = ['$location', '$mdDialog', '$scope', '$timeout', '$translate', 'ConfigService', 'ProjectService', 'SessionService', 'moment'];
 
 exports.default = AuthoringToolController;
 //# sourceMappingURL=authoringToolController.js.map

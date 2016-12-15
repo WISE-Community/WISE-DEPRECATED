@@ -5,19 +5,26 @@ class AuthoringToolController {
     constructor($location,
                 $mdDialog,
                 $scope,
+                $timeout,
                 $translate,
                 ConfigService,
                 ProjectService,
-                SessionService
-                ) {
+                SessionService) {
 
         this.$location = $location;
         this.$mdDialog = $mdDialog;
         this.$scope = $scope;
+        this.$timeout = $timeout;
         this.$translate = $translate;
         this.ConfigService = ConfigService;
         this.ProjectService = ProjectService;
         this.SessionService = SessionService;
+        
+        // the global message that shows up at the top right of the authoring tool
+        this.globalMessage = {
+            text: '',
+            time: ''
+        };
 
         $scope.$on('showSessionWarning', () => {
 
@@ -57,6 +64,35 @@ class AuthoringToolController {
                 });
 
             });
+        });
+        
+        /*
+         * Listen for the savingProject event which means the authoring tool
+         * is in the process of saving the project
+         */
+        this.$scope.$on('savingProject', () => {
+            // display the message to show that the project is being saved
+            this.setGlobalMessage('Saving...', null);
+        });
+        
+        /*
+         * Listen for the projectSaved event which means the project has just
+         * been saved to the server
+         */
+        this.$scope.$on('projectSaved', () => {
+            
+            /*
+             * Wait half a second before changing the message to 'Saved' so that
+             * the 'Saving...' message stays up long enough for the author to
+             * see that the project is saving. If we don't perform this wait,
+             * it will always say 'Saved' and authors may wonder whether the
+             * project ever gets saved.
+             */
+            this.$timeout(() => {
+                // get the current time stamp and set the 'Saved' message
+                var clientSaveTime = new Date().getTime();
+                this.setGlobalMessage('Saved', clientSaveTime);
+            }, 500);
         });
     }
     
@@ -107,8 +143,28 @@ class AuthoringToolController {
             window.location = teacherHomePageURL;
         })
     }
+    
+    /**
+     * Set the global message at the top right
+     * @param message the message to display
+     * @param time the time to display
+     */
+    setGlobalMessage(message, time) {
+        this.globalMessage.text = message;
+        this.globalMessage.time = time;
+    };
 }
 
-AuthoringToolController.$inject = ['$location', '$mdDialog', '$scope', '$translate', 'ConfigService', 'ProjectService', 'SessionService'];
+AuthoringToolController.$inject = [
+    '$location',
+    '$mdDialog',
+    '$scope',
+    '$timeout',
+    '$translate',
+    'ConfigService',
+    'ProjectService',
+    'SessionService',
+    'moment'
+];
 
 export default AuthoringToolController;

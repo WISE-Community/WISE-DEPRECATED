@@ -411,8 +411,8 @@ var NodeAuthoringController = function () {
          */
         value: function close() {
             // perform any node cleanup if necessary
-            var commitMessage = "Made changes to Step.";
-            this.ProjectService.saveProject(commitMessage);
+            //let commitMessage = "Made changes to Step.";
+            //this.ProjectService.saveProject(commitMessage);
 
             this.$scope.$broadcast('exitNode', { nodeToExit: this.node });
 

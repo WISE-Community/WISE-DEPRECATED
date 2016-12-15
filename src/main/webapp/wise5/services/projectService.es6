@@ -1668,7 +1668,7 @@ class ProjectService {
      * if Config.saveProjectURL or Config.projectId are undefined, does not save and returns null
      */
     saveProject(commitMessage = "") {
-
+        this.$rootScope.$broadcast('savingProject');
         // perform any cleanup before saving the project
         this.cleanupBeforeSave();
 
@@ -1694,6 +1694,7 @@ class ProjectService {
 
         return this.$http(httpParams).then((result) => {
             var commitHistory = result.data;
+            this.$rootScope.$broadcast('projectSaved');
             return commitHistory;
         });
     };

@@ -15,10 +15,7 @@ TODO: implement me. Allow authors to view assets while authoring node conent. Pe
             ng-show="!projectController.isGroupNode(nodeAuthoringController.node.id)"
             ng-disabled="nodeAuthoringController.undoStack.length == 0"
             translate="undo"></button>
-    <button ng-click="nodeAuthoringController.close()"
-            translate="saveAndClose"
-            ng-disabled="nodeAuthoringController.showEditTransitions"></button>
-    <button ng-click="nodeAuthoringController.cancel()" translate="close"></button>
+    <button ng-click="nodeAuthoringController.close()" translate="close"></button>
 </div>
 <div><span ng-show="!projectController.isGroupNode(nodeAuthoringController.node.id)" translate="stepTitle"></span>
      <span ng-show="projectController.isGroupNode(nodeAuthoringController.node.id)" translate="activityTitle"></span>

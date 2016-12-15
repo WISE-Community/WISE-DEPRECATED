@@ -264,19 +264,19 @@ return _this2.$http.get(projectURL).then(function(result){var projectJSON=result
                              */projectJSON.previewProjectURL=previewProjectURL;return projectJSON;});}}});}}/**
      * Saves the project to Config.saveProjectURL and returns commit history promise.
      * if Config.saveProjectURL or Config.projectId are undefined, does not save and returns null
-     */},{key:'saveProject',value:function saveProject(){var commitMessage=arguments.length<=0||arguments[0]===undefined?"":arguments[0];// perform any cleanup before saving the project
+     */},{key:'saveProject',value:function saveProject(){var _this3=this;var commitMessage=arguments.length<=0||arguments[0]===undefined?"":arguments[0];this.$rootScope.$broadcast('savingProject');// perform any cleanup before saving the project
 this.cleanupBeforeSave();var projectId=this.ConfigService.getProjectId();var saveProjectURL=this.ConfigService.getConfigParam('saveProjectURL');if(projectId==null||saveProjectURL==null){return null;}// Get the project from this service
-var projectJSONString=angular.toJson(this.project,4);var httpParams={};httpParams.method='POST';httpParams.url=saveProjectURL;httpParams.headers={'Content-Type':'application/x-www-form-urlencoded'};var params={};params.projectId=projectId;params.commitMessage=commitMessage;params.projectJSONString=projectJSONString;httpParams.data=$.param(params);return this.$http(httpParams).then(function(result){var commitHistory=result.data;return commitHistory;});}},{key:'getCurrentAuthors',/**
+var projectJSONString=angular.toJson(this.project,4);var httpParams={};httpParams.method='POST';httpParams.url=saveProjectURL;httpParams.headers={'Content-Type':'application/x-www-form-urlencoded'};var params={};params.projectId=projectId;params.commitMessage=commitMessage;params.projectJSONString=projectJSONString;httpParams.data=$.param(params);return this.$http(httpParams).then(function(result){var commitHistory=result.data;_this3.$rootScope.$broadcast('projectSaved');return commitHistory;});}},{key:'getCurrentAuthors',/**
      * Get the current authors for this project
      * @param projectId
-     */value:function getCurrentAuthors(){var _this3=this;var projectId=arguments.length<=0||arguments[0]===undefined?null:arguments[0];return this.$q(function(resolve,reject){if(projectId==null){if(_this3.project!=null){projectId=_this3.ConfigService.getProjectId();}else{// we're not editing any projects, so there are no authors
-resolve([]);}}var notifyProjectEndURL=_this3.ConfigService.getConfigParam('getCurrentAuthorsURL')+projectId;var httpParams={};httpParams.method='GET';httpParams.url=notifyProjectEndURL;_this3.$http(httpParams).then(function(result){resolve(result.data);});});}},{key:'notifyAuthorProjectBegin',/**
+     */value:function getCurrentAuthors(){var _this4=this;var projectId=arguments.length<=0||arguments[0]===undefined?null:arguments[0];return this.$q(function(resolve,reject){if(projectId==null){if(_this4.project!=null){projectId=_this4.ConfigService.getProjectId();}else{// we're not editing any projects, so there are no authors
+resolve([]);}}var notifyProjectEndURL=_this4.ConfigService.getConfigParam('getCurrentAuthorsURL')+projectId;var httpParams={};httpParams.method='GET';httpParams.url=notifyProjectEndURL;_this4.$http(httpParams).then(function(result){resolve(result.data);});});}},{key:'notifyAuthorProjectBegin',/**
      * Notifies others that the specified project is being authored
      * @param projectId id of the project
      */value:function notifyAuthorProjectBegin(){var projectId=arguments.length<=0||arguments[0]===undefined?null:arguments[0];if(projectId==null){if(this.project!=null){projectId=this.project.id;}else{return;}}var notifyProjectBeginURL=this.ConfigService.getConfigParam('notifyProjectBeginURL')+projectId;var httpParams={};httpParams.method='POST';httpParams.url=notifyProjectBeginURL;return this.$http(httpParams).then(function(result){var otherAuthors=result.data;return otherAuthors;});}/**
      * Notifies others that the specified project is being authored
      * @param projectId id of the project
-     */},{key:'notifyAuthorProjectEnd',value:function notifyAuthorProjectEnd(){var _this4=this;var projectId=arguments.length<=0||arguments[0]===undefined?null:arguments[0];return this.$q(function(resolve,reject){if(projectId==null){if(_this4.project!=null){projectId=_this4.ConfigService.getProjectId();}else{resolve();}}var notifyProjectEndURL=_this4.ConfigService.getConfigParam('notifyProjectEndURL')+projectId;var httpParams={};httpParams.method='POST';httpParams.url=notifyProjectEndURL;_this4.$http(httpParams).then(function(){resolve();});});}/**
+     */},{key:'notifyAuthorProjectEnd',value:function notifyAuthorProjectEnd(){var _this5=this;var projectId=arguments.length<=0||arguments[0]===undefined?null:arguments[0];return this.$q(function(resolve,reject){if(projectId==null){if(_this5.project!=null){projectId=_this5.ConfigService.getProjectId();}else{resolve();}}var notifyProjectEndURL=_this5.ConfigService.getConfigParam('notifyProjectEndURL')+projectId;var httpParams={};httpParams.method='POST';httpParams.url=notifyProjectEndURL;_this5.$http(httpParams).then(function(){resolve();});});}/**
      * Perform any necessary cleanup before we save the project.
      * For example we need to remove the checked field in the inactive node
      * objects.
@@ -1770,7 +1770,7 @@ var node=this.project.inactiveNodes[n];if(node!=null){if(nodeId===node.id){retur
      * @param selectedNodes the nodes to import
      * @param fromProjectId copy the nodes from this project
      * @param toProjectId copy the nodes into this project
-     */},{key:'copyNodes',value:function copyNodes(selectedNodes,fromProjectId,toProjectId){var _this5=this;// get the import steps URL
+     */},{key:'copyNodes',value:function copyNodes(selectedNodes,fromProjectId,toProjectId){var _this6=this;// get the import steps URL
 var importStepsURL=this.ConfigService.getConfigParam('importStepsURL');var httpParams={};httpParams.method='POST';httpParams.url=importStepsURL;httpParams.headers={'Content-Type':'application/x-www-form-urlencoded'};// set the POST params
 var params={};params.steps=angular.toJson(selectedNodes);params.fromProjectId=fromProjectId;params.toProjectId=toProjectId;httpParams.data=$.param(params);/*
          * Make the request to import the steps. This will copy the asset files
@@ -1782,7 +1782,7 @@ var params={};params.steps=angular.toJson(selectedNodes);params.fromProjectId=fr
          * name.
          */return this.$http(httpParams).then(function(result){// get the selected nodes from the result that may have been modified
 selectedNodes=result.data;// get the inactive nodes from the project
-var inactiveNodes=_this5.getInactiveNodes();// we will insert the steps into the inactive steps
+var inactiveNodes=_this6.getInactiveNodes();// we will insert the steps into the inactive steps
 var nodeIdToInsertAfter='inactiveSteps';// loop through the nodes we will import
 for(var n=0;n<selectedNodes.length;n++){// get a node
 var selectedNode=selectedNodes[n];if(selectedNode!=null){/*
@@ -1791,20 +1791,20 @@ var selectedNode=selectedNodes[n];if(selectedNode!=null){/*
                      * inactive nodes section. In the latter case we do this by
                      * setting nodeIdToInsertAfter to 'inactiveSteps'.
                      */if(inactiveNodes!=null&&inactiveNodes.length>0){nodeIdToInsertAfter=inactiveNodes[inactiveNodes.length-1];}// make a copy of the node so that we don't modify the source
-var tempNode=_this5.UtilService.makeCopyOfJSONObject(selectedNode);// check if the node id is already being used in the current project
-if(_this5.isNodeIdUsed(tempNode.id)){// the node id is already being used in the current project
+var tempNode=_this6.UtilService.makeCopyOfJSONObject(selectedNode);// check if the node id is already being used in the current project
+if(_this6.isNodeIdUsed(tempNode.id)){// the node id is already being used in the current project
 // get the next available node id
-var nextAvailableNodeId=_this5.getNextAvailableNodeId();// change the node id of the node we are importing
+var nextAvailableNodeId=_this6.getNextAvailableNodeId();// change the node id of the node we are importing
 tempNode.id=nextAvailableNodeId;}// get the components in the node
 var tempComponents=tempNode.components;if(tempComponents!=null){// loop through all the components in the node we are importing
 for(var c=0;c<tempComponents.length;c++){// get a component
 var tempComponent=tempComponents[c];if(tempComponent!=null){// check if the component id is already being used
-if(_this5.isComponentIdUsed(tempComponent.id)){// we are already using the component id so we will need to change it
+if(_this6.isComponentIdUsed(tempComponent.id)){// we are already using the component id so we will need to change it
 // find a component id that isn't currently being used
-var newComponentId=_this5.getUnusedComponentId();// set the new component id into the component
+var newComponentId=_this6.getUnusedComponentId();// set the new component id into the component
 tempComponent.id=newComponentId;}}}}// clear the constraints
 tempNode.constraints=[];// add the imported node to the end of the inactive nodes
-_this5.addInactiveNode(tempNode,nodeIdToInsertAfter);}}});}/**
+_this6.addInactiveNode(tempNode,nodeIdToInsertAfter);}}});}/**
      * Get the next available constraint id for a node
      * @param nodeId get the next available constraint id for this node
      * e.g. node8Constraint2
