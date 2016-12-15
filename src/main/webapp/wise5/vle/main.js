@@ -325,17 +325,14 @@ var vleModule = _angular2.default.module('vle', [(0, _angularDragula2.default)(_
     $httpProvider.interceptors.push('HttpInterceptor');
 
     // Set up Translations
-    $translatePartialLoaderProvider.addPart('common');
-    $translatePartialLoaderProvider.addPart('vle');
+    $translatePartialLoaderProvider.addPart('i18n/common');
+    $translatePartialLoaderProvider.addPart('i18n/vle');
     $translateProvider.useLoader('$translatePartialLoader', {
-        urlTemplate: 'wise5/i18n/{part}/i18n_{lang}.json'
-    });
-    $translateProvider.fallbackLanguage(['en']);
-    $translateProvider.registerAvailableLanguageKeys(['en', 'ja', 'ko', 'pt', 'tr', 'zh_CN'], {
+        urlTemplate: 'wise5/{part}/i18n_{lang}.json'
+    }).fallbackLanguage(['en']).registerAvailableLanguageKeys(['en', 'es', 'ja', 'ko', 'pt', 'tr', 'zh_CN'], {
         'en_US': 'en',
         'en_UK': 'en'
-    });
-    $translateProvider.useSanitizeValueStrategy('sanitizeParameters', 'escape');
+    }).determinePreferredLanguage().useSanitizeValueStrategy('sanitizeParameters', 'escape');
 
     // ngMaterial default theme configuration
     // TODO: make dynamic and support alternate themes; allow projects to specify theme parameters and settings

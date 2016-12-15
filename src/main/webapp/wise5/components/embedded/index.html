@@ -9,7 +9,7 @@
                    ng-model-options='{ debounce: 1000 }'
                    size='50'/>
             <br/>
-            Show Save Button:
+            {{ 'showSaveButton' | translate }}:
             <input type='checkbox'
                    ng-model='embeddedController.authoringComponentContent.showSaveButton'
                    ng-change='embeddedController.authoringViewComponentChanged()'/>

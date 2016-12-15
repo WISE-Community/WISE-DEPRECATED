@@ -14,7 +14,9 @@ var _drawController2 = _interopRequireDefault(_drawController);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var drawComponentModule = angular.module('drawComponentModule', []).service(_drawService2.default.name, _drawService2.default).controller(_drawController2.default.name, _drawController2.default);
+var drawComponentModule = angular.module('drawComponentModule', ['pascalprecht.translate']).service(_drawService2.default.name, _drawService2.default).controller(_drawController2.default.name, _drawController2.default).config(['$translatePartialLoaderProvider', function ($translatePartialLoaderProvider) {
+    $translatePartialLoaderProvider.addPart('components/draw/i18n');
+}]);
 
 exports.default = drawComponentModule;
 //# sourceMappingURL=drawComponentModule.js.map
