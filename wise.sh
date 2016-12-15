@@ -16,9 +16,9 @@ then
 fi
 
 # check for valid arguments
-if [ $1 != "reset" -a $1 != "run" ]
+if [ $1 != "reset" -a $1 != "run" -a $1 != "dev" ]
 then
-    echo "Usage: ./wise.sh {reset|run}"
+    echo "Usage: ./wise.sh {reset|run|dev}"
     exit 0
 fi
 
@@ -40,6 +40,13 @@ else
   then
     # properties file does not exist, assume this is a fresh install
     # install npm dependencies and jspm depedencies (happens in postinstall)
+    
+    if [ $1 = "dev" ]
+    then
+      # if in dev mode, make sure github token is registered so we don't run into rate limit
+      jspm registry config github
+    fi
+
     npm install
 
     # copy sample property file and set paths automatically
@@ -55,8 +62,11 @@ else
     sed -i.bak '/hibernate.hbm2ddl.auto=[none|create]/d' $PROPERTIES_FILE
     echo "hibernate.hbm2ddl.auto=create" >> $PROPERTIES_FILE
 
-    # starts npm watch-all in background, which transpiles es6 to js and watches changes to sass files
-    npm run watch-all&
+    if [ $1 = "dev" ]
+    then
+      # starts npm watch-all in background, which transpiles es6 to js and watches changes to sass files
+      npm run watch-all&
+    fi
 
     # start embedded tomcat
     mvn clean compile tomcat7:run
@@ -66,8 +76,11 @@ else
     sed -i.bak '/hibernate.hbm2ddl.auto=[none|create]/d' $PROPERTIES_FILE
     echo "hibernate.hbm2ddl.auto=none" >> $PROPERTIES_FILE
 
-    # starts npm watch-all in background, which transpiles es6 to js and watches changes to sass files
-    npm run watch-all&
+    if [ $1 = "dev" ]
+    then
+      # starts npm watch-all in background, which transpiles es6 to js and watches changes to sass files
+      npm run watch-all&
+    fi
 
     # start embedded tomcat
     mvn clean compile tomcat7:run
