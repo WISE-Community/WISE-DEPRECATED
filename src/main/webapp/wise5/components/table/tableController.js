@@ -344,7 +344,7 @@ var TableController = function () {
 
                 // set save message
                 if (isSubmit) {
-                    this.setSaveMessage('Submitted', clientSaveTime);
+                    this.setSaveMessage(this.$translate('submitted'), clientSaveTime);
 
                     this.submit();
 
@@ -352,9 +352,9 @@ var TableController = function () {
                     this.isSubmitDirty = false;
                     this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: false });
                 } else if (isAutoSave) {
-                    this.setSaveMessage('Auto-saved', clientSaveTime);
+                    this.setSaveMessage(this.$translate('autoSaved'), clientSaveTime);
                 } else {
-                    this.setSaveMessage('Saved', clientSaveTime);
+                    this.setSaveMessage(this.$translate('saved'), clientSaveTime);
                 }
             }
 
@@ -547,13 +547,13 @@ var TableController = function () {
                     this.isSubmitDirty = false;
                     this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: false });
                     // set save message
-                    this.setSaveMessage('Last submitted', clientSaveTime);
+                    this.setSaveMessage(this.$translate('lastSubmitted'), clientSaveTime);
                 } else {
                     // latest state is not a submission, so set isSubmitDirty to true and notify node
                     this.isSubmitDirty = true;
                     this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: true });
                     // set save message
-                    this.setSaveMessage('Last saved', clientSaveTime);
+                    this.setSaveMessage(this.$translate('lastSaved'), clientSaveTime);
                 }
             }
         }
@@ -1181,7 +1181,7 @@ var TableController = function () {
             if (rowOrColumn === 'rows') {
                 if (this.authoringComponentContent.numRows < oldValue) {
                     // author wants to decrease number of rows, so confirm
-                    var answer = confirm('Are you sure you want to decrease number of ' + rowOrColumn + '?');
+                    var answer = confirm(this.$translate('areYouSureYouWantToDecreaseTheNumberOfRows'));
                     if (answer) {
                         // author confirms yes, proceed with change
                         this.authoringViewTableSizeChanged();
@@ -1196,7 +1196,7 @@ var TableController = function () {
             } else if (rowOrColumn === 'columns') {
                 if (this.authoringComponentContent.numColumns < oldValue) {
                     // author wants to decrease number of columns, so confirm
-                    var answer = confirm('Are you sure you want to decrease number of ' + rowOrColumn + '?');
+                    var answer = confirm(this.$translate('areYouSureYouWantToDecreaseTheNumberOfColumns'));
                     if (answer) {
                         // author confirms yes, proceed with change
                         this.authoringViewTableSizeChanged();
@@ -1364,7 +1364,7 @@ var TableController = function () {
         key: 'authoringViewDeleteRow',
         value: function authoringViewDeleteRow(y) {
 
-            var answer = confirm('Are you sure you want to delete this column?');
+            var answer = confirm(this.$translate('areYouSureYouWantToDeleteThisRow'));
 
             if (answer) {
                 // get the table
@@ -1433,7 +1433,7 @@ var TableController = function () {
         key: 'authoringViewDeleteColumn',
         value: function authoringViewDeleteColumn(x) {
 
-            var answer = confirm('Are you sure you want to delete this column?');
+            var answer = confirm(this.$translate('areYouSureYouWantToDeleteThisColumn'));
 
             if (answer) {
                 // get the table
@@ -1882,7 +1882,7 @@ var TableController = function () {
                      */
 
                     // make sure the author really wants to change the component type
-                    var answer = confirm('Are you sure you want to change this component type?');
+                    var answer = confirm(this.$translate('areYouSureYouWantToChangeThisComponentType'));
 
                     if (answer) {
                         // the author wants to change the component type

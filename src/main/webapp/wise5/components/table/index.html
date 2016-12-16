@@ -12,22 +12,22 @@
                            ng-model='tableController.authoringComponentContent.showSaveButton'
                            ng-change='tableController.authoringViewComponentChanged()'/>
                     <br/>
-                    Show Submit Button:
+                    {{ 'showSubmitButton' | translate }}:
                     <input type='checkbox'
                            ng-model='tableController.authoringComponentContent.showSubmitButton'
                            ng-change='tableController.authoringViewComponentChanged()'/>
                     <br/>
-                    Columns: <input type='number'
+                    {{ 'columns' | translate }}: <input type='number'
                                     ng-model='tableController.authoringComponentContent.numColumns'
                                     ng-change='tableController.authoringViewTableSizeConfirmChange("columns", {{tableController.authoringComponentContent.numColumns}})'
                                     ng-model-options='{ debounce: 1000 }'
                                     style='width: 3em'/>
-                    Rows: <input type='number'
+                    {{ 'rows' | translate }}: <input type='number'
                                  ng-model='tableController.authoringComponentContent.numRows'
                                  ng-change='tableController.authoringViewTableSizeConfirmChange("rows", {{tableController.authoringComponentContent.numRows}})'
                                  ng-model-options='{ debounce: 1000 }'
                                  style='width: 3em'/>
-                    Cell Size: <input type='number'
+                    {{ 'cellSize' | translate }}: <input type='number'
                                       ng-model='tableController.authoringComponentContent.globalCellSize'
                                       ng-change='tableController.authoringViewComponentChanged()'
                                       ng-model-options='{ debounce: 1000 }'
@@ -69,14 +69,14 @@
                            style='width: 3em'/>
         </div>
         <div ng-if='tableController.mode === "authoring"'>
-            Import Previous Work:
+            {{ 'importPreviousWork' | translate }}:
             <input type='checkbox'
                    ng-model='tableController.authoringComponentContent.importPreviousWork'
                    ng-click='tableController.authoringImportPreviousWorkClicked()'
                    ng-change='tableController.authoringViewComponentChanged()'/>
         </div>
         <div ng-if='tableController.mode === "authoring" && tableController.authoringComponentContent.importPreviousWork'>
-            Import Previous Work Step:
+            {{ 'importPreviousWorkStep' | translate }}:
             <select ng-model='tableController.authoringComponentContent.importPreviousWorkNodeId'
                     ng-change='tableController.authoringImportPreviousWorkNodeIdChanged()'>
                 <option></option>
@@ -85,7 +85,7 @@
                         ng-if='tableController.isApplicationNode(item.$key)'>{{tableController.getNodePositionAndTitleByNodeId(item.$key)}}</option>
             </select>
             <br/>
-            Import Previous Work Component:
+            {{ 'importPreviousWorkComponent' | translate }}:
             <select ng-model='tableController.authoringComponentContent.importPreviousWorkComponentId'
                     ng-change='tableController.authoringImportPreviousWorkComponentIdChanged()'
                     ng-options='component.id as component.type disable when !tableController.componentHasWork(component) for component in tableController.getComponentsByNodeId(tableController.authoringComponentContent.importPreviousWorkNodeId)'>
@@ -93,14 +93,14 @@
             </select>
         </div>
         <div ng-if='tableController.mode === "authoring"'>
-            Show Previous Work:
+            {{ 'showPreviousWork' | translate }}:
             <input type='checkbox'
                    ng-model='tableController.authoringComponentContent.showPreviousWork'
                    ng-click='tableController.authoringShowPreviousWorkClicked()'
                    ng-change='tableController.authoringViewComponentChanged()'/>
         </div>
         <div ng-if='tableController.mode === "authoring" && tableController.authoringComponentContent.showPreviousWork'>
-            Show Previous Work Step:
+            {{ 'showPreviousWorkStep' | translate }}:
             <select ng-model='tableController.authoringComponentContent.showPreviousWorkNodeId'
                     ng-change='tableController.authoringShowPreviousWorkNodeIdChanged()'>
                 <option></option>
@@ -109,14 +109,14 @@
                         ng-if='tableController.isApplicationNode(item.$key)'>{{tableController.getNodePositionAndTitleByNodeId(item.$key)}}</option>
             </select>
             <br/>
-            Show Previous Work Component:
+            {{ 'showPreviousWorkComponent' | translate }}:
             <select ng-model='tableController.authoringComponentContent.showPreviousWorkComponentId'
                     ng-change='tableController.authoringShowPreviousWorkComponentIdChanged()'
                     ng-options='component.id as component.type disable when !tableController.componentHasWork(component) for component in tableController.getComponentsByNodeId(tableController.authoringComponentContent.showPreviousWorkNodeId)'>
                 <option></option>
             </select>
             <br/>
-            Show Previous Work Prompt:
+            {{ 'showPreviousWorkPrompt' | translate }}:
             <input type='checkbox'
                    ng-model='tableController.authoringComponentContent.showPreviousWorkPrompt'
                    ng-model-options='{ debounce: 1000 }'
@@ -137,7 +137,7 @@
         <div class="component__actions" layout="row">
             <md-button class="md-accent" ng-show="tableController.isStudentAttachmentEnabled"
                        ng-click="nodeController.showStudentAssets($event, component.id, tableController.isDisabled)">
-                <md-icon>image</md-icon> Import Data
+                <md-icon>image</md-icon> {{ 'importData' | translate }}
             </md-button>
         </div>
         <md-button class="md-accent" ng-click='tableController.resetTable()' ng-show='tableController.showResetTableButton()'>
@@ -165,13 +165,13 @@
                        ng-disabled='tableController.isDisabled || !tableController.isDirty'
                        ng-if='tableController.showSaveButton()'
                        aria-label="Save"
-                       translate="save">Save</md-button>
+                       translate="save">{{ 'save' | translate }}</md-button>
             <md-button class="md-raised md-primary"
                        ng-click='tableController.submitButtonClicked()'
                        ng-disabled='tableController.isDisabled || !tableController.isSubmitDirty'
                        ng-show='tableController.showSubmitButton()'
                        aria-label="Submit"
-                       translate="submit">Submit</md-button>
+                       translate="submit">{{ 'submit' | translate }}</md-button>
             <span ng-if="tableController.showSaveButton() || tableController.showSubmitButton()"
                   ng-show="tableController.saveMessage.text"
                   class="component__actions__info md-caption">

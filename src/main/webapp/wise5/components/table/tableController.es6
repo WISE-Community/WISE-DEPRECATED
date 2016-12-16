@@ -342,7 +342,7 @@ class TableController {
 
                 // set save message
                 if (isSubmit) {
-                    this.setSaveMessage('Submitted', clientSaveTime);
+                    this.setSaveMessage(this.$translate('submitted'), clientSaveTime);
 
                     this.submit();
 
@@ -350,9 +350,9 @@ class TableController {
                     this.isSubmitDirty = false;
                     this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: false});
                 } else if (isAutoSave) {
-                    this.setSaveMessage('Auto-saved', clientSaveTime);
+                    this.setSaveMessage(this.$translate('autoSaved'), clientSaveTime);
                 } else {
-                    this.setSaveMessage('Saved', clientSaveTime);
+                    this.setSaveMessage(this.$translate('saved'), clientSaveTime);
                 }
             }
 
@@ -530,13 +530,13 @@ class TableController {
                 this.isSubmitDirty = false;
                 this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: false});
                 // set save message
-                this.setSaveMessage('Last submitted', clientSaveTime);
+                this.setSaveMessage(this.$translate('lastSubmitted'), clientSaveTime);
             } else {
                 // latest state is not a submission, so set isSubmitDirty to true and notify node
                 this.isSubmitDirty = true;
                 this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: true});
                 // set save message
-                this.setSaveMessage('Last saved', clientSaveTime);
+                this.setSaveMessage(this.$translate('lastSaved'), clientSaveTime);
             }
         }
     };
@@ -1099,7 +1099,7 @@ class TableController {
         if (rowOrColumn === 'rows') {
             if (this.authoringComponentContent.numRows < oldValue) {
                 // author wants to decrease number of rows, so confirm
-                var answer = confirm('Are you sure you want to decrease number of ' + rowOrColumn + '?');
+                var answer = confirm(this.$translate('areYouSureYouWantToDecreaseTheNumberOfRows'));
                 if (answer) {
                     // author confirms yes, proceed with change
                     this.authoringViewTableSizeChanged();
@@ -1114,7 +1114,7 @@ class TableController {
         } else if (rowOrColumn === 'columns') {
             if (this.authoringComponentContent.numColumns < oldValue) {
                 // author wants to decrease number of columns, so confirm
-                var answer = confirm('Are you sure you want to decrease number of ' + rowOrColumn + '?');
+                var answer = confirm(this.$translate('areYouSureYouWantToDecreaseTheNumberOfColumns'));
                 if (answer) {
                     // author confirms yes, proceed with change
                     this.authoringViewTableSizeChanged();
@@ -1264,7 +1264,7 @@ class TableController {
      */
     authoringViewDeleteRow(y) {
 
-        var answer = confirm('Are you sure you want to delete this column?');
+        var answer = confirm(this.$translate('areYouSureYouWantToDeleteThisRow'));
 
         if (answer) {
             // get the table
@@ -1327,7 +1327,7 @@ class TableController {
      */
     authoringViewDeleteColumn(x) {
 
-        var answer = confirm('Are you sure you want to delete this column?');
+        var answer = confirm(this.$translate('areYouSureYouWantToDeleteThisColumn'));
 
         if (answer) {
             // get the table
@@ -1729,7 +1729,7 @@ class TableController {
                  */
                 
                 // make sure the author really wants to change the component type
-                var answer = confirm('Are you sure you want to change this component type?');
+                var answer = confirm(this.$translate('areYouSureYouWantToChangeThisComponentType'));
                 
                 if (answer) {
                     // the author wants to change the component type

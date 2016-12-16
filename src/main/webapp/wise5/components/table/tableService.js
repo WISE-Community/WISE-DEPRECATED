@@ -21,13 +21,15 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var TableService = function (_NodeService) {
     _inherits(TableService, _NodeService);
 
-    function TableService(StudentDataService, UtilService) {
+    function TableService($filter, StudentDataService, UtilService) {
         _classCallCheck(this, TableService);
 
         var _this = _possibleConstructorReturn(this, (TableService.__proto__ || Object.getPrototypeOf(TableService)).call(this));
 
+        _this.$filter = $filter;
         _this.StudentDataService = StudentDataService;
         _this.UtilService = UtilService;
+        _this.$translate = _this.$filter('translate');
         return _this;
     }
 
@@ -43,6 +45,7 @@ var TableService = function (_NodeService) {
             var component = {};
             component.id = this.UtilService.generateKey();
             component.type = 'Table';
+            component.prompt = this.$translate('enterPromptHere');
             component.showSaveButton = false;
             component.showSubmitButton = false;
             component.globalCellSize = 10;
@@ -214,7 +217,7 @@ var TableService = function (_NodeService) {
     return TableService;
 }(_nodeService2.default);
 
-TableService.$inject = ['StudentDataService', 'UtilService'];
+TableService.$inject = ['$filter', 'StudentDataService', 'UtilService'];
 
 exports.default = TableService;
 //# sourceMappingURL=tableService.js.map
