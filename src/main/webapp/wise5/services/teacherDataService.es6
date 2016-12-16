@@ -612,6 +612,8 @@ class TeacherDataService {
 
             periods.unshift(allPeriodsOption);
             currentPeriod = periods[0];
+        } else if (periods.length == 1) {
+            currentPeriod = periods[0];
         }
 
         this.periods = periods;
