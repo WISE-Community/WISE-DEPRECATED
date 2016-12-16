@@ -16,7 +16,7 @@ class MultipleChoiceService extends NodeService {
         let component = {};
         component.id = this.UtilService.generateKey();
         component.type = 'MultipleChoice';
-        component.prompt = 'Enter prompt here';
+        component.prompt = this.$translate('enterPromptHere');
         component.showSaveButton = false;
         component.showSubmitButton = false;
         component.choiceType = 'radio';
@@ -65,7 +65,7 @@ class MultipleChoiceService extends NodeService {
                         "componentId": componentId,
                         "choiceIds": [choice.id]
                     },
-                    "userFriendlyDescription": "User chose \"" + choice.text + "\" (Choice ID: " + choice.id + ") on this component."
+                    "userFriendlyDescription": this.$translate('userChose', {choiceText: choice.text, choiceId: choice.id});
 
                 };
                 allPossibleTransitionCriteria.push(possibleTransitionCriteria);
