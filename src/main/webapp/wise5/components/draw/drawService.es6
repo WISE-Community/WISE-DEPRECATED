@@ -1,11 +1,15 @@
 import NodeService from '../../services/nodeService';
 
 class DrawService extends NodeService {
-    constructor(StudentDataService,
+    constructor($filter,
+                StudentDataService,
                 UtilService) {
         super();
+        this.$filter = $filter;
         this.StudentDataService = StudentDataService;
         this.UtilService = UtilService;
+        
+        this.$translate = this.$filter('translate');
     }
 
     /**
@@ -16,7 +20,7 @@ class DrawService extends NodeService {
         var component = {};
         component.id = this.UtilService.generateKey();
         component.type = 'Draw';
-        component.prompt = 'Enter prompt here';
+        component.prompt = this.$translate('enterPromptHere');
         component.showSaveButton = false;
         component.showSubmitButton = false;
         component.stamps = {};
@@ -210,6 +214,7 @@ class DrawService extends NodeService {
 }
 
 DrawService.$inject = [
+    '$filter',
     'StudentDataService',
     'UtilService'
 ];

@@ -21,13 +21,16 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var DrawService = function (_NodeService) {
     _inherits(DrawService, _NodeService);
 
-    function DrawService(StudentDataService, UtilService) {
+    function DrawService($filter, StudentDataService, UtilService) {
         _classCallCheck(this, DrawService);
 
         var _this = _possibleConstructorReturn(this, (DrawService.__proto__ || Object.getPrototypeOf(DrawService)).call(this));
 
+        _this.$filter = $filter;
         _this.StudentDataService = StudentDataService;
         _this.UtilService = UtilService;
+
+        _this.$translate = _this.$filter('translate');
         return _this;
     }
 
@@ -43,7 +46,7 @@ var DrawService = function (_NodeService) {
             var component = {};
             component.id = this.UtilService.generateKey();
             component.type = 'Draw';
-            component.prompt = 'Enter prompt here';
+            component.prompt = this.$translate('enterPromptHere');
             component.showSaveButton = false;
             component.showSubmitButton = false;
             component.stamps = {};
@@ -255,7 +258,7 @@ var DrawService = function (_NodeService) {
     return DrawService;
 }(_nodeService2.default);
 
-DrawService.$inject = ['StudentDataService', 'UtilService'];
+DrawService.$inject = ['$filter', 'StudentDataService', 'UtilService'];
 
 exports.default = DrawService;
 //# sourceMappingURL=drawService.js.map

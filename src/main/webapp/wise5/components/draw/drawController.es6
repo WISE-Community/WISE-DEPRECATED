@@ -2,7 +2,8 @@ import drawingTool from 'lib/drawingTool/drawing-tool';
 import drawingToolVendor from 'lib/drawingTool/vendor.min';
 
 class DrawController {
-    constructor($injector,
+    constructor($filter,
+                $injector,
                 $q,
                 $rootScope,
                 $scope,
@@ -16,6 +17,7 @@ class DrawController {
                 StudentDataService,
                 UtilService) {
 
+        this.$filter = $filter;
         this.$injector = $injector;
         this.$q = $q;
         this.$rootScope = $rootScope;
@@ -29,8 +31,11 @@ class DrawController {
         this.StudentAssetService = StudentAssetService;
         this.StudentDataService = StudentDataService;
         this.UtilService = UtilService;
+        
+        this.$translate = this.$filter('translate');
+        
         this.idToOrder = this.ProjectService.idToOrder;
-
+        
         // the node id of the current node
         this.nodeId = null;
 
@@ -256,7 +261,7 @@ class DrawController {
 
                 // set save message
                 if (isSubmit) {
-                    this.setSaveMessage('Submitted', clientSaveTime);
+                    this.setSaveMessage(this.$translate('submitted'), clientSaveTime);
 
                     this.submit();
 
@@ -264,9 +269,9 @@ class DrawController {
                     this.isSubmitDirty = false;
                     this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: false});
                 } else if (isAutoSave) {
-                    this.setSaveMessage('Auto-saved', clientSaveTime);
+                    this.setSaveMessage(this.$translate('autoSaved'), clientSaveTime);
                 } else {
-                    this.setSaveMessage('Saved', clientSaveTime);
+                    this.setSaveMessage(this.$translate('saved'), clientSaveTime);
                 }
             }
 
@@ -300,7 +305,7 @@ class DrawController {
                              * the student has drawn on the canvas so we
                              * will ask them if they want to update it
                              */
-                            var answer = confirm('Do you want to update the connected drawing?');
+                            var answer = confirm(this.$translate('doYouWantToUpdateTheConnectedDrawing'));
 
                             if (answer) {
                                 // the student answered yes
@@ -507,7 +512,7 @@ class DrawController {
             // we will only display the tools the authored specified to show
 
             // the title for the select button
-            var selectTitle = "Select tool";
+            var selectTitle = this.$translate('selectTool');
 
             if (tools.select) {
                 $('#drawingtool_' + this.nodeId + '_' + this.componentId).find('[title="' + selectTitle + '"]').show();
@@ -516,7 +521,7 @@ class DrawController {
             }
 
             // the title for the line button
-            var lineTitle = "Line tool (click and hold to show available line types)";
+            var lineTitle = this.$translate('lineToolTooltip');
 
             if (tools.line) {
                 $('#drawingtool_' + this.nodeId + '_' + this.componentId).find('[title="' + lineTitle + '"]').show();
@@ -525,7 +530,7 @@ class DrawController {
             }
 
             // the title for the shape button
-            var shapeTitle = "Basic shape tool (click and hold to show available shapes)";
+            var shapeTitle = this.$translate('shapeToolTooltip');
 
             if (tools.shape) {
                 $('#drawingtool_' + this.nodeId + '_' + this.componentId).find('[title="' + shapeTitle + '"]').show();
@@ -534,7 +539,7 @@ class DrawController {
             }
 
             // the title for the free hand button
-            var freeHandTitle = "Free hand drawing tool";
+            var freeHandTitle = this.$translate('freeHandToolTooltip');
 
             if (tools.freeHand) {
                 $('#drawingtool_' + this.nodeId + '_' + this.componentId).find('[title="' + freeHandTitle + '"]').show();
@@ -543,7 +548,7 @@ class DrawController {
             }
 
             // the title for the text button
-            var textTitle = "Text tool (click and hold to show available font sizes)";
+            var textTitle = this.$translate('textToolTooltip');
 
             if (tools.text) {
                 $('#drawingtool_' + this.nodeId + '_' + this.componentId).find('[title="' + textTitle + '"]').show();
@@ -552,7 +557,7 @@ class DrawController {
             }
 
             // the title for the stamp button
-            var stampTitle = "Stamp tool (click and hold to show available categories)";
+            var stampTitle = this.$translate('stampToolTooltip');
 
             if (tools.stamp) {
                 $('#drawingtool_' + this.nodeId + '_' + this.componentId).find('[title="' + stampTitle + '"]').show();
@@ -561,7 +566,7 @@ class DrawController {
             }
 
             // the title for the clone button
-            var cloneTitle = "Clone tool";
+            var cloneTitle = this.$translate('cloneTool');
 
             if (tools.clone) {
                 $('#drawingtool_' + this.nodeId + '_' + this.componentId).find('[title="' + cloneTitle + '"]').show();
@@ -570,7 +575,7 @@ class DrawController {
             }
 
             // the title for the stroke color button
-            var strokeColorTitle = "Stroke color (click and hold to show available colors)";
+            var strokeColorTitle = this.$translate('strokeColorToolTooltip');
 
             if (tools.strokeColor) {
                 $('#drawingtool_' + this.nodeId + '_' + this.componentId).find('[title="' + strokeColorTitle + '"]').show();
@@ -579,7 +584,7 @@ class DrawController {
             }
 
             // the title for the fill color button
-            var fillColorTitle = "Fill color (click and hold to show available colors)";
+            var fillColorTitle = this.$translate('fillColorToolTooltip');
 
             if (tools.fillColor) {
                 $('#drawingtool_' + this.nodeId + '_' + this.componentId).find('[title="' + fillColorTitle + '"]').show();
@@ -588,7 +593,7 @@ class DrawController {
             }
 
             // the title for the stroke width button
-            var strokeWidthTitle = "Stroke width (click and hold to show available options)";
+            var strokeWidthTitle = this.$translate('strokeWidthToolTooltip');
 
             if (tools.strokeWidth) {
                 $('#drawingtool_' + this.nodeId + '_' + this.componentId).find('[title="' + strokeWidthTitle + '"]').show();
@@ -597,7 +602,7 @@ class DrawController {
             }
 
             // the title for the send back button
-            var sendBackTitle = "Send selected objects to back";
+            var sendBackTitle = this.$translate('sendBackToolTooltip');
 
             if (tools.sendBack) {
                 $('#drawingtool_' + this.nodeId + '_' + this.componentId).find('[title="' + sendBackTitle + '"]').show();
@@ -606,7 +611,7 @@ class DrawController {
             }
 
             // the title for the send forward button
-            var sendForwardTitle = "Send selected objects to front";
+            var sendForwardTitle = this.$translate('sendForwardToolTooltip');
 
             if (tools.sendForward) {
                 $('#drawingtool_' + this.nodeId + '_' + this.componentId).find('[title="' + sendForwardTitle + '"]').show();
@@ -615,7 +620,7 @@ class DrawController {
             }
 
             // the title for the undo button
-            var undoTitle = "Undo";
+            var undoTitle = this.$translate('undo');
 
             if (tools.undo) {
                 $('#drawingtool_' + this.nodeId + '_' + this.componentId).find('[title="' + undoTitle + '"]').show();
@@ -624,7 +629,7 @@ class DrawController {
             }
 
             // the title for the redo button
-            var redoTitle = "Redo";
+            var redoTitle = this.$translate('redo');
 
             if (tools.redo) {
                 $('#drawingtool_' + this.nodeId + '_' + this.componentId).find('[title="' + redoTitle + '"]').show();
@@ -633,7 +638,7 @@ class DrawController {
             }
 
             // the title for the delete button
-            var deleteTitle = "Delete selected objects";
+            var deleteTitle = this.$translate('deleteToolTooltip');
 
             if (tools.delete) {
                 $('#drawingtool_' + this.nodeId + '_' + this.componentId).find('[title="' + deleteTitle + '"]').show();
@@ -676,13 +681,13 @@ class DrawController {
                 this.isSubmitDirty = false;
                 this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: false});
                 // set save message
-                this.setSaveMessage('Last submitted', clientSaveTime);
+                this.setSaveMessage(this.$translate('lastSubmitted'), clientSaveTime);
             } else {
                 // latest state is not a submission, so set isSubmitDirty to true and notify node
                 this.isSubmitDirty = true;
                 this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: true});
                 // set save message
-                this.setSaveMessage('Last saved', clientSaveTime);
+                this.setSaveMessage(this.$translate('lastSaved'), clientSaveTime);
             }
         }
     };
@@ -713,7 +718,7 @@ class DrawController {
     resetButtonClicked() {
 
         // ask the student if they are sure they want to clear the drawing
-        var result = confirm('Are you sure you want to clear your drawing?');
+        var result = confirm(this.$translate('areYouSureYouWantToClearYourDrawing'));
 
         if (result) {
             // clear the drawing
@@ -1194,7 +1199,7 @@ class DrawController {
                  */
                 
                 // make sure the author really wants to change the component type
-                var answer = confirm('Are you sure you want to change this component type?');
+                var answer = confirm(this.$translate('areYouSureYouWantToChangeThisComponentType'));
                 
                 if (answer) {
                     // the author wants to change the component type
@@ -1560,7 +1565,7 @@ class DrawController {
     authoringDeleteStampClicked(index) {
         
         // ask the author if they are sure they want to delete the stamp
-        var answer = confirm('Are you sure you want to delete this stamp?\n\n' + this.authoringComponentContent.stamps.Stamps[index]);
+        var answer = confirm(this.$translate('areYouSureYouWantToDeleteThisStamp') + '\n\n' + this.authoringComponentContent.stamps.Stamps[index]);
         
         if (answer) {
             
@@ -1739,6 +1744,7 @@ class DrawController {
 }
 
 DrawController.$inject = [
+    '$filter',
     '$injector',
     '$q',
     '$rootScope',
