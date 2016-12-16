@@ -1,11 +1,14 @@
 import NodeService from '../../services/nodeService';
 
 class MatchService extends NodeService {
-    constructor(StudentDataService,
+    constructor($filter,
+                StudentDataService,
                 UtilService) {
         super();
+        this.$filter = $filter;
         this.StudentDataService = StudentDataService;
         this.UtilService = UtilService;
+        this.$translate = this.$filter('translate');
     }
 
     /**
@@ -17,7 +20,7 @@ class MatchService extends NodeService {
         var component = {};
         component.id = this.UtilService.generateKey();
         component.type = 'Match';
-        component.prompt = 'Enter prompt here';
+        component.prompt = this.$translate('enterPromptHere');
         component.showSaveButton = false;
         component.showSubmitButton = true;
         component.choices = [];
@@ -182,6 +185,7 @@ class MatchService extends NodeService {
 }
 
 MatchService.$inject = [
+    '$filter',
     'StudentDataService',
     'UtilService'
 ];

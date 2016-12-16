@@ -9,11 +9,12 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var MatchController = function () {
-    function MatchController($injector, $q, $rootScope, $scope, dragulaService, ConfigService, MatchService, NodeService, ProjectService, StudentDataService, UtilService, $mdMedia) {
+    function MatchController($filter, $injector, $q, $rootScope, $scope, dragulaService, ConfigService, MatchService, NodeService, ProjectService, StudentDataService, UtilService, $mdMedia) {
         var _this = this;
 
         _classCallCheck(this, MatchController);
 
+        this.$filter = $filter;
         this.$injector = $injector;
         this.$q = $q;
         this.$rootScope = $rootScope;
@@ -28,6 +29,7 @@ var MatchController = function () {
         this.$mdMedia = $mdMedia;
         this.idToOrder = this.ProjectService.idToOrder;
         this.autoScroll = require('dom-autoscroller');
+        this.$translate = this.$filter('translate');
 
         // the node id of the current node
         this.nodeId = null;
@@ -338,13 +340,13 @@ var MatchController = function () {
 
                 // set save message
                 if (isSubmit) {
-                    this.setSaveMessage('Submitted', clientSaveTime);
+                    this.setSaveMessage(this.$translate('submitted'), clientSaveTime);
 
                     this.submit();
                 } else if (isAutoSave) {
-                    this.setSaveMessage('Auto-saved', clientSaveTime);
+                    this.setSaveMessage(this.$translate('autoSaved'), clientSaveTime);
                 } else {
-                    this.setSaveMessage('Saved', clientSaveTime);
+                    this.setSaveMessage(this.$translate('saved'), clientSaveTime);
                 }
             }
         }));
@@ -521,13 +523,13 @@ var MatchController = function () {
                         this.isSubmitDirty = false;
                         this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: false });
                         // set save message
-                        this.setSaveMessage('Last submitted', clientSaveTime);
+                        this.setSaveMessage(this.$translate('lastSubmitted'), clientSaveTime);
                     } else {
                         // latest state is not a submission, so set isSubmitDirty to true and notify node
                         this.isSubmitDirty = true;
                         this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: true });
                         // set save message
-                        this.setSaveMessage('Last saved', clientSaveTime);
+                        this.setSaveMessage(this.$translate('lastSaved'), clientSaveTime);
                     }
                 }
             }
@@ -773,9 +775,9 @@ var MatchController = function () {
                                         // set the default feedback if none is authored
                                         if (feedback) {
                                             if (feedbackIsCorrect) {
-                                                feedback = 'Correct';
+                                                feedback = this.$translate('correct');
                                             } else {
-                                                feedback = 'Incorrect';
+                                                feedback = this.$translate('incorrect');
                                             }
                                         }
 
@@ -834,7 +836,7 @@ var MatchController = function () {
 
                                                 // set the default feedback if none is authored
                                                 if (incorrectPositionFeedback == null || incorrectPositionFeedback == '') {
-                                                    incorrectPositionFeedback = 'Correct bucket but wrong position';
+                                                    incorrectPositionFeedback = this.$translate('correctBucketButWrongPosition');
                                                 }
 
                                                 item.feedback = incorrectPositionFeedback;
@@ -1492,7 +1494,7 @@ var MatchController = function () {
                      */
 
                     // make sure the author really wants to change the component type
-                    var answer = confirm('Are you sure you want to change this component type?');
+                    var answer = confirm(this.$translate('areYouSureYouWantToChangeThisComponentType'));
 
                     if (answer) {
                         // the author wants to change the component type
@@ -1654,7 +1656,7 @@ var MatchController = function () {
         value: function authoringDeleteChoice(index) {
 
             // confirm with the user that they want to delete the choice
-            var answer = confirm('Are you sure you want to delete this choice?');
+            var answer = confirm(this.$translate('areYouSureYouWantToDeleteThisChoice'));
 
             if (answer) {
 
@@ -1688,7 +1690,7 @@ var MatchController = function () {
         value: function authoringDeleteBucket(index) {
 
             // confirm with the user tha tthey want to delete the bucket
-            var answer = confirm('Are you sure you want to delete this bucket?');
+            var answer = confirm(this.$translate('areYouSureYouWantToDeleteThisBucket'));
 
             if (answer) {
 
@@ -2191,7 +2193,7 @@ var MatchController = function () {
     return MatchController;
 }();
 
-MatchController.$inject = ['$injector', '$q', '$rootScope', '$scope', 'dragulaService', 'ConfigService', 'MatchService', 'NodeService', 'ProjectService', 'StudentDataService', 'UtilService', '$mdMedia'];
+MatchController.$inject = ['$filter', '$injector', '$q', '$rootScope', '$scope', 'dragulaService', 'ConfigService', 'MatchService', 'NodeService', 'ProjectService', 'StudentDataService', 'UtilService', '$mdMedia'];
 
 exports.default = MatchController;
 //# sourceMappingURL=matchController.js.map

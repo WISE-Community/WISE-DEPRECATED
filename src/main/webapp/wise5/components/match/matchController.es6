@@ -1,6 +1,7 @@
 
 class MatchController {
-    constructor($injector,
+    constructor($filter,
+                $injector,
                 $q,
                 $rootScope,
                 $scope,
@@ -13,6 +14,7 @@ class MatchController {
                 UtilService,
                 $mdMedia) {
 
+        this.$filter = $filter;
         this.$injector = $injector;
         this.$q = $q;
         this.$rootScope = $rootScope;
@@ -27,6 +29,7 @@ class MatchController {
         this.$mdMedia = $mdMedia;
         this.idToOrder = this.ProjectService.idToOrder;
         this.autoScroll = require('dom-autoscroller');
+        this.$translate = this.$filter('translate');
 
         // the node id of the current node
         this.nodeId = null;
@@ -339,13 +342,13 @@ class MatchController {
 
                 // set save message
                 if (isSubmit) {
-                    this.setSaveMessage('Submitted', clientSaveTime);
+                    this.setSaveMessage(this.$translate('submitted'), clientSaveTime);
 
                     this.submit();
                 } else if (isAutoSave) {
-                    this.setSaveMessage('Auto-saved', clientSaveTime);
+                    this.setSaveMessage(this.$translate('autoSaved'), clientSaveTime);
                 } else {
-                    this.setSaveMessage('Saved', clientSaveTime);
+                    this.setSaveMessage(this.$translate('saved'), clientSaveTime);
                 }
             }
         }));
@@ -501,13 +504,13 @@ class MatchController {
                     this.isSubmitDirty = false;
                     this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: false});
                     // set save message
-                    this.setSaveMessage('Last submitted', clientSaveTime);
+                    this.setSaveMessage(this.$translate('lastSubmitted'), clientSaveTime);
                 } else {
                     // latest state is not a submission, so set isSubmitDirty to true and notify node
                     this.isSubmitDirty = true;
                     this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: true});
                     // set save message
-                    this.setSaveMessage('Last saved', clientSaveTime);
+                    this.setSaveMessage(this.$translate('lastSaved'), clientSaveTime);
                 }
             }
         }
@@ -723,9 +726,9 @@ class MatchController {
                                     // set the default feedback if none is authored
                                     if (feedback) {
                                         if (feedbackIsCorrect) {
-                                            feedback = 'Correct';
+                                            feedback = this.$translate('correct');
                                         } else {
-                                            feedback = 'Incorrect';
+                                            feedback = this.$translate('incorrect');
                                         }
                                     }
 
@@ -784,7 +787,7 @@ class MatchController {
 
                                             // set the default feedback if none is authored
                                             if (incorrectPositionFeedback == null || incorrectPositionFeedback == '') {
-                                                incorrectPositionFeedback = 'Correct bucket but wrong position';
+                                                incorrectPositionFeedback = this.$translate('correctBucketButWrongPosition');
                                             }
 
                                             item.feedback = incorrectPositionFeedback;
@@ -1387,7 +1390,7 @@ class MatchController {
                  */
                 
                 // make sure the author really wants to change the component type
-                var answer = confirm('Are you sure you want to change this component type?');
+                var answer = confirm(this.$translate('areYouSureYouWantToChangeThisComponentType'));
                 
                 if (answer) {
                     // the author wants to change the component type
@@ -1528,7 +1531,7 @@ class MatchController {
     authoringDeleteChoice(index) {
 
         // confirm with the user that they want to delete the choice
-        var answer = confirm('Are you sure you want to delete this choice?');
+        var answer = confirm(this.$translate('areYouSureYouWantToDeleteThisChoice'));
 
         if (answer) {
 
@@ -1559,7 +1562,7 @@ class MatchController {
     authoringDeleteBucket(index) {
 
         // confirm with the user tha tthey want to delete the bucket
-        var answer = confirm('Are you sure you want to delete this bucket?');
+        var answer = confirm(this.$translate('areYouSureYouWantToDeleteThisBucket'));
 
         if (answer) {
 
@@ -2010,6 +2013,7 @@ class MatchController {
 }
 
 MatchController.$inject = [
+    '$filter',
     '$injector',
     '$q',
     '$rootScope',
