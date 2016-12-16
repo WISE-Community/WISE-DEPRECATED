@@ -3,8 +3,11 @@
   "accountMenuPoints": "{{point}}点",
   "accountMenuTotalScore": "スコア合計",
   "addNewNote": "新規ノート",
+  "dropAssetMessage": "アセットをアップロードするには、ここにアセットをドロップするか、ここをクリックしてください。",
+  "goHome": "ホームに戻る",
   "newNote": "新規ノート",
   "projectCompletion": "完成度",
   "projectPlan": "プロジェクトマップ",
+  "signOut": "ログアウト",
   "typeYourNoteHere": "ここにノートを書いてください。。。"
 }

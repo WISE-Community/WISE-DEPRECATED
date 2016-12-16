@@ -15,6 +15,7 @@
   "createNewProject": "プロジェクトを作成",
   "createNewStep": "ステップを作成",
   "deleteTransition": "トランジションを削除",
+  "dropAssetMessage": "アセットをアップロードするには、ここにアセットをドロップするか、ここをクリックしてください。",
   "editTransitions": "ナビゲーションロジックを編成",
   "fileNameAToZ": "ファイル名 A->Z",
   "fileNameZToA": "ファイル名 Z->A",

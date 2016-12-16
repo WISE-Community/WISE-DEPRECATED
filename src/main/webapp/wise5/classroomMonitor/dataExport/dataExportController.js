@@ -4,7 +4,7 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -84,7 +84,7 @@ var DataExportController = function () {
         value: function _export() {
             var _this2 = this;
 
-            var exportType = arguments.length <= 0 || arguments[0] === undefined ? null : arguments[0];
+            var exportType = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
 
             if (exportType == null) {
                 exportType = this.exportType;
@@ -530,7 +530,7 @@ var DataExportController = function () {
     }, {
         key: "selectAll",
         value: function selectAll() {
-            var doSelect = arguments.length <= 0 || arguments[0] === undefined ? true : arguments[0];
+            var doSelect = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
 
             if (this.projectIdToOrder != null) {
                 for (var nodeId in this.projectIdToOrder) {
