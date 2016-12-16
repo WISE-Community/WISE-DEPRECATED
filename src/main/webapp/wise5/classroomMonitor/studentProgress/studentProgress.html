@@ -11,10 +11,6 @@
         background-color: lightgreen;
     }
 
-    table tr {
-        cursor: pointer;
-    }
-
     .active {
         background-color: yellow;
     }
@@ -40,7 +36,6 @@
             </tr>
             <tr ng-class="{online: studentProgressController.isWorkgroupOnline(workgroup.workgroupId)}"
                 ng-repeat="workgroup in studentProgressController.workgroups"
-                ng-click="studentProgressController.studentRowClicked(workgroup)"
                 ng-show="studentProgressController.getCurrentPeriod().periodName == 'All' || workgroup.periodId == studentProgressController.getCurrentPeriod().periodId">
                 <td ng-if="studentProgressController.canViewStudentNames">{{workgroup.userName}} ({{workgroup.workgroupId}})</td>
                 <td ng-if="!studentProgressController.canViewStudentNames">{{workgroup.workgroupId}}</td>
