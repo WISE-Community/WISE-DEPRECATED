@@ -30,6 +30,8 @@
     "ok": "OK",
     "planningModeOnlyOnePlanningModeAllowed": "You can only work on one Planning Activity at a time. Turn off Planning Mode on the existing Planning Activity before working on this one.",
     "planningModeStepsUnVisitable": "You are not allowed to view items while in Planning Mode. Please turn off Planning Mode and try again.",
+    "point": "point",
+    "points": "points",
     "previousItem": "Previous Item",
     "projectCompletion": "Project Completion",
     "projectItemSelect": "Project item select",
