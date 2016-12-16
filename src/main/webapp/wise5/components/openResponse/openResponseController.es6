@@ -2,7 +2,8 @@
 
 class OpenResponseController {
 
-    constructor($injector,
+    constructor($filter,
+                $injector,
                 $mdDialog,
                 $q,
                 $rootScope,
@@ -17,6 +18,7 @@ class OpenResponseController {
                 StudentAssetService,
                 StudentDataService) {
 
+        this.$filter = $filter;
         this.$injector = $injector;
         this.$mdDialog = $mdDialog;
         this.$q = $q;
@@ -31,6 +33,9 @@ class OpenResponseController {
         this.ProjectService = ProjectService;
         this.StudentAssetService = StudentAssetService;
         this.StudentDataService = StudentDataService;
+        
+        this.$translate = this.$filter('translate');
+        
         this.idToOrder = this.ProjectService.idToOrder;
 
         // the node id of the current node
@@ -355,7 +360,7 @@ class OpenResponseController {
 
                 // set save message
                 if (isSubmit) {
-                    this.setSaveMessage('Submitted', clientSaveTime);
+                    this.setSaveMessage(this.$translate('submitted'), clientSaveTime);
 
                     this.submit();
 
@@ -363,9 +368,9 @@ class OpenResponseController {
                     this.isSubmitDirty = false;
                     this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: false});
                 } else if (isAutoSave) {
-                    this.setSaveMessage('Auto-saved', clientSaveTime);
+                    this.setSaveMessage(this.$translate('autoSaved'), clientSaveTime);
                 } else {
-                    this.setSaveMessage('Saved', clientSaveTime);
+                    this.setSaveMessage(this.$translate('saved'), clientSaveTime);
                 }
             }
         }));
@@ -467,13 +472,13 @@ class OpenResponseController {
                 this.isSubmitDirty = false;
                 this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: false});
                 // set save message
-                this.setSaveMessage('Last submitted', clientSaveTime);
+                this.setSaveMessage(this.$translate('lastSubmitted'), clientSaveTime);
             } else {
                 // latest state is not a submission, so set isSubmitDirty to true and notify node
                 this.isSubmitDirty = true;
                 this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: true});
                 // set save message
-                this.setSaveMessage('Last saved', clientSaveTime);
+                this.setSaveMessage(this.$translate('lastSaved'), clientSaveTime);
             }
         }
     };
@@ -506,17 +511,19 @@ class OpenResponseController {
             if (numberOfSubmitsLeft <= 0) {
                 
                 // the student does not have any more chances to submit
-                alert('You do not have any more chances to receive feedback on your answer.');
+                alert(this.$translate('noMoreChances'));
                 performSubmit = false;
             } else if (numberOfSubmitsLeft == 1) {
                 
                 // ask the student if they are sure they want to submit
-                message = 'You have ' + numberOfSubmitsLeft + ' chance to receive feedback on your answer so this this should be your best work.\n\nAre you ready to receive feedback on this answer?';
+                message = this.$translate('youHaveOneChance', {numberOfSubmitsLeft: numberOfSubmitsLeft});
+                //message = 'You have ' + numberOfSubmitsLeft + ' chance to receive feedback on your answer so this this should be your best work.\n\nAre you ready to receive feedback on this answer?';
                 performSubmit = confirm(message);
             } else if (numberOfSubmitsLeft > 1) {
                 
                 // ask the student if they are sure they want to submit
-                message = 'You have ' + numberOfSubmitsLeft + ' chances to receive feedback on your answer so this this should be your best work.\n\nAre you ready to receive feedback on this answer?';
+                message = this.$translate('youHaveMultipleChances', {numberOfSubmitsLeft: numberOfSubmitsLeft});
+                //message = 'You have ' + numberOfSubmitsLeft + ' chances to receive feedback on your answer so this this should be your best work.\n\nAre you ready to receive feedback on this answer?';
                 performSubmit = confirm(message);
             }
         }
@@ -684,7 +691,7 @@ class OpenResponseController {
              * to be scored by CRater
              */
             this.messageDialog = this.$mdDialog.show({
-                template: '<md-dialog aria-label="Please Wait"><md-dialog-content><div class="md-dialog-content">Please wait, we are scoring your work.</div></md-dialog-content></md-dialog>',
+                template: '<md-dialog aria-label="Please Wait"><md-dialog-content><div class="md-dialog-content">' + this.$translate('pleaseWaitWeAreScoringYourWork') + '</div></md-dialog-content></md-dialog>',
                 escapeToClose: false
             });
 
@@ -1255,7 +1262,7 @@ class OpenResponseController {
                  */
 
                 // make sure the author really wants to change the component type
-                var answer = confirm('Are you sure you want to change this component type?');
+                var answer = confirm(this.$translate('areYouSureYouWantToChangeThisComponentType'));
 
                 if (answer) {
                     // the author wants to change the component type
@@ -1553,7 +1560,8 @@ class OpenResponseController {
                 var feedbackText = scoringRule.feedbackText;
 
                 // make sure the author really wants to delete the scoring rule
-                var answer = confirm('Are you sure you want to delete this scoring rule?\n\nScore: ' + score + '\n\n' + 'Feedback Text: ' + feedbackText);
+                //var answer = confirm('Are you sure you want to delete this scoring rule?\n\nScore: ' + score + '\n\n' + 'Feedback Text: ' + feedbackText);
+                var answer = confirm(this.$translate('areYouSureYouWantToDeleteThisScoringRule', {score: score, feedbackText: feedbackText}));
 
                 if (answer) {
                     // the author answered yes to delete the scoring rule
@@ -1588,8 +1596,8 @@ class OpenResponseController {
                 dismissCode: "apple",
                 isNotifyTeacher: true,
                 isNotifyStudent: true,
-                notificationMessageToStudent: "{{username}}, you got a score of {{score}}. Please talk to your teacher.",
-                notificationMessageToTeacher: "{{username}} got a score of {{score}}."
+                notificationMessageToStudent: "{{username}}, " + this.$translate('youGotAScoreOf') + " {{score}}. " + this.$translate('pleaseTalkToYourTeacher') + ".",
+                notificationMessageToTeacher: "{{username}} " + this.$translate('gotAScoreOf') + " {{score}}."
             };
 
             // add the new notification
@@ -1713,8 +1721,8 @@ class OpenResponseController {
                 // get the feedback text
                 var feedbackText = multipleAttemptScoringRule.feedbackText;
 
-                // make sure the author really wants to delete the multiple attempt scoring rul
-                var answer = confirm('Are you sure you want to delete this scoring rule?\n\nPrevious Score: ' + previousScore + '\n\nCurrent Score: ' + currentScore + '\n\nFeedback Text: ' + feedbackText);
+                // make sure the author really wants to delete the multiple attempt scoring rule
+                var answer = confirm(this.$translate('areYouSureYouWantToDeleteThisMultipleAttemptScoringRule', {previousScore: previousScore, currentScore: currentScore, feedbackText: feedbackText}));
 
                 if (answer) {
                     // the author answered yes to delete the multiple attempt scoring rule
@@ -1811,7 +1819,7 @@ class OpenResponseController {
                 }
 
                 // make sure the author really wants to delete the notification
-                var answer = confirm('Are you sure you want to delete this scoring rule?\n\nPrevious Score: ' + previousScore + '\n\nCurrent Score: ' + currentScore);
+                var answer = confirm(this.$translate('areYouSureYouWantToDeleteThisNotification', {previousScore: previousScore, currentScore: currentScore}));
 
                 if (answer) {
                     // the author answered yes to delete the notification
@@ -1985,6 +1993,7 @@ class OpenResponseController {
 };
 
 OpenResponseController.$inject = [
+    '$filter',
     '$injector',
     '$mdDialog',
     '$q',
