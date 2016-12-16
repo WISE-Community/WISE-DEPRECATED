@@ -1,11 +1,15 @@
 import NodeService from '../../services/nodeService';
 
 class OpenResponseService extends NodeService {
-    constructor(StudentDataService,
+    constructor($filter,
+                StudentDataService,
                 UtilService) {
         super();
+        this.$filter = $filter;
         this.StudentDataService = StudentDataService;
         this.UtilService = UtilService;
+        
+        this.$translate = this.$filter('translate');
     }
 
     /**
@@ -16,7 +20,7 @@ class OpenResponseService extends NodeService {
         var component = {};
         component.id = this.UtilService.generateKey();
         component.type = 'OpenResponse';
-        component.prompt = 'Enter prompt here';
+        component.prompt = this.$translate('enterPromptHere');
         component.showSaveButton = false;
         component.showSubmitButton = false;
         component.starterSentence = null;
@@ -176,6 +180,7 @@ class OpenResponseService extends NodeService {
 }
 
 OpenResponseService.$inject = [
+    '$filter',
     'StudentDataService',
     'UtilService'
 ];

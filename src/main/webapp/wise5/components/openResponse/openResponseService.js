@@ -21,13 +21,16 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var OpenResponseService = function (_NodeService) {
     _inherits(OpenResponseService, _NodeService);
 
-    function OpenResponseService(StudentDataService, UtilService) {
+    function OpenResponseService($filter, StudentDataService, UtilService) {
         _classCallCheck(this, OpenResponseService);
 
         var _this = _possibleConstructorReturn(this, (OpenResponseService.__proto__ || Object.getPrototypeOf(OpenResponseService)).call(this));
 
+        _this.$filter = $filter;
         _this.StudentDataService = StudentDataService;
         _this.UtilService = UtilService;
+
+        _this.$translate = _this.$filter('translate');
         return _this;
     }
 
@@ -43,7 +46,7 @@ var OpenResponseService = function (_NodeService) {
             var component = {};
             component.id = this.UtilService.generateKey();
             component.type = 'OpenResponse';
-            component.prompt = 'Enter prompt here';
+            component.prompt = this.$translate('enterPromptHere');
             component.showSaveButton = false;
             component.showSubmitButton = false;
             component.starterSentence = null;
@@ -216,7 +219,7 @@ var OpenResponseService = function (_NodeService) {
     return OpenResponseService;
 }(_nodeService2.default);
 
-OpenResponseService.$inject = ['StudentDataService', 'UtilService'];
+OpenResponseService.$inject = ['$filter', 'StudentDataService', 'UtilService'];
 
 exports.default = OpenResponseService;
 //# sourceMappingURL=openResponseService.js.map
