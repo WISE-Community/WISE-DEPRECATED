@@ -1,11 +1,15 @@
 import NodeService from '../../services/nodeService';
 
 class GraphService extends NodeService {
-    constructor(StudentDataService,
+    constructor($filter,
+                StudentDataService,
                 UtilService) {
         super();
+        this.$filter = $filter;
         this.StudentDataService = StudentDataService;
         this.UtilService = UtilService;
+        
+        this.$translate = this.$filter('translate');
     }
 
     /**
@@ -17,10 +21,10 @@ class GraphService extends NodeService {
         var component = {};
         component.id = this.UtilService.generateKey();
         component.type = 'Graph';
-        component.prompt = 'Enter prompt here';
+        component.prompt = this.$translate('enterPromptHere');
         component.showSaveButton = false;
         component.showSubmitButton = false;
-        component.title = 'Enter graph title here';
+        component.title = this.$translate('enterGraphTitleHere');
         component.width = 800;
         component.height = 500;
         component.enableTrials = false;
@@ -29,21 +33,21 @@ class GraphService extends NodeService {
         component.showAllTrialsOnNewTrial = false;
         component.xAxis = {
             title: {
-                text: 'Time (seconds)'
+                text: this.$translate('timeSeconds')
             },
             min: 0,
             max: 10
         };
         component.yAxis = {
             title: {
-                text: 'Position (meters)'
+                text: this.$translate('positionMeters')
             },
             min: 0,
             max: 10
         };
         component.series = [
             {
-                name: 'Prediction',
+                name: this.$translate('prediction'),
                 data: [],
                 color: 'blue',
                 marker: {
@@ -830,6 +834,7 @@ class GraphService extends NodeService {
 }
 
 GraphService.$inject = [
+    '$filter',
     'StudentDataService',
     'UtilService'
 ];

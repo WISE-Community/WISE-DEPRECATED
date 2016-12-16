@@ -3,7 +3,7 @@
 //import angularHighcharts from 'highcharts-ng';
 //import Highcharts from '../../lib/highcharts@4.2.1';
 //import draggablePoints from 'highcharts/draggable-points';
-var GraphController=function(){function GraphController($injector,$q,$rootScope,$scope,$timeout,ConfigService,GraphService,NodeService,NotebookService,ProjectService,StudentAssetService,StudentDataService,UtilService){var _this=this;_classCallCheck(this,GraphController);this.$injector=$injector;this.$q=$q;this.$rootScope=$rootScope;this.$scope=$scope;this.$timeout=$timeout;this.ConfigService=ConfigService;this.GraphService=GraphService;this.NodeService=NodeService;this.NotebookService=NotebookService;this.ProjectService=ProjectService;this.StudentAssetService=StudentAssetService;this.StudentDataService=StudentDataService;this.UtilService=UtilService;this.idToOrder=this.ProjectService.idToOrder;// the node id of the current node
+var GraphController=function(){function GraphController($filter,$injector,$q,$rootScope,$scope,$timeout,ConfigService,GraphService,NodeService,NotebookService,ProjectService,StudentAssetService,StudentDataService,UtilService){var _this=this;_classCallCheck(this,GraphController);this.$filter=$filter;this.$injector=$injector;this.$q=$q;this.$rootScope=$rootScope;this.$scope=$scope;this.$timeout=$timeout;this.ConfigService=ConfigService;this.GraphService=GraphService;this.NodeService=NodeService;this.NotebookService=NotebookService;this.ProjectService=ProjectService;this.StudentAssetService=StudentAssetService;this.StudentDataService=StudentDataService;this.UtilService=UtilService;this.$translate=this.$filter('translate');this.idToOrder=this.ProjectService.idToOrder;// the node id of the current node
 this.nodeId=null;// the component id
 this.componentId=null;// field that will hold the component content
 this.componentContent=null;// field that will hold the authoring component content
@@ -121,8 +121,8 @@ if(this.nodeId===nodeId){this.isSubmit=true;}}));/**
          */this.$scope.$on('studentWorkSavedToServer',angular.bind(this,function(event,args){var componentState=args.studentWork;// check that the component state is for this component
 if(componentState&&this.nodeId===componentState.nodeId&&this.componentId===componentState.componentId){// set isDirty to false because the component state was just saved and notify node
 this.isDirty=false;this.$scope.$emit('componentDirty',{componentId:this.componentId,isDirty:false});var isAutoSave=componentState.isAutoSave;var isSubmit=componentState.isSubmit;var serverSaveTime=componentState.serverSaveTime;var clientSaveTime=this.ConfigService.convertToClientTimestamp(serverSaveTime);// set save message
-if(isSubmit){this.setSaveMessage('Submitted',clientSaveTime);this.submit();// set isSubmitDirty to false because the component state was just submitted and notify node
-this.isSubmitDirty=false;this.$scope.$emit('componentSubmitDirty',{componentId:this.componentId,isDirty:false});}else if(isAutoSave){this.setSaveMessage('Auto-saved',clientSaveTime);}else{this.setSaveMessage('Saved',clientSaveTime);}// re-draw the graph
+if(isSubmit){this.setSaveMessage(this.$translate('submitted'),clientSaveTime);this.submit();// set isSubmitDirty to false because the component state was just submitted and notify node
+this.isSubmitDirty=false;this.$scope.$emit('componentSubmitDirty',{componentId:this.componentId,isDirty:false});}else if(isAutoSave){this.setSaveMessage(this.$translate('autoSaved'),clientSaveTime);}else{this.setSaveMessage(this.$translate('saved'),clientSaveTime);}// re-draw the graph
 this.setupGraph();}}));/*
          * Handle the delete key pressed event
          */this.deleteKeyPressedListenerDestroyer=this.$scope.$on('deleteKeyPressed',function(){_this.handleDeleteKeyPressed();});/**
@@ -137,7 +137,7 @@ this.deleteKeyPressedListenerDestroyer();}));/**
 if(this.graphController!=null&&this.graphController.activeSeries!=null&&this.graphController.activeSeries.data!=null){var activeSeriesData=this.graphController.activeSeries.data;if(activeSeriesData.length>0){/*
                      * the active series already has data so we will ask the 
                      * student if they want to overwrite the data
-                     */var answer=confirm("Are you sure you want to overwrite the current line data?");if(!answer){// the student does not want to overwrite the data
+                     */var answer=confirm(this.$translate('areYouSureYouWantToOverwriteTheCurrentLineData'));if(!answer){// the student does not want to overwrite the data
 overwrite=false;}}}if(overwrite){// obtain the file content and overwrite the data in the graph
 // get the files from the file input element
 var files=element.files;if(files!=null&&files.length>0){var reader=new FileReader();// this is the callback function for reader.readAsText()
@@ -394,7 +394,7 @@ this.backgroundImage=this.componentContent.backgroundImage;/*
          */this.studentDataChanged();}},{key:'resetSeries',/**
      * Reset the active series
      */value:function resetSeries(){var confirmMessage='';// get the series name
-var seriesName=this.activeSeries.name;if(seriesName==null||seriesName==''){confirmMessage='Are you sure you want to reset the series?';}else{confirmMessage='Are you sure you want to reset the "'+seriesName+'" series?';}// ask the student if they are sure they want to reset the series
+var seriesName=this.activeSeries.name;if(seriesName==null||seriesName==''){confirmMessage=this.$translate('areYouSureYouWantToResetTheSeries');}else{confirmMessage=this.$translate('areYouSureYouWantToResetTheNamedSeries');}// ask the student if they are sure they want to reset the series
 var answer=confirm(confirmMessage);if(answer){// the student answer yes to reset the series
 // get the index of the active series
 var activeSeriesIndex=this.getSeriesIndex(this.activeSeries);if(activeSeriesIndex!=null){// get the original series from the component content
@@ -431,9 +431,9 @@ this.backgroundImage=studentData.backgroundImage;}this.processLatestSubmit();}}}
      * Check if latest component state is a submission and set isSubmitDirty accordingly
      */value:function processLatestSubmit(){var latestState=this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId,this.componentId);if(latestState){var serverSaveTime=latestState.serverSaveTime;var clientSaveTime=this.ConfigService.convertToClientTimestamp(serverSaveTime);if(latestState.isSubmit){// latest state is a submission, so set isSubmitDirty to false and notify node
 this.isSubmitDirty=false;this.$scope.$emit('componentSubmitDirty',{componentId:this.componentId,isDirty:false});// set save message
-this.setSaveMessage('Last submitted',clientSaveTime);}else{// latest state is not a submission, so set isSubmitDirty to true and notify node
+this.setSaveMessage(this.$translate('lastSubmitted'),clientSaveTime);}else{// latest state is not a submission, so set isSubmitDirty to true and notify node
 this.isSubmitDirty=true;this.$scope.$emit('componentSubmitDirty',{componentId:this.componentId,isDirty:true});// set save message
-this.setSaveMessage('Last saved',clientSaveTime);}}}},{key:'saveButtonClicked',/**
+this.setSaveMessage(this.$translate('lastSaved'),clientSaveTime);}}}},{key:'saveButtonClicked',/**
      * Called when the student clicks the save button
      */value:function saveButtonClicked(){this.isSubmit=false;// tell the parent node that this component wants to save
 this.$scope.$emit('componentSaveTriggered',{nodeId:this.nodeId,componentId:this.componentId});}},{key:'submitButtonClicked',/**
@@ -710,7 +710,7 @@ if(newComponentType!=currentComponentType){/*
                  * the component types are different so we will need to change
                  * the whole component
                  */// make sure the author really wants to change the component type
-var answer=confirm('Are you sure you want to change this component type?');if(answer){// the author wants to change the component type
+var answer=confirm(this.$translate('areYouSureYouWantToChangeThisComponentType'));if(answer){// the author wants to change the component type
 /*
                      * get the component service so we can make a new instance
                      * of the component
@@ -802,7 +802,7 @@ trialNumbers.sort();var maxTrialNumber=0;if(trialNumbers.length>0){// get the hi
 maxTrialNumber=trialNumbers[trialNumbers.length-1];}if(this.hideAllTrialsOnNewTrial){// we only want to show the latest trial
 // loop through all the existing trials and hide them
 for(var t=0;t<this.trials.length;t++){var tempTrial=this.trials[t];if(tempTrial!=null){tempTrial.show=false;}}}// make a new trial with a trial number one larger than the existing max
-var trial={};trial.name='Trial '+(maxTrialNumber+1);trial.series=series;trial.show=true;trial.id=this.UtilService.generateKey(10);// add the trial to the array of trials
+var trial={};trial.name=this.$translate('trial')+' '+(maxTrialNumber+1);trial.series=series;trial.show=true;trial.id=this.UtilService.generateKey(10);// add the trial to the array of trials
 this.trials.push(trial);// set the new trial to be the active trial
 this.activeTrial=trial;// set the series to be displayed
 this.series=series;var activeSeriesIndex=0;if(this.activeSeries!=null){// get the index of the active series
@@ -887,7 +887,7 @@ this.selectedTrialsText=this.getSelectedTrialsText();}},{key:'setTrialIdsToShow'
      */value:function setTrialIdsToShow(){var idsToShow=[];var trials=this.trials;for(var i=0;i<trials.length;i++){var trial=trials[i];if(trial.show){// trial is visible on graph, so add it to the ids to show model
 var id=trial.id;idsToShow.push(id);}}this.trialIdsToShow=idsToShow;}},{key:'getSelectedTrialsText',/**
      * Get the text to show in the trials select dropdown
-     */value:function getSelectedTrialsText(){if(this.trialIdsToShow.length===1){var id=this.trialIdsToShow[0];var name=this.getTrialById(id).name;return name;}else if(this.trialIdsToShow.length>1){return this.trialIdsToShow.length+" trials shown";}else{return"Select trials to show";}}},{key:'parseTrials0',/**
+     */value:function getSelectedTrialsText(){if(this.trialIdsToShow.length===1){var id=this.trialIdsToShow[0];var name=this.getTrialById(id).name;return name;}else if(this.trialIdsToShow.length>1){return this.trialIdsToShow.length+" "+this.$translate('trialsShown');}else{return this.$translate('selectTrialsToShow');}}},{key:'parseTrials0',/**
      * Parse the trials and set it into the component
      * @param studentData the student data object that has a trials field
      */value:function parseTrials0(studentData){if(studentData!=null){// get the trials
@@ -1060,5 +1060,5 @@ this.authoringViewComponentChanged();}}/**
 this.authoringViewComponentChanged();}/**
      * The import previous work component id has changed
      */},{key:'authoringImportPreviousWorkComponentIdChanged',value:function authoringImportPreviousWorkComponentIdChanged(){// the authoring component content has changed so we will save the project
-this.authoringViewComponentChanged();}}]);return GraphController;}();GraphController.$inject=['$injector','$q','$rootScope','$scope','$timeout','ConfigService','GraphService','NodeService','NotebookService','ProjectService','StudentAssetService','StudentDataService','UtilService'];exports.default=GraphController;
+this.authoringViewComponentChanged();}}]);return GraphController;}();GraphController.$inject=['$filter','$injector','$q','$rootScope','$scope','$timeout','ConfigService','GraphService','NodeService','NotebookService','ProjectService','StudentAssetService','StudentDataService','UtilService'];exports.default=GraphController;
 //# sourceMappingURL=graphController.js.map

@@ -21,13 +21,16 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var GraphService = function (_NodeService) {
     _inherits(GraphService, _NodeService);
 
-    function GraphService(StudentDataService, UtilService) {
+    function GraphService($filter, StudentDataService, UtilService) {
         _classCallCheck(this, GraphService);
 
         var _this = _possibleConstructorReturn(this, (GraphService.__proto__ || Object.getPrototypeOf(GraphService)).call(this));
 
+        _this.$filter = $filter;
         _this.StudentDataService = StudentDataService;
         _this.UtilService = UtilService;
+
+        _this.$translate = _this.$filter('translate');
         return _this;
     }
 
@@ -44,10 +47,10 @@ var GraphService = function (_NodeService) {
             var component = {};
             component.id = this.UtilService.generateKey();
             component.type = 'Graph';
-            component.prompt = 'Enter prompt here';
+            component.prompt = this.$translate('enterPromptHere');
             component.showSaveButton = false;
             component.showSubmitButton = false;
-            component.title = 'Enter graph title here';
+            component.title = this.$translate('enterGraphTitleHere');
             component.width = 800;
             component.height = 500;
             component.enableTrials = false;
@@ -56,20 +59,20 @@ var GraphService = function (_NodeService) {
             component.showAllTrialsOnNewTrial = false;
             component.xAxis = {
                 title: {
-                    text: 'Time (seconds)'
+                    text: this.$translate('timeSeconds')
                 },
                 min: 0,
                 max: 10
             };
             component.yAxis = {
                 title: {
-                    text: 'Position (meters)'
+                    text: this.$translate('positionMeters')
                 },
                 min: 0,
                 max: 10
             };
             component.series = [{
-                name: 'Prediction',
+                name: this.$translate('prediction'),
                 data: [],
                 color: 'blue',
                 marker: {
@@ -931,7 +934,7 @@ var GraphService = function (_NodeService) {
     return GraphService;
 }(_nodeService2.default);
 
-GraphService.$inject = ['StudentDataService', 'UtilService'];
+GraphService.$inject = ['$filter', 'StudentDataService', 'UtilService'];
 
 exports.default = GraphService;
 //# sourceMappingURL=graphService.js.map

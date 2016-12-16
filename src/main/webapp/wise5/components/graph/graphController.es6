@@ -7,7 +7,8 @@ import html2canvas from 'html2canvas';
 //import draggablePoints from 'highcharts/draggable-points';
 
 class GraphController {
-    constructor($injector,
+    constructor($filter,
+                $injector,
                 $q,
                 $rootScope,
                 $scope,
@@ -21,6 +22,7 @@ class GraphController {
                 StudentDataService,
                 UtilService) {
 
+        this.$filter = $filter;
         this.$injector = $injector;
         this.$q = $q;
         this.$rootScope = $rootScope;
@@ -34,6 +36,9 @@ class GraphController {
         this.StudentAssetService = StudentAssetService;
         this.StudentDataService = StudentDataService;
         this.UtilService = UtilService;
+        
+        this.$translate = this.$filter('translate');
+        
         this.idToOrder = this.ProjectService.idToOrder;
 
         // the node id of the current node
@@ -488,7 +493,7 @@ class GraphController {
 
                 // set save message
                 if (isSubmit) {
-                    this.setSaveMessage('Submitted', clientSaveTime);
+                    this.setSaveMessage(this.$translate('submitted'), clientSaveTime);
 
                     this.submit();
 
@@ -496,9 +501,9 @@ class GraphController {
                     this.isSubmitDirty = false;
                     this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: false});
                 } else if (isAutoSave) {
-                    this.setSaveMessage('Auto-saved', clientSaveTime);
+                    this.setSaveMessage(this.$translate('autoSaved'), clientSaveTime);
                 } else {
-                    this.setSaveMessage('Saved', clientSaveTime);
+                    this.setSaveMessage(this.$translate('saved'), clientSaveTime);
                 }
 
                 // re-draw the graph
@@ -544,7 +549,7 @@ class GraphController {
                      * student if they want to overwrite the data
                      */
                     
-                    var answer = confirm("Are you sure you want to overwrite the current line data?");
+                    var answer = confirm(this.$translate('areYouSureYouWantToOverwriteTheCurrentLineData'));
                     
                     if (!answer) {
                         // the student does not want to overwrite the data
@@ -1401,9 +1406,9 @@ class GraphController {
         var seriesName = this.activeSeries.name;
 
         if (seriesName == null || seriesName == '') {
-            confirmMessage = 'Are you sure you want to reset the series?';
+            confirmMessage = this.$translate('areYouSureYouWantToResetTheSeries');
         } else {
-            confirmMessage = 'Are you sure you want to reset the "' + seriesName + '" series?';
+            confirmMessage = this.$translate('areYouSureYouWantToResetTheNamedSeries');
         }
 
         // ask the student if they are sure they want to reset the series
@@ -1547,13 +1552,13 @@ class GraphController {
                 this.isSubmitDirty = false;
                 this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: false});
                 // set save message
-                this.setSaveMessage('Last submitted', clientSaveTime);
+                this.setSaveMessage(this.$translate('lastSubmitted'), clientSaveTime);
             } else {
                 // latest state is not a submission, so set isSubmitDirty to true and notify node
                 this.isSubmitDirty = true;
                 this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: true});
                 // set save message
-                this.setSaveMessage('Last saved', clientSaveTime);
+                this.setSaveMessage(this.$translate('lastSaved'), clientSaveTime);
             }
         }
     };
@@ -2476,7 +2481,7 @@ class GraphController {
                  */
                 
                 // make sure the author really wants to change the component type
-                var answer = confirm('Are you sure you want to change this component type?');
+                var answer = confirm(this.$translate('areYouSureYouWantToChangeThisComponentType'));
                 
                 if (answer) {
                     // the author wants to change the component type
@@ -2766,7 +2771,7 @@ class GraphController {
 
         // make a new trial with a trial number one larger than the existing max
         var trial = {};
-        trial.name = 'Trial ' + (maxTrialNumber + 1);
+        trial.name = this.$translate('trial') + ' ' + (maxTrialNumber + 1);
         trial.series = series;
         trial.show = true;
         trial.id = this.UtilService.generateKey(10);
@@ -3069,9 +3074,9 @@ class GraphController {
             let name = this.getTrialById(id).name;
             return name;
         } else if (this.trialIdsToShow.length > 1) {
-            return this.trialIdsToShow.length + " trials shown";
+            return this.trialIdsToShow.length + " " + this.$translate('trialsShown');
         } else {
-            return "Select trials to show";
+            return this.$translate('selectTrialsToShow');
         }
     };
 
@@ -3724,6 +3729,7 @@ class GraphController {
 
 
 GraphController.$inject = [
+    '$filter',
     '$injector',
     '$q',
     '$rootScope',

@@ -13,112 +13,112 @@
                        ng-model='graphController.authoringComponentContent.showSaveButton'
                        ng-change='graphController.authoringViewComponentChanged()'/>
                 <br/>
-                Show Submit Button:
+                {{ 'showSubmitButton' | translate }}:
                 <input type='checkbox'
                        ng-model='graphController.authoringComponentContent.showSubmitButton'
                        ng-change='graphController.authoringViewComponentChanged()'/>
                 <br/>
-                Graph Title: <input ng-model='graphController.authoringComponentContent.title'
+                {{ 'graphTitle' | translate }}: <input ng-model='graphController.authoringComponentContent.title'
                                     ng-change='graphController.authoringViewComponentChanged()'
                                     ng-model-options='{ debounce: 1000 }'
                                     size='30'/>
-                Graph Type: <input ng-model='graphController.authoringComponentContent.graphType'
+                {{ 'graphType' | translate }}: <input ng-model='graphController.authoringComponentContent.graphType'
                                    ng-model-options='{ debounce: 1000 }'
                                    ng-change='graphController.authoringViewComponentChanged()'/>
                 <br/>
-                Graph Width: <input type='number'
+                {{ 'graphWidth' | translate }}: <input type='number'
                                     ng-model='graphController.authoringComponentContent.width'
                                     ng-model-options='{ debounce: 1000 }'
                                     ng-change='graphController.authoringViewComponentChanged()'/>
-                Graph Height: <input type='number'
+                {{ 'graphHeight' | translate }}: <input type='number'
                                      ng-model='graphController.authoringComponentContent.height'
                                      ng-model-options='{ debounce: 1000 }'
                                      ng-change='graphController.authoringViewComponentChanged()'/>
                 <br/>
-                X Axis Title: <input ng-model='graphController.authoringComponentContent.xAxis.title.text'
+                {{ 'xAxisTitle' | translate }}: <input ng-model='graphController.authoringComponentContent.xAxis.title.text'
                                      ng-model-options='{ debounce: 1000 }'
                                      ng-change='graphController.authoringViewComponentChanged()'/>
-                X Min: <input type='number'
+                {{ 'xMin' | translate }}: <input type='number'
                               ng-model='graphController.authoringComponentContent.xAxis.min'
                               ng-model-options='{ debounce: 1000 }'
                               ng-change='graphController.authoringViewComponentChanged()'/>
-                X Max: <input type='number'
+                {{ 'xMax' | translate }}: <input type='number'
                               ng-model='graphController.authoringComponentContent.xAxis.max'
                               ng-model-options='{ debounce: 1000 }'
                               ng-change='graphController.authoringViewComponentChanged()'/>
                 <br/>
                 <br/>
-                Y Axis Title: <input ng-model='graphController.authoringComponentContent.yAxis.title.text'
+                {{ 'yAxisTitle' | translate }}: <input ng-model='graphController.authoringComponentContent.yAxis.title.text'
                                      ng-model-options='{ debounce: 1000 }'
                                      ng-change='graphController.authoringViewComponentChanged()'/>
-                Y Min: <input type='number'
+                {{ 'yMin' | translate }}: <input type='number'
                               ng-model='graphController.authoringComponentContent.yAxis.min'
                               ng-model-options='{ debounce: 1000 }'
                               ng-change='graphController.authoringViewComponentChanged()'/>
-                Y Max: <input type='number'
+                {{ 'yMax' | translate }}: <input type='number'
                               ng-model='graphController.authoringComponentContent.yAxis.max'
                               ng-model-options='{ debounce: 1000 }'
                               ng-change='graphController.authoringViewComponentChanged()'/>
                 <br/>
                 <br/>
-                Background Image: <input type='text'
+                {{ 'backgroundImage' | translate }}: <input type='text'
                                          size='80'
                                          ng-model='graphController.authoringComponentContent.backgroundImage'
                                          ng-model-options='{ debounce: 1000 }'
                                          ng-change='graphController.authoringViewComponentChanged()'/>
                 <br/>
                 <br/>
-                Enable Trials <input type='checkbox'
+                {{ 'enableTrials' | translate }} <input type='checkbox'
                                      ng-model='graphController.authoringComponentContent.enableTrials'
                                      ng-change='graphController.authoringViewEnableTrialsClicked()'/>
                 <br/>
                 <div ng-show='graphController.authoringComponentContent.enableTrials'>
-                    Can Student Create Trials <input type='checkbox'
+                    {{ 'canStudentCreateTrials' | translate }} <input type='checkbox'
                                                      ng-model='graphController.authoringComponentContent.canCreateNewTrials'
                                                      ng-show='graphController.authoringComponentContent.enableTrials'
                                                      ng-change='graphController.authoringViewComponentChanged()'/>
                     <br/>
-                    Can Student Delete Trials <input type='checkbox'
+                    {{ 'canStudentDeleteTrials' | translate }} <input type='checkbox'
                                                      ng-model='graphController.authoringComponentContent.canDeleteTrials'
                                                      ng-show='graphController.authoringComponentContent.enableTrials'
                                                      ng-change='graphController.authoringViewComponentChanged()'/>
                     <br/>
-                    Hide Existing Trials On New Trial <input type='checkbox'
+                    {{ 'hideExistingTrialsOnNewTrial' | translate }} <input type='checkbox'
                                                              ng-model='graphController.authoringComponentContent.hideAllTrialsOnNewTrial'
                                                              ng-show='graphController.authoringComponentContent.enableTrials'
                                                              ng-change='graphController.authoringViewComponentChanged()'/>
                 </div>
                 <br/>
-                Enable File Upload <input type='checkbox'
+                {{ 'enableFileUpload' | translate }} <input type='checkbox'
                                      ng-model='graphController.authoringComponentContent.enableFileUpload'
                                      ng-change='graphController.authoringViewComponentChanged()'/>
                 <br/>
-                Series
-                <button ng-click='graphController.authoringAddSeriesClicked()'>Add Series</button>
+                {{ 'series' | translate }}
+                <button ng-click='graphController.authoringAddSeriesClicked()'>{{ 'addSeries' | translate }}</button>
                 <div ng-repeat='series in graphController.authoringComponentContent.series track by $index'
                      style='border: 1px solid black'>
-                    Name: <input ng-model='series.name'
+                    {{ 'name' | translate }}: <input ng-model='series.name'
                                  ng-change='graphController.authoringViewComponentChanged()'
                                  ng-model-options='{ debounce: 1000 }'
                                  size='30'/>
                     <br/>
-                    Color: <input ng-model='series.color'
+                    {{ 'color' | translate }}: <input ng-model='series.color'
                                   ng-model-options='{ debounce: 1000 }'
                                   ng-change='graphController.authoringViewComponentChanged()'/>
                     <br/>
-                    Symbol: <input ng-model='series.marker.symbol'
+                    {{ 'symbol' | translate }}: <input ng-model='series.marker.symbol'
                                    ng-model-options='{ debounce: 1000 }'
                                    ng-change='graphController.authoringViewComponentChanged()'/>
                     <br/>
-                    Can Student Edit: <input type='checkbox'
+                    {{ 'canStudentEdit' | translate }}: <input type='checkbox'
                                              ng-model='series.canEdit'
                                              ng-model-options='{ debounce: 1000 }'
                                              ng-change='graphController.authoringViewComponentChanged()'/>
                     <br/>
-                    <button ng-click='graphController.authoringDeleteSeriesClicked($index)'>Delete Series</button>
+                    <button ng-click='graphController.authoringDeleteSeriesClicked($index)'>{{ 'deleteSeries' | translate }}</button>
                 </div>
                 <br/>
-                Max Score:
+                {{ 'maxScore' | translate }}:
                 <input type='number'
                        ng-model='graphController.authoringComponentContent.maxScore'
                        ng-change='graphController.authoringViewComponentChanged()'
@@ -126,14 +126,14 @@
                        style='width: 3em'/>
             </div>
             <div ng-if='graphController.mode === "authoring"'>
-                Import Previous Work:
+                {{ 'importPreviousWork' | translate }}:
                 <input type='checkbox'
                        ng-model='graphController.authoringComponentContent.importPreviousWork'
                        ng-click='graphController.authoringImportPreviousWorkClicked()'
                        ng-change='graphController.authoringViewComponentChanged()'/>
             </div>
             <div ng-if='graphController.mode === "authoring" && graphController.authoringComponentContent.importPreviousWork'>
-                Import Previous Work Step:
+                {{ 'importPreviousWorkStep' | translate }}:
                 <select ng-model='graphController.authoringComponentContent.importPreviousWorkNodeId'
                         ng-change='graphController.authoringImportPreviousWorkNodeIdChanged()'>
                     <option></option>
@@ -142,7 +142,7 @@
                             ng-if='graphController.isApplicationNode(item.$key)'>{{graphController.getNodePositionAndTitleByNodeId(item.$key)}}</option>
                 </select>
                 <br/>
-                Import Previous Work Component:
+                {{ 'importPreviousWorkComponent' | translate }}:
                 <select ng-model='graphController.authoringComponentContent.importPreviousWorkComponentId'
                         ng-change='graphController.authoringImportPreviousWorkComponentIdChanged()'
                         ng-options='component.id as component.type disable when !graphController.componentHasWork(component) for component in graphController.getComponentsByNodeId(graphController.authoringComponentContent.importPreviousWorkNodeId)'>
@@ -150,14 +150,14 @@
                 </select>
             </div>
             <div ng-if='graphController.mode === "authoring"'>
-                Show Previous Work:
+                {{ 'showPreviousWork' | translate }}:
                 <input type='checkbox'
                        ng-model='graphController.authoringComponentContent.showPreviousWork'
                        ng-click='graphController.authoringShowPreviousWorkClicked()'
                        ng-change='graphController.authoringViewComponentChanged()'/>
             </div>
             <div ng-if='graphController.mode === "authoring" && graphController.authoringComponentContent.showPreviousWork'>
-                Show Previous Work Step:
+                {{ 'showPreviousWorkStep' | translate }}:
                 <select ng-model='graphController.authoringComponentContent.showPreviousWorkNodeId'
                         ng-change='graphController.authoringShowPreviousWorkNodeIdChanged()'>
                     <option></option>
@@ -166,14 +166,14 @@
                             ng-if='graphController.isApplicationNode(item.$key)'>{{graphController.getNodePositionAndTitleByNodeId(item.$key)}}</option>
                 </select>
                 <br/>
-                Show Previous Work Component:
+                {{ 'showPreviousWorkComponent' | translate }}:
                 <select ng-model='graphController.authoringComponentContent.showPreviousWorkComponentId'
                         ng-change='graphController.authoringShowPreviousWorkComponentIdChanged()'
                         ng-options='component.id as component.type disable when !graphController.componentHasWork(component) for component in graphController.getComponentsByNodeId(graphController.authoringComponentContent.showPreviousWorkNodeId)'>
                     <option></option>
                 </select>
                 <br/>
-                Show Previous Work Prompt:
+                {{ 'showPreviousWorkPrompt' | translate }}:
                 <input type='checkbox'
                        ng-model='graphController.authoringComponentContent.showPreviousWorkPrompt'
                        ng-change='graphController.authoringViewComponentChanged()'/>
@@ -197,7 +197,7 @@
             <hr />
             <div class="component__actions">
                 <md-input-container ng-if='graphController.componentContent.enableTrials'>
-                    <label>Select trials to show</label>
+                    <label>{{ 'selectTrialsToShow' | translate }}</label>
                     <md-select ng-model="graphController.trialIdsToShow"
                                ng-change='graphController.trialIdsToShowChanged()'
                                md-selected-text="graphController.selectedTrialsText"
@@ -215,7 +215,7 @@
                     </md-select>
                 </md-input-container>
                 <md-input-container ng-if="graphController.componentContent.enableTrials && graphController.showSelectActiveTrials()">
-                    <label>Select trial to edit</label>
+                    <label>{{ 'selectTrialToEdit' | translate }}</label>
                     <md-select ng-model="graphController.activeTrial"
                                ng-change='graphController.activeTrialChanged()'
                                class="graph-select">
@@ -227,7 +227,7 @@
                     </md-select>
                 </md-input-container>
                 <md-input-container ng-if="graphController.showSelectSeries()">
-                    <label>Select series to edit</label>
+                    <label>{{ 'selectSeriesToEdit' | translate }}</label>
                     <md-select ng-model="graphController.activeSeries"
                                ng-change='graphController.activeSeriesChanged()'
                                class="graph-select">
@@ -240,19 +240,19 @@
                 <md-button class="md-accent"
                            ng-click='graphController.resetSeries()'
                            ng-if='graphController.showResetSeriesButton() && graphController.activeSeries.canEdit'>
-                    <md-icon> restore </md-icon> Reset Series
+                    <md-icon> restore </md-icon> {{ 'resetSeries' | translate }}
                 </md-button>
             </div>
             <div class="component__actions">
                 <md-button class="md-accent"
                            ng-click='graphController.newTrial()'
                            ng-show='graphController.componentContent.canCreateNewTrials'>
-                    <md-icon> add </md-icon> New Trial
+                    <md-icon> add </md-icon> {{ 'newTrial' | translate }}
                 </md-button>
                 <md-button class="md-accent"
                            ng-click='graphController.resetGraph()'
                            ng-show='graphController.showResetGraphButton()'>
-                    <md-icon> restore </md-icon> Reset Graph
+                    <md-icon> restore </md-icon> {{ 'resetGraph' | translate }}
                 </md-button>
                 <md-button class="md-accent md-primary"
                         ng-click='graphController.snipDrawing($event)'
@@ -261,7 +261,7 @@
                 </md-button>
                 <md-button class="md-accent" ng-if="graphController.isStudentAttachmentEnabled"
                            ng-click="nodeController.showStudentAssets($event, component.id, graphController.isDisabled)">
-                    <md-icon>image</md-icon> Import Data
+                    <md-icon>image</md-icon> {{ 'importData' | translate }}
                 </md-button>
             </div>
             <highchart id="{{graphController.chartId}}" config="graphController.chartConfig"></highchart>
@@ -269,11 +269,11 @@
                 <md-button class="md-raised md-primary"
                            ng-click='graphController.saveButtonClicked()'
                            ng-if='graphController.showSaveButton()'
-                           ng-disabled='graphController.isDisabled || !graphController.isDirty'>Save</md-button>
+                           ng-disabled='graphController.isDisabled || !graphController.isDirty'>{{ 'save' | translate }}</md-button>
                 <md-button class="md-raised md-primary"
                            ng-click='graphController.submitButtonClicked()'
                            ng-if='graphController.showSubmitButton()'
-                           ng-disabled='graphController.isDisabled || !graphController.isSubmitDirty'>Submit</md-button>
+                           ng-disabled='graphController.isDisabled || !graphController.isSubmitDirty'>{{ 'submit' | translate }}</md-button>
                 <span ng-if="graphController.showSaveButton() || graphController.showSubmitButton()"
                           ng-show="graphController.saveMessage.text"
                           class="component__actions__info md-caption">
