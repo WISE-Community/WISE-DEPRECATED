@@ -325,8 +325,7 @@ var vleModule = _angular2.default.module('vle', [(0, _angularDragula2.default)(_
     $httpProvider.interceptors.push('HttpInterceptor');
 
     // Set up Translations
-    $translatePartialLoaderProvider.addPart('i18n/common');
-    $translatePartialLoaderProvider.addPart('i18n/vle');
+    $translatePartialLoaderProvider.addPart('vle/i18n');
     $translateProvider.useLoader('$translatePartialLoader', {
         urlTemplate: 'wise5/{part}/i18n_{lang}.json'
     }).fallbackLanguage(['en']).registerAvailableLanguageKeys(['en', 'es', 'ja', 'ko', 'pt', 'tr', 'zh_CN'], {

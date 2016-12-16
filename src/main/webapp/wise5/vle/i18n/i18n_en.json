@@ -14,6 +14,7 @@
     "dismissNotificationDismissCode": "Dismiss code",
     "dismissNotificationDismissCodeMessage": "Teacher, enter code to dismiss this alert:",
     "dismissNotificationInvalidDismissCode": "Invalid dismiss code. Please try again.",
+    "dropAssetMessage": "Drop image or file here or click to upload!",
     "editNotebookItem": "Edit Notebook Item",
     "goHome": "Go Home",
     "itemLocked": "Item Locked",

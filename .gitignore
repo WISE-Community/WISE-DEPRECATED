@@ -2,6 +2,10 @@
 *.class
 *.DS_Store
 build
+.jspm
+.m2
+.npm
+.v8flags*
 node_modules
 target
 src/main/webapp/wise5/jspm_packages

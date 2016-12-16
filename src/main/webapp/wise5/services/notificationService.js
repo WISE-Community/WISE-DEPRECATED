@@ -72,8 +72,8 @@ var NotificationService = function () {
     _createClass(NotificationService, [{
         key: 'createNewNotification',
         value: function createNewNotification(notificationType, nodeId, componentId, fromWorkgroupId, toWorkgroupId, message) {
-            var data = arguments.length <= 6 || arguments[6] === undefined ? null : arguments[6];
-            var groupId = arguments.length <= 7 || arguments[7] === undefined ? null : arguments[7];
+            var data = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : null;
+            var groupId = arguments.length > 7 && arguments[7] !== undefined ? arguments[7] : null;
 
             var nodePosition = this.ProjectService.getNodePositionById(nodeId);
             var nodePositionAndTitle = this.ProjectService.getNodePositionAndTitleByNodeId(nodeId);
@@ -109,7 +109,7 @@ var NotificationService = function () {
         value: function retrieveNotifications() {
             var _this2 = this;
 
-            var toWorkgroupId = arguments.length <= 0 || arguments[0] === undefined ? null : arguments[0];
+            var toWorkgroupId = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
 
 
             var notificationURL = this.ConfigService.getNotificationURL();
