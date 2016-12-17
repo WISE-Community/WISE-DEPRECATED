@@ -98,8 +98,7 @@ var MultipleChoiceService = function (_NodeService) {
                             "componentId": componentId,
                             "choiceIds": [choice.id]
                         },
-                        "userFriendlyDescription": "User chose \"" + choice.text + "\" (Choice ID: " + choice.id + ") on this component."
-
+                        "userFriendlyDescription": this.$translate('userChose', { choiceText: choice.text, choiceId: choice.id })
                     };
                     allPossibleTransitionCriteria.push(possibleTransitionCriteria);
                 }
