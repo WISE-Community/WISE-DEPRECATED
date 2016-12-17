@@ -19,7 +19,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var DrawController = function () {
-    function DrawController($filter, $injector, $q, $rootScope, $scope, $timeout, ConfigService, DrawService, NodeService, NotebookService, ProjectService, StudentAssetService, StudentDataService, UtilService) {
+    function DrawController($filter, $injector, $q, $rootScope, $scope, $timeout, AnnotationService, ConfigService, DrawService, NodeService, NotebookService, ProjectService, StudentAssetService, StudentDataService, UtilService) {
         var _this = this;
 
         _classCallCheck(this, DrawController);
@@ -30,6 +30,7 @@ var DrawController = function () {
         this.$rootScope = $rootScope;
         this.$scope = $scope;
         this.$timeout = $timeout;
+        this.AnnotationService = AnnotationService;
         this.ConfigService = ConfigService;
         this.DrawService = DrawService;
         this.NodeService = NodeService;
@@ -154,7 +155,7 @@ var DrawController = function () {
                 this.drawingToolId = "drawingtool_" + this.nodeId + "_" + this.componentId;
 
                 // get the latest annotations
-                this.latestAnnotations = this.$scope.$parent.nodeController.getLatestComponentAnnotations(this.componentId);
+                this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
             } else if (this.mode === 'grading' || this.mode === "onlyShowWork") {
                 // get the component state from the scope
                 var componentState = this.$scope.componentState;
@@ -162,6 +163,11 @@ var DrawController = function () {
                     this.drawingToolId = "drawingtool_" + componentState.id;
                 }
                 this.isSnipDrawingButtonVisible = false;
+
+                if (this.mode === 'grading') {
+                    // get the latest annotations
+                    this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
+                }
             } else if (this.mode === 'showPreviousWork') {
                 // get the component state from the scope
                 var componentState = this.$scope.componentState;
@@ -373,6 +379,33 @@ var DrawController = function () {
         });
 
         /**
+         * Listen for the 'annotationSavedToServer' event which is fired when
+         * we receive the response from saving an annotation to the server
+         */
+        this.$scope.$on('annotationSavedToServer', function (event, args) {
+
+            if (args != null) {
+
+                // get the annotation that was saved to the server
+                var annotation = args.annotation;
+
+                if (annotation != null) {
+
+                    // get the node id and component id of the annotation
+                    var annotationNodeId = annotation.nodeId;
+                    var annotationComponentId = annotation.componentId;
+
+                    // make sure the annotation was for this component
+                    if (_this.nodeId === annotationNodeId && _this.componentId === annotationComponentId) {
+
+                        // get latest score and comment annotations for this component
+                        _this.latestAnnotations = _this.AnnotationService.getLatestComponentAnnotations(_this.nodeId, _this.componentId, _this.workgroupId);
+                    }
+                }
+            }
+        });
+
+        /**
          * Listen for the 'exitNode' event which is fired when the student
          * exits the parent node. This will perform any necessary cleanup
          * when the student exits the parent node.
@@ -435,7 +468,7 @@ var DrawController = function () {
 
             if (componentState == null) {
                 /*
-                 * only import work or use starter draw data if the student 
+                 * only import work or use starter draw data if the student
                  * does not already have work for this component
                  */
 
@@ -686,7 +719,7 @@ var DrawController = function () {
          * Check if latest component state is a submission and set isSubmitDirty accordingly
          */
         value: function processLatestSubmit() {
-            var latestState = this.$scope.componentState;
+            var latestState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
 
             if (latestState) {
                 var serverSaveTime = latestState.serverSaveTime;
@@ -920,48 +953,6 @@ var DrawController = function () {
                 // distable saving if we're in showStudentWorkOnly mode
                 this.isDisabled = true;
             }
-        }
-    }, {
-        key: 'showSaveButton',
-
-
-        /**
-         * Check whether we need to show the save button
-         * @return whether to show the save button
-         */
-        value: function showSaveButton() {
-            var show = false;
-
-            if (this.componentContent != null) {
-
-                // check the showSaveButton field in the component content
-                if (this.componentContent.showSaveButton) {
-                    show = true;
-                }
-            }
-
-            return show;
-        }
-    }, {
-        key: 'showSubmitButton',
-
-
-        /**
-         * Check whether we need to show the submit button
-         * @return whether to show the submit button
-         */
-        value: function showSubmitButton() {
-            var show = false;
-
-            if (this.componentContent != null) {
-
-                // check the showSubmitButton field in the component content
-                if (this.componentContent.showSubmitButton) {
-                    show = true;
-                }
-            }
-
-            return show;
         }
     }, {
         key: 'isLockAfterSubmit',
@@ -1204,7 +1195,7 @@ var DrawController = function () {
             if (!this.authoringComponentContent.showPreviousWork) {
                 /*
                  * show previous work has been turned off so we will clear the
-                 * show previous work node id, show previous work component id, and 
+                 * show previous work node id, show previous work component id, and
                  * show previous work prompt values
                  */
                 this.authoringComponentContent.showPreviousWorkNodeId = null;
@@ -1562,7 +1553,7 @@ var DrawController = function () {
             if (!this.authoringComponentContent.importPreviousWork) {
                 /*
                  * import previous work has been turned off so we will clear the
-                 * import previous work node id, and import previous work 
+                 * import previous work node id, and import previous work
                  * component id
                  */
                 this.authoringComponentContent.importPreviousWorkNodeId = null;
@@ -1904,7 +1895,7 @@ var DrawController = function () {
     return DrawController;
 }();
 
-DrawController.$inject = ['$filter', '$injector', '$q', '$rootScope', '$scope', '$timeout', 'ConfigService', 'DrawService', 'NodeService', 'NotebookService', 'ProjectService', 'StudentAssetService', 'StudentDataService', 'UtilService'];
+DrawController.$inject = ['$filter', '$injector', '$q', '$rootScope', '$scope', '$timeout', 'AnnotationService', 'ConfigService', 'DrawService', 'NodeService', 'NotebookService', 'ProjectService', 'StudentAssetService', 'StudentDataService', 'UtilService'];
 
 exports.default = DrawController;
 //# sourceMappingURL=drawController.js.map

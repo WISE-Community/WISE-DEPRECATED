@@ -138,7 +138,7 @@ var ConceptMapController = function () {
 
         /*
          * used to remember the offset of the mouse relative to the upper left
-         * of the node image the student started dragging to create a new node 
+         * of the node image the student started dragging to create a new node
          * instance
          */
         this.tempOffsetX = 0;
@@ -207,14 +207,17 @@ var ConceptMapController = function () {
                 this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
                 this.availableNodes = this.componentContent.nodes;
                 this.availableLinks = this.componentContent.links;
+
                 // get the latest annotations
-                // TODO: watch for new annotations and update accordingly
-                this.latestAnnotations = this.$scope.$parent.nodeController.getLatestComponentAnnotations(this.componentId);
+                this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
             } else if (this.mode === 'grading') {
                 this.isPromptVisible = true;
                 this.isSaveButtonVisible = false;
                 this.isSubmitButtonVisible = false;
                 this.isDisabled = true;
+
+                // get the latest annotations
+                this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
             } else if (this.mode === 'onlyShowWork') {
                 this.isPromptVisible = false;
                 this.isSaveButtonVisible = false;
@@ -288,7 +291,7 @@ var ConceptMapController = function () {
                     this.importWork();
                 } else if (this.componentContent.starterConceptMap != null) {
                     /*
-                     * the student has not done any work and there is a starter 
+                     * the student has not done any work and there is a starter
                      * concept map so we will populate the concept map with
                      * the starter
                      */
@@ -319,7 +322,7 @@ var ConceptMapController = function () {
             // check if the student has used up all of their submits
             if (this.componentContent.maxSubmitCount != null && this.submitCounter >= this.componentContent.maxSubmitCount) {
                 /*
-                 * the student has used up all of their chances to submit so we 
+                 * the student has used up all of their chances to submit so we
                  * will disable the submit button
                  */
                 this.isSubmitButtonDisabled = true;
@@ -509,7 +512,7 @@ var ConceptMapController = function () {
                     if (_this.nodeId === annotationNodeId && _this.componentId === annotationComponentId) {
 
                         // get latest score and comment annotations for this component
-                        _this.latestAnnotations = _this.$scope.$parent.nodeController.getLatestComponentAnnotations(_this.componentId);
+                        _this.latestAnnotations = _this.AnnotationService.getLatestComponentAnnotations(_this.nodeId, _this.componentId, _this.workgroupId);
                     }
                 }
             }
@@ -823,9 +826,9 @@ var ConceptMapController = function () {
                 var thisResult = {};
 
                 /*
-                 * create the any function that can be called in the custom rule 
+                 * create the any function that can be called in the custom rule
                  * evaluator code. the arguments to the any function are rule names.
-                 * for example if we are looking for any of the links below 
+                 * for example if we are looking for any of the links below
                  * Sun (Infrared Radiation) Space
                  * Sun (Heat) Space
                  * Sun (Solar Radiation) Space
@@ -838,7 +841,7 @@ var ConceptMapController = function () {
                 };
 
                 /*
-                 * create the all function that can be called in the custom rule 
+                 * create the all function that can be called in the custom rule
                  * evaluator code. the arguments to the all function are rule names.
                  * for example if we are looking for all of the links below
                  * Sun (Infrared Radiation) Space
@@ -853,7 +856,7 @@ var ConceptMapController = function () {
                 };
 
                 /*
-                 * create the setResult function that can be called in the custom rule 
+                 * create the setResult function that can be called in the custom rule
                  * evaluator code
                  */
                 var setResult = function setResult(result) {
@@ -1154,7 +1157,7 @@ var ConceptMapController = function () {
                 var studentData = this.studentResponse;
 
                 /*
-                 * display a dialog message while the student waits for their work 
+                 * display a dialog message while the student waits for their work
                  * to be scored by CRater
                  */
                 this.messageDialog = this.$mdDialog.show({
@@ -1174,7 +1177,7 @@ var ConceptMapController = function () {
                         if (data != null) {
 
                             /*
-                             * annotations we put in the component state will be 
+                             * annotations we put in the component state will be
                              * removed from the component state and saved separately
                              */
                             componentState.annotations = [];
@@ -1213,7 +1216,7 @@ var ConceptMapController = function () {
 
                     if (_this4.messageDialog != null) {
                         /*
-                         * hide the dialog that tells the student to wait since 
+                         * hide the dialog that tells the student to wait since
                          * the work has been scored.
                          */
                         _this4.$mdDialog.hide(_this4.messageDialog);
@@ -1316,39 +1319,6 @@ var ConceptMapController = function () {
                     }
                 }
             }
-        }
-    }, {
-        key: 'showPrompt',
-
-
-        /**
-         * Check whether we need to show the prompt
-         * @return whether to show the prompt
-         */
-        value: function showPrompt() {
-            return this.isPromptVisible;
-        }
-    }, {
-        key: 'showSaveButton',
-
-
-        /**
-         * Check whether we need to show the save button
-         * @return whether to show the save button
-         */
-        value: function showSaveButton() {
-            return this.isSaveButtonVisible;
-        }
-    }, {
-        key: 'showSubmitButton',
-
-
-        /**
-         * Check whether we need to show the submit button
-         * @return whether to show the submit button
-         */
-        value: function showSubmitButton() {
-            return this.isSubmitButtonVisible;
         }
     }, {
         key: 'isLockAfterSubmit',
@@ -1627,7 +1597,7 @@ var ConceptMapController = function () {
             if (!this.authoringComponentContent.showPreviousWork) {
                 /*
                  * show previous work has been turned off so we will clear the
-                 * show previous work node id, show previous work component id, and 
+                 * show previous work node id, show previous work component id, and
                  * show previous work prompt values
                  */
                 this.authoringComponentContent.showPreviousWorkNodeId = null;
@@ -1650,7 +1620,7 @@ var ConceptMapController = function () {
             if (this.authoringComponentContent.showPreviousWorkNodeId == null || this.authoringComponentContent.showPreviousWorkNodeId == '') {
 
                 /*
-                 * the show previous work node id is null so we will also set the 
+                 * the show previous work node id is null so we will also set the
                  * show previous component id to null
                  */
                 this.authoringComponentContent.showPreviousWorkComponentId = '';
@@ -1754,7 +1724,7 @@ var ConceptMapController = function () {
         }
 
         /**
-         * A node up button was clicked in the authoring tool so we will move the 
+         * A node up button was clicked in the authoring tool so we will move the
          * node up
          * @param index the index of the node that we will move
          */
@@ -1869,7 +1839,7 @@ var ConceptMapController = function () {
         }
 
         /**
-         * A link up button was clicked in the authoring tool so we will move the 
+         * A link up button was clicked in the authoring tool so we will move the
          * link up
          * @param index the index of the link
          */
@@ -1908,7 +1878,7 @@ var ConceptMapController = function () {
         }
 
         /**
-         * A link down button was clicked in the authoring tool so we will move the 
+         * A link down button was clicked in the authoring tool so we will move the
          * link down
          * @param index the index of the link
          */
@@ -2168,7 +2138,7 @@ var ConceptMapController = function () {
 
             if (rule != null) {
                 if (rule.type == 'node') {
-                    /* 
+                    /*
                      * the rule has been set to 'node' instead of 'link' so we
                      * will remove the link label and other node label
                      */
@@ -3002,11 +2972,11 @@ var ConceptMapController = function () {
                  * is more than 20 pixels away from the start.
                  *
                  * we will determine the curvature of the link based upon how
-                 * the user has dragged the mouse in relation to the center 
+                 * the user has dragged the mouse in relation to the center
                  * of the connector. if they start drawing the link horizontally
                  * we will create a straight line with no curvature. if they
                  * start drawing the link by moving the mouse up, we will create
-                 * a line that curves up. if they start drawing the link by 
+                 * a line that curves up. if they start drawing the link by
                  * moving the mouse down, we will create a line that curves down.
                  */
                 if (!this.linkCurvatureSet && distance > 20) {
@@ -3022,7 +2992,7 @@ var ConceptMapController = function () {
 
                         if (slope == null) {
                             /*
-                             * the slope is infinite so we will default the 
+                             * the slope is infinite so we will default the
                              * curvature to 0.5
                              */
                             this.activeLink.curvature = 0.5;
@@ -3042,7 +3012,7 @@ var ConceptMapController = function () {
 
                         if (slope == null) {
                             /*
-                             * the slope is infinite so we will default the 
+                             * the slope is infinite so we will default the
                              * curvature to 0.5
                              */
                             this.activeLink.curvature = 0.5;
@@ -3257,7 +3227,7 @@ var ConceptMapController = function () {
             }
 
             /*
-             * add the parent offset values to the relative offset values to obtain 
+             * add the parent offset values to the relative offset values to obtain
              * the x and y values relative to the upper left corner of the svg
              */
             var x = parentOffsetX + offsetX;
@@ -3622,7 +3592,7 @@ var ConceptMapController = function () {
 
         /**
          * Disable node dragging. This will be called when the student creates a
-         * link so that they aren't dragging nodes around at the same time as 
+         * link so that they aren't dragging nodes around at the same time as
          * creating a link.
          */
 
@@ -3942,7 +3912,7 @@ var ConceptMapController = function () {
 
         /**
          * Remove a node by id. The id of a node is the same as its svg group id.
-         * @param groupId 
+         * @param groupId
          */
 
     }, {
@@ -4132,8 +4102,8 @@ var ConceptMapController = function () {
                         var sourceNodeGroupId = sourceNode.getGroupId();
 
                         if (sourceNodeGroupId == groupId) {
-                            /* 
-                             * if the source of the link is the same as the 
+                            /*
+                             * if the source of the link is the same as the
                              * destination node, we will not connect the link
                              */
                             this.activeLink.remove();
@@ -4505,7 +4475,7 @@ var ConceptMapController = function () {
          * svg > group > image
          * for example a link's path element will be located here
          * svg > group > path
-         * 
+         *
          * @param element get the group id of this element
          * @returns the group id
          */
@@ -4665,7 +4635,7 @@ var ConceptMapController = function () {
             if (!this.authoringComponentContent.importPreviousWork) {
                 /*
                  * import previous work has been turned off so we will clear the
-                 * import previous work node id, and import previous work 
+                 * import previous work node id, and import previous work
                  * component id
                  */
                 this.authoringComponentContent.importPreviousWorkNodeId = null;

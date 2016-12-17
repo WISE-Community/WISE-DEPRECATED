@@ -242,7 +242,7 @@
             </div>
             <md-input-container class="input-container md-block input-container--open-response input-container--component md-no-float">
                 <label class="input-label md-no-float" ng-disabled="conceptMapController.isDisabled"
-                       ng-if="conceptMapController.showPrompt()"><compile data="conceptMapController.getPrompt()"></compile></label>
+                       ng-if="conceptMapController.isPromptVisible"><compile data="conceptMapController.getPrompt()"></compile></label>
                 <possible-score max-score="conceptMapController.componentContent.maxScore"
                                 ng-if="conceptMapController.mode === 'student' && !conceptMapController.latestAnnotations.score"></possible-score>
                 <div class="input-wrapper" ng-class="{'input-wrapper--richtext': conceptMapController.isRichTextEnabled}">
@@ -340,18 +340,19 @@
                     <md-button ng-show="!conceptMapController.isDisabled" class="component__attachment__delete" ng-click='conceptMapController.removeAttachment(attachment)' title="Remove file"><md-icon>cancel</md-icon></md-button>
                 </div>
             </div>
-            <div ng-if="conceptMapController.showSaveButton() || conceptMapController.showSubmitButton()"
+            <div ng-if="conceptMapController.isSaveButtonVisible || conceptMapController.isSubmitButtonVisible"
                  class="component__actions" layout="row" layout-align="start center">
                 <md-button class="md-primary md-raised"
+                           ng-class="{'md-raised': !conceptMapController.isSubmitButtonVisible}"
                            ng-click="conceptMapController.saveButtonClicked()"
                            ng-disabled="conceptMapController.isDisabled || !conceptMapController.isDirty"
-                           ng-if="conceptMapController.showSaveButton()"
+                           ng-if="conceptMapController.isSaveButtonVisible"
                            aria-label="Save"
                            translate="save"></md-button>
                 <md-button class="md-raised md-primary"
                            ng-click="conceptMapController.submitButtonClicked()"
                            ng-disabled="conceptMapController.isDisabled || !conceptMapController.isSubmitDirty"
-                           ng-if="conceptMapController.showSubmitButton()"
+                           ng-if="conceptMapController.isSubmitButtonVisible"
                            aria-label="Submit"
                            translate="submit"></md-button>
 
@@ -363,25 +364,14 @@
             <component-annotations ng-if="conceptMapController.mode === 'student'"
                                    annotations='conceptMapController.latestAnnotations'
                                    max-score="conceptMapController.componentContent.maxScore"></component-annotations>
-            <div ng-if='conceptMapController.mode === "grading"'>
-                <annotation ng-if='conceptMapController.componentContent.maxScore > -1'
-                            type='score'
-                            mode='conceptMapController.mode'
-                            node-id='conceptMapController.nodeId'
-                            component-id='conceptMapController.componentId'
-                            from-workgroup-id='teacherWorkgroupId'
-                            to-workgroup-id='workgroupId'
-                            component-state-id='componentState.id'
-                            active='true'></annotation>
-                <br ng-if='conceptMapController.componentContent.maxScore > -1'/>
-                <annotation type='comment'
-                            mode='conceptMapController.mode'
-                            node-id='conceptMapController.nodeId'
-                            component-id='conceptMapController.componentId'
-                            from-workgroup-id='teacherWorkgroupId'
-                            to-workgroup-id='workgroupId'
-                            component-state-id='componentState.id'
-                            active='true'></annotation>
+            <component-grading ng-if="conceptMapController.mode === 'grading'"
+                              node-id='conceptMapController.nodeId'
+                              component-id='conceptMapController.componentId'
+                              max-score="conceptMapController.componentContent.maxScore"
+                              from-workgroup-id='teacherWorkgroupId'
+                              to-workgroup-id='workgroupId'
+                              component-state-id='componentState.id'
+                              active="true"></component-grading>
             </div>
         </div>
     </body>

@@ -9,7 +9,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var MatchController = function () {
-    function MatchController($filter, $injector, $q, $rootScope, $scope, dragulaService, ConfigService, MatchService, NodeService, ProjectService, StudentDataService, UtilService, $mdMedia) {
+    function MatchController($filter, $injector, $q, $rootScope, $scope, AnnotationService, dragulaService, ConfigService, MatchService, NodeService, ProjectService, StudentDataService, UtilService, $mdMedia) {
         var _this = this;
 
         _classCallCheck(this, MatchController);
@@ -19,6 +19,7 @@ var MatchController = function () {
         this.$q = $q;
         this.$rootScope = $rootScope;
         this.$scope = $scope;
+        this.AnnotationService = AnnotationService;
         this.dragulaService = dragulaService;
         this.ConfigService = ConfigService;
         this.MatchService = MatchService;
@@ -129,13 +130,15 @@ var MatchController = function () {
                 this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
 
                 // get the latest annotations
-                // TODO: watch for new annotations and update accordingly
-                this.latestAnnotations = this.$scope.$parent.nodeController.getLatestComponentAnnotations(this.componentId);
+                this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
             } else if (this.mode === 'grading') {
                 this.isPromptVisible = true;
                 this.isSaveButtonVisible = false;
                 this.isSubmitButtonVisible = false;
                 this.isDisabled = true;
+
+                // get the latest annotations
+                this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
             } else if (this.mode === 'onlyShowWork') {
                 this.isPromptVisible = false;
                 this.isSaveButtonVisible = false;
@@ -350,6 +353,33 @@ var MatchController = function () {
                 }
             }
         }));
+
+        /**
+         * Listen for the 'annotationSavedToServer' event which is fired when
+         * we receive the response from saving an annotation to the server
+         */
+        this.$scope.$on('annotationSavedToServer', function (event, args) {
+
+            if (args != null) {
+
+                // get the annotation that was saved to the server
+                var annotation = args.annotation;
+
+                if (annotation != null) {
+
+                    // get the node id and component id of the annotation
+                    var annotationNodeId = annotation.nodeId;
+                    var annotationComponentId = annotation.componentId;
+
+                    // make sure the annotation was for this component
+                    if (_this.nodeId === annotationNodeId && _this.componentId === annotationComponentId) {
+
+                        // get latest score and comment annotations for this component
+                        _this.latestAnnotations = _this.AnnotationService.getLatestComponentAnnotations(_this.nodeId, _this.componentId, _this.workgroupId);
+                    }
+                }
+            }
+        });
 
         /**
          * Listen for the 'exitNode' event which is fired when the student
@@ -1092,48 +1122,6 @@ var MatchController = function () {
             }
         }
     }, {
-        key: 'showSaveButton',
-
-
-        /**
-         * Check whether we need to show the save button
-         * @return whether to show the save button
-         */
-        value: function showSaveButton() {
-            var show = false;
-
-            if (this.componentContent != null) {
-
-                // check the showSaveButton field in the component content
-                if (this.componentContent.showSaveButton) {
-                    show = true;
-                }
-            }
-
-            return show;
-        }
-    }, {
-        key: 'showSubmitButton',
-
-
-        /**
-         * Check whether we need to show the submit button
-         * @return whether to show the submit button
-         */
-        value: function showSubmitButton() {
-            var show = false;
-
-            if (this.componentContent != null) {
-
-                // check the showSubmitButton field in the component content
-                if (this.componentContent.showSubmitButton) {
-                    show = true;
-                }
-            }
-
-            return show;
-        }
-    }, {
         key: 'isLockAfterSubmit',
 
 
@@ -1417,7 +1405,7 @@ var MatchController = function () {
             if (!this.authoringComponentContent.showPreviousWork) {
                 /*
                  * show previous work has been turned off so we will clear the
-                 * show previous work node id, show previous work component id, and 
+                 * show previous work node id, show previous work component id, and
                  * show previous work prompt values
                  */
                 this.authoringComponentContent.showPreviousWorkNodeId = null;
@@ -2145,7 +2133,7 @@ var MatchController = function () {
             if (!this.authoringComponentContent.importPreviousWork) {
                 /*
                  * import previous work has been turned off so we will clear the
-                 * import previous work node id, and import previous work 
+                 * import previous work node id, and import previous work
                  * component id
                  */
                 this.authoringComponentContent.importPreviousWorkNodeId = null;
@@ -2193,7 +2181,7 @@ var MatchController = function () {
     return MatchController;
 }();
 
-MatchController.$inject = ['$filter', '$injector', '$q', '$rootScope', '$scope', 'dragulaService', 'ConfigService', 'MatchService', 'NodeService', 'ProjectService', 'StudentDataService', 'UtilService', '$mdMedia'];
+MatchController.$inject = ['$filter', '$injector', '$q', '$rootScope', '$scope', 'AnnotationService', 'dragulaService', 'ConfigService', 'MatchService', 'NodeService', 'ProjectService', 'StudentDataService', 'UtilService', '$mdMedia'];
 
 exports.default = MatchController;
 //# sourceMappingURL=matchController.js.map

@@ -9,7 +9,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var AudioOscillatorController = function () {
-    function AudioOscillatorController($injector, $q, $rootScope, $scope, $timeout, ConfigService, NodeService, AudioOscillatorService, ProjectService, StudentAssetService, StudentDataService) {
+    function AudioOscillatorController($injector, $q, $rootScope, $scope, $timeout, AnnotationService, ConfigService, NodeService, AudioOscillatorService, ProjectService, StudentAssetService, StudentDataService) {
         var _this2 = this;
 
         _classCallCheck(this, AudioOscillatorController);
@@ -19,6 +19,7 @@ var AudioOscillatorController = function () {
         this.$rootScope = $rootScope;
         this.$scope = $scope;
         this.$timeout = $timeout;
+        this.AnnotationService = AnnotationService;
         this.ConfigService = ConfigService;
         this.NodeService = NodeService;
         this.AudioOscillatorService = AudioOscillatorService;
@@ -143,12 +144,15 @@ var AudioOscillatorController = function () {
                 this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
 
                 // get the latest annotations
-                this.latestAnnotations = this.$scope.$parent.nodeController.getLatestComponentAnnotations(this.componentId);
+                this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
             } else if (this.mode === 'grading') {
                 this.isPromptVisible = true;
                 this.isSaveButtonVisible = false;
                 this.isSubmitButtonVisible = false;
                 this.isDisabled = true;
+
+                // get the latest annotations
+                this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
             } else if (this.mode === 'onlyShowWork') {
                 this.isPromptVisible = false;
                 this.isSaveButtonVisible = false;
@@ -377,7 +381,7 @@ var AudioOscillatorController = function () {
                     if (_this2.nodeId === annotationNodeId && _this2.componentId === annotationComponentId) {
 
                         // get latest score and comment annotations for this component
-                        _this2.latestAnnotations = _this2.$scope.$parent.nodeController.getLatestComponentAnnotations(_this2.componentId);
+                        _this2.latestAnnotations = _this2.AnnotationService.getLatestComponentAnnotations(_this2.nodeId, _this2.componentId, _this2.workgroupId);
                     }
                 }
             }
@@ -673,39 +677,6 @@ var AudioOscillatorController = function () {
                     }
                 }
             }
-        }
-    }, {
-        key: 'showPrompt',
-
-
-        /**
-         * Check whether we need to show the prompt
-         * @return whether to show the prompt
-         */
-        value: function showPrompt() {
-            return this.isPromptVisible;
-        }
-    }, {
-        key: 'showSaveButton',
-
-
-        /**
-         * Check whether we need to show the save button
-         * @return whether to show the save button
-         */
-        value: function showSaveButton() {
-            return this.isSaveButtonVisible;
-        }
-    }, {
-        key: 'showSubmitButton',
-
-
-        /**
-         * Check whether we need to show the submit button
-         * @return whether to show the submit button
-         */
-        value: function showSubmitButton() {
-            return this.isSubmitButtonVisible;
         }
     }, {
         key: 'isLockAfterSubmit',
@@ -1308,7 +1279,7 @@ var AudioOscillatorController = function () {
             if (!this.authoringComponentContent.showPreviousWork) {
                 /*
                  * show previous work has been turned off so we will clear the
-                 * show previous work node id, show previous work component id, and 
+                 * show previous work node id, show previous work component id, and
                  * show previous work prompt values
                  */
                 this.authoringComponentContent.showPreviousWorkNodeId = null;
@@ -1557,7 +1528,7 @@ var AudioOscillatorController = function () {
             if (!this.authoringComponentContent.importPreviousWork) {
                 /*
                  * import previous work has been turned off so we will clear the
-                 * import previous work node id, and import previous work 
+                 * import previous work node id, and import previous work
                  * component id
                  */
                 this.authoringComponentContent.importPreviousWorkNodeId = null;
@@ -1607,7 +1578,7 @@ var AudioOscillatorController = function () {
 
 ;
 
-AudioOscillatorController.$inject = ['$injector', '$q', '$rootScope', '$scope', '$timeout', 'ConfigService', 'NodeService', 'AudioOscillatorService', 'ProjectService', 'StudentAssetService', 'StudentDataService'];
+AudioOscillatorController.$inject = ['$injector', '$q', '$rootScope', '$scope', '$timeout', 'AnnotationService', 'ConfigService', 'NodeService', 'AudioOscillatorService', 'ProjectService', 'StudentAssetService', 'StudentDataService'];
 
 exports.default = AudioOscillatorController;
 //# sourceMappingURL=audioOscillatorController.js.map

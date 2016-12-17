@@ -19,7 +19,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var EmbeddedController = function () {
-    function EmbeddedController($injector, $q, $scope, $sce, $window, ConfigService, NodeService, NotebookService, EmbeddedService, ProjectService, StudentDataService, UtilService) {
+    function EmbeddedController($injector, $q, $scope, $sce, $window, AnnotationService, ConfigService, NodeService, NotebookService, EmbeddedService, ProjectService, StudentDataService, UtilService) {
         var _this = this;
 
         _classCallCheck(this, EmbeddedController);
@@ -29,6 +29,7 @@ var EmbeddedController = function () {
         this.$scope = $scope;
         this.$sce = $sce;
         this.$window = $window;
+        this.AnnotationService = AnnotationService;
         this.ConfigService = ConfigService;
         this.NodeService = NodeService;
         this.NotebookService = NotebookService;
@@ -219,8 +220,7 @@ var EmbeddedController = function () {
                 this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
 
                 // get the latest annotations
-                // TODO: watch for new annotations and update accordingly
-                this.latestAnnotations = this.$scope.$parent.nodeController.getLatestComponentAnnotations(this.componentId);
+                this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
                 this.isSnipModelButtonVisible = true;
             } else if (this.mode === 'authoring') {
                 this.updateAdvancedAuthoringView();
@@ -235,6 +235,9 @@ var EmbeddedController = function () {
                 this.isSaveButtonVisible = false;
                 this.isSubmitButtonVisible = false;
                 this.isSnipModelButtonVisible = false;
+
+                // get the latest annotations
+                this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
             } else if (this.mode === 'onlyShowWork') {
                 this.isSaveButtonVisible = false;
                 this.isSubmitButtonVisible = false;
@@ -391,6 +394,33 @@ var EmbeddedController = function () {
 
             return deferred.promise;
         }.bind(this);
+
+        /**
+         * Listen for the 'annotationSavedToServer' event which is fired when
+         * we receive the response from saving an annotation to the server
+         */
+        this.$scope.$on('annotationSavedToServer', function (event, args) {
+
+            if (args != null) {
+
+                // get the annotation that was saved to the server
+                var annotation = args.annotation;
+
+                if (annotation != null) {
+
+                    // get the node id and component id of the annotation
+                    var annotationNodeId = annotation.nodeId;
+                    var annotationComponentId = annotation.componentId;
+
+                    // make sure the annotation was for this component
+                    if (_this.nodeId === annotationNodeId && _this.componentId === annotationComponentId) {
+
+                        // get latest score and comment annotations for this component
+                        _this.latestAnnotations = _this.AnnotationService.getLatestComponentAnnotations(_this.nodeId, _this.componentId, _this.workgroupId);
+                    }
+                }
+            }
+        });
 
         /**
          * Listen for the 'exitNode' event which is fired when the student
@@ -777,7 +807,7 @@ var EmbeddedController = function () {
             if (!this.authoringComponentContent.showPreviousWork) {
                 /*
                  * show previous work has been turned off so we will clear the
-                 * show previous work node id, show previous work component id, and 
+                 * show previous work node id, show previous work component id, and
                  * show previous work prompt values
                  */
                 this.authoringComponentContent.showPreviousWorkNodeId = null;
@@ -922,34 +952,12 @@ var EmbeddedController = function () {
         }
 
         /**
-         * Check whether we need to show the save button
-         * @return whether to show the save button
-         */
-
-    }, {
-        key: 'showSaveButton',
-        value: function showSaveButton() {
-            return this.isSaveButtonVisible;
-        }
-    }, {
-        key: 'showSubmitButton',
-
-
-        /**
-         * Check whether we need to show the submit button
-         * @return whether to show the submit button
-         */
-        value: function showSubmitButton() {
-            return this.isSubmitButtonVisible;
-        }
-    }, {
-        key: 'isLockAfterSubmit',
-
-
-        /**
          * Check whether we need to lock the component after the student
          * submits an answer.
          */
+
+    }, {
+        key: 'isLockAfterSubmit',
         value: function isLockAfterSubmit() {
             var result = false;
 
@@ -996,7 +1004,7 @@ var EmbeddedController = function () {
         /**
          * Get the student work from the components in this node and potentially
          * from other components
-         * @return an object containing work from the components in this node and 
+         * @return an object containing work from the components in this node and
          * potentially from other components
          */
         value: function getStudentWork() {
@@ -1069,7 +1077,7 @@ var EmbeddedController = function () {
             if (!this.authoringComponentContent.importPreviousWork) {
                 /*
                  * import previous work has been turned off so we will clear the
-                 * import previous work node id, and import previous work 
+                 * import previous work node id, and import previous work
                  * component id
                  */
                 this.authoringComponentContent.importPreviousWorkNodeId = null;
@@ -1117,7 +1125,7 @@ var EmbeddedController = function () {
     return EmbeddedController;
 }();
 
-EmbeddedController.$inject = ['$injector', '$q', '$scope', '$sce', '$window', 'ConfigService', 'NodeService', 'NotebookService', 'EmbeddedService', 'ProjectService', 'StudentDataService', 'UtilService'];
+EmbeddedController.$inject = ['$injector', '$q', '$scope', '$sce', '$window', 'AnnotationService', 'ConfigService', 'NodeService', 'NotebookService', 'EmbeddedService', 'ProjectService', 'StudentDataService', 'UtilService'];
 
 exports.default = EmbeddedController;
 //# sourceMappingURL=embeddedController.js.map

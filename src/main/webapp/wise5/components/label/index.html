@@ -25,7 +25,7 @@
                                  ng-model-options='{ debounce: 1000 }'
                                  size='50'/>
         <br/>
-        Allow Student to Upload Image for Background 
+        Allow Student to Upload Image for Background
         <input type='checkbox'
                ng-model='labelController.authoringComponentContent.enableStudentUploadBackground'
                ng-change='labelController.authoringViewComponentChanged()'/>
@@ -212,43 +212,31 @@
                 <md-button class="component__attachment__delete" ng-click='labelController.removeAttachment(attachment)' title="Remove file"><md-icon>cancel</md-icon></md-button>
             </div>
         </div>
-        <div class="component__actions" layout="row" layout-align="start center">
+        <div ng-if="labelController.isSaveButtonVisible || labelController.isSubmitButtonVisible"
+             class="component__actions" layout="row" layout-align="start center">
             <md-button class="md-raised md-primary"
                        ng-click='labelController.saveButtonClicked()'
-                       ng-if='labelController.showSaveButton()'
+                       ng-if='labelController.isSaveButtonVisible'
                        ng-disabled='labelController.isDisabled || !labelController.isDirty'>Save</md-button>
             <md-button class="md-raised md-primary"
                        ng-click='labelController.submitButtonClicked()'
-                       ng-if='labelController.showSubmitButton()'
+                       ng-if='labelController.isSubmitButtonVisible'
                        ng-disabled='labelController.isDisabled || !labelController.isSubmitDirty'>Submit</md-button>
-            <span ng-if="labelController.showSaveButton() || labelController.showSubmitButton()"
-                     ng-show="labelController.saveMessage.text"
-                     class="component__actions__info md-caption">
-                     {{labelController.saveMessage.text}} <span class="component__actions__more"><md-tooltip md-direction="top">{{ labelController.saveMessage.time | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip><span am-time-ago="labelController.saveMessage.time"></span></span>
+            <span ng-show="labelController.saveMessage.text"
+                  class="component__actions__info md-caption">
+                {{labelController.saveMessage.text}} <span class="component__actions__more"><md-tooltip md-direction="top">{{ labelController.saveMessage.time | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip><span am-time-ago="labelController.saveMessage.time"></span></span>
             </span>
         </div>
         <component-annotations ng-if="labelController.mode === 'student'"
                                annotations='labelController.latestAnnotations'
                                max-score="labelController.componentContent.maxScore"></component-annotations>
     </div>
-    <div ng-if='labelController.mode === "grading"'>
-        <annotation ng-if='labelController.componentContent.maxScore > -1'
-                    type='score'
-                    mode='labelController.mode'
-                    node-id='labelController.nodeId'
-                    component-id='labelController.componentId'
-                    from-workgroup-id='teacherWorkgroupId'
-                    to-workgroup-id='workgroupId'
-                    component-state-id='componentState.id'
-                    active='true'></annotation>
-        <br ng-if='labelController.componentContent.maxScore > -1'/>
-        <annotation type='comment'
-                    mode='labelController.mode'
-                    node-id='labelController.nodeId'
-                    component-id='labelController.componentId'
-                    from-workgroup-id='teacherWorkgroupId'
-                    to-workgroup-id='workgroupId'
-                    component-state-id='componentState.id'
-                    active='true'></annotation>
-    </div>
+    <component-grading ng-if="labelController.mode === 'grading'"
+                       node-id='labelController.nodeId'
+                       component-id='labelController.componentId'
+                       max-score="labelController.componentContent.maxScore"
+                       from-workgroup-id='teacherWorkgroupId'
+                       to-workgroup-id='workgroupId'
+                       component-state-id='componentState.id'
+                       active="true"></component-grading>
 </div>

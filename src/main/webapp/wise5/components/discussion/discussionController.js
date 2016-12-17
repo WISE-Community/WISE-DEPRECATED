@@ -9,7 +9,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var DiscussionController = function () {
-    function DiscussionController($injector, $q, $rootScope, $scope, ConfigService, DiscussionService, NodeService, NotificationService, ProjectService, StudentAssetService, StudentDataService, StudentWebSocketService, UtilService, $mdMedia) {
+    function DiscussionController($injector, $q, $rootScope, $scope, AnnotationService, ConfigService, DiscussionService, NodeService, NotificationService, ProjectService, StudentAssetService, StudentDataService, StudentWebSocketService, UtilService, $mdMedia) {
         var _this2 = this;
 
         _classCallCheck(this, DiscussionController);
@@ -18,6 +18,7 @@ var DiscussionController = function () {
         this.$q = $q;
         this.$rootScope = $rootScope;
         this.$scope = $scope;
+        this.AnnotationService = AnnotationService;
         this.ConfigService = ConfigService;
         this.DiscussionService = DiscussionService;
         this.NodeService = NodeService;
@@ -161,8 +162,7 @@ var DiscussionController = function () {
                     }
 
                     // get the latest annotations
-                    // TODO: watch for new annotations and update accordingly
-                    this.latestAnnotations = this.$scope.$parent.nodeController.getLatestComponentAnnotations(this.componentId);
+                    this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
                 }
 
                 // check if we need to lock this component
@@ -180,6 +180,9 @@ var DiscussionController = function () {
                 this.setClassResponses(componentStates);
 
                 this.isDisabled = true;
+
+                // get the latest annotations
+                this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
             } else if (this.mode === 'onlyShowWork') {
                 this.isDisabled = true;
             } else if (this.mode === 'showPreviousWork') {
@@ -305,6 +308,33 @@ var DiscussionController = function () {
             // make sure the node id matches our parent node
             if (_this2.nodeId === nodeId) {
                 _this2.isSubmit = true;
+            }
+        });
+
+        /**
+         * Listen for the 'annotationSavedToServer' event which is fired when
+         * we receive the response from saving an annotation to the server
+         */
+        this.$scope.$on('annotationSavedToServer', function (event, args) {
+
+            if (args != null) {
+
+                // get the annotation that was saved to the server
+                var annotation = args.annotation;
+
+                if (annotation != null) {
+
+                    // get the node id and component id of the annotation
+                    var annotationNodeId = annotation.nodeId;
+                    var annotationComponentId = annotation.componentId;
+
+                    // make sure the annotation was for this component
+                    if (_this2.nodeId === annotationNodeId && _this2.componentId === annotationComponentId) {
+
+                        // get latest score and comment annotations for this component
+                        _this2.latestAnnotations = _this2.AnnotationService.getLatestComponentAnnotations(_this2.nodeId, _this2.componentId, _this2.workgroupId);
+                    }
+                }
             }
         });
 
@@ -1309,7 +1339,7 @@ var DiscussionController = function () {
             if (!this.authoringComponentContent.showPreviousWork) {
                 /*
                  * show previous work has been turned off so we will clear the
-                 * show previous work node id, show previous work component id, and 
+                 * show previous work node id, show previous work component id, and
                  * show previous work prompt values
                  */
                 this.authoringComponentContent.showPreviousWorkNodeId = null;
@@ -1457,7 +1487,7 @@ var DiscussionController = function () {
     return DiscussionController;
 }();
 
-DiscussionController.$inject = ['$injector', '$q', '$rootScope', '$scope', 'ConfigService', 'DiscussionService', 'NodeService', 'NotificationService', 'ProjectService', 'StudentAssetService', 'StudentDataService', 'StudentWebSocketService', 'UtilService', '$mdMedia'];
+DiscussionController.$inject = ['$injector', '$q', '$rootScope', '$scope', 'AnnotationService', 'ConfigService', 'DiscussionService', 'NodeService', 'NotificationService', 'ProjectService', 'StudentAssetService', 'StudentDataService', 'StudentWebSocketService', 'UtilService', '$mdMedia'];
 
 exports.default = DiscussionController;
 //# sourceMappingURL=discussionController.js.map

@@ -272,7 +272,7 @@
     </div>
     <md-input-container class="input-container md-block input-container--open-response input-container--component md-no-float">
         <label class="input-label md-no-float" ng-disabled="openResponseController.isDisabled"
-               ng-if="openResponseController.showPrompt()"><compile data="openResponseController.getPrompt()"></compile></label>
+               ng-if="openResponseController.isPromptVisible"><compile data="openResponseController.getPrompt()"></compile></label>
         <possible-score max-score="openResponseController.componentContent.maxScore"
                         ng-if="openResponseController.mode === 'student' && !openResponseController.latestAnnotations.score"></possible-score>
         <div class="input-wrapper" ng-class="{'input-wrapper--richtext': openResponseController.isRichTextEnabled}">
@@ -283,6 +283,7 @@
                       ng-change="openResponseController.studentDataChanged()"></textarea>
             <div ng-if="openResponseController.isRichTextEnabled && openResponseController.isDisabled"
                  class="input--textarea input--textarea--disabled">
+                    <compile data="openResponseController.studentResponse"></compile>
             </div>
             <textarea ng-if="!openResponseController.isRichTextEnabled"
                       class="input--textarea input--textarea--hasaction"
@@ -300,7 +301,7 @@
        </a>
     </div>
 
-    <div class="component__actions" ng-show="openResponseController.isStudentAttachmentEnabled" layout="row" layout-wrap="true">
+    <div class="component__actions" ng-if="openResponseController.isStudentAttachmentEnabled" layout="row" layout-wrap="true">
         <div class="component__add-attachment">
             <md-button class="md-accent"
                        ng-click="nodeController.showStudentAssets($event, component.id, openResponseController.isDisabled)">
@@ -312,18 +313,19 @@
             <md-button ng-show="!openResponseController.isDisabled" class="component__attachment__delete" ng-click='openResponseController.removeAttachment(attachment)' title="Remove file"><md-icon>cancel</md-icon></md-button>
         </div>
     </div>
-    <div ng-if="openResponseController.showSaveButton() || openResponseController.showSubmitButton()"
+    <div ng-if="openResponseController.isSaveButtonVisible || openResponseController.isSubmitButtonVisible"
          class="component__actions" layout="row" layout-align="start center">
-        <md-button class="md-primary md-raised"
+        <md-button class="md-primary"
+                   ng-class="{'md-raised': !openResponseController.isSubmitButtonVisible}"
                    ng-click="openResponseController.saveButtonClicked()"
                    ng-disabled="openResponseController.isDisabled || !openResponseController.isDirty"
-                   ng-if="openResponseController.showSaveButton()"
+                   ng-if="openResponseController.isSaveButtonVisible"
                    aria-label="Save"
                    translate="save"></md-button>
         <md-button class="md-raised md-primary"
                    ng-click="openResponseController.submitButtonClicked()"
                    ng-disabled="openResponseController.isDisabled || !openResponseController.isSubmitDirty || openResponseController.isSubmitButtonDisabled"
-                   ng-if="openResponseController.showSubmitButton()"
+                   ng-if="openResponseController.isSubmitButtonVisible"
                    aria-label="Submit"
                    translate="submit"></md-button>
         <span ng-show="openResponseController.saveMessage.text"
@@ -342,24 +344,4 @@
                        to-workgroup-id='workgroupId'
                        component-state-id='componentState.id'
                        active="true"></component-grading>
-   <!--<div ng-if='openResponseController.mode === "grading"'>
-       <annotation ng-if='openResponseController.componentContent.maxScore > -1'
-                   type='score'
-                   mode='openResponseController.mode'
-                   node-id='openResponseController.nodeId'
-                   component-id='openResponseController.componentId'
-                   from-workgroup-id='teacherWorkgroupId'
-                   to-workgroup-id='workgroupId'
-                   component-state-id='componentState.id'
-                   active='true'></annotation>
-       <br ng-if='openResponseController.componentContent.maxScore > -1'/>
-       <annotation type='comment'
-                   mode='openResponseController.mode'
-                   node-id='openResponseController.nodeId'
-                   component-id='openResponseController.componentId'
-                   from-workgroup-id='teacherWorkgroupId'
-                   to-workgroup-id='workgroupId'
-                   component-state-id='componentState.id'
-                   active='true'></annotation>
-   </div>-->
 </div>

@@ -218,39 +218,28 @@
             </div>
         </div>
     </div>
-    <div class="component__actions" layout="row" layout-align="start center">
-        <md-button class="md-raised md-primary"
+    <div ng-if="matchController.isSaveButtonVisible || matchController.isSubmitButtonVisible"
+         class="component__actions" layout="row" layout-align="start center">
+        <md-button class="md-primary"
+                   ng-class="{'md-raised': !matchController.isSubmitButtonVisible}"
                    ng-click='matchController.saveButtonClicked()'
-                   ng-if='matchController.showSaveButton()'
+                   ng-if='matchController.isSaveButtonVisible'
                    ng-disabled='matchController.isDisabled || !matchController.isDirty'>{{ 'save' | translate }}</md-button>
         <md-button class="md-raised md-primary"
                    ng-click='matchController.submitButtonClicked()'
-                   ng-if='matchController.showSubmitButton()'
+                   ng-if='matchController.isSubmitButtonVisible'
                    ng-disabled='matchController.isDisabled || !matchController.isSubmitDirty'>{{ 'submit' | translate }}</md-button>
-        <span ng-if="matchController.showSaveButton() || matchController.showSubmitButton()"
-                 ng-show="matchController.saveMessage.text"
-                 class="component__actions__info md-caption">
-                 {{matchController.saveMessage.text}} <span class="component__actions__more"><md-tooltip md-direction="top">{{ matchController.saveMessage.time | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip><span am-time-ago="matchController.saveMessage.time"></span></span>
+        <span ng-show="matchController.saveMessage.text"
+              class="component__actions__info md-caption">
+            {{matchController.saveMessage.text}} <span class="component__actions__more"><md-tooltip md-direction="top">{{ matchController.saveMessage.time | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip><span am-time-ago="matchController.saveMessage.time"></span></span>
         </span>
     </div>
-    <div ng-if='matchController.mode === "grading"'>
-        <annotation ng-if='matchController.componentContent.maxScore > -1'
-                    type='score'
-                    mode='matchController.mode'
-                    node-id='matchController.nodeId'
-                    component-id='matchController.componentId'
-                    from-workgroup-id='teacherWorkgroupId'
-                    to-workgroup-id='workgroupId'
-                    component-state-id='componentState.id'
-                    active='true'></annotation>
-        <br ng-if='matchController.componentContent.maxScore > -1'/>
-        <annotation type='comment'
-                    mode='matchController.mode'
-                    node-id='matchController.nodeId'
-                    component-id='matchController.componentId'
-                    from-workgroup-id='teacherWorkgroupId'
-                    to-workgroup-id='workgroupId'
-                    component-state-id='componentState.id'
-                    active='true'></annotation>
-    </div>
+    <component-grading ng-if="matchController.mode === 'grading'"
+                       node-id='matchController.nodeId'
+                       component-id='matchController.componentId'
+                       max-score="matchController.componentContent.maxScore"
+                       from-workgroup-id='teacherWorkgroupId'
+                       to-workgroup-id='workgroupId'
+                       component-state-id='componentState.id'
+                       active="true"></component-grading>
 </div>

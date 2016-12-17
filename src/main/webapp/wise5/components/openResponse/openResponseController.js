@@ -91,6 +91,9 @@ var OpenResponseController = function () {
         // whether the submit button is disabled
         this.isSubmitButtonDisabled = false;
 
+        // whether we're only showing the student work
+        this.onlyShowWork = false;
+
         // the latest annotations
         this.latestAnnotations = null;
 
@@ -166,18 +169,14 @@ var OpenResponseController = function () {
                 this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
 
                 // get the latest annotations
-                // TODO: watch for new annotations and update accordingly
                 this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
             } else if (this.mode === 'grading') {
                 this.isPromptVisible = true;
                 this.isSaveButtonVisible = false;
                 this.isSubmitButtonVisible = false;
                 this.isDisabled = true;
-
-                // get the latest annotations
-                // TODO: watch for new annotations and update accordingly
-                this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
             } else if (this.mode === 'onlyShowWork') {
+                this.onlyShowWork = true;
                 this.isPromptVisible = false;
                 this.isSaveButtonVisible = false;
                 this.isSubmitButtonVisible = false;
@@ -252,7 +251,7 @@ var OpenResponseController = function () {
             // check if the student has used up all of their submits
             if (this.componentContent.maxSubmitCount != null && this.submitCounter >= this.componentContent.maxSubmitCount) {
                 /*
-                 * the student has used up all of their chances to submit so we 
+                 * the student has used up all of their chances to submit so we
                  * will disable the submit button
                  */
                 this.isSubmitButtonDisabled = true;
@@ -438,11 +437,7 @@ var OpenResponseController = function () {
                         this.attachments = attachments;
                     }
 
-                    if (this.mode === 'grading') {
-                        this.processLatestSubmit(componentState);
-                    } else {
-                        this.processLatestSubmit();
-                    }
+                    this.processLatestSubmit();
                 }
             }
         }
@@ -452,15 +447,9 @@ var OpenResponseController = function () {
 
         /**
          * Check if latest component state is a submission and set isSubmitDirty accordingly
-         * @param componentState (optional)
          */
-        value: function processLatestSubmit(componentState) {
-            var latestState = null;
-            if (componentState) {
-                latestState = componentState;
-            } else {
-                latestState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
-            }
+        value: function processLatestSubmit() {
+            var latestState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
 
             if (latestState) {
                 var serverSaveTime = latestState.serverSaveTime;
@@ -968,39 +957,6 @@ var OpenResponseController = function () {
                     }
                 }
             }
-        }
-    }, {
-        key: 'showPrompt',
-
-
-        /**
-         * Check whether we need to show the prompt
-         * @return whether to show the prompt
-         */
-        value: function showPrompt() {
-            return this.isPromptVisible;
-        }
-    }, {
-        key: 'showSaveButton',
-
-
-        /**
-         * Check whether we need to show the save button
-         * @return whether to show the save button
-         */
-        value: function showSaveButton() {
-            return this.isSaveButtonVisible;
-        }
-    }, {
-        key: 'showSubmitButton',
-
-
-        /**
-         * Check whether we need to show the submit button
-         * @return whether to show the submit button
-         */
-        value: function showSubmitButton() {
-            return this.isSubmitButtonVisible;
         }
     }, {
         key: 'isLockAfterSubmit',
@@ -2116,7 +2072,7 @@ var OpenResponseController = function () {
             if (!this.authoringComponentContent.importPreviousWork) {
                 /*
                  * import previous work has been turned off so we will clear the
-                 * import previous work node id, and import previous work 
+                 * import previous work node id, and import previous work
                  * component id
                  */
                 this.authoringComponentContent.importPreviousWorkNodeId = null;

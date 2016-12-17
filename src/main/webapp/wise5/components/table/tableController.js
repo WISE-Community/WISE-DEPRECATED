@@ -15,15 +15,19 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var TableController = function () {
-    function TableController($anchorScroll, $injector, $location, $q, $rootScope, $scope, ConfigService, NodeService, NotebookService, ProjectService, StudentDataService, TableService, UtilService) {
+    function TableController($anchorScroll, $filter, $injector, $location, $q, $rootScope, $scope, AnnotationService, ConfigService, NodeService, NotebookService, ProjectService, StudentDataService, TableService, UtilService) {
+        var _this = this;
+
         _classCallCheck(this, TableController);
 
         this.$anchorScroll = $anchorScroll;
+        this.$filter = $filter;
         this.$injector = $injector;
         this.$location = $location;
         this.$q = $q;
         this.$rootScope = $rootScope;
         this.$scope = $scope;
+        this.AnnotationService = AnnotationService;
         this.ConfigService = ConfigService;
         this.NodeService = NodeService;
         this.NotebookService = NotebookService;
@@ -32,6 +36,8 @@ var TableController = function () {
         this.TableService = TableService;
         this.UtilService = UtilService;
         this.idToOrder = this.ProjectService.idToOrder;
+
+        this.$translate = this.$filter('translate');
 
         // the node id of the current node
         this.nodeId = null;
@@ -133,8 +139,7 @@ var TableController = function () {
                 this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
 
                 // get the latest annotations
-                // TODO: watch for new annotations and update accordingly
-                this.latestAnnotations = this.$scope.$parent.nodeController.getLatestComponentAnnotations(this.componentId);
+                this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
                 this.isResetTableButtonVisible = true;
             } else if (this.mode === 'grading') {
                 this.isPromptVisible = true;
@@ -143,6 +148,9 @@ var TableController = function () {
                 this.isResetTableButtonVisible = false;
                 this.isSnipTableButtonVisible = false;
                 this.isDisabled = true;
+
+                // get the latest annotations
+                this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
             } else if (this.mode === 'onlyShowWork') {
                 this.isPromptVisible = false;
                 this.isSaveButtonVisible = false;
@@ -422,6 +430,33 @@ var TableController = function () {
         }));
 
         /**
+         * Listen for the 'annotationSavedToServer' event which is fired when
+         * we receive the response from saving an annotation to the server
+         */
+        this.$scope.$on('annotationSavedToServer', function (event, args) {
+
+            if (args != null) {
+
+                // get the annotation that was saved to the server
+                var annotation = args.annotation;
+
+                if (annotation != null) {
+
+                    // get the node id and component id of the annotation
+                    var annotationNodeId = annotation.nodeId;
+                    var annotationComponentId = annotation.componentId;
+
+                    // make sure the annotation was for this component
+                    if (_this.nodeId === annotationNodeId && _this.componentId === annotationComponentId) {
+
+                        // get latest score and comment annotations for this component
+                        _this.latestAnnotations = _this.AnnotationService.getLatestComponentAnnotations(_this.nodeId, _this.componentId, _this.workgroupId);
+                    }
+                }
+            }
+        });
+
+        /**
          * Listen for the 'exitNode' event which is fired when the student
          * exits the parent node. This will perform any necessary cleanup
          * when the student exits the parent node.
@@ -599,7 +634,7 @@ var TableController = function () {
          * Called when the student changes their work
          */
         value: function studentDataChanged() {
-            var _this = this;
+            var _this2 = this;
 
             /*
              * set the dirty flag so we will know we need to save the
@@ -627,7 +662,7 @@ var TableController = function () {
 
             // create a component state populated with the student data
             this.createComponentState(action).then(function (componentState) {
-                _this.$scope.$emit('componentStudentDataChanged', { componentId: componentId, componentState: componentState });
+                _this2.$scope.$emit('componentStudentDataChanged', { componentId: componentId, componentState: componentState });
             });
         }
     }, {
@@ -731,39 +766,6 @@ var TableController = function () {
                     }
                 }
             }
-        }
-    }, {
-        key: 'showPrompt',
-
-
-        /**
-         * Check whether we need to show the prompt
-         * @return whether to show the prompt
-         */
-        value: function showPrompt() {
-            return this.isPromptVisible;
-        }
-    }, {
-        key: 'showSaveButton',
-
-
-        /**
-         * Check whether we need to show the save button
-         * @return whether to show the save button
-         */
-        value: function showSaveButton() {
-            return this.isSaveButtonVisible;
-        }
-    }, {
-        key: 'showSubmitButton',
-
-
-        /**
-         * Check whether we need to show the submit button
-         * @return whether to show the submit button
-         */
-        value: function showSubmitButton() {
-            return this.isSubmitButtonVisible;
         }
     }, {
         key: 'showResetTableButton',
@@ -1646,7 +1648,7 @@ var TableController = function () {
     }, {
         key: 'snipTable',
         value: function snipTable($event) {
-            var _this2 = this;
+            var _this3 = this;
 
             // get the table element. this will obtain an array.
             var tableElement = angular.element('#' + this.componentId + ' table');
@@ -1671,34 +1673,34 @@ var TableController = function () {
                         var img_b64 = canvas.toDataURL('image/png');
 
                         // get the image object
-                        var imageObject = _this2.UtilService.getImageObjectFromBase64String(img_b64);
+                        var imageObject = _this3.UtilService.getImageObjectFromBase64String(img_b64);
 
                         // create a notebook item with the image populated into it
-                        _this2.NotebookService.addNewItem($event, imageObject);
+                        _this3.NotebookService.addNewItem($event, imageObject);
 
                         // we are done capturing the table so we will show the iframes again
-                        _this2.UtilService.showIFrames();
+                        _this3.UtilService.showIFrames();
 
                         /*
                          * scroll to the component in case the view has shifted after
                          * showing the iframe
                          */
-                        _this2.$location.hash(_this2.componentId);
-                        _this2.$anchorScroll();
+                        _this3.$location.hash(_this3.componentId);
+                        _this3.$anchorScroll();
                     }).catch(function () {
 
                         /*
                          * an error occurred while trying to capture the table so we
                          * will show the iframes again
                          */
-                        _this2.UtilService.showIFrames();
+                        _this3.UtilService.showIFrames();
 
                         /*
                          * scroll to the component in case the view has shifted after
                          * showing the iframe
                          */
-                        _this2.$location.hash(_this2.componentId);
-                        _this2.$anchorScroll();
+                        _this3.$location.hash(_this3.componentId);
+                        _this3.$anchorScroll();
                     });
                 } catch (e) {
 
@@ -1803,7 +1805,7 @@ var TableController = function () {
             if (!this.authoringComponentContent.showPreviousWork) {
                 /*
                  * show previous work has been turned off so we will clear the
-                 * show previous work node id, show previous work component id, and 
+                 * show previous work node id, show previous work component id, and
                  * show previous work prompt values
                  */
                 this.authoringComponentContent.showPreviousWorkNodeId = null;
@@ -1960,7 +1962,7 @@ var TableController = function () {
             if (!this.authoringComponentContent.importPreviousWork) {
                 /*
                  * import previous work has been turned off so we will clear the
-                 * import previous work node id, and import previous work 
+                 * import previous work node id, and import previous work
                  * component id
                  */
                 this.authoringComponentContent.importPreviousWorkNodeId = null;
@@ -2008,7 +2010,7 @@ var TableController = function () {
     return TableController;
 }();
 
-TableController.$inject = ['$anchorScroll', '$injector', '$location', '$q', '$rootScope', '$scope', 'ConfigService', 'NodeService', 'NotebookService', 'ProjectService', 'StudentDataService', 'TableService', 'UtilService'];
+TableController.$inject = ['$anchorScroll', '$filter', '$injector', '$location', '$q', '$rootScope', '$scope', 'AnnotationService', 'ConfigService', 'NodeService', 'NotebookService', 'ProjectService', 'StudentDataService', 'TableService', 'UtilService'];
 
 exports.default = TableController;
 //# sourceMappingURL=tableController.js.map

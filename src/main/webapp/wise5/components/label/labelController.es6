@@ -4,6 +4,7 @@ class LabelController {
         $q,
         $scope,
         $timeout,
+        AnnotationService,
         ConfigService,
         LabelService,
         NodeService,
@@ -19,6 +20,7 @@ class LabelController {
         this.$q = $q;
         this.$scope = $scope;
         this.$timeout = $timeout;
+        this.AnnotationService = AnnotationService;
         this.ConfigService = ConfigService;
         this.LabelService = LabelService;
         this.NodeService = NodeService;
@@ -192,8 +194,7 @@ class LabelController {
                 }
 
                 // get the latest annotations
-                // TODO: watch for new annotations and update accordingly
-                this.latestAnnotations = this.$scope.$parent.nodeController.getLatestComponentAnnotations(this.componentId);
+                this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
             } else if (this.mode === 'grading') {
                 this.isPromptVisible = true;
                 this.isSaveButtonVisible = false;
@@ -206,6 +207,9 @@ class LabelController {
                 if (componentState != null) {
                     this.canvasId = 'labelCanvas_' + componentState.id;
                 }
+
+                // get the latest annotations
+                this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
             } else if (this.mode === 'onlyShowWork') {
                 this.isPromptVisible = false;
                 this.isSaveButtonVisible = false;
@@ -403,6 +407,34 @@ class LabelController {
         });
 
         /**
+         * Listen for the 'annotationSavedToServer' event which is fired when
+         * we receive the response from saving an annotation to the server
+         */
+        this.$scope.$on('annotationSavedToServer', (event, args) => {
+
+            if (args != null ) {
+
+                // get the annotation that was saved to the server
+                var annotation = args.annotation;
+
+                if (annotation != null) {
+
+                    // get the node id and component id of the annotation
+                    var annotationNodeId = annotation.nodeId;
+                    var annotationComponentId = annotation.componentId;
+
+                    // make sure the annotation was for this component
+                    if (this.nodeId === annotationNodeId &&
+                        this.componentId === annotationComponentId) {
+
+                        // get latest score and comment annotations for this component
+                        this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
+                    }
+                }
+            }
+        });
+
+        /**
          * Listen for the 'exitNode' event which is fired when the student
          * exits the parent node. This will perform any necessary cleanup
          * when the student exits the parent node.
@@ -410,33 +442,33 @@ class LabelController {
         this.$scope.$on('exitNode', angular.bind(this, function(event, args) {
 
         }));
-        
+
         /**
          * The student has changed the file input
          * @param element the file input element
          */
         this.$scope.fileUploadChanged = function(element) {
-            
+
             // get the current background image if any
             var backgroundImage = this.labelController.getBackgroundImage();
-            
+
             var overwrite = true;
-            
+
             if (backgroundImage != null && backgroundImage != '') {
                 /*
                  * there is an existing background image so we will ask the
                  * student if they want to change it
                  */
                 var answer = confirm("Are you sure you want to change the background image?");
-                
+
                 if (answer) {
                     // the student wants to change the background image
                     overwrite = true;
                 } else {
                     // the student does not want to change the background image
                     overwrite = false;
-                    
-                    /* 
+
+                    /*
                      * clear the input file value otherwise it will show the
                      * name of the file they recently selected but decided not
                      * to use because they decided not to change the background
@@ -445,27 +477,27 @@ class LabelController {
                     element.value = null;
                 }
             }
-            
+
             if (overwrite) {
                 // we will change the current background
-                
+
                 // get the files from the file input element
                 var files = element.files;
-                
+
                 if (files != null && files.length > 0) {
-                    
+
                     // upload the file to the studentuploads folder
                     this.labelController.StudentAssetService.uploadAsset(files[0]).then((unreferencedAsset) => {
-                        
+
                         // make a referenced copy of the unreferenced asset
                         this.labelController.StudentAssetService.copyAssetForReference(unreferencedAsset).then((referencedAsset) => {
-                            
+
                             if (referencedAsset != null) {
                                 // get the url of the referenced asset
                                 var imageURL = referencedAsset.url;
-                                
+
                                 if (imageURL != null && imageURL != '') {
-                                    
+
                                     // set the referenced asset as the background image
                                     this.labelController.setBackgroundImage(imageURL);
                                     this.labelController.studentDataChanged();
@@ -503,7 +535,7 @@ class LabelController {
             // check if we need to import work
             var importPreviousWorkNodeId = this.componentContent.importPreviousWorkNodeId;
             var importPreviousWorkComponentId = this.componentContent.importPreviousWorkComponentId;
-            
+
             if (importPreviousWorkNodeId == null || importPreviousWorkNodeId == '') {
                 /*
                  * check if the node id is in the field that we used to store
@@ -511,7 +543,7 @@ class LabelController {
                  */
                 importPreviousWorkNodeId = this.componentContent.importWorkNodeId;
             }
-            
+
             if (importPreviousWorkComponentId == null || importPreviousWorkComponentId == '') {
                 /*
                  * check if the component id is in the field that we used to store
@@ -519,7 +551,7 @@ class LabelController {
                  */
                 importPreviousWorkComponentId = this.componentContent.importWorkComponentId;
             }
-            
+
             if (importPreviousWorkNodeId != null && importPreviousWorkComponentId != null) {
                 // import the work from the other component
                 this.importWork();
@@ -910,30 +942,6 @@ class LabelController {
     };
 
     /**
-     * Check whether we need to show the prompt
-     * @return whether to show the prompt
-     */
-    showPrompt() {
-        return this.isPromptVisible;
-    };
-
-    /**
-     * Check whether we need to show the save button
-     * @return whether to show the save button
-     */
-    showSaveButton() {
-        return this.isSaveButtonVisible;
-    };
-
-    /**
-     * Check whether we need to show the submit button
-     * @return whether to show the submit button
-     */
-    showSubmitButton() {
-        return this.isSubmitButtonVisible;
-    };
-
-    /**
      * Check whether we need to show the new label button
      * @returns whether to show the new label button
      */
@@ -1026,9 +1034,9 @@ class LabelController {
             // get the import previous work node id and component id
             var importPreviousWorkNodeId = componentContent.importPreviousWorkNodeId;
             var importPreviousWorkComponentId = componentContent.importPreviousWorkComponentId;
-            
+
             if (importPreviousWorkNodeId == null || importPreviousWorkNodeId == '') {
-                
+
                 /*
                  * check if the node id is in the field that we used to store
                  * the import previous work node id in
@@ -1037,9 +1045,9 @@ class LabelController {
                     importPreviousWorkNodeId = componentContent.importWorkNodeId;
                 }
             }
-            
+
             if (importPreviousWorkComponentId == null || importPreviousWorkComponentId == '') {
-                
+
                 /*
                  * check if the component id is in the field that we used to store
                  * the import previous work component id in
@@ -1048,7 +1056,7 @@ class LabelController {
                     importPreviousWorkComponentId = componentContent.importWorkComponentId;
                 }
             }
-            
+
             if (importPreviousWorkNodeId != null && importPreviousWorkComponentId != null) {
 
                 // get the latest component state for this component
@@ -1122,10 +1130,10 @@ class LabelController {
 
         // listen for the mouse down event
         canvas.on('mouse:down', angular.bind(this, function(options) {
-            
+
             // get the object that was clicked on if any
             var activeObject = this.canvas.getActiveObject();
-            
+
             if (activeObject == null) {
                 /*
                  * no objects in the canvas were clicked. the user clicked
@@ -1146,7 +1154,7 @@ class LabelController {
                 // turn off create label mode and hide the cancel button
                 this.createLabelMode = false;
                 this.isCancelButtonVisible = false;
-                 
+
                 var event = options.e;
 
                 if (event != null) {
@@ -1166,8 +1174,8 @@ class LabelController {
 
                     // add the label to the canvas
                     this.addLabelToCanvas(this.canvas, newLabel);
-                    
-                    /* 
+
+                    /*
                      * make the new label selected so that the student can edit
                      * the text
                      */
@@ -1469,7 +1477,7 @@ class LabelController {
 
                 // refresh the canvas
                 canvas.renderAll();
-                
+
                 circle.on('selected', () => {
                     /*
                      * the circle was clicked so we will make the associated
@@ -1477,7 +1485,7 @@ class LabelController {
                      */
                     this.selectLabel(label);
                 });
-                
+
                 text.on('selected', () => {
                     /*
                      * the text was clicked so we will make the associated
@@ -1488,47 +1496,47 @@ class LabelController {
             }
         }
     };
-    
+
     /**
-     * Make the label selected which means we will show the UI elements to 
+     * Make the label selected which means we will show the UI elements to
      * allow the text to be edited and the label to deleted.
      * @param label the label object
      */
     selectLabel(label) {
-        
+
         // create a reference to the selected label
         this.selectedLabel = label;
-        
+
         /*
          * remember the label text before the student changes it in case the
          * student wants to cancel any changes they make
          */
         this.selectedLabelText = label.text.text;
-        
+
         // turn on edit label mode
         this.editLabelMode = true;
-        
+
         /*
          * force angular to refresh, otherwise angular will wait until the
-         * user generates another input (such as moving the mouse) before 
+         * user generates another input (such as moving the mouse) before
          * refreshing
          */
         this.$scope.$apply();
     }
-    
+
     /**
      * The student has changed the label text on the selected label
      * @param textObject the label's canvas text object
      * @param text the text string
      */
     selectedLabelTextChanged(textObject, text) {
-        
+
         // set the text into the object
         textObject.setText(text);
-        
+
         // notify the controller that the student data has changed
         this.studentDataChanged();
-        
+
         // refresh the canvas
         this.canvas.renderAll();
     }
@@ -1618,22 +1626,22 @@ class LabelController {
      * The show previous work checkbox was clicked
      */
     authoringShowPreviousWorkClicked() {
-        
+
         if (!this.authoringComponentContent.showPreviousWork) {
             /*
              * show previous work has been turned off so we will clear the
-             * show previous work node id, show previous work component id, and 
+             * show previous work node id, show previous work component id, and
              * show previous work prompt values
              */
             this.authoringComponentContent.showPreviousWorkNodeId = null;
             this.authoringComponentContent.showPreviousWorkComponentId = null;
             this.authoringComponentContent.showPreviousWorkPrompt = null;
-            
+
             // the authoring component content has changed so we will save the project
             this.authoringViewComponentChanged();
         }
     }
-    
+
     /**
      * The show previous work node id has changed
      */
@@ -1657,72 +1665,72 @@ class LabelController {
      * The show previous work component id has changed
      */
     authoringShowPreviousWorkComponentIdChanged() {
-        
+
         // get the show previous work node id
         var showPreviousWorkNodeId = this.authoringComponentContent.showPreviousWorkNodeId;
-        
+
         // get the show previous work prompt boolean value
         var showPreviousWorkPrompt = this.authoringComponentContent.showPreviousWorkPrompt;
-        
+
         // get the old show previous work component id
         var oldShowPreviousWorkComponentId = this.componentContent.showPreviousWorkComponentId;
-        
+
         // get the new show previous work component id
         var newShowPreviousWorkComponentId = this.authoringComponentContent.showPreviousWorkComponentId;
-        
+
         // get the new show previous work component
         var newShowPreviousWorkComponent = this.ProjectService.getComponentByNodeIdAndComponentId(showPreviousWorkNodeId, newShowPreviousWorkComponentId);
-        
+
         if (newShowPreviousWorkComponent == null || newShowPreviousWorkComponent == '') {
             // the new show previous work component is empty
-            
+
             // save the component
             this.authoringViewComponentChanged();
         } else if (newShowPreviousWorkComponent != null) {
-            
+
             // get the current component type
             var currentComponentType = this.componentContent.type;
-            
+
             // get the new component type
             var newComponentType = newShowPreviousWorkComponent.type;
-            
+
             // check if the component types are different
             if (newComponentType != currentComponentType) {
                 /*
                  * the component types are different so we will need to change
                  * the whole component
                  */
-                
+
                 // make sure the author really wants to change the component type
                 var answer = confirm('Are you sure you want to change this component type?');
-                
+
                 if (answer) {
                     // the author wants to change the component type
-                    
+
                     /*
                      * get the component service so we can make a new instance
                      * of the component
                      */
                     var componentService = this.$injector.get(newComponentType + 'Service');
-                    
+
                     if (componentService != null) {
-                        
+
                         // create a new component
                         var newComponent = componentService.createComponent();
-                        
+
                         // set move over the values we need to keep
                         newComponent.id = this.authoringComponentContent.id;
                         newComponent.showPreviousWork = true;
                         newComponent.showPreviousWorkNodeId = showPreviousWorkNodeId;
                         newComponent.showPreviousWorkComponentId = newShowPreviousWorkComponentId;
                         newComponent.showPreviousWorkPrompt = showPreviousWorkPrompt;
-                        
+
                         /*
                          * update the authoring component content JSON string to
                          * change the component
                          */
                         this.authoringComponentContentJSONString = JSON.stringify(newComponent);
-                        
+
                         // update the component in the project and save the project
                         this.advancedAuthoringViewComponentChanged();
                     }
@@ -1742,7 +1750,7 @@ class LabelController {
             }
         }
     }
-    
+
     /**
      * Get all the step node ids in the project
      * @returns all the step node ids
@@ -1900,7 +1908,7 @@ class LabelController {
 
         }));
     };
-    
+
     /**
      * Check if a component generates student work
      * @param component the component
@@ -1908,14 +1916,14 @@ class LabelController {
      */
     componentHasWork(component) {
         var result = true;
-        
+
         if (component != null) {
             result = this.ProjectService.componentHasWork(component);
         }
-        
+
         return result;
     }
-    
+
     /**
      * The import previous work checkbox was clicked
      */
@@ -1924,7 +1932,7 @@ class LabelController {
         if (!this.authoringComponentContent.importPreviousWork) {
             /*
              * import previous work has been turned off so we will clear the
-             * import previous work node id, and import previous work 
+             * import previous work node id, and import previous work
              * component id
              */
             this.authoringComponentContent.importPreviousWorkNodeId = null;
@@ -1934,12 +1942,12 @@ class LabelController {
             this.authoringViewComponentChanged();
         }
     }
-    
+
     /**
      * The import previous work node id has changed
      */
     authoringImportPreviousWorkNodeIdChanged() {
-        
+
         if (this.authoringComponentContent.importPreviousWorkNodeId == null ||
             this.authoringComponentContent.importPreviousWorkNodeId == '') {
 
@@ -1953,116 +1961,116 @@ class LabelController {
         // the authoring component content has changed so we will save the project
         this.authoringViewComponentChanged();
     }
-    
+
     /**
      * The import previous work component id has changed
      */
     authoringImportPreviousWorkComponentIdChanged() {
-        
+
         // the authoring component content has changed so we will save the project
         this.authoringViewComponentChanged();
     }
-    
+
     /**
      * The student clicked the save button in the edit label mode
      */
     saveLabelButtonClicked() {
-        
+
         if (this.selectedLabel != null) {
             /*
              * we do not need to perform any saving of the text since it has
              * already been handled by the ng-model for the label text
              */
-            
+
             /*
              * remove the reference to the selected label since it will no
              * longer be selected
              */
             this.selectedLabel = null;
-            
+
             // turn off edit label mode
             this.editLabelMode = false;
-            
+
             // make the canvas object no longer the active object
             this.canvas.discardActiveObject();
         }
     }
-    
+
     /**
      * The student clicked the cancel button in the edit label mode
      */
     cancelLabelButtonClicked() {
-        
+
         if (this.selectedLabel != null) {
-            
+
             // get the label text before the student recently made changes to it
             var selectedLabelText = this.selectedLabelText;
-            
+
             // revert the label text to what it was before
             this.selectedLabel.text.setText(selectedLabelText);
-            
+
             // clear the label text holder
             this.selectedLabelText = null;
-            
+
             /*
              * remove the reference to the selected label since it will no
              * longer be selected
              */
             this.selectedLabel = null;
-            
+
             // turn off edit label mode
             this.editLabelMode = false;
-            
+
             // make the canvas object no longer the active object
             this.canvas.discardActiveObject();
-            
+
             // notify others that the student data has changed
             this.studentDataChanged();
-            
+
             // refresh the canvas
             this.canvas.renderAll();
         }
     }
-    
+
     /**
      * The student clicked the delete button in the edit label mode
      */
     deleteLabelButtonClicked() {
-        
+
         if (this.selectedLabel != null) {
-            
+
             // get the text from the label we are going to delete
             var selectedLabelText = this.selectedLabel.text.text;
-            
+
             // confirm with the student that they want to delete the label
             var answer = confirm('Are you sure you want to delete this label?\n\n' + selectedLabelText);
-            
+
             if (answer) {
                 // the student is sure they want to delete the label
-                
+
                 /*
                  * get the circle from the label since the circle has
                  * references to the line and text for the label
                  */
                 var circle = this.selectedLabel.circle;
-                
+
                 if (circle != null) {
-                    
+
                     // remove the label from the canvas
                     this.removeLabelFromCanvas(this.canvas, circle);
-                    
+
                     /*
                      * remove the reference to the selected label since it will no
                      * longer be selected
                      */
                     this.selectedLabel = null;
-                    
+
                     // turn off edit label mode
                     this.editLabelMode = false;
-                    
+
                     // make the canvas object no longer the active object
                     this.canvas.discardActiveObject();
-                    
+
                     // notify others that the student data has changed
                     this.studentDataChanged();
                 }
@@ -2076,6 +2084,7 @@ LabelController.$inject = [
     '$q',
     '$scope',
     '$timeout',
+    'AnnotationService',
     'ConfigService',
     'LabelService',
     'NodeService',

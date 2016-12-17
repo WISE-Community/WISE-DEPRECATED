@@ -265,44 +265,33 @@
                 </md-button>
             </div>
             <highchart id="{{graphController.chartId}}" config="graphController.chartConfig"></highchart>
-            <div class="component__actions" layout="row" layout-align="start center">
-                <md-button class="md-raised md-primary"
+            <div ng-if="graphController.isSaveButtonVisible || graphController.isSubmitButtonVisible"
+                 class="component__actions" layout="row" layout-align="start center">
+                <md-button class="md-primary"
+                           ng-class="{'md-raised': !graphController.isSubmitButtonVisible}"
                            ng-click='graphController.saveButtonClicked()'
-                           ng-if='graphController.showSaveButton()'
+                           ng-if='graphController.isSaveButtonVisible'
                            ng-disabled='graphController.isDisabled || !graphController.isDirty'>{{ 'save' | translate }}</md-button>
                 <md-button class="md-raised md-primary"
                            ng-click='graphController.submitButtonClicked()'
-                           ng-if='graphController.showSubmitButton()'
+                           ng-if='graphController.isSubmitButtonVisible'
                            ng-disabled='graphController.isDisabled || !graphController.isSubmitDirty'>{{ 'submit' | translate }}</md-button>
-                <span ng-if="graphController.showSaveButton() || graphController.showSubmitButton()"
-                          ng-show="graphController.saveMessage.text"
-                          class="component__actions__info md-caption">
-                          {{graphController.saveMessage.text}} <span class="component__actions__more"><md-tooltip md-direction="top">{{ graphController.saveMessage.time | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip><span am-time-ago="graphController.saveMessage.time"></span></span>
+                <span ng-show="graphController.saveMessage.text"
+                      class="component__actions__info md-caption">
+                    {{graphController.saveMessage.text}} <span class="component__actions__more"><md-tooltip md-direction="top">{{ graphController.saveMessage.time | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip><span am-time-ago="graphController.saveMessage.time"></span></span>
                 </span>
             </div>
             <component-annotations ng-if="graphController.mode === 'student'"
                                    annotations='graphController.latestAnnotations'
                                    max-score="graphController.componentContent.maxScore"></component-annotations>
-        </div>
-        <div ng-if='graphController.mode === "grading"'>
-            <annotation ng-if='graphController.componentContent.maxScore > -1'
-                        type='score'
-                        mode='graphController.mode'
-                        node-id='graphController.nodeId'
-                        component-id='graphController.componentId'
-                        from-workgroup-id='teacherWorkgroupId'
-                        to-workgroup-id='workgroupId'
-                        component-state-id='componentState.id'
-                        active='true'></annotation>
-            <br ng-if='graphController.componentContent.maxScore > -1'/>
-            <annotation type='comment'
-                        mode='graphController.mode'
-                        node-id='graphController.nodeId'
-                        component-id='graphController.componentId'
-                        from-workgroup-id='teacherWorkgroupId'
-                        to-workgroup-id='workgroupId'
-                        component-state-id='componentState.id'
-                        active='true'></annotation>
-        </div>
+            <component-grading ng-if="graphController.mode === 'grading'"
+                              node-id='graphController.nodeId'
+                              component-id='graphController.componentId'
+                              max-score="graphController.componentContent.maxScore"
+                              from-workgroup-id='teacherWorkgroupId'
+                              to-workgroup-id='workgroupId'
+                              component-state-id='componentState.id'
+                              active="true"></component-grading>
+        </div
     </listen-for-delete-keypress>
 </div>

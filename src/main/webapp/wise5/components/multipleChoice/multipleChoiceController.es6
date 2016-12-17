@@ -3,6 +3,7 @@ class MultipleChoiceController {
                 $injector,
                 $q,
                 $scope,
+                AnnotationService,
                 ConfigService,
                 MultipleChoiceService,
                 NodeService,
@@ -14,6 +15,7 @@ class MultipleChoiceController {
         this.$injector = $injector;
         this.$q = $q;
         this.$scope = $scope;
+        this.AnnotationService = AnnotationService;
         this.ConfigService = ConfigService;
         this.MultipleChoiceService = MultipleChoiceService;
         this.NodeService = NodeService;
@@ -120,8 +122,7 @@ class MultipleChoiceController {
                 this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
 
                 // get the latest annotations
-                // TODO: watch for new annotations and update accordingly
-                this.latestAnnotations = this.$scope.$parent.nodeController.getLatestComponentAnnotations(this.componentId);
+                this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
             } else if (this.mode === 'grading') {
                 this.isPromptVisible = true;
                 this.isSaveButtonVisible = false;
@@ -166,7 +167,7 @@ class MultipleChoiceController {
                 // check if we need to import work
                 var importPreviousWorkNodeId = this.componentContent.importPreviousWorkNodeId;
                 var importPreviousWorkComponentId = this.componentContent.importPreviousWorkComponentId;
-                
+
                 if (importPreviousWorkNodeId == null || importPreviousWorkNodeId == '') {
                     /*
                      * check if the node id is in the field that we used to store
@@ -174,7 +175,7 @@ class MultipleChoiceController {
                      */
                     importPreviousWorkNodeId = this.componentContent.importWorkNodeId;
                 }
-                
+
                 if (importPreviousWorkComponentId == null || importPreviousWorkComponentId == '') {
                     /*
                      * check if the component id is in the field that we used to store
@@ -182,7 +183,7 @@ class MultipleChoiceController {
                      */
                     importPreviousWorkComponentId = this.componentContent.importWorkComponentId;
                 }
-                
+
                 if (importPreviousWorkNodeId != null && importPreviousWorkComponentId != null) {
                     // import the work from the other component
                     this.importWork();
@@ -301,6 +302,34 @@ class MultipleChoiceController {
                 }
             }
         }));
+
+        /**
+         * Listen for the 'annotationSavedToServer' event which is fired when
+         * we receive the response from saving an annotation to the server
+         */
+        this.$scope.$on('annotationSavedToServer', (event, args) => {
+
+            if (args != null ) {
+
+                // get the annotation that was saved to the server
+                var annotation = args.annotation;
+
+                if (annotation != null) {
+
+                    // get the node id and component id of the annotation
+                    var annotationNodeId = annotation.nodeId;
+                    var annotationComponentId = annotation.componentId;
+
+                    // make sure the annotation was for this component
+                    if (this.nodeId === annotationNodeId &&
+                        this.componentId === annotationComponentId) {
+
+                        // get latest score and comment annotations for this component
+                        this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
+                    }
+                }
+            }
+        });
 
         /**
          * Listen for the 'exitNode' event which is fired when the student
@@ -1033,16 +1062,16 @@ class MultipleChoiceController {
 
         return choice;
     };
-    
+
     /**
      * Get a choice by choice text
      * @param text the choice text
      * @return the choice with the given text
      */
     getChoiceByText(text) {
-        
+
         var choice = null;
-        
+
         if (text != null) {
             // get the component content
             var componentContent = this.componentContent;
@@ -1074,7 +1103,7 @@ class MultipleChoiceController {
                 }
             }
         }
-        
+
         return choice;
     }
 
@@ -1135,53 +1164,6 @@ class MultipleChoiceController {
     };
 
     /**
-     * Check whether we need to show the prompt
-     * @return whether to show the prompt
-     */
-    showPrompt() {
-        var show = false;
-
-        if (this.isPromptVisible) {
-            show = true;
-        }
-
-        return show;
-    };
-
-    /**
-     * Check whether we need to show the save button
-     * @return whether to show the save button
-     */
-    showSaveButton() {
-        var show = false;
-
-        // check the showSaveButton field in the component content
-        if (this.componentContent.showSaveButton) {
-            show = true;
-        }
-
-        return show;
-    };
-
-    /**
-     * Check whether we need to show the submit button
-     * @return whether to show the submit button
-     */
-    showSubmitButton() {
-        var show = false;
-
-        if (this.componentContent != null) {
-
-            // check the showSubmitButton field in the component content
-            if (this.componentContent.showSubmitButton) {
-                show = true;
-            }
-        }
-
-        return show;
-    };
-
-    /**
      * Check whether we need to lock the component after the student
      * submits an answer.
      */
@@ -1235,9 +1217,9 @@ class MultipleChoiceController {
             // get the import previous work node id and component id
             var importPreviousWorkNodeId = componentContent.importPreviousWorkNodeId;
             var importPreviousWorkComponentId = componentContent.importPreviousWorkComponentId;
-            
+
             if (importPreviousWorkNodeId == null || importPreviousWorkNodeId == '') {
-                
+
                 /*
                  * check if the node id is in the field that we used to store
                  * the import previous work node id in
@@ -1246,9 +1228,9 @@ class MultipleChoiceController {
                     importPreviousWorkNodeId = componentContent.importWorkNodeId;
                 }
             }
-            
+
             if (importPreviousWorkComponentId == null || importPreviousWorkComponentId == '') {
-                
+
                 /*
                  * check if the component id is in the field that we used to store
                  * the import previous work component id in
@@ -1295,45 +1277,45 @@ class MultipleChoiceController {
             }
         }
     };
-    
+
     /**
      * Update the choice ids to use the choice ids from this component.
      * We will use the choice text to match the choices.
      * @param componentState the component state
      */
     updateChoiceIdsFromImportedWork(componentState) {
-        
+
         if (componentState != null) {
-            
+
             // get the student data
             var studentData = componentState.studentData;
-            
+
             if (studentData != null) {
-                
+
                 // get the choices the student chose
                 var studentChoices = studentData.studentChoices;
-                
+
                 if (studentChoices != null) {
-                    
+
                     // loop through all the choices the student chose
                     for (var s = 0; s < studentChoices.length; s++) {
-                        
+
                         // get a choice the student chose
                         var studentChoice = studentChoices[s];
-                        
+
                         if (studentChoice != null) {
-                            
+
                             // get the choice text
                             var studentChoiceText = studentChoice.text;
-                            
+
                             // get the choice in this component with the given tetxt
                             var choice = this.getChoiceByText(studentChoiceText);
-                            
+
                             if (choice != null) {
-                                
+
                                 // get the choice id
                                 var choiceId = choice.id;
-                                
+
                                 // update the id to have the id from this component
                                 studentChoice.id = choiceId;
                             }
@@ -1567,22 +1549,22 @@ class MultipleChoiceController {
      * The show previous work checkbox was clicked
      */
     authoringShowPreviousWorkClicked() {
-        
+
         if (!this.authoringComponentContent.showPreviousWork) {
             /*
              * show previous work has been turned off so we will clear the
-             * show previous work node id, show previous work component id, and 
+             * show previous work node id, show previous work component id, and
              * show previous work prompt values
              */
             this.authoringComponentContent.showPreviousWorkNodeId = null;
             this.authoringComponentContent.showPreviousWorkComponentId = null;
             this.authoringComponentContent.showPreviousWorkPrompt = null;
-            
+
             // the authoring component content has changed so we will save the project
             this.authoringViewComponentChanged();
         }
     }
-    
+
     /**
      * The show previous work node id has changed
      */
@@ -1601,77 +1583,77 @@ class MultipleChoiceController {
         // the authoring component content has changed so we will save the project
         this.authoringViewComponentChanged();
     }
-    
+
     /**
      * The show previous work component id has changed
      */
     authoringShowPreviousWorkComponentIdChanged() {
-        
+
         // get the show previous work node id
         var showPreviousWorkNodeId = this.authoringComponentContent.showPreviousWorkNodeId;
-        
+
         // get the show previous work prompt boolean value
         var showPreviousWorkPrompt = this.authoringComponentContent.showPreviousWorkPrompt;
-        
+
         // get the old show previous work component id
         var oldShowPreviousWorkComponentId = this.componentContent.showPreviousWorkComponentId;
-        
+
         // get the new show previous work component id
         var newShowPreviousWorkComponentId = this.authoringComponentContent.showPreviousWorkComponentId;
-        
+
         // get the new show previous work component
         var newShowPreviousWorkComponent = this.ProjectService.getComponentByNodeIdAndComponentId(showPreviousWorkNodeId, newShowPreviousWorkComponentId);
-        
+
         if (newShowPreviousWorkComponent == null || newShowPreviousWorkComponent == '') {
             // the new show previous work component is empty
-            
+
             // save the component
             this.authoringViewComponentChanged();
         } else if (newShowPreviousWorkComponent != null) {
-            
+
             // get the current component type
             var currentComponentType = this.componentContent.type;
-            
+
             // get the new component type
             var newComponentType = newShowPreviousWorkComponent.type;
-            
+
             // check if the component types are different
             if (newComponentType != currentComponentType) {
                 /*
                  * the component types are different so we will need to change
                  * the whole component
                  */
-                
+
                 // make sure the author really wants to change the component type
                 var answer = confirm(this.$translate('areYouSureYouWantToChangeThisComponentType'));
-                
+
                 if (answer) {
                     // the author wants to change the component type
-                    
+
                     /*
                      * get the component service so we can make a new instance
                      * of the component
                      */
                     var componentService = this.$injector.get(newComponentType + 'Service');
-                    
+
                     if (componentService != null) {
-                        
+
                         // create a new component
                         var newComponent = componentService.createComponent();
-                        
+
                         // set move over the values we need to keep
                         newComponent.id = this.authoringComponentContent.id;
                         newComponent.showPreviousWork = true;
                         newComponent.showPreviousWorkNodeId = showPreviousWorkNodeId;
                         newComponent.showPreviousWorkComponentId = newShowPreviousWorkComponentId;
                         newComponent.showPreviousWorkPrompt = showPreviousWorkPrompt;
-                        
+
                         /*
                          * update the authoring component content JSON string to
                          * change the component
                          */
                         this.authoringComponentContentJSONString = JSON.stringify(newComponent);
-                        
+
                         // update the component in the project and save the project
                         this.advancedAuthoringViewComponentChanged();
                     }
@@ -1691,7 +1673,7 @@ class MultipleChoiceController {
             }
         }
     }
-    
+
     /**
      * Check if a component generates student work
      * @param component the component
@@ -1699,11 +1681,11 @@ class MultipleChoiceController {
      */
     componentHasWork(component) {
         var result = true;
-        
+
         if (component != null) {
             result = this.ProjectService.componentHasWork(component);
         }
-        
+
         return result;
     }
     /**
@@ -1714,7 +1696,7 @@ class MultipleChoiceController {
         if (!this.authoringComponentContent.importPreviousWork) {
             /*
              * import previous work has been turned off so we will clear the
-             * import previous work node id, and import previous work 
+             * import previous work node id, and import previous work
              * component id
              */
             this.authoringComponentContent.importPreviousWorkNodeId = null;
@@ -1724,12 +1706,12 @@ class MultipleChoiceController {
             this.authoringViewComponentChanged();
         }
     }
-    
+
     /**
      * The import previous work node id has changed
      */
     authoringImportPreviousWorkNodeIdChanged() {
-        
+
         if (this.authoringComponentContent.importPreviousWorkNodeId == null ||
             this.authoringComponentContent.importPreviousWorkNodeId == '') {
 
@@ -1743,12 +1725,12 @@ class MultipleChoiceController {
         // the authoring component content has changed so we will save the project
         this.authoringViewComponentChanged();
     }
-    
+
     /**
      * The import previous work component id has changed
      */
     authoringImportPreviousWorkComponentIdChanged() {
-        
+
         // the authoring component content has changed so we will save the project
         this.authoringViewComponentChanged();
     }
@@ -1759,6 +1741,7 @@ MultipleChoiceController.$inject = [
     '$injector',
     '$q',
     '$scope',
+    'AnnotationService',
     'ConfigService',
     'MultipleChoiceService',
     'NodeService',

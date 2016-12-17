@@ -265,17 +265,18 @@
         <md-icon> history </md-icon>
         <md-tooltip md-direction="top">{{nodeController.getRevisions(component.id).length}} {{ 'versions' | translate }}</md-tooltip>
     </md-button>
-    <div class="component__actions" layout="row" layout-align="start center">
-        <md-button class="md-raised md-primary"
+    <div ng-if="drawController.isSaveButtonVisible || drawController.isSubmitButtonVisible"
+         class="component__actions" layout="row" layout-align="start center">
+        <md-button class="md-primary"
+                   ng-class="{'md-raised': !drawController.isSubmitButtonVisible}"
                    ng-click='drawController.saveButtonClicked()'
                    ng-disabled='drawController.isDisabled || !drawController.isDirty'
-                   ng-show='drawController.showSaveButton()'>{{ 'save' | translate }}</md-button>
+                   ng-show='drawController.isSaveButtonVisible'>{{ 'save' | translate }}</md-button>
         <md-button class="md-raised md-primary"
                    ng-click='drawController.submitButtonClicked()'
                    ng-disabled='drawController.isDisabled || !drawController.isSubmitDirty'
-                   ng-show='drawController.showSubmitButton()'>{{ 'submit' | translate }}</md-button>
-        <span ng-if="drawController.showSaveButton() || drawController.showSubmitButton()"
-              ng-show="drawController.saveMessage.text"
+                   ng-show='drawController.isSubmitButtonVisible'>{{ 'submit' | translate }}</md-button>
+        <span ng-show="drawController.saveMessage.text"
               class="component__actions__info md-caption">
               {{drawController.saveMessage.text}} <span class="component__actions__more"><md-tooltip md-direction="top">{{ drawController.saveMessage.time | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip><span am-time-ago="drawController.saveMessage.time"></span></span>
         </span>
@@ -283,24 +284,12 @@
     <component-annotations ng-if="drawController.mode === 'student'"
                            annotations='drawController.latestAnnotations'
                            max-score="drawController.componentContent.maxScore"></component-annotations>
-    <div ng-if='drawController.mode === "grading"'>
-        <annotation ng-if='drawController.componentContent.maxScore > -1'
-                    type='score'
-                    mode='drawController.mode'
-                    node-id='drawController.nodeId'
-                    component-id='drawController.componentId'
-                    from-workgroup-id='teacherWorkgroupId'
-                    to-workgroup-id='workgroupId'
-                    component-state-id='componentState.id'
-                    active='true'></annotation>
-        <br ng-if='drawController.componentContent.maxScore > -1'/>
-        <annotation type='comment'
-                    mode='drawController.mode'
-                    node-id='drawController.nodeId'
-                    component-id='drawController.componentId'
-                    from-workgroup-id='teacherWorkgroupId'
-                    to-workgroup-id='workgroupId'
-                    component-state-id='componentState.id'
-                    active='true'></annotation>
-    </div>
+    <component-grading ng-if="drawController.mode === 'grading'"
+                      node-id='drawController.nodeId'
+                      component-id='drawController.componentId'
+                      max-score="drawController.componentContent.maxScore"
+                      from-workgroup-id='teacherWorkgroupId'
+                      to-workgroup-id='workgroupId'
+                      component-state-id='componentState.id'
+                      active="true"></component-grading>
 </div>

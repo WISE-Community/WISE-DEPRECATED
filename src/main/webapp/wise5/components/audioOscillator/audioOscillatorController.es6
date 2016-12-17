@@ -7,6 +7,7 @@ class AudioOscillatorController {
                 $rootScope,
                 $scope,
                 $timeout,
+                AnnotationService,
                 ConfigService,
                 NodeService,
                 AudioOscillatorService,
@@ -19,6 +20,7 @@ class AudioOscillatorController {
         this.$rootScope = $rootScope;
         this.$scope = $scope;
         this.$timeout = $timeout;
+        this.AnnotationService = AnnotationService;
         this.ConfigService = ConfigService;
         this.NodeService = NodeService;
         this.AudioOscillatorService = AudioOscillatorService;
@@ -148,12 +150,15 @@ class AudioOscillatorController {
                 this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
 
                 // get the latest annotations
-                this.latestAnnotations = this.$scope.$parent.nodeController.getLatestComponentAnnotations(this.componentId);
+                this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
             } else if (this.mode === 'grading') {
                 this.isPromptVisible = true;
                 this.isSaveButtonVisible = false;
                 this.isSubmitButtonVisible = false;
                 this.isDisabled = true;
+
+                // get the latest annotations
+                this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
             } else if (this.mode === 'onlyShowWork') {
                 this.isPromptVisible = false;
                 this.isSaveButtonVisible = false;
@@ -206,7 +211,7 @@ class AudioOscillatorController {
                 // check if we need to import work
                 var importPreviousWorkNodeId = this.componentContent.importPreviousWorkNodeId;
                 var importPreviousWorkComponentId = this.componentContent.importPreviousWorkComponentId;
-                
+
                 if (importPreviousWorkNodeId == null || importPreviousWorkNodeId == '') {
                     /*
                      * check if the node id is in the field that we used to store
@@ -214,7 +219,7 @@ class AudioOscillatorController {
                      */
                     importPreviousWorkNodeId = this.componentContent.importWorkNodeId;
                 }
-                
+
                 if (importPreviousWorkComponentId == null || importPreviousWorkComponentId == '') {
                     /*
                      * check if the component id is in the field that we used to store
@@ -222,7 +227,7 @@ class AudioOscillatorController {
                      */
                     importPreviousWorkComponentId = this.componentContent.importWorkComponentId;
                 }
-                
+
                 if (importPreviousWorkNodeId != null && importPreviousWorkComponentId != null) {
                     // import the work from the other component
                     this.importWork();
@@ -378,7 +383,7 @@ class AudioOscillatorController {
                         this.componentId === annotationComponentId) {
 
                         // get latest score and comment annotations for this component
-                        this.latestAnnotations = this.$scope.$parent.nodeController.getLatestComponentAnnotations(this.componentId);
+                        this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
                     }
                 }
             }
@@ -640,30 +645,6 @@ class AudioOscillatorController {
                 }
             }
         }
-    };
-
-    /**
-     * Check whether we need to show the prompt
-     * @return whether to show the prompt
-     */
-    showPrompt() {
-        return this.isPromptVisible;
-    };
-
-    /**
-     * Check whether we need to show the save button
-     * @return whether to show the save button
-     */
-    showSaveButton() {
-        return this.isSaveButtonVisible;
-    };
-
-    /**
-     * Check whether we need to show the submit button
-     * @return whether to show the submit button
-     */
-    showSubmitButton() {
-        return this.isSubmitButtonVisible;
     };
 
     /**
@@ -1087,9 +1068,9 @@ class AudioOscillatorController {
             // get the import previous work node id and component id
             var importPreviousWorkNodeId = componentContent.importPreviousWorkNodeId;
             var importPreviousWorkComponentId = componentContent.importPreviousWorkComponentId;
-            
+
             if (importPreviousWorkNodeId == null || importPreviousWorkNodeId == '') {
-                
+
                 /*
                  * check if the node id is in the field that we used to store
                  * the import previous work node id in
@@ -1098,9 +1079,9 @@ class AudioOscillatorController {
                     importPreviousWorkNodeId = componentContent.importWorkNodeId;
                 }
             }
-            
+
             if (importPreviousWorkComponentId == null || importPreviousWorkComponentId == '') {
-                
+
                 /*
                  * check if the component id is in the field that we used to store
                  * the import previous work component id in
@@ -1109,7 +1090,7 @@ class AudioOscillatorController {
                     importPreviousWorkComponentId = componentContent.importWorkComponentId;
                 }
             }
-            
+
             if (importPreviousWorkNodeId != null && importPreviousWorkComponentId != null) {
 
                 // get the latest component state for this component
@@ -1196,22 +1177,22 @@ class AudioOscillatorController {
      * The show previous work checkbox was clicked
      */
     authoringShowPreviousWorkClicked() {
-        
+
         if (!this.authoringComponentContent.showPreviousWork) {
             /*
              * show previous work has been turned off so we will clear the
-             * show previous work node id, show previous work component id, and 
+             * show previous work node id, show previous work component id, and
              * show previous work prompt values
              */
             this.authoringComponentContent.showPreviousWorkNodeId = null;
             this.authoringComponentContent.showPreviousWorkComponentId = null;
             this.authoringComponentContent.showPreviousWorkPrompt = null;
-            
+
             // the authoring component content has changed so we will save the project
             this.authoringViewComponentChanged();
         }
     }
-    
+
     /**
      * The show previous work node id has changed
      */
@@ -1235,72 +1216,72 @@ class AudioOscillatorController {
      * The show previous work component id has changed
      */
     authoringShowPreviousWorkComponentIdChanged() {
-        
+
         // get the show previous work node id
         var showPreviousWorkNodeId = this.authoringComponentContent.showPreviousWorkNodeId;
-        
+
         // get the show previous work prompt boolean value
         var showPreviousWorkPrompt = this.authoringComponentContent.showPreviousWorkPrompt;
-        
+
         // get the old show previous work component id
         var oldShowPreviousWorkComponentId = this.componentContent.showPreviousWorkComponentId;
-        
+
         // get the new show previous work component id
         var newShowPreviousWorkComponentId = this.authoringComponentContent.showPreviousWorkComponentId;
-        
+
         // get the new show previous work component
         var newShowPreviousWorkComponent = this.ProjectService.getComponentByNodeIdAndComponentId(showPreviousWorkNodeId, newShowPreviousWorkComponentId);
-        
+
         if (newShowPreviousWorkComponent == null || newShowPreviousWorkComponent == '') {
             // the new show previous work component is empty
-            
+
             // save the component
             this.authoringViewComponentChanged();
         } else if (newShowPreviousWorkComponent != null) {
-            
+
             // get the current component type
             var currentComponentType = this.componentContent.type;
-            
+
             // get the new component type
             var newComponentType = newShowPreviousWorkComponent.type;
-            
+
             // check if the component types are different
             if (newComponentType != currentComponentType) {
                 /*
                  * the component types are different so we will need to change
                  * the whole component
                  */
-                
+
                 // make sure the author really wants to change the component type
                 var answer = confirm('Are you sure you want to change this component type?');
-                
+
                 if (answer) {
                     // the author wants to change the component type
-                    
+
                     /*
                      * get the component service so we can make a new instance
                      * of the component
                      */
                     var componentService = this.$injector.get(newComponentType + 'Service');
-                    
+
                     if (componentService != null) {
-                        
+
                         // create a new component
                         var newComponent = componentService.createComponent();
-                        
+
                         // set move over the values we need to keep
                         newComponent.id = this.authoringComponentContent.id;
                         newComponent.showPreviousWork = true;
                         newComponent.showPreviousWorkNodeId = showPreviousWorkNodeId;
                         newComponent.showPreviousWorkComponentId = newShowPreviousWorkComponentId;
                         newComponent.showPreviousWorkPrompt = showPreviousWorkPrompt;
-                        
+
                         /*
                          * update the authoring component content JSON string to
                          * change the component
                          */
                         this.authoringComponentContentJSONString = JSON.stringify(newComponent);
-                        
+
                         // update the component in the project and save the project
                         this.advancedAuthoringViewComponentChanged();
                     }
@@ -1395,7 +1376,7 @@ class AudioOscillatorController {
 
         }));
     };
-    
+
     /**
      * Check if a component generates student work
      * @param component the component
@@ -1403,14 +1384,14 @@ class AudioOscillatorController {
      */
     componentHasWork(component) {
         var result = true;
-        
+
         if (component != null) {
             result = this.ProjectService.componentHasWork(component);
         }
-        
+
         return result;
     }
-    
+
     /**
      * The import previous work checkbox was clicked
      */
@@ -1419,7 +1400,7 @@ class AudioOscillatorController {
         if (!this.authoringComponentContent.importPreviousWork) {
             /*
              * import previous work has been turned off so we will clear the
-             * import previous work node id, and import previous work 
+             * import previous work node id, and import previous work
              * component id
              */
             this.authoringComponentContent.importPreviousWorkNodeId = null;
@@ -1429,12 +1410,12 @@ class AudioOscillatorController {
             this.authoringViewComponentChanged();
         }
     }
-    
+
     /**
      * The import previous work node id has changed
      */
     authoringImportPreviousWorkNodeIdChanged() {
-        
+
         if (this.authoringComponentContent.importPreviousWorkNodeId == null ||
             this.authoringComponentContent.importPreviousWorkNodeId == '') {
 
@@ -1448,12 +1429,12 @@ class AudioOscillatorController {
         // the authoring component content has changed so we will save the project
         this.authoringViewComponentChanged();
     }
-    
+
     /**
      * The import previous work component id has changed
      */
     authoringImportPreviousWorkComponentIdChanged() {
-        
+
         // the authoring component content has changed so we will save the project
         this.authoringViewComponentChanged();
     }
@@ -1465,6 +1446,7 @@ AudioOscillatorController.$inject = [
     '$rootScope',
     '$scope',
     '$timeout',
+    'AnnotationService',
     'ConfigService',
     'NodeService',
     'AudioOscillatorService',

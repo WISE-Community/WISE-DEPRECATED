@@ -1,192 +1,176 @@
-<html>
-    <head></head>
-    <body>
-        <div ng-controller="MultipleChoiceController as multipleChoiceController" flex>
+<div ng-controller="MultipleChoiceController as multipleChoiceController" flex>
 
-            <div ng-if='multipleChoiceController.mode === "authoring" && !multipleChoiceController.authoringComponentContent.showPreviousWork'>
+    <div ng-if='multipleChoiceController.mode === "authoring" && !multipleChoiceController.authoringComponentContent.showPreviousWork'>
 
-                <textarea ng-model='multipleChoiceController.authoringComponentContent.prompt'
-                          ng-change='multipleChoiceController.authoringViewComponentChanged()'
-                          ng-model-options='{ debounce: 1000 }'
-                          rows='10'
-                          cols='100'></textarea>
-                <br/>
-                {{ 'showSaveButton' | translate }}: <input type='checkbox'
-                                         ng-model='multipleChoiceController.authoringComponentContent.showSaveButton'
-                                         ng-change='multipleChoiceController.authoringViewComponentChanged()'/>
-                <br/>
-                {{ 'showSubmitButton' | translate }}: <input type='checkbox'
-                                           ng-model='multipleChoiceController.authoringComponentContent.showSubmitButton'
-                                           ng-change='multipleChoiceController.authoringViewComponentChanged()'/>
-                <br/>
-                {{ 'radio' | translate }}: <input type='radio' name='choiceType' ng-model='multipleChoiceController.authoringComponentContent.choiceType' value='radio' ng-change='multipleChoiceController.authoringViewComponentChanged()'/>
-                {{ 'checkbox' | translate }}: <input type='radio' name='choiceType' ng-model='multipleChoiceController.authoringComponentContent.choiceType' value='checkbox' ng-change='multipleChoiceController.authoringViewComponentChanged()'/>
-                <br/>
-                <button ng-click='multipleChoiceController.addChoice()'>{{ 'addChoice' | translate }}</button>
-                <div ng-repeat='choice in multipleChoiceController.authoringComponentContent.choices'
-                     style='border: 1px solid black'>
-                    {{ 'text' | translate }}: <input ng-model='choice.text' ng-change='multipleChoiceController.authoringViewComponentChanged()' ng-model-options='{ debounce: 1000 }' size='100'/>
-                    <br/>
-                    {{ 'feedback' | translate }}: <input ng-model='choice.feedback' ng-change='multipleChoiceController.authoringViewFeedbackChanged()' ng-model-options='{ debounce: 1000 }' size='100'/>
-                    <br/>
-                    <div>{{ 'isCorrect' | translate }}: <input type='checkbox' ng-model='choice.isCorrect' ng-change='multipleChoiceController.authoringViewComponentChanged()'/></div>
-                    <button ng-click='multipleChoiceController.deleteChoice(choice.id)'>{{ 'delete' | translate }}</button>
-                </div>
-                <br/>
-                {{ 'showFeedback' | translate }}: <input type='checkbox'
-                                      ng-model='multipleChoiceController.authoringComponentContent.showFeedback'
-                                      ng-change='multipleChoiceController.authoringViewComponentChanged()'/>
-                <br/>
-                {{ 'maxScore' | translate }}:
-                <input type='number'
-                       ng-model='multipleChoiceController.authoringComponentContent.maxScore'
-                       ng-change='multipleChoiceController.authoringViewComponentChanged()'
-                       ng-model-options='{ debounce: 1000 }'
-                       style='width: 3em'/>
+        <textarea ng-model='multipleChoiceController.authoringComponentContent.prompt'
+                  ng-change='multipleChoiceController.authoringViewComponentChanged()'
+                  ng-model-options='{ debounce: 1000 }'
+                  rows='10'
+                  cols='100'></textarea>
+        <br/>
+        {{ 'showSaveButton' | translate }}: <input type='checkbox'
+                                 ng-model='multipleChoiceController.authoringComponentContent.showSaveButton'
+                                 ng-change='multipleChoiceController.authoringViewComponentChanged()'/>
+        <br/>
+        {{ 'showSubmitButton' | translate }}: <input type='checkbox'
+                                   ng-model='multipleChoiceController.authoringComponentContent.showSubmitButton'
+                                   ng-change='multipleChoiceController.authoringViewComponentChanged()'/>
+        <br/>
+        {{ 'radio' | translate }}: <input type='radio' name='choiceType' ng-model='multipleChoiceController.authoringComponentContent.choiceType' value='radio' ng-change='multipleChoiceController.authoringViewComponentChanged()'/>
+        {{ 'checkbox' | translate }}: <input type='radio' name='choiceType' ng-model='multipleChoiceController.authoringComponentContent.choiceType' value='checkbox' ng-change='multipleChoiceController.authoringViewComponentChanged()'/>
+        <br/>
+        <button ng-click='multipleChoiceController.addChoice()'>{{ 'addChoice' | translate }}</button>
+        <div ng-repeat='choice in multipleChoiceController.authoringComponentContent.choices'
+             style='border: 1px solid black'>
+            {{ 'text' | translate }}: <input ng-model='choice.text' ng-change='multipleChoiceController.authoringViewComponentChanged()' ng-model-options='{ debounce: 1000 }' size='100'/>
+            <br/>
+            {{ 'feedback' | translate }}: <input ng-model='choice.feedback' ng-change='multipleChoiceController.authoringViewFeedbackChanged()' ng-model-options='{ debounce: 1000 }' size='100'/>
+            <br/>
+            <div>{{ 'isCorrect' | translate }}: <input type='checkbox' ng-model='choice.isCorrect' ng-change='multipleChoiceController.authoringViewComponentChanged()'/></div>
+            <button ng-click='multipleChoiceController.deleteChoice(choice.id)'>{{ 'delete' | translate }}</button>
+        </div>
+        <br/>
+        {{ 'showFeedback' | translate }}: <input type='checkbox'
+                              ng-model='multipleChoiceController.authoringComponentContent.showFeedback'
+                              ng-change='multipleChoiceController.authoringViewComponentChanged()'/>
+        <br/>
+        {{ 'maxScore' | translate }}:
+        <input type='number'
+               ng-model='multipleChoiceController.authoringComponentContent.maxScore'
+               ng-change='multipleChoiceController.authoringViewComponentChanged()'
+               ng-model-options='{ debounce: 1000 }'
+               style='width: 3em'/>
+    </div>
+    <div ng-if='multipleChoiceController.mode === "authoring"'>
+        {{ 'importPreviousWork' | translate }}:
+        <input type='checkbox'
+               ng-model='multipleChoiceController.authoringComponentContent.importPreviousWork'
+               ng-click='multipleChoiceController.authoringImportPreviousWorkClicked()'
+               ng-change='multipleChoiceController.authoringViewComponentChanged()'/>
+    </div>
+    <div ng-if='multipleChoiceController.mode === "authoring" && multipleChoiceController.authoringComponentContent.importPreviousWork'>
+        {{ 'importPreviousWorkStep' | translate }}:
+        <select ng-model='multipleChoiceController.authoringComponentContent.importPreviousWorkNodeId'
+                ng-change='multipleChoiceController.authoringImportPreviousWorkNodeIdChanged()'>
+            <option></option>
+            <option ng-repeat='item in multipleChoiceController.idToOrder | toArray | orderBy : "order"'
+                    value='{{item.$key}}'
+                    ng-if='multipleChoiceController.isApplicationNode(item.$key)'>{{multipleChoiceController.getNodePositionAndTitleByNodeId(item.$key)}}</option>
+        </select>
+        <br/>
+        {{ 'importPreviousWorkComponent' | translate }}:
+        <select ng-model='multipleChoiceController.authoringComponentContent.importPreviousWorkComponentId'
+                ng-change='multipleChoiceController.authoringImportPreviousWorkComponentIdChanged()'
+                ng-options='component.id as component.type disable when !multipleChoiceController.componentHasWork(component) for component in multipleChoiceController.getComponentsByNodeId(multipleChoiceController.authoringComponentContent.importPreviousWorkNodeId)'>
+            <option></option>
+        </select>
+    </div>
+    <div ng-if='multipleChoiceController.mode === "authoring"'>
+        {{ 'showPreviousWork' | translate }}:
+        <input type='checkbox'
+               ng-model='multipleChoiceController.authoringComponentContent.showPreviousWork'
+               ng-change='multipleChoiceController.authoringViewComponentChanged()'
+               ng-click='multipleChoiceController.authoringShowPreviousWorkClicked()'/>
+    </div>
+    <div ng-if='multipleChoiceController.mode === "authoring" && multipleChoiceController.authoringComponentContent.showPreviousWork'>
+        {{ 'showPreviousWorkStep' | translate }}:
+        <select ng-model='multipleChoiceController.authoringComponentContent.showPreviousWorkNodeId'
+                ng-change='multipleChoiceController.authoringShowPreviousWorkNodeIdChanged()'>
+            <option></option>
+            <option ng-repeat='item in multipleChoiceController.idToOrder | toArray | orderBy : "order"'
+                    value='{{item.$key}}'
+                    ng-if='multipleChoiceController.isApplicationNode(item.$key)'>{{multipleChoiceController.getNodePositionAndTitleByNodeId(item.$key)}}</option>
+        </select>
+        <br/>
+        {{ 'showPreviousWorkComponent' | translate }}:
+        <select ng-model='multipleChoiceController.authoringComponentContent.showPreviousWorkComponentId'
+                ng-change='multipleChoiceController.authoringShowPreviousWorkComponentIdChanged()'
+                ng-options='component.id as component.type disable when !multipleChoiceController.componentHasWork(component) for component in multipleChoiceController.getComponentsByNodeId(multipleChoiceController.authoringComponentContent.showPreviousWorkNodeId)'>
+            <option></option>
+        </select>
+        <br/>
+        {{ 'showPreviousWorkPrompt' | translate }}:
+        <input type='checkbox'
+               ng-model='multipleChoiceController.authoringComponentContent.showPreviousWorkPrompt'
+               ng-change='multipleChoiceController.authoringViewComponentChanged()'/>
+    </div>
+    <div ng-if='multipleChoiceController.mode === "authoring"'>
+        <textarea ng-model='multipleChoiceController.authoringComponentContentJSONString'
+                  ng-change='multipleChoiceController.advancedAuthoringViewComponentChanged()'
+                  ng-model-options="{ updateOn: 'blur' }"
+                  rows='10'
+                  cols='100'></textarea>
+    </div>
+    <md-input-container class="input-container md-block input-container--open-response input-container--component md-no-float"
+                        ng-switch on="multipleChoiceController.getChoiceType()">
+        <label class="input-label md-no-float" ng-if="multipleChoiceController.isPromptVisible"><compile data="multipleChoiceController.getPrompt()"></compile></label>
+        <possible-score max-score="multipleChoiceController.componentContent.maxScore"
+                        ng-if="multipleChoiceController.mode === 'student' && !multipleChoiceController.latestAnnotations.score"></possible-score>
+        <md-radio-group ng-switch-when="radio" ng-model="multipleChoiceController.studentChoices"
+                        ng-change="multipleChoiceController.studentDataChanged()">
+            <div ng-repeat="choice in multipleChoiceController.getChoices()">
+                <md-radio-button class="md-primary"
+                                 ng-value="choice.id"
+                                 ng-click="multipleChoiceController.isDisabled || multipleChoiceController.radioChoiceSelected(choice.id)"
+                                 ng-disabled="multipleChoiceController.isDisabled">
+                    <span><compile data="choice.text"></compile></span>
+                    <span ng-if="multipleChoiceController.showFeedback"
+                          ng-show="choice.showFeedback"
+                          ng-class="{'success': multipleChoiceController.hasCorrectChoices() && choice.isCorrect, 'warn': multipleChoiceController.hasCorrectChoices() && !choice.isCorrect, 'info': !multipleChoiceController.hasCorrectChoices()}">
+                          {{choice.feedbackToShow}}
+                    </span>
+                </md-radio-button>
             </div>
-            <div ng-if='multipleChoiceController.mode === "authoring"'>
-                {{ 'importPreviousWork' | translate }}:
-                <input type='checkbox'
-                       ng-model='multipleChoiceController.authoringComponentContent.importPreviousWork'
-                       ng-click='multipleChoiceController.authoringImportPreviousWorkClicked()'
-                       ng-change='multipleChoiceController.authoringViewComponentChanged()'/>
-            </div>
-            <div ng-if='multipleChoiceController.mode === "authoring" && multipleChoiceController.authoringComponentContent.importPreviousWork'>
-                {{ 'importPreviousWorkStep' | translate }}:
-                <select ng-model='multipleChoiceController.authoringComponentContent.importPreviousWorkNodeId'
-                        ng-change='multipleChoiceController.authoringImportPreviousWorkNodeIdChanged()'>
-                    <option></option>
-                    <option ng-repeat='item in multipleChoiceController.idToOrder | toArray | orderBy : "order"'
-                            value='{{item.$key}}'
-                            ng-if='multipleChoiceController.isApplicationNode(item.$key)'>{{multipleChoiceController.getNodePositionAndTitleByNodeId(item.$key)}}</option>
-                </select>
-                <br/>
-                {{ 'importPreviousWorkComponent' | translate }}:
-                <select ng-model='multipleChoiceController.authoringComponentContent.importPreviousWorkComponentId'
-                        ng-change='multipleChoiceController.authoringImportPreviousWorkComponentIdChanged()'
-                        ng-options='component.id as component.type disable when !multipleChoiceController.componentHasWork(component) for component in multipleChoiceController.getComponentsByNodeId(multipleChoiceController.authoringComponentContent.importPreviousWorkNodeId)'>
-                    <option></option>
-                </select>
-            </div>
-            <div ng-if='multipleChoiceController.mode === "authoring"'>
-                {{ 'showPreviousWork' | translate }}:
-                <input type='checkbox'
-                       ng-model='multipleChoiceController.authoringComponentContent.showPreviousWork'
-                       ng-change='multipleChoiceController.authoringViewComponentChanged()'
-                       ng-click='multipleChoiceController.authoringShowPreviousWorkClicked()'/>
-            </div>
-            <div ng-if='multipleChoiceController.mode === "authoring" && multipleChoiceController.authoringComponentContent.showPreviousWork'>
-                {{ 'showPreviousWorkStep' | translate }}:
-                <select ng-model='multipleChoiceController.authoringComponentContent.showPreviousWorkNodeId'
-                        ng-change='multipleChoiceController.authoringShowPreviousWorkNodeIdChanged()'>
-                    <option></option>
-                    <option ng-repeat='item in multipleChoiceController.idToOrder | toArray | orderBy : "order"'
-                            value='{{item.$key}}'
-                            ng-if='multipleChoiceController.isApplicationNode(item.$key)'>{{multipleChoiceController.getNodePositionAndTitleByNodeId(item.$key)}}</option>
-                </select>
-                <br/>
-                {{ 'showPreviousWorkComponent' | translate }}:
-                <select ng-model='multipleChoiceController.authoringComponentContent.showPreviousWorkComponentId'
-                        ng-change='multipleChoiceController.authoringShowPreviousWorkComponentIdChanged()'
-                        ng-options='component.id as component.type disable when !multipleChoiceController.componentHasWork(component) for component in multipleChoiceController.getComponentsByNodeId(multipleChoiceController.authoringComponentContent.showPreviousWorkNodeId)'>
-                    <option></option>
-                </select>
-                <br/>
-                {{ 'showPreviousWorkPrompt' | translate }}:
-                <input type='checkbox'
-                       ng-model='multipleChoiceController.authoringComponentContent.showPreviousWorkPrompt'
-                       ng-change='multipleChoiceController.authoringViewComponentChanged()'/>
-            </div>
-            <div ng-if='multipleChoiceController.mode === "authoring"'>
-                <textarea ng-model='multipleChoiceController.authoringComponentContentJSONString'
-                          ng-change='multipleChoiceController.advancedAuthoringViewComponentChanged()'
-                          ng-model-options="{ updateOn: 'blur' }"
-                          rows='10'
-                          cols='100'></textarea>
-            </div>
-            <md-input-container class="input-container md-block input-container--open-response input-container--component md-no-float"
-                                ng-switch on="multipleChoiceController.getChoiceType()">
-                <label class="input-label md-no-float" ng-if="multipleChoiceController.showPrompt()"><compile data="multipleChoiceController.getPrompt()"></compile></label>
-                <possible-score max-score="multipleChoiceController.componentContent.maxScore"
-                                ng-if="multipleChoiceController.mode === 'student' && !multipleChoiceController.latestAnnotations.score"></possible-score>
-                <md-radio-group ng-switch-when="radio" ng-model="multipleChoiceController.studentChoices"
-                                ng-change="multipleChoiceController.studentDataChanged()">
-                    <div ng-repeat="choice in multipleChoiceController.getChoices()">
-                        <md-radio-button class="md-primary"
-                                         ng-value="choice.id"
-                                         ng-click="multipleChoiceController.isDisabled || multipleChoiceController.radioChoiceSelected(choice.id)"
-                                         ng-disabled="multipleChoiceController.isDisabled">
-                            <span><compile data="choice.text"></compile></span>
-                            <span ng-if="multipleChoiceController.showFeedback"
-                                  ng-show="choice.showFeedback"
-                                  ng-class="{'success': multipleChoiceController.hasCorrectChoices() && choice.isCorrect, 'warn': multipleChoiceController.hasCorrectChoices() && !choice.isCorrect, 'info': !multipleChoiceController.hasCorrectChoices()}">
-                                  {{choice.feedbackToShow}}
-                            </span>
-                        </md-radio-button>
-                    </div>
-                </md-radio-group>
-                <div ng-switch-when="checkbox">
-                    <div ng-repeat="choice in multipleChoiceController.getChoices()">
-                        <md-checkbox class="md-primary"
-                                     ng-checked="multipleChoiceController.isChecked(choice.id)"
-                                     ng-click="multipleChoiceController.isDisabled || multipleChoiceController.toggleSelection(choice.id)"
-                                     ng-disabled="multipleChoiceController.isDisabled">
-                            <span><compile data="choice.text"></compile></span>
-                            <span ng-show="choice.showFeedback"
-                                  ng-class="{'success': multipleChoiceController.hasCorrectChoices() && choice.isCorrect, 'warn': multipleChoiceController.hasCorrectChoices() && !choice.isCorrect, 'info': !multipleChoiceController.hasCorrectChoices()}">
-                                  {{choice.feedbackToShow}}
-                            </span>
-                        </md-checkbox>
-                    </div>
-                </div>
-
-                <div class="md-caption" ng-if="multipleChoiceController.hasCorrectChoices() && multipleChoiceController.showFeedback" ng-show="multipleChoiceController.numberOfAttempts != null">{{ 'numberOfAttempts' | translate }}: {{multipleChoiceController.numberOfAttempts}}</div>
-                <div ng-if="multipleChoiceController.hasCorrectChoices() && multipleChoiceController.showFeedback && multipleChoiceController.isCorrect != null && multipleChoiceController.isCorrect">{{ 'correct' | translate }}!</div>
-                <div ng-if="multipleChoiceController.hasCorrectChoices() && multipleChoiceController.showFeedback && multipleChoiceController.isCorrect != null && !multipleChoiceController.isCorrect">{{ 'incorrect' | translate }}</div>
-            </md-input-container>
-
-            <div ng-if="multipleChoiceController.showSaveButton() || multipleChoiceController.showSubmitButton()"
-                 class="component__actions" layout="row" layout-align="start center">
-                <md-button class="md-raised md-primary"
-                           ng-click='multipleChoiceController.saveButtonClicked()'
-                           ng-disabled='multipleChoiceController.isDisabled || !multipleChoiceController.isDirty'
-                           ng-show='multipleChoiceController.showSaveButton()'
-                           aria-label="Save"
-                           translate="save"></md-button>
-                <md-button class="md-raised md-primary"
-                           ng-click='multipleChoiceController.submitButtonClicked()'
-                           ng-disabled='multipleChoiceController.isDisabled || !multipleChoiceController.isSubmitDirty'
-                           ng-show='multipleChoiceController.showSubmitButton()'
-                           aria-label="Submit"
-                           translate="submit"></md-button>
-                <span ng-show="multipleChoiceController.saveMessage.text"
-                      class="component__actions__info md-caption">
-                      {{multipleChoiceController.saveMessage.text}} <span class="component__actions__more"><md-tooltip md-direction="top">{{ multipleChoiceController.saveMessage.time | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip><span am-time-ago="multipleChoiceController.saveMessage.time"></span></span>
-                </span>
-            </div>
-            <component-annotations ng-if="multipleChoiceController.mode === 'student'"
-                                   annotations='multipleChoiceController.latestAnnotations'
-                                   max-score="multipleChoiceController.componentContent.maxScore"></component-annotations>
-            <div ng-if='multipleChoiceController.mode === "grading"'>
-                <annotation ng-if='multipleChoiceController.componentContent.maxScore > -1'
-                            type='score'
-                            mode='multipleChoiceController.mode'
-                            node-id='multipleChoiceController.nodeId'
-                            component-id='multipleChoiceController.componentId'
-                            from-workgroup-id='teacherWorkgroupId'
-                            to-workgroup-id='workgroupId'
-                            component-state-id='componentState.id'
-                            active='true'></annotation>
-                <br ng-if='multipleChoiceController.componentContent.maxScore > -1'/>
-                <annotation type='comment'
-                            mode='multipleChoiceController.mode'
-                            node-id='multipleChoiceController.nodeId'
-                            component-id='multipleChoiceController.componentId'
-                            from-workgroup-id='teacherWorkgroupId'
-                            to-workgroup-id='workgroupId'
-                            component-state-id='componentState.id'
-                            active='true'></annotation>
+        </md-radio-group>
+        <div ng-switch-when="checkbox">
+            <div ng-repeat="choice in multipleChoiceController.getChoices()">
+                <md-checkbox class="md-primary"
+                             ng-checked="multipleChoiceController.isChecked(choice.id)"
+                             ng-click="multipleChoiceController.isDisabled || multipleChoiceController.toggleSelection(choice.id)"
+                             ng-disabled="multipleChoiceController.isDisabled">
+                    <span><compile data="choice.text"></compile></span>
+                    <span ng-show="choice.showFeedback"
+                          ng-class="{'success': multipleChoiceController.hasCorrectChoices() && choice.isCorrect, 'warn': multipleChoiceController.hasCorrectChoices() && !choice.isCorrect, 'info': !multipleChoiceController.hasCorrectChoices()}">
+                          {{choice.feedbackToShow}}
+                    </span>
+                </md-checkbox>
             </div>
         </div>
-    </body>
-</html>
+
+        <div class="md-caption" ng-if="multipleChoiceController.hasCorrectChoices() && multipleChoiceController.showFeedback" ng-show="multipleChoiceController.numberOfAttempts != null">{{ 'numberOfAttempts' | translate }}: {{multipleChoiceController.numberOfAttempts}}</div>
+        <div ng-if="multipleChoiceController.hasCorrectChoices() && multipleChoiceController.showFeedback && multipleChoiceController.isCorrect != null && multipleChoiceController.isCorrect">{{ 'correct' | translate }}!</div>
+        <div ng-if="multipleChoiceController.hasCorrectChoices() && multipleChoiceController.showFeedback && multipleChoiceController.isCorrect != null && !multipleChoiceController.isCorrect">{{ 'incorrect' | translate }}</div>
+    </md-input-container>
+
+    <div ng-if="multipleChoiceController.isSaveButtonVisible || multipleChoiceController.isSubmitButtonVisible"
+         class="component__actions" layout="row" layout-align="start center">
+        <md-button class="md-primary"
+                   ng-class="{'md-raised': !multipleChoiceController.isSubmitButtonVisible}"
+                   ng-click='multipleChoiceController.saveButtonClicked()'
+                   ng-disabled='multipleChoiceController.isDisabled || !multipleChoiceController.isDirty'
+                   ng-show='multipleChoiceController.isSaveButtonVisible'
+                   aria-label="Save"
+                   translate="save"></md-button>
+        <md-button class="md-raised md-primary"
+                   ng-click='multipleChoiceController.submitButtonClicked()'
+                   ng-disabled='multipleChoiceController.isDisabled || !multipleChoiceController.isSubmitDirty'
+                   ng-show='multipleChoiceController.isSubmitButtonVisible'
+                   aria-label="Submit"
+                   translate="submit"></md-button>
+        <span ng-show="multipleChoiceController.saveMessage.text"
+              class="component__actions__info md-caption">
+              {{multipleChoiceController.saveMessage.text}} <span class="component__actions__more"><md-tooltip md-direction="top">{{ multipleChoiceController.saveMessage.time | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip><span am-time-ago="multipleChoiceController.saveMessage.time"></span></span>
+        </span>
+    </div>
+    <component-annotations ng-if="multipleChoiceController.mode === 'student'"
+                           annotations='multipleChoiceController.latestAnnotations'
+                           max-score="multipleChoiceController.componentContent.maxScore"></component-annotations>
+    <component-grading ng-if="multipleChoiceController.mode === 'grading'"
+                      node-id='multipleChoiceController.nodeId'
+                      component-id='multipleChoiceController.componentId'
+                      max-score="multipleChoiceController.componentContent.maxScore"
+                      from-workgroup-id='teacherWorkgroupId'
+                      to-workgroup-id='workgroupId'
+                      component-state-id='componentState.id'
+                      active="true"></component-grading>
+</div>

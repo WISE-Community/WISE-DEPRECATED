@@ -7,6 +7,7 @@ class EmbeddedController {
                 $scope,
                 $sce,
                 $window,
+                AnnotationService,
                 ConfigService,
                 NodeService,
                 NotebookService,
@@ -20,6 +21,7 @@ class EmbeddedController {
         this.$scope = $scope;
         this.$sce = $sce;
         this.$window = $window;
+        this.AnnotationService = AnnotationService;
         this.ConfigService = ConfigService;
         this.NodeService = NodeService;
         this.NotebookService = NotebookService;
@@ -85,7 +87,7 @@ class EmbeddedController {
 
         // the id of the embedded application's iframe
         this.embeddedApplicationIFrameId = '';
-        
+
         // whether the save button is shown or not
         this.isSaveButtonVisible = false;
 
@@ -154,13 +156,13 @@ class EmbeddedController {
                 this.studentDataChanged(messageEventData.studentData);
             } else if (messageEventData.messageType === "getStudentWork") {
                 // the embedded application is requesting the student work
-                
+
                 // get the student work
                 var studentWork = this.getStudentWork();
-                
+
                 var message = studentWork;
                 message.messageType = 'studentWork';
-                
+
                 // send the student work to the embedded application
                 this.sendMessageToApplication(message);
             }
@@ -208,10 +210,9 @@ class EmbeddedController {
             if (this.mode === 'student') {
                 this.isSaveButtonVisible = this.componentContent.showSaveButton;
                 this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
-                
+
                 // get the latest annotations
-                // TODO: watch for new annotations and update accordingly
-                this.latestAnnotations = this.$scope.$parent.nodeController.getLatestComponentAnnotations(this.componentId);
+                this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
                 this.isSnipModelButtonVisible = true;
             } else if (this.mode === 'authoring') {
                 this.updateAdvancedAuthoringView();
@@ -226,6 +227,9 @@ class EmbeddedController {
                 this.isSaveButtonVisible = false;
                 this.isSubmitButtonVisible = false;
                 this.isSnipModelButtonVisible = false;
+
+                // get the latest annotations
+                this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
             } else if (this.mode === 'onlyShowWork') {
                 this.isSaveButtonVisible = false;
                 this.isSubmitButtonVisible = false;
@@ -271,21 +275,21 @@ class EmbeddedController {
             if (this.nodeId === nodeId) {
                 this.isSubmit = true;
             }
-            
+
             // get the student work
             var studentWork = this.getStudentWork();
-            
+
             var message = studentWork;
             message.messageType = 'nodeSubmitClicked';
-            
+
             // send the student data to the embedded application
             this.sendMessageToApplication(message);
         });
-        
+
         this.$scope.$on('studentWorkSavedToServer', (event, args) => {
-            
+
             var componentState = args.studentWork;
-            
+
             if (componentState != null) {
                 if (componentState.componentId === this.componentId) {
                     // a component state for this component was saved
@@ -330,13 +334,13 @@ class EmbeddedController {
                     this.componentState = {};
                 }
             }
-            
+
             // get the student work
             var studentWork = this.getStudentWork();
-            
+
             var message = studentWork;
             message.messageType = 'studentWork';
-            
+
             // send the student work to the embedded application
             this.sendMessageToApplication(message);
         });
@@ -382,6 +386,34 @@ class EmbeddedController {
 
             return deferred.promise;
         }.bind(this);
+
+        /**
+         * Listen for the 'annotationSavedToServer' event which is fired when
+         * we receive the response from saving an annotation to the server
+         */
+        this.$scope.$on('annotationSavedToServer', (event, args) => {
+
+            if (args != null ) {
+
+                // get the annotation that was saved to the server
+                var annotation = args.annotation;
+
+                if (annotation != null) {
+
+                    // get the node id and component id of the annotation
+                    var annotationNodeId = annotation.nodeId;
+                    var annotationComponentId = annotation.componentId;
+
+                    // make sure the annotation was for this component
+                    if (this.nodeId === annotationNodeId &&
+                        this.componentId === annotationComponentId) {
+
+                        // get latest score and comment annotations for this component
+                        this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
+                    }
+                }
+            }
+        });
 
 
         /**
@@ -672,7 +704,7 @@ class EmbeddedController {
 
         }));
     };
-    
+
     /**
      * Check if a node is a step node
      * @param nodeId the node id to check
@@ -683,7 +715,7 @@ class EmbeddedController {
 
         return result;
     }
-    
+
     /**
      * Get the step number and title
      * @param nodeId get the step number and title for this node
@@ -705,27 +737,27 @@ class EmbeddedController {
 
         return components;
     }
-    
+
     /**
      * The show previous work checkbox was clicked
      */
     authoringShowPreviousWorkClicked() {
-        
+
         if (!this.authoringComponentContent.showPreviousWork) {
             /*
              * show previous work has been turned off so we will clear the
-             * show previous work node id, show previous work component id, and 
+             * show previous work node id, show previous work component id, and
              * show previous work prompt values
              */
             this.authoringComponentContent.showPreviousWorkNodeId = null;
             this.authoringComponentContent.showPreviousWorkComponentId = null;
             this.authoringComponentContent.showPreviousWorkPrompt = null;
-            
+
             // the authoring component content has changed so we will save the project
             this.authoringViewComponentChanged();
         }
     }
-    
+
     /**
      * The show previous work node id has changed
      */
@@ -749,72 +781,72 @@ class EmbeddedController {
      * The show previous work component id has changed
      */
     authoringShowPreviousWorkComponentIdChanged() {
-        
+
         // get the show previous work node id
         var showPreviousWorkNodeId = this.authoringComponentContent.showPreviousWorkNodeId;
-        
+
         // get the show previous work prompt boolean value
         var showPreviousWorkPrompt = this.authoringComponentContent.showPreviousWorkPrompt;
-        
+
         // get the old show previous work component id
         var oldShowPreviousWorkComponentId = this.componentContent.showPreviousWorkComponentId;
-        
+
         // get the new show previous work component id
         var newShowPreviousWorkComponentId = this.authoringComponentContent.showPreviousWorkComponentId;
-        
+
         // get the new show previous work component
         var newShowPreviousWorkComponent = this.ProjectService.getComponentByNodeIdAndComponentId(showPreviousWorkNodeId, newShowPreviousWorkComponentId);
-        
+
         if (newShowPreviousWorkComponent == null || newShowPreviousWorkComponent == '') {
             // the new show previous work component is empty
-            
+
             // save the component
             this.authoringViewComponentChanged();
         } else if (newShowPreviousWorkComponent != null) {
-            
+
             // get the current component type
             var currentComponentType = this.componentContent.type;
-            
+
             // get the new component type
             var newComponentType = newShowPreviousWorkComponent.type;
-            
+
             // check if the component types are different
             if (newComponentType != currentComponentType) {
                 /*
                  * the component types are different so we will need to change
                  * the whole component
                  */
-                
+
                 // make sure the author really wants to change the component type
                 var answer = confirm('Are you sure you want to change this component type?');
-                
+
                 if (answer) {
                     // the author wants to change the component type
-                    
+
                     /*
                      * get the component service so we can make a new instance
                      * of the component
                      */
                     var componentService = this.$injector.get(newComponentType + 'Service');
-                    
+
                     if (componentService != null) {
-                        
+
                         // create a new component
                         var newComponent = componentService.createComponent();
-                        
+
                         // set move over the values we need to keep
                         newComponent.id = this.authoringComponentContent.id;
                         newComponent.showPreviousWork = true;
                         newComponent.showPreviousWorkNodeId = showPreviousWorkNodeId;
                         newComponent.showPreviousWorkComponentId = newShowPreviousWorkComponentId;
                         newComponent.showPreviousWorkPrompt = showPreviousWorkPrompt;
-                        
+
                         /*
                          * update the authoring component content JSON string to
                          * change the component
                          */
                         this.authoringComponentContentJSONString = JSON.stringify(newComponent);
-                        
+
                         // update the component in the project and save the project
                         this.advancedAuthoringViewComponentChanged();
                     }
@@ -834,7 +866,7 @@ class EmbeddedController {
             }
         }
     }
-    
+
     /**
      * Check if a component generates student work
      * @param component the component
@@ -842,30 +874,14 @@ class EmbeddedController {
      */
     componentHasWork(component) {
         var result = true;
-        
+
         if (component != null) {
             result = this.ProjectService.componentHasWork(component);
         }
-        
+
         return result;
     }
-    
-    /**
-     * Check whether we need to show the save button
-     * @return whether to show the save button
-     */
-    showSaveButton() {
-        return this.isSaveButtonVisible;
-    };
 
-    /**
-     * Check whether we need to show the submit button
-     * @return whether to show the submit button
-     */
-    showSubmitButton() {
-        return this.isSubmitButtonVisible;
-    };
-    
     /**
      * Check whether we need to lock the component after the student
      * submits an answer.
@@ -883,7 +899,7 @@ class EmbeddedController {
 
         return result;
     }
-    
+
     /**
      * Called when the student clicks the save button
      */
@@ -903,47 +919,47 @@ class EmbeddedController {
         // tell the parent node that this component wants to submit
         this.$scope.$emit('componentSubmitTriggered', {nodeId: this.nodeId, componentId: this.componentId});
     };
-    
+
     /**
      * Get the student work from the components in this node and potentially
      * from other components
-     * @return an object containing work from the components in this node and 
+     * @return an object containing work from the components in this node and
      * potentially from other components
      */
     getStudentWork() {
-        
+
         var studentWork = {};
-        
+
         // get the latest component states from this node
         var studentWorkFromThisNode = this.StudentDataService.getLatestComponentStatesByNodeId(this.nodeId);
         studentWork.studentWorkFromThisNode = studentWorkFromThisNode;
-        
+
         /*
          * this is an array that contains objects with a nodeId and componentId
          * fields. this specifies what student data we need to obtain.
          */
         var getStudentWorkFromOtherComponents = this.componentContent.getStudentWorkFromOtherComponents;
-        
+
         if (getStudentWorkFromOtherComponents != null) {
             var studentWorkFromOtherComponents = [];
-            
+
             // loop through all the objects
             for (var c = 0; c < getStudentWorkFromOtherComponents.length; c++) {
                 var otherComponent = getStudentWorkFromOtherComponents[c];
-                
+
                 if (otherComponent != null) {
-                    
+
                     // get the node id and component id
                     var tempNodeId = otherComponent.nodeId;
                     var tempComponentId = otherComponent.componentId;
-                    
+
                     if (tempNodeId != null) {
-                        
+
                         if (tempComponentId != null) {
-                            
+
                             // get the latest component state for the given component
                             var tempComponentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(tempNodeId, tempComponentId);
-                            
+
                             if (tempComponentState == null) {
                                 /*
                                  * there is no component state for the component
@@ -955,20 +971,20 @@ class EmbeddedController {
                                 tempComponentState.nodeId = tempNodeId;
                                 tempComponentState.componentId = tempComponentId;
                             }
-                            
+
                             // add the component state to the array
                             studentWorkFromOtherComponents.push(tempComponentState);
                         }
                     }
                 }
             }
-            
+
             studentWork.studentWorkFromOtherComponents = studentWorkFromOtherComponents;
         }
-        
+
         return studentWork;
     }
-    
+
     /**
      * The import previous work checkbox was clicked
      */
@@ -977,7 +993,7 @@ class EmbeddedController {
         if (!this.authoringComponentContent.importPreviousWork) {
             /*
              * import previous work has been turned off so we will clear the
-             * import previous work node id, and import previous work 
+             * import previous work node id, and import previous work
              * component id
              */
             this.authoringComponentContent.importPreviousWorkNodeId = null;
@@ -987,12 +1003,12 @@ class EmbeddedController {
             this.authoringViewComponentChanged();
         }
     }
-    
+
     /**
      * The import previous work node id has changed
      */
     authoringImportPreviousWorkNodeIdChanged() {
-        
+
         if (this.authoringComponentContent.importPreviousWorkNodeId == null ||
             this.authoringComponentContent.importPreviousWorkNodeId == '') {
 
@@ -1006,12 +1022,12 @@ class EmbeddedController {
         // the authoring component content has changed so we will save the project
         this.authoringViewComponentChanged();
     }
-    
+
     /**
      * The import previous work component id has changed
      */
     authoringImportPreviousWorkComponentIdChanged() {
-        
+
         // the authoring component content has changed so we will save the project
         this.authoringViewComponentChanged();
     }
@@ -1023,6 +1039,7 @@ EmbeddedController.$inject = [
     '$scope',
     '$sce',
     '$window',
+    'AnnotationService',
     'ConfigService',
     'NodeService',
     'NotebookService',

@@ -5,6 +5,7 @@ class MatchController {
                 $q,
                 $rootScope,
                 $scope,
+                AnnotationService,
                 dragulaService,
                 ConfigService,
                 MatchService,
@@ -19,6 +20,7 @@ class MatchController {
         this.$q = $q;
         this.$rootScope = $rootScope;
         this.$scope = $scope;
+        this.AnnotationService = AnnotationService;
         this.dragulaService = dragulaService;
         this.ConfigService = ConfigService;
         this.MatchService = MatchService;
@@ -129,13 +131,15 @@ class MatchController {
                 this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
 
                 // get the latest annotations
-                // TODO: watch for new annotations and update accordingly
-                this.latestAnnotations = this.$scope.$parent.nodeController.getLatestComponentAnnotations(this.componentId);
+                this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
             } else if (this.mode === 'grading') {
                 this.isPromptVisible = true;
                 this.isSaveButtonVisible = false;
                 this.isSubmitButtonVisible = false;
                 this.isDisabled = true;
+
+                // get the latest annotations
+                this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
             } else if (this.mode === 'onlyShowWork') {
                 this.isPromptVisible = false;
                 this.isSaveButtonVisible = false;
@@ -182,7 +186,7 @@ class MatchController {
                 // check if we need to import work
                 var importPreviousWorkNodeId = this.componentContent.importPreviousWorkNodeId;
                 var importPreviousWorkComponentId = this.componentContent.importPreviousWorkComponentId;
-                
+
                 if (importPreviousWorkNodeId == null || importPreviousWorkNodeId == '') {
                     /*
                      * check if the node id is in the field that we used to store
@@ -190,7 +194,7 @@ class MatchController {
                      */
                     importPreviousWorkNodeId = this.componentContent.importWorkNodeId;
                 }
-                
+
                 if (importPreviousWorkComponentId == null || importPreviousWorkComponentId == '') {
                     /*
                      * check if the component id is in the field that we used to store
@@ -352,6 +356,34 @@ class MatchController {
                 }
             }
         }));
+
+        /**
+         * Listen for the 'annotationSavedToServer' event which is fired when
+         * we receive the response from saving an annotation to the server
+         */
+        this.$scope.$on('annotationSavedToServer', (event, args) => {
+
+            if (args != null ) {
+
+                // get the annotation that was saved to the server
+                var annotation = args.annotation;
+
+                if (annotation != null) {
+
+                    // get the node id and component id of the annotation
+                    var annotationNodeId = annotation.nodeId;
+                    var annotationComponentId = annotation.componentId;
+
+                    // make sure the annotation was for this component
+                    if (this.nodeId === annotationNodeId &&
+                        this.componentId === annotationComponentId) {
+
+                        // get latest score and comment annotations for this component
+                        this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
+                    }
+                }
+            }
+        });
 
         /**
          * Listen for the 'exitNode' event which is fired when the student
@@ -1027,42 +1059,6 @@ class MatchController {
     };
 
     /**
-     * Check whether we need to show the save button
-     * @return whether to show the save button
-     */
-    showSaveButton() {
-        var show = false;
-
-        if (this.componentContent != null) {
-
-            // check the showSaveButton field in the component content
-            if (this.componentContent.showSaveButton) {
-                show = true;
-            }
-        }
-
-        return show;
-    };
-
-    /**
-     * Check whether we need to show the submit button
-     * @return whether to show the submit button
-     */
-    showSubmitButton() {
-        var show = false;
-
-        if (this.componentContent != null) {
-
-            // check the showSubmitButton field in the component content
-            if (this.componentContent.showSubmitButton) {
-                show = true;
-            }
-        }
-
-        return show;
-    };
-
-    /**
      * Check whether we need to lock the component after the student
      * submits an answer.
      */
@@ -1116,9 +1112,9 @@ class MatchController {
             // get the import previous work node id and component id
             var importPreviousWorkNodeId = componentContent.importPreviousWorkNodeId;
             var importPreviousWorkComponentId = componentContent.importPreviousWorkComponentId;
-            
+
             if (importPreviousWorkNodeId == null || importPreviousWorkNodeId == '') {
-                
+
                 /*
                  * check if the node id is in the field that we used to store
                  * the import previous work node id in
@@ -1127,9 +1123,9 @@ class MatchController {
                     importPreviousWorkNodeId = componentContent.importWorkNodeId;
                 }
             }
-            
+
             if (importPreviousWorkComponentId == null || importPreviousWorkComponentId == '') {
-                
+
                 /*
                  * check if the component id is in the field that we used to store
                  * the import previous work component id in
@@ -1160,7 +1156,7 @@ class MatchController {
                          * imported component state
                          */
                         var populatedComponentState = this.MatchService.populateComponentState(importWorkComponentState);
-                        
+
                         /*
                          * update the choice ids so that it uses the choice ids
                          * from this component. we need to do this because the choice
@@ -1168,7 +1164,7 @@ class MatchController {
                          * by matching the choice text.
                          */
                         this.updateIdsFromImportedWork(populatedComponentState);
-                        
+
                         // populate the component state into this component
                         this.setStudentWork(populatedComponentState);
                     }
@@ -1176,64 +1172,64 @@ class MatchController {
             }
         }
     };
-    
+
     /**
      * Update the choice ids and bucket ids to use the ids from this component.
      * We will use the choice text and bucket text to perform matching.
      * @param componentState the component state
      */
     updateIdsFromImportedWork(componentState) {
-        
+
         if (componentState != null) {
-            
+
             // get the student data
             var studentData = componentState.studentData;
-            
+
             if (studentData != null) {
-                
+
                 // get the buckets from the student data
                 var studentBuckets = studentData.buckets;
-                
+
                 if (studentBuckets != null) {
-                    
+
                     // loop through all the student buckets
                     for (var b = 0; b < studentBuckets.length; b++) {
-                        
+
                         // get a student bucket
                         var studentBucket = studentBuckets[b];
-                        
+
                         if (studentBucket != null) {
-                            
+
                             // get the text of the student bucket
                             var tempStudentBucketText = studentBucket.value;
-                            
+
                             // get the bucket from this component that has the matching text
                             var bucket = this.getBucketByText(tempStudentBucketText);
-                            
+
                             if (bucket != null) {
                                 // change the id of the student bucket
                                 studentBucket.id = bucket.id;
                             }
-                            
+
                             // get the choices the student put into this bucket
                             var studentChoices = studentBucket.items;
-                            
+
                             if (studentChoices != null) {
-                                
+
                                 // loop through the choices in the bucket
                                 for (var c = 0; c < studentChoices.length; c++) {
-                                    
+
                                     // get a student choice
                                     var studentChoice = studentChoices[c];
-                                    
+
                                     if (studentChoice != null) {
-                                        
+
                                         // get the text of the student choice
                                         var tempStudentChoiceText = studentChoice.value;
-                                        
+
                                         // get the choice from this component that has the matching text
                                         var choice = this.getChoiceByText(tempStudentChoiceText);
-                                        
+
                                         if (choice != null) {
                                             // change the id of the student choice
                                             studentChoice.id = choice.id;
@@ -1314,22 +1310,22 @@ class MatchController {
      * The show previous work checkbox was clicked
      */
     authoringShowPreviousWorkClicked() {
-        
+
         if (!this.authoringComponentContent.showPreviousWork) {
             /*
              * show previous work has been turned off so we will clear the
-             * show previous work node id, show previous work component id, and 
+             * show previous work node id, show previous work component id, and
              * show previous work prompt values
              */
             this.authoringComponentContent.showPreviousWorkNodeId = null;
             this.authoringComponentContent.showPreviousWorkComponentId = null;
             this.authoringComponentContent.showPreviousWorkPrompt = null;
-            
+
             // the authoring component content has changed so we will save the project
             this.authoringViewComponentChanged();
         }
     }
-    
+
     /**
      * The show previous work node id has changed
      */
@@ -1353,72 +1349,72 @@ class MatchController {
      * The show previous work component id has changed
      */
     authoringShowPreviousWorkComponentIdChanged() {
-        
+
         // get the show previous work node id
         var showPreviousWorkNodeId = this.authoringComponentContent.showPreviousWorkNodeId;
-        
+
         // get the show previous work prompt boolean value
         var showPreviousWorkPrompt = this.authoringComponentContent.showPreviousWorkPrompt;
-        
+
         // get the old show previous work component id
         var oldShowPreviousWorkComponentId = this.componentContent.showPreviousWorkComponentId;
-        
+
         // get the new show previous work component id
         var newShowPreviousWorkComponentId = this.authoringComponentContent.showPreviousWorkComponentId;
-        
+
         // get the new show previous work component
         var newShowPreviousWorkComponent = this.ProjectService.getComponentByNodeIdAndComponentId(showPreviousWorkNodeId, newShowPreviousWorkComponentId);
-        
+
         if (newShowPreviousWorkComponent == null || newShowPreviousWorkComponent == '') {
             // the new show previous work component is empty
-            
+
             // save the component
             this.authoringViewComponentChanged();
         } else if (newShowPreviousWorkComponent != null) {
-            
+
             // get the current component type
             var currentComponentType = this.componentContent.type;
-            
+
             // get the new component type
             var newComponentType = newShowPreviousWorkComponent.type;
-            
+
             // check if the component types are different
             if (newComponentType != currentComponentType) {
                 /*
                  * the component types are different so we will need to change
                  * the whole component
                  */
-                
+
                 // make sure the author really wants to change the component type
                 var answer = confirm(this.$translate('areYouSureYouWantToChangeThisComponentType'));
-                
+
                 if (answer) {
                     // the author wants to change the component type
-                    
+
                     /*
                      * get the component service so we can make a new instance
                      * of the component
                      */
                     var componentService = this.$injector.get(newComponentType + 'Service');
-                    
+
                     if (componentService != null) {
-                        
+
                         // create a new component
                         var newComponent = componentService.createComponent();
-                        
+
                         // set move over the values we need to keep
                         newComponent.id = this.authoringComponentContent.id;
                         newComponent.showPreviousWork = true;
                         newComponent.showPreviousWorkNodeId = showPreviousWorkNodeId;
                         newComponent.showPreviousWorkComponentId = newShowPreviousWorkComponentId;
                         newComponent.showPreviousWorkPrompt = showPreviousWorkPrompt;
-                        
+
                         /*
                          * update the authoring component content JSON string to
                          * change the component
                          */
                         this.authoringComponentContentJSONString = JSON.stringify(newComponent);
-                        
+
                         // update the component in the project and save the project
                         this.advancedAuthoringViewComponentChanged();
                     }
@@ -1438,7 +1434,7 @@ class MatchController {
             }
         }
     }
-    
+
     /**
      * Get all the step node ids in the project
      * @returns all the step node ids
@@ -1614,27 +1610,27 @@ class MatchController {
 
         return choice;
     }
-    
+
     /**
      * Get the choice by text
      * @param text look for a choice with this text
      * @returns the choice with the given text
      */
     getChoiceByText(text) {
-        
+
         var choice = null;
-        
+
         if (text != null) {
-            
+
             // get the choices from the component content
             var choices = this.componentContent.choices;
-            
+
             if (choices != null) {
-                
+
                 // loop through all the choices
                 for (var c = 0; c < choices.length; c++) {
                     var tempChoice = choices[c];
-                    
+
                     if (tempChoice != null) {
                         if (text == tempChoice.value) {
                             // we have found the choice we want
@@ -1645,7 +1641,7 @@ class MatchController {
                 }
             }
         }
-        
+
         return choice;
     }
 
@@ -1676,27 +1672,27 @@ class MatchController {
 
         return bucket;
     }
-    
+
     /**
      * Get the bucket by text
      * @param text look for a bucket with this text
      * @returns the bucket with the given text
      */
     getBucketByText(text) {
-        
+
         var bucket = null;
-        
+
         if (text != null) {
-            
+
             // get the buckets from the component content
             var buckets = this.componentContent.buckets;
-            
+
             if (buckets != null) {
-                
+
                 // loop throgh all the buckets
                 for (var b = 0; b < buckets.length; b++) {
                     var tempBucket = buckets[b];
-                    
+
                     if (tempBucket != null) {
                         if (text == tempBucket.value) {
                             // we have found the bucket we want
@@ -1707,7 +1703,7 @@ class MatchController {
                 }
             }
         }
-        
+
         return bucket;
     }
 
@@ -1948,7 +1944,7 @@ class MatchController {
             this.$rootScope.$broadcast('doneExiting');
         }));
     };
-    
+
     /**
      * Check if a component generates student work
      * @param component the component
@@ -1956,14 +1952,14 @@ class MatchController {
      */
     componentHasWork(component) {
         var result = true;
-        
+
         if (component != null) {
             result = this.ProjectService.componentHasWork(component);
         }
-        
+
         return result;
     }
-    
+
     /**
      * The import previous work checkbox was clicked
      */
@@ -1972,7 +1968,7 @@ class MatchController {
         if (!this.authoringComponentContent.importPreviousWork) {
             /*
              * import previous work has been turned off so we will clear the
-             * import previous work node id, and import previous work 
+             * import previous work node id, and import previous work
              * component id
              */
             this.authoringComponentContent.importPreviousWorkNodeId = null;
@@ -1982,12 +1978,12 @@ class MatchController {
             this.authoringViewComponentChanged();
         }
     }
-    
+
     /**
      * The import previous work node id has changed
      */
     authoringImportPreviousWorkNodeIdChanged() {
-        
+
         if (this.authoringComponentContent.importPreviousWorkNodeId == null ||
             this.authoringComponentContent.importPreviousWorkNodeId == '') {
 
@@ -2001,12 +1997,12 @@ class MatchController {
         // the authoring component content has changed so we will save the project
         this.authoringViewComponentChanged();
     }
-    
+
     /**
      * The import previous work component id has changed
      */
     authoringImportPreviousWorkComponentIdChanged() {
-        
+
         // the authoring component content has changed so we will save the project
         this.authoringViewComponentChanged();
     }
@@ -2018,6 +2014,7 @@ MatchController.$inject = [
     '$q',
     '$rootScope',
     '$scope',
+    'AnnotationService',
     'dragulaService',
     'ConfigService',
     'MatchService',

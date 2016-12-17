@@ -13,6 +13,7 @@ class GraphController {
                 $rootScope,
                 $scope,
                 $timeout,
+                AnnotationService,
                 ConfigService,
                 GraphService,
                 NodeService,
@@ -28,6 +29,7 @@ class GraphController {
         this.$rootScope = $rootScope;
         this.$scope = $scope;
         this.$timeout = $timeout;
+        this.AnnotationService = AnnotationService;
         this.ConfigService = ConfigService;
         this.GraphService = GraphService;
         this.NodeService = NodeService;
@@ -36,9 +38,9 @@ class GraphController {
         this.StudentAssetService = StudentAssetService;
         this.StudentDataService = StudentDataService;
         this.UtilService = UtilService;
-        
+
         this.$translate = this.$filter('translate');
-        
+
         this.idToOrder = this.ProjectService.idToOrder;
 
         // the node id of the current node
@@ -163,9 +165,9 @@ class GraphController {
 
         this.canCreateNewTrials = false;
         this.canDeleteTrials = false;
-        
+
         this.uploadedFileName = null;
-        
+
         this.backgroundImage = null;
 
         if (this.componentContent != null) {
@@ -200,7 +202,7 @@ class GraphController {
 
                 // get the latest annotations
                 // TODO: watch for new annotations and update accordingly
-                this.latestAnnotations = this.$scope.$parent.nodeController.getLatestComponentAnnotations(this.componentId);
+                this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
                 this.backgroundImage = this.componentContent.backgroundImage;
             } else if (this.mode === 'grading') {
                 this.isPromptVisible = true;
@@ -211,6 +213,9 @@ class GraphController {
                 this.isSelectSeriesVisible = false;
                 this.isDisabled = true;
                 this.isSnipDrawingButtonVisible = false;
+
+                // get the latest annotations
+                this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
             } else if (this.mode === 'onlyShowWork') {
                 this.isPromptVisible = true;
                 this.isSaveButtonVisible = false;
@@ -260,7 +265,7 @@ class GraphController {
                 // check if we need to import work
                 var importPreviousWorkNodeId = this.componentContent.importPreviousWorkNodeId;
                 var importPreviousWorkComponentId = this.componentContent.importPreviousWorkComponentId;
-                
+
                 if (importPreviousWorkNodeId == null || importPreviousWorkNodeId == '') {
                     /*
                      * check if the node id is in the field that we used to store
@@ -268,7 +273,7 @@ class GraphController {
                      */
                     importPreviousWorkNodeId = this.componentContent.importWorkNodeId;
                 }
-                
+
                 if (importPreviousWorkComponentId == null || importPreviousWorkComponentId == '') {
                     /*
                      * check if the component id is in the field that we used to store
@@ -276,7 +281,7 @@ class GraphController {
                      */
                     importPreviousWorkComponentId = this.componentContent.importWorkComponentId;
                 }
-                
+
                 if (importPreviousWorkNodeId != null && importPreviousWorkComponentId != null) {
                     // import the work from the other component
                     this.importWork();
@@ -519,6 +524,34 @@ class GraphController {
         });
 
         /**
+         * Listen for the 'annotationSavedToServer' event which is fired when
+         * we receive the response from saving an annotation to the server
+         */
+        this.$scope.$on('annotationSavedToServer', (event, args) => {
+
+            if (args != null ) {
+
+                // get the annotation that was saved to the server
+                var annotation = args.annotation;
+
+                if (annotation != null) {
+
+                    // get the node id and component id of the annotation
+                    var annotationNodeId = annotation.nodeId;
+                    var annotationComponentId = annotation.componentId;
+
+                    // make sure the annotation was for this component
+                    if (this.nodeId === annotationNodeId &&
+                        this.componentId === annotationComponentId) {
+
+                        // get latest score and comment annotations for this component
+                        this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
+                    }
+                }
+            }
+        });
+
+        /**
          * Listen for the 'exitNode' event which is fired when the student
          * exits the parent node. This will perform any necessary cleanup
          * when the student exits the parent node.
@@ -527,90 +560,88 @@ class GraphController {
             // destroy the delete key pressed listener
             this.deleteKeyPressedListenerDestroyer();
         }));
-        
+
         /**
          * The student has changed the file input
          * @param element the file input element
          */
         this.$scope.fileUploadChanged = function(element) {
-            
+
             var overwrite = true;
-            
+
             // check if the active series already has data
             if (this.graphController != null &&
                 this.graphController.activeSeries != null &&
                 this.graphController.activeSeries.data != null) {
-                
+
                 var activeSeriesData = this.graphController.activeSeries.data;
-                
+
                 if (activeSeriesData.length > 0) {
                     /*
-                     * the active series already has data so we will ask the 
+                     * the active series already has data so we will ask the
                      * student if they want to overwrite the data
                      */
-                    
                     var answer = confirm(this.$translate('areYouSureYouWantToOverwriteTheCurrentLineData'));
-                    
                     if (!answer) {
                         // the student does not want to overwrite the data
                         overwrite = false;
                     }
                 }
             }
-            
+
             if (overwrite) {
                 // obtain the file content and overwrite the data in the graph
-                
+
                 // get the files from the file input element
                 var files = element.files;
-                
+
                 if (files != null && files.length > 0) {
-                    
+
                     var reader = new FileReader();
-                    
+
                     // this is the callback function for reader.readAsText()
                     reader.onload = function() {
-                        
+
                         // get the file contente
                         var fileContent = reader.result;
-                        
+
                         /*
                          * read the csv file content and load the data into
                          * the active series
                          */
                         this.scope.graphController.readCSV(fileContent);
-                        
+
                         // remember the file name
                         this.scope.graphController.setUploadedFileName(this.fileName);
-                        
+
                         // redraw the graph
                         this.scope.graphController.setupGraph();
-                        
+
                         /*
                          * notify the controller that the student data has
                          * changed so that it will perform any necessary saving
                          */
                         this.scope.graphController.studentDataChanged();
                     }
-                    
+
                     /*
                      * save a reference to this scope in the reader so that we
                      * have access to the scope and graphController in the
                      * reader.onload() function
                      */
                     reader.scope = this;
-                    
+
                     // remember the file name
                     reader.fileName = files[0].name;
-                    
+
                     // read the text from the file
                     reader.readAsText(files[0]);
-                    
+
                     // upload the file to the studentuploads folder
                     this.graphController.StudentAssetService.uploadAsset(files[0]);
                 }
             }
-            
+
             /*
              * clear the file input element value so that onchange() will be
              * called again if the student wants to upload the same file again
@@ -799,7 +830,7 @@ class GraphController {
          */
         this.updateMinMaxAxisValues(allSeries, xAxis, yAxis);
         let timeout = this.$timeout;
-        
+
         this.chartConfig = {
             options: {
                 tooltip: {
@@ -1384,7 +1415,7 @@ class GraphController {
 
         // set the active series to null so that the default series will become selected later
         this.setActiveSeries(null);
-        
+
         // set the background image
         this.backgroundImage = this.componentContent.backgroundImage;
 
@@ -1438,7 +1469,7 @@ class GraphController {
                      * is the same as before.
                      */
                     this.setActiveSeriesByIndex(activeSeriesIndex);
-                    
+
                     if (this.componentContent.xAxis != null) {
                         // reset the x axis
                         this.setXAxis(this.componentContent.xAxis);
@@ -1448,10 +1479,10 @@ class GraphController {
                         // reset the y axis
                         this.setYAxis(this.componentContent.yAxis);
                     }
-                    
+
                     // reset the background image
                     this.backgroundImage = this.componentContent.backgroundImage;
-                    
+
                     /*
                      * notify the controller that the student data has changed
                      * so that the graph will be redrawn
@@ -1532,8 +1563,9 @@ class GraphController {
                     // set the background from the student data
                     this.backgroundImage = studentData.backgroundImage;
                 }
-                
+
                 this.processLatestSubmit();
+
             }
         }
     };
@@ -1700,15 +1732,15 @@ class GraphController {
                 // set the active series index
                 studentData.activeSeriesIndex = activeSeriesIndex;
             }
-            
+
             // get the uploaded file name if any
             var uploadedFileName = this.getUploadedFileName();
-            
+
             if (uploadedFileName != null) {
                 // set the uploaded file name
                 studentData.uploadedFileName = uploadedFileName;
             }
-            
+
             if (this.backgroundImage != null) {
                 studentData.backgroundImage = this.backgroundImage;
             }
@@ -1796,34 +1828,6 @@ class GraphController {
         var show = false;
 
         if (this.isPromptVisible) {
-            show = true;
-        }
-
-        return show;
-    };
-
-    /**
-     * Check whether we need to show the save button
-     * @return whether to show the save button
-     */
-    showSaveButton() {
-        var show = false;
-
-        if (this.isSaveButtonVisible) {
-            show = true;
-        }
-
-        return show;
-    };
-
-    /**
-     * Check whether we need to show the submit button
-     * @return whether to show the submit button
-     */
-    showSubmitButton() {
-        var show = false;
-
-        if (this.isSubmitButtonVisible) {
             show = true;
         }
 
@@ -1965,9 +1969,9 @@ class GraphController {
             // get the import previous work node id and component id
             var importPreviousWorkNodeId = componentContent.importPreviousWorkNodeId;
             var importPreviousWorkComponentId = componentContent.importPreviousWorkComponentId;
-            
+
             if (importPreviousWorkNodeId == null || importPreviousWorkNodeId == '') {
-                
+
                 /*
                  * check if the node id is in the field that we used to store
                  * the import previous work node id in
@@ -1976,9 +1980,9 @@ class GraphController {
                     importPreviousWorkNodeId = componentContent.importWorkNodeId;
                 }
             }
-            
+
             if (importPreviousWorkComponentId == null || importPreviousWorkComponentId == '') {
-                
+
                 /*
                  * check if the component id is in the field that we used to store
                  * the import previous work component id in
@@ -2405,22 +2409,22 @@ class GraphController {
      * The show previous work checkbox was clicked
      */
     authoringShowPreviousWorkClicked() {
-        
+
         if (!this.authoringComponentContent.showPreviousWork) {
             /*
              * show previous work has been turned off so we will clear the
-             * show previous work node id, show previous work component id, and 
+             * show previous work node id, show previous work component id, and
              * show previous work prompt values
              */
             this.authoringComponentContent.showPreviousWorkNodeId = null;
             this.authoringComponentContent.showPreviousWorkComponentId = null;
             this.authoringComponentContent.showPreviousWorkPrompt = null;
-            
+
             // the authoring component content has changed so we will save the project
             this.authoringViewComponentChanged();
         }
     }
-    
+
     /**
      * The show previous work node id has changed
      */
@@ -2444,72 +2448,71 @@ class GraphController {
      * The show previous work component id has changed
      */
     authoringShowPreviousWorkComponentIdChanged() {
-        
+
         // get the show previous work node id
         var showPreviousWorkNodeId = this.authoringComponentContent.showPreviousWorkNodeId;
-        
+
         // get the show previous work prompt boolean value
         var showPreviousWorkPrompt = this.authoringComponentContent.showPreviousWorkPrompt;
-        
+
         // get the old show previous work component id
         var oldShowPreviousWorkComponentId = this.componentContent.showPreviousWorkComponentId;
-        
+
         // get the new show previous work component id
         var newShowPreviousWorkComponentId = this.authoringComponentContent.showPreviousWorkComponentId;
-        
+
         // get the new show previous work component
         var newShowPreviousWorkComponent = this.ProjectService.getComponentByNodeIdAndComponentId(showPreviousWorkNodeId, newShowPreviousWorkComponentId);
-        
+
         if (newShowPreviousWorkComponent == null || newShowPreviousWorkComponent == '') {
             // the new show previous work component is empty
-            
+
             // save the component
             this.authoringViewComponentChanged();
         } else if (newShowPreviousWorkComponent != null) {
-            
+
             // get the current component type
             var currentComponentType = this.componentContent.type;
-            
+
             // get the new component type
             var newComponentType = newShowPreviousWorkComponent.type;
-            
+
             // check if the component types are different
             if (newComponentType != currentComponentType) {
                 /*
                  * the component types are different so we will need to change
                  * the whole component
                  */
-                
+
                 // make sure the author really wants to change the component type
                 var answer = confirm(this.$translate('areYouSureYouWantToChangeThisComponentType'));
-                
                 if (answer) {
                     // the author wants to change the component type
-                    
+
                     /*
                      * get the component service so we can make a new instance
                      * of the component
                      */
                     var componentService = this.$injector.get(newComponentType + 'Service');
-                    
+
                     if (componentService != null) {
-                        
+
                         // create a new component
                         var newComponent = componentService.createComponent();
-                        
+
                         // set move over the values we need to keep
                         newComponent.id = this.authoringComponentContent.id;
                         newComponent.showPreviousWork = true;
                         newComponent.showPreviousWorkNodeId = showPreviousWorkNodeId;
                         newComponent.showPreviousWorkComponentId = newShowPreviousWorkComponentId;
                         newComponent.showPreviousWorkPrompt = showPreviousWorkPrompt;
-                        
+
                         /*
                          * update the authoring component content JSON string to
                          * change the component
                          */
                         this.authoringComponentContentJSONString = JSON.stringify(newComponent);
-                        
+
                         // update the component in the project and save the project
                         this.advancedAuthoringViewComponentChanged();
                     }
@@ -2820,22 +2823,22 @@ class GraphController {
         }
 
         if (trialIndex != null && trialIndex != -1) {
-            
+
             // get the trial to remove
             var trialToRemove = this.trials[trialIndex];
-            
+
             // get the trial id of the trial to remove
             var trialToRemoveId = trialToRemove.id;
-            
+
             // remove the trial from the array of trials
             this.trials.splice(trialIndex, 1);
-            
+
             // remove the trial id from the trial ids to show array
             for (var t = 0; t < this.trialIdsToShow.length; t++) {
                 if (trialToRemoveId == this.trialIdsToShow[t]) {
                     // remove the trial id
                     this.trialIdsToShow.splice(t, 1);
-                    
+
                     /*
                      * move the counter back one because we have just removed
                      * an element from the array. a trial id should never show
@@ -2845,7 +2848,7 @@ class GraphController {
                     t--;
                 }
             }
-            
+
             if (this.trials.length == 0) {
                 // there are no more trials so we will create a new empty trial
                 this.newTrial();
@@ -2859,25 +2862,25 @@ class GraphController {
                     this.activeTrial = null;
                     this.activeSeries = null;
                     this.series = null;
-                    
+
                     // make the highest shown trial the active trial
                     var highestTrialIndex = null;
                     var highestTrial = null;
-                    
+
                     // loop through the shown trials
                     for (var t = 0; t < this.trialIdsToShow.length; t++) {
                         var trialId = this.trialIdsToShow[t];
-                        
+
                         // get one of the shown trials
                         var trial = this.getTrialById(trialId);
-                        
+
                         if (trial != null) {
-                            
+
                             // get the trial index
                             var trialIndex = this.getTrialIndex(trial);
-                            
+
                             if (trialIndex != null) {
-                                
+
                                 if (highestTrialIndex == null || trialIndex > highestTrialIndex) {
                                     /*
                                      * this is the highest trial we have seen so
@@ -2889,20 +2892,20 @@ class GraphController {
                             }
                         }
                     }
-                    
+
                     if (highestTrial != null) {
                         /*
                          * get the index of the active series so that we can set the
                          * same series to be active in the new active trial
                          */
                         var seriesIndex = this.getSeriesIndex(this.activeSeries);
-                        
+
                         // set the highest shown trial to be the active trial
                         this.activeTrial = highestTrial;
-                        
+
                         // set the series
                         this.setSeries(this.activeTrial.series);
-                        
+
                         if (seriesIndex != null) {
                             // set the active series
                             this.setActiveSeriesByIndex(seriesIndex);
@@ -2919,7 +2922,7 @@ class GraphController {
          * changed so that it will perform any necessary saving
          */
         this.studentDataChanged();
-        
+
         // update the selected trial text
         this.selectedTrialsText = this.getSelectedTrialsText();
 
@@ -2983,12 +2986,12 @@ class GraphController {
         for (let i = 0; i < trials.length; i++) {
             let trial = trials[i];
             let id = trial.id;
-            
+
             if (trialIdsToShow.indexOf(id) > -1) {
                 trial.show = true;
             } else {
                 trial.show = false;
-                
+
                 if (this.activeTrial != null && this.activeTrial.id == id) {
                     // the active trial is no longer shown
                     this.activeTrial = null;
@@ -2997,35 +3000,35 @@ class GraphController {
                 }
             }
         }
-        
+
         // get the latest trial that was checked and make it the active trial
         if (this.trialIdsToShow.length > 0) {
-            
+
             // get the latest trial that was checked
             var lastShownTrialId = this.trialIdsToShow[this.trialIdsToShow.length - 1];
             var lastShownTrial = this.getTrialById(lastShownTrialId);
-            
+
             if (lastShownTrial != null) {
-                
+
                 /*
                  * get the index of the active series so that we can set the
                  * same series to active in the new active trial
                  */
                 var seriesIndex = this.getSeriesIndex(this.activeSeries);
-                
+
                 // set the last shown trial to be the active trial
                 this.activeTrial = lastShownTrial;
-                
+
                 // set the series
                 this.setSeries(this.activeTrial.series);
-                
+
                 if (seriesIndex != null) {
                     // set the active series
                     this.setActiveSeriesByIndex(seriesIndex);
                 }
             }
         }
-        
+
         // hack: for some reason, the ids to show model gets out of sync when deleting a trial, for example
         // TODO: figure out why this check is sometimes necessary and remove
         for (let a = 0; a < trialIdsToShow.length; a++) {
@@ -3603,42 +3606,42 @@ class GraphController {
             });
         }
     }
-    
+
     /**
      * Read a csv string and load the data into the active series
      * @param csv a csv string
      */
     readCSV(csv) {
-        
+
         if (csv != null) {
-            
+
             // splite the string into lines
             var lines = csv.split(/\r\n|\n/);
-            
+
             // clear the data in the active series
             this.activeSeries.data = [];
-            
+
             // loop through all the lines
             for (var lineNumber = 0; lineNumber < lines.length; lineNumber++) {
-                
+
                 // get a line
                 var line = lines[lineNumber];
-                
+
                 if (line != null) {
-                    
+
                     // split the line to get the values
                     var values = line.split(",");
-                    
+
                     if (values != null) {
-                        
+
                         // get the x and y values
                         var x = parseFloat(values[0]);
                         var y = parseFloat(values[1]);
-                        
+
                         if (!isNaN(x) && !isNaN(y)) {
                             // make the data point
                             var dataPoint = [x, y];
-                            
+
                             // add the data point to the active series
                             this.activeSeries.data.push(dataPoint);
                         }
@@ -3647,7 +3650,7 @@ class GraphController {
             }
         }
     }
-    
+
     /**
      * Set the uploaded file name
      * @param fileName the file name
@@ -3655,7 +3658,7 @@ class GraphController {
     setUploadedFileName(fileName) {
         this.uploadedFileName = fileName;
     }
-    
+
     /**
      * Get the uploaded file name
      * @return the uploaded file name
@@ -3663,7 +3666,7 @@ class GraphController {
     getUploadedFileName() {
         return this.uploadedFileName;
     }
-    
+
     /**
      * Check if a component generates student work
      * @param component the component
@@ -3671,14 +3674,14 @@ class GraphController {
      */
     componentHasWork(component) {
         var result = true;
-        
+
         if (component != null) {
             result = this.ProjectService.componentHasWork(component);
         }
-        
+
         return result;
     }
-    
+
     /**
      * The import previous work checkbox was clicked
      */
@@ -3687,7 +3690,7 @@ class GraphController {
         if (!this.authoringComponentContent.importPreviousWork) {
             /*
              * import previous work has been turned off so we will clear the
-             * import previous work node id, and import previous work 
+             * import previous work node id, and import previous work
              * component id
              */
             this.authoringComponentContent.importPreviousWorkNodeId = null;
@@ -3697,12 +3700,12 @@ class GraphController {
             this.authoringViewComponentChanged();
         }
     }
-    
+
     /**
      * The import previous work node id has changed
      */
     authoringImportPreviousWorkNodeIdChanged() {
-        
+
         if (this.authoringComponentContent.importPreviousWorkNodeId == null ||
             this.authoringComponentContent.importPreviousWorkNodeId == '') {
 
@@ -3716,12 +3719,12 @@ class GraphController {
         // the authoring component content has changed so we will save the project
         this.authoringViewComponentChanged();
     }
-    
+
     /**
      * The import previous work component id has changed
      */
     authoringImportPreviousWorkComponentIdChanged() {
-        
+
         // the authoring component content has changed so we will save the project
         this.authoringViewComponentChanged();
     }
@@ -3735,6 +3738,7 @@ GraphController.$inject = [
     '$rootScope',
     '$scope',
     '$timeout',
+    'AnnotationService',
     'ConfigService',
     'GraphService',
     'NodeService',

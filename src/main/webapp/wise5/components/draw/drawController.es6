@@ -8,6 +8,7 @@ class DrawController {
                 $rootScope,
                 $scope,
                 $timeout,
+                AnnotationService,
                 ConfigService,
                 DrawService,
                 NodeService,
@@ -23,6 +24,7 @@ class DrawController {
         this.$rootScope = $rootScope;
         this.$scope = $scope;
         this.$timeout = $timeout;
+        this.AnnotationService = AnnotationService;
         this.ConfigService = ConfigService;
         this.DrawService = DrawService;
         this.NodeService = NodeService;
@@ -31,11 +33,11 @@ class DrawController {
         this.StudentAssetService = StudentAssetService;
         this.StudentDataService = StudentDataService;
         this.UtilService = UtilService;
-        
+
         this.$translate = this.$filter('translate');
-        
+
         this.idToOrder = this.ProjectService.idToOrder;
-        
+
         // the node id of the current node
         this.nodeId = null;
 
@@ -110,15 +112,15 @@ class DrawController {
 
         this.latestConnectedComponentState = null;
         this.latestConnectedComponentParams = null;
-        
+
         // the default width and height of the canvas
         this.width = 800;
         this.height = 600;
-        
+
         if (this.componentContent.width != null) {
             this.width = this.componentContent.width;
         }
-        
+
         if (this.componentContent.height != null) {
             this.height = this.componentContent.height;
         }
@@ -147,7 +149,7 @@ class DrawController {
                 this.drawingToolId = "drawingtool_" + this.nodeId + "_" + this.componentId;
 
                 // get the latest annotations
-                this.latestAnnotations = this.$scope.$parent.nodeController.getLatestComponentAnnotations(this.componentId);
+                this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
             } else if (this.mode === 'grading' || this.mode === "onlyShowWork") {
                 // get the component state from the scope
                 var componentState = this.$scope.componentState;
@@ -155,6 +157,11 @@ class DrawController {
                     this.drawingToolId = "drawingtool_" + componentState.id;
                 }
                 this.isSnipDrawingButtonVisible = false;
+
+                if (this.mode === 'grading') {
+                    // get the latest annotations
+                    this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
+                }
             } else if (this.mode === 'showPreviousWork') {
                 // get the component state from the scope
                 var componentState = this.$scope.componentState;
@@ -368,6 +375,34 @@ class DrawController {
         });
 
         /**
+         * Listen for the 'annotationSavedToServer' event which is fired when
+         * we receive the response from saving an annotation to the server
+         */
+        this.$scope.$on('annotationSavedToServer', (event, args) => {
+
+            if (args != null ) {
+
+                // get the annotation that was saved to the server
+                var annotation = args.annotation;
+
+                if (annotation != null) {
+
+                    // get the node id and component id of the annotation
+                    var annotationNodeId = annotation.nodeId;
+                    var annotationComponentId = annotation.componentId;
+
+                    // make sure the annotation was for this component
+                    if (this.nodeId === annotationNodeId &&
+                        this.componentId === annotationComponentId) {
+
+                        // get latest score and comment annotations for this component
+                        this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
+                    }
+                }
+            }
+        });
+
+        /**
          * Listen for the 'exitNode' event which is fired when the student
          * exits the parent node. This will perform any necessary cleanup
          * when the student exits the parent node.
@@ -382,7 +417,7 @@ class DrawController {
      * Initialize the drawing tool
      */
     initializeDrawingTool() {
-        
+
         this.drawingTool = new DrawingTool("#" + this.drawingToolId, {
             stamps: this.componentContent.stamps || {},
             parseSVG: true,
@@ -429,17 +464,17 @@ class DrawController {
 
         if (componentState == null) {
             /*
-             * only import work or use starter draw data if the student 
+             * only import work or use starter draw data if the student
              * does not already have work for this component
              */
 
             // check if we need to import work
             var importPreviousWorkNodeId = this.componentContent.importPreviousWorkNodeId;
             var importPreviousWorkComponentId = this.componentContent.importPreviousWorkComponentId;
-            
+
             // get the starter draw data if any
             var starterDrawData = this.componentContent.starterDrawData;
-            
+
             if (importPreviousWorkNodeId == null || importPreviousWorkNodeId == '') {
                 /*
                  * check if the node id is in the field that we used to store
@@ -447,7 +482,7 @@ class DrawController {
                  */
                 importPreviousWorkNodeId = this.componentContent.importWorkNodeId;
             }
-            
+
             if (importPreviousWorkComponentId == null || importPreviousWorkComponentId == '') {
                 /*
                  * check if the component id is in the field that we used to store
@@ -455,7 +490,7 @@ class DrawController {
                  */
                 importPreviousWorkComponentId = this.componentContent.importWorkComponentId;
             }
-            
+
             if (importPreviousWorkNodeId != null && importPreviousWorkComponentId != null) {
                 // import the work from the other component
                 this.importWork();
@@ -663,7 +698,7 @@ class DrawController {
              * check if the latest component state is a submit and perform
              * any necessary processing
              */
-            this.processLatestSubmit();
+             this.processLatestSubmit();
         }
     };
 
@@ -671,7 +706,7 @@ class DrawController {
      * Check if latest component state is a submission and set isSubmitDirty accordingly
      */
     processLatestSubmit() {
-        let latestState = this.$scope.componentState;
+        let latestState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
 
         if (latestState) {
             let serverSaveTime = latestState.serverSaveTime;
@@ -727,10 +762,10 @@ class DrawController {
             // check if we need to reload student data from a connected component
             var latestConnectedComponentState = this.latestConnectedComponentState;
             var latestConnectedComponentParams = this.latestConnectedComponentParams;
-            
+
             // get the starter draw data if any
             var starterDrawData = this.componentContent.starterDrawData;
-            
+
             if (latestConnectedComponentState && latestConnectedComponentParams) {
                 // reload the student data from the connected component
                 this.setDrawData(latestConnectedComponentState, latestConnectedComponentParams);
@@ -884,42 +919,6 @@ class DrawController {
     };
 
     /**
-     * Check whether we need to show the save button
-     * @return whether to show the save button
-     */
-    showSaveButton() {
-        var show = false;
-
-        if (this.componentContent != null) {
-
-            // check the showSaveButton field in the component content
-            if (this.componentContent.showSaveButton) {
-                show = true;
-            }
-        }
-
-        return show;
-    };
-
-    /**
-     * Check whether we need to show the submit button
-     * @return whether to show the submit button
-     */
-    showSubmitButton() {
-        var show = false;
-
-        if (this.componentContent != null) {
-
-            // check the showSubmitButton field in the component content
-            if (this.componentContent.showSubmitButton) {
-                show = true;
-            }
-        }
-
-        return show;
-    };
-
-    /**
      * Check whether we need to lock the component after the student
      * submits an answer.
      */
@@ -1007,9 +1006,9 @@ class DrawController {
             // get the import previous work node id and component id
             var importPreviousWorkNodeId = componentContent.importPreviousWorkNodeId;
             var importPreviousWorkComponentId = componentContent.importPreviousWorkComponentId;
-            
+
             if (importPreviousWorkNodeId == null || importPreviousWorkNodeId == '') {
-                
+
                 /*
                  * check if the node id is in the field that we used to store
                  * the import previous work node id in
@@ -1018,9 +1017,9 @@ class DrawController {
                     importPreviousWorkNodeId = componentContent.importWorkNodeId;
                 }
             }
-            
+
             if (importPreviousWorkComponentId == null || importPreviousWorkComponentId == '') {
-                
+
                 /*
                  * check if the component id is in the field that we used to store
                  * the import previous work component id in
@@ -1123,22 +1122,22 @@ class DrawController {
      * The show previous work checkbox was clicked
      */
     authoringShowPreviousWorkClicked() {
-        
+
         if (!this.authoringComponentContent.showPreviousWork) {
             /*
              * show previous work has been turned off so we will clear the
-             * show previous work node id, show previous work component id, and 
+             * show previous work node id, show previous work component id, and
              * show previous work prompt values
              */
             this.authoringComponentContent.showPreviousWorkNodeId = null;
             this.authoringComponentContent.showPreviousWorkComponentId = null;
             this.authoringComponentContent.showPreviousWorkPrompt = null;
-            
+
             // the authoring component content has changed so we will save the project
             this.authoringViewComponentChanged();
         }
     }
-    
+
     /**
      * The show previous work node id has changed
      */
@@ -1162,72 +1161,72 @@ class DrawController {
      * The show previous work component id has changed
      */
     authoringShowPreviousWorkComponentIdChanged() {
-        
+
         // get the show previous work node id
         var showPreviousWorkNodeId = this.authoringComponentContent.showPreviousWorkNodeId;
-        
+
         // get the show previous work prompt boolean value
         var showPreviousWorkPrompt = this.authoringComponentContent.showPreviousWorkPrompt;
-        
+
         // get the old show previous work component id
         var oldShowPreviousWorkComponentId = this.componentContent.showPreviousWorkComponentId;
-        
+
         // get the new show previous work component id
         var newShowPreviousWorkComponentId = this.authoringComponentContent.showPreviousWorkComponentId;
-        
+
         // get the new show previous work component
         var newShowPreviousWorkComponent = this.ProjectService.getComponentByNodeIdAndComponentId(showPreviousWorkNodeId, newShowPreviousWorkComponentId);
-        
+
         if (newShowPreviousWorkComponent == null || newShowPreviousWorkComponent == '') {
             // the new show previous work component is empty
-            
+
             // save the component
             this.authoringViewComponentChanged();
         } else if (newShowPreviousWorkComponent != null) {
-            
+
             // get the current component type
             var currentComponentType = this.componentContent.type;
-            
+
             // get the new component type
             var newComponentType = newShowPreviousWorkComponent.type;
-            
+
             // check if the component types are different
             if (newComponentType != currentComponentType) {
                 /*
                  * the component types are different so we will need to change
                  * the whole component
                  */
-                
+
                 // make sure the author really wants to change the component type
                 var answer = confirm(this.$translate('areYouSureYouWantToChangeThisComponentType'));
-                
+
                 if (answer) {
                     // the author wants to change the component type
-                    
+
                     /*
                      * get the component service so we can make a new instance
                      * of the component
                      */
                     var componentService = this.$injector.get(newComponentType + 'Service');
-                    
+
                     if (componentService != null) {
-                        
+
                         // create a new component
                         var newComponent = componentService.createComponent();
-                        
+
                         // set move over the values we need to keep
                         newComponent.id = this.authoringComponentContent.id;
                         newComponent.showPreviousWork = true;
                         newComponent.showPreviousWorkNodeId = showPreviousWorkNodeId;
                         newComponent.showPreviousWorkComponentId = newShowPreviousWorkComponentId;
                         newComponent.showPreviousWorkPrompt = showPreviousWorkPrompt;
-                        
+
                         /*
                          * update the authoring component content JSON string to
                          * change the component
                          */
                         this.authoringComponentContentJSONString = JSON.stringify(newComponent);
-                        
+
                         // update the component in the project and save the project
                         this.advancedAuthoringViewComponentChanged();
                     }
@@ -1247,7 +1246,7 @@ class DrawController {
             }
         }
     }
-    
+
     /**
      * Get all the step node ids in the project
      * @returns all the step node ids
@@ -1426,14 +1425,14 @@ class DrawController {
      */
     componentHasWork(component) {
         var result = true;
-        
+
         if (component != null) {
             result = this.ProjectService.componentHasWork(component);
         }
-        
+
         return result;
     }
-    
+
     /**
      * The import previous work checkbox was clicked
      */
@@ -1442,7 +1441,7 @@ class DrawController {
         if (!this.authoringComponentContent.importPreviousWork) {
             /*
              * import previous work has been turned off so we will clear the
-             * import previous work node id, and import previous work 
+             * import previous work node id, and import previous work
              * component id
              */
             this.authoringComponentContent.importPreviousWorkNodeId = null;
@@ -1452,12 +1451,12 @@ class DrawController {
             this.authoringViewComponentChanged();
         }
     }
-    
+
     /**
      * The import previous work node id has changed
      */
     authoringImportPreviousWorkNodeIdChanged() {
-        
+
         if (this.authoringComponentContent.importPreviousWorkNodeId == null ||
             this.authoringComponentContent.importPreviousWorkNodeId == '') {
 
@@ -1471,117 +1470,117 @@ class DrawController {
         // the authoring component content has changed so we will save the project
         this.authoringViewComponentChanged();
     }
-    
+
     /**
      * The import previous work component id has changed
      */
     authoringImportPreviousWorkComponentIdChanged() {
-        
+
         // the authoring component content has changed so we will save the project
         this.authoringViewComponentChanged();
     }
-    
+
     /**
      * Add a stamp in the authoring
      */
     authoringAddStampButtonClicked() {
-        
+
         // create the stamps field in the content if it does not exist
         if (this.authoringComponentContent != null) {
-            
+
             // create a stamps object if it does not exist
             if (this.authoringComponentContent.stamps == null) {
                 this.authoringComponentContent.stamps = {};
             }
-            
+
             // create the Stamps array if it does not exist
             if (this.authoringComponentContent.stamps.Stamps == null) {
                 this.authoringComponentContent.stamps.Stamps = [];
             }
         }
-        
+
         /*
          * create the stamp as an empty string that the author will replace
          * with a file name or url
          */
         this.authoringComponentContent.stamps.Stamps.push('');
-        
+
         // the authoring component content has changed so we will save the project
         this.authoringViewComponentChanged();
     }
-    
+
     /**
      * Move a stamp up in the authoring view
      * @param index the index of the stamp
      */
     authoringStampUpClicked(index) {
-        
+
         // check if the stamp is not already at the top
         if (index != 0) {
             // the stamp is not at the top
-            
+
             // get the stamp string
             var stamp = this.authoringComponentContent.stamps.Stamps[index];
-            
+
             // remove the stamp
             this.authoringComponentContent.stamps.Stamps.splice(index, 1);
-            
+
             // insert the stamp back into the array
             this.authoringComponentContent.stamps.Stamps.splice(index - 1, 0, stamp);
-            
+
             // the authoring component content has changed so we will save the project
             this.authoringViewComponentChanged();
         }
     }
-    
+
     /**
      * Move the stamp down in the authoring view
      * @param index the index of the stamp
      */
     authoringStampDownClicked(index) {
-        
+
         // check if the stamp is already at the bottom
         if (index != this.authoringComponentContent.stamps.Stamps.length - 1) {
             // the stamp is not at the bottom
-            
+
             // get the stamp string
             var stamp = this.authoringComponentContent.stamps.Stamps[index];
-            
+
             // remove the stamp
             this.authoringComponentContent.stamps.Stamps.splice(index, 1);
-            
+
             // insert the stamp back into the array
             this.authoringComponentContent.stamps.Stamps.splice(index + 1, 0, stamp);
-            
+
             // the authoring component content has changed so we will save the project
             this.authoringViewComponentChanged();
         }
     }
-    
+
     /**
      * Delete a stamp from the authoring view
      * @param index the index of the stamp
      */
     authoringDeleteStampClicked(index) {
-        
+
         // ask the author if they are sure they want to delete the stamp
         var answer = confirm(this.$translate('areYouSureYouWantToDeleteThisStamp') + '\n\n' + this.authoringComponentContent.stamps.Stamps[index]);
-        
+
         if (answer) {
-            
+
             // remove the stamp
             this.authoringComponentContent.stamps.Stamps.splice(index, 1);
-            
+
             // the authoring component content has changed so we will save the project
             this.authoringViewComponentChanged();
         }
     }
-    
+
     /**
      * Enable all the tools
      */
     authoringEnableAllToolsButtonClicked() {
-        
+
         // enable all the tools
         this.authoringComponentContent.tools.select = true;
         this.authoringComponentContent.tools.line = true;
@@ -1598,16 +1597,16 @@ class DrawController {
         this.authoringComponentContent.tools.undo = true;
         this.authoringComponentContent.tools.redo = true;
         this.authoringComponentContent.tools.delete = true;
-        
+
         // the authoring component content has changed so we will save the project
         this.authoringViewComponentChanged();
     }
-    
+
     /**
      * Disable all the tools
      */
     authoringDisableAllToolsButtonClicked() {
-        
+
         // disable all the tools
         this.authoringComponentContent.tools.select = false;
         this.authoringComponentContent.tools.line = false;
@@ -1625,119 +1624,119 @@ class DrawController {
         this.authoringComponentContent.tools.redo = false;
         this.authoringComponentContent.tools.delete = false;
     }
-    
+
     /**
      * Save the starter draw data
      */
     authoringSaveStarterDrawData() {
-        
+
         // get the draw data
         var drawData = this.getDrawData();
-        
+
         // set the starter draw data
         this.authoringComponentContent.starterDrawData = drawData;
-        
+
         // the authoring component content has changed so we will save the project
         this.authoringViewComponentChanged();
     }
-    
+
     /**
      * Delete the starter draw data
      */
     authoringDeleteStarterDrawData() {
-        
+
         // remove the starter draw data
         this.authoringComponentContent.starterDrawData = null;
-        
+
         // clear the drawing
         this.drawingTool.clear();
-        
+
         /*
          * the author has made changes so we will save the component
          * content
          */
         this.authoringViewComponentChanged();
     }
-    
+
     /**
      * The author has changed the width
      */
     authoringViewWidthChanged() {
-        
+
         // update the width
         this.width = this.authoringComponentContent.width;
-        
+
         // update the starter draw data if there is any
         if (this.authoringComponentContent.starterDrawData != null) {
-            
+
             // get the starter draw data as a JSON object
             var starterDrawDataJSONObject = angular.fromJson(this.authoringComponentContent.starterDrawData);
-            
+
             if (starterDrawDataJSONObject != null && starterDrawDataJSONObject.dt != null) {
-                
+
                 // update the width in the starter draw data
                 starterDrawDataJSONObject.dt.width = this.width;
-                
+
                 // set the starter draw data back into the component content
                 this.authoringComponentContent.starterDrawData = angular.toJson(starterDrawDataJSONObject);
             }
         }
-        
+
         /*
          * the author has made changes so we will save the component
          * content
          */
         this.authoringViewComponentChanged();
-        
+
         // re-initialize the drawing tool so the width is updated
         this.$timeout(angular.bind(this, this.initializeDrawingTool));
     }
-    
+
     /**
      * The author has changed the height
      */
     authoringViewHeightChanged() {
-        
+
         // update the height
         this.height = this.authoringComponentContent.height;
-        
+
         // update the starter draw data if there is any
         if (this.authoringComponentContent.starterDrawData != null) {
-            
+
             // get the starter draw data as a JSON object
             var starterDrawDataJSONObject = angular.fromJson(this.authoringComponentContent.starterDrawData);
-            
+
             if (starterDrawDataJSONObject != null && starterDrawDataJSONObject.dt != null) {
-                
+
                 // update the height in the starter draw data
                 starterDrawDataJSONObject.dt.height = this.height;
-                
+
                 // set the starter draw data back into the component content
                 this.authoringComponentContent.starterDrawData = angular.toJson(starterDrawDataJSONObject);
             }
         }
-        
+
         /*
          * the author has made changes so we will save the component
          * content
          */
         this.authoringViewComponentChanged();
-        
+
         // re-initialize the drawing tool so the height is updated
         this.$timeout(angular.bind(this, this.initializeDrawingTool));
     }
-    
+
     /**
      * The author has enabled or disabled a tool
      */
     authoringViewToolClicked() {
-        
+
         /*
          * the author has made changes so we will save the component
          * content
          */
         this.authoringViewComponentChanged();
-        
+
         // re-initialize the drawing tool so the height is updated
         this.$timeout(angular.bind(this, this.initializeDrawingTool));
     }
@@ -1750,6 +1749,7 @@ DrawController.$inject = [
     '$rootScope',
     '$scope',
     '$timeout',
+    'AnnotationService',
     'ConfigService',
     'DrawService',
     'NodeService',

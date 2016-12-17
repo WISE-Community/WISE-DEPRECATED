@@ -134,24 +134,12 @@
             </div>
         </div>
     </div>
-    <div ng-if='discussionController.mode === "grading"'>
-        <annotation ng-if='discussionController.componentContent.maxScore > -1'
-                    type='score'
-                    mode='discussionController.mode'
-                    node-id='discussionController.nodeId'
-                    component-id='discussionController.componentId'
-                    from-workgroup-id='teacherWorkgroupId'
-                    to-workgroup-id='workgroupId'
-                    component-state-id='componentState.id'
-                    active='true'></annotation>
-        <br ng-if='discussionController.componentContent.maxScore > -1'/>
-        <annotation type='comment'
-                    mode='discussionController.mode'
-                    node-id='discussionController.nodeId'
-                    component-id='discussionController.componentId'
-                    from-workgroup-id='teacherWorkgroupId'
-                    to-workgroup-id='workgroupId'
-                    component-state-id='componentState.id'
-                    active='true'></annotation>
-    </div>
+    <component-grading ng-if="discussionController.mode === 'grading'"
+                      node-id='discussionController.nodeId'
+                      component-id='discussionController.componentId'
+                      max-score="discussionController.componentContent.maxScore"
+                      from-workgroup-id='teacherWorkgroupId'
+                      to-workgroup-id='workgroupId'
+                      component-state-id='componentState.id'
+                      active="true"></component-grading>
 </div>

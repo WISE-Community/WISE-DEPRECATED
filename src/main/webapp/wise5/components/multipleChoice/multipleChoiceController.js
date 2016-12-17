@@ -9,13 +9,16 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var MultipleChoiceController = function () {
-    function MultipleChoiceController($filter, $injector, $q, $scope, ConfigService, MultipleChoiceService, NodeService, ProjectService, StudentDataService, UtilService) {
+    function MultipleChoiceController($filter, $injector, $q, $scope, AnnotationService, ConfigService, MultipleChoiceService, NodeService, ProjectService, StudentDataService, UtilService) {
+        var _this = this;
+
         _classCallCheck(this, MultipleChoiceController);
 
         this.$filter = $filter;
         this.$injector = $injector;
         this.$q = $q;
         this.$scope = $scope;
+        this.AnnotationService = AnnotationService;
         this.ConfigService = ConfigService;
         this.MultipleChoiceService = MultipleChoiceService;
         this.NodeService = NodeService;
@@ -122,8 +125,7 @@ var MultipleChoiceController = function () {
                 this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
 
                 // get the latest annotations
-                // TODO: watch for new annotations and update accordingly
-                this.latestAnnotations = this.$scope.$parent.nodeController.getLatestComponentAnnotations(this.componentId);
+                this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
             } else if (this.mode === 'grading') {
                 this.isPromptVisible = true;
                 this.isSaveButtonVisible = false;
@@ -302,6 +304,33 @@ var MultipleChoiceController = function () {
                 }
             }
         }));
+
+        /**
+         * Listen for the 'annotationSavedToServer' event which is fired when
+         * we receive the response from saving an annotation to the server
+         */
+        this.$scope.$on('annotationSavedToServer', function (event, args) {
+
+            if (args != null) {
+
+                // get the annotation that was saved to the server
+                var annotation = args.annotation;
+
+                if (annotation != null) {
+
+                    // get the node id and component id of the annotation
+                    var annotationNodeId = annotation.nodeId;
+                    var annotationComponentId = annotation.componentId;
+
+                    // make sure the annotation was for this component
+                    if (_this.nodeId === annotationNodeId && _this.componentId === annotationComponentId) {
+
+                        // get latest score and comment annotations for this component
+                        _this.latestAnnotations = _this.AnnotationService.getLatestComponentAnnotations(_this.nodeId, _this.componentId, _this.workgroupId);
+                    }
+                }
+            }
+        });
 
         /**
          * Listen for the 'exitNode' event which is fired when the student
@@ -770,7 +799,7 @@ var MultipleChoiceController = function () {
          * Called when the student changes their work
          */
         value: function studentDataChanged() {
-            var _this = this;
+            var _this2 = this;
 
             /*
              * set the dirty flag so we will know we need to save the
@@ -798,7 +827,7 @@ var MultipleChoiceController = function () {
 
             // create a component state populated with the student data
             this.createComponentState(action).then(function (componentState) {
-                _this.$scope.$emit('componentStudentDataChanged', { componentId: componentId, componentState: componentState });
+                _this2.$scope.$emit('componentStudentDataChanged', { componentId: componentId, componentState: componentState });
             });
         }
     }, {
@@ -1220,62 +1249,6 @@ var MultipleChoiceController = function () {
             }
 
             return choices;
-        }
-    }, {
-        key: 'showPrompt',
-
-
-        /**
-         * Check whether we need to show the prompt
-         * @return whether to show the prompt
-         */
-        value: function showPrompt() {
-            var show = false;
-
-            if (this.isPromptVisible) {
-                show = true;
-            }
-
-            return show;
-        }
-    }, {
-        key: 'showSaveButton',
-
-
-        /**
-         * Check whether we need to show the save button
-         * @return whether to show the save button
-         */
-        value: function showSaveButton() {
-            var show = false;
-
-            // check the showSaveButton field in the component content
-            if (this.componentContent.showSaveButton) {
-                show = true;
-            }
-
-            return show;
-        }
-    }, {
-        key: 'showSubmitButton',
-
-
-        /**
-         * Check whether we need to show the submit button
-         * @return whether to show the submit button
-         */
-        value: function showSubmitButton() {
-            var show = false;
-
-            if (this.componentContent != null) {
-
-                // check the showSubmitButton field in the component content
-                if (this.componentContent.showSubmitButton) {
-                    show = true;
-                }
-            }
-
-            return show;
         }
     }, {
         key: 'isLockAfterSubmit',
@@ -1723,7 +1696,7 @@ var MultipleChoiceController = function () {
             if (!this.authoringComponentContent.showPreviousWork) {
                 /*
                  * show previous work has been turned off so we will clear the
-                 * show previous work node id, show previous work component id, and 
+                 * show previous work node id, show previous work component id, and
                  * show previous work prompt values
                  */
                 this.authoringComponentContent.showPreviousWorkNodeId = null;
@@ -1877,7 +1850,7 @@ var MultipleChoiceController = function () {
             if (!this.authoringComponentContent.importPreviousWork) {
                 /*
                  * import previous work has been turned off so we will clear the
-                 * import previous work node id, and import previous work 
+                 * import previous work node id, and import previous work
                  * component id
                  */
                 this.authoringComponentContent.importPreviousWorkNodeId = null;
@@ -1927,7 +1900,7 @@ var MultipleChoiceController = function () {
 
 ;
 
-MultipleChoiceController.$inject = ['$filter', '$injector', '$q', '$scope', 'ConfigService', 'MultipleChoiceService', 'NodeService', 'ProjectService', 'StudentDataService', 'UtilService'];
+MultipleChoiceController.$inject = ['$filter', '$injector', '$q', '$scope', 'AnnotationService', 'ConfigService', 'MultipleChoiceService', 'NodeService', 'ProjectService', 'StudentDataService', 'UtilService'];
 
 exports.default = MultipleChoiceController;
 //# sourceMappingURL=multipleChoiceController.js.map

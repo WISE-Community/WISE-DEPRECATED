@@ -9,7 +9,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var LabelController = function () {
-    function LabelController($injector, $q, $scope, $timeout, ConfigService, LabelService, NodeService, NotebookService, OpenResponseService, ProjectService, StudentAssetService, StudentDataService, UtilService) {
+    function LabelController($injector, $q, $scope, $timeout, AnnotationService, ConfigService, LabelService, NodeService, NotebookService, OpenResponseService, ProjectService, StudentAssetService, StudentDataService, UtilService) {
         var _this = this;
 
         _classCallCheck(this, LabelController);
@@ -18,6 +18,7 @@ var LabelController = function () {
         this.$q = $q;
         this.$scope = $scope;
         this.$timeout = $timeout;
+        this.AnnotationService = AnnotationService;
         this.ConfigService = ConfigService;
         this.LabelService = LabelService;
         this.NodeService = NodeService;
@@ -191,8 +192,7 @@ var LabelController = function () {
                 }
 
                 // get the latest annotations
-                // TODO: watch for new annotations and update accordingly
-                this.latestAnnotations = this.$scope.$parent.nodeController.getLatestComponentAnnotations(this.componentId);
+                this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
             } else if (this.mode === 'grading') {
                 this.isPromptVisible = true;
                 this.isSaveButtonVisible = false;
@@ -205,6 +205,9 @@ var LabelController = function () {
                 if (componentState != null) {
                     this.canvasId = 'labelCanvas_' + componentState.id;
                 }
+
+                // get the latest annotations
+                this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
             } else if (this.mode === 'onlyShowWork') {
                 this.isPromptVisible = false;
                 this.isSaveButtonVisible = false;
@@ -401,6 +404,33 @@ var LabelController = function () {
         });
 
         /**
+         * Listen for the 'annotationSavedToServer' event which is fired when
+         * we receive the response from saving an annotation to the server
+         */
+        this.$scope.$on('annotationSavedToServer', function (event, args) {
+
+            if (args != null) {
+
+                // get the annotation that was saved to the server
+                var annotation = args.annotation;
+
+                if (annotation != null) {
+
+                    // get the node id and component id of the annotation
+                    var annotationNodeId = annotation.nodeId;
+                    var annotationComponentId = annotation.componentId;
+
+                    // make sure the annotation was for this component
+                    if (_this.nodeId === annotationNodeId && _this.componentId === annotationComponentId) {
+
+                        // get latest score and comment annotations for this component
+                        _this.latestAnnotations = _this.AnnotationService.getLatestComponentAnnotations(_this.nodeId, _this.componentId, _this.workgroupId);
+                    }
+                }
+            }
+        });
+
+        /**
          * Listen for the 'exitNode' event which is fired when the student
          * exits the parent node. This will perform any necessary cleanup
          * when the student exits the parent node.
@@ -433,7 +463,7 @@ var LabelController = function () {
                     // the student does not want to change the background image
                     overwrite = false;
 
-                    /* 
+                    /*
                      * clear the input file value otherwise it will show the
                      * name of the file they recently selected but decided not
                      * to use because they decided not to change the background
@@ -950,39 +980,6 @@ var LabelController = function () {
             }
         }
     }, {
-        key: 'showPrompt',
-
-
-        /**
-         * Check whether we need to show the prompt
-         * @return whether to show the prompt
-         */
-        value: function showPrompt() {
-            return this.isPromptVisible;
-        }
-    }, {
-        key: 'showSaveButton',
-
-
-        /**
-         * Check whether we need to show the save button
-         * @return whether to show the save button
-         */
-        value: function showSaveButton() {
-            return this.isSaveButtonVisible;
-        }
-    }, {
-        key: 'showSubmitButton',
-
-
-        /**
-         * Check whether we need to show the submit button
-         * @return whether to show the submit button
-         */
-        value: function showSubmitButton() {
-            return this.isSubmitButtonVisible;
-        }
-    }, {
         key: 'showNewLabelButton',
 
 
@@ -1242,7 +1239,7 @@ var LabelController = function () {
                         // add the label to the canvas
                         this.addLabelToCanvas(this.canvas, newLabel);
 
-                        /* 
+                        /*
                          * make the new label selected so that the student can edit
                          * the text
                          */
@@ -1587,7 +1584,7 @@ var LabelController = function () {
 
 
         /**
-         * Make the label selected which means we will show the UI elements to 
+         * Make the label selected which means we will show the UI elements to
          * allow the text to be edited and the label to deleted.
          * @param label the label object
          */
@@ -1607,7 +1604,7 @@ var LabelController = function () {
 
             /*
              * force angular to refresh, otherwise angular will wait until the
-             * user generates another input (such as moving the mouse) before 
+             * user generates another input (such as moving the mouse) before
              * refreshing
              */
             this.$scope.$apply();
@@ -1737,7 +1734,7 @@ var LabelController = function () {
             if (!this.authoringComponentContent.showPreviousWork) {
                 /*
                  * show previous work has been turned off so we will clear the
-                 * show previous work node id, show previous work component id, and 
+                 * show previous work node id, show previous work component id, and
                  * show previous work prompt values
                  */
                 this.authoringComponentContent.showPreviousWorkNodeId = null;
@@ -2081,7 +2078,7 @@ var LabelController = function () {
             if (!this.authoringComponentContent.importPreviousWork) {
                 /*
                  * import previous work has been turned off so we will clear the
-                 * import previous work node id, and import previous work 
+                 * import previous work node id, and import previous work
                  * component id
                  */
                 this.authoringComponentContent.importPreviousWorkNodeId = null;
@@ -2245,7 +2242,7 @@ var LabelController = function () {
     return LabelController;
 }();
 
-LabelController.$inject = ['$injector', '$q', '$scope', '$timeout', 'ConfigService', 'LabelService', 'NodeService', 'NotebookService', 'OpenResponseService', 'ProjectService', 'StudentAssetService', 'StudentDataService', 'UtilService'];
+LabelController.$inject = ['$injector', '$q', '$scope', '$timeout', 'AnnotationService', 'ConfigService', 'LabelService', 'NodeService', 'NotebookService', 'OpenResponseService', 'ProjectService', 'StudentAssetService', 'StudentDataService', 'UtilService'];
 
 exports.default = LabelController;
 //# sourceMappingURL=labelController.js.map

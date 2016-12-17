@@ -33,9 +33,9 @@ class OpenResponseController {
         this.ProjectService = ProjectService;
         this.StudentAssetService = StudentAssetService;
         this.StudentDataService = StudentDataService;
-        
+
         this.$translate = this.$filter('translate');
-        
+
         this.idToOrder = this.ProjectService.idToOrder;
 
         // the node id of the current node
@@ -94,7 +94,10 @@ class OpenResponseController {
 
         // whether the submit button is disabled
         this.isSubmitButtonDisabled = false;
-        
+
+        // whether we're only showing the student work
+        this.onlyShowWork = false;
+
         // the latest annotations
         this.latestAnnotations = null;
 
@@ -103,7 +106,7 @@ class OpenResponseController {
 
         // counter to keep track of the number of submits
         this.submitCounter = 0;
-        
+
         //var scope = this;
         let themePath = this.ProjectService.getThemePath();
 
@@ -171,18 +174,14 @@ class OpenResponseController {
                 this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
 
                 // get the latest annotations
-                // TODO: watch for new annotations and update accordingly
                 this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
             } else if (this.mode === 'grading') {
                 this.isPromptVisible = true;
                 this.isSaveButtonVisible = false;
                 this.isSubmitButtonVisible = false;
                 this.isDisabled = true;
-
-                // get the latest annotations
-                // TODO: watch for new annotations and update accordingly
-                this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
             } else if (this.mode === 'onlyShowWork') {
+                this.onlyShowWork = true;
                 this.isPromptVisible = false;
                 this.isSaveButtonVisible = false;
                 this.isSubmitButtonVisible = false;
@@ -222,7 +221,7 @@ class OpenResponseController {
                 // check if we need to import work
                 var importPreviousWorkNodeId = this.componentContent.importPreviousWorkNodeId;
                 var importPreviousWorkComponentId = this.componentContent.importPreviousWorkComponentId;
-                
+
                 if (importPreviousWorkNodeId == null || importPreviousWorkNodeId == '') {
                     /*
                      * check if the node id is in the field that we used to store
@@ -230,7 +229,7 @@ class OpenResponseController {
                      */
                     importPreviousWorkNodeId = this.componentContent.importWorkNodeId;
                 }
-                
+
                 if (importPreviousWorkComponentId == null || importPreviousWorkComponentId == '') {
                     /*
                      * check if the component id is in the field that we used to store
@@ -253,11 +252,11 @@ class OpenResponseController {
                 // populate the student work into this component
                 this.setStudentWork(componentState);
             }
-            
+
             // check if the student has used up all of their submits
             if (this.componentContent.maxSubmitCount != null && this.submitCounter >= this.componentContent.maxSubmitCount) {
                 /*
-                 * the student has used up all of their chances to submit so we 
+                 * the student has used up all of their chances to submit so we
                  * will disable the submit button
                  */
                 this.isSubmitButtonDisabled = true;
@@ -443,26 +442,16 @@ class OpenResponseController {
                     this.attachments = attachments;
                 }
 
-                if (this.mode === 'grading') {
-                    this.processLatestSubmit(componentState);
-                } else {
-                    this.processLatestSubmit();
-                }
+                this.processLatestSubmit();
             }
         }
     };
 
     /**
      * Check if latest component state is a submission and set isSubmitDirty accordingly
-     * @param componentState (optional)
      */
-    processLatestSubmit(componentState) {
-        let latestState = null;
-        if (componentState) {
-            latestState = componentState;
-        } else {
-            latestState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
-        }
+    processLatestSubmit() {
+        let latestState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
 
         if (latestState) {
             let serverSaveTime = latestState.serverSaveTime;
@@ -497,41 +486,41 @@ class OpenResponseController {
      * Called when the student clicks the submit button
      */
     submitButtonClicked() {
-        
+
         var performSubmit = true;
-        
+
         if (this.componentContent.maxSubmitCount != null) {
             // there is a max submit count
-            
+
             // calculate the number of submits this student has left
             var numberOfSubmitsLeft = this.componentContent.maxSubmitCount - this.submitCounter;
-            
+
             var message = '';
-            
+
             if (numberOfSubmitsLeft <= 0) {
-                
+
                 // the student does not have any more chances to submit
                 alert(this.$translate('noMoreChances'));
                 performSubmit = false;
             } else if (numberOfSubmitsLeft == 1) {
-                
+
                 // ask the student if they are sure they want to submit
                 message = this.$translate('youHaveOneChance', {numberOfSubmitsLeft: numberOfSubmitsLeft});
                 //message = 'You have ' + numberOfSubmitsLeft + ' chance to receive feedback on your answer so this this should be your best work.\n\nAre you ready to receive feedback on this answer?';
                 performSubmit = confirm(message);
             } else if (numberOfSubmitsLeft > 1) {
-                
+
                 // ask the student if they are sure they want to submit
                 message = this.$translate('youHaveMultipleChances', {numberOfSubmitsLeft: numberOfSubmitsLeft});
                 //message = 'You have ' + numberOfSubmitsLeft + ' chances to receive feedback on your answer so this this should be your best work.\n\nAre you ready to receive feedback on this answer?';
                 performSubmit = confirm(message);
             }
         }
-        
+
         if (performSubmit) {
             // increment the submit counter
             this.submitCounter++;
-            
+
             // check if the student has used up all of their submits
             if (this.componentContent.maxSubmitCount != null && this.submitCounter >= this.componentContent.maxSubmitCount) {
                 /*
@@ -540,7 +529,7 @@ class OpenResponseController {
                  */
                 this.isSubmitButtonDisabled = true;
             }
-            
+
             this.isSubmit = true;
 
             // tell the parent node that this component wants to submit
@@ -671,7 +660,7 @@ class OpenResponseController {
                 performCRaterScoring = true;
             }
         }
-        
+
         if (this.submitCounter > this.componentContent.maxSubmitCount) {
             // the student has used up all their chances to submit
             performCRaterScoring = false;
@@ -933,30 +922,6 @@ class OpenResponseController {
     };
 
     /**
-     * Check whether we need to show the prompt
-     * @return whether to show the prompt
-     */
-    showPrompt() {
-        return this.isPromptVisible;
-    };
-
-    /**
-     * Check whether we need to show the save button
-     * @return whether to show the save button
-     */
-    showSaveButton() {
-        return this.isSaveButtonVisible;
-    };
-
-    /**
-     * Check whether we need to show the submit button
-     * @return whether to show the submit button
-     */
-    showSubmitButton() {
-        return this.isSubmitButtonVisible;
-    };
-
-    /**
      * Check whether we need to lock the component after the student
      * submits an answer.
      */
@@ -1077,9 +1042,9 @@ class OpenResponseController {
             // get the import previous work node id and component id
             var importPreviousWorkNodeId = componentContent.importPreviousWorkNodeId;
             var importPreviousWorkComponentId = componentContent.importPreviousWorkComponentId;
-            
+
             if (importPreviousWorkNodeId == null || importPreviousWorkNodeId == '') {
-                
+
                 /*
                  * check if the node id is in the field that we used to store
                  * the import previous work node id in
@@ -1088,9 +1053,9 @@ class OpenResponseController {
                     importPreviousWorkNodeId = componentContent.importWorkNodeId;
                 }
             }
-            
+
             if (importPreviousWorkComponentId == null || importPreviousWorkComponentId == '') {
-                
+
                 /*
                  * check if the component id is in the field that we used to store
                  * the import previous work component id in
@@ -1943,7 +1908,7 @@ class OpenResponseController {
         // get the component states for this component
         return this.StudentDataService.getComponentStatesByNodeIdAndComponentId(this.nodeId, this.componentId);
     };
-    
+
     /**
      * The import previous work checkbox was clicked
      */
@@ -1952,7 +1917,7 @@ class OpenResponseController {
         if (!this.authoringComponentContent.importPreviousWork) {
             /*
              * import previous work has been turned off so we will clear the
-             * import previous work node id, and import previous work 
+             * import previous work node id, and import previous work
              * component id
              */
             this.authoringComponentContent.importPreviousWorkNodeId = null;
@@ -1962,12 +1927,12 @@ class OpenResponseController {
             this.authoringViewComponentChanged();
         }
     }
-    
+
     /**
      * The import previous work node id has changed
      */
     authoringImportPreviousWorkNodeIdChanged() {
-        
+
         if (this.authoringComponentContent.importPreviousWorkNodeId == null ||
             this.authoringComponentContent.importPreviousWorkNodeId == '') {
 
@@ -1981,12 +1946,12 @@ class OpenResponseController {
         // the authoring component content has changed so we will save the project
         this.authoringViewComponentChanged();
     }
-    
+
     /**
      * The import previous work component id has changed
      */
     authoringImportPreviousWorkComponentIdChanged() {
-        
+
         // the authoring component content has changed so we will save the project
         this.authoringViewComponentChanged();
     }

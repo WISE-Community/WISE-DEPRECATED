@@ -159,47 +159,35 @@
                 </td>
             </tr>
         </table>
-        <div class="component__actions" layout="row" layout-align="start center">
-            <md-button class="md-primary md-raised"
+        <div ng-if="tableController.isSaveButtonVisible || tableController.isSubmitButtonVisible"
+             class="component__actions" layout="row" layout-align="start center">
+            <md-button class="md-primary"
+                       ng-class="{'md-raised': !tableController.isSubmitButtonVisible}"
                        ng-click='tableController.saveButtonClicked()'
                        ng-disabled='tableController.isDisabled || !tableController.isDirty'
-                       ng-if='tableController.showSaveButton()'
+                       ng-if='tableController.isSaveButtonVisible'
                        aria-label="Save"
                        translate="save">{{ 'save' | translate }}</md-button>
             <md-button class="md-raised md-primary"
                        ng-click='tableController.submitButtonClicked()'
                        ng-disabled='tableController.isDisabled || !tableController.isSubmitDirty'
-                       ng-show='tableController.showSubmitButton()'
+                       ng-show='tableController.isSubmitButtonVisible'
                        aria-label="Submit"
                        translate="submit">{{ 'submit' | translate }}</md-button>
-            <span ng-if="tableController.showSaveButton() || tableController.showSubmitButton()"
-                  ng-show="tableController.saveMessage.text"
+            <span ng-show="tableController.saveMessage.text"
                   class="component__actions__info md-caption">
-                  {{tableController.saveMessage.text}} <span class="component__actions__more"><md-tooltip md-direction="top">{{ tableController.saveMessage.time | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip><span am-time-ago="tableController.saveMessage.time"></span></span>
+                {{tableController.saveMessage.text}} <span class="component__actions__more"><md-tooltip md-direction="top">{{ tableController.saveMessage.time | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip><span am-time-ago="tableController.saveMessage.time"></span></span>
             </span>
         </div>
         <component-annotations ng-if="tableController.mode === 'student'"
                                annotations='tableController.latestAnnotations'
                                max-score="tableController.componentContent.maxScore"></component-annotations>
-    </div>
-    <div ng-if='tableController.mode === "grading"'>
-        <annotation ng-if='tableController.componentContent.maxScore > -1'
-                    type='score'
-                    mode='tableController.mode'
-                    node-id='tableController.nodeId'
-                    component-id='tableController.componentId'
-                    from-workgroup-id='teacherWorkgroupId'
-                    to-workgroup-id='workgroupId'
-                    component-state-id='componentState.id'
-                    active='true'></annotation>
-        <br ng-if='tableController.componentContent.maxScore > -1'/>
-        <annotation type='comment'
-                    mode='tableController.mode'
-                    node-id='tableController.nodeId'
-                    component-id='tableController.componentId'
-                    from-workgroup-id='teacherWorkgroupId'
-                    to-workgroup-id='workgroupId'
-                    component-state-id='componentState.id'
-                    active='true'></annotation>
-    </div>
+        <component-grading ng-if="tableController.mode === 'grading'"
+                          node-id='tableController.nodeId'
+                          component-id='tableController.componentId'
+                          max-score="tableController.componentContent.maxScore"
+                          from-workgroup-id='teacherWorkgroupId'
+                          to-workgroup-id='workgroupId'
+                          component-state-id='componentState.id'
+                          active="true"></component-grading>
 </div>
