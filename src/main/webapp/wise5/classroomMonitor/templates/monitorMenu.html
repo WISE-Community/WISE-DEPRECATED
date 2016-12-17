@@ -5,7 +5,7 @@
     <md-divider></md-divider>
     <md-list class="menu-sidenav">
         <md-list-item ng-repeat="(key, value) in classroomMonitorController.views"
-                      ng-if="value.type === 'primary'"
+                      ng-if="value.type === 'primary' && value.active"
                       aria-label="{{value.label}}"
                       ui-sref="{{key}}"
                       ng-class="{'active': classroomMonitorController.$state.current.name === key}">
@@ -16,7 +16,7 @@
     <md-divider></md-divider>
     <md-list class="menu-sidenav">
         <md-list-item ng-repeat="(key, value) in classroomMonitorController.views"
-                      ng-if="value.type === 'secondary'"
+                      ng-if="value.type === 'secondary' && value.active"
                       aria-label="{{value.label}}"
                       ui-sref="{{key}}"
                       ng-class="{'active': classroomMonitorController.$state.current.name === key}">
