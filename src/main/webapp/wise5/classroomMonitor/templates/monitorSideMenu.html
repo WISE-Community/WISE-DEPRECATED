@@ -1,8 +1,8 @@
 <div class="menu-sidebar">
     <md-button ng-repeat="(key, value) in classroomMonitorController.views"
-                  ng-if="value.type === 'primary'"
-                  aria-label="{{value.label}}"
-                  ui-sref="{{key}}"
+               ng-if="value.type === 'primary' && value.active"
+               aria-label="{{value.label}}"
+               ui-sref="{{key}}"
                class="md-icon-button menu-sidebar__link">
         <md-icon ng-class="{'primary': classroomMonitorController.$state.current.name === key}"> {{value.icon}} </md-icon>
         <md-tooltip md-direction="right">{{value.name}}</md-tooltip>

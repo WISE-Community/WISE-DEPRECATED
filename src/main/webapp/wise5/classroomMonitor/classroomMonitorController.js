@@ -43,37 +43,43 @@ var ClassroomMonitorController = function () {
                     name: translation.dashboardView,
                     label: translation.dashboardViewLabel,
                     icon: 'dashboard',
-                    type: 'primary'
+                    type: 'primary',
+                    active: false
                 },
                 'root.nodeProgress': {
                     name: translation.projectView,
                     label: translation.projectViewLabel,
                     icon: 'assignment_turned_in',
-                    type: 'primary'
+                    type: 'primary',
+                    active: true
                 },
                 'root.studentProgress': {
                     name: translation.studentView,
                     label: translation.studentViewLabel,
                     icon: 'people',
-                    type: 'primary'
+                    type: 'primary',
+                    active: true
                 },
                 'root.notebooks': {
                     name: translation.notebookView,
                     label: translation.notebookViewLabel,
                     icon: 'chrome_reader_mode',
-                    type: 'secondary'
+                    type: 'secondary',
+                    active: false
                 },
                 'root.export': {
                     name: translation.exportView,
                     label: translation.exportViewLabel,
                     icon: 'file_download',
-                    type: 'secondary'
+                    type: 'secondary',
+                    active: true
                 },
                 'root.notes': {
                     name: translation.notesTipsView,
                     label: translation.notesTipsViewLabel,
                     icon: 'speaker_notes',
-                    type: 'secondary'
+                    type: 'secondary',
+                    active: false
                 }
             };
         });
