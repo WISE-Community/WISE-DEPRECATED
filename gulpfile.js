@@ -13,6 +13,7 @@ var sourcemaps = require('gulp-sourcemaps');
 var newer = require('gulp-newer');
 var gulpif = require('gulp-if');
 var print = require('gulp-print');
+var merge = require('gulp-merge-json');
 //var rtlscss = require('rtlcss');
 
 // -----------------------------------------------------------------------------
@@ -42,6 +43,39 @@ gulp.task('compile-sass', function() {
         //.pipe(gulp.dest(function(file) {
             //return file.base;
         //}));
+});
+
+// -----------------------------------------------------------------------------
+// merge i18n json files
+// -----------------------------------------------------------------------------
+gulp.task('update-i18n', function() {
+    var supportedLocales = ['es','iw','ja','ko','nl','tr','zh_CN','zh_TW'];
+    // update WISE5 i18n files
+    var wise5_i18n_folders = [
+        './src/main/webapp/wise5/authoringTool/i18n/',
+        './src/main/webapp/wise5/classroomMonitor/i18n/',
+        './src/main/webapp/wise5/vle/i18n/',
+        './src/main/webapp/wise5/components/audioOscillator/i18n/',
+        './src/main/webapp/wise5/components/conceptMap/i18n/',
+        './src/main/webapp/wise5/components/discussion/i18n/',
+        './src/main/webapp/wise5/components/draw/i18n/',
+        './src/main/webapp/wise5/components/embedded/i18n/',
+        './src/main/webapp/wise5/components/graph/i18n/',
+        './src/main/webapp/wise5/components/html/i18n/',
+        './src/main/webapp/wise5/components/label/i18n/',
+        './src/main/webapp/wise5/components/match/i18n/',
+        './src/main/webapp/wise5/components/multipleChoice/i18n/',
+        './src/main/webapp/wise5/components/openResponse/i18n/',
+        './src/main/webapp/wise5/components/outsideURL/i18n/',
+        './src/main/webapp/wise5/components/table/i18n/'
+    ];
+    wise5_i18n_folders.map(function(i18n_folder) {
+        supportedLocales.map(function(supportedLocale) {
+            gulp.src([i18n_folder + "i18n_en.json", i18n_folder + "i18n_" + supportedLocale + ".json"])
+                .pipe(merge("i18n_" + supportedLocale + ".json"))
+                .pipe(gulp.dest(i18n_folder));
+        });
+    });
 });
 
 // -----------------------------------------------------------------------------
