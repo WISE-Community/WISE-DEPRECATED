@@ -785,7 +785,7 @@ public class InformationController {
 				if (isConstraintsDisabledStr != null && Boolean.parseBoolean(isConstraintsDisabledStr)) {
 					config.put("isConstraintsDisabled", true);
 				}
-			} else if ("studentRun".equals(mode) || "classroomMonitor".equals(mode) || "author".equals(mode)) {
+			} else if ("studentRun".equals(mode) || "classroomMonitor".equals(mode)) {
 				Long runId = Long.parseLong(id);
 				config.put("runId", runId);
 
@@ -863,15 +863,10 @@ public class InformationController {
 				if (signedInUser.isAdmin() ||
 						this.runService.hasRunPermission(run, signedInUser, BasePermission.WRITE) ||
 						this.runService.hasRunPermission(run, signedInUser, BasePermission.READ)) {
+					config.put("runCode", run.getRuncode());
 					config.put("teacherDataURL", wiseBaseURL + "/teacher/data");
 					config.put("runDataExportURL", wiseBaseURL + "/teacher/export");
 					config.put("studentNotebookURL", wiseBaseURL + "/teacher/notebook/" + runId);
-				}
-
-				// add the config fields specific to the teacher grading
-				if ("grade".equals(mode)) {
-					String getStudentListURL = wiseBaseURL + "/teacher/management/studentListExport?runId=" + runId;
-					config.put("getStudentListURL", getStudentListURL);
 				}
 			}
 
