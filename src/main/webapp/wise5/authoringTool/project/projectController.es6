@@ -2,13 +2,23 @@
 
 class ProjectController {
 
-    constructor($interval, $q, $scope, $state, $stateParams, $translate, AuthorWebSocketService, ConfigService, ProjectService, UtilService) {
+    constructor($filter,
+                $interval,
+                $q,
+                $scope,
+                $state,
+                $stateParams,
+                AuthorWebSocketService,
+                ConfigService,
+                ProjectService,
+                UtilService) {
+        this.$filter = $filter;
         this.$interval = $interval;
         this.$q = $q;
         this.$scope = $scope;
         this.$state = $state;
         this.$stateParams = $stateParams;
-        this.$translate = $translate;
+        this.$translate = this.$filter('translate');
         this.AuthorWebSocketService = AuthorWebSocketService;
         this.ConfigService = ConfigService;
         this.ProjectService = ProjectService;
@@ -25,70 +35,23 @@ class ProjectController {
         this.inactiveNodes = this.ProjectService.getInactiveNodes();
         this.currentAuthorsMessage = "";  // show a message when there is more than one author currently authoring this project
 
-        // check to see if there are other authors right now.
-        this.ProjectService.getCurrentAuthors(this.projectId).then((currentAuthors) => {
-            if (currentAuthors.length == 0) {
-                this.currentAuthorsMessage = "";
-            } else {
-                var showWarningMessage = true;
-                
-                // get the user name of the signed in user
-                var myUserName = this.ConfigService.getMyUserName();
-                
-                // check if the signed in user is the current author
-                if (currentAuthors.length == 1 && currentAuthors[0] == myUserName) {
-                    /*
-                     * the signed in user is the current author so we do not need
-                     * to display the warning message
-                     */
-                    showWarningMessage = false;
-                }
-                
-                if (showWarningMessage) {
-                    this.$translate('concurrentAuthorsWarning', { currentAuthors: currentAuthors.join(", ") }).then((concurrentAuthorsWarning) => {
-                        alert(concurrentAuthorsWarning);
-                        this.currentAuthorsMessage = concurrentAuthorsWarning;
-                    });
-                }
-            }
-        });
-
         // notify others that this project is being authored
         this.ProjectService.notifyAuthorProjectBegin(this.projectId);
 
-        // temprary polling until we get websocket working
-        this.checkOtherAuthorsIntervalId = this.$interval(() => {
-            this.ProjectService.getCurrentAuthors(this.projectId).then((currentAuthors) => {
-                if (currentAuthors.length == 0) {
-                    this.currentAuthorsMessage = "";
-                } else {
-                    
-                    var showWarningMessage = true;
-                    
-                    // get the user name of the signed in user
-                    var myUserName = this.ConfigService.getMyUserName();
-                    
-                    // check if the signed in user is the current author
-                    if (currentAuthors.length == 1 && currentAuthors[0] == myUserName) {
-                        /*
-                         * the signed in user is the current author so we do not need
-                         * to display the warning message
-                         */
-                        showWarningMessage = false;
-                    }
-                    
-                    if (showWarningMessage) {
-                        this.$translate('concurrentAuthorsWarning', { currentAuthors: currentAuthors.join(", ") }).then((concurrentAuthorsWarning) => {
-                            this.currentAuthorsMessage = concurrentAuthorsWarning;
-                        });
-                    }
-                }
-            });
-        }, 20000);
+        this.$scope.$on('currentAuthorsReceived', (event, args) => {
+            let currentAuthorsUsernames = args.currentAuthorsUsernames;
+            // get the user name of the signed in user
+            var myUserName = this.ConfigService.getMyUserName();
+            // remove my username from the currentAuthors
+            currentAuthorsUsernames.splice(currentAuthorsUsernames.indexOf(myUserName),1);
+            if (currentAuthorsUsernames.length > 0) {
+                this.currentAuthorsMessage = this.$translate('concurrentAuthorsWarning', { currentAuthors: currentAuthorsUsernames.join(", ") });
+            } else {
+                this.currentAuthorsMessage = "";
+            }
+        });
 
         this.$scope.$on("$destroy", () => {
-            // cancel the checkOtherAuthorsInterval
-            this.$interval.cancel(this.checkOtherAuthorsIntervalId);
             // notify others that this project is no longer being authored
             this.ProjectService.notifyAuthorProjectEnd(this.projectId);
         });
@@ -1051,9 +1014,19 @@ class ProjectController {
         
         return selectedNodes;
     }
-};
+}
 
-ProjectController.$inject = ['$interval', '$q', '$scope', '$state', '$stateParams', '$translate',
-    'AuthorWebSocketService', 'ConfigService', 'ProjectService', 'UtilService'];
+ProjectController.$inject = [
+    '$filter',
+    '$interval',
+    '$q',
+    '$scope',
+    '$state',
+    '$stateParams',
+    'AuthorWebSocketService',
+    'ConfigService',
+    'ProjectService',
+    'UtilService'
+];
 
 export default ProjectController;

@@ -4,7 +4,7 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -195,8 +195,8 @@ var NotebookService = function () {
         value: function retrieveNotebookItems() {
             var _this = this;
 
-            var workgroupId = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
-            var periodId = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+            var workgroupId = arguments.length <= 0 || arguments[0] === undefined ? null : arguments[0];
+            var periodId = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
 
             var config = {
                 method: 'GET',
@@ -289,8 +289,8 @@ var NotebookService = function () {
         value: function saveNotebookItem(notebookItemId, nodeId, localNotebookItemId, type, title, content) {
             var _this2 = this;
 
-            var clientSaveTime = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : null;
-            var clientDeleteTime = arguments.length > 7 && arguments[7] !== undefined ? arguments[7] : null;
+            var clientSaveTime = arguments.length <= 6 || arguments[6] === undefined ? null : arguments[6];
+            var clientDeleteTime = arguments.length <= 7 || arguments[7] === undefined ? null : arguments[7];
 
             if (this.ConfigService.isPreview()) {
                 return this.$q(function (resolve, reject) {

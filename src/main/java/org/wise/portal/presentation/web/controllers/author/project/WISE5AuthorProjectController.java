@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
+import org.springframework.web.socket.WebSocketHandler;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.module.Curnit;
 import org.wise.portal.domain.module.impl.CurnitGetCurnitUrlVisitor;
@@ -39,6 +40,8 @@ import org.wise.portal.service.module.CurnitService;
 import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.portal.PortalService;
 import org.wise.portal.service.project.ProjectService;
+import org.wise.portal.service.websocket.WISEWebSocketHandler;
+import org.wise.vle.domain.notification.Notification;
 import org.wise.vle.utils.FileManager;
 
 import javax.servlet.ServletContext;
@@ -75,6 +78,9 @@ public class WISE5AuthorProjectController {
 
     @Autowired
     ServletContext servletContext;
+
+    @Autowired
+    private WebSocketHandler webSocketHandler;
 
     /**
      * Handle user's request to launch the Authoring Tool without specified project
@@ -489,7 +495,6 @@ public class WISE5AuthorProjectController {
             config.put("wiseBaseURL", wiseBaseURL);
             config.put("notifyProjectBeginURL", wiseBaseURL + "/project/notifyAuthorBegin/");
             config.put("notifyProjectEndURL", wiseBaseURL + "/project/notifyAuthorEnd/");
-            config.put("getCurrentAuthorsURL", wiseBaseURL + "/project/currentAuthors/");
             config.put("getLibraryProjectsURL", wiseBaseURL + "/author/authorproject.html?command=projectList&projectPaths=&projectTag=library&wiseVersion=5");
 
             // add this teachers's info in config.userInfo.myUserInfo object
@@ -929,58 +934,8 @@ public class WISE5AuthorProjectController {
     }
 
     /**
-     * Returns a list of authors who are currently editing the specified project
-     * @param request
-     * @param response
-     * @return
-     * @throws Exception
-     */
-    @SuppressWarnings("unchecked")
-    @RequestMapping(value = "/project/currentAuthors/{projectId}", method = RequestMethod.GET)
-    private void handleGetCurrentAuthors(
-            @PathVariable String projectId,
-            HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
-        User user = ControllerUtil.getSignedInUser();
-        if (this.hasAuthorPermissions(user)) {
-
-            HashMap<String, ArrayList<String>> openedProjectsToSessions =
-                    (HashMap<String, ArrayList<String>>) servletContext.getAttribute("openedProjectsToSessions");
-
-            if (openedProjectsToSessions == null) {
-                openedProjectsToSessions = new HashMap<String, ArrayList<String>>();
-                servletContext.setAttribute("openedProjectsToSessions", openedProjectsToSessions);
-            }
-
-            if (openedProjectsToSessions.get(projectId) == null) {
-                openedProjectsToSessions.put(projectId, new ArrayList<String>());
-            }
-            ArrayList<String> sessions = openedProjectsToSessions.get(projectId);  // sessions that are currently authoring this project
-
-            // Now get all the logged in users who are editing this same project
-            HashMap<String, User> allLoggedInUsers = (HashMap<String, User>) servletContext
-                    .getAttribute(WISESessionListener.ALL_LOGGED_IN_USERS);
-
-            HttpSession currentUserSession = request.getSession();
-            JSONArray otherUsersAlsoEditingProject = new JSONArray();
-
-            for (String sessionId : sessions) {
-                if (sessionId != currentUserSession.getId()) {
-                    user = allLoggedInUsers.get(sessionId);
-                    if (user != null) {
-                        otherUsersAlsoEditingProject.put(user.getUserDetails().getUsername());
-                    }
-                }
-            }
-
-            response.getWriter().write(otherUsersAlsoEditingProject.toString());
-        }
-    }
-
-    /**
      * Handles notifications of opened projects
      * @param request
-     * @param response
      * @return
      * @throws Exception
      */
@@ -988,8 +943,7 @@ public class WISE5AuthorProjectController {
     @RequestMapping(value = "/project/notifyAuthorBegin/{projectId}", method = RequestMethod.POST)
     private ModelAndView handleNotifyAuthorProjectBegin(
             @PathVariable String projectId,
-            HttpServletRequest request,
-            HttpServletResponse response) throws Exception{
+            HttpServletRequest request) throws Exception{
         User user = ControllerUtil.getSignedInUser();
         if (this.hasAuthorPermissions(user)) {
 
@@ -1010,26 +964,8 @@ public class WISE5AuthorProjectController {
                 sessions.add(currentUserSession.getId());
             }
 
-            // Now get all the logged in users who are editing this same project
-            HashMap<String, User> allLoggedInUsers = (HashMap<String, User>) servletContext
-                    .getAttribute(WISESessionListener.ALL_LOGGED_IN_USERS);
+            notifyCurrentAuthors(projectId);
 
-            String otherUsersAlsoEditingProject = "";
-            for (String sessionId : sessions) {
-                if (sessionId != currentUserSession.getId()) {
-                    user = allLoggedInUsers.get(sessionId);
-                    if (user != null) {
-                        otherUsersAlsoEditingProject += user.getUserDetails().getUsername() + ",";
-                    }
-                }
-            }
-
-			/* strip off trailing comma */
-            if (otherUsersAlsoEditingProject.contains(",")) {
-                otherUsersAlsoEditingProject = otherUsersAlsoEditingProject.substring(0, otherUsersAlsoEditingProject.length() - 1);
-            }
-
-            response.getWriter().write(otherUsersAlsoEditingProject);
             return null;
         } else {
             return new ModelAndView(new RedirectView("accessdenied.html"));
@@ -1039,17 +975,13 @@ public class WISE5AuthorProjectController {
     /**
      * Handles notifications of closed projects
      *
-     * @param request
-     * @param response
-     * @return
      * @throws Exception
      */
     @SuppressWarnings("unchecked")
     @RequestMapping(value = "/project/notifyAuthorEnd/{projectId}", method = RequestMethod.POST)
     private ModelAndView handleNotifyAuthorProjectEnd(
             @PathVariable String projectId,
-            HttpServletRequest request,
-            HttpServletResponse response) throws Exception{
+            HttpServletRequest request) throws Exception{
         User user = ControllerUtil.getSignedInUser();
         if (this.hasAuthorPermissions(user)) {
             HttpSession currentSession = request.getSession();
@@ -1068,7 +1000,9 @@ public class WISE5AuthorProjectController {
                     if (sessions.size() == 0) {
                         openedProjectsToSessions.remove(projectId);
                     }
-                    response.getWriter().write("success");
+
+                    notifyCurrentAuthors(projectId);
+
                     return null;
                 }
             }
@@ -1076,7 +1010,32 @@ public class WISE5AuthorProjectController {
             return new ModelAndView(new RedirectView("accessdenied.html"));
         }
     }
-    
+
+    /**
+     * Notify other authors authoring the same project id.
+     * @param projectId
+     */
+    private void notifyCurrentAuthors(String projectId) {
+        // Notifiy other authors authoring this project in real-time with websocket.
+        try {
+            User user = ControllerUtil.getSignedInUser();
+            if (webSocketHandler != null) {
+                WISEWebSocketHandler wiseWebSocketHandler = (WISEWebSocketHandler) webSocketHandler;
+
+                // send this message to websockets
+                JSONObject webSocketMessageJSON = new JSONObject();
+                webSocketMessageJSON.put("messageType", "currentAuthors");
+                webSocketMessageJSON.put("projectId", projectId);
+                webSocketMessageJSON.put("messageParticipants", "authorToAuthors");
+                wiseWebSocketHandler.handleMessage(user, webSocketMessageJSON.toString());
+            }
+
+        } catch (Exception e) {
+            // if something fails while sending to websocket, allow the rest to continue
+            e.printStackTrace();
+        }
+    }
+
     /**
      * Import steps and copy assets if necessary
      * @param steps a string containing a JSONArray of steps

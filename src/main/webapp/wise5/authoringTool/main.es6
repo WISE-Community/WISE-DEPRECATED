@@ -199,12 +199,10 @@ let authoringModule = angular.module('authoring', [
                         },
                         sessionTimers: (SessionService, projectConfig) => {
                             return SessionService.initializeSession();
+                        },
+                        webSocket: (AuthorWebSocketService, projectConfig) => {
+                            return AuthorWebSocketService.initialize();
                         }
-                        /*,
-                        webSocket: (AuthorWebSocketService, projectConfig, $stateParams) => {
-                            return AuthorWebSocketService.initialize($stateParams.projectId);
-                        }
-                        */
                     }
                 })
                 .state('root.project.node', {

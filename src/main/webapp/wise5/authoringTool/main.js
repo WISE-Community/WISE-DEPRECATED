@@ -296,12 +296,10 @@ var authoringModule = _angular2.default.module('authoring', [(0, _angularDragula
             },
             sessionTimers: function sessionTimers(SessionService, projectConfig) {
                 return SessionService.initializeSession();
+            },
+            webSocket: function webSocket(AuthorWebSocketService, projectConfig) {
+                return AuthorWebSocketService.initialize();
             }
-            /*,
-            webSocket: (AuthorWebSocketService, projectConfig, $stateParams) => {
-                return AuthorWebSocketService.initialize($stateParams.projectId);
-            }
-            */
         }
     }).state('root.project.node', {
         url: '/node/:nodeId',

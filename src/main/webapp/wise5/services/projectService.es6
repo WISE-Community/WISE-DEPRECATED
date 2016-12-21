@@ -1700,31 +1700,6 @@ class ProjectService {
     };
 
     /**
-     * Get the current authors for this project
-     * @param projectId
-     */
-    getCurrentAuthors(projectId = null) {
-        return this.$q((resolve, reject) => {
-            if (projectId == null) {
-                if (this.project != null) {
-                    projectId = this.ConfigService.getProjectId();
-                } else {
-                    // we're not editing any projects, so there are no authors
-                    resolve([]);
-                }
-            }
-            let notifyProjectEndURL = this.ConfigService.getConfigParam('getCurrentAuthorsURL') + projectId;
-            let httpParams = {};
-            httpParams.method = 'GET';
-            httpParams.url = notifyProjectEndURL;
-
-            this.$http(httpParams).then((result) => {
-                resolve(result.data);
-            })
-        });
-    };
-
-    /**
      * Notifies others that the specified project is being authored
      * @param projectId id of the project
      */
@@ -1737,9 +1712,10 @@ class ProjectService {
             }
         }
         let notifyProjectBeginURL = this.ConfigService.getConfigParam('notifyProjectBeginURL') + projectId;
-        let httpParams = {};
-        httpParams.method = 'POST';
-        httpParams.url = notifyProjectBeginURL;
+        let httpParams = {
+            method: "POST",
+            url: notifyProjectBeginURL
+        };
 
         return this.$http(httpParams).then((result) => {
             let otherAuthors = result.data;

@@ -9,17 +9,18 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var ProjectController = function () {
-    function ProjectController($interval, $q, $scope, $state, $stateParams, $translate, AuthorWebSocketService, ConfigService, ProjectService, UtilService) {
+    function ProjectController($filter, $interval, $q, $scope, $state, $stateParams, AuthorWebSocketService, ConfigService, ProjectService, UtilService) {
         var _this = this;
 
         _classCallCheck(this, ProjectController);
 
+        this.$filter = $filter;
         this.$interval = $interval;
         this.$q = $q;
         this.$scope = $scope;
         this.$state = $state;
         this.$stateParams = $stateParams;
-        this.$translate = $translate;
+        this.$translate = this.$filter('translate');
         this.AuthorWebSocketService = AuthorWebSocketService;
         this.ConfigService = ConfigService;
         this.ProjectService = ProjectService;
@@ -36,77 +37,30 @@ var ProjectController = function () {
         this.inactiveNodes = this.ProjectService.getInactiveNodes();
         this.currentAuthorsMessage = ""; // show a message when there is more than one author currently authoring this project
 
-        // check to see if there are other authors right now.
-        this.ProjectService.getCurrentAuthors(this.projectId).then(function (currentAuthors) {
-            if (currentAuthors.length == 0) {
-                _this.currentAuthorsMessage = "";
-            } else {
-                var showWarningMessage = true;
-
-                // get the user name of the signed in user
-                var myUserName = _this.ConfigService.getMyUserName();
-
-                // check if the signed in user is the current author
-                if (currentAuthors.length == 1 && currentAuthors[0] == myUserName) {
-                    /*
-                     * the signed in user is the current author so we do not need
-                     * to display the warning message
-                     */
-                    showWarningMessage = false;
-                }
-
-                if (showWarningMessage) {
-                    _this.$translate('concurrentAuthorsWarning', { currentAuthors: currentAuthors.join(", ") }).then(function (concurrentAuthorsWarning) {
-                        alert(concurrentAuthorsWarning);
-                        _this.currentAuthorsMessage = concurrentAuthorsWarning;
-                    });
-                }
-            }
-        });
-
         // notify others that this project is being authored
         this.ProjectService.notifyAuthorProjectBegin(this.projectId);
 
-        // temprary polling until we get websocket working
-        this.checkOtherAuthorsIntervalId = this.$interval(function () {
-            _this.ProjectService.getCurrentAuthors(_this.projectId).then(function (currentAuthors) {
-                if (currentAuthors.length == 0) {
-                    _this.currentAuthorsMessage = "";
-                } else {
-
-                    var showWarningMessage = true;
-
-                    // get the user name of the signed in user
-                    var myUserName = _this.ConfigService.getMyUserName();
-
-                    // check if the signed in user is the current author
-                    if (currentAuthors.length == 1 && currentAuthors[0] == myUserName) {
-                        /*
-                         * the signed in user is the current author so we do not need
-                         * to display the warning message
-                         */
-                        showWarningMessage = false;
-                    }
-
-                    if (showWarningMessage) {
-                        _this.$translate('concurrentAuthorsWarning', { currentAuthors: currentAuthors.join(", ") }).then(function (concurrentAuthorsWarning) {
-                            _this.currentAuthorsMessage = concurrentAuthorsWarning;
-                        });
-                    }
-                }
-            });
-        }, 20000);
+        this.$scope.$on('currentAuthorsReceived', function (event, args) {
+            var currentAuthorsUsernames = args.currentAuthorsUsernames;
+            // get the user name of the signed in user
+            var myUserName = _this.ConfigService.getMyUserName();
+            // remove my username from the currentAuthors
+            currentAuthorsUsernames.splice(currentAuthorsUsernames.indexOf(myUserName), 1);
+            if (currentAuthorsUsernames.length > 0) {
+                _this.currentAuthorsMessage = _this.$translate('concurrentAuthorsWarning', { currentAuthors: currentAuthorsUsernames.join(", ") });
+            } else {
+                _this.currentAuthorsMessage = "";
+            }
+        });
 
         this.$scope.$on("$destroy", function () {
-            // cancel the checkOtherAuthorsInterval
-            _this.$interval.cancel(_this.checkOtherAuthorsIntervalId);
             // notify others that this project is no longer being authored
             _this.ProjectService.notifyAuthorProjectEnd(_this.projectId);
         });
     }
 
     _createClass(ProjectController, [{
-        key: "updateProjectAsText",
+        key: 'updateProjectAsText',
 
 
         // updates projectAsText field, which is the string representation of the project that we'll show in the textarea
@@ -114,7 +68,7 @@ var ProjectController = function () {
             this.projectAsText = JSON.stringify(this.ProjectService.project, null, 4);
         }
     }, {
-        key: "previewProject",
+        key: 'previewProject',
 
 
         /**
@@ -125,7 +79,7 @@ var ProjectController = function () {
             window.open(previewProjectURL);
         }
     }, {
-        key: "previewProjectWithoutConstraints",
+        key: 'previewProjectWithoutConstraints',
 
 
         /**
@@ -137,22 +91,22 @@ var ProjectController = function () {
             window.open(previewProjectURL);
         }
     }, {
-        key: "viewProjectAssets",
+        key: 'viewProjectAssets',
         value: function viewProjectAssets() {
             this.$state.go('root.project.asset', { projectId: this.projectId });
         }
     }, {
-        key: "viewProjectHistory",
+        key: 'viewProjectHistory',
         value: function viewProjectHistory() {
             this.$state.go('root.project.history', { projectId: this.projectId });
         }
     }, {
-        key: "viewNotebookSettings",
+        key: 'viewNotebookSettings',
         value: function viewNotebookSettings() {
             this.$state.go('root.project.notebook', { projectId: this.projectId });
         }
     }, {
-        key: "saveProject",
+        key: 'saveProject',
         value: function saveProject() {
             var _this2 = this;
 
@@ -173,7 +127,7 @@ var ProjectController = function () {
             }
         }
     }, {
-        key: "closeProject",
+        key: 'closeProject',
 
 
         /**
@@ -183,7 +137,7 @@ var ProjectController = function () {
             this.$state.go('root.main');
         }
     }, {
-        key: "getNodePositionById",
+        key: 'getNodePositionById',
 
 
         /**
@@ -195,7 +149,7 @@ var ProjectController = function () {
             return this.ProjectService.getNodePositionById(nodeId);
         }
     }, {
-        key: "getComponentsByNodeId",
+        key: 'getComponentsByNodeId',
 
 
         /**
@@ -214,7 +168,7 @@ var ProjectController = function () {
          */
 
     }, {
-        key: "getPossibleTransitionCriteria",
+        key: 'getPossibleTransitionCriteria',
         value: function getPossibleTransitionCriteria(nodeId, componentId) {
             return this.ProjectService.getPossibleTransitionCriteria(nodeId, componentId);
         }
@@ -226,12 +180,12 @@ var ProjectController = function () {
          */
 
     }, {
-        key: "getNodeTitleByNodeId",
+        key: 'getNodeTitleByNodeId',
         value: function getNodeTitleByNodeId(nodeId) {
             return this.ProjectService.getNodeTitleByNodeId(nodeId);
         }
     }, {
-        key: "isGroupNode",
+        key: 'isGroupNode',
 
 
         /**
@@ -243,7 +197,7 @@ var ProjectController = function () {
             return this.ProjectService.isGroupNode(nodeId);
         }
     }, {
-        key: "nodeClicked",
+        key: 'nodeClicked',
 
 
         /**
@@ -254,7 +208,7 @@ var ProjectController = function () {
             this.$state.go('root.project.node', { projectId: this.projectId, nodeId: nodeId });
         }
     }, {
-        key: "createGroup",
+        key: 'createGroup',
 
 
         /**
@@ -290,7 +244,7 @@ var ProjectController = function () {
          */
 
     }, {
-        key: "createNode",
+        key: 'createNode',
         value: function createNode() {
 
             // create a new node
@@ -322,7 +276,7 @@ var ProjectController = function () {
          */
 
     }, {
-        key: "insertInside",
+        key: 'insertInside',
         value: function insertInside(nodeId) {
 
             // TODO check that we are inserting into a group
@@ -400,7 +354,7 @@ var ProjectController = function () {
          */
 
     }, {
-        key: "insertAfter",
+        key: 'insertAfter',
         value: function insertAfter(nodeId) {
 
             if (this.createMode) {
@@ -481,7 +435,7 @@ var ProjectController = function () {
          */
 
     }, {
-        key: "copy",
+        key: 'copy',
         value: function copy() {
 
             // make sure there is at least one item selected
@@ -514,7 +468,7 @@ var ProjectController = function () {
          */
 
     }, {
-        key: "move",
+        key: 'move',
         value: function move() {
 
             // make sure there is at least one item selected
@@ -563,7 +517,7 @@ var ProjectController = function () {
          */
 
     }, {
-        key: "delete",
+        key: 'delete',
         value: function _delete() {
 
             // get the selected items
@@ -629,7 +583,7 @@ var ProjectController = function () {
          */
 
     }, {
-        key: "getSelectedItems",
+        key: 'getSelectedItems',
         value: function getSelectedItems() {
 
             // an array to hold the node ids of the nodes that are selected
@@ -667,7 +621,7 @@ var ProjectController = function () {
          */
 
     }, {
-        key: "getSelectedItemTypes",
+        key: 'getSelectedItemTypes',
         value: function getSelectedItemTypes() {
 
             var selectedItemTypes = [];
@@ -724,7 +678,7 @@ var ProjectController = function () {
          */
 
     }, {
-        key: "unselectAllItems",
+        key: 'unselectAllItems',
         value: function unselectAllItems() {
             angular.forEach(this.items, function (value, key) {
                 value.checked = false;
@@ -736,7 +690,7 @@ var ProjectController = function () {
          */
 
     }, {
-        key: "toggleCreateGroup",
+        key: 'toggleCreateGroup',
         value: function toggleCreateGroup() {
             this.hideCreateNode();
             this.showCreateGroup = !this.showCreateGroup;
@@ -748,7 +702,7 @@ var ProjectController = function () {
          */
 
     }, {
-        key: "hideCreateGroup",
+        key: 'hideCreateGroup',
         value: function hideCreateGroup() {
             this.showCreateGroup = false;
             this.createGroupTitle = '';
@@ -759,7 +713,7 @@ var ProjectController = function () {
          */
 
     }, {
-        key: "toggleCreateNode",
+        key: 'toggleCreateNode',
         value: function toggleCreateNode() {
             this.hideCreateGroup();
             this.showCreateNode = !this.showCreateNode;
@@ -771,7 +725,7 @@ var ProjectController = function () {
          */
 
     }, {
-        key: "hideCreateNode",
+        key: 'hideCreateNode',
         value: function hideCreateNode() {
             this.showCreateNode = false;
             this.createNodeTitle = '';
@@ -782,7 +736,7 @@ var ProjectController = function () {
          */
 
     }, {
-        key: "cancelMove",
+        key: 'cancelMove',
         value: function cancelMove() {
             this.insertGroupMode = false;
             this.insertNodeMode = false;
@@ -794,7 +748,7 @@ var ProjectController = function () {
          */
 
     }, {
-        key: "updateStartNodeId",
+        key: 'updateStartNodeId',
         value: function updateStartNodeId() {
 
             var newStartNodeId = null;
@@ -836,7 +790,7 @@ var ProjectController = function () {
          */
 
     }, {
-        key: "checkPotentialStartNodeIdChange",
+        key: 'checkPotentialStartNodeIdChange',
         value: function checkPotentialStartNodeIdChange() {
             var _this3 = this;
 
@@ -896,7 +850,7 @@ var ProjectController = function () {
          */
 
     }, {
-        key: "checkPotentialStartNodeIdChangeThenSaveProject",
+        key: 'checkPotentialStartNodeIdChangeThenSaveProject',
         value: function checkPotentialStartNodeIdChangeThenSaveProject() {
             var _this4 = this;
 
@@ -919,7 +873,7 @@ var ProjectController = function () {
          */
 
     }, {
-        key: "projectTitleChanged",
+        key: 'projectTitleChanged',
         value: function projectTitleChanged() {
 
             // update the project title in the project service
@@ -934,7 +888,7 @@ var ProjectController = function () {
          */
 
     }, {
-        key: "toggleImportView",
+        key: 'toggleImportView',
         value: function toggleImportView() {
             this.importMode = !this.importMode;
 
@@ -954,7 +908,7 @@ var ProjectController = function () {
          */
 
     }, {
-        key: "getAuthorableProjects",
+        key: 'getAuthorableProjects',
         value: function getAuthorableProjects() {
             this.authorableProjectsList = this.ConfigService.getConfigParam('projects');
         }
@@ -964,7 +918,7 @@ var ProjectController = function () {
          */
 
     }, {
-        key: "getLibraryProjects",
+        key: 'getLibraryProjects',
         value: function getLibraryProjects() {
             var _this5 = this;
 
@@ -979,7 +933,7 @@ var ProjectController = function () {
          */
 
     }, {
-        key: "showAuthorableImportProject",
+        key: 'showAuthorableImportProject',
         value: function showAuthorableImportProject(importProjectId) {
 
             // clear the select drop down for the library project
@@ -995,7 +949,7 @@ var ProjectController = function () {
          */
 
     }, {
-        key: "showLibraryImportProject",
+        key: 'showLibraryImportProject',
         value: function showLibraryImportProject(importProjectId) {
             this.importAuthorableProjectId = null;
 
@@ -1009,7 +963,7 @@ var ProjectController = function () {
          */
 
     }, {
-        key: "showImportProject",
+        key: 'showImportProject',
         value: function showImportProject(importProjectId) {
             var _this6 = this;
 
@@ -1044,7 +998,7 @@ var ProjectController = function () {
          */
 
     }, {
-        key: "previewImportProject",
+        key: 'previewImportProject',
         value: function previewImportProject() {
 
             if (this.importProject != null) {
@@ -1062,7 +1016,7 @@ var ProjectController = function () {
          */
 
     }, {
-        key: "previewImportNode",
+        key: 'previewImportNode',
         value: function previewImportNode(node) {
 
             if (node != null) {
@@ -1086,7 +1040,7 @@ var ProjectController = function () {
          */
 
     }, {
-        key: "importSteps",
+        key: 'importSteps',
         value: function importSteps() {
             var _this7 = this;
 
@@ -1175,7 +1129,7 @@ var ProjectController = function () {
          */
 
     }, {
-        key: "getSelectedNodesToImport",
+        key: 'getSelectedNodesToImport',
         value: function getSelectedNodesToImport() {
             var selectedNodes = [];
 
@@ -1199,9 +1153,7 @@ var ProjectController = function () {
     return ProjectController;
 }();
 
-;
-
-ProjectController.$inject = ['$interval', '$q', '$scope', '$state', '$stateParams', '$translate', 'AuthorWebSocketService', 'ConfigService', 'ProjectService', 'UtilService'];
+ProjectController.$inject = ['$filter', '$interval', '$q', '$scope', '$state', '$stateParams', 'AuthorWebSocketService', 'ConfigService', 'ProjectService', 'UtilService'];
 
 exports.default = ProjectController;
 //# sourceMappingURL=projectController.js.map

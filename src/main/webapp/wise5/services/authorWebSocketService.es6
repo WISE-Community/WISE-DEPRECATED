@@ -23,7 +23,13 @@ class AuthorWebSocketService {
     handleMessage(message) {
         let data = JSON.parse(message.data);
         let messageType = data.messageType;
+
+        if (messageType === "currentAuthors") {
+            this.$rootScope.$broadcast('currentAuthorsReceived', {currentAuthorsUsernames: data.currentAuthorsUsernames});
+        }
+
     };
+
 
     sendMessage(messageJSON) {
         // send the websocket message
@@ -31,6 +37,10 @@ class AuthorWebSocketService {
     }
 }
 
-AuthorWebSocketService.$inject = ['$rootScope', '$websocket', 'ConfigService'];
+AuthorWebSocketService.$inject = [
+    '$rootScope',
+    '$websocket',
+    'ConfigService'
+];
 
 export default AuthorWebSocketService;

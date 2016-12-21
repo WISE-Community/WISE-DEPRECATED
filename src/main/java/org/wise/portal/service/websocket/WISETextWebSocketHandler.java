@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2016 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3,
@@ -46,11 +46,14 @@ import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.user.impl.UserImpl;
 import org.wise.portal.domain.workgroup.Workgroup;
+import org.wise.portal.presentation.web.listeners.WISESessionListener;
 import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.user.UserService;
 import org.wise.portal.service.vle.VLEService;
 import org.wise.portal.service.workgroup.WorkgroupService;
 import org.wise.vle.domain.status.StudentStatus;
+
+import javax.servlet.ServletContext;
 
 /**
  * @author Geoffrey Kwan
@@ -70,9 +73,9 @@ public class WISETextWebSocketHandler extends TextWebSocketHandler implements WI
 	private UserService userService;
 
 	@Autowired
-    private Properties wiseProperties;
+	ServletContext servletContext;
 
-    //the hashtable that stores run id to set of student connections
+	//the hashtable that stores run id to set of student connections
     private static Hashtable<Long, Set<WISEWebSocketSession>> runToStudentConnections = new Hashtable<Long,Set<WISEWebSocketSession>>();
 
     //the hashtable that stores run id to set of teacher connections
@@ -251,63 +254,58 @@ public class WISETextWebSocketHandler extends TextWebSocketHandler implements WI
         	String message = messageJSON.toString();
 
         	//get all the teachers that are currently connected for this run
-        	Set<WISEWebSocketSession> teacherConnectionsForRun = getTeacherConnectionsForRun(runId);
+			if (runId != null) {
+				Set<WISEWebSocketSession> teacherConnectionsForRun = getTeacherConnectionsForRun(runId);
 
-        	//send the message to all the teacher currently connected for this run
-        	sendMessageToConnections(message, teacherConnectionsForRun);
+				//send the message to all the teacher currently connected for this run
+				sendMessageToConnections(message, teacherConnectionsForRun);
 
-            //also send updated studentsOnline list to all the teacher currently connected for this run
-            JSONObject studentsOnlineMessage = createStudentsOnlineMessage(wiseWebSocketSession);
-            sendMessageToConnections(studentsOnlineMessage.toString(), teacherConnectionsForRun);
+				//also send updated studentsOnline list to all the teacher currently connected for this run
+				JSONObject studentsOnlineMessage = createStudentsOnlineMessage(wiseWebSocketSession);
+				sendMessageToConnections(studentsOnlineMessage.toString(), teacherConnectionsForRun);
 
-            if (wiseWebSocketSession.isTeacher()) {
-        		/*
-        		 * the user that has just connected is a teacher so we will send
-        		 * them a list of students that are also currently connected
-        		 */
-				//JSONObject studentsOnlineMessage = createStudentsOnlineMessage(wiseWebSocketSession);
 
-                //send the message that contains the list of connected students for the run
-                sendMessage(session, studentsOnlineMessage.toString());
+				if (wiseWebSocketSession.isTeacher()) {
+					// the user that has just connected is a teacher so we will send
+					// them a list of students that are also currently connected
 
-            } else if (!wiseWebSocketSession.isTeacher()) {
-        		/*
-        		 * the user that has just connected is a student so we will
-        		 * send them a list of teachers that are also currently connected
-        		 */
+					//send the message that contains the list of connected students for the run
+					sendMessage(session, studentsOnlineMessage.toString());
 
-	        	//create the message that will contain the list of connected teachers
-	        	JSONObject teachersConnectedMessage = new JSONObject();
+				} else if (!wiseWebSocketSession.isTeacher()) {
+					// the user that has just connected is a student so we will
+					// send them a list of teachers that are also currently connected
+					//create the message that will contain the list of connected teachers
+					JSONObject teachersConnectedMessage = new JSONObject();
 
-	        	//set the message type
-	        	teachersConnectedMessage.put("messageType", "teachersOnlineList");
+					//set the message type
+					teachersConnectedMessage.put("messageType", "teachersOnlineList");
 
-	        	/*
-	        	 * the array that will contain the workgroup ids of the teachers
-	        	 * that are currently connected for this run
-	        	 */
-	        	JSONArray teachersOnlineList = new JSONArray();
+					// the array that will contain the workgroup ids of the teachers
+					// that are currently connected for this run
+					JSONArray teachersOnlineList = new JSONArray();
 
-	        	Iterator<WISEWebSocketSession> teacherConnectionIterator = teacherConnectionsForRun.iterator();
+					Iterator<WISEWebSocketSession> teacherConnectionIterator = teacherConnectionsForRun.iterator();
 
-	        	//loop through all the teachers that are currently connected for this run
-	        	while (teacherConnectionIterator.hasNext()) {
-	        		//get a teacher connection
-	        		WISEWebSocketSession teacherConnection = teacherConnectionIterator.next();
+					//loop through all the teachers that are currently connected for this run
+					while (teacherConnectionIterator.hasNext()) {
+						//get a teacher connection
+						WISEWebSocketSession teacherConnection = teacherConnectionIterator.next();
 
-	        		//get the workgroup id
-	        		Long teacherConnectionWorkgroupId = teacherConnection.getWorkgroupId();
+						//get the workgroup id
+						Long teacherConnectionWorkgroupId = teacherConnection.getWorkgroupId();
 
-	        		//add the workgroup id to the array
-	        		teachersOnlineList.put(teacherConnectionWorkgroupId);
-	        	}
+						//add the workgroup id to the array
+						teachersOnlineList.put(teacherConnectionWorkgroupId);
+					}
 
-	        	//add the array of connected teachers to the message
-	        	teachersConnectedMessage.put("teachersOnlineList", teachersOnlineList);
+					//add the array of connected teachers to the message
+					teachersConnectedMessage.put("teachersOnlineList", teachersOnlineList);
 
-	        	//send the message that contains the list of connected teachers for the run
-	        	sendMessage(session, teachersConnectedMessage.toString());
-        	}
+					//send the message that contains the list of connected teachers for the run
+					sendMessage(session, teachersConnectedMessage.toString());
+				}
+			}
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -486,6 +484,22 @@ public class WISETextWebSocketHandler extends TextWebSocketHandler implements WI
 			}
 		}
 
+		if (projectId == null && runId == null) {
+			// user just opened the WISE5 AT, with no project selected.
+
+			//get the session object from the wiseWebSocketSession
+			WebSocketSession session = wiseWebSocketSession.getSession();
+
+			//add the mapping from session to wiseWebSocketSession
+			sessionToWISEWebSocketSession.put(session, wiseWebSocketSession);
+
+			// get the user
+			User user = wiseWebSocketSession.getUser();
+
+			// add the mapping from user to wiseWebSocketSession
+			userToWISEWebSocketSession.put(user, wiseWebSocketSession);
+		}
+
 	}
 
 	/**
@@ -644,26 +658,53 @@ public class WISETextWebSocketHandler extends TextWebSocketHandler implements WI
     }
 
 	/**
+	 * Returns a set of users who are currently authoring the project
+	 * @param projectId
+	 * @return
+     */
+	private Set<User> getCurrentAuthors(String projectId) {
+		Set<User> currentAuthors = new HashSet<User>();
+
+		HashMap<String, ArrayList<String>> openedProjectsToSessions =
+				(HashMap<String, ArrayList<String>>) servletContext.getAttribute("openedProjectsToSessions");
+
+		if (openedProjectsToSessions == null) {
+			openedProjectsToSessions = new HashMap<String, ArrayList<String>>();
+			servletContext.setAttribute("openedProjectsToSessions", openedProjectsToSessions);
+		}
+
+		ArrayList<String> sessions = openedProjectsToSessions.get(projectId);  // sessions that are currently authoring this project
+
+		// Now get all the logged in users who are editing this same project
+		HashMap<String, User> allLoggedInUsers = (HashMap<String, User>) servletContext
+				.getAttribute(WISESessionListener.ALL_LOGGED_IN_USERS);
+
+		for (String sessionId : sessions) {
+			User user = allLoggedInUsers.get(sessionId);
+			currentAuthors.add(user);
+		}
+		return currentAuthors;
+	}
+
+	/**
 	 * Get the sessions of authors who are currently authoring the project
 	 * @param projectId the projectId
 	 * @return a set of teacher connections
 	 */
-	private Set<WISEWebSocketSession> getAuthorConnectionsForProject(Long projectId) {
-		Set<WISEWebSocketSession> authorConnectionsForRun = null;
+	private Set<WISEWebSocketSession> getAuthorConnectionsForProject(String projectId) {
+		Set<WISEWebSocketSession> authorConnectionsForProject = new CopyOnWriteArraySet<WISEWebSocketSession>();
 
-		//get the set of teacher connections for the run
-		authorConnectionsForRun = projectToAuthorConnections.get(projectId);
+		Set<User> currentAuthors = getCurrentAuthors(projectId);
 
-		if (authorConnectionsForRun == null) {
-			//the set does not exist for the run so we will create a set
-			authorConnectionsForRun = new CopyOnWriteArraySet<WISEWebSocketSession>();
+		for (User user : currentAuthors) {
+			// get the wiseWebSocketSession for the given user
+			WISEWebSocketSession wiseWebSocketSession = userToWISEWebSocketSession.get(user);
 
-			//put the set of teacher connections into the hashtable that maps run to teacher connection sets
-			projectToAuthorConnections.put(projectId, authorConnectionsForRun);
+			authorConnectionsForProject.add(wiseWebSocketSession);
 		}
 
-		//return the set of teacher connections for the run
-		return authorConnectionsForRun;
+		// return the set of teacher connections for the run
+		return authorConnectionsForProject;
 	}
 
     /**
@@ -1466,7 +1507,6 @@ public class WISETextWebSocketHandler extends TextWebSocketHandler implements WI
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-
     }
 
     /**
@@ -1637,19 +1677,30 @@ public class WISETextWebSocketHandler extends TextWebSocketHandler implements WI
 				WISEWebSocketSession wiseWebSocketSession = sessionToWISEWebSocketSession.get(session);
 
 				if (wiseWebSocketSession != null) {
-					Long projectId = wiseWebSocketSession.getProjectId();
+					String messageType = messageJSON.getString("messageType");
 
-					//add the run id into the message
-					messageJSON.put("projectId", projectId);
+					if ("currentAuthors".equals(messageType)) {
 
-					//get the message as a string
-					String message = messageJSON.toString();
+						String projectId = messageJSON.getString("projectId");
 
-					//get all the currently connected authors
-					Set<WISEWebSocketSession> authorConnections = getAuthorConnectionsForProject(projectId);
+						//get all the currently connected authors
+						Set<WISEWebSocketSession> authorConnections = getAuthorConnectionsForProject(projectId);
 
-					//send the message to all the currently connected authors
-					sendMessageToConnections(message, authorConnections);
+						// add a list of current author's usernames
+						Set<User> currentAuthors = getCurrentAuthors(projectId);
+						JSONArray currentAuthorsUsernames = new JSONArray();
+						for (User currentAuthor : currentAuthors) {
+							currentAuthorsUsernames.put(currentAuthor.getUserDetails().getUsername());
+						}
+
+						messageJSON.put("currentAuthorsUsernames", currentAuthorsUsernames);
+
+						//get the message as a string
+						String message = messageJSON.toString();
+
+						//send the message to all the currently connected authors
+						sendMessageToConnections(message, authorConnections);
+					}
 				}
 			}
 		} catch (JSONException e) {
@@ -1694,5 +1745,4 @@ public class WISETextWebSocketHandler extends TextWebSocketHandler implements WI
             }
     	}
     }
-
 }
