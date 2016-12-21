@@ -154,7 +154,13 @@ public class ShareProjectController {
 			if (message != null) {
 				modelMap.put("message", message);
 			}
-			
+
+			//get all the teacher user names in WISE in alphabetical order
+			List<String> allTeacherUsernames = userDetailsService.retrieveAllUsernames("TeacherUserDetails");
+
+			//remove the owner from the user names
+			allTeacherUsernames.remove(user.getUserDetails().getUsername());
+
 			//get the shared owners of the project
 			Set<User> sharedowners = project.getSharedowners();
 			
@@ -165,7 +171,10 @@ public class ShareProjectController {
 				
 				//get the user name of the shared owner
 				String userName = sharedowner.getUserDetails().getUsername();
-				
+
+				//remove the shared owner from the user names
+				allTeacherUsernames.remove(userName);
+
 				//create the object that will contain the information for the shared owner
 				AddSharedTeacherParameters addSharedTeacherParameters = new AddSharedTeacherParameters();
 				addSharedTeacherParameters.setPermission(sharedTeacherRole);
@@ -179,8 +188,6 @@ public class ShareProjectController {
 			//add the project to the model
 			modelMap.put(PROJECT_PARAM_NAME, project);
 			
-			//get all the teacher user names in WISE in alphabetical order
-			List<String> allTeacherUsernames = userDetailsService.retrieveAllUsernames("TeacherUserDetails");
 			AlphabeticalStringComparator alphabeticalStringComparator = new AlphabeticalStringComparator();
 			Collections.sort(allTeacherUsernames, alphabeticalStringComparator);
 			String allTeacherUsernameString = StringUtils.join(allTeacherUsernames.iterator(), ":");
