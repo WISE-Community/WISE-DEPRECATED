@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 'use strict';
 
 // -----------------------------------------------------------------------------
@@ -49,7 +51,7 @@ gulp.task('compile-sass', function() {
 // merge i18n json files
 // -----------------------------------------------------------------------------
 gulp.task('update-i18n', function() {
-    var supportedLocales = ['es','iw','ja','ko','nl','tr','zh_CN','zh_TW'];
+    var supportedLocales = ['ar','es','iw','ja','ko','nl','tr','zh_CN','zh_TW'];
     // update WISE5 i18n files
     var wise5_i18n_folders = [
         './src/main/webapp/wise5/authoringTool/i18n/',
@@ -91,7 +93,7 @@ gulp.task('watch-sass', ['set-watch'], function() {
         // and run `compile-sass` task on change
         .watch(paths, ['compile-sass'])
         .on('change', function(event) {
-            console.log('File ' + event.path + ' was ' + event.type);
+		console.log('File ' + event.path + ' was ' + event.type);
         });
 });
 
