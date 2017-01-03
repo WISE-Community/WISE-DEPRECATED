@@ -1,5 +1,5 @@
 {
-	"addFile": "ファイルを追加",
+	"addFile": "Add File",
 	"addMultipleAttemptScoringRule": "Add Multiple Attempt Scoring Rule",
 	"addNewNotification": "Add New Notification",
 	"addScoringRule": "Add Scoring Rule",
@@ -49,7 +49,7 @@
 	"showPreviousWorkComponent": "Show Previous Work Component",
 	"showPreviousWorkPrompt": "Show Previous Work Prompt",
 	"showPreviousWorkStep": "Show Previous Work Step",
-	"showSaveButton": "セーブボタンを表示する",
+	"showSaveButton": "Show Save Button",
 	"showScore": "Show Score",
 	"showSubmitButton": "Show Submit Button",
 	"starterSentence": "Starter Sentence",
