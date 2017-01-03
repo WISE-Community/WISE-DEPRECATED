@@ -47,59 +47,23 @@ this.mode=this.$scope.mode;this.workgroupId=this.$scope.workgroupId;this.teacher
 this.shouldOptions=[{value:false,label:'should'},{value:true,label:'should not'}];// the auto feedback string
 this.autoFeedbackString='';// counter to keep track of the number of submits
 this.submitCounter=0;if(this.componentContent!=null){// get the component id
-this.componentId=this.componentContent.id;if(this.componentContent.width!=null){this.width=this.componentContent.width;}if(this.componentContent.height!=null){this.height=this.componentContent.height;}// setup the svg
-this.setupSVG();if(this.mode==='student'){this.isPromptVisible=true;this.isSaveButtonVisible=this.componentContent.showSaveButton;this.isSubmitButtonVisible=this.componentContent.showSubmitButton;this.availableNodes=this.componentContent.nodes;this.availableLinks=this.componentContent.links;// get the latest annotations
+this.componentId=this.componentContent.id;// set the id of the svg element
+this.svgId='svg_'+this.nodeId+'_'+this.componentId;if(this.componentContent.width!=null){this.width=this.componentContent.width;}if(this.componentContent.height!=null){this.height=this.componentContent.height;}if(this.mode==='student'){this.isPromptVisible=true;this.isSaveButtonVisible=this.componentContent.showSaveButton;this.isSubmitButtonVisible=this.componentContent.showSubmitButton;this.availableNodes=this.componentContent.nodes;this.availableLinks=this.componentContent.links;// get the latest annotations
 this.latestAnnotations=this.AnnotationService.getLatestComponentAnnotations(this.nodeId,this.componentId,this.workgroupId);}else if(this.mode==='grading'){this.isPromptVisible=true;this.isSaveButtonVisible=false;this.isSubmitButtonVisible=false;this.isDisabled=true;// get the latest annotations
-this.latestAnnotations=this.AnnotationService.getLatestComponentAnnotations(this.nodeId,this.componentId,this.workgroupId);}else if(this.mode==='onlyShowWork'){this.isPromptVisible=false;this.isSaveButtonVisible=false;this.isSubmitButtonVisible=false;this.isDisabled=true;}else if(this.mode==='showPreviousWork'){this.isPromptVisible=true;this.isSaveButtonVisible=false;this.isSubmitButtonVisible=false;this.isDisabled=true;}else if(this.mode==='authoring'){this.isPromptVisible=true;this.isSaveButtonVisible=this.componentContent.showSaveButton;this.isSubmitButtonVisible=this.componentContent.showSubmitButton;this.availableNodes=this.componentContent.nodes;this.availableLinks=this.componentContent.links;this.updateAdvancedAuthoringView();$scope.$watch(function(){return this.authoringComponentContent;}.bind(this),function(newValue,oldValue){this.componentContent=this.ProjectService.injectAssetPaths(newValue);this.isSaveButtonVisible=this.componentContent.showSaveButton;this.isSubmitButtonVisible=this.componentContent.showSubmitButton;this.availableNodes=this.componentContent.nodes;this.availableLinks=this.componentContent.links;this.setupSVG();}.bind(this),true);}var componentState=null;// set whether rich text is enabled
-this.isRichTextEnabled=this.componentContent.isRichTextEnabled;// set whether studentAttachment is enabled
-this.isStudentAttachmentEnabled=this.componentContent.isStudentAttachmentEnabled;// get the component state from the scope
-componentState=this.$scope.componentState;if(componentState==null){/*
-                 * only import work if the student does not already have
-                 * work for this component
-                 */// check if we need to import work
-var importPreviousWorkNodeId=this.componentContent.importPreviousWorkNodeId;var importPreviousWorkComponentId=this.componentContent.importPreviousWorkComponentId;if(importPreviousWorkNodeId==null||importPreviousWorkNodeId==''){/*
-                     * check if the node id is in the field that we used to store
-                     * the import previous work node id in
-                     */importPreviousWorkNodeId=this.componentContent.importWorkNodeId;}if(importPreviousWorkComponentId==null||importPreviousWorkComponentId==''){/*
-                     * check if the component id is in the field that we used to store
-                     * the import previous work component id in
-                     */importPreviousWorkComponentId=this.componentContent.importWorkComponentId;}if(importPreviousWorkNodeId!=null&&importPreviousWorkComponentId!=null){// import the work from the other component
-this.importWork();}else if(this.componentContent.starterConceptMap!=null){/*
-                     * the student has not done any work and there is a starter
-                     * concept map so we will populate the concept map with
-                     * the starter
-                     */// get the starter concept map
-var conceptMapData=this.componentContent.starterConceptMap;// populate the concept map data into the component
-this.populateConceptMapData(conceptMapData);}}else{// the student has work for this component
-/*
-                 * inject the asset path so that the file name is changed to
-                 * a relative path
-                 * e.g.
-                 * "Sun.png"
-                 * will be changed to
-                 * "/wise/curriculum/108/assets/Sun.png"
-                 */componentState=this.ProjectService.injectAssetPaths(componentState);// populate the student work into this component
-this.setStudentWork(componentState);}// check if the student has used up all of their submits
-if(this.componentContent.maxSubmitCount!=null&&this.submitCounter>=this.componentContent.maxSubmitCount){/*
-                 * the student has used up all of their chances to submit so we
-                 * will disable the submit button
-                 */this.isSubmitButtonDisabled=true;}// populate the previous feedback
-if(this.latestAnnotations!=null){var autoFeedbackString="";// obtain the previous score annotation if any
-if(this.latestAnnotations.score!=null){// get the annotation data
-var data=this.latestAnnotations.score.data;if(data!=null){// get the score and max auto score
-var score=data.value;var maxAutoScore=data.maxAutoScore;autoFeedbackString+="Score: "+score;if(maxAutoScore!=null&&maxAutoScore!=''){// show the max score as the denominator
-autoFeedbackString+="/"+maxAutoScore;}}}// obtain the previous comment annotation if any
-if(this.latestAnnotations.comment!=null){// get the annotation data
-var data=this.latestAnnotations.comment.data;if(data!=null){if(autoFeedbackString!=""){// add a new line if the result string is not empty
-autoFeedbackString+="<br/>";}// get the comment
-var comment=data.value;autoFeedbackString+="Feedback: "+comment;}}/*
-                 * set the previous auto feedback into the field that is used
-                 * to display the auto feedback to the student when they click
-                 * on the show feedback button
-                 */this.autoFeedbackString=autoFeedbackString;}// make the nodes draggable
-this.enableNodeDragging();// check if we need to lock this component
-this.calculateDisabled();if(this.$scope.$parent.nodeController!=null){// register this component with the parent node
-this.$scope.$parent.nodeController.registerComponentController(this.$scope,this.componentContent);}}/**
+this.latestAnnotations=this.AnnotationService.getLatestComponentAnnotations(this.nodeId,this.componentId,this.workgroupId);var componentState=this.$scope.componentState;if(componentState==null){/*
+                     * the student does not have any work for this component so 
+                     * we will use the node id, component id, and workgroup id
+                     * for the svg id
+                     */this.svgId='svg_'+this.nodeId+'_'+this.componentId+'_'+this.workgroupId;}else{/*
+                     * the student has work for this component so we will use 
+                     * the node id, component id, and component state id
+                     * for the svg id
+                     */this.svgId='svg_'+this.nodeId+'_'+this.componentId+'_'+componentState.id;}}else if(this.mode==='onlyShowWork'){this.isPromptVisible=false;this.isSaveButtonVisible=false;this.isSubmitButtonVisible=false;this.isDisabled=true;}else if(this.mode==='showPreviousWork'){this.isPromptVisible=true;this.isSaveButtonVisible=false;this.isSubmitButtonVisible=false;this.isDisabled=true;}else if(this.mode==='authoring'){this.isPromptVisible=true;this.isSaveButtonVisible=this.componentContent.showSaveButton;this.isSubmitButtonVisible=this.componentContent.showSubmitButton;this.availableNodes=this.componentContent.nodes;this.availableLinks=this.componentContent.links;this.updateAdvancedAuthoringView();$scope.$watch(function(){return this.authoringComponentContent;}.bind(this),function(newValue,oldValue){this.componentContent=this.ProjectService.injectAssetPaths(newValue);this.isSaveButtonVisible=this.componentContent.showSaveButton;this.isSubmitButtonVisible=this.componentContent.showSubmitButton;this.availableNodes=this.componentContent.nodes;this.availableLinks=this.componentContent.links;this.setupSVG();}.bind(this),true);}/*
+             * Call the initializeSVG() after a timeout so that angular has a 
+             * chance to set the svg element id before we start using it. If we
+             * don't wait for the timeout, the svg id won't be set when we try
+             * to start referencing the svg element.
+             */this.$timeout(angular.bind(this,this.initializeSVG));}/**
          * Returns true iff there is student work that hasn't been saved yet
          */this.$scope.isDirty=function(){return this.$scope.conceptMapController.isDirty;}.bind(this);/**
          * Get the component state from this component. The parent node will
@@ -136,9 +100,61 @@ _this.latestAnnotations=_this.AnnotationService.getLatestComponentAnnotations(_t
          * exits the parent node. This will perform any necessary cleanup
          * when the student exits the parent node.
          */this.$scope.$on('exitNode',function(event,args){}.bind(this));}/**
+     * Initialize the SVG
+     */_createClass(ConceptMapController,[{key:'initializeSVG',value:function initializeSVG(){// setup the svg
+this.setupSVG();var componentState=null;// set whether rich text is enabled
+this.isRichTextEnabled=this.componentContent.isRichTextEnabled;// set whether studentAttachment is enabled
+this.isStudentAttachmentEnabled=this.componentContent.isStudentAttachmentEnabled;// get the component state from the scope
+componentState=this.$scope.componentState;if(componentState==null){/*
+             * only import work if the student does not already have
+             * work for this component
+             */// check if we need to import work
+var importPreviousWorkNodeId=this.componentContent.importPreviousWorkNodeId;var importPreviousWorkComponentId=this.componentContent.importPreviousWorkComponentId;if(importPreviousWorkNodeId==null||importPreviousWorkNodeId==''){/*
+                 * check if the node id is in the field that we used to store
+                 * the import previous work node id in
+                 */importPreviousWorkNodeId=this.componentContent.importWorkNodeId;}if(importPreviousWorkComponentId==null||importPreviousWorkComponentId==''){/*
+                 * check if the component id is in the field that we used to store
+                 * the import previous work component id in
+                 */importPreviousWorkComponentId=this.componentContent.importWorkComponentId;}if(importPreviousWorkNodeId!=null&&importPreviousWorkComponentId!=null){// import the work from the other component
+this.importWork();}else if(this.componentContent.starterConceptMap!=null){/*
+                 * the student has not done any work and there is a starter
+                 * concept map so we will populate the concept map with
+                 * the starter
+                 */// get the starter concept map
+var conceptMapData=this.componentContent.starterConceptMap;// populate the concept map data into the component
+this.populateConceptMapData(conceptMapData);}}else{// the student has work for this component
+/*
+             * inject the asset path so that the file name is changed to
+             * a relative path
+             * e.g.
+             * "Sun.png"
+             * will be changed to
+             * "/wise/curriculum/108/assets/Sun.png"
+             */componentState=this.ProjectService.injectAssetPaths(componentState);// populate the student work into this component
+this.setStudentWork(componentState);}// check if the student has used up all of their submits
+if(this.componentContent.maxSubmitCount!=null&&this.submitCounter>=this.componentContent.maxSubmitCount){/*
+             * the student has used up all of their chances to submit so we
+             * will disable the submit button
+             */this.isSubmitButtonDisabled=true;}// populate the previous feedback
+if(this.latestAnnotations!=null){var autoFeedbackString="";// obtain the previous score annotation if any
+if(this.latestAnnotations.score!=null){// get the annotation data
+var data=this.latestAnnotations.score.data;if(data!=null){// get the score and max auto score
+var score=data.value;var maxAutoScore=data.maxAutoScore;autoFeedbackString+="Score: "+score;if(maxAutoScore!=null&&maxAutoScore!=''){// show the max score as the denominator
+autoFeedbackString+="/"+maxAutoScore;}}}// obtain the previous comment annotation if any
+if(this.latestAnnotations.comment!=null){// get the annotation data
+var data=this.latestAnnotations.comment.data;if(data!=null){if(autoFeedbackString!=""){// add a new line if the result string is not empty
+autoFeedbackString+="<br/>";}// get the comment
+var comment=data.value;autoFeedbackString+="Feedback: "+comment;}}/*
+             * set the previous auto feedback into the field that is used
+             * to display the auto feedback to the student when they click
+             * on the show feedback button
+             */this.autoFeedbackString=autoFeedbackString;}// make the nodes draggable
+this.enableNodeDragging();// check if we need to lock this component
+this.calculateDisabled();if(this.$scope.$parent.nodeController!=null){// register this component with the parent node
+this.$scope.$parent.nodeController.registerComponentController(this.$scope,this.componentContent);}}/**
      * Populate the student work into the component
      * @param componentState the component state to populate into the component
-     */_createClass(ConceptMapController,[{key:'setStudentWork',value:function setStudentWork(componentState){if(componentState!=null){var studentData=componentState.studentData;if(studentData!=null){var conceptMapData=studentData.conceptMapData;var submitCounter=studentData.submitCounter;if(submitCounter!=null){// populate the submit counter
+     */},{key:'setStudentWork',value:function setStudentWork(componentState){if(componentState!=null){var studentData=componentState.studentData;if(studentData!=null){var conceptMapData=studentData.conceptMapData;var submitCounter=studentData.submitCounter;if(submitCounter!=null){// populate the submit counter
 this.submitCounter=submitCounter;}if(conceptMapData!=null){// populate the concept map data into the component
 this.populateConceptMapData(conceptMapData);}var attachments=studentData.attachments;if(attachments!=null){this.attachments=attachments;}this.processLatestSubmit();}}}},{key:'populateConceptMapData',/**
      * Populate the concept map data into the component
@@ -711,19 +727,19 @@ this.displayLinkTypeChooser=false;this.displayLinkTypeChooserModalOverlay=false;
 //this.$scope.$apply();
 }}/**
      * Setup the svg
-     */},{key:'setupSVG',value:function setupSVG(){var _this6=this;// get the svg1 element in the svg.js world
-this.draw=SVG('svg1');this.draw.width(this.width);this.draw.height(this.height);this.highlightedElement=null;this.activeNode=null;this.activeLink=null;this.drawingLink=false;this.newlyCreatedLink=null;// set the mouse down listener
+     */},{key:'setupSVG',value:function setupSVG(){var _this6=this;// get the svg element in the svg.js world
+this.draw=SVG(this.svgId);this.draw.width(this.width);this.draw.height(this.height);this.highlightedElement=null;this.activeNode=null;this.activeLink=null;this.drawingLink=false;this.newlyCreatedLink=null;// set the mouse down listener
 this.draw.mousedown(function(event){_this6.svgMouseDown(event);});// set the mouse up listener
 this.draw.mouseup(function(event){_this6.svgMouseUp(event);});// set the mouse move listener
-this.draw.mousemove(function(event){_this6.svgMouseMove(event);});// get the svg1 element in the angular world
-var svg1=angular.element('#svg1');/*
+this.draw.mousemove(function(event){_this6.svgMouseMove(event);});// get the svg element in the angular world
+var svg=angular.element('#'+this.svgId);/*
          * check if we have already added the dragover listener so we don't
          * add multiple listeners for the same event. adding multiple listeners
          * to the same event may occur in the authoring tool.
          */if(!this.addedDragOverListener){/*
              * listen for the dragover event which occurs when the user is
              * dragging a node onto the svg
-             */svg1[0].addEventListener('dragover',function(event){/*
+             */svg[0].addEventListener('dragover',function(event){/*
                  * prevent the default because if we don't, the user won't
                  * be able to drop a new node instance onto the svg in the
                  * authoring mode
@@ -734,7 +750,7 @@ var svg1=angular.element('#svg1');/*
          */if(!this.addedDropListener){/*
              * listen for the drop event which occurs when the student drops
              * a new node onto the svg
-             */svg1[0].addEventListener('drop',function(event){/*
+             */svg[0].addEventListener('drop',function(event){/*
                  * the user has dropped a new node onto the svg to create a
                  * new instance of a node
                  */_this6.newNodeDropped(event);});this.addedDropListener=true;}// set the link type chooser style
@@ -747,7 +763,7 @@ this.backgroundSize='';}}}/**
          * set the link type chooser popup to show up in the upper right of
          * the svg element
          */var leftNumber=600;var topNumber=20;// get the bounding rectangle of the svg element
-var boundingClientRect=angular.element('#svg1')[0].getBoundingClientRect();var offsetLeft=boundingClientRect.left;var offsetTop=boundingClientRect.top;// add the values together to obtain the absolute left and top positions
+var boundingClientRect=angular.element('#'+this.svgId)[0].getBoundingClientRect();var offsetLeft=boundingClientRect.left;var offsetTop=boundingClientRect.top;// add the values together to obtain the absolute left and top positions
 var left=leftNumber+offsetLeft+'px';var top=topNumber+offsetTop+'px';this.linkTypeChooserStyle={'width':'300px','position':'absolute','top':top,'left':left,'border':'1px solid black','backgroundColor':'white','cursor':'pointer','z-index':10000,'padding':'16px'};}/**
      * Set the link type chooser popup overlay style
      */},{key:'setLinkTypeChooserOverlayStyle',value:function setLinkTypeChooserOverlayStyle(){// calculate the modal overlay width and height
@@ -755,18 +771,18 @@ this.modalWidth=this.getModalWidth();this.modalHeight=this.getModalHeight();//va
 var overlayWidth=this.modalWidth;var conceptMapContainer=angular.element('#conceptMapContainer');var width=conceptMapContainer.width();var height=conceptMapContainer.height();var offset=conceptMapContainer.offset();var offsetLeft=offset.left;var offsetTop=offset.top;offsetLeft=0;offsetTop=0;this.linkTypeChooserModalOverlayStyle={'position':'absolute','z-index':9999,'width':overlayWidth,'height':height,'background-color':'#000000','opacity':0.4};}/**
      * Get the width that the modal overlay should be
      * @returns the width that the modal overlay should be
-     */},{key:'getModalWidth',value:function getModalWidth(){var selectNodeBarWidth=null;var svg1Width=null;// get the width of the left select node bar
+     */},{key:'getModalWidth',value:function getModalWidth(){var selectNodeBarWidth=null;var svgWidth=null;// get the width of the left select node bar
 var selectNodeBarWidthString=angular.element(document.getElementById('selectNodeBar')).css('width');// get the width of the svg element
-var svg1WidthString=angular.element(document.getElementById('svg1')).css('width');if(selectNodeBarWidthString!=null&&svg1WidthString!=null){// get the integer values
-selectNodeBarWidth=parseInt(selectNodeBarWidthString.replace('px',''));svg1Width=parseInt(svg1WidthString.replace('px',''));}var overlayWidth=null;if(selectNodeBarWidth!=null&&svg1Width!=null){// calculate the sum of the widths
-overlayWidth=selectNodeBarWidth+svg1Width;}return overlayWidth;}/**
+var svgWidthString=angular.element(document.getElementById(this.svgId)).css('width');if(selectNodeBarWidthString!=null&&svgWidthString!=null){// get the integer values
+selectNodeBarWidth=parseInt(selectNodeBarWidthString.replace('px',''));svgWidth=parseInt(svgWidthString.replace('px',''));}var overlayWidth=null;if(selectNodeBarWidth!=null&&svgWidth!=null){// calculate the sum of the widths
+overlayWidth=selectNodeBarWidth+svgWidth;}return overlayWidth;}/**
      * Get the height that the modal overlay should be
      * @returns the height that the modal overlay should be
-     */},{key:'getModalHeight',value:function getModalHeight(){var selectNodeBarHeight=null;var svg1Height=null;// get the height of the left select node bar
+     */},{key:'getModalHeight',value:function getModalHeight(){var selectNodeBarHeight=null;var svgHeight=null;// get the height of the left select node bar
 var selectNodeBarHeightString=angular.element(document.getElementById('selectNodeBar')).css('height');// get the height of the svg element
-var svg1HeightString=angular.element(document.getElementById('svg1')).css('height');if(selectNodeBarHeightString!=null&&svg1HeightString!=null){// get the integer values
-selectNodeBarHeight=parseInt(selectNodeBarHeightString.replace('px',''));svg1Height=parseInt(svg1HeightString.replace('px',''));}var overlayHeight=null;if(selectNodeBarHeight!=null&&svg1Height!=null){// get the larger of the two heights
-overlayHeight=Math.max(selectNodeBarHeight,svg1Height);}return overlayHeight;}/**
+var svgHeightString=angular.element(document.getElementById(this.svgId)).css('height');if(selectNodeBarHeightString!=null&&svgHeightString!=null){// get the integer values
+selectNodeBarHeight=parseInt(selectNodeBarHeightString.replace('px',''));svgHeight=parseInt(svgHeightString.replace('px',''));}var overlayHeight=null;if(selectNodeBarHeight!=null&&svgHeight!=null){// get the larger of the two heights
+overlayHeight=Math.max(selectNodeBarHeight,svgHeight);}return overlayHeight;}/**
      * The cancel button on the link type chooser was clicked
      */},{key:'cancelLinkTypeChooser',value:function cancelLinkTypeChooser(){if(this.newlyCreatedLink!=null){/*
              * the student has just created this link and has not yet chosen

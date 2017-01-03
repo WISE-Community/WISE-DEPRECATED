@@ -194,6 +194,9 @@ class ConceptMapController {
 
             // get the component id
             this.componentId = this.componentContent.id;
+            
+            // set the id of the svg element
+            this.svgId = 'svg_' + this.nodeId + '_' + this.componentId;
 
             if (this.componentContent.width != null) {
                 this.width = this.componentContent.width;
@@ -202,9 +205,6 @@ class ConceptMapController {
             if (this.componentContent.height != null) {
                 this.height = this.componentContent.height;
             }
-
-            // setup the svg
-            this.setupSVG();
 
             if (this.mode === 'student') {
                 this.isPromptVisible = true;
@@ -223,6 +223,24 @@ class ConceptMapController {
 
                 // get the latest annotations
                 this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
+                
+                var componentState = this.$scope.componentState;
+                
+                if (componentState == null) {
+                    /*
+                     * the student does not have any work for this component so 
+                     * we will use the node id, component id, and workgroup id
+                     * for the svg id
+                     */
+                    this.svgId = 'svg_' + this.nodeId + '_' + this.componentId + '_' + this.workgroupId;
+                } else {
+                    /*
+                     * the student has work for this component so we will use 
+                     * the node id, component id, and component state id
+                     * for the svg id
+                     */
+                    this.svgId = 'svg_' + this.nodeId + '_' + this.componentId + '_' + componentState.id;
+                }
             } else if (this.mode === 'onlyShowWork') {
                 this.isPromptVisible = false;
                 this.isSaveButtonVisible = false;
@@ -253,149 +271,14 @@ class ConceptMapController {
                     this.setupSVG();
                 }.bind(this), true);
             }
-
-            var componentState = null;
-
-            // set whether rich text is enabled
-            this.isRichTextEnabled = this.componentContent.isRichTextEnabled;
-
-            // set whether studentAttachment is enabled
-            this.isStudentAttachmentEnabled = this.componentContent.isStudentAttachmentEnabled;
-
-            // get the component state from the scope
-            componentState = this.$scope.componentState;
-
-            if (componentState == null) {
-                /*
-                 * only import work if the student does not already have
-                 * work for this component
-                 */
-
-                // check if we need to import work
-                var importPreviousWorkNodeId = this.componentContent.importPreviousWorkNodeId;
-                var importPreviousWorkComponentId = this.componentContent.importPreviousWorkComponentId;
-
-                if (importPreviousWorkNodeId == null || importPreviousWorkNodeId == '') {
-                    /*
-                     * check if the node id is in the field that we used to store
-                     * the import previous work node id in
-                     */
-                    importPreviousWorkNodeId = this.componentContent.importWorkNodeId;
-                }
-
-                if (importPreviousWorkComponentId == null || importPreviousWorkComponentId == '') {
-                    /*
-                     * check if the component id is in the field that we used to store
-                     * the import previous work component id in
-                     */
-                    importPreviousWorkComponentId = this.componentContent.importWorkComponentId;
-                }
-
-                if (importPreviousWorkNodeId != null && importPreviousWorkComponentId != null) {
-                    // import the work from the other component
-                    this.importWork();
-                } else if (this.componentContent.starterConceptMap != null) {
-                    /*
-                     * the student has not done any work and there is a starter
-                     * concept map so we will populate the concept map with
-                     * the starter
-                     */
-
-                    // get the starter concept map
-                    var conceptMapData = this.componentContent.starterConceptMap;
-
-                    // populate the concept map data into the component
-                    this.populateConceptMapData(conceptMapData);
-                }
-            } else {
-                // the student has work for this component
-
-                /*
-                 * inject the asset path so that the file name is changed to
-                 * a relative path
-                 * e.g.
-                 * "Sun.png"
-                 * will be changed to
-                 * "/wise/curriculum/108/assets/Sun.png"
-                 */
-                componentState = this.ProjectService.injectAssetPaths(componentState);
-
-                // populate the student work into this component
-                this.setStudentWork(componentState);
-            }
-
-            // check if the student has used up all of their submits
-            if (this.componentContent.maxSubmitCount != null && this.submitCounter >= this.componentContent.maxSubmitCount) {
-                /*
-                 * the student has used up all of their chances to submit so we
-                 * will disable the submit button
-                 */
-                this.isSubmitButtonDisabled = true;
-            }
-
-            // populate the previous feedback
-            if (this.latestAnnotations != null) {
-
-                var autoFeedbackString = "";
-
-                // obtain the previous score annotation if any
-                if (this.latestAnnotations.score != null) {
-
-                    // get the annotation data
-                    var data = this.latestAnnotations.score.data;
-
-                    if (data != null) {
-
-                        // get the score and max auto score
-                        var score = data.value;
-                        var maxAutoScore = data.maxAutoScore;
-
-                        autoFeedbackString += "Score: " + score;
-
-                        if (maxAutoScore != null && maxAutoScore != '') {
-                            // show the max score as the denominator
-                            autoFeedbackString += "/" + maxAutoScore;
-                        }
-                    }
-                }
-
-                // obtain the previous comment annotation if any
-                if (this.latestAnnotations.comment != null) {
-
-                    // get the annotation data
-                    var data = this.latestAnnotations.comment.data;
-
-                    if (data != null) {
-                        if (autoFeedbackString != "") {
-                            // add a new line if the result string is not empty
-                            autoFeedbackString += "<br/>";
-                        }
-
-                        // get the comment
-                        var comment = data.value;
-                        autoFeedbackString += "Feedback: " + comment;
-                    }
-                }
-
-                /*
-                 * set the previous auto feedback into the field that is used
-                 * to display the auto feedback to the student when they click
-                 * on the show feedback button
-                 */
-                this.autoFeedbackString = autoFeedbackString;
-            }
-
-            // make the nodes draggable
-            this.enableNodeDragging();
-
-            // check if we need to lock this component
-            this.calculateDisabled();
-
-
-            if (this.$scope.$parent.nodeController != null) {
-                // register this component with the parent node
-                this.$scope.$parent.nodeController.registerComponentController(this.$scope, this.componentContent);
-            }
+            
+            /*
+             * Call the initializeSVG() after a timeout so that angular has a 
+             * chance to set the svg element id before we start using it. If we
+             * don't wait for the timeout, the svg id won't be set when we try
+             * to start referencing the svg element.
+             */
+            this.$timeout(angular.bind(this, this.initializeSVG));
         }
 
         /**
@@ -534,6 +417,158 @@ class ConceptMapController {
         this.$scope.$on('exitNode', function(event, args) {
 
         }.bind(this));
+    }
+    
+    /**
+     * Initialize the SVG
+     */
+    initializeSVG() {
+        
+        // setup the svg
+        this.setupSVG();
+        
+        var componentState = null;
+
+        // set whether rich text is enabled
+        this.isRichTextEnabled = this.componentContent.isRichTextEnabled;
+
+        // set whether studentAttachment is enabled
+        this.isStudentAttachmentEnabled = this.componentContent.isStudentAttachmentEnabled;
+
+        // get the component state from the scope
+        componentState = this.$scope.componentState;
+
+        if (componentState == null) {
+            /*
+             * only import work if the student does not already have
+             * work for this component
+             */
+
+            // check if we need to import work
+            var importPreviousWorkNodeId = this.componentContent.importPreviousWorkNodeId;
+            var importPreviousWorkComponentId = this.componentContent.importPreviousWorkComponentId;
+
+            if (importPreviousWorkNodeId == null || importPreviousWorkNodeId == '') {
+                /*
+                 * check if the node id is in the field that we used to store
+                 * the import previous work node id in
+                 */
+                importPreviousWorkNodeId = this.componentContent.importWorkNodeId;
+            }
+
+            if (importPreviousWorkComponentId == null || importPreviousWorkComponentId == '') {
+                /*
+                 * check if the component id is in the field that we used to store
+                 * the import previous work component id in
+                 */
+                importPreviousWorkComponentId = this.componentContent.importWorkComponentId;
+            }
+
+            if (importPreviousWorkNodeId != null && importPreviousWorkComponentId != null) {
+                // import the work from the other component
+                this.importWork();
+            } else if (this.componentContent.starterConceptMap != null) {
+                /*
+                 * the student has not done any work and there is a starter
+                 * concept map so we will populate the concept map with
+                 * the starter
+                 */
+
+                // get the starter concept map
+                var conceptMapData = this.componentContent.starterConceptMap;
+
+                // populate the concept map data into the component
+                this.populateConceptMapData(conceptMapData);
+            }
+        } else {
+            // the student has work for this component
+
+            /*
+             * inject the asset path so that the file name is changed to
+             * a relative path
+             * e.g.
+             * "Sun.png"
+             * will be changed to
+             * "/wise/curriculum/108/assets/Sun.png"
+             */
+            componentState = this.ProjectService.injectAssetPaths(componentState);
+
+            // populate the student work into this component
+            this.setStudentWork(componentState);
+        }
+
+        // check if the student has used up all of their submits
+        if (this.componentContent.maxSubmitCount != null && this.submitCounter >= this.componentContent.maxSubmitCount) {
+            /*
+             * the student has used up all of their chances to submit so we
+             * will disable the submit button
+             */
+            this.isSubmitButtonDisabled = true;
+        }
+
+        // populate the previous feedback
+        if (this.latestAnnotations != null) {
+
+            var autoFeedbackString = "";
+
+            // obtain the previous score annotation if any
+            if (this.latestAnnotations.score != null) {
+
+                // get the annotation data
+                var data = this.latestAnnotations.score.data;
+
+                if (data != null) {
+
+                    // get the score and max auto score
+                    var score = data.value;
+                    var maxAutoScore = data.maxAutoScore;
+
+                    autoFeedbackString += "Score: " + score;
+
+                    if (maxAutoScore != null && maxAutoScore != '') {
+                        // show the max score as the denominator
+                        autoFeedbackString += "/" + maxAutoScore;
+                    }
+                }
+            }
+
+            // obtain the previous comment annotation if any
+            if (this.latestAnnotations.comment != null) {
+
+                // get the annotation data
+                var data = this.latestAnnotations.comment.data;
+
+                if (data != null) {
+                    if (autoFeedbackString != "") {
+                        // add a new line if the result string is not empty
+                        autoFeedbackString += "<br/>";
+                    }
+
+                    // get the comment
+                    var comment = data.value;
+                    autoFeedbackString += "Feedback: " + comment;
+                }
+            }
+
+            /*
+             * set the previous auto feedback into the field that is used
+             * to display the auto feedback to the student when they click
+             * on the show feedback button
+             */
+            this.autoFeedbackString = autoFeedbackString;
+        }
+
+        // make the nodes draggable
+        this.enableNodeDragging();
+
+        // check if we need to lock this component
+        this.calculateDisabled();
+
+
+        if (this.$scope.$parent.nodeController != null) {
+            // register this component with the parent node
+            this.$scope.$parent.nodeController.registerComponentController(this.$scope, this.componentContent);
+        }
     }
 
     /**
@@ -2465,8 +2500,8 @@ class ConceptMapController {
      * Setup the svg
      */
     setupSVG() {
-        // get the svg1 element in the svg.js world
-        this.draw = SVG('svg1');
+        // get the svg element in the svg.js world
+        this.draw = SVG(this.svgId);
         this.draw.width(this.width);
         this.draw.height(this.height);
 
@@ -2491,8 +2526,8 @@ class ConceptMapController {
             this.svgMouseMove(event);
         });
 
-        // get the svg1 element in the angular world
-        var svg1 = angular.element('#svg1');
+        // get the svg element in the angular world
+        var svg = angular.element('#' + this.svgId);
 
         /*
          * check if we have already added the dragover listener so we don't
@@ -2504,7 +2539,7 @@ class ConceptMapController {
              * listen for the dragover event which occurs when the user is
              * dragging a node onto the svg
              */
-            svg1[0].addEventListener('dragover', (event) => {
+            svg[0].addEventListener('dragover', (event) => {
                 /*
                  * prevent the default because if we don't, the user won't
                  * be able to drop a new node instance onto the svg in the
@@ -2526,7 +2561,7 @@ class ConceptMapController {
              * listen for the drop event which occurs when the student drops
              * a new node onto the svg
              */
-            svg1[0].addEventListener('drop', (event) => {
+            svg[0].addEventListener('drop', (event) => {
 
                 /*
                  * the user has dropped a new node onto the svg to create a
@@ -2567,7 +2602,7 @@ class ConceptMapController {
         var topNumber = 20;
 
         // get the bounding rectangle of the svg element
-        var boundingClientRect = angular.element('#svg1')[0].getBoundingClientRect();
+        var boundingClientRect = angular.element('#' + this.svgId)[0].getBoundingClientRect();
         var offsetLeft = boundingClientRect.left;
         var offsetTop = boundingClientRect.top;
 
@@ -2627,25 +2662,25 @@ class ConceptMapController {
     getModalWidth() {
 
         var selectNodeBarWidth = null;
-        var svg1Width = null;
+        var svgWidth = null;
 
         // get the width of the left select node bar
         var selectNodeBarWidthString = angular.element(document.getElementById('selectNodeBar')).css('width');
 
         // get the width of the svg element
-        var svg1WidthString = angular.element(document.getElementById('svg1')).css('width');
+        var svgWidthString = angular.element(document.getElementById(this.svgId)).css('width');
 
-        if (selectNodeBarWidthString != null && svg1WidthString != null) {
+        if (selectNodeBarWidthString != null && svgWidthString != null) {
             // get the integer values
             selectNodeBarWidth = parseInt(selectNodeBarWidthString.replace('px', ''));
-            svg1Width = parseInt(svg1WidthString.replace('px', ''));
+            svgWidth = parseInt(svgWidthString.replace('px', ''));
         }
 
         var overlayWidth = null;
 
-        if (selectNodeBarWidth != null && svg1Width != null) {
+        if (selectNodeBarWidth != null && svgWidth != null) {
             // calculate the sum of the widths
-            overlayWidth = selectNodeBarWidth + svg1Width;
+            overlayWidth = selectNodeBarWidth + svgWidth;
         }
 
         return overlayWidth;
@@ -2658,25 +2693,25 @@ class ConceptMapController {
     getModalHeight() {
 
         var selectNodeBarHeight = null;
-        var svg1Height = null;
+        var svgHeight = null;
 
         // get the height of the left select node bar
         var selectNodeBarHeightString = angular.element(document.getElementById('selectNodeBar')).css('height');
 
         // get the height of the svg element
-        var svg1HeightString = angular.element(document.getElementById('svg1')).css('height');
+        var svgHeightString = angular.element(document.getElementById(this.svgId)).css('height');
 
-        if (selectNodeBarHeightString != null && svg1HeightString != null) {
+        if (selectNodeBarHeightString != null && svgHeightString != null) {
             // get the integer values
             selectNodeBarHeight = parseInt(selectNodeBarHeightString.replace('px', ''));
-            svg1Height = parseInt(svg1HeightString.replace('px', ''));
+            svgHeight = parseInt(svgHeightString.replace('px', ''));
         }
 
         var overlayHeight = null;
 
-        if (selectNodeBarHeight != null && svg1Height != null) {
+        if (selectNodeBarHeight != null && svgHeight != null) {
             // get the larger of the two heights
-            overlayHeight = Math.max(selectNodeBarHeight, svg1Height);
+            overlayHeight = Math.max(selectNodeBarHeight, svgHeight);
         }
 
         return overlayHeight;
