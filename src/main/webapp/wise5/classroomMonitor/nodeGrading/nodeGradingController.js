@@ -86,7 +86,7 @@ var NodeGradingController = function () {
             componentId = null,
             componentType = null,
             category = "Navigation",
-            event = "studentProgressViewDisplayed",
+            event = "nodeGradingViewDisplayed",
             data = { nodeId: this.nodeId };
         this.TeacherDataService.saveEvent(context, nodeId, componentId, componentType, category, event, data);
     }
