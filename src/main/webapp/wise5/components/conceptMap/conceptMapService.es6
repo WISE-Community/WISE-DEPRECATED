@@ -797,6 +797,9 @@ class ConceptMapNode {
      */
     constructor(ConceptMapService, draw, id, originalId, filePath, label, x, y, width, height) {
 
+        // remember the ConceptMapService
+        this.ConceptMapService = ConceptMapService;
+        
         // remember the svg.js draw object so we can draw onto it
         this.draw = draw;
         
@@ -1079,7 +1082,12 @@ class ConceptMapNode {
         try {
             // get the width of the bounding box of the text node
             var textBBox = this.text.node.getBBox();
-            width = textBBox.width + 10;
+            
+            if (textBBox.width == 0) {
+                width = this.calculateTextRectWidth(this.label);
+            } else {
+                width = textBBox.width + 10;
+            }
         } catch(e) {
             /*
              * we were unable to get the bounding box (likely because
@@ -1156,7 +1164,12 @@ class ConceptMapNode {
         try {
             // get the width of the bounding box of the text node
             var textBBox = this.text.node.getBBox();
-            width = textBBox.width + 10;
+            
+            if (textBBox.width == 0) {
+                width = this.calculateTextRectWidth(this.label);
+            } else {
+                width = textBBox.width + 10;
+            }
         } catch(e) {
             /*
              * we were unable to get the bounding box (likely because
@@ -2603,7 +2616,12 @@ class ConceptMapLink {
             try {
                 // get the width of the bounding box of the text node
                 var textBBox = this.text.node.getBBox();
-                width = textBBox.width + 10;
+                
+                if (textBBox.width == 0) {
+                    width = this.calculateTextRectWidth(this.label);
+                } else {
+                    width = textBBox.width + 10;
+                }
             } catch(e) {
                 /*
                  * we were unable to get the bounding box (likely because
@@ -2940,7 +2958,12 @@ class ConceptMapLink {
         try {
             // get the width of the bounding box of the text node
             var textBBox = this.text.node.getBBox();
-            width = textBBox.width + 10;
+            
+            if (textBBox.width == 0) {
+                width = this.calculateTextRectWidth(this.label);
+            } else {
+                width = textBBox.width + 10;
+            }
         } catch(e) {
             /*
              * we were unable to get the bounding box (likely because
