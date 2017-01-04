@@ -331,10 +331,10 @@ var ProjectController = function () {
                 // We are in copy mode
 
                 // get the nodes that were selected
-                var selectedNodeIds = this.getSelectedItems();
+                var _selectedNodeIds = this.getSelectedItems();
 
                 // copy the nodes into the group
-                this.ProjectService.copyNodesInside(selectedNodeIds, nodeId);
+                this.ProjectService.copyNodesInside(_selectedNodeIds, nodeId);
 
                 // turn off copy mode
                 this.copyMode = false;
@@ -413,10 +413,10 @@ var ProjectController = function () {
                 // We are in copy mode
 
                 // get the selected nodes
-                var selectedNodeIds = this.getSelectedItems();
+                var _selectedNodeIds2 = this.getSelectedItems();
 
                 // copy the nodes and put them after the node id
-                this.ProjectService.copyNodesAfter(selectedNodeIds, nodeId);
+                this.ProjectService.copyNodesAfter(_selectedNodeIds2, nodeId);
 
                 // turn off copy mode
                 this.copyMode = false;
@@ -541,9 +541,6 @@ var ProjectController = function () {
 
                     if (answer) {
                         // the user confirmed yes
-
-                        // get the selected node ids
-                        var selectedNodeIds = this.getSelectedItems();
 
                         // flag that will be set if we have deleted the start node id
                         var deletedStartNodeId = false;
@@ -824,17 +821,17 @@ var ProjectController = function () {
                             var firstChildTitle = firstLeafNode.title;
 
                             // ask the user if they would like to change the start step to the step that is now the first child in the group
-                            _this3.$translate('confirmUpdateStartStep', { startStepTitle: firstChildTitle }).then(function (confirmUpdateStartStep) {
-                                var answer = confirm(confirmUpdateStartStep);
+                            var confirmUpdateStartStep = _this3.$translate('confirmUpdateStartStep', { startStepTitle: firstChildTitle });
 
-                                if (answer) {
-                                    // change the project start node id
-                                    _this3.ProjectService.setStartNodeId(firstLeafNodeId);
-                                    resolve();
-                                } else {
-                                    resolve();
-                                }
-                            });
+                            var answer = confirm(confirmUpdateStartStep);
+
+                            if (answer) {
+                                // change the project start node id
+                                _this3.ProjectService.setStartNodeId(firstLeafNodeId);
+                                resolve();
+                            } else {
+                                resolve();
+                            }
                         } else {
                             resolve();
                         }

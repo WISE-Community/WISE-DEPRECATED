@@ -256,7 +256,7 @@ class ProjectController {
             // we are in move mode
 
             // get the nodes that were selected
-            var selectedNodeIds = this.getSelectedItems();
+            let selectedNodeIds = this.getSelectedItems();
 
             if (selectedNodeIds != null && selectedNodeIds.indexOf(nodeId) != -1) {
                 /*
@@ -283,7 +283,7 @@ class ProjectController {
             // We are in copy mode
 
             // get the nodes that were selected
-            var selectedNodeIds = this.getSelectedItems();
+            let selectedNodeIds = this.getSelectedItems();
 
             // copy the nodes into the group
             this.ProjectService.copyNodesInside(selectedNodeIds, nodeId);
@@ -332,7 +332,7 @@ class ProjectController {
             // we are in move mode
 
             // get the selected nodes
-            var selectedNodeIds = this.getSelectedItems();
+            let selectedNodeIds = this.getSelectedItems();
 
             if (selectedNodeIds != null && selectedNodeIds.indexOf(nodeId) != -1) {
                 /*
@@ -362,7 +362,7 @@ class ProjectController {
             // We are in copy mode
 
             // get the selected nodes
-            var selectedNodeIds = this.getSelectedItems();
+            let selectedNodeIds = this.getSelectedItems();
 
             // copy the nodes and put them after the node id
             this.ProjectService.copyNodesAfter(selectedNodeIds, nodeId);
@@ -461,7 +461,7 @@ class ProjectController {
     delete() {
     
         // get the selected items
-        var selectedNodeIds = this.getSelectedItems();
+        let selectedNodeIds = this.getSelectedItems();
 
         if (selectedNodeIds != null) {
         
@@ -481,9 +481,6 @@ class ProjectController {
         
                 if (answer) {
                     // the user confirmed yes
-        
-                    // get the selected node ids
-                    var selectedNodeIds = this.getSelectedItems();
         
                     // flag that will be set if we have deleted the start node id
                     var deletedStartNodeId = false;
@@ -730,19 +727,19 @@ class ProjectController {
 
                     if (firstLeafNode != null) {
                         var firstChildTitle = firstLeafNode.title;
-
+                        
                         // ask the user if they would like to change the start step to the step that is now the first child in the group
-                        this.$translate('confirmUpdateStartStep', { startStepTitle: firstChildTitle }).then((confirmUpdateStartStep) => {
-                            var answer = confirm(confirmUpdateStartStep);
+                        var confirmUpdateStartStep = this.$translate('confirmUpdateStartStep', { startStepTitle: firstChildTitle });
+                        
+                        var answer = confirm(confirmUpdateStartStep);
 
-                            if (answer) {
-                                // change the project start node id
-                                this.ProjectService.setStartNodeId(firstLeafNodeId);
-                                resolve();
-                            } else {
-                                resolve();
-                            }
-                        });
+                        if (answer) {
+                            // change the project start node id
+                            this.ProjectService.setStartNodeId(firstLeafNodeId);
+                            resolve();
+                        } else {
+                            resolve();
+                        }
                     } else {
                         resolve();
                     }
