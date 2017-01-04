@@ -270,7 +270,7 @@ const WorkgroupItem = {
         <workgroup-node-grading workgroup-id="$ctrl.workgroupId"
                                 node-id="{{$ctrl.nodeId}}"
                                 latest-work-time="$ctrl.latestWorkTime"
-                                ng-show="$ctrl.showWork"
+                                ng-if="$ctrl.showWork"
                                 hidden-components="$ctrl.hiddenComponents"
                                 on-update="$ctrl.updateHiddenCompnents(value)"></workgroup-node-grading>`
 };

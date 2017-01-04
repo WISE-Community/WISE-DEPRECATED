@@ -80,7 +80,7 @@ class NodeGradingController {
 
         // save event when node grading view is displayed and save the nodeId that is displayed
         let context = "ClassroomMonitor", nodeId = this.nodeId, componentId = null, componentType = null,
-            category = "Navigation", event = "studentProgressViewDisplayed", data = { nodeId: this.nodeId };
+            category = "Navigation", event = "nodeGradingViewDisplayed", data = { nodeId: this.nodeId };
         this.TeacherDataService.saveEvent(context, nodeId, componentId, componentType, category, event, data);
     }
 
