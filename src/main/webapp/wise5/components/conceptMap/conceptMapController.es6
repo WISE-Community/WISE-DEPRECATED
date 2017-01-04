@@ -268,6 +268,9 @@ class ConceptMapController {
                     this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
                     this.availableNodes = this.componentContent.nodes;
                     this.availableLinks = this.componentContent.links;
+                    this.width = this.componentContent.width;
+                    this.height = this.componentContent.height;
+                    
                     this.setupSVG();
                 }.bind(this), true);
             }

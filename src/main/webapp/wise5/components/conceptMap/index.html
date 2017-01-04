@@ -47,6 +47,14 @@
                                            ng-model='conceptMapController.authoringComponentContent.stretchBackground'
                                            ng-change='conceptMapController.authoringViewComponentChanged()' />
                 <br/>
+                Canvas Width: <input type='number'
+                              ng-model='conceptMapController.authoringComponentContent.width'
+                              ng-change='conceptMapController.authoringViewComponentChanged()' />
+                <br/>
+                Canvas Height: <input type='number'
+                              ng-model='conceptMapController.authoringComponentContent.height'
+                              ng-change='conceptMapController.authoringViewComponentChanged()' />
+                <br/>
                 <br/>
                 Node <button ng-click='conceptMapController.authoringViewAddNode()'>Add Node</button>
                 <br/>
