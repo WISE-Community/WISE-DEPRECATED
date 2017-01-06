@@ -16,6 +16,7 @@ var newer = require('gulp-newer');
 var gulpif = require('gulp-if');
 var print = require('gulp-print');
 var merge = require('gulp-merge-json');
+var fs = require('fs');
 //var rtlscss = require('rtlcss');
 
 // -----------------------------------------------------------------------------
@@ -48,10 +49,12 @@ gulp.task('compile-sass', function() {
 });
 
 // -----------------------------------------------------------------------------
-// merge i18n json files
+// merge i18n json files.
+// If key doesn't exist in foreignLocale, sets it value to "".
+// Removes extra keys from foreignLocale
 // -----------------------------------------------------------------------------
 gulp.task('update-i18n', function() {
-    var supportedLocales = ['ar','es','iw','ja','ko','nl','tr','zh_CN','zh_TW'];
+    var supportedLocales = ['ar','es','iw','ja','ko','nl','pt','tr','zh_CN','zh_TW'];
     // update WISE5 i18n files
     var wise5_i18n_folders = [
         './src/main/webapp/wise5/authoringTool/i18n/',
@@ -63,19 +66,39 @@ gulp.task('update-i18n', function() {
         './src/main/webapp/wise5/components/draw/i18n/',
         './src/main/webapp/wise5/components/embedded/i18n/',
         './src/main/webapp/wise5/components/graph/i18n/',
-        './src/main/webapp/wise5/components/html/i18n/',
         './src/main/webapp/wise5/components/label/i18n/',
         './src/main/webapp/wise5/components/match/i18n/',
         './src/main/webapp/wise5/components/multipleChoice/i18n/',
         './src/main/webapp/wise5/components/openResponse/i18n/',
-        './src/main/webapp/wise5/components/outsideURL/i18n/',
         './src/main/webapp/wise5/components/table/i18n/'
     ];
     wise5_i18n_folders.map(function(i18n_folder) {
+      var english = JSON.parse(fs.readFileSync(i18n_folder + "i18n_en.json"));
         supportedLocales.map(function(supportedLocale) {
-            gulp.src([i18n_folder + "i18n_en.json", i18n_folder + "i18n_" + supportedLocale + ".json"])
-                .pipe(merge("i18n_" + supportedLocale + ".json"))
-                .pipe(gulp.dest(i18n_folder));
+            var result = JSON.parse(fs.readFileSync(i18n_folder + "i18n_en.json"));
+            var foreignLocale = {};
+            try {
+              // if the file doesn't exist, it will throw an exception
+              foreignLocale = JSON.parse(fs.readFileSync(i18n_folder + "i18n_" + supportedLocale + ".json"));
+            } catch (ex) {
+              // do nothing. we'll use the default {} object
+            }
+            for (var key in foreignLocale) {
+              if (result[key]) {
+                result[key] = foreignLocale[key];
+              }
+            }
+            // now look for keys that don't exist in the foreignLocale and set value to ""
+            for (var key in english) {
+              if (foreignLocale[key] == null) {
+                result[key] = "";
+              }
+            }
+
+            var jsonReplacer = null;
+            var jsonSpace = '\t';
+            var result = JSON.stringify(result, jsonReplacer, jsonSpace);
+            fs.writeFileSync(i18n_folder + "i18n_" + supportedLocale + ".json", result);
         });
     });
 });
