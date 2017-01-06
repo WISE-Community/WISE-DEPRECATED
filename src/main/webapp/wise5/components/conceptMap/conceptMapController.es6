@@ -194,7 +194,7 @@ class ConceptMapController {
 
             // get the component id
             this.componentId = this.componentContent.id;
-            
+
             // set the id of the svg element
             this.svgId = 'svg_' + this.nodeId + '_' + this.componentId;
 
@@ -223,19 +223,19 @@ class ConceptMapController {
 
                 // get the latest annotations
                 this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
-                
+
                 var componentState = this.$scope.componentState;
-                
+
                 if (componentState == null) {
                     /*
-                     * the student does not have any work for this component so 
+                     * the student does not have any work for this component so
                      * we will use the node id, component id, and workgroup id
                      * for the svg id
                      */
                     this.svgId = 'svg_' + this.nodeId + '_' + this.componentId + '_' + this.workgroupId;
                 } else {
                     /*
-                     * the student has work for this component so we will use 
+                     * the student has work for this component so we will use
                      * the node id, component id, and component state id
                      * for the svg id
                      */
@@ -270,13 +270,13 @@ class ConceptMapController {
                     this.availableLinks = this.componentContent.links;
                     this.width = this.componentContent.width;
                     this.height = this.componentContent.height;
-                    
+
                     this.setupSVG();
                 }.bind(this), true);
             }
-            
+
             /*
-             * Call the initializeSVG() after a timeout so that angular has a 
+             * Call the initializeSVG() after a timeout so that angular has a
              * chance to set the svg element id before we start using it. If we
              * don't wait for the timeout, the svg id won't be set when we try
              * to start referencing the svg element.
@@ -421,15 +421,15 @@ class ConceptMapController {
 
         }.bind(this));
     }
-    
+
     /**
      * Initialize the SVG
      */
     initializeSVG() {
-        
+
         // setup the svg
         this.setupSVG();
-        
+
         var componentState = null;
 
         // set whether rich text is enabled
@@ -2446,37 +2446,8 @@ class ConceptMapController {
          * initialize the top left of the link chooser popup to show up on
          * the top right of the svg element
          */
-        var leftNumber = 600;
-        var topNumber = 20;
-
-        var left = leftNumber + 'px';
-        var top = topNumber + 'px';
-
-        if (this.mode === 'authoring') {
-            /*
-             * if we are in authoring mode we need to include the offset of
-             * the container for some reason.
-             * TODO: figure out why the offset is required in authoring mode
-             * but not in student mode.
-             */
-
-            // get the concept map container
-            var conceptMapContainer = angular.element('#conceptMapContainer');
-
-            // get the offset of the container relative to the whole page
-            var offset = conceptMapContainer.offset();
-
-            // get the left and top of the offset
-            var offsetLeft = offset.left;
-            var offsetTop = offset.top;
-
-            // add the offset to the left and top values
-            left = leftNumber + offsetLeft + 'px';
-            top = topNumber + offsetTop + 'px';
-        }
-
-        this.linkTypeChooserStyle['top'] = top;
-        this.linkTypeChooserStyle['left'] = left;
+        this.linkTypeChooserStyle['left'] = '600px';
+        this.linkTypeChooserStyle['top'] = '20px';
 
         this.displayLinkTypeChooser = true;
     }
@@ -2601,23 +2572,11 @@ class ConceptMapController {
          * set the link type chooser popup to show up in the upper right of
          * the svg element
          */
-        var leftNumber = 600;
-        var topNumber = 20;
-
-        // get the bounding rectangle of the svg element
-        var boundingClientRect = angular.element('#' + this.svgId)[0].getBoundingClientRect();
-        var offsetLeft = boundingClientRect.left;
-        var offsetTop = boundingClientRect.top;
-
-        // add the values together to obtain the absolute left and top positions
-        var left = leftNumber + offsetLeft + 'px';
-        var top = topNumber + offsetTop + 'px';
-
         this.linkTypeChooserStyle = {
             'width': '300px',
             'position': 'absolute',
-            'top': top,
-            'left': left,
+            'left': '600px',
+            'top': '20px',
             'border': '1px solid black',
             'backgroundColor': 'white',
             'cursor': 'pointer',

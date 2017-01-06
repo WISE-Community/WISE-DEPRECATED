@@ -103,27 +103,6 @@ class DraggableController {
 
         var top = 0;
 
-        if (this.$element.scope().conceptMapController.mode == 'authoring') {
-            /*
-             * if we are in authoring mode we need to include the offset of
-             * the container for some reason.
-             * TODO: figure out why the offset is required in authoring mode
-             * but not in student mode.
-             */
-
-            // get the concept map container
-            var conceptMapContainer = angular.element('#conceptMapContainer');
-
-            // get the offset of the container relative to the whole page
-            var offset = conceptMapContainer.offset();
-
-            // get the top offset
-            var offsetTop = offset.top;
-
-            // set the top to the offset
-            top = offsetTop;
-        }
-
         if (x < 0) {
             /*
              * the x position that we have calculated for the left
