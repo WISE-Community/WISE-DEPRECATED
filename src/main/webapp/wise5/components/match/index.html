@@ -16,6 +16,13 @@
                ng-model='matchController.authoringComponentContent.showSubmitButton'
                ng-change='matchController.authoringViewComponentChanged()'/>
         <br/>
+        {{ 'maxScore' | translate }}:
+        <input type='number'
+               ng-model='matchController.authoringComponentContent.maxScore'
+               ng-change='matchController.authoringViewComponentChanged()'
+               ng-model-options='{ debounce: 1000 }'
+               style='width: 3em'/>
+        <br/>
         {{ 'labelForChoicesBucket' | translate }}: <input ng-model='matchController.authoringComponentContent.choicesLabel'
                ng-change='matchController.authoringViewComponentChanged()'
                ng-model-options='{ debounce: 1000 }'
@@ -74,13 +81,6 @@
             </div>
             <br/>
         </div>
-        <br/>
-        {{ 'maxScore' | translate }}:
-        <input type='number'
-               ng-model='matchController.authoringComponentContent.maxScore'
-               ng-change='matchController.authoringViewComponentChanged()'
-               ng-model-options='{ debounce: 1000 }'
-               style='width: 3em'/>
     </div>
     <div ng-if='matchController.mode === "authoring"'>
         {{ 'importPreviousWork' | translate }}:

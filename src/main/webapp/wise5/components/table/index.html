@@ -17,6 +17,13 @@
                            ng-model='tableController.authoringComponentContent.showSubmitButton'
                            ng-change='tableController.authoringViewComponentChanged()'/>
                     <br/>
+                    Max Score:
+                    <input type='number'
+                           ng-model='tableController.authoringComponentContent.maxScore'
+                           ng-change='tableController.authoringViewComponentChanged()'
+                           ng-model-options='{ debounce: 1000 }'
+                           style='width: 3em'/>
+                    <br/>
                     {{ 'columns' | translate }}: <input type='number'
                                     ng-model='tableController.authoringComponentContent.numColumns'
                                     ng-change='tableController.authoringViewTableSizeConfirmChange("columns", {{tableController.authoringComponentContent.numColumns}})'
@@ -60,13 +67,6 @@
                             </td>
                         </tr>
                     </table>
-                    <br/>
-                    Max Score:
-                    <input type='number'
-                           ng-model='tableController.authoringComponentContent.maxScore'
-                           ng-change='tableController.authoringViewComponentChanged()'
-                           ng-model-options='{ debounce: 1000 }'
-                           style='width: 3em'/>
         </div>
         <div ng-if='tableController.mode === "authoring"'>
             {{ 'importPreviousWork' | translate }}:

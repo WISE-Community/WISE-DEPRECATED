@@ -17,6 +17,14 @@
                 <input type='checkbox'
                        ng-model='graphController.authoringComponentContent.showSubmitButton'
                        ng-change='graphController.authoringViewComponentChanged()'/>
+
+                <br/>
+                {{ 'maxScore' | translate }}:
+                <input type='number'
+                       ng-model='graphController.authoringComponentContent.maxScore'
+                       ng-change='graphController.authoringViewComponentChanged()'
+                       ng-model-options='{ debounce: 1000 }'
+                       style='width: 3em'/>
                 <br/>
                 {{ 'graphTitle' | translate }}: <input ng-model='graphController.authoringComponentContent.title'
                                     ng-change='graphController.authoringViewComponentChanged()'
@@ -117,13 +125,6 @@
                     <br/>
                     <button ng-click='graphController.authoringDeleteSeriesClicked($index)'>{{ 'deleteSeries' | translate }}</button>
                 </div>
-                <br/>
-                {{ 'maxScore' | translate }}:
-                <input type='number'
-                       ng-model='graphController.authoringComponentContent.maxScore'
-                       ng-change='graphController.authoringViewComponentChanged()'
-                       ng-model-options='{ debounce: 1000 }'
-                       style='width: 3em'/>
             </div>
             <div ng-if='graphController.mode === "authoring"'>
                 {{ 'importPreviousWork' | translate }}:

@@ -1,4 +1,4 @@
-<div ng-controller='AudioOscillatorController as audioOscillatorController' style='display: flex'>
+<div ng-controller='AudioOscillatorController as audioOscillatorController'>
     <div ng-if='audioOscillatorController.mode === "authoring" && !audioOscillatorController.authoringComponentContent.showPreviousWork'>
         <textarea ng-model='audioOscillatorController.authoringComponentContent.prompt'
                   ng-change='audioOscillatorController.authoringViewComponentChanged()'
@@ -15,6 +15,13 @@
         <input type='checkbox'
                ng-model='audioOscillatorController.authoringComponentContent.showSubmitButton'
                ng-change='audioOscillatorController.authoringViewComponentChanged()'/>
+        <br/>
+        Max Score:
+        <input type='number'
+               ng-model='audioOscillatorController.authoringComponentContent.maxScore'
+               ng-change='audioOscillatorController.authoringViewComponentChanged()'
+               ng-model-options='{ debounce: 1000 }'
+               style='width: 3em'/>
         <br/>
         Oscillator Types <button ng-click='audioOscillatorController.authoringOpenAddOscillatorType()'>Add Oscillator Type</button>
         <span ng-show='audioOscillatorController.showOscillatorTypeChooser'>
@@ -56,13 +63,6 @@
                                     ng-change='audioOscillatorController.authoringViewComponentChanged()'
                                     ng-model-options='{ debounce: 1000 }'
                                     style='width: 5em'/>
-        <br/>
-        Max Score:
-        <input type='number'
-               ng-model='audioOscillatorController.authoringComponentContent.maxScore'
-               ng-change='audioOscillatorController.authoringViewComponentChanged()'
-               ng-model-options='{ debounce: 1000 }'
-               style='width: 3em'/>
     </div>
     <div ng-if='audioOscillatorController.mode === "authoring"'>
         Import Previous Work:

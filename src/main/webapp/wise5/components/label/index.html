@@ -20,6 +20,13 @@
                ng-model='labelController.authoringComponentContent.showSubmitButton'
                ng-change='labelController.authoringViewComponentChanged()'/>
         <br/>
+        Max Score:
+        <input type='number'
+               ng-model='labelController.authoringComponentContent.maxScore'
+               ng-change='labelController.authoringViewComponentChanged()'
+               ng-model-options='{ debounce: 1000 }'
+               style='width: 3em'/>
+        <br/>
         Background Image: <input ng-model='labelController.authoringComponentContent.backgroundImage'
                                  ng-change='labelController.authoringViewComponentChanged()'
                                  ng-model-options='{ debounce: 1000 }'
@@ -80,13 +87,6 @@
             <br/>
             <button ng-click='labelController.authoringDeleteLabelClicked($index)'>Delete Label</button>
         </div>
-        <br/>
-        Max Score:
-        <input type='number'
-               ng-model='labelController.authoringComponentContent.maxScore'
-               ng-change='labelController.authoringViewComponentChanged()'
-               ng-model-options='{ debounce: 1000 }'
-               style='width: 3em'/>
     </div>
     <div ng-if='labelController.mode === "authoring"'>
         Import Previous Work:

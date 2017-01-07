@@ -21,13 +21,15 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var MultipleChoiceService = function (_NodeService) {
     _inherits(MultipleChoiceService, _NodeService);
 
-    function MultipleChoiceService(StudentDataService, UtilService) {
+    function MultipleChoiceService($filter, StudentDataService, UtilService) {
         _classCallCheck(this, MultipleChoiceService);
 
         var _this = _possibleConstructorReturn(this, (MultipleChoiceService.__proto__ || Object.getPrototypeOf(MultipleChoiceService)).call(this));
 
+        _this.$filter = $filter;
         _this.StudentDataService = StudentDataService;
         _this.UtilService = UtilService;
+        _this.$translate = _this.$filter('translate');
         return _this;
     }
 
@@ -315,7 +317,7 @@ var MultipleChoiceService = function (_NodeService) {
         /**
          * Whether this component generates student work
          * @param component (optional) the component object. if the component object
-         * is not provided, we will use the default value of whether the 
+         * is not provided, we will use the default value of whether the
          * component type usually has work.
          * @return whether this component generates student work
          */
@@ -327,7 +329,7 @@ var MultipleChoiceService = function (_NodeService) {
     return MultipleChoiceService;
 }(_nodeService2.default);
 
-MultipleChoiceService.$inject = ['StudentDataService', 'UtilService'];
+MultipleChoiceService.$inject = ['$filter', 'StudentDataService', 'UtilService'];
 
 exports.default = MultipleChoiceService;
 //# sourceMappingURL=multipleChoiceService.js.map

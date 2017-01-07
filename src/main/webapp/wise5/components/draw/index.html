@@ -17,6 +17,14 @@
                 <input type='checkbox'
                        ng-model='drawController.authoringComponentContent.showSubmitButton'
                        ng-change='drawController.authoringViewComponentChanged()'/>
+
+                <br/>
+                {{ 'maxScore' | translate }}:
+                <input type='number'
+                       ng-model='drawController.authoringComponentContent.maxScore'
+                       ng-change='drawController.authoringViewComponentChanged()'
+                       ng-model-options='{ debounce: 1000 }'
+                       style='width: 3em'/>
                 <br/>
                 {{ 'background' | translate }}:
                 <input type='text'
@@ -152,13 +160,6 @@
                 </label>
                 <button ng-click='drawController.authoringSaveStarterDrawData()'>{{ 'saveStarterDrawing' | translate }}</button>
                 <button ng-click='drawController.authoringDeleteStarterDrawData()'>{{ 'deleteStarterDrawing' | translate }}</button>
-                <br/>
-                {{ 'maxScore' | translate }}:
-                <input type='number'
-                       ng-model='drawController.authoringComponentContent.maxScore'
-                       ng-change='drawController.authoringViewComponentChanged()'
-                       ng-model-options='{ debounce: 1000 }'
-                       style='width: 3em'/>
     </div>
     <div ng-if='drawController.mode === "authoring"'>
         {{ 'importPreviousWork' | translate }}:
