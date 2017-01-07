@@ -9,14 +9,27 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var AuthoringToolNewProjectController = function () {
-    function AuthoringToolNewProjectController($state, ConfigService, ProjectService) {
+    function AuthoringToolNewProjectController($state, $timeout, ConfigService, ProjectService) {
         _classCallCheck(this, AuthoringToolNewProjectController);
 
         this.$state = $state;
+        this.$timeout = $timeout;
         this.ConfigService = ConfigService;
         this.ProjectService = ProjectService;
 
         this.project = this.ProjectService.getNewProjectTemplate();
+
+        /*
+         * we are showing the create new project view so we will give focus to
+         * the newProjectTitle input element
+         */
+        this.$timeout(function () {
+            var newProjectTitleInput = document.getElementById('newProjectTitle');
+
+            if (newProjectTitleInput != null) {
+                newProjectTitleInput.focus();
+            }
+        });
     }
 
     _createClass(AuthoringToolNewProjectController, [{
@@ -40,7 +53,7 @@ var AuthoringToolNewProjectController = function () {
     return AuthoringToolNewProjectController;
 }();
 
-AuthoringToolNewProjectController.$inject = ['$state', 'ConfigService', 'ProjectService'];
+AuthoringToolNewProjectController.$inject = ['$state', '$timeout', 'ConfigService', 'ProjectService'];
 
 exports.default = AuthoringToolNewProjectController;
 //# sourceMappingURL=authoringToolNewProjectController.js.map

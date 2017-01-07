@@ -8,6 +8,7 @@ class ProjectController {
                 $scope,
                 $state,
                 $stateParams,
+                $timeout,
                 AuthorWebSocketService,
                 ConfigService,
                 ProjectService,
@@ -18,6 +19,7 @@ class ProjectController {
         this.$scope = $scope;
         this.$state = $state;
         this.$stateParams = $stateParams;
+        this.$timeout = $timeout;
         this.$translate = this.$filter('translate');
         this.AuthorWebSocketService = AuthorWebSocketService;
         this.ConfigService = ConfigService;
@@ -69,7 +71,7 @@ class ProjectController {
         let previewProjectURL = this.ConfigService.getConfigParam("previewProjectURL");
         window.open(previewProjectURL);
     };
-    
+
     /**
      * Launch the project in preview mode without constraints
      */
@@ -274,7 +276,7 @@ class ProjectController {
 
                 // turn off move mode
                 this.moveMode = false;
-    
+
                 // turn off insert mode
                 this.insertGroupMode = false;
                 this.insertNodeMode = false;
@@ -295,7 +297,7 @@ class ProjectController {
             this.insertGroupMode = false;
             this.insertNodeMode = false;
         }
-        
+
         // save and refresh the project
         this.checkPotentialStartNodeIdChangeThenSaveProject();
     }
@@ -325,7 +327,7 @@ class ProjectController {
             // turn off insert mode
             this.insertGroupMode = false;
             this.insertNodeMode = false;
-            
+
             // save and referesh the project
             this.checkPotentialStartNodeIdChangeThenSaveProject();
         } else if (this.moveMode) {
@@ -350,7 +352,7 @@ class ProjectController {
 
                 // turn off move mode
                 this.moveMode = false;
-    
+
                 // turn off insert mode
                 this.insertGroupMode = false;
                 this.insertNodeMode = false;
@@ -413,32 +415,32 @@ class ProjectController {
      * Turn on move mode
      */
     move() {
-    
+
         // make sure there is at least one item selected
         var selectedNodeIds = this.getSelectedItems();
-        
+
         if (selectedNodeIds != null && selectedNodeIds.length > 0) {
             // get the nodes that were selected
             var selectedItemTypes = this.getSelectedItemTypes();
-            
+
             if (selectedItemTypes != null && selectedItemTypes.length > 0) {
-            
+
                 if (selectedItemTypes.length == 0) {
                     // there are no selected items
                     alert('Please select an item to move.');
                 } else if (selectedItemTypes.length == 1) {
                     // all the items the user selected are the same type
-                    
+
                     if (selectedItemTypes[0] === 'group') {
                         // turn on insert mode
                         this.insertGroupMode = true;
-            
+
                         // turn on move mode
                         this.moveMode = true;
                     } else if (selectedItemTypes[0] === 'node') {
                         // turn on insert mode
                         this.insertNodeMode = true;
-            
+
                         // turn on move mode
                         this.moveMode = true;
                     }
@@ -448,7 +450,7 @@ class ProjectController {
                      * we do not allow moving different types of items at
                      * the same time
                      */
-                    
+
                     alert('If you want to move multiple items at once, they must be of the same type. Please select only activities or only steps.');
                 }
             }
@@ -459,14 +461,14 @@ class ProjectController {
      * Delete the selected nodes
      */
     delete() {
-    
+
         // get the selected items
         let selectedNodeIds = this.getSelectedItems();
 
         if (selectedNodeIds != null) {
-        
+
             var confirmMessage = null;
-        
+
             if (selectedNodeIds.length == 1) {
                 // the user selected one item
                 confirmMessage = 'Are you sure you want to delete the selected item?';
@@ -474,38 +476,38 @@ class ProjectController {
                 // the user selected multiple items
                 confirmMessage = 'Are you sure you want to delete the ' + selectedNodeIds.length + ' selected items?';
             }
-            
+
             if (confirmMessage != null) {
                 // ask the user to confirm the delete
                 var answer = confirm(confirmMessage);
-        
+
                 if (answer) {
                     // the user confirmed yes
-        
+
                     // flag that will be set if we have deleted the start node id
                     var deletedStartNodeId = false;
-        
+
                     // loop through each node id
                     for (var n = 0; n < selectedNodeIds.length; n++) {
                         var nodeId = selectedNodeIds[n];
-        
+
                         if (this.ProjectService.isStartNodeId(nodeId)) {
                             // we have deleted the start node id
                             deletedStartNodeId = true;
                         }
-        
+
                         // delete the node
                         this.ProjectService.deleteNode(nodeId);
                     }
-                    
+
                     // update start node id if necesary
                     if (deletedStartNodeId) {
                         this.updateStartNodeId();
                     }
-        
+
                     // save the project
                     this.ProjectService.saveProject();
-        
+
                     // refresh the project
                     this.ProjectService.parseProject();
                     this.items = this.ProjectService.idToOrder;
@@ -530,13 +532,13 @@ class ProjectController {
                 selectedNodeIds.push(key);
             }
         }, selectedNodeIds);
-        
+
         if (this.inactiveNodes != null) {
-            
+
             // loop through all the inactive nodes
             for (var i = 0; i < this.inactiveNodes.length; i++) {
                 var inactiveNode = this.inactiveNodes[i];
-                
+
                 if (inactiveNode != null) {
                     if (inactiveNode.checked) {
                         // the inactive node was checked so we will add it
@@ -548,7 +550,7 @@ class ProjectController {
 
         return selectedNodeIds;
     }
-    
+
     /**
      * Get the types of the selected items
      * @returns an array of item types. possible items are group or node.
@@ -560,15 +562,15 @@ class ProjectController {
         // loop through all the node checkboxes
         angular.forEach(this.items, function(value, key) {
             if (value.checked) {
-                
+
                 // this node is checked
                 var node = this.ProjectService.getNodeById(key);
-                
+
                 if (node != null) {
-                
+
                     // get the node type
                     var nodeType = node.type;
-                    
+
                     if (selectedItemTypes.indexOf(nodeType) == -1) {
                         // we have not seen this node type yet so we will add it
                         selectedItemTypes.push(nodeType);
@@ -576,22 +578,22 @@ class ProjectController {
                 }
             }
         }, this);
-        
+
         var inactiveNodes = this.inactiveNodes;
-        
+
         if (inactiveNodes != null) {
-            
+
             // loop through all the inactive nodes
             for (var i = 0; i < inactiveNodes.length; i++) {
                 var inactiveNode = inactiveNodes[i];
-                
+
                 if (inactiveNode != null) {
                     if (inactiveNode.checked) {
                         // the node was checked
-                        
+
                         // get the node type
                         var nodeType = inactiveNode.type;
-                        
+
                         if (selectedItemTypes.indexOf(nodeType) == -1) {
                             // we have not seen this node type yet so we will add it
                             selectedItemTypes.push(nodeType);
@@ -612,7 +614,7 @@ class ProjectController {
             value.checked = false;
         });
     }
-    
+
     /**
      * Toggle the create group input
      */
@@ -620,8 +622,22 @@ class ProjectController {
         this.hideCreateNode();
         this.showCreateGroup = !this.showCreateGroup;
         this.createGroupTitle = '';
+
+        if (this.showCreateGroup) {
+            /*
+             * we are showing the create node view so we will give focus to the
+             * createGroupTitle input element
+             */
+            this.$timeout(() => {
+                var createGroupTitleInput = document.getElementById('createGroupTitle');
+
+                if (createGroupTitleInput != null) {
+                    createGroupTitleInput.focus();
+                }
+            });
+        }
     }
-    
+
     /**
      * Hide the create group input
      */
@@ -629,7 +645,7 @@ class ProjectController {
         this.showCreateGroup = false;
         this.createGroupTitle = '';
     }
-    
+
     /**
      * Toggle the create node input
      */
@@ -637,8 +653,22 @@ class ProjectController {
         this.hideCreateGroup();
         this.showCreateNode = !this.showCreateNode;
         this.createNodeTitle = '';
+
+        if (this.showCreateNode) {
+            /*
+             * we are showing the create node view so we will give focus to the
+             * createNodeTitle input element
+             */
+            this.$timeout(() => {
+                var createNodeTitleInput = document.getElementById('createNodeTitle');
+
+                if (createNodeTitleInput != null) {
+                    createNodeTitleInput.focus();
+                }
+            });
+        }
     }
-    
+
     /**
      * Hide the create group input
      */
@@ -646,7 +676,7 @@ class ProjectController {
         this.showCreateNode = false;
         this.createNodeTitle = '';
     }
-    
+
     /**
      * Cancel the move mode
      */
@@ -654,24 +684,24 @@ class ProjectController {
         this.insertGroupMode = false;
         this.insertNodeMode = false;
     }
-    
+
     /**
      * Update the start node id by traversing start ids until a
      * node id is found.
      */
     updateStartNodeId() {
-        
+
         var newStartNodeId = null;
-        
+
         // get the start group id
         var startGroupId = this.ProjectService.getStartGroupId();
         var node = this.ProjectService.getNodeById(startGroupId);
-        
+
         var done = false;
-        
+
         // recursively traverse the start ids
         while(!done) {
-            
+
             if (node == null) {
                 // base case in case something went wrong
                 done = true;
@@ -687,13 +717,13 @@ class ProjectController {
                 done = true;
             }
         }
-        
+
         if (newStartNodeId) {
             // set the new start node id
             this.ProjectService.setStartNodeId(newStartNodeId);
         }
     }
-    
+
     /**
      * Check if the start node id for the project could potentially
      * change.
@@ -708,14 +738,14 @@ class ProjectController {
 
             if (firstLeafNodeId == null) {
                 // there are no steps in the project
-                
+
                 // set the start node id to empty string
                 this.ProjectService.setStartNodeId('');
-                
+
                 resolve();
             } else {
                 // we have found a leaf node
-                
+
                 if (currentStartNodeId != firstLeafNodeId) {
                     /*
                      * the node ids are different which means the first leaf node
@@ -727,10 +757,10 @@ class ProjectController {
 
                     if (firstLeafNode != null) {
                         var firstChildTitle = firstLeafNode.title;
-                        
+
                         // ask the user if they would like to change the start step to the step that is now the first child in the group
                         var confirmUpdateStartStep = this.$translate('confirmUpdateStartStep', { startStepTitle: firstChildTitle });
-                        
+
                         var answer = confirm(confirmUpdateStartStep);
 
                         if (answer) {
@@ -749,7 +779,7 @@ class ProjectController {
             }
         });
     }
-    
+
     /**
      * Check if the start node id has changed and then save the project
      */
@@ -766,44 +796,44 @@ class ProjectController {
             this.unselectAllItems();
         });
     }
-    
+
     /**
-     * The project title changed so we will update the project title in the 
+     * The project title changed so we will update the project title in the
      * project service
      */
     projectTitleChanged() {
-        
+
         // update the project title in the project service
         this.ProjectService.setProjectTitle(this.projectTitle);
-        
+
         // save the project
         this.ProjectService.saveProject();
     }
-    
+
     /**
      * Toggle the import view and load the project drop downs if necessary
      */
     toggleImportView() {
         this.importMode = !this.importMode;
-        
+
         if (this.authorableProjectsList == null) {
             // populate the authorable projects drop down
             this.getAuthorableProjects();
         }
-        
+
         if (this.libraryProjectsList == null) {
             // populate the library projects drop down
             this.getLibraryProjects();
         }
     }
-    
+
     /**
      * Get all the authorable projects
      */
     getAuthorableProjects() {
         this.authorableProjectsList = this.ConfigService.getConfigParam('projects');
     }
-    
+
     /**
      * Get all the library projects
      */
@@ -812,39 +842,39 @@ class ProjectController {
             this.libraryProjectsList = libraryProjectsList;
         });
     }
-    
+
     /**
      * The author has chosen an authorable project to import from
      * @param importProjectId the project id to import from
      */
     showAuthorableImportProject(importProjectId) {
-        
+
         // clear the select drop down for the library project
         this.importLibraryProjectId = null;
-        
+
         // show the import project
         this.showImportProject(importProjectId);
     }
-    
+
     /**
      * The author has chosen a library project to import from
      * @param importProjectId the project id to import from
      */
     showLibraryImportProject(importProjectId) {
         this.importAuthorableProjectId = null;
-        
+
         // show the import project
         this.showImportProject(importProjectId);
     }
-    
+
     /**
      * Show the project we want to import steps from
      * @param importProjectId the import project id
      */
     showImportProject(importProjectId) {
-        
+
         this.importProjectId = importProjectId;
-        
+
         if (this.importProjectId == null) {
             // clear all the import project values
             this.importProjectIdToOrder = {};
@@ -856,11 +886,11 @@ class ProjectController {
         } else {
             // get the import project
             this.ProjectService.retrieveProjectById(this.importProjectId).then((projectJSON) => {
-                
+
                 // create the mapping of node id to order for the import project
                 this.importProjectIdToOrder = {};
                 this.importProject = projectJSON;
-                
+
                 // calculate the node order of the import project
                 var result = this.ProjectService.getNodeOrderOfProject(this.importProject);
                 this.importProjectIdToOrder = result.idToOrder;
@@ -868,82 +898,82 @@ class ProjectController {
             });
         }
     }
-    
+
     /**
      * Preview the import project
      */
     previewImportProject() {
-    
+
         if (this.importProject != null) {
             // get the preview project url for the import project
             var previewProjectURL = this.importProject.previewProjectURL;
-            
+
             // open the preview step in a new tab
             window.open(previewProjectURL);
         }
     }
-    
+
     /**
      * Preview the step
      * @param node
      */
     previewImportNode(node) {
-        
+
         if (node != null) {
-            
+
             // get the node id
             var nodeId = node.id;
-            
+
             // get the preview project url for the import project
             var previewProjectURL = this.importProject.previewProjectURL;
-            
+
             // create the url to preview the step
             var previewStepURL  = previewProjectURL + "#/vle/" + nodeId;
-            
+
             // open the preview step in a new tab
             window.open(previewStepURL);
         }
     }
-    
+
     /**
      * Import the selected steps
      */
     importSteps() {
-        
+
         // get the nodes that were selected
         var selectedNodes = this.getSelectedNodesToImport();
-        
+
         if (selectedNodes == null || selectedNodes.length == 0) {
             // the author did not select any steps to import
             alert('Please select a step to import.');
         } else {
             var selectedNodeTitles = '';
-            
+
             // loop through all the selected nodes
             for (var s = 0; s < selectedNodes.length; s++) {
                 var selectedNode = selectedNodes[s];
-                
+
                 if (selectedNode != null) {
-                    
+
                     var stepNumber = null;
                     var title = selectedNode.title;
-                    
+
                     if (this.importProjectIdToOrder[selectedNode.id] != null) {
                         // get the step number
                         stepNumber = this.importProjectIdToOrder[selectedNode.id].stepNumber;
                     }
-                    
+
                     if (selectedNodeTitles != '') {
                         selectedNodeTitles += '\n';
                     }
-                    
+
                     // get the step number and title
                     selectedNodeTitles += stepNumber + ': ' + title;
                 }
             }
-            
+
             var message = '';
-            
+
             if (selectedNodes.length == 1) {
                 // one step is being imported
                 message = 'Are you sure you want to import this step?\n\n' + selectedNodeTitles + '\n\nThe imported step will be placed in the Inactive Steps section.';
@@ -951,32 +981,32 @@ class ProjectController {
                 // multiple steps are being imported
                 message = 'Are you sure you want to import these steps?\n\n' + selectedNodeTitles + '\n\nThe imported steps will be placed in the Inactive Steps section.';
             }
-            
+
             // ask the author if they are sure they want to import these steps
             var answer = confirm(message);
-            
+
             if (answer) {
                 // the author answered yes to import
-                
+
                 // get the project id we are importing into
                 var toProjectId = this.ConfigService.getConfigParam('projectId');
-                
+
                 // get the project id we are importing from
                 var fromProjectId = this.importProjectId;
-                
+
                 // copy the nodes into the project
                 this.ProjectService.copyNodes(selectedNodes, fromProjectId, toProjectId, this.importProjectIdToOrder).then(() => {
-                    
+
                     // save the project
                     this.ProjectService.saveProject();
 
                     // refresh the project
                     this.ProjectService.parseProject();
                     this.items = this.ProjectService.idToOrder;
-                    
+
                     // turn off import mode
                     this.importMode = false;
-                    
+
                     // clear the import fields
                     this.importProjectIdToOrder = {};
                     this.importProjectItems = [];
@@ -988,18 +1018,18 @@ class ProjectController {
             }
         }
     }
-    
+
     /**
      * Get the selected nodes to import
      * @return an array of selected nodes
      */
     getSelectedNodesToImport() {
         var selectedNodes = [];
-        
+
         // loop through all the import project items
         for (var n = 0; n < this.importProjectItems.length; n++) {
             var item = this.importProjectItems[n];
-            
+
             if (item.checked) {
                 /*
                  * this item is checked so we will add it to the array of nodes
@@ -1008,7 +1038,7 @@ class ProjectController {
                 selectedNodes.push(item.node);
             }
         }
-        
+
         return selectedNodes;
     }
 }
@@ -1020,6 +1050,7 @@ ProjectController.$inject = [
     '$scope',
     '$state',
     '$stateParams',
+    '$timeout',
     'AuthorWebSocketService',
     'ConfigService',
     'ProjectService',

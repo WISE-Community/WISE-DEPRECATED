@@ -9,7 +9,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var ProjectController = function () {
-    function ProjectController($filter, $interval, $q, $scope, $state, $stateParams, AuthorWebSocketService, ConfigService, ProjectService, UtilService) {
+    function ProjectController($filter, $interval, $q, $scope, $state, $stateParams, $timeout, AuthorWebSocketService, ConfigService, ProjectService, UtilService) {
         var _this = this;
 
         _classCallCheck(this, ProjectController);
@@ -20,6 +20,7 @@ var ProjectController = function () {
         this.$scope = $scope;
         this.$state = $state;
         this.$stateParams = $stateParams;
+        this.$timeout = $timeout;
         this.$translate = this.$filter('translate');
         this.AuthorWebSocketService = AuthorWebSocketService;
         this.ConfigService = ConfigService;
@@ -692,6 +693,20 @@ var ProjectController = function () {
             this.hideCreateNode();
             this.showCreateGroup = !this.showCreateGroup;
             this.createGroupTitle = '';
+
+            if (this.showCreateGroup) {
+                /*
+                 * we are showing the create node view so we will give focus to the
+                 * createGroupTitle input element
+                 */
+                this.$timeout(function () {
+                    var createGroupTitleInput = document.getElementById('createGroupTitle');
+
+                    if (createGroupTitleInput != null) {
+                        createGroupTitleInput.focus();
+                    }
+                });
+            }
         }
 
         /**
@@ -715,6 +730,20 @@ var ProjectController = function () {
             this.hideCreateGroup();
             this.showCreateNode = !this.showCreateNode;
             this.createNodeTitle = '';
+
+            if (this.showCreateNode) {
+                /*
+                 * we are showing the create node view so we will give focus to the
+                 * createNodeTitle input element
+                 */
+                this.$timeout(function () {
+                    var createNodeTitleInput = document.getElementById('createNodeTitle');
+
+                    if (createNodeTitleInput != null) {
+                        createNodeTitleInput.focus();
+                    }
+                });
+            }
         }
 
         /**
@@ -865,7 +894,7 @@ var ProjectController = function () {
         }
 
         /**
-         * The project title changed so we will update the project title in the 
+         * The project title changed so we will update the project title in the
          * project service
          */
 
@@ -1150,7 +1179,7 @@ var ProjectController = function () {
     return ProjectController;
 }();
 
-ProjectController.$inject = ['$filter', '$interval', '$q', '$scope', '$state', '$stateParams', 'AuthorWebSocketService', 'ConfigService', 'ProjectService', 'UtilService'];
+ProjectController.$inject = ['$filter', '$interval', '$q', '$scope', '$state', '$stateParams', '$timeout', 'AuthorWebSocketService', 'ConfigService', 'ProjectService', 'UtilService'];
 
 exports.default = ProjectController;
 //# sourceMappingURL=projectController.js.map

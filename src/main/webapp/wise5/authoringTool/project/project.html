@@ -53,12 +53,12 @@
 <button id="closeProjectButton" ng-click='projectController.closeProject()' translate="close"
         ng-disabled="projectController.insertGroupMode || projectController.insertNodeMode"></button>
 <div ng-show='projectController.showCreateGroup'>
-    <label style="display:initial" translate="activityTitle"></label>: <input ng-model='projectController.createGroupTitle' size='50'/>
+    <label style="display:initial" translate="activityTitle"></label>: <input id="createGroupTitle" ng-model='projectController.createGroupTitle' ng-keyup='$event.keyCode == 13 && projectController.createGroup()' size='50'/>
     <button ng-click='projectController.createGroup()' translate="create"></button>
     <button ng-click='projectController.hideCreateGroup()'translate="cancel"></button>
 </div>
 <div ng-show='projectController.showCreateNode'>
-    <label style="display:initial" translate="stepTitle"></label>: <input id="createNodeTitle" ng-model='projectController.createNodeTitle' size='50'/>
+    <label style="display:initial" translate="stepTitle"></label>: <input id="createNodeTitle" ng-model='projectController.createNodeTitle' ng-keyup='$event.keyCode == 13 && projectController.createNode()' size='50'/>
     <button ng-click='projectController.createNode()' translate="create"></button>
     <button ng-click='projectController.hideCreateNode()' translate="cancel"></button>
 </div>
@@ -128,11 +128,11 @@
         <label ng-if='projectController.runId == null'>(Run ID: None)</label>
         <label ng-if='projectController.runId != null'>(Run ID: {{projectController.runId}})</label>
     </h6>
-    <button ng-show='(projectController.insertNodeMode && item.order!==0) || (projectController.insertGroupMode && item.order==0)' 
-            ng-if='projectController.isGroupNode(item.$key)' 
+    <button ng-show='(projectController.insertNodeMode && item.order!==0) || (projectController.insertGroupMode && item.order==0)'
+            ng-if='projectController.isGroupNode(item.$key)'
             ng-click='projectController.insertInside(item.$key)' translate="insertInside"></button>
-    <button ng-show='(projectController.insertNodeMode && !projectController.isGroupNode(item.$key)) || (projectController.insertGroupMode && projectController.isGroupNode(item.$key))' 
-            ng-if='item.order!==0' 
+    <button ng-show='(projectController.insertNodeMode && !projectController.isGroupNode(item.$key)) || (projectController.insertGroupMode && projectController.isGroupNode(item.$key))'
+            ng-if='item.order!==0'
             ng-click='projectController.insertAfter(item.$key)' translate="insertAfter"></button>
 </div>
 <h6 style='display:none'>Inactive Activities</h6>
@@ -161,7 +161,7 @@
             class='stepHeader'>
             {{projectController.getNodeTitleByNodeId(inactiveNode.id)}}
         </h6>
-        <button ng-show='(projectController.insertNodeMode && !projectController.isGroupNode(inactiveNode.id))' 
+        <button ng-show='(projectController.insertNodeMode && !projectController.isGroupNode(inactiveNode.id))'
                 ng-click='projectController.insertAfter(inactiveNode.id)' translate="insertAfter"></button>
     </div>
 </div>
@@ -175,4 +175,3 @@
 
 
 <div ui-view></div>  <!-- this ui-view shows the node authoring view -->
-

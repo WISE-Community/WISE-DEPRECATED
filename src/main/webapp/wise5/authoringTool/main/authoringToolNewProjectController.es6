@@ -2,12 +2,28 @@
 
 class AuthoringToolNewProjectController {
 
-    constructor($state, ConfigService, ProjectService) {
+    constructor($state,
+                $timeout,
+                ConfigService,
+                ProjectService) {
         this.$state = $state;
+        this.$timeout = $timeout;
         this.ConfigService = ConfigService;
         this.ProjectService = ProjectService;
 
         this.project = this.ProjectService.getNewProjectTemplate();
+
+        /*
+         * we are showing the create new project view so we will give focus to
+         * the newProjectTitle input element
+         */
+        this.$timeout(() => {
+            var newProjectTitleInput = document.getElementById('newProjectTitle');
+
+            if (newProjectTitleInput != null) {
+                newProjectTitleInput.focus();
+            }
+        });
     }
 
     registerNewProject() {
@@ -23,6 +39,11 @@ class AuthoringToolNewProjectController {
     }
 }
 
-AuthoringToolNewProjectController.$inject = ['$state', 'ConfigService', 'ProjectService'];
+AuthoringToolNewProjectController.$inject = [
+    '$state',
+    '$timeout',
+    'ConfigService',
+    'ProjectService'
+];
 
 export default AuthoringToolNewProjectController;
