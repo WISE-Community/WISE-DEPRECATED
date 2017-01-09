@@ -700,7 +700,7 @@ var OpenResponseController = function () {
                  * to be scored by CRater
                  */
                 this.messageDialog = this.$mdDialog.show({
-                    template: '<md-dialog aria-label="Please Wait"><md-dialog-content><div class="md-dialog-content">' + this.$translate('pleaseWaitWeAreScoringYourWork') + '</div></md-dialog-content></md-dialog>',
+                    template: '<md-dialog aria-label="' + this.$translate('pleaseWait') + '"><md-dialog-content><div class="md-dialog-content">' + this.$translate('pleaseWaitWeAreScoringYourWork') + '</div></md-dialog-content></md-dialog>',
                     escapeToClose: false
                 });
 
