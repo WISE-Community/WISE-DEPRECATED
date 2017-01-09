@@ -13,11 +13,12 @@ require('svg.draggable.js');
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var ConceptMapController = function () {
-    function ConceptMapController($injector, $mdDialog, $q, $rootScope, $scope, $timeout, AnnotationService, ConceptMapService, ConfigService, CRaterService, NodeService, ProjectService, StudentAssetService, StudentDataService) {
+    function ConceptMapController($filter, $injector, $mdDialog, $q, $rootScope, $scope, $timeout, AnnotationService, ConceptMapService, ConfigService, CRaterService, NodeService, ProjectService, StudentAssetService, StudentDataService) {
         var _this = this;
 
         _classCallCheck(this, ConceptMapController);
 
+        this.$filter = $filter;
         this.$injector = $injector;
         this.$mdDialog = $mdDialog;
         this.$q = $q;
@@ -33,6 +34,8 @@ var ConceptMapController = function () {
         this.StudentAssetService = StudentAssetService;
         this.StudentDataService = StudentDataService;
         this.idToOrder = this.ProjectService.idToOrder;
+
+        this.$translate = this.$filter('translate');
 
         // the node id of the current node
         this.nodeId = null;
@@ -174,9 +177,9 @@ var ConceptMapController = function () {
 
         // the options for authoring the should or should not value in rules
         this.shouldOptions = [{
-            value: false, label: 'should'
+            value: false, label: this.$translate('should')
         }, {
-            value: true, label: 'should not'
+            value: true, label: this.$translate('shouldNot')
         }];
 
         // the auto feedback string
@@ -371,9 +374,9 @@ var ConceptMapController = function () {
                     this.isSubmitDirty = false;
                     this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: false });
                 } else if (isAutoSave) {
-                    this.setSaveMessage('Auto-saved', clientSaveTime);
+                    this.setSaveMessage(this.$translate('autoSaved'), clientSaveTime);
                 } else {
-                    this.setSaveMessage('Saved', clientSaveTime);
+                    this.setSaveMessage(this.$translate('saved'), clientSaveTime);
                 }
             }
         }));
@@ -521,7 +524,7 @@ var ConceptMapController = function () {
                         var score = data.value;
                         var maxAutoScore = data.maxAutoScore;
 
-                        autoFeedbackString += "Score: " + score;
+                        autoFeedbackString += this.$translate('score') + ": " + score;
 
                         if (maxAutoScore != null && maxAutoScore != '') {
                             // show the max score as the denominator
@@ -544,7 +547,7 @@ var ConceptMapController = function () {
 
                         // get the comment
                         var comment = data.value;
-                        autoFeedbackString += "Feedback: " + comment;
+                        autoFeedbackString += this.$translate('feedback') + ": " + comment;
                     }
                 }
 
@@ -779,13 +782,13 @@ var ConceptMapController = function () {
                     this.isSubmitDirty = false;
                     this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: false });
                     // set save message
-                    this.setSaveMessage('Last submitted', latestState.clientSaveTime);
+                    this.setSaveMessage(this.$translate('lastSubmitted'), latestState.clientSaveTime);
                 } else {
                     // latest state is not a submission, so set isSubmitDirty to true and notify node
                     this.isSubmitDirty = true;
                     this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: true });
                     // set save message
-                    this.setSaveMessage('Last saved', latestState.clientSaveTime);
+                    this.setSaveMessage(this.$translate('lastSaved'), latestState.clientSaveTime);
                 }
             }
         }
@@ -824,17 +827,17 @@ var ConceptMapController = function () {
                 if (numberOfSubmitsLeft <= 0) {
 
                     // the student does not have any more chances to submit
-                    alert('You do not have any more chances to receive feedback on your answer.');
+                    alert(this.$translate('youHaveNoMoreChances'));
                     performSubmit = false;
                 } else if (numberOfSubmitsLeft == 1) {
 
                     // ask the student if they are sure they want to submit
-                    message = 'You have ' + numberOfSubmitsLeft + ' chance to receive feedback on your answer so this this should be your best work.\n\nAre you ready to receive feedback on this answer?';
+                    message = this.$translate('youHaveOneChance', { numberOfSubmitsLeft: numberOfSubmitsLeft });
                     performSubmit = confirm(message);
                 } else if (numberOfSubmitsLeft > 1) {
 
                     // ask the student if they are sure they want to submit
-                    message = 'You have ' + numberOfSubmitsLeft + ' chances to receive feedback on your answer so this this should be your best work.\n\nAre you ready to receive feedback on this answer?';
+                    message = this.$translate('youHaveMultipleChances', { numberOfSubmitsLeft: numberOfSubmitsLeft });
                     performSubmit = confirm(message);
                 }
             }
@@ -914,7 +917,7 @@ var ConceptMapController = function () {
 
                 if (this.componentContent.showAutoScore && thisResult.score != null) {
                     // display the score
-                    resultString += "Score: " + thisResult.score;
+                    resultString += this.$translate('score') + ": " + thisResult.score;
 
                     if (this.componentContent.maxScore != null && this.componentContent.maxScore != '') {
                         // show the max score as the denominator
@@ -929,12 +932,12 @@ var ConceptMapController = function () {
                     }
 
                     // display the feedback
-                    resultString += "Feedback: " + thisResult.feedback;
+                    resultString += this.$translate('feedback') + ": " + thisResult.feedback;
                 }
 
                 if (resultString != "") {
                     // show the auto feedback in a modal dialog
-                    this.$mdDialog.show(this.$mdDialog.alert().parent(angular.element(document.querySelector('#feedbackDiv'))).clickOutsideToClose(true).title('Feedback').htmlContent(resultString).ariaLabel('Feedback').ok('Close'));
+                    this.$mdDialog.show(this.$mdDialog.alert().parent(angular.element(document.querySelector('#feedbackDiv'))).clickOutsideToClose(true).title(this.$translate('feedback')).htmlContent(resultString).ariaLabel(this.$translate('feedback')).ok(this.$translate('close')));
                 }
 
                 // remember the feedback string
@@ -1202,7 +1205,7 @@ var ConceptMapController = function () {
                  * to be scored by CRater
                  */
                 this.messageDialog = this.$mdDialog.show({
-                    template: '<md-dialog aria-label="Please Wait"><md-dialog-content><div class="md-dialog-content">Please wait, we are scoring your work.</div></md-dialog-content></md-dialog>',
+                    template: '<md-dialog aria-label="' + this.$translate('pleaseWait') + '"><md-dialog-content><div class="md-dialog-content">' + this.$translate('pleaseWaitWeAreScoringYourWork') + '</div></md-dialog-content></md-dialog>',
                     fullscreen: true,
                     escapeToClose: false
                 });
@@ -1715,7 +1718,7 @@ var ConceptMapController = function () {
                      */
 
                     // make sure the author really wants to change the component type
-                    var answer = confirm('Are you sure you want to change this component type?');
+                    var answer = confirm(this.$translate('areYouSureYouWantToChangeThisComponentType'));
 
                     if (answer) {
                         // the author wants to change the component type
@@ -1860,7 +1863,7 @@ var ConceptMapController = function () {
                     var nodeLabel = node.label;
 
                     // confirm with the author that they really want to delete the node
-                    var answer = confirm('Are you sure you want to delete this node?\n\nFile Name: ' + nodeFileName + '\nLabel: ' + nodeLabel);
+                    var answer = confirm(this.$translate('areYouSureYouWantToDeleteThisNode', { nodeFileName: nodeFileName, nodeLabel: nodeLabel }));
 
                     if (answer) {
                         /*
@@ -1982,7 +1985,7 @@ var ConceptMapController = function () {
                     var linkLabel = link.label;
 
                     // confirm with the author that they really want to delete the link
-                    var answer = confirm('Are you sure you want to delete this link?\n\nLabel: ' + linkLabel);
+                    var answer = confirm(this.$translate('areYouSureYouWantToDeleteThisLink', { linkLabel: linkLabel }));
 
                     if (answer) {
                         /*
@@ -2305,7 +2308,7 @@ var ConceptMapController = function () {
                 var ruleName = rule.name;
 
                 // confirm with the author that they really want to delete the rule
-                var answer = confirm('Are you sure you want to delete this rule?\n\nRule Name: ' + ruleName);
+                var answer = confirm(this.$translate('areYouSureYouWantToDeleteThisRule', { ruleName: ruleName }));
 
                 if (answer) {
                     // remove the rule at the given index
@@ -2354,7 +2357,7 @@ var ConceptMapController = function () {
                 var categoryName = rule.categories[index];
 
                 // confirm with the author that they really want to delete the category from the rule
-                var answer = confirm('Are you sure you want to delete the category from this rule?\n\nRule Name: ' + ruleName + '\nCategory Name: ' + categoryName);
+                var answer = confirm(this.$translate('areYouSureYouWantToDeleteTheCategory', { ruleName: ruleName, categoryName: categoryName }));
 
                 if (answer) {
                     // remove the category at the index
@@ -4580,16 +4583,24 @@ var ConceptMapController = function () {
         key: 'resetConceptMap',
         value: function resetConceptMap() {
 
-            // clear the concept map
-            this.clearConceptMap();
+            // ask the student if they are sure they want to reset their work
+            var message = this.$translate('areYouSureYouWantToResetYourWork');
+            var answer = confirm(message);
 
-            if (this.componentContent.starterConceptMap != null) {
+            if (answer) {
+                // the student answered yes to reset their work
 
-                // get the starter concept map
-                var conceptMapData = this.componentContent.starterConceptMap;
+                // clear the concept map
+                this.clearConceptMap();
 
-                // populate the starter concept map data into the component
-                this.populateConceptMapData(conceptMapData);
+                if (this.componentContent.starterConceptMap != null) {
+
+                    // get the starter concept map
+                    var conceptMapData = this.componentContent.starterConceptMap;
+
+                    // populate the starter concept map data into the component
+                    this.populateConceptMapData(conceptMapData);
+                }
             }
         }
 
@@ -4603,7 +4614,7 @@ var ConceptMapController = function () {
         value: function showAutoFeedback() {
 
             // show the auto feedback in a modal dialog
-            this.$mdDialog.show(this.$mdDialog.alert().parent(angular.element(document.querySelector('#feedbackDiv'))).clickOutsideToClose(true).title('Feedback').htmlContent(this.autoFeedbackString).ariaLabel('Feedback').ok('Close'));
+            this.$mdDialog.show(this.$mdDialog.alert().parent(angular.element(document.querySelector('#feedbackDiv'))).clickOutsideToClose(true).title(this.$translate('feedback')).htmlContent(this.autoFeedbackString).ariaLabel(this.$translate('feedback')).ok(this.$translate('close')));
         }
 
         /**
@@ -4717,7 +4728,7 @@ var ConceptMapController = function () {
 
 ;
 
-ConceptMapController.$inject = ['$injector', '$mdDialog', '$q', '$rootScope', '$scope', '$timeout', 'AnnotationService', 'ConceptMapService', 'ConfigService', 'CRaterService', 'NodeService', 'ProjectService', 'StudentAssetService', 'StudentDataService'];
+ConceptMapController.$inject = ['$filter', '$injector', '$mdDialog', '$q', '$rootScope', '$scope', '$timeout', 'AnnotationService', 'ConceptMapService', 'ConfigService', 'CRaterService', 'NodeService', 'ProjectService', 'StudentAssetService', 'StudentDataService'];
 
 exports.default = ConceptMapController;
 //# sourceMappingURL=conceptMapController.js.map

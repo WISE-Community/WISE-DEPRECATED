@@ -5,7 +5,8 @@ import 'svg.draggable.js';
 
 class ConceptMapController {
 
-    constructor($injector,
+    constructor($filter,
+                $injector,
                 $mdDialog,
                 $q,
                 $rootScope,
@@ -20,6 +21,7 @@ class ConceptMapController {
                 StudentAssetService,
                 StudentDataService) {
 
+        this.$filter = $filter;
         this.$injector = $injector;
         this.$mdDialog = $mdDialog;
         this.$q = $q;
@@ -35,6 +37,8 @@ class ConceptMapController {
         this.StudentAssetService = StudentAssetService;
         this.StudentDataService = StudentDataService;
         this.idToOrder = this.ProjectService.idToOrder;
+
+        this.$translate = this.$filter('translate');
 
         // the node id of the current node
         this.nodeId = null;
@@ -177,10 +181,10 @@ class ConceptMapController {
         // the options for authoring the should or should not value in rules
         this.shouldOptions = [
             {
-                value: false, label: 'should'
+                value: false, label: this.$translate('should')
             },
             {
-                value: true, label: 'should not'
+                value: true, label: this.$translate('shouldNot')
             }
         ];
 
@@ -377,9 +381,9 @@ class ConceptMapController {
                     this.isSubmitDirty = false;
                     this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: false});
                 } else if (isAutoSave) {
-                    this.setSaveMessage('Auto-saved', clientSaveTime);
+                    this.setSaveMessage(this.$translate('autoSaved'), clientSaveTime);
                 } else {
-                    this.setSaveMessage('Saved', clientSaveTime);
+                    this.setSaveMessage(this.$translate('saved'), clientSaveTime);
                 }
             }
         }));
@@ -526,7 +530,7 @@ class ConceptMapController {
                     var score = data.value;
                     var maxAutoScore = data.maxAutoScore;
 
-                    autoFeedbackString += "Score: " + score;
+                    autoFeedbackString += this.$translate('score') + ": " + score;
 
                     if (maxAutoScore != null && maxAutoScore != '') {
                         // show the max score as the denominator
@@ -549,7 +553,7 @@ class ConceptMapController {
 
                     // get the comment
                     var comment = data.value;
-                    autoFeedbackString += "Feedback: " + comment;
+                    autoFeedbackString += this.$translate('feedback') + ": " + comment;
                 }
             }
 
@@ -772,13 +776,13 @@ class ConceptMapController {
                 this.isSubmitDirty = false;
                 this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: false});
                 // set save message
-                this.setSaveMessage('Last submitted', latestState.clientSaveTime);
+                this.setSaveMessage(this.$translate('lastSubmitted'), latestState.clientSaveTime);
             } else {
                 // latest state is not a submission, so set isSubmitDirty to true and notify node
                 this.isSubmitDirty = true;
                 this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: true});
                 // set save message
-                this.setSaveMessage('Last saved', latestState.clientSaveTime);
+                this.setSaveMessage(this.$translate('lastSaved'), latestState.clientSaveTime);
             }
         }
     };
@@ -811,17 +815,17 @@ class ConceptMapController {
             if (numberOfSubmitsLeft <= 0) {
 
                 // the student does not have any more chances to submit
-                alert('You do not have any more chances to receive feedback on your answer.');
+                alert(this.$translate('youHaveNoMoreChances'));
                 performSubmit = false;
             } else if (numberOfSubmitsLeft == 1) {
 
                 // ask the student if they are sure they want to submit
-                message = 'You have ' + numberOfSubmitsLeft + ' chance to receive feedback on your answer so this this should be your best work.\n\nAre you ready to receive feedback on this answer?';
+                message = this.$translate('youHaveOneChance', {numberOfSubmitsLeft: numberOfSubmitsLeft});
                 performSubmit = confirm(message);
             } else if (numberOfSubmitsLeft > 1) {
 
                 // ask the student if they are sure they want to submit
-                message = 'You have ' + numberOfSubmitsLeft + ' chances to receive feedback on your answer so this this should be your best work.\n\nAre you ready to receive feedback on this answer?';
+                message = this.$translate('youHaveMultipleChances', {numberOfSubmitsLeft: numberOfSubmitsLeft});
                 performSubmit = confirm(message);
             }
         }
@@ -901,7 +905,7 @@ class ConceptMapController {
 
             if (this.componentContent.showAutoScore && thisResult.score != null) {
                 // display the score
-                resultString += "Score: " + thisResult.score;
+                resultString += this.$translate('score') + ": " + thisResult.score;
 
                 if (this.componentContent.maxScore != null && this.componentContent.maxScore != '') {
                     // show the max score as the denominator
@@ -916,7 +920,7 @@ class ConceptMapController {
                 }
 
                 // display the feedback
-                resultString += "Feedback: " + thisResult.feedback;
+                resultString += this.$translate('feedback') + ": " + thisResult.feedback;
             }
 
             if (resultString != "") {
@@ -925,10 +929,10 @@ class ConceptMapController {
                     this.$mdDialog.alert()
                     .parent(angular.element(document.querySelector('#feedbackDiv')))
                     .clickOutsideToClose(true)
-                    .title('Feedback')
+                    .title(this.$translate('feedback'))
                     .htmlContent(resultString)
-                    .ariaLabel('Feedback')
-                    .ok('Close')
+                    .ariaLabel(this.$translate('feedback'))
+                    .ok(this.$translate('close'))
                 );
             }
 
@@ -1178,7 +1182,7 @@ class ConceptMapController {
              * to be scored by CRater
              */
             this.messageDialog = this.$mdDialog.show({
-                template: '<md-dialog aria-label="Please Wait"><md-dialog-content><div class="md-dialog-content">Please wait, we are scoring your work.</div></md-dialog-content></md-dialog>',
+                template: '<md-dialog aria-label="' + this.$translate('pleaseWait') + '"><md-dialog-content><div class="md-dialog-content">' + this.$translate('pleaseWaitWeAreScoringYourWork') + '</div></md-dialog-content></md-dialog>',
                 fullscreen: true,
                 escapeToClose: false
             });
@@ -1641,7 +1645,7 @@ class ConceptMapController {
                  */
 
                 // make sure the author really wants to change the component type
-                var answer = confirm('Are you sure you want to change this component type?');
+                var answer = confirm(this.$translate('areYouSureYouWantToChangeThisComponentType'));
 
                 if (answer) {
                     // the author wants to change the component type
@@ -1777,7 +1781,7 @@ class ConceptMapController {
                 var nodeLabel = node.label;
 
                 // confirm with the author that they really want to delete the node
-                var answer = confirm('Are you sure you want to delete this node?\n\nFile Name: ' + nodeFileName + '\nLabel: ' + nodeLabel);
+                var answer = confirm(this.$translate('areYouSureYouWantToDeleteThisNode', { nodeFileName: nodeFileName, nodeLabel: nodeLabel}));
 
                 if (answer) {
                     /*
@@ -1890,7 +1894,7 @@ class ConceptMapController {
                 var linkLabel = link.label;
 
                 // confirm with the author that they really want to delete the link
-                var answer = confirm('Are you sure you want to delete this link?\n\nLabel: ' + linkLabel);
+                var answer = confirm(this.$translate('areYouSureYouWantToDeleteThisLink', { linkLabel: linkLabel}));
 
                 if (answer) {
                     /*
@@ -2186,7 +2190,7 @@ class ConceptMapController {
             var ruleName = rule.name;
 
             // confirm with the author that they really want to delete the rule
-            var answer = confirm('Are you sure you want to delete this rule?\n\nRule Name: ' + ruleName);
+            var answer = confirm(this.$translate('areYouSureYouWantToDeleteThisRule', { ruleName: ruleName }));
 
             if (answer) {
                 // remove the rule at the given index
@@ -2229,7 +2233,7 @@ class ConceptMapController {
             var categoryName = rule.categories[index];
 
             // confirm with the author that they really want to delete the category from the rule
-            var answer = confirm('Are you sure you want to delete the category from this rule?\n\nRule Name: ' + ruleName + '\nCategory Name: ' + categoryName);
+            var answer = confirm(this.$translate('areYouSureYouWantToDeleteTheCategory' , { ruleName: ruleName, categoryName: categoryName }));
 
             if (answer) {
                 // remove the category at the index
@@ -4244,16 +4248,24 @@ class ConceptMapController {
      */
     resetConceptMap() {
 
-        // clear the concept map
-        this.clearConceptMap();
+        // ask the student if they are sure they want to reset their work
+        var message = this.$translate('areYouSureYouWantToResetYourWork');
+        var answer = confirm(message);
 
-        if (this.componentContent.starterConceptMap != null) {
+        if (answer) {
+            // the student answered yes to reset their work
 
-            // get the starter concept map
-            var conceptMapData = this.componentContent.starterConceptMap;
+            // clear the concept map
+            this.clearConceptMap();
 
-            // populate the starter concept map data into the component
-            this.populateConceptMapData(conceptMapData);
+            if (this.componentContent.starterConceptMap != null) {
+
+                // get the starter concept map
+                var conceptMapData = this.componentContent.starterConceptMap;
+
+                // populate the starter concept map data into the component
+                this.populateConceptMapData(conceptMapData);
+            }
         }
     }
 
@@ -4268,10 +4280,10 @@ class ConceptMapController {
             this.$mdDialog.alert()
             .parent(angular.element(document.querySelector('#feedbackDiv')))
             .clickOutsideToClose(true)
-            .title('Feedback')
+            .title(this.$translate('feedback'))
             .htmlContent(this.autoFeedbackString)
-            .ariaLabel('Feedback')
-            .ok('Close')
+            .ariaLabel(this.$translate('feedback'))
+            .ok(this.$translate('close'))
         );
     }
 
@@ -4365,6 +4377,7 @@ class ConceptMapController {
 };
 
 ConceptMapController.$inject = [
+    '$filter',
     '$injector',
     '$mdDialog',
     '$q',
