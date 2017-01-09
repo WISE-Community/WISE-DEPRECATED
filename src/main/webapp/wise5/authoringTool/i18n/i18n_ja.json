@@ -48,6 +48,7 @@
 	"moveDown": "下に移動",
 	"moveUp": "上に移動",
 	"myProjectsHeading": "プロジェクトリスト",
+	"no": "",
 	"noSharedProjectsMessage": "シェアされたプロジェクトがありません。",
 	"notebook": "",
 	"noUndoAvailable": "取り消す変更がありません。",
@@ -59,8 +60,11 @@
 	"projectTitle": "",
 	"save": "",
 	"saveErrorAdvancedAuthoring": "",
+	"saved": "",
+	"saving": "",
 	"serverUpdate": "",
 	"serverUpdateRequestLogoutMessage": "",
+	"sessionTimeout": "",
 	"sharedProjectsHeading": "シェアされたプロジェクト",
 	"sortAssets": "ソート",
 	"stepTitle": "ステップ名",
@@ -71,5 +75,6 @@
 	"transitions": "ナビゲーションロジック",
 	"undo": "取り消し",
 	"viewHistory": "履歴の閲覧",
-	"whenToChoosePath": "いつ目標ステップが決まるか"
+	"whenToChoosePath": "いつ目標ステップが決まるか",
+	"yes": ""
 }

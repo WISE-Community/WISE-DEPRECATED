@@ -48,6 +48,7 @@
 	"moveDown": "",
 	"moveUp": "",
 	"myProjectsHeading": "",
+	"no": "",
 	"noSharedProjectsMessage": "",
 	"notebook": "",
 	"noUndoAvailable": "",
@@ -59,8 +60,11 @@
 	"projectTitle": "",
 	"save": "",
 	"saveErrorAdvancedAuthoring": "",
+	"saved": "",
+	"saving": "",
 	"serverUpdate": "",
 	"serverUpdateRequestLogoutMessage": "",
+	"sessionTimeout": "",
 	"sharedProjectsHeading": "",
 	"sortAssets": "",
 	"stepTitle": "",
@@ -71,5 +75,6 @@
 	"transitions": "",
 	"undo": "",
 	"viewHistory": "",
-	"whenToChoosePath": ""
+	"whenToChoosePath": "",
+	"yes": ""
 }
