@@ -2,14 +2,14 @@
 
 class ProjectAssetController {
 
-    constructor($filter, $mdDialog, $state, $stateParams, $scope, $timeout, $translate, ProjectAssetService) {
+    constructor($filter, $mdDialog, $state, $stateParams, $scope, $timeout, ProjectAssetService) {
         this.$filter = $filter;
         this.$mdDialog = $mdDialog;
         this.$state = $state;
         this.$stateParams = $stateParams;
         this.$scope = $scope;
         this.$timeout = $timeout;
-        this.$translate = $translate;
+        this.$translate = this.$filter('translate');
         this.projectId = this.$stateParams.projectId;
         this.ProjectAssetService = ProjectAssetService;
         this.projectAssets = ProjectAssetService.projectAssets;
@@ -91,20 +91,18 @@ class ProjectAssetController {
      * Show asset image in a popup dialog and give author an option to delete it.
      */
     viewAsset(assetItem) {
-        this.$translate(['close']).then((translations) => {
-            // Append dialog to document.body
-            let assetFullURL = this.ProjectAssetService.getFullAssetItemURL(assetItem);
-            let appropriateFileSize = this.$filter('appropriateSizeText')(assetItem.fileSize);
-            let confirm = this.$mdDialog.confirm()
-                .parent(angular.element(document.body))
-                .title(assetItem.fileName + " (" + appropriateFileSize + ")")
-                .htmlContent("<img src=\"" + assetFullURL + "\" />")
-                .ok(translations.close)
-            this.$mdDialog.show(confirm).then(() => {
-                // Author wants to simply close the dialog
-            }, () => {
-                // Author wants to simply close the dialog
-            });
+        // Append dialog to document.body
+        let assetFullURL = this.ProjectAssetService.getFullAssetItemURL(assetItem);
+        let appropriateFileSize = this.$filter('appropriateSizeText')(assetItem.fileSize);
+        let confirm = this.$mdDialog.confirm()
+            .parent(angular.element(document.body))
+            .title(assetItem.fileName + " (" + appropriateFileSize + ")")
+            .htmlContent("<img src=\"" + assetFullURL + "\" />")
+            .ok(this.$translate('close'))
+        this.$mdDialog.show(confirm).then(() => {
+            // Author wants to simply close the dialog
+        }, () => {
+            // Author wants to simply close the dialog
         });
     }
 
@@ -114,15 +112,19 @@ class ProjectAssetController {
                 let uploadedAssetsFilenames = [];
                 for (var r = 0; r < uploadAssetsResults.length; r++) {
                     let uploadAssetsResult = uploadAssetsResults[r];
-                    uploadedAssetsFilenames.push(uploadAssetsResult.config.file.name);
+                    if (typeof uploadAssetsResult.data === 'string') {
+                        // there was an error uploading this file, so don't add
+                    } else {
+                        uploadedAssetsFilenames.push(uploadAssetsResult.config.file.name);
+                    }
                 }
-                this.$translate('assetUploadSuccessful', { assetFilenames: uploadedAssetsFilenames.join(", ") }).then((assetUploadSuccessful) => {
+                if (uploadedAssetsFilenames.length > 0) {
                     // show a confirmation message for 7 seconds
-                    this.assetMessage = assetUploadSuccessful;
+                    this.assetMessage = this.$translate('assetUploadSuccessful', { assetFilenames: uploadedAssetsFilenames.join(", ") });
                     this.$timeout(() => {
-                            this.assetMessage = "";
+                        this.assetMessage = "";
                     }, 7000);
-                });
+                }
             }
             this.projectAssets = this.ProjectAssetService.projectAssets;
         });
@@ -133,6 +135,6 @@ class ProjectAssetController {
     }
 }
 
-ProjectAssetController.$inject = ['$filter', '$mdDialog', '$state', '$stateParams', '$scope', '$timeout', '$translate', 'ProjectAssetService'];
+ProjectAssetController.$inject = ['$filter', '$mdDialog', '$state', '$stateParams', '$scope', '$timeout', 'ProjectAssetService'];
 
 export default ProjectAssetController;

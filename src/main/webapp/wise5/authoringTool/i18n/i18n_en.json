@@ -48,6 +48,7 @@
     "moveDown": "Move Down",
     "moveUp": "Move Up",
     "myProjectsHeading": "My Projects",
+    "no": "No",
     "noSharedProjectsMessage": "You have no shared projects",
     "notebook": "Notebook",
     "noUndoAvailable": "There are no changes to undo",
@@ -59,8 +60,11 @@
     "projectTitle": "Project Title",
     "save": "Save",
     "saveErrorAdvancedAuthoring": "Error saving advanced authoring, possibly due to malformed JSON content. Check that your JSON is valid. Your changes have not been saved.",
+    "saved": "Saved",
+    "saving": "Saving...",
     "serverUpdate": "WISE Server Update",
     "serverUpdateRequestLogoutMessage": "WISE will be undergoing server maintenance soon. Please save your work and log out in the next few minutes.",
+    "sessionTimeout": "Session Timeout",
     "sharedProjectsHeading": "Shared Projects",
     "sortAssets": "Sort Assets",
     "stepTitle": "Step Title",
@@ -71,5 +75,6 @@
     "transitions": "Paths",
     "undo": "Undo",
     "viewHistory": "View History",
-    "whenToChoosePath": "When to choose path"
+    "whenToChoosePath": "When to choose path",
+    "yes": "Yes"
 }

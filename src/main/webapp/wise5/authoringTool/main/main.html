@@ -8,8 +8,10 @@
 
 <h3 translate="myProjectsHeading"></h3>
 <div class="projectItem" style="padding:2px" ng-repeat='project in authoringToolMainController.projects'>
-    {{project.id}}
-    {{project.name}}
+    <span ng-click="authoringToolMainController.openProject(project.id)">
+        {{project.id}}
+        {{project.name}}
+    </span>
     <span ng-if="project.runId != null">(Run ID: {{project.runId}})</span>
     <span ng-click="authoringToolMainController.openProject(project.id)">
         <md-tooltip md-direction="left"><span translate="edit"></span></md-tooltip>
@@ -32,8 +34,10 @@
 <h3 translate="sharedProjectsHeading"></h3>
 <div ng-show="authoringToolMainController.sharedProjects.length == 0" translate="noSharedProjectsMessage"></div>
 <div class="projectItem" style="padding:2px" ng-repeat='project in authoringToolMainController.sharedProjects'>
-    {{project.id}}
-    {{project.name}}
+    <span ng-click="authoringToolMainController.openProject(project.id)">
+        {{project.id}}
+        {{project.name}}
+    </span>
     <span ng-if="project.runId != null">(Run ID: {{project.runId}})</span>
     <span ng-click="authoringToolMainController.openProject(project.id)">
         <md-tooltip md-direction="left"><span translate="edit"></span></md-tooltip>

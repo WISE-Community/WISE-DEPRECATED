@@ -9,7 +9,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var NodeAuthoringController = function () {
-    function NodeAuthoringController($anchorScroll, $location, $filter, $scope, $state, $stateParams, $timeout, $translate, ConfigService, ProjectService, UtilService) {
+    function NodeAuthoringController($anchorScroll, $location, $filter, $scope, $state, $stateParams, $timeout, ConfigService, ProjectService, UtilService) {
         _classCallCheck(this, NodeAuthoringController);
 
         this.$anchorScroll = $anchorScroll;
@@ -19,7 +19,7 @@ var NodeAuthoringController = function () {
         this.$state = $state;
         this.$stateParams = $stateParams;
         this.$timeout = $timeout;
-        this.$translate = $translate;
+        this.$translate = this.$filter('translate');
         this.ConfigService = ConfigService;
         this.ProjectService = ProjectService;
         this.UtilService = UtilService;
@@ -226,7 +226,7 @@ var NodeAuthoringController = function () {
 
 
     _createClass(NodeAuthoringController, [{
-        key: "populateBranchAuthoring",
+        key: 'populateBranchAuthoring',
         value: function populateBranchAuthoring() {
             if (this.node.transitionLogic != null) {
 
@@ -384,14 +384,14 @@ var NodeAuthoringController = function () {
          */
 
     }, {
-        key: "previewStep",
+        key: 'previewStep',
         value: function previewStep() {
             var previewProjectURL = this.ConfigService.getConfigParam("previewProjectURL");
             var previewStepURL = previewProjectURL + "#/vle/" + this.nodeId;
             window.open(previewStepURL);
         }
     }, {
-        key: "previewStepWithoutConstraints",
+        key: 'previewStepWithoutConstraints',
 
 
         /**
@@ -403,7 +403,7 @@ var NodeAuthoringController = function () {
             window.open(previewStepURL);
         }
     }, {
-        key: "close",
+        key: 'close',
 
 
         /**
@@ -419,19 +419,17 @@ var NodeAuthoringController = function () {
             this.$state.go('root.project', { projectId: this.projectId });
         }
     }, {
-        key: "showSaveErrorAdvancedAuthoring",
+        key: 'showSaveErrorAdvancedAuthoring',
 
 
         /**
          * Display an error saving during advanced authoring, most-likely due to malformed JSON
          */
         value: function showSaveErrorAdvancedAuthoring() {
-            this.$translate('saveErrorAdvancedAuthoring').then(function (saveErrorAdvancedAuthoringMsg) {
-                alert(saveErrorAdvancedAuthoringMsg);
-            });
+            alert(this.$translate('saveErrorAdvancedAuthoring'));
         }
     }, {
-        key: "cancel",
+        key: 'cancel',
 
 
         /**
@@ -439,26 +437,23 @@ var NodeAuthoringController = function () {
          * the recent changes since they opened the node.
          */
         value: function cancel() {
-            var _this = this;
 
             // check if the user has made any changes
             if (!angular.equals(this.node, this.originalNodeCopy)) {
                 // the user has made changes
 
-                this.$translate('confirmUndo').then(function (confirmUndo) {
-                    var result = confirm(confirmUndo);
+                var result = confirm(this.$translate('confirmUndo'));
 
-                    if (result) {
-                        // revert the node back to the previous version
-                        _this.ProjectService.replaceNode(_this.nodeId, _this.originalNodeCopy);
+                if (result) {
+                    // revert the node back to the previous version
+                    this.ProjectService.replaceNode(this.nodeId, this.originalNodeCopy);
 
-                        // save the project
-                        _this.ProjectService.saveProject();
+                    // save the project
+                    this.ProjectService.saveProject();
 
-                        // close the node authoring view
-                        _this.close();
-                    }
-                });
+                    // close the node authoring view
+                    this.close();
+                }
             } else {
                 // the user has not made any changes
 
@@ -472,7 +467,7 @@ var NodeAuthoringController = function () {
          */
 
     }, {
-        key: "addNewTransition",
+        key: 'addNewTransition',
         value: function addNewTransition() {
             if (this.node.transitionLogic.transitions == null) {
                 this.node.transitionLogic.transitions = [];
@@ -499,7 +494,7 @@ var NodeAuthoringController = function () {
          */
 
     }, {
-        key: "addNewTransitionCriteria",
+        key: 'addNewTransitionCriteria',
         value: function addNewTransitionCriteria(transition) {
             var nodeTransitions = this.node.transitionLogic.transitions;
             for (var n = 0; n < nodeTransitions.length; n++) {
@@ -529,7 +524,7 @@ var NodeAuthoringController = function () {
          */
 
     }, {
-        key: "transitionCriteriaChanged",
+        key: 'transitionCriteriaChanged',
         value: function transitionCriteriaChanged(transitionIndex, criteriaIndex, newTransitionCriteria) {
             this.node.transitionLogic.transitions[transitionIndex].criteria[criteriaIndex] = newTransitionCriteria;
         }
@@ -539,7 +534,7 @@ var NodeAuthoringController = function () {
          */
 
     }, {
-        key: "deleteTransition",
+        key: 'deleteTransition',
         value: function deleteTransition(transition) {
             var nodeTransitions = this.node.transitionLogic.transitions;
 
@@ -556,7 +551,7 @@ var NodeAuthoringController = function () {
          */
 
     }, {
-        key: "saveTransitions",
+        key: 'saveTransitions',
         value: function saveTransitions() {
 
             // save the project
@@ -571,9 +566,9 @@ var NodeAuthoringController = function () {
          */
 
     }, {
-        key: "createComponent",
+        key: 'createComponent',
         value: function createComponent() {
-            var _this2 = this;
+            var _this = this;
 
             // create a component and add it to this node
             this.ProjectService.createComponent(this.nodeId, this.selectedComponent);
@@ -586,8 +581,8 @@ var NodeAuthoringController = function () {
 
             // Scroll to the bottom of the page where the new component was added
             this.$timeout(function () {
-                _this2.$location.hash('bottom');
-                _this2.$anchorScroll();
+                _this.$location.hash('bottom');
+                _this.$anchorScroll();
             });
         }
 
@@ -597,7 +592,7 @@ var NodeAuthoringController = function () {
          */
 
     }, {
-        key: "moveComponentUp",
+        key: 'moveComponentUp',
         value: function moveComponentUp(componentId) {
 
             // move the component up within the node
@@ -613,7 +608,7 @@ var NodeAuthoringController = function () {
          */
 
     }, {
-        key: "moveComponentDown",
+        key: 'moveComponentDown',
         value: function moveComponentDown(componentId) {
 
             // move the component down within the node
@@ -629,25 +624,21 @@ var NodeAuthoringController = function () {
          */
 
     }, {
-        key: "deleteComponent",
+        key: 'deleteComponent',
         value: function deleteComponent(componentId) {
-            var _this3 = this;
 
-            this.$translate('confirmDeleteComponent').then(function (confirmDeleteComponent) {
+            // ask the user to confirm the delete
+            var answer = confirm(this.$translate('confirmDeleteComponent'));
 
-                // ask the user to confirm the delete
-                var answer = confirm(confirmDeleteComponent);
+            if (answer) {
+                // the user confirmed yes
 
-                if (answer) {
-                    // the user confirmed yes
+                // delete the component from the node
+                this.ProjectService.deleteComponent(this.nodeId, componentId);
 
-                    // delete the component from the node
-                    _this3.ProjectService.deleteComponent(_this3.nodeId, componentId);
-
-                    // save the project
-                    _this3.ProjectService.saveProject();
-                }
-            });
+                // save the project
+                this.ProjectService.saveProject();
+            }
         }
 
         /**
@@ -655,7 +646,7 @@ var NodeAuthoringController = function () {
          */
 
     }, {
-        key: "authoringViewNodeChanged",
+        key: 'authoringViewNodeChanged',
         value: function authoringViewNodeChanged() {
             // put the previous version of the node on to the undo stack
             this.undoStack.push(this.currentNodeCopy);
@@ -672,43 +663,37 @@ var NodeAuthoringController = function () {
          */
 
     }, {
-        key: "undo",
+        key: 'undo',
         value: function undo() {
-            var _this4 = this;
 
             if (this.undoStack.length === 0) {
                 // the undo stack is empty so there are no changes to undo
-                this.$translate('noUndoAvailable').then(function (noUndoAvailable) {
-                    alert(noUndoAvailable);
-                });
+                alert(this.$translate('noUndoAvailable'));
             } else if (this.undoStack.length > 0) {
                 // the undo stack has elements
 
-                this.$translate('confirmUndoLastChange').then(function (confirmUndoLastChange) {
+                // ask the user to confirm the delete
+                var result = confirm(this.$translate('confirmUndoLastChange'));
 
-                    // ask the user to confirm the delete
-                    var result = confirm(confirmUndoLastChange);
+                if (result) {
+                    // perform any node cleanup if necessary
+                    this.$scope.$broadcast('exitNode', { nodeToExit: this.node });
 
-                    if (result) {
-                        // perform any node cleanup if necessary
-                        _this4.$scope.$broadcast('exitNode', { nodeToExit: _this4.node });
+                    // get the previous version of the node
+                    var nodeCopy = this.undoStack.pop();
 
-                        // get the previous version of the node
-                        var nodeCopy = _this4.undoStack.pop();
+                    // revert the node back to the previous version
+                    this.ProjectService.replaceNode(this.nodeId, nodeCopy);
 
-                        // revert the node back to the previous version
-                        _this4.ProjectService.replaceNode(_this4.nodeId, nodeCopy);
+                    // get the node
+                    this.node = this.ProjectService.getNodeById(this.nodeId);
 
-                        // get the node
-                        _this4.node = _this4.ProjectService.getNodeById(_this4.nodeId);
+                    // get the components in the node
+                    this.components = this.ProjectService.getComponentsByNodeId(this.nodeId);
 
-                        // get the components in the node
-                        _this4.components = _this4.ProjectService.getComponentsByNodeId(_this4.nodeId);
-
-                        // save the project
-                        _this4.ProjectService.saveProject();
-                    }
-                });
+                    // save the project
+                    this.ProjectService.saveProject();
+                }
             }
         }
 
@@ -719,7 +704,7 @@ var NodeAuthoringController = function () {
          */
 
     }, {
-        key: "getRemovalCriteriaParamsByName",
+        key: 'getRemovalCriteriaParamsByName',
         value: function getRemovalCriteriaParamsByName(name) {
             var params = [];
 
@@ -755,7 +740,7 @@ var NodeAuthoringController = function () {
          */
 
     }, {
-        key: "getTransitionCriteriaParamsByName",
+        key: 'getTransitionCriteriaParamsByName',
         value: function getTransitionCriteriaParamsByName(name) {
             var params = [];
 
@@ -792,7 +777,7 @@ var NodeAuthoringController = function () {
          */
 
     }, {
-        key: "getChoicesByNodeIdAndComponentId",
+        key: 'getChoicesByNodeIdAndComponentId',
         value: function getChoicesByNodeIdAndComponentId(nodeId, componentId) {
 
             var choices = [];
@@ -816,7 +801,7 @@ var NodeAuthoringController = function () {
          */
 
     }, {
-        key: "getChoiceTypeByNodeIdAndComponentId",
+        key: 'getChoiceTypeByNodeIdAndComponentId',
         value: function getChoiceTypeByNodeIdAndComponentId(nodeId, componentId) {
 
             var choiceType = null;
@@ -839,7 +824,7 @@ var NodeAuthoringController = function () {
          */
 
     }, {
-        key: "getNewNodeConstraintId",
+        key: 'getNewNodeConstraintId',
         value: function getNewNodeConstraintId(nodeId) {
 
             var newNodeConstraintId = null;
@@ -904,7 +889,7 @@ var NodeAuthoringController = function () {
          */
 
     }, {
-        key: "addConstraint",
+        key: 'addConstraint',
         value: function addConstraint() {
 
             // get a new constraint id
@@ -944,7 +929,7 @@ var NodeAuthoringController = function () {
          */
 
     }, {
-        key: "deleteConstraint",
+        key: 'deleteConstraint',
         value: function deleteConstraint(constraintIndex) {
 
             if (constraintIndex != null) {
@@ -974,7 +959,7 @@ var NodeAuthoringController = function () {
          */
 
     }, {
-        key: "addRemovalCriteria",
+        key: 'addRemovalCriteria',
         value: function addRemovalCriteria(constraint) {
 
             if (constraint != null) {
@@ -999,7 +984,7 @@ var NodeAuthoringController = function () {
          */
 
     }, {
-        key: "deleteRemovalCriteria",
+        key: 'deleteRemovalCriteria',
         value: function deleteRemovalCriteria(constraint, removalCriteriaIndex) {
             if (constraint != null) {
 
@@ -1023,7 +1008,7 @@ var NodeAuthoringController = function () {
          */
 
     }, {
-        key: "deleteTransitionCriteria",
+        key: 'deleteTransitionCriteria',
         value: function deleteTransitionCriteria(transition, transitionCriteriaIndex) {
             if (transition != null) {
 
@@ -1046,7 +1031,7 @@ var NodeAuthoringController = function () {
          */
 
     }, {
-        key: "removalCriteriaNameChanged",
+        key: 'removalCriteriaNameChanged',
         value: function removalCriteriaNameChanged(criteria) {
 
             if (criteria != null) {
@@ -1064,7 +1049,7 @@ var NodeAuthoringController = function () {
          */
 
     }, {
-        key: "transitionCriteriaNameChanged",
+        key: 'transitionCriteriaNameChanged',
         value: function transitionCriteriaNameChanged(transitionCriteria) {
 
             if (transitionCriteria != null) {
@@ -1082,7 +1067,7 @@ var NodeAuthoringController = function () {
          */
 
     }, {
-        key: "nodeAuthoringViewButtonClicked",
+        key: 'nodeAuthoringViewButtonClicked',
         value: function nodeAuthoringViewButtonClicked(view) {
 
             if (view == 'addComponent') {
@@ -1128,7 +1113,7 @@ var NodeAuthoringController = function () {
          */
 
     }, {
-        key: "createBranchNumberOfBranchesChanged",
+        key: 'createBranchNumberOfBranchesChanged',
         value: function createBranchNumberOfBranchesChanged() {
 
             if (this.createBranchNumberOfBranches == 0) {
@@ -1273,7 +1258,7 @@ var NodeAuthoringController = function () {
          */
 
     }, {
-        key: "createBranchCriterionChanged",
+        key: 'createBranchCriterionChanged',
         value: function createBranchCriterionChanged() {
 
             if (this.createBranchCriterion != null) {
@@ -1323,7 +1308,7 @@ var NodeAuthoringController = function () {
          */
 
     }, {
-        key: "createBranchNodeIdChanged",
+        key: 'createBranchNodeIdChanged',
         value: function createBranchNodeIdChanged() {
 
             this.createBranchComponentId = null;
@@ -1363,7 +1348,7 @@ var NodeAuthoringController = function () {
          */
 
     }, {
-        key: "createBranchComponentIdChanged",
+        key: 'createBranchComponentIdChanged',
         value: function createBranchComponentIdChanged() {
 
             /*
@@ -1382,7 +1367,7 @@ var NodeAuthoringController = function () {
          */
 
     }, {
-        key: "createBranchUpdateTransitions",
+        key: 'createBranchUpdateTransitions',
         value: function createBranchUpdateTransitions() {
 
             // loop through all the branches
@@ -1511,7 +1496,7 @@ var NodeAuthoringController = function () {
          */
 
     }, {
-        key: "createBranchUpdateChoiceChosenIds",
+        key: 'createBranchUpdateChoiceChosenIds',
         value: function createBranchUpdateChoiceChosenIds() {
 
             // get the node id and component id
@@ -1597,7 +1582,7 @@ var NodeAuthoringController = function () {
          */
 
     }, {
-        key: "createBranchStepClicked",
+        key: 'createBranchStepClicked',
         value: function createBranchStepClicked(branch, item) {
 
             // get all the steps in order
@@ -1805,7 +1790,7 @@ var NodeAuthoringController = function () {
          */
 
     }, {
-        key: "createBranchScoreChanged",
+        key: 'createBranchScoreChanged',
         value: function createBranchScoreChanged(branch) {
 
             if (branch != null) {
@@ -1853,7 +1838,7 @@ var NodeAuthoringController = function () {
          */
 
     }, {
-        key: "createBranchMergePointNodeIdChanged",
+        key: 'createBranchMergePointNodeIdChanged',
         value: function createBranchMergePointNodeIdChanged() {
 
             // get the merge point node id
@@ -1915,7 +1900,7 @@ var NodeAuthoringController = function () {
          */
 
     }, {
-        key: "removeBranchButtonClicked",
+        key: 'removeBranchButtonClicked',
         value: function removeBranchButtonClicked() {
 
             // ask the user if they are sure they want to remove the branch
@@ -1933,7 +1918,7 @@ var NodeAuthoringController = function () {
          */
 
     }, {
-        key: "removeBranch",
+        key: 'removeBranch',
         value: function removeBranch() {
 
             // loop through all the branch paths
@@ -2025,7 +2010,7 @@ var NodeAuthoringController = function () {
          */
 
     }, {
-        key: "removeBranchPath",
+        key: 'removeBranchPath',
         value: function removeBranchPath(branch) {
 
             if (branch != null) {
@@ -2077,7 +2062,7 @@ var NodeAuthoringController = function () {
 
 ;
 
-NodeAuthoringController.$inject = ['$anchorScroll', '$location', '$filter', '$scope', '$state', '$stateParams', '$timeout', '$translate', 'ConfigService', 'ProjectService', 'UtilService'];
+NodeAuthoringController.$inject = ['$anchorScroll', '$location', '$filter', '$scope', '$state', '$stateParams', '$timeout', 'ConfigService', 'ProjectService', 'UtilService'];
 
 exports.default = NodeAuthoringController;
 //# sourceMappingURL=nodeAuthoringController.js.map

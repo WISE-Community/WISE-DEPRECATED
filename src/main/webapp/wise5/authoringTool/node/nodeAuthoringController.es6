@@ -9,7 +9,6 @@ class NodeAuthoringController {
                 $state,
                 $stateParams,
                 $timeout,
-                $translate,
                 ConfigService,
                 ProjectService,
                 UtilService) {
@@ -21,7 +20,7 @@ class NodeAuthoringController {
         this.$state = $state;
         this.$stateParams = $stateParams;
         this.$timeout = $timeout;
-        this.$translate = $translate;
+        this.$translate = this.$filter('translate');
         this.ConfigService = ConfigService;
         this.ProjectService = ProjectService;
         this.UtilService = UtilService;
@@ -484,9 +483,7 @@ class NodeAuthoringController {
      * Display an error saving during advanced authoring, most-likely due to malformed JSON
      */
     showSaveErrorAdvancedAuthoring() {
-        this.$translate('saveErrorAdvancedAuthoring').then((saveErrorAdvancedAuthoringMsg) => {
-            alert(saveErrorAdvancedAuthoringMsg);
-        });
+        alert(this.$translate('saveErrorAdvancedAuthoring'));
     };
 
     /**
@@ -499,20 +496,19 @@ class NodeAuthoringController {
         if (!angular.equals(this.node, this.originalNodeCopy)) {
             // the user has made changes
 
-            this.$translate('confirmUndo').then((confirmUndo) => {
-                var result = confirm(confirmUndo);
+            let result = confirm(this.$translate('confirmUndo'));
 
-                if (result) {
-                    // revert the node back to the previous version
-                    this.ProjectService.replaceNode(this.nodeId, this.originalNodeCopy);
+            if (result) {
+                // revert the node back to the previous version
+                this.ProjectService.replaceNode(this.nodeId, this.originalNodeCopy);
 
-                    // save the project
-                    this.ProjectService.saveProject();
+                // save the project
+                this.ProjectService.saveProject();
 
-                    // close the node authoring view
-                    this.close();
-                }
-            });
+                // close the node authoring view
+                this.close();
+            }
+
         } else {
             // the user has not made any changes
 
@@ -659,21 +655,18 @@ class NodeAuthoringController {
      */
     deleteComponent(componentId) {
 
-        this.$translate('confirmDeleteComponent').then((confirmDeleteComponent) => {
+        // ask the user to confirm the delete
+        let answer = confirm(this.$translate('confirmDeleteComponent'));
 
-            // ask the user to confirm the delete
-            var answer = confirm(confirmDeleteComponent);
+        if (answer) {
+            // the user confirmed yes
 
-            if (answer) {
-                // the user confirmed yes
+            // delete the component from the node
+            this.ProjectService.deleteComponent(this.nodeId, componentId);
 
-                // delete the component from the node
-                this.ProjectService.deleteComponent(this.nodeId, componentId);
-
-                // save the project
-                this.ProjectService.saveProject();
-            }
-        });
+            // save the project
+            this.ProjectService.saveProject();
+        }
     }
 
     /**
@@ -697,38 +690,34 @@ class NodeAuthoringController {
 
         if (this.undoStack.length === 0) {
             // the undo stack is empty so there are no changes to undo
-            this.$translate('noUndoAvailable').then((noUndoAvailable) => {
-                alert(noUndoAvailable);
-            });
+            alert(this.$translate('noUndoAvailable'));
 
         } else if (this.undoStack.length > 0) {
             // the undo stack has elements
 
-            this.$translate('confirmUndoLastChange').then((confirmUndoLastChange) => {
+            // ask the user to confirm the delete
+            let result = confirm(this.$translate('confirmUndoLastChange'));
 
-                // ask the user to confirm the delete
-                var result = confirm(confirmUndoLastChange);
+            if (result) {
+                // perform any node cleanup if necessary
+                this.$scope.$broadcast('exitNode', {nodeToExit: this.node});
 
-                if (result) {
-                    // perform any node cleanup if necessary
-                    this.$scope.$broadcast('exitNode', {nodeToExit: this.node});
-                    
-                    // get the previous version of the node
-                    var nodeCopy = this.undoStack.pop();
+                // get the previous version of the node
+                var nodeCopy = this.undoStack.pop();
 
-                    // revert the node back to the previous version
-                    this.ProjectService.replaceNode(this.nodeId, nodeCopy);
+                // revert the node back to the previous version
+                this.ProjectService.replaceNode(this.nodeId, nodeCopy);
 
-                    // get the node
-                    this.node = this.ProjectService.getNodeById(this.nodeId);
+                // get the node
+                this.node = this.ProjectService.getNodeById(this.nodeId);
 
-                    // get the components in the node
-                    this.components = this.ProjectService.getComponentsByNodeId(this.nodeId);
+                // get the components in the node
+                this.components = this.ProjectService.getComponentsByNodeId(this.nodeId);
 
-                    // save the project
-                    this.ProjectService.saveProject();
-                }
-            });
+                // save the project
+                this.ProjectService.saveProject();
+            }
+
         }
     }
     
@@ -2025,7 +2014,6 @@ NodeAuthoringController.$inject = [
     '$state',
     '$stateParams',
     '$timeout',
-    '$translate',
     'ConfigService',
     'ProjectService',
     'UtilService'
