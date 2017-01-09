@@ -1,5 +1,7 @@
 <div ng-controller='HTMLController as htmlController'>
     <div ng-if='htmlController.mode === "authoring"'>
+        {{ 'html' | translate }}
+        <br/>
         <textarea ng-model='htmlController.authoringComponentContent.html'
                   ng-change='htmlController.authoringViewComponentChanged()'
                   ng-model-options='{ debounce: 1000 }'
