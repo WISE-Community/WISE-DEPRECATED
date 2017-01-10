@@ -12,7 +12,7 @@
                    ng-change='discussionController.authoringViewComponentChanged()'/>
             <br/>
 
-            Max Score:
+            {{ 'maxScore' | translate }}:
             <input type='number'
                    ng-model='discussionController.authoringComponentContent.maxScore'
                    ng-change='discussionController.authoringViewComponentChanged()'
@@ -20,14 +20,14 @@
                    style='width: 3em'/>
     </div>
     <div ng-if='discussionController.mode === "authoring"'>
-        Show Previous Work:
+        {{ 'showPreviousWork' | translate }}:
         <input type='checkbox'
                ng-model='discussionController.authoringComponentContent.showPreviousWork'
                ng-click='discussionController.authoringShowPreviousWorkClicked()'
                ng-change='discussionController.authoringViewComponentChanged()'/>
     </div>
     <div ng-if='discussionController.mode === "authoring" && discussionController.authoringComponentContent.showPreviousWork'>
-        Show Previous Work Step:
+        {{ 'showPreviousWorkStep' | translate }}:
         <select ng-model='discussionController.authoringComponentContent.showPreviousWorkNodeId'
                 ng-change='discussionController.authoringShowPreviousWorkNodeIdChanged()'>
             <option></option>
@@ -36,14 +36,14 @@
                     ng-if='discussionController.isApplicationNode(item.$key)'>{{discussionController.getNodePositionAndTitleByNodeId(item.$key)}}</option>
         </select>
         <br/>
-        Show Previous Work Component:
+        {{ 'showPreviousWorkComponent' | translate }}:
         <select ng-model='discussionController.authoringComponentContent.showPreviousWorkComponentId'
                 ng-change='discussionController.authoringShowPreviousWorkComponentIdChanged()'
                 ng-options='component.id as component.type disable when !discussionController.componentHasWork(component) for component in discussionController.getComponentsByNodeId(discussionController.authoringComponentContent.showPreviousWorkNodeId)'>
             <option></option>
         </select>
         <br/>
-        Show Previous Work Prompt:
+        {{ 'showPreviousWorkPrompt' | translate }}:
         <input type='checkbox'
                ng-model='discussionController.authoringComponentContent.showPreviousWorkPrompt'
                ng-change='discussionController.authoringViewComponentChanged()'/>
@@ -114,7 +114,7 @@
                                    ng-if="discussionController.showSaveButton()">Save Draft</md-button>-->
                         <md-button class="md-raised md-primary"
                                    ng-click="discussionController.submitButtonClicked()"
-                                   ng-disabled="discussionController.isDisabled || (!discussionController.newResponse && discussionController.newAttachments.length == 0)">Post</md-button>
+                                   ng-disabled="discussionController.isDisabled || (!discussionController.newResponse && discussionController.newAttachments.length == 0)">{{ 'post' | translate }}</md-button>
                     </div>
                 </md-card>
 

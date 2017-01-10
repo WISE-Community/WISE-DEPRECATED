@@ -1,5 +1,6 @@
 class DiscussionController {
-    constructor($injector,
+    constructor($filter,
+                $injector,
                 $q,
                 $rootScope,
                 $scope,
@@ -15,6 +16,7 @@ class DiscussionController {
                 UtilService,
                 $mdMedia) {
 
+        this.$filter = $filter;
         this.$injector = $injector;
         this.$q = $q;
         this.$rootScope = $rootScope;
@@ -31,6 +33,8 @@ class DiscussionController {
         this.UtilService = UtilService;
         this.idToOrder = this.ProjectService.idToOrder;
         this.$mdMedia = $mdMedia;
+
+        this.$translate = this.$filter('translate');
 
         // the node id of the current node
         this.nodeId = null;
@@ -401,7 +405,7 @@ class DiscussionController {
                         let userNames = userNamesArray.map( (obj) => {
                             return obj.name;
                         }).join(', ');
-                        let notificationMessage = userNames + " replied to a discussion you were in!";
+                        let notificationMessage = this.$translate('repliedToADiscussionYouWereIn', { userNames: userNames });
 
                         let workgroupsNotifiedSoFar = [];  // keep track of workgroups we've already notified, in case a workgroup posts twice on a thread we only want to notify once.
                         // check if we have the component state that was replied to
@@ -1306,7 +1310,7 @@ class DiscussionController {
                  */
 
                 // make sure the author really wants to change the component type
-                var answer = confirm('Are you sure you want to change this component type?');
+                var answer = confirm(this.$translate('areYouSureYouWantToChangeThisComponentType'));
 
                 if (answer) {
                     // the author wants to change the component type
@@ -1372,6 +1376,7 @@ class DiscussionController {
 }
 
 DiscussionController.$inject = [
+    '$filter',
     '$injector',
     '$q',
     '$rootScope',

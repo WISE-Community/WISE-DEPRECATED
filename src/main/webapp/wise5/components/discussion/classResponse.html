@@ -15,8 +15,8 @@
     <div class="discussion-comments">
         <div class="discussion-comments__contents" ng-show="classResponseCtrl.response.replies.length">
             <md-subheader class="md-no-sticky discussion-comments__header">
-                <a ng-if="classResponseCtrl.response.replies.length > 1" ng-click="classResponseCtrl.toggleExpanded()">Comments ({{ classResponseCtrl.response.replies.length }})<md-icon ng-if="!classResponseCtrl.expanded">expand_more</md-icon><md-icon ng-if="classResponseCtrl.expanded">expand_less</md-icon></a>
-                <span ng-if="classResponseCtrl.response.replies.length < 2">Comments ({{ classResponseCtrl.response.replies.length }})</span>
+                <a ng-if="classResponseCtrl.response.replies.length > 1" ng-click="classResponseCtrl.toggleExpanded()">{{ 'comments' | translate }} ({{ classResponseCtrl.response.replies.length }})<md-icon ng-if="!classResponseCtrl.expanded">expand_more</md-icon><md-icon ng-if="classResponseCtrl.expanded">expand_less</md-icon></a>
+                <span ng-if="classResponseCtrl.response.replies.length < 2">{{ 'comments' | translate }} ({{ classResponseCtrl.response.replies.length }})</span>
             </md-subheader>
             <md-list class="discussion-comments__list">
                 <md-list-item class="md-3-line md-long-text discussion-reply"
@@ -49,7 +49,7 @@
                 </md-button>-->
                 <md-button class="md-primary discussion-new-reply__submit"
                            ng-disabled="!classResponseCtrl.response.replyText"
-                           ng-click="classResponseCtrl.submitButtonClicked(classResponseCtrl.response)">Reply</md-button>
+                           ng-click="classResponseCtrl.submitButtonClicked(classResponseCtrl.response)">{{ 'reply' | translate }}</md-button>
             </div>
         </div>
     </div>

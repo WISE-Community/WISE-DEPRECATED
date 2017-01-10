@@ -9,11 +9,12 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var DiscussionController = function () {
-    function DiscussionController($injector, $q, $rootScope, $scope, AnnotationService, ConfigService, DiscussionService, NodeService, NotificationService, ProjectService, StudentAssetService, StudentDataService, StudentWebSocketService, UtilService, $mdMedia) {
+    function DiscussionController($filter, $injector, $q, $rootScope, $scope, AnnotationService, ConfigService, DiscussionService, NodeService, NotificationService, ProjectService, StudentAssetService, StudentDataService, StudentWebSocketService, UtilService, $mdMedia) {
         var _this2 = this;
 
         _classCallCheck(this, DiscussionController);
 
+        this.$filter = $filter;
         this.$injector = $injector;
         this.$q = $q;
         this.$rootScope = $rootScope;
@@ -30,6 +31,8 @@ var DiscussionController = function () {
         this.UtilService = UtilService;
         this.idToOrder = this.ProjectService.idToOrder;
         this.$mdMedia = $mdMedia;
+
+        this.$translate = this.$filter('translate');
 
         // the node id of the current node
         this.nodeId = null;
@@ -400,7 +403,7 @@ var DiscussionController = function () {
                         var userNames = userNamesArray.map(function (obj) {
                             return obj.name;
                         }).join(', ');
-                        var notificationMessage = userNames + " replied to a discussion you were in!";
+                        var notificationMessage = _this2.$translate('repliedToADiscussionYouWereIn', { userNames: userNames });
 
                         var workgroupsNotifiedSoFar = []; // keep track of workgroups we've already notified, in case a workgroup posts twice on a thread we only want to notify once.
                         // check if we have the component state that was replied to
@@ -1416,7 +1419,7 @@ var DiscussionController = function () {
                      */
 
                     // make sure the author really wants to change the component type
-                    var answer = confirm('Are you sure you want to change this component type?');
+                    var answer = confirm(this.$translate('areYouSureYouWantToChangeThisComponentType'));
 
                     if (answer) {
                         // the author wants to change the component type
@@ -1487,7 +1490,7 @@ var DiscussionController = function () {
     return DiscussionController;
 }();
 
-DiscussionController.$inject = ['$injector', '$q', '$rootScope', '$scope', 'AnnotationService', 'ConfigService', 'DiscussionService', 'NodeService', 'NotificationService', 'ProjectService', 'StudentAssetService', 'StudentDataService', 'StudentWebSocketService', 'UtilService', '$mdMedia'];
+DiscussionController.$inject = ['$filter', '$injector', '$q', '$rootScope', '$scope', 'AnnotationService', 'ConfigService', 'DiscussionService', 'NodeService', 'NotificationService', 'ProjectService', 'StudentAssetService', 'StudentDataService', 'StudentWebSocketService', 'UtilService', '$mdMedia'];
 
 exports.default = DiscussionController;
 //# sourceMappingURL=discussionController.js.map

@@ -1,7 +1,8 @@
 import NodeService from '../../services/nodeService';
 
 class DiscussionService extends NodeService {
-    constructor($http,
+    constructor($filter,
+                $http,
                 $rootScope,
                 $q,
                 $injector,
@@ -10,6 +11,7 @@ class DiscussionService extends NodeService {
                 UtilService) {
         super();
 
+        this.$filter = $filter;
         this.$http = $http;
         this.$rootScope = $rootScope;
         this.$q = $q;
@@ -17,6 +19,8 @@ class DiscussionService extends NodeService {
         this.ConfigService = ConfigService;
         this.StudentDataService = StudentDataService;
         this.UtilService = UtilService;
+
+        this.$translate = this.$filter('translate');
 
         if (this.ConfigService != null && this.ConfigService.getMode() == "classroomMonitor") {
             // in the classroom monitor, we need access to the TeacherDataService so it can retrieve posts and replies for all students
@@ -32,7 +36,7 @@ class DiscussionService extends NodeService {
         var component = {};
         component.id = this.UtilService.generateKey();
         component.type = 'Discussion';
-        component.prompt = 'Enter prompt here';
+        component.prompt = this.$translate('enterPromptHere');
         component.showSaveButton = false;
         component.showSubmitButton = true;
         component.isStudentAttachmentEnabled = true;
@@ -238,11 +242,11 @@ class DiscussionService extends NodeService {
 
         return postAndAllReplies;
     };
-    
+
     /**
      * Whether this component generates student work
      * @param component (optional) the component object. if the component object
-     * is not provided, we will use the default value of whether the 
+     * is not provided, we will use the default value of whether the
      * component type usually has work.
      * @return whether this component generates student work
      */
@@ -252,6 +256,7 @@ class DiscussionService extends NodeService {
 }
 
 DiscussionService.$inject = [
+    '$filter',
     '$http',
     '$rootScope',
     '$q',

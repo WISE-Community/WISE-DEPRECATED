@@ -1,3 +1,14 @@
 {
-  "allowUploadedImagesInPosts": "Students can upload and use images in their posts."
+    "allowUploadedImagesInPosts": "Students can upload and use images in their posts.",
+    "areYouSureYouWantToChangeThisComponentType": "Are you sure you want to change this component type?",
+    "comments": "Comments",
+    "enterPromptHere": "Enter Prompt Here",
+    "maxScore": "Max Score",
+    "post": "Post",
+    "repliedToADiscussionYouWereIn": "{{userNames}} replied to a discussion you were in!",
+    "reply": "Reply",
+    "showPreviousWork": "Show Previous Work",
+    "showPreviousWorkComponent": "Show Previous Work Component",
+    "showPreviousWorkPrompt": "Show Previous Work Prompt",
+    "showPreviousWorkStep": "Show Previous Work Step"
 }

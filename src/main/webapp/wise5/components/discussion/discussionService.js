@@ -21,11 +21,12 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var DiscussionService = function (_NodeService) {
     _inherits(DiscussionService, _NodeService);
 
-    function DiscussionService($http, $rootScope, $q, $injector, ConfigService, StudentDataService, UtilService) {
+    function DiscussionService($filter, $http, $rootScope, $q, $injector, ConfigService, StudentDataService, UtilService) {
         _classCallCheck(this, DiscussionService);
 
         var _this = _possibleConstructorReturn(this, (DiscussionService.__proto__ || Object.getPrototypeOf(DiscussionService)).call(this));
 
+        _this.$filter = $filter;
         _this.$http = $http;
         _this.$rootScope = $rootScope;
         _this.$q = $q;
@@ -33,6 +34,8 @@ var DiscussionService = function (_NodeService) {
         _this.ConfigService = ConfigService;
         _this.StudentDataService = StudentDataService;
         _this.UtilService = UtilService;
+
+        _this.$translate = _this.$filter('translate');
 
         if (_this.ConfigService != null && _this.ConfigService.getMode() == "classroomMonitor") {
             // in the classroom monitor, we need access to the TeacherDataService so it can retrieve posts and replies for all students
@@ -53,7 +56,7 @@ var DiscussionService = function (_NodeService) {
             var component = {};
             component.id = this.UtilService.generateKey();
             component.type = 'Discussion';
-            component.prompt = 'Enter prompt here';
+            component.prompt = this.$translate('enterPromptHere');
             component.showSaveButton = false;
             component.showSubmitButton = true;
             component.isStudentAttachmentEnabled = true;
@@ -280,7 +283,7 @@ var DiscussionService = function (_NodeService) {
         /**
          * Whether this component generates student work
          * @param component (optional) the component object. if the component object
-         * is not provided, we will use the default value of whether the 
+         * is not provided, we will use the default value of whether the
          * component type usually has work.
          * @return whether this component generates student work
          */
@@ -292,7 +295,7 @@ var DiscussionService = function (_NodeService) {
     return DiscussionService;
 }(_nodeService2.default);
 
-DiscussionService.$inject = ['$http', '$rootScope', '$q', '$injector', 'ConfigService', 'StudentDataService', 'UtilService'];
+DiscussionService.$inject = ['$filter', '$http', '$rootScope', '$q', '$injector', 'ConfigService', 'StudentDataService', 'UtilService'];
 
 exports.default = DiscussionService;
 //# sourceMappingURL=discussionService.js.map
