@@ -1,5 +1,6 @@
 class LabelController {
     constructor(
+        $filter,
         $injector,
         $q,
         $scope,
@@ -16,6 +17,7 @@ class LabelController {
         UtilService
     ) {
 
+        this.$filter = $filter;
         this.$injector = $injector;
         this.$q = $q;
         this.$scope = $scope;
@@ -31,6 +33,8 @@ class LabelController {
         this.StudentDataService = StudentDataService;
         this.UtilService = UtilService;
         this.idToOrder = this.ProjectService.idToOrder;
+
+        this.$translate = this.$filter('translate');
 
         // the node id of the current node
         this.nodeId = null;
@@ -129,7 +133,7 @@ class LabelController {
         this.backgroundImage = null;
 
         // the message to display when the student is in create label mode
-        this.newLabelMessage = 'Click on the image or ';
+        this.newLabelMessage = this.$translate('clickOnTheImageOr');
 
         // get the current node and node id
         var currentNode = this.StudentDataService.getCurrentNode();
@@ -362,7 +366,7 @@ class LabelController {
 
                 // set save message
                 if (isSubmit) {
-                    this.setSaveMessage('Submitted', clientSaveTime);
+                    this.setSaveMessage(this.$translate('submitted'), clientSaveTime);
 
                     this.submit();
 
@@ -370,9 +374,9 @@ class LabelController {
                     this.isSubmitDirty = false;
                     this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: false});
                 } else if (isAutoSave) {
-                    this.setSaveMessage('Auto-saved', clientSaveTime);
+                    this.setSaveMessage(this.$translate('autoSaved'), clientSaveTime);
                 } else {
-                    this.setSaveMessage('Saved', clientSaveTime);
+                    this.setSaveMessage(this.$translate('saved'), clientSaveTime);
                 }
             }
         }));
@@ -459,7 +463,7 @@ class LabelController {
                  * there is an existing background image so we will ask the
                  * student if they want to change it
                  */
-                var answer = confirm("Are you sure you want to change the background image?");
+                var answer = confirm(this.$translate('areYouSureYouWantToChangeTheBackgroundImage'));
 
                 if (answer) {
                     // the student wants to change the background image
@@ -628,13 +632,13 @@ class LabelController {
                 this.isSubmitDirty = false;
                 this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: false});
                 // set save message
-                this.setSaveMessage('Last submitted', clientSaveTime);
+                this.setSaveMessage(this.$translate('lastSubmitted'), clientSaveTime);
             } else {
                 // latest state is not a submission, so set isSubmitDirty to true and notify node
                 this.isSubmitDirty = true;
                 this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: true});
                 // set save message
-                this.setSaveMessage('Last saved', clientSaveTime);
+                this.setSaveMessage(this.$translate('lastSaved'), clientSaveTime);
             }
         }
     };
@@ -1170,7 +1174,7 @@ class LabelController {
                     var textY = 100;
 
                     // create a new label
-                    var newLabel = this.createLabel(x, y, textX, textY, 'A new label', 'blue');
+                    var newLabel = this.createLabel(x, y, textX, textY, this.$translate('aNewLabel'), 'blue');
 
                     // add the label to the canvas
                     this.addLabelToCanvas(this.canvas, newLabel);
@@ -1702,7 +1706,7 @@ class LabelController {
                  */
 
                 // make sure the author really wants to change the component type
-                var answer = confirm('Are you sure you want to change this component type?');
+                var answer = confirm(this.$translate('areYouSureYouWantToChangeThisComponentType'));
 
                 if (answer) {
                     // the author wants to change the component type
@@ -1801,7 +1805,7 @@ class LabelController {
 
         // create the new label
         var newLabel = {};
-        newLabel.text = 'Enter text here';
+        newLabel.text = this.$translate('enterTextHere');
         newLabel.color = 'blue';
         newLabel.pointX = 100;
         newLabel.pointY = 100;
@@ -2043,7 +2047,7 @@ class LabelController {
             var selectedLabelText = this.selectedLabel.text.text;
 
             // confirm with the student that they want to delete the label
-            var answer = confirm('Are you sure you want to delete this label?\n\n' + selectedLabelText);
+            var answer = confirm(this.$translate('areYouSureYouWantToDeleteThisLabel', { selectedLabelText: selectedLabelText }));
 
             if (answer) {
                 // the student is sure they want to delete the label
@@ -2080,6 +2084,7 @@ class LabelController {
 }
 
 LabelController.$inject = [
+    '$filter',
     '$injector',
     '$q',
     '$scope',

@@ -21,13 +21,15 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var LabelService = function (_NodeService) {
     _inherits(LabelService, _NodeService);
 
-    function LabelService(StudentDataService, UtilService) {
+    function LabelService($filter, StudentDataService, UtilService) {
         _classCallCheck(this, LabelService);
 
         var _this = _possibleConstructorReturn(this, (LabelService.__proto__ || Object.getPrototypeOf(LabelService)).call(this));
 
+        _this.$filter = $filter;
         _this.StudentDataService = StudentDataService;
         _this.UtilService = UtilService;
+        _this.$translate = _this.$filter('translate');
         return _this;
     }
 
@@ -43,7 +45,7 @@ var LabelService = function (_NodeService) {
             var component = {};
             component.id = this.UtilService.generateKey();
             component.type = 'Label';
-            component.prompt = 'Enter prompt here';
+            component.prompt = this.$translate('enterPromptHere');
             component.showSaveButton = false;
             component.showSubmitButton = false;
             component.backgroundImage = '';
@@ -177,7 +179,7 @@ var LabelService = function (_NodeService) {
         /**
          * Whether this component generates student work
          * @param component (optional) the component object. if the component object
-         * is not provided, we will use the default value of whether the 
+         * is not provided, we will use the default value of whether the
          * component type usually has work.
          * @return whether this component generates student work
          */
@@ -189,7 +191,7 @@ var LabelService = function (_NodeService) {
     return LabelService;
 }(_nodeService2.default);
 
-LabelService.$inject = ['StudentDataService', 'UtilService'];
+LabelService.$inject = ['$filter', 'StudentDataService', 'UtilService'];
 
 exports.default = LabelService;
 //# sourceMappingURL=labelService.js.map

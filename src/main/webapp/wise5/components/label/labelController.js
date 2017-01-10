@@ -9,11 +9,12 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var LabelController = function () {
-    function LabelController($injector, $q, $scope, $timeout, AnnotationService, ConfigService, LabelService, NodeService, NotebookService, OpenResponseService, ProjectService, StudentAssetService, StudentDataService, UtilService) {
+    function LabelController($filter, $injector, $q, $scope, $timeout, AnnotationService, ConfigService, LabelService, NodeService, NotebookService, OpenResponseService, ProjectService, StudentAssetService, StudentDataService, UtilService) {
         var _this = this;
 
         _classCallCheck(this, LabelController);
 
+        this.$filter = $filter;
         this.$injector = $injector;
         this.$q = $q;
         this.$scope = $scope;
@@ -29,6 +30,8 @@ var LabelController = function () {
         this.StudentDataService = StudentDataService;
         this.UtilService = UtilService;
         this.idToOrder = this.ProjectService.idToOrder;
+
+        this.$translate = this.$filter('translate');
 
         // the node id of the current node
         this.nodeId = null;
@@ -127,7 +130,7 @@ var LabelController = function () {
         this.backgroundImage = null;
 
         // the message to display when the student is in create label mode
-        this.newLabelMessage = 'Click on the image or ';
+        this.newLabelMessage = this.$translate('clickOnTheImageOr');
 
         // get the current node and node id
         var currentNode = this.StudentDataService.getCurrentNode();
@@ -359,7 +362,7 @@ var LabelController = function () {
 
                 // set save message
                 if (isSubmit) {
-                    this.setSaveMessage('Submitted', clientSaveTime);
+                    this.setSaveMessage(this.$translate('submitted'), clientSaveTime);
 
                     this.submit();
 
@@ -367,9 +370,9 @@ var LabelController = function () {
                     this.isSubmitDirty = false;
                     this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: false });
                 } else if (isAutoSave) {
-                    this.setSaveMessage('Auto-saved', clientSaveTime);
+                    this.setSaveMessage(this.$translate('autoSaved'), clientSaveTime);
                 } else {
-                    this.setSaveMessage('Saved', clientSaveTime);
+                    this.setSaveMessage(this.$translate('saved'), clientSaveTime);
                 }
             }
         }));
@@ -454,7 +457,7 @@ var LabelController = function () {
                  * there is an existing background image so we will ask the
                  * student if they want to change it
                  */
-                var answer = confirm("Are you sure you want to change the background image?");
+                var answer = confirm(this.$translate('areYouSureYouWantToChangeTheBackgroundImage'));
 
                 if (answer) {
                     // the student wants to change the background image
@@ -631,13 +634,13 @@ var LabelController = function () {
                     this.isSubmitDirty = false;
                     this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: false });
                     // set save message
-                    this.setSaveMessage('Last submitted', clientSaveTime);
+                    this.setSaveMessage(this.$translate('lastSubmitted'), clientSaveTime);
                 } else {
                     // latest state is not a submission, so set isSubmitDirty to true and notify node
                     this.isSubmitDirty = true;
                     this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: true });
                     // set save message
-                    this.setSaveMessage('Last saved', clientSaveTime);
+                    this.setSaveMessage(this.$translate('lastSaved'), clientSaveTime);
                 }
             }
         }
@@ -1234,7 +1237,7 @@ var LabelController = function () {
                         var textY = 100;
 
                         // create a new label
-                        var newLabel = this.createLabel(x, y, textX, textY, 'A new label', 'blue');
+                        var newLabel = this.createLabel(x, y, textX, textY, this.$translate('aNewLabel'), 'blue');
 
                         // add the label to the canvas
                         this.addLabelToCanvas(this.canvas, newLabel);
@@ -1811,7 +1814,7 @@ var LabelController = function () {
                      */
 
                     // make sure the author really wants to change the component type
-                    var answer = confirm('Are you sure you want to change this component type?');
+                    var answer = confirm(this.$translate('areYouSureYouWantToChangeThisComponentType'));
 
                     if (answer) {
                         // the author wants to change the component type
@@ -1925,7 +1928,7 @@ var LabelController = function () {
 
             // create the new label
             var newLabel = {};
-            newLabel.text = 'Enter text here';
+            newLabel.text = this.$translate('enterTextHere');
             newLabel.color = 'blue';
             newLabel.pointX = 100;
             newLabel.pointY = 100;
@@ -2203,7 +2206,7 @@ var LabelController = function () {
                 var selectedLabelText = this.selectedLabel.text.text;
 
                 // confirm with the student that they want to delete the label
-                var answer = confirm('Are you sure you want to delete this label?\n\n' + selectedLabelText);
+                var answer = confirm(this.$translate('areYouSureYouWantToDeleteThisLabel', { selectedLabelText: selectedLabelText }));
 
                 if (answer) {
                     // the student is sure they want to delete the label
@@ -2242,7 +2245,7 @@ var LabelController = function () {
     return LabelController;
 }();
 
-LabelController.$inject = ['$injector', '$q', '$scope', '$timeout', 'AnnotationService', 'ConfigService', 'LabelService', 'NodeService', 'NotebookService', 'OpenResponseService', 'ProjectService', 'StudentAssetService', 'StudentDataService', 'UtilService'];
+LabelController.$inject = ['$filter', '$injector', '$q', '$scope', '$timeout', 'AnnotationService', 'ConfigService', 'LabelService', 'NodeService', 'NotebookService', 'OpenResponseService', 'ProjectService', 'StudentAssetService', 'StudentDataService', 'UtilService'];
 
 exports.default = LabelController;
 //# sourceMappingURL=labelController.js.map

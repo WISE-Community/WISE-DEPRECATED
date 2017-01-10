@@ -2,11 +2,14 @@ import NodeService from '../../services/nodeService';
 
 class LabelService extends NodeService {
 
-    constructor(StudentDataService,
+    constructor($filter,
+                StudentDataService,
                 UtilService) {
         super();
+        this.$filter = $filter;
         this.StudentDataService = StudentDataService;
         this.UtilService = UtilService;
+        this.$translate = this.$filter('translate');
     }
 
     /**
@@ -17,7 +20,7 @@ class LabelService extends NodeService {
         var component = {};
         component.id = this.UtilService.generateKey();
         component.type = 'Label';
-        component.prompt = 'Enter prompt here';
+        component.prompt = this.$translate('enterPromptHere');
         component.showSaveButton = false;
         component.showSubmitButton = false;
         component.backgroundImage = '';
@@ -135,11 +138,11 @@ class LabelService extends NodeService {
 
         return result;
     };
-    
+
     /**
      * Whether this component generates student work
      * @param component (optional) the component object. if the component object
-     * is not provided, we will use the default value of whether the 
+     * is not provided, we will use the default value of whether the
      * component type usually has work.
      * @return whether this component generates student work
      */
@@ -149,6 +152,7 @@ class LabelService extends NodeService {
 }
 
 LabelService.$inject = [
+    '$filter',
     'StudentDataService',
     'UtilService'
 ];
