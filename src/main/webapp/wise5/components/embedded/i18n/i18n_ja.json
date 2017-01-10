@@ -1,3 +1,19 @@
 {
-	"showSaveButton": "セーブボタンを表示する"
+	"areYouSureYouWantToChangeThisComponentType": "",
+	"autoSaved": "",
+	"importPreviousWork": "",
+	"importPreviousWorkComponent": "",
+	"importPreviousWorkStep": "",
+	"lastSaved": "",
+	"lastSubmitted": "",
+	"maxScore": "",
+	"modelFileName": "",
+	"saved": "",
+	"showPreviousWork": "",
+	"showPreviousWorkComponent": "",
+	"showPreviousWorkPrompt": "",
+	"showPreviousWorkStep": "",
+	"showSaveButton": "セーブボタンを表示する",
+	"showSubmitButton": "",
+	"submitted": ""
 }

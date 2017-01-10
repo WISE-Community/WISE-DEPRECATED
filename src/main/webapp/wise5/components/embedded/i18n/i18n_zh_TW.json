@@ -1,3 +1,19 @@
 {
-	"showSaveButton": ""
+	"areYouSureYouWantToChangeThisComponentType": "",
+	"autoSaved": "",
+	"importPreviousWork": "",
+	"importPreviousWorkComponent": "",
+	"importPreviousWorkStep": "",
+	"lastSaved": "",
+	"lastSubmitted": "",
+	"maxScore": "",
+	"modelFileName": "",
+	"saved": "",
+	"showPreviousWork": "",
+	"showPreviousWorkComponent": "",
+	"showPreviousWorkPrompt": "",
+	"showPreviousWorkStep": "",
+	"showSaveButton": "",
+	"showSubmitButton": "",
+	"submitted": ""
 }

@@ -66,10 +66,12 @@ gulp.task('update-i18n', function() {
         './src/main/webapp/wise5/components/draw/i18n/',
         './src/main/webapp/wise5/components/embedded/i18n/',
         './src/main/webapp/wise5/components/graph/i18n/',
+        './src/main/webapp/wise5/components/html/i18n/',
         './src/main/webapp/wise5/components/label/i18n/',
         './src/main/webapp/wise5/components/match/i18n/',
         './src/main/webapp/wise5/components/multipleChoice/i18n/',
         './src/main/webapp/wise5/components/openResponse/i18n/',
+        './src/main/webapp/wise5/components/outsideURL/i18n/',
         './src/main/webapp/wise5/components/table/i18n/'
     ];
     wise5_i18n_folders.map(function(i18n_folder) {
