@@ -744,6 +744,12 @@ public class WISE5AuthorProjectController {
                                 writer.write("Error: Exceeded project max asset size.\nPlease delete unused assets.\n\nContact WISE if your project needs more disk space.");
                                 writer.close();
                                 return;
+                            } else if (!isUserAllowedToUpload(user, file)) {
+                                // user is not a trusted author and is trying to upload a file that is not allowed
+                                PrintWriter writer = response.getWriter();
+                                writer.write("Error: Upload file \"" + file.getOriginalFilename() + "\" not allowed.\n");
+                                writer.close();
+                                return;
                             } else {
                                 String filename = file.getOriginalFilename();
                                 File asset = new File(projectAssetsDir, filename);
@@ -771,6 +777,26 @@ public class WISE5AuthorProjectController {
         } catch (JSONException je) {
             je.printStackTrace();
         }
+    }
+
+    /**
+     * Returns true iff the logged-in user is allowed to post the specified file
+     * @param user the user who is trying to upload
+     * @param file file that the user is trying to upload
+     * @return true/false
+     */
+    private boolean isUserAllowedToUpload(User user, MultipartFile file) {
+        String allowedProjectAssetContentTypesStr = wiseProperties.getProperty("normalAuthorAllowedProjectAssetContentTypes");
+        if (user.isTrustedAuthor()) {
+            allowedProjectAssetContentTypesStr += "," + wiseProperties.getProperty("trustedAuthorAllowedProjectAssetContentTypes");
+        }
+
+        String contentType = file.getContentType();
+        if (!allowedProjectAssetContentTypesStr.contains(contentType)) {
+            return false;
+        }
+
+        return true;
     }
 
     /**

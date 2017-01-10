@@ -2,6 +2,13 @@
   <library name="Generated files" type="javaScript">
     <properties>
       <sourceFilesUrls>
+        <item url="file://$PROJECT_DIR$/src/main/webapp/wise5/vle/main.js" />
+        <item url="file://$PROJECT_DIR$/src/main/webapp/wise5/vle/vleController.js" />
+        <item url="file://$PROJECT_DIR$/src/main/webapp/wise5/vle/navigation/navigationController.js" />
+        <item url="file://$PROJECT_DIR$/src/main/webapp/wise5/vle/notebook/notebook.js" />
+        <item url="file://$PROJECT_DIR$/src/main/webapp/wise5/vle/notebook/notebookController.js" />
+        <item url="file://$PROJECT_DIR$/src/main/webapp/wise5/classroomMonitor/bootstrap.js" />
+        <item url="file://$PROJECT_DIR$/src/main/webapp/wise5/classroomMonitor/main.js" />
         <item url="file://$PROJECT_DIR$/src/main/webapp/wise5/components/label/labelController.js" />
         <item url="file://$PROJECT_DIR$/src/main/webapp/wise5/components/label/labelService.js" />
         <item url="file://$PROJECT_DIR$/src/main/webapp/wise5/components/match/matchService.js" />
@@ -49,13 +56,6 @@
         <item url="file://$PROJECT_DIR$/src/main/webapp/wise5/authoringTool/main/authoringToolMainController.js" />
         <item url="file://$PROJECT_DIR$/src/main/webapp/wise5/filters/filters.js" />
         <item url="file://$PROJECT_DIR$/src/main/webapp/wise5/node/nodeController.js" />
-        <item url="file://$PROJECT_DIR$/src/main/webapp/wise5/vle/main.js" />
-        <item url="file://$PROJECT_DIR$/src/main/webapp/wise5/vle/vleController.js" />
-        <item url="file://$PROJECT_DIR$/src/main/webapp/wise5/vle/navigation/navigationController.js" />
-        <item url="file://$PROJECT_DIR$/src/main/webapp/wise5/vle/notebook/notebook.js" />
-        <item url="file://$PROJECT_DIR$/src/main/webapp/wise5/vle/notebook/notebookController.js" />
-        <item url="file://$PROJECT_DIR$/src/main/webapp/wise5/classroomMonitor/bootstrap.js" />
-        <item url="file://$PROJECT_DIR$/src/main/webapp/wise5/classroomMonitor/main.js" />
       </sourceFilesUrls>
     </properties>
     <CLASSES>
@@ -71,6 +71,13 @@
       <root url="file://$PROJECT_DIR$/src/main/webapp/wise5/vle/themes/default/navItemController.js" />
       <root url="file://$PROJECT_DIR$/src/main/webapp/wise5/authoringTool/node/nodeController.js" />
       <root url="file://$PROJECT_DIR$/src/main/webapp/wise5/directives/directives.js" />
+      <root url="file://$PROJECT_DIR$/src/main/webapp/wise5/vle/main.js" />
+      <root url="file://$PROJECT_DIR$/src/main/webapp/wise5/vle/vleController.js" />
+      <root url="file://$PROJECT_DIR$/src/main/webapp/wise5/vle/navigation/navigationController.js" />
+      <root url="file://$PROJECT_DIR$/src/main/webapp/wise5/vle/notebook/notebook.js" />
+      <root url="file://$PROJECT_DIR$/src/main/webapp/wise5/vle/notebook/notebookController.js" />
+      <root url="file://$PROJECT_DIR$/src/main/webapp/wise5/classroomMonitor/bootstrap.js" />
+      <root url="file://$PROJECT_DIR$/src/main/webapp/wise5/classroomMonitor/main.js" />
       <root url="file://$PROJECT_DIR$/src/main/webapp/wise5/components/label/labelController.js" />
       <root url="file://$PROJECT_DIR$/src/main/webapp/wise5/components/label/labelService.js" />
       <root url="file://$PROJECT_DIR$/src/main/webapp/wise5/components/match/matchService.js" />
@@ -118,13 +125,6 @@
       <root url="file://$PROJECT_DIR$/src/main/webapp/wise5/authoringTool/main/authoringToolMainController.js" />
       <root url="file://$PROJECT_DIR$/src/main/webapp/wise5/filters/filters.js" />
       <root url="file://$PROJECT_DIR$/src/main/webapp/wise5/node/nodeController.js" />
-      <root url="file://$PROJECT_DIR$/src/main/webapp/wise5/vle/main.js" />
-      <root url="file://$PROJECT_DIR$/src/main/webapp/wise5/vle/vleController.js" />
-      <root url="file://$PROJECT_DIR$/src/main/webapp/wise5/vle/navigation/navigationController.js" />
-      <root url="file://$PROJECT_DIR$/src/main/webapp/wise5/vle/notebook/notebook.js" />
-      <root url="file://$PROJECT_DIR$/src/main/webapp/wise5/vle/notebook/notebookController.js" />
-      <root url="file://$PROJECT_DIR$/src/main/webapp/wise5/classroomMonitor/bootstrap.js" />
-      <root url="file://$PROJECT_DIR$/src/main/webapp/wise5/classroomMonitor/main.js" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

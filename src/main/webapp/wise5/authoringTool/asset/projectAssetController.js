@@ -9,7 +9,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var ProjectAssetController = function () {
-    function ProjectAssetController($filter, $mdDialog, $state, $stateParams, $scope, $timeout, $translate, ProjectAssetService) {
+    function ProjectAssetController($filter, $mdDialog, $state, $stateParams, $scope, $timeout, ProjectAssetService) {
         var _this = this;
 
         _classCallCheck(this, ProjectAssetController);
@@ -20,7 +20,7 @@ var ProjectAssetController = function () {
         this.$stateParams = $stateParams;
         this.$scope = $scope;
         this.$timeout = $timeout;
-        this.$translate = $translate;
+        this.$translate = this.$filter('translate');
         this.projectId = this.$stateParams.projectId;
         this.ProjectAssetService = ProjectAssetService;
         this.projectAssets = ProjectAssetService.projectAssets;
@@ -46,7 +46,7 @@ var ProjectAssetController = function () {
     }
 
     _createClass(ProjectAssetController, [{
-        key: "sortAssets",
+        key: 'sortAssets',
         value: function sortAssets(sortBy) {
             if (sortBy === "aToZ") {
                 this.projectAssets.files.sort(this.sortAssetsAToZ);
@@ -61,7 +61,7 @@ var ProjectAssetController = function () {
             }
         }
     }, {
-        key: "sortAssetsAToZ",
+        key: 'sortAssetsAToZ',
         value: function sortAssetsAToZ(a, b) {
             var aFileName = a.fileName.toLowerCase();
             var bFileName = b.fileName.toLowerCase();
@@ -75,7 +75,7 @@ var ProjectAssetController = function () {
             return result;
         }
     }, {
-        key: "sortAssetsSmallToLarge",
+        key: 'sortAssetsSmallToLarge',
         value: function sortAssetsSmallToLarge(a, b) {
             var aFileSize = a.fileSize;
             var bFileSize = b.fileSize;
@@ -89,7 +89,7 @@ var ProjectAssetController = function () {
             return result;
         }
     }, {
-        key: "deleteAsset",
+        key: 'deleteAsset',
         value: function deleteAsset(assetItem) {
             var _this2 = this;
 
@@ -103,47 +103,47 @@ var ProjectAssetController = function () {
          */
 
     }, {
-        key: "viewAsset",
+        key: 'viewAsset',
         value: function viewAsset(assetItem) {
-            var _this3 = this;
-
-            this.$translate(['close']).then(function (translations) {
-                // Append dialog to document.body
-                var assetFullURL = _this3.ProjectAssetService.getFullAssetItemURL(assetItem);
-                var appropriateFileSize = _this3.$filter('appropriateSizeText')(assetItem.fileSize);
-                var confirm = _this3.$mdDialog.confirm().parent(angular.element(document.body)).title(assetItem.fileName + " (" + appropriateFileSize + ")").htmlContent("<img src=\"" + assetFullURL + "\" />").ok(translations.close);
-                _this3.$mdDialog.show(confirm).then(function () {
-                    // Author wants to simply close the dialog
-                }, function () {
-                    // Author wants to simply close the dialog
-                });
+            // Append dialog to document.body
+            var assetFullURL = this.ProjectAssetService.getFullAssetItemURL(assetItem);
+            var appropriateFileSize = this.$filter('appropriateSizeText')(assetItem.fileSize);
+            var confirm = this.$mdDialog.confirm().parent(angular.element(document.body)).title(assetItem.fileName + " (" + appropriateFileSize + ")").htmlContent("<img src=\"" + assetFullURL + "\" />").ok(this.$translate('close'));
+            this.$mdDialog.show(confirm).then(function () {
+                // Author wants to simply close the dialog
+            }, function () {
+                // Author wants to simply close the dialog
             });
         }
     }, {
-        key: "uploadAssetItems",
+        key: 'uploadAssetItems',
         value: function uploadAssetItems(files) {
-            var _this4 = this;
+            var _this3 = this;
 
             this.ProjectAssetService.uploadAssets(files).then(function (uploadAssetsResults) {
                 if (uploadAssetsResults && uploadAssetsResults.length > 0) {
                     var uploadedAssetsFilenames = [];
                     for (var r = 0; r < uploadAssetsResults.length; r++) {
                         var uploadAssetsResult = uploadAssetsResults[r];
-                        uploadedAssetsFilenames.push(uploadAssetsResult.config.file.name);
+                        if (typeof uploadAssetsResult.data === 'string') {
+                            // there was an error uploading this file, so don't add
+                        } else {
+                            uploadedAssetsFilenames.push(uploadAssetsResult.config.file.name);
+                        }
                     }
-                    _this4.$translate('assetUploadSuccessful', { assetFilenames: uploadedAssetsFilenames.join(", ") }).then(function (assetUploadSuccessful) {
+                    if (uploadedAssetsFilenames.length > 0) {
                         // show a confirmation message for 7 seconds
-                        _this4.assetMessage = assetUploadSuccessful;
-                        _this4.$timeout(function () {
-                            _this4.assetMessage = "";
+                        _this3.assetMessage = _this3.$translate('assetUploadSuccessful', { assetFilenames: uploadedAssetsFilenames.join(", ") });
+                        _this3.$timeout(function () {
+                            _this3.assetMessage = "";
                         }, 7000);
-                    });
+                    }
                 }
-                _this4.projectAssets = _this4.ProjectAssetService.projectAssets;
+                _this3.projectAssets = _this3.ProjectAssetService.projectAssets;
             });
         }
     }, {
-        key: "exit",
+        key: 'exit',
         value: function exit() {
             this.$state.go('root.project', { projectId: this.projectId });
         }
@@ -152,7 +152,7 @@ var ProjectAssetController = function () {
     return ProjectAssetController;
 }();
 
-ProjectAssetController.$inject = ['$filter', '$mdDialog', '$state', '$stateParams', '$scope', '$timeout', '$translate', 'ProjectAssetService'];
+ProjectAssetController.$inject = ['$filter', '$mdDialog', '$state', '$stateParams', '$scope', '$timeout', 'ProjectAssetService'];
 
 exports.default = ProjectAssetController;
 //# sourceMappingURL=projectAssetController.js.map

@@ -9,16 +9,17 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var AuthoringToolController = function () {
-    function AuthoringToolController($location, $mdDialog, $scope, $timeout, $translate, ConfigService, ProjectService, SessionService) {
+    function AuthoringToolController($filter, $location, $mdDialog, $scope, $timeout, ConfigService, ProjectService, SessionService) {
         var _this = this;
 
         _classCallCheck(this, AuthoringToolController);
 
+        this.$filter = $filter;
         this.$location = $location;
         this.$mdDialog = $mdDialog;
         this.$scope = $scope;
         this.$timeout = $timeout;
-        this.$translate = $translate;
+        this.$translate = this.$filter('translate');
         this.ConfigService = ConfigService;
         this.ProjectService = ProjectService;
         this.SessionService = SessionService;
@@ -31,27 +32,24 @@ var AuthoringToolController = function () {
 
         $scope.$on('showSessionWarning', function () {
 
-            _this.$translate('autoLogoutMessage').then(function (autoLogoutMessage) {
-                // Appending dialog to document.body
-                var confirm = _this.$mdDialog.confirm().parent(angular.element(document.body)).title('Session Timeout').content(autoLogoutMessage).ariaLabel('Session Timeout').ok('YES').cancel('No');
-                _this.$mdDialog.show(confirm).then(function () {
-                    _this.SessionService.renewSession();
-                }, function () {
-                    _this.SessionService.forceLogOut();
-                });
+            // Append dialog to document.body
+            var confirm = _this.$mdDialog.confirm().parent(angular.element(document.body)).title(_this.$translate('sessionTimeout')).content(_this.$translate('autoLogoutMessage')).ariaLabel(_this.$translate('sessionTimeout')).ok(_this.$translate('yes')).cancel(_this.$translate('no'));
+            _this.$mdDialog.show(confirm).then(function () {
+                _this.SessionService.renewSession();
+            }, function () {
+                _this.SessionService.forceLogOut();
             });
         });
 
         // alert user when inactive for a long time
         this.$scope.$on('showRequestLogout', function (ev) {
-            _this.$translate(["serverUpdate", "serverUpdateRequestLogoutMessage", "ok"]).then(function (translations) {
-                var alert = _this.$mdDialog.confirm().parent(angular.element(document.body)).title(translations.serverUpdate).textContent(translations.serverUpdateRequestLogoutMessage).ariaLabel(translations.serverUpdate).targetEvent(ev).ok(translations.ok);
 
-                _this.$mdDialog.show(alert).then(function () {
-                    // do nothing
-                }, function () {
-                    // do nothing
-                });
+            var alert = _this.$mdDialog.confirm().parent(angular.element(document.body)).title(_this.$translate('serverUpdate')).textContent(_this.$translate('serverUpdateRequestLogoutMessage')).ariaLabel(_this.$translate('serverUpdate')).targetEvent(ev).ok(_this.$translate('ok'));
+
+            _this.$mdDialog.show(alert).then(function () {
+                // do nothing
+            }, function () {
+                // do nothing
             });
         });
 
@@ -61,7 +59,7 @@ var AuthoringToolController = function () {
          */
         this.$scope.$on('savingProject', function () {
             // display the message to show that the project is being saved
-            _this.setGlobalMessage('Saving...', null);
+            _this.setGlobalMessage(_this.$translate('saving'), null);
         });
 
         /*
@@ -80,7 +78,7 @@ var AuthoringToolController = function () {
             _this.$timeout(function () {
                 // get the current time stamp and set the 'Saved' message
                 var clientSaveTime = new Date().getTime();
-                _this.setGlobalMessage('Saved', clientSaveTime);
+                _this.setGlobalMessage(_this.$translate('saved'), clientSaveTime);
             }, 500);
         });
     }
@@ -163,7 +161,7 @@ var AuthoringToolController = function () {
     return AuthoringToolController;
 }();
 
-AuthoringToolController.$inject = ['$location', '$mdDialog', '$scope', '$timeout', '$translate', 'ConfigService', 'ProjectService', 'SessionService', 'moment'];
+AuthoringToolController.$inject = ['$filter', '$location', '$mdDialog', '$scope', '$timeout', 'ConfigService', 'ProjectService', 'SessionService', 'moment'];
 
 exports.default = AuthoringToolController;
 //# sourceMappingURL=authoringToolController.js.map

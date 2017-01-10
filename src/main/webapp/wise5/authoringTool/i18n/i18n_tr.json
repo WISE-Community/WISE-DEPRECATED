@@ -48,6 +48,7 @@
 	"moveDown": "Aşağıya Taşı",
 	"moveUp": "Yukarıya Taşı",
 	"myProjectsHeading": "Projelerim",
+	"no": "",
 	"noSharedProjectsMessage": "",
 	"notebook": "",
 	"noUndoAvailable": "Geri alınacak değişiklik yok",
@@ -59,8 +60,11 @@
 	"projectTitle": "",
 	"save": "",
 	"saveErrorAdvancedAuthoring": "",
+	"saved": "",
+	"saving": "",
 	"serverUpdate": "",
 	"serverUpdateRequestLogoutMessage": "",
+	"sessionTimeout": "",
 	"sharedProjectsHeading": "",
 	"sortAssets": "Değerleri Sırala",
 	"stepTitle": "Adım Başlığı",
@@ -71,5 +75,6 @@
 	"transitions": "Geçişler",
 	"undo": "Geri al",
 	"viewHistory": "Geçmişi Görüntüle",
-	"whenToChoosePath": "Ne zaman yol seçilir"
+	"whenToChoosePath": "Ne zaman yol seçilir",
+	"yes": ""
 }
