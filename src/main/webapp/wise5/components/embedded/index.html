@@ -4,7 +4,7 @@
             var embeddedController = embeddedController;
         </script>
         <div ng-if='embeddedController.mode === "authoring" && !embeddedController.authoringComponentContent.showPreviousWork'>
-            Model File Name: <input ng-model='embeddedController.authoringComponentContent.url'
+            {{ 'modelFileName' | translate }}: <input ng-model='embeddedController.authoringComponentContent.url'
                    ng-change='embeddedController.authoringViewComponentChanged()'
                    ng-model-options='{ debounce: 1000 }'
                    size='50'/>
@@ -14,12 +14,12 @@
                    ng-model='embeddedController.authoringComponentContent.showSaveButton'
                    ng-change='embeddedController.authoringViewComponentChanged()'/>
             <br/>
-            Show Submit Button:
+            {{ 'showSubmitButton' | translate }}:
             <input type='checkbox'
                    ng-model='embeddedController.authoringComponentContent.showSubmitButton'
                    ng-change='embeddedController.authoringViewComponentChanged()'/>
             <br/>
-            Max Score:
+            {{ 'maxScore' | translate }}:
             <input type='number'
                    ng-model='embeddedController.authoringComponentContent.maxScore'
                    ng-change='embeddedController.authoringViewComponentChanged()'
@@ -27,14 +27,14 @@
                    style='width: 3em'/>
         </div>
         <div ng-if='embeddedController.mode === "authoring2"'>
-            Import Previous Work:
+            {{ 'importPreviousWork' | translate }}:
             <input type='checkbox'
                    ng-model='embeddedController.authoringComponentContent.importPreviousWork'
                    ng-click='embeddedController.authoringImportPreviousWorkClicked()'
                    ng-change='embeddedController.authoringViewComponentChanged()'/>
         </div>
         <div ng-if='embeddedController.mode === "authoring2" && embeddedController.authoringComponentContent.importPreviousWork'>
-            Import Previous Work Step:
+            {{ 'importPreviousWorkStep' | translate }}:
             <select ng-model='embeddedController.authoringComponentContent.importPreviousWorkNodeId'
                     ng-change='embeddedController.authoringImportPreviousWorkNodeIdChanged()'>
                 <option></option>
@@ -43,7 +43,7 @@
                         ng-if='embeddedController.isApplicationNode(item.$key)'>{{embeddedController.getNodePositionAndTitleByNodeId(item.$key)}}</option>
             </select>
             <br/>
-            Import Previous Work Component:
+            {{ 'importPreviousWorkComponent' | translate }}:
             <select ng-model='embeddedController.authoringComponentContent.importPreviousWorkComponentId'
                     ng-change='embeddedController.authoringImportPreviousWorkComponentIdChanged()'
                     ng-options='component.id as component.type disable when !embeddedController.componentHasWork(component) for component in embeddedController.getComponentsByNodeId(embeddedController.authoringComponentContent.importPreviousWorkNodeId)'>
@@ -51,14 +51,14 @@
             </select>
         </div>
         <div ng-if='embeddedController.mode === "authoring2"'>
-            Show Previous Work:
+            {{ 'showPreviousWork' | translate }}:
             <input type='checkbox'
                    ng-model='embeddedController.authoringComponentContent.showPreviousWork'
                    ng-click='embeddedController.authoringShowPreviousWorkClicked()'
                    ng-change='embeddedController.authoringViewComponentChanged()'/>
         </div>
         <div ng-if='embeddedController.mode === "authoring2" && embeddedController.authoringComponentContent.showPreviousWork'>
-            Show Previous Work Step:
+            {{ 'showPreviousWorkStep' | translate }}:
             <select ng-model='embeddedController.authoringComponentContent.showPreviousWorkNodeId'
                     ng-change='embeddedController.authoringShowPreviousWorkNodeIdChanged()'>
                 <option></option>
@@ -67,14 +67,14 @@
                         ng-if='embeddedController.isApplicationNode(item.$key)'>{{embeddedController.getNodePositionAndTitleByNodeId(item.$key)}}</option>
             </select>
             <br/>
-            Show Previous Work Component:
+            {{ 'showPreviousWorkComponent' | translate }}:
             <select ng-model='embeddedController.authoringComponentContent.showPreviousWorkComponentId'
                     ng-change='embeddedController.authoringShowPreviousWorkComponentIdChanged()'
                     ng-options='component.id as component.type disable when !embeddedController.componentHasWork(component) for component in embeddedController.getComponentsByNodeId(embeddedController.authoringComponentContent.showPreviousWorkNodeId)'>
                 <option></option>
             </select>
             <br/>
-            Show Previous Work Prompt:
+            {{ 'showPreviousWorkPrompt' | translate }}:
             <input type='checkbox'
                    ng-model='embeddedController.authoringComponentContent.showPreviousWorkPrompt'
                    ng-change='embeddedController.authoringViewComponentChanged()'/>

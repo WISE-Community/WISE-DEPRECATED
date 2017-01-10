@@ -19,11 +19,12 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var EmbeddedController = function () {
-    function EmbeddedController($injector, $q, $scope, $sce, $window, AnnotationService, ConfigService, NodeService, NotebookService, EmbeddedService, ProjectService, StudentDataService, UtilService) {
+    function EmbeddedController($filter, $injector, $q, $scope, $sce, $window, AnnotationService, ConfigService, NodeService, NotebookService, EmbeddedService, ProjectService, StudentDataService, UtilService) {
         var _this = this;
 
         _classCallCheck(this, EmbeddedController);
 
+        this.$filter = $filter;
         this.$injector = $injector;
         this.$q = $q;
         this.$scope = $scope;
@@ -38,6 +39,8 @@ var EmbeddedController = function () {
         this.StudentDataService = StudentDataService;
         this.UtilService = UtilService;
         this.idToOrder = this.ProjectService.idToOrder;
+
+        this.$translate = this.$filter('translate');
 
         // the node id of the current node
         this.nodeId = null;
@@ -316,7 +319,7 @@ var EmbeddedController = function () {
 
                     // set save message
                     if (isSubmit) {
-                        _this.setSaveMessage('Submitted', clientSaveTime);
+                        _this.setSaveMessage(_this.$translate('submitted'), clientSaveTime);
 
                         _this.submit();
 
@@ -324,9 +327,9 @@ var EmbeddedController = function () {
                         _this.isSubmitDirty = false;
                         _this.$scope.$emit('componentSubmitDirty', { componentId: _this.componentId, isDirty: false });
                     } else if (isAutoSave) {
-                        _this.setSaveMessage('Auto-saved', clientSaveTime);
+                        _this.setSaveMessage(_this.$translate('autoSaved'), clientSaveTime);
                     } else {
-                        _this.setSaveMessage('Saved', clientSaveTime);
+                        _this.setSaveMessage(_this.$translate('saved'), clientSaveTime);
                     }
 
                     // Tell application that this componentState was successfully saved to server;
@@ -451,13 +454,13 @@ var EmbeddedController = function () {
                     this.isSubmitDirty = false;
                     this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: false });
                     // set save message
-                    this.setSaveMessage('Last submitted', clientSaveTime);
+                    this.setSaveMessage(this.$translate('lastSubmitted'), clientSaveTime);
                 } else {
                     // latest state is not a submission, so set isSubmitDirty to true and notify node
                     this.isSubmitDirty = true;
                     this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: true });
                     // set save message
-                    this.setSaveMessage('Last saved', clientSaveTime);
+                    this.setSaveMessage(this.$translate('lastSaved'), clientSaveTime);
                 }
             }
         }
@@ -884,7 +887,7 @@ var EmbeddedController = function () {
                      */
 
                     // make sure the author really wants to change the component type
-                    var answer = confirm('Are you sure you want to change this component type?');
+                    var answer = confirm(this.$translate('areYouSureYouWantToChangeThisComponentType'));
 
                     if (answer) {
                         // the author wants to change the component type
@@ -1125,7 +1128,7 @@ var EmbeddedController = function () {
     return EmbeddedController;
 }();
 
-EmbeddedController.$inject = ['$injector', '$q', '$scope', '$sce', '$window', 'AnnotationService', 'ConfigService', 'NodeService', 'NotebookService', 'EmbeddedService', 'ProjectService', 'StudentDataService', 'UtilService'];
+EmbeddedController.$inject = ['$filter', '$injector', '$q', '$scope', '$sce', '$window', 'AnnotationService', 'ConfigService', 'NodeService', 'NotebookService', 'EmbeddedService', 'ProjectService', 'StudentDataService', 'UtilService'];
 
 exports.default = EmbeddedController;
 //# sourceMappingURL=embeddedController.js.map

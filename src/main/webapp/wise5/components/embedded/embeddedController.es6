@@ -2,7 +2,8 @@ import iframeResizer from 'iframe-resizer';
 import html2canvas from 'html2canvas';
 
 class EmbeddedController {
-    constructor($injector,
+    constructor($filter,
+                $injector,
                 $q,
                 $scope,
                 $sce,
@@ -16,6 +17,7 @@ class EmbeddedController {
                 StudentDataService,
                 UtilService) {
 
+        this.$filter = $filter;
         this.$injector = $injector;
         this.$q = $q;
         this.$scope = $scope;
@@ -30,6 +32,8 @@ class EmbeddedController {
         this.StudentDataService = StudentDataService;
         this.UtilService = UtilService;
         this.idToOrder = this.ProjectService.idToOrder;
+
+        this.$translate = this.$filter('translate');
 
         // the node id of the current node
         this.nodeId = null;
@@ -308,7 +312,7 @@ class EmbeddedController {
 
                     // set save message
                     if (isSubmit) {
-                        this.setSaveMessage('Submitted', clientSaveTime);
+                        this.setSaveMessage(this.$translate('submitted'), clientSaveTime);
 
                         this.submit();
 
@@ -316,9 +320,9 @@ class EmbeddedController {
                         this.isSubmitDirty = false;
                         this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: false});
                     } else if (isAutoSave) {
-                        this.setSaveMessage('Auto-saved', clientSaveTime);
+                        this.setSaveMessage(this.$translate('autoSaved'), clientSaveTime);
                     } else {
-                        this.setSaveMessage('Saved', clientSaveTime);
+                        this.setSaveMessage(this.$translate('saved'), clientSaveTime);
                     }
 
                     // Tell application that this componentState was successfully saved to server;
@@ -441,13 +445,13 @@ class EmbeddedController {
                 this.isSubmitDirty = false;
                 this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: false});
                 // set save message
-                this.setSaveMessage('Last submitted', clientSaveTime);
+                this.setSaveMessage(this.$translate('lastSubmitted'), clientSaveTime);
             } else {
                 // latest state is not a submission, so set isSubmitDirty to true and notify node
                 this.isSubmitDirty = true;
                 this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: true});
                 // set save message
-                this.setSaveMessage('Last saved', clientSaveTime);
+                this.setSaveMessage(this.$translate('lastSaved'), clientSaveTime);
             }
         }
     };
@@ -818,7 +822,7 @@ class EmbeddedController {
                  */
 
                 // make sure the author really wants to change the component type
-                var answer = confirm('Are you sure you want to change this component type?');
+                var answer = confirm(this.$translate('areYouSureYouWantToChangeThisComponentType'));
 
                 if (answer) {
                     // the author wants to change the component type
@@ -1034,6 +1038,7 @@ class EmbeddedController {
 }
 
 EmbeddedController.$inject = [
+    '$filter',
     '$injector',
     '$q',
     '$scope',

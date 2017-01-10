@@ -1,3 +1,19 @@
 {
-  "showSaveButton": "Show Save Button"
+    "areYouSureYouWantToChangeThisComponentType": "Are you sure you want to change this component type?",
+    "autoSaved": "Auto-saved",
+    "importPreviousWork": "Import Previous Work",
+    "importPreviousWorkComponent": "Import Previous Work Component",
+    "importPreviousWorkStep": "Import Previous Work Step",
+    "lastSaved": "Last saved",
+    "lastSubmitted": "Last submitted",
+    "maxScore": "Max Score",
+    "modelFileName": "Model File Name",
+    "saved": "Saved",
+    "showPreviousWork": "Show Previous Work",
+    "showPreviousWorkComponent": "Show Previous Work Component",
+    "showPreviousWorkPrompt": "Show Previous Work Prompt",
+    "showPreviousWorkStep": "Show Previous Work Step",
+    "showSaveButton": "Show Save Button",
+    "showSubmitButton": "Show Submit Button",
+    "submitted": "Submitted"
 }
