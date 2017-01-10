@@ -11,68 +11,69 @@
                ng-model='audioOscillatorController.authoringComponentContent.showSaveButton'
                ng-change='audioOscillatorController.authoringViewComponentChanged()'/>
         <br/>
-        Show Submit Button:
+        {{ 'showSubmitButton' | translate }}:
         <input type='checkbox'
                ng-model='audioOscillatorController.authoringComponentContent.showSubmitButton'
                ng-change='audioOscillatorController.authoringViewComponentChanged()'/>
         <br/>
-        Max Score:
+        {{ 'maxScore' | translate }}:
         <input type='number'
                ng-model='audioOscillatorController.authoringComponentContent.maxScore'
                ng-change='audioOscillatorController.authoringViewComponentChanged()'
                ng-model-options='{ debounce: 1000 }'
                style='width: 3em'/>
         <br/>
-        Oscillator Types <button ng-click='audioOscillatorController.authoringOpenAddOscillatorType()'>Add Oscillator Type</button>
+        {{ 'oscillatorTypes' | translate }} <button ng-click='audioOscillatorController.authoringOpenAddOscillatorType()'>{{ 'addOscillatorType' | translate }}</button>
         <span ng-show='audioOscillatorController.showOscillatorTypeChooser'>
             <select ng-model='audioOscillatorController.oscillatorTypeToAdd'>
                 <option ng-repeat='availableOscillatorType in audioOscillatorController.availableOscillatorTypes' value='{{availableOscillatorType}}'>{{availableOscillatorType}}</option>
             </select>
-            <button ng-click='audioOscillatorController.authoringAddOscillatorTypeClicked()'>Add</button>
-            <button ng-click='audioOscillatorController.authoringCancelOscillatorTypeClicked()'>Cancel</button>
+            <button ng-click='audioOscillatorController.authoringAddOscillatorTypeClicked()'>{{ 'add' | translate }}</button>
+            <button ng-click='audioOscillatorController.authoringCancelOscillatorTypeClicked()'>{{ 'cancel' | translate }}</button>
         </span>
         <div ng-repeat='oscillatorType in audioOscillatorController.authoringComponentContent.oscillatorTypes track by $index'>
-            {{oscillatorType}} <button ng-click='audioOscillatorController.authoringDeleteOscillatorTypeClicked($index)'>Delete</button>
+            {{oscillatorType}} <button ng-click='audioOscillatorController.authoringDeleteOscillatorTypeClicked($index)'>{{ 'delete' | translate }}</button>
         </div>
-        Starting Frequency: <input type='number'
+        <br/>
+        {{ 'startingFrequency' | translate }}: <input type='number'
                                    ng-model='audioOscillatorController.authoringComponentContent.startingFrequency'
                                    ng-change='audioOscillatorController.authoringViewComponentChanged()'
                                    ng-model-options='{ debounce: 1000 }'
                                    style='width: 5em'/>
         <br/>
-        Oscilloscope Width: <input type='number'
+        {{ 'oscillatorWidth' | translate }}: <input type='number'
                                    ng-model='audioOscillatorController.authoringComponentContent.oscilloscopeWidth'
                                    ng-change='audioOscillatorController.authoringViewComponentChanged()'
                                    ng-model-options='{ debounce: 1000 }'
                                    style='width: 5em'/>
         <br/>
-        Oscilloscope Height: <input type='number'
+        {{ 'oscillatorHeight' | translate }}: <input type='number'
                                     ng-model='audioOscillatorController.authoringComponentContent.oscilloscopeHeight'
                                     ng-change='audioOscillatorController.authoringViewComponentChanged()'
                                     ng-model-options='{ debounce: 1000 }'
                                     style='width: 5em'/>
         <br/>
-        Oscilloscope Grid Size: <input type='number'
+        {{ 'oscillatorGridSize' | translate }}: <input type='number'
                                     ng-model='audioOscillatorController.authoringComponentContent.gridCellSize'
                                     ng-change='audioOscillatorController.authoringViewComponentChanged()'
                                     ng-model-options='{ debounce: 1000 }'
                                     style='width: 5em'/>
         <br/>
-        Oscilloscope Stop After Good Draw: <input type='checkbox'
+        {{ 'oscilloscopeStopAfterGoodDraw' | translate }}: <input type='checkbox'
                                     ng-model='audioOscillatorController.authoringComponentContent.stopAfterGoodDraw'
                                     ng-change='audioOscillatorController.authoringViewComponentChanged()'
                                     ng-model-options='{ debounce: 1000 }'
                                     style='width: 5em'/>
     </div>
     <div ng-if='audioOscillatorController.mode === "authoring"'>
-        Import Previous Work:
+        {{ 'importPreviousWork' | translate }}:
         <input type='checkbox'
                ng-model='audioOscillatorController.authoringComponentContent.importPreviousWork'
                ng-click='audioOscillatorController.authoringImportPreviousWorkClicked()'
                ng-change='audioOscillatorController.authoringViewComponentChanged()'/>
     </div>
     <div ng-if='audioOscillatorController.mode === "authoring" && audioOscillatorController.authoringComponentContent.importPreviousWork'>
-        Import Previous Work Step:
+        {{ 'importPreviousWorkStep' | translate }}:
         <select ng-model='audioOscillatorController.authoringComponentContent.importPreviousWorkNodeId'
                 ng-change='audioOscillatorController.authoringImportPreviousWorkNodeIdChanged()'>
             <option></option>
@@ -81,7 +82,7 @@
                     ng-if='audioOscillatorController.isApplicationNode(item.$key)'>{{audioOscillatorController.getNodePositionAndTitleByNodeId(item.$key)}}</option>
         </select>
         <br/>
-        Import Previous Work Component:
+        {{ 'importPreviousWorkComponent' | translate }}:
         <select ng-model='audioOscillatorController.authoringComponentContent.importPreviousWorkComponentId'
                 ng-change='audioOscillatorController.authoringImportPreviousWorkComponentIdChanged()'
                 ng-options='component.id as component.type disable when !audioOscillatorController.componentHasWork(component) for component in audioOscillatorController.getComponentsByNodeId(audioOscillatorController.authoringComponentContent.importPreviousWorkNodeId)'>
@@ -89,14 +90,14 @@
         </select>
     </div>
     <div ng-if='audioOscillatorController.mode === "authoring"'>
-        Show Previous Work:
+        {{ 'showPreviousWork' | translate }}:
         <input type='checkbox'
                ng-model='audioOscillatorController.authoringComponentContent.showPreviousWork'
                ng-click='audioOscillatorController.authoringShowPreviousWorkClicked()'
                ng-change='audioOscillatorController.authoringViewComponentChanged()'/>
     </div>
     <div ng-if='audioOscillatorController.mode === "authoring" && audioOscillatorController.authoringComponentContent.showPreviousWork'>
-        Show Previous Work Step:
+        {{ 'showPreviousWorkStep' | translate }}:
         <select ng-model='audioOscillatorController.authoringComponentContent.showPreviousWorkNodeId'
                 ng-change='audioOscillatorController.authoringShowPreviousWorkNodeIdChanged()'>
             <option></option>
@@ -105,14 +106,14 @@
                     ng-if='audioOscillatorController.isApplicationNode(item.$key)'>{{audioOscillatorController.getNodePositionAndTitleByNodeId(item.$key)}}</option>
         </select>
         <br/>
-        Show Previous Work Component:
+        {{ 'showPreviousWorkComponent' | translate }}:
         <select ng-model='audioOscillatorController.authoringComponentContent.showPreviousWorkComponentId'
                 ng-change='audioOscillatorController.authoringShowPreviousWorkComponentIdChanged()'
                 ng-options='component.id as component.type disable when !audioOscillatorController.componentHasWork(component) for component in audioOscillatorController.getComponentsByNodeId(audioOscillatorController.authoringComponentContent.showPreviousWorkNodeId)'>
             <option></option>
         </select>
         <br/>
-        Show Previous Work Prompt:
+        {{ 'showPreviousWorkPrompt' | translate }}:
         <input type='checkbox'
                ng-model='audioOscillatorController.authoringComponentContent.showPreviousWorkPrompt'
                ng-change='audioOscillatorController.authoringViewComponentChanged()'/>
@@ -128,14 +129,14 @@
     <div class="component-content__actions" layout="row">
         <md-button class="md-accent" ng-show="audioOscillatorController.isStudentAttachmentEnabled"
                    ng-click="nodeController.showStudentAssets($event, component.id, audioOscillatorController.isDisabled)">
-            <md-icon>image</md-icon> Import Data
+            <md-icon>image</md-icon> {{ 'importData' | translate }}
         </md-button>
     </div>
     <span ng-if='audioOscillatorController.oscillatorTypes.length == 0 || audioOscillatorController.oscillatorTypes.length == 1'>
-        Oscillator Type: {{audioOscillatorController.oscillatorType}}
+        {{ 'oscillatorType' | translate }}: {{audioOscillatorController.oscillatorType}}
     </span>
     <span ng-if='audioOscillatorController.oscillatorTypes.length > 1'>
-        Oscillator Type:
+        {{ 'oscillatorType' | translate }}:
         <select ng-model='audioOscillatorController.oscillatorType'
                 ng-change='audioOscillatorController.oscillatorTypeChanged()'>
             <option ng-repeat='oscillatorType in audioOscillatorController.oscillatorTypes'
@@ -143,11 +144,11 @@
         </select>
     </span>
     <br/>
-    Frequency: <input type='number'
+    {{ 'frequency' | translate }}: <input type='number'
                       ng-model='audioOscillatorController.frequency'
                       ng-change='audioOscillatorController.frequencyChanged()'/>
     <br/>
-    <button ng-click='audioOscillatorController.playStopClicked()'>{{audioOscillatorController.isPlaying == true ? 'Stop' : 'Play'}}</button>
+    <button ng-click='audioOscillatorController.playStopClicked()'>{{audioOscillatorController.playStopButtonText}}</button>
     <br/>
     <canvas id='{{audioOscillatorController.oscilloscopeId}}' width={{audioOscillatorController.oscilloscopeWidth}} height={{audioOscillatorController.oscilloscopeHeight}} style="border:1px solid lightgrey"></canvas>
     <div ng-if="audioOscillatorController.isSaveButtonVisible || audioOscillatorController.isSubmitButtonVisible"
@@ -156,11 +157,11 @@
                    ng-class="{'md-raised': !audioOscillatorController.isSubmitButtonVisible}"
                    ng-click='audioOscillatorController.saveButtonClicked()'
                    ng-if='audioOscillatorController.isSaveButtonVisible'
-                   ng-disabled='audioOscillatorController.isDisabled || !audioOscillatorController.isDirty'>Save</md-button>
+                   ng-disabled='audioOscillatorController.isDisabled || !audioOscillatorController.isDirty'>{{ 'save' | translate }}</md-button>
         <md-button class="md-raised md-primary"
                    ng-click='audioOscillatorController.submitButtonClicked()'
                    ng-if='audioOscillatorController.isSubmitButtonVisible'
-                   ng-disabled='audioOscillatorController.isDisabled || !audioOscillatorController.isSubmitDirty'>Submit</md-button>
+                   ng-disabled='audioOscillatorController.isDisabled || !audioOscillatorController.isSubmitDirty'>{{ 'submit' | translate }}</md-button>
         <span ng-show="audioOscillatorController.saveMessage.text"
               class="component-content__actions__info md-caption">
               {{audioOscillatorController.saveMessage.text}} <span class="component-content__actions__more"><md-tooltip md-direction="top">{{ audioOscillatorController.saveMessage.time | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip><span am-time-ago="audioOscillatorController.saveMessage.time"></span></span>

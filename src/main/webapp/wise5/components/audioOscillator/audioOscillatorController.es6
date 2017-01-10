@@ -2,7 +2,8 @@
 
 class AudioOscillatorController {
 
-    constructor($injector,
+    constructor($filter,
+                $injector,
                 $q,
                 $rootScope,
                 $scope,
@@ -15,6 +16,7 @@ class AudioOscillatorController {
                 StudentAssetService,
                 StudentDataService) {
 
+        this.$filter = $filter
         this.$injector = $injector;
         this.$q = $q;
         this.$rootScope = $rootScope;
@@ -28,6 +30,8 @@ class AudioOscillatorController {
         this.StudentAssetService = StudentAssetService;
         this.StudentDataService = StudentDataService;
         this.idToOrder = this.ProjectService.idToOrder;
+
+        this.$translate = this.$filter('translate');
 
         // the node id of the current node
         this.nodeId = null;
@@ -115,6 +119,9 @@ class AudioOscillatorController {
             'sawtooth'
         ]
         this.oscillatorTypeToAdd = 'sine';
+
+        // the text to display on the play/stop button
+        this.playStopButtonText = 'Play';
 
         // get the current node and node id
         var currentNode = this.StudentDataService.getCurrentNode();
@@ -346,7 +353,7 @@ class AudioOscillatorController {
 
                 // set save message
                 if (isSubmit) {
-                    this.setSaveMessage('Submitted', clientSaveTime);
+                    this.setSaveMessage(this.$translate('submitted'), clientSaveTime);
 
                     this.submit();
 
@@ -354,9 +361,9 @@ class AudioOscillatorController {
                     this.isSubmitDirty = false;
                     this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: false});
                 } else if (isAutoSave) {
-                    this.setSaveMessage('Auto-saved', clientSaveTime);
+                    this.setSaveMessage(this.$translate('autoSaved'), clientSaveTime);
                 } else {
-                    this.setSaveMessage('Saved', clientSaveTime);
+                    this.setSaveMessage(this.$translate('saved'), clientSaveTime);
                 }
             }
         }));
@@ -476,13 +483,13 @@ class AudioOscillatorController {
                 this.isSubmitDirty = false;
                 this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: false});
                 // set save message
-                this.setSaveMessage('Last submitted', clientSaveTime);
+                this.setSaveMessage(this.$translate('lastSubmitted'), clientSaveTime);
             } else {
                 // latest state is not a submission, so set isSubmitDirty to true and notify node
                 this.isSubmitDirty = true;
                 this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: true});
                 // set save message
-                this.setSaveMessage('Last saved', clientSaveTime);
+                this.setSaveMessage(this.$translate('lastSaved'), clientSaveTime);
             }
         }
     };
@@ -737,9 +744,15 @@ class AudioOscillatorController {
         if (this.isPlaying) {
             // the audio is playing so we will now stop it
             this.stop();
+
+            // change the button text to display 'Play'
+            this.playStopButtonText = 'Play';
         } else {
-            // the audio is not playing so we will not play it
+            // the audio is not playing so we will now play it
             this.play();
+
+            // change the button text to display 'Stop'
+            this.playStopButtonText = 'Stop';
         }
     };
 
@@ -1021,7 +1034,7 @@ class AudioOscillatorController {
         if (this.authoringComponentContent.oscillatorTypes.indexOf(oscillatorTypeToAdd) != -1) {
             // the oscillator type is already in the array of oscillator types
 
-            alert('Error: You have already added ' + oscillatorTypeToAdd);
+            alert(this.$translate('errorYouHaveAlreadyAddedOscillatorType', { oscillatorTypeToAdd: oscillatorTypeToAdd }));
         } else {
             // the oscillator type is not already in the array of oscillator types
             this.authoringComponentContent.oscillatorTypes.push(oscillatorTypeToAdd);
@@ -1253,7 +1266,7 @@ class AudioOscillatorController {
                  */
 
                 // make sure the author really wants to change the component type
-                var answer = confirm('Are you sure you want to change this component type?');
+                var answer = confirm(this.$translate('areYouSureYouWantToChangeThisComponentType'));
 
                 if (answer) {
                     // the author wants to change the component type
@@ -1441,6 +1454,7 @@ class AudioOscillatorController {
 };
 
 AudioOscillatorController.$inject = [
+    '$filter',
     '$injector',
     '$q',
     '$rootScope',
