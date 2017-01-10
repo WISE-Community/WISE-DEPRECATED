@@ -9,7 +9,7 @@ fi
 
 failed=0
 for file in ${files}; do
-  git show :$file | eslint --stdin --stdin-filename $file
+  git show :$file | ./node_modules/eslint/bin/eslint.js --stdin --stdin-filename $file
   if [[ $? != 0 ]] ; then
     echo $file
     failed=1
