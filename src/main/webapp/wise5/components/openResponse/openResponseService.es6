@@ -8,7 +8,7 @@ class OpenResponseService extends NodeService {
         this.$filter = $filter;
         this.StudentDataService = StudentDataService;
         this.UtilService = UtilService;
-        
+
         this.$translate = this.$filter('translate');
     }
 
@@ -20,7 +20,7 @@ class OpenResponseService extends NodeService {
         var component = {};
         component.id = this.UtilService.generateKey();
         component.type = 'OpenResponse';
-        component.prompt = this.$translate('enterPromptHere');
+        component.prompt = this.$translate('ENTERPROMPTHERE');
         component.showSaveButton = false;
         component.showSubmitButton = false;
         component.starterSentence = null;
@@ -118,9 +118,9 @@ class OpenResponseService extends NodeService {
                 }
             }
         }
-        
+
         if (component.completionCriteria != null) {
-            /* 
+            /*
              * there is a special completion criteria authored in this component
              * so we will evaluate the completion criteria to see if the student
              * has completed this component
@@ -138,39 +138,39 @@ class OpenResponseService extends NodeService {
      * @returns whether we need to display the annotation to the student
      */
     displayAnnotation(componentContent, annotation) {
-        
+
         var result = true;
-        
+
         if (componentContent != null && annotation != null) {
-            
+
             if (annotation.type == 'score') {
-                
+
             } else if (annotation.type == 'comment') {
-                
+
             } else if (annotation.type == 'autoScore') {
                 // this is an auto graded score annotation
-                
+
                 if (componentContent.cRater != null && !componentContent.cRater.showScore) {
                     // we do not want to show the CRater score
                     result = false;
                 }
             } else if (annotation.type == 'autoComment') {
                 // this is an auto graded comment annotation
-                
+
                 if (componentContent.cRater != null && !componentContent.cRater.showFeedback) {
                     // we do not want to show the CRater comment
                     result = false;
                 }
             }
         }
-        
+
         return result;
     }
-    
+
     /**
      * Whether this component generates student work
      * @param component (optional) the component object. if the component object
-     * is not provided, we will use the default value of whether the 
+     * is not provided, we will use the default value of whether the
      * component type usually has work.
      * @return whether this component generates student work
      */

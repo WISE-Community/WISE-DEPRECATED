@@ -305,6 +305,7 @@ var classroomMonitorModule = _angular2.default.module('classroomMonitor', [(0, _
     });
 
     // Set up Translations
+    $translatePartialLoaderProvider.addPart('i18n');
     $translatePartialLoaderProvider.addPart('classroomMonitor/i18n');
     $translateProvider.useLoader('$translatePartialLoader', {
         urlTemplate: 'wise5/{part}/i18n_{lang}.json'

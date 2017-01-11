@@ -1,11 +1,15 @@
 import NodeService from '../../services/nodeService';
 
 class HTMLService extends NodeService {
-    constructor(StudentDataService,
+    constructor($filter,
+                StudentDataService,
                 UtilService) {
         super();
+        this.$filter = $filter;
         this.StudentDataService = StudentDataService;
         this.UtilService = UtilService;
+
+        this.$translate = this.$filter('translate');
     }
 
     /**
@@ -17,7 +21,7 @@ class HTMLService extends NodeService {
         var component = {};
         component.id = this.UtilService.generateKey();
         component.type = 'HTML';
-        component.html = 'Enter html here';
+        component.html = this.$translate('enterHTMLHere');
 
         return component;
     }
@@ -64,11 +68,11 @@ class HTMLService extends NodeService {
 
         return result;
     }
-    
+
     /**
      * Whether this component generates student work
      * @param component (optional) the component object. if the component object
-     * is not provided, we will use the default value of whether the 
+     * is not provided, we will use the default value of whether the
      * component type usually has work.
      * @return whether this component generates student work
      */
@@ -78,6 +82,7 @@ class HTMLService extends NodeService {
 }
 
 HTMLService.$inject = [
+    '$filter',
     'StudentDataService',
     'UtilService'
 ];

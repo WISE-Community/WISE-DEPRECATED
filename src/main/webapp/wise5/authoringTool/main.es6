@@ -242,6 +242,7 @@ let authoringModule = angular.module('authoring', [
                 });
 
             // Set up Translations
+            $translatePartialLoaderProvider.addPart('i18n');
             $translatePartialLoaderProvider.addPart('authoringTool/i18n');
             $translateProvider.useLoader('$translatePartialLoader', {
                 urlTemplate: 'wise5/{part}/i18n_{lang}.json'

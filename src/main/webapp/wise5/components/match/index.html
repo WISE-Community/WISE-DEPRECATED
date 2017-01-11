@@ -6,17 +6,17 @@
                   rows='10'
                   cols='100'></textarea>
         <br/>
-        {{ 'showSaveButton' | translate }}:
+        {{ 'SHOWSAVEBUTTON' | translate }}:
         <input type='checkbox'
                ng-model='matchController.authoringComponentContent.showSaveButton'
                ng-change='matchController.authoringViewComponentChanged()'/>
         <br/>
-        {{ 'showSubmitButton' | translate }}:
+        {{ 'SHOWSUBMITBUTTON' | translate }}:
         <input type='checkbox'
                ng-model='matchController.authoringComponentContent.showSubmitButton'
                ng-change='matchController.authoringViewComponentChanged()'/>
         <br/>
-        {{ 'maxScore' | translate }}:
+        {{ 'MAXSCORE' | translate }}:
         <input type='number'
                ng-model='matchController.authoringComponentContent.maxScore'
                ng-change='matchController.authoringViewComponentChanged()'
@@ -46,7 +46,7 @@
             <button ng-click='matchController.authoringDeleteBucket($index)'>{{ 'deleteBucket' | translate }}</button>
         </div>
         <br/>
-        {{ 'feedback' | translate }}
+        {{ 'FEEDBACK' | translate }}
         <br/>
         {{ 'ordered' | translate }}: <input type='checkbox'
                         ng-model='matchController.authoringComponentContent.ordered'
@@ -58,12 +58,12 @@
                  style='border: 1px solid black'>
                 <span>{{matchController.getChoiceValueById(choiceFeedback.choiceId)}}</span>
                 <br/>
-                {{ 'feedback' | translate }}: <input ng-model='choiceFeedback.feedback'
+                {{ 'FEEDBACK' | translate }}: <input ng-model='choiceFeedback.feedback'
                                  ng-model-options='{ debounce: 1000 }'
                        ng-change='matchController.authoringViewComponentChanged()'
                        size='60'/>
                 <br/>
-                {{ 'isCorrect' | translate }}: <input type='checkbox'
+                {{ 'ISCORRECT' | translate }}: <input type='checkbox'
                                    ng-model='choiceFeedback.isCorrect'
                                    ng-change='matchController.authoringViewComponentChanged()'/>
                 <br/>
@@ -83,14 +83,14 @@
         </div>
     </div>
     <div ng-if='matchController.mode === "authoring"'>
-        {{ 'importPreviousWork' | translate }}:
+        {{ 'IMPORTPREVIOUSWORK' | translate }}:
         <input type='checkbox'
                ng-model='matchController.authoringComponentContent.importPreviousWork'
                ng-click='matchController.authoringImportPreviousWorkClicked()'
                ng-change='matchController.authoringViewComponentChanged()'/>
     </div>
     <div ng-if='matchController.mode === "authoring" && matchController.authoringComponentContent.importPreviousWork'>
-        {{ 'importPreviousWorkStep' | translate }}:
+        {{ 'IMPORTPREVIOUSWORKSTEP' | translate }}:
         <select ng-model='matchController.authoringComponentContent.importPreviousWorkNodeId'
                 ng-change='matchController.authoringImportPreviousWorkNodeIdChanged()'>
             <option></option>
@@ -99,7 +99,7 @@
                     ng-if='matchController.isApplicationNode(item.$key)'>{{matchController.getNodePositionAndTitleByNodeId(item.$key)}}</option>
         </select>
         <br/>
-        {{ 'importPreviousWorkComponent' | translate }}:
+        {{ 'IMPORTPREVIOUSWORKCOMPONENT' | translate }}:
         <select ng-model='matchController.authoringComponentContent.importPreviousWorkComponentId'
                 ng-change='matchController.authoringImportPreviousWorkComponentIdChanged()'
                 ng-options='component.id as component.type disable when !matchController.componentHasWork(component) for component in matchController.getComponentsByNodeId(matchController.authoringComponentContent.importPreviousWorkNodeId)'>
@@ -107,14 +107,14 @@
         </select>
     </div>
     <div ng-if='matchController.mode === "authoring"'>
-        {{ 'showPreviousWork' | translate }}:
+        {{ 'SHOWPREVIOUSWORK' | translate }}:
         <input type='checkbox'
                ng-model='matchController.authoringComponentContent.showPreviousWork'
                ng-click='matchController.authoringShowPreviousWorkClicked()'
                ng-change='matchController.authoringViewComponentChanged()'/>
     </div>
     <div ng-if='matchController.mode === "authoring" && matchController.authoringComponentContent.showPreviousWork'>
-        {{ 'showPreviousWorkStep' | translate }}:
+        {{ 'SHOWPREVIOUSWORKSTEP' | translate }}:
         <select ng-model='matchController.authoringComponentContent.showPreviousWorkNodeId'
                 ng-change='matchController.authoringShowPreviousWorkNodeIdChanged()'>
             <option></option>
@@ -123,14 +123,14 @@
                     ng-if='matchController.isApplicationNode(item.$key)'>{{matchController.getNodePositionAndTitleByNodeId(item.$key)}}</option>
         </select>
         <br/>
-        {{ 'showPreviousWorkComponent' | translate }}:
+        {{ 'SHOWPREVIOUSWORKCOMPONENT' | translate }}:
         <select ng-model='matchController.authoringComponentContent.showPreviousWorkComponentId'
                 ng-change='matchController.authoringShowPreviousWorkComponentIdChanged()'
                 ng-options='component.id as component.type disable when !matchController.componentHasWork(component) for component in matchController.getComponentsByNodeId(matchController.authoringComponentContent.showPreviousWorkNodeId)'>
             <option></option>
         </select>
         <br/>
-        {{ 'showPreviousWorkPrompt' | translate }}:
+        {{ 'SHOWPREVIOUSWORKPROMPT' | translate }}:
         <input type='checkbox'
                ng-model='matchController.authoringComponentContent.showPreviousWorkPrompt'
                ng-change='matchController.authoringViewComponentChanged()'/>
@@ -224,11 +224,11 @@
                    ng-class="{'md-raised': !matchController.isSubmitButtonVisible}"
                    ng-click='matchController.saveButtonClicked()'
                    ng-if='matchController.isSaveButtonVisible'
-                   ng-disabled='matchController.isDisabled || !matchController.isDirty'>{{ 'save' | translate }}</md-button>
+                   ng-disabled='matchController.isDisabled || !matchController.isDirty'>{{ 'SAVE' | translate }}</md-button>
         <md-button class="md-raised md-primary"
                    ng-click='matchController.submitButtonClicked()'
                    ng-if='matchController.isSubmitButtonVisible'
-                   ng-disabled='matchController.isDisabled || !matchController.isSubmitDirty'>{{ 'submit' | translate }}</md-button>
+                   ng-disabled='matchController.isDisabled || !matchController.isSubmitDirty'>{{ 'SUBMIT' | translate }}</md-button>
         <span ng-show="matchController.saveMessage.text"
               class="component__actions__info md-caption">
             {{matchController.saveMessage.text}} <span class="component__actions__more"><md-tooltip md-direction="top">{{ matchController.saveMessage.time | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip><span am-time-ago="matchController.saveMessage.time"></span></span>

@@ -358,9 +358,9 @@ class TableController {
                     this.isSubmitDirty = false;
                     this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: false});
                 } else if (isAutoSave) {
-                    this.setSaveMessage(this.$translate('autoSaved'), clientSaveTime);
+                    this.setSaveMessage(this.$translate('AUTOSAVED'), clientSaveTime);
                 } else {
-                    this.setSaveMessage(this.$translate('saved'), clientSaveTime);
+                    this.setSaveMessage(this.$translate('SAVED'), clientSaveTime);
                 }
             }
 
@@ -566,13 +566,13 @@ class TableController {
                 this.isSubmitDirty = false;
                 this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: false});
                 // set save message
-                this.setSaveMessage(this.$translate('lastSubmitted'), clientSaveTime);
+                this.setSaveMessage(this.$translate('LASTSUBMITTED'), clientSaveTime);
             } else {
                 // latest state is not a submission, so set isSubmitDirty to true and notify node
                 this.isSubmitDirty = true;
                 this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: true});
                 // set save message
-                this.setSaveMessage(this.$translate('lastSaved'), clientSaveTime);
+                this.setSaveMessage(this.$translate('LASTSAVED'), clientSaveTime);
             }
         }
     };
@@ -1740,7 +1740,7 @@ class TableController {
                  */
 
                 // make sure the author really wants to change the component type
-                var answer = confirm(this.$translate('areYouSureYouWantToChangeThisComponentType'));
+                var answer = confirm(this.$translate('AREYOUSUREYOUWANTTOCHANGETHISCOMPONENTTYPE'));
 
                 if (answer) {
                     // the author wants to change the component type

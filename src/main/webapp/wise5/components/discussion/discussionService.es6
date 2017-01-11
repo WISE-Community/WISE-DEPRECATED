@@ -36,7 +36,7 @@ class DiscussionService extends NodeService {
         var component = {};
         component.id = this.UtilService.generateKey();
         component.type = 'Discussion';
-        component.prompt = this.$translate('enterPromptHere');
+        component.prompt = this.$translate('ENTERPROMPTHERE');
         component.showSaveButton = false;
         component.showSubmitButton = true;
         component.isStudentAttachmentEnabled = true;

@@ -239,6 +239,7 @@ let vleModule = angular.module('vle', [
             $httpProvider.interceptors.push('HttpInterceptor');
 
             // Set up Translations
+            $translatePartialLoaderProvider.addPart('i18n');
             $translatePartialLoaderProvider.addPart('vle/i18n');
             $translateProvider.useLoader('$translatePartialLoader', {
                 urlTemplate: 'wise5/{part}/i18n_{lang}.json'

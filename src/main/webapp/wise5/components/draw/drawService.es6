@@ -8,7 +8,7 @@ class DrawService extends NodeService {
         this.$filter = $filter;
         this.StudentDataService = StudentDataService;
         this.UtilService = UtilService;
-        
+
         this.$translate = this.$filter('translate');
     }
 
@@ -20,7 +20,7 @@ class DrawService extends NodeService {
         var component = {};
         component.id = this.UtilService.generateKey();
         component.type = 'Draw';
-        component.prompt = this.$translate('enterPromptHere');
+        component.prompt = this.$translate('ENTERPROMPTHERE');
         component.showSaveButton = false;
         component.showSubmitButton = false;
         component.stamps = {};
@@ -154,40 +154,40 @@ class DrawService extends NodeService {
 
         return result;
     };
-    
+
     /**
      * Remove the background object from the draw data in the component state
      * @param componentState the component state
      * @returns the componentState
      */
     removeBackgroundFromComponentState(componentState) {
-        
+
         if (componentState != null) {
             var studentData = componentState.studentData;
-            
+
             if (studentData != null) {
-                
+
                 // get the draw data string
                 var drawData = studentData.drawData;
-                
+
                 if (drawData != null) {
-                    
+
                     // convert the draw data string to an object
                     var drawDataObject = angular.fromJson(drawData);
-                    
+
                     if (drawDataObject != null) {
-                        
+
                         // get the canvas value
                         var canvas = drawDataObject.canvas;
-                        
+
                         if (canvas != null) {
-                            
+
                             // remove the background image from the canvas
                             delete canvas.backgroundImage;
-                            
+
                             // convert the object back to a JSON string
                             var drawDataJSONString = angular.toJson(drawDataObject);
-                            
+
                             if (drawDataJSONString != null) {
                                 // set the draw data JSON string back into the student data
                                 studentData.drawData = drawDataJSONString;
@@ -197,14 +197,14 @@ class DrawService extends NodeService {
                 }
             }
         };
-        
+
         return componentState;
     }
-    
+
     /**
      * Whether this component generates student work
      * @param component (optional) the component object. if the component object
-     * is not provided, we will use the default value of whether the 
+     * is not provided, we will use the default value of whether the
      * component type usually has work.
      * @return whether this component generates student work
      */

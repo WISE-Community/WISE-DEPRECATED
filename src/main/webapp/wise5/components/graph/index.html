@@ -8,18 +8,18 @@
                           rows='10'
                           cols='100'></textarea>
                 <br/>
-                {{ 'showSaveButton' | translate }}:
+                {{ 'SHOWSAVEBUTTON' | translate }}:
                 <input type='checkbox'
                        ng-model='graphController.authoringComponentContent.showSaveButton'
                        ng-change='graphController.authoringViewComponentChanged()'/>
                 <br/>
-                {{ 'showSubmitButton' | translate }}:
+                {{ 'SHOWSUBMITBUTTON' | translate }}:
                 <input type='checkbox'
                        ng-model='graphController.authoringComponentContent.showSubmitButton'
                        ng-change='graphController.authoringViewComponentChanged()'/>
 
                 <br/>
-                {{ 'maxScore' | translate }}:
+                {{ 'MAXSCORE' | translate }}:
                 <input type='number'
                        ng-model='graphController.authoringComponentContent.maxScore'
                        ng-change='graphController.authoringViewComponentChanged()'
@@ -69,7 +69,7 @@
                               ng-change='graphController.authoringViewComponentChanged()'/>
                 <br/>
                 <br/>
-                {{ 'backgroundImage' | translate }}: <input type='text'
+                {{ 'BACKGROUNDIMAGE' | translate }}: <input type='text'
                                          size='80'
                                          ng-model='graphController.authoringComponentContent.backgroundImage'
                                          ng-model-options='{ debounce: 1000 }'
@@ -127,14 +127,14 @@
                 </div>
             </div>
             <div ng-if='graphController.mode === "authoring"'>
-                {{ 'importPreviousWork' | translate }}:
+                {{ 'IMPORTPREVIOUSWORK' | translate }}:
                 <input type='checkbox'
                        ng-model='graphController.authoringComponentContent.importPreviousWork'
                        ng-click='graphController.authoringImportPreviousWorkClicked()'
                        ng-change='graphController.authoringViewComponentChanged()'/>
             </div>
             <div ng-if='graphController.mode === "authoring" && graphController.authoringComponentContent.importPreviousWork'>
-                {{ 'importPreviousWorkStep' | translate }}:
+                {{ 'IMPORTPREVIOUSWORKSTEP' | translate }}:
                 <select ng-model='graphController.authoringComponentContent.importPreviousWorkNodeId'
                         ng-change='graphController.authoringImportPreviousWorkNodeIdChanged()'>
                     <option></option>
@@ -143,7 +143,7 @@
                             ng-if='graphController.isApplicationNode(item.$key)'>{{graphController.getNodePositionAndTitleByNodeId(item.$key)}}</option>
                 </select>
                 <br/>
-                {{ 'importPreviousWorkComponent' | translate }}:
+                {{ 'IMPORTPREVIOUSWORKCOMPONENT' | translate }}:
                 <select ng-model='graphController.authoringComponentContent.importPreviousWorkComponentId'
                         ng-change='graphController.authoringImportPreviousWorkComponentIdChanged()'
                         ng-options='component.id as component.type disable when !graphController.componentHasWork(component) for component in graphController.getComponentsByNodeId(graphController.authoringComponentContent.importPreviousWorkNodeId)'>
@@ -151,7 +151,7 @@
                 </select>
             </div>
             <div ng-if='graphController.mode === "authoring"'>
-                {{ 'showPreviousWork' | translate }}:
+                {{ 'SHOWPREVIOUSWORK' | translate }}:
                 <input type='checkbox'
                        ng-model='graphController.authoringComponentContent.showPreviousWork'
                        ng-click='graphController.authoringShowPreviousWorkClicked()'
@@ -167,14 +167,14 @@
                             ng-if='graphController.isApplicationNode(item.$key)'>{{graphController.getNodePositionAndTitleByNodeId(item.$key)}}</option>
                 </select>
                 <br/>
-                {{ 'showPreviousWorkComponent' | translate }}:
+                {{ 'SHOWPREVIOUSWORKCOMPONENT' | translate }}:
                 <select ng-model='graphController.authoringComponentContent.showPreviousWorkComponentId'
                         ng-change='graphController.authoringShowPreviousWorkComponentIdChanged()'
                         ng-options='component.id as component.type disable when !graphController.componentHasWork(component) for component in graphController.getComponentsByNodeId(graphController.authoringComponentContent.showPreviousWorkNodeId)'>
                     <option></option>
                 </select>
                 <br/>
-                {{ 'showPreviousWorkPrompt' | translate }}:
+                {{ 'SHOWPREVIOUSWORKPROMPT' | translate }}:
                 <input type='checkbox'
                        ng-model='graphController.authoringComponentContent.showPreviousWorkPrompt'
                        ng-change='graphController.authoringViewComponentChanged()'/>
@@ -258,7 +258,7 @@
                 <md-button class="md-accent md-primary"
                         ng-click='graphController.snipDrawing($event)'
                         ng-if='graphController.showSnipDrawingButton()'>
-                    <md-icon> content_cut </md-icon>  {{ 'addToNotebook' | translate:{label:graphController.notebookConfig.label} }}
+                    <md-icon> content_cut </md-icon>  {{ 'ADDTONOTEBOOK' | translate:{label:graphController.notebookConfig.label} }}
                 </md-button>
                 <md-button class="md-accent" ng-if="graphController.isStudentAttachmentEnabled"
                            ng-click="nodeController.showStudentAssets($event, component.id, graphController.isDisabled)">
@@ -272,11 +272,11 @@
                            ng-class="{'md-raised': !graphController.isSubmitButtonVisible}"
                            ng-click='graphController.saveButtonClicked()'
                            ng-if='graphController.isSaveButtonVisible'
-                           ng-disabled='graphController.isDisabled || !graphController.isDirty'>{{ 'save' | translate }}</md-button>
+                           ng-disabled='graphController.isDisabled || !graphController.isDirty'>{{ 'SAVE' | translate }}</md-button>
                 <md-button class="md-raised md-primary"
                            ng-click='graphController.submitButtonClicked()'
                            ng-if='graphController.isSubmitButtonVisible'
-                           ng-disabled='graphController.isDisabled || !graphController.isSubmitDirty'>{{ 'submit' | translate }}</md-button>
+                           ng-disabled='graphController.isDisabled || !graphController.isSubmitDirty'>{{ 'SUBMIT' | translate }}</md-button>
                 <span ng-show="graphController.saveMessage.text"
                       class="component__actions__info md-caption">
                     {{graphController.saveMessage.text}} <span class="component__actions__more"><md-tooltip md-direction="top">{{ graphController.saveMessage.time | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip><span am-time-ago="graphController.saveMessage.time"></span></span>

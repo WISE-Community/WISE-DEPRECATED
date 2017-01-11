@@ -8,35 +8,35 @@
                           rows='10'
                           cols='100'></textarea>
                 <br/>
-                {{ 'showSaveButton' | translate }}:
+                {{ 'SHOWSAVEBUTTON' | translate }}:
                 <input type='checkbox'
                        ng-model='drawController.authoringComponentContent.showSaveButton'
                        ng-change='drawController.authoringViewComponentChanged()'/>
                 <br/>
-                {{ 'showSubmitButton' | translate }}:
+                {{ 'SHOWSUBMITBUTTON' | translate }}:
                 <input type='checkbox'
                        ng-model='drawController.authoringComponentContent.showSubmitButton'
                        ng-change='drawController.authoringViewComponentChanged()'/>
 
                 <br/>
-                {{ 'maxScore' | translate }}:
+                {{ 'MAXSCORE' | translate }}:
                 <input type='number'
                        ng-model='drawController.authoringComponentContent.maxScore'
                        ng-change='drawController.authoringViewComponentChanged()'
                        ng-model-options='{ debounce: 1000 }'
                        style='width: 3em'/>
                 <br/>
-                {{ 'background' | translate }}:
+                {{ 'BACKGROUNDIMAGE' | translate }}:
                 <input type='text'
                        size='80'
                        ng-model='drawController.authoringComponentContent.background'
                        ng-change='drawController.authoringViewComponentChanged()'/>
                 <br/>
-                {{ 'width' | translate }}: <input type='number'
+                {{ 'WIDTH' | translate }}: <input type='number'
                               ng-model='drawController.authoringComponentContent.width'
                               ng-change='drawController.authoringViewWidthChanged()'/>
                 <br/>
-                {{ 'height' | translate }}: <input type='number'
+                {{ 'HEIGHT' | translate }}: <input type='number'
                               ng-model='drawController.authoringComponentContent.height'
                               ng-change='drawController.authoringViewHeightChanged()'/>
                 <br/>
@@ -46,9 +46,9 @@
                            size='50'
                            ng-model='drawController.authoringComponentContent.stamps.Stamps[$index]'
                            ng-change='drawController.authoringViewComponentChanged()'/>
-                    <button ng-click='drawController.authoringStampUpClicked($index)'>{{ 'up' | translate }}</button>
-                    <button ng-click='drawController.authoringStampDownClicked($index)'>{{ 'down' | translate }}</button>
-                    <button ng-click='drawController.authoringDeleteStampClicked($index)'>{{ 'delete' | translate }}</button>
+                    <button ng-click='drawController.authoringStampUpClicked($index)'>{{ 'UP' | translate }}</button>
+                    <button ng-click='drawController.authoringStampDownClicked($index)'>{{ 'DOWN' | translate }}</button>
+                    <button ng-click='drawController.authoringDeleteStampClicked($index)'>{{ 'DELETE' | translate }}</button>
                 </div>
                 <br/>
                 <button ng-click='drawController.authoringEnableAllToolsButtonClicked()'>{{ 'enableAllTools' | translate }}</button>
@@ -162,14 +162,14 @@
                 <button ng-click='drawController.authoringDeleteStarterDrawData()'>{{ 'deleteStarterDrawing' | translate }}</button>
     </div>
     <div ng-if='drawController.mode === "authoring"'>
-        {{ 'importPreviousWork' | translate }}:
+        {{ 'IMPORTPREVIOUSWORK' | translate }}:
         <input type='checkbox'
                ng-model='drawController.authoringComponentContent.importPreviousWork'
                ng-click='drawController.authoringImportPreviousWorkClicked()'
                ng-change='drawController.authoringViewComponentChanged()'/>
     </div>
     <div ng-if='drawController.mode === "authoring" && drawController.authoringComponentContent.importPreviousWork'>
-        {{ 'importPreviousWorkStep' | translate }}:
+        {{ 'IMPORTPREVIOUSWORKSTEP' | translate }}:
         <select ng-model='drawController.authoringComponentContent.importPreviousWorkNodeId'
                 ng-change='drawController.authoringImportPreviousWorkNodeIdChanged()'>
             <option></option>
@@ -178,7 +178,7 @@
                     ng-if='drawController.isApplicationNode(item.$key)'>{{drawController.getNodePositionAndTitleByNodeId(item.$key)}}</option>
         </select>
         <br/>
-        {{ 'importPreviousWorkComponent' | translate }}:
+        {{ 'IMPORTPREVIOUSWORKCOMPONENT' | translate }}:
         <select ng-model='drawController.authoringComponentContent.importPreviousWorkComponentId'
                 ng-change='drawController.authoringImportPreviousWorkComponentIdChanged()'
                 ng-options='component.id as component.type disable when !drawController.componentHasWork(component) for component in drawController.getComponentsByNodeId(drawController.authoringComponentContent.importPreviousWorkNodeId)'>
@@ -186,14 +186,14 @@
         </select>
     </div>
     <div ng-if='drawController.mode === "authoring"'>
-        {{ 'showPreviousWork' | translate }}:
+        {{ 'SHOWPREVIOUSWORK' | translate }}:
         <input type='checkbox'
                ng-model='drawController.authoringComponentContent.showPreviousWork'
                ng-click='drawController.authoringShowPreviousWorkClicked()'
                ng-change='drawController.authoringViewComponentChanged()'/>
     </div>
     <div ng-if='drawController.mode === "authoring" && drawController.authoringComponentContent.showPreviousWork'>
-        {{ 'showPreviousWorkStep' | translate }}:
+        {{ 'SHOWPREVIOUSWORKSTEP' | translate }}:
         <select ng-model='drawController.authoringComponentContent.showPreviousWorkNodeId'
                 ng-change='drawController.authoringShowPreviousWorkNodeIdChanged()'>
             <option></option>
@@ -202,14 +202,14 @@
                     ng-if='drawController.isApplicationNode(item.$key)'>{{drawController.getNodePositionAndTitleByNodeId(item.$key)}}</option>
         </select>
         <br/>
-        {{ 'showPreviousWorkComponent' | translate }}:
+        {{ 'SHOWPREVIOUSWORKCOMPONENT' | translate }}:
         <select ng-model='drawController.authoringComponentContent.showPreviousWorkComponentId'
                 ng-change='drawController.authoringShowPreviousWorkComponentIdChanged()'
                 ng-options='component.id as component.type disable when !drawController.componentHasWork(component) for component in drawController.getComponentsByNodeId(drawController.authoringComponentContent.showPreviousWorkNodeId)'>
             <option></option>
         </select>
         <br/>
-        {{ 'showPreviousWorkPrompt' | translate }}:
+        {{ 'SHOWPREVIOUSWORKPROMPT' | translate }}:
         <input type='checkbox'
                ng-model='drawController.authoringComponentContent.showPreviousWorkPrompt'
                ng-change='drawController.authoringViewComponentChanged()'/>
@@ -235,12 +235,12 @@
     <md-button class="md-accent"
             ng-click="drawController.resetButtonClicked()"
             ng-show="drawController.isResetButtonVisible">
-            <md-icon> restore </md-icon> {{ 'reset' | translate }}
+            <md-icon> restore </md-icon> {{ 'RESET' | translate }}
     </md-button>
     <md-button class="md-accent md-primary"
             ng-click='drawController.snipDrawing($event)'
             ng-if='drawController.showSnipDrawingButton()'>
-        <md-icon> content_cut </md-icon> {{ 'addToNotebook' | translate:{label:drawController.notebookConfig.label} }}
+        <md-icon> content_cut </md-icon> {{ 'ADDTONOTEBOOK' | translate:{label:drawController.notebookConfig.label} }}
     </md-button>
     <div data-drop="true"
          jqyoui-droppable="{onDrop: 'drawController.dropCallback(item, $index)'}">
@@ -272,11 +272,11 @@
                    ng-class="{'md-raised': !drawController.isSubmitButtonVisible}"
                    ng-click='drawController.saveButtonClicked()'
                    ng-disabled='drawController.isDisabled || !drawController.isDirty'
-                   ng-show='drawController.isSaveButtonVisible'>{{ 'save' | translate }}</md-button>
+                   ng-show='drawController.isSaveButtonVisible'>{{ 'SAVE' | translate }}</md-button>
         <md-button class="md-raised md-primary"
                    ng-click='drawController.submitButtonClicked()'
                    ng-disabled='drawController.isDisabled || !drawController.isSubmitDirty'
-                   ng-show='drawController.isSubmitButtonVisible'>{{ 'submit' | translate }}</md-button>
+                   ng-show='drawController.isSubmitButtonVisible'>{{ 'SUBMIT' | translate }}</md-button>
         <span ng-show="drawController.saveMessage.text"
               class="component__actions__info md-caption">
               {{drawController.saveMessage.text}} <span class="component__actions__more"><md-tooltip md-direction="top">{{ drawController.saveMessage.time | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip><span am-time-ago="drawController.saveMessage.time"></span></span>

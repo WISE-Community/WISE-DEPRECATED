@@ -45,7 +45,7 @@ var TableService = function (_NodeService) {
             var component = {};
             component.id = this.UtilService.generateKey();
             component.type = 'Table';
-            component.prompt = this.$translate('enterPromptHere');
+            component.prompt = this.$translate('ENTERPROMPTHERE');
             component.showSaveButton = false;
             component.showSubmitButton = false;
             component.globalCellSize = 10;
@@ -205,7 +205,7 @@ var TableService = function (_NodeService) {
         /**
          * Whether this component generates student work
          * @param component (optional) the component object. if the component object
-         * is not provided, we will use the default value of whether the 
+         * is not provided, we will use the default value of whether the
          * component type usually has work.
          * @return whether this component generates student work
          */

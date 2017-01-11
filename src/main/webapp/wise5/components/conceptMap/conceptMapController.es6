@@ -373,7 +373,7 @@ class ConceptMapController {
 
                 // set save message
                 if (isSubmit) {
-                    this.setSaveMessage('Submitted', clientSaveTime);
+                    this.setSaveMessage('SUBMITTED', clientSaveTime);
 
                     this.submit();
 
@@ -381,9 +381,9 @@ class ConceptMapController {
                     this.isSubmitDirty = false;
                     this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: false});
                 } else if (isAutoSave) {
-                    this.setSaveMessage(this.$translate('autoSaved'), clientSaveTime);
+                    this.setSaveMessage(this.$translate('AUTOSAVED'), clientSaveTime);
                 } else {
-                    this.setSaveMessage(this.$translate('saved'), clientSaveTime);
+                    this.setSaveMessage(this.$translate('SAVED'), clientSaveTime);
                 }
             }
         }));
@@ -530,7 +530,7 @@ class ConceptMapController {
                     var score = data.value;
                     var maxAutoScore = data.maxAutoScore;
 
-                    autoFeedbackString += this.$translate('score') + ": " + score;
+                    autoFeedbackString += this.$translate('SCORE') + ": " + score;
 
                     if (maxAutoScore != null && maxAutoScore != '') {
                         // show the max score as the denominator
@@ -553,7 +553,7 @@ class ConceptMapController {
 
                     // get the comment
                     var comment = data.value;
-                    autoFeedbackString += this.$translate('feedback') + ": " + comment;
+                    autoFeedbackString += this.$translate('FEEDBACK') + ": " + comment;
                 }
             }
 
@@ -776,13 +776,13 @@ class ConceptMapController {
                 this.isSubmitDirty = false;
                 this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: false});
                 // set save message
-                this.setSaveMessage(this.$translate('lastSubmitted'), latestState.clientSaveTime);
+                this.setSaveMessage(this.$translate('LASTSUBMITTED'), latestState.clientSaveTime);
             } else {
                 // latest state is not a submission, so set isSubmitDirty to true and notify node
                 this.isSubmitDirty = true;
                 this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: true});
                 // set save message
-                this.setSaveMessage(this.$translate('lastSaved'), latestState.clientSaveTime);
+                this.setSaveMessage(this.$translate('LASTSAVED'), latestState.clientSaveTime);
             }
         }
     };
@@ -905,7 +905,7 @@ class ConceptMapController {
 
             if (this.componentContent.showAutoScore && thisResult.score != null) {
                 // display the score
-                resultString += this.$translate('score') + ": " + thisResult.score;
+                resultString += this.$translate('SCORE') + ": " + thisResult.score;
 
                 if (this.componentContent.maxScore != null && this.componentContent.maxScore != '') {
                     // show the max score as the denominator
@@ -920,7 +920,7 @@ class ConceptMapController {
                 }
 
                 // display the feedback
-                resultString += this.$translate('feedback') + ": " + thisResult.feedback;
+                resultString += this.$translate('FEEDBACK') + ": " + thisResult.feedback;
             }
 
             if (resultString != "") {
@@ -929,10 +929,10 @@ class ConceptMapController {
                     this.$mdDialog.alert()
                     .parent(angular.element(document.querySelector('#feedbackDiv')))
                     .clickOutsideToClose(true)
-                    .title(this.$translate('feedback'))
+                    .title(this.$translate('FEEDBACK'))
                     .htmlContent(resultString)
-                    .ariaLabel(this.$translate('feedback'))
-                    .ok(this.$translate('close'))
+                    .ariaLabel(this.$translate('FEEDBACK'))
+                    .ok(this.$translate('CLOSE'))
                 );
             }
 
@@ -1645,7 +1645,7 @@ class ConceptMapController {
                  */
 
                 // make sure the author really wants to change the component type
-                var answer = confirm(this.$translate('areYouSureYouWantToChangeThisComponentType'));
+                var answer = confirm(this.$translate('AREYOUSUREYOUWANTTOCHANGETHISCOMPONENTTYPE'));
 
                 if (answer) {
                     // the author wants to change the component type
@@ -4280,10 +4280,10 @@ class ConceptMapController {
             this.$mdDialog.alert()
             .parent(angular.element(document.querySelector('#feedbackDiv')))
             .clickOutsideToClose(true)
-            .title(this.$translate('feedback'))
+            .title(this.$translate('FEEDBACK'))
             .htmlContent(this.autoFeedbackString)
-            .ariaLabel(this.$translate('feedback'))
-            .ok(this.$translate('close'))
+            .ariaLabel(this.$translate('FEEDBACK'))
+            .ok(this.$translate('CLOSE'))
         );
     }
 

@@ -319,7 +319,7 @@ var EmbeddedController = function () {
 
                     // set save message
                     if (isSubmit) {
-                        _this.setSaveMessage(_this.$translate('submitted'), clientSaveTime);
+                        _this.setSaveMessage(_this.$translate('SUBMITTED'), clientSaveTime);
 
                         _this.submit();
 
@@ -327,9 +327,9 @@ var EmbeddedController = function () {
                         _this.isSubmitDirty = false;
                         _this.$scope.$emit('componentSubmitDirty', { componentId: _this.componentId, isDirty: false });
                     } else if (isAutoSave) {
-                        _this.setSaveMessage(_this.$translate('autoSaved'), clientSaveTime);
+                        _this.setSaveMessage(_this.$translate('AUTOSAVED'), clientSaveTime);
                     } else {
-                        _this.setSaveMessage(_this.$translate('saved'), clientSaveTime);
+                        _this.setSaveMessage(_this.$translate('SAVED'), clientSaveTime);
                     }
 
                     // Tell application that this componentState was successfully saved to server;
@@ -454,13 +454,13 @@ var EmbeddedController = function () {
                     this.isSubmitDirty = false;
                     this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: false });
                     // set save message
-                    this.setSaveMessage(this.$translate('lastSubmitted'), clientSaveTime);
+                    this.setSaveMessage(this.$translate('LASTSUBMITTED'), clientSaveTime);
                 } else {
                     // latest state is not a submission, so set isSubmitDirty to true and notify node
                     this.isSubmitDirty = true;
                     this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: true });
                     // set save message
-                    this.setSaveMessage(this.$translate('lastSaved'), clientSaveTime);
+                    this.setSaveMessage(this.$translate('LASTSAVED'), clientSaveTime);
                 }
             }
         }
@@ -887,7 +887,7 @@ var EmbeddedController = function () {
                      */
 
                     // make sure the author really wants to change the component type
-                    var answer = confirm(this.$translate('areYouSureYouWantToChangeThisComponentType'));
+                    var answer = confirm(this.$translate('AREYOUSUREYOUWANTTOCHANGETHISCOMPONENTTYPE'));
 
                     if (answer) {
                         // the author wants to change the component type

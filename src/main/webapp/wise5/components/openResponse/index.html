@@ -4,7 +4,7 @@
     </style>
 
     <div ng-if='openResponseController.mode === "authoring" && !openResponseController.authoringComponentContent.showPreviousWork'>
-        {{ 'prompt' | translate }}:
+        {{ 'PROMPT' | translate }}:
         <br/>
         <textarea ng-model='openResponseController.authoringComponentContent.prompt'
                   ng-change='openResponseController.authoringViewComponentChanged()'
@@ -20,24 +20,24 @@
                   rows='2'
                   cols='100'></textarea>
         <br/>
-        {{ 'showSaveButton' | translate }}:
+        {{ 'SHOWSAVEBUTTON' | translate }}:
         <input type='checkbox'
                ng-model='openResponseController.authoringComponentContent.showSaveButton'
                ng-change='openResponseController.authoringViewComponentChanged()'/>
         <br/>
-        {{ 'showSubmitButton' | translate }}:
+        {{ 'SHOWSUBMITBUTTON' | translate }}:
         <input type='checkbox'
                ng-model='openResponseController.authoringComponentContent.showSubmitButton'
                ng-change='openResponseController.authoringViewComponentChanged()'/>
         <div ng-show='openResponseController.authoringComponentContent.showSubmitButton'
              style='display:inline'>
-            {{ 'maxSubmit' | translate }}:
+            {{ 'MAXSUBMIT' | translate }}:
             <input type='number'
                    ng-model='openResponseController.authoringComponentContent.maxSubmitCount'
                    ng-change='openResponseController.authoringViewComponentChanged()'/>
         </div>
         <br/>
-        {{ 'maxScore' | translate }}:
+        {{ 'MAXSCORE' | translate }}:
         <input type='number'
                ng-model='openResponseController.authoringComponentContent.maxScore'
                ng-change='openResponseController.authoringViewComponentChanged()'
@@ -70,11 +70,11 @@
             <input type='radio'
                    ng-model='openResponseController.authoringComponentContent.cRater.scoreOn'
                    value='submit'
-                   ng-change='openResponseController.authoringViewComponentChanged()'/> {{ 'submit' | translate }}
+                   ng-change='openResponseController.authoringViewComponentChanged()'/> {{ 'SUBMIT' | translate }}
             <input type='radio'
                    ng-model='openResponseController.authoringComponentContent.cRater.scoreOn'
                    value='save'
-                   ng-change='openResponseController.authoringViewComponentChanged()'/> {{ 'save' | translate }}
+                   ng-change='openResponseController.authoringViewComponentChanged()'/> {{ 'SAVE' | translate }}
             <input type='radio'
                    ng-model='openResponseController.authoringComponentContent.cRater.scoreOn'
                    value='change'
@@ -82,15 +82,15 @@
             <br/>
             <input type='checkbox'
                    ng-model='openResponseController.authoringComponentContent.cRater.showScore'
-                   ng-change='openResponseController.authoringViewComponentChanged()'/> {{ 'showScore' | translate }}
+                   ng-change='openResponseController.authoringViewComponentChanged()'/> {{ 'SHOWSCORE' | translate }}
             <br/>
             <input type='checkbox'
                    ng-model='openResponseController.authoringComponentContent.cRater.showFeedback'
-                   ng-change='openResponseController.authoringViewComponentChanged()'/> {{ 'showFeedback' | translate }}
+                   ng-change='openResponseController.authoringViewComponentChanged()'/> {{ 'SHOWFEEDBACK' | translate }}
             <br/>
             <button ng-click='openResponseController.authoringAddScoringRule()'>{{ 'addScoringRule' | translate }}</button>
             <div ng-repeat='scoringRule in openResponseController.authoringComponentContent.cRater.scoringRules'>
-                {{ 'score' | translate }}: <input type='text'
+                {{ 'SCORE' | translate }}: <input type='text'
                               ng-model='scoringRule.score'
                               ng-model-options='{ debounce: 500 }'
                               ng-change='openResponseController.authoringViewComponentChanged()'
@@ -101,9 +101,9 @@
                                  cols='100'
                                  ng-model-options='{ debounce: 500 }'
                                  ng-change='openResponseController.authoringViewComponentChanged()'/>
-                <button ng-click='openResponseController.authoringViewScoringRuleUpClicked($index)'>{{ 'up' | translate }}</button>
-                <button ng-click='openResponseController.authoringViewScoringRuleDownClicked($index)'>{{ 'down' | translate }}</button>
-                <button ng-click='openResponseController.authoringViewScoringRuleDeleteClicked($index)'>{{ 'delete' | translate }}</button>
+                <button ng-click='openResponseController.authoringViewScoringRuleUpClicked($index)'>{{ 'UP' | translate }}</button>
+                <button ng-click='openResponseController.authoringViewScoringRuleDownClicked($index)'>{{ 'DOWN' | translate }}</button>
+                <button ng-click='openResponseController.authoringViewScoringRuleDeleteClicked($index)'>{{ 'DELETE' | translate }}</button>
             </div>
             <button ng-click='openResponseController.authoringAddScoringRule()'>{{ 'addScoringRule' | translate }}</button>
             <br/>
@@ -136,9 +136,9 @@
                                          cols='100'
                                          ng-model-options='{ debounce: 500 }'
                                          ng-change='openResponseController.authoringViewComponentChanged()'/>
-                 <button ng-click='openResponseController.authoringViewMultipleAttemptScoringRuleUpClicked($index)'>{{ 'up' | translate }}</button>
-                 <button ng-click='openResponseController.authoringViewMultipleAttemptScoringRuleDownClicked($index)'>{{ 'down' | translate }}</button>
-                 <button ng-click='openResponseController.authoringViewMultipleAttemptScoringRuleDeleteClicked($index)'>{{ 'delete' | translate }}</button>
+                 <button ng-click='openResponseController.authoringViewMultipleAttemptScoringRuleUpClicked($index)'>{{ 'UP' | translate }}</button>
+                 <button ng-click='openResponseController.authoringViewMultipleAttemptScoringRuleDownClicked($index)'>{{ 'DOWN' | translate }}</button>
+                 <button ng-click='openResponseController.authoringViewMultipleAttemptScoringRuleDeleteClicked($index)'>{{ 'DELETE' | translate }}</button>
             </div>
             <br/>
             <button ng-click='openResponseController.authoringAddMultipleAttemptScoringRule()'
@@ -198,9 +198,9 @@
                                                         ng-change='openResponseController.authoringViewComponentChanged()'/>
                     </div>
                     <br/>
-                    <button ng-click='openResponseController.authoringViewNotificationUpClicked($index)'>{{ 'up' | translate }}</button>
-                    <button ng-click='openResponseController.authoringViewNotificationDownClicked($index)'>{{ 'down' | translate }}</button>
-                    <button ng-click='openResponseController.authoringViewNotificationDeleteClicked($index)'>{{ 'delete' | translate }}</button>
+                    <button ng-click='openResponseController.authoringViewNotificationUpClicked($index)'>{{ 'UP' | translate }}</button>
+                    <button ng-click='openResponseController.authoringViewNotificationDownClicked($index)'>{{ 'DOWN' | translate }}</button>
+                    <button ng-click='openResponseController.authoringViewNotificationDeleteClicked($index)'>{{ 'DELETE' | translate }}</button>
                  </div>
                 <button ng-click='openResponseController.authoringAddNotification()'>
                     {{ 'addNewNotification' | translate }}
@@ -210,14 +210,14 @@
         <br/>
     </div>
     <div ng-if='openResponseController.mode === "authoring"'>
-        {{ 'importPreviousWork' | translate }}:
+        {{ 'IMPORTPREVIOUSWORK' | translate }}:
         <input type='checkbox'
                ng-model='openResponseController.authoringComponentContent.importPreviousWork'
                ng-click='openResponseController.authoringImportPreviousWorkClicked()'
                ng-change='openResponseController.authoringViewComponentChanged()'/>
     </div>
     <div ng-if='openResponseController.mode === "authoring" && openResponseController.authoringComponentContent.importPreviousWork'>
-        {{ 'importPreviousWorkStep' | translate }}:
+        {{ 'IMPORTPREVIOUSWORKSTEP' | translate }}:
         <select ng-model='openResponseController.authoringComponentContent.importPreviousWorkNodeId'
                 ng-change='openResponseController.authoringImportPreviousWorkNodeIdChanged()'>
             <option></option>
@@ -226,7 +226,7 @@
                     ng-if='openResponseController.isApplicationNode(item.$key)'>{{openResponseController.getNodePositionAndTitleByNodeId(item.$key)}}</option>
         </select>
         <br/>
-        {{ 'importPreviousWorkComponent' | translate }}:
+        {{ 'IMPORTPREVIOUSWORKCOMPONENT' | translate }}:
         <select ng-model='openResponseController.authoringComponentContent.importPreviousWorkComponentId'
                 ng-change='openResponseController.authoringImportPreviousWorkComponentIdChanged()'
                 ng-options='component.id as component.type disable when !openResponseController.componentHasWork(component) for component in openResponseController.getComponentsByNodeId(openResponseController.authoringComponentContent.importPreviousWorkNodeId)'>
@@ -234,14 +234,14 @@
         </select>
     </div>
     <div ng-if='openResponseController.mode === "authoring"'>
-        {{ 'showPreviousWork' | translate }}:
+        {{ 'SHOWPREVIOUSWORK' | translate }}:
         <input type='checkbox'
                ng-model='openResponseController.authoringComponentContent.showPreviousWork'
                ng-click='openResponseController.authoringShowPreviousWorkClicked()'
                ng-change='openResponseController.authoringViewComponentChanged()'/>
     </div>
     <div ng-if='openResponseController.mode === "authoring" && openResponseController.authoringComponentContent.showPreviousWork'>
-        {{ 'showPreviousWorkStep' | translate }}:
+        {{ 'SHOWPREVIOUSWORKSTEP' | translate }}:
         <select ng-model='openResponseController.authoringComponentContent.showPreviousWorkNodeId'
                 ng-change='openResponseController.authoringShowPreviousWorkNodeIdChanged()'>
             <option></option>
@@ -250,14 +250,14 @@
                     ng-if='openResponseController.isApplicationNode(item.$key)'>{{openResponseController.getNodePositionAndTitleByNodeId(item.$key)}}</option>
         </select>
         <br/>
-        {{ 'showPreviousWorkComponent' | translate }}:
+        {{ 'SHOWPREVIOUSWORKCOMPONENT' | translate }}:
         <select ng-model='openResponseController.authoringComponentContent.showPreviousWorkComponentId'
                 ng-change='openResponseController.authoringShowPreviousWorkComponentIdChanged()'
                 ng-options='component.id as component.type disable when !openResponseController.componentHasWork(component) for component in openResponseController.getComponentsByNodeId(openResponseController.authoringComponentContent.showPreviousWorkNodeId)'>
             <option></option>
         </select>
         <br/>
-        {{ 'showPreviousWorkPrompt' | translate }}:
+        {{ 'SHOWPREVIOUSWORKPROMPT' | translate }}:
         <input type='checkbox'
                ng-model='openResponseController.authoringComponentContent.showPreviousWorkPrompt'
                ng-change='openResponseController.authoringViewComponentChanged()'/>
@@ -321,13 +321,13 @@
                    ng-disabled="openResponseController.isDisabled || !openResponseController.isDirty"
                    ng-if="openResponseController.isSaveButtonVisible"
                    aria-label="Save"
-                   translate="save"></md-button>
+                   translate="SAVE"></md-button>
         <md-button class="md-raised md-primary"
                    ng-click="openResponseController.submitButtonClicked()"
                    ng-disabled="openResponseController.isDisabled || !openResponseController.isSubmitDirty || openResponseController.isSubmitButtonDisabled"
                    ng-if="openResponseController.isSubmitButtonVisible"
                    aria-label="Submit"
-                   translate="submit"></md-button>
+                   translate="SUBMIT"></md-button>
         <span ng-show="openResponseController.saveMessage.text"
               class="component__actions__info md-caption">
               {{openResponseController.saveMessage.text}} <span class="component__actions__more"><md-tooltip md-direction="top">{{ openResponseController.saveMessage.time | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip><span am-time-ago="openResponseController.saveMessage.time"></span></span>

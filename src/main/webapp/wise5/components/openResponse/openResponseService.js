@@ -46,7 +46,7 @@ var OpenResponseService = function (_NodeService) {
             var component = {};
             component.id = this.UtilService.generateKey();
             component.type = 'OpenResponse';
-            component.prompt = this.$translate('enterPromptHere');
+            component.prompt = this.$translate('ENTERPROMPTHERE');
             component.showSaveButton = false;
             component.showSubmitButton = false;
             component.starterSentence = null;
@@ -155,7 +155,7 @@ var OpenResponseService = function (_NodeService) {
             }
 
             if (component.completionCriteria != null) {
-                /* 
+                /*
                  * there is a special completion criteria authored in this component
                  * so we will evaluate the completion criteria to see if the student
                  * has completed this component
@@ -204,7 +204,7 @@ var OpenResponseService = function (_NodeService) {
         /**
          * Whether this component generates student work
          * @param component (optional) the component object. if the component object
-         * is not provided, we will use the default value of whether the 
+         * is not provided, we will use the default value of whether the
          * component type usually has work.
          * @return whether this component generates student work
          */

@@ -343,13 +343,13 @@ var MatchController = function () {
 
                 // set save message
                 if (isSubmit) {
-                    this.setSaveMessage(this.$translate('submitted'), clientSaveTime);
+                    this.setSaveMessage(this.$translate('SUBMITTED'), clientSaveTime);
 
                     this.submit();
                 } else if (isAutoSave) {
-                    this.setSaveMessage(this.$translate('autoSaved'), clientSaveTime);
+                    this.setSaveMessage(this.$translate('AUTOSAVED'), clientSaveTime);
                 } else {
-                    this.setSaveMessage(this.$translate('saved'), clientSaveTime);
+                    this.setSaveMessage(this.$translate('SAVED'), clientSaveTime);
                 }
             }
         }));
@@ -553,13 +553,13 @@ var MatchController = function () {
                         this.isSubmitDirty = false;
                         this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: false });
                         // set save message
-                        this.setSaveMessage(this.$translate('lastSubmitted'), clientSaveTime);
+                        this.setSaveMessage(this.$translate('LASTSUBMITTED'), clientSaveTime);
                     } else {
                         // latest state is not a submission, so set isSubmitDirty to true and notify node
                         this.isSubmitDirty = true;
                         this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: true });
                         // set save message
-                        this.setSaveMessage(this.$translate('lastSaved'), clientSaveTime);
+                        this.setSaveMessage(this.$translate('LASTSAVED'), clientSaveTime);
                     }
                 }
             }
@@ -805,9 +805,9 @@ var MatchController = function () {
                                         // set the default feedback if none is authored
                                         if (feedback) {
                                             if (feedbackIsCorrect) {
-                                                feedback = this.$translate('correct');
+                                                feedback = this.$translate('CORRECT');
                                             } else {
-                                                feedback = this.$translate('incorrect');
+                                                feedback = this.$translate('INCORRECT');
                                             }
                                         }
 
@@ -1482,7 +1482,7 @@ var MatchController = function () {
                      */
 
                     // make sure the author really wants to change the component type
-                    var answer = confirm(this.$translate('areYouSureYouWantToChangeThisComponentType'));
+                    var answer = confirm(this.$translate('AREYOUSUREYOUWANTTOCHANGETHISCOMPONENTTYPE'));
 
                     if (answer) {
                         // the author wants to change the component type

@@ -21,13 +21,16 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var HTMLService = function (_NodeService) {
     _inherits(HTMLService, _NodeService);
 
-    function HTMLService(StudentDataService, UtilService) {
+    function HTMLService($filter, StudentDataService, UtilService) {
         _classCallCheck(this, HTMLService);
 
         var _this = _possibleConstructorReturn(this, (HTMLService.__proto__ || Object.getPrototypeOf(HTMLService)).call(this));
 
+        _this.$filter = $filter;
         _this.StudentDataService = StudentDataService;
         _this.UtilService = UtilService;
+
+        _this.$translate = _this.$filter('translate');
         return _this;
     }
 
@@ -44,7 +47,7 @@ var HTMLService = function (_NodeService) {
             var component = {};
             component.id = this.UtilService.generateKey();
             component.type = 'HTML';
-            component.html = 'Enter html here';
+            component.html = this.$translate('enterHTMLHere');
 
             return component;
         }
@@ -101,7 +104,7 @@ var HTMLService = function (_NodeService) {
         /**
          * Whether this component generates student work
          * @param component (optional) the component object. if the component object
-         * is not provided, we will use the default value of whether the 
+         * is not provided, we will use the default value of whether the
          * component type usually has work.
          * @return whether this component generates student work
          */
@@ -116,7 +119,7 @@ var HTMLService = function (_NodeService) {
     return HTMLService;
 }(_nodeService2.default);
 
-HTMLService.$inject = ['StudentDataService', 'UtilService'];
+HTMLService.$inject = ['$filter', 'StudentDataService', 'UtilService'];
 
 exports.default = HTMLService;
 //# sourceMappingURL=htmlService.js.map

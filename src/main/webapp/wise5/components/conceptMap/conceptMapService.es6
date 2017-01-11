@@ -19,7 +19,7 @@ class ConceptMapService extends NodeService {
         var component = {};
         component.id = this.UtilService.generateKey();
         component.type = 'ConceptMap';
-        component.prompt = this.$translate('enterPromptHere');
+        component.prompt = this.$translate('ENTERPROMPTHERE');
         component.showSaveButton = false;
         component.showSubmitButton = false;
         component.isStudentAttachmentEnabled = false;

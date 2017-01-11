@@ -8,7 +8,7 @@ class GraphService extends NodeService {
         this.$filter = $filter;
         this.StudentDataService = StudentDataService;
         this.UtilService = UtilService;
-        
+
         this.$translate = this.$filter('translate');
     }
 
@@ -21,7 +21,7 @@ class GraphService extends NodeService {
         var component = {};
         component.id = this.UtilService.generateKey();
         component.type = 'Graph';
-        component.prompt = this.$translate('enterPromptHere');
+        component.prompt = this.$translate('ENTERPROMPTHERE');
         component.showSaveButton = false;
         component.showSubmitButton = false;
         component.title = this.$translate('enterGraphTitleHere');
@@ -774,7 +774,7 @@ class GraphService extends NodeService {
 
         return result;
     };
-    
+
     /**
      * Check if the student data contains any trial data
      * @param studentData student data from a component state
@@ -782,31 +782,31 @@ class GraphService extends NodeService {
      */
     hasTrialData(studentData) {
         var result = false;
-        
+
         if (studentData != null) {
             var trials = studentData.trials;
-            
+
             if (trials != null) {
-                
+
                 // loop through all the trials
                 for (var t = 0; t < trials.length; t++) {
-                    
+
                     var trial = trials[t];
-                    
+
                     if (trial != null) {
                         var series = trial.series;
-                        
+
                         // loop through all the series
                         for (var s = 0; s < series.length; s++) {
-                            
+
                             // get a single series
                             var singleSeries = series[s];
-                            
+
                             if (singleSeries != null) {
-                                
+
                                 // get the data from the single series
                                 var data = singleSeries.data;
-                                
+
                                 if (data != null && data.length > 0) {
                                     // the single series has data
                                     return true;
@@ -817,14 +817,14 @@ class GraphService extends NodeService {
                 }
             }
         }
-        
+
         return result;
     }
-    
+
     /**
      * Whether this component generates student work
      * @param component (optional) the component object. if the component object
-     * is not provided, we will use the default value of whether the 
+     * is not provided, we will use the default value of whether the
      * component type usually has work.
      * @return whether this component generates student work
      */

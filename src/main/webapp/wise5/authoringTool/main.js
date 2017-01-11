@@ -330,6 +330,7 @@ var authoringModule = _angular2.default.module('authoring', [(0, _angularDragula
     });
 
     // Set up Translations
+    $translatePartialLoaderProvider.addPart('i18n');
     $translatePartialLoaderProvider.addPart('authoringTool/i18n');
     $translateProvider.useLoader('$translatePartialLoader', {
         urlTemplate: 'wise5/{part}/i18n_{lang}.json'
