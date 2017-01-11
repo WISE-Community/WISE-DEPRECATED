@@ -127,7 +127,12 @@ public class HibernateUserDao extends AbstractHibernateDao<User> implements
     		return (List<User>) this.getHibernateTemplate().find(
     				"select user from UserImpl user, " + capitalizeFirst(classVar) + " " +
     				classVar +	" where user.userDetails.id = " + classVar + ".id");
-    	} else {
+    	} else if ("id".equals(field)) {
+    		// handle id specifically by looking for user.id instead of user.userDetails.id
+			return (List<User>) this.getHibernateTemplate().findByNamedParam(
+					"select user from UserImpl user, " + capitalizeFirst(classVar) + " " +
+							classVar +	" where user.userDetails.id = " + classVar + ".id and user.id " + type + " :term", "term", term);
+		} else {
     		return (List<User>) this.getHibernateTemplate().findByNamedParam(
     				"select user from UserImpl user, " + capitalizeFirst(classVar) + " " +
     				classVar +	" where user.userDetails.id = " + classVar + ".id and " +

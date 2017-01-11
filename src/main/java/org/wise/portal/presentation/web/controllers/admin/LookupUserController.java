@@ -59,7 +59,7 @@ public class LookupUserController {
 	@Autowired
 	private LookupUserParametersValidator lookupUserParametersValidator;
 
-	@RequestMapping(method=RequestMethod.POST)
+	@RequestMapping(method = RequestMethod.POST)
 	protected ModelAndView onSubmit(@ModelAttribute("lookupUserParameters") LookupUserParameters param,
 			BindingResult result, HttpServletRequest request){
 		
@@ -72,20 +72,21 @@ public class LookupUserController {
 		
 		String lookupField = param.getLookupField();
 		String lookupCriteria = param.getLookupCriteria();
-		
+		String lookupData = param.getLookupData();
+
 		// if searching for ID, make the term object in a Long.
 		if ("id".equals(lookupField)) {
-			term = Long.parseLong(param.getLookupData());
+			term = Long.parseLong(lookupData);
 		} else if ("gender".equals(lookupField)) {
-			term = Gender.valueOf(param.getLookupData().toUpperCase());
+			term = Gender.valueOf(lookupData.toUpperCase());
 		} else if ("like".equals(lookupCriteria)) {
-			term = "%" + param.getLookupData() + "%";
+			term = "%" + lookupData + "%";
 		} else if ("schoollevel".equals(lookupField)) {
-			term = getLevel(param.getLookupData());
+			term = getLevel(lookupData);
 		} else if ("like".equals(lookupCriteria)) {
-			term = "%" + param.getLookupData() + "%";
+			term = "%" + lookupData + "%";
 		} else {
-			term = param.getLookupData();
+			term = lookupData;
 		}
 		
 		String userDetailsType = "teacherUserDetails";
@@ -93,8 +94,7 @@ public class LookupUserController {
 			userDetailsType = "studentUserDetails";
 		}
 		
-		List<User> users = this.userService.retrieveByField(param.getLookupField(),	param.getLookupCriteria(), term,
-				userDetailsType);
+		List<User> users = this.userService.retrieveByField(lookupField, lookupCriteria, term, userDetailsType);
 		
 		ModelAndView modelAndView = new ModelAndView("admin/account/manageusers");
 		// put the usernames in an array
@@ -103,7 +103,7 @@ public class LookupUserController {
 			usernames.add(user.getUserDetails().getUsername());
 		}
 		
-		if(users.size() < 1){
+		if (users.size() < 1){
 			modelAndView.addObject("message", "No users given search criteria found.");
 		} else {
 			if ("student".equals(request.getParameter("userType"))) {
