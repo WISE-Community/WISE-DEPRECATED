@@ -12,7 +12,7 @@
                   rows='10'
                   cols='100'></textarea>
         <br/>
-        {{ 'starterSentence' | translate }} ({{ 'optional' | translate }}):
+        {{ 'openResponse.starterSentence' | translate }} ({{ 'openResponse.optional' | translate }}):
         <br/>
         <textarea ng-model='openResponseController.authoringComponentContent.starterSentence'
                   ng-change='openResponseController.authoringViewComponentChanged()'
@@ -45,28 +45,28 @@
                style='width: 3em'/>
         <br/>
         <br/>
-        {{ 'enableCRater' | translate }}:
+        {{ 'openResponse.enableCRater' | translate }}:
         <input type='checkbox'
                ng-model='openResponseController.authoringComponentContent.enableCRater'
                ng-change='openResponseController.authoringViewEnableCRaterClicked()'/>
         <div ng-show='openResponseController.authoringComponentContent.enableCRater'>
-            {{ 'type' | translate }}:
+            {{ 'openResponse.type' | translate }}:
             <input type='radio'
                    ng-model='openResponseController.authoringComponentContent.cRater.itemType'
                    value='CRATER'
-                   ng-change='openResponseController.authoringViewComponentChanged()'/> {{ 'cRater' | translate }}
+                   ng-change='openResponseController.authoringViewComponentChanged()'/> {{ 'openResponse.cRater' | translate }}
             <input type='radio'
                    ng-model='openResponseController.authoringComponentContent.cRater.itemType'
                    value='HENRY'
-                   ng-change='openResponseController.authoringViewComponentChanged()'/> {{ 'henry' | translate }}
+                   ng-change='openResponseController.authoringViewComponentChanged()'/> {{ 'openResponse.henry' | translate }}
             <br/>
-            {{ 'itemId' | translate }}:
+            {{ 'openResponse.itemId' | translate }}:
             <input type='text'
                    ng-model='openResponseController.authoringComponentContent.cRater.itemId'
                    ng-change='openResponseController.authoringViewComponentChanged()'
                    size='30'/>
             <br/>
-            {{ 'scoreOn' | translate }}:
+            {{ 'openResponse.scoreOn' | translate }}:
             <input type='radio'
                    ng-model='openResponseController.authoringComponentContent.cRater.scoreOn'
                    value='submit'
@@ -78,7 +78,7 @@
             <input type='radio'
                    ng-model='openResponseController.authoringComponentContent.cRater.scoreOn'
                    value='change'
-                   ng-change='openResponseController.authoringViewComponentChanged()'/> {{ 'change' | translate }}
+                   ng-change='openResponseController.authoringViewComponentChanged()'/> {{ 'openResponse.change' | translate }}
             <br/>
             <input type='checkbox'
                    ng-model='openResponseController.authoringComponentContent.cRater.showScore'
@@ -88,14 +88,14 @@
                    ng-model='openResponseController.authoringComponentContent.cRater.showFeedback'
                    ng-change='openResponseController.authoringViewComponentChanged()'/> {{ 'SHOWFEEDBACK' | translate }}
             <br/>
-            <button ng-click='openResponseController.authoringAddScoringRule()'>{{ 'addScoringRule' | translate }}</button>
+            <button ng-click='openResponseController.authoringAddScoringRule()'>{{ 'openResponse.addScoringRule' | translate }}</button>
             <div ng-repeat='scoringRule in openResponseController.authoringComponentContent.cRater.scoringRules'>
                 {{ 'SCORE' | translate }}: <input type='text'
                               ng-model='scoringRule.score'
                               ng-model-options='{ debounce: 500 }'
                               ng-change='openResponseController.authoringViewComponentChanged()'
                               style='width: 3em'/>
-                {{ 'feedbackText' | translate }}: <textarea type='text'
+                {{ 'openResponse.feedbackText' | translate }}: <textarea type='text'
                                  ng-model='scoringRule.feedbackText'
                                  rows='5'
                                  cols='100'
@@ -105,32 +105,32 @@
                 <button ng-click='openResponseController.authoringViewScoringRuleDownClicked($index)'>{{ 'DOWN' | translate }}</button>
                 <button ng-click='openResponseController.authoringViewScoringRuleDeleteClicked($index)'>{{ 'DELETE' | translate }}</button>
             </div>
-            <button ng-click='openResponseController.authoringAddScoringRule()'>{{ 'addScoringRule' | translate }}</button>
+            <button ng-click='openResponseController.authoringAddScoringRule()'>{{ 'openResponse.addScoringRule' | translate }}</button>
             <br/>
             <br/>
-            {{ 'enableMultipleAttemptFeedback' | translate }}
+            {{ 'openResponse.enableMultipleAttemptFeedback' | translate }}
             <input type='checkbox'
                    ng-model='openResponseController.authoringComponentContent.cRater.enableMultipleAttemptScoringRules'
                    ng-click='openResponseController.enableMultipleAttemptScoringRulesClicked()'/>
             <br/>
             <button ng-click='openResponseController.authoringAddMultipleAttemptScoringRule()'
                     ng-show='openResponseController.authoringComponentContent.cRater.enableMultipleAttemptScoringRules'>
-                    {{ 'addMultipleAttemptScoringRule' | translate }}
+                    {{ 'openResponse.addMultipleAttemptScoringRule' | translate }}
             </button>
             <br/>
             <div ng-repeat='multipleAttemptScoringRule in openResponseController.authoringComponentContent.cRater.multipleAttemptScoringRules'
                  ng-show='openResponseController.authoringComponentContent.cRater.enableMultipleAttemptScoringRules'>
-                {{ 'previousScore' | translate }}: <input type='text'
+                {{ 'openResponse.previousScore' | translate }}: <input type='text'
                                        ng-model='multipleAttemptScoringRule.scoreSequence[0]'
                                        size='5'
                                        ng-model-options='{ debounce: 500 }'
                                        ng-change='openResponseController.authoringViewComponentChanged()'/>
-                {{ 'currentScore' | translate }}: <input type='text'
+                {{ 'openResponse.currentScore' | translate }}: <input type='text'
                                       ng-model='multipleAttemptScoringRule.scoreSequence[1]'
                                       size='5'
                                       ng-model-options='{ debounce: 500 }'
                                       ng-change='openResponseController.authoringViewComponentChanged()'/>
-                {{ 'feedbackToStudent' | translate }}: <textarea type='text'
+                {{ 'openResponse.feedbackToStudent' | translate }}: <textarea type='text'
                                          ng-model='multipleAttemptScoringRule.feedbackText'
                                          rows='5'
                                          cols='100'
@@ -143,54 +143,54 @@
             <br/>
             <button ng-click='openResponseController.authoringAddMultipleAttemptScoringRule()'
                     ng-show='openResponseController.authoringComponentContent.cRater.enableMultipleAttemptScoringRules'>
-                    {{ 'addMultipleAttemptScoringRule' | translate }}
+                    {{ 'openResponse.addMultipleAttemptScoringRule' | translate }}
             </button>
             <br/>
             <br/>
-            {{ 'enableNotifications' | translate }}:
+            {{ 'openResponse.enableNotifications' | translate }}:
             <input type='checkbox'
                    ng-model='openResponseController.authoringComponentContent.enableNotifications'
                    ng-change='openResponseController.authoringViewEnableNotificationsClicked()'/>
             <div ng-show='openResponseController.authoringComponentContent.enableNotifications'>
                 <div style="border:.5px dotted; padding: 5px" ng-repeat='notification in openResponseController.authoringComponentContent.notificationSettings.notifications'>
-                    {{ 'previousScore' | translate }}: <input type='text'
+                    {{ 'openResponse.previousScore' | translate }}: <input type='text'
                                            ng-model='notification.enableCriteria.scoreSequence[0]'
                                            size='5'
                                            ng-model-options='{ debounce: 500 }'
                                            ng-change='openResponseController.authoringViewComponentChanged()'/>
-                    {{ 'currentScore' | translate }}: <input type='text'
+                    {{ 'openResponse.currentScore' | translate }}: <input type='text'
                                           ng-model='notification.enableCriteria.scoreSequence[1]'
                                           size='5'
                                           ng-model-options='{ debounce: 500 }'
                                           ng-change='openResponseController.authoringViewComponentChanged()'/>
                     <br/>
-                    {{ 'enableAmbientDisplayDismissMode' | translate }}
+                    {{ 'openResponse.enableAmbientDisplayDismissMode' | translate }}
                     <input type='checkbox'
                            ng-model='notification.isAmbient' />
                     <div ng-show='notification.isAmbient'>
-                        {{ 'dismissCode' | translate }}:
+                        {{ 'openResponse.dismissCode' | translate }}:
                         <input ng-model='notification.dismissCode'
                                ng-model-options='{ debounce: 500 }'
                                ng-change='openResponseController.authoringViewComponentChanged()' />
                     </div>
                     <br/>
-                    {{ 'notifyStudent' | translate }}
+                    {{ 'openResponse.notifyStudent' | translate }}
                     <input type='checkbox'
                            ng-model='notification.isNotifyStudent' />
                     <br/>
                     <div ng-show='notification.isNotifyStudent'>
-                    {{ 'feedbackToStudent' | translate }}: <textarea type='text'
+                    {{ 'openResponse.feedbackToStudent' | translate }}: <textarea type='text'
                                      ng-model='notification.notificationMessageToStudent'
                                      rows='5'
                                      cols='100'
                                      ng-model-options='{ debounce: 500 }'
                                      ng-change='openResponseController.authoringViewComponentChanged()'/>
                     </div>
-                    {{ 'notifyTeacher' | translate }}
+                    {{ 'openResponse.notifyTeacher' | translate }}
                     <input type='checkbox'
                            ng-model='notification.isNotifyTeacher' />
                     <div ng-show='notification.isNotifyTeacher'>
-                    {{ 'feedbackToTeacher' | translate }}: <textarea type='text'
+                    {{ 'openResponse.feedbackToTeacher' | translate }}: <textarea type='text'
                                                         ng-model='notification.notificationMessageToTeacher'
                                                         rows='5'
                                                         cols='100'
@@ -203,7 +203,7 @@
                     <button ng-click='openResponseController.authoringViewNotificationDeleteClicked($index)'>{{ 'DELETE' | translate }}</button>
                  </div>
                 <button ng-click='openResponseController.authoringAddNotification()'>
-                    {{ 'addNewNotification' | translate }}
+                    {{ 'openResponse.addNewNotification' | translate }}
                 </button>
             </div>
         </div>
@@ -297,7 +297,7 @@
     </md-input-container>
     <div ng-if="nodeController.getRevisions().length > 1" layout="row" layout-align="center end">
         <a ng-click="nodeController.showRevisions($event, component.id, openResponseController.isDisabled)">
-           + {{ 'previousVersions' | translate }}: {{nodeController.getRevisions().length - 1}}
+           + {{ 'openResponse.previousVersions' | translate }}: {{nodeController.getRevisions().length - 1}}
        </a>
     </div>
 
@@ -305,7 +305,7 @@
         <div class="component__add-attachment">
             <md-button class="md-accent"
                        ng-click="nodeController.showStudentAssets($event, component.id, openResponseController.isDisabled)">
-                <md-icon>image</md-icon> <span>{{ 'addFile' | translate }}</span>
+                <md-icon>image</md-icon> <span>{{ 'openResponse.addFile' | translate }}</span>
             </md-button>
         </div>
         <div class="component__attachment" ng-repeat="attachment in openResponseController.attachments">

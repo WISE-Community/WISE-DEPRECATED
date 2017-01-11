@@ -114,7 +114,7 @@ var AudioOscillatorController = function () {
         this.oscillatorTypeToAdd = 'sine';
 
         // the text to display on the play/stop button
-        this.playStopButtonText = 'Play';
+        this.playStopButtonText = this.$translate('audioOscillator.play');
 
         // get the current node and node id
         var currentNode = this.StudentDataService.getCurrentNode();
@@ -795,13 +795,13 @@ var AudioOscillatorController = function () {
                 this.stop();
 
                 // change the button text to display 'Play'
-                this.playStopButtonText = 'Play';
+                this.playStopButtonText = this.$translate('audioOscillator.play');
             } else {
                 // the audio is not playing so we will now play it
                 this.play();
 
                 // change the button text to display 'Stop'
-                this.playStopButtonText = 'Stop';
+                this.playStopButtonText = this.$translate('audioOscillator.stop');
             }
         }
     }, {
@@ -1110,7 +1110,7 @@ var AudioOscillatorController = function () {
             if (this.authoringComponentContent.oscillatorTypes.indexOf(oscillatorTypeToAdd) != -1) {
                 // the oscillator type is already in the array of oscillator types
 
-                alert(this.$translate('errorYouHaveAlreadyAddedOscillatorType', { oscillatorTypeToAdd: oscillatorTypeToAdd }));
+                alert(this.$translate('audioOscillator.errorYouHaveAlreadyAddedOscillatorType', { oscillatorTypeToAdd: oscillatorTypeToAdd }));
             } else {
                 // the oscillator type is not already in the array of oscillator types
                 this.authoringComponentContent.oscillatorTypes.push(oscillatorTypeToAdd);

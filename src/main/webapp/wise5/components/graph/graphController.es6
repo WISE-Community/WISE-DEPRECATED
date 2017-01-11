@@ -581,7 +581,7 @@ class GraphController {
                      * the active series already has data so we will ask the
                      * student if they want to overwrite the data
                      */
-                    var answer = confirm(this.$translate('areYouSureYouWantToOverwriteTheCurrentLineData'));
+                    var answer = confirm(this.$translate('graph.areYouSureYouWantToOverwriteTheCurrentLineData'));
                     if (!answer) {
                         // the student does not want to overwrite the data
                         overwrite = false;
@@ -1437,9 +1437,9 @@ class GraphController {
         var seriesName = this.activeSeries.name;
 
         if (seriesName == null || seriesName == '') {
-            confirmMessage = this.$translate('areYouSureYouWantToResetTheSeries');
+            confirmMessage = this.$translate('graph.areYouSureYouWantToResetTheSeries');
         } else {
-            confirmMessage = this.$translate('areYouSureYouWantToResetTheNamedSeries');
+            confirmMessage = this.$translate('graph.areYouSureYouWantToResetTheNamedSeries');
         }
 
         // ask the student if they are sure they want to reset the series
@@ -2774,7 +2774,7 @@ class GraphController {
 
         // make a new trial with a trial number one larger than the existing max
         var trial = {};
-        trial.name = this.$translate('trial') + ' ' + (maxTrialNumber + 1);
+        trial.name = this.$translate('graph.trial') + ' ' + (maxTrialNumber + 1);
         trial.series = series;
         trial.show = true;
         trial.id = this.UtilService.generateKey(10);
@@ -3077,9 +3077,9 @@ class GraphController {
             let name = this.getTrialById(id).name;
             return name;
         } else if (this.trialIdsToShow.length > 1) {
-            return this.trialIdsToShow.length + " " + this.$translate('trialsShown');
+            return this.trialIdsToShow.length + " " + this.$translate('graph.trialsShown');
         } else {
-            return this.$translate('selectTrialsToShow');
+            return this.$translate('graph.selectTrialsToShow');
         }
     };
 

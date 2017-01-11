@@ -40,7 +40,7 @@
                               ng-model='drawController.authoringComponentContent.height'
                               ng-change='drawController.authoringViewHeightChanged()'/>
                 <br/>
-                <button ng-click='drawController.authoringAddStampButtonClicked()'>{{ 'addStamp' | translate }}</button>
+                <button ng-click='drawController.authoringAddStampButtonClicked()'>{{ 'draw.addStamp' | translate }}</button>
                 <div ng-repeat='stamp in drawController.authoringComponentContent.stamps.Stamps track by $index'>
                     <input type='text'
                            size='50'
@@ -51,115 +51,115 @@
                     <button ng-click='drawController.authoringDeleteStampClicked($index)'>{{ 'DELETE' | translate }}</button>
                 </div>
                 <br/>
-                <button ng-click='drawController.authoringEnableAllToolsButtonClicked()'>{{ 'enableAllTools' | translate }}</button>
-                <button ng-click='drawController.authoringDisableAllToolsButtonClicked()'>{{ 'disableAllTools' | translate }}</button>
+                <button ng-click='drawController.authoringEnableAllToolsButtonClicked()'>{{ 'draw.enableAllTools' | translate }}</button>
+                <button ng-click='drawController.authoringDisableAllToolsButtonClicked()'>{{ 'draw.disableAllTools' | translate }}</button>
                 <br/>
                 <label>
                     <input type='checkbox'
                        ng-model='drawController.authoringComponentContent.tools.select'
                        ng-change='drawController.authoringViewToolClicked()'/>
-                    {{ 'selectTool' | translate }}
+                    {{ 'draw.selectTool' | translate }}
                 </label>
                 <br/>
                 <label>
                     <input type='checkbox'
                            ng-model='drawController.authoringComponentContent.tools.line'
                            ng-change='drawController.authoringViewToolClicked()'/>
-                    {{ 'lineTool' | translate }}
+                    {{ 'draw.lineTool' | translate }}
                 </label>
                 <br/>
                 <label>
                     <input type='checkbox'
                            ng-model='drawController.authoringComponentContent.tools.shape'
                            ng-change='drawController.authoringViewToolClicked()'/>
-                    {{ 'shapeTool' | translate }}
+                    {{ 'draw.shapeTool' | translate }}
                 </label>
                 <br/>
                 <label>
                     <input type='checkbox'
                            ng-model='drawController.authoringComponentContent.tools.freeHand'
                            ng-change='drawController.authoringViewToolClicked()'/>
-                    {{ 'freeHandTool' | translate }}
+                    {{ 'draw.freeHandTool' | translate }}
                 </label>
                 <br/>
                 <label>
                     <input type='checkbox'
                            ng-model='drawController.authoringComponentContent.tools.text'
                            ng-change='drawController.authoringViewToolClicked()'/>
-                    {{ 'textTool' | translate }}
+                    {{ 'draw.textTool' | translate }}
                 </label>
                 <br/>
                 <label>
                     <input type='checkbox'
                            ng-model='drawController.authoringComponentContent.tools.stamp'
                            ng-change='drawController.authoringViewToolClicked()'/>
-                    {{ 'stampTool' | translate }}
+                    {{ 'draw.stampTool' | translate }}
                 </label>
                 <br/>
                 <label>
                     <input type='checkbox'
                            ng-model='drawController.authoringComponentContent.tools.clone'
                            ng-change='drawController.authoringViewToolClicked()'/>
-                    {{ 'cloneTool' | translate }}
+                    {{ 'draw.cloneTool' | translate }}
                 </label>
                 <br/>
                 <label>
                     <input type='checkbox'
                            ng-model='drawController.authoringComponentContent.tools.strokeColor'
                            ng-change='drawController.authoringViewToolClicked()'/>
-                    {{ 'strokeColorTool' | translate }}
+                    {{ 'draw.strokeColorTool' | translate }}
                 </label>
                 <br/>
                 <label>
                     <input type='checkbox'
                            ng-model='drawController.authoringComponentContent.tools.fillColor'
                            ng-change='drawController.authoringViewToolClicked()'/>
-                    {{ 'fillColorTool' | translate }}
+                    {{ 'draw.fillColorTool' | translate }}
                 </label>
                 <br/>
                 <label>
                     <input type='checkbox'
                            ng-model='drawController.authoringComponentContent.tools.strokeWidth'
                            ng-change='drawController.authoringViewToolClicked()'/>
-                    {{ 'strokeWidthTool' | translate }}
+                    {{ 'draw.strokeWidthTool' | translate }}
                 </label>
                 <br/>
                 <label>
                     <input type='checkbox'
                            ng-model='drawController.authoringComponentContent.tools.sendBack'
                            ng-change='drawController.authoringViewToolClicked()'/>
-                    {{ 'sendBackTool' | translate }}
+                    {{ 'draw.sendBackTool' | translate }}
                 </label>
                 <br/>
                 <label>
                     <input type='checkbox'
                            ng-model='drawController.authoringComponentContent.tools.sendForward'
                            ng-change='drawController.authoringViewToolClicked()'/>
-                    {{ 'sendForwardTool' | translate }}
+                    {{ 'draw.sendForwardTool' | translate }}
                 </label>
                 <br/>
                 <label>
                     <input type='checkbox'
                            ng-model='drawController.authoringComponentContent.tools.undo'
                            ng-change='drawController.authoringViewToolClicked()'/>
-                    {{ 'undoTool' | translate }}
+                    {{ 'draw.undoTool' | translate }}
                 </label>
                 <br/>
                 <label>
                     <input type='checkbox'
                            ng-model='drawController.authoringComponentContent.tools.redo'
                            ng-change='drawController.authoringViewToolClicked()'/>
-                    {{ 'redoTool' | translate }}
+                    {{ 'draw.redoTool' | translate }}
                 </label>
                 <br/>
                 <label>
                     <input type='checkbox'
                            ng-model='drawController.authoringComponentContent.tools.delete'
                            ng-change='drawController.authoringViewToolClicked()'/>
-                    {{ 'deleteTool' | translate }}
+                    {{ 'draw.deleteTool' | translate }}
                 </label>
-                <button ng-click='drawController.authoringSaveStarterDrawData()'>{{ 'saveStarterDrawing' | translate }}</button>
-                <button ng-click='drawController.authoringDeleteStarterDrawData()'>{{ 'deleteStarterDrawing' | translate }}</button>
+                <button ng-click='drawController.authoringSaveStarterDrawData()'>{{ 'draw.saveStarterDrawing' | translate }}</button>
+                <button ng-click='drawController.authoringDeleteStarterDrawData()'>{{ 'draw.deleteStarterDrawing' | translate }}</button>
     </div>
     <div ng-if='drawController.mode === "authoring"'>
         {{ 'IMPORTPREVIOUSWORK' | translate }}:
@@ -229,7 +229,7 @@
     <div class="component__actions" layout="row">
         <md-button class="md-accent" ng-show="drawController.isStudentAttachmentEnabled"
                    ng-click="nodeController.showStudentAssets($event, component.id, drawController.isDisabled)">
-            <md-icon>image</md-icon> {{ 'insertFile' | translate }}
+            <md-icon>image</md-icon> {{ 'draw.insertFile' | translate }}
         </md-button>
     </div>
     <md-button class="md-accent"
@@ -264,7 +264,7 @@
     <md-button class="revision md-icon-button" ng-click='nodeController.showRevisions($event, component.id)'
                ng-if="nodeController.getRevisions(component.id).length > 1">
         <md-icon> history </md-icon>
-        <md-tooltip md-direction="top">{{nodeController.getRevisions(component.id).length}} {{ 'versions' | translate }}</md-tooltip>
+        <md-tooltip md-direction="top">{{nodeController.getRevisions(component.id).length}} {{ 'draw.versions' | translate }}</md-tooltip>
     </md-button>
     <div ng-if="drawController.isSaveButtonVisible || drawController.isSubmitButtonVisible"
          class="component__actions" layout="row" layout-align="start center">

@@ -47,7 +47,7 @@ var HTMLService = function (_NodeService) {
             var component = {};
             component.id = this.UtilService.generateKey();
             component.type = 'HTML';
-            component.html = this.$translate('enterHTMLHere');
+            component.html = this.$translate('html.enterHTMLHere');
 
             return component;
         }

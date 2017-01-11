@@ -181,10 +181,10 @@ class ConceptMapController {
         // the options for authoring the should or should not value in rules
         this.shouldOptions = [
             {
-                value: false, label: this.$translate('should')
+                value: false, label: this.$translate('conceptMap.should')
             },
             {
-                value: true, label: this.$translate('shouldNot')
+                value: true, label: this.$translate('conceptMap.shouldNot')
             }
         ];
 
@@ -815,17 +815,17 @@ class ConceptMapController {
             if (numberOfSubmitsLeft <= 0) {
 
                 // the student does not have any more chances to submit
-                alert(this.$translate('youHaveNoMoreChances'));
+                alert(this.$translate('conceptMap.youHaveNoMoreChances'));
                 performSubmit = false;
             } else if (numberOfSubmitsLeft == 1) {
 
                 // ask the student if they are sure they want to submit
-                message = this.$translate('youHaveOneChance', {numberOfSubmitsLeft: numberOfSubmitsLeft});
+                message = this.$translate('conceptMap.youHaveOneChance', {numberOfSubmitsLeft: numberOfSubmitsLeft});
                 performSubmit = confirm(message);
             } else if (numberOfSubmitsLeft > 1) {
 
                 // ask the student if they are sure they want to submit
-                message = this.$translate('youHaveMultipleChances', {numberOfSubmitsLeft: numberOfSubmitsLeft});
+                message = this.$translate('conceptMap.youHaveMultipleChances', {numberOfSubmitsLeft: numberOfSubmitsLeft});
                 performSubmit = confirm(message);
             }
         }
@@ -1182,7 +1182,7 @@ class ConceptMapController {
              * to be scored by CRater
              */
             this.messageDialog = this.$mdDialog.show({
-                template: '<md-dialog aria-label="' + this.$translate('pleaseWait') + '"><md-dialog-content><div class="md-dialog-content">' + this.$translate('pleaseWaitWeAreScoringYourWork') + '</div></md-dialog-content></md-dialog>',
+                template: '<md-dialog aria-label="' + this.$translate('conceptMap.pleaseWait') + '"><md-dialog-content><div class="md-dialog-content">' + this.$translate('conceptMap.pleaseWaitWeAreScoringYourWork') + '</div></md-dialog-content></md-dialog>',
                 fullscreen: true,
                 escapeToClose: false
             });
@@ -1781,7 +1781,7 @@ class ConceptMapController {
                 var nodeLabel = node.label;
 
                 // confirm with the author that they really want to delete the node
-                var answer = confirm(this.$translate('areYouSureYouWantToDeleteThisNode', { nodeFileName: nodeFileName, nodeLabel: nodeLabel}));
+                var answer = confirm(this.$translate('conceptMap.areYouSureYouWantToDeleteThisNode', { nodeFileName: nodeFileName, nodeLabel: nodeLabel}));
 
                 if (answer) {
                     /*
@@ -1894,7 +1894,7 @@ class ConceptMapController {
                 var linkLabel = link.label;
 
                 // confirm with the author that they really want to delete the link
-                var answer = confirm(this.$translate('areYouSureYouWantToDeleteThisLink', { linkLabel: linkLabel}));
+                var answer = confirm(this.$translate('conceptMap.areYouSureYouWantToDeleteThisLink', { linkLabel: linkLabel}));
 
                 if (answer) {
                     /*
@@ -2190,7 +2190,7 @@ class ConceptMapController {
             var ruleName = rule.name;
 
             // confirm with the author that they really want to delete the rule
-            var answer = confirm(this.$translate('areYouSureYouWantToDeleteThisRule', { ruleName: ruleName }));
+            var answer = confirm(this.$translate('conceptMap.areYouSureYouWantToDeleteThisRule', { ruleName: ruleName }));
 
             if (answer) {
                 // remove the rule at the given index
@@ -2233,7 +2233,7 @@ class ConceptMapController {
             var categoryName = rule.categories[index];
 
             // confirm with the author that they really want to delete the category from the rule
-            var answer = confirm(this.$translate('areYouSureYouWantToDeleteTheCategory' , { ruleName: ruleName, categoryName: categoryName }));
+            var answer = confirm(this.$translate('conceptMap.areYouSureYouWantToDeleteTheCategory' , { ruleName: ruleName, categoryName: categoryName }));
 
             if (answer) {
                 // remove the category at the index
@@ -4249,7 +4249,7 @@ class ConceptMapController {
     resetConceptMap() {
 
         // ask the student if they are sure they want to reset their work
-        var message = this.$translate('areYouSureYouWantToResetYourWork');
+        var message = this.$translate('conceptMap.areYouSureYouWantToResetYourWork');
         var answer = confirm(message);
 
         if (answer) {

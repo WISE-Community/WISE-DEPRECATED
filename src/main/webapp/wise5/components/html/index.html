@@ -1,6 +1,6 @@
 <div ng-controller='HTMLController as htmlController'>
     <div ng-if='htmlController.mode === "authoring"'>
-        {{ 'html' | translate }}
+        {{ 'html.html' | translate }}
         <br/>
         <textarea ng-model='htmlController.authoringComponentContent.html'
                   ng-change='htmlController.authoringViewComponentChanged()'

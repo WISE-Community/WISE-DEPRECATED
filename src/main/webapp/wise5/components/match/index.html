@@ -23,32 +23,32 @@
                ng-model-options='{ debounce: 1000 }'
                style='width: 3em'/>
         <br/>
-        {{ 'labelForChoicesBucket' | translate }}: <input ng-model='matchController.authoringComponentContent.choicesLabel'
+        {{ 'match.labelForChoicesBucket' | translate }}: <input ng-model='matchController.authoringComponentContent.choicesLabel'
                ng-change='matchController.authoringViewComponentChanged()'
                ng-model-options='{ debounce: 1000 }'
                size='100'/>
        <br/>
-        {{ 'choices' | translate }}: <button ng-click='matchController.authoringAddChoice()'>{{ 'addChoice' | translate }}</button>
+        {{ 'match.choices' | translate }}: <button ng-click='matchController.authoringAddChoice()'>{{ 'match.addChoice' | translate }}</button>
         <div ng-repeat='choice in matchController.authoringComponentContent.choices track by $index'>
             <input ng-model='choice.value'
                    ng-model-options='{ debounce: 1000 }'
                    ng-change='matchController.authoringViewComponentChanged()'
                    size='100'/>
-            <button ng-click='matchController.authoringDeleteChoice($index)'>{{ 'deleteChoice' | translate }}</button>
+            <button ng-click='matchController.authoringDeleteChoice($index)'>{{ 'match.deleteChoice' | translate }}</button>
         </div>
         <br/>
-        {{ 'buckets' | translate }}: <button ng-click='matchController.authoringAddBucket()'>{{ 'addBucket' | translate }}</button>
+        {{ 'match.buckets' | translate }}: <button ng-click='matchController.authoringAddBucket()'>{{ 'match.addBucket' | translate }}</button>
         <div ng-repeat='bucket in matchController.authoringComponentContent.buckets track by $index'>
             <input ng-model='bucket.value'
                    ng-model-options='{ debounce: 1000 }'
                    ng-change='matchController.authoringViewComponentChanged()'
                    size='100'/>
-            <button ng-click='matchController.authoringDeleteBucket($index)'>{{ 'deleteBucket' | translate }}</button>
+            <button ng-click='matchController.authoringDeleteBucket($index)'>{{ 'match.deleteBucket' | translate }}</button>
         </div>
         <br/>
         {{ 'FEEDBACK' | translate }}
         <br/>
-        {{ 'ordered' | translate }}: <input type='checkbox'
+        {{ 'match.ordered' | translate }}: <input type='checkbox'
                         ng-model='matchController.authoringComponentContent.ordered'
                         ng-change='matchController.authoringViewComponentChanged()'/>
         <br/>
@@ -68,12 +68,12 @@
                                    ng-change='matchController.authoringViewComponentChanged()'/>
                 <br/>
                 <span ng-show='matchController.authoringComponentContent.ordered && choiceFeedback.isCorrect'>
-                    {{ 'position' | translate }}: <input type='number'
+                    {{ 'match.position' | translate }}: <input type='number'
                                  ng-model='choiceFeedback.position'
                                  ng-model-options='{ debounce: 1000 }'
                                  ng-change='matchController.authoringViewComponentChanged()'
                                  style='width: 3em'/>
-                    {{ 'incorrectPositionFeedback' | translate }}: <input ng-model='choiceFeedback.incorrectPositionFeedback'
+                    {{ 'match.incorrectPositionFeedback' | translate }}: <input ng-model='choiceFeedback.incorrectPositionFeedback'
                                                         ng-model-options='{ debounce: 1000 }'
                                                         ng-change='matchController.authoringViewComponentChanged()'
                                                         size='60'/>

@@ -24,17 +24,17 @@
                            ng-model-options='{ debounce: 1000 }'
                            style='width: 3em'/>
                     <br/>
-                    {{ 'columns' | translate }}: <input type='number'
+                    {{ 'table.columns' | translate }}: <input type='number'
                                     ng-model='tableController.authoringComponentContent.numColumns'
                                     ng-change='tableController.authoringViewTableSizeConfirmChange("columns", {{tableController.authoringComponentContent.numColumns}})'
                                     ng-model-options='{ debounce: 1000 }'
                                     style='width: 3em'/>
-                    {{ 'rows' | translate }}: <input type='number'
+                    {{ 'table.rows' | translate }}: <input type='number'
                                  ng-model='tableController.authoringComponentContent.numRows'
                                  ng-change='tableController.authoringViewTableSizeConfirmChange("rows", {{tableController.authoringComponentContent.numRows}})'
                                  ng-model-options='{ debounce: 1000 }'
                                  style='width: 3em'/>
-                    {{ 'cellSize' | translate }}: <input type='number'
+                    {{ 'table.cellSize' | translate }}: <input type='number'
                                       ng-model='tableController.authoringComponentContent.globalCellSize'
                                       ng-change='tableController.authoringViewComponentChanged()'
                                       ng-model-options='{ debounce: 1000 }'
@@ -137,7 +137,7 @@
         <div class="component__actions" layout="row">
             <md-button class="md-accent" ng-show="tableController.isStudentAttachmentEnabled"
                        ng-click="nodeController.showStudentAssets($event, component.id, tableController.isDisabled)">
-                <md-icon>image</md-icon> {{ 'importData' | translate }}
+                <md-icon>image</md-icon> {{ 'table.importData' | translate }}
             </md-button>
         </div>
         <md-button class="md-accent" ng-click='tableController.resetTable()' ng-show='tableController.showResetTableButton()'>

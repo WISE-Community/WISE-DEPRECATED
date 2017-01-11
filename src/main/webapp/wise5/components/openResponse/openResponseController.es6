@@ -500,18 +500,18 @@ class OpenResponseController {
             if (numberOfSubmitsLeft <= 0) {
 
                 // the student does not have any more chances to submit
-                alert(this.$translate('noMoreChances'));
+                alert(this.$translate('openResponse.youHaveNoMoreChances'));
                 performSubmit = false;
             } else if (numberOfSubmitsLeft == 1) {
 
                 // ask the student if they are sure they want to submit
-                message = this.$translate('youHaveOneChance', {numberOfSubmitsLeft: numberOfSubmitsLeft});
+                message = this.$translate('openResponse.youHaveOneChance', {numberOfSubmitsLeft: numberOfSubmitsLeft});
                 //message = 'You have ' + numberOfSubmitsLeft + ' chance to receive feedback on your answer so this this should be your best work.\n\nAre you ready to receive feedback on this answer?';
                 performSubmit = confirm(message);
             } else if (numberOfSubmitsLeft > 1) {
 
                 // ask the student if they are sure they want to submit
-                message = this.$translate('youHaveMultipleChances', {numberOfSubmitsLeft: numberOfSubmitsLeft});
+                message = this.$translate('openResponse.youHaveMultipleChances', {numberOfSubmitsLeft: numberOfSubmitsLeft});
                 //message = 'You have ' + numberOfSubmitsLeft + ' chances to receive feedback on your answer so this this should be your best work.\n\nAre you ready to receive feedback on this answer?';
                 performSubmit = confirm(message);
             }
@@ -680,7 +680,7 @@ class OpenResponseController {
              * to be scored by CRater
              */
             this.messageDialog = this.$mdDialog.show({
-                template: '<md-dialog aria-label="' + this.$translate('pleaseWait') + '"><md-dialog-content><div class="md-dialog-content">' + this.$translate('pleaseWaitWeAreScoringYourWork') + '</div></md-dialog-content></md-dialog>',
+                template: '<md-dialog aria-label="' + this.$translate('openResponse.pleaseWait') + '"><md-dialog-content><div class="md-dialog-content">' + this.$translate('openResponse.pleaseWaitWeAreScoringYourWork') + '</div></md-dialog-content></md-dialog>',
                 escapeToClose: false
             });
 
@@ -1526,7 +1526,7 @@ class OpenResponseController {
 
                 // make sure the author really wants to delete the scoring rule
                 //var answer = confirm('Are you sure you want to delete this scoring rule?\n\nScore: ' + score + '\n\n' + 'Feedback Text: ' + feedbackText);
-                var answer = confirm(this.$translate('areYouSureYouWantToDeleteThisScoringRule', {score: score, feedbackText: feedbackText}));
+                var answer = confirm(this.$translate('openResponse.areYouSureYouWantToDeleteThisScoringRule', {score: score, feedbackText: feedbackText}));
 
                 if (answer) {
                     // the author answered yes to delete the scoring rule
@@ -1561,8 +1561,8 @@ class OpenResponseController {
                 dismissCode: "apple",
                 isNotifyTeacher: true,
                 isNotifyStudent: true,
-                notificationMessageToStudent: "{{username}}, " + this.$translate('youGotAScoreOf') + " {{score}}. " + this.$translate('pleaseTalkToYourTeacher') + ".",
-                notificationMessageToTeacher: "{{username}} " + this.$translate('gotAScoreOf') + " {{score}}."
+                notificationMessageToStudent: "{{username}}, " + this.$translate('openResponse.youGotAScoreOf') + " {{score}}. " + this.$translate('openResponse.pleaseTalkToYourTeacher') + ".",
+                notificationMessageToTeacher: "{{username}} " + this.$translate('openResponse.gotAScoreOf') + " {{score}}."
             };
 
             // add the new notification
@@ -1687,7 +1687,7 @@ class OpenResponseController {
                 var feedbackText = multipleAttemptScoringRule.feedbackText;
 
                 // make sure the author really wants to delete the multiple attempt scoring rule
-                var answer = confirm(this.$translate('areYouSureYouWantToDeleteThisMultipleAttemptScoringRule', {previousScore: previousScore, currentScore: currentScore, feedbackText: feedbackText}));
+                var answer = confirm(this.$translate('openResponse.areYouSureYouWantToDeleteThisMultipleAttemptScoringRule', {previousScore: previousScore, currentScore: currentScore, feedbackText: feedbackText}));
 
                 if (answer) {
                     // the author answered yes to delete the multiple attempt scoring rule
@@ -1784,7 +1784,7 @@ class OpenResponseController {
                 }
 
                 // make sure the author really wants to delete the notification
-                var answer = confirm(this.$translate('areYouSureYouWantToDeleteThisNotification', {previousScore: previousScore, currentScore: currentScore}));
+                var answer = confirm(this.$translate('openResponse.areYouSureYouWantToDeleteThisNotification', {previousScore: previousScore, currentScore: currentScore}));
 
                 if (answer) {
                     // the author answered yes to delete the notification

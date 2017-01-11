@@ -43,28 +43,28 @@
                                          ng-change='conceptMapController.authoringViewComponentChanged()'
                                          size='80' />
                 <br/>
-                {{ 'stretchBackground' | translate }}: <input type='checkbox'
+                {{ 'conceptMap.stretchBackground' | translate }}: <input type='checkbox'
                                            ng-model='conceptMapController.authoringComponentContent.stretchBackground'
                                            ng-change='conceptMapController.authoringViewComponentChanged()' />
                 <br/>
-                {{ 'canvasWidth' | translate }}: <input type='number'
+                {{ 'conceptMap.canvasWidth' | translate }}: <input type='number'
                               ng-model='conceptMapController.authoringComponentContent.width'
                               ng-change='conceptMapController.authoringViewComponentChanged()' />
                 <br/>
-                {{ 'canvasHeight' | translate }}: <input type='number'
+                {{ 'conceptMap.canvasHeight' | translate }}: <input type='number'
                               ng-model='conceptMapController.authoringComponentContent.height'
                               ng-change='conceptMapController.authoringViewComponentChanged()' />
                 <br/>
                 <br/>
-                {{ 'nodes' | translate }} <button ng-click='conceptMapController.authoringViewAddNode()'>{{ 'addNode' | translate }}</button>
+                {{ 'conceptMap.nodes' | translate }} <button ng-click='conceptMapController.authoringViewAddNode()'>{{ 'conceptMap.addNode' | translate }}</button>
                 <br/>
                 <div ng-repeat='node in conceptMapController.authoringComponentContent.nodes'>
-                    {{ 'fileName' | translate }}:
+                    {{ 'conceptMap.fileName' | translate }}:
                     <input ng-model='node.fileName'
                            ng-change='conceptMapController.authoringViewComponentChanged()'
                            size='30'
                            ng-model-options='{ debounce: 1000 }'/>
-                    {{ 'label' | translate }}:
+                    {{ 'conceptMap.label' | translate }}:
                     <input ng-model='node.label'
                            ng-change='conceptMapController.authoringViewComponentChanged()'
                            size='30'
@@ -84,15 +84,15 @@
                     <button ng-click='conceptMapController.authoringViewNodeDeleteButtonClicked($index)'>{{ 'DELETE' | translate }}</button>
                 </div>
                 <br/>
-                {{ 'links' | translate }} <button ng-click='conceptMapController.authoringViewAddLink()'>{{ 'addLink' | translate }}</button>
+                {{ 'conceptMap.links' | translate }} <button ng-click='conceptMapController.authoringViewAddLink()'>{{ 'conceptMap.addLink' | translate }}</button>
                 <br/>
                 <div ng-repeat='link in conceptMapController.authoringComponentContent.links'>
-                    {{ 'label' | translate }}:
+                    {{ 'conceptMap.label' | translate }}:
                     <input ng-model='link.label'
                            ng-change='conceptMapController.authoringViewComponentChanged()'
                            size='30'
                            ng-model-options='{ debounce: 1000 }'/>
-                    {{ 'color' | translate }}:
+                    {{ 'conceptMap.color' | translate }}:
                     <input ng-model='link.color'
                            ng-change='conceptMapController.authoringViewComponentChanged()'
                            size='30'
@@ -102,21 +102,21 @@
                     <button ng-click='conceptMapController.authoringViewLinkDeleteButtonClicked($index)'>{{ 'DELETE' | translate }}</button>
                 </div>
                 <br/>
-                <button ng-click='conceptMapController.saveStarterConceptMap()'>{{ 'saveStarterConceptMap' | translate }}</button>
-                <button ng-click='conceptMapController.deleteStarterConceptMap()'>{{ 'deleteStarterConceptMap' | translate }}</button>
+                <button ng-click='conceptMapController.saveStarterConceptMap()'>{{ 'conceptMap.saveStarterConceptMap' | translate }}</button>
+                <button ng-click='conceptMapController.deleteStarterConceptMap()'>{{ 'conceptMap.deleteStarterConceptMap' | translate }}</button>
                 <br/>
                 <br/>
-                {{ 'showAutoScore' | translate }}: <input type='checkbox'
+                {{ 'conceptMap.showAutoScore' | translate }}: <input type='checkbox'
                                         ng-model='conceptMapController.authoringComponentContent.showAutoScore'
                                         ng-change='conceptMapController.authoringViewComponentChanged()'/>
                 <br/>
-                {{ 'showAutoFeedback' | translate }}: <input type='checkbox'
+                {{ 'conceptMap.showAutoFeedback' | translate }}: <input type='checkbox'
                                         ng-model='conceptMapController.authoringComponentContent.showAutoFeedback'
                                         ng-change='conceptMapController.authoringViewComponentChanged()'/>
                 <br/>
-                {{ 'rules' | translate }} <button ng-click='conceptMapController.authoringAddRule()'>{{ 'addRule' | translate }}</button>
+                {{ 'conceptMap.rules' | translate }} <button ng-click='conceptMapController.authoringAddRule()'>{{ 'conceptMap.addRule' | translate }}</button>
                 <div ng-repeat='rule in conceptMapController.authoringComponentContent.rules'>
-                    {{ 'ruleName' | translate }}:
+                    {{ 'conceptMap.ruleName' | translate }}:
                     <input ng-model='rule.name'
                            size='30'
                            ng-change='conceptMapController.authoringViewComponentChanged()'
@@ -125,12 +125,12 @@
                             ng-change='conceptMapController.authoringViewComponentChanged()'
                             ng-options='option.value as option.label for option in conceptMapController.shouldOptions'>
                     </select>
-                    {{ 'contain' | translate }}
+                    {{ 'conceptMap.contain' | translate }}
                     <select ng-model='rule.comparison'
                             ng-change='conceptMapController.authoringViewComponentChanged()'>
-                        <option value='exactly'>{{ 'exactly' | translate }}</option>
-                        <option value='more than'>{{ 'moreThan' | translate }}</option>
-                        <option value='less than'>{{ 'lessThan' | translate }}</option>
+                        <option value='exactly'>{{ 'conceptMap.exactly' | translate }}</option>
+                        <option value='more than'>{{ 'conceptMap.moreThan' | translate }}</option>
+                        <option value='less than'>{{ 'conceptMap.lessThan' | translate }}</option>
                     </select>
                     <input ng-model='rule.number'
                            size='3'
@@ -138,11 +138,11 @@
                     <select ng-model='rule.nodeLabel'
                             ng-change='conceptMapController.authoringViewComponentChanged()'>
                         <option></option>
-                        <option value='any'>{{ 'any' | translate }}</option>
+                        <option value='any'>{{ 'conceptMap.any' | translate }}</option>
                         <option ng-repeat='node in conceptMapController.authoringComponentContent.nodes'
                                 value='{{node.label}}'>{{node.label}}</option>
                     </select>
-                    {{ 'withLink' | translate }}
+                    {{ 'conceptMap.withLink' | translate }}
                     <input type='checkbox'
                            ng-model='rule.type'
                            ng-true-value="'link'"
@@ -152,7 +152,7 @@
                             ng-change='conceptMapController.authoringViewComponentChanged()'
                             ng-show='rule.type == "link"'>
                         <option></option>
-                        <option value='any'>{{ 'any' | translate }}</option>
+                        <option value='any'>{{ 'conceptMap.any' | translate }}</option>
                         <option ng-repeat='link in conceptMapController.authoringComponentContent.links'
                                 value='{{link.label}}'>{{link.label}}</option>
                     </select>
@@ -160,7 +160,7 @@
                             ng-change='conceptMapController.authoringViewComponentChanged()'
                             ng-show='rule.type == "link"'>
                         <option></option>
-                        <option value='any'>{{ 'any' | translate }}</option>
+                        <option value='any'>{{ 'conceptMap.any' | translate }}</option>
                         <option ng-repeat='node in conceptMapController.authoringComponentContent.nodes'
                                 value='{{node.label}}'>{{node.label}}</option>
                     </select>
@@ -169,7 +169,7 @@
                     <button ng-click='conceptMapController.authoringViewRuleDeleteButtonClicked($index)'>{{ 'DELETE' | translate }}</button>
                     <br/>
                     <div style='text-indent: 80px'>
-                        <button ng-click='conceptMapController.authoringViewAddCategoryClicked(rule)'>{{ 'addCategoryOptional' | translate }}</button>
+                        <button ng-click='conceptMapController.authoringViewAddCategoryClicked(rule)'>{{ 'conceptMap.addCategoryOptional' | translate }}</button>
                         <span ng-repeat='category in rule.categories track by $index'>
                             <input ng-model='rule.categories[$index]'
                                    ng-change='conceptMapController.authoringViewComponentChanged()'
@@ -180,7 +180,7 @@
                     <br/>
                 </div>
                 <br/>
-                {{ 'customRuleEvaluator' | translate }}
+                {{ 'conceptMap.customRuleEvaluator' | translate }}
                 <br/>
                 <textarea ng-model='conceptMapController.authoringComponentContent.customRuleEvaluator'
                           ng-change='conceptMapController.authoringViewComponentChanged()'
@@ -317,7 +317,7 @@
                                 <div style="display: flex; margin-right: 16px;">
                                     <md-tooltip md-direction="left"
                                                 style="z-index: 10001;">
-                                        {{ 'dragMe' | translate }}
+                                        {{ 'conceptMap.dragMe' | translate }}
                                     </md-tooltip>
                                     <md-icon style="transform: rotate(45deg)"
                                             ng-click="conceptMapController.dragIconClicked()">
@@ -340,7 +340,7 @@
                 <div class="component__add-attachment">
                     <md-button class="md-accent"
                                ng-click="nodeController.showStudentAssets($event, component.id, conceptMapController.isDisabled)">
-                        <md-icon>image</md-icon> <span>{{ 'addFile' | translate }}</span>
+                        <md-icon>image</md-icon> <span>{{ 'conceptMap.addFile' | translate }}</span>
                     </md-button>
                 </div>
                 <div class="component__attachment" ng-repeat="attachment in conceptMapController.attachments">
