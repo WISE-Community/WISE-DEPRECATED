@@ -74,6 +74,7 @@ gulp.task('update-i18n', function() {
     var supportedLocales = ['ar','es','iw','ja','ko','nl','pt','tr','zh_CN','zh_TW'];
     // update WISE5 i18n files
     var wise5_i18n_folders = [
+        './src/main/webapp/wise5/i18n/',
         './src/main/webapp/wise5/authoringTool/i18n/',
         './src/main/webapp/wise5/classroomMonitor/i18n/',
         './src/main/webapp/wise5/vle/i18n/',
