@@ -1,15 +1,15 @@
 {
-    "addBucket": "Add Bucket",
-    "addChoice": "Add Choice",
-    "areYouSureYouWantToDeleteThisBucket": "Are you sure you want to delete this bucket?",
-    "areYouSureYouWantToDeleteThisChoice": "Are you sure you want to delete this choice?",
-    "buckets": "Buckets",
-    "choices": "Choices",
-    "correctBucketButWrongPosition": "Correct bucket but wrong position",
-    "deleteBucket": "Delete Bucket",
-    "deleteChoice": "Delete Choice",
-    "incorrectPositionFeedback": "Incorrect Position Feedback",
-    "labelForChoicesBucket": "Label for choices bucket",
-    "ordered": "Ordered",
-    "position": "Position"
+    "match.addBucket": "Add Bucket",
+    "match.addChoice": "Add Choice",
+    "match.areYouSureYouWantToDeleteThisBucket": "Are you sure you want to delete this bucket?",
+    "match.areYouSureYouWantToDeleteThisChoice": "Are you sure you want to delete this choice?",
+    "match.buckets": "Buckets",
+    "match.choices": "Choices",
+    "match.correctBucketButWrongPosition": "Correct bucket but wrong position",
+    "match.deleteBucket": "Delete Bucket",
+    "match.deleteChoice": "Delete Choice",
+    "match.incorrectPositionFeedback": "Incorrect Position Feedback",
+    "match.labelForChoicesBucket": "Label for choices bucket",
+    "match.ordered": "Ordered",
+    "match.position": "Position"
 }

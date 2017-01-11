@@ -610,7 +610,7 @@ class MatchController {
              */
             let originBucket = {};
             originBucket.id = 0;
-            originBucket.value = this.componentContent.choicesLabel ? this.componentContent.choicesLabel : 'Choices';
+            originBucket.value = this.componentContent.choicesLabel ? this.componentContent.choicesLabel : this.$translate('match.choices');
             originBucket.type = 'bucket';
             originBucket.items = [];
 
@@ -819,7 +819,7 @@ class MatchController {
 
                                             // set the default feedback if none is authored
                                             if (incorrectPositionFeedback == null || incorrectPositionFeedback == '') {
-                                                incorrectPositionFeedback = this.$translate('correctBucketButWrongPosition');
+                                                incorrectPositionFeedback = this.$translate('match.correctBucketButWrongPosition');
                                             }
 
                                             item.feedback = incorrectPositionFeedback;
@@ -1527,7 +1527,7 @@ class MatchController {
     authoringDeleteChoice(index) {
 
         // confirm with the user that they want to delete the choice
-        var answer = confirm(this.$translate('areYouSureYouWantToDeleteThisChoice'));
+        var answer = confirm(this.$translate('match.areYouSureYouWantToDeleteThisChoice'));
 
         if (answer) {
 
@@ -1558,7 +1558,7 @@ class MatchController {
     authoringDeleteBucket(index) {
 
         // confirm with the user tha tthey want to delete the bucket
-        var answer = confirm(this.$translate('areYouSureYouWantToDeleteThisBucket'));
+        var answer = confirm(this.$translate('match.areYouSureYouWantToDeleteThisBucket'));
 
         if (answer) {
 

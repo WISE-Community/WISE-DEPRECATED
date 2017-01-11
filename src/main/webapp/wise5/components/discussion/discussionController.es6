@@ -405,7 +405,7 @@ class DiscussionController {
                         let userNames = userNamesArray.map( (obj) => {
                             return obj.name;
                         }).join(', ');
-                        let notificationMessage = this.$translate('repliedToADiscussionYouWereIn', { userNames: userNames });
+                        let notificationMessage = this.$translate('discussion.repliedToADiscussionYouWereIn', { userNames: userNames });
 
                         let workgroupsNotifiedSoFar = [];  // keep track of workgroups we've already notified, in case a workgroup posts twice on a thread we only want to notify once.
                         // check if we have the component state that was replied to

@@ -24,7 +24,7 @@ class GraphService extends NodeService {
         component.prompt = this.$translate('ENTERPROMPTHERE');
         component.showSaveButton = false;
         component.showSubmitButton = false;
-        component.title = this.$translate('enterGraphTitleHere');
+        component.title = this.$translate('graph.enterGraphTitleHere');
         component.width = 800;
         component.height = 500;
         component.enableTrials = false;
@@ -33,21 +33,21 @@ class GraphService extends NodeService {
         component.showAllTrialsOnNewTrial = false;
         component.xAxis = {
             title: {
-                text: this.$translate('timeSeconds')
+                text: this.$translate('graph.timeSeconds')
             },
             min: 0,
             max: 10
         };
         component.yAxis = {
             title: {
-                text: this.$translate('positionMeters')
+                text: this.$translate('graph.postitionMeters')
             },
             min: 0,
             max: 10
         };
         component.series = [
             {
-                name: this.$translate('prediction'),
+                name: this.$translate('graph.prediction'),
                 data: [],
                 color: 'blue',
                 marker: {

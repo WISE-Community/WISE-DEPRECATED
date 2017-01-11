@@ -1,6 +1,6 @@
 <div ng-controller='OutsideURLController as outsideURLController'>
     <div ng-if='outsideURLController.mode === "authoring"'>
-                    {{ 'url' | translate }}: <input ng-model='outsideURLController.authoringComponentContent.url'
+                    {{ 'outsideURL.url' | translate }}: <input ng-model='outsideURLController.authoringComponentContent.url'
                            ng-change='outsideURLController.authoringViewComponentChanged()'
                            ng-model-options='{ debounce: 1000 }'
                            size='80'/>

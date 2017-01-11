@@ -1,7 +1,7 @@
 {
-    "addChoice": "Add Choice",
-    "checkbox": "Checkbox",
-    "numberOfAttempts": "Number of Attempts",
-    "radio": "Radio",
-    "userChose": "User chose '{{choiceText}}' (Choice Id: {{choiceId}}) on this component."
+    "multipleChoice.addChoice": "Add Choice",
+    "multipleChoice.checkbox": "Checkbox",
+    "multipleChoice.numberOfAttempts": "Number of Attempts",
+    "multipleChoice.radio": "Radio",
+    "multipleChoice.userChose": "User chose '{{choiceText}}' (Choice Id: {{choiceId}}) on this component."
 }

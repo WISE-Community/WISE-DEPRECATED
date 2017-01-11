@@ -23,10 +23,10 @@
                ng-model-options='{ debounce: 1000 }'
                style='width: 3em'/>
         <br/>
-        {{ 'radio' | translate }}: <input type='radio' name='choiceType' ng-model='multipleChoiceController.authoringComponentContent.choiceType' value='radio' ng-change='multipleChoiceController.authoringViewComponentChanged()'/>
-        {{ 'checkbox' | translate }}: <input type='radio' name='choiceType' ng-model='multipleChoiceController.authoringComponentContent.choiceType' value='checkbox' ng-change='multipleChoiceController.authoringViewComponentChanged()'/>
+        {{ 'multipleChoice.radio' | translate }}: <input type='radio' name='choiceType' ng-model='multipleChoiceController.authoringComponentContent.choiceType' value='radio' ng-change='multipleChoiceController.authoringViewComponentChanged()'/>
+        {{ 'multipleChoice.checkbox' | translate }}: <input type='radio' name='choiceType' ng-model='multipleChoiceController.authoringComponentContent.choiceType' value='checkbox' ng-change='multipleChoiceController.authoringViewComponentChanged()'/>
         <br/>
-        <button ng-click='multipleChoiceController.addChoice()'>{{ 'addChoice' | translate }}</button>
+        <button ng-click='multipleChoiceController.addChoice()'>{{ 'multipleChoice.addChoice' | translate }}</button>
         <div ng-repeat='choice in multipleChoiceController.authoringComponentContent.choices'
              style='border: 1px solid black'>
             {{ 'TEXT' | translate }}: <input ng-model='choice.text' ng-change='multipleChoiceController.authoringViewComponentChanged()' ng-model-options='{ debounce: 1000 }' size='100'/>
@@ -137,7 +137,7 @@
             </div>
         </div>
 
-        <div class="md-caption" ng-if="multipleChoiceController.hasCorrectChoices() && multipleChoiceController.showFeedback" ng-show="multipleChoiceController.numberOfAttempts != null">{{ 'numberOfAttempts' | translate }}: {{multipleChoiceController.numberOfAttempts}}</div>
+        <div class="md-caption" ng-if="multipleChoiceController.hasCorrectChoices() && multipleChoiceController.showFeedback" ng-show="multipleChoiceController.numberOfAttempts != null">{{ 'multipleChoice.numberOfAttempts' | translate }}: {{multipleChoiceController.numberOfAttempts}}</div>
         <div ng-if="multipleChoiceController.hasCorrectChoices() && multipleChoiceController.showFeedback && multipleChoiceController.isCorrect != null && multipleChoiceController.isCorrect">{{ 'CORRECT' | translate }}!</div>
         <div ng-if="multipleChoiceController.hasCorrectChoices() && multipleChoiceController.showFeedback && multipleChoiceController.isCorrect != null && !multipleChoiceController.isCorrect">{{ 'INCORRECT' | translate }}</div>
     </md-input-container>

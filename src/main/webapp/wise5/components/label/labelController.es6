@@ -133,7 +133,7 @@ class LabelController {
         this.backgroundImage = null;
 
         // the message to display when the student is in create label mode
-        this.newLabelMessage = this.$translate('clickOnTheImageOr');
+        this.newLabelMessage = this.$translate('label.clickOnTheImageOr');
 
         // get the current node and node id
         var currentNode = this.StudentDataService.getCurrentNode();
@@ -463,7 +463,7 @@ class LabelController {
                  * there is an existing background image so we will ask the
                  * student if they want to change it
                  */
-                var answer = confirm(this.$translate('areYouSureYouWantToChangeTheBackgroundImage'));
+                var answer = confirm(this.$translate('label.areYouSureYouWantToChangeTheBackgroundImage'));
 
                 if (answer) {
                     // the student wants to change the background image
@@ -1174,7 +1174,7 @@ class LabelController {
                     var textY = 100;
 
                     // create a new label
-                    var newLabel = this.createLabel(x, y, textX, textY, this.$translate('aNewLabel'), 'blue');
+                    var newLabel = this.createLabel(x, y, textX, textY, this.$translate('label.aNewLabel'), 'blue');
 
                     // add the label to the canvas
                     this.addLabelToCanvas(this.canvas, newLabel);
@@ -1805,7 +1805,7 @@ class LabelController {
 
         // create the new label
         var newLabel = {};
-        newLabel.text = this.$translate('enterTextHere');
+        newLabel.text = this.$translate('label.enterTextHere');
         newLabel.color = 'blue';
         newLabel.pointX = 100;
         newLabel.pointY = 100;
@@ -2047,7 +2047,7 @@ class LabelController {
             var selectedLabelText = this.selectedLabel.text.text;
 
             // confirm with the student that they want to delete the label
-            var answer = confirm(this.$translate('areYouSureYouWantToDeleteThisLabel', { selectedLabelText: selectedLabelText }));
+            var answer = confirm(this.$translate('label.areYouSureYouWantToDeleteThisLabel', { selectedLabelText: selectedLabelText }));
 
             if (answer) {
                 // the student is sure they want to delete the label

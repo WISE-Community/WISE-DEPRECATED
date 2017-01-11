@@ -1110,7 +1110,7 @@ class TableController {
         if (rowOrColumn === 'rows') {
             if (this.authoringComponentContent.numRows < oldValue) {
                 // author wants to decrease number of rows, so confirm
-                var answer = confirm(this.$translate('areYouSureYouWantToDecreaseTheNumberOfRows'));
+                var answer = confirm(this.$translate('table.areYouSureYouWantToDecreaseTheNumberOfRows'));
                 if (answer) {
                     // author confirms yes, proceed with change
                     this.authoringViewTableSizeChanged();
@@ -1125,7 +1125,7 @@ class TableController {
         } else if (rowOrColumn === 'columns') {
             if (this.authoringComponentContent.numColumns < oldValue) {
                 // author wants to decrease number of columns, so confirm
-                var answer = confirm(this.$translate('areYouSureYouWantToDecreaseTheNumberOfColumns'));
+                var answer = confirm(this.$translate('table.areYouSureYouWantToDecreaseTheNumberOfColumns'));
                 if (answer) {
                     // author confirms yes, proceed with change
                     this.authoringViewTableSizeChanged();
@@ -1275,7 +1275,7 @@ class TableController {
      */
     authoringViewDeleteRow(y) {
 
-        var answer = confirm(this.$translate('areYouSureYouWantToDeleteThisRow'));
+        var answer = confirm(this.$translate('table.areYouSureYouWantToDeleteThisRow'));
 
         if (answer) {
             // get the table
@@ -1338,7 +1338,7 @@ class TableController {
      */
     authoringViewDeleteColumn(x) {
 
-        var answer = confirm(this.$translate('areYouSureYouWantToDeleteThisColumn'));
+        var answer = confirm(this.$translate('table.areYouSureYouWantToDeleteThisColumn'));
 
         if (answer) {
             // get the table

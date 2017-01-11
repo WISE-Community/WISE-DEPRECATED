@@ -23,43 +23,43 @@
                ng-model-options='{ debounce: 1000 }'
                style='width: 3em'/>
         <br/>
-        {{ 'oscillatorTypes' | translate }} <button ng-click='audioOscillatorController.authoringOpenAddOscillatorType()'>{{ 'addOscillatorType' | translate }}</button>
+        {{ 'audioOscillator.oscillatorTypes' | translate }} <button ng-click='audioOscillatorController.authoringOpenAddOscillatorType()'>{{ 'audioOscillator.addOscillatorType' | translate }}</button>
         <span ng-show='audioOscillatorController.showOscillatorTypeChooser'>
             <select ng-model='audioOscillatorController.oscillatorTypeToAdd'>
                 <option ng-repeat='availableOscillatorType in audioOscillatorController.availableOscillatorTypes' value='{{availableOscillatorType}}'>{{availableOscillatorType}}</option>
             </select>
-            <button ng-click='audioOscillatorController.authoringAddOscillatorTypeClicked()'>{{ 'add' | translate }}</button>
+            <button ng-click='audioOscillatorController.authoringAddOscillatorTypeClicked()'>{{ 'audioOscillator.add' | translate }}</button>
             <button ng-click='audioOscillatorController.authoringCancelOscillatorTypeClicked()'>{{ 'CANCEL' | translate }}</button>
         </span>
         <div ng-repeat='oscillatorType in audioOscillatorController.authoringComponentContent.oscillatorTypes track by $index'>
             {{oscillatorType}} <button ng-click='audioOscillatorController.authoringDeleteOscillatorTypeClicked($index)'>{{ 'DELETE' | translate }}</button>
         </div>
         <br/>
-        {{ 'startingFrequency' | translate }}: <input type='number'
+        {{ 'audioOscillator.startingFrequency' | translate }}: <input type='number'
                                    ng-model='audioOscillatorController.authoringComponentContent.startingFrequency'
                                    ng-change='audioOscillatorController.authoringViewComponentChanged()'
                                    ng-model-options='{ debounce: 1000 }'
                                    style='width: 5em'/>
         <br/>
-        {{ 'oscillatorWidth' | translate }}: <input type='number'
+        {{ 'audioOscillator.oscillatorWidth' | translate }}: <input type='number'
                                    ng-model='audioOscillatorController.authoringComponentContent.oscilloscopeWidth'
                                    ng-change='audioOscillatorController.authoringViewComponentChanged()'
                                    ng-model-options='{ debounce: 1000 }'
                                    style='width: 5em'/>
         <br/>
-        {{ 'oscillatorHeight' | translate }}: <input type='number'
+        {{ 'audioOscillator.oscillatorHeight' | translate }}: <input type='number'
                                     ng-model='audioOscillatorController.authoringComponentContent.oscilloscopeHeight'
                                     ng-change='audioOscillatorController.authoringViewComponentChanged()'
                                     ng-model-options='{ debounce: 1000 }'
                                     style='width: 5em'/>
         <br/>
-        {{ 'oscillatorGridSize' | translate }}: <input type='number'
+        {{ 'audioOscillator.oscillatorGridSize' | translate }}: <input type='number'
                                     ng-model='audioOscillatorController.authoringComponentContent.gridCellSize'
                                     ng-change='audioOscillatorController.authoringViewComponentChanged()'
                                     ng-model-options='{ debounce: 1000 }'
                                     style='width: 5em'/>
         <br/>
-        {{ 'oscilloscopeStopAfterGoodDraw' | translate }}: <input type='checkbox'
+        {{ 'audioOscillator.oscilloscopeStopAfterGoodDraw' | translate }}: <input type='checkbox'
                                     ng-model='audioOscillatorController.authoringComponentContent.stopAfterGoodDraw'
                                     ng-change='audioOscillatorController.authoringViewComponentChanged()'
                                     ng-model-options='{ debounce: 1000 }'
@@ -129,14 +129,14 @@
     <div class="component-content__actions" layout="row">
         <md-button class="md-accent" ng-show="audioOscillatorController.isStudentAttachmentEnabled"
                    ng-click="nodeController.showStudentAssets($event, component.id, audioOscillatorController.isDisabled)">
-            <md-icon>image</md-icon> {{ 'importData' | translate }}
+            <md-icon>image</md-icon> {{ 'audioOscillator.importData' | translate }}
         </md-button>
     </div>
     <span ng-if='audioOscillatorController.oscillatorTypes.length == 0 || audioOscillatorController.oscillatorTypes.length == 1'>
-        {{ 'oscillatorType' | translate }}: {{audioOscillatorController.oscillatorType}}
+        {{ 'audioOscillator.oscillatorType' | translate }}: {{audioOscillatorController.oscillatorType}}
     </span>
     <span ng-if='audioOscillatorController.oscillatorTypes.length > 1'>
-        {{ 'oscillatorType' | translate }}:
+        {{ 'audioOscillator.oscillatorType' | translate }}:
         <select ng-model='audioOscillatorController.oscillatorType'
                 ng-change='audioOscillatorController.oscillatorTypeChanged()'>
             <option ng-repeat='oscillatorType in audioOscillatorController.oscillatorTypes'
@@ -144,7 +144,7 @@
         </select>
     </span>
     <br/>
-    {{ 'frequency' | translate }}: <input type='number'
+    {{ 'audioOscillator.frequency' | translate }}: <input type='number'
                       ng-model='audioOscillatorController.frequency'
                       ng-change='audioOscillatorController.frequencyChanged()'/>
     <br/>

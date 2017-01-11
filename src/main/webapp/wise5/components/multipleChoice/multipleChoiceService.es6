@@ -68,7 +68,7 @@ class MultipleChoiceService extends NodeService {
                         "componentId": componentId,
                         "choiceIds": [choice.id]
                     },
-                    "userFriendlyDescription": this.$translate('userChose', {choiceText: choice.text, choiceId: choice.id})
+                    "userFriendlyDescription": this.$translate('multipleChoice.userChose', {choiceText: choice.text, choiceId: choice.id})
                 };
                 allPossibleTransitionCriteria.push(possibleTransitionCriteria);
             }

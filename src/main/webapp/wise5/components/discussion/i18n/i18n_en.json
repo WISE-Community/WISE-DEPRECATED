@@ -1,7 +1,7 @@
 {
-    "allowUploadedImagesInPosts": "Students can upload and use images in their posts.",
-    "comments": "Comments",
-    "post": "Post",
-    "repliedToADiscussionYouWereIn": "{{userNames}} replied to a discussion you were in!",
-    "reply": "Reply"
+    "discussion.allowUploadedImagesInPosts": "Students can upload and use images in their posts.",
+    "discussion.comments": "Comments",
+    "discussion.post": "Post",
+    "discussion.repliedToADiscussionYouWereIn": "{{userNames}} replied to a discussion you were in!",
+    "discussion.reply": "Reply"
 }
