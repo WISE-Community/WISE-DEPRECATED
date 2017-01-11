@@ -1,7 +1,7 @@
 {
-	"addChoice": "",
-	"checkbox": "",
-	"numberOfAttempts": "",
-	"radio": "",
-	"userChose": ""
+	"multipleChoice.addChoice": "",
+	"multipleChoice.checkbox": "",
+	"multipleChoice.numberOfAttempts": "",
+	"multipleChoice.radio": "",
+	"multipleChoice.userChose": ""
 }

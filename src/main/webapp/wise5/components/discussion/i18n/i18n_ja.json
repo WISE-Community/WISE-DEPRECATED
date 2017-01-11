@@ -1,7 +1,7 @@
 {
-	"allowUploadedImagesInPosts": "生徒がアップロードした写真をコメントに使用できる",
-	"comments": "",
-	"post": "",
-	"repliedToADiscussionYouWereIn": "",
-	"reply": ""
+	"discussion.allowUploadedImagesInPosts": "",
+	"discussion.comments": "",
+	"discussion.post": "",
+	"discussion.repliedToADiscussionYouWereIn": "",
+	"discussion.reply": ""
 }
