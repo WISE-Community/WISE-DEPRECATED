@@ -7,16 +7,16 @@
 // -----------------------------------------------------------------------------
 
 var gulp = require('gulp');
-var postcss = require('gulp-postcss');
-var sass = require('gulp-sass');
 var autoprefixer = require('autoprefixer');
 var cssnano = require('cssnano');
-var sourcemaps = require('gulp-sourcemaps');
-var newer = require('gulp-newer');
-var gulpif = require('gulp-if');
-var print = require('gulp-print');
-var merge = require('gulp-merge-json');
 var fs = require('fs');
+var gulpif = require('gulp-if');
+var merge = require('gulp-merge-json');
+var newer = require('gulp-newer');
+var postcss = require('gulp-postcss');
+var print = require('gulp-print');
+var sass = require('gulp-sass');
+var sourcemaps = require('gulp-sourcemaps');
 //var rtlscss = require('rtlcss');
 
 // -----------------------------------------------------------------------------
@@ -33,7 +33,7 @@ var autoprefixerOptions = { browsers: ['> 5%', 'last 2 versions', 'Firefox ESR',
 gulp.task('compile-sass', function() {
     return gulp
         .src(paths, {base: './'})
-        .pipe(gulpif(global.isWatching, newer({dest: './', ext: '.css'})))
+        .pipe(gulpif(global.isWatching, newer({dest: './', ext: '.css', extra: paths })))
         .pipe(sourcemaps.init())
         .pipe(sass(sassOptions).on('error', sass.logError))
         .pipe(postcss([ autoprefixer(autoprefixerOptions), cssnano/*, rtlcss*/ ]) )
@@ -41,7 +41,7 @@ gulp.task('compile-sass', function() {
         //.pipe(rename({suffix: ".min"}))
         .pipe(gulp.dest('./'))
         .pipe(print(function(filepath) {
-          return "Compiled: " + filepath;
+            return "Compiled: " + filepath;
         }));
         //.pipe(gulp.dest(function(file) {
             //return file.base;
@@ -49,7 +49,24 @@ gulp.task('compile-sass', function() {
 });
 
 // -----------------------------------------------------------------------------
-// merge i18n json files.
+// Watchers
+// -----------------------------------------------------------------------------
+gulp.task('set-watch', function() {
+    global.isWatching = true;
+});
+
+gulp.task('watch-sass', ['set-watch'], function() {
+    return gulp
+        // Watch folders for *.scss changes in the specified paths,
+        // and run `compile-sass` task on change
+        .watch(paths, ['compile-sass'])
+        .on('change', function(event) {
+            console.log('File ' + event.path + ' was ' + event.type);
+        });
+});
+
+// -----------------------------------------------------------------------------
+// merge i18n json files
 // If key doesn't exist in foreignLocale, sets it value to "".
 // Removes extra keys from foreignLocale
 // -----------------------------------------------------------------------------
@@ -103,23 +120,6 @@ gulp.task('update-i18n', function() {
             fs.writeFileSync(i18n_folder + "i18n_" + supportedLocale + ".json", result);
         });
     });
-});
-
-// -----------------------------------------------------------------------------
-// Watchers
-// -----------------------------------------------------------------------------
-gulp.task('set-watch', function() {
-    global.isWatching = true;
-});
-
-gulp.task('watch-sass', ['set-watch'], function() {
-    return gulp
-        // Watch folders for *.scss changes in the specified paths,
-        // and run `compile-sass` task on change
-        .watch(paths, ['compile-sass'])
-        .on('change', function(event) {
-		console.log('File ' + event.path + ' was ' + event.type);
-        });
 });
 
 
