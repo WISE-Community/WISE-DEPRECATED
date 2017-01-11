@@ -21,13 +21,15 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var AudioOscillatorService = function (_NodeService) {
     _inherits(AudioOscillatorService, _NodeService);
 
-    function AudioOscillatorService(StudentDataService, UtilService) {
+    function AudioOscillatorService($filter, StudentDataService, UtilService) {
         _classCallCheck(this, AudioOscillatorService);
 
         var _this = _possibleConstructorReturn(this, (AudioOscillatorService.__proto__ || Object.getPrototypeOf(AudioOscillatorService)).call(this));
 
+        _this.$filter = $filter;
         _this.StudentDataService = StudentDataService;
         _this.UtilService = UtilService;
+        _this.$translate = _this.$filter('translate');
         return _this;
     }
 
@@ -44,7 +46,7 @@ var AudioOscillatorService = function (_NodeService) {
             var component = {};
             component.id = this.UtilService.generateKey();
             component.type = 'AudioOscillator';
-            component.prompt = 'Enter prompt here';
+            component.prompt = this.$translate('enterPromptHere');
             component.oscillatorTypes = ['sine'];
             component.startingFrequency = 440;
             component.oscilloscopeWidth = 800;
@@ -152,7 +154,7 @@ var AudioOscillatorService = function (_NodeService) {
         /**
          * Whether this component generates student work
          * @param component (optional) the component object. if the component object
-         * is not provided, we will use the default value of whether the 
+         * is not provided, we will use the default value of whether the
          * component type usually has work.
          * @return whether this component generates student work
          */
@@ -164,7 +166,7 @@ var AudioOscillatorService = function (_NodeService) {
     return AudioOscillatorService;
 }(_nodeService2.default);
 
-AudioOscillatorService.$inject = ['StudentDataService', 'UtilService'];
+AudioOscillatorService.$inject = ['$filter', 'StudentDataService', 'UtilService'];
 
 exports.default = AudioOscillatorService;
 //# sourceMappingURL=audioOscillatorService.js.map

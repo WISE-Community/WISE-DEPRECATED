@@ -9,11 +9,12 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var AudioOscillatorController = function () {
-    function AudioOscillatorController($injector, $q, $rootScope, $scope, $timeout, AnnotationService, ConfigService, NodeService, AudioOscillatorService, ProjectService, StudentAssetService, StudentDataService) {
+    function AudioOscillatorController($filter, $injector, $q, $rootScope, $scope, $timeout, AnnotationService, ConfigService, NodeService, AudioOscillatorService, ProjectService, StudentAssetService, StudentDataService) {
         var _this2 = this;
 
         _classCallCheck(this, AudioOscillatorController);
 
+        this.$filter = $filter;
         this.$injector = $injector;
         this.$q = $q;
         this.$rootScope = $rootScope;
@@ -27,6 +28,8 @@ var AudioOscillatorController = function () {
         this.StudentAssetService = StudentAssetService;
         this.StudentDataService = StudentDataService;
         this.idToOrder = this.ProjectService.idToOrder;
+
+        this.$translate = this.$filter('translate');
 
         // the node id of the current node
         this.nodeId = null;
@@ -109,6 +112,9 @@ var AudioOscillatorController = function () {
         this.showOscillatorTypeChooser = false;
         this.availableOscillatorTypes = ['sine', 'square', 'triangle', 'sawtooth'];
         this.oscillatorTypeToAdd = 'sine';
+
+        // the text to display on the play/stop button
+        this.playStopButtonText = 'Play';
 
         // get the current node and node id
         var currentNode = this.StudentDataService.getCurrentNode();
@@ -345,7 +351,7 @@ var AudioOscillatorController = function () {
 
                 // set save message
                 if (isSubmit) {
-                    this.setSaveMessage('Submitted', clientSaveTime);
+                    this.setSaveMessage(this.$translate('submitted'), clientSaveTime);
 
                     this.submit();
 
@@ -353,9 +359,9 @@ var AudioOscillatorController = function () {
                     this.isSubmitDirty = false;
                     this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: false });
                 } else if (isAutoSave) {
-                    this.setSaveMessage('Auto-saved', clientSaveTime);
+                    this.setSaveMessage(this.$translate('autoSaved'), clientSaveTime);
                 } else {
-                    this.setSaveMessage('Saved', clientSaveTime);
+                    this.setSaveMessage(this.$translate('saved'), clientSaveTime);
                 }
             }
         }));
@@ -484,13 +490,13 @@ var AudioOscillatorController = function () {
                     this.isSubmitDirty = false;
                     this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: false });
                     // set save message
-                    this.setSaveMessage('Last submitted', clientSaveTime);
+                    this.setSaveMessage(this.$translate('lastSubmitted'), clientSaveTime);
                 } else {
                     // latest state is not a submission, so set isSubmitDirty to true and notify node
                     this.isSubmitDirty = true;
                     this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: true });
                     // set save message
-                    this.setSaveMessage('Last saved', clientSaveTime);
+                    this.setSaveMessage(this.$translate('lastSaved'), clientSaveTime);
                 }
             }
         }
@@ -787,9 +793,15 @@ var AudioOscillatorController = function () {
             if (this.isPlaying) {
                 // the audio is playing so we will now stop it
                 this.stop();
+
+                // change the button text to display 'Play'
+                this.playStopButtonText = 'Play';
             } else {
-                // the audio is not playing so we will not play it
+                // the audio is not playing so we will now play it
                 this.play();
+
+                // change the button text to display 'Stop'
+                this.playStopButtonText = 'Stop';
             }
         }
     }, {
@@ -1098,7 +1110,7 @@ var AudioOscillatorController = function () {
             if (this.authoringComponentContent.oscillatorTypes.indexOf(oscillatorTypeToAdd) != -1) {
                 // the oscillator type is already in the array of oscillator types
 
-                alert('Error: You have already added ' + oscillatorTypeToAdd);
+                alert(this.$translate('errorYouHaveAlreadyAddedOscillatorType', { oscillatorTypeToAdd: oscillatorTypeToAdd }));
             } else {
                 // the oscillator type is not already in the array of oscillator types
                 this.authoringComponentContent.oscillatorTypes.push(oscillatorTypeToAdd);
@@ -1356,7 +1368,7 @@ var AudioOscillatorController = function () {
                      */
 
                     // make sure the author really wants to change the component type
-                    var answer = confirm('Are you sure you want to change this component type?');
+                    var answer = confirm(this.$translate('areYouSureYouWantToChangeThisComponentType'));
 
                     if (answer) {
                         // the author wants to change the component type
@@ -1578,7 +1590,7 @@ var AudioOscillatorController = function () {
 
 ;
 
-AudioOscillatorController.$inject = ['$injector', '$q', '$rootScope', '$scope', '$timeout', 'AnnotationService', 'ConfigService', 'NodeService', 'AudioOscillatorService', 'ProjectService', 'StudentAssetService', 'StudentDataService'];
+AudioOscillatorController.$inject = ['$filter', '$injector', '$q', '$rootScope', '$scope', '$timeout', 'AnnotationService', 'ConfigService', 'NodeService', 'AudioOscillatorService', 'ProjectService', 'StudentAssetService', 'StudentDataService'];
 
 exports.default = AudioOscillatorController;
 //# sourceMappingURL=audioOscillatorController.js.map
