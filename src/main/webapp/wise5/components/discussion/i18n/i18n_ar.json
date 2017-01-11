@@ -1,14 +1,7 @@
 {
 	"allowUploadedImagesInPosts": "",
-	"areYouSureYouWantToChangeThisComponentType": "",
 	"comments": "",
-	"enterPromptHere": "",
-	"maxScore": "",
 	"post": "",
 	"repliedToADiscussionYouWereIn": "",
-	"reply": "",
-	"showPreviousWork": "",
-	"showPreviousWorkComponent": "",
-	"showPreviousWorkPrompt": "",
-	"showPreviousWorkStep": ""
+	"reply": ""
 }
