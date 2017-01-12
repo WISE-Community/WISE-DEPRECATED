@@ -3,8 +3,8 @@
         <md-button aria-label="Toggle Notebook menu" class="md-icon-button" ng-click="notebookToolsCtrl.toggleNotebookNav($event)">
             <md-icon> menu </md-icon>
         </md-button>
-        <!--<md-icon style="color: {{ notebookToolsCtrl.notebookConfig.itemTypes[notebookToolsCtrl.notebookFilter].label.color }} !important">{{ notebookToolsCtrl.notebookConfig.itemTypes[notebookToolsCtrl.notebookFilter].label.icon }}</md-icon>-->
         <span class="toolbar-title" style="color: {{ notebookToolsCtrl.notebookConfig.itemTypes[notebookToolsCtrl.notebookFilter].label.color }} !important">{{ notebookToolsCtrl.notebookConfig.itemTypes[notebookToolsCtrl.notebookFilter].label.link }}</span>
+        <span class="toolbar-title" ng-if="notebookToolsCtrl.notebookFilter === 'trash'" style="color: gray !important" translate="deletedNotes"></span>
         <span flex></span>
         <md-button aria-label="Close Notebook" class="md-icon-button" ng-click="notebookToolsCtrl.toggleNotebook($event)">
             <md-icon md-theme="default"> close </md-icon>

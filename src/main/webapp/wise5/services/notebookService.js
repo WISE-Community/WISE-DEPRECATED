@@ -126,10 +126,16 @@ var NotebookService = function () {
         }
     }, {
         key: "getLatestNotebookItemByLocalNotebookItemId",
+
+
+        // looks up notebook item by local notebook item id, including deleted notes
         value: function getLatestNotebookItemByLocalNotebookItemId(itemId) {
             if (this.notebook.items.hasOwnProperty(itemId)) {
                 var items = this.notebook.items[itemId];
                 return items.last();
+            } else if (this.notebook.deletedItems.hasOwnProperty(itemId)) {
+                var _items = this.notebook.deletedItems[itemId];
+                return _items.last();
             } else {
                 return null;
             }

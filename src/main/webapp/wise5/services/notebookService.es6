@@ -113,9 +113,13 @@ class NotebookService {
         }
     };
 
+    // looks up notebook item by local notebook item id, including deleted notes
     getLatestNotebookItemByLocalNotebookItemId(itemId) {
         if (this.notebook.items.hasOwnProperty(itemId)) {
             let items = this.notebook.items[itemId];
+            return items.last();
+        } else if (this.notebook.deletedItems.hasOwnProperty(itemId)) {
+            let items = this.notebook.deletedItems[itemId];
             return items.last();
         } else {
             return null;

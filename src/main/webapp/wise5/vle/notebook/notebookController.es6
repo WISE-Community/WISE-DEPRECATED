@@ -64,6 +64,10 @@ class NotebookController {
         this.$rootScope.$broadcast('editNote', {itemId: itemId, ev: ev});
     }
 
+    reviveItem(ev, itemId) {
+        this.$rootScope.$broadcast('reviveNote', {itemId: itemId, ev: ev});
+    }
+
     notebookItemSelected($event, notebookItem) {
         this.selectedNotebookItem = notebookItem;
     }
