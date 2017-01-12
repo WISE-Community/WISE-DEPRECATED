@@ -5,6 +5,7 @@ class NodeGradingController {
     constructor($filter,
                 $state,
                 $stateParams,
+                $timeout,
                 AnnotationService,
                 ConfigService,
                 NodeService,
@@ -15,6 +16,7 @@ class NodeGradingController {
         this.$filter = $filter;
         this.$state = $state;
         this.$stateParams = $stateParams;
+        this.$timeout = $timeout;
         this.AnnotationService = AnnotationService;
         this.ConfigService = ConfigService;
         this.NodeService = NodeService;
@@ -274,9 +276,28 @@ class NodeGradingController {
             this.getPeriodIdByWorkgroupId(workgroupId) === this.getCurrentPeriod().periodId);
     }
 
-    onUpdateHiddenComponents(value) {
+    onUpdateHiddenComponents(value, event) {
+        let target = event.target;
+        let viewportOffsetTop = target.getBoundingClientRect().top;
+        console.log('btn viewport location:' + viewportOffsetTop);
+
         this.hiddenComponents = value;
         this.hiddenComponents = angular.copy(this.hiddenComponents);
+
+        this.$timeout(() => {
+            this.updateScroll(target, viewportOffsetTop);
+        }, 400);
+
+    }
+
+    updateScroll(target, viewportOffsetTop) {
+        let newViewportOffsetTop = target.getBoundingClientRect().top;
+        console.log('btn new viewport location: ' + newViewportOffsetTop);
+        let delta = viewportOffsetTop - newViewportOffsetTop;
+        let content = document.getElementById('content');
+        let scrollTop = content.scrollTop;
+        console.log('content scrolltop: ' + scrollTop);
+        content.scrollTop = scrollTop - delta; 
     }
 }
 
@@ -284,6 +305,7 @@ NodeGradingController.$inject = [
     '$filter',
     '$state',
     '$stateParams',
+    '$timeout',
     'AnnotationService',
     'ConfigService',
     'NodeService',

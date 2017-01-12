@@ -1,5 +1,9 @@
 .component--grading {
-    border-top: 1px solid color('gray-light');
+    position: relative;
+
+    &:not(:first-child) {
+        border-top: 1px dashed color('gray-dark');
+    }
     //padding-top: 16px;
 
     .component-container {
@@ -12,7 +16,7 @@
     }
 
     .component {
-        padding: 16px 0;
+        padding: 16px;
     }
 
     .component__actions__info {
@@ -21,6 +25,30 @@
 }
 
 .component--grading__toggle {
-    margin: 6px 0;
-    text-align: left;
+    margin: 0 !important;
+    border-radius: 0;
+    //right: -20px;
+
+    &::first-child {
+        margin-top: 1px !important;
+    }
+    //position: absolute;
+    //background-color: #ffffff;
+    //top: 0;
+    //box-shadow: 1.5px 0px 2px color('text-disabled');
+    //md-icon {
+        //color: color('primary');
+    //}
+
+    //&:hover, &:focus {
+        //background-color: color('gray-lighter') !important;
+    //}
+}
+
+.component--grading__toggle--hidden {
+    position: relative;
+
+    //md-icon {
+        //color: color('text-secondary');
+    //}
 }

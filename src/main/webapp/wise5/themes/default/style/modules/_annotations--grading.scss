@@ -1,19 +1,22 @@
 .annotations--grading {
-    //margin: 8px -16px -16px;
-    //padding: 16px;
-    //border-top: 1px dashed color('gray-light');
-
-    //margin: 12px 4px 0;
-    //border: 1px solid color('gray-light');
-
-    margin: 8px 2px 4px;
-    padding: 12px 8px 8px;
-    border-top: 8px solid color('primary');
+    //margin: 8px 2px 4px;
+    //padding: 12px 8px 8px;
+    border: 1px solid color('primary');
     background-color: lighten(color('primary'), 58%);
+
+    margin: 8px -4px -4px;
+    padding: 12px 8px 0;
+    //border: 1px solid color('primary');
+    //box-shadow: 0 0 3px color('gray') inset;
 
     md-input-container {
         margin-bottom: 0;
     }
+}
+
+.annotations--grading--revision {
+    margin: 8px 0 0;
+    padding: 8px;
 }
 
 .annotations--grading__info {
@@ -46,6 +49,6 @@
 .annotations--grading__auto-comment {
     margin: 12px 4px 16px;
     padding: 0 8px;
-    color: color('text-secondary');
-    border-left: 3px solid color('gray-dark');
+    //color: color('text-secondary');
+    border-left: 3px solid color('text-disabled');
 }
