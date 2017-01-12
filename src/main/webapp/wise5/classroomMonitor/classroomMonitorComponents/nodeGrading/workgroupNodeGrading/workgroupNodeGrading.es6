@@ -161,7 +161,7 @@ const WorkgroupNodeGrading = {
                 </div>
                 <component ng-if='component.showPreviousWorkNodeId != null && component.showPreviousWorkComponentId != null && component.showPreviousWorkNodeId != "" && component.showPreviousWorkComponentId != ""'
                            ng-show="$ctrl.isComponentVisible(component.id)"
-                           class="component-container animate-show"
+                           class="component-container"
                            node-id='{{component.showPreviousWorkNodeId}}'
                            component-id='{{component.showPreviousWorkComponentId}}'
                            component-state='{{$ctrl.getLatestComponentStateByWorkgroupIdAndNodeIdAndComponentId($ctrl.workgroupId, component.showPreviousWorkNodeId, component.showPreviousWorkComponentId)}}'
@@ -170,7 +170,7 @@ const WorkgroupNodeGrading = {
                            mode='grading'></component>
                 <component ng-if='component.showPreviousWorkNodeId == null || component.showPreviousWorkComponentId == null || component.showPreviousWorkNodeId == "" || component.showPreviousWorkComponentId == ""'
                            ng-show="$ctrl.isComponentVisible(component.id)"
-                           class="component-container animate-show"
+                           class="component-container"
                            node-id='{{$ctrl.nodeId}}'
                            component-id='{{component.id}}'
                            component-state='{{$ctrl.getLatestComponentStateByWorkgroupIdAndComponentId($ctrl.workgroupId, component.id)}}'

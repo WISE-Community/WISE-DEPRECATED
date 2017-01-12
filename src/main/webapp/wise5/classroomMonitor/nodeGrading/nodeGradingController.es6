@@ -279,24 +279,20 @@ class NodeGradingController {
     onUpdateHiddenComponents(value, event) {
         let target = event.target;
         let viewportOffsetTop = target.getBoundingClientRect().top;
-        console.log('btn viewport location:' + viewportOffsetTop);
 
         this.hiddenComponents = value;
         this.hiddenComponents = angular.copy(this.hiddenComponents);
 
         this.$timeout(() => {
             this.updateScroll(target, viewportOffsetTop);
-        }, 400);
+        }, 100);
 
     }
 
     updateScroll(target, viewportOffsetTop) {
         let newViewportOffsetTop = target.getBoundingClientRect().top;
-        console.log('btn new viewport location: ' + newViewportOffsetTop);
         let delta = viewportOffsetTop - newViewportOffsetTop;
-        let content = document.getElementById('content');
         let scrollTop = content.scrollTop;
-        console.log('content scrolltop: ' + scrollTop);
         content.scrollTop = scrollTop - delta; 
     }
 }

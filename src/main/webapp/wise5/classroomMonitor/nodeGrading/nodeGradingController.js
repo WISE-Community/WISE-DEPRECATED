@@ -323,24 +323,20 @@ var NodeGradingController = function () {
 
             var target = event.target;
             var viewportOffsetTop = target.getBoundingClientRect().top;
-            console.log('btn viewport location:' + viewportOffsetTop);
 
             this.hiddenComponents = value;
             this.hiddenComponents = angular.copy(this.hiddenComponents);
 
             this.$timeout(function () {
                 _this2.updateScroll(target, viewportOffsetTop);
-            }, 400);
+            }, 100);
         }
     }, {
         key: 'updateScroll',
         value: function updateScroll(target, viewportOffsetTop) {
             var newViewportOffsetTop = target.getBoundingClientRect().top;
-            console.log('btn new viewport location: ' + newViewportOffsetTop);
             var delta = viewportOffsetTop - newViewportOffsetTop;
-            var content = document.getElementById('content');
             var scrollTop = content.scrollTop;
-            console.log('content scrolltop: ' + scrollTop);
             content.scrollTop = scrollTop - delta;
         }
     }]);
