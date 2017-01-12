@@ -15,7 +15,7 @@ TODO: implement me. Allow authors to view assets while authoring node conent. Pe
             ng-show="!projectController.isGroupNode(nodeAuthoringController.node.id)"
             ng-disabled="nodeAuthoringController.undoStack.length == 0"
             translate="undo"></button>
-    <button ng-click="nodeAuthoringController.close()" translate="close"></button>
+    <button ng-click="nodeAuthoringController.close()" translate="CLOSE"></button>
 </div>
 <div><span ng-show="!projectController.isGroupNode(nodeAuthoringController.node.id)" translate="stepTitle"></span>
      <span ng-show="projectController.isGroupNode(nodeAuthoringController.node.id)" translate="activityTitle"></span>
@@ -41,7 +41,7 @@ TODO: implement me. Allow authors to view assets while authoring node conent. Pe
         </option>
     </select>
     <button ng-click='nodeAuthoringController.createComponent()' translate="add"></button>
-    <button ng-click='nodeAuthoringController.showCreateComponent = false' translate="cancel"></button>
+    <button ng-click='nodeAuthoringController.showCreateComponent = false' translate="CANCEL"></button>
 </div>
 
 
@@ -107,7 +107,7 @@ TODO: implement me. Allow authors to view assets while authoring node conent. Pe
                         <md-option ng-repeat="component in projectController.getComponentsByNodeId(transitionCriteria.params.nodeId)"
                                    value="{{ component.id }}">
                         <span layout="row" layout-align="start center">
-                            <span class="node-select__text">ID: {{component.id}} | Type: {{component.type}} | Prompt: {{component.prompt}}</span>
+                            <span class="node-select__text">{{ 'ID' | translate }}: {{component.id}} | {{ 'TYPE' | translate }}: {{component.type}} | {{ 'PROMPT' | translate }}: {{component.prompt}}</span>
                         </span>
                         </md-option>
                     </md-select>
@@ -213,17 +213,17 @@ TODO: implement me. Allow authors to view assets while authoring node conent. Pe
                ng-model-options='{ debounce: 1000 }' size='60' />
     </div>
 
-    <button ng-click='nodeAuthoringController.saveTransitions()' translate="save"></button>
+    <button ng-click='nodeAuthoringController.saveTransitions()' translate="SAVE"></button>
 </div>
 
 <div ng-show='nodeAuthoringController.showConstraints' style='width:700px'>
-    Constraints
+    {{ 'constraints' | translate }}
     <br/>
     <div ng-repeat='constraint in nodeAuthoringController.node.constraints' style='border: 1px solid black'>
-        Constraint: {{constraint.id}}
-        <button ng-click='nodeAuthoringController.deleteConstraint($index)'>Delete Constraint</button>
+        {{ 'constraint' | translate }}: {{constraint.id}}
+        <button ng-click='nodeAuthoringController.deleteConstraint($index)'>{{ 'deleteConstraint' | translate }}</button>
         <br/>
-        Action: <md-select ng-model='constraint.action' 
+        {{ 'action' | translate }}: <md-select ng-model='constraint.action'
                            ng-change='nodeAuthoringController.authoringViewNodeChanged()'
                            class="node-select md-subhead">
             <md-option ng-repeat='action in nodeAuthoringController.constraintActions'
@@ -233,8 +233,8 @@ TODO: implement me. Allow authors to view assets while authoring node conent. Pe
                 </span>
             </md-option>
         </md-select>
-        Removal Conditional
-        <md-select ng-model='constraint.removalConditional' 
+        {{ 'removalConditional' | translate }}
+        <md-select ng-model='constraint.removalConditional'
                    ng-change='nodeAuthoringController.authoringViewNodeChanged()'
                    class="node-select md-subhead">
             <md-option ng-repeat='availableRemovalConditional in nodeAuthoringController.removalConditionals'
@@ -245,9 +245,9 @@ TODO: implement me. Allow authors to view assets while authoring node conent. Pe
             </md-option>
         </md-select>
         <div ng-repeat='criteria in constraint.removalCriteria' style='border: 1px solid red'>
-            Removal Criteria Name: 
-            <md-select ng-model='criteria.name' 
-                       ng-change='nodeAuthoringController.removalCriteriaNameChanged(criteria)' 
+            {{ 'removalCriteriaName' | translate }}:
+            <md-select ng-model='criteria.name'
+                       ng-change='nodeAuthoringController.removalCriteriaNameChanged(criteria)'
                        class="node-select md-subhead">
                 <md-option ng-repeat='availableRemovalCriteria in nodeAuthoringController.removalCriteria'
                            ng-value='availableRemovalCriteria.value'>
@@ -257,14 +257,14 @@ TODO: implement me. Allow authors to view assets while authoring node conent. Pe
                 </md-option>
             </md-select>
             <div ng-repeat='param in nodeAuthoringController.getRemovalCriteriaParamsByName(criteria.name)'>
-                {{param.text}}: 
+                {{param.text}}:
                 <div ng-if='param.value == "nodeId"'>
-                    <md-select id="nodeIdSelectMenu" 
-                               md-theme="default" 
+                    <md-select id="nodeIdSelectMenu"
+                               md-theme="default"
                                class="node-select md-subhead"
                                ng-model="criteria.params.nodeId"
                                ng-change='nodeAuthoringController.authoringViewNodeChanged()'
-                               aria-label="TransitionCriteriaNode" 
+                               aria-label="TransitionCriteriaNode"
                                style="margin-left:30px; width:600px">
                         <md-option ng-repeat="item in projectController.items | toArray | orderBy : 'order'"
                                    value="{{ item.$key }}"
@@ -277,28 +277,28 @@ TODO: implement me. Allow authors to view assets while authoring node conent. Pe
                     </md-select>
                 </div>
                 <div ng-if='param.value == "componentId"'>
-                    <md-select id="componentIdSelectMenu" 
-                               md-theme="default" 
+                    <md-select id="componentIdSelectMenu"
+                               md-theme="default"
                                class="node-select md-subhead"
                                ng-model="criteria.params.componentId"
                                ng-change='nodeAuthoringController.authoringViewNodeChanged()'
-                               aria-label="TransitionCriteriaComponent" 
+                               aria-label="TransitionCriteriaComponent"
                                style="margin-left:30px; width:600px">
                         <md-option ng-repeat="component in projectController.getComponentsByNodeId(criteria.params.nodeId)"
                                    value="{{ component.id }}">
                         <span layout="row" layout-align="start center">
-                            <span class="node-select__text">ID: {{component.id}} | Type: {{component.type}} | Prompt: {{component.prompt}}</span>
+                            <span class="node-select__text">{{ 'ID' | translate }}: {{component.id}} | {{ 'type' | translate }}: {{component.type}} | {{ 'prompt' | translate }}: {{component.prompt}}</span>
                         </span>
                         </md-option>
                     </md-select>
                 </div>
                 <div ng-if='param.value == "fromNodeId"'>
-                    <md-select id="fromNodeIdSelectMenu" 
-                               md-theme="default" 
+                    <md-select id="fromNodeIdSelectMenu"
+                               md-theme="default"
                                class="node-select md-subhead"
                                ng-model="criteria.params.fromNodeId"
                                ng-change='nodeAuthoringController.authoringViewNodeChanged()'
-                               aria-label="TransitionCriteriaNode" 
+                               aria-label="TransitionCriteriaNode"
                                style="margin-left:30px; width:600px">
                         <md-option ng-repeat="item in projectController.items | toArray | orderBy : 'order'"
                                    value="{{ item.$key }}"
@@ -311,12 +311,12 @@ TODO: implement me. Allow authors to view assets while authoring node conent. Pe
                     </md-select>
                 </div>
                 <div ng-if='param.value == "toNodeId"'>
-                    <md-select id="toNodeIdSelectMenu" 
-                               md-theme="default" 
+                    <md-select id="toNodeIdSelectMenu"
+                               md-theme="default"
                                class="node-select md-subhead"
                                ng-model="criteria.params.toNodeId"
                                ng-change='nodeAuthoringController.authoringViewNodeChanged()'
-                               aria-label="TransitionCriteriaNode" 
+                               aria-label="TransitionCriteriaNode"
                                style="margin-left:30px; width:600px">
                         <md-option ng-repeat="item in projectController.items | toArray | orderBy : 'order'"
                                    value="{{ item.$key }}"
@@ -336,12 +336,12 @@ TODO: implement me. Allow authors to view assets while authoring node conent. Pe
                            ng-list=','/>
                 </div>
                 <div ng-if='param.value == "choiceIds" && "radio" == nodeAuthoringController.getChoiceTypeByNodeIdAndComponentId(criteria.params.nodeId, criteria.params.componentId)'>
-                    <md-select id="radioChoiceIdsSelectMenu" 
-                               md-theme="default" 
+                    <md-select id="radioChoiceIdsSelectMenu"
+                               md-theme="default"
                                class="node-select md-subhead"
                                ng-model="criteria.params.choiceIds"
                                ng-change='nodeAuthoringController.authoringViewNodeChanged()'
-                               aria-label="TransitionCriteriaNode" 
+                               aria-label="TransitionCriteriaNode"
                                style="margin-left:30px; width:600px">
                         <md-optgroup>
                             <md-option ng-value="choice.id" ng-repeat="choice in nodeAuthoringController.getChoicesByNodeIdAndComponentId(criteria.params.nodeId, criteria.params.componentId)">{{choice.text}}</md-option>
@@ -349,12 +349,12 @@ TODO: implement me. Allow authors to view assets while authoring node conent. Pe
                     </md-select>
                 </div>
                 <div ng-if='param.value == "choiceIds" && "checkbox" == nodeAuthoringController.getChoiceTypeByNodeIdAndComponentId(criteria.params.nodeId, criteria.params.componentId)'>
-                    <md-select id="checkboxChoiceIdsSelectMenu" 
-                               md-theme="default" 
+                    <md-select id="checkboxChoiceIdsSelectMenu"
+                               md-theme="default"
                                class="node-select md-subhead"
                                ng-model="criteria.params.choiceIds"
                                ng-change='nodeAuthoringController.authoringViewNodeChanged()'
-                               aria-label="TransitionCriteriaNode" 
+                               aria-label="TransitionCriteriaNode"
                                style="margin-left:30px; width:600px"
                                multiple={{nodeAuthoringController.getChoiceTypeByNodeIdAndComponentId(criteria.params.nodeId, criteria.params.componentId)}}>
                         <md-optgroup>
@@ -363,42 +363,42 @@ TODO: implement me. Allow authors to view assets while authoring node conent. Pe
                     </md-select>
                 </div>
             </div>
-            <button ng-click='nodeAuthoringController.deleteRemovalCriteria(constraint, $index)'>Delete Removal Criteria</button>
+            <button ng-click='nodeAuthoringController.deleteRemovalCriteria(constraint, $index)' translate='deleteRemovalCriteria'></button>
         </div>
         <br/>
-        <button ng-click='nodeAuthoringController.addRemovalCriteria(constraint)'>Add Removal Criteria</button>
+        <button ng-click='nodeAuthoringController.addRemovalCriteria(constraint)' translate='addRemovalCriteria'></button>
     </div>
-    <button ng-click='nodeAuthoringController.addConstraint()'>Add Constraint</button>
+    <button ng-click='nodeAuthoringController.addConstraint()' translate='addConstraint'></button>
 </div>
 
 <div ng-show='nodeAuthoringController.showEditButtons'>
     <br/>
-    Show Save Button: 
+    {{ 'SHOWSAVEBUTTON' | translate }}:
     <input type='checkbox'
            ng-model='nodeAuthoringController.node.showSaveButton'
            ng-change='nodeAuthoringController.authoringViewNodeChanged()'/>
     <br/>
-    Show Submit Button:
+    {{ 'SHOWSUBMITBUTTON' | translate }}:
     <input type='checkbox'
            ng-model='nodeAuthoringController.node.showSubmitButton'
            ng-change='nodeAuthoringController.authoringViewNodeChanged()'/>
 </div>
 
 <div ng-show='nodeAuthoringController.showCreateBranch'>
-    Create Branch
+    {{ 'createBranch' | translate }}
     <br/>
-    
+
     <div>
-        Number of Branch Paths
+        {{ 'numberOfBranchPaths' | translate }}
         <input type='number'
                ng-model='nodeAuthoringController.createBranchNumberOfBranches'
                ng-change='nodeAuthoringController.createBranchNumberOfBranchesChanged()'/>
-        <button ng-click='nodeAuthoringController.removeBranchButtonClicked()'>Remove Branch</button>
+        <button ng-click='nodeAuthoringController.removeBranchButtonClicked()' translate='removeBranch'></button>
     </div>
-    
+
     <div ng-show='nodeAuthoringController.createBranchNumberOfBranches > 1'>
         <div>
-            How to choose among paths
+            {{ 'howToChooseAmongPaths' | translate }}
             <md-select md-theme="default"
                        class="node-select md-subhead"
                        style="margin-left:30px; width:600px"
@@ -412,9 +412,9 @@ TODO: implement me. Allow authors to view assets while authoring node conent. Pe
                 </md-option>
             </md-select>
         </div>
-        
+
         <div ng-show='nodeAuthoringController.createBranchCriterion == "score" || nodeAuthoringController.createBranchCriterion == "choiceChosen"'>
-            Choose Step
+            {{ 'chooseStep' | translate }}
             <md-select md-theme="default"
                        class="node-select md-subhead"
                        ng-model="nodeAuthoringController.createBranchNodeId"
@@ -432,7 +432,7 @@ TODO: implement me. Allow authors to view assets while authoring node conent. Pe
         </div>
 
         <div ng-show='nodeAuthoringController.createBranchCriterion == "score" || nodeAuthoringController.createBranchCriterion == "choiceChosen"'>
-            Choose Component
+            {{ 'chooseComponent' | translate }}
             <md-select md-theme="default"
                        class="node-select md-subhead"
                        ng-model="nodeAuthoringController.createBranchComponentId"
@@ -446,42 +446,42 @@ TODO: implement me. Allow authors to view assets while authoring node conent. Pe
                 </md-option>
             </md-select>
         </div>
-        
+
         <div ng-repeat='branch in nodeAuthoringController.createBranchBranches'
              style='border: 1px solid black'>
-            Branch Path {{branch.number}}
-            
+            {{ 'branchPath' | translate }} {{branch.number}}
+
             <div ng-show='nodeAuthoringController.createBranchCriterion == "workgroupId"'>
-                Workgroup Id
+                {{ 'WORKGROUPID' | translate }}
             </div>
-            
+
             <div ng-show='nodeAuthoringController.createBranchCriterion == "score"'>
-                Score
+                {{ 'SCORE' | translate }}
                 <input type='text'
                        ng-model='branch.scores'
                        ng-change='nodeAuthoringController.createBranchScoreChanged(branch)'
                        ng-list=','/>
             </div>
-            
+
             <div ng-show='nodeAuthoringController.createBranchCriterion == "choiceChosen"'>
-                Choice Chosen
+                {{ 'choiceChosen' | translate }}
                 <md-select ng-model='branch.choiceId'>
                     <md-option ng-repeat='choice in branch.choices'
                                value='{{ choice.id }}'>
                        <span layout="row" layout-align="start center">
-                           <span class="node-select__text">ID: {{choice.id}} | Text: {{choice.text}} | Is Correct: {{choice.isCorrect}} | Feedback: {{choice.feedback}}</span>
+                           <span class="node-select__text">{{ 'ID' | translate }}: {{choice.id}} | {{ 'TEXT' | translate }}: {{choice.text}} | {{ 'ISCORRECT' | translate }}: {{choice.isCorrect}} | {{ 'FEEDBACK' | translate }}: {{choice.feedback}}</span>
                        </span>
                     </md-option>
                 </md-select>
             </div>
-            
+
             <div ng-show='nodeAuthoringController.createBranchCriterion == "random"'>
-                Random
+                {{ 'random' | translate }}
             </div>
-            
-            <button ng-click='branch.openStepsChooser = !branch.openStepsChooser'>{{ branch.openStepsChooser ? 'Close' : 'Open'}} Branch {{branch.number}} Steps Chooser</button>
+
+            <button ng-click='branch.openStepsChooser = !branch.openStepsChooser'>{{ branch.openStepsChooser ? ('closeBranchPathXStepsChooser' | translate:'{ branchNumber: ' + branch.number + ' }') : 'openBranchPathXStepsChooser' | translate:'{ branchNumber: ' + branch.number + ' }' }}</button>
             <div ng-show='branch.openStepsChooser'>
-                Choose Steps in Path
+                {{ 'chooseStepsInPath' | translate }}
                 <br/>
                 <div ng-repeat='item in branch.items | toArray | orderBy : "order"'
                      ng-class='{"node-select--group": projectController.isGroupNode(item.$key), "node-select--node": !projectController.isGroupNode(item.$key)}'
@@ -498,11 +498,11 @@ TODO: implement me. Allow authors to view assets while authoring node conent. Pe
                         {{projectController.getNodePositionById(item.$key)}} {{projectController.getNodeTitleByNodeId(item.$key)}}
                     </h6>
                 </div>
-                <button ng-click='branch.openStepsChooser = !branch.openStepsChooser'>{{ !branch.openStepsChooser ? 'Close' : 'Open'}} Branch Path {{branch.number}} Steps Chooser</button>
+                <button ng-click='branch.openStepsChooser = !branch.openStepsChooser'>{{ branch.openStepsChooser ? ('closeBranchPathXStepsChooser' | translate:'{ branchNumber: ' + branch.number + ' }') : 'openBranchPathXStepsChooser' | translate:'{ branchNumber: ' + branch.number + ' }' }}</button>
             </div>
         </div>
         <div>
-            Choose Merge Point
+            {{ 'chooseMergePoint' | translate }}
             <md-select md-theme="default"
                        class="node-select md-subhead"
                        ng-model="nodeAuthoringController.createBranchMergePointNodeId"
@@ -526,7 +526,7 @@ TODO: implement me. Allow authors to view assets while authoring node conent. Pe
         {{component.type}}
         <button ng-click='nodeAuthoringController.moveComponentUp(component.id)' ng-disabled='nodeAuthoringController.components.length <= 1' translate="moveUp"></button>
         <button ng-click='nodeAuthoringController.moveComponentDown(component.id)' ng-disabled='nodeAuthoringController.components.length <= 1' translate="moveDown"></button>
-        <button ng-click='nodeAuthoringController.deleteComponent(component.id)' translate="delete"></button>
+        <button ng-click='nodeAuthoringController.deleteComponent(component.id)' translate="DELETE"></button>
     </div>
     <component node-id='{{nodeAuthoringController.nodeId}}' component-id='{{component.id}}' mode='authoring'></component>
 </div>

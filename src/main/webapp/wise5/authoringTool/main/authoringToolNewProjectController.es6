@@ -2,14 +2,19 @@
 
 class AuthoringToolNewProjectController {
 
-    constructor($state,
+    constructor($filter,
+                $state,
                 $timeout,
                 ConfigService,
                 ProjectService) {
+
+        this.$filter = $filter;
         this.$state = $state;
         this.$timeout = $timeout;
         this.ConfigService = ConfigService;
         this.ProjectService = ProjectService;
+
+        this.$translate = this.$filter('translate');
 
         this.project = this.ProjectService.getNewProjectTemplate();
 
@@ -28,7 +33,7 @@ class AuthoringToolNewProjectController {
 
     registerNewProject() {
         var projectJSONString = angular.toJson(this.project, 4);
-        var commitMessage = "Project created on " + new Date().getTime();
+        var commitMessage = this.$translate('projectCreatedOn') + new Date().getTime();
         this.ProjectService.registerNewProject(projectJSONString, commitMessage).then((projectId) => {
             this.$state.go('root.project', {projectId: projectId});
         });
@@ -40,6 +45,7 @@ class AuthoringToolNewProjectController {
 }
 
 AuthoringToolNewProjectController.$inject = [
+    '$filter',
     '$state',
     '$timeout',
     'ConfigService',

@@ -20,7 +20,7 @@ class AuthoringToolController {
         this.ConfigService = ConfigService;
         this.ProjectService = ProjectService;
         this.SessionService = SessionService;
-        
+
         // the global message that shows up at the top right of the authoring tool
         this.globalMessage = {
             text: '',
@@ -61,7 +61,7 @@ class AuthoringToolController {
                 // do nothing
             });
         });
-        
+
         /*
          * Listen for the savingProject event which means the authoring tool
          * is in the process of saving the project
@@ -70,13 +70,13 @@ class AuthoringToolController {
             // display the message to show that the project is being saved
             this.setGlobalMessage(this.$translate('saving'), null);
         });
-        
+
         /*
          * Listen for the projectSaved event which means the project has just
          * been saved to the server
          */
         this.$scope.$on('projectSaved', () => {
-            
+
             /*
              * Wait half a second before changing the message to 'Saved' so that
              * the 'Saving...' message stays up long enough for the author to
@@ -87,11 +87,11 @@ class AuthoringToolController {
             this.$timeout(() => {
                 // get the current time stamp and set the 'Saved' message
                 var clientSaveTime = new Date().getTime();
-                this.setGlobalMessage(this.$translate('saved'), clientSaveTime);
+                this.setGlobalMessage(this.$translate('SAVED'), clientSaveTime);
             }, 500);
         });
     }
-    
+
     /**
      * Check if the author is on the My Projects page in the Authoring Tool
      * @returns whether the author is on the My Projects page in the Authoring
@@ -99,7 +99,7 @@ class AuthoringToolController {
      */
     isAuthorOnMyProjectsPage() {
         var result = false;
-        
+
         if (this.$location.url() == '/') {
             /*
              * the author is on the My Projects page. the url looks like
@@ -107,10 +107,10 @@ class AuthoringToolController {
              */
             result = true;
         }
-        
+
         return result;
     }
-    
+
     /**
      * Navigate the user to the My Projects page in the Authoring Tool
      */
@@ -118,7 +118,7 @@ class AuthoringToolController {
         // send the user to the My Projects page in the Authoring Tool
         this.$location.url('/author');
     }
-    
+
     /**
      * The user has moved the mouse so
      */
@@ -139,7 +139,7 @@ class AuthoringToolController {
             window.location = teacherHomePageURL;
         })
     }
-    
+
     /**
      * Set the global message at the top right
      * @param message the message to display

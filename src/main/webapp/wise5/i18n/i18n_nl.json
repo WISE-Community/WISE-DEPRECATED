@@ -11,6 +11,7 @@
 	"ENTERPROMPTHERE": "",
 	"FEEDBACK": "",
 	"HEIGHT": "",
+	"ID": "",
 	"IMPORTPREVIOUSWORK": "",
 	"IMPORTPREVIOUSWORKCOMPONENT": "",
 	"IMPORTPREVIOUSWORKSTEP": "",
@@ -20,8 +21,11 @@
 	"LASTSUBMITTED": "",
 	"MAXSCORE": "",
 	"MAXSUBMIT": "",
+	"OPEN": "",
+	"PROJECTID": "",
 	"PROMPT": "",
 	"RESET": "",
+	"RUNID": "",
 	"SAVE": "",
 	"SAVED": "",
 	"SCORE": "",
@@ -36,6 +40,8 @@
 	"SUBMIT": "",
 	"SUBMITTED": "",
 	"TEXT": "",
+	"TYPE": "",
 	"UP": "",
-	"WIDTH": ""
+	"WIDTH": "",
+	"WORKGROUPID": ""
 }

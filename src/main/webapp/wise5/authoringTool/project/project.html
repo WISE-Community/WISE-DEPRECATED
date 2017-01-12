@@ -32,9 +32,9 @@
                 -->
     </div>
     <div id="commitDiv" style="display:none">
-        <label id="editMessageLabel">Edit Message:</label>
+        <label id="editMessageLabel" translate="editMessage"></label>
         <input id="commitMessageInput" type="text" size="50" placeholder="Write a small message here explaining this change. (Optional)" />
-        <button id="saveHistoryButton" ng-click='projectController.saveProject()' translate="save"></button>
+        <button id="saveHistoryButton" ng-click='projectController.saveProject()' translate="SAVE"></button>
     </div>
 <button id="createNewActivityButton" ng-click='projectController.toggleCreateGroup()' translate="createNewActivity"
         ng-disabled="projectController.insertGroupMode || projectController.insertNodeMode"></button>
@@ -46,50 +46,51 @@
         ng-disabled="projectController.getSelectedItems().length == 0 || projectController.insertGroupMode || projectController.insertNodeMode"></button>
 <button id="copyButton" ng-click='projectController.copy()' translate="copy"
         ng-disabled="projectController.getSelectedItems().length == 0 || projectController.insertGroupMode || projectController.insertNodeMode"></button>
-<button id="deleteButton" ng-click='projectController.delete()' translate="delete"
+<button id="deleteButton" ng-click='projectController.delete()' translate="DELETE"
         ng-disabled="projectController.getSelectedItems().length == 0 || projectController.insertGroupMode || projectController.insertNodeMode"></button>
-<button id="saveProjectButton" ng-click='projectController.saveProject()' translate="save"
+<button id="saveProjectButton" ng-click='projectController.saveProject()' translate="SAVE"
         ng-disabled="projectController.insertGroupMode || projectController.insertNodeMode"></button>
-<button id="closeProjectButton" ng-click='projectController.closeProject()' translate="close"
+<button id="closeProjectButton" ng-click='projectController.closeProject()' translate="CLOSE"
         ng-disabled="projectController.insertGroupMode || projectController.insertNodeMode"></button>
 <div ng-show='projectController.showCreateGroup'>
     <label style="display:initial" translate="activityTitle"></label>: <input id="createGroupTitle" ng-model='projectController.createGroupTitle' ng-keyup='$event.keyCode == 13 && projectController.createGroup()' size='50'/>
     <button ng-click='projectController.createGroup()' translate="create"></button>
-    <button ng-click='projectController.hideCreateGroup()'translate="cancel"></button>
+    <button ng-click='projectController.hideCreateGroup()'translate="CANCEL"></button>
 </div>
 <div ng-show='projectController.showCreateNode'>
     <label style="display:initial" translate="stepTitle"></label>: <input id="createNodeTitle" ng-model='projectController.createNodeTitle' ng-keyup='$event.keyCode == 13 && projectController.createNode()' size='50'/>
     <button ng-click='projectController.createNode()' translate="create"></button>
-    <button ng-click='projectController.hideCreateNode()' translate="cancel"></button>
+    <button ng-click='projectController.hideCreateNode()' translate="CANCEL"></button>
 </div>
 <div ng-show='projectController.insertGroupMode || projectController.insertNodeMode'>
-    <span translate="chooseNewLocation"></span> <button ng-click='projectController.cancelMove()' translate="cancel"></button>
+    <span translate="chooseNewLocation"></span> <button ng-click='projectController.cancelMove()' translate="CANCEL"></button>
 </div>
 <div ng-show='projectController.importMode'>
-    <h4>Import Step(s)</h4>
-    Authorable Projects
+    <h4>{{ 'importStepsParens' | translate }}</h4>
+    {{ 'authorableProjects' | translate }}
     <br/>
     <select ng-model='projectController.importAuthorableProjectId'
-            ng-options='project.id as project.id + " " + project.name + (project.runId ? " (Run ID: " + project.runId + ")" : "") for project in projectController.authorableProjectsList'
+            ng-options="project.id as (project.id + ' ' + project.name + (project.runId ? ' (' + ('RUNID' | translate) + ': ' + project.runId + ')': '')) for project in projectController.authorableProjectsList"
             ng-change='projectController.showAuthorableImportProject(projectController.importAuthorableProjectId)'>
-            <option value=''>Select Authorable Project</option>
+            <option value='' translate='selectAuthorableProject'></option>
     </select>
     <br/>
-    Library Projects
+    {{ 'libraryProjects' | translate }}
     <br/>
     <select ng-model='projectController.importLibraryProjectId'
-            ng-options='project.id as project.id + " " + project.title + (project.runId ? " (Run ID: " + project.runId + ")" : "") for project in projectController.libraryProjectsList'
+            ng-options="project.id as (project.id + ' ' + project.title + (project.runId ? ' (' + ('RUNID' | translate) + ': ' + project.runId + ')': '')) for project in projectController.libraryProjectsList.reverse()"
             ng-change='projectController.showLibraryImportProject(projectController.importLibraryProjectId)'>
-            <option value=''>Select Library Project</option>
+            <option value='' translate='selectLibraryProject'></option>
     </select>
     <br/>
     <br/>
     <button ng-if='projectController.importProject != null'
-            ng-click='projectController.importSteps()'>Import Step(s)</button>
+            ng-click='projectController.importSteps()' translate='importStepsParens'></button>
     <br/>
     <h4 style='display:inline'>{{projectController.importProject.metadata.title}}</h4>
     <button ng-if='projectController.importProject != null'
-            ng-click='projectController.previewImportProject()'>Preview</button>
+            ng-click='projectController.previewImportProject()'
+            translate='preview'></button>
     <br/>
     <div ng-repeat='importItem in projectController.importProjectIdToOrder'>
         <input type='checkbox'
@@ -100,12 +101,14 @@
             {{importItem.stepNumber}}: {{importItem.node.title}}
         </h6>
         <button ng-if='importItem.node.type != "group"'
-                ng-click='projectController.previewImportNode(importItem.node)'>Preview</button>
+                ng-click='projectController.previewImportNode(importItem.node)'
+                translate='preview'></button>
     </div>
     <button ng-if='projectController.importProject != null'
-            ng-click='projectController.importSteps()'>Import Step(s)</button>
+            ng-click='projectController.importSteps()'
+            translate='importStepsParens'></button>
     <br/><br/>
-    <button ng-click='projectController.importMode = false' translate='cancel'></button>
+    <button ng-click='projectController.importMode = false' translate='CANCEL'></button>
 </div>
 <div ng-repeat='item in projectController.items | toArray | orderBy : "order"'
      ng-class='{"node-select--group": projectController.isGroupNode(item.$key), "node-select--node": !projectController.isGroupNode(item.$key)}'
@@ -124,9 +127,9 @@
     <h6 ng-if='item.order==0'
         style='display:inline'>
         <label translate="projectTitle"></label>: <input id="projectTitle" size='100' ng-model='projectController.projectTitle' ng-model-options='{ debounce: 500 }' ng-change='projectController.projectTitleChanged()'/>
-        <label ng-if='projectController.projectId != null'>Project ID: {{projectController.projectId}}</label>
-        <label ng-if='projectController.runId == null'>(Run ID: None)</label>
-        <label ng-if='projectController.runId != null'>(Run ID: {{projectController.runId}})</label>
+        <label ng-if='projectController.projectId != null'>{{ 'PROJECTID' | translate }}: {{projectController.projectId}}</label>
+        <label ng-if='projectController.runId == null'>({{ 'RUNID' | translate }}: {{ 'none' | translate }})</label>
+        <label ng-if='projectController.runId != null'>({{ 'RUNID' | translate }}: {{projectController.runId}})</label>
     </h6>
     <button ng-show='(projectController.insertNodeMode && item.order!==0) || (projectController.insertGroupMode && item.order==0)'
             ng-if='projectController.isGroupNode(item.$key)'
@@ -135,10 +138,11 @@
             ng-if='item.order!==0'
             ng-click='projectController.insertAfter(item.$key)' translate="insertAfter"></button>
 </div>
-<h6 style='display:none'>Inactive Activities</h6>
+<h6 style='display:none' translate='inactiveActivities'></h6>
 <button ng-show='projectController.insertGroupMode'
         ng-click='projectController.insertInside("inactiveGroups")'
-        style='display:none'>Insert Inside</button>
+        style='display:none'
+        translate='insertInside'></button>
 <br/>
 <div ng-repeat='inactiveGroup in projectController.inactiveGroups' style='display:none'>
     <input type='checkbox'
@@ -150,9 +154,10 @@
     </h6>
 </div>
 <div ng-show='!projectController.importMode && !projectController.showCreateGroup && !projectController.showCreateNode'>
-<h6 style='display:inline'>Inactive Steps</h6>
+<h6 style='display:inline' translate='inactiveSteps'></h6>
     <button ng-show='projectController.insertNodeMode'
-            ng-click='projectController.insertInside("inactiveNodes")'>Insert Inside</button>
+            ng-click='projectController.insertInside("inactiveNodes")'
+            translate='insertInside'></button>
     <div ng-repeat='inactiveNode in projectController.inactiveNodes'>
         <input type='checkbox'
                ng-model='inactiveNode.checked'/>
@@ -165,10 +170,10 @@
                 ng-click='projectController.insertAfter(inactiveNode.id)' translate="insertAfter"></button>
     </div>
 </div>
-    <div id="projectJSONStringDiv" style="display:none">Project JSON:
+    <div id="projectJSONStringDiv" style="display:none">{{ 'projectJSON' | translate }}:
         <textarea id="project" rows="40" cols="150" ng-model="projectController.projectAsText"></textarea>
     </div>
-    <div id="projectStylesDiv" style="display:none">Project Styles:
+    <div id="projectStylesDiv" style="display:none">{{ 'projectStyles' | translate }}:
         <textarea cols="50" rows="10" ng-model="projectController.project.style" ng-change="projectController.updateProjectAsText()" />
     </div>
 </div>

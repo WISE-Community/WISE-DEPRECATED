@@ -2,12 +2,19 @@
 
 class AuthorNotebookController {
 
-    constructor($state, $stateParams, $scope, ProjectService) {
+    constructor($filter,
+                $state,
+                $stateParams,
+                $scope,
+                ProjectService) {
+
+        this.$filter = $filter;
         this.$state = $state;
         this.$stateParams = $stateParams;
         this.$scope = $scope;
-        this.projectId = this.$stateParams.projectId;
         this.ProjectService = ProjectService;
+        this.$translate = this.$filter('translate');
+        this.projectId = this.$stateParams.projectId;
         this.project = this.ProjectService.project;
 
         if (this.project.notebook == null) {
@@ -33,13 +40,18 @@ class AuthorNotebookController {
     }
 
     exit() {
-        let commitMessage = "Made changes to Notebook.";
+        let commitMessage = this.$translate('madeChangesToNotebook');
 
         this.ProjectService.saveProject(commitMessage);
         this.$state.go('root.project', {projectId: this.projectId});
     }
 }
 
-AuthorNotebookController.$inject = ['$state', '$stateParams', '$scope', 'ProjectService'];
+AuthorNotebookController.$inject = [
+    '$filter',
+    '$state',
+    '$stateParams',
+    '$scope',
+    'ProjectService'];
 
 export default AuthorNotebookController;

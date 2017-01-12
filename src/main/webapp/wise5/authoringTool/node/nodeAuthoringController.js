@@ -23,6 +23,7 @@ var NodeAuthoringController = function () {
         this.ConfigService = ConfigService;
         this.ProjectService = ProjectService;
         this.UtilService = UtilService;
+        this.$translate = this.$filter('translate');
         this.projectId = $stateParams.projectId;
         this.nodeId = $stateParams.nodeId;
         this.showCreateComponent = false;
@@ -38,154 +39,154 @@ var NodeAuthoringController = function () {
         // the available constraint actions
         this.constraintActions = [{
             value: "makeThisNodeNotVisible",
-            text: "Make this node not visible"
+            text: this.$translate('makeThisNodeNotVisible')
         }, {
             value: "makeThisNodeNotVisitable",
-            text: "Make this node not visitable"
+            text: this.$translate('makeThisNodeNotVisitable')
         }, {
             value: "makeAllNodesAfterThisNotVisible",
-            text: "Make all nodes after this not visible"
+            text: this.$translate('makeAllNodesAfterThisNotVisible')
         }, {
             value: "makeAllNodesAfterThisNotVisitable",
-            text: "Make all nodes after this not visitable"
+            text: this.$translate('makeAllNodesAfterThisNotVisitable')
         }, {
             value: "makeAllOtherNodesNotVisible",
-            text: "Make all other nodes not visible"
+            text: this.$translate('makeAllOtherNodesNotVisible')
         }, {
             value: "makeAllOtherNodesNotVisitable",
-            text: "Make all other nodes not visitable"
+            text: this.$translate('makeAllOtherNodesNotVisitable')
         }];
 
         // the available removal conditionals
         this.removalConditionals = [{
             value: "any",
-            text: "Any"
+            text: this.$translate('any')
         }, {
             value: "all",
-            text: "All"
+            text: this.$translate('all')
         }];
 
         // the available removal criteria
         this.removalCriteria = [{
             value: "isCompleted",
-            text: "Is Completed",
+            text: this.$translate('isCompleted'),
             params: [{
                 value: "nodeId",
-                text: "Node Id"
+                text: this.$translate('nodeID')
             }]
         }, {
             value: "score",
-            text: "Score",
+            text: this.$translate('SCORE'),
             params: [{
                 value: "nodeId",
-                text: "Node Id"
+                text: this.$translate('nodeID')
             }, {
                 value: "componentId",
-                text: "Component Id"
+                text: this.$translate('componentID')
             }, {
                 value: "scores",
-                text: "Score(s)"
+                text: this.$translate('scoresParens')
             }]
         }, {
             value: "branchPathTaken",
-            text: "Branch Path Taken",
+            text: this.$translate('branchPathTaken'),
             params: [{
                 value: "fromNodeId",
-                text: "From Node Id"
+                text: this.$translate('fromNodeID')
             }, {
                 value: "toNodeId",
-                text: "To Node Id"
+                text: this.$translate('toNodeID')
             }]
         }, {
             value: "choiceChosen",
-            text: "Choice Chosen",
+            text: this.$translate('choiceChosen'),
             params: [{
                 value: "nodeId",
-                text: "Node Id"
+                text: this.$translate('nodeID')
             }, {
                 value: "componentId",
-                text: "Component Id"
+                text: this.$translate('componentID')
             }, {
                 value: "choiceIds",
-                text: "Choices"
+                text: this.$translate('choices')
             }]
         }, {
             value: "isCorrect",
-            text: "Is Correct",
+            text: this.$translate('ISCORRECT'),
             params: [{
                 value: "nodeId",
-                text: "Node Id"
+                text: this.$translate('nodeID')
             }, {
                 value: "componentId",
-                text: "Component Id"
+                text: this.$translate('componentID')
             }]
         }, {
             value: "isVisible",
-            text: "Is Visible",
+            text: this.$translate('isVisible'),
             params: [{
                 value: "nodeId",
-                text: "Node Id"
+                text: this.$translate('nodeID')
             }]
         }, {
             value: "isVisitable",
-            text: "Is Visitable",
+            text: this.$translate('isVisitable'),
             params: [{
                 value: "nodeId",
-                text: "Node Id"
+                text: this.$translate('nodeID')
             }]
         }, {
             value: "isVisited",
-            text: "Is Visited",
+            text: this.$translate('isVisited'),
             params: [{
                 value: "nodeId",
-                text: "Node Id"
+                text: this.$translate('nodeID')
             }]
         }, {
             value: "isPlanningActivityCompleted",
-            text: "Is Planning Activity Completed"
+            text: this.$translate('isPlanningActivityCompleted')
         }];
 
         // available transitionCriterias
         this.transitionCriterias = [{
             value: "score",
-            text: "Score",
+            text: this.$translate('SCORE'),
             params: [{
                 value: "nodeId",
-                text: "Node Id"
+                text: this.$translate('nodeID')
             }, {
                 value: "componentId",
-                text: "Component Id"
+                text: this.$translate('componentID')
             }, {
                 value: "scores",
-                text: "Score(s)"
+                text: this.$translate('scoresParens')
             }]
         }, {
             value: "choiceChosen",
-            text: "Choice Chosen",
+            text: this.$translate('choiceChosen'),
             params: [{
                 value: "nodeId",
-                text: "Node Id"
+                text: this.$translate('nodeID')
             }, {
                 value: "componentId",
-                text: "Component Id"
+                text: this.$translate('componentID')
             }, {
                 value: "choiceIds",
-                text: "Choices"
+                text: this.$translate('choices')
             }]
         }];
 
         this.branchCriteria = [{
             value: "workgroupId",
-            text: "Workgroup Id"
+            text: this.$translate('WORKGROUPID')
         }, {
             value: "score",
-            text: "Score"
+            text: this.$translate('SCORE')
         }, {
             value: "choiceChosen",
-            text: "Choice Chosen"
+            text: this.$translate('choiceChosen')
         }, {
             value: "random",
-            text: "Random"
+            text: this.$translate('random')
         }];
 
         // the array of component types that can be created
@@ -874,7 +875,7 @@ var NodeAuthoringController = function () {
                     newNodeConstraintId = potentialNewNodeConstraintId;
                 } else {
                     /*
-                     * the constraint id has been used so we will increment the 
+                     * the constraint id has been used so we will increment the
                      * counter to try another contraint id
                      */
                     constraintCounter++;
@@ -1118,16 +1119,16 @@ var NodeAuthoringController = function () {
 
             if (this.createBranchNumberOfBranches == 0) {
                 // the author has set the number of branch paths to 0 which is not allowed
-                alert("Error: You can't have 0 branch paths");
+                alert(this.$translate('errorYouCantHave0BranchPaths'));
 
                 // revert the number of branch paths value
                 this.createBranchNumberOfBranches = this.createBranchBranches.length;
             } else if (this.createBranchNumberOfBranches < this.createBranchBranches.length) {
                 /*
-                 * the author is reducing the number of branches so we want to 
+                 * the author is reducing the number of branches so we want to
                  * confirm they want to do so
                  */
-                var answer = confirm('Are you sure you want to reduce the number of branches to ' + this.createBranchNumberOfBranches + '?');
+                var answer = confirm(this.$translate('areYouSureYouWantToReduceTheNumberOfBranchesToX', { createBranchNumberOfBranches: createBranchNumberOfBranches }));
 
                 if (answer) {
                     // they answered yes
@@ -1172,7 +1173,7 @@ var NodeAuthoringController = function () {
 
                     if (b >= this.createBranchBranches.length) {
                         /*
-                         * we do not have a branch object for this branch number so 
+                         * we do not have a branch object for this branch number so
                          * we will create it
                          */
 
@@ -1749,7 +1750,7 @@ var NodeAuthoringController = function () {
                     this.ProjectService.addBranchPathTakenConstraints(nodeId, fromNodeId, toNodeId);
                 } else {
                     /*
-                     * the item was unchecked so we will change its transition to 
+                     * the item was unchecked so we will change its transition to
                      * point to the node that comes right after it
                      */
                     this.ProjectService.setTransition(nodeId, nodeIdAfter);
@@ -1904,7 +1905,7 @@ var NodeAuthoringController = function () {
         value: function removeBranchButtonClicked() {
 
             // ask the user if they are sure they want to remove the branch
-            var message = 'Are you sure you want to remove the branch?';
+            var message = this.$translate('areYouSureYouWantToRemoveTheBranch');
             var answer = confirm(message);
 
             if (answer) {
@@ -1963,7 +1964,7 @@ var NodeAuthoringController = function () {
 
             /*
              * branch paths are determined by the transitions. since there is now
-             * just one transition, we will create a single branch object to 
+             * just one transition, we will create a single branch object to
              * represent it.
              */
 

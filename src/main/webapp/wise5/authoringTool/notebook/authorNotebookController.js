@@ -9,14 +9,16 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var AuthorNotebookController = function () {
-    function AuthorNotebookController($state, $stateParams, $scope, ProjectService) {
+    function AuthorNotebookController($filter, $state, $stateParams, $scope, ProjectService) {
         _classCallCheck(this, AuthorNotebookController);
 
+        this.$filter = $filter;
         this.$state = $state;
         this.$stateParams = $stateParams;
         this.$scope = $scope;
-        this.projectId = this.$stateParams.projectId;
         this.ProjectService = ProjectService;
+        this.$translate = this.$filter('translate');
+        this.projectId = this.$stateParams.projectId;
         this.project = this.ProjectService.project;
 
         if (this.project.notebook == null) {
@@ -47,7 +49,7 @@ var AuthorNotebookController = function () {
     }, {
         key: 'exit',
         value: function exit() {
-            var commitMessage = "Made changes to Notebook.";
+            var commitMessage = this.$translate('madeChangesToNotebook');
 
             this.ProjectService.saveProject(commitMessage);
             this.$state.go('root.project', { projectId: this.projectId });
@@ -57,7 +59,7 @@ var AuthorNotebookController = function () {
     return AuthorNotebookController;
 }();
 
-AuthorNotebookController.$inject = ['$state', '$stateParams', '$scope', 'ProjectService'];
+AuthorNotebookController.$inject = ['$filter', '$state', '$stateParams', '$scope', 'ProjectService'];
 
 exports.default = AuthorNotebookController;
 //# sourceMappingURL=authorNotebookController.js.map

@@ -11,6 +11,7 @@
     "ENTERPROMPTHERE": "Enter Prompt Here",
     "FEEDBACK": "Feedback",
     "HEIGHT": "Height",
+    "ID": "ID",
     "IMPORTPREVIOUSWORK": "Import Previous Work",
     "IMPORTPREVIOUSWORKCOMPONENT": "Import Previous Work Component",
     "IMPORTPREVIOUSWORKSTEP": "Import Previous Work Step",
@@ -20,8 +21,11 @@
     "LASTSUBMITTED": "Last submitted",
     "MAXSCORE": "Max Score",
     "MAXSUBMIT": "Max Submit",
+    "OPEN": "Open",
+    "PROJECTID": "Project ID",
     "PROMPT": "Prompt",
     "RESET": "Reset",
+    "RUNID": "Run ID",
     "SAVE": "Save",
     "SAVED": "Saved",
     "SCORE": "Score",
@@ -36,6 +40,8 @@
     "SUBMIT": "Submit",
     "SUBMITTED": "Submitted",
     "TEXT": "Text",
+    "TYPE": "Type",
     "UP": "Up",
-    "WIDTH": "Width"
+    "WIDTH": "Width",
+    "WORKGROUPID": "Workgroup ID"
 }

@@ -108,7 +108,7 @@ var ProjectAssetController = function () {
             // Append dialog to document.body
             var assetFullURL = this.ProjectAssetService.getFullAssetItemURL(assetItem);
             var appropriateFileSize = this.$filter('appropriateSizeText')(assetItem.fileSize);
-            var confirm = this.$mdDialog.confirm().parent(angular.element(document.body)).title(assetItem.fileName + " (" + appropriateFileSize + ")").htmlContent("<img src=\"" + assetFullURL + "\" />").ok(this.$translate('close'));
+            var confirm = this.$mdDialog.confirm().parent(angular.element(document.body)).title(assetItem.fileName + " (" + appropriateFileSize + ")").htmlContent("<img src=\"" + assetFullURL + "\" />").ok(this.$translate('CLOSE'));
             this.$mdDialog.show(confirm).then(function () {
                 // Author wants to simply close the dialog
             }, function () {

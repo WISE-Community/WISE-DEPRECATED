@@ -98,7 +98,7 @@ class ProjectAssetController {
             .parent(angular.element(document.body))
             .title(assetItem.fileName + " (" + appropriateFileSize + ")")
             .htmlContent("<img src=\"" + assetFullURL + "\" />")
-            .ok(this.$translate('close'))
+            .ok(this.$translate('CLOSE'))
         this.$mdDialog.show(confirm).then(() => {
             // Author wants to simply close the dialog
         }, () => {

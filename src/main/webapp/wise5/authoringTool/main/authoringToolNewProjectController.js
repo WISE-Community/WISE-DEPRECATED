@@ -9,13 +9,16 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var AuthoringToolNewProjectController = function () {
-    function AuthoringToolNewProjectController($state, $timeout, ConfigService, ProjectService) {
+    function AuthoringToolNewProjectController($filter, $state, $timeout, ConfigService, ProjectService) {
         _classCallCheck(this, AuthoringToolNewProjectController);
 
+        this.$filter = $filter;
         this.$state = $state;
         this.$timeout = $timeout;
         this.ConfigService = ConfigService;
         this.ProjectService = ProjectService;
+
+        this.$translate = this.$filter('translate');
 
         this.project = this.ProjectService.getNewProjectTemplate();
 
@@ -38,7 +41,7 @@ var AuthoringToolNewProjectController = function () {
             var _this = this;
 
             var projectJSONString = angular.toJson(this.project, 4);
-            var commitMessage = "Project created on " + new Date().getTime();
+            var commitMessage = this.$translate('projectCreatedOn') + new Date().getTime();
             this.ProjectService.registerNewProject(projectJSONString, commitMessage).then(function (projectId) {
                 _this.$state.go('root.project', { projectId: projectId });
             });
@@ -53,7 +56,7 @@ var AuthoringToolNewProjectController = function () {
     return AuthoringToolNewProjectController;
 }();
 
-AuthoringToolNewProjectController.$inject = ['$state', '$timeout', 'ConfigService', 'ProjectService'];
+AuthoringToolNewProjectController.$inject = ['$filter', '$state', '$timeout', 'ConfigService', 'ProjectService'];
 
 exports.default = AuthoringToolNewProjectController;
 //# sourceMappingURL=authoringToolNewProjectController.js.map

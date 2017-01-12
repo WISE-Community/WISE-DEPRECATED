@@ -78,7 +78,7 @@ var AuthoringToolController = function () {
             _this.$timeout(function () {
                 // get the current time stamp and set the 'Saved' message
                 var clientSaveTime = new Date().getTime();
-                _this.setGlobalMessage(_this.$translate('saved'), clientSaveTime);
+                _this.setGlobalMessage(_this.$translate('SAVED'), clientSaveTime);
             }, 500);
         });
     }
