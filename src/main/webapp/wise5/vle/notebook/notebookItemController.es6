@@ -75,16 +75,23 @@ class NotebookItemController {
         return this.ProjectService.getThemePath() + '/notebook/notebookItem.html';
     }
 
-    doSelect(ev) {
-        if (this.onSelect) {
-            this.onSelect({$ev: ev, $itemId: this.item.localNotebookItemId});
-        }
-    }
-
     doDelete(ev) {
         if (this.onDelete) {
             ev.stopPropagation();  // don't follow-through on the doSelect callback after this
             this.onDelete({$ev: ev, $itemId: this.item.localNotebookItemId});
+        }
+    }
+
+    doRevive(ev) {
+        if (this.onRevive) {
+            ev.stopPropagation();  // don't follow-through on the doRevive callback after this
+            this.onRevive({$ev: ev, $itemId: this.item.localNotebookItemId});
+        }
+    }
+
+    doSelect(ev) {
+        if (this.onSelect) {
+            this.onSelect({$ev: ev, $itemId: this.item.localNotebookItemId});
         }
     }
 }

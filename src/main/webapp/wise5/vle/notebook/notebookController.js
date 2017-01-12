@@ -72,6 +72,11 @@ var NotebookController = function () {
             this.$rootScope.$broadcast('editNote', { itemId: itemId, ev: ev });
         }
     }, {
+        key: 'reviveItem',
+        value: function reviveItem(ev, itemId) {
+            this.$rootScope.$broadcast('reviveNote', { itemId: itemId, ev: ev });
+        }
+    }, {
         key: 'notebookItemSelected',
         value: function notebookItemSelected($event, notebookItem) {
             this.selectedNotebookItem = notebookItem;

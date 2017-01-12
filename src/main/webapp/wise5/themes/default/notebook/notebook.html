@@ -22,6 +22,18 @@
         <!-- assume only one report for now -->
         <notebookitemreport report-id="notebookController.notebookConfig.itemTypes.report.notes[0].reportId" theme-path="notebookController.themePath" template-url="notebookController.themePath + '/notebook/notebookItemReport.html'"></notebookitemreport>
     </div>
+
+    <div ng-if="notebookController.filter === 'trash'" >
+        <div layout="row" layout-wrap layout-align="start start">
+            <p class="center flex md-heading" ng-if="notebookController.notebook.deletedItems.length < 1" translate="noDeletedNotes"></p>
+            <notebook-item ng-repeat="(localNotebookItemId, deletedNotebookItems) in notebookController.notebook.deletedItems"
+                           ng-if="(notebookController.filter === 'trash') && deletedNotebookItems.last().type == 'note'"
+                           item-id="localNotebookItemId"
+                           on-revive="notebookController.reviveItem($ev, $itemId)"
+                           flex="100" flex-sm="50" flex-md="33" flex-gt-md="33"></notebook-item>
+        </div>
+    </div>
+
 </div>
 
 <!--

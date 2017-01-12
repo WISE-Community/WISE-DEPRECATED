@@ -22,7 +22,7 @@ var ThemeController = function () {
 
         this.$scope = $scope;
         this.$state = $state;
-        this.$translate = $translate;
+        this.$translate = $translate; // TODO: use translate filter
         this.ConfigService = ConfigService;
         this.ProjectService = ProjectService;
         this.StudentDataService = StudentDataService;
@@ -241,8 +241,7 @@ var ThemeController = function () {
 
         // update notebook filter on 'setNotebookFilter' event
         this.$scope.$on('setNotebookFilter', function (event, args) {
-            var filter = args.filter;
-            _this.notebookFilter = filter;
+            _this.notebookFilter = args.filter;
         });
 
         // show edit note dialog on 'editNote' event
@@ -263,7 +262,16 @@ var ThemeController = function () {
         this.$scope.$on('deleteNote', function (event, args) {
             var itemId = args.itemId;
             var ev = args.ev;
-            _this.deleteNote(itemId, ev);
+            var doDelete = true;
+            _this.deleteNote(itemId, ev, doDelete);
+        });
+
+        // show delete note confirm dialog on 'reviveNote' event
+        this.$scope.$on('reviveNote', function (event, args) {
+            var itemId = args.itemId;
+            var ev = args.ev;
+            var doDelete = false;
+            _this.deleteNote(itemId, ev, doDelete);
         });
 
         // a group node has turned on or off planning mode
@@ -471,14 +479,25 @@ var ThemeController = function () {
         value: function deleteNote(itemId, ev) {
             var _this2 = this;
 
-            this.$translate(["deleteNoteConfirmMessage", "delete", "cancel"]).then(function (translations) {
-                var confirm = _this2.$mdDialog.confirm().title(translations.deleteNoteConfirmMessage).ariaLabel('delete note confirmation').targetEvent(ev).ok(translations.delete).cancel(translations.cancel);
+            var doDelete = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
+
+            this.$translate(["cancel", "deleteNoteConfirmMessage", "delete", "revive", "reviveNoteConfirmMessage"]).then(function (translations) {
+                var confirm = null;
+
+                if (doDelete) {
+                    confirm = _this2.$mdDialog.confirm().title(translations.deleteNoteConfirmMessage).ariaLabel('delete note confirmation').targetEvent(ev).ok(translations.delete).cancel(translations.cancel);
+                } else {
+                    confirm = _this2.$mdDialog.confirm().title(translations.reviveNoteConfirmMessage).ariaLabel('revive note confirmation').targetEvent(ev).ok(translations.revive).cancel(translations.cancel);
+                }
 
                 _this2.$mdDialog.show(confirm).then(function () {
                     var noteCopy = angular.copy(_this2.NotebookService.getLatestNotebookItemByLocalNotebookItemId(itemId));
                     noteCopy.id = null; // set to null so we're creating a new notebook item. An edit to a notebook item results in a new entry in the db.
                     noteCopy.content.clientSaveTime = Date.parse(new Date()); // set save timestamp
-                    var clientDeleteTime = Date.parse(new Date()); // set delete timestamp
+                    var clientDeleteTime = null; // if delete timestamp is null, then we are in effect un-deleting this note item
+                    if (doDelete) {
+                        clientDeleteTime = Date.parse(new Date()); // set delete timestamp
+                    }
                     _this2.NotebookService.saveNotebookItem(noteCopy.id, noteCopy.nodeId, noteCopy.localNotebookItemId, noteCopy.type, noteCopy.title, noteCopy.content, noteCopy.content.clientSaveTime, clientDeleteTime);
                 }, function () {
                     // they chose not to delete. Do nothing, the dialog will close.

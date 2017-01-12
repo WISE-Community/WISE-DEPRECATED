@@ -7,6 +7,7 @@
     "automatedFeedbackLabel": "Computer Feedback",
     "cancel": "Cancel",
     "chooseNotebookItemToAdd": "Choose an item to add",
+    "deletedNotes": "Deleted Notes",
     "deleteNoteConfirmMessage": "Are you sure you want to delete this note?",
     "dismiss": "Dismiss",
     "dismissNotificationsTitle": "Clear all alerts",
@@ -24,6 +25,7 @@
     "nextItem": "Next Item",
     "no": "No",
     "noAlerts": "Hi there! You currently have no alerts.",
+    "noDeletedNotes": "You don't have any deleted notes.",
     "noNotes": "Hello! You haven't created any {{term}} yet.",
     "notebook": "Notebook",
     "notificationsTitle": "Alerts",
@@ -36,6 +38,9 @@
     "projectCompletion": "Project Completion",
     "projectItemSelect": "Project item select",
     "projectPlan": "Project Plan",
+    "revive": "Revive",
+    "reviveNote": "Revive Note",
+    "reviveNoteConfirmMessage": "Are you sure you want to revive this note?",
     "save": "Save",
     "saved": "Saved",
     "scoreLabel": "Score:",
@@ -47,5 +52,6 @@
     "teacherFeedbackLabel": "Teacher Feedback",
     "typeYourNoteHere": "Note text...",
     "useThisFile": "Use this file",
+    "viewDeletedNotes": "View deleted notes",
     "yes": "Yes"
 }

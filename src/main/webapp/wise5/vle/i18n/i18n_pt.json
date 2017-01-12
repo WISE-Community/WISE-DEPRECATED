@@ -7,6 +7,7 @@
 	"automatedFeedbackLabel": "",
 	"cancel": "",
 	"chooseNotebookItemToAdd": "",
+	"deletedNotes": "",
 	"deleteNoteConfirmMessage": "",
 	"dismiss": "",
 	"dismissNotificationsTitle": "",
@@ -24,6 +25,7 @@
 	"nextItem": "",
 	"no": "",
 	"noAlerts": "",
+	"noDeletedNotes": "",
 	"noNotes": "",
 	"notebook": "",
 	"notificationsTitle": "",
@@ -36,6 +38,9 @@
 	"projectCompletion": "Conclusão do projeto",
 	"projectItemSelect": "",
 	"projectPlan": "Plano do projeto",
+	"revive": "",
+	"reviveNote": "",
+	"reviveNoteConfirmMessage": "",
 	"save": "",
 	"saved": "",
 	"scoreLabel": "",
@@ -47,5 +52,6 @@
 	"teacherFeedbackLabel": "",
 	"typeYourNoteHere": "Escreva a sua nota aqui",
 	"useThisFile": "",
+	"viewDeletedNotes": "",
 	"yes": ""
 }
