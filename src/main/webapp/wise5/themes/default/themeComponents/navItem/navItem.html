@@ -20,7 +20,7 @@
                                class="nav-item__planning-toggle md-primary"
                                ng-change="navitemCtrl.togglePlanningMode()"
                                ng-disabled="navitemCtrl.StudentDataService.planningMode && !navitemCtrl.planningMode">
-                        Planning Mode: {{ navitemCtrl.planningMode ? 'ON' : 'OFF' }}
+                        {{ 'planningMode' | translate }}: {{ navitemCtrl.planningMode ? ('on' | translate) : ('off' | translate) }}
                     </md-switch>
                 </div>
                 <md-list class="nav-contents__list">
@@ -41,7 +41,7 @@
                     <md-button class="md-accent" aria-label="Add new item to {{ navitemCtrl.nodeTitle }}"
                                ng-click="navitemCtrl.item.ids.length ? navitemCtrl.addPlanningInstance($event, navitemCtrl.item.ids[navitemCtrl.item.ids.length-1]) : navitemCtrl.addPlanningInstance($event, navitemCtrl.nodeId, true)">
                         <md-icon class="md-accent">add_circle</md-icon>
-                        Add item
+                        {{ 'addItem' | translate }}
                     </md-button>
                 </div>
             </md-card-content>

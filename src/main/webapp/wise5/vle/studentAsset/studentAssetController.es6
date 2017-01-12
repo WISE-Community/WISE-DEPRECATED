@@ -1,13 +1,15 @@
 'use strict';
 
 class StudentAssetController {
-    constructor($injector,
+    constructor($filter,
+                $injector,
                 $rootScope,
                 $scope,
                 ConfigService,
                 ProjectService,
                 StudentAssetService) {
 
+        this.$filter = $filter;
         this.$injector = $injector;
         this.$rootScope = $rootScope;
         this.$scope = $scope;
@@ -15,6 +17,7 @@ class StudentAssetController {
         this.mode = this.ConfigService.getMode();
         this.ProjectService = ProjectService;
         this.StudentAssetService = StudentAssetService;
+        this.$translate = this.$filter('translate');
 
         this.studentAssets = this.StudentAssetService.allAssets;
 
@@ -60,7 +63,7 @@ class StudentAssetController {
     };
 
     deleteStudentAsset(studentAsset) {
-        alert('delete student asset not implemented yet');
+        alert(this.$translate('deleteStudentAssetNotImplementedYet'));
         /*
          StudentAssetService.deleteAsset(studentAsset).then(angular.bind(this, function(deletedStudentAsset) {
          // remove studentAsset
@@ -82,6 +85,7 @@ class StudentAssetController {
 }
 
 StudentAssetController.$inject = [
+    "$filter",
     "$injector",
     "$rootScope",
     "$scope",

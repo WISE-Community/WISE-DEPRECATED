@@ -37,7 +37,7 @@ class EditNotebookItemController {
                 localNotebookItemId: this.UtilService.generateKey(10), // Id that is common across the same notebook item revisions.
                 type: "note", // the notebook item type, TODO: once questions are enabled, don't hard code
                 nodeId: currentNodeId, // Id of the node this note was created on
-                title: "Note from " + currentNodeTitle,  // Title of the node this note was created on
+                title: this.$translate('noteFrom') + currentNodeTitle,  // Title of the node this note was created on
                 content: {
                     text: "",
                     attachments: []
@@ -50,7 +50,7 @@ class EditNotebookItemController {
 
         this.notebookConfig = this.NotebookService.getNotebookConfig();
         let label = this.notebookConfig.itemTypes[this.item.type].label.singular;
-        this.title = (this.isEditMode ? (this.itemId ? 'Edit ' : 'Add ') : 'View ') + label;
+        this.title = (this.isEditMode ? (this.itemId ? this.$translate('edit') + ' ' : this.$translate('add') + ' ') : this.$translate('view') + ' ') + label;
         this.saveEnabled = false;
 
         if (this.file != null) {

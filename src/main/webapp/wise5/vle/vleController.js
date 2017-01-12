@@ -9,13 +9,14 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var VLEController = function () {
-    function VLEController($scope, $rootScope, $mdDialog, $mdMenu, $state, $translate, AnnotationService, ConfigService, NotebookService, NotificationService, ProjectService, SessionService, StudentDataService, UtilService) {
+    function VLEController($scope, $rootScope, $filter, $mdDialog, $mdMenu, $state, $translate, AnnotationService, ConfigService, NotebookService, NotificationService, ProjectService, SessionService, StudentDataService, UtilService) {
         var _this = this;
 
         _classCallCheck(this, VLEController);
 
         this.$scope = $scope;
         this.$rootScope = $rootScope;
+        this.$filter = $filter;
         this.$mdDialog = $mdDialog;
         this.$mdMenu = $mdMenu;
         this.$state = $state;
@@ -28,6 +29,8 @@ var VLEController = function () {
         this.SessionService = SessionService;
         this.StudentDataService = StudentDataService;
         this.UtilService = UtilService;
+
+        this.$translate = this.$filter('translate');
 
         this.currentNode = null;
         this.pauseDialog = null;
@@ -491,7 +494,7 @@ var VLEController = function () {
         value: function pauseScreen() {
             // TODO: i18n
             this.pauseDialog = this.$mdDialog.show({
-                template: '<md-dialog aria-label="Screen Paused"><md-dialog-content><div class="md-dialog-content">Your teacher has paused all the screens in the class.</div></md-dialog-content></md-dialog>',
+                template: '<md-dialog aria-label="Screen Paused"><md-dialog-content><div class="md-dialog-content">' + this.$translate('yourTeacherHasPausedAllTheScreensInTheClass') + '</div></md-dialog-content></md-dialog>',
                 escapeToClose: false
             });
         }
@@ -511,7 +514,7 @@ var VLEController = function () {
     return VLEController;
 }();
 
-VLEController.$inject = ['$scope', '$rootScope', '$mdDialog', '$mdMenu', '$state', '$translate', 'AnnotationService', 'ConfigService', 'NotebookService', 'NotificationService', 'ProjectService', 'SessionService', 'StudentDataService', 'UtilService'];
+VLEController.$inject = ['$scope', '$rootScope', '$filter', '$mdDialog', '$mdMenu', '$state', '$translate', 'AnnotationService', 'ConfigService', 'NotebookService', 'NotificationService', 'ProjectService', 'SessionService', 'StudentDataService', 'UtilService'];
 
 exports.default = VLEController;
 //# sourceMappingURL=vleController.js.map

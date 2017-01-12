@@ -1,7 +1,8 @@
 "use strict";
 
 class NavItemController {
-    constructor($rootScope,
+    constructor($filter,
+                $rootScope,
                 $scope,
                 $translate,
                 $element,
@@ -11,6 +12,7 @@ class NavItemController {
                 StudentDataService,
                 $mdDialog) {
 
+        this.$filter = $filter;
         this.$rootScope = $rootScope;
         this.$scope = $scope;
         this.$element = $element;
@@ -20,6 +22,7 @@ class NavItemController {
         this.ProjectService = ProjectService;
         this.StudentDataService = StudentDataService;
         this.$mdDialog = $mdDialog;
+        this.$translate = this.$filter('translate');
         this.autoScroll = require('dom-autoscroller');
 
         this.expanded = false;
@@ -463,9 +466,9 @@ class NavItemController {
         this.$translate(["yes", "no"]).then((translations) => {
             let confirm = this.$mdDialog.confirm()
                 .parent(angular.element(document.body))
-                .title('Are you sure you want to delete this item?')
-                .textContent('Note: Any work you have done on the item will be lost.')
-                .ariaLabel('Delete item from project')
+                .title(this.$translate('areYouSureYouWantToDeleteThisItem'))
+                .textContent(this.$translate('noteAnyWorkYouHaveDoneOnThisItemWillBeLost'))
+                .ariaLabel(this.$translate('deleteItemFromProject'))
                 .targetEvent(event)
                 .ok(translations.yes)
                 .cancel(translations.no);
@@ -685,6 +688,7 @@ class NavItemController {
 }
 
 NavItemController.$inject = [
+    '$filter',
     '$rootScope',
     '$scope',
     '$translate',

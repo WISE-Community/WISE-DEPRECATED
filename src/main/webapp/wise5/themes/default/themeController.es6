@@ -69,9 +69,9 @@ class ThemeController {
 
         // build server disconnect display
         this.connectionLostDisplay = $mdToast.build({
-            template: '<md-toast>\
-                      <span>Server error. Check your internet connection.</span>\
-                      </md-toast>',
+            template: "<md-toast>\
+                      <span>{{ 'serverErrorCheckYourInternetConnection' | translate }}</span>\
+                      </md-toast>",
             hideDelay: 0
         });
         this.connectionLostShown = false;
@@ -86,7 +86,7 @@ class ThemeController {
 
         // alert user when a locked node has been clicked
         this.$scope.$on('nodeClickLocked', (event, args) => {
-            var message = 'Sorry, you cannot view this item yet.';
+            var message = this.$translate('sorryYouCannotViewThisItemYet');
             let nodeId = args.nodeId;
 
             var node = this.ProjectService.getNodeById(nodeId);

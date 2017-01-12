@@ -35,7 +35,7 @@ var EditNotebookItemController = function () {
                 localNotebookItemId: this.UtilService.generateKey(10), // Id that is common across the same notebook item revisions.
                 type: "note", // the notebook item type, TODO: once questions are enabled, don't hard code
                 nodeId: currentNodeId, // Id of the node this note was created on
-                title: "Note from " + currentNodeTitle, // Title of the node this note was created on
+                title: this.$translate('noteFrom') + currentNodeTitle, // Title of the node this note was created on
                 content: {
                     text: "",
                     attachments: []
@@ -48,7 +48,7 @@ var EditNotebookItemController = function () {
 
         this.notebookConfig = this.NotebookService.getNotebookConfig();
         var label = this.notebookConfig.itemTypes[this.item.type].label.singular;
-        this.title = (this.isEditMode ? this.itemId ? 'Edit ' : 'Add ' : 'View ') + label;
+        this.title = (this.isEditMode ? this.itemId ? this.$translate('edit') + ' ' : this.$translate('add') + ' ' : this.$translate('view') + ' ') + label;
         this.saveEnabled = false;
 
         if (this.file != null) {
@@ -62,7 +62,7 @@ var EditNotebookItemController = function () {
     }
 
     _createClass(EditNotebookItemController, [{
-        key: "attachStudentAssetToNote",
+        key: 'attachStudentAssetToNote',
         value: function attachStudentAssetToNote(files) {
             var _this = this;
 
@@ -91,7 +91,7 @@ var EditNotebookItemController = function () {
             }
         }
     }, {
-        key: "getItemNodeId",
+        key: 'getItemNodeId',
         value: function getItemNodeId() {
             if (this.item == null) {
                 return null;
@@ -105,7 +105,7 @@ var EditNotebookItemController = function () {
          */
 
     }, {
-        key: "getItemNodeLink",
+        key: 'getItemNodeLink',
         value: function getItemNodeLink() {
             if (this.item == null) {
                 return "";
@@ -119,7 +119,7 @@ var EditNotebookItemController = function () {
          */
 
     }, {
-        key: "getItemNodePosition",
+        key: 'getItemNodePosition',
         value: function getItemNodePosition() {
             if (this.item == null) {
                 return "";
@@ -128,12 +128,12 @@ var EditNotebookItemController = function () {
             }
         }
     }, {
-        key: "getTemplateUrl",
+        key: 'getTemplateUrl',
         value: function getTemplateUrl() {
             return this.ProjectService.getThemePath() + '/notebook/editNotebookItem.html';
         }
     }, {
-        key: "removeAttachment",
+        key: 'removeAttachment',
         value: function removeAttachment(attachment) {
             if (this.item.content.attachments.indexOf(attachment) != -1) {
                 this.item.content.attachments.splice(this.item.content.attachments.indexOf(attachment), 1);
@@ -141,17 +141,17 @@ var EditNotebookItemController = function () {
             }
         }
     }, {
-        key: "delete",
+        key: 'delete',
         value: function _delete(ev) {
             // TODO: add archiving/deleting notebook items
         }
     }, {
-        key: "cancel",
+        key: 'cancel',
         value: function cancel() {
             this.$mdDialog.hide();
         }
     }, {
-        key: "save",
+        key: 'save',
         value: function save() {
             var _this2 = this;
 
@@ -198,7 +198,7 @@ var EditNotebookItemController = function () {
             });
         }
     }, {
-        key: "update",
+        key: 'update',
         value: function update() {
             // notebook item has changed
             // set whether save button should be enabled
@@ -212,7 +212,7 @@ var EditNotebookItemController = function () {
             this.setShowUpload();
         }
     }, {
-        key: "setShowUpload",
+        key: 'setShowUpload',
         value: function setShowUpload() {
             this.showUpload = this.mode !== 'preview' && this.item.content.attachments && this.item.content.attachments.length < 1;
         }

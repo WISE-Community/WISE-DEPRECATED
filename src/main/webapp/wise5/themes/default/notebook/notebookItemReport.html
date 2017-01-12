@@ -16,7 +16,7 @@
     <div class="component__actions">
         <md-button class="md-primary md-raised" aria-label="Save {{notebookItemReportController.label.link}}"
                    ng-click="notebookItemReportController.saveNotebookReportItem()"
-                   ng-disabled="!notebookItemReportController.dirty">{{ 'save' | translate }}</md-button>
+                   ng-disabled="!notebookItemReportController.dirty">{{ 'SAVE' | translate }}</md-button>
         <span ng-show="notebookItemReportController.saveMessage.text"
               class="component__actions__info md-caption">
               {{notebookItemReportController.saveMessage.text}} <span class="component__actions__more"><md-tooltip md-direction="top">{{ notebookItemReportController.saveMessage.time | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip><span am-time-ago="notebookItemReportController.saveMessage.time"></span></span>

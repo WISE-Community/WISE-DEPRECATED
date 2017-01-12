@@ -1,7 +1,7 @@
 <md-dialog aria-label="Add Item to Project">
     <md-toolbar md-theme="light">
         <div class="md-toolbar-tools">
-            <h2 class="md-title">Add Item to {{ navitemCtrl.getNodeTitle(navitemCtrl.nodeId) }}</h2>
+            <h2 class="md-title">{{ 'addItemTo' | translate }} {{ navitemCtrl.getNodeTitle(navitemCtrl.nodeId) }}</h2>
         </div>
     </md-toolbar>
     <md-dialog-content class="nav-contents--group md-dialog-content">
@@ -24,6 +24,6 @@
         </md-list>
     </md-dialog-content>
     <md-dialog-actions layout="row">
-        <md-button ng-click="close()" class="md-primary">Cancel</md-button>
+        <md-button ng-click="close()" class="md-primary">{{ 'CANCEL' | translate }}</md-button>
     </md-dialog-actions>
 </md-dialog>

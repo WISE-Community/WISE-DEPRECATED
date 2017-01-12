@@ -1,10 +1,12 @@
 class NavigationController {
     constructor($rootScope,
+                $filter,
                 ConfigService,
                 ProjectService,
                 StudentDataService) {
 
         this.$rootScope = $rootScope;
+        this.$filter = $filter;
         this.ConfigService = ConfigService;
         this.ProjectService = ProjectService;
         this.StudentDataService = StudentDataService;
@@ -47,7 +49,7 @@ class NavigationController {
 
             //if R returns an error, alert the error message
             request.fail(() => {
-                alert("Server error: " + request.responseText);
+                alert(this.$translate('serverError') + request.responseText);
             });
         }
     }
@@ -55,6 +57,7 @@ class NavigationController {
 
 NavigationController.$inject = [
     '$rootScope',
+    '$filter',
     'ConfigService',
     'ProjectService',
     'StudentDataService'

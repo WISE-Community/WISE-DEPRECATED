@@ -9,11 +9,12 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var StudentAssetController = function () {
-    function StudentAssetController($injector, $rootScope, $scope, ConfigService, ProjectService, StudentAssetService) {
+    function StudentAssetController($filter, $injector, $rootScope, $scope, ConfigService, ProjectService, StudentAssetService) {
         var _this = this;
 
         _classCallCheck(this, StudentAssetController);
 
+        this.$filter = $filter;
         this.$injector = $injector;
         this.$rootScope = $rootScope;
         this.$scope = $scope;
@@ -21,6 +22,7 @@ var StudentAssetController = function () {
         this.mode = this.ConfigService.getMode();
         this.ProjectService = ProjectService;
         this.StudentAssetService = StudentAssetService;
+        this.$translate = this.$filter('translate');
 
         this.studentAssets = this.StudentAssetService.allAssets;
 
@@ -75,7 +77,7 @@ var StudentAssetController = function () {
     }, {
         key: 'deleteStudentAsset',
         value: function deleteStudentAsset(studentAsset) {
-            alert('delete student asset not implemented yet');
+            alert(this.$translate('deleteStudentAssetNotImplementedYet'));
             /*
              StudentAssetService.deleteAsset(studentAsset).then(angular.bind(this, function(deletedStudentAsset) {
              // remove studentAsset
@@ -100,7 +102,7 @@ var StudentAssetController = function () {
     return StudentAssetController;
 }();
 
-StudentAssetController.$inject = ["$injector", "$rootScope", "$scope", "ConfigService", "ProjectService", "StudentAssetService"];
+StudentAssetController.$inject = ["$filter", "$injector", "$rootScope", "$scope", "ConfigService", "ProjectService", "StudentAssetService"];
 
 exports.default = StudentAssetController;
 //# sourceMappingURL=studentAssetController.js.map

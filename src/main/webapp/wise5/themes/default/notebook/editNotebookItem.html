@@ -16,7 +16,7 @@
             </md-input-container>
             <div class="notebook-item__attachment" ng-repeat="attachment in editNotebookItemController.item.content.attachments">
                 <img ng-src="{{attachment.iconURL}}" class="notebook-item__attachment__content" />
-                <md-button class="md-whiteframe-1dp notebook-item__attachment__delete md-icon-button md-raised" ng-click='editNotebookItemController.removeAttachment(attachment)' title="Remove file">
+                <md-button class="md-whiteframe-1dp notebook-item__attachment__delete md-icon-button md-raised" ng-click='editNotebookItemController.removeAttachment(attachment)' title="{{ 'removeFile' | translate }}">
                     <md-icon class="text-secondary">delete</md-icon>
                 </md-button>
             </div>
@@ -36,10 +36,10 @@
     </md-dialog-content>
     <md-dialog-actions layout="row" layout-align="end center">
         <md-button class="primary" aria-label="Cancel" ng-click="editNotebookItemController.cancel()">
-            Cancel
+            {{ 'CANCEL' | translate }}
         </md-button>
         <md-button class="primary" aria-label="Save" ng-click="editNotebookItemController.save()" ng-disabled="!editNotebookItemController.saveEnabled">
-            Save
+            {{ 'SAVE' | translate }}
         </md-button>
     </md-dialog-actions>
 </md-dialog>

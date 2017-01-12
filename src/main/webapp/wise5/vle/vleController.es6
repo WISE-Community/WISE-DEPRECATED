@@ -3,6 +3,7 @@
 class VLEController {
     constructor($scope,
                 $rootScope,
+                $filter,
                 $mdDialog,
                 $mdMenu,
                 $state,
@@ -18,6 +19,7 @@ class VLEController {
 
         this.$scope = $scope;
         this.$rootScope = $rootScope;
+        this.$filter = $filter;
         this.$mdDialog = $mdDialog;
         this.$mdMenu = $mdMenu;
         this.$state = $state;
@@ -30,6 +32,8 @@ class VLEController {
         this.SessionService = SessionService;
         this.StudentDataService = StudentDataService;
         this.UtilService = UtilService;
+
+        this.$translate = this.$filter('translate');
 
         this.currentNode = null;
         this.pauseDialog = null;
@@ -460,7 +464,7 @@ class VLEController {
     pauseScreen() {
         // TODO: i18n
         this.pauseDialog = this.$mdDialog.show({
-            template: '<md-dialog aria-label="Screen Paused"><md-dialog-content><div class="md-dialog-content">Your teacher has paused all the screens in the class.</div></md-dialog-content></md-dialog>',
+            template: '<md-dialog aria-label="Screen Paused"><md-dialog-content><div class="md-dialog-content">' + this.$translate('yourTeacherHasPausedAllTheScreensInTheClass') + '</div></md-dialog-content></md-dialog>',
             escapeToClose: false
         });
     }
@@ -477,6 +481,7 @@ class VLEController {
 VLEController.$inject = [
     '$scope',
     '$rootScope',
+    '$filter',
     '$mdDialog',
     '$mdMenu',
     '$state',

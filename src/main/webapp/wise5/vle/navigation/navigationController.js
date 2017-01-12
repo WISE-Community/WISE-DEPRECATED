@@ -9,10 +9,11 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var NavigationController = function () {
-    function NavigationController($rootScope, ConfigService, ProjectService, StudentDataService) {
+    function NavigationController($rootScope, $filter, ConfigService, ProjectService, StudentDataService) {
         _classCallCheck(this, NavigationController);
 
         this.$rootScope = $rootScope;
+        this.$filter = $filter;
         this.ConfigService = ConfigService;
         this.ProjectService = ProjectService;
         this.StudentDataService = StudentDataService;
@@ -44,6 +45,8 @@ var NavigationController = function () {
     _createClass(NavigationController, [{
         key: 'showStudentStatistics',
         value: function showStudentStatistics() {
+            var _this = this;
+
             var openCPUURL = this.ConfigService.getOpenCPUURL();
             if (openCPUURL != null) {
                 var allEvents = this.StudentDataService.getEvents();
@@ -59,7 +62,7 @@ var NavigationController = function () {
 
                 //if R returns an error, alert the error message
                 request.fail(function () {
-                    alert("Server error: " + request.responseText);
+                    alert(_this.$translate('serverError') + request.responseText);
                 });
             }
         }
@@ -68,7 +71,7 @@ var NavigationController = function () {
     return NavigationController;
 }();
 
-NavigationController.$inject = ['$rootScope', 'ConfigService', 'ProjectService', 'StudentDataService'];
+NavigationController.$inject = ['$rootScope', '$filter', 'ConfigService', 'ProjectService', 'StudentDataService'];
 
 exports.default = NavigationController;
 //# sourceMappingURL=navigationController.js.map

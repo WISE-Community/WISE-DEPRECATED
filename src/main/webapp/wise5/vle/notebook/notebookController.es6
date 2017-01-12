@@ -45,7 +45,7 @@ class NotebookController {
     }
 
     deleteStudentAsset(studentAsset) {
-        alert('delete student asset from note book not implemented yet');
+        alert(this.$translate('deleteStudentAssetFromNotebookNotImplementedYet'));
         /*
          StudentAssetService.deleteAsset(studentAsset).then(angular.bind(this, function(deletedStudentAsset) {
          // remove studentAsset

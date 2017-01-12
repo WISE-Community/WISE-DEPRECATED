@@ -9,11 +9,12 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var NavItemController = function () {
-    function NavItemController($rootScope, $scope, $translate, $element, dragulaService, NodeService, ProjectService, StudentDataService, $mdDialog) {
+    function NavItemController($filter, $rootScope, $scope, $translate, $element, dragulaService, NodeService, ProjectService, StudentDataService, $mdDialog) {
         var _this = this;
 
         _classCallCheck(this, NavItemController);
 
+        this.$filter = $filter;
         this.$rootScope = $rootScope;
         this.$scope = $scope;
         this.$element = $element;
@@ -23,6 +24,7 @@ var NavItemController = function () {
         this.ProjectService = ProjectService;
         this.StudentDataService = StudentDataService;
         this.$mdDialog = $mdDialog;
+        this.$translate = this.$filter('translate');
         this.autoScroll = require('dom-autoscroller');
 
         this.expanded = false;
@@ -484,7 +486,7 @@ var NavItemController = function () {
             var _this4 = this;
 
             this.$translate(["yes", "no"]).then(function (translations) {
-                var confirm = _this4.$mdDialog.confirm().parent(angular.element(document.body)).title('Are you sure you want to delete this item?').textContent('Note: Any work you have done on the item will be lost.').ariaLabel('Delete item from project').targetEvent(event).ok(translations.yes).cancel(translations.no);
+                var confirm = _this4.$mdDialog.confirm().parent(angular.element(document.body)).title(_this4.$translate('areYouSureYouWantToDeleteThisItem')).textContent(_this4.$translate('noteAnyWorkYouHaveDoneOnThisItemWillBeLost')).ariaLabel(_this4.$translate('deleteItemFromProject')).targetEvent(event).ok(translations.yes).cancel(translations.no);
 
                 _this4.$mdDialog.show(confirm).then(function () {
                     // delete the node from the project
@@ -726,7 +728,7 @@ var NavItemController = function () {
     return NavItemController;
 }();
 
-NavItemController.$inject = ['$rootScope', '$scope', '$translate', '$element', 'dragulaService', 'NodeService', 'ProjectService', 'StudentDataService', '$mdDialog'];
+NavItemController.$inject = ['$filter', '$rootScope', '$scope', '$translate', '$element', 'dragulaService', 'NodeService', 'ProjectService', 'StudentDataService', '$mdDialog'];
 
 exports.default = NavItemController;
 //# sourceMappingURL=navItemController.js.map
