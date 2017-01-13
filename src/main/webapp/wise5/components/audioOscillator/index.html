@@ -31,10 +31,10 @@
             <button ng-click='audioOscillatorController.authoringAddOscillatorTypeClicked()'>{{ 'audioOscillator.add' | translate }}</button>
             <button ng-click='audioOscillatorController.authoringCancelOscillatorTypeClicked()'>{{ 'CANCEL' | translate }}</button>
         </span>
-        <div ng-repeat='oscillatorType in audioOscillatorController.authoringComponentContent.oscillatorTypes track by $index'>
+        <br/>
+        <div ng-repeat='oscillatorType in audioOscillatorController.authoringComponentContent.oscillatorTypes track by $index' style='margin-left:20px'>
             {{oscillatorType}} <button ng-click='audioOscillatorController.authoringDeleteOscillatorTypeClicked($index)'>{{ 'DELETE' | translate }}</button>
         </div>
-        <br/>
         {{ 'audioOscillator.startingFrequency' | translate }}: <input type='number'
                                    ng-model='audioOscillatorController.authoringComponentContent.startingFrequency'
                                    ng-change='audioOscillatorController.authoringViewComponentChanged()'
@@ -119,11 +119,17 @@
                ng-change='audioOscillatorController.authoringViewComponentChanged()'/>
     </div>
     <div ng-if='audioOscillatorController.mode === "authoring"'>
-        <textarea ng-model='audioOscillatorController.authoringComponentContentJSONString'
-                  ng-change='audioOscillatorController.advancedAuthoringViewComponentChanged()'
-                  ng-model-options="{ updateOn: 'blur' }"
-                  rows='10'
-                  cols='100'></textarea>
+        <button ng-click='audioOscillatorController.showAdvancedAuthoring = !audioOscillatorController.showAdvancedAuthoring'>
+                {{ audioOscillatorController.showAdvancedAuthoring ? ('HIDEADVANCEDAUTHORING' | translate) : ('SHOWADVANCEDAUTHORING' | translate) }}
+        </button>
+        <br/>
+        <div ng-show='audioOscillatorController.showAdvancedAuthoring'>
+            <textarea ng-model='audioOscillatorController.authoringComponentContentJSONString'
+                      ng-change='audioOscillatorController.advancedAuthoringViewComponentChanged()'
+                      ng-model-options="{ updateOn: 'blur' }"
+                      rows='20'
+                      cols='100'></textarea>
+        </div>
     </div>
     <div id='prompt' ng-show='audioOscillatorController.isPromptVisible'><compile data='audioOscillatorController.getPrompt()'></compile></div>
     <div class="component-content__actions" layout="row">

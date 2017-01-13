@@ -33,6 +33,9 @@ class HTMLController {
         // whether this part is showing previous work
         this.isShowPreviousWork = false;
 
+        // whether the advanced authoring textarea is displayed
+        this.showAdvancedAuthoring = false;
+
         this.mode = $scope.mode;
 
         // perform setup of this component
@@ -90,7 +93,7 @@ class HTMLController {
                 }
             }
         }
-        
+
         /*
          * Listen for the requestImage event which is fired when something needs
          * an image representation of the student data from a specific
@@ -100,19 +103,19 @@ class HTMLController {
             // get the node id and component id from the args
             var nodeId = args.nodeId;
             var componentId = args.componentId;
-            
+
             // check if the image is being requested from this component
             if (this.nodeId === nodeId && this.componentId === componentId) {
-                
+
                 // obtain the image objects
                 var imageObjects = this.getImageObjects();
-                
+
                 if (imageObjects != null) {
                     var args = {};
                     args.nodeId = nodeId;
                     args.componentId = componentId;
                     args.imageObjects = imageObjects;
-                    
+
                     // fire an event that contains the image objects
                     this.$scope.$emit('requestImageCallback', args);
                 }
@@ -177,17 +180,17 @@ class HTMLController {
      */
     getImageObjects() {
         var imageObjects = [];
-        
+
         // get the image elements in the scope
         let componentId = this.componentId;
         var imageElements = angular.element('#' + componentId + ' img');
-        
+
         if (imageElements != null) {
-            
+
             // loop through all the image elements
             for (var i = 0; i < imageElements.length; i++) {
                 var imageElement = imageElements[i];
-                
+
                 if (imageElement != null) {
 
                     // create an image object
@@ -196,7 +199,7 @@ class HTMLController {
                 }
             }
         }
-        
+
         return imageObjects;
     }
 }

@@ -49,11 +49,17 @@
                ng-change='discussionController.authoringViewComponentChanged()'/>
     </div>
     <div ng-if='discussionController.mode === "authoring"'>
-        <textarea ng-model='discussionController.authoringComponentContentJSONString'
-                  ng-change='discussionController.advancedAuthoringViewComponentChanged()'
-                  ng-model-options="{ updateOn: 'blur' }"
-                  rows='10'
-                  cols='100'></textarea>
+        <button ng-click='discussionController.showAdvancedAuthoring = !discussionController.showAdvancedAuthoring'>
+                {{ openResponseController.showAdvancedAuthoring ? ('HIDEADVANCEDAUTHORING' | translate) : ('SHOWADVANCEDAUTHORING' | translate) }}
+        </button>
+        <br/>
+        <div ng-show='discussionController.showAdvancedAuthoring'>
+            <textarea ng-model='discussionController.authoringComponentContentJSONString'
+                      ng-change='discussionController.advancedAuthoringViewComponentChanged()'
+                      ng-model-options="{ updateOn: 'blur' }"
+                      rows='10'
+                      cols='100'></textarea>
+        </div>
     </div>
     <div class="component__prompt">
         <div class="component__prompt__content"><compile data='discussionController.getPrompt()'></compile></div>

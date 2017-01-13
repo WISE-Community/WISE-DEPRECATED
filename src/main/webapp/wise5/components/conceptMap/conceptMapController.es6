@@ -97,6 +97,9 @@ class ConceptMapController {
         // whether the submit button is disabled
         this.isSubmitButtonDisabled = false;
 
+        // whether the advanced authoring textarea is displayed
+        this.showAdvancedAuthoring = false;
+
         // the latest annotations
         this.latestAnnotations = null;
 

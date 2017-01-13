@@ -142,11 +142,17 @@
                ng-change='labelController.authoringViewComponentChanged()'/>
     </div>
     <div ng-if='labelController.mode === "authoring"'>
-        <textarea ng-model='labelController.authoringComponentContentJSONString'
-                  ng-change='labelController.advancedAuthoringViewComponentChanged()'
-                  ng-model-options="{ updateOn: 'blur' }"
-                  rows='10'
-                  cols='100'></textarea>
+        <button ng-click='labelController.showAdvancedAuthoring = !labelController.showAdvancedAuthoring'>
+                {{ labelController.showAdvancedAuthoring ? ('HIDEADVANCEDAUTHORING' | translate) : ('SHOWADVANCEDAUTHORING' | translate) }}
+        </button>
+        <br/>
+        <div ng-show='labelController.showAdvancedAuthoring'>
+            <textarea ng-model='labelController.authoringComponentContentJSONString'
+                      ng-change='labelController.advancedAuthoringViewComponentChanged()'
+                      ng-model-options="{ updateOn: 'blur' }"
+                      rows='20'
+                      cols='100'></textarea>
+        </div>
     </div>
     <div class="component__prompt">
         <div class="component__prompt__content"><compile data='labelController.getPrompt()'></compile></div>

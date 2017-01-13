@@ -82,6 +82,9 @@ var AudioOscillatorController = function () {
         // whether the submit button is shown or not
         this.isSubmitButtonVisible = false;
 
+        // whether the advanced authoring textarea is displayed
+        this.showAdvancedAuthoring = false;
+
         // the latest annotations
         this.latestAnnotations = null;
 

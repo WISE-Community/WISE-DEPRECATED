@@ -52,6 +52,9 @@ class MultipleChoiceController {
             time: ''
         };
 
+        // whether the advanced authoring textarea is displayed
+        this.showAdvancedAuthoring = false;
+
         // holds the ids of the choices the student has chosen
         this.studentChoices = [];
 

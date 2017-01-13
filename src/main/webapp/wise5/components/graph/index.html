@@ -180,11 +180,17 @@
                        ng-change='graphController.authoringViewComponentChanged()'/>
             </div>
             <div ng-if='graphController.mode === "authoring"'>
-                <textarea ng-model='graphController.authoringComponentContentJSONString'
-                          ng-change='graphController.advancedAuthoringViewComponentChanged()'
-                          ng-model-options="{ updateOn: 'blur' }"
-                          rows='10'
-                          cols='100'></textarea>
+                <button ng-click='graphController.showAdvancedAuthoring = !graphController.showAdvancedAuthoring'>
+                        {{ graphController.showAdvancedAuthoring ? ('HIDEADVANCEDAUTHORING' | translate) : ('SHOWADVANCEDAUTHORING' | translate) }}
+                </button>
+                <br/>
+                <div ng-show='graphController.showAdvancedAuthoring'>
+                    <textarea ng-model='graphController.authoringComponentContentJSONString'
+                              ng-change='graphController.advancedAuthoringViewComponentChanged()'
+                              ng-model-options="{ updateOn: 'blur' }"
+                              rows='30'
+                              cols='100'></textarea>
+                </div>
             </div>
             <div class="component__prompt">
                 <div class="component__prompt__content"><compile data='graphController.getPrompt()'></compile></div>

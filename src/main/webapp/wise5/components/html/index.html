@@ -7,11 +7,19 @@
                   ng-model-options='{ debounce: 1000 }'
                   rows='10'
                   cols='100'></textarea>
-        <textarea ng-model='htmlController.authoringComponentContentJSONString'
-                  ng-change='htmlController.advancedAuthoringViewComponentChanged()'
-                  ng-model-options="{ updateOn: 'blur' }"
-                  rows='10'
-                  cols='100'></textarea>
+        <div ng-if='htmlController.mode === "authoring"'>
+            <button ng-click='htmlController.showAdvancedAuthoring = !htmlController.showAdvancedAuthoring'>
+                    {{ htmlController.showAdvancedAuthoring ? ('HIDEADVANCEDAUTHORING' | translate) : ('SHOWADVANCEDAUTHORING' | translate) }}
+            </button>
+            <br/>
+            <div ng-show='htmlController.showAdvancedAuthoring'>
+                <textarea ng-model='htmlController.authoringComponentContentJSONString'
+                          ng-change='htmlController.advancedAuthoringViewComponentChanged()'
+                          ng-model-options="{ updateOn: 'blur' }"
+                          rows='10'
+                          cols='100'></textarea>
+            </div>
+        </div>
     </div>
     <div><compile data='htmlController.componentContent.html'></compile></div>
 </div>

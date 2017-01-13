@@ -90,6 +90,9 @@ class MatchController {
             time: ''
         };
 
+        // whether the advanced authoring textarea is displayed
+        this.showAdvancedAuthoring = false;
+
         // the latest annotations
         this.latestAnnotations = null;
 

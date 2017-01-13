@@ -60,98 +60,84 @@
                        ng-change='drawController.authoringViewToolClicked()'/>
                     {{ 'draw.selectTool' | translate }}
                 </label>
-                <br/>
                 <label>
                     <input type='checkbox'
                            ng-model='drawController.authoringComponentContent.tools.line'
                            ng-change='drawController.authoringViewToolClicked()'/>
                     {{ 'draw.lineTool' | translate }}
                 </label>
-                <br/>
                 <label>
                     <input type='checkbox'
                            ng-model='drawController.authoringComponentContent.tools.shape'
                            ng-change='drawController.authoringViewToolClicked()'/>
                     {{ 'draw.shapeTool' | translate }}
                 </label>
-                <br/>
                 <label>
                     <input type='checkbox'
                            ng-model='drawController.authoringComponentContent.tools.freeHand'
                            ng-change='drawController.authoringViewToolClicked()'/>
                     {{ 'draw.freeHandTool' | translate }}
                 </label>
-                <br/>
                 <label>
                     <input type='checkbox'
                            ng-model='drawController.authoringComponentContent.tools.text'
                            ng-change='drawController.authoringViewToolClicked()'/>
                     {{ 'draw.textTool' | translate }}
                 </label>
-                <br/>
                 <label>
                     <input type='checkbox'
                            ng-model='drawController.authoringComponentContent.tools.stamp'
                            ng-change='drawController.authoringViewToolClicked()'/>
                     {{ 'draw.stampTool' | translate }}
                 </label>
-                <br/>
                 <label>
                     <input type='checkbox'
                            ng-model='drawController.authoringComponentContent.tools.clone'
                            ng-change='drawController.authoringViewToolClicked()'/>
                     {{ 'draw.cloneTool' | translate }}
                 </label>
-                <br/>
                 <label>
                     <input type='checkbox'
                            ng-model='drawController.authoringComponentContent.tools.strokeColor'
                            ng-change='drawController.authoringViewToolClicked()'/>
                     {{ 'draw.strokeColorTool' | translate }}
                 </label>
-                <br/>
                 <label>
                     <input type='checkbox'
                            ng-model='drawController.authoringComponentContent.tools.fillColor'
                            ng-change='drawController.authoringViewToolClicked()'/>
                     {{ 'draw.fillColorTool' | translate }}
                 </label>
-                <br/>
                 <label>
                     <input type='checkbox'
                            ng-model='drawController.authoringComponentContent.tools.strokeWidth'
                            ng-change='drawController.authoringViewToolClicked()'/>
                     {{ 'draw.strokeWidthTool' | translate }}
                 </label>
-                <br/>
                 <label>
                     <input type='checkbox'
                            ng-model='drawController.authoringComponentContent.tools.sendBack'
                            ng-change='drawController.authoringViewToolClicked()'/>
                     {{ 'draw.sendBackTool' | translate }}
                 </label>
-                <br/>
                 <label>
                     <input type='checkbox'
                            ng-model='drawController.authoringComponentContent.tools.sendForward'
                            ng-change='drawController.authoringViewToolClicked()'/>
                     {{ 'draw.sendForwardTool' | translate }}
                 </label>
-                <br/>
                 <label>
                     <input type='checkbox'
                            ng-model='drawController.authoringComponentContent.tools.undo'
                            ng-change='drawController.authoringViewToolClicked()'/>
                     {{ 'draw.undoTool' | translate }}
                 </label>
-                <br/>
                 <label>
                     <input type='checkbox'
                            ng-model='drawController.authoringComponentContent.tools.redo'
                            ng-change='drawController.authoringViewToolClicked()'/>
                     {{ 'draw.redoTool' | translate }}
                 </label>
-                <br/>
                 <label>
                     <input type='checkbox'
                            ng-model='drawController.authoringComponentContent.tools.delete'
@@ -215,11 +201,17 @@
                ng-change='drawController.authoringViewComponentChanged()'/>
     </div>
     <div ng-if='drawController.mode === "authoring"'>
-        <textarea ng-model='drawController.authoringComponentContentJSONString'
-                  ng-change='drawController.advancedAuthoringViewComponentChanged()'
-                  ng-model-options="{ updateOn: 'blur' }"
-                  rows='10'
-                  cols='100'></textarea>
+        <button ng-click='drawController.showAdvancedAuthoring = !drawController.showAdvancedAuthoring'>
+                {{ drawController.showAdvancedAuthoring ? ('HIDEADVANCEDAUTHORING' | translate) : ('SHOWADVANCEDAUTHORING' | translate) }}
+        </button>
+        <br/>
+        <div ng-show='drawController.showAdvancedAuthoring'>
+            <textarea ng-model='drawController.authoringComponentContentJSONString'
+                      ng-change='drawController.advancedAuthoringViewComponentChanged()'
+                      ng-model-options="{ updateOn: 'blur' }"
+                      rows='30'
+                      cols='100'></textarea>
+        </div>
     </div>
     <div class="component__prompt">
         <div class="component__prompt__content"><compile data='drawController.getPrompt()'></compile></div>

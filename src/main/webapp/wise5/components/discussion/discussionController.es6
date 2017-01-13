@@ -69,6 +69,9 @@ class DiscussionController {
         // whether the student work is for a submit
         this.isSubmit = false;
 
+        // whether the advanced authoring textarea is displayed
+        this.showAdvancedAuthoring = false;
+
         // will hold the class responses
         this.classResponses = [];
 

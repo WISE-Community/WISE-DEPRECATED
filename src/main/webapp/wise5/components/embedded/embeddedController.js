@@ -105,6 +105,9 @@ var EmbeddedController = function () {
         // whether the submit button is shown or not
         this.isSubmitButtonVisible = false;
 
+        // whether the advanced authoring textarea is displayed
+        this.showAdvancedAuthoring = false;
+
         this.messageEventListener = angular.bind(this, function (messageEvent) {
             // handle messages received from iframe
             var messageEventData = messageEvent.data;

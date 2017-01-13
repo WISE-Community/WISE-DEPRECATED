@@ -39,6 +39,9 @@ var HTMLController = function () {
         // whether this part is showing previous work
         this.isShowPreviousWork = false;
 
+        // whether the advanced authoring textarea is displayed
+        this.showAdvancedAuthoring = false;
+
         this.mode = $scope.mode;
 
         // perform setup of this component

@@ -95,6 +95,9 @@ class OpenResponseController {
         // whether the submit button is disabled
         this.isSubmitButtonDisabled = false;
 
+        // whether the advanced authoring textarea is displayed
+        this.showAdvancedAuthoring = false;
+
         // whether we're only showing the student work
         this.onlyShowWork = false;
 

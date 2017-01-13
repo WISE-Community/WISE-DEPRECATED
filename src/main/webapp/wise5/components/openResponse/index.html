@@ -44,7 +44,6 @@
                ng-model-options='{ debounce: 1000 }'
                style='width: 3em'/>
         <br/>
-        <br/>
         {{ 'openResponse.enableCRater' | translate }}:
         <input type='checkbox'
                ng-model='openResponseController.authoringComponentContent.enableCRater'
@@ -263,12 +262,17 @@
                ng-change='openResponseController.authoringViewComponentChanged()'/>
     </div>
     <div ng-if='openResponseController.mode === "authoring"'>
+        <button ng-click='openResponseController.showAdvancedAuthoring = !openResponseController.showAdvancedAuthoring'>
+                {{ openResponseController.showAdvancedAuthoring ? ('HIDEADVANCEDAUTHORING' | translate) : ('SHOWADVANCEDAUTHORING' | translate) }}
+        </button>
         <br/>
-        <textarea ng-model='openResponseController.authoringComponentContentJSONString'
-               ng-change='openResponseController.advancedAuthoringViewComponentChanged()'
-               ng-model-options="{ updateOn: 'blur' }"
-               rows='10'
-               cols='100'></textarea>
+        <div ng-show='openResponseController.showAdvancedAuthoring'>
+            <textarea ng-model='openResponseController.authoringComponentContentJSONString'
+                   ng-change='openResponseController.advancedAuthoringViewComponentChanged()'
+                   ng-model-options="{ updateOn: 'blur' }"
+                   rows='10'
+                   cols='100'></textarea>
+        </div>
     </div>
     <md-input-container class="input-container md-block input-container--open-response input-container--component md-no-float">
         <label class="input-label md-no-float" ng-disabled="openResponseController.isDisabled"

@@ -34,6 +34,9 @@ var OutsideURLController = function () {
         // field that will hold the authoring component content
         this.authoringComponentContent = null;
 
+        // whether the advanced authoring textarea is displayed
+        this.showAdvancedAuthoring = false;
+
         // the url to the web page to display
         this.url = null;
 

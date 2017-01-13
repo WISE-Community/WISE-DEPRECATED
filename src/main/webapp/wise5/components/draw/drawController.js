@@ -71,6 +71,9 @@ var DrawController = function () {
         // whether the submit button is shown or not
         this.isSubmitButtonVisible = false;
 
+        // whether the advanced authoring textarea is displayed
+        this.showAdvancedAuthoring = false;
+
         // whether the reset button is visible or not
         this.isResetButtonVisible = false;
 

@@ -27,6 +27,9 @@ class OutsideURLController {
         // field that will hold the authoring component content
         this.authoringComponentContent = null;
 
+        // whether the advanced authoring textarea is displayed
+        this.showAdvancedAuthoring = false;
+
         // the url to the web page to display
         this.url = null;
 
@@ -101,14 +104,14 @@ class OutsideURLController {
          */
         this.$scope.getComponentState = function() {
             var deferred = this.$q.defer();
-            
+
             /*
              * the student does not have any unsaved changes in this component
              * so we don't need to save a component state for this component.
              * we will immediately resolve the promise here.
              */
             deferred.resolve();
-            
+
             return deferred.promise;
         }.bind(this);
     }

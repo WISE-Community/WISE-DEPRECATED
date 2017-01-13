@@ -95,11 +95,17 @@
                ng-change='multipleChoiceController.authoringViewComponentChanged()'/>
     </div>
     <div ng-if='multipleChoiceController.mode === "authoring"'>
-        <textarea ng-model='multipleChoiceController.authoringComponentContentJSONString'
-                  ng-change='multipleChoiceController.advancedAuthoringViewComponentChanged()'
-                  ng-model-options="{ updateOn: 'blur' }"
-                  rows='10'
-                  cols='100'></textarea>
+        <button ng-click='multipleChoiceController.showAdvancedAuthoring = !multipleChoiceController.showAdvancedAuthoring'>
+                {{ multipleChoiceController.showAdvancedAuthoring ? ('HIDEADVANCEDAUTHORING' | translate) : ('SHOWADVANCEDAUTHORING' | translate) }}
+        </button>
+        <br/>
+        <div ng-show='multipleChoiceController.showAdvancedAuthoring'>
+            <textarea ng-model='multipleChoiceController.authoringComponentContentJSONString'
+                      ng-change='multipleChoiceController.advancedAuthoringViewComponentChanged()'
+                      ng-model-options="{ updateOn: 'blur' }"
+                      rows='30'
+                      cols='100'></textarea>
+        </div>
     </div>
     <md-input-container class="input-container md-block input-container--open-response input-container--component md-no-float"
                         ng-switch on="multipleChoiceController.getChoiceType()">

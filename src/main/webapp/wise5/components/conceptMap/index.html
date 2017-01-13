@@ -242,11 +242,17 @@
                        ng-change='conceptMapController.authoringViewComponentChanged()'/>
             </div>
             <div ng-if='conceptMapController.mode === "authoring"'>
-                <textarea ng-model='conceptMapController.authoringComponentContentJSONString'
-                          ng-change='conceptMapController.advancedAuthoringViewComponentChanged()'
-                          ng-model-options="{ updateOn: 'blur' }"
-                          rows='10'
-                          cols='200'></textarea>
+                <button ng-click='conceptMapController.showAdvancedAuthoring = !conceptMapController.showAdvancedAuthoring'>
+                        {{ conceptMapController.showAdvancedAuthoring ? ('HIDEADVANCEDAUTHORING' | translate) : ('SHOWADVANCEDAUTHORING' | translate) }}
+                </button>
+                <br/>
+                <div ng-show='conceptMapController.showAdvancedAuthoring'>
+                    <textarea ng-model='conceptMapController.authoringComponentContentJSONString'
+                              ng-change='conceptMapController.advancedAuthoringViewComponentChanged()'
+                              ng-model-options="{ updateOn: 'blur' }"
+                              rows='20'
+                              cols='200'></textarea>
+                </div>
             </div>
             <md-input-container class="input-container md-block input-container--open-response input-container--component md-no-float">
                 <label class="input-label md-no-float" ng-disabled="conceptMapController.isDisabled"

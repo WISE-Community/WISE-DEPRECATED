@@ -80,11 +80,17 @@
                    ng-change='embeddedController.authoringViewComponentChanged()'/>
         </div>
         <div ng-if='embeddedController.mode === "authoring"'>
-            <textarea ng-model='embeddedController.authoringComponentContentJSONString'
-                      ng-change='embeddedController.advancedAuthoringViewComponentChanged()'
-                      ng-model-options="{ updateOn: 'blur' }"
-                      rows='10'
-                      cols='100'></textarea>
+            <button ng-click='embeddedController.showAdvancedAuthoring = !embeddedController.showAdvancedAuthoring'>
+                    {{ embeddedController.showAdvancedAuthoring ? ('HIDEADVANCEDAUTHORING' | translate) : ('SHOWADVANCEDAUTHORING' | translate) }}
+            </button>
+            <br/>
+            <div ng-show='embeddedController.showAdvancedAuthoring'>
+                <textarea ng-model='embeddedController.authoringComponentContentJSONString'
+                          ng-change='embeddedController.advancedAuthoringViewComponentChanged()'
+                          ng-model-options="{ updateOn: 'blur' }"
+                          rows='10'
+                          cols='100'></textarea>
+            </div>
         </div>
         <md-button class="md-accent md-primary"
                     ng-click='embeddedController.snipModel($event)'
