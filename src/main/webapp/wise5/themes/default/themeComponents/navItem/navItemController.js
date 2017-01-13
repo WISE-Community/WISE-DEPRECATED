@@ -9,7 +9,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var NavItemController = function () {
-    function NavItemController($filter, $rootScope, $scope, $translate, $element, dragulaService, NodeService, ProjectService, StudentDataService, $mdDialog) {
+    function NavItemController($filter, $rootScope, $scope, $element, dragulaService, NodeService, ProjectService, StudentDataService, $mdDialog) {
         var _this = this;
 
         _classCallCheck(this, NavItemController);
@@ -18,7 +18,6 @@ var NavItemController = function () {
         this.$rootScope = $rootScope;
         this.$scope = $scope;
         this.$element = $element;
-        this.$translate = $translate;
         this.dragulaService = dragulaService;
         this.NodeService = NodeService;
         this.ProjectService = ProjectService;
@@ -228,8 +227,6 @@ var NavItemController = function () {
     }, {
         key: 'itemClicked',
         value: function itemClicked(event) {
-            var _this3 = this;
-
             if (this.isGroup) {
                 this.expanded = !this.expanded;
                 if (this.expanded) {
@@ -242,9 +239,7 @@ var NavItemController = function () {
             } else {
                 if (this.StudentDataService.planningMode) {
                     // Don't allow students to enter planning steps while in planning mode
-                    this.$translate(['itemLocked', 'planningModeStepsUnVisitable', 'ok']).then(function (translations) {
-                        _this3.$mdDialog.show(_this3.$mdDialog.alert().title(translations.itemLocked).textContent(translations.planningModeStepsUnVisitable).ariaLabel(translations.itemLocked).ok(translations.ok).targetEvent(event));
-                    });
+                    this.$mdDialog.show(this.$mdDialog.alert().title(this.$translate('itemLocked')).textContent(this.$translate('planningModeStepsUnVisitable')).ariaLabel(this.$translate('itemLocked')).ok(this.$translate('ok')).targetEvent(event));
                 } else {
                     this.StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(this.nodeId);
                 }
@@ -483,30 +478,28 @@ var NavItemController = function () {
     }, {
         key: 'removePlanningNodeInstance',
         value: function removePlanningNodeInstance(planningNodeInstanceNodeId, event) {
-            var _this4 = this;
+            var _this3 = this;
 
-            this.$translate(["yes", "no"]).then(function (translations) {
-                var confirm = _this4.$mdDialog.confirm().parent(angular.element(document.body)).title(_this4.$translate('areYouSureYouWantToDeleteThisItem')).textContent(_this4.$translate('noteAnyWorkYouHaveDoneOnThisItemWillBeLost')).ariaLabel(_this4.$translate('deleteItemFromProject')).targetEvent(event).ok(translations.yes).cancel(translations.no);
+            var confirm = this.$mdDialog.confirm().parent(angular.element(document.body)).title(this.$translate('areYouSureYouWantToDeleteThisItem')).textContent(this.$translate('noteAnyWorkYouHaveDoneOnThisItemWillBeLost')).ariaLabel(this.$translate('deleteItemFromProject')).targetEvent(event).ok(this.$translate('yes')).cancel(this.$translate('no'));
 
-                _this4.$mdDialog.show(confirm).then(function () {
-                    // delete the node from the project
-                    _this4.ProjectService.deleteNode(planningNodeInstanceNodeId);
+            this.$mdDialog.show(confirm).then(function () {
+                // delete the node from the project
+                _this3.ProjectService.deleteNode(planningNodeInstanceNodeId);
 
-                    // perform any necessary updating
-                    _this4.planningNodeChanged(_this4.parentGroupId);
+                // perform any necessary updating
+                _this3.planningNodeChanged(_this3.parentGroupId);
 
-                    // Save remove planning node event
-                    var componentId = null;
-                    var componentType = null;
-                    var category = "Planning";
-                    var eventName = "planningNodeRemoved";
-                    var eventData = {
-                        nodeIdRemoved: planningNodeInstanceNodeId
-                    };
-                    var eventNodeId = _this4.nodeId;
-                    _this4.StudentDataService.saveVLEEvent(eventNodeId, componentId, componentType, category, eventName, eventData);
-                }, function () {});
-            });
+                // Save remove planning node event
+                var componentId = null;
+                var componentType = null;
+                var category = "Planning";
+                var eventName = "planningNodeRemoved";
+                var eventData = {
+                    nodeIdRemoved: planningNodeInstanceNodeId
+                };
+                var eventNodeId = _this3.nodeId;
+                _this3.StudentDataService.saveVLEEvent(eventNodeId, componentId, componentType, category, eventName, eventData);
+            }, function () {});
         }
 
         /**
@@ -728,7 +721,7 @@ var NavItemController = function () {
     return NavItemController;
 }();
 
-NavItemController.$inject = ['$filter', '$rootScope', '$scope', '$translate', '$element', 'dragulaService', 'NodeService', 'ProjectService', 'StudentDataService', '$mdDialog'];
+NavItemController.$inject = ['$filter', '$rootScope', '$scope', '$element', 'dragulaService', 'NodeService', 'ProjectService', 'StudentDataService', '$mdDialog'];
 
 exports.default = NavItemController;
 //# sourceMappingURL=navItemController.js.map

@@ -6,7 +6,7 @@ class NotebookItemReportController {
                 $mdBottomSheet,
                 $rootScope,
                 $scope,
-                $translate,
+                $filter,
                 ConfigService,
                 NotebookService,
                 ProjectService,
@@ -16,12 +16,14 @@ class NotebookItemReportController {
         this.$mdBottomSheet = $mdBottomSheet;
         this.$rootScope = $rootScope;
         this.$scope = $scope;
-        this.$translate = $translate;
+        this.$filter = $filter;
         this.ConfigService = ConfigService;
         this.NotebookService = NotebookService;
         this.ProjectService = ProjectService;
         this.StudentAssetService = StudentAssetService;
         this.StudentDataService = StudentDataService;
+
+        this.$translate = this.$filter('translate');
         this.mode = this.ConfigService.getMode();
 
         this.dirty = false;
@@ -37,9 +39,7 @@ class NotebookItemReportController {
         if (this.reportItem) {
             let serverSaveTime = this.reportItem.serverSaveTime;
             let clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
-            this.$translate(['lastSaved']).then((translations) => {
-                this.setSaveMessage(translations.lastSaved, clientSaveTime);
-            });
+            this.setSaveMessage(this.$translate('lastSaved'), clientSaveTime);
         } else {
             // Student doesn't have work for this report yet, so we'll use the template.
             this.reportItem = this.NotebookService.getTemplateReportItemByReportId(this.reportId);
@@ -222,15 +222,13 @@ class NotebookItemReportController {
             this.reportItem.type, this.reportItem.title, this.reportItem.content, this.reportItem.content.clientSaveTime)
             .then((result) => {
                 if (result) {
-                    this.$translate(['saved']).then((translations) => {
-                        this.dirty = false;
-                        this.reportItem.id = result.id; // set the reportNotebookItemId to the newly-incremented id so that future saves during this visit will be an update instead of an insert.
-                        let serverSaveTime = result.serverSaveTime;
-                        let clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
+                    this.dirty = false;
+                    this.reportItem.id = result.id; // set the reportNotebookItemId to the newly-incremented id so that future saves during this visit will be an update instead of an insert.
+                    let serverSaveTime = result.serverSaveTime;
+                    let clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
 
-                        // set save message
-                        this.setSaveMessage(translations.saved, clientSaveTime);
-                    });
+                    // set save message
+                    this.setSaveMessage(this.$translate('saved'), clientSaveTime);
                 }
             });
     }
@@ -260,7 +258,7 @@ NotebookItemReportController.$inject = [
     '$mdBottomSheet',
     "$rootScope",
     "$scope",
-    "$translate",
+    "$filter",
     "ConfigService",
     "NotebookService",
     "ProjectService",

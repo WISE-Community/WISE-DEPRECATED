@@ -5,7 +5,7 @@ import EditNotebookItemController from './notebook/editNotebookItemController';
 class ThemeController {
     constructor($scope,
                 $state,
-                $translate,
+                $filter,
                 ConfigService,
                 ProjectService,
                 StudentDataService,
@@ -19,7 +19,7 @@ class ThemeController {
 
         this.$scope = $scope;
         this.$state = $state;
-        this.$translate = $translate;  // TODO: use translate filter
+        this.$filter = $filter;
         this.ConfigService = ConfigService;
         this.ProjectService = ProjectService;
         this.StudentDataService = StudentDataService;
@@ -30,6 +30,8 @@ class ThemeController {
         this.$mdMedia = $mdMedia;
         this.$mdToast = $mdToast;
         this.$mdComponentRegistry = $mdComponentRegistry;
+
+        this.$translate = this.$filter('translate');
 
         // TODO: set these variables dynamically from theme settings
         this.layoutView = 'list'; // 'list' or 'card'
@@ -119,60 +121,50 @@ class ThemeController {
                 }
             }
 
-            this.$translate(['itemLocked', 'ok']).then((translations) => {
-                this.$mdDialog.show(
-                    this.$mdDialog.alert()
-                        .parent(angular.element(document.body))
-                        .title(translations.itemLocked)
-                        .htmlContent(message)
-                        .ariaLabel(translations.itemLocked)
-                        .ok(translations.ok)
-                        .targetEvent(event)
-                );
-            })
+            this.$mdDialog.show(
+                this.$mdDialog.alert()
+                    .parent(angular.element(document.body))
+                    .title(this.$translate('itemLocked'))
+                    .htmlContent(message)
+                    .ariaLabel(this.$translate('itemLocked'))
+                    .ok(this.$translate('ok'))
+                    .targetEvent(event)
+            );
         });
 
         // alert user when inactive for a long time
         this.$scope.$on('showSessionWarning', (ev) => {
-            this.$translate(["sessionTimeout", "autoLogoutMessage", "yes", "no"]).then((translations) => {
+            let alert = this.$mdDialog.confirm()
+                .parent(angular.element(document.body))
+                .title(this.$translate('sessionTimeout'))
+                .textContent(this.$translate('autoLogoutMessage'))
+                .ariaLabel(this.$translate('sessionTimeout'))
+                .targetEvent(ev)
+                .ok(this.$translate('yes'))
+                .cancel(this.$translate('no'));
 
-                let alert = this.$mdDialog.confirm()
-                    .parent(angular.element(document.body))
-                    .title(translations.sessionTimeout)
-                    .textContent(translations.autoLogoutMessage)
-                    .ariaLabel(translations.sessionTimeout)
-                    .targetEvent(ev)
-                    .ok(translations.yes)
-                    .cancel(translations.no);
-
-                this.$mdDialog.show(alert).then(() => {
-                    this.SessionService.renewSession();
-                    alert = undefined;
-                }, () => {
-                    this.SessionService.forceLogOut();
-                });
-
+            this.$mdDialog.show(alert).then(() => {
+                this.SessionService.renewSession();
+                alert = undefined;
+            }, () => {
+                this.SessionService.forceLogOut();
             });
         });
 
         // alert user when inactive for a long time
         this.$scope.$on('showRequestLogout', (ev) => {
-            this.$translate(["serverUpdate", "serverUpdateRequestLogoutMessage", "ok"]).then((translations) => {
+            let alert = this.$mdDialog.confirm()
+                .parent(angular.element(document.body))
+                .title(this.$translate('serverUpdate'))
+                .textContent(this.$translate('serverUpdateRequestLogoutMessage'))
+                .ariaLabel(this.$translate('serverUpdate'))
+                .targetEvent(ev)
+                .ok(this.$translate('ok'));
 
-                let alert = this.$mdDialog.confirm()
-                    .parent(angular.element(document.body))
-                    .title(translations.serverUpdate)
-                    .textContent(translations.serverUpdateRequestLogoutMessage)
-                    .ariaLabel(translations.serverUpdate)
-                    .targetEvent(ev)
-                    .ok(translations.ok);
-
-                this.$mdDialog.show(alert).then(() => {
-                    // do nothing
-                }, () => {
-                    // do nothing
-                });
-
+            this.$mdDialog.show(alert).then(() => {
+                // do nothing
+            }, () => {
+                // do nothing
             });
         });
 
@@ -305,87 +297,86 @@ class ThemeController {
             let ev = args.event;
             let notificationDismissDialogTemplateUrl = this.themePath + '/templates/notificationDismissDialog.html';
 
-            this.$translate(["dismissNotificationDismissCodeTitle", "dismissNotificationDismissCodeMessage", "ok", "cancel"]).then((translations) => {
-                let dismissCodePrompt = {
-                    parent: angular.element(document.body),
-                    targetEvent: ev,
-                    templateUrl: notificationDismissDialogTemplateUrl,
-                    locals: {
-                        notification: notification
-                    },
-                    controller: DismissCodeDialogController
+            let dismissCodePrompt = {
+                parent: angular.element(document.body),
+                targetEvent: ev,
+                templateUrl: notificationDismissDialogTemplateUrl,
+                locals: {
+                    notification: notification
+                },
+                controller: DismissCodeDialogController
+            };
+            DismissCodeDialogController.$inject = ['$scope', '$mdDialog', '$filter', 'NotificationService', 'ProjectService', 'StudentDataService', 'notification'];
+
+            function DismissCodeDialogController($scope, $mdDialog, $filter, NotificationService, ProjectService, StudentDataService, notification) {
+
+                $scope.$translate = $filter('translate');
+
+                $scope.input = {
+                    dismissCode: ""
                 };
-                DismissCodeDialogController.$inject = ['$scope', '$mdDialog', '$translate', 'NotificationService', 'ProjectService', 'StudentDataService', 'notification'];
-
-                function DismissCodeDialogController($scope, $mdDialog, $translate, NotificationService, ProjectService, StudentDataService, notification) {
-                    $scope.input = {
-                        dismissCode: ""
-                    };
-                    $scope.message = "";
-                    $scope.notification = notification;
-                    $scope.hasDismissCode = false;
-                    if (notification.data) {
-                        if (notification.data.dismissCode) {
-                            $scope.hasDismissCode = true;
-                        }
+                $scope.message = "";
+                $scope.notification = notification;
+                $scope.hasDismissCode = false;
+                if (notification.data) {
+                    if (notification.data.dismissCode) {
+                        $scope.hasDismissCode = true;
                     }
-                    $scope.nodePositionAndTitle = ProjectService.getNodePositionAndTitleByNodeId(notification.nodeId);
+                }
+                $scope.nodePositionAndTitle = ProjectService.getNodePositionAndTitleByNodeId(notification.nodeId);
 
-                    $scope.checkDismissCode = function() {
-                        if (!$scope.hasDismissCode || ($scope.input.dismissCode == notification.data.dismissCode)) {
-                            NotificationService.dismissNotification(notification);
-                            $mdDialog.hide();
-                            // log currentAmbientNotificationDimissed event
-                            var nodeId = null;
-                            var componentId = null;
-                            var componentType = null;
-                            var category = "Notification";
-                            var event = "currentAmbientNotificationDimissedWithCode";
-                            var eventData = {};
-                            StudentDataService.saveVLEEvent(nodeId, componentId, componentType, category, event, eventData);
-                        } else {
-                            $translate(["dismissNotificationInvalidDismissCode"]).then((translations) => {
-                                $scope.errorMessage = translations.dismissNotificationInvalidDismissCode;
-                            });
-                        }
-                    };
-                    $scope.visitNode = function() {
-                        if (!$scope.hasDismissCode) {
-                            // only dismiss notifications that don't require a dismiss code, but still allow them to move to the node
-                            NotificationService.dismissNotification(null, $scope.notification);
-                        }
-
-                        let goToNodeId = $scope.notification.nodeId;
-                        if (goToNodeId != null) {
-                            StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(goToNodeId);
-                        }
-                    };
-
-                    $scope.closeDialog = function() {
+                $scope.checkDismissCode = function() {
+                    if (!$scope.hasDismissCode || ($scope.input.dismissCode == notification.data.dismissCode)) {
+                        NotificationService.dismissNotification(notification);
                         $mdDialog.hide();
-
-                        // log currentAmbientNotificationWindowClosed event
+                        // log currentAmbientNotificationDimissed event
                         var nodeId = null;
                         var componentId = null;
                         var componentType = null;
                         var category = "Notification";
-                        var event = "currentAmbientNotificationWindowClosed";
+                        var event = "currentAmbientNotificationDimissedWithCode";
                         var eventData = {};
                         StudentDataService.saveVLEEvent(nodeId, componentId, componentType, category, event, eventData);
+                    } else {
+                        $scope.errorMessage = $scope.$translate('dismissNotificationInvalidDismissCode');
                     }
+                };
+                $scope.visitNode = function() {
+                    if (!$scope.hasDismissCode) {
+                        // only dismiss notifications that don't require a dismiss code, but still allow them to move to the node
+                        NotificationService.dismissNotification(null, $scope.notification);
+                    }
+
+                    let goToNodeId = $scope.notification.nodeId;
+                    if (goToNodeId != null) {
+                        StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(goToNodeId);
+                    }
+                };
+
+                $scope.closeDialog = function() {
+                    $mdDialog.hide();
+
+                    // log currentAmbientNotificationWindowClosed event
+                    var nodeId = null;
+                    var componentId = null;
+                    var componentType = null;
+                    var category = "Notification";
+                    var event = "currentAmbientNotificationWindowClosed";
+                    var eventData = {};
+                    StudentDataService.saveVLEEvent(nodeId, componentId, componentType, category, event, eventData);
                 }
+            }
 
-                this.$mdDialog.show(dismissCodePrompt);
+            this.$mdDialog.show(dismissCodePrompt);
 
-                // log currentAmbientNotificationWindowOpened event
-                var nodeId = null;
-                var componentId = null;
-                var componentType = null;
-                var category = "Notification";
-                var event = "currentAmbientNotificationWindowOpened";
-                var eventData = {};
-                this.StudentDataService.saveVLEEvent(nodeId, componentId, componentType, category, event, eventData);
-            });
+            // log currentAmbientNotificationWindowOpened event
+            var nodeId = null;
+            var componentId = null;
+            var componentType = null;
+            var category = "Notification";
+            var event = "currentAmbientNotificationWindowOpened";
+            var eventData = {};
+            this.StudentDataService.saveVLEEvent(nodeId, componentId, componentType, category, event, eventData);
         });
 
         // capture notebook open/close events
@@ -477,38 +468,36 @@ class ThemeController {
      * Delete the note specified by the itemId.
      */
     deleteNote(itemId, ev, doDelete = true) {
-        this.$translate(["cancel", "deleteNoteConfirmMessage", "delete", "revive", "reviveNoteConfirmMessage"]).then((translations) => {
-            let confirm = null;
+        let confirm = null;
 
+        if (doDelete) {
+            confirm = this.$mdDialog.confirm()
+                .title(this.$translate('deleteNoteConfirmMessage'))
+                .ariaLabel('delete note confirmation')
+                .targetEvent(ev)
+                .ok(this.$translate('delete'))
+                .cancel(this.$translate('cancel'));
+        } else {
+            confirm = this.$mdDialog.confirm()
+                .title(this.$translate('reviveNoteConfirmMessage'))
+                .ariaLabel('revive note confirmation')
+                .targetEvent(ev)
+                .ok(this.$translate('revive'))
+                .cancel(this.$translate('cancel'));
+        }
+
+        this.$mdDialog.show(confirm).then(() => {
+            let noteCopy = angular.copy(this.NotebookService.getLatestNotebookItemByLocalNotebookItemId(itemId));
+            noteCopy.id = null; // set to null so we're creating a new notebook item. An edit to a notebook item results in a new entry in the db.
+            noteCopy.content.clientSaveTime = Date.parse(new Date());  // set save timestamp
+            let clientDeleteTime = null;  // if delete timestamp is null, then we are in effect un-deleting this note item
             if (doDelete) {
-                confirm = this.$mdDialog.confirm()
-                    .title(translations.deleteNoteConfirmMessage)
-                    .ariaLabel('delete note confirmation')
-                    .targetEvent(ev)
-                    .ok(translations.delete)
-                    .cancel(translations.cancel);
-            } else {
-                confirm = this.$mdDialog.confirm()
-                    .title(translations.reviveNoteConfirmMessage)
-                    .ariaLabel('revive note confirmation')
-                    .targetEvent(ev)
-                    .ok(translations.revive)
-                    .cancel(translations.cancel);
+                clientDeleteTime = Date.parse(new Date());  // set delete timestamp
             }
-
-            this.$mdDialog.show(confirm).then(() => {
-                let noteCopy = angular.copy(this.NotebookService.getLatestNotebookItemByLocalNotebookItemId(itemId));
-                noteCopy.id = null; // set to null so we're creating a new notebook item. An edit to a notebook item results in a new entry in the db.
-                noteCopy.content.clientSaveTime = Date.parse(new Date());  // set save timestamp
-                let clientDeleteTime = null;  // if delete timestamp is null, then we are in effect un-deleting this note item
-                if (doDelete) {
-                    clientDeleteTime = Date.parse(new Date());  // set delete timestamp
-                }
-                this.NotebookService.saveNotebookItem(noteCopy.id, noteCopy.nodeId, noteCopy.localNotebookItemId,
-                    noteCopy.type, noteCopy.title, noteCopy.content, noteCopy.content.clientSaveTime, clientDeleteTime);
-            }, () => {
-                // they chose not to delete. Do nothing, the dialog will close.
-            });
+            this.NotebookService.saveNotebookItem(noteCopy.id, noteCopy.nodeId, noteCopy.localNotebookItemId,
+                noteCopy.type, noteCopy.title, noteCopy.content, noteCopy.content.clientSaveTime, clientDeleteTime);
+        }, () => {
+            // they chose not to delete. Do nothing, the dialog will close.
         });
     }
 
@@ -550,7 +539,7 @@ class ThemeController {
 ThemeController.$inject = [
     '$scope',
     '$state',
-    '$translate',
+    '$filter',
     'ConfigService',
     'ProjectService',
     'StudentDataService',

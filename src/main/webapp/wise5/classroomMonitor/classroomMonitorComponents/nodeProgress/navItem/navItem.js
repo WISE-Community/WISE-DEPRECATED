@@ -9,7 +9,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var NavItemController = function () {
-    function NavItemController($element, $filter, $mdDialog, $rootScope, $scope, $state, $translate, ConfigService, NodeService, NotificationService, ProjectService, StudentDataService, StudentStatusService, TeacherDataService, TeacherWebSocketService) {
+    function NavItemController($element, $filter, $mdDialog, $rootScope, $scope, $state, ConfigService, NodeService, NotificationService, ProjectService, StudentDataService, StudentStatusService, TeacherDataService, TeacherWebSocketService) {
         var _this = this;
 
         _classCallCheck(this, NavItemController);
@@ -20,7 +20,6 @@ var NavItemController = function () {
         this.$rootScope = $rootScope;
         this.$scope = $scope;
         this.$state = $state;
-        this.$translate = $translate;
         this.ConfigService = ConfigService;
         this.NodeService = NodeService;
         this.NotificationService = NotificationService;
@@ -29,6 +28,8 @@ var NavItemController = function () {
         this.StudentStatusService = StudentStatusService;
         this.TeacherDataService = TeacherDataService;
         this.TeacherWebSocketService = TeacherWebSocketService;
+
+        this.$translate = this.$filter('translate');
 
         this.expanded = false;
 
@@ -436,7 +437,7 @@ var NavItemController = function () {
     return NavItemController;
 }();
 
-NavItemController.$inject = ['$element', '$filter', '$mdDialog', '$rootScope', '$scope', '$state', '$translate', 'ConfigService', 'NodeService', 'NotificationService', 'ProjectService', 'StudentDataService', 'StudentStatusService', 'TeacherDataService', 'TeacherWebSocketService'];
+NavItemController.$inject = ['$element', '$filter', '$mdDialog', '$rootScope', '$scope', '$state', 'ConfigService', 'NodeService', 'NotificationService', 'ProjectService', 'StudentDataService', 'StudentStatusService', 'TeacherDataService', 'TeacherWebSocketService'];
 
 var NavItem = {
     bindings: {

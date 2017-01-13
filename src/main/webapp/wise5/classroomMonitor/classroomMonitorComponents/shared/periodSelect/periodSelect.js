@@ -9,13 +9,12 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var PeriodSelectController = function () {
-    function PeriodSelectController($scope, $translate, TeacherDataService) {
+    function PeriodSelectController($scope, TeacherDataService) {
         var _this = this;
 
         _classCallCheck(this, PeriodSelectController);
 
         this.$scope = $scope;
-        this.$translate = $translate;
         this.TeacherDataService = TeacherDataService;
 
         this.currentPeriod = null;
@@ -86,7 +85,7 @@ var PeriodSelectController = function () {
     return PeriodSelectController;
 }();
 
-PeriodSelectController.$inject = ['$scope', '$translate', 'TeacherDataService'];
+PeriodSelectController.$inject = ['$scope', 'TeacherDataService'];
 
 var PeriodSelect = {
     template: '<md-select ng-model="$ctrl.currentPeriod"\n                    ng-model-options="{trackBy: \'$value.periodId\'}"\n                    class="md-no-underline md-button md-raised"\n                    ng-change="$ctrl.currentPeriodChanged()"\n                    placeholder="{{\'selectPeriod\' | translate}}">\n            <md-option ng-repeat="period in $ctrl.periods" ng-value="period">\n                <span ng-if="period.periodId === -1" translate="allPeriods"></span>\n                <span ng-if="period.periodId != -1" translate="periodLabel" translate-value-name="{{period.periodName}}"></span>\n            </md-option>\n        </md-select>',

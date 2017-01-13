@@ -7,7 +7,6 @@ class NavItemController {
                 $rootScope,
                 $scope,
                 $state,
-                $translate,
                 ConfigService,
                 NodeService,
                 NotificationService,
@@ -23,7 +22,6 @@ class NavItemController {
         this.$rootScope = $rootScope;
         this.$scope = $scope;
         this.$state = $state;
-        this.$translate = $translate;
         this.ConfigService = ConfigService;
         this.NodeService = NodeService;
         this.NotificationService = NotificationService;
@@ -32,6 +30,8 @@ class NavItemController {
         this.StudentStatusService = StudentStatusService;
         this.TeacherDataService = TeacherDataService;
         this.TeacherWebSocketService = TeacherWebSocketService;
+
+        this.$translate = this.$filter('translate');
 
         this.expanded = false;
 
@@ -416,7 +416,6 @@ NavItemController.$inject = [
     '$rootScope',
     '$scope',
     '$state',
-    '$translate',
     'ConfigService',
     'NodeService',
     'NotificationService',

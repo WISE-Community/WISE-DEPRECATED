@@ -3,18 +3,20 @@
 class ComponentAnnotationsController {
     constructor($scope,
                 $element,   // TODO remove after verifying that this is not being used
+                $filter,
                 $mdDialog,
                 $timeout,
-                $translate,
                 ConfigService,
                 ProjectService,
                 StudentDataService) {
         this.$scope = $scope;
+        this.$filter = $filter;
         this.$mdDialog = $mdDialog;
-        this.$translate = $translate;
         this.ConfigService = ConfigService;
         this.ProjectService = ProjectService;
         this.StudentDataService = StudentDataService;
+
+        this.$translate = this.$filter('translate');
 
         this.maxScoreDisplay = (parseInt(this.maxScore) > 0) ? '/' + this.maxScore : '';
 
@@ -35,7 +37,7 @@ class ComponentAnnotationsController {
 
         // the avatar icon (default to person/teacher)
         this.icon = 'person';
-        
+
         this.showScore = true;
         this.showComment = true;
 
@@ -181,15 +183,11 @@ class ComponentAnnotationsController {
 
         if (latest) {
             if (latest.type === 'autoComment' || latest.type === 'autoScore') {
-                this.$translate(['automatedFeedbackLabel']).then((translations) => {
-                    this.label = translations.automatedFeedbackLabel;
-                    this.icon = 'keyboard';
-                });
+                this.label = this.$translate('automatedFeedbackLabel');
+                this.icon = 'keyboard';
             } else {
-                this.$translate(['teacherFeedbackLabel']).then((translations) => {
-                    this.label = translations.teacherFeedbackLabel;
-                    this.icon = "person";
-                });
+                this.label = this.$translate('teacherFeedbackLabel');
+                this.icon = "person";
             }
         }
     };
@@ -204,12 +202,12 @@ class ComponentAnnotationsController {
                     // we do not want to show the score
                     this.showScore = false;
                 }
-                
+
                 if (!this.ProjectService.displayAnnotation(this.annotations.comment)) {
                     // we do not want to show the comment
                     this.showComment = false;
                 }
-                
+
                 // set the annotation label and icon
                 this.setLabelAndIcon();
             }
@@ -220,9 +218,9 @@ class ComponentAnnotationsController {
 ComponentAnnotationsController.$inject = [
     '$scope',
     '$element',
+    '$filter',
     '$mdDialog',
     '$timeout',
-    '$translate',
     'ConfigService',
     'ProjectService',
     'StudentDataService'

@@ -9,16 +9,18 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var GlobalAnnotationsListController = function () {
-    function GlobalAnnotationsListController($rootScope, $scope, $translate, AnnotationService, ProjectService) {
+    function GlobalAnnotationsListController($rootScope, $scope, $filter, AnnotationService, ProjectService) {
         var _this = this;
 
         _classCallCheck(this, GlobalAnnotationsListController);
 
         this.$rootScope = $rootScope;
         this.$scope = $scope;
-        this.$translate = $translate;
+        this.$filter = $filter;
         this.AnnotationService = AnnotationService;
         this.ProjectService = ProjectService;
+
+        this.$translate = this.$filter('translate');
 
         this.active = false;
 
@@ -96,7 +98,7 @@ var GlobalAnnotationsListController = function () {
     return GlobalAnnotationsListController;
 }();
 
-GlobalAnnotationsListController.$inject = ['$rootScope', '$scope', '$translate', 'AnnotationService', 'ProjectService'];
+GlobalAnnotationsListController.$inject = ['$rootScope', '$scope', '$filter', 'AnnotationService', 'ProjectService'];
 
 var GlobalAnnotationsList = {
     bindings: {},

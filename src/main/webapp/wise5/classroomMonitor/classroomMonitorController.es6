@@ -2,29 +2,32 @@
 
 class ClassroomMonitorController {
 
-    constructor($mdDialog,
+    constructor($filter,
+                $mdDialog,
                 $rootScope,
                 $scope,
                 $state,
                 $stateParams,
-                $translate,
                 ConfigService,
                 NotificationService,
                 ProjectService,
                 SessionService,
                 TeacherDataService,
                 TeacherWebSocketService) {
+
+        this.$filter = $filter;
         this.$rootScope = $rootScope;
         this.$scope = $scope;
         this.$state = $state;
         this.$stateParams = $stateParams;
-        this.$translate = $translate;
         this.ConfigService = ConfigService;
         this.NotificationService = NotificationService;
         this.ProjectService = ProjectService;
         this.SessionService = SessionService;
         this.TeacherDataService = TeacherDataService;
         this.TeacherWebSocketService = TeacherWebSocketService;
+
+        this.$translate = this.$filter('translate');
 
         this.projectName = this.ProjectService.getProjectTitle();
         this.runId = this.ConfigService.getRunId();
@@ -37,54 +40,50 @@ class ClassroomMonitorController {
         this.showStepToolbar = false; // boolean to indicate whether to show the step toolbar
 
         // ui-views and their corresponding names, labels, and icons
-        this.$translate(['dashboardView', 'dashboardViewLabel', 'projectView', 'projectViewLabel',
-            'studentView', 'studentViewLabel', 'notebookView', 'notebookViewLabel',
-            'exportView', 'exportViewLabel', 'notesTipsView', 'notesTipsViewLabel']).then((translation) => {
-            this.views = {
-                'root.dashboard': {
-                    name: translation.dashboardView,
-                    label: translation.dashboardViewLabel,
-                    icon: 'dashboard',
-                    type: 'primary',
-                    active: false
-                },
-                'root.nodeProgress': {
-                    name: translation.projectView,
-                    label: translation.projectViewLabel,
-                    icon: 'assignment_turned_in',
-                    type: 'primary',
-                    active: true
-                },
-                'root.studentProgress': {
-                    name: translation.studentView,
-                    label: translation.studentViewLabel,
-                    icon: 'people',
-                    type: 'primary',
-                    active: true
-                },
-                'root.notebooks': {
-                    name: translation.notebookView,
-                    label: translation.notebookViewLabel,
-                    icon: 'chrome_reader_mode',
-                    type: 'secondary',
-                    active: false
-                },
-                'root.export': {
-                    name: translation.exportView,
-                    label: translation.exportViewLabel,
-                    icon: 'file_download',
-                    type: 'secondary',
-                    active: true
-                },
-                'root.notes': {
-                    name: translation.notesTipsView,
-                    label: translation.notesTipsViewLabel,
-                    icon: 'speaker_notes',
-                    type: 'secondary',
-                    active: false
-                }
-            };
-        });
+        this.views = {
+            'root.dashboard': {
+                name: this.$translate('dashboardView'),
+                label: this.$translate('dashboardViewLabel'),
+                icon: 'dashboard',
+                type: 'primary',
+                active: false
+            },
+            'root.nodeProgress': {
+                name: this.$translate('projectView'),
+                label: this.$translate('projectViewLabel'),
+                icon: 'assignment_turned_in',
+                type: 'primary',
+                active: true
+            },
+            'root.studentProgress': {
+                name: this.$translate('studentView'),
+                label: this.$translate('studentViewLabel'),
+                icon: 'people',
+                type: 'primary',
+                active: true
+            },
+            'root.notebooks': {
+                name: this.$translate('notebookView'),
+                label: this.$translate('notebookViewLabel'),
+                icon: 'chrome_reader_mode',
+                type: 'secondary',
+                active: false
+            },
+            'root.export': {
+                name: this.$translate('exportView'),
+                label: this.$translate('exportViewLabel'),
+                icon: 'file_download',
+                type: 'secondary',
+                active: true
+            },
+            'root.notes': {
+                name: this.$translate('notesTipsView'),
+                label: this.$translate('notesTipsViewLabel'),
+                icon: 'speaker_notes',
+                type: 'secondary',
+                active: false
+            }
+        };
 
         this.$scope.$on('showSessionWarning', () => {
             // Appending dialog to document.body
@@ -104,22 +103,18 @@ class ClassroomMonitorController {
 
         // alert user when inactive for a long time
         this.$scope.$on('showRequestLogout', (ev) => {
-            this.$translate(["serverUpdate", "serverUpdateRequestLogoutMessage", "ok"]).then((translations) => {
+            let alert = $mdDialog.confirm()
+                .parent(angular.element(document.body))
+                .title(translations.serverUpdate)
+                .textContent(this.$translate('serverUpdateRequestLogoutMessage'))
+                .ariaLabel(this.$translate('serverUpdate'))
+                .targetEvent(ev)
+                .ok(this.$translate('ok'));
 
-                let alert = $mdDialog.confirm()
-                    .parent(angular.element(document.body))
-                    .title(translations.serverUpdate)
-                    .textContent(translations.serverUpdateRequestLogoutMessage)
-                    .ariaLabel(translations.serverUpdate)
-                    .targetEvent(ev)
-                    .ok(translations.ok);
-
-                $mdDialog.show(alert).then(() => {
-                    // do nothing
-                }, () => {
-                    // do nothing
-                });
-
+            $mdDialog.show(alert).then(() => {
+                // do nothing
+            }, () => {
+                // do nothing
             });
         });
 
@@ -201,18 +196,16 @@ class ClassroomMonitorController {
      */
     confirmDismissAllNotifications(ev) {
         if (this.getNewNotifications().length > 1) {
-            this.$translate(["dismissNotificationsTitle", "dismissNotificationsMessage", "yes", "no"]).then((translations) => {
-                let confirm = this.$mdDialog.confirm()
-                    .parent(angular.element($('._md-open-menu-container._md-active')))// TODO: hack for now (showing md-dialog on top of md-menu)
-                    .ariaLabel(translations.dismissNotificationsTitle)
-                    .textContent(translations.dismissNotificationsMessage)
-                    .targetEvent(ev)
-                    .ok(translations.yes)
-                    .cancel(translations.no);
+            let confirm = this.$mdDialog.confirm()
+                .parent(angular.element($('._md-open-menu-container._md-active')))// TODO: hack for now (showing md-dialog on top of md-menu)
+                .ariaLabel(this.$translate('dismissNotificationsTitle'))
+                .textContent(this.$translate('dismissNotificationsMessage'))
+                .targetEvent(ev)
+                .ok(this.$translate('yes'))
+                .cancel(this.$translate('no'));
 
-                this.$mdDialog.show(confirm).then(() => {
-                    this.dismissAllNotifications();
-                });
+            this.$mdDialog.show(confirm).then(() => {
+                this.dismissAllNotifications();
             });
         } else {
             this.dismissAllNotifications();
@@ -250,12 +243,12 @@ class ClassroomMonitorController {
 }
 
 ClassroomMonitorController.$inject = [
+    '$filter',
     '$mdDialog',
     '$rootScope',
     '$scope',
     '$state',
     '$stateParams',
-    '$translate',
     'ConfigService',
     'NotificationService',
     'ProjectService',

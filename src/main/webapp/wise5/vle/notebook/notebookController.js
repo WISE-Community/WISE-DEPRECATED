@@ -9,7 +9,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var NotebookController = function () {
-    function NotebookController($injector, $rootScope, $scope, $translate, ConfigService, NotebookService, ProjectService, StudentAssetService, StudentDataService) {
+    function NotebookController($injector, $rootScope, $scope, $filter, ConfigService, NotebookService, ProjectService, StudentAssetService, StudentDataService) {
         var _this = this;
 
         _classCallCheck(this, NotebookController);
@@ -17,13 +17,15 @@ var NotebookController = function () {
         this.$injector = $injector;
         this.$rootScope = $rootScope;
         this.$scope = $scope;
-        this.$translate = $translate;
+        this.$filter = $filter;
         this.ConfigService = ConfigService;
         this.mode = this.ConfigService.getMode();
         this.NotebookService = NotebookService;
         this.ProjectService = ProjectService;
         this.StudentAssetService = StudentAssetService;
         this.StudentDataService = StudentDataService;
+
+        this.$translate = this.$filter('translate');
 
         this.notebook = null;
         this.itemId = null;
@@ -94,7 +96,7 @@ var NotebookController = function () {
     return NotebookController;
 }();
 
-NotebookController.$inject = ["$injector", "$rootScope", "$scope", "$translate", "ConfigService", "NotebookService", "ProjectService", "StudentAssetService", "StudentDataService"];
+NotebookController.$inject = ["$injector", "$rootScope", "$scope", "$filter", "ConfigService", "NotebookService", "ProjectService", "StudentAssetService", "StudentDataService"];
 
 exports.default = NotebookController;
 //# sourceMappingURL=notebookController.js.map

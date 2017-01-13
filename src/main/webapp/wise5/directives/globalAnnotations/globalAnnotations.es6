@@ -1,18 +1,21 @@
 "use strict";
 
 class GlobalAnnotationsController {
-    constructor($mdDialog,
+    constructor($filter,
+                $mdDialog,
                 $rootScope,
                 $scope,
                 $timeout,
-                $translate,
                 AnnotationService) {
+
+        this.$filter = $filter;
         this.$mdDialog = $mdDialog;
         this.$rootScope = $rootScope;
         this.$scope = $scope;
         this.$timeout = $timeout;
-        this.$translate = $translate;
         this.AnnotationService = AnnotationService;
+
+        this.$translate = this.$filter('translate');
 
         this.active = false;
 
@@ -58,7 +61,7 @@ class GlobalAnnotationsController {
                     `<md-dialog aria-label="Global Feedback Dialog">
                         <!--<md-toolbar md-theme="light">
                             <div class="md-toolbar-tools">
-                                <h2>Feedback</h2>
+                                <h2>{{ 'FEEDBACK' | translate }}</h2>
                                 <span flex></span>
                                 <md-button class="md-icon-button" ng-click="close()">
                                     <md-icon aria-label="Close dialog"> close </md-icon>
@@ -92,11 +95,11 @@ class GlobalAnnotationsController {
 }
 
 GlobalAnnotationsController.$inject = [
+    '$filter',
     '$mdDialog',
     '$rootScope',
     '$scope',
     '$timeout',
-    '$translate',
     'AnnotationService'
 ];
 

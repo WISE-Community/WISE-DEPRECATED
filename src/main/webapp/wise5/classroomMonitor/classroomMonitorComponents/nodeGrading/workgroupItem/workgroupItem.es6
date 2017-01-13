@@ -1,22 +1,25 @@
 "use strict";
 
 class WorkgroupItemController {
-    constructor($scope,
-                $translate,
+    constructor($filter,
+                $scope,
                 AnnotationService,
                 ConfigService,
                 NotificationService,
                 ProjectService,
                 StudentStatusService,
                 TeacherDataService) {
+
+        this.$filter = $filter;
         this.$scope = $scope;
-        this.$translate = $translate;
         this.AnnotationService = AnnotationService;
         this.ConfigService = ConfigService;
         this.NotificationService = NotificationService;
         this.ProjectService = ProjectService;
         this.StudentStatusService = StudentStatusService;
         this.TeacherDataService = TeacherDataService;
+
+        this.$translate = this.$filter('translate');
 
         this.$onInit = () => {
             this.statusClass = '';
@@ -107,33 +110,21 @@ class WorkgroupItemController {
 
         if (hasNewWork) {
             this.statusClass = 'info';
-            this.$translate('newWork').then(newWork => {
-                this.statusText = newWork;
-            });
+            this.statusText = this.$translate('newWork');
         } else if (isCompleted) {
             this.statusClass = 'success';
             if (this.hasMaxScore) {
-                this.$translate('completed').then(completed => {
-                    this.statusText = completed;
-                });
+                this.statusText = this.$translate('completed');
             } else {
-                this.$translate('visited').then(visited => {
-                    this.statusText = visited;
-                });
+                this.statusText = this.$translate('visited');
             }
         } else if (hasWork) {
-            this.$translate('partiallyCompleted').then(partiallyCompleted => {
-                this.statusText = partiallyCompleted;
-            });
+            this.statusText = this.$translate('partiallyCompleted');
         } else {
             if (this.node) {
-                this.$translate('noWork').then(noWork => {
-                    this.statusText = noWork;
-                });
+                this.statusText = this.$translate('noWork');
             } else {
-                this.$translate('notVisited').then(notVisited => {
-                    this.statusText = notVisited;
-                });
+                this.statusText = this.$translate('notVisited');
             }
         }
 
@@ -228,8 +219,8 @@ class WorkgroupItemController {
 }
 
 WorkgroupItemController.$inject = [
+    '$filter',
     '$scope',
-    '$translate',
     'AnnotationService',
     'ConfigService',
     'NotificationService',

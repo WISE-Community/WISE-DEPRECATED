@@ -9,17 +9,19 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var GlobalAnnotationsController = function () {
-    function GlobalAnnotationsController($mdDialog, $rootScope, $scope, $timeout, $translate, AnnotationService) {
+    function GlobalAnnotationsController($filter, $mdDialog, $rootScope, $scope, $timeout, AnnotationService) {
         var _this = this;
 
         _classCallCheck(this, GlobalAnnotationsController);
 
+        this.$filter = $filter;
         this.$mdDialog = $mdDialog;
         this.$rootScope = $rootScope;
         this.$scope = $scope;
         this.$timeout = $timeout;
-        this.$translate = $translate;
         this.AnnotationService = AnnotationService;
+
+        this.$translate = this.$filter('translate');
 
         this.active = false;
 
@@ -64,7 +66,7 @@ var GlobalAnnotationsController = function () {
         value: function show() {
             //this.$translate(['itemLocked', 'ok']).then((translations) => {
             this.$mdDialog.show({
-                template: '<md-dialog aria-label="Global Feedback Dialog">\n                        <!--<md-toolbar md-theme="light">\n                            <div class="md-toolbar-tools">\n                                <h2>Feedback</h2>\n                                <span flex></span>\n                                <md-button class="md-icon-button" ng-click="close()">\n                                    <md-icon aria-label="Close dialog"> close </md-icon>\n                                </md-button>\n                            </div>\n                        </md-toolbar>-->\n                        <md-dialog-content class="md-dialog-content">\n                            <h2 class="md-title">{{ \'FEEDBACK\' | translate }}</h2>\n                            <global-annotations-list></global-annotations-list>\n                        </md-dialog-content>\n                        <md-dialog-actions>\n                            <md-button ng-click="close()" class="md-primary">\n                                {{ \'CLOSE\' | translate }}\n                            </md-button>\n                        </md-dialog-actions>\n                    </md-dialog>',
+                template: '<md-dialog aria-label="Global Feedback Dialog">\n                        <!--<md-toolbar md-theme="light">\n                            <div class="md-toolbar-tools">\n                                <h2>{{ \'FEEDBACK\' | translate }}</h2>\n                                <span flex></span>\n                                <md-button class="md-icon-button" ng-click="close()">\n                                    <md-icon aria-label="Close dialog"> close </md-icon>\n                                </md-button>\n                            </div>\n                        </md-toolbar>-->\n                        <md-dialog-content class="md-dialog-content">\n                            <h2 class="md-title">{{ \'FEEDBACK\' | translate }}</h2>\n                            <global-annotations-list></global-annotations-list>\n                        </md-dialog-content>\n                        <md-dialog-actions>\n                            <md-button ng-click="close()" class="md-primary">\n                                {{ \'CLOSE\' | translate }}\n                            </md-button>\n                        </md-dialog-actions>\n                    </md-dialog>',
                 closeTo: angular.element(document.querySelector('#globalMsgTrigger')),
                 openFrom: angular.element(document.querySelector('#globalMsgTrigger')),
                 controller: GlobalAnnotationsDialogController
@@ -84,7 +86,7 @@ var GlobalAnnotationsController = function () {
     return GlobalAnnotationsController;
 }();
 
-GlobalAnnotationsController.$inject = ['$mdDialog', '$rootScope', '$scope', '$timeout', '$translate', 'AnnotationService'];
+GlobalAnnotationsController.$inject = ['$filter', '$mdDialog', '$rootScope', '$scope', '$timeout', 'AnnotationService'];
 
 var GlobalAnnotations = {
     bindings: {},

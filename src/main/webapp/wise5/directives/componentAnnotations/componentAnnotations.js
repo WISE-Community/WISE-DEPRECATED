@@ -10,17 +10,19 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var ComponentAnnotationsController = function () {
     function ComponentAnnotationsController($scope, $element, // TODO remove after verifying that this is not being used
-    $mdDialog, $timeout, $translate, ConfigService, ProjectService, StudentDataService) {
+    $filter, $mdDialog, $timeout, ConfigService, ProjectService, StudentDataService) {
         var _this = this;
 
         _classCallCheck(this, ComponentAnnotationsController);
 
         this.$scope = $scope;
+        this.$filter = $filter;
         this.$mdDialog = $mdDialog;
-        this.$translate = $translate;
         this.ConfigService = ConfigService;
         this.ProjectService = ProjectService;
         this.StudentDataService = StudentDataService;
+
+        this.$translate = this.$filter('translate');
 
         this.maxScoreDisplay = parseInt(this.maxScore) > 0 ? '/' + this.maxScore : '';
 
@@ -203,21 +205,15 @@ var ComponentAnnotationsController = function () {
          * Set the label based on whether this is an automated or teacher annotation
          **/
         value: function setLabelAndIcon() {
-            var _this2 = this;
-
             var latest = this.getLatestAnnotation();
 
             if (latest) {
                 if (latest.type === 'autoComment' || latest.type === 'autoScore') {
-                    this.$translate(['automatedFeedbackLabel']).then(function (translations) {
-                        _this2.label = translations.automatedFeedbackLabel;
-                        _this2.icon = 'keyboard';
-                    });
+                    this.label = this.$translate('automatedFeedbackLabel');
+                    this.icon = 'keyboard';
                 } else {
-                    this.$translate(['teacherFeedbackLabel']).then(function (translations) {
-                        _this2.label = translations.teacherFeedbackLabel;
-                        _this2.icon = "person";
-                    });
+                    this.label = this.$translate('teacherFeedbackLabel');
+                    this.icon = "person";
                 }
             }
         }
@@ -249,7 +245,7 @@ var ComponentAnnotationsController = function () {
     return ComponentAnnotationsController;
 }();
 
-ComponentAnnotationsController.$inject = ['$scope', '$element', '$mdDialog', '$timeout', '$translate', 'ConfigService', 'ProjectService', 'StudentDataService'];
+ComponentAnnotationsController.$inject = ['$scope', '$element', '$filter', '$mdDialog', '$timeout', 'ConfigService', 'ProjectService', 'StudentDataService'];
 
 var ComponentAnnotations = {
     bindings: {

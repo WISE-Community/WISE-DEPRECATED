@@ -9,19 +9,21 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var WorkgroupItemController = function () {
-    function WorkgroupItemController($scope, $translate, AnnotationService, ConfigService, NotificationService, ProjectService, StudentStatusService, TeacherDataService) {
+    function WorkgroupItemController($filter, $scope, AnnotationService, ConfigService, NotificationService, ProjectService, StudentStatusService, TeacherDataService) {
         var _this = this;
 
         _classCallCheck(this, WorkgroupItemController);
 
+        this.$filter = $filter;
         this.$scope = $scope;
-        this.$translate = $translate;
         this.AnnotationService = AnnotationService;
         this.ConfigService = ConfigService;
         this.NotificationService = NotificationService;
         this.ProjectService = ProjectService;
         this.StudentStatusService = StudentStatusService;
         this.TeacherDataService = TeacherDataService;
+
+        this.$translate = this.$filter('translate');
 
         this.$onInit = function () {
             _this.statusClass = '';
@@ -106,8 +108,6 @@ var WorkgroupItemController = function () {
     }, {
         key: 'updateModel',
         value: function updateModel() {
-            var _this2 = this;
-
             var isCompleted = this.isCompleted();
             var hasWork = this.hasWork();
             var hasNewWork = this.hasNewWork();
@@ -117,33 +117,21 @@ var WorkgroupItemController = function () {
 
             if (hasNewWork) {
                 this.statusClass = 'info';
-                this.$translate('newWork').then(function (newWork) {
-                    _this2.statusText = newWork;
-                });
+                this.statusText = this.$translate('newWork');
             } else if (isCompleted) {
                 this.statusClass = 'success';
                 if (this.hasMaxScore) {
-                    this.$translate('completed').then(function (completed) {
-                        _this2.statusText = completed;
-                    });
+                    this.statusText = this.$translate('completed');
                 } else {
-                    this.$translate('visited').then(function (visited) {
-                        _this2.statusText = visited;
-                    });
+                    this.statusText = this.$translate('visited');
                 }
             } else if (hasWork) {
-                this.$translate('partiallyCompleted').then(function (partiallyCompleted) {
-                    _this2.statusText = partiallyCompleted;
-                });
+                this.statusText = this.$translate('partiallyCompleted');
             } else {
                 if (this.node) {
-                    this.$translate('noWork').then(function (noWork) {
-                        _this2.statusText = noWork;
-                    });
+                    this.statusText = this.$translate('noWork');
                 } else {
-                    this.$translate('notVisited').then(function (notVisited) {
-                        _this2.statusText = notVisited;
-                    });
+                    this.statusText = this.$translate('notVisited');
                 }
             }
 
@@ -246,7 +234,7 @@ var WorkgroupItemController = function () {
     return WorkgroupItemController;
 }();
 
-WorkgroupItemController.$inject = ['$scope', '$translate', 'AnnotationService', 'ConfigService', 'NotificationService', 'ProjectService', 'StudentStatusService', 'TeacherDataService'];
+WorkgroupItemController.$inject = ['$filter', '$scope', 'AnnotationService', 'ConfigService', 'NotificationService', 'ProjectService', 'StudentStatusService', 'TeacherDataService'];
 
 var WorkgroupItem = {
     bindings: {

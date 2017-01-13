@@ -9,18 +9,19 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var ComponentGradingController = function () {
-    function ComponentGradingController($mdDialog, $scope, $translate, AnnotationService, ConfigService, TeacherDataService, UtilService) {
+    function ComponentGradingController($filter, $mdDialog, $scope, AnnotationService, ConfigService, TeacherDataService, UtilService) {
         var _this = this;
 
         _classCallCheck(this, ComponentGradingController);
 
         this.$mdDialog = $mdDialog;
         this.$scope = $scope;
-        this.$translate = $translate;
         this.AnnotationService = AnnotationService;
         this.ConfigService = ConfigService;
         this.TeacherDataService = TeacherDataService;
         this.UtilService = UtilService;
+
+        this.$translate = this.$filter('translate');
 
         this.$onInit = function () {
             _this.runId = _this.ConfigService.getRunId();
@@ -295,7 +296,7 @@ var ComponentGradingController = function () {
     return ComponentGradingController;
 }();
 
-ComponentGradingController.$inject = ['$mdDialog', '$scope', '$translate', 'AnnotationService', 'ConfigService', 'TeacherDataService', 'UtilService'];
+ComponentGradingController.$inject = ['$filter', '$mdDialog', '$scope', 'AnnotationService', 'ConfigService', 'TeacherDataService', 'UtilService'];
 
 var ComponentGrading = {
     bindings: {

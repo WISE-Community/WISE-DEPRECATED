@@ -3,14 +3,16 @@
 class GlobalAnnotationsListController {
     constructor($rootScope,
                 $scope,
-                $translate,
+                $filter,
                 AnnotationService,
                 ProjectService) {
         this.$rootScope = $rootScope;
         this.$scope = $scope;
-        this.$translate = $translate;
+        this.$filter = $filter;
         this.AnnotationService = AnnotationService;
         this.ProjectService = ProjectService;
+
+        this.$translate = this.$filter('translate');
 
         this.active = false;
 
@@ -83,7 +85,7 @@ class GlobalAnnotationsListController {
 GlobalAnnotationsListController.$inject = [
     '$rootScope',
     '$scope',
-    '$translate',
+    '$filter',
     'AnnotationService',
     'ProjectService'
 ];

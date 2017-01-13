@@ -9,7 +9,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var NotebookItemController = function () {
-    function NotebookItemController($injector, $rootScope, $scope, $translate, ConfigService, NotebookService, ProjectService, StudentAssetService, StudentDataService, UtilService) {
+    function NotebookItemController($injector, $rootScope, $scope, $filter, ConfigService, NotebookService, ProjectService, StudentAssetService, StudentDataService, UtilService) {
         var _this = this;
 
         _classCallCheck(this, NotebookItemController);
@@ -17,13 +17,15 @@ var NotebookItemController = function () {
         this.$injector = $injector;
         this.$rootScope = $rootScope;
         this.$scope = $scope;
-        this.$translate = $translate;
+        this.$filter = $filter;
         this.ConfigService = ConfigService;
         this.NotebookService = NotebookService;
         this.ProjectService = ProjectService;
         this.StudentAssetService = StudentAssetService;
         this.StudentDataService = StudentDataService;
         this.UtilService = UtilService;
+
+        this.$translate = this.$filter('translate');
         this.mode = this.ConfigService.getMode();
 
         this.item = this.NotebookService.getLatestNotebookItemByLocalNotebookItemId(this.itemId);
@@ -113,7 +115,7 @@ var NotebookItemController = function () {
     return NotebookItemController;
 }();
 
-NotebookItemController.$inject = ["$injector", "$rootScope", "$scope", "$translate", "ConfigService", "NotebookService", "ProjectService", "StudentAssetService", "StudentDataService", "UtilService"];
+NotebookItemController.$inject = ["$injector", "$rootScope", "$scope", "$filter", "ConfigService", "NotebookService", "ProjectService", "StudentAssetService", "StudentDataService", "UtilService"];
 
 exports.default = NotebookItemController;
 //# sourceMappingURL=notebookItemController.js.map

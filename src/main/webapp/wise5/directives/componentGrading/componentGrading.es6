@@ -1,20 +1,21 @@
 'use strict';
 
 class ComponentGradingController {
-    constructor($mdDialog,
+    constructor($filter,
+                $mdDialog,
                 $scope,
-                $translate,
                 AnnotationService,
                 ConfigService,
                 TeacherDataService,
                 UtilService,) {
         this.$mdDialog = $mdDialog;
         this.$scope = $scope;
-        this.$translate = $translate;
         this.AnnotationService = AnnotationService;
         this.ConfigService = ConfigService;
         this.TeacherDataService = TeacherDataService;
         this.UtilService = UtilService;
+
+        this.$translate = this.$filter('translate');
 
         this.$onInit = () => {
             this.runId = this.ConfigService.getRunId();
@@ -301,9 +302,9 @@ class ComponentGradingController {
 }
 
 ComponentGradingController.$inject = [
+    '$filter',
     '$mdDialog',
     '$scope',
-    '$translate',
     'AnnotationService',
     'ConfigService',
     'TeacherDataService',

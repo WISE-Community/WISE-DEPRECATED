@@ -4,7 +4,6 @@ class NavItemController {
     constructor($filter,
                 $rootScope,
                 $scope,
-                $translate,
                 $element,
                 dragulaService,
                 NodeService,
@@ -16,7 +15,6 @@ class NavItemController {
         this.$rootScope = $rootScope;
         this.$scope = $scope;
         this.$element = $element;
-        this.$translate = $translate;
         this.dragulaService = dragulaService;
         this.NodeService = NodeService;
         this.ProjectService = ProjectService;
@@ -239,16 +237,14 @@ class NavItemController {
         } else {
             if (this.StudentDataService.planningMode) {
                 // Don't allow students to enter planning steps while in planning mode
-                this.$translate(['itemLocked', 'planningModeStepsUnVisitable', 'ok']).then((translations) => {
-                    this.$mdDialog.show(
-                        this.$mdDialog.alert()
-                            .title(translations.itemLocked)
-                            .textContent(translations.planningModeStepsUnVisitable)
-                            .ariaLabel(translations.itemLocked)
-                            .ok(translations.ok)
-                            .targetEvent(event)
-                    );
-                });
+                this.$mdDialog.show(
+                    this.$mdDialog.alert()
+                        .title(this.$translate('itemLocked'))
+                        .textContent(this.$translate('planningModeStepsUnVisitable'))
+                        .ariaLabel(this.$translate('itemLocked'))
+                        .ok(this.$translate('ok'))
+                        .targetEvent(event)
+                );
             } else {
                 this.StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(this.nodeId);
             }
@@ -463,35 +459,33 @@ class NavItemController {
      * @param event the event that triggered the function call
      */
     removePlanningNodeInstance(planningNodeInstanceNodeId, event) {
-        this.$translate(["yes", "no"]).then((translations) => {
-            let confirm = this.$mdDialog.confirm()
-                .parent(angular.element(document.body))
-                .title(this.$translate('areYouSureYouWantToDeleteThisItem'))
-                .textContent(this.$translate('noteAnyWorkYouHaveDoneOnThisItemWillBeLost'))
-                .ariaLabel(this.$translate('deleteItemFromProject'))
-                .targetEvent(event)
-                .ok(translations.yes)
-                .cancel(translations.no);
+        let confirm = this.$mdDialog.confirm()
+            .parent(angular.element(document.body))
+            .title(this.$translate('areYouSureYouWantToDeleteThisItem'))
+            .textContent(this.$translate('noteAnyWorkYouHaveDoneOnThisItemWillBeLost'))
+            .ariaLabel(this.$translate('deleteItemFromProject'))
+            .targetEvent(event)
+            .ok(this.$translate('yes'))
+            .cancel(this.$translate('no'));
 
-            this.$mdDialog.show(confirm).then(() => {
-                // delete the node from the project
-                this.ProjectService.deleteNode(planningNodeInstanceNodeId);
+        this.$mdDialog.show(confirm).then(() => {
+            // delete the node from the project
+            this.ProjectService.deleteNode(planningNodeInstanceNodeId);
 
-                // perform any necessary updating
-                this.planningNodeChanged(this.parentGroupId);
+            // perform any necessary updating
+            this.planningNodeChanged(this.parentGroupId);
 
-                // Save remove planning node event
-                let componentId = null;
-                let componentType = null;
-                let category = "Planning";
-                let eventName = "planningNodeRemoved";
-                let eventData = {
-                    nodeIdRemoved: planningNodeInstanceNodeId
-                };
-                let eventNodeId = this.nodeId;
-                this.StudentDataService.saveVLEEvent(eventNodeId, componentId, componentType, category, eventName, eventData);
-            }, () => {});
-        });
+            // Save remove planning node event
+            let componentId = null;
+            let componentType = null;
+            let category = "Planning";
+            let eventName = "planningNodeRemoved";
+            let eventData = {
+                nodeIdRemoved: planningNodeInstanceNodeId
+            };
+            let eventNodeId = this.nodeId;
+            this.StudentDataService.saveVLEEvent(eventNodeId, componentId, componentType, category, eventName, eventData);
+        }, () => {});
     }
 
     /**
@@ -691,7 +685,6 @@ NavItemController.$inject = [
     '$filter',
     '$rootScope',
     '$scope',
-    '$translate',
     '$element',
     'dragulaService',
     'NodeService',

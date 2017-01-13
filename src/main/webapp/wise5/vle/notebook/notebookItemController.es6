@@ -5,7 +5,7 @@ class NotebookItemController {
     constructor($injector,
                 $rootScope,
                 $scope,
-                $translate,
+                $filter,
                 ConfigService,
                 NotebookService,
                 ProjectService,
@@ -15,13 +15,15 @@ class NotebookItemController {
         this.$injector = $injector;
         this.$rootScope = $rootScope;
         this.$scope = $scope;
-        this.$translate = $translate;
+        this.$filter = $filter;
         this.ConfigService = ConfigService;
         this.NotebookService = NotebookService;
         this.ProjectService = ProjectService;
         this.StudentAssetService = StudentAssetService;
         this.StudentDataService = StudentDataService;
         this.UtilService = UtilService;
+
+        this.$translate = this.$filter('translate');
         this.mode = this.ConfigService.getMode();
 
         this.item = this.NotebookService.getLatestNotebookItemByLocalNotebookItemId(this.itemId);
@@ -100,7 +102,7 @@ NotebookItemController.$inject = [
     "$injector",
     "$rootScope",
     "$scope",
-    "$translate",
+    "$filter",
     "ConfigService",
     "NotebookService",
     "ProjectService",

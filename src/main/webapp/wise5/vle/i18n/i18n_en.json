@@ -41,7 +41,7 @@
     "noDeletedNotes": "You don't have any deleted notes.",
     "noNotes": "Hello! You haven't created any {{term}} yet.",
     "notebook": "Notebook",
-    "noteFrom": "Note from ",
+    "noteFrom": "Note from {{currentNodeTitle}}",
     "noteAnyWorkYouHaveDoneOnThisItemWillBeLost": "Note: Any work you have done on the item will be lost.",
     "noteThisChooserScreenIsOnlyAvailableInPreviewMode": "Note: This chooser screen is only available in preview mode. Students will not see this screen in a classroom run and will instead be assigned a branch path automatically. Once you have chosen a branch, complete the current step and then click the Next arrow.",
     "notificationsTitle": "Alerts",

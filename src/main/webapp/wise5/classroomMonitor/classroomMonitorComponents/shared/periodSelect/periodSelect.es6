@@ -2,10 +2,8 @@
 
 class PeriodSelectController {
     constructor($scope,
-                $translate,
                 TeacherDataService) {
         this.$scope = $scope;
-        this.$translate = $translate;
         this.TeacherDataService = TeacherDataService;
 
         this.currentPeriod = null;
@@ -62,7 +60,6 @@ class PeriodSelectController {
 
 PeriodSelectController.$inject = [
     '$scope',
-    '$translate',
     'TeacherDataService'
 ];
 

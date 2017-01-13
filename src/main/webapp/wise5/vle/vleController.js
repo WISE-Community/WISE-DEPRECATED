@@ -9,7 +9,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var VLEController = function () {
-    function VLEController($scope, $rootScope, $filter, $mdDialog, $mdMenu, $state, $translate, AnnotationService, ConfigService, NotebookService, NotificationService, ProjectService, SessionService, StudentDataService, UtilService) {
+    function VLEController($scope, $rootScope, $filter, $mdDialog, $mdMenu, $state, AnnotationService, ConfigService, NotebookService, NotificationService, ProjectService, SessionService, StudentDataService, UtilService) {
         var _this = this;
 
         _classCallCheck(this, VLEController);
@@ -20,7 +20,6 @@ var VLEController = function () {
         this.$mdDialog = $mdDialog;
         this.$mdMenu = $mdMenu;
         this.$state = $state;
-        this.$translate = $translate;
         this.AnnotationService = AnnotationService;
         this.ConfigService = ConfigService;
         this.NotebookService = NotebookService;
@@ -393,14 +392,11 @@ var VLEController = function () {
             var _this2 = this;
 
             if (this.getNewNotifications().length > 1) {
-                this.$translate(["dismissNotificationsTitle", "dismissNotificationsMessage", "yes", "no"]).then(function (translations) {
+                var confirm = this.$mdDialog.confirm().parent(angular.element($('._md-open-menu-container._md-active'))) // TODO: hack for now (showing md-dialog on top of md-menu)
+                .ariaLabel(this.$translate('dismissNotificationsTitle')).textContent(this.$translate('dismissNotificationsMessage')).targetEvent(ev).ok(this.$translate('yes')).cancel(this.$translate('no'));
 
-                    var confirm = _this2.$mdDialog.confirm().parent(angular.element($('._md-open-menu-container._md-active'))) // TODO: hack for now (showing md-dialog on top of md-menu)
-                    .ariaLabel(translations.dismissNotificationsTitle).textContent(translations.dismissNotificationsMessage).targetEvent(ev).ok(translations.yes).cancel(translations.no);
-
-                    _this2.$mdDialog.show(confirm).then(function () {
-                        _this2.dismissAllNotifications(ev);
-                    });
+                this.$mdDialog.show(confirm).then(function () {
+                    _this2.dismissAllNotifications(ev);
                 });
             } else {
                 this.dismissAllNotifications(ev);
@@ -514,7 +510,7 @@ var VLEController = function () {
     return VLEController;
 }();
 
-VLEController.$inject = ['$scope', '$rootScope', '$filter', '$mdDialog', '$mdMenu', '$state', '$translate', 'AnnotationService', 'ConfigService', 'NotebookService', 'NotificationService', 'ProjectService', 'SessionService', 'StudentDataService', 'UtilService'];
+VLEController.$inject = ['$scope', '$rootScope', '$filter', '$mdDialog', '$mdMenu', '$state', 'AnnotationService', 'ConfigService', 'NotebookService', 'NotificationService', 'ProjectService', 'SessionService', 'StudentDataService', 'UtilService'];
 
 exports.default = VLEController;
 //# sourceMappingURL=vleController.js.map

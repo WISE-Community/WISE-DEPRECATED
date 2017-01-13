@@ -7,7 +7,6 @@ class VLEController {
                 $mdDialog,
                 $mdMenu,
                 $state,
-                $translate,
                 AnnotationService,
                 ConfigService,
                 NotebookService,
@@ -23,7 +22,6 @@ class VLEController {
         this.$mdDialog = $mdDialog;
         this.$mdMenu = $mdMenu;
         this.$state = $state;
-        this.$translate = $translate;
         this.AnnotationService = AnnotationService;
         this.ConfigService = ConfigService;
         this.NotebookService = NotebookService;
@@ -375,19 +373,16 @@ class VLEController {
      */
     confirmDismissAllNotifications(ev) {
         if (this.getNewNotifications().length > 1) {
-            this.$translate(["dismissNotificationsTitle", "dismissNotificationsMessage", "yes", "no"]).then((translations) => {
+            let confirm = this.$mdDialog.confirm()
+                .parent(angular.element($('._md-open-menu-container._md-active')))// TODO: hack for now (showing md-dialog on top of md-menu)
+                .ariaLabel(this.$translate('dismissNotificationsTitle'))
+                .textContent(this.$translate('dismissNotificationsMessage'))
+                .targetEvent(ev)
+                .ok(this.$translate('yes'))
+                .cancel(this.$translate('no'));
 
-                let confirm = this.$mdDialog.confirm()
-                    .parent(angular.element($('._md-open-menu-container._md-active')))// TODO: hack for now (showing md-dialog on top of md-menu)
-                    .ariaLabel(translations.dismissNotificationsTitle)
-                    .textContent(translations.dismissNotificationsMessage)
-                    .targetEvent(ev)
-                    .ok(translations.yes)
-                    .cancel(translations.no);
-
-                this.$mdDialog.show(confirm).then(() => {
-                    this.dismissAllNotifications(ev);
-                });
+            this.$mdDialog.show(confirm).then(() => {
+                this.dismissAllNotifications(ev);
             });
         } else {
             this.dismissAllNotifications(ev);
@@ -485,7 +480,6 @@ VLEController.$inject = [
     '$mdDialog',
     '$mdMenu',
     '$state',
-    '$translate',
     'AnnotationService',
     'ConfigService',
     'NotebookService',

@@ -9,21 +9,24 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var EditNotebookItemController = function () {
-    function EditNotebookItemController($mdDialog, $q, $injector, $rootScope, $scope, $translate, ConfigService, NotebookService, ProjectService, StudentAssetService, StudentDataService, UtilService) {
+    function EditNotebookItemController($filter, $mdDialog, $q, $injector, $rootScope, $scope, ConfigService, NotebookService, ProjectService, StudentAssetService, StudentDataService, UtilService) {
         _classCallCheck(this, EditNotebookItemController);
 
+        this.$filter = $filter;
         this.$mdDialog = $mdDialog;
         this.$q = $q;
         this.$injector = $injector;
         this.$rootScope = $rootScope;
         this.$scope = $scope;
-        this.$translate = $translate;
         this.ConfigService = ConfigService;
         this.NotebookService = NotebookService;
         this.ProjectService = ProjectService;
         this.StudentAssetService = StudentAssetService;
         this.StudentDataService = StudentDataService;
         this.UtilService = UtilService;
+
+        this.$translate = this.$filter('translate');
+
         this.mode = this.ConfigService.getMode();
 
         if (this.itemId == null) {
@@ -35,7 +38,7 @@ var EditNotebookItemController = function () {
                 localNotebookItemId: this.UtilService.generateKey(10), // Id that is common across the same notebook item revisions.
                 type: "note", // the notebook item type, TODO: once questions are enabled, don't hard code
                 nodeId: currentNodeId, // Id of the node this note was created on
-                title: this.$translate('noteFrom') + currentNodeTitle, // Title of the node this note was created on
+                title: this.$translate('noteFrom', { currentNodeTitle: currentNodeTitle }), // Title of the node this note was created on
                 content: {
                     text: "",
                     attachments: []
@@ -221,7 +224,7 @@ var EditNotebookItemController = function () {
     return EditNotebookItemController;
 }();
 
-EditNotebookItemController.$inject = ["$mdDialog", "$q", "$injector", "$rootScope", "$scope", "$translate", "ConfigService", "NotebookService", "ProjectService", "StudentAssetService", "StudentDataService", "UtilService"];
+EditNotebookItemController.$inject = ['$filter', "$mdDialog", "$q", "$injector", "$rootScope", "$scope", "ConfigService", "NotebookService", "ProjectService", "StudentAssetService", "StudentDataService", "UtilService"];
 
 exports.default = EditNotebookItemController;
 //# sourceMappingURL=editNotebookItemController.js.map

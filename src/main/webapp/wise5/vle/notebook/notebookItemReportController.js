@@ -9,7 +9,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var NotebookItemReportController = function () {
-    function NotebookItemReportController($injector, $mdBottomSheet, $rootScope, $scope, $translate, ConfigService, NotebookService, ProjectService, StudentAssetService, StudentDataService) {
+    function NotebookItemReportController($injector, $mdBottomSheet, $rootScope, $scope, $filter, ConfigService, NotebookService, ProjectService, StudentAssetService, StudentDataService) {
         var _this = this;
 
         _classCallCheck(this, NotebookItemReportController);
@@ -18,12 +18,14 @@ var NotebookItemReportController = function () {
         this.$mdBottomSheet = $mdBottomSheet;
         this.$rootScope = $rootScope;
         this.$scope = $scope;
-        this.$translate = $translate;
+        this.$filter = $filter;
         this.ConfigService = ConfigService;
         this.NotebookService = NotebookService;
         this.ProjectService = ProjectService;
         this.StudentAssetService = StudentAssetService;
         this.StudentDataService = StudentDataService;
+
+        this.$translate = this.$filter('translate');
         this.mode = this.ConfigService.getMode();
 
         this.dirty = false;
@@ -37,13 +39,9 @@ var NotebookItemReportController = function () {
 
         this.reportItem = this.NotebookService.getLatestNotebookReportItemByReportId(this.reportId);
         if (this.reportItem) {
-            (function () {
-                var serverSaveTime = _this.reportItem.serverSaveTime;
-                var clientSaveTime = _this.ConfigService.convertToClientTimestamp(serverSaveTime);
-                _this.$translate(['lastSaved']).then(function (translations) {
-                    _this.setSaveMessage(translations.lastSaved, clientSaveTime);
-                });
-            })();
+            var serverSaveTime = this.reportItem.serverSaveTime;
+            var clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
+            this.setSaveMessage(this.$translate('lastSaved'), clientSaveTime);
         } else {
             // Student doesn't have work for this report yet, so we'll use the template.
             this.reportItem = this.NotebookService.getTemplateReportItemByReportId(this.reportId);
@@ -239,15 +237,13 @@ var NotebookItemReportController = function () {
             this.reportItem.content.clientSaveTime = Date.parse(new Date()); // set save timestamp
             this.NotebookService.saveNotebookItem(this.reportItem.id, this.reportItem.nodeId, this.reportItem.localNotebookItemId, this.reportItem.type, this.reportItem.title, this.reportItem.content, this.reportItem.content.clientSaveTime).then(function (result) {
                 if (result) {
-                    _this3.$translate(['saved']).then(function (translations) {
-                        _this3.dirty = false;
-                        _this3.reportItem.id = result.id; // set the reportNotebookItemId to the newly-incremented id so that future saves during this visit will be an update instead of an insert.
-                        var serverSaveTime = result.serverSaveTime;
-                        var clientSaveTime = _this3.ConfigService.convertToClientTimestamp(serverSaveTime);
+                    _this3.dirty = false;
+                    _this3.reportItem.id = result.id; // set the reportNotebookItemId to the newly-incremented id so that future saves during this visit will be an update instead of an insert.
+                    var serverSaveTime = result.serverSaveTime;
+                    var clientSaveTime = _this3.ConfigService.convertToClientTimestamp(serverSaveTime);
 
-                        // set save message
-                        _this3.setSaveMessage(translations.saved, clientSaveTime);
-                    });
+                    // set save message
+                    _this3.setSaveMessage(_this3.$translate('saved'), clientSaveTime);
                 }
             });
         }
@@ -281,7 +277,7 @@ var NotebookItemReportController = function () {
     return NotebookItemReportController;
 }();
 
-NotebookItemReportController.$inject = ["$injector", '$mdBottomSheet', "$rootScope", "$scope", "$translate", "ConfigService", "NotebookService", "ProjectService", "StudentAssetService", "StudentDataService"];
+NotebookItemReportController.$inject = ["$injector", '$mdBottomSheet', "$rootScope", "$scope", "$filter", "ConfigService", "NotebookService", "ProjectService", "StudentAssetService", "StudentDataService"];
 
 exports.default = NotebookItemReportController;
 //# sourceMappingURL=notebookItemReportController.js.map
