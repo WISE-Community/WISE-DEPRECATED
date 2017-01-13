@@ -214,9 +214,6 @@ class ComponentGradingController {
                     <md-dialog-content class="md-dialog-content gray-light-bg">
                         <workgroup-component-revisions workgroup-id="workgroupId" component-id="{{componentId}}" max-score="maxScore"></workgroup-component-revisions>
                     </md-dialog-content>
-                    <md-dialog-actions layout="row">
-                        <md-button ng-click="close()" class="md-primary">{{ 'CLOSE' | translate }}</md-button>
-                    </md-dialog-actions>
                 </md-dialog>`,
             locals: {
                 workgroupId: workgroupId,

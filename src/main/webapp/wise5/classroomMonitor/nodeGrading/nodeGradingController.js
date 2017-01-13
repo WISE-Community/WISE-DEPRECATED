@@ -9,7 +9,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var NodeGradingController = function () {
-    function NodeGradingController($filter, $state, $stateParams, AnnotationService, ConfigService, NodeService, ProjectService, StudentStatusService, TeacherDataService) {
+    function NodeGradingController($filter, $state, $stateParams, $timeout, AnnotationService, ConfigService, NodeService, ProjectService, StudentStatusService, TeacherDataService) {
         var _this = this;
 
         _classCallCheck(this, NodeGradingController);
@@ -17,6 +17,7 @@ var NodeGradingController = function () {
         this.$filter = $filter;
         this.$state = $state;
         this.$stateParams = $stateParams;
+        this.$timeout = $timeout;
         this.AnnotationService = AnnotationService;
         this.ConfigService = ConfigService;
         this.NodeService = NodeService;
@@ -317,16 +318,33 @@ var NodeGradingController = function () {
         }
     }, {
         key: 'onUpdateHiddenComponents',
-        value: function onUpdateHiddenComponents(value) {
+        value: function onUpdateHiddenComponents(value, event) {
+            var _this2 = this;
+
+            var target = event.target;
+            var viewportOffsetTop = target.getBoundingClientRect().top;
+
             this.hiddenComponents = value;
             this.hiddenComponents = angular.copy(this.hiddenComponents);
+
+            this.$timeout(function () {
+                _this2.updateScroll(target, viewportOffsetTop);
+            }, 100);
+        }
+    }, {
+        key: 'updateScroll',
+        value: function updateScroll(target, viewportOffsetTop) {
+            var newViewportOffsetTop = target.getBoundingClientRect().top;
+            var delta = viewportOffsetTop - newViewportOffsetTop;
+            var scrollTop = content.scrollTop;
+            content.scrollTop = scrollTop - delta;
         }
     }]);
 
     return NodeGradingController;
 }();
 
-NodeGradingController.$inject = ['$filter', '$state', '$stateParams', 'AnnotationService', 'ConfigService', 'NodeService', 'ProjectService', 'StudentStatusService', 'TeacherDataService'];
+NodeGradingController.$inject = ['$filter', '$state', '$stateParams', '$timeout', 'AnnotationService', 'ConfigService', 'NodeService', 'ProjectService', 'StudentStatusService', 'TeacherDataService'];
 
 exports.default = NodeGradingController;
 //# sourceMappingURL=nodeGradingController.js.map

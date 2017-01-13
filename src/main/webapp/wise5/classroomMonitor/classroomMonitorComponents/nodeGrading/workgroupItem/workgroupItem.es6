@@ -222,8 +222,8 @@ class WorkgroupItemController {
         return (typeof score === 'number' ? score : '-');
     }
 
-    updateHiddenCompnents(value) {
-        this.onUpdate({value: value});
+    updateHiddenComponents(value, event) {
+        this.onUpdate({value: value, event: event});
     }
 }
 
@@ -272,7 +272,7 @@ const WorkgroupItem = {
                                 latest-work-time="$ctrl.latestWorkTime"
                                 ng-if="$ctrl.showWork"
                                 hidden-components="$ctrl.hiddenComponents"
-                                on-update="$ctrl.updateHiddenCompnents(value)"></workgroup-node-grading>`
+                                on-update="$ctrl.updateHiddenComponents(value, event)"></workgroup-node-grading>`
 };
 
 export default WorkgroupItem;

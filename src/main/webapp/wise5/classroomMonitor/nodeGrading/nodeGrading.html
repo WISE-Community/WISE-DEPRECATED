@@ -1,4 +1,4 @@
-<div class="l-constrained l-constrained-md">
+<div class="l-constrained">
     <div class="flex md-subhead content-head" layout="row" layout-align="start center" layout-wrap layout-margin>
         <h2 class="accent-2" layout="row">
             <div class="content-head__item">{{nodeGradingController.getNodeCompletion(nodeGradingController.nodeId)}}%</span><span class="md-subhead" translate="completion"></div>
@@ -28,6 +28,6 @@
                         node-id="nodeGradingController.nodeId"
                         workgroup-id="workgroupId"
                         hidden-components="nodeGradingController.hiddenComponents"
-                        on-update="nodeGradingController.onUpdateHiddenComponents(value)"></workgroup-item>
+                        on-update="nodeGradingController.onUpdateHiddenComponents(value, event)"></workgroup-item>
     </md-list>
 </div>

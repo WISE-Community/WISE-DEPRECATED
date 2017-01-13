@@ -118,7 +118,7 @@ const WorkgroupComponentRevisions = {
     },
     template:
         `<md-list class="component-revisions">
-            <div  ng-repeat="item in $ctrl.data | toArray | orderBy: '-clientSaveTime'">
+            <div ng-repeat="item in $ctrl.data | toArray | orderBy: '-clientSaveTime'">
                 <md-list-item class="list-item md-3-line md-whiteframe-1dp component-revisions__item" ng-class="{'component-revisions__item--latest': $first}">
                     <div class="md-list-item-text component-revisions__item__text">
                         <div layout="row">
@@ -136,7 +136,7 @@ const WorkgroupComponentRevisions = {
                             <component component-state="{{item.componentState}}" mode="onlyShowWork">
                         </div>
                         <div ng-if="item.annotations.comment || item.annotations.score || item.annotations.autoComment || item.annotations.autoScore"
-                             class="annotations--grading md-body-1">
+                             class="annotations--grading annotations--grading--revision md-body-1">
                             <div ng-if="item.annotations.comment || item.annotations.score">
                                 <div ng-if="item.annotations.comment" layout="row" layout-wrap>
                                     <span class="component-revisions__annotation-label heavy">{{ 'TEACHERCOMMENT' | translate }}: </span>{{item.annotations.comment.data.value}}
