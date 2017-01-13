@@ -20,7 +20,7 @@
                     <md-icon class="text-secondary">delete</md-icon>
                 </md-button>
             </div>
-            <div ng-show="editNotebookItemController.showUpload"
+            <div ng-if="editNotebookItemController.showUpload"
                  ngf-drop ngf-select ngf-change="editNotebookItemController.attachStudentAssetToNote($files)"
                  class="notebook-item__upload"
                  drag-over-class="dragover" allow-dir="false"

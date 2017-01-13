@@ -30,7 +30,7 @@ class EditNotebookItemController {
 
         this.$translate = this.$filter('translate');
 
-        this.mode = this.ConfigService.getMode();
+        this.showUpload = false;
 
         if (this.itemId == null) {
             let currentNodeId = this.StudentDataService.getCurrentNodeId();
@@ -54,7 +54,15 @@ class EditNotebookItemController {
 
         this.notebookConfig = this.NotebookService.getNotebookConfig();
         let label = this.notebookConfig.itemTypes[this.item.type].label.singular;
-        this.title = (this.isEditMode ? (this.itemId ? this.$translate('EDIT') + ' ' : this.$translate('add') + ' ') : this.$translate('view') + ' ') + label;
+        if (this.isEditMode) {
+            if (this.itemId) {
+                this.title = this.$translate('editNote', { noteLabel: label });
+            } else {
+                this.title = this.$translate('addNote', { noteLabel: label });
+            }
+        } else {
+            this.title = this.$translate('viewNote', { noteLabel: label });
+        }
         this.saveEnabled = false;
 
         if (this.file != null) {
@@ -62,9 +70,9 @@ class EditNotebookItemController {
             var files = [this.file];  // put the file into an array
 
             this.attachStudentAssetToNote(files);
+        } else {
+            this.setShowUpload();
         }
-
-        this.setShowUpload();
     }
 
     attachStudentAssetToNote(files) {
@@ -190,7 +198,7 @@ class EditNotebookItemController {
     }
 
     setShowUpload() {
-        this.showUpload = this.mode !== 'preview' && (this.item.content.attachments && this.item.content.attachments.length < 1);
+        this.showUpload = this.item.content.attachments && this.item.content.attachments.length < 1;
     }
 }
 
