@@ -1,5 +1,6 @@
 class NodeController {
-    constructor($q,
+    constructor($filter,
+                $q,
                 $rootScope,
                 $scope,
                 AnnotationService,
@@ -9,6 +10,7 @@ class NodeController {
                 ProjectService,
                 StudentDataService) {
 
+        this.$filter = $filter;
         this.$q = $q;
         this.$rootScope = $rootScope;
         this.$scope = $scope;
@@ -18,6 +20,8 @@ class NodeController {
         this.NotebookService = NotebookService;
         this.ProjectService = ProjectService;
         this.StudentDataService = StudentDataService;
+
+        this.$translate = this.$filter('translate');
 
         // the auto save interval in milliseconds
         this.autoSaveInterval = 60000;
@@ -99,9 +103,9 @@ class NodeController {
             if (latestComponentState) {
                 let latestClientSaveTime = latestComponentState.clientSaveTime;
                 if (latestComponentState.isSubmit) {
-                    this.setSaveMessage('Last submitted', latestClientSaveTime);
+                    this.setSaveMessage(this.$translate('LASTSUBMITTED'), latestClientSaveTime);
                 } else {
-                    this.setSaveMessage('Last saved', latestClientSaveTime);
+                    this.setSaveMessage(this.$translate('LASTSAVED'), latestClientSaveTime);
                 }
             }
 
@@ -641,14 +645,14 @@ class NodeController {
             if ((componentStates != null && componentStates.length) ||
                 (componentAnnotations != null && componentAnnotations.length) ||
                 (componentEvents != null && componentEvents.length)) {
-                
+
                 // get the annotations from the components
                 for (var c = 0; c < componentStates.length; c++) {
                     var componentState = componentStates[c];
-                    
+
                     if (componentState != null) {
                         var annotations = componentState.annotations;
-                        
+
                         if (annotations != null) {
                             /*
                              * add the annotations to our array of annotations that will
@@ -656,12 +660,12 @@ class NodeController {
                              */
                             componentAnnotations = componentAnnotations.concat(annotations);
                         }
-                        
+
                         // remove the annotations from the component state
                         delete componentState.annotations;
                     }
                 }
-                
+
                 // save the component states to the server
                 return this.StudentDataService.saveToServer(componentStates, nodeStates, componentEvents, componentAnnotations).then((savedStudentDataResponse) => {
                     if (savedStudentDataResponse) {
@@ -670,24 +674,24 @@ class NodeController {
                             // this node has transition logic
                             this.NodeService.evaluateTransitionLogic();
                         }
-                        
+
                         // check if this node has transition logic that should be run when the student score changes
                         if (this.NodeService.hasTransitionLogic() && this.NodeService.evaluateTransitionLogicOn('scoreChanged')) {
-                            
+
                             if (componentAnnotations != null && componentAnnotations.length > 0) {
                                 var evaluateTransitionLogic = false;
-                                
+
                                 // loop through all the annotations and check if any were score annotations
                                 for (var c = 0; c < componentAnnotations.length; c++) {
                                     var componentAnnotation = componentAnnotations[c];
-                                    
+
                                     if (componentAnnotation != null) {
                                         if (componentAnnotation.type === 'autoScore') {
                                             evaluateTransitionLogic = true;
                                         }
                                     }
                                 }
-                                
+
                                 if (evaluateTransitionLogic) {
                                     // the student score has changed so we will evaluate the transition logic
                                     this.NodeService.evaluateTransitionLogic();
@@ -703,11 +707,11 @@ class NodeController {
                             let clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
 
                             if (isAutoSave) {
-                                this.setSaveMessage('Auto-Saved', clientSaveTime);
+                                this.setSaveMessage(this.$translate('AUTOSAVED'), clientSaveTime);
                             } else if (isSubmit) {
-                                this.setSaveMessage('Submitted', clientSaveTime);
+                                this.setSaveMessage(this.$translate('SUBMITTED'), clientSaveTime);
                             } else {
-                                this.setSaveMessage('Saved', clientSaveTime);
+                                this.setSaveMessage(this.$translate('SAVED'), clientSaveTime);
                             }
                         } else {
                             this.setSaveMessage('', null);
@@ -741,7 +745,7 @@ class NodeController {
         } else {
             components = this.getComponents();
         }
-        
+
         if (components.length) {
 
             var runId = this.ConfigService.getRunId();
@@ -776,7 +780,7 @@ class NodeController {
 
         return this.$q.all(componentStatePromises);
     };
-    
+
     /**
      * Get the component state from the child scope
      * @param childScope the child scope
@@ -833,7 +837,7 @@ class NodeController {
                         }
                     }
                 }
-                
+
                 return componentState
             }
         });
@@ -848,7 +852,7 @@ class NodeController {
     getLatestComponentAnnotations(componentId) {
         let latestScoreAnnotation = null;
         let latestCommentAnnotation = null;
-        
+
         let nodeId = this.nodeId;
         let workgroupId = this.workgroupId;
 
@@ -1043,6 +1047,7 @@ class NodeController {
 }
 
 NodeController.$inject = [
+    '$filter',
     '$q',
     '$rootScope',
     '$scope',

@@ -38,7 +38,7 @@ const WorkgroupInfo = {
             <div ng-if='$ctrl.canViewStudentNames' layout="row" layout-align="start center" class="heavy">
                 <div>
                     <span ng-repeat="userName in $ctrl.userNames">{{userName.name}}<span ng-if="!$last">,&nbsp;</span></span>
-                    <md-tooltip md-direction="top" ng-if='$ctrl.canViewStudentNames'>Workgroup ID: {{$ctrl.workgroupId}}</md-tooltip>
+                    <md-tooltip md-direction="top" ng-if='$ctrl.canViewStudentNames'>{{ 'WORKGROUPID' | translate }}: {{$ctrl.workgroupId}}</md-tooltip>
                 </div>
                 <alert-status-icon message="$ctrl.statusMsg" alert-status="$ctrl.alertStatus"></alert-status-icon>
             </div>

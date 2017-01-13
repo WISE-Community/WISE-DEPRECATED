@@ -38,6 +38,8 @@ var ProjectService = function () {
         this.nodeCount = 0;
         this.componentServices = {};
 
+        this.$translate = this.$filter('translate');
+
         // filtering options for navigation displays
         this.filters = [{ 'name': 'all', 'label': 'All' }
         //{'name': 'todo', 'label': 'Todo'},
@@ -5784,9 +5786,9 @@ var ProjectService = function () {
                 var removalCriteria = constraint.removalCriteria;
 
                 if (removalConditional === 'any') {
-                    message += 'To visit "' + nodeTitle + '" you must perform one of the actions below:<br/>';
+                    message += this.$translate('TOVISITSTEPYOUMUSTPERFORMONEOFTHEACTIONSBELOW', { nodeTitle: nodeTitle }) + ':<br/>';
                 } else {
-                    message += 'To visit "' + nodeTitle + '" you must perform all of the actions below:<br/>';
+                    message += this.$translate('TOVISITSTEPYOUMUSTPERFORMALLOFTHEACTIONSBELOW', { nodeTitle: nodeTitle }) + ':<br/>';
                 }
 
                 if (removalCriteria != null) {
@@ -7370,7 +7372,7 @@ var ProjectService = function () {
                 }, {
                     "id": "group1",
                     "type": "group",
-                    "title": "First Activity",
+                    "title": this.$translate('FIRSTACTIVITY'),
                     "startId": "",
                     "ids": [],
                     "icons": {
@@ -7390,11 +7392,11 @@ var ProjectService = function () {
                     "template": "starmap|leftNav|rightNav"
                 },
                 "metadata": {
-                    "title": "My New Project!"
+                    "title": this.$translate('MYNEWPROJECT')
                 },
                 "notebook": {
                     "enabled": false,
-                    "label": "Notebook",
+                    "label": this.$translate('NOTEBOOK'),
                     "enableAddNew": true,
                     "itemTypes": {
                         "note": {
@@ -7405,9 +7407,9 @@ var ProjectService = function () {
                             "enableClipping": true,
                             "enableStudentUploads": true,
                             "label": {
-                                "singular": "note",
-                                "plural": "notes",
-                                "link": "Notes",
+                                "singular": this.$translate('NOTELOWERCASE'),
+                                "plural": this.$translate('NOTESLOWERCASE'),
+                                "link": this.$translate('NOTES'),
                                 "icon": "note",
                                 "color": "#1565C0"
                             }
@@ -7419,9 +7421,9 @@ var ProjectService = function () {
                             "enableClipping": true,
                             "enableStudentUploads": true,
                             "label": {
-                                "singular": "question",
-                                "plural": "questions",
-                                "link": "Questions",
+                                "singular": this.$translate('QUESTIONLOWERCASE'),
+                                "plural": this.$translate('QUESTIONSLOWERCASE'),
+                                "link": this.$translate('QUESTIONS'),
                                 "icon": "live_help",
                                 "color": "#F57C00"
                             }
@@ -7429,18 +7431,18 @@ var ProjectService = function () {
                         "report": {
                             "enabled": false,
                             "label": {
-                                "singular": "report",
-                                "plural": "reports",
-                                "link": "Report",
+                                "singular": this.$translate('REPORTLOWERCASE'),
+                                "plural": this.$translate('REPORTSLOWERCASE'),
+                                "link": this.$translate('REPORT'),
                                 "icon": "assignment",
                                 "color": "#AD1457"
                             },
                             "notes": [{
                                 "reportId": "finalReport",
-                                "title": "Final Report",
-                                "description": "Final summary report of what you learned in this project",
-                                "prompt": "Use this space to write your final report using evidence from your notebook.",
-                                "content": "<h3>This is a heading</h3><p>This is a paragraph.</p>"
+                                "title": this.$translate('FINALREPORT'),
+                                "description": this.$translate('REPORTDESCRIPTION'),
+                                "prompt": this.$translate('REPORTPROMPT'),
+                                "content": this.$translate('REPORTCONTENT')
                             }]
                         }
                     }
@@ -7818,7 +7820,7 @@ var ProjectService = function () {
 
             /*
              * Make the request to import the steps. This will copy the asset files
-             * and change file names if necessary. If an asset file with the same 
+             * and change file names if necessary. If an asset file with the same
              * name exists in both projects we will check if their content is the
              * same. If the content is the same we don't need to copy the file. If
              * the content is different, we need to make a copy of the file with a
@@ -8399,7 +8401,7 @@ var ProjectService = function () {
                                         if (removalCriterion != null) {
                                             if (removalCriterion.name == 'branchPathTaken') {
                                                 /*
-                                                 * we have found a branch path taken constraint so 
+                                                 * we have found a branch path taken constraint so
                                                  * we will add the constraint to the array
                                                  */
                                                 branchPathTakenConstraints.push(constraint);

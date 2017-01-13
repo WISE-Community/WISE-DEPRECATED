@@ -9,13 +9,16 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var AnnotationService = function () {
-    function AnnotationService($http, $rootScope, ConfigService, UtilService) {
+    function AnnotationService($filter, $http, $rootScope, ConfigService, UtilService) {
         _classCallCheck(this, AnnotationService);
 
+        this.$filter = $filter;
         this.$http = $http;
         this.$rootScope = $rootScope;
         this.ConfigService = ConfigService;
         this.UtilService = UtilService;
+
+        this.$translate = this.$filter('translate');
 
         this.annotations = null;
     }
@@ -722,7 +725,7 @@ var AnnotationService = function () {
                             }
                         } else {
                             // each global annotation should have a name, so it shouldn't get here
-                            console.error("Global annotation does not have a name: " + annotation);
+                            console.error(this.$translate('GLOBALANNOTATIONDOESNOTHAVEANAME') + annotation);
                         }
                     }
                 }
@@ -797,7 +800,7 @@ var AnnotationService = function () {
                             }
                         } else {
                             // each global annotation should have a name, so it shouldn't get here
-                            console.error("Global annotation does not have a name: " + annotation);
+                            console.error(his.$translate('GLOBALANNOTATIONDOESNOTHAVEANAME') + annotation);
                         }
                     }
                 }
@@ -831,7 +834,7 @@ var AnnotationService = function () {
     return AnnotationService;
 }();
 
-AnnotationService.$inject = ['$http', '$rootScope', 'ConfigService', 'UtilService'];
+AnnotationService.$inject = ['$filter', '$http', '$rootScope', 'ConfigService', 'UtilService'];
 
 exports.default = AnnotationService;
 //# sourceMappingURL=annotationService.js.map

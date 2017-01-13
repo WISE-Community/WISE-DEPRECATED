@@ -9,14 +9,17 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var StudentAssetService = function () {
-    function StudentAssetService($http, $q, Upload, $rootScope, ConfigService) {
+    function StudentAssetService($filter, $http, $q, Upload, $rootScope, ConfigService) {
         _classCallCheck(this, StudentAssetService);
 
+        this.$filter = $filter;
         this.$http = $http;
         this.$q = $q;
         this.Upload = Upload;
         this.$rootScope = $rootScope;
         this.ConfigService = ConfigService;
+
+        this.$translate = this.$filter('translate');
 
         this.allAssets = []; // keep track of student's assets
     }
@@ -159,7 +162,7 @@ var StudentAssetService = function () {
                     file: file
                 }).success(function (asset, status, headers, config) {
                     if (asset === "error") {
-                        alert("There was an error uploading.");
+                        alert(_this2.$translate('THEREWASANERRORUPLOADING'));
                     } else {
                         var studentUploadsBaseURL = _this2.ConfigService.getStudentUploadsBaseURL();
                         asset.url = studentUploadsBaseURL + asset.filePath;
@@ -178,7 +181,7 @@ var StudentAssetService = function () {
                         deferred.resolve(asset);
                     }
                 }).error(function (asset, status, headers, config) {
-                    alert("There was an error uploading. You might have reached your file upload limit or the file you tried to upload was too large. Please ask your teacher for help.");
+                    alert(_this2.$translate('THEREWASANERRORUPLOADINGYOUMIGHTHAVEREACHEDLIMIT'));
                 });
 
                 return deferred.promise;
@@ -287,7 +290,7 @@ var StudentAssetService = function () {
     return StudentAssetService;
 }();
 
-StudentAssetService.$inject = ['$http', '$q', 'Upload', '$rootScope', 'ConfigService'];
+StudentAssetService.$inject = ['$filter', '$http', '$q', 'Upload', '$rootScope', 'ConfigService'];
 
 exports.default = StudentAssetService;
 //# sourceMappingURL=studentAssetService.js.map

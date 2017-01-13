@@ -1,12 +1,21 @@
 'use strict';
 
 class StudentAssetService {
-    constructor($http, $q, Upload, $rootScope, ConfigService) {
+    constructor($filter,
+                $http,
+                $q,
+                Upload,
+                $rootScope,
+                ConfigService) {
+
+        this.$filter = $filter;
         this.$http = $http;
         this.$q = $q;
         this.Upload = Upload;
         this.$rootScope = $rootScope;
         this.ConfigService = ConfigService;
+
+        this.$translate = this.$filter('translate');
 
         this.allAssets = [];  // keep track of student's assets
     }
@@ -138,7 +147,7 @@ class StudentAssetService {
                 file: file
             }).success((asset, status, headers, config) => {
                 if (asset === "error") {
-                    alert("There was an error uploading.");
+                    alert(this.$translate('THEREWASANERRORUPLOADING'));
                 } else {
                     var studentUploadsBaseURL = this.ConfigService.getStudentUploadsBaseURL();
                     asset.url = studentUploadsBaseURL + asset.filePath;
@@ -157,7 +166,7 @@ class StudentAssetService {
                     deferred.resolve(asset);
                 }
             }).error((asset, status, headers, config) => {
-                alert("There was an error uploading. You might have reached your file upload limit or the file you tried to upload was too large. Please ask your teacher for help.");
+                alert(this.$translate('THEREWASANERRORUPLOADINGYOUMIGHTHAVEREACHEDLIMIT'));
             });
 
             return deferred.promise;
@@ -252,6 +261,12 @@ class StudentAssetService {
     };
 }
 
-StudentAssetService.$inject = ['$http', '$q', 'Upload', '$rootScope', 'ConfigService'];
+StudentAssetService.$inject = [
+    '$filter',
+    '$http',
+    '$q',
+    'Upload',
+    '$rootScope',
+    'ConfigService'];
 
 export default StudentAssetService;

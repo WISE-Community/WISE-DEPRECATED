@@ -50,7 +50,7 @@ class EditNotebookItemController {
 
         this.notebookConfig = this.NotebookService.getNotebookConfig();
         let label = this.notebookConfig.itemTypes[this.item.type].label.singular;
-        this.title = (this.isEditMode ? (this.itemId ? this.$translate('edit') + ' ' : this.$translate('add') + ' ') : this.$translate('view') + ' ') + label;
+        this.title = (this.isEditMode ? (this.itemId ? this.$translate('EDIT') + ' ' : this.$translate('add') + ' ') : this.$translate('view') + ' ') + label;
         this.saveEnabled = false;
 
         if (this.file != null) {

@@ -1,11 +1,19 @@
 'use strict';
 
 class AnnotationService {
-    constructor($http, $rootScope, ConfigService, UtilService) {
+    constructor($filter,
+                $http,
+                $rootScope,
+                ConfigService,
+                UtilService) {
+
+        this.$filter = $filter;
         this.$http = $http;
         this.$rootScope = $rootScope;
         this.ConfigService = ConfigService;
         this.UtilService = UtilService;
+
+        this.$translate = this.$filter('translate');
 
         this.annotations = null;
     }
@@ -681,7 +689,7 @@ class AnnotationService {
                         }
                     } else {
                         // each global annotation should have a name, so it shouldn't get here
-                        console.error("Global annotation does not have a name: " + annotation);
+                        console.error(this.$translate('GLOBALANNOTATIONDOESNOTHAVEANAME') + annotation);
                     }
                 }
             }
@@ -750,7 +758,7 @@ class AnnotationService {
                         }
                     } else {
                         // each global annotation should have a name, so it shouldn't get here
-                        console.error("Global annotation does not have a name: " + annotation);
+                        console.error(his.$translate('GLOBALANNOTATIONDOESNOTHAVEANAME') + annotation);
                     }
                 }
             }
@@ -779,6 +787,7 @@ class AnnotationService {
 }
 
 AnnotationService.$inject = [
+    '$filter',
     '$http',
     '$rootScope',
     'ConfigService',

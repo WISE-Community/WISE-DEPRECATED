@@ -25,6 +25,8 @@ class ProjectService {
         this.nodeCount = 0;
         this.componentServices = {};
 
+        this.$translate = this.$filter('translate');
+
         // filtering options for navigation displays
         this.filters = [
             {'name': 'all', 'label': 'All'}
@@ -420,7 +422,7 @@ class ProjectService {
             }
         }
     };
-    
+
     /**
      * Get the node order mappings of the project
      * @param project the project JSOn
@@ -428,38 +430,38 @@ class ProjectService {
      * of nodes
      */
     getNodeOrderOfProject(project) {
-        
+
         var idToOrder = {};
-        
+
         // initialize the node count used for counting the nodes
         idToOrder.nodeCount = 0;
-        
+
         // get the start group id
         var startGroupId = project.startGroupId;
-        
+
         // get the root node
         var rootNode = this.getNodeById(startGroupId, project);
-        
+
         // initialize the step number
         var stepNumber = '';
-        
+
         // initialize the nodes
         var nodes = [];
-        
+
         // recursively traverse the project to calculate the node counts and step numbers
         var importProjectIdToOrder = this.getNodeOrderOfProjectHelper(project, rootNode, idToOrder, stepNumber, nodes);
-        
+
         // remove the node count from the mapping since we don't need it anymore
         delete importProjectIdToOrder.nodeCount;
-        
+
         // create the object we will return
         var result = {};
         result.idToOrder = importProjectIdToOrder;
         result.nodes = nodes;
-        
+
         return result;
     }
-    
+
     /**
      * Recursively traverse the project to calculate the node order and step numbers
      * @param project the project JSON
@@ -469,7 +471,7 @@ class ProjectService {
      * @param nodes the array of nodes
      */
     getNodeOrderOfProjectHelper(project, node, idToOrder, stepNumber, nodes) {
-        
+
         /*
          * Create the item that we will add to the idToOrder mapping.
          * The 'order' field determines how the project nodes are displayed
@@ -480,45 +482,45 @@ class ProjectService {
             'node': node,
             'stepNumber': stepNumber
         };
-        
+
         // set the mapping of node id to item
         idToOrder[node.id] = item;
-        
+
         // increment the node count
         idToOrder.nodeCount++;
-        
+
         // add the item to the nodes array
         nodes.push(item);
-        
+
         if (node.type == 'group') {
             // the node is group so we also need to loop through its children
-            
+
             // get the child node ids
             var childIds = node.ids;
-            
+
             // loop through all the children
             for (var c = 0; c < childIds.length; c++) {
                 var childId = childIds[c];
-                
+
                 // get a child node
                 var child = this.getNodeById(childId, project);
-                
+
                 // get the current step number e.g. 1
                 var childStepNumber = stepNumber;
-                
+
                 if (childStepNumber != '') {
                     // add the . separator for the step number e.g. 1.
                     childStepNumber += '.';
                 }
-                
+
                 // update the step number e.g. 1.1
                 childStepNumber += (c + 1);
-                
+
                 // recursively traverse the child
                 this.getNodeOrderOfProjectHelper(project, child, idToOrder, childStepNumber, nodes);
             }
         }
-        
+
         return idToOrder;
     }
 
@@ -858,21 +860,21 @@ class ProjectService {
              * the project argument is not null so we will get the node from
              * project that was passed in
              */
-            
+
             // loop through all the active nodes in the project
             for (var n = 0; n < project.nodes.length; n++) {
                 var tempNode = project.nodes[n];
-                
+
                 if (tempNode != null && tempNode.id == nodeId) {
                     // we have found the node we are looking for
                     return tempNode;
                 }
             }
-            
+
             // loop through all the inactive nodes in the project
             for (var n = 0; n < project.inactiveNodes.length; n++) {
                 var tempNode = project.inactiveNodes[n];
-                
+
                 if (tempNode != null && tempNode.id == nodeId) {
                     // we have found the node we are looking for
                     return tempNode;
@@ -1619,42 +1621,42 @@ class ProjectService {
             return projectJSON;
         });
     };
-    
+
     /**
      * Retrieve the project JSON
      * @param projectId retrieve the project JSON with this id
      * @return a promise to return the project JSON
      */
     retrieveProjectById(projectId) {
-        
+
         if (projectId != null) {
-            
+
             // get the config URL for the project
             var configURL = window.configURL + '/' + projectId;
-            
+
             // get the config for the project
             return this.$http.get(configURL).then((result) => {
                 var configJSON = result.data;
-                
+
                 if (configJSON != null) {
-                    
+
                     // get the project URL and preview project URL
                     var projectURL = configJSON.projectURL;
                     var previewProjectURL = configJSON.previewProjectURL;
-                    
+
                     if (projectURL != null) {
-                        
+
                         // get the project JSON
                         return this.$http.get(projectURL).then((result) => {
                             var projectJSON = result.data;
-                            
+
                             /*
                              * set the preview project URL into the project JSON
                              * so that we easily obtain the preview project URL
                              * later
                              */
                             projectJSON.previewProjectURL = previewProjectURL;
-                            
+
                             return projectJSON;
                         });
                     }
@@ -3514,38 +3516,38 @@ class ProjectService {
 
             // make the before node point to the new node
             previousNode.transitionLogic.transitions.push(transitionObject);
-            
+
             // remove the branch path taken constraints from the node we are moving
             this.removeBranchPathTakenNodeConstraints(node.id);
-            
+
             // get the branch path taken constraints from the previous node
             var branchPathTakenConstraints = this.getBranchPathTakenConstraintsByNodeId(nodeId);
-            
+
             /*
              * if the previous node was in a branch path, we will also put the
              * inserted node into the branch path
              */
             if (branchPathTakenConstraints != null && branchPathTakenConstraints.length > 0) {
-                
+
                 if (node.constraints == null) {
                     node.constraints = [];
                 }
-                
+
                 // loop through all the branch path taken constraints
                 for (var c = 0; c < branchPathTakenConstraints.length; c++) {
-                    
+
                     // get a branch path taken constraint
                     var branchPathTakenConstraint = branchPathTakenConstraints[c];
-                    
+
                     if (branchPathTakenConstraint != null) {
-                        
+
                         // create a new constraint with the same branch path taken parameters
                         var newConstraint = {};
                         newConstraint.id = this.getNextAvailableConstraintIdForNodeId(node.id);
                         newConstraint.action = branchPathTakenConstraint.action;
                         newConstraint.targetId = node.id;
                         newConstraint.removalCriteria = this.UtilService.makeCopyOfJSONObject(branchPathTakenConstraint.removalCriteria);
-                        
+
                         // add the constraint to the node
                         node.constraints.push(newConstraint);
                     }
@@ -5350,9 +5352,9 @@ class ProjectService {
             var removalCriteria = constraint.removalCriteria;
 
             if (removalConditional === 'any') {
-                message += 'To visit "' + nodeTitle + '" you must perform one of the actions below:<br/>';
+                message += this.$translate('TOVISITSTEPYOUMUSTPERFORMONEOFTHEACTIONSBELOW', { nodeTitle: nodeTitle}) + ':<br/>';
             } else {
-                message += 'To visit "' + nodeTitle + '" you must perform all of the actions below:<br/>';
+                message += this.$translate('TOVISITSTEPYOUMUSTPERFORMALLOFTHEACTIONSBELOW', { nodeTitle: nodeTitle}) + ':<br/>';
             }
 
             if (removalCriteria != null) {
@@ -6205,7 +6207,7 @@ class ProjectService {
             var inactiveNodes = this.project.inactiveNodes;
 
             if (inactiveNodes != null) {
-                
+
                 // clear the transitions from this node
                 if (node.transitionLogic != null) {
                     node.transitionLogic.transitions = [];
@@ -6863,7 +6865,7 @@ class ProjectService {
                 {
                     "id": "group1",
                     "type": "group",
-                    "title": "First Activity",
+                    "title": this.$translate('FIRSTACTIVITY'),
                     "startId": "",
                     "ids": [
                     ],
@@ -6885,11 +6887,11 @@ class ProjectService {
                 "template": "starmap|leftNav|rightNav"
             },
             "metadata": {
-                "title": "My New Project!"
+                "title": this.$translate('MYNEWPROJECT')
             },
             "notebook": {
                 "enabled": false,
-                "label": "Notebook",
+                "label": this.$translate('NOTEBOOK'),
                 "enableAddNew": true,
                 "itemTypes": {
                     "note": {
@@ -6900,9 +6902,9 @@ class ProjectService {
                         "enableClipping": true,
                         "enableStudentUploads": true,
                         "label": {
-                            "singular": "note",
-                            "plural": "notes",
-                            "link": "Notes",
+                            "singular": this.$translate('NOTELOWERCASE'),
+                            "plural": this.$translate('NOTESLOWERCASE'),
+                            "link": this.$translate('NOTES'),
                             "icon": "note",
                             "color": "#1565C0"
                         }
@@ -6914,9 +6916,9 @@ class ProjectService {
                         "enableClipping": true,
                         "enableStudentUploads": true,
                         "label": {
-                            "singular": "question",
-                            "plural": "questions",
-                            "link": "Questions",
+                            "singular": this.$translate('QUESTIONLOWERCASE'),
+                            "plural": this.$translate('QUESTIONSLOWERCASE'),
+                            "link": this.$translate('QUESTIONS'),
                             "icon": "live_help",
                             "color": "#F57C00"
                         }
@@ -6924,19 +6926,19 @@ class ProjectService {
                     "report": {
                         "enabled": false,
                         "label": {
-                            "singular": "report",
-                            "plural": "reports",
-                            "link": "Report",
+                            "singular": this.$translate('REPORTLOWERCASE'),
+                            "plural": this.$translate('REPORTSLOWERCASE'),
+                            "link": this.$translate('REPORT'),
                             "icon": "assignment",
                             "color": "#AD1457"
                         },
                         "notes": [
                             {
                                 "reportId": "finalReport",
-                                "title": "Final Report",
-                                "description": "Final summary report of what you learned in this project",
-                                "prompt": "Use this space to write your final report using evidence from your notebook.",
-                                "content": "<h3>This is a heading</h3><p>This is a paragraph.</p>"
+                                "title": this.$translate('FINALREPORT'),
+                                "description": this.$translate('REPORTDESCRIPTION'),
+                                "prompt": this.$translate('REPORTPROMPT'),
+                                "content": this.$translate('REPORTCONTENT')
                             }
                         ]
                     }
@@ -7123,7 +7125,7 @@ class ProjectService {
 
         return result;
     }
-    
+
     /**
      * Get an unused component id
      * @return a component id that isn't already being used in the project
@@ -7131,10 +7133,10 @@ class ProjectService {
     getUnusedComponentId() {
         // we want to make an id with 10 characters
         var idLength = 10;
-        
+
         // generate a new id
         var newComponentId = this.UtilService.generateKey(idLength);
-        
+
         // check if the component id is already used in the project
         if (this.isComponentIdUsed(newComponentId)) {
             /*
@@ -7142,7 +7144,7 @@ class ProjectService {
              * try generating another one
              */
             var alreadyUsed = true;
-            
+
             /*
              * keep trying to generate a new component id until we have found
              * one that isn't already being used
@@ -7150,15 +7152,15 @@ class ProjectService {
             while(!alreadyUsed) {
                 // generate a new id
                 newComponentId = this.UtilService.generateKey(idLength);
-                
+
                 // check if the id is already being used in the project
                 alreadyUsed = this.isComponentIdUsed(newComponentId);
             }
         }
-        
+
         return newComponentId;
     }
-    
+
     /**
      * Check if the component id is already being used in the project
      * @param componentId check if this component id is already being used in
@@ -7167,22 +7169,22 @@ class ProjectService {
      */
     isComponentIdUsed(componentId) {
         var isUsed = false;
-        
+
         // loop through all the active nodes
         for (var n = 0; n < this.project.nodes.length; n++) {
-            
+
             // get an active node
             var node = this.project.nodes[n];
-            
+
             if (node != null) {
                 var components = node.components;
-                
+
                 if (components != null) {
-                    
+
                     // loop through all the components
                     for (var c = 0; c < components.length; c++) {
                         var component = components[c];
-                        
+
                         if (component != null) {
                             if (componentId === component.id) {
                                 // the component id is already being used
@@ -7193,22 +7195,22 @@ class ProjectService {
                 }
             }
         }
-        
+
         // loop through all the inactive nodes
         for (var n = 0; n < this.project.inactiveNodes.length; n++) {
-            
+
             // get an inactive node
             var node = this.project.inactiveNodes[n];
-            
+
             if (node != null) {
                 var components = node.components;
-                
+
                 if (components != null) {
-                    
+
                     // loop through all the components
                     for (var c = 0; c < components.length; c++) {
                         var component = components[c];
-                        
+
                         if (component != null) {
                             if (componentId === component.id) {
                                 // the component id is already being used
@@ -7219,10 +7221,10 @@ class ProjectService {
                 }
             }
         }
-        
+
         return isUsed;
     }
-    
+
     /**
      * Check if a node id is already being used in the project
      * @param nodeId check if this node id is already being used in the project
@@ -7230,38 +7232,38 @@ class ProjectService {
      */
     isNodeIdUsed(nodeId) {
         var isUsed = false;
-        
+
         // loop through all the active nodes
         for (var n = 0; n < this.project.nodes.length; n++) {
-            
+
             // get an active node
             var node = this.project.nodes[n];
-            
+
             if (node != null) {
-                
+
                 if (nodeId === node.id) {
                     return true;
                 }
             }
         }
-        
+
         // loop through all the inactive nodes
         for (var n = 0; n < this.project.inactiveNodes.length; n++) {
-            
+
             // get an inactive node
             var node = this.project.inactiveNodes[n];
-            
+
             if (node != null) {
-                
+
                 if (nodeId === node.id) {
                     return true;
                 }
             }
         }
-        
+
         return isUsed;
     }
-    
+
     /**
      * Copy the nodes into the project
      * @param selectedNodes the nodes to import
@@ -7269,10 +7271,10 @@ class ProjectService {
      * @param toProjectId copy the nodes into this project
      */
     copyNodes(selectedNodes, fromProjectId, toProjectId) {
-        
+
         // get the import steps URL
         var importStepsURL = this.ConfigService.getConfigParam('importStepsURL');
-        
+
         var httpParams = {};
         httpParams.method = 'POST';
         httpParams.url = importStepsURL;
@@ -7284,10 +7286,10 @@ class ProjectService {
         params.fromProjectId = fromProjectId;
         params.toProjectId = toProjectId;
         httpParams.data = $.param(params);
-        
+
         /*
          * Make the request to import the steps. This will copy the asset files
-         * and change file names if necessary. If an asset file with the same 
+         * and change file names if necessary. If an asset file with the same
          * name exists in both projects we will check if their content is the
          * same. If the content is the same we don't need to copy the file. If
          * the content is different, we need to make a copy of the file with a
@@ -7295,24 +7297,24 @@ class ProjectService {
          * name.
          */
         return this.$http(httpParams).then((result) => {
-            
+
             // get the selected nodes from the result that may have been modified
             selectedNodes = result.data;
-            
+
             // get the inactive nodes from the project
             var inactiveNodes = this.getInactiveNodes();
-            
+
             // we will insert the steps into the inactive steps
             var nodeIdToInsertAfter = 'inactiveSteps';
-            
+
             // loop through the nodes we will import
             for (var n = 0; n < selectedNodes.length; n++) {
-                
+
                 // get a node
                 var selectedNode = selectedNodes[n];
-                
+
                 if (selectedNode != null) {
-                    
+
                     /*
                      * Insert the node after the last inactive node. If there
                      * are no inactive nodes it will just be placed in the
@@ -7329,10 +7331,10 @@ class ProjectService {
                     // check if the node id is already being used in the current project
                     if (this.isNodeIdUsed(tempNode.id)) {
                         // the node id is already being used in the current project
-                        
+
                         // get the next available node id
                         var nextAvailableNodeId = this.getNextAvailableNodeId();
-                        
+
                         // change the node id of the node we are importing
                         tempNode.id = nextAvailableNodeId;
                     }
@@ -7341,22 +7343,22 @@ class ProjectService {
                     var tempComponents = tempNode.components;
 
                     if (tempComponents != null) {
-                        
+
                         // loop through all the components in the node we are importing
                         for (var c = 0; c < tempComponents.length; c++) {
-                            
+
                             // get a component
                             var tempComponent = tempComponents[c];
-                            
+
                             if (tempComponent != null) {
-                                
+
                                 // check if the component id is already being used
                                 if (this.isComponentIdUsed(tempComponent.id)) {
                                     // we are already using the component id so we will need to change it
-                                    
+
                                     // find a component id that isn't currently being used
                                     var newComponentId = this.getUnusedComponentId();
-                                    
+
                                     // set the new component id into the component
                                     tempComponent.id = newComponentId;
                                 }
@@ -7373,7 +7375,7 @@ class ProjectService {
             }
         });
     }
-    
+
     /**
      * Get the next available constraint id for a node
      * @param nodeId get the next available constraint id for this node
@@ -7381,50 +7383,50 @@ class ProjectService {
      * @return the next available constraint id for the node
      */
     getNextAvailableConstraintIdForNodeId(nodeId) {
-        
+
         var nextAvailableConstraintId = null;
-        
+
         if (nodeId != null) {
-            
+
             // an array to hold the constraint ids that are already being used
             var usedConstraintIds = [];
-            
+
             // get the node
             var node = this.getNodeById(nodeId);
-            
+
             if (node != null) {
                 var constraints = node.constraints;
-                
+
                 if (constraints != null) {
-                    
+
                     // loop through all the constraints
                     for (var c = 0; c < constraints.length; c++) {
                         var constraint = constraints[c];
-                        
+
                         if (constraint != null) {
                             var constraintId = constraint.id;
-                            
+
                             // add the constraint id to the array of used constraint ids
                             usedConstraintIds.push(constraintId);
                         }
                     }
                 }
             }
-            
+
             var foundNextAvailableConstraintId = false;
             var counter = 1;
-            
+
             // loop until we have found a constraint id that hasn't been used
             while(!foundNextAvailableConstraintId) {
-                
+
                 // generate a constraint id
                 var potentialConstraintId = nodeId + 'Constraint' + counter;
-                
+
                 // check if the constraint id has been used
                 if (usedConstraintIds.indexOf(potentialConstraintId) == -1) {
                     // we have found a constraint id that has not been used
                     nextAvailableConstraintId = potentialConstraintId;
-                    
+
                     // we are done looping
                     foundNextAvailableConstraintId = true;
                 } else {
@@ -7433,34 +7435,34 @@ class ProjectService {
                 }
             }
         }
-        
+
         return nextAvailableConstraintId;
     }
-    
+
     /**
      * Set a field in the transition logic of a node
      */
     setTransitionLogicField(nodeId, field, value) {
-        
+
         if (nodeId != null && field != null) {
-            
+
             // get the node
             var node = this.getNodeById(nodeId);
-            
+
             if (node != null) {
-                
+
                 // get the transition logic
                 var transitionLogic = node.transitionLogic;
-                
+
                 if (transitionLogic != null) {
-                    
+
                     // set the value of the field
                     transitionLogic[field] = value;
                 }
             }
         }
     }
-    
+
     /**
      * Set the criteria params field
      * @param criteria the criteria object
@@ -7468,41 +7470,41 @@ class ProjectService {
      * @param value the value to set into the field
      */
     setCriteriaParamsField(criteria, field, value) {
-        
+
         if (criteria != null) {
-            
+
             if (criteria.params == null) {
-                
+
                 // create a params field since it does not exist
                 criteria.params = {};
             }
-            
+
             // set the value of the field
             criteria.params[field] = value;
         }
     }
-    
+
     /**
      * Get the criteria params field
      * @param criteria the criteria object
      * @param field the field name
      */
     getCriteriaParamsField(criteria, field) {
-        
+
         if (criteria != null) {
-            
+
             // get the params
             var params = criteria.params;
-            
+
             if (params != null) {
                 // get the field value
                 return params[field];
             }
         }
-        
+
         return null;
     }
-    
+
     /**
      * Set the transition to value of a node
      * @param fromNodeId the from node
@@ -7510,32 +7512,32 @@ class ProjectService {
      */
     setTransition(fromNodeId, toNodeId) {
         var node = this.getNodeById(fromNodeId);
-        
+
         if (node != null) {
             // get the transition logic of the node
             var transitionLogic = node.transitionLogic;
-            
+
             if (transitionLogic != null) {
-                
+
                 // get the transitions
                 var transitions = transitionLogic.transitions;
-                
+
                 if (transitions == null || transitions.length == 0) {
                     // there are no transitions so we will create one
                     transitionLogic.transitions = [];
-                    
+
                     // create a transition object
                     var transition = {};
                     transitionLogic.transitions.push(transition);
-                    
+
                     transitions = transitionLogic.transitions;
                 }
-                
+
                 if (transitions != null && transitions.length > 0) {
-                    
+
                     // get the first transition. we will assume there is only one transition.
                     var transition = transitions[0];
-                    
+
                     if (transition != null) {
                         // set the to value
                         transition.to = toNodeId;
@@ -7544,33 +7546,33 @@ class ProjectService {
             }
         }
     }
-    
+
     /**
      * Get the node id that comes after a given node id
      * @param nodeId get the node id that comes after this node id
      * @param the node id that comes after the one that is passed in as a parameter
      */
     getNodeIdAfter(nodeId) {
-        
+
         var nodeIdAfter = null;
-        
+
         // get an array of ordered items. each item represents a node
         var orderedItems = this.$filter('orderBy')(this.$filter('toArray')(this.idToOrder), 'order');
-        
+
         if (orderedItems != null) {
-            
+
             var foundNodeId = false;
-            
+
             // loop through all the items
             for (var i = 0; i < orderedItems.length; i++) {
-                
+
                 // get an item
                 var item = orderedItems[i];
-                
+
                 if (item != null) {
                     // get the node id of the item
                     var tempNodeId = item.$key;
-                    
+
                     // check if we have found the node id that was passed in as a parameter
                     if (foundNodeId) {
                         /*
@@ -7580,7 +7582,7 @@ class ProjectService {
                         nodeIdAfter = tempNodeId;
                         break;
                     } else {
-                        
+
                         if (nodeId == tempNodeId) {
                             // we have found the node id that was passed in as a parameter
                             foundNodeId = true;
@@ -7589,10 +7591,10 @@ class ProjectService {
                 }
             }
         }
-        
+
         return nodeIdAfter;
     }
-    
+
     /**
      * Get the node ids in the branch by looking for nodes that have branch
      * path taken constraints with the given fromNodeId and toNodeId
@@ -7601,18 +7603,18 @@ class ProjectService {
      * @return an array of nodes that are in the branch path
      */
     getNodeIdsInBranch(fromNodeId, toNodeId) {
-        
+
         var nodesInBranch = [];
-        
+
         // get all the nodes in the project
         var nodes = this.getNodes();
-        
+
         if (nodes != null) {
-            
+
             // loop through all the nodes
             for (var n = 0; n < nodes.length; n++) {
                 var node = nodes[n];
-                
+
                 if (node != null) {
                     if (this.hasBranchPathTakenConstraint(node, fromNodeId, toNodeId)) {
                         /*
@@ -7624,10 +7626,10 @@ class ProjectService {
                 }
             }
         }
-        
+
         return nodesInBranch;
     }
-    
+
     /**
      * Check if a node has a branch path taken constraint
      * @param node the node to check
@@ -7637,42 +7639,42 @@ class ProjectService {
      * given from node id and to node id
      */
     hasBranchPathTakenConstraint(node, fromNodeId, toNodeId) {
-        
+
         if (node != null) {
-            
+
             // get the constraints in the node
             var constraints = node.constraints;
-            
+
             if (constraints != null) {
-                
+
                 // loop through all the constraints
                 for (var c = 0; c < constraints.length; c++) {
                     var constraint = constraints[c];
-                    
+
                     if (constraint != null) {
-                        
+
                         // get the removal criteria of the constraint
                         var removalCriteria = constraint.removalCriteria;
-                        
+
                         if (removalCriteria != null) {
-                            
+
                             // loop through all the removal criterion
                             for (var r = 0; r < removalCriteria.length; r++) {
-                                
+
                                 // get a removal criterion
                                 var removalCriterion = removalCriteria[r];
-                                
+
                                 if (removalCriterion != null) {
-                                    
+
                                     // get the removal criterion name
                                     var name = removalCriterion.name;
-                                    
+
                                     if (name == 'branchPathTaken') {
                                         // this is a branch path taken constraint
-                                        
+
                                         // get the removal criterion params
                                         var params = removalCriterion.params;
-                                        
+
                                         if (params != null) {
                                             if (fromNodeId == params.fromNodeId && toNodeId == params.toNodeId) {
                                                 // the params match the from node id and to node id
@@ -7687,10 +7689,10 @@ class ProjectService {
                 }
             }
         }
-        
+
         return false;
     }
-    
+
     /**
      * Add branch path taken constraints to the node
      * @param targetNodeId the node to add the constraints to
@@ -7698,14 +7700,14 @@ class ProjectService {
      * @param toNodeId the to node id of the branch path taken constraint
      */
     addBranchPathTakenConstraints(targetNodeId, fromNodeId, toNodeId) {
-        
+
         if (targetNodeId != null) {
-            
+
             // get the node
             var node = this.getNodeById(targetNodeId);
-            
+
             if (node != null) {
-                
+
                 /*
                  * create the constraint that makes the node not visible until
                  * the given branch path is taken
@@ -7722,7 +7724,7 @@ class ProjectService {
                 noteVisibleRemovalCriterion.params.toNodeId = toNodeId;
                 makeThisNodeNotVisibleConstraint.removalCriteria.push(noteVisibleRemovalCriterion);
                 node.constraints.push(makeThisNodeNotVisibleConstraint);
-                
+
                 /*
                  * create the constraint that makes the node not visitable until
                  * the given branch path is taken
@@ -7742,48 +7744,48 @@ class ProjectService {
             }
         }
     }
-    
+
     /**
      * Remove the branch path taken constraints from a node
      * @param nodeId remove the constraints from this node
      */
     removeBranchPathTakenNodeConstraints(nodeId) {
-        
+
         // get a node
         var node = this.getNodeById(nodeId);
-        
+
         if (node != null) {
-            
+
             // get the constraints
             var constraints = node.constraints;
-            
+
             if (constraints != null) {
-                
+
                 // loop through all the constraints
                 for (var c = 0; c < constraints.length; c++) {
                     var constraint = constraints[c];
-                    
+
                     if (constraint != null) {
-                        
+
                         // get the removal criteria
                         var removalCriteria = constraint.removalCriteria;
-                        
+
                         if (removalCriteria != null) {
-                            
+
                             // loop through all the removal criteria
                             for (var rc = 0; rc < removalCriteria.length; rc++) {
-                                
+
                                 // get a removal criterion
                                 var removalCriterion = removalCriteria[rc];
-                                
+
                                 if (removalCriterion != null) {
                                     if (removalCriterion.name == 'branchPathTaken') {
                                         // this is a branch path taken removal criterion
                                         var params = removalCriterion.params;
-                                        
+
                                         // remove the constraint
                                         constraints.splice(c, 1);
-                                        
+
                                         // move the counter back one because we just removed a constraint
                                         c--;
                                     }
@@ -7795,47 +7797,47 @@ class ProjectService {
             }
         }
     }
-    
+
     /**
      * Get the branch path taken constraints from a node
      * @param nodeId get the branch path taken constraints from this node
      * @return an array of branch path taken constraints from the node
      */
     getBranchPathTakenConstraintsByNodeId(nodeId) {
-        
+
         var branchPathTakenConstraints = [];
-        
+
         if (nodeId != null) {
-            
+
             // get the node
             var node = this.getNodeById(nodeId);
-            
+
             if (node != null) {
-                
+
                 // get the constraints from the node
                 var constraints = node.constraints;
-                
+
                 if (constraints != null) {
-                    
+
                     // loop through all the constraints
                     for (var c = 0; c < constraints.length; c++) {
                         var constraint = constraints[c];
-                        
+
                         if (constraint != null) {
-                            
+
                             // get the removal criteria from the constraint
                             var removalCriteria = constraint.removalCriteria;
-                            
+
                             if (removalCriteria != null) {
-                                
+
                                 // loop through all the removal criteria
                                 for (var rc = 0; rc < removalCriteria.length; rc++) {
                                     var removalCriterion = removalCriteria[rc];
-                                    
+
                                     if (removalCriterion != null) {
                                         if (removalCriterion.name == 'branchPathTaken') {
                                             /*
-                                             * we have found a branch path taken constraint so 
+                                             * we have found a branch path taken constraint so
                                              * we will add the constraint to the array
                                              */
                                             branchPathTakenConstraints.push(constraint);
@@ -7849,7 +7851,7 @@ class ProjectService {
                 }
             }
         }
-        
+
         return branchPathTakenConstraints;
     }
 }

@@ -1,6 +1,16 @@
 
 class StudentDataService {
-    constructor($http, $injector, $q, $rootScope, AnnotationService, ConfigService, ProjectService, UtilService) {
+    constructor($filter,
+                $http,
+                $injector,
+                $q,
+                $rootScope,
+                AnnotationService,
+                ConfigService,
+                ProjectService,
+                UtilService) {
+
+        this.$filter = $filter;
         this.$http = $http;
         this.$injector = $injector;
         this.$q = $q;
@@ -9,6 +19,8 @@ class StudentDataService {
         this.ConfigService = ConfigService;
         this.ProjectService = ProjectService;
         this.UtilService = UtilService;
+
+        this.$translate = this.$filter('translate');
 
         this.currentNode = null;
         this.previousStep = null;
@@ -77,7 +89,7 @@ class StudentDataService {
             this.studentData.nodeStates = [];
             this.studentData.events = [];
             this.studentData.annotations = [];
-            this.studentData.userName = 'Preview Student';
+            this.studentData.userName = this.$translate('PREVIEWSTUDENT');
             this.studentData.userId = '0';
 
             // set the annotations into the annotation service
@@ -1140,7 +1152,7 @@ class StudentDataService {
 
     saveComponentEvent(component, category, event, data) {
         if (component == null || category == null || event == null) {
-            alert("StudentDataService.saveComponentEvent: component, category, event args must not be null");
+            alert(this.$translate('STUDENTDATASERVICESAVECOMPONENTEVENTCOMPONENTCATEGORYEVENTERROR'));
             return;
         }
         var context = "Component";
@@ -1148,7 +1160,7 @@ class StudentDataService {
         var componentId = component.componentId;
         var componentType = component.componentType;
         if (nodeId == null || componentId == null || componentType == null) {
-            alert("StudentDataService.saveComponentEvent: nodeId, componentId, componentType must not be null");
+            alert(this.$translate('STUDENTDATASERVICESAVECOMPONENTEVENTNODEIDCOMPONENTIDCOMPONENTTYPEERROR'));
             return;
         }
         this.saveEvent(context, nodeId, componentId, componentType, category, event, data);
@@ -1156,7 +1168,7 @@ class StudentDataService {
 
     saveVLEEvent(nodeId, componentId, componentType, category, event, data) {
         if (category == null || event == null) {
-            alert("StudentDataService.saveVLEEvent: category and event args must not be null");
+            alert(this.$translate('STUDENTDATASERVICESAVEVLEEVENTCATEGORYEVENTERROR'));
             return;
         }
         var context = "VLE";
@@ -1788,43 +1800,43 @@ class StudentDataService {
 
         return eventsByNodeId;
     };
-    
+
     /**
-     * Get the node id of the latest node entered event for an active node that 
+     * Get the node id of the latest node entered event for an active node that
      * exists in the project. We need to check if the node exists in the project
      * in case the node has been deleted from the project. We also need to check
      * that the node is active in case the node has been moved to the inactive
      * section of the project.
-     * @return the node id of the latest node entered event for an active node 
+     * @return the node id of the latest node entered event for an active node
      * that exists in the project
      */
     getLatestNodeEnteredEventNodeIdWithExistingNode() {
-        
+
         // get all the events
         var events = this.studentData.events;
 
         // loop through all the events newest to oldest
         for (var e = events.length - 1; e >= 0; e--) {
-            
+
             // get an event
             var event = events[e];
 
             if (event != null) {
-                
+
                 // get the event name
                 var eventName = event.event;
-                
+
                 if (eventName == 'nodeEntered') {
                     // we have found a nodeEntered event
-                    
+
                     // get the node id of the event
                     var nodeId = event.nodeId;
-                    
+
                     // check if the node exists in the project
                     var node = this.ProjectService.getNodeById(nodeId);
-                    
+
                     if (node != null) {
-                        
+
                         // check if the node is active
                         if (this.ProjectService.isActive(nodeId)) {
                             // the node exists in the project and is active
@@ -1834,7 +1846,7 @@ class StudentDataService {
                 }
             }
         }
-        
+
         return null;
     }
 
@@ -2056,7 +2068,7 @@ class StudentDataService {
                                     tempResult = tempResult && isComponentCompleted;
                                 }
                             } catch (e) {
-                                console.log('Error: Could not calculate isCompleted() for component with id ' + tempComponentId);
+                                console.log(this.$translate('ERRORCOULDNOTCALCULATEISCOMPLETED') + tempComponentId);
                             }
                         }
                     }
@@ -2424,45 +2436,45 @@ class StudentDataService {
 
         return latestComponentStates;
     }
-    
+
     /**
      * Check if the completion criteria is satisfied
      * @param completionCriteria the completion criteria
      * @return whether the completion criteria was satisfied
      */
     isCompletionCriteriaSatisfied(completionCriteria) {
-        
+
         var result = true;
-        
+
         if (completionCriteria != null) {
-            
+
             if (completionCriteria.inOrder) {
                 // the criteria need to be satisfied in order
-                
+
                 var tempTimestamp = 0;
-                
+
                 // get all of the criteria
                 var criteria = completionCriteria.criteria;
-                
+
                 // loop through all the criteria
                 for (var c = 0; c < criteria.length; c++) {
                     var tempResult = true;
-                    
+
                     // get a criterion
                     var completionCriterion = criteria[c];
-                    
+
                     if (completionCriterion != null) {
-                        
+
                         // get the function name e.g. 'isVisited', 'isSaved', 'isSubmitted'
                         var functionName = completionCriterion.name;
-                        
+
                         if (functionName == 'isSubmitted') {
                             var nodeId = completionCriterion.nodeId;
                             var componentId = completionCriterion.componentId;
-                            
+
                             // get the first submit component state after the timestamp
                             var tempComponentState = this.getComponentStateSubmittedAfter(nodeId, componentId, tempTimestamp);
-                            
+
                             if (tempComponentState == null) {
                                 // we did not find a component state
                                 result = false;
@@ -2474,10 +2486,10 @@ class StudentDataService {
                         } else if (functionName == 'isSaved') {
                             var nodeId = completionCriterion.nodeId;
                             var componentId = completionCriterion.componentId;
-                            
+
                             // get the first save component state after the timestamp
                             var tempComponentState = this.getComponentStateSavedAfter(nodeId, componentId, tempTimestamp);
-                            
+
                             if (tempComponentState == null) {
                                 // we did not find a component state
                                 result = false;
@@ -2488,10 +2500,10 @@ class StudentDataService {
                             }
                         } else if (functionName == 'isVisited') {
                             var nodeId = completionCriterion.nodeId;
-                            
+
                             // get the first visit event after the timestamp
                             var tempEvent = this.getVisitEventAfter(nodeId, tempTimestamp);
-                            
+
                             if (tempEvent == null) {
                                 // we did not find a component state
                                 result = false;
@@ -2505,10 +2517,10 @@ class StudentDataService {
                 }
             }
         }
-        
+
         return result;
     }
-    
+
     /**
      * Get the first save component state after the given timestamp
      * @param nodeId the node id of the component state
@@ -2517,33 +2529,33 @@ class StudentDataService {
      */
     getComponentStateSavedAfter(nodeId, componentId, timestamp) {
         var componentState = null;
-        
+
         // get all the component states
         var componentStates = this.studentData.componentStates;
-        
+
         if (componentStates != null) {
-            
+
             // loop through all the component states
             for (var c = 0; c < componentStates.length; c++) {
-                
+
                 // get a component state
                 var tempComponentState = componentStates[c];
-                
-                if (tempComponentState != null && 
+
+                if (tempComponentState != null &&
                     tempComponentState.serverSaveTime > timestamp &&
                     tempComponentState.nodeId === nodeId &&
                     tempComponentState.componentId === componentId) {
-                    
+
                     // we have found a save component state after the timestamp
                     componentState = tempComponentState;
                     break;
                 }
             }
         }
-        
+
         return componentState;
     }
-    
+
     /**
      * Get the first submit component state after the given timestamp
      * @param nodeId the node id of the component state
@@ -2552,63 +2564,73 @@ class StudentDataService {
      */
     getComponentStateSubmittedAfter(nodeId, componentId, timestamp) {
         var componentState = null;
-        
+
         // get all the component states
         var componentStates = this.studentData.componentStates;
-        
+
         if (componentStates != null) {
-            
+
             // loop through all the component states
             for (var c = 0; c < componentStates.length; c++) {
                 var tempComponentState = componentStates[c];
-                
-                if (tempComponentState != null && 
+
+                if (tempComponentState != null &&
                     tempComponentState.serverSaveTime > timestamp &&
                     tempComponentState.nodeId === nodeId &&
                     tempComponentState.componentId === componentId &&
                     tempComponentState.isSubmit) {
-                    
+
                     // we have found a submit component state after the timestamp
                     componentState = tempComponentState;
                     break;
                 }
             }
         }
-        
+
         return componentState;
     }
-    
+
     /**
      * Get the first visit event after the timestamp
      */
     getVisitEventAfter(nodeId, timestamp) {
         var event = null;
-        
+
         // get all the events
         var events = this.studentData.events;
-        
+
         if (events != null) {
-            
+
             // loop through all the events
             for (var e = 0; e < events.length; e++) {
                 var tempEvent = events[e];
-                
+
                 if (tempEvent != null &&
                     tempEvent.serverSaveTime > timestamp &&
                     tempEvent.nodeId === nodeId &&
                     tempEvent.event === 'nodeEntered') {
-                    
+
                     // we have found a visit event after the timestamp
                     event = tempEvent;
                     break;
                 }
             }
         }
-        
+
         return event;
     }
 }
 
-StudentDataService.$inject = ['$http', '$injector', '$q', '$rootScope', 'AnnotationService', 'ConfigService', 'ProjectService', 'UtilService'];
+StudentDataService.$inject = [
+    '$filter',
+    '$http',
+    '$injector',
+    '$q',
+    '$rootScope',
+    'AnnotationService',
+    'ConfigService',
+    'ProjectService',
+    'UtilService'
+];
 
 export default StudentDataService;

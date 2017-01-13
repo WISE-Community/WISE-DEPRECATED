@@ -139,10 +139,10 @@ const WorkgroupComponentRevisions = {
                              class="annotations--grading md-body-1">
                             <div ng-if="item.annotations.comment || item.annotations.score">
                                 <div ng-if="item.annotations.comment" layout="row" layout-wrap>
-                                    <span class="component-revisions__annotation-label heavy">Teacher Comment: </span>{{item.annotations.comment.data.value}}
+                                    <span class="component-revisions__annotation-label heavy">{{ 'TEACHERCOMMENT' | translate }}: </span>{{item.annotations.comment.data.value}}
                                 </div>
                                 <div ng-if="item.annotations.score">
-                                    <span class="heavy">Score: </span>{{item.annotations.score.data.value}}/{{$ctrl.maxScore}}
+                                    <span class="heavy">{{ 'SCORE' | translate }}: </span>{{item.annotations.score.data.value}}/{{$ctrl.maxScore}}
                                 </div>
                             </div>
 
@@ -150,14 +150,14 @@ const WorkgroupComponentRevisions = {
                                  ng-class="{'component-revisions__has-auto-and-teacher': item.annotations.comment || item.annotations.score}">
                                 <div ng-if="item.annotations.autoComment">
                                     <div class="component-revisions__annotation-label heavy">
-                                        Auto Comment:
+                                        {{ 'AUTOCOMMENT' | translate }}:
                                     </div>
                                     <div class="annotations--grading__auto-comment">
                                         <compile data="item.annotations.autoComment.data.value"></compile>
                                     </div>
                                 </div>
                                 <div ng-if="item.annotations.autoScore">
-                                    <span class="heavy">Auto Score: </span>{{item.annotations.autoScore.data.value}}/{{$ctrl.maxScore}}
+                                    <span class="heavy">{{ 'AUTOSCORE' | translate }}: </span>{{item.annotations.autoScore.data.value}}/{{$ctrl.maxScore}}
                                 </div>
                             </div>
                         </div>

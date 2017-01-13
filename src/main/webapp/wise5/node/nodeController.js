@@ -9,11 +9,12 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var NodeController = function () {
-    function NodeController($q, $rootScope, $scope, AnnotationService, ConfigService, NodeService, NotebookService, ProjectService, StudentDataService) {
+    function NodeController($filter, $q, $rootScope, $scope, AnnotationService, ConfigService, NodeService, NotebookService, ProjectService, StudentDataService) {
         var _this = this;
 
         _classCallCheck(this, NodeController);
 
+        this.$filter = $filter;
         this.$q = $q;
         this.$rootScope = $rootScope;
         this.$scope = $scope;
@@ -23,6 +24,8 @@ var NodeController = function () {
         this.NotebookService = NotebookService;
         this.ProjectService = ProjectService;
         this.StudentDataService = StudentDataService;
+
+        this.$translate = this.$filter('translate');
 
         // the auto save interval in milliseconds
         this.autoSaveInterval = 60000;
@@ -104,9 +107,9 @@ var NodeController = function () {
             if (latestComponentState) {
                 var latestClientSaveTime = latestComponentState.clientSaveTime;
                 if (latestComponentState.isSubmit) {
-                    this.setSaveMessage('Last submitted', latestClientSaveTime);
+                    this.setSaveMessage(this.$translate('LASTSUBMITTED'), latestClientSaveTime);
                 } else {
-                    this.setSaveMessage('Last saved', latestClientSaveTime);
+                    this.setSaveMessage(this.$translate('LASTSAVED'), latestClientSaveTime);
                 }
             }
 
@@ -764,11 +767,11 @@ var NodeController = function () {
                                 var clientSaveTime = _this3.ConfigService.convertToClientTimestamp(serverSaveTime);
 
                                 if (isAutoSave) {
-                                    _this3.setSaveMessage('Auto-Saved', clientSaveTime);
+                                    _this3.setSaveMessage(_this3.$translate('AUTOSAVED'), clientSaveTime);
                                 } else if (isSubmit) {
-                                    _this3.setSaveMessage('Submitted', clientSaveTime);
+                                    _this3.setSaveMessage(_this3.$translate('SUBMITTED'), clientSaveTime);
                                 } else {
-                                    _this3.setSaveMessage('Saved', clientSaveTime);
+                                    _this3.setSaveMessage(_this3.$translate('SAVED'), clientSaveTime);
                                 }
                             } else {
                                 _this3.setSaveMessage('', null);
@@ -1135,7 +1138,7 @@ var NodeController = function () {
     return NodeController;
 }();
 
-NodeController.$inject = ['$q', '$rootScope', '$scope', 'AnnotationService', 'ConfigService', 'NodeService', 'NotebookService', 'ProjectService', 'StudentDataService'];
+NodeController.$inject = ['$filter', '$q', '$rootScope', '$scope', 'AnnotationService', 'ConfigService', 'NodeService', 'NotebookService', 'ProjectService', 'StudentDataService'];
 
 exports.default = NodeController;
 //# sourceMappingURL=nodeController.js.map

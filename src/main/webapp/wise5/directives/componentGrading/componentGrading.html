@@ -2,18 +2,18 @@
      layout="row"
      layout-align="center start">
     <div ng-if="$ctrl.componentStates.length > 0" class="animate-fade">
-        Saved: <span class="component__actions__more" am-time-ago="$ctrl.latestComponentStateTime"></span>
+        {{ 'SAVED' | translate }}: <span class="component__actions__more" am-time-ago="$ctrl.latestComponentStateTime"></span>
         <md-tooltip md-direction="top">{{ $ctrl.latestComponentStateTime | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip>
-        &nbsp;<span ng-if="$ctrl.hasNewWork()" class="badge badge--info animate-fade">New</span>
+        &nbsp;<span ng-if="$ctrl.hasNewWork()" class="badge badge--info animate-fade">{{ 'NEW' | translate }}</span>
     </div>
     <div ng-if="$ctrl.componentStates.length === 0" class="animate-fade">
-        Team has not saved any work
+        {{ 'TEAMHASNOTSAVEDANYWORK' | translate }}
     </div>
     <span flex></span>
     <a class="md-body-2 animate-fade"
        ng-if="$ctrl.componentStates.length > 1"
        ng-click="$ctrl.showRevisions($event)">
-       Versions: {{($ctrl.componentStates.length)}}
+       {{ 'VERSIONS' | translate }}: {{($ctrl.componentStates.length)}}
    </a>
 </div>
 
@@ -23,9 +23,9 @@
             <div class="animate-fade"
                  ng-if="$ctrl.showAutoComment()">
                 <div class="heavy">
-                    <md-icon class="md-accent">keyboard</md-icon> Auto Comment
+                    <md-icon class="md-accent">keyboard</md-icon> {{ 'AUTOCOMMENT' | translate }}
                     <span ng-if="$ctrl.active">
-                        &nbsp;<a ng-click="$ctrl.edit = !$ctrl.edit">Edit</a>&nbsp;
+                        &nbsp;<a ng-click="$ctrl.edit = !$ctrl.edit">{{ 'EDIT' | translate }}</a>&nbsp;
                         <!--<span>
                             <md-icon class="info">info</md-icon>
                             <md-tooltip md-direction="top">Team received automated feedback for this work. To send your own comment, click or tap 'Edit'.</md-tooltip>
@@ -40,8 +40,8 @@
                                 ng-show="$ctrl.edit || !$ctrl.showAutoComment()"
                                 flex>
                 <label class="input-label md-no-float" ng-disabled="!$ctrl.active"><md-icon class="md-accent">account_box</md-icon>
-                    <span ng-if="$ctrl.comment" class="animate-fade">Teacher Comment</span>
-                    <span ng-if="!$ctrl.comment" class="animate-fade">Send Comment</span>
+                    <span ng-if="$ctrl.comment" class="animate-fade">{{ 'TEACHERCOMMENT' | translate }}</span>
+                    <span ng-if="!$ctrl.comment" class="animate-fade">{{ 'SENDCOMMENT' | translate }}</span>
                 </label>
                 <div class="input-wrapper">
                     <textarea md-detect-hidden
@@ -56,10 +56,10 @@
         <div class="annotations--grading__score" flex-xs="100" ng-if="$ctrl.hasMaxScore" layout="row" layout-align="start start">
             <md-input-container class="md-no-float">
                 <label class="input-label md-no-float">
-                    <span ng-if="$ctrl.latestAnnotations.score.type === 'autoScore'" class="animate-fade">Auto Score</span>
+                    <span ng-if="$ctrl.latestAnnotations.score.type === 'autoScore'" class="animate-fade">{{ 'AUTOSCORE' | translate }}</span>
                     <span ng-if="$ctrl.latestAnnotations.score.type !== 'autoScore'">
-                        <span ng-if="$ctrl.score != null" class="animate-fade">Score</span>
-                        <span ng-if="$ctrl.score == null" class="animate-fade">Set Score</span>
+                        <span ng-if="$ctrl.score != null" class="animate-fade">{{ 'SCORE' | translate }}</span>
+                        <span ng-if="$ctrl.score == null" class="animate-fade">{{ 'SETSCORE' | translate }}</span>
                     </span>
                 </label>
                 <input type="number"

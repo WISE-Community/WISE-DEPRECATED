@@ -66,12 +66,12 @@ class GlobalAnnotationsController {
                             </div>
                         </md-toolbar>-->
                         <md-dialog-content class="md-dialog-content">
-                            <h2 class="md-title">Feedback</h2>
+                            <h2 class="md-title">{{ 'FEEDBACK' | translate }}</h2>
                             <global-annotations-list></global-annotations-list>
                         </md-dialog-content>
                         <md-dialog-actions>
                             <md-button ng-click="close()" class="md-primary">
-                                Close
+                                {{ 'CLOSE' | translate }}
                             </md-button>
                         </md-dialog-actions>
                     </md-dialog>`,

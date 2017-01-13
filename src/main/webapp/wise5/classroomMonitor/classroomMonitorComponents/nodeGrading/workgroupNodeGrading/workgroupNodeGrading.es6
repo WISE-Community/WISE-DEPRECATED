@@ -154,10 +154,10 @@ const WorkgroupNodeGrading = {
                                aria-label="Hide section"
                                flex="100">
                         <span ng-if="$ctrl.isComponentVisible(component.id)">
-                            Hide Section<md-icon>expand_less</md-icon>
+                            {{ 'hideSection' | translate }}<md-icon>expand_less</md-icon>
                         </span>
                         <span ng-if="!$ctrl.isComponentVisible(component.id)">
-                            Show Section<md-icon>expand_more</md-icon>
+                            {{ 'showSection' | translate }}<md-icon>expand_more</md-icon>
                         </span>
                     </md-button>
                 </div>

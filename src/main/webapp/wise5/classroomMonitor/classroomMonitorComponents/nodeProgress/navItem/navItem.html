@@ -17,7 +17,7 @@
         </md-card-content>
         <md-card-content ng-if="$ctrl.isGroup" ng-show="$ctrl.expanded" class="nav-contents nav-contents--group">
             <div ng-if="$ctrl.isPlanning" class="md-padding" layout="column" layout-align="center center">
-                Note: This activity includes student planning.
+                {{ 'noteThisActivityIncludesStudentPlanning' | translate }}
             </div>
             <md-list class="nav-contents__list">
                 <nav-item ng-repeat="childId in $ctrl.item.ids"
