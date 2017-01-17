@@ -67,10 +67,6 @@ class NotebookService {
         };
 
         this.reports = [];
-        this.notebook = {};
-        this.notebook.allItems = [];
-        this.notebook.items = {};
-        this.notebook.deletedItems = {};
 
         this.notebookConfig = {};
         if (this.ProjectService.project) {
@@ -83,14 +79,6 @@ class NotebookService {
         }
     }
 
-    addItem(notebookItem) {
-        this.notebook.allItems.push(notebookItem);
-        this.groupNotebookItems();
-
-        // the current node is about to change
-        this.$rootScope.$broadcast('notebookUpdated', {notebook: this.notebook});
-    };
-
     editItem(ev, itemId) {
         // broadcast edit notebook item event
         this.$rootScope.$broadcast('editNote', {itemId: itemId, ev: ev});
@@ -102,8 +90,8 @@ class NotebookService {
     };
 
     deleteItem(itemToDelete) {
-        let items = this.notebook.items;
-        let deletedItems = this.notebook.deletedItems;
+        let items = this.getNotebookByWorkgroup().items;
+        let deletedItems = this.getNotebookByWorkgroup().deletedItems;
         for (let i = 0; i < items.length; i++) {
             let item = items[i];
             if (item === itemToDelete) {
@@ -114,12 +102,12 @@ class NotebookService {
     };
 
     // looks up notebook item by local notebook item id, including deleted notes
-    getLatestNotebookItemByLocalNotebookItemId(itemId) {
-        if (this.notebook.items.hasOwnProperty(itemId)) {
-            let items = this.notebook.items[itemId];
+    getLatestNotebookItemByLocalNotebookItemId(itemId, workgroupId = null) {
+        if (this.getNotebookByWorkgroup(workgroupId).items.hasOwnProperty(itemId)) {
+            let items = this.getNotebookByWorkgroup(workgroupId).items[itemId];
             return items.last();
-        } else if (this.notebook.deletedItems.hasOwnProperty(itemId)) {
-            let items = this.notebook.deletedItems[itemId];
+        } else if (this.getNotebookByWorkgroup(workgroupId).deletedItems.hasOwnProperty(itemId)) {
+            let items = this.getNotebookByWorkgroup(workgroupId).deletedItems[itemId];
             return items.last();
         } else {
             return null;
@@ -127,8 +115,8 @@ class NotebookService {
     }
 
     // returns student's report item if they've done work, or the template if they haven't.
-    getLatestNotebookReportItemByReportId(reportId) {
-        return this.getLatestNotebookItemByLocalNotebookItemId(reportId);
+    getLatestNotebookReportItemByReportId(reportId, workgroupId = null) {
+        return this.getLatestNotebookItemByLocalNotebookItemId(reportId, workgroupId);
     }
 
     // returns the authored report item
@@ -152,17 +140,19 @@ class NotebookService {
 
     calculateTotalUsage() {
         // get the total size
+        /*
         let totalSizeSoFar = 0;
-        for (let i = 0; i < this.notebook.items.length; i++) {
-            let notebookItem = this.notebook.items[i];
+        for (let i = 0; i < this.getNotebookByWorkgroup().items.length; i++) {
+            let notebookItem = this.getNotebookByWorkgroup().items[i];
             if (notebookItem.studentAsset != null) {
                 let notebookItemSize = notebookItem.studentAsset.fileSize;
                 totalSizeSoFar += notebookItemSize;
             }
         }
-        this.notebook.totalSize = totalSizeSoFar;
-        this.notebook.totalSizeMax = this.ConfigService.getStudentMaxTotalAssetsSize();
-        this.notebook.usagePercentage = this.notebook.totalSize / this.notebook.totalSizeMax * 100;
+        this.getNotebookByWorkgroup().totalSize = totalSizeSoFar;
+        this.getNotebookByWorkgroup().totalSizeMax = this.ConfigService.getStudentMaxTotalAssetsSize();
+        this.getNotebookByWorkgroup().usagePercentage = this.notebook.totalSize / this.notebook.totalSizeMax * 100;
+        */
     };
 
     getNotebookConfig() {
@@ -174,39 +164,61 @@ class NotebookService {
     };
 
     retrieveNotebookItems(workgroupId = null, periodId = null) {
-        let config = {
-            method : 'GET',
-            url : this.ConfigService.getStudentNotebookURL(),
-            params : {}
-        };
-        if (workgroupId != null) {
-            config.params.workgroupId = workgroupId;
-        }
-        if (periodId != null) {
-            config.params.periodId = periodId;
-        }
-        return this.$http(config).then((response) => {
-            // loop through the assets and make them into JSON object with more details
-            this.notebook.allItems = [];  // clear local notebook items array
-            let allNotebookItems = response.data;
-            for (let n = 0; n < allNotebookItems.length; n++) {
-                let notebookItem = allNotebookItems[n];
-                if (notebookItem.studentAssetId != null) {
-                    // if this notebook item is a StudentAsset item, add the association here
-                    notebookItem.studentAsset = this.StudentAssetService.getAssetById(notebookItem.studentAssetId);
-                } else if (notebookItem.studentWorkId != null) {
-                    // if this notebook item is a StudentWork item, add the association here
-                    notebookItem.studentWork = this.StudentDataService.getStudentWorkByStudentWorkId(notebookItem.studentWorkId);
-                } else if (notebookItem.type === "note" || notebookItem.type === "report") {
-                    notebookItem.content = angular.fromJson(notebookItem.content);
-                }
-                this.notebook.allItems.push(notebookItem);
+        if (this.ConfigService.isPreview()) {
+            // we are previewing the project, initialize dummy student data
+            let workgroupId = this.ConfigService.getWorkgroupId();
+            this.notebooksByWorkgroup = {};
+            this.notebooksByWorkgroup[workgroupId] = {};
+            this.notebooksByWorkgroup[workgroupId].allItems = [];
+            this.notebooksByWorkgroup[workgroupId].items = [];
+            this.notebooksByWorkgroup[workgroupId].deletedItems = [];
+            this.groupNotebookItems();
+            // if we're in preview, don't make any request to the server but pretend we did
+            let deferred = this.$q.defer();
+            deferred.resolve(this.notebooksByWorkgroup[workgroupId]);
+            return deferred.promise;
+        } else {
+            let config = {
+                method : 'GET',
+                url : this.ConfigService.getStudentNotebookURL(),
+                params : {}
+            };
+            if (workgroupId != null) {
+                config.params.workgroupId = workgroupId;
             }
-            this.calculateTotalUsage();
-            this.groupNotebookItems(); // group notebook items based on item.localNotebookItemId
+            if (periodId != null) {
+                config.params.periodId = periodId;
+            }
+            return this.$http(config).then((response) => {
+                // loop through the assets and make them into JSON object with more details
+                this.notebooksByWorkgroup = {};
+                let allNotebookItems = response.data;
+                for (let n = 0; n < allNotebookItems.length; n++) {
+                    let notebookItem = allNotebookItems[n];
+                    if (notebookItem.studentAssetId != null) {
+                        // if this notebook item is a StudentAsset item, add the association here
+                        notebookItem.studentAsset = this.StudentAssetService.getAssetById(notebookItem.studentAssetId);
+                    } else if (notebookItem.studentWorkId != null) {
+                        // if this notebook item is a StudentWork item, add the association here
+                        notebookItem.studentWork = this.StudentDataService.getStudentWorkByStudentWorkId(notebookItem.studentWorkId);
+                    } else if (notebookItem.type === "note" || notebookItem.type === "report") {
+                        notebookItem.content = angular.fromJson(notebookItem.content);
+                    }
+                    let workgroupId = notebookItem.workgroupId;
+                    if (this.notebooksByWorkgroup.hasOwnProperty(workgroupId)) {
+                        // we already have create a notebook for this workgroup before, so we'll append this notebook item to the array
+                        this.notebooksByWorkgroup[workgroupId].allItems.push(notebookItem);
+                    } else {
+                        // otherwise, we'll create a new notebook field and add the item to the array
+                        this.notebooksByWorkgroup[workgroupId] = { allItems: [notebookItem] };
+                    }
+                }
+                this.groupNotebookItems(); // group notebook items based on item.localNotebookItemId
+                this.calculateTotalUsage();
 
-            return this.notebook;
-        });
+                return this.notebooksByWorkgroup;
+            });
+        }
     };
 
     /**
@@ -217,34 +229,54 @@ class NotebookService {
      * }
      */
     groupNotebookItems() {
-        this.notebook.items = {}; // reset items
-        this.notebook.deletedItems = {};  // reset deleted items
-        for (let ni = 0; ni < this.notebook.allItems.length; ni++) {
-            let notebookItem = this.notebook.allItems[ni];
-            let notebookItemLocalNotebookItemId = notebookItem.localNotebookItemId;
-            if (this.notebook.items.hasOwnProperty(notebookItemLocalNotebookItemId)) {
-                // if this was already added before, we'll append this notebook item to the array
-                this.notebook.items[notebookItemLocalNotebookItemId].push(notebookItem);
-            } else {
-                // otherwise, we'll create a new field and add the item to the array
-                this.notebook.items[notebookItemLocalNotebookItemId] = [notebookItem];
-            }
-        }
-        // now go through the items and look at the last revision of each item. If it's deleted, then move the entire item array to deletedItems
-        for (let notebookItemLocalNotebookItemIdKey in this.notebook.items) {
-            if (this.notebook.items.hasOwnProperty(notebookItemLocalNotebookItemIdKey)) {
-                // get the last note revision
-                let allRevisionsForThisLocalNotebookItemId = this.notebook.items[notebookItemLocalNotebookItemIdKey];
-                if (allRevisionsForThisLocalNotebookItemId != null) {
-                    let lastRevision = allRevisionsForThisLocalNotebookItemId[allRevisionsForThisLocalNotebookItemId.length - 1];
-                    if (lastRevision != null && lastRevision.serverDeleteTime != null) {
-                        // the last revision for this not deleted, so move the entire note (with all its revisions) to deletedItems
-                        this.notebook.deletedItems[notebookItemLocalNotebookItemIdKey] = allRevisionsForThisLocalNotebookItemId;
-                        delete this.notebook.items[notebookItemLocalNotebookItemIdKey];  // then remove it from the items array
+        for (let workgroupId in this.notebooksByWorkgroup) {
+            if (this.notebooksByWorkgroup.hasOwnProperty(workgroupId)) {
+                let notebookByWorkgroup = this.notebooksByWorkgroup[workgroupId];
+                notebookByWorkgroup.items = {};
+                notebookByWorkgroup.deletedItems = {};  // reset deleted items
+                for (let ni = 0; ni < notebookByWorkgroup.allItems.length; ni++) {
+                    let notebookItem = notebookByWorkgroup.allItems[ni];
+                    let notebookItemLocalNotebookItemId = notebookItem.localNotebookItemId;
+                    if (notebookByWorkgroup.items.hasOwnProperty(notebookItemLocalNotebookItemId)) {
+                        // if this was already added before, we'll append this notebook item to the array
+                        notebookByWorkgroup.items[notebookItemLocalNotebookItemId].push(notebookItem);
+                    } else {
+                        // otherwise, we'll create a new field and add the item to the array
+                        notebookByWorkgroup.items[notebookItemLocalNotebookItemId] = [notebookItem];
+                    }
+                }
+                // now go through the items and look at the last revision of each item. If it's deleted, then move the entire item array to deletedItems
+                for (let notebookItemLocalNotebookItemIdKey in notebookByWorkgroup.items) {
+                    if (notebookByWorkgroup.items.hasOwnProperty(notebookItemLocalNotebookItemIdKey)) {
+                        // get the last note revision
+                        let allRevisionsForThisLocalNotebookItemId = notebookByWorkgroup.items[notebookItemLocalNotebookItemIdKey];
+                        if (allRevisionsForThisLocalNotebookItemId != null) {
+                            let lastRevision = allRevisionsForThisLocalNotebookItemId[allRevisionsForThisLocalNotebookItemId.length - 1];
+                            if (lastRevision != null && lastRevision.serverDeleteTime != null) {
+                                // the last revision for this not deleted, so move the entire note (with all its revisions) to deletedItems
+                                notebookByWorkgroup.deletedItems[notebookItemLocalNotebookItemIdKey] = allRevisionsForThisLocalNotebookItemId;
+                                delete notebookByWorkgroup.items[notebookItemLocalNotebookItemIdKey];  // then remove it from the items array
+                            }
+                        }
                     }
                 }
             }
         }
+    }
+
+    getNotebookByWorkgroup(workgroupId = null) {
+        if (workgroupId == null) {
+            workgroupId = this.ConfigService.getWorkgroupId();
+        }
+        let notebookByWorkgroup = this.notebooksByWorkgroup[workgroupId];
+        if (notebookByWorkgroup == null) {
+            notebookByWorkgroup = {
+                allItems: [],
+                items: {},
+                deletedItems: {}
+            }
+        }
+        return notebookByWorkgroup;
     }
 
     hasStudentWorkNotebookItem(studentWork) {
@@ -267,12 +299,29 @@ class NotebookService {
                     notebookItemId: notebookItemId,
                     title: title,
                     type: type,
+                    workgroupId: this.ConfigService.getWorkgroupId(),
                     clientSaveTime: clientSaveTime,
                     clientDeleteTime: clientDeleteTime
                 };
-                this.notebook.allItems.push(notebookItem);
+                if (clientDeleteTime != null) {
+                    // preview user wants to delete this note, so mock the server deletion by setting the server delete time
+                    notebookItem.serverDeleteTime = clientDeleteTime;
+                } else {
+                    notebookItem.serverDeleteTime = null;
+                }
+                // add/update notebook
+                let workgroupId = notebookItem.workgroupId;
+                if (this.notebooksByWorkgroup.hasOwnProperty(workgroupId)) {
+                    // we already have create a notebook for this workgroup before, so we'll append this notebook item to the array
+                    this.notebooksByWorkgroup[workgroupId].allItems.push(notebookItem);
+                } else {
+                    // otherwise, we'll create a new notebook field and add the item to the array
+                    this.notebooksByWorkgroup[workgroupId] = { allItems: [notebookItem] };
+                }
+
                 this.groupNotebookItems();
-                this.$rootScope.$broadcast('notebookUpdated', {notebook: this.notebook});
+                this.groupNotebookItems();
+                this.$rootScope.$broadcast('notebookUpdated', {notebook: this.notebooksByWorkgroup[workgroupId]});
                 resolve();
             });
         } else {
@@ -305,44 +354,23 @@ class NotebookService {
                         notebookItem.content = angular.fromJson(notebookItem.content);
                     }
                     // add/update notebook
-                    this.notebook.allItems.push(notebookItem);
+                    let workgroupId = notebookItem.workgroupId;
+                    if (this.notebooksByWorkgroup.hasOwnProperty(workgroupId)) {
+                        // we already have create a notebook for this workgroup before, so we'll append this notebook item to the array
+                        this.notebooksByWorkgroup[workgroupId].allItems.push(notebookItem);
+                    } else {
+                        // otherwise, we'll create a new notebook field and add the item to the array
+                        this.notebooksByWorkgroup[workgroupId] = { allItems: [notebookItem] };
+                    }
+
                     this.groupNotebookItems();
 
-                    this.$rootScope.$broadcast('notebookUpdated', {notebook: this.notebook});
+                    this.$rootScope.$broadcast('notebookUpdated', {notebook: this.notebooksByWorkgroup[workgroupId]});
                 }
                 return result.data;
             });
         }
     };
-
-    uploadStudentAssetNotebookItem(file) {
-        this.StudentAssetService.uploadAsset(file).then((studentAsset) => {
-
-            let config = {
-                method: 'POST',
-                url: this.ConfigService.getStudentNotebookURL(),
-                headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-            };
-            let params = {
-                workgroupId: this.ConfigService.getWorkgroupId(),
-                periodId: this.ConfigService.getPeriodId(),
-                studentAssetId: studentAsset.id,
-                clientSaveTime: Date.parse(new Date())
-            };
-            config.data = $.param(params);
-
-            return this.$http(config).then((result) => {
-                let notebookItem = result.data;
-                if (notebookItem != null) {
-                    notebookItem.studentAsset = this.StudentAssetService.getAssetById(notebookItem.studentAssetId);
-                    this.notebook.allItems.push(notebookItem);
-                    this.groupNotebookItems();
-                }
-                this.calculateTotalUsage();
-                return notebookItem;
-            });
-        });
-    }
 
     saveNotebookToggleEvent(isOpen, currentNode) {
         let nodeId = null, componentId = null, componentType = null, category = "Notebook";

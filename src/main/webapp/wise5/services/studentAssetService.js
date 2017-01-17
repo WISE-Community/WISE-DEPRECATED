@@ -40,36 +40,46 @@ var StudentAssetService = function () {
         value: function retrieveAssets() {
             var _this = this;
 
-            var config = {};
-            config.method = 'GET';
-            config.url = this.ConfigService.getStudentAssetsURL();
-            config.params = {};
-            config.params.workgroupId = this.ConfigService.getWorkgroupId();
-            return this.$http(config).then(function (response) {
-                // loop through the assets and make them into JSON object with more details
-                var result = [];
-                var assets = response.data;
-                var studentUploadsBaseURL = _this.ConfigService.getStudentUploadsBaseURL();
-                for (var a = 0; a < assets.length; a++) {
-                    var asset = assets[a];
-                    if (!asset.isReferenced && asset.serverDeleteTime == null && asset.fileName !== '.DS_Store') {
-                        asset.url = studentUploadsBaseURL + asset.filePath;
-                        if (_this.isImage(asset)) {
-                            asset.type = 'image';
-                            asset.iconURL = asset.url;
-                        } else if (_this.isAudio(asset)) {
-                            asset.type = 'audio';
-                            asset.iconURL = 'wise5/vle/notebook/audio.png';
-                        } else {
-                            asset.type = 'file';
-                            asset.iconURL = 'wise5/vle/notebook/file.png';
-                        }
-                        result.push(asset);
+            if (this.ConfigService.isPreview()) {
+                // if we're in preview, don't make any request to the server but pretend we did
+                this.allAssets = [];
+                var deferred = this.$q.defer();
+                deferred.resolve(this.allAssets);
+                return deferred.promise;
+            } else {
+                var config = {
+                    method: "GET",
+                    url: this.ConfigService.getStudentAssetsURL(),
+                    params: {
+                        workgroupId: this.ConfigService.getWorkgroupId()
                     }
-                }
-                _this.allAssets = result;
-                return result;
-            });
+                };
+                return this.$http(config).then(function (response) {
+                    // loop through the assets and make them into JSON object with more details
+                    var result = [];
+                    var assets = response.data;
+                    var studentUploadsBaseURL = _this.ConfigService.getStudentUploadsBaseURL();
+                    for (var a = 0; a < assets.length; a++) {
+                        var asset = assets[a];
+                        if (!asset.isReferenced && asset.serverDeleteTime == null && asset.fileName !== '.DS_Store') {
+                            asset.url = studentUploadsBaseURL + asset.filePath;
+                            if (_this.isImage(asset)) {
+                                asset.type = 'image';
+                                asset.iconURL = asset.url;
+                            } else if (_this.isAudio(asset)) {
+                                asset.type = 'audio';
+                                asset.iconURL = 'wise5/vle/notebook/audio.png';
+                            } else {
+                                asset.type = 'file';
+                                asset.iconURL = 'wise5/vle/notebook/file.png';
+                            }
+                            result.push(asset);
+                        }
+                    }
+                    _this.allAssets = result;
+                    return result;
+                });
+            }
         }
     }, {
         key: 'getAssetContent',

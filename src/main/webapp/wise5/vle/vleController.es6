@@ -33,6 +33,7 @@ class VLEController {
 
         this.$translate = this.$filter('translate');
 
+        this.workgroupId = this.ConfigService.getWorkgroupId();
         this.currentNode = null;
         this.pauseDialog = null;
         this.noteDialog = null;

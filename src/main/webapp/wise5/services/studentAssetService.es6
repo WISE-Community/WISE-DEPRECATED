@@ -31,36 +31,46 @@ class StudentAssetService {
     };
 
     retrieveAssets() {
-        var config = {};
-        config.method = 'GET';
-        config.url = this.ConfigService.getStudentAssetsURL();
-        config.params = {};
-        config.params.workgroupId = this.ConfigService.getWorkgroupId();
-        return this.$http(config).then((response) => {
-            // loop through the assets and make them into JSON object with more details
-            var result = [];
-            var assets = response.data;
-            var studentUploadsBaseURL = this.ConfigService.getStudentUploadsBaseURL();
-            for (var a = 0; a < assets.length; a++) {
-                var asset = assets[a];
-                if (!asset.isReferenced && asset.serverDeleteTime == null && asset.fileName !== '.DS_Store') {
-                    asset.url = studentUploadsBaseURL + asset.filePath;
-                    if (this.isImage(asset)) {
-                        asset.type = 'image';
-                        asset.iconURL = asset.url;
-                    } else if (this.isAudio(asset)) {
-                        asset.type = 'audio';
-                        asset.iconURL = 'wise5/vle/notebook/audio.png';
-                    } else {
-                        asset.type = 'file';
-                        asset.iconURL = 'wise5/vle/notebook/file.png';
-                    }
-                    result.push(asset);
+        if (this.ConfigService.isPreview()) {
+            // if we're in preview, don't make any request to the server but pretend we did
+            this.allAssets = [];
+            let deferred = this.$q.defer();
+            deferred.resolve(this.allAssets);
+            return deferred.promise;
+        } else {
+            let config = {
+                method: "GET",
+                url: this.ConfigService.getStudentAssetsURL(),
+                params: {
+                    workgroupId: this.ConfigService.getWorkgroupId()
                 }
-            }
-            this.allAssets = result;
-            return result;
-        });
+            };
+            return this.$http(config).then((response) => {
+                // loop through the assets and make them into JSON object with more details
+                let result = [];
+                let assets = response.data;
+                let studentUploadsBaseURL = this.ConfigService.getStudentUploadsBaseURL();
+                for (let a = 0; a < assets.length; a++) {
+                    let asset = assets[a];
+                    if (!asset.isReferenced && asset.serverDeleteTime == null && asset.fileName !== '.DS_Store') {
+                        asset.url = studentUploadsBaseURL + asset.filePath;
+                        if (this.isImage(asset)) {
+                            asset.type = 'image';
+                            asset.iconURL = asset.url;
+                        } else if (this.isAudio(asset)) {
+                            asset.type = 'audio';
+                            asset.iconURL = 'wise5/vle/notebook/audio.png';
+                        } else {
+                            asset.type = 'file';
+                            asset.iconURL = 'wise5/vle/notebook/file.png';
+                        }
+                        result.push(asset);
+                    }
+                }
+                this.allAssets = result;
+                return result;
+            });
+        }
     };
 
     getAssetContent(asset) {

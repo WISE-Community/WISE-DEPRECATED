@@ -10,10 +10,11 @@ import Draggable from './draggable/draggable';
 import GlobalAnnotations from './globalAnnotations/globalAnnotations';
 import GlobalAnnotationsList from './globalAnnotationsList/globalAnnotationsList';
 import ListenForDeleteKeypress from './listenForDeleteKeypress/listenForDeleteKeypress';
+import Notebook from './notebook/notebook';
 import PossibleScore from './possibleScore/possibleScore';
 import Wiselink from './wiselink/wiselink';
 
-let Components = angular.module('components', []);
+let Components = angular.module('components', ['notebook']);
 
 Components.component('annotation', Annotation);
 Components.component('compile', Compile);

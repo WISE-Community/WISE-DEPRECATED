@@ -10,8 +10,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var NotebookGradingController = function () {
     function NotebookGradingController($rootScope, $scope, $state, ConfigService, NotebookService, ProjectService, StudentStatusService, TeacherDataService, TeacherWebSocketService) {
-        var _this = this;
-
         _classCallCheck(this, NotebookGradingController);
 
         this.$rootScope = $rootScope;
@@ -24,10 +22,25 @@ var NotebookGradingController = function () {
         this.TeacherDataService = TeacherDataService;
         this.TeacherWebSocketService = TeacherWebSocketService;
 
+        this.themePath = this.ProjectService.getThemePath();
+
         this.teacherWorkgroupId = this.ConfigService.getWorkgroupId();
 
         // get the workgroups sorted alphabetically
         this.workgroups = this.ConfigService.getClassmateUserInfos();
+
+        this.noteFilter = "note";
+        this.reportFilter = "report";
+
+        this.showAllNotes = false;
+        this.showAllReports = false;
+        this.showNoteForWorkgroup = {};
+        this.showReportForWorkgroup = {};
+        for (var i = 0; i < this.workgroups.length; i++) {
+            var workgroup = this.workgroups[i];
+            this.showNoteForWorkgroup[workgroup.workgroupId] = false;
+            this.showReportForWorkgroup[workgroup.workgroupId] = false;
+        }
 
         this.canViewStudentNames = true;
         this.canGradeStudentWork = true;
@@ -59,12 +72,6 @@ var NotebookGradingController = function () {
             }
         }
 
-        this.notebookItems;
-
-        this.NotebookService.retrieveNotebookItems().then(function (notebookItems) {
-            _this.notebookItems = notebookItems;
-        });
-
         // save event when notebook grading view is displayed
         var context = "ClassroomMonitor",
             nodeId = null,
@@ -76,18 +83,68 @@ var NotebookGradingController = function () {
         this.TeacherDataService.saveEvent(context, nodeId, componentId, componentType, category, event, data);
     }
 
-    /**
-     * Get the current period
-     */
-
-
     _createClass(NotebookGradingController, [{
-        key: 'getCurrentPeriod',
+        key: "toggleDisplayNoteForWorkgroup",
+        value: function toggleDisplayNoteForWorkgroup(workgroupId) {
+            this.showNoteForWorkgroup[workgroupId] = !this.showNoteForWorkgroup[workgroupId];
+        }
+    }, {
+        key: "toggleDisplayReportForWorkgroup",
+        value: function toggleDisplayReportForWorkgroup(workgroupId) {
+            this.showReportForWorkgroup[workgroupId] = !this.showReportForWorkgroup[workgroupId];
+        }
+    }, {
+        key: "toggleDisplayAllNotes",
+        value: function toggleDisplayAllNotes() {
+            this.showAllNotes = !this.showAllNotes;
+
+            for (var workgroupId in this.showNoteForWorkgroup) {
+                this.showNoteForWorkgroup[workgroupId] = this.showAllNotes;
+            }
+        }
+    }, {
+        key: "toggleDisplayAllReports",
+        value: function toggleDisplayAllReports() {
+            this.showAllReports = !this.showAllReports;
+
+            for (var workgroupId in this.showReportForWorkgroup) {
+                this.showReportForWorkgroup[workgroupId] = this.showAllReports;
+            }
+        }
+
+        /**
+         * Handle request to view notes for the specified workgroup
+         * @param workgroupId
+         */
+
+    }, {
+        key: "viewNotes",
+        value: function viewNotes(workgroupId) {
+            alert(workgroupId);
+        }
+
+        /**
+         * Handle request to view report for the specified workgroup
+         * @param workgroupId
+         */
+
+    }, {
+        key: "viewReport",
+        value: function viewReport(workgroupId) {
+            alert(workgroupId);
+        }
+
+        /**
+         * Get the current period
+         */
+
+    }, {
+        key: "getCurrentPeriod",
         value: function getCurrentPeriod() {
             return this.TeacherDataService.getCurrentPeriod();
         }
     }, {
-        key: 'setCurrentPeriod',
+        key: "setCurrentPeriod",
 
 
         /**

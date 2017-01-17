@@ -144,10 +144,6 @@ var _nodeService = require('../services/nodeService');
 
 var _nodeService2 = _interopRequireDefault(_nodeService);
 
-var _notebook = require('./notebook/notebook');
-
-var _notebook2 = _interopRequireDefault(_notebook);
-
 var _notebookService = require('../services/notebookService');
 
 var _notebookService2 = _interopRequireDefault(_notebookService);
@@ -218,7 +214,7 @@ var _angularSummernote2 = _interopRequireDefault(_angularSummernote);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var vleModule = _angular2.default.module('vle', [(0, _angularDragula2.default)(_angular2.default), 'angularMoment', 'angular-toArrayFilter', 'audioOscillatorComponentModule', 'components', 'conceptMapComponentModule', 'discussionComponentModule', 'drawComponentModule', 'embeddedComponentModule', 'filters', 'graphComponentModule', 'highcharts-ng', 'htmlComponentModule', 'labelComponentModule', 'matchComponentModule', 'multipleChoiceComponentModule', 'ngAria', 'ngFileUpload', 'ngMaterial', 'ngSanitize', 'ngWebSocket', 'notebook', 'oc.lazyLoad', 'openResponseComponentModule', 'outsideURLComponentModule', 'pascalprecht.translate', 'studentAsset', 'summernote', 'tableComponentModule', 'ui.router', 'ui.scrollpoint']).service(_annotationService2.default.name, _annotationService2.default).service(_configService2.default.name, _configService2.default).service(_cRaterService2.default.name, _cRaterService2.default).service(_httpInterceptor2.default.name, _httpInterceptor2.default).service(_nodeService2.default.name, _nodeService2.default).service(_notebookService2.default.name, _notebookService2.default).service(_notificationService2.default.name, _notificationService2.default).service(_projectService2.default.name, _projectService2.default).service(_sessionService2.default.name, _sessionService2.default).service(_studentAssetService2.default.name, _studentAssetService2.default).service(_studentDataService2.default.name, _studentDataService2.default).service(_studentStatusService2.default.name, _studentStatusService2.default).service(_studentWebSocketService2.default.name, _studentWebSocketService2.default).service(_utilService2.default.name, _utilService2.default).controller(_navigationController2.default.name, _navigationController2.default).controller(_nodeController2.default.name, _nodeController2.default).controller(_vleController2.default.name, _vleController2.default).filter(_filters2.default.name, _filters2.default).config(['$urlRouterProvider', '$stateProvider', '$translateProvider', '$translatePartialLoaderProvider', '$controllerProvider', '$mdThemingProvider', '$httpProvider', '$provide', function ($urlRouterProvider, $stateProvider, $translateProvider, $translatePartialLoaderProvider, $controllerProvider, $mdThemingProvider, $httpProvider, $provide) {
+var vleModule = _angular2.default.module('vle', [(0, _angularDragula2.default)(_angular2.default), 'angularMoment', 'angular-toArrayFilter', 'audioOscillatorComponentModule', 'components', 'conceptMapComponentModule', 'discussionComponentModule', 'drawComponentModule', 'embeddedComponentModule', 'filters', 'graphComponentModule', 'highcharts-ng', 'htmlComponentModule', 'labelComponentModule', 'matchComponentModule', 'multipleChoiceComponentModule', 'ngAria', 'ngFileUpload', 'ngMaterial', 'ngSanitize', 'ngWebSocket', 'oc.lazyLoad', 'openResponseComponentModule', 'outsideURLComponentModule', 'pascalprecht.translate', 'studentAsset', 'summernote', 'tableComponentModule', 'ui.router', 'ui.scrollpoint']).service(_annotationService2.default.name, _annotationService2.default).service(_configService2.default.name, _configService2.default).service(_cRaterService2.default.name, _cRaterService2.default).service(_httpInterceptor2.default.name, _httpInterceptor2.default).service(_nodeService2.default.name, _nodeService2.default).service(_notebookService2.default.name, _notebookService2.default).service(_notificationService2.default.name, _notificationService2.default).service(_projectService2.default.name, _projectService2.default).service(_sessionService2.default.name, _sessionService2.default).service(_studentAssetService2.default.name, _studentAssetService2.default).service(_studentDataService2.default.name, _studentDataService2.default).service(_studentStatusService2.default.name, _studentStatusService2.default).service(_studentWebSocketService2.default.name, _studentWebSocketService2.default).service(_utilService2.default.name, _utilService2.default).controller(_navigationController2.default.name, _navigationController2.default).controller(_nodeController2.default.name, _nodeController2.default).controller(_vleController2.default.name, _vleController2.default).filter(_filters2.default.name, _filters2.default).config(['$urlRouterProvider', '$stateProvider', '$translateProvider', '$translatePartialLoaderProvider', '$controllerProvider', '$mdThemingProvider', '$httpProvider', '$provide', function ($urlRouterProvider, $stateProvider, $translateProvider, $translatePartialLoaderProvider, $controllerProvider, $mdThemingProvider, $httpProvider, $provide) {
 
     $urlRouterProvider.otherwise('/vle/');
 
@@ -247,15 +243,22 @@ var vleModule = _angular2.default.module('vle', [(0, _angularDragula2.default)(_
                 return StudentDataService.retrieveStudentData();
             },
             notebook: function notebook(NotebookService, ConfigService, StudentAssetService, studentData, config, project) {
-                if (!ConfigService.isPreview()) {
-                    StudentAssetService.retrieveAssets().then(function (studentAssets) {
-                        NotebookService.retrieveNotebookItems(ConfigService.getWorkgroupId()).then(function (notebook) {
-                            return notebook;
-                        });
+                StudentAssetService.retrieveAssets().then(function (studentAssets) {
+                    NotebookService.retrieveNotebookItems(ConfigService.getWorkgroupId()).then(function (notebook) {
+                        return notebook;
                     });
-                } else {
-                    return NotebookService.notebook;
-                }
+                });
+                /*
+                                            if (!ConfigService.isPreview()) {
+                                                StudentAssetService.retrieveAssets().then((studentAssets) => {
+                                                    NotebookService.retrieveNotebookItems(ConfigService.getWorkgroupId()).then((notebook) => {
+                                                        return notebook;
+                                                    });
+                                                });
+                                            } else {
+                                                return NotebookService.notebook;
+                                            }
+                                            */
             },
             notifications: function notifications(NotificationService, studentData, config, project) {
                 return NotificationService.retrieveNotifications();

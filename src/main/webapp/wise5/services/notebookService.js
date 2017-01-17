@@ -74,10 +74,6 @@ var NotebookService = function () {
         };
 
         this.reports = [];
-        this.notebook = {};
-        this.notebook.allItems = [];
-        this.notebook.items = {};
-        this.notebook.deletedItems = {};
 
         this.notebookConfig = {};
         if (this.ProjectService.project) {
@@ -91,15 +87,6 @@ var NotebookService = function () {
     }
 
     _createClass(NotebookService, [{
-        key: "addItem",
-        value: function addItem(notebookItem) {
-            this.notebook.allItems.push(notebookItem);
-            this.groupNotebookItems();
-
-            // the current node is about to change
-            this.$rootScope.$broadcast('notebookUpdated', { notebook: this.notebook });
-        }
-    }, {
         key: "editItem",
         value: function editItem(ev, itemId) {
             // broadcast edit notebook item event
@@ -114,8 +101,8 @@ var NotebookService = function () {
     }, {
         key: "deleteItem",
         value: function deleteItem(itemToDelete) {
-            var items = this.notebook.items;
-            var deletedItems = this.notebook.deletedItems;
+            var items = this.getNotebookByWorkgroup().items;
+            var deletedItems = this.getNotebookByWorkgroup().deletedItems;
             for (var i = 0; i < items.length; i++) {
                 var item = items[i];
                 if (item === itemToDelete) {
@@ -130,11 +117,13 @@ var NotebookService = function () {
 
         // looks up notebook item by local notebook item id, including deleted notes
         value: function getLatestNotebookItemByLocalNotebookItemId(itemId) {
-            if (this.notebook.items.hasOwnProperty(itemId)) {
-                var items = this.notebook.items[itemId];
+            var workgroupId = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+
+            if (this.getNotebookByWorkgroup(workgroupId).items.hasOwnProperty(itemId)) {
+                var items = this.getNotebookByWorkgroup(workgroupId).items[itemId];
                 return items.last();
-            } else if (this.notebook.deletedItems.hasOwnProperty(itemId)) {
-                var _items = this.notebook.deletedItems[itemId];
+            } else if (this.getNotebookByWorkgroup(workgroupId).deletedItems.hasOwnProperty(itemId)) {
+                var _items = this.getNotebookByWorkgroup(workgroupId).deletedItems[itemId];
                 return _items.last();
             } else {
                 return null;
@@ -146,7 +135,9 @@ var NotebookService = function () {
     }, {
         key: "getLatestNotebookReportItemByReportId",
         value: function getLatestNotebookReportItemByReportId(reportId) {
-            return this.getLatestNotebookItemByLocalNotebookItemId(reportId);
+            var workgroupId = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+
+            return this.getLatestNotebookItemByLocalNotebookItemId(reportId, workgroupId);
         }
 
         // returns the authored report item
@@ -174,17 +165,19 @@ var NotebookService = function () {
         key: "calculateTotalUsage",
         value: function calculateTotalUsage() {
             // get the total size
-            var totalSizeSoFar = 0;
-            for (var i = 0; i < this.notebook.items.length; i++) {
-                var notebookItem = this.notebook.items[i];
+            /*
+            let totalSizeSoFar = 0;
+            for (let i = 0; i < this.getNotebookByWorkgroup().items.length; i++) {
+                let notebookItem = this.getNotebookByWorkgroup().items[i];
                 if (notebookItem.studentAsset != null) {
-                    var notebookItemSize = notebookItem.studentAsset.fileSize;
+                    let notebookItemSize = notebookItem.studentAsset.fileSize;
                     totalSizeSoFar += notebookItemSize;
                 }
             }
-            this.notebook.totalSize = totalSizeSoFar;
-            this.notebook.totalSizeMax = this.ConfigService.getStudentMaxTotalAssetsSize();
-            this.notebook.usagePercentage = this.notebook.totalSize / this.notebook.totalSizeMax * 100;
+            this.getNotebookByWorkgroup().totalSize = totalSizeSoFar;
+            this.getNotebookByWorkgroup().totalSizeMax = this.ConfigService.getStudentMaxTotalAssetsSize();
+            this.getNotebookByWorkgroup().usagePercentage = this.notebook.totalSize / this.notebook.totalSizeMax * 100;
+            */
         }
     }, {
         key: "getNotebookConfig",
@@ -204,39 +197,61 @@ var NotebookService = function () {
             var workgroupId = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
             var periodId = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
 
-            var config = {
-                method: 'GET',
-                url: this.ConfigService.getStudentNotebookURL(),
-                params: {}
-            };
-            if (workgroupId != null) {
-                config.params.workgroupId = workgroupId;
-            }
-            if (periodId != null) {
-                config.params.periodId = periodId;
-            }
-            return this.$http(config).then(function (response) {
-                // loop through the assets and make them into JSON object with more details
-                _this.notebook.allItems = []; // clear local notebook items array
-                var allNotebookItems = response.data;
-                for (var n = 0; n < allNotebookItems.length; n++) {
-                    var notebookItem = allNotebookItems[n];
-                    if (notebookItem.studentAssetId != null) {
-                        // if this notebook item is a StudentAsset item, add the association here
-                        notebookItem.studentAsset = _this.StudentAssetService.getAssetById(notebookItem.studentAssetId);
-                    } else if (notebookItem.studentWorkId != null) {
-                        // if this notebook item is a StudentWork item, add the association here
-                        notebookItem.studentWork = _this.StudentDataService.getStudentWorkByStudentWorkId(notebookItem.studentWorkId);
-                    } else if (notebookItem.type === "note" || notebookItem.type === "report") {
-                        notebookItem.content = angular.fromJson(notebookItem.content);
-                    }
-                    _this.notebook.allItems.push(notebookItem);
+            if (this.ConfigService.isPreview()) {
+                // we are previewing the project, initialize dummy student data
+                var _workgroupId = this.ConfigService.getWorkgroupId();
+                this.notebooksByWorkgroup = {};
+                this.notebooksByWorkgroup[_workgroupId] = {};
+                this.notebooksByWorkgroup[_workgroupId].allItems = [];
+                this.notebooksByWorkgroup[_workgroupId].items = [];
+                this.notebooksByWorkgroup[_workgroupId].deletedItems = [];
+                this.groupNotebookItems();
+                // if we're in preview, don't make any request to the server but pretend we did
+                var deferred = this.$q.defer();
+                deferred.resolve(this.notebooksByWorkgroup[_workgroupId]);
+                return deferred.promise;
+            } else {
+                var config = {
+                    method: 'GET',
+                    url: this.ConfigService.getStudentNotebookURL(),
+                    params: {}
+                };
+                if (workgroupId != null) {
+                    config.params.workgroupId = workgroupId;
                 }
-                _this.calculateTotalUsage();
-                _this.groupNotebookItems(); // group notebook items based on item.localNotebookItemId
+                if (periodId != null) {
+                    config.params.periodId = periodId;
+                }
+                return this.$http(config).then(function (response) {
+                    // loop through the assets and make them into JSON object with more details
+                    _this.notebooksByWorkgroup = {};
+                    var allNotebookItems = response.data;
+                    for (var n = 0; n < allNotebookItems.length; n++) {
+                        var notebookItem = allNotebookItems[n];
+                        if (notebookItem.studentAssetId != null) {
+                            // if this notebook item is a StudentAsset item, add the association here
+                            notebookItem.studentAsset = _this.StudentAssetService.getAssetById(notebookItem.studentAssetId);
+                        } else if (notebookItem.studentWorkId != null) {
+                            // if this notebook item is a StudentWork item, add the association here
+                            notebookItem.studentWork = _this.StudentDataService.getStudentWorkByStudentWorkId(notebookItem.studentWorkId);
+                        } else if (notebookItem.type === "note" || notebookItem.type === "report") {
+                            notebookItem.content = angular.fromJson(notebookItem.content);
+                        }
+                        var _workgroupId2 = notebookItem.workgroupId;
+                        if (_this.notebooksByWorkgroup.hasOwnProperty(_workgroupId2)) {
+                            // we already have create a notebook for this workgroup before, so we'll append this notebook item to the array
+                            _this.notebooksByWorkgroup[_workgroupId2].allItems.push(notebookItem);
+                        } else {
+                            // otherwise, we'll create a new notebook field and add the item to the array
+                            _this.notebooksByWorkgroup[_workgroupId2] = { allItems: [notebookItem] };
+                        }
+                    }
+                    _this.groupNotebookItems(); // group notebook items based on item.localNotebookItemId
+                    _this.calculateTotalUsage();
 
-                return _this.notebook;
-            });
+                    return _this.notebooksByWorkgroup;
+                });
+            }
         }
     }, {
         key: "groupNotebookItems",
@@ -250,34 +265,57 @@ var NotebookService = function () {
          * }
          */
         value: function groupNotebookItems() {
-            this.notebook.items = {}; // reset items
-            this.notebook.deletedItems = {}; // reset deleted items
-            for (var ni = 0; ni < this.notebook.allItems.length; ni++) {
-                var notebookItem = this.notebook.allItems[ni];
-                var notebookItemLocalNotebookItemId = notebookItem.localNotebookItemId;
-                if (this.notebook.items.hasOwnProperty(notebookItemLocalNotebookItemId)) {
-                    // if this was already added before, we'll append this notebook item to the array
-                    this.notebook.items[notebookItemLocalNotebookItemId].push(notebookItem);
-                } else {
-                    // otherwise, we'll create a new field and add the item to the array
-                    this.notebook.items[notebookItemLocalNotebookItemId] = [notebookItem];
-                }
-            }
-            // now go through the items and look at the last revision of each item. If it's deleted, then move the entire item array to deletedItems
-            for (var notebookItemLocalNotebookItemIdKey in this.notebook.items) {
-                if (this.notebook.items.hasOwnProperty(notebookItemLocalNotebookItemIdKey)) {
-                    // get the last note revision
-                    var allRevisionsForThisLocalNotebookItemId = this.notebook.items[notebookItemLocalNotebookItemIdKey];
-                    if (allRevisionsForThisLocalNotebookItemId != null) {
-                        var lastRevision = allRevisionsForThisLocalNotebookItemId[allRevisionsForThisLocalNotebookItemId.length - 1];
-                        if (lastRevision != null && lastRevision.serverDeleteTime != null) {
-                            // the last revision for this not deleted, so move the entire note (with all its revisions) to deletedItems
-                            this.notebook.deletedItems[notebookItemLocalNotebookItemIdKey] = allRevisionsForThisLocalNotebookItemId;
-                            delete this.notebook.items[notebookItemLocalNotebookItemIdKey]; // then remove it from the items array
+            for (var workgroupId in this.notebooksByWorkgroup) {
+                if (this.notebooksByWorkgroup.hasOwnProperty(workgroupId)) {
+                    var notebookByWorkgroup = this.notebooksByWorkgroup[workgroupId];
+                    notebookByWorkgroup.items = {};
+                    notebookByWorkgroup.deletedItems = {}; // reset deleted items
+                    for (var ni = 0; ni < notebookByWorkgroup.allItems.length; ni++) {
+                        var notebookItem = notebookByWorkgroup.allItems[ni];
+                        var notebookItemLocalNotebookItemId = notebookItem.localNotebookItemId;
+                        if (notebookByWorkgroup.items.hasOwnProperty(notebookItemLocalNotebookItemId)) {
+                            // if this was already added before, we'll append this notebook item to the array
+                            notebookByWorkgroup.items[notebookItemLocalNotebookItemId].push(notebookItem);
+                        } else {
+                            // otherwise, we'll create a new field and add the item to the array
+                            notebookByWorkgroup.items[notebookItemLocalNotebookItemId] = [notebookItem];
+                        }
+                    }
+                    // now go through the items and look at the last revision of each item. If it's deleted, then move the entire item array to deletedItems
+                    for (var notebookItemLocalNotebookItemIdKey in notebookByWorkgroup.items) {
+                        if (notebookByWorkgroup.items.hasOwnProperty(notebookItemLocalNotebookItemIdKey)) {
+                            // get the last note revision
+                            var allRevisionsForThisLocalNotebookItemId = notebookByWorkgroup.items[notebookItemLocalNotebookItemIdKey];
+                            if (allRevisionsForThisLocalNotebookItemId != null) {
+                                var lastRevision = allRevisionsForThisLocalNotebookItemId[allRevisionsForThisLocalNotebookItemId.length - 1];
+                                if (lastRevision != null && lastRevision.serverDeleteTime != null) {
+                                    // the last revision for this not deleted, so move the entire note (with all its revisions) to deletedItems
+                                    notebookByWorkgroup.deletedItems[notebookItemLocalNotebookItemIdKey] = allRevisionsForThisLocalNotebookItemId;
+                                    delete notebookByWorkgroup.items[notebookItemLocalNotebookItemIdKey]; // then remove it from the items array
+                                }
+                            }
                         }
                     }
                 }
             }
+        }
+    }, {
+        key: "getNotebookByWorkgroup",
+        value: function getNotebookByWorkgroup() {
+            var workgroupId = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+
+            if (workgroupId == null) {
+                workgroupId = this.ConfigService.getWorkgroupId();
+            }
+            var notebookByWorkgroup = this.notebooksByWorkgroup[workgroupId];
+            if (notebookByWorkgroup == null) {
+                notebookByWorkgroup = {
+                    allItems: [],
+                    items: {},
+                    deletedItems: {}
+                };
+            }
+            return notebookByWorkgroup;
         }
     }, {
         key: "hasStudentWorkNotebookItem",
@@ -307,12 +345,29 @@ var NotebookService = function () {
                         notebookItemId: notebookItemId,
                         title: title,
                         type: type,
+                        workgroupId: _this2.ConfigService.getWorkgroupId(),
                         clientSaveTime: clientSaveTime,
                         clientDeleteTime: clientDeleteTime
                     };
-                    _this2.notebook.allItems.push(notebookItem);
+                    if (clientDeleteTime != null) {
+                        // preview user wants to delete this note, so mock the server deletion by setting the server delete time
+                        notebookItem.serverDeleteTime = clientDeleteTime;
+                    } else {
+                        notebookItem.serverDeleteTime = null;
+                    }
+                    // add/update notebook
+                    var workgroupId = notebookItem.workgroupId;
+                    if (_this2.notebooksByWorkgroup.hasOwnProperty(workgroupId)) {
+                        // we already have create a notebook for this workgroup before, so we'll append this notebook item to the array
+                        _this2.notebooksByWorkgroup[workgroupId].allItems.push(notebookItem);
+                    } else {
+                        // otherwise, we'll create a new notebook field and add the item to the array
+                        _this2.notebooksByWorkgroup[workgroupId] = { allItems: [notebookItem] };
+                    }
+
                     _this2.groupNotebookItems();
-                    _this2.$rootScope.$broadcast('notebookUpdated', { notebook: _this2.notebook });
+                    _this2.groupNotebookItems();
+                    _this2.$rootScope.$broadcast('notebookUpdated', { notebook: _this2.notebooksByWorkgroup[workgroupId] });
                     resolve();
                 });
             } else {
@@ -345,46 +400,22 @@ var NotebookService = function () {
                             notebookItem.content = angular.fromJson(notebookItem.content);
                         }
                         // add/update notebook
-                        _this2.notebook.allItems.push(notebookItem);
+                        var workgroupId = notebookItem.workgroupId;
+                        if (_this2.notebooksByWorkgroup.hasOwnProperty(workgroupId)) {
+                            // we already have create a notebook for this workgroup before, so we'll append this notebook item to the array
+                            _this2.notebooksByWorkgroup[workgroupId].allItems.push(notebookItem);
+                        } else {
+                            // otherwise, we'll create a new notebook field and add the item to the array
+                            _this2.notebooksByWorkgroup[workgroupId] = { allItems: [notebookItem] };
+                        }
+
                         _this2.groupNotebookItems();
 
-                        _this2.$rootScope.$broadcast('notebookUpdated', { notebook: _this2.notebook });
+                        _this2.$rootScope.$broadcast('notebookUpdated', { notebook: _this2.notebooksByWorkgroup[workgroupId] });
                     }
                     return result.data;
                 });
             }
-        }
-    }, {
-        key: "uploadStudentAssetNotebookItem",
-        value: function uploadStudentAssetNotebookItem(file) {
-            var _this3 = this;
-
-            this.StudentAssetService.uploadAsset(file).then(function (studentAsset) {
-
-                var config = {
-                    method: 'POST',
-                    url: _this3.ConfigService.getStudentNotebookURL(),
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-                };
-                var params = {
-                    workgroupId: _this3.ConfigService.getWorkgroupId(),
-                    periodId: _this3.ConfigService.getPeriodId(),
-                    studentAssetId: studentAsset.id,
-                    clientSaveTime: Date.parse(new Date())
-                };
-                config.data = $.param(params);
-
-                return _this3.$http(config).then(function (result) {
-                    var notebookItem = result.data;
-                    if (notebookItem != null) {
-                        notebookItem.studentAsset = _this3.StudentAssetService.getAssetById(notebookItem.studentAssetId);
-                        _this3.notebook.allItems.push(notebookItem);
-                        _this3.groupNotebookItems();
-                    }
-                    _this3.calculateTotalUsage();
-                    return notebookItem;
-                });
-            });
         }
     }, {
         key: "saveNotebookToggleEvent",
