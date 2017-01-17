@@ -35,7 +35,7 @@ class NotebookItemReportController {
             time: ''
         };
 
-        this.reportItem = this.NotebookService.getLatestNotebookReportItemByReportId(this.reportId);
+        this.reportItem = this.NotebookService.getLatestNotebookReportItemByReportId(this.reportId, this.workgroupId);
         if (this.reportItem) {
             let serverSaveTime = this.reportItem.serverSaveTime;
             let clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
@@ -46,7 +46,6 @@ class NotebookItemReportController {
             if (this.reportItem == null) {
                 // if there is no template, don't allow student to work on the report.
                 return;
-            } else {
             }
         }
         this.reportItem.id = null;  // set the id to null so it can be inserted as initial version, as opposed to updated. this is true for both new and just-loaded reports.
@@ -111,7 +110,9 @@ class NotebookItemReportController {
         });
 
         // start the auto save interval
-        this.startAutoSaveInterval();
+        if (this.mode != "classroomMonitor") {
+            this.startAutoSaveInterval();
+        }
     }
 
     getItemNodeId() {
@@ -138,7 +139,7 @@ class NotebookItemReportController {
     }
 
     addNotebookItemContent(ev) {
-        let notebookItems = this.NotebookService.notebook.items;
+        let notebookItems = this.NotebookService.getNotebookByWorkgroup(this.workgroupId).items;
         let templateUrl = this.themePath + '/notebook/notebookItemChooser.html';
         let reportTextareaCursorPosition = angular.element('textarea.report').prop("selectionStart"); // insert the notebook item at the cursor position later
         let $reportElement = $('#' + this.reportId);

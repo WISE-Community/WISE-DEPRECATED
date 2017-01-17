@@ -35,7 +35,6 @@ import MultipleChoiceComponentModule from '../components/multipleChoice/multiple
 import NavigationController from './navigation/navigationController';
 import NodeController from '../node/nodeController';
 import NodeService from '../services/nodeService';
-import Notebook from './notebook/notebook';
 import NotebookService from '../services/notebookService';
 import NotificationService from '../services/notificationService';
 import OpenResponseComponentModule from '../components/openResponse/openResponseComponentModule';
@@ -79,7 +78,6 @@ let vleModule = angular.module('vle', [
     'ngMaterial',
     'ngSanitize',
     'ngWebSocket',
-    'notebook',
     'oc.lazyLoad',
     'openResponseComponentModule',
     'outsideURLComponentModule',
@@ -155,6 +153,12 @@ let vleModule = angular.module('vle', [
                             return StudentDataService.retrieveStudentData();
                         },
                         notebook: function (NotebookService, ConfigService, StudentAssetService, studentData, config, project) {
+                            StudentAssetService.retrieveAssets().then((studentAssets) => {
+                                NotebookService.retrieveNotebookItems(ConfigService.getWorkgroupId()).then((notebook) => {
+                                    return notebook;
+                                });
+                            });
+/*
                             if (!ConfigService.isPreview()) {
                                 StudentAssetService.retrieveAssets().then((studentAssets) => {
                                     NotebookService.retrieveNotebookItems(ConfigService.getWorkgroupId()).then((notebook) => {
@@ -164,6 +168,7 @@ let vleModule = angular.module('vle', [
                             } else {
                                 return NotebookService.notebook;
                             }
+                            */
                         },
                         notifications: function (NotificationService, studentData, config, project) {
                             return NotificationService.retrieveNotifications();

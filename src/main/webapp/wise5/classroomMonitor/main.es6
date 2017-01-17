@@ -207,7 +207,20 @@ let classroomMonitorModule = angular.module('classroomMonitor', [
                     url: '/notebook',
                     templateUrl: 'wise5/classroomMonitor/notebook/notebook.html',
                     controller: 'NotebookGradingController',
-                    controllerAs: 'notebookGradingController'
+                    controllerAs: 'notebookGradingController',
+                    resolve: {
+                        notebook: function (NotebookService, ConfigService, config, project, StudentAssetService) {
+                            if (!ConfigService.isPreview()) {
+                                //StudentAssetService.retrieveAssets().then((studentAssets) => {
+                                    NotebookService.retrieveNotebookItems().then((notebook) => {
+                                        return notebook;
+                                    });
+                                //});
+                            } else {
+                                return NotebookService.notebook;
+                            }
+                        }
+                    }
                 });
 
             // Set up Translations

@@ -26,7 +26,7 @@ class NotebookItemController {
         this.$translate = this.$filter('translate');
         this.mode = this.ConfigService.getMode();
 
-        this.item = this.NotebookService.getLatestNotebookItemByLocalNotebookItemId(this.itemId);
+        this.item = this.NotebookService.getLatestNotebookItemByLocalNotebookItemId(this.itemId, this.workgroupId);
         this.item.id = null; // set to null so we're creating a new notebook item. An edit to a notebook item results in a new entry in the db.
 
         // set the type in the controller

@@ -27,14 +27,14 @@
         <span class="notebook-item__content__location"><md-icon> place </md-icon><span class="md-body-1">{{notebookItemController.getItemNodePosition()}}</span></span>
         <span flex></span>
         <md-button class="md-icon-button"
-                   ng-if="notebookItemController.item.serverDeleteTime == null"
+                   ng-if="notebookItemController.mode != 'classroomMonitor' && notebookItemController.item.serverDeleteTime == null"
                    aria-label="Delete notebook item"
                    ng-click="notebookItemController.doDelete($event)">
             <md-icon> delete </md-icon>
             <md-tooltip md-direction="top">{{ 'DELETE' | translate }}</md-tooltip>
         </md-button>
         <md-button class="md-icon-button"
-                   ng-if="notebookItemController.item.serverDeleteTime != null"
+                   ng-if="notebookItemController.mode != 'classroomMonitor' && notebookItemController.item.serverDeleteTime != null"
                    aria-label="Revive notebook item"
                    ng-click="notebookItemController.doRevive($event)">
             <md-icon> undo </md-icon>
