@@ -5352,9 +5352,9 @@ class ProjectService {
             var removalCriteria = constraint.removalCriteria;
 
             if (removalConditional === 'any') {
-                message += this.$translate('TOVISITSTEPYOUMUSTPERFORMONEOFTHEACTIONSBELOW', { nodeTitle: nodeTitle}) + ':<br/>';
+                message += this.$translate('TO_VISIT_STEP_YOU_MUST_PERFORM_ONE_OF_THE_ACTIONS_BELOW', { nodeTitle: nodeTitle}) + ':<br/>';
             } else {
-                message += this.$translate('TOVISITSTEPYOUMUSTPERFORMALLOFTHEACTIONSBELOW', { nodeTitle: nodeTitle}) + ':<br/>';
+                message += this.$translate('TO_VISIT_STEP_YOU_MUST_PERFORM_ALL_OF_THE_ACTIONS_BELOW', { nodeTitle: nodeTitle}) + ':<br/>';
             }
 
             if (removalCriteria != null) {
@@ -6865,7 +6865,7 @@ class ProjectService {
                 {
                     "id": "group1",
                     "type": "group",
-                    "title": this.$translate('FIRSTACTIVITY'),
+                    "title": this.$translate('FIRST_ACTIVITY'),
                     "startId": "",
                     "ids": [
                     ],
@@ -6887,7 +6887,7 @@ class ProjectService {
                 "template": "starmap|leftNav|rightNav"
             },
             "metadata": {
-                "title": this.$translate('MYNEWPROJECT')
+                "title": this.$translate('MY_NEW_PROJECT')
             },
             "notebook": {
                 "enabled": false,
@@ -6902,8 +6902,8 @@ class ProjectService {
                         "enableClipping": true,
                         "enableStudentUploads": true,
                         "label": {
-                            "singular": this.$translate('NOTELOWERCASE'),
-                            "plural": this.$translate('NOTESLOWERCASE'),
+                            "singular": this.$translate('NOTE_LOWERCASE'),
+                            "plural": this.$translate('NOTES_LOWERCASE'),
                             "link": this.$translate('NOTES'),
                             "icon": "note",
                             "color": "#1565C0"
@@ -6916,8 +6916,8 @@ class ProjectService {
                         "enableClipping": true,
                         "enableStudentUploads": true,
                         "label": {
-                            "singular": this.$translate('QUESTIONLOWERCASE'),
-                            "plural": this.$translate('QUESTIONSLOWERCASE'),
+                            "singular": this.$translate('QUESTION_LOWER_CASE'),
+                            "plural": this.$translate('QUESTIONS_LOWER_CASE'),
                             "link": this.$translate('QUESTIONS'),
                             "icon": "live_help",
                             "color": "#F57C00"
@@ -6926,8 +6926,8 @@ class ProjectService {
                     "report": {
                         "enabled": false,
                         "label": {
-                            "singular": this.$translate('REPORTLOWERCASE'),
-                            "plural": this.$translate('REPORTSLOWERCASE'),
+                            "singular": this.$translate('REPORT_LOWERCASE'),
+                            "plural": this.$translate('REPORTS_LOWERCASE'),
                             "link": this.$translate('REPORT'),
                             "icon": "assignment",
                             "color": "#AD1457"
@@ -6935,10 +6935,10 @@ class ProjectService {
                         "notes": [
                             {
                                 "reportId": "finalReport",
-                                "title": this.$translate('FINALREPORT'),
-                                "description": this.$translate('REPORTDESCRIPTION'),
-                                "prompt": this.$translate('REPORTPROMPT'),
-                                "content": this.$translate('REPORTCONTENT')
+                                "title": this.$translate('FINAL_REPORT'),
+                                "description": this.$translate('REPORT_DESCRIPTION'),
+                                "prompt": this.$translate('REPORT_PROMPT'),
+                                "content": this.$translate('REPORT_CONTENT')
                             }
                         ]
                     }

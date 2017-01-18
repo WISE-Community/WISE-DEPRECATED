@@ -157,7 +157,7 @@ class StudentAssetService {
                 file: file
             }).success((asset, status, headers, config) => {
                 if (asset === "error") {
-                    alert(this.$translate('THEREWASANERRORUPLOADING'));
+                    alert(this.$translate('THERE_WAS_AN_ERROR_UPLOADING'));
                 } else {
                     var studentUploadsBaseURL = this.ConfigService.getStudentUploadsBaseURL();
                     asset.url = studentUploadsBaseURL + asset.filePath;
@@ -176,7 +176,7 @@ class StudentAssetService {
                     deferred.resolve(asset);
                 }
             }).error((asset, status, headers, config) => {
-                alert(this.$translate('THEREWASANERRORUPLOADINGYOUMIGHTHAVEREACHEDLIMIT'));
+                alert(this.$translate('THERE_WAS_AN_ERROR_UPLOADING_YOU_MIGHT_HAVE_REACHED_LIMIT'));
             });
 
             return deferred.promise;

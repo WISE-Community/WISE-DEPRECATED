@@ -20,7 +20,7 @@ class LabelService extends NodeService {
         var component = {};
         component.id = this.UtilService.generateKey();
         component.type = 'Label';
-        component.prompt = this.$translate('ENTERPROMPTHERE');
+        component.prompt = this.$translate('ENTER_PROMPT_HERE');
         component.showSaveButton = false;
         component.showSubmitButton = false;
         component.backgroundImage = '';

@@ -112,7 +112,7 @@ var NodeAuthoringController = function () {
             }]
         }, {
             value: "isCorrect",
-            text: this.$translate('ISCORRECT'),
+            text: this.$translate('IS_CORRECT'),
             params: [{
                 value: "nodeId",
                 text: this.$translate('nodeID')
@@ -177,7 +177,7 @@ var NodeAuthoringController = function () {
 
         this.branchCriteria = [{
             value: "workgroupId",
-            text: this.$translate('WORKGROUPID')
+            text: this.$translate('WORKGROUP_ID')
         }, {
             value: "score",
             text: this.$translate('SCORE')

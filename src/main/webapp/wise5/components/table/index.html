@@ -7,17 +7,17 @@
                               rows='10'
                               cols='100'></textarea>
                     <br/>
-                    {{ 'SHOWSAVEBUTTON' | translate }}:
+                    {{ 'SHOW_SAVE_BUTTON' | translate }}:
                     <input type='checkbox'
                            ng-model='tableController.authoringComponentContent.showSaveButton'
                            ng-change='tableController.authoringViewComponentChanged()'/>
                     <br/>
-                    {{ 'SHOWSUBMITBUTTON' | translate }}:
+                    {{ 'SHOW_SUBMIT_BUTTON' | translate }}:
                     <input type='checkbox'
                            ng-model='tableController.authoringComponentContent.showSubmitButton'
                            ng-change='tableController.authoringViewComponentChanged()'/>
                     <br/>
-                    {{ 'MAXSCORE' | translate }}:
+                    {{ 'MAX_SCORE' | translate }}:
                     <input type='number'
                            ng-model='tableController.authoringComponentContent.maxScore'
                            ng-change='tableController.authoringViewComponentChanged()'
@@ -69,14 +69,14 @@
                     </table>
         </div>
         <div ng-if='tableController.mode === "authoring"'>
-            {{ 'IMPORTPREVIOUSWORK' | translate }}:
+            {{ 'IMPORT_PREVIOUS_WORK' | translate }}:
             <input type='checkbox'
                    ng-model='tableController.authoringComponentContent.importPreviousWork'
                    ng-click='tableController.authoringImportPreviousWorkClicked()'
                    ng-change='tableController.authoringViewComponentChanged()'/>
         </div>
         <div ng-if='tableController.mode === "authoring" && tableController.authoringComponentContent.importPreviousWork'>
-            {{ 'IMPORTPREVIOUSWORKSTEP' | translate }}:
+            {{ 'IMPORT_PREVIOUS_WORK_STEP' | translate }}:
             <select ng-model='tableController.authoringComponentContent.importPreviousWorkNodeId'
                     ng-change='tableController.authoringImportPreviousWorkNodeIdChanged()'>
                 <option></option>
@@ -85,7 +85,7 @@
                         ng-if='tableController.isApplicationNode(item.$key)'>{{tableController.getNodePositionAndTitleByNodeId(item.$key)}}</option>
             </select>
             <br/>
-            {{ 'IMPORTPREVIOUSWORKCOMPONENT' | translate }}:
+            {{ 'IMPORT_PREVIOUS_WORK_COMPONENT' | translate }}:
             <select ng-model='tableController.authoringComponentContent.importPreviousWorkComponentId'
                     ng-change='tableController.authoringImportPreviousWorkComponentIdChanged()'
                     ng-options='component.id as component.type disable when !tableController.componentHasWork(component) for component in tableController.getComponentsByNodeId(tableController.authoringComponentContent.importPreviousWorkNodeId)'>
@@ -93,14 +93,14 @@
             </select>
         </div>
         <div ng-if='tableController.mode === "authoring"'>
-            {{ 'SHOWPREVIOUSWORK' | translate }}:
+            {{ 'SHOW_PREVIOUS_WORK' | translate }}:
             <input type='checkbox'
                    ng-model='tableController.authoringComponentContent.showPreviousWork'
                    ng-click='tableController.authoringShowPreviousWorkClicked()'
                    ng-change='tableController.authoringViewComponentChanged()'/>
         </div>
         <div ng-if='tableController.mode === "authoring" && tableController.authoringComponentContent.showPreviousWork'>
-            {{ 'SHOWPREVIOUSWORKSTEP' | translate }}:
+            {{ 'SHOW_PREVIOUS_WORK_STEP' | translate }}:
             <select ng-model='tableController.authoringComponentContent.showPreviousWorkNodeId'
                     ng-change='tableController.authoringShowPreviousWorkNodeIdChanged()'>
                 <option></option>
@@ -109,14 +109,14 @@
                         ng-if='tableController.isApplicationNode(item.$key)'>{{tableController.getNodePositionAndTitleByNodeId(item.$key)}}</option>
             </select>
             <br/>
-            {{ 'SHOWPREVIOUSWORKCOMPONENT' | translate }}:
+            {{ 'SHOW_PREVIOUS_WORK_COMPONENT' | translate }}:
             <select ng-model='tableController.authoringComponentContent.showPreviousWorkComponentId'
                     ng-change='tableController.authoringShowPreviousWorkComponentIdChanged()'
                     ng-options='component.id as component.type disable when !tableController.componentHasWork(component) for component in tableController.getComponentsByNodeId(tableController.authoringComponentContent.showPreviousWorkNodeId)'>
                 <option></option>
             </select>
             <br/>
-            {{ 'SHOWPREVIOUSWORKPROMPT' | translate }}:
+            {{ 'SHOW_PREVIOUS_WORK_PROMPT' | translate }}:
             <input type='checkbox'
                    ng-model='tableController.authoringComponentContent.showPreviousWorkPrompt'
                    ng-model-options='{ debounce: 1000 }'
@@ -124,7 +124,7 @@
         </div>
         <div ng-if='tableController.mode === "authoring"'>
             <button ng-click='tableController.showAdvancedAuthoring = !tableController.showAdvancedAuthoring'>
-                    {{ tableController.showAdvancedAuthoring ? ('HIDEADVANCEDAUTHORING' | translate) : ('SHOWADVANCEDAUTHORING' | translate) }}
+                    {{ tableController.showAdvancedAuthoring ? ('HIDE_ADVANCED_AUTHORING' | translate) : ('SHOW_ADVANCED_AUTHORING' | translate) }}
             </button>
             <br/>
             <div ng-show='tableController.showAdvancedAuthoring'>

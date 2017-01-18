@@ -20,7 +20,7 @@ class TableService extends NodeService {
         var component = {};
         component.id = this.UtilService.generateKey();
         component.type = 'Table';
-        component.prompt = this.$translate('ENTERPROMPTHERE');
+        component.prompt = this.$translate('ENTER_PROMPT_HERE');
         component.showSaveButton = false;
         component.showSubmitButton = false;
         component.globalCellSize = 10;

@@ -373,12 +373,12 @@ TODO: implement me. Allow authors to view assets while authoring node conent. Pe
 
 <div ng-show='nodeAuthoringController.showEditButtons'>
     <br/>
-    {{ 'SHOWSAVEBUTTON' | translate }}:
+    {{ 'SHOW_SAVE_BUTTON' | translate }}:
     <input type='checkbox'
            ng-model='nodeAuthoringController.node.showSaveButton'
            ng-change='nodeAuthoringController.authoringViewNodeChanged()'/>
     <br/>
-    {{ 'SHOWSUBMITBUTTON' | translate }}:
+    {{ 'SHOW_SUBMIT_BUTTON' | translate }}:
     <input type='checkbox'
            ng-model='nodeAuthoringController.node.showSubmitButton'
            ng-change='nodeAuthoringController.authoringViewNodeChanged()'/>
@@ -452,7 +452,7 @@ TODO: implement me. Allow authors to view assets while authoring node conent. Pe
             {{ 'branchPath' | translate }} {{branch.number}}
 
             <div ng-show='nodeAuthoringController.createBranchCriterion == "workgroupId"'>
-                {{ 'WORKGROUPID' | translate }}
+                {{ 'WORKGROUP_ID' | translate }}
             </div>
 
             <div ng-show='nodeAuthoringController.createBranchCriterion == "score"'>
@@ -469,7 +469,7 @@ TODO: implement me. Allow authors to view assets while authoring node conent. Pe
                     <md-option ng-repeat='choice in branch.choices'
                                value='{{ choice.id }}'>
                        <span layout="row" layout-align="start center">
-                           <span class="node-select__text">{{ 'ID' | translate }}: {{choice.id}} | {{ 'TEXT' | translate }}: {{choice.text}} | {{ 'ISCORRECT' | translate }}: {{choice.isCorrect}} | {{ 'FEEDBACK' | translate }}: {{choice.feedback}}</span>
+                           <span class="node-select__text">{{ 'ID' | translate }}: {{choice.id}} | {{ 'TEXT' | translate }}: {{choice.text}} | {{ 'IS_CORRECT' | translate }}: {{choice.isCorrect}} | {{ 'FEEDBACK' | translate }}: {{choice.feedback}}</span>
                        </span>
                     </md-option>
                 </md-select>

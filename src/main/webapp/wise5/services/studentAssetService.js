@@ -172,7 +172,7 @@ var StudentAssetService = function () {
                     file: file
                 }).success(function (asset, status, headers, config) {
                     if (asset === "error") {
-                        alert(_this2.$translate('THEREWASANERRORUPLOADING'));
+                        alert(_this2.$translate('THERE_WAS_AN_ERROR_UPLOADING'));
                     } else {
                         var studentUploadsBaseURL = _this2.ConfigService.getStudentUploadsBaseURL();
                         asset.url = studentUploadsBaseURL + asset.filePath;
@@ -191,7 +191,7 @@ var StudentAssetService = function () {
                         deferred.resolve(asset);
                     }
                 }).error(function (asset, status, headers, config) {
-                    alert(_this2.$translate('THEREWASANERRORUPLOADINGYOUMIGHTHAVEREACHEDLIMIT'));
+                    alert(_this2.$translate('THERE_WAS_AN_ERROR_UPLOADING_YOU_MIGHT_HAVE_REACHED_LIMIT'));
                 });
 
                 return deferred.promise;

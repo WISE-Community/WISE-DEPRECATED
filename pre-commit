@@ -21,8 +21,10 @@ if [[ $failed != 0 ]] ; then
   exit $failed
 fi
 
-updateI18NResult=./node_modules/gulp/bin/gulp.js update-i18n
-if [[ $updateI18NResult != 0 ]] ; then
+# run the update-i18n command and abort commit if there were any changes
+./node_modules/gulp/bin/gulp.js update-i18n
+
+if [[ $? != 0 ]] ; then
   echo "Aborting commit. Please add the newly updated files to your commit and try again."
-  exit $updateI18NResult
+  exit 1
 fi

@@ -96,7 +96,7 @@ var StudentDataService = function () {
                 this.studentData.nodeStates = [];
                 this.studentData.events = [];
                 this.studentData.annotations = [];
-                this.studentData.userName = this.$translate('PREVIEWSTUDENT');
+                this.studentData.userName = this.$translate('PREVIEW_STUDENT');
                 this.studentData.userId = '0';
 
                 // set the annotations into the annotation service
@@ -1222,7 +1222,7 @@ var StudentDataService = function () {
         key: 'saveComponentEvent',
         value: function saveComponentEvent(component, category, event, data) {
             if (component == null || category == null || event == null) {
-                alert(this.$translate('STUDENTDATASERVICESAVECOMPONENTEVENTCOMPONENTCATEGORYEVENTERROR'));
+                alert(this.$translate('STUDENT_DATA_SERVICE_SAVE_COMPONENT_EVENT_COMPONENT_CATEGORY_EVENT_ERROR'));
                 return;
             }
             var context = "Component";
@@ -1230,7 +1230,7 @@ var StudentDataService = function () {
             var componentId = component.componentId;
             var componentType = component.componentType;
             if (nodeId == null || componentId == null || componentType == null) {
-                alert(this.$translate('STUDENTDATASERVICESAVECOMPONENTEVENTNODEIDCOMPONENTIDCOMPONENTTYPEERROR'));
+                alert(this.$translate('STUDENT_DATA_SERVICE_SAVE_COMPONENT_EVENT_NODE_ID_COMPONENT_ID_COMPONENT_TYPE_ERROR'));
                 return;
             }
             this.saveEvent(context, nodeId, componentId, componentType, category, event, data);
@@ -1239,7 +1239,7 @@ var StudentDataService = function () {
         key: 'saveVLEEvent',
         value: function saveVLEEvent(nodeId, componentId, componentType, category, event, data) {
             if (category == null || event == null) {
-                alert(this.$translate('STUDENTDATASERVICESAVEVLEEVENTCATEGORYEVENTERROR'));
+                alert(this.$translate('STUDENT_DATA_SERVICE_SAVE_VLE_EVENT_CATEGORY_EVENT_ERROR'));
                 return;
             }
             var context = "VLE";
@@ -2184,7 +2184,7 @@ var StudentDataService = function () {
                                         tempResult = tempResult && isComponentCompleted;
                                     }
                                 } catch (e) {
-                                    console.log(this.$translate('ERRORCOULDNOTCALCULATEISCOMPLETED') + tempComponentId);
+                                    console.log(this.$translate('ERROR_COULD_NOT_CALCULATE_IS_COMPLETED') + tempComponentId);
                                 }
                             }
                         }

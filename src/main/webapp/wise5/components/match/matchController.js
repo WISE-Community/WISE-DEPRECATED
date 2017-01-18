@@ -350,7 +350,7 @@ var MatchController = function () {
 
                     this.submit();
                 } else if (isAutoSave) {
-                    this.setSaveMessage(this.$translate('AUTOSAVED'), clientSaveTime);
+                    this.setSaveMessage(this.$translate('AUTO_SAVED'), clientSaveTime);
                 } else {
                     this.setSaveMessage(this.$translate('SAVED'), clientSaveTime);
                 }
@@ -556,13 +556,13 @@ var MatchController = function () {
                         this.isSubmitDirty = false;
                         this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: false });
                         // set save message
-                        this.setSaveMessage(this.$translate('LASTSUBMITTED'), clientSaveTime);
+                        this.setSaveMessage(this.$translate('LAST_SUBMITTED'), clientSaveTime);
                     } else {
                         // latest state is not a submission, so set isSubmitDirty to true and notify node
                         this.isSubmitDirty = true;
                         this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: true });
                         // set save message
-                        this.setSaveMessage(this.$translate('LASTSAVED'), clientSaveTime);
+                        this.setSaveMessage(this.$translate('LAST_SAVED'), clientSaveTime);
                     }
                 }
             }
@@ -1485,7 +1485,7 @@ var MatchController = function () {
                      */
 
                     // make sure the author really wants to change the component type
-                    var answer = confirm(this.$translate('AREYOUSUREYOUWANTTOCHANGETHISCOMPONENTTYPE'));
+                    var answer = confirm(this.$translate('ARE_YOU_SURE_YOU_WANT_TO_CHANGE_THIS_COMPONENT_TYPE'));
 
                     if (answer) {
                         // the author wants to change the component type
