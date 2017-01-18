@@ -152,7 +152,7 @@
         <md-button class="md-accent"
                    ng-click='tableController.snipTable($event)'
                    ng-if='tableController.showSnipTableButton()'>
-            <md-icon> content_cut </md-icon>  {{ 'ADDTONOTEBOOK' | translate:{label:tableController.notebookConfig.label} }}
+            <md-icon> content_cut </md-icon>  {{ 'ADD_TO_NOTEBOOK' | translate:{label:tableController.notebookConfig.label} }}
         </md-button>
         <table>
             <tr ng-repeat='row in tableController.getTableDataRows()'>

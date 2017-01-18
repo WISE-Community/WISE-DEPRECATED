@@ -264,7 +264,7 @@
                 <md-button class="md-accent md-primary"
                         ng-click='graphController.snipDrawing($event)'
                         ng-if='graphController.showSnipDrawingButton()'>
-                    <md-icon> content_cut </md-icon>  {{ 'ADDTONOTEBOOK' | translate:{label:graphController.notebookConfig.label} }}
+                    <md-icon> content_cut </md-icon>  {{ 'ADD_TO_NOTEBOOK' | translate:{label:graphController.notebookConfig.label} }}
                 </md-button>
                 <md-button class="md-accent" ng-if="graphController.isStudentAttachmentEnabled"
                            ng-click="nodeController.showStudentAssets($event, component.id, graphController.isDisabled)">

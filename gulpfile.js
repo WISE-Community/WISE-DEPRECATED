@@ -92,8 +92,9 @@ gulp.task('update-i18n', function() {
         './src/main/webapp/wise5/components/outsideURL/i18n/',
         './src/main/webapp/wise5/components/table/i18n/'
     ];
+    var updatedAtLeasetOneI18NFile = false;  // set to true iff there was at least one i18n file change
     wise5_i18n_folders.map(function(i18n_folder) {
-      var english = JSON.parse(fs.readFileSync(i18n_folder + "i18n_en.json"));
+        var english = JSON.parse(fs.readFileSync(i18n_folder + "i18n_en.json"));
         supportedLocales.map(function(supportedLocale) {
             var result = JSON.parse(fs.readFileSync(i18n_folder + "i18n_en.json"));
             var foreignLocale = {};
@@ -112,6 +113,7 @@ gulp.task('update-i18n', function() {
             for (var key in english) {
               if (foreignLocale[key] == null) {
                 result[key] = "";
+                  updatedAtLeasetOneI18NFile = true;
               }
             }
 
@@ -121,6 +123,10 @@ gulp.task('update-i18n', function() {
             fs.writeFileSync(i18n_folder + "i18n_" + supportedLocale + ".json", result);
         });
     });
+    if (updatedAtLeasetOneI18NFile) {
+        console.log("I18N file(s) were updated as a result of running gulp update-i18n task.");
+        process.exit(1);
+    }
 });
 
 
