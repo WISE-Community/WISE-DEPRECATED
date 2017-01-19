@@ -59,8 +59,8 @@
 </div>
 <div ng-show='projectController.showCreateNode'>
     <label style="display:initial" translate="stepTitle"></label>: <input id="createNodeTitle" ng-model='projectController.createNodeTitle' ng-keyup='$event.keyCode == 13 && projectController.createNode()' size='50'/>
-    <button ng-click='projectController.createNode()' translate="create"></button>
-    <button ng-click='projectController.hideCreateNode()' translate="CANCEL"></button>
+    <button id="createNodeCreateButton" ng-click='projectController.createNode()' translate="create"></button>
+    <button id="createNodeCancelButton" ng-click='projectController.hideCreateNode()' translate="CANCEL"></button>
 </div>
 <div ng-show='projectController.insertGroupMode || projectController.insertNodeMode'>
     <span translate="chooseNewLocation"></span> <button ng-click='projectController.cancelMove()' translate="CANCEL"></button>
