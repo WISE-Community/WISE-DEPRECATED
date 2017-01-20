@@ -9,7 +9,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var HTMLController = function () {
-    function HTMLController($scope, $state, $stateParams, $sce, $mdDialog, ConfigService, NodeService, ProjectService, StudentDataService, UtilService) {
+    function HTMLController($scope, $state, $stateParams, $sce, $filter, $mdDialog, ConfigService, NodeService, ProjectService, StudentDataService, UtilService) {
         var _this = this;
 
         _classCallCheck(this, HTMLController);
@@ -18,12 +18,15 @@ var HTMLController = function () {
         this.$state = $state;
         this.$stateParams = $stateParams;
         this.$sce = $sce;
+        this.$filter = $filter;
         this.$mdDialog = $mdDialog;
         this.ConfigService = ConfigService;
         this.NodeService = NodeService;
         this.ProjectService = ProjectService;
         this.StudentDataService = StudentDataService;
         this.UtilService = UtilService;
+
+        this.$translate = this.$filter('translate');
 
         // the node id of the current node
         this.nodeId = null;
@@ -76,6 +79,7 @@ var HTMLController = function () {
         this.mode = $scope.mode;
 
         var thisController = this;
+        var insertAssetString = this.$translate('html.insertAsset');
 
         // A custom button that opens the asset chooser
         var InsertAssetButton = function InsertAssetButton(context) {
@@ -84,7 +88,7 @@ var HTMLController = function () {
             // create button
             var button = ui.button({
                 contents: '<i class="note-icon-picture"></i>',
-                tooltip: 'Insert Asset',
+                tooltip: insertAssetString,
                 click: function click() {
                     // remember the position of the cursor
                     context.invoke('editor.saveRange');
@@ -398,7 +402,7 @@ var HTMLController = function () {
     return HTMLController;
 }();
 
-HTMLController.$inject = ['$scope', '$state', '$stateParams', '$sce', '$mdDialog', 'ConfigService', 'NodeService', 'ProjectService', 'StudentDataService', 'UtilService'];
+HTMLController.$inject = ['$scope', '$state', '$stateParams', '$sce', '$filter', '$mdDialog', 'ConfigService', 'NodeService', 'ProjectService', 'StudentDataService', 'UtilService'];
 
 exports.default = HTMLController;
 //# sourceMappingURL=htmlController.js.map

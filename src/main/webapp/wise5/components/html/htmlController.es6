@@ -3,6 +3,7 @@ class HTMLController {
                 $state,
                 $stateParams,
                 $sce,
+                $filter,
                 $mdDialog,
                 ConfigService,
                 NodeService,
@@ -13,12 +14,15 @@ class HTMLController {
         this.$state = $state;
         this.$stateParams = $stateParams;
         this.$sce = $sce;
+        this.$filter = $filter;
         this.$mdDialog = $mdDialog;
         this.ConfigService = ConfigService;
         this.NodeService = NodeService;
         this.ProjectService = ProjectService;
         this.StudentDataService = StudentDataService;
         this.UtilService = UtilService;
+
+        this.$translate = this.$filter('translate');
 
         // the node id of the current node
         this.nodeId = null;
@@ -71,6 +75,7 @@ class HTMLController {
         this.mode = $scope.mode;
 
         var thisController = this;
+        var insertAssetString = this.$translate('html.insertAsset');
 
         // A custom button that opens the asset chooser
         var InsertAssetButton = function(context) {
@@ -79,7 +84,7 @@ class HTMLController {
             // create button
             var button = ui.button({
                 contents: '<i class="note-icon-picture"></i>',
-                tooltip: 'Insert Asset',
+                tooltip: insertAssetString,
                 click: function () {
                     // remember the position of the cursor
                     context.invoke('editor.saveRange');
@@ -386,6 +391,7 @@ HTMLController.$inject = [
     '$state',
     '$stateParams',
     '$sce',
+    '$filter',
     '$mdDialog',
     'ConfigService',
     'NodeService',

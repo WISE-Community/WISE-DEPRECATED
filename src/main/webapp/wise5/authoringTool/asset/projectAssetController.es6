@@ -123,7 +123,7 @@ class ProjectAssetController {
     deleteAsset(assetItem) {
 
         // ask the user if they are sure they want to delete the file
-        var message = "Are you sure you want to delete this file?\n\n" + assetItem.fileName;
+        var message = this.$translate("areYouSureYouWantToDeleteThisFile") + "\n\n" + assetItem.fileName;
         var answer = confirm(message);
 
         if (answer) {
