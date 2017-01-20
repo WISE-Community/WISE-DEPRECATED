@@ -2,11 +2,13 @@
     <div ng-if='htmlController.mode === "authoring"'>
         {{ 'html.html' | translate }}
         <br/>
-        <textarea ng-model='htmlController.authoringComponentContent.html'
-                  ng-change='htmlController.authoringViewComponentChanged()'
+        <summernote id='{{htmlController.summernoteId}}'
+                  ng-model='htmlController.summernoteHTML'
+                  ng-change='htmlController.summernoteHTMLChanged()'
+                  config='htmlController.summernoteOptions'
                   ng-model-options='{ debounce: 1000 }'
                   rows='10'
-                  cols='100'></textarea>
+                  cols='100'></summernote>
         <div ng-if='htmlController.mode === "authoring"'>
             <button ng-click='htmlController.showAdvancedAuthoring = !htmlController.showAdvancedAuthoring'>
                     {{ htmlController.showAdvancedAuthoring ? ('HIDEADVANCEDAUTHORING' | translate) : ('SHOWADVANCEDAUTHORING' | translate) }}

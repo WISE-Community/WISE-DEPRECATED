@@ -49,19 +49,19 @@ class ConfigService {
 
             // regex to match showProjectPath=true in the url
             var showProjectPathRegEx = new RegExp("showProjectPath=true", 'gi');
-            
+
             if (absURL != null && absURL.match(showProjectPathRegEx)) {
                 // the url contains showProjectPath=true
-                
+
                 // get the host e.g. http://wise.berkeley.edu
                 var host = location.origin;
-                
+
                 // get the project URL e.g. /wise/curriculum/123/project.json
                 var projectURL = configJSON.projectURL;
-                
+
                 // get the full project path
                 var projectPath = host + projectURL;
-                
+
                 // output the full project path to the console
                 console.log(projectPath);
             }
@@ -212,23 +212,23 @@ class ConfigService {
 
         return myUserInfo;
     };
-    
+
     /**
      * Get the user name of the signed in user
      * @return the user name of the signed in user
      */
     getMyUserName() {
-        
+
         var userName = null;
-        
+
         // get my user info
         var myUserInfo = this.getMyUserInfo();
-        
+
         if (myUserInfo != null) {
             // get the user name
             userName = myUserInfo.userName;
         }
-        
+
         return userName;
     }
 
@@ -688,7 +688,7 @@ class ConfigService {
         var modulo = workgroupId % 10;
         return avatarColors[modulo];
     }
-    
+
     /**
      * Get the library projects
      */
@@ -696,15 +696,53 @@ class ConfigService {
 
         // get the URL to get the list of library projects
         var getLibraryProjectsURL = this.getConfigParam('getLibraryProjectsURL');
-        
+
         if (getLibraryProjectsURL != null) {
-            
+
             // request the list of library projects
             return this.$http.get(getLibraryProjectsURL).then((result) => {
                 //console.log(result.data);
                 return result.data;
             });
         }
+    }
+
+    /**
+     * Get the project assets folder path
+     * @param includeHost whether to include the host in the URL
+     * @return the project assets folder path
+     * e.g.
+     * with host
+     * http://wise.berkeley.edu/wise/curriculum/3/
+     * without host
+     * /wise/curriculum/3/
+     */
+    getProjectAssetsDirectoryPath(includeHost) {
+        var projectAssetsDirectoryPath = null;
+
+        // get the project base URL e.g. /wise/curriculum/3/
+        var projectBaseURL = this.getConfigParam('projectBaseURL');
+
+        if (projectBaseURL != null) {
+            if (includeHost) {
+                // get the host e.g. http://wise.berkeley.edu
+                var host = window.location.origin;
+
+                /*
+                 * get the full path including the host
+                 * e.g. http://wise.berkeley.edu/wise/curriculum/3/
+                 */
+                projectAssetsDirectoryPath = host + projectBaseURL + 'assets';
+            } else {
+                /*
+                 * get the full path not including the host
+                 * e.g. /wise/curriculum/3/
+                 */
+                projectAssetsDirectoryPath = projectBaseURL + 'assets';
+            }
+        }
+
+        return projectAssetsDirectoryPath;
     }
 };
 

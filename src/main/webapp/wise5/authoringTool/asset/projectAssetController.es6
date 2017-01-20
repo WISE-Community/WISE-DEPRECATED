@@ -2,20 +2,55 @@
 
 class ProjectAssetController {
 
-    constructor($filter, $mdDialog, $state, $stateParams, $scope, $timeout, ProjectAssetService) {
+    constructor($filter,
+                $mdDialog,
+                $rootScope,
+                $state,
+                $stateParams,
+                $scope,
+                $timeout,
+                ConfigService,
+                ProjectAssetService,
+                UtilService) {
+
         this.$filter = $filter;
         this.$mdDialog = $mdDialog;
+        this.$rootScope = $rootScope;
         this.$state = $state;
         this.$stateParams = $stateParams;
         this.$scope = $scope;
         this.$timeout = $timeout;
-        this.$translate = this.$filter('translate');
-        this.projectId = this.$stateParams.projectId;
+        this.ConfigService = ConfigService;
         this.ProjectAssetService = ProjectAssetService;
+        this.UtilService = UtilService;
+        this.$translate = this.$filter('translate');
+
+        this.projectId = this.$stateParams.projectId;
         this.projectAssets = ProjectAssetService.projectAssets;
         this.projectAssetTotalSizeMax = ProjectAssetService.projectAssetTotalSizeMax;
         this.projectAssetUsagePercentage = ProjectAssetService.projectAssetUsagePercentage;
 
+        // whether the asset page is being displayed in a popup
+        this.popup = false;
+        this.nodeId = null;
+        this.componentId = null;
+
+        if (this.$stateParams != null) {
+            if (this.$stateParams.popup) {
+                // this asset page is being displayed in a popup
+                this.popup = true;
+            }
+
+            if (this.$stateParams.nodeId) {
+                // get the node id that opened this popup
+                this.nodeId = this.$stateParams.nodeId;
+            }
+
+            if (this.$stateParams.componentId) {
+                // get the component id that opened this popup
+                this.componentId = this.$stateParams.componentId;
+            }
+        }
 
         this.assetSortBy = "aToZ";  // initially sort assets alphabetically
         this.assetMessage = "";
@@ -81,10 +116,22 @@ class ProjectAssetController {
         return result;
     }
 
+    /**
+     * Delete an asset from the project
+     * @param assetItem the asset to delete
+     */
     deleteAsset(assetItem) {
-        this.ProjectAssetService.deleteAssetItem(assetItem).then((newProjectAssets) => {
-            this.projectAssets = this.ProjectAssetService.projectAssets;
-        });
+
+        // ask the user if they are sure they want to delete the file
+        var message = "Are you sure you want to delete this file?\n\n" + assetItem.fileName;
+        var answer = confirm(message);
+
+        if (answer) {
+            // the user answered yes to delete the file
+            this.ProjectAssetService.deleteAssetItem(assetItem).then((newProjectAssets) => {
+                this.projectAssets = this.ProjectAssetService.projectAssets;
+            });
+        }
     }
 
     /**
@@ -104,6 +151,20 @@ class ProjectAssetController {
         }, () => {
             // Author wants to simply close the dialog
         });
+    }
+
+    /**
+     * The user has chosen an asset to use
+     * @param assetItem the asset the user chose
+     */
+    chooseAsset(assetItem) {
+        // fire the event to notify listeners that an asset was selected
+        var params = {
+            assetItem: assetItem,
+            nodeId: this.nodeId,
+            componentId: this.componentId
+        };
+        this.$rootScope.$broadcast('assetSelected', params);
     }
 
     uploadAssetItems(files) {
@@ -130,11 +191,68 @@ class ProjectAssetController {
         });
     }
 
+    /**
+     * Preview an asset in the right panel
+     * @param $event The event that caused the asset to be previewed. This will
+     * either be a mouseover or click event.
+     * @param assetItem the asset item to preview
+     */
+    previewAsset($event, assetItem) {
+        if (assetItem != null) {
+            this.selectedAssetItem = assetItem;
+
+            // get the file name
+            var fileName = assetItem.fileName;
+
+            // get the project assets directory path
+            var assetsDirectoryPath = this.ConfigService.getProjectAssetsDirectoryPath();
+
+            // get the absolute path to the asset file
+            var absolutePath = assetsDirectoryPath + '/' + fileName;
+
+            // set the url of the asset so we can preview it
+            this.previewAssetURL = absolutePath;
+
+            // clear these flags
+            this.assetIsImage = false;
+            this.assetIsVideo = false;
+
+            if (this.UtilService.isImage(fileName)) {
+                // the asset in an image
+                this.assetIsImage = true;
+            } else if(this.UtilService.isVideo(fileName)) {
+                // the asset is a video
+                this.assetIsVideo = true;
+                $('video').load();
+            }
+        }
+    }
+
+    /**
+     * Close the asset view
+     */
     exit() {
-        this.$state.go('root.project', {projectId: this.projectId});
+        if (this.popup) {
+            // this asset view was opened in a popup
+            this.$mdDialog.hide();
+        } else {
+            // this asset view was opened as a page
+            this.$state.go('root.project', {projectId: this.projectId});
+        }
     }
 }
 
-ProjectAssetController.$inject = ['$filter', '$mdDialog', '$state', '$stateParams', '$scope', '$timeout', 'ProjectAssetService'];
+ProjectAssetController.$inject = [
+    '$filter',
+    '$mdDialog',
+    '$rootScope',
+    '$state',
+    '$stateParams',
+    '$scope',
+    '$timeout',
+    'ConfigService',
+    'ProjectAssetService',
+    'UtilService'
+];
 
 export default ProjectAssetController;

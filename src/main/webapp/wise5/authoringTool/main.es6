@@ -56,6 +56,8 @@ import TeacherDataService from '../services/teacherDataService';
 import TeacherWebSocketService from '../services/teacherWebSocketService';
 import UtilService from '../services/utilService';
 
+import angularSummernote from 'lib/angular-summernote/dist/angular-summernote.min';
+
 let authoringModule = angular.module('authoring', [
     angularDragula(angular),
     'angularMoment',
@@ -82,6 +84,7 @@ let authoringModule = angular.module('authoring', [
     'openResponseComponentModule',
     'outsideURLComponentModule',
     'pascalprecht.translate',
+    'summernote',
     'tableComponentModule',
     'ui.router'
     ])

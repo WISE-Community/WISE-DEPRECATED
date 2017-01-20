@@ -9,23 +9,49 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var ProjectAssetController = function () {
-    function ProjectAssetController($filter, $mdDialog, $state, $stateParams, $scope, $timeout, ProjectAssetService) {
+    function ProjectAssetController($filter, $mdDialog, $rootScope, $state, $stateParams, $scope, $timeout, ConfigService, ProjectAssetService, UtilService) {
         var _this = this;
 
         _classCallCheck(this, ProjectAssetController);
 
         this.$filter = $filter;
         this.$mdDialog = $mdDialog;
+        this.$rootScope = $rootScope;
         this.$state = $state;
         this.$stateParams = $stateParams;
         this.$scope = $scope;
         this.$timeout = $timeout;
-        this.$translate = this.$filter('translate');
-        this.projectId = this.$stateParams.projectId;
+        this.ConfigService = ConfigService;
         this.ProjectAssetService = ProjectAssetService;
+        this.UtilService = UtilService;
+        this.$translate = this.$filter('translate');
+
+        this.projectId = this.$stateParams.projectId;
         this.projectAssets = ProjectAssetService.projectAssets;
         this.projectAssetTotalSizeMax = ProjectAssetService.projectAssetTotalSizeMax;
         this.projectAssetUsagePercentage = ProjectAssetService.projectAssetUsagePercentage;
+
+        // whether the asset page is being displayed in a popup
+        this.popup = false;
+        this.nodeId = null;
+        this.componentId = null;
+
+        if (this.$stateParams != null) {
+            if (this.$stateParams.popup) {
+                // this asset page is being displayed in a popup
+                this.popup = true;
+            }
+
+            if (this.$stateParams.nodeId) {
+                // get the node id that opened this popup
+                this.nodeId = this.$stateParams.nodeId;
+            }
+
+            if (this.$stateParams.componentId) {
+                // get the component id that opened this popup
+                this.componentId = this.$stateParams.componentId;
+            }
+        }
 
         this.assetSortBy = "aToZ"; // initially sort assets alphabetically
         this.assetMessage = "";
@@ -88,14 +114,27 @@ var ProjectAssetController = function () {
             }
             return result;
         }
+
+        /**
+         * Delete an asset from the project
+         * @param assetItem the asset to delete
+         */
+
     }, {
         key: 'deleteAsset',
         value: function deleteAsset(assetItem) {
             var _this2 = this;
 
-            this.ProjectAssetService.deleteAssetItem(assetItem).then(function (newProjectAssets) {
-                _this2.projectAssets = _this2.ProjectAssetService.projectAssets;
-            });
+            // ask the user if they are sure they want to delete the file
+            var message = "Are you sure you want to delete this file?\n\n" + assetItem.fileName;
+            var answer = confirm(message);
+
+            if (answer) {
+                // the user answered yes to delete the file
+                this.ProjectAssetService.deleteAssetItem(assetItem).then(function (newProjectAssets) {
+                    _this2.projectAssets = _this2.ProjectAssetService.projectAssets;
+                });
+            }
         }
 
         /**
@@ -114,6 +153,23 @@ var ProjectAssetController = function () {
             }, function () {
                 // Author wants to simply close the dialog
             });
+        }
+
+        /**
+         * The user has chosen an asset to use
+         * @param assetItem the asset the user chose
+         */
+
+    }, {
+        key: 'chooseAsset',
+        value: function chooseAsset(assetItem) {
+            // fire the event to notify listeners that an asset was selected
+            var params = {
+                assetItem: assetItem,
+                nodeId: this.nodeId,
+                componentId: this.componentId
+            };
+            this.$rootScope.$broadcast('assetSelected', params);
         }
     }, {
         key: 'uploadAssetItems',
@@ -142,17 +198,68 @@ var ProjectAssetController = function () {
                 _this3.projectAssets = _this3.ProjectAssetService.projectAssets;
             });
         }
+
+        /**
+         * Preview an asset in the right panel
+         * @param $event The event that caused the asset to be previewed. This will
+         * either be a mouseover or click event.
+         * @param assetItem the asset item to preview
+         */
+
+    }, {
+        key: 'previewAsset',
+        value: function previewAsset($event, assetItem) {
+            if (assetItem != null) {
+                this.selectedAssetItem = assetItem;
+
+                // get the file name
+                var fileName = assetItem.fileName;
+
+                // get the project assets directory path
+                var assetsDirectoryPath = this.ConfigService.getProjectAssetsDirectoryPath();
+
+                // get the absolute path to the asset file
+                var absolutePath = assetsDirectoryPath + '/' + fileName;
+
+                // set the url of the asset so we can preview it
+                this.previewAssetURL = absolutePath;
+
+                // clear these flags
+                this.assetIsImage = false;
+                this.assetIsVideo = false;
+
+                if (this.UtilService.isImage(fileName)) {
+                    // the asset in an image
+                    this.assetIsImage = true;
+                } else if (this.UtilService.isVideo(fileName)) {
+                    // the asset is a video
+                    this.assetIsVideo = true;
+                    $('video').load();
+                }
+            }
+        }
+
+        /**
+         * Close the asset view
+         */
+
     }, {
         key: 'exit',
         value: function exit() {
-            this.$state.go('root.project', { projectId: this.projectId });
+            if (this.popup) {
+                // this asset view was opened in a popup
+                this.$mdDialog.hide();
+            } else {
+                // this asset view was opened as a page
+                this.$state.go('root.project', { projectId: this.projectId });
+            }
         }
     }]);
 
     return ProjectAssetController;
 }();
 
-ProjectAssetController.$inject = ['$filter', '$mdDialog', '$state', '$stateParams', '$scope', '$timeout', 'ProjectAssetService'];
+ProjectAssetController.$inject = ['$filter', '$mdDialog', '$rootScope', '$state', '$stateParams', '$scope', '$timeout', 'ConfigService', 'ProjectAssetService', 'UtilService'];
 
 exports.default = ProjectAssetController;
 //# sourceMappingURL=projectAssetController.js.map

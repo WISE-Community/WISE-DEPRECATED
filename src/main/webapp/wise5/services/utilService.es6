@@ -64,34 +64,34 @@ class UtilService {
 
         return copyOfJSONObject;
     };
-    
+
     /**
      * Get the image object
      * @params img_b64 the base64 image string
      * @returns an image object
      */
     getImageObjectFromBase64String(img_b64) {
-        
+
         // create a blob from the base64 image string
         var blob = this.dataURItoBlob(img_b64);
-        
+
         var now = new Date().getTime();
         var filename = encodeURIComponent('picture_' + now + '.png');
         var pngFile = new File([blob], filename, {
             lastModified: now, // optional - default = now
             type: 'image/png' // optional - default = ''
         });
-        
+
         return pngFile;
     }
-    
+
     /**
      * Convert base64/URLEncoded data component to raw binary data held in a string
      * @param dataURI base64/URLEncoded data
      * @returns a Blob object
      */
     dataURItoBlob(dataURI) {
-        
+
         var byteString;
         if (dataURI.split(',')[0].indexOf('base64') >= 0)
             byteString = atob(dataURI.split(',')[1]);
@@ -109,24 +109,24 @@ class UtilService {
 
         return new Blob([ia], {type:mimeString});
     };
-    
+
     /**
      * Get an image object from an image element
      * @param imageElement an image element (<img src='abc.jpg'/>)
      * @returns an image object
      */
     getImageObjectFromImageElement(imageElement) {
-        
+
         var imageObject = null;
-        
+
         if (imageElement != null) {
             // create a canvas element that we will use to generate a base64 string
             var canvas = document.createElement("canvas");
-            
+
             // set the width and height of the canvas to match the image dimensions
             canvas.width = imageElement.naturalWidth;
             canvas.height = imageElement.naturalHeight;
-            
+
             // draw the image onto the canvas
             var ctx = canvas.getContext("2d");
             ctx.drawImage(imageElement, 0, 0);
@@ -137,10 +137,10 @@ class UtilService {
             // get the image object
             imageObject = this.getImageObjectFromBase64String(dataURL);
         }
-        
+
         return imageObject;
     }
-    
+
     /**
      * Hide all the iframes. This is used before a student snips something
      * to put into their notebook. Iframes shift the position of elements
@@ -148,21 +148,21 @@ class UtilService {
      * certain elements.
      */
     hideIFrames() {
-        
+
         // get all the iframes
         var iframes = angular.element('iframe');
-        
+
         // loop through all the iframes
         for (var i = 0; i < iframes.length; i++) {
             var iframe = iframes[i];
-            
+
             if (iframe != null) {
                 // hide the iframe
                 iframe.style.display = 'none';
             }
         }
     }
-    
+
     /**
      * Show all the iframes. This is used after the student snips something
      * to put into their notebook. Iframes shift the position of elements
@@ -170,19 +170,69 @@ class UtilService {
      * certain elements.
      */
     showIFrames() {
-        
+
         // get all the iframes
         var iframes = angular.element('iframe');
-        
+
         // loop through all the iframes
         for (var i = 0; i < iframes.length; i++) {
             var iframe = iframes[i];
-            
+
             if (iframe != null) {
                 // show the iframe
                 iframe.style.display = '';
             }
         }
+    }
+
+    /**
+     * Check if the asset is an image
+     * @param fileName the file name of the asset
+     * @return whether the asset is an image or not
+     */
+    isImage(fileName) {
+        var result = false;
+
+        if (fileName != null) {
+            var lowerCaseFileName = fileName.toLowerCase();
+
+            // regex to match image extensions
+            var imageExtensionsRegEx = new RegExp('.*\.(png|jpg|jpeg|bmp|gif|tiff|svg)');
+
+            var matchResult = lowerCaseFileName.match(imageExtensionsRegEx);
+
+            if (matchResult != null) {
+                // we have found a match so the asset is an image
+                result = true;
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * Check if the asset is a video
+     * @param fileName the file name of the asset
+     * @return whether the asset is an image or not
+     */
+    isVideo(fileName) {
+        var result = false;
+
+        if (fileName != null) {
+            var lowerCaseFileName = fileName.toLowerCase();
+
+            // regex to match video extensions
+            var imageExtensionsRegEx = new RegExp('.*\.(mp4|mpg|mpeg|m2v|avi|gifv|mov|qt)');
+
+            var matchResult = lowerCaseFileName.match(imageExtensionsRegEx);
+
+            if (matchResult != null) {
+                // we have found a match so the asset is a video
+                result = true;
+            }
+        }
+
+        return result;
     }
 }
 

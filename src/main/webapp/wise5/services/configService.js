@@ -795,6 +795,47 @@ var ConfigService = function () {
                 });
             }
         }
+
+        /**
+         * Get the project assets folder path
+         * @param includeHost whether to include the host in the URL
+         * @return the project assets folder path
+         * e.g.
+         * with host
+         * http://wise.berkeley.edu/wise/curriculum/3/
+         * without host
+         * /wise/curriculum/3/
+         */
+
+    }, {
+        key: 'getProjectAssetsDirectoryPath',
+        value: function getProjectAssetsDirectoryPath(includeHost) {
+            var projectAssetsDirectoryPath = null;
+
+            // get the project base URL e.g. /wise/curriculum/3/
+            var projectBaseURL = this.getConfigParam('projectBaseURL');
+
+            if (projectBaseURL != null) {
+                if (includeHost) {
+                    // get the host e.g. http://wise.berkeley.edu
+                    var host = window.location.origin;
+
+                    /*
+                     * get the full path including the host
+                     * e.g. http://wise.berkeley.edu/wise/curriculum/3/
+                     */
+                    projectAssetsDirectoryPath = host + projectBaseURL + 'assets';
+                } else {
+                    /*
+                     * get the full path not including the host
+                     * e.g. /wise/curriculum/3/
+                     */
+                    projectAssetsDirectoryPath = projectBaseURL + 'assets';
+                }
+            }
+
+            return projectAssetsDirectoryPath;
+        }
     }]);
 
     return ConfigService;

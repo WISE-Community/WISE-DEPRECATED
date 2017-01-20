@@ -213,6 +213,62 @@ var UtilService = function () {
                 }
             }
         }
+
+        /**
+         * Check if the asset is an image
+         * @param fileName the file name of the asset
+         * @return whether the asset is an image or not
+         */
+
+    }, {
+        key: "isImage",
+        value: function isImage(fileName) {
+            var result = false;
+
+            if (fileName != null) {
+                var lowerCaseFileName = fileName.toLowerCase();
+
+                // regex to match image extensions
+                var imageExtensionsRegEx = new RegExp('.*\.(png|jpg|jpeg|bmp|gif|tiff|svg)');
+
+                var matchResult = lowerCaseFileName.match(imageExtensionsRegEx);
+
+                if (matchResult != null) {
+                    // we have found a match so the asset is an image
+                    result = true;
+                }
+            }
+
+            return result;
+        }
+
+        /**
+         * Check if the asset is a video
+         * @param fileName the file name of the asset
+         * @return whether the asset is an image or not
+         */
+
+    }, {
+        key: "isVideo",
+        value: function isVideo(fileName) {
+            var result = false;
+
+            if (fileName != null) {
+                var lowerCaseFileName = fileName.toLowerCase();
+
+                // regex to match video extensions
+                var imageExtensionsRegEx = new RegExp('.*\.(mp4|mpg|mpeg|m2v|avi|gifv|mov|qt)');
+
+                var matchResult = lowerCaseFileName.match(imageExtensionsRegEx);
+
+                if (matchResult != null) {
+                    // we have found a match so the asset is a video
+                    result = true;
+                }
+            }
+
+            return result;
+        }
     }]);
 
     return UtilService;

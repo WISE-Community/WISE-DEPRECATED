@@ -9,7 +9,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var HTMLController = function () {
-    function HTMLController($scope, $state, $stateParams, $sce, ConfigService, NodeService, ProjectService, StudentDataService, UtilService) {
+    function HTMLController($scope, $state, $stateParams, $sce, $mdDialog, ConfigService, NodeService, ProjectService, StudentDataService, UtilService) {
         var _this = this;
 
         _classCallCheck(this, HTMLController);
@@ -18,6 +18,7 @@ var HTMLController = function () {
         this.$state = $state;
         this.$stateParams = $stateParams;
         this.$sce = $sce;
+        this.$mdDialog = $mdDialog;
         this.ConfigService = ConfigService;
         this.NodeService = NodeService;
         this.ProjectService = ProjectService;
@@ -41,6 +42,12 @@ var HTMLController = function () {
 
         // whether the advanced authoring textarea is displayed
         this.showAdvancedAuthoring = false;
+
+        // the summernote element id
+        this.summernoteId = '';
+
+        // the summernote html
+        this.summernoteHTML = '';
 
         this.mode = $scope.mode;
 
@@ -68,12 +75,45 @@ var HTMLController = function () {
 
         this.mode = $scope.mode;
 
+        var thisController = this;
+
+        // A custom button that opens the asset chooser
+        var InsertAssetButton = function InsertAssetButton(context) {
+            var ui = $.summernote.ui;
+
+            // create button
+            var button = ui.button({
+                contents: '<i class="note-icon-picture"></i>',
+                tooltip: 'Insert Asset',
+                click: function click() {
+                    // remember the position of the cursor
+                    context.invoke('editor.saveRange');
+
+                    // display the asset chooser popup
+                    thisController.displayAssetChooser();
+                }
+            });
+
+            return button.render(); // return button as jquery object
+        };
+
+        // the options that specifies the tools to display in summernote
+        this.summernoteOptions = {
+            toolbar: [['style', ['style']], ['font', ['bold', 'underline', 'clear']], ['fontname', ['fontname']], ['color', ['color']], ['para', ['ul', 'ol', 'paragraph']], ['table', ['table']], ['insert', ['link', 'video']], ['view', ['fullscreen', 'codeview', 'help']], ['customButton', ['insertAssetButton']]],
+            disableDragAndDrop: true,
+            buttons: {
+                insertAssetButton: InsertAssetButton
+            }
+        };
+
         if (this.componentContent != null) {
 
             // get the component id
             this.componentId = this.componentContent.id;
 
             if (this.mode === 'authoring') {
+                this.summernoteId = 'summernote_' + this.nodeId + '_' + this.componentId;
+                this.summernoteHTML = this.componentContent.html;
                 this.updateAdvancedAuthoringView();
 
                 $scope.$watch(function () {
@@ -126,6 +166,66 @@ var HTMLController = function () {
                     _this.$scope.$emit('requestImageCallback', args);
                 }
             }
+        });
+
+        /*
+         * Listen for the assetSelected event which occurs when the user
+         * selects an asset from the choose asset popup
+         */
+        this.$scope.$on('assetSelected', function (event, args) {
+
+            if (args != null) {
+
+                // make sure the event was fired for this component
+                if (args.nodeId == _this.nodeId && args.componentId == _this.componentId) {
+                    // the asset was selected for this component
+                    var assetItem = args.assetItem;
+
+                    if (assetItem != null) {
+                        var fileName = assetItem.fileName;
+
+                        if (fileName != null) {
+                            /*
+                             * get the assets directory path
+                             * e.g.
+                             * /wise/curriculum/3/
+                             */
+                            var assetsDirectoryPath = _this.ConfigService.getProjectAssetsDirectoryPath();
+                            var fullAssetPath = assetsDirectoryPath + '/' + fileName;
+
+                            if (_this.UtilService.isImage(fileName)) {
+                                /*
+                                 * move the cursor back to its position when the asset chooser
+                                 * popup was clicked
+                                 */
+                                $('#summernote_' + _this.nodeId + '_' + _this.componentId).summernote('editor.restoreRange');
+                                $('#summernote_' + _this.nodeId + '_' + _this.componentId).summernote('editor.focus');
+
+                                // add the image html
+                                $('#summernote_' + _this.nodeId + '_' + _this.componentId).summernote('insertImage', fullAssetPath, fileName);
+                            } else if (_this.UtilService.isVideo(fileName)) {
+                                /*
+                                 * move the cursor back to its position when the asset chooser
+                                 * popup was clicked
+                                 */
+                                $('#summernote_' + _this.nodeId + '_' + _this.componentId).summernote('editor.restoreRange');
+                                $('#summernote_' + _this.nodeId + '_' + _this.componentId).summernote('editor.focus');
+
+                                // add the image html
+                                //$('#summernote_' + this.nodeId + '_' + this.componentId).summernote('insertImage', assetsDirectoryPath + '/' + fileName, fileName);
+
+                                var videoElement = document.createElement('video');
+                                videoElement.controls = 'true';
+                                videoElement.innerHTML = "<source ng-src='" + fullAssetPath + "' type='video/mp4'>";
+                                $('#summernote_' + _this.nodeId + '_' + _this.componentId).summernote('insertNode', videoElement);
+                            }
+                        }
+                    }
+                }
+            }
+
+            // close the popup
+            _this.$mdDialog.hide();
         });
     }
 
@@ -221,12 +321,84 @@ var HTMLController = function () {
 
             return imageObjects;
         }
+
+        /**
+         * The summernote html has changed so we will update the authoring component
+         * content
+         */
+
+    }, {
+        key: 'summernoteHTMLChanged',
+        value: function summernoteHTMLChanged() {
+
+            // get the summernote html
+            var html = this.summernoteHTML;
+
+            /*
+             * get the assets directory path with the host
+             * e.g.
+             * https://wise.berkeley.edu/wise/curriculum/3/assets/
+             */
+            var includeHost = true;
+            var assetsDirectoryPathIncludingHost = this.ConfigService.getProjectAssetsDirectoryPath(includeHost);
+            var assetsDirectoryPathIncludingHostRegEx = new RegExp(assetsDirectoryPathIncludingHost, 'g');
+
+            /*
+             * get the assets directory path without the host
+             * e.g.
+             * /wise/curriculum/3/assets/
+             */
+            var assetsDirectoryPathNotIncludingHost = this.ConfigService.getProjectAssetsDirectoryPath() + '/';
+            var assetsDirectoryPathNotIncludingHostRegEx = new RegExp(assetsDirectoryPathNotIncludingHost, 'g');
+
+            /*
+             * remove the directory path from the html so that only the file name
+             * remains in asset references
+             * e.g.
+             * <img src='https://wise.berkeley.edu/wise/curriculum/3/assets/sun.png'/>
+             * will be changed to
+             * <img src='sun.png'/>
+             */
+            html = html.replace(assetsDirectoryPathIncludingHostRegEx, '');
+            html = html.replace(assetsDirectoryPathNotIncludingHostRegEx, '');
+
+            // update the authorg component content
+            this.authoringComponentContent.html = html;
+
+            // the authoring component content has changed so we will save the project
+            this.authoringViewComponentChanged();
+        }
+
+        /**
+         * Display the asset chooser
+         */
+
+    }, {
+        key: 'displayAssetChooser',
+        value: function displayAssetChooser() {
+
+            // create the params for opening the asset chooser
+            var stateParams = {};
+            stateParams.popup = true;
+            stateParams.nodeId = this.nodeId;
+            stateParams.componentId = this.componentId;
+
+            // open the dialog that will display the assets for the user to choose
+            this.$mdDialog.show({
+                templateUrl: 'wise5/authoringTool/asset/asset.html',
+                controller: 'ProjectAssetController',
+                controllerAs: 'projectAssetController',
+                $stateParams: stateParams,
+                clickOutsideToClose: true,
+                escapeToClose: true
+            });
+        }
     }]);
 
     return HTMLController;
 }();
 
-HTMLController.$inject = ['$scope', '$state', '$stateParams', '$sce', 'ConfigService', 'NodeService', 'ProjectService', 'StudentDataService', 'UtilService'];
+HTMLController.$inject = ['$scope', '$state', '$stateParams', '$sce', '$mdDialog', 'ConfigService', 'NodeService', 'ProjectService', 'StudentDataService', 'UtilService'];
 
 exports.default = HTMLController;
 //# sourceMappingURL=htmlController.js.map
