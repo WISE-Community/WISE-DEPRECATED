@@ -21,10 +21,25 @@ class NotebookGradingController {
         this.TeacherDataService = TeacherDataService;
         this.TeacherWebSocketService = TeacherWebSocketService;
 
+        this.themePath = this.ProjectService.getThemePath();
+
         this.teacherWorkgroupId = this.ConfigService.getWorkgroupId();
 
         // get the workgroups sorted alphabetically
         this.workgroups = this.ConfigService.getClassmateUserInfos();
+
+        this.noteFilter = "note";
+        this.reportFilter = "report";
+
+        this.showAllNotes = false;
+        this.showAllReports = false;
+        this.showNoteForWorkgroup = {};
+        this.showReportForWorkgroup = {};
+        for (let i = 0; i < this.workgroups.length; i++) {
+            let workgroup = this.workgroups[i];
+            this.showNoteForWorkgroup[workgroup.workgroupId] = false;
+            this.showReportForWorkgroup[workgroup.workgroupId] = false;
+        }
 
         this.canViewStudentNames = true;
         this.canGradeStudentWork = true;
@@ -56,16 +71,50 @@ class NotebookGradingController {
             }
         }
 
-        this.notebookItems;
-
-        this.NotebookService.retrieveNotebookItems().then((notebookItems) => {
-            this.notebookItems = notebookItems;
-        });
-
         // save event when notebook grading view is displayed
         let context = "ClassroomMonitor", nodeId = null, componentId = null, componentType = null,
             category = "Navigation", event = "notebookViewDisplayed", data = {};
         this.TeacherDataService.saveEvent(context, nodeId, componentId, componentType, category, event, data);
+    }
+
+    toggleDisplayNoteForWorkgroup(workgroupId) {
+        this.showNoteForWorkgroup[workgroupId] = !this.showNoteForWorkgroup[workgroupId];
+    }
+
+    toggleDisplayReportForWorkgroup(workgroupId) {
+        this.showReportForWorkgroup[workgroupId] = !this.showReportForWorkgroup[workgroupId];
+    }
+
+    toggleDisplayAllNotes() {
+        this.showAllNotes = !this.showAllNotes;
+
+        for (let workgroupId in this.showNoteForWorkgroup) {
+            this.showNoteForWorkgroup[workgroupId] = this.showAllNotes;
+        }
+    }
+
+    toggleDisplayAllReports() {
+        this.showAllReports = !this.showAllReports;
+
+        for (let workgroupId in this.showReportForWorkgroup) {
+            this.showReportForWorkgroup[workgroupId] = this.showAllReports;
+        }
+    }
+
+    /**
+     * Handle request to view notes for the specified workgroup
+     * @param workgroupId
+     */
+    viewNotes(workgroupId) {
+        alert(workgroupId);
+    }
+
+    /**
+     * Handle request to view report for the specified workgroup
+     * @param workgroupId
+     */
+    viewReport(workgroupId) {
+        alert(workgroupId);
     }
 
     /**

@@ -10,24 +10,24 @@
                   rows='10'
                   cols='100'></textarea>
         <br/>
-        {{ 'SHOWSAVEBUTTON' | translate }}:
+        {{ 'SHOW_SAVE_BUTTON' | translate }}:
         <input type='checkbox'
                ng-model='labelController.authoringComponentContent.showSaveButton'
                ng-change='labelController.authoringViewComponentChanged()'/>
         <br/>
-        {{ 'SHOWSUBMITBUTTON' | translate }}:
+        {{ 'SHOW_SUBMIT_BUTTON' | translate }}:
         <input type='checkbox'
                ng-model='labelController.authoringComponentContent.showSubmitButton'
                ng-change='labelController.authoringViewComponentChanged()'/>
         <br/>
-        {{ 'MAXSCORE' | translate }}:
+        {{ 'MAX_SCORE' | translate }}:
         <input type='number'
                ng-model='labelController.authoringComponentContent.maxScore'
                ng-change='labelController.authoringViewComponentChanged()'
                ng-model-options='{ debounce: 1000 }'
                style='width: 3em'/>
         <br/>
-        {{ 'BACKGROUNDIMAGE' | translate }}: <input ng-model='labelController.authoringComponentContent.backgroundImage'
+        {{ 'BACKGROUND_IMAGE' | translate }}: <input ng-model='labelController.authoringComponentContent.backgroundImage'
                                  ng-change='labelController.authoringViewComponentChanged()'
                                  ng-model-options='{ debounce: 1000 }'
                                  size='50'/>
@@ -89,14 +89,14 @@
         </div>
     </div>
     <div ng-if='labelController.mode === "authoring"'>
-        {{ 'IMPORTPREVIOUSWORK' | translate }}:
+        {{ 'IMPORT_PREVIOUS_WORK' | translate }}:
         <input type='checkbox'
                ng-model='labelController.authoringComponentContent.importPreviousWork'
                ng-click='labelController.authoringImportPreviousWorkClicked()'
                ng-change='labelController.authoringViewComponentChanged()'/>
     </div>
     <div ng-if='labelController.mode === "authoring" && labelController.authoringComponentContent.importPreviousWork'>
-        {{ 'IMPORTPREVIOUSWORKSTEP' | translate }}:
+        {{ 'IMPORT_PREVIOUS_WORK_STEP' | translate }}:
         <select ng-model='labelController.authoringComponentContent.importPreviousWorkNodeId'
                 ng-change='labelController.authoringImportPreviousWorkNodeIdChanged()'>
             <option></option>
@@ -105,7 +105,7 @@
                     ng-if='labelController.isApplicationNode(item.$key)'>{{labelController.getNodePositionAndTitleByNodeId(item.$key)}}</option>
         </select>
         <br/>
-        {{ 'IMPORTPREVIOUSWORKCOMPONENT' | translate }}:
+        {{ 'IMPORT_PREVIOUS_WORK_COMPONENT' | translate }}:
         <select ng-model='labelController.authoringComponentContent.importPreviousWorkComponentId'
                 ng-change='labelController.authoringImportPreviousWorkComponentIdChanged()'
                 ng-options='component.id as component.type disable when !labelController.componentHasWork(component) for component in labelController.getComponentsByNodeId(labelController.authoringComponentContent.importPreviousWorkNodeId)'>
@@ -113,14 +113,14 @@
         </select>
     </div>
     <div ng-if='labelController.mode === "authoring"'>
-        {{ 'SHOWPREVIOUSWORK' | translate }}:
+        {{ 'SHOW_PREVIOUS_WORK' | translate }}:
         <input type='checkbox'
                ng-model='labelController.authoringComponentContent.showPreviousWork'
                ng-click='labelController.authoringShowPreviousWorkClicked()'
                ng-change='labelController.authoringViewComponentChanged()'/>
     </div>
     <div ng-if='labelController.mode === "authoring" && labelController.authoringComponentContent.showPreviousWork'>
-        {{ 'SHOWPREVIOUSWORKSTEP' | translate }}:
+        {{ 'SHOW_PREVIOUS_WORK_STEP' | translate }}:
         <select ng-model='labelController.authoringComponentContent.showPreviousWorkNodeId'
                 ng-change='labelController.authoringShowPreviousWorkNodeIdChanged()'>
             <option></option>
@@ -129,21 +129,21 @@
                     ng-if='labelController.isApplicationNode(item.$key)'>{{labelController.getNodePositionAndTitleByNodeId(item.$key)}}</option>
         </select>
         <br/>
-        {{ 'SHOWPREVIOUSWORKCOMPONENT' | translate }}:
+        {{ 'SHOW_PREVIOUS_WORK_COMPONENT' | translate }}:
         <select ng-model='labelController.authoringComponentContent.showPreviousWorkComponentId'
                 ng-change='labelController.authoringShowPreviousWorkComponentIdChanged()'
                 ng-options='component.id as component.type disable when !labelController.componentHasWork(component) for component in labelController.getComponentsByNodeId(labelController.authoringComponentContent.showPreviousWorkNodeId)'>
             <option></option>
         </select>
         <br/>
-        {{ 'SHOWPREVIOUSWORKPROMPT' | translate }}:
+        {{ 'SHOW_PREVIOUS_WORK_PROMPT' | translate }}:
         <input type='checkbox'
                ng-model='labelController.authoringComponentContent.showPreviousWorkPrompt'
                ng-change='labelController.authoringViewComponentChanged()'/>
     </div>
     <div ng-if='labelController.mode === "authoring"'>
         <button ng-click='labelController.showAdvancedAuthoring = !labelController.showAdvancedAuthoring'>
-                {{ labelController.showAdvancedAuthoring ? ('HIDEADVANCEDAUTHORING' | translate) : ('SHOWADVANCEDAUTHORING' | translate) }}
+                {{ labelController.showAdvancedAuthoring ? ('HIDE_ADVANCED_AUTHORING' | translate) : ('SHOW_ADVANCED_AUTHORING' | translate) }}
         </button>
         <br/>
         <div ng-show='labelController.showAdvancedAuthoring'>
@@ -191,7 +191,7 @@
         <md-button class="md-accent md-primary"
                 ng-click='labelController.snipImage($event)'
                 ng-if='labelController.showSnipImageButton()'>
-            <md-icon> content_cut </md-icon>  {{ 'ADDTONOTEBOOK' | translate:{label:labelController.notebookConfig.label} }}
+            <md-icon> content_cut </md-icon>  {{ 'ADD_TO_NOTEBOOK' | translate:{label:labelController.notebookConfig.label} }}
         </md-button>
         <br/>
         <div ng-show="labelController.componentContent.enableStudentUploadBackground">

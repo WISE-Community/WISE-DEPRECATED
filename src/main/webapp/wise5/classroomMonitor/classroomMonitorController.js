@@ -9,7 +9,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var ClassroomMonitorController = function () {
-    function ClassroomMonitorController($filter, $mdDialog, $rootScope, $scope, $state, $stateParams, ConfigService, NotificationService, ProjectService, SessionService, TeacherDataService, TeacherWebSocketService) {
+    function ClassroomMonitorController($filter, $mdDialog, $rootScope, $scope, $state, $stateParams, ConfigService, NotebookService, NotificationService, ProjectService, SessionService, TeacherDataService, TeacherWebSocketService) {
         var _this = this;
 
         _classCallCheck(this, ClassroomMonitorController);
@@ -20,6 +20,7 @@ var ClassroomMonitorController = function () {
         this.$state = $state;
         this.$stateParams = $stateParams;
         this.ConfigService = ConfigService;
+        this.NotebookService = NotebookService;
         this.NotificationService = NotificationService;
         this.ProjectService = ProjectService;
         this.SessionService = SessionService;
@@ -65,8 +66,8 @@ var ClassroomMonitorController = function () {
                 name: this.$translate('notebookView'),
                 label: this.$translate('notebookViewLabel'),
                 icon: 'chrome_reader_mode',
-                type: 'secondary',
-                active: false
+                type: 'primary',
+                active: this.NotebookService.isNotebookEnabled()
             },
             'root.export': {
                 name: this.$translate('exportView'),
@@ -255,7 +256,7 @@ var ClassroomMonitorController = function () {
     return ClassroomMonitorController;
 }();
 
-ClassroomMonitorController.$inject = ['$filter', '$mdDialog', '$rootScope', '$scope', '$state', '$stateParams', 'ConfigService', 'NotificationService', 'ProjectService', 'SessionService', 'TeacherDataService', 'TeacherWebSocketService'];
+ClassroomMonitorController.$inject = ['$filter', '$mdDialog', '$rootScope', '$scope', '$state', '$stateParams', 'ConfigService', 'NotebookService', 'NotificationService', 'ProjectService', 'SessionService', 'TeacherDataService', 'TeacherWebSocketService'];
 
 exports.default = ClassroomMonitorController;
 //# sourceMappingURL=classroomMonitorController.js.map

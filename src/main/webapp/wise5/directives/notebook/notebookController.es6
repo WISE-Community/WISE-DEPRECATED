@@ -39,7 +39,7 @@ class NotebookController {
         });
 
         // by this time, the notebook and student assets have been retrieved.
-        this.notebook = this.NotebookService.notebook;
+        this.notebook = this.NotebookService.getNotebookByWorkgroup(this.workgroupId);
     }
 
     getTemplateUrl() {
@@ -80,6 +80,23 @@ class NotebookController {
         // TODO: add some kind of unobtrusive confirmation to let student know that the notebook item has been added to current component
         $event.stopPropagation();  // prevents parent notebook list item from getting the onclick event so this item won't be re-selected.
     }
+
+    getNotebook() {
+        return this.notebook;
+    }
+
+    getNotes() {
+        let notes = [];
+        let notebookItems = this.getNotebook().items;
+        for (let notebookItemKey in notebookItems) {
+            let notebookItem = notebookItems[notebookItemKey];
+            if (notebookItem.last().type === 'note') {
+                notes.push(notebookItem);
+            }
+        }
+        return notes;
+    }
+
 }
 
 NotebookController.$inject = [

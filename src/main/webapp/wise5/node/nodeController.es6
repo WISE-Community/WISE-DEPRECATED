@@ -103,9 +103,9 @@ class NodeController {
             if (latestComponentState) {
                 let latestClientSaveTime = latestComponentState.clientSaveTime;
                 if (latestComponentState.isSubmit) {
-                    this.setSaveMessage(this.$translate('LASTSUBMITTED'), latestClientSaveTime);
+                    this.setSaveMessage(this.$translate('LAST_SUBMITTED'), latestClientSaveTime);
                 } else {
-                    this.setSaveMessage(this.$translate('LASTSAVED'), latestClientSaveTime);
+                    this.setSaveMessage(this.$translate('LAST_SAVED'), latestClientSaveTime);
                 }
             }
 
@@ -707,7 +707,7 @@ class NodeController {
                             let clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
 
                             if (isAutoSave) {
-                                this.setSaveMessage(this.$translate('AUTOSAVED'), clientSaveTime);
+                                this.setSaveMessage(this.$translate('AUTO_SAVED'), clientSaveTime);
                             } else if (isSubmit) {
                                 this.setSaveMessage(this.$translate('SUBMITTED'), clientSaveTime);
                             } else {

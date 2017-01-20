@@ -725,7 +725,7 @@ var AnnotationService = function () {
                             }
                         } else {
                             // each global annotation should have a name, so it shouldn't get here
-                            console.error(this.$translate('GLOBALANNOTATIONDOESNOTHAVEANAME') + annotation);
+                            console.error(this.$translate('GLOBAL_ANNOTATION_DOES_NOT_HAVE_A_NAME') + annotation);
                         }
                     }
                 }
@@ -800,7 +800,7 @@ var AnnotationService = function () {
                             }
                         } else {
                             // each global annotation should have a name, so it shouldn't get here
-                            console.error(his.$translate('GLOBALANNOTATIONDOESNOTHAVEANAME') + annotation);
+                            console.error(his.$translate('GLOBAL_ANNOTATION_DOES_NOT_HAVE_A_NAME') + annotation);
                         }
                     }
                 }

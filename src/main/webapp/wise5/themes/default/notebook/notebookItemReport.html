@@ -9,12 +9,16 @@
             <div id="{{notebookItemReportController.reportId}}-toolbar" class="l-constrained l-constrained-md"></div>
         </div>
         <summernote id="{{notebookItemReportController.reportId}}"
+                    ng-if="notebookItemReportController.mode != 'classroomMonitor'"
                     class="notebook-item--report__content"
                     ng-model="notebookItemReportController.reportItem.content.content"
                     config="notebookItemReportController.summernoteOptions"></summernote>
+        <div ng-if="notebookItemReportController.mode == 'classroomMonitor'"
+             class="notebook-item--report__content"><compile data="notebookItemReportController.reportItem.content.content"></compile></div>
     </div>
     <div class="component__actions">
-        <md-button class="md-primary md-raised" aria-label="Save {{notebookItemReportController.label.link}}"
+        <md-button ng-if="notebookItemReportController.mode != 'classroomMonitor'"
+                   class="md-primary md-raised" aria-label="Save {{notebookItemReportController.label.link}}"
                    ng-click="notebookItemReportController.saveNotebookReportItem()"
                    ng-disabled="!notebookItemReportController.dirty">{{ 'SAVE' | translate }}</md-button>
         <span ng-show="notebookItemReportController.saveMessage.text"

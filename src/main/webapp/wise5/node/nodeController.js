@@ -107,9 +107,9 @@ var NodeController = function () {
             if (latestComponentState) {
                 var latestClientSaveTime = latestComponentState.clientSaveTime;
                 if (latestComponentState.isSubmit) {
-                    this.setSaveMessage(this.$translate('LASTSUBMITTED'), latestClientSaveTime);
+                    this.setSaveMessage(this.$translate('LAST_SUBMITTED'), latestClientSaveTime);
                 } else {
-                    this.setSaveMessage(this.$translate('LASTSAVED'), latestClientSaveTime);
+                    this.setSaveMessage(this.$translate('LAST_SAVED'), latestClientSaveTime);
                 }
             }
 
@@ -767,7 +767,7 @@ var NodeController = function () {
                                 var clientSaveTime = _this3.ConfigService.convertToClientTimestamp(serverSaveTime);
 
                                 if (isAutoSave) {
-                                    _this3.setSaveMessage(_this3.$translate('AUTOSAVED'), clientSaveTime);
+                                    _this3.setSaveMessage(_this3.$translate('AUTO_SAVED'), clientSaveTime);
                                 } else if (isSubmit) {
                                     _this3.setSaveMessage(_this3.$translate('SUBMITTED'), clientSaveTime);
                                 } else {

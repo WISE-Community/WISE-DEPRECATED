@@ -42,7 +42,7 @@ var NotebookController = function () {
         });
 
         // by this time, the notebook and student assets have been retrieved.
-        this.notebook = this.NotebookService.notebook;
+        this.notebook = this.NotebookService.getNotebookByWorkgroup(this.workgroupId);
     }
 
     _createClass(NotebookController, [{
@@ -90,6 +90,24 @@ var NotebookController = function () {
             this.selectedNotebookItem = null; // reset selected notebook item
             // TODO: add some kind of unobtrusive confirmation to let student know that the notebook item has been added to current component
             $event.stopPropagation(); // prevents parent notebook list item from getting the onclick event so this item won't be re-selected.
+        }
+    }, {
+        key: 'getNotebook',
+        value: function getNotebook() {
+            return this.notebook;
+        }
+    }, {
+        key: 'getNotes',
+        value: function getNotes() {
+            var notes = [];
+            var notebookItems = this.getNotebook().items;
+            for (var notebookItemKey in notebookItems) {
+                var notebookItem = notebookItems[notebookItemKey];
+                if (notebookItem.last().type === 'note') {
+                    notes.push(notebookItem);
+                }
+            }
+            return notes;
         }
     }]);
 

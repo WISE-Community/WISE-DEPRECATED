@@ -4,7 +4,16 @@
     }
 </style>
 
-<div class="view-content">
+<div class="view-content view-content--with-sidemenu">
+    <button ng-click="notebookGradingController.toggleDisplayAllNotes()">
+        <span ng-if="notebookGradingController.showAllNotes" translate="hideAllNotes"></span>
+        <span ng-if="!notebookGradingController.showAllNotes" translate="showAllNotes"></span>
+    </button>
+    <button ng-click="notebookGradingController.toggleDisplayAllReports()">
+        <span ng-if="notebookGradingController.showAllReports" translate="hideAllReports"></span>
+        <span ng-if="!notebookGradingController.showAllReports" translate="showAllReports"></span>
+    </button>
+
     <div class="l-constrained" layout="column">
         <div>
             <button ng-repeat='period in notebookGradingController.periods'
@@ -13,11 +22,24 @@
                 {{period.periodName}}
             </button>
         </div>
-
         <div ng-repeat="workgroup in notebookGradingController.workgroups"
             ng-show="notebookGradingController.getCurrentPeriod().periodName == 'All' || workgroup.periodId == notebookGradingController.getCurrentPeriod().periodId">
-            <span ng-if="notebookGradingController.canViewStudentNames">{{workgroup.userName}} ({{workgroup.workgroupId}})</span>
+            <span style="font-weight:bold" ng-if="notebookGradingController.canViewStudentNames">{{workgroup.userName}} ({{'WORKGROUP_ID' | translate }}: {{workgroup.workgroupId}})</span>
             <span ng-if="!notebookGradingController.canViewStudentNames">{{workgroup.workgroupId}}</span>
+            <a ng-click="notebookGradingController.toggleDisplayNoteForWorkgroup(workgroup.workgroupId)" translate="NOTES"></a>
+            <a ng-click="notebookGradingController.toggleDisplayReportForWorkgroup(workgroup.workgroupId)" translate="REPORT"></a>
+            <notebook mode="grading"
+                      ng-if="notebookGradingController.showNoteForWorkgroup[workgroup.workgroupId]"
+                      workgroup-id="workgroup.workgroupId"
+                      theme-path="notebookGradingController.themePath"
+                      template-url="notebookGradingController.themePath + '/notebook/notebook.html'"
+                      filter="notebookGradingController.noteFilter"></notebook>
+            <notebook mode="grading"
+                      ng-if="notebookGradingController.showReportForWorkgroup[workgroup.workgroupId]"
+                      workgroup-id="workgroup.workgroupId"
+                      theme-path="notebookGradingController.themePath"
+                      template-url="notebookGradingController.themePath + '/notebook/notebook.html'"
+                      filter="notebookGradingController.reportFilter"></notebook>
         </div>
 
     </div>

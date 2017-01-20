@@ -1422,7 +1422,7 @@ var DiscussionController = function () {
                      */
 
                     // make sure the author really wants to change the component type
-                    var answer = confirm(this.$translate('AREYOUSUREYOUWANTTOCHANGETHISCOMPONENTTYPE'));
+                    var answer = confirm(this.$translate('ARE_YOU_SURE_YOU_WANT_TO_CHANGE_THIS_COMPONENT_TYPE'));
 
                     if (answer) {
                         // the author wants to change the component type

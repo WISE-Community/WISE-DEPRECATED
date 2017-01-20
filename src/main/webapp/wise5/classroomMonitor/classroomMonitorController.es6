@@ -9,6 +9,7 @@ class ClassroomMonitorController {
                 $state,
                 $stateParams,
                 ConfigService,
+                NotebookService,
                 NotificationService,
                 ProjectService,
                 SessionService,
@@ -21,6 +22,7 @@ class ClassroomMonitorController {
         this.$state = $state;
         this.$stateParams = $stateParams;
         this.ConfigService = ConfigService;
+        this.NotebookService = NotebookService;
         this.NotificationService = NotificationService;
         this.ProjectService = ProjectService;
         this.SessionService = SessionService;
@@ -66,8 +68,8 @@ class ClassroomMonitorController {
                 name: this.$translate('notebookView'),
                 label: this.$translate('notebookViewLabel'),
                 icon: 'chrome_reader_mode',
-                type: 'secondary',
-                active: false
+                type: 'primary',
+                active: this.NotebookService.isNotebookEnabled()
             },
             'root.export': {
                 name: this.$translate('exportView'),
@@ -250,6 +252,7 @@ ClassroomMonitorController.$inject = [
     '$state',
     '$stateParams',
     'ConfigService',
+    'NotebookService',
     'NotificationService',
     'ProjectService',
     'SessionService',

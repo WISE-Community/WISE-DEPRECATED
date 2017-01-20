@@ -13,6 +13,7 @@ const NotebookItem = {
         onDelete: '&',
         onRevive: '&',
         onSelect: '&',
+        workgroupId: '='
     },
     template: '<ng-include src="notebookItemController.getTemplateUrl()"></ng-include>',
     controller: 'NotebookItemController as notebookItemController'
@@ -22,10 +23,12 @@ let notebookModule = angular.module('notebook', [])
     .directive('notebook', () => {
         return {
             scope: {
+                componentController: '=',
                 filter: '=',
+                mode: '@',
                 themePath: '=',
                 templateUrl: '=',
-                componentController: '='
+                workgroupId: '='
             },
             template: '<ng-include src="notebookController.getTemplateUrl()"></ng-include>',
             controller: 'NotebookController',
@@ -39,7 +42,8 @@ let notebookModule = angular.module('notebook', [])
                 reportId: '=',
                 isEditAllowed: '=',
                 templateUrl: '=',
-                themePath: '='
+                themePath: '=',
+                workgroupId: '='
             },
             template: '<ng-include src="notebookItemReportController.getTemplateUrl()"></ng-include>',
             controller: 'NotebookItemReportController',

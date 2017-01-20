@@ -1,11 +1,13 @@
 <div class="l-constrained l-constrained-md" layout="column">
     <div ng-if="notebookController.filter === 'note'" layout="row" layout-wrap layout-align="start start">
-        <p class="center flex md-heading" ng-if="notebookController.notebook.items.length < 1" translate="noNotes" translate-value-term="{{notebookController.notebookConfig.itemTypes.note.label.plural}}"></p>
-        <notebook-item ng-repeat="(localNotebookItemId, notebookItems) in notebookController.notebook.items"
+        <p class="center flex md-heading" ng-if="notebookController.getNotes().length == 0"
+           translate="noNotes" translate-value-term="{{notebookController.notebookConfig.itemTypes.note.label.plural}}"></p>
+        <notebook-item ng-repeat="(localNotebookItemId, notebookItems) in notebookController.getNotebook().items"
                        ng-if="(notebookController.filter === 'note') && notebookItems.last().type == 'note'"
                        item-id="localNotebookItemId"
                        on-select="notebookController.editItem($ev, $itemId)"
                        on-delete="notebookController.deleteItem($ev, $itemId)"
+                       workgroup-id="notebookController.workgroupId"
                        flex="100" flex-sm="50" flex-md="33" flex-gt-md="33"></notebook-item>
     </div>
 
@@ -20,16 +22,20 @@
 
     <div ng-if="notebookController.filter === 'report'">
         <!-- assume only one report for now -->
-        <notebookitemreport report-id="notebookController.notebookConfig.itemTypes.report.notes[0].reportId" theme-path="notebookController.themePath" template-url="notebookController.themePath + '/notebook/notebookItemReport.html'"></notebookitemreport>
+        <notebookitemreport report-id="notebookController.notebookConfig.itemTypes.report.notes[0].reportId"
+                            theme-path="notebookController.themePath"
+                            template-url="notebookController.themePath + '/notebook/notebookItemReport.html'"
+                            workgroup-id="notebookController.workgroupId"></notebookitemreport>
     </div>
 
     <div ng-if="notebookController.filter === 'trash'" >
         <div layout="row" layout-wrap layout-align="start start">
-            <p class="center flex md-heading" ng-if="notebookController.notebook.deletedItems.length < 1" translate="noDeletedNotes"></p>
-            <notebook-item ng-repeat="(localNotebookItemId, deletedNotebookItems) in notebookController.notebook.deletedItems"
+            <p class="center flex md-heading" ng-if="notebookController.getNotebook().deletedItems.length < 1" translate="noDeletedNotes"></p>
+            <notebook-item ng-repeat="(localNotebookItemId, deletedNotebookItems) in notebookController.getNotebook().deletedItems"
                            ng-if="(notebookController.filter === 'trash') && deletedNotebookItems.last().type == 'note'"
                            item-id="localNotebookItemId"
                            on-revive="notebookController.reviveItem($ev, $itemId)"
+                           workgroup-id="notebookController.workgroupId"
                            flex="100" flex-sm="50" flex-md="33" flex-gt-md="33"></notebook-item>
         </div>
     </div>

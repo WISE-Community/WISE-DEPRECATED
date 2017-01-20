@@ -97,6 +97,58 @@ describe('WISE Authoring Tool', function () {
         expect($("#editNotebookSettingsButton").isEnabled()).toBe(true);
     });
 
+    it('should create new steps', function () {
+        // test adding a new step to an empty project
+        $("#createNewStepButton").click();
+        expect($("#createNodeTitle").isDisplayed()).toBeTruthy();
+        expect($("#createNodeCreateButton").isDisplayed()).toBeTruthy();
+        expect($("#createNodeCancelButton").isDisplayed()).toBeTruthy();
+        // clicking on cancel should hide the create node input and buttons
+        $("#createNodeCancelButton").click();
+        expect($("#createNodeTitle").isDisplayed()).toBeFalsy();
+        expect($("#createNodeCreateButton").isDisplayed()).toBeFalsy();
+        expect($("#createNodeCancelButton").isDisplayed()).toBeFalsy();
+
+        $("#createNewStepButton").click();
+        $('#createNodeTitle').clear(); // clear out what's there.
+        $('#createNodeTitle').sendKeys('Step 1');
+        $("#createNodeCreateButton").click();
+
+        element.all(by.repeater("item in projectController.items")).then(function (nodeItem) {
+            expect(nodeItem[1].element(by.className('groupHeader')).getText()).toBe("1 First Activity");
+            var insertInsideAct1Button = nodeItem[1].element(by.cssContainingText('button', 'Insert Inside'));
+            expect(insertInsideAct1Button.isDisplayed()).toBeTruthy();
+            insertInsideAct1Button.click();
+            var EC = protractor.ExpectedConditions;
+            browser.wait(EC.alertIsPresent(), 5000); // Wait for an alert pops up asking if it should this should be the first step in the project.
+            browser.switchTo().alert().accept(); // accept the alert
+        });
+
+        element.all(by.repeater("item in projectController.items")).then(function (nodeItem) {
+            expect(nodeItem[1].element(by.className('groupHeader')).getText()).toBe("1 First Activity"); // should have one default activity
+            expect(nodeItem[2].element(by.className('stepHeader')).getText()).toBe("1.1 Step 1"); // should now have the newly added step
+        });
+
+        // now test adding another step after the first step. This time the alert should not show.
+
+        $("#createNewStepButton").click();
+        $('#createNodeTitle').clear(); // clear out what's there.
+        $('#createNodeTitle').sendKeys('Step 2');
+        $("#createNodeCreateButton").click();
+
+        element.all(by.repeater("item in projectController.items")).then(function (nodeItem) {
+            var insertAfterStep1Button = nodeItem[2].element(by.cssContainingText('button', 'Insert After'));
+            expect(insertAfterStep1Button.isDisplayed()).toBeTruthy();
+            insertAfterStep1Button.click();
+        });
+
+        element.all(by.repeater("item in projectController.items")).then(function (nodeItem) {
+            expect(nodeItem[1].element(by.className('groupHeader')).getText()).toBe("1 First Activity"); // should have one default activity
+            expect(nodeItem[2].element(by.className('stepHeader')).getText()).toBe("1.1 Step 1"); // should have step 1
+            expect(nodeItem[3].element(by.className('stepHeader')).getText()).toBe("1.2 Step 2"); // should now have the newly added step
+        });
+    });
+
     it('should display my assets', function () {
         $("#manageAssetsButton").click();
         expect(browser.getCurrentUrl()).toMatch('http://localhost:8080/wise/author#/project/[0-9]+/asset');

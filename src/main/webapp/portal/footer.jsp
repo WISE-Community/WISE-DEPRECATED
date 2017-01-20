@@ -4,13 +4,13 @@
 	 		<div id="footerLinks">
 	 			<div id="wiseLinks">
 	 				<ul>
-						<li class="first"><a href="${contextPath}"><spring:message code="footer.home" /></a></li>
-						<li><a href="${contextPath}/join"><spring:message code="footer.createAccount" /></a></li>
+						<li class="first"><a href="${contextPath}/join"><spring:message code="footer.createAccount" /></a></li>
 						<li><a href="${contextPath}/pages/wise-advantage.html"><spring:message code="footer.wiseAdvantage" /></a></li>
 						<li><a href="${contextPath}/pages/features.html"><spring:message code="footer.wiseFeatures" /></a></li>
 						<li><a href="${contextPath}/pages/teacher-tools.html"><spring:message code="footer.teacherTools" /></a></li>
 						<li><a href="${contextPath}/pages/teacherfaq.html"><spring:message code="footer.faq" /></a></li>
 						<li><a href="${contextPath}/pages/gettingstarted.html"><spring:message code="footer.gettingStarted" /></a></li>
+						<li><a href="${contextPath}/pages/terms.html"><spring:message code="footer.termsOfUse" /></a></li>
 						<li class="last"><a href="${contextPath}/contact/contactwise.html"><spring:message code="footer.contact" /></a></li>
 						<!-- TODO: uncomment me when credits page is ready <li class="last"><a href="credits.html"><spring:message code="footer.credits" /></a></li> -->
 					</ul>

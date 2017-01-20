@@ -141,7 +141,7 @@ class NodeAuthoringController {
             },
             {
                 value: "isCorrect",
-                text: this.$translate('ISCORRECT'),
+                text: this.$translate('IS_CORRECT'),
                 params: [
                     {
                         value: "nodeId",
@@ -232,7 +232,7 @@ class NodeAuthoringController {
         this.branchCriteria = [
             {
                 value: "workgroupId",
-                text: this.$translate('WORKGROUPID')
+                text: this.$translate('WORKGROUP_ID')
             },
             {
                 value: "score",

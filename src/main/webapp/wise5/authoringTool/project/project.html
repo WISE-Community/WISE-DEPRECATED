@@ -59,8 +59,8 @@
 </div>
 <div ng-show='projectController.showCreateNode'>
     <label style="display:initial" translate="stepTitle"></label>: <input id="createNodeTitle" ng-model='projectController.createNodeTitle' ng-keyup='$event.keyCode == 13 && projectController.createNode()' size='50'/>
-    <button ng-click='projectController.createNode()' translate="create"></button>
-    <button ng-click='projectController.hideCreateNode()' translate="CANCEL"></button>
+    <button id="createNodeCreateButton" ng-click='projectController.createNode()' translate="create"></button>
+    <button id="createNodeCancelButton" ng-click='projectController.hideCreateNode()' translate="CANCEL"></button>
 </div>
 <div ng-show='projectController.insertGroupMode || projectController.insertNodeMode'>
     <span translate="chooseNewLocation"></span> <button ng-click='projectController.cancelMove()' translate="CANCEL"></button>
@@ -70,7 +70,7 @@
     {{ 'authorableProjects' | translate }}
     <br/>
     <select ng-model='projectController.importAuthorableProjectId'
-            ng-options="project.id as (project.id + ' ' + project.name + (project.runId ? ' (' + ('RUNID' | translate) + ': ' + project.runId + ')': '')) for project in projectController.authorableProjectsList"
+            ng-options="project.id as (project.id + ' ' + project.name + (project.runId ? ' (' + ('RUN_ID' | translate) + ': ' + project.runId + ')': '')) for project in projectController.authorableProjectsList"
             ng-change='projectController.showAuthorableImportProject(projectController.importAuthorableProjectId)'>
             <option value='' translate='selectAuthorableProject'></option>
     </select>
@@ -78,7 +78,7 @@
     {{ 'libraryProjects' | translate }}
     <br/>
     <select ng-model='projectController.importLibraryProjectId'
-            ng-options="project.id as (project.id + ' ' + project.title + (project.runId ? ' (' + ('RUNID' | translate) + ': ' + project.runId + ')': '')) for project in projectController.libraryProjectsList.reverse()"
+            ng-options="project.id as (project.id + ' ' + project.title + (project.runId ? ' (' + ('RUN_ID' | translate) + ': ' + project.runId + ')': '')) for project in projectController.libraryProjectsList.reverse()"
             ng-change='projectController.showLibraryImportProject(projectController.importLibraryProjectId)'>
             <option value='' translate='selectLibraryProject'></option>
     </select>
@@ -127,9 +127,9 @@
     <h6 ng-if='item.order==0'
         style='display:inline'>
         <label translate="projectTitle"></label>: <input id="projectTitle" size='100' ng-model='projectController.projectTitle' ng-model-options='{ debounce: 500 }' ng-change='projectController.projectTitleChanged()'/>
-        <label ng-if='projectController.projectId != null'>{{ 'PROJECTID' | translate }}: {{projectController.projectId}}</label>
-        <label ng-if='projectController.runId == null'>({{ 'RUNID' | translate }}: {{ 'none' | translate }})</label>
-        <label ng-if='projectController.runId != null'>({{ 'RUNID' | translate }}: {{projectController.runId}})</label>
+        <label ng-if='projectController.projectId != null'>{{ 'PROJECT_ID' | translate }}: {{projectController.projectId}}</label>
+        <label ng-if='projectController.runId == null'>({{ 'RUN_ID' | translate }}: {{ 'none' | translate }})</label>
+        <label ng-if='projectController.runId != null'>({{ 'RUN_ID' | translate }}: {{projectController.runId}})</label>
     </h6>
     <button ng-show='(projectController.insertNodeMode && item.order!==0) || (projectController.insertGroupMode && item.order==0)'
             ng-if='projectController.isGroupNode(item.$key)'
