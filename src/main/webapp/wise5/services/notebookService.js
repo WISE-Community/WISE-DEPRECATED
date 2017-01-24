@@ -228,22 +228,26 @@ var NotebookService = function () {
                     var allNotebookItems = response.data;
                     for (var n = 0; n < allNotebookItems.length; n++) {
                         var notebookItem = allNotebookItems[n];
-                        if (notebookItem.studentAssetId != null) {
-                            // if this notebook item is a StudentAsset item, add the association here
-                            notebookItem.studentAsset = _this.StudentAssetService.getAssetById(notebookItem.studentAssetId);
-                        } else if (notebookItem.studentWorkId != null) {
-                            // if this notebook item is a StudentWork item, add the association here
-                            notebookItem.studentWork = _this.StudentDataService.getStudentWorkByStudentWorkId(notebookItem.studentWorkId);
-                        } else if (notebookItem.type === "note" || notebookItem.type === "report") {
-                            notebookItem.content = angular.fromJson(notebookItem.content);
-                        }
-                        var _workgroupId2 = notebookItem.workgroupId;
-                        if (_this.notebooksByWorkgroup.hasOwnProperty(_workgroupId2)) {
-                            // we already have create a notebook for this workgroup before, so we'll append this notebook item to the array
-                            _this.notebooksByWorkgroup[_workgroupId2].allItems.push(notebookItem);
-                        } else {
-                            // otherwise, we'll create a new notebook field and add the item to the array
-                            _this.notebooksByWorkgroup[_workgroupId2] = { allItems: [notebookItem] };
+                        try {
+                            if (notebookItem.studentAssetId != null) {
+                                // if this notebook item is a StudentAsset item, add the association here
+                                notebookItem.studentAsset = _this.StudentAssetService.getAssetById(notebookItem.studentAssetId);
+                            } else if (notebookItem.studentWorkId != null) {
+                                // if this notebook item is a StudentWork item, add the association here
+                                notebookItem.studentWork = _this.StudentDataService.getStudentWorkByStudentWorkId(notebookItem.studentWorkId);
+                            } else if (notebookItem.type === "note" || notebookItem.type === "report") {
+                                notebookItem.content = angular.fromJson(notebookItem.content);
+                            }
+                            var _workgroupId2 = notebookItem.workgroupId;
+                            if (_this.notebooksByWorkgroup.hasOwnProperty(_workgroupId2)) {
+                                // we already have create a notebook for this workgroup before, so we'll append this notebook item to the array
+                                _this.notebooksByWorkgroup[_workgroupId2].allItems.push(notebookItem);
+                            } else {
+                                // otherwise, we'll create a new notebook field and add the item to the array
+                                _this.notebooksByWorkgroup[_workgroupId2] = { allItems: [notebookItem] };
+                            }
+                        } catch (e) {
+                            // keep going, ignore this error
                         }
                     }
                     _this.groupNotebookItems(); // group notebook items based on item.localNotebookItemId
