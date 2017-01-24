@@ -55,6 +55,7 @@ import TableComponentModule from '../components/table/tableComponentModule';
 import TeacherDataService from '../services/teacherDataService';
 import TeacherWebSocketService from '../services/teacherWebSocketService';
 import UtilService from '../services/utilService';
+import WISELinkAuthoringController from './wiseLink/wiseLinkAuthoringController';
 
 import angularSummernote from 'lib/angular-summernote/dist/angular-summernote.min';
 
@@ -113,6 +114,7 @@ let authoringModule = angular.module('authoring', [
     .controller(ProjectAssetController.name, ProjectAssetController)
     .controller(ProjectController.name, ProjectController)
     .controller(ProjectHistoryController.name, ProjectHistoryController)
+    .controller(WISELinkAuthoringController.name, WISELinkAuthoringController)
     .config([
         '$urlRouterProvider',
         '$stateProvider',

@@ -1,0 +1,40 @@
+<style>
+    md-dialog {
+        display: initial;
+        width: 80%;
+        height: 50%;
+    }
+</style>
+
+<div style='margin-left: 20px; margin-top: 20px;'>
+    <h5>{{ 'createAWISELink' | translate }}</h5>
+    <br/>
+    <md-select md-theme="default"
+               class="node-select md-subhead"
+               ng-model="wiseLinkAuthoringController.wiseLinkNodeId"
+               placeholder="{{ 'chooseAStep' | translate }}"
+               ng-change="wiseLinkAuthoringController.wiseLinkNodeIdChanged()"
+               style="width:600px">
+        <md-option ng-repeat="item in wiseLinkAuthoringController.items | toArray | orderBy : 'order'"
+                   ng-if="item.$key != 'group0'"
+                   value="{{ item.$key }}"
+                   ng-class="{'node-select-option--group': wiseLinkAuthoringController.isGroupNode(item.$key), 'node-select-option--node': !wiseLinkAuthoringController.isGroupNode(item.$key)}">
+            <span layout="row" layout-align="start center">
+                <span class="node-select__text">{{ wiseLinkAuthoringController.getNodePositionById(item.$key) + ': '}}{{ wiseLinkAuthoringController.getNodeTitleByNodeId(item.$key) }} ({{item.$key}})</span>
+                <node-status-icon node-id="item.$key" custom-class="'node-select__status'"></node-status-icon>
+            </span>
+        </md-option>
+    </md-select>
+    <br/>
+    <md-radio-group ng-model="wiseLinkAuthoringController.wiseLinkType" class="md-primary">
+        <md-radio-button value="link">{{ 'link' | translate }}</md-radio-button>
+        <md-radio-button value="button">{{ 'button' | translate }}</md-radio-button>
+    </md-radio-group>
+    <md-input-container>
+        <label>{{ 'setLinkText' | translate }}</label>
+        <input ng-model="wiseLinkAuthoringController.wiseLinkText">
+    </md-input-container>
+    <br/>
+    <button ng-click='wiseLinkAuthoringController.createWISELink()'>{{ 'create' | translate }}</button>
+    <button ng-click='wiseLinkAuthoringController.cancelWISELink()'>{{ 'CANCEL' | translate }}</button>
+</div>
