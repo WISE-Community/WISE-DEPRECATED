@@ -83,6 +83,7 @@
     "studentViewLabel": "View Student Progress",
     "teacherComment": "Teacher Comment",
     "team": "Team",
+    "teamId": "Team {{id}}",
     "teamsOnItem": "Teams currently on this item: {{total}} ({{online}} online)",
     "teamsOnItemNone": "No teams currently on this item.",
     "teamsOnItemTitle": "Teams on item",

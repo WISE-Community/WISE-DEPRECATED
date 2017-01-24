@@ -69,12 +69,12 @@ class WorkgroupNodeGradingController {
     }
 
     /**
-     * Get the student data for a specific part
+     * Get the student data for a specific component
      * @param the componentId
      * @param the workgroupId id of Workgroup who created the component state
      * @return the student data for the given component
      */
-    getLatestComponentStateByWorkgroupIdAndComponentId(workgroupId,  componentId) {
+    getLatestComponentStateByWorkgroupIdAndComponentId(workgroupId, componentId) {
         let componentState = null;
 
         if (workgroupId != null && componentId != null) {

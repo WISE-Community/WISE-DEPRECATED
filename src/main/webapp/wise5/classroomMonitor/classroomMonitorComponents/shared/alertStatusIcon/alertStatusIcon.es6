@@ -2,14 +2,15 @@
 
 const AlertStatusIcon = {
     bindings: {
-        alertStatus: '<',
-        message: '<',
+        hasAlert: '<',
+        hasNewAlert: '<',
+        message: '@',
         onClick: '&'
     },
     template:
-        `<md-icon ng-if="$ctrl.alertStatus"
+        `<md-icon ng-if="$ctrl.hasAlert"
                   class="status-icon text-disabled"
-                  ng-class="{'warn': $ctrl.alertStatus === 'new'}"
+                  ng-class="{'warn': $ctrl.hasNewAlert}"
                   ng-click="$ctrl.onClick()">
             error
             <md-tooltip md-direction="top" ng-if='$ctrl.message'>{{$ctrl.message}}</md-tooltip>

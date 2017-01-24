@@ -8,6 +8,10 @@ var _stepTools = require('./stepTools/stepTools');
 
 var _stepTools2 = _interopRequireDefault(_stepTools);
 
+var _workgroupInfo = require('./workgroupInfo/workgroupInfo');
+
+var _workgroupInfo2 = _interopRequireDefault(_workgroupInfo);
+
 var _workgroupItem = require('./workgroupItem/workgroupItem');
 
 var _workgroupItem2 = _interopRequireDefault(_workgroupItem);
@@ -29,6 +33,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var NodeGrading = angular.module('nodeGrading', []);
 
 NodeGrading.component('stepTools', _stepTools2.default);
+NodeGrading.component('workgroupInfo', _workgroupInfo2.default);
 NodeGrading.component('workgroupItem', _workgroupItem2.default);
 NodeGrading.component('workgroupNodeScore', _workgroupNodeScore2.default);
 NodeGrading.component('workgroupNodeGrading', _workgroupNodeGrading2.default);
