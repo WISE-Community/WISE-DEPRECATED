@@ -8,6 +8,7 @@ class ComponentGradingController {
                 ConfigService,
                 TeacherDataService,
                 UtilService,) {
+        this.$filter = $filter;
         this.$mdDialog = $mdDialog;
         this.$scope = $scope;
         this.AnnotationService = AnnotationService;

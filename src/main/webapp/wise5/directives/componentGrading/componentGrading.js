@@ -14,6 +14,7 @@ var ComponentGradingController = function () {
 
         _classCallCheck(this, ComponentGradingController);
 
+        this.$filter = $filter;
         this.$mdDialog = $mdDialog;
         this.$scope = $scope;
         this.AnnotationService = AnnotationService;
