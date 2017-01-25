@@ -49,13 +49,13 @@
     <md-list-item ng-switch-when="list" ng-click="$ctrl.itemClicked($event)"
                   class="md-long-text noright list-item md-whiteframe-z1"
                   aria-label="View {{$ctrl.nodeTitle}}"
-                  ng-class="{'nav-item--list--group': $ctrl.isGroup, 'nav-item--planning-mode': $ctrl.planningMode && $ctrl.isPlanningInstance, 'list-item--warn': $ctrl.alertStatus === 'new'}">
+                  ng-class="{'nav-item--list--group': $ctrl.isGroup, 'nav-item--planning-mode': $ctrl.planningMode && $ctrl.isPlanningInstance, 'list-item--warn': $ctrl.newAlert}">
         <img ng-if="$ctrl.icon.type === 'img'" ng-class="$ctrl.isGroup ? 'avatar--square' : ''" class="md-avatar" ng-src="{{$ctrl.icon.imgSrc}}" alt="{{$ctrl.icon.imgAlt}}" />
         <div ng-if="$ctrl.icon.type === 'font'" ng-class="$ctrl.isGroup ? 'avatar--square' : ''" style="background-color: {{$ctrl.icon.color}};" class="md-avatar">
             <md-icon md-font-set="{{$ctrl.icon.fontSet}}" class="md-light">{{$ctrl.icon.fontName}}</md-icon>
         </div>
         <p flex layout="row" layout-align="start center">
-            <span>{{ $ctrl.nodeTitle }}</span> <alert-status-icon alert-status="$ctrl.alertStatus"></alert-status-icon>
+            <span>{{ $ctrl.nodeTitle }}</span> <alert-status-icon has-alert="$ctrl.hasAlert" has-new-alert="$ctrl.newAlert"></alert-status-icon>
             <span flex></span>
             <span class="nav-item--list__info-item" ng-if="$ctrl.maxScore !== null" ng-include="'wise5/classroomMonitor/classroomMonitorComponents/nodeProgress/navItem/navItemScore.html'"></span>
             <span class="nav-item--list__info-item" ng-include="'wise5/classroomMonitor/classroomMonitorComponents/nodeProgress/navItem/navItemProgress.html'"></span>

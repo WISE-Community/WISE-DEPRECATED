@@ -89,6 +89,10 @@ label {
     text-align: center;
 }
 
+.block {
+    display: block;
+}
+
 // Color
 // Set classes for each named color in the $colors map
 @each $key, $value in $colors {

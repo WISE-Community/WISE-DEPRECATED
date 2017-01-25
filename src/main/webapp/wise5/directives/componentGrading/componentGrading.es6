@@ -88,6 +88,8 @@ class ComponentGradingController {
         }
 
         this.latestTeacherAnnotationTime = this.getLatestTeacherAnnotationTime();
+
+        this.hasNewWork = this.hasNewWork();
     }
 
     hasNewWork() {

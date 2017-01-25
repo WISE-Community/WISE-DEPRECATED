@@ -6,3 +6,36 @@
     min-height: $wise-toolbar-height;
     height: $wise-toolbar-height;
 }
+
+.thead__row {
+    height: 100%;
+    margin: 0 8px;
+
+    @media only screen and (min-width: $layout-breakpoint-xs) {
+        margin: 0 16px;
+    }
+}
+
+.thead__link {
+    color: #ffffff;
+    text-transform: none;
+    margin: 0;
+
+    /*&:hover {
+        margin-top: 0;
+        border-bottom: 0 none !important;
+    }
+
+    &:focus {
+        margin-top: 0;
+        border: 1px dotted color('gray-light') !important;
+    }*/
+}
+
+.thead__sort {
+    margin: 0;
+}
+
+.thead__sort--reverse {
+    transform: rotate(180deg);
+}
