@@ -1,19 +1,25 @@
 "use strict";
 
-/*class WorkgroupInfoController {
-    constructor() {
+class WorkgroupInfoController {
+    constructor(ConfigService) {
+        this.ConfigService = ConfigService;				
+ 	
+        this.$onInit = () => {		
+            this.avatarColor = this.ConfigService.getAvatarColorForWorkgroupId(this.workgroupId);
+        }
     };
 }
 
 WorkgroupInfoController.$inject = [
-    
-];*/
+    'ConfigService'
+];
 
 const WorkgroupInfo = {
     bindings: {
         alertMsg: '@',
         hasAlert: '<',
         hasNewAlert: '<',
+        workgroupId: '<',
         usernames: '@'
     },
     template:
@@ -25,8 +31,8 @@ const WorkgroupInfo = {
                 {{$ctrl.usernames}}
                 <alert-status-icon message="{{$ctrl.alertMsg}}" has-alert="$ctrl.hasAlert" has-new-alert="$ctrl.hasNewAlert"></alert-status-icon>
             </div>
-        </div>`//,
-    //controller: WorkgroupInfoController
+        </div>`,
+    controller: WorkgroupInfoController
 };
 
 export default WorkgroupInfo;

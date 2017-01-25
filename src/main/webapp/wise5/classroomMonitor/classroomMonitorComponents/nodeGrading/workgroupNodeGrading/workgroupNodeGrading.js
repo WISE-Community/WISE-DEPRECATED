@@ -22,14 +22,9 @@ var WorkgroupNodeGradingController = function () {
             _this.nodeContent = _this.getNodeContent();
             _this.components = _this.getComponents();
             _this.teacherWorkgroupId = _this.ConfigService.getWorkgroupId();
-            _this.latestWork = _this.latestWorkTime;
         };
 
         this.$onChanges = function (changesObj) {
-            if (changesObj.latestWorkTime) {
-                _this.latestWork = _this.convertToClientTimestamp(changesObj.latestWorkTime.currentValue);
-            }
-
             if (changesObj.hiddenComponents) {
                 _this.hiddenComponents = changesObj.hiddenComponents.currentValue;
             }
@@ -163,7 +158,6 @@ var WorkgroupNodeGrading = {
     bindings: {
         workgroupId: '<',
         nodeId: '@',
-        latestWorkTime: '<',
         visibleComponents: '<',
         hiddenComponents: '<',
         onUpdate: '&'

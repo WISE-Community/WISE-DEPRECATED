@@ -28,7 +28,6 @@ class WorkgroupItemController {
                 this.hasNewAlert = workgroupData.hasNewAlert;
                 this.status = workgroupData.completionStatus;
                 this.score = workgroupData.score > -1 ? workgroupData.score : '-';
-                this.latestWorkTime = workgroupData.latestWorkTime;
             }
 
             this.update();
@@ -105,7 +104,7 @@ const WorkgroupItem = {
                        layout-wrap>
             <div class="md-list-item-text" layout="row" flex>
                 <div flex layout="row" layout-align="start center">
-                    <workgroup-info has-alert="$ctrl.hasAlert" has-new-alert="$ctrl.hasNewAlert" usernames="{{$ctrl.workgroupData.usernames}}"></workgroup-info>
+                    <workgroup-info has-alert="$ctrl.hasAlert" has-new-alert="$ctrl.hasNewAlert" usernames="{{$ctrl.workgroupData.usernames}}" workgroup-id="$ctrl.workgroupId"></workgroup-info>
                 </div>
                 <div flex="30" layout="row" layout-align="center center">
                     <workgroup-node-status status-text="{{$ctrl.statusText}}" status-class="{{$ctrl.statusClass}}"></workgroup-node-status>
@@ -117,7 +116,6 @@ const WorkgroupItem = {
         </md-list-item>
         <workgroup-node-grading workgroup-id="$ctrl.workgroupId"
                                 node-id="{{$ctrl.nodeId}}"
-                                latest-work-time="$ctrl.latestWorkTime"
                                 ng-if="$ctrl.expand"
                                 hidden-components="$ctrl.hiddenComponents"
                                 on-update="$ctrl.updateHiddenComponents(value, event)"></workgroup-node-grading>`
