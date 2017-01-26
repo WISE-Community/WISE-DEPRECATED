@@ -81,7 +81,8 @@ var NavItemController = function () {
         this.setWorkgroupsOnNodeData();
 
         this.$onInit = function () {
-            _this.alertStatus = null;
+            _this.hasAlert = false;
+            _this.newAlert = false;
             _this.alertNotifications = [];
 
             _this.getAlertNotifications();
@@ -403,16 +404,8 @@ var NavItemController = function () {
             args.periodId = periodId;
             this.alertNotifications = this.NotificationService.getAlertNotifications(args);
 
-            var hasAlert = this.alertNotifications.length > 0;
-            var hasNewAlert = this.hasNewAlert();
-
-            if (hasNewAlert) {
-                this.alertStatus = 'new';
-            } else if (hasAlert) {
-                this.alertStatus = 'dismissed';
-            } else {
-                this.alertStatus = null;
-            }
+            this.hasAlert = this.alertNotifications.length > 0;
+            this.newAlert = this.hasNewAlert();
         }
     }, {
         key: 'hasNewAlert',
@@ -422,7 +415,6 @@ var NavItemController = function () {
             var nAlerts = this.alertNotifications.length;
             for (var i = 0; i < nAlerts; i++) {
                 var alert = this.alertNotifications[i];
-                var toWorkgroupId = alert.toWorkgroupId;
 
                 if (!alert.timeDismissed) {
                     result = true;

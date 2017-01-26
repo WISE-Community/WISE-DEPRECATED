@@ -41,6 +41,8 @@ class NodeGradingController {
         let startNodeId = this.ProjectService.getStartNodeId();
         this.rootNode = this.ProjectService.getRootNode(startNodeId);
 
+        this.sort = this.TeacherDataService.nodeGradingSort;
+
         this.hiddenComponents = [];
 
         // TODO: add loading indicator
@@ -186,7 +188,7 @@ class NodeGradingController {
             workgroup.hasAlert = alertNotifications.length;
             workgroup.hasNewAlert = this.workgroupHasNewAlert(alertNotifications);
             let completionStatus = this.getNodeCompletionStatusByWorkgroupId(workgroupId);
-            workgroup.latestWorkTime = completionStatus.latestWorkTime;
+            workgroup.hasNewWork = completionStatus.hasNewWork;
             workgroup.completionStatus = this.getWorkgroupCompletionStatus(completionStatus);
             workgroup.score = this.getNodeScoreByWorkgroupId(workgroupId);
             workgroup.usernames = this.getUsernamesByWorkgroupId(workgroupId);
@@ -230,6 +232,8 @@ class NodeGradingController {
 
         // TODO: store this info in the nodeStatus so we don't have to calculate every time?
         let latestWorkTime = this.getLatestWorkTimeByWorkgroupId(workgroupId);
+
+
         let latestAnnotationTime = this.getLatestAnnotationTimeByWorkgroupId(workgroupId);
 
         if (latestWorkTime) {
@@ -636,6 +640,63 @@ class NodeGradingController {
             clickOutsideToClose: true,
             escapeToClose: true
         });
+    }
+
+    setSort(value) {
+
+        switch (value) {
+            case 'team':
+                if (this.sort === 'team') {
+                    this.sort = '-team';
+                } else {
+                    this.sort = 'team';
+                }
+                break;
+            case 'status':
+                if (this.sort === 'status') {
+                    this.sort = '-status';
+                } else {
+                    this.sort = 'status';
+                }
+                break;
+            case 'score':
+                if (this.sort === 'score') {
+                    this.sort = '-score';
+                } else {
+                    this.sort = 'score';
+                }
+                break;
+        }
+
+        // update value in the teacher data service so we can persist across view instances and current node changes
+        this.TeacherDataService.nodeGradingSort = this.sort;
+    }
+
+    getOrderBy() {
+        let orderBy = [];
+
+        switch (this.sort) {
+            case 'team':
+                orderBy = ['usernames'];
+                break;
+            case '-team':
+                orderBy = ['-usernames'];
+                break;
+            case 'status':
+                orderBy = ['completionStatus', 'score'];
+                break;
+            case '-status':
+                orderBy = ['-completionStatus', 'score'];
+                break;
+            case 'score':
+                orderBy = ['score', 'usernames'];
+                break;
+            case '-score':
+                orderBy = ['-score', 'usernames'];
+                break;
+        }
+
+        return orderBy;
     }
 }
 

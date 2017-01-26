@@ -95,6 +95,8 @@ var ComponentGradingController = function () {
             }
 
             this.latestTeacherAnnotationTime = this.getLatestTeacherAnnotationTime();
+
+            this.hasNewWork = this.hasNewWork();
         }
     }, {
         key: 'hasNewWork',

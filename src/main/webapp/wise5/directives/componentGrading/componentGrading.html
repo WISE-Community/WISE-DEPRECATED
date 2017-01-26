@@ -4,7 +4,7 @@
     <div ng-if="$ctrl.componentStates.length > 0" class="animate-fade">
         {{ 'SAVED' | translate }}: <span class="component__actions__more" am-time-ago="$ctrl.latestComponentStateTime"></span>
         <md-tooltip md-direction="top">{{ $ctrl.latestComponentStateTime | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip>
-        &nbsp;<span ng-if="$ctrl.hasNewWork()" class="badge badge--info animate-fade">{{ 'NEW' | translate }}</span>
+        &nbsp;<span ng-if="$ctrl.hasNewWork" class="badge badge--info animate-fade">{{ 'NEW' | translate }}</span>
     </div>
     <div ng-if="$ctrl.componentStates.length === 0" class="animate-fade">
         {{ 'TEAM_HAS_NOT_SAVED_ANY_WORK' | translate }}

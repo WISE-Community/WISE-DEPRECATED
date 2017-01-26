@@ -8,7 +8,7 @@ var WorkgroupNodeStatus = {
         statusClass: '@',
         statusText: '@'
     },
-    template: '<span class="md-subhead heavy {{$ctrl.statusClass}}" ng-class="{\'text-secondary\': !$ctrl.statusClass}">{{$ctrl.statusText}}</span>'
+    template: '<span class="md-subhead block center heavy {{$ctrl.statusClass}}" ng-class="{\'text-secondary\': !$ctrl.statusClass}">{{$ctrl.statusText}}</span>'
 };
 
 exports.default = WorkgroupNodeStatus;

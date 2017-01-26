@@ -83,7 +83,8 @@ class NavItemController {
         this.setWorkgroupsOnNodeData();
 
         this.$onInit = () => {
-            this.alertStatus = null;
+            this.hasAlert = false;
+            this.newAlert = false;
             this.alertNotifications = [];
 
             this.getAlertNotifications();
@@ -377,16 +378,8 @@ class NavItemController {
         args.periodId = periodId;
         this.alertNotifications = this.NotificationService.getAlertNotifications(args);
 
-        let hasAlert = (this.alertNotifications.length > 0);
-        let hasNewAlert = this.hasNewAlert();
-
-        if (hasNewAlert) {
-            this.alertStatus = 'new';
-        } else if (hasAlert) {
-            this.alertStatus = 'dismissed';
-        } else {
-            this.alertStatus = null;
-        }
+        this.hasAlert = (this.alertNotifications.length > 0);
+        this.newAlert = this.hasNewAlert();
     }
 
     hasNewAlert() {
@@ -395,10 +388,7 @@ class NavItemController {
         let nAlerts = this.alertNotifications.length;
         for (let i = 0; i < nAlerts; i++) {
             let alert = this.alertNotifications[i];
-            let toWorkgroupId = alert.toWorkgroupId;
-
-
-
+           
             if (!alert.timeDismissed) {
                 result = true;
                 break;

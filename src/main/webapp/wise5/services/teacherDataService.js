@@ -34,6 +34,7 @@ var TeacherDataService = function () {
         this.previousStep = null;
         this.runStatus = null;
         this.periods = [];
+        this.nodeGradingSort = 'team';
 
         this.initializePeriods();
 
