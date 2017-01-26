@@ -31,6 +31,8 @@ TODO: implement me. Allow authors to view assets while authoring node conent. Pe
         translate="editConstraints"></button>
 <button ng-click='nodeAuthoringController.nodeAuthoringViewButtonClicked("editButtons")'
         translate="editButtons"></button>
+<button ng-click='nodeAuthoringController.nodeAuthoringViewButtonClicked("editRubric")'
+        translate="editStepRubric"></button>
 <button ng-click='nodeAuthoringController.nodeAuthoringViewButtonClicked("createBranch")'
         translate="createBranch"></button>
 
@@ -382,6 +384,17 @@ TODO: implement me. Allow authors to view assets while authoring node conent. Pe
     <input type='checkbox'
            ng-model='nodeAuthoringController.node.showSubmitButton'
            ng-change='nodeAuthoringController.authoringViewNodeChanged()'/>
+</div>
+
+<div ng-show='nodeAuthoringController.showRubric'>
+    <summernote id='{{nodeAuthoringController.summernoteRubricId}}'
+                ng-model='nodeAuthoringController.summernoteRubricHTML'
+                ng-change='nodeAuthoringController.summernoteRubricHTMLChanged()'
+                config='nodeAuthoringController.summernoteRubricOptions'
+                ng-model-options='{ debounce: 1000 }'
+                rows='10'
+                cols='100'>
+    </summernote>
 </div>
 
 <div ng-show='nodeAuthoringController.showCreateBranch'>

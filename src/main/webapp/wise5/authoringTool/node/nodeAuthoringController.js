@@ -219,6 +219,21 @@ var NodeAuthoringController = function () {
 
         // populate the branch authoring if any
         this.populateBranchAuthoring();
+
+        // create the summernote rubric element id
+        this.summernoteRubricId = 'summernoteRubric_' + this.nodeId;
+
+        // set the summernote rubric options
+        this.summernoteRubricOptions = {
+            height: 300,
+            disableDragAndDrop: true
+        };
+
+        /*
+         * inject the asset paths into the rubric html and set the summernote
+         * rubric html
+         */
+        this.summernoteRubricHTML = this.ProjectService.replaceAssetPaths(this.node.rubric);
     }
 
     /**
@@ -1077,6 +1092,7 @@ var NodeAuthoringController = function () {
                 this.showEditTransitions = false;
                 this.showConstraints = false;
                 this.showEditButtons = false;
+                this.showRubric = false;
                 this.showCreateBranch = false;
             } else if (view == 'editTransitions') {
                 // toggle the edit transitions view and hide all the other views
@@ -1084,6 +1100,7 @@ var NodeAuthoringController = function () {
                 this.showEditTransitions = !this.showEditTransitions;
                 this.showConstraints = false;
                 this.showEditButtons = false;
+                this.showRubricButton = false;
                 this.showCreateBranch = false;
             } else if (view == 'editConstraints') {
                 // toggle the edit constraints view and hide all the other views
@@ -1091,6 +1108,7 @@ var NodeAuthoringController = function () {
                 this.showEditTransitions = false;
                 this.showConstraints = !this.showConstraints;
                 this.showEditButtons = false;
+                this.showRubric = false;
                 this.showCreateBranch = false;
             } else if (view == 'editButtons') {
                 // toggle the edit buttons view and hide all the other views
@@ -1098,6 +1116,15 @@ var NodeAuthoringController = function () {
                 this.showEditTransitions = false;
                 this.showConstraints = false;
                 this.showEditButtons = !this.showEditButtons;
+                this.showRubric = false;
+                this.showCreateBranch = false;
+            } else if (view == 'editRubric') {
+                // toggle the edit buttons view and hide all the other views
+                this.showCreateComponent = false;
+                this.showEditTransitions = false;
+                this.showConstraints = false;
+                this.showEditButtons = false;
+                this.showRubric = !this.showRubric;
                 this.showCreateBranch = false;
             } else if (view == 'createBranch') {
                 // toggle the edit buttons view and hide all the other views
@@ -1105,6 +1132,7 @@ var NodeAuthoringController = function () {
                 this.showEditTransitions = false;
                 this.showConstraints = false;
                 this.showEditButtons = false;
+                this.showRubric = false;
                 this.showCreateBranch = !this.showCreateBranch;
             }
         }
@@ -2055,6 +2083,39 @@ var NodeAuthoringController = function () {
                 // remove the transition the corresponds to the branch path
                 this.node.transitionLogic.transitions.splice(branchPathIndex, 1);
             }
+        }
+
+        /**
+         * The author has changed the step rubric
+         */
+
+    }, {
+        key: 'summernoteRubricHTMLChanged',
+        value: function summernoteRubricHTMLChanged() {
+
+            // get the summernote rubric html
+            var html = this.summernoteRubricHTML;
+
+            /*
+             * remove the absolute asset paths
+             * e.g.
+             * <img src='https://wise.berkeley.edu/curriculum/3/assets/sun.png'/>
+             * will be changed to
+             * <img src='sun.png'/>
+             */
+            html = this.ConfigService.removeAbsoluteAssetPaths(html);
+
+            /*
+             * replace <a> and <button> elements with <wiselink> elements when
+             * applicable
+             */
+            html = this.UtilService.insertWISELinks(html);
+
+            // update the step rubric
+            this.node.rubric = html;
+
+            // save the project
+            this.authoringViewNodeChanged();
         }
     }]);
 

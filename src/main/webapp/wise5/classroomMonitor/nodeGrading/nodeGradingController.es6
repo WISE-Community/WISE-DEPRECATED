@@ -3,6 +3,7 @@
 class NodeGradingController {
 
     constructor($filter,
+                $mdDialog,
                 $scope,
                 $state,
                 $stateParams,
@@ -16,6 +17,7 @@ class NodeGradingController {
                 TeacherDataService) {
 
         this.$filter = $filter;
+        this.$mdDialog = $mdDialog;
         this.$state = $state;
         this.$scope = $scope;
         this.$stateParams = $stateParams;
@@ -328,7 +330,7 @@ class NodeGradingController {
     getWorkgroupCompletionStatus(completionStatus) {
         let hasWork = completionStatus.latestWorkTime !== null;
         let isCompleted = completionStatus.isCompleted;
-        
+
         // TODO: store this info in the nodeStatus so we don't have to calculate every time (and can use more widely)?
         let status = 0; // default
 
@@ -567,12 +569,79 @@ class NodeGradingController {
         let newViewportOffsetTop = target.getBoundingClientRect().top;
         let delta = viewportOffsetTop - newViewportOffsetTop;
         let scrollTop = content.scrollTop;
-        content.scrollTop = scrollTop - delta; 
+        content.scrollTop = scrollTop - delta;
+    }
+
+    /**
+     * Show the rubric in the grading view. We will show the step rubric and the
+     * component rubrics.
+     */
+    showRubric() {
+
+        /*
+         * we will accumulate the rubrics from the step and the step's
+         * components
+         */
+        var accumulatedRubrics = '';
+
+        // get the step number and title
+        var title = this.ProjectService.getNodePositionAndTitleByNodeId(this.nodeId);
+
+        accumulatedRubrics += "<div style='margin-left:30px;margin-right:30px;margin-top:30px;margin-bottom:30px;'>";
+
+        // show the step number and title
+        accumulatedRubrics += '<h3>' + title + '</h3>';
+
+        // get the step rubric
+        var nodeRubric = this.nodeContent.rubric;
+
+        if (nodeRubric != null) {
+            accumulatedRubrics += nodeRubric;
+        }
+
+        // get the components
+        var components = this.nodeContent.components;
+
+        if (components != null && components.length != 0) {
+
+            // loop through all the components
+            for (var c = 0; c < components.length; c++) {
+                var component = components[c];
+
+                if (component != null) {
+
+                    // get a component rubric
+                    var componentRubric = component.rubric;
+
+                    if (componentRubric != null && componentRubric != '') {
+
+                        if (accumulatedRubrics != '') {
+                            // separate component rubrics with a line break
+                            accumulatedRubrics += '<br/>';
+                        }
+
+                        // append the component rubric
+                        accumulatedRubrics += componentRubric;
+                    }
+                }
+            }
+        }
+
+        // inject the asset paths into the rubrics
+        accumulatedRubrics = this.ProjectService.replaceAssetPaths(accumulatedRubrics);
+
+        // display the rubrics in a popup
+        this.$mdDialog.show({
+            template: accumulatedRubrics,
+            clickOutsideToClose: true,
+            escapeToClose: true
+        });
     }
 }
 
 NodeGradingController.$inject = [
     '$filter',
+    '$mdDialog',
     '$scope',
     '$state',
     '$stateParams',

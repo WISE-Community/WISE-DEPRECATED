@@ -90,6 +90,29 @@ class AuthoringToolController {
                 this.setGlobalMessage(this.$translate('SAVED'), clientSaveTime);
             }, 500);
         });
+
+        /*
+         * Open the asset chooser to let the author insert an asset into the
+         * specified target
+         */
+        this.$scope.$on('openAssetChooser', (event, params) => {
+            // create the params for opening the asset chooser
+            var stateParams = {};
+            stateParams.popup = params.popup;
+            stateParams.nodeId = params.nodeId;
+            stateParams.componentId = params.componentId;
+            stateParams.target = params.target;
+
+            // open the dialog that will display the assets for the user to choose
+            this.$mdDialog.show({
+                templateUrl: 'wise5/authoringTool/asset/asset.html',
+                controller: 'ProjectAssetController',
+                controllerAs: 'projectAssetController',
+                $stateParams: stateParams,
+                clickOutsideToClose: true,
+                escapeToClose: true
+            });
+        });
     }
 
     /**

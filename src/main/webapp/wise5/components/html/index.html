@@ -2,10 +2,10 @@
     <div ng-if='htmlController.mode === "authoring"'>
         {{ 'html.html' | translate }}
         <br/>
-        <summernote id='{{htmlController.summernoteId}}'
-                  ng-model='htmlController.summernoteHTML'
-                  ng-change='htmlController.summernoteHTMLChanged()'
-                  config='htmlController.summernoteOptions'
+        <summernote id='{{htmlController.summernotePromptId}}'
+                  ng-model='htmlController.summernotePromptHTML'
+                  ng-change='htmlController.summernotePromptHTMLChanged()'
+                  config='htmlController.summernotePromptOptions'
                   ng-model-options='{ debounce: 1000 }'
                   rows='10'
                   cols='100'></summernote>

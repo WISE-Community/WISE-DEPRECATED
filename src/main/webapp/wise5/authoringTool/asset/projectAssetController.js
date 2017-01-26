@@ -35,6 +35,7 @@ var ProjectAssetController = function () {
         this.popup = false;
         this.nodeId = null;
         this.componentId = null;
+        this.target = null;
 
         if (this.$stateParams != null) {
             if (this.$stateParams.popup) {
@@ -50,6 +51,11 @@ var ProjectAssetController = function () {
             if (this.$stateParams.componentId) {
                 // get the component id that opened this popup
                 this.componentId = this.$stateParams.componentId;
+            }
+
+            if (this.$stateParams.target) {
+                // get the target to put the asset in
+                this.target = this.$stateParams.target;
             }
         }
 
@@ -167,7 +173,8 @@ var ProjectAssetController = function () {
             var params = {
                 assetItem: assetItem,
                 nodeId: this.nodeId,
-                componentId: this.componentId
+                componentId: this.componentId,
+                target: this.target
             };
             this.$rootScope.$broadcast('assetSelected', params);
         }

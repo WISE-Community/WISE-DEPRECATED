@@ -234,6 +234,289 @@ class UtilService {
 
         return result;
     }
+
+    /**
+     * Replace <a> and <button> elements with <wiselink> elements where
+     * applicable
+     * @param html the html
+     * @return the modified html with <wiselink> elements
+     */
+    insertWISELinks(html) {
+
+        // replace <a> elements with <wiselink> elements
+        html = this.insertWISELinkAnchors(html);
+
+        // replace <button> elements with <wiselink> elements
+        html = this.insertWISELinkButtons(html);
+
+        return html;
+    }
+
+    /**
+     * Replace <a> elements that have the parameter wiselink=true with
+     * <wiselink> elements
+     * @param html the html
+     * @return the modified html with certain <a> elements replaced with
+     * <wiselink> elements
+     */
+    insertWISELinkAnchors(html) {
+
+        // find <a> elements with the parameter wiselink=true
+        var wiseLinkRegEx = new RegExp(/<a.*?wiselink="true".*?>(.*?)<\/a>/);
+
+        // find the first match
+        var wiseLinkRegExMatchResult = wiseLinkRegEx.exec(html);
+
+        // loop until we have replaced all the matches
+        while(wiseLinkRegExMatchResult != null) {
+
+            // get the whole <a> element
+            var anchorHTML = wiseLinkRegExMatchResult[0];
+
+            // get the inner html of the <a> element
+            var anchorText = wiseLinkRegExMatchResult[1];
+
+            // get the node id parameter of the <a> element
+            var nodeId = this.getWISELinkNodeId(anchorHTML);
+
+            if (nodeId == null) {
+                nodeId = '';
+            }
+
+            // create the <wiselink> element
+            var wiselinkHtml = "<wiselink type='link' link-text='" + anchorText + "' node-id='" + nodeId + "'/>";
+
+            // replace the <a> element with the <wiselink> element
+            html = html.replace(wiseLinkRegExMatchResult[0], wiselinkHtml);
+
+            // search for the next <a> element with the parameter wiselink=true
+            wiseLinkRegExMatchResult = wiseLinkRegEx.exec(html);
+        }
+
+        return html;
+    }
+
+    /**
+     * Replace <button> elements that have the parameter wiselink=true
+     * with <wiselink> elements
+     * @param html the html
+     * @return the modified html with certain <button> elements replaced with
+     * <wiselink> elements
+     */
+    insertWISELinkButtons(html) {
+
+        // find <button> elements with the parameter wiselink=true
+        var wiseLinkRegEx = new RegExp(/<button.*?wiselink="true".*?>(.*?)<\/button>/);
+
+        // find the first match
+        var wiseLinkRegExMatchResult = wiseLinkRegEx.exec(html);
+
+        // loop until we have replaced all the matches
+        while(wiseLinkRegExMatchResult != null) {
+
+            // get the whole <button> element
+            var buttonHTML = wiseLinkRegExMatchResult[0];
+
+            // get the inner html of the <button> element
+            var buttonText = wiseLinkRegExMatchResult[1];
+
+            // get the node id parameter of the <button> element
+            var nodeId = this.getWISELinkNodeId(buttonHTML);
+
+            if (nodeId == null) {
+                nodeId = '';
+            }
+
+            // create the <wiselink> element
+            var wiselinkHtml = "<wiselink type='button' link-text='" + buttonText + "' node-id='" + nodeId + "'/>";
+
+            // replace the <button> element with the <wiselink> element
+            html = html.replace(wiseLinkRegExMatchResult[0], wiselinkHtml);
+
+            // search for the next <button> element with the parameter wiselink=true
+            wiseLinkRegExMatchResult = wiseLinkRegEx.exec(html);
+        }
+
+        return html;
+    }
+
+    /**
+     * Get the node id from the wiselink element
+     * e.g.
+     * <wiselink node-id='node5'/>
+     * the node id in this case is 'node5'
+     * @param html the html for the element
+     * @return the node id from the node id parameter in the element
+     */
+    getWISELinkNodeId(html) {
+
+        var nodeId = null;
+
+        if (html != null) {
+            // create the regex to find the node id parameter
+            var nodeIdRegEx = new RegExp(/node-id=["'b](.*?)["']/, 'g');
+
+            // try to find a match
+            var nodeIdRegExResult = nodeIdRegEx.exec(html);
+
+            if (nodeIdRegExResult != null) {
+                // we have found a node id
+                nodeId = nodeIdRegExResult[1];
+            }
+        }
+
+        return nodeId;
+    }
+
+    /**
+     * Get the link type from the wiselink element
+     * e.g.
+     * <wiselink type='button'/>
+     * the type in this case is 'button'
+     * @param html the html for the element
+     * @return the link type from the type parameter in the element
+     */
+    getWISELinkType(html) {
+        var type = null;
+
+        if (html != null) {
+            // create the regex to find the type
+            var typeRegEx = new RegExp(/type=["'b](.*?)["']/, 'g');
+
+            // try to find a match
+            var typeRegExResult = typeRegEx.exec(html);
+
+            if (typeRegExResult != null) {
+                // we have found a type
+                type = typeRegExResult[1];
+            }
+        }
+
+        return type;
+    }
+
+    /**
+     * Get the link text from the wiselink element
+     * <wiselink link-text='Go to here'/>
+     * the link text in this case is 'Go to here'
+     * @param html the html for the element
+     * @return the link text from the link text parameter in the element
+     */
+    getWISELinkLinkText(html) {
+        var linkText = null;
+
+        if (html != null) {
+            // create the regex to find the link text
+            var linkTextRegEx = new RegExp(/link-text=["'b](.*?)["']/, 'g');
+
+            // try to find a match
+            var linkTextRegExResult = linkTextRegEx.exec(html);
+
+            if (linkTextRegExResult != null) {
+                // we have found a link text
+                linkText = linkTextRegExResult[1];
+            }
+        }
+
+        return linkText;
+    }
+
+    /**
+     * Replace <wiselink> elements with <a> and <button> elements
+     * @param html the html
+     * @return the modified html without <wiselink> elements
+     */
+    replaceWISELinks(html) {
+
+        // replace wiselinks that look like <wiselink/>
+        html = this.replaceWISELinksHelper(html, '<wiselink.*?\/>');
+
+        // replace wiselinks that look like <wiselink></wiselink>
+        html = this.replaceWISELinksHelper(html, '<wiselink.*?>.*?<\/wiselink>');
+
+        return html;
+    }
+
+    /**
+     * Helper function for replacing <wiselink> elements with <a> and <button>
+     * elements
+     * @param html the html
+     * @param regex the regex string to search for
+     * @return the html without <wiselink> elements
+     */
+    replaceWISELinksHelper(html, regex) {
+
+        // create the regex
+        var wiseLinkRegEx = new RegExp(regex);
+
+        // find the first match
+        var wiseLinkRegExMatchResult = wiseLinkRegEx.exec(html);
+
+        // loop until we have replaced all the matches
+        while (wiseLinkRegExMatchResult != null) {
+
+            /*
+             * get the whole match
+             * e.g. <wiselink type='link' node-id='node5' link-text='Go to here'/>
+             */
+            var wiseLinkHTML = wiseLinkRegExMatchResult[0];
+
+            // get the node id, type and link text from the match
+            var nodeId = this.getWISELinkNodeId(wiseLinkHTML);
+            var type = this.getWISELinkType(wiseLinkHTML);
+            var linkText = this.getWISELinkLinkText(wiseLinkHTML);
+
+            var newElement = null;
+
+            if (type == 'link') {
+                // create a link that represents the wiselink
+                newElement = "<a wiselink='true' node-id='" + nodeId + "'>" + linkText + "</a>";
+            } else if (type == 'button') {
+                // create a button that represents the wiselink
+                newElement = "<button wiselink='true' node-id='" + nodeId + "'>" + linkText + "</button>";
+            }
+
+            if (newElement != null) {
+                // replace the wiselink with the new element
+                html = html.replace(wiseLinkHTML, newElement);
+            }
+
+            // find the next match
+            wiseLinkRegExMatchResult = wiseLinkRegEx.exec(html);
+        }
+
+        return html;
+    }
+
+    createInsertAssetButton(controller, nodeId, componentId, target, tooltip) {
+        // a custom button that opens the asset chooser
+        var InsertAssetButton = function(context) {
+            var ui = $.summernote.ui;
+
+            // create button
+            var button = ui.button({
+                contents: '<i class="note-icon-picture"></i>',
+                tooltip: tooltip,
+                click: function () {
+                    // remember the position of the cursor
+                    context.invoke('editor.saveRange');
+
+                    // create the params for opening the asset chooser
+                    var params = {};
+                    params.popup = true;
+                    params.nodeId = nodeId;
+                    params.componentId = componentId;
+                    params.target = target;
+
+                    controller.$rootScope.$broadcast('openAssetChooser', params);
+                }
+            });
+
+            return button.render();   // return button as jquery object
+        };
+
+        return InsertAssetButton
+    }
 }
 
 // Get the last element of the array

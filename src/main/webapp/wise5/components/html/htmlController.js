@@ -9,11 +9,12 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var HTMLController = function () {
-    function HTMLController($scope, $state, $stateParams, $sce, $filter, $mdDialog, ConfigService, NodeService, ProjectService, StudentDataService, UtilService) {
+    function HTMLController($rootScope, $scope, $state, $stateParams, $sce, $filter, $mdDialog, ConfigService, NodeService, ProjectService, StudentDataService, UtilService) {
         var _this = this;
 
         _classCallCheck(this, HTMLController);
 
+        this.$rootScope = $rootScope;
         this.$scope = $scope;
         this.$state = $state;
         this.$stateParams = $stateParams;
@@ -46,11 +47,11 @@ var HTMLController = function () {
         // whether the advanced authoring textarea is displayed
         this.showAdvancedAuthoring = false;
 
-        // the summernote element id
-        this.summernoteId = '';
+        // the summernote prompt element id
+        this.summernotePromptId = '';
 
-        // the summernote html
-        this.summernoteHTML = '';
+        // the summernote prompt html
+        this.summernotePromptHTML = '';
 
         this.mode = $scope.mode;
 
@@ -78,76 +79,87 @@ var HTMLController = function () {
 
         this.mode = $scope.mode;
 
-        var thisController = this;
-
-        // the tooltip text for the the WISE Link authoring button
-        var insertWISELinkString = this.$translate('html.insertWISELink');
-
-        // a custom button that opens the WISE Link authoring popup
-        var InsertWISELinkButton = function InsertWISELinkButton(context) {
-            var ui = $.summernote.ui;
-
-            // create button
-            var button = ui.button({
-                contents: '<i class="note-icon-link"></i>',
-                tooltip: insertWISELinkString,
-                click: function click() {
-                    // remember the position of the cursor
-                    context.invoke('editor.saveRange');
-
-                    // display the WISE Link authoring popup
-                    thisController.displayWISELinkChooser();
-                }
-            });
-
-            return button.render(); // return button as jquery object
-        };
-
-        // the tooltip text for the insert WISE asset button
-        var insertAssetString = this.$translate('html.insertAsset');
-
-        // a custom button that opens the asset chooser
-        var InsertAssetButton = function InsertAssetButton(context) {
-            var ui = $.summernote.ui;
-
-            // create button
-            var button = ui.button({
-                contents: '<i class="note-icon-picture"></i>',
-                tooltip: insertAssetString,
-                click: function click() {
-                    // remember the position of the cursor
-                    context.invoke('editor.saveRange');
-
-                    // display the asset chooser popup
-                    thisController.displayAssetChooser();
-                }
-            });
-
-            return button.render(); // return button as jquery object
-        };
-
-        // the options that specifies the tools to display in summernote
-        this.summernoteOptions = {
-            toolbar: [['style', ['style']], ['font', ['bold', 'underline', 'clear']], ['fontname', ['fontname']], ['color', ['color']], ['para', ['ul', 'ol', 'paragraph']], ['table', ['table']], ['insert', ['link', 'video']], ['view', ['fullscreen', 'codeview', 'help']], ['customButton', ['insertWISELinkButton', 'insertAssetButton']]],
-            height: 300,
-            disableDragAndDrop: true,
-            buttons: {
-                insertWISELinkButton: InsertWISELinkButton,
-                insertAssetButton: InsertAssetButton
-            }
-        };
-
         if (this.componentContent != null) {
 
             // get the component id
             this.componentId = this.componentContent.id;
 
             if (this.mode === 'authoring') {
-                // get the id of the summernote element
-                this.summernoteId = 'summernote_' + this.nodeId + '_' + this.componentId;
+                var thisController = this;
+
+                // the tooltip text for the the WISE Link authoring button
+                var insertWISELinkString = this.$translate('html.insertWISELink');
+
+                // a custom button that opens the WISE Link authoring popup
+                var InsertWISELinkButton = function InsertWISELinkButton(context) {
+                    var ui = $.summernote.ui;
+
+                    // create button
+                    var button = ui.button({
+                        contents: '<i class="note-icon-link"></i>',
+                        tooltip: insertWISELinkString,
+                        click: function click() {
+                            // remember the position of the cursor
+                            context.invoke('editor.saveRange');
+
+                            // display the WISE Link authoring popup
+                            thisController.displayWISELinkChooser();
+                        }
+                    });
+
+                    return button.render(); // return button as jquery object
+                };
+
+                // the tooltip text for the insert WISE asset button
+                var insertAssetString = this.$translate('html.insertAsset');
+
+                // a custom button that opens the asset chooser
+                var InsertAssetButton0 = function InsertAssetButton0(context) {
+                    var ui = $.summernote.ui;
+
+                    // create button
+                    var button = ui.button({
+                        contents: '<i class="note-icon-picture"></i>',
+                        tooltip: insertAssetString,
+                        click: function click() {
+                            // remember the position of the cursor
+                            context.invoke('editor.saveRange');
+
+                            // create the params for opening the asset chooser
+                            var params = {};
+                            params.popup = true;
+                            params.nodeId = thisController.nodeId;
+                            params.componentId = thisController.componentId;
+                            params.target = 'prompt';
+
+                            thisController.$rootScope.$broadcast('openAssetChooser', params);
+                        }
+                    });
+
+                    return button.render(); // return button as jquery object
+                };
+
+                var InsertAssetButton = this.UtilService.createInsertAssetButton(this, this.nodeId, this.componentId, 'prompt', insertAssetString);
+
+                /*
+                 * the options that specifies the tools to display in the
+                 * summernote prompt
+                 */
+                this.summernotePromptOptions = {
+                    toolbar: [['style', ['style']], ['font', ['bold', 'underline', 'clear']], ['fontname', ['fontname']], ['color', ['color']], ['para', ['ul', 'ol', 'paragraph']], ['table', ['table']], ['insert', ['link', 'video']], ['view', ['fullscreen', 'codeview', 'help']], ['customButton', ['insertWISELinkButton', 'insertAssetButton']]],
+                    height: 300,
+                    disableDragAndDrop: true,
+                    buttons: {
+                        insertWISELinkButton: InsertWISELinkButton,
+                        insertAssetButton: InsertAssetButton
+                    }
+                };
+
+                // get the id of the summernote prompt element
+                this.summernotePromptId = 'summernotePrompt_' + this.nodeId + '_' + this.componentId;
 
                 // replace all <wiselink> elements with <a> or <button> elements
-                this.summernoteHTML = this.replaceWISELinks(this.componentContent.html);
+                this.summernotePromptHTML = this.UtilService.replaceWISELinks(this.componentContent.html);
 
                 this.updateAdvancedAuthoringView();
 
@@ -228,31 +240,39 @@ var HTMLController = function () {
                             var assetsDirectoryPath = _this.ConfigService.getProjectAssetsDirectoryPath();
                             var fullAssetPath = assetsDirectoryPath + '/' + fileName;
 
+                            var summernoteId = '';
+
+                            if (args.target == 'prompt') {
+                                // the target is the summernote prompt element
+                                summernoteId = 'summernotePrompt_' + _this.nodeId + '_' + _this.componentId;
+                            } else if (args.target == 'rubric') {
+                                // the target is the summernote rubric element
+                                summernoteId = 'summernoteRubric_' + _this.nodeId + '_' + _this.componentId;
+                            }
+
                             if (_this.UtilService.isImage(fileName)) {
                                 /*
                                  * move the cursor back to its position when the asset chooser
                                  * popup was clicked
                                  */
-                                $('#summernote_' + _this.nodeId + '_' + _this.componentId).summernote('editor.restoreRange');
-                                $('#summernote_' + _this.nodeId + '_' + _this.componentId).summernote('editor.focus');
+                                $('#' + summernoteId).summernote('editor.restoreRange');
+                                $('#' + summernoteId).summernote('editor.focus');
 
                                 // add the image html
-                                $('#summernote_' + _this.nodeId + '_' + _this.componentId).summernote('insertImage', fullAssetPath, fileName);
+                                $('#' + summernoteId).summernote('insertImage', fullAssetPath, fileName);
                             } else if (_this.UtilService.isVideo(fileName)) {
                                 /*
                                  * move the cursor back to its position when the asset chooser
                                  * popup was clicked
                                  */
-                                $('#summernote_' + _this.nodeId + '_' + _this.componentId).summernote('editor.restoreRange');
-                                $('#summernote_' + _this.nodeId + '_' + _this.componentId).summernote('editor.focus');
+                                $('#' + summernoteId).summernote('editor.restoreRange');
+                                $('#' + summernoteId).summernote('editor.focus');
 
-                                // add the image html
-                                //$('#summernote_' + this.nodeId + '_' + this.componentId).summernote('insertImage', assetsDirectoryPath + '/' + fileName, fileName);
-
+                                // insert the video element
                                 var videoElement = document.createElement('video');
                                 videoElement.controls = 'true';
                                 videoElement.innerHTML = "<source ng-src='" + fullAssetPath + "' type='video/mp4'>";
-                                $('#summernote_' + _this.nodeId + '_' + _this.componentId).summernote('insertNode', videoElement);
+                                $('#' + summernoteId).summernote('insertNode', videoElement);
                             }
                         }
                     }
@@ -304,16 +324,16 @@ var HTMLController = function () {
                      * popup was clicked so that the element gets inserted in the
                      * correct location
                      */
-                    $('#summernote_' + _this.nodeId + '_' + _this.componentId).summernote('editor.restoreRange');
-                    $('#summernote_' + _this.nodeId + '_' + _this.componentId).summernote('editor.focus');
+                    $('#summernotePrompt_' + _this.nodeId + '_' + _this.componentId).summernote('editor.restoreRange');
+                    $('#summernotePrompt_' + _this.nodeId + '_' + _this.componentId).summernote('editor.focus');
 
                     if (wiseLinkElement != null) {
                         // insert the element
-                        $('#summernote_' + _this.nodeId + '_' + _this.componentId).summernote('insertNode', wiseLinkElement);
+                        $('#summernotePrompt_' + _this.nodeId + '_' + _this.componentId).summernote('insertNode', wiseLinkElement);
 
                         // add a new line after the element we have just inserted
                         var br = document.createElement('br');
-                        $('#summernote_' + _this.nodeId + '_' + _this.componentId).summernote('insertNode', br);
+                        $('#summernotePrompt_' + _this.nodeId + '_' + _this.componentId).summernote('insertNode', br);
                     }
                 }
             }
@@ -417,16 +437,16 @@ var HTMLController = function () {
         }
 
         /**
-         * The summernote html has changed so we will update the authoring component
-         * content
+         * The summernote prompt html has changed so we will update the authoring
+         * component content
          */
 
     }, {
-        key: 'summernoteHTMLChanged',
-        value: function summernoteHTMLChanged() {
+        key: 'summernotePromptHTMLChanged',
+        value: function summernotePromptHTMLChanged() {
 
-            // get the summernote html
-            var html = this.summernoteHTML;
+            // get the summernote prompt html
+            var html = this.summernotePromptHTML;
 
             /*
              * remove the absolute asset paths
@@ -435,44 +455,19 @@ var HTMLController = function () {
              * will be changed to
              * <img src='sun.png'/>
              */
-            html = this.removeAbsoluteAssetPaths(html);
+            html = this.ConfigService.removeAbsoluteAssetPaths(html);
 
             /*
              * replace <a> and <button> elements with <wiselink> elements when
              * applicable
              */
-            html = this.insertWISELinks(html);
+            html = this.UtilService.insertWISELinks(html);
 
-            // update the authorg component content
+            // update the authoring component content
             this.authoringComponentContent.html = html;
 
             // the authoring component content has changed so we will save the project
             this.authoringViewComponentChanged();
-        }
-
-        /**
-         * Display the asset chooser
-         */
-
-    }, {
-        key: 'displayAssetChooser',
-        value: function displayAssetChooser() {
-
-            // create the params for opening the asset chooser
-            var stateParams = {};
-            stateParams.popup = true;
-            stateParams.nodeId = this.nodeId;
-            stateParams.componentId = this.componentId;
-
-            // open the dialog that will display the assets for the user to choose
-            this.$mdDialog.show({
-                templateUrl: 'wise5/authoringTool/asset/asset.html',
-                controller: 'ProjectAssetController',
-                controllerAs: 'projectAssetController',
-                $stateParams: stateParams,
-                clickOutsideToClose: true,
-                escapeToClose: true
-            });
         }
 
         /**
@@ -498,333 +493,12 @@ var HTMLController = function () {
                 escapeToClose: true
             });
         }
-
-        /**
-         * Remove the absolute asset paths
-         * e.g.
-         * <img src='https://wise.berkeley.edu/curriculum/3/assets/sun.png'/>
-         * will be changed to
-         * <img src='sun.png'/>
-         * @param html the html
-         * @return the modified html without the absolute asset paths
-         */
-
-    }, {
-        key: 'removeAbsoluteAssetPaths',
-        value: function removeAbsoluteAssetPaths(html) {
-            /*
-             * get the assets directory path with the host
-             * e.g.
-             * https://wise.berkeley.edu/wise/curriculum/3/assets/
-             */
-            var includeHost = true;
-            var assetsDirectoryPathIncludingHost = this.ConfigService.getProjectAssetsDirectoryPath(includeHost);
-            var assetsDirectoryPathIncludingHostRegEx = new RegExp(assetsDirectoryPathIncludingHost, 'g');
-
-            /*
-             * get the assets directory path without the host
-             * e.g.
-             * /wise/curriculum/3/assets/
-             */
-            var assetsDirectoryPathNotIncludingHost = this.ConfigService.getProjectAssetsDirectoryPath() + '/';
-            var assetsDirectoryPathNotIncludingHostRegEx = new RegExp(assetsDirectoryPathNotIncludingHost, 'g');
-
-            /*
-             * remove the directory path from the html so that only the file name
-             * remains in asset references
-             * e.g.
-             * <img src='https://wise.berkeley.edu/wise/curriculum/3/assets/sun.png'/>
-             * will be changed to
-             * <img src='sun.png'/>
-             */
-            html = html.replace(assetsDirectoryPathIncludingHostRegEx, '');
-            html = html.replace(assetsDirectoryPathNotIncludingHostRegEx, '');
-
-            return html;
-        }
-
-        /**
-         * Replace <a> and <button> elements with <wiselink> elements where
-         * applicable
-         * @param html the html
-         * @return the modified html with <wiselink> elements
-         */
-
-    }, {
-        key: 'insertWISELinks',
-        value: function insertWISELinks(html) {
-
-            // replace <a> elements with <wiselink> elements
-            html = this.insertWISELinkAnchors(html);
-
-            // replace <button> elements with <wiselink> elements
-            html = this.insertWISELinkButtons(html);
-
-            return html;
-        }
-
-        /**
-         * Replace <a> elements that have the parameter wiselink=true with
-         * <wiselink> elements
-         * @param html the html
-         * @return the modified html with certain <a> elements replaced with
-         * <wiselink> elements
-         */
-
-    }, {
-        key: 'insertWISELinkAnchors',
-        value: function insertWISELinkAnchors(html) {
-
-            // find <a> elements with the parameter wiselink=true
-            var wiseLinkRegEx = new RegExp(/<a.*?wiselink="true".*?>(.*?)<\/a>/);
-
-            // find the first match
-            var wiseLinkRegExMatchResult = wiseLinkRegEx.exec(html);
-
-            // loop until we have replaced all the matches
-            while (wiseLinkRegExMatchResult != null) {
-
-                // get the whole <a> element
-                var anchorHTML = wiseLinkRegExMatchResult[0];
-
-                // get the inner html of the <a> element
-                var anchorText = wiseLinkRegExMatchResult[1];
-
-                // get the node id parameter of the <a> element
-                var nodeId = this.getWISELinkNodeId(anchorHTML);
-
-                if (nodeId == null) {
-                    nodeId = '';
-                }
-
-                // create the <wiselink> element
-                var wiselinkHtml = "<wiselink type='link' link-text='" + anchorText + "' node-id='" + nodeId + "'/>";
-
-                // replace the <a> element with the <wiselink> element
-                html = html.replace(wiseLinkRegExMatchResult[0], wiselinkHtml);
-
-                // search for the next <a> element with the parameter wiselink=true
-                wiseLinkRegExMatchResult = wiseLinkRegEx.exec(html);
-            }
-
-            return html;
-        }
-
-        /**
-         * Replace <button> elements that have the parameter wiselink=true
-         * with <wiselink> elements
-         * @param html the html
-         * @return the modified html with certain <button> elements replaced with
-         * <wiselink> elements
-         */
-
-    }, {
-        key: 'insertWISELinkButtons',
-        value: function insertWISELinkButtons(html) {
-
-            // find <button> elements with the parameter wiselink=true
-            var wiseLinkRegEx = new RegExp(/<button.*?wiselink="true".*?>(.*?)<\/button>/);
-
-            // find the first match
-            var wiseLinkRegExMatchResult = wiseLinkRegEx.exec(html);
-
-            // loop until we have replaced all the matches
-            while (wiseLinkRegExMatchResult != null) {
-
-                // get the whole <button> element
-                var buttonHTML = wiseLinkRegExMatchResult[0];
-
-                // get the inner html of the <button> element
-                var buttonText = wiseLinkRegExMatchResult[1];
-
-                // get the node id parameter of the <button> element
-                var nodeId = this.getWISELinkNodeId(buttonHTML);
-
-                if (nodeId == null) {
-                    nodeId = '';
-                }
-
-                // create the <wiselink> element
-                var wiselinkHtml = "<wiselink type='button' link-text='" + buttonText + "' node-id='" + nodeId + "'/>";
-
-                // replace the <button> element with the <wiselink> element
-                html = html.replace(wiseLinkRegExMatchResult[0], wiselinkHtml);
-
-                // search for the next <button> element with the parameter wiselink=true
-                wiseLinkRegExMatchResult = wiseLinkRegEx.exec(html);
-            }
-
-            return html;
-        }
-
-        /**
-         * Get the node id from the wiselink element
-         * e.g.
-         * <wiselink node-id='node5'/>
-         * the node id in this case is 'node5'
-         * @param html the html for the element
-         * @return the node id from the node id parameter in the element
-         */
-
-    }, {
-        key: 'getWISELinkNodeId',
-        value: function getWISELinkNodeId(html) {
-
-            var nodeId = null;
-
-            if (html != null) {
-                // create the regex to find the node id parameter
-                var nodeIdRegEx = new RegExp(/node-id=["'b](.*?)["']/, 'g');
-
-                // try to find a match
-                var nodeIdRegExResult = nodeIdRegEx.exec(html);
-
-                if (nodeIdRegExResult != null) {
-                    // we have found a node id
-                    nodeId = nodeIdRegExResult[1];
-                }
-            }
-
-            return nodeId;
-        }
-
-        /**
-         * Get the link type from the wiselink element
-         * e.g.
-         * <wiselink type='button'/>
-         * the type in this case is 'button'
-         * @param html the html for the element
-         * @return the link type from the type parameter in the element
-         */
-
-    }, {
-        key: 'getWISELinkType',
-        value: function getWISELinkType(html) {
-            var type = null;
-
-            if (html != null) {
-                // create the regex to find the type
-                var typeRegEx = new RegExp(/type=["'b](.*?)["']/, 'g');
-
-                // try to find a match
-                var typeRegExResult = typeRegEx.exec(html);
-
-                if (typeRegExResult != null) {
-                    // we have found a type
-                    type = typeRegExResult[1];
-                }
-            }
-
-            return type;
-        }
-
-        /**
-         * Get the link text from the wiselink element
-         * <wiselink link-text='Go to here'/>
-         * the link text in this case is 'Go to here'
-         * @param html the html for the element
-         * @return the link text from the link text parameter in the element
-         */
-
-    }, {
-        key: 'getWISELinkLinkText',
-        value: function getWISELinkLinkText(html) {
-            var linkText = null;
-
-            if (html != null) {
-                // create the regex to find the link text
-                var linkTextRegEx = new RegExp(/link-text=["'b](.*?)["']/, 'g');
-
-                // try to find a match
-                var linkTextRegExResult = linkTextRegEx.exec(html);
-
-                if (linkTextRegExResult != null) {
-                    // we have found a link text
-                    linkText = linkTextRegExResult[1];
-                }
-            }
-
-            return linkText;
-        }
-
-        /**
-         * Replace <wiselink> elements with <a> and <button> elements
-         * @param html the html
-         * @return the modified html without <wiselink> elements
-         */
-
-    }, {
-        key: 'replaceWISELinks',
-        value: function replaceWISELinks(html) {
-
-            // replace wiselinks that look like <wiselink/>
-            html = this.replaceWISELinksHelper(html, '<wiselink.*?\/>');
-
-            // replace wiselinks that look like <wiselink></wiselink>
-            html = this.replaceWISELinksHelper(html, '<wiselink.*?>.*?<\/wiselink>');
-
-            return html;
-        }
-
-        /**
-         * Helper function for replacing <wiselink> elements with <a> and <button>
-         * elements
-         * @param html the html
-         * @param regex the regex string to search for
-         * @return the html without <wiselink> elements
-         */
-
-    }, {
-        key: 'replaceWISELinksHelper',
-        value: function replaceWISELinksHelper(html, regex) {
-
-            // create the regex
-            var wiseLinkRegEx = new RegExp(regex);
-
-            // find the first match
-            var wiseLinkRegExMatchResult = wiseLinkRegEx.exec(html);
-
-            // loop until we have replaced all the matches
-            while (wiseLinkRegExMatchResult != null) {
-
-                /*
-                 * get the whole match
-                 * e.g. <wiselink type='link' node-id='node5' link-text='Go to here'/>
-                 */
-                var wiseLinkHTML = wiseLinkRegExMatchResult[0];
-
-                // get the node id, type and link text from the match
-                var nodeId = this.getWISELinkNodeId(wiseLinkHTML);
-                var type = this.getWISELinkType(wiseLinkHTML);
-                var linkText = this.getWISELinkLinkText(wiseLinkHTML);
-
-                var newElement = null;
-
-                if (type == 'link') {
-                    // create a link that represents the wiselink
-                    newElement = "<a wiselink='true' node-id='" + nodeId + "'>" + linkText + "</a>";
-                } else if (type == 'button') {
-                    // create a button that represents the wiselink
-                    newElement = "<button wiselink='true' node-id='" + nodeId + "'>" + linkText + "</button>";
-                }
-
-                if (newElement != null) {
-                    // replace the wiselink with the new element
-                    html = html.replace(wiseLinkHTML, newElement);
-                }
-
-                // find the next match
-                wiseLinkRegExMatchResult = wiseLinkRegEx.exec(html);
-            }
-
-            return html;
-        }
     }]);
 
     return HTMLController;
 }();
 
-HTMLController.$inject = ['$scope', '$state', '$stateParams', '$sce', '$filter', '$mdDialog', 'ConfigService', 'NodeService', 'ProjectService', 'StudentDataService', 'UtilService'];
+HTMLController.$inject = ['$rootScope', '$scope', '$state', '$stateParams', '$sce', '$filter', '$mdDialog', 'ConfigService', 'NodeService', 'ProjectService', 'StudentDataService', 'UtilService'];
 
 exports.default = HTMLController;
 //# sourceMappingURL=htmlController.js.map

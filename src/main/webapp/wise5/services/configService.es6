@@ -744,6 +744,47 @@ class ConfigService {
 
         return projectAssetsDirectoryPath;
     }
+
+    /**
+     * Remove the absolute asset paths
+     * e.g.
+     * <img src='https://wise.berkeley.edu/curriculum/3/assets/sun.png'/>
+     * will be changed to
+     * <img src='sun.png'/>
+     * @param html the html
+     * @return the modified html without the absolute asset paths
+     */
+    removeAbsoluteAssetPaths(html) {
+        /*
+         * get the assets directory path with the host
+         * e.g.
+         * https://wise.berkeley.edu/wise/curriculum/3/assets/
+         */
+        var includeHost = true;
+        var assetsDirectoryPathIncludingHost = this.getProjectAssetsDirectoryPath(includeHost);
+        var assetsDirectoryPathIncludingHostRegEx = new RegExp(assetsDirectoryPathIncludingHost, 'g');
+
+        /*
+         * get the assets directory path without the host
+         * e.g.
+         * /wise/curriculum/3/assets/
+         */
+        var assetsDirectoryPathNotIncludingHost = this.getProjectAssetsDirectoryPath() + '/';
+        var assetsDirectoryPathNotIncludingHostRegEx = new RegExp(assetsDirectoryPathNotIncludingHost, 'g');
+
+        /*
+         * remove the directory path from the html so that only the file name
+         * remains in asset references
+         * e.g.
+         * <img src='https://wise.berkeley.edu/wise/curriculum/3/assets/sun.png'/>
+         * will be changed to
+         * <img src='sun.png'/>
+         */
+        html = html.replace(assetsDirectoryPathIncludingHostRegEx, '');
+        html = html.replace(assetsDirectoryPathNotIncludingHostRegEx, '');
+
+        return html
+    }
 };
 
 ConfigService.$inject = [

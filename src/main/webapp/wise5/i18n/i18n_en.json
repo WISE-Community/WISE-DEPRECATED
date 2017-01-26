@@ -11,6 +11,7 @@
     "DELETE": "Delete",
     "DOWN": "Down",
     "EDIT": "Edit",
+    "EDIT_COMPONENT_RUBRIC": "Edit Component Rubric",
     "ENTER_PROMPT_HERE": "Enter Prompt Here",
     "ERROR_COULD_NOT_CALCULATE_IS_COMPLETED": "Error: Could not calculate isCompleted() for component with id ",
     "FEEDBACK": "Feedback",

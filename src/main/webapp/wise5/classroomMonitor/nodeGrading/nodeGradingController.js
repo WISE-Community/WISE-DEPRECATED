@@ -9,12 +9,13 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var NodeGradingController = function () {
-    function NodeGradingController($filter, $scope, $state, $stateParams, $timeout, AnnotationService, ConfigService, NodeService, NotificationService, ProjectService, StudentStatusService, TeacherDataService) {
+    function NodeGradingController($filter, $mdDialog, $scope, $state, $stateParams, $timeout, AnnotationService, ConfigService, NodeService, NotificationService, ProjectService, StudentStatusService, TeacherDataService) {
         var _this = this;
 
         _classCallCheck(this, NodeGradingController);
 
         this.$filter = $filter;
+        this.$mdDialog = $mdDialog;
         this.$state = $state;
         this.$scope = $scope;
         this.$stateParams = $stateParams;
@@ -637,12 +638,81 @@ var NodeGradingController = function () {
             var scrollTop = content.scrollTop;
             content.scrollTop = scrollTop - delta;
         }
+
+        /**
+         * Show the rubric in the grading view. We will show the step rubric and the
+         * component rubrics.
+         */
+
+    }, {
+        key: 'showRubric',
+        value: function showRubric() {
+
+            /*
+             * we will accumulate the rubrics from the step and the step's
+             * components
+             */
+            var accumulatedRubrics = '';
+
+            // get the step number and title
+            var title = this.ProjectService.getNodePositionAndTitleByNodeId(this.nodeId);
+
+            accumulatedRubrics += "<div style='margin-left:30px;margin-right:30px;margin-top:30px;margin-bottom:30px;'>";
+
+            // show the step number and title
+            accumulatedRubrics += '<h3>' + title + '</h3>';
+
+            // get the step rubric
+            var nodeRubric = this.nodeContent.rubric;
+
+            if (nodeRubric != null) {
+                accumulatedRubrics += nodeRubric;
+            }
+
+            // get the components
+            var components = this.nodeContent.components;
+
+            if (components != null && components.length != 0) {
+
+                // loop through all the components
+                for (var c = 0; c < components.length; c++) {
+                    var component = components[c];
+
+                    if (component != null) {
+
+                        // get a component rubric
+                        var componentRubric = component.rubric;
+
+                        if (componentRubric != null && componentRubric != '') {
+
+                            if (accumulatedRubrics != '') {
+                                // separate component rubrics with a line break
+                                accumulatedRubrics += '<br/>';
+                            }
+
+                            // append the component rubric
+                            accumulatedRubrics += componentRubric;
+                        }
+                    }
+                }
+            }
+
+            // inject the asset paths into the rubrics
+            accumulatedRubrics = this.ProjectService.replaceAssetPaths(accumulatedRubrics);
+
+            // display the rubrics in a popup
+            this.$mdDialog.show({
+                template: accumulatedRubrics,
+                clickOutsideToClose: true,
+                escapeToClose: true
+            });
+        }
     }]);
 
     return NodeGradingController;
 }();
 
-NodeGradingController.$inject = ['$filter', '$scope', '$state', '$stateParams', '$timeout', 'AnnotationService', 'ConfigService', 'NodeService', 'NotificationService', 'ProjectService', 'StudentStatusService', 'TeacherDataService'];
+NodeGradingController.$inject = ['$filter', '$mdDialog', '$scope', '$state', '$stateParams', '$timeout', 'AnnotationService', 'ConfigService', 'NodeService', 'NotificationService', 'ProjectService', 'StudentStatusService', 'TeacherDataService'];
 
 exports.default = NodeGradingController;
 //# sourceMappingURL=nodeGradingController.js.map
