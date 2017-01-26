@@ -1,12 +1,10 @@
 'use strict';
 
+//import AccountMenu from './accountMenu/accountMenu';
+
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
-var _accountMenu = require('./accountMenu/accountMenu');
-
-var _accountMenu2 = _interopRequireDefault(_accountMenu);
 
 var _alertStatusCorner = require('./alertStatusCorner/alertStatusCorner');
 
@@ -28,7 +26,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var Shared = angular.module('shared', []);
 
-Shared.component('accountMenu', _accountMenu2.default);
+//Shared.component('accountMenu', AccountMenu);
 Shared.component('alertStatusCorner', _alertStatusCorner2.default);
 Shared.component('alertStatusIcon', _alertStatusIcon2.default);
 Shared.component('periodSelect', _periodSelect2.default);
