@@ -90,55 +90,19 @@ var HTMLController = function () {
                 // the tooltip text for the the WISE Link authoring button
                 var insertWISELinkString = this.$translate('html.insertWISELink');
 
-                // a custom button that opens the WISE Link authoring popup
-                var InsertWISELinkButton = function InsertWISELinkButton(context) {
-                    var ui = $.summernote.ui;
-
-                    // create button
-                    var button = ui.button({
-                        contents: '<i class="note-icon-link"></i>',
-                        tooltip: insertWISELinkString,
-                        click: function click() {
-                            // remember the position of the cursor
-                            context.invoke('editor.saveRange');
-
-                            // display the WISE Link authoring popup
-                            thisController.displayWISELinkChooser();
-                        }
-                    });
-
-                    return button.render(); // return button as jquery object
-                };
+                /*
+                 * create the custom button for inserting a WISE Link into
+                 * summernote
+                 */
+                var InsertWISELinkButton = this.UtilService.createInsertWISELinkButton(this, this.nodeId, this.componentId, 'prompt', insertWISELinkString);
 
                 // the tooltip text for the insert WISE asset button
                 var insertAssetString = this.$translate('html.insertAsset');
 
-                // a custom button that opens the asset chooser
-                var InsertAssetButton0 = function InsertAssetButton0(context) {
-                    var ui = $.summernote.ui;
-
-                    // create button
-                    var button = ui.button({
-                        contents: '<i class="note-icon-picture"></i>',
-                        tooltip: insertAssetString,
-                        click: function click() {
-                            // remember the position of the cursor
-                            context.invoke('editor.saveRange');
-
-                            // create the params for opening the asset chooser
-                            var params = {};
-                            params.popup = true;
-                            params.nodeId = thisController.nodeId;
-                            params.componentId = thisController.componentId;
-                            params.target = 'prompt';
-
-                            thisController.$rootScope.$broadcast('openAssetChooser', params);
-                        }
-                    });
-
-                    return button.render(); // return button as jquery object
-                };
-
+                /*
+                 * create the custom button for inserting WISE assets into
+                 * summernote
+                 */
                 var InsertAssetButton = this.UtilService.createInsertAssetButton(this, this.nodeId, this.componentId, 'prompt', insertAssetString);
 
                 /*
@@ -250,29 +214,31 @@ var HTMLController = function () {
                                 summernoteId = 'summernoteRubric_' + _this.nodeId + '_' + _this.componentId;
                             }
 
-                            if (_this.UtilService.isImage(fileName)) {
-                                /*
-                                 * move the cursor back to its position when the asset chooser
-                                 * popup was clicked
-                                 */
-                                $('#' + summernoteId).summernote('editor.restoreRange');
-                                $('#' + summernoteId).summernote('editor.focus');
+                            if (summernoteId != '') {
+                                if (_this.UtilService.isImage(fileName)) {
+                                    /*
+                                     * move the cursor back to its position when the asset chooser
+                                     * popup was clicked
+                                     */
+                                    $('#' + summernoteId).summernote('editor.restoreRange');
+                                    $('#' + summernoteId).summernote('editor.focus');
 
-                                // add the image html
-                                $('#' + summernoteId).summernote('insertImage', fullAssetPath, fileName);
-                            } else if (_this.UtilService.isVideo(fileName)) {
-                                /*
-                                 * move the cursor back to its position when the asset chooser
-                                 * popup was clicked
-                                 */
-                                $('#' + summernoteId).summernote('editor.restoreRange');
-                                $('#' + summernoteId).summernote('editor.focus');
+                                    // add the image html
+                                    $('#' + summernoteId).summernote('insertImage', fullAssetPath, fileName);
+                                } else if (_this.UtilService.isVideo(fileName)) {
+                                    /*
+                                     * move the cursor back to its position when the asset chooser
+                                     * popup was clicked
+                                     */
+                                    $('#' + summernoteId).summernote('editor.restoreRange');
+                                    $('#' + summernoteId).summernote('editor.focus');
 
-                                // insert the video element
-                                var videoElement = document.createElement('video');
-                                videoElement.controls = 'true';
-                                videoElement.innerHTML = "<source ng-src='" + fullAssetPath + "' type='video/mp4'>";
-                                $('#' + summernoteId).summernote('insertNode', videoElement);
+                                    // insert the video element
+                                    var videoElement = document.createElement('video');
+                                    videoElement.controls = 'true';
+                                    videoElement.innerHTML = "<source ng-src='" + fullAssetPath + "' type='video/mp4'>";
+                                    $('#' + summernoteId).summernote('insertNode', videoElement);
+                                }
                             }
                         }
                     }
@@ -298,6 +264,7 @@ var HTMLController = function () {
                     var wiseLinkType = args.wiseLinkType;
                     var wiseLinkText = args.wiseLinkText;
                     var wiseLinkClass = args.wiseLinkClass;
+                    var target = args.target;
 
                     var wiseLinkElement = null;
 
@@ -319,21 +286,30 @@ var HTMLController = function () {
                         wiseLinkElement.setAttribute('link-text', wiseLinkText);
                     }
 
-                    /*
-                     * move the cursor back to its position when the asset chooser
-                     * popup was clicked so that the element gets inserted in the
-                     * correct location
-                     */
-                    $('#summernotePrompt_' + _this.nodeId + '_' + _this.componentId).summernote('editor.restoreRange');
-                    $('#summernotePrompt_' + _this.nodeId + '_' + _this.componentId).summernote('editor.focus');
+                    var summernoteId = '';
 
-                    if (wiseLinkElement != null) {
-                        // insert the element
-                        $('#summernotePrompt_' + _this.nodeId + '_' + _this.componentId).summernote('insertNode', wiseLinkElement);
+                    if (target == 'prompt') {
+                        // get the id for the summernote prompt
+                        summernoteId = 'summernotePrompt_' + _this.nodeId + '_' + _this.componentId;
+                    }
 
-                        // add a new line after the element we have just inserted
-                        var br = document.createElement('br');
-                        $('#summernotePrompt_' + _this.nodeId + '_' + _this.componentId).summernote('insertNode', br);
+                    if (summernoteId != '') {
+                        /*
+                         * move the cursor back to its position when the asset chooser
+                         * popup was clicked so that the element gets inserted in the
+                         * correct location
+                         */
+                        $('#' + summernoteId).summernote('editor.restoreRange');
+                        $('#' + summernoteId).summernote('editor.focus');
+
+                        if (wiseLinkElement != null) {
+                            // insert the element
+                            $('#' + summernoteId).summernote('insertNode', wiseLinkElement);
+
+                            // add a new line after the element we have just inserted
+                            var br = document.createElement('br');
+                            $('#' + summernoteId).summernote('insertNode', br);
+                        }
                     }
                 }
             }
@@ -468,30 +444,6 @@ var HTMLController = function () {
 
             // the authoring component content has changed so we will save the project
             this.authoringViewComponentChanged();
-        }
-
-        /**
-         * Display the WISE Link authoring popup
-         */
-
-    }, {
-        key: 'displayWISELinkChooser',
-        value: function displayWISELinkChooser() {
-            // create the params for opening the WISE Link authoring popup
-            var stateParams = {};
-            stateParams.popup = true;
-            stateParams.nodeId = this.nodeId;
-            stateParams.componentId = this.componentId;
-
-            // open the WISE Link authoring popup
-            this.$mdDialog.show({
-                templateUrl: 'wise5/authoringTool/wiseLink/wiseLinkAuthoring.html',
-                controller: 'WISELinkAuthoringController',
-                controllerAs: 'wiseLinkAuthoringController',
-                $stateParams: stateParams,
-                clickOutsideToClose: true,
-                escapeToClose: true
-            });
         }
     }]);
 

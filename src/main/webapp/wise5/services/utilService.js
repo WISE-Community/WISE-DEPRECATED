@@ -546,9 +546,24 @@ var UtilService = function () {
 
             return html;
         }
+
+        /**
+         * Create a custom summernote button that inserts a WISE asset into
+         * summernote
+         * @param controller the controller that is creating the button
+         * e.g. openResponseController
+         * @param nodeId the node id of the component that is creating the button
+         * @param componentId the component id of the component that is creating the button
+         * @param target the target element in the component to insert the asset into
+         * e.g. 'prompt' or 'rubricSummernoteId'
+         * @param tooltip the tooltip text for the custom button
+         * @return custom summernote button
+         */
+
     }, {
         key: "createInsertAssetButton",
         value: function createInsertAssetButton(controller, nodeId, componentId, target, tooltip) {
+
             // a custom button that opens the asset chooser
             var InsertAssetButton = function InsertAssetButton(context) {
                 var ui = $.summernote.ui;
@@ -568,6 +583,7 @@ var UtilService = function () {
                         params.componentId = componentId;
                         params.target = target;
 
+                        // display the asset chooser
                         controller.$rootScope.$broadcast('openAssetChooser', params);
                     }
                 });
@@ -576,6 +592,52 @@ var UtilService = function () {
             };
 
             return InsertAssetButton;
+        }
+
+        /**
+         * Create a custom summernote button that inserts a WISE link into
+         * summernote
+         * @param controller the controller that is creating the WISE link
+         * e.g. openResponseController
+         * @param nodeId the node id of the component that is creating the WISE link
+         * @param componentId the component id of the component that is creating the WISE link
+         * @param target the target element in the component to insert the WISE link into
+         * e.g. 'prompt' or 'rubricSummernoteId'
+         * @param tooltip the tooltip text for the custom button
+         * @return custom summernote button
+         */
+
+    }, {
+        key: "createInsertWISELinkButton",
+        value: function createInsertWISELinkButton(controller, nodeId, componentId, target, tooltip) {
+
+            // a custom button that opens the WISE Link authoring popup
+            var InsertWISELinkButton = function InsertWISELinkButton(context) {
+                var ui = $.summernote.ui;
+
+                // create button
+                var button = ui.button({
+                    contents: '<i class="note-icon-link"></i>',
+                    tooltip: tooltip,
+                    click: function click() {
+                        // remember the position of the cursor
+                        context.invoke('editor.saveRange');
+
+                        // create the params for opening the WISE Link chooser
+                        var params = {};
+                        params.nodeId = nodeId;
+                        params.componentId = componentId;
+                        params.target = target;
+
+                        // display the WISE Link authoring popup
+                        controller.$rootScope.$broadcast('openWISELinkChooser', params);
+                    }
+                });
+
+                return button.render(); // return button as jquery object
+            };
+
+            return InsertWISELinkButton;
         }
     }]);
 

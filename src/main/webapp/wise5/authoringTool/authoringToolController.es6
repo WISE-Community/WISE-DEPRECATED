@@ -113,6 +113,29 @@ class AuthoringToolController {
                 escapeToClose: true
             });
         });
+
+        /*
+         * Open the asset chooser to let the author insert an WISE Link into the
+         * specified target
+         */
+        this.$scope.$on('openWISELinkChooser', (event, params) => {
+
+            // create the params for opening the WISE Link authoring popup
+            var stateParams = {};
+            stateParams.nodeId = params.nodeId;
+            stateParams.componentId = params.componentId;
+            stateParams.target = params.target;
+
+            // open the WISE Link authoring popup
+            this.$mdDialog.show({
+                templateUrl: 'wise5/authoringTool/wiseLink/wiseLinkAuthoring.html',
+                controller: 'WISELinkAuthoringController',
+                controllerAs: 'wiseLinkAuthoringController',
+                $stateParams: stateParams,
+                clickOutsideToClose: true,
+                escapeToClose: true
+            });
+        });
     }
 
     /**

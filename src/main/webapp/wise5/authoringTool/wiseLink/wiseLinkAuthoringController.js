@@ -23,6 +23,7 @@ var WISELinkAuthoringController = function () {
          */
         this.nodeId = $stateParams.nodeId;
         this.componentId = $stateParams.componentId;
+        this.target = $stateParams.target;
 
         /*
          * get the mapping of node id to order which is used to display
@@ -116,6 +117,7 @@ var WISELinkAuthoringController = function () {
                 var params = {
                     nodeId: this.nodeId,
                     componentId: this.componentId,
+                    target: this.target,
                     wiseLinkNodeId: this.wiseLinkNodeId,
                     wiseLinkType: this.wiseLinkType,
                     wiseLinkText: this.wiseLinkText,
