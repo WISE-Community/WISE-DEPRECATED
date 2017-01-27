@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
     value: true
@@ -9,7 +9,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var OutsideURLController = function () {
-    function OutsideURLController($q, $scope, $sce, NodeService, OutsideURLService, ProjectService, StudentDataService) {
+    function OutsideURLController($q, $scope, $sce, ConfigService, NodeService, OutsideURLService, ProjectService, StudentDataService, UtilService) {
         var _this = this;
 
         _classCallCheck(this, OutsideURLController);
@@ -17,10 +17,12 @@ var OutsideURLController = function () {
         this.$q = $q;
         this.$scope = $scope;
         this.$sce = $sce;
+        this.ConfigService = ConfigService;
         this.NodeService = NodeService;
         this.OutsideURLService = OutsideURLService;
         this.ProjectService = ProjectService;
         this.StudentDataService = StudentDataService;
+        this.UtilService = UtilService;
 
         // the node id of the current node
         this.nodeId = null;
@@ -74,6 +76,18 @@ var OutsideURLController = function () {
             this.componentId = this.componentContent.id;
 
             if (this.mode === 'authoring') {
+                // generate the summernote rubric element id
+                this.summernoteRubricId = 'summernoteRubric_' + this.nodeId + '_' + this.componentId;
+
+                // set the component rubric into the summernote rubric
+                this.summernoteRubricHTML = this.componentContent.rubric;
+
+                // set the rubric summernote options
+                this.summernoteRubricOptions = {
+                    height: 300,
+                    disableDragAndDrop: true
+                };
+
                 this.updateAdvancedAuthoringView();
 
                 $scope.$watch(function () {
@@ -130,7 +144,7 @@ var OutsideURLController = function () {
 
 
     _createClass(OutsideURLController, [{
-        key: "setURL",
+        key: 'setURL',
         value: function setURL(url) {
             if (url != null) {
                 var trustedURL = this.$sce.trustAsResourceUrl(url);
@@ -138,7 +152,7 @@ var OutsideURLController = function () {
             }
         }
     }, {
-        key: "authoringViewComponentChanged",
+        key: 'authoringViewComponentChanged',
 
 
         /**
@@ -159,7 +173,7 @@ var OutsideURLController = function () {
             this.$scope.$parent.nodeAuthoringController.authoringViewNodeChanged();
         }
     }, {
-        key: "advancedAuthoringViewComponentChanged",
+        key: 'advancedAuthoringViewComponentChanged',
 
 
         /**
@@ -194,7 +208,7 @@ var OutsideURLController = function () {
             }
         }
     }, {
-        key: "updateAdvancedAuthoringView",
+        key: 'updateAdvancedAuthoringView',
 
 
         /**
@@ -204,7 +218,7 @@ var OutsideURLController = function () {
             this.authoringComponentContentJSONString = angular.toJson(this.authoringComponentContent, 4);
         }
     }, {
-        key: "registerExitListener",
+        key: 'registerExitListener',
 
 
         /**
@@ -219,12 +233,45 @@ var OutsideURLController = function () {
              */
             this.exitListener = this.$scope.$on('exit', function (event, args) {});
         }
+    }, {
+        key: 'summernoteRubricHTMLChanged',
+
+
+        /**
+         * The author has changed the rubric
+         */
+        value: function summernoteRubricHTMLChanged() {
+
+            // get the summernote rubric html
+            var html = this.summernoteRubricHTML;
+
+            /*
+             * remove the absolute asset paths
+             * e.g.
+             * <img src='https://wise.berkeley.edu/curriculum/3/assets/sun.png'/>
+             * will be changed to
+             * <img src='sun.png'/>
+             */
+            html = this.ConfigService.removeAbsoluteAssetPaths(html);
+
+            /*
+             * replace <a> and <button> elements with <wiselink> elements when
+             * applicable
+             */
+            html = this.UtilService.insertWISELinks(html);
+
+            // update the component rubric
+            this.authoringComponentContent.rubric = html;
+
+            // the authoring component content has changed so we will save the project
+            this.authoringViewComponentChanged();
+        }
     }]);
 
     return OutsideURLController;
 }();
 
-OutsideURLController.$inject = ['$q', '$scope', '$sce', 'NodeService', 'OutsideURLService', 'ProjectService', 'StudentDataService'];
+OutsideURLController.$inject = ['$q', '$scope', '$sce', 'ConfigService', 'NodeService', 'OutsideURLService', 'ProjectService', 'StudentDataService', 'UtilService'];
 
 exports.default = OutsideURLController;
 //# sourceMappingURL=outsideURLController.js.map

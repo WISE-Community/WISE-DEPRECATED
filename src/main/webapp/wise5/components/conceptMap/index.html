@@ -39,7 +39,7 @@
                        ng-model-options='{ debounce: 1000 }'
                        style='width: 3em'/>
                 <br/>
-                {{ 'BACKGROUNDIMAGE' | translate }}: <input ng-model='conceptMapController.authoringComponentContent.background'
+                {{ 'BACKGROUND_IMAGE' | translate }}: <input ng-model='conceptMapController.authoringComponentContent.background'
                                          ng-change='conceptMapController.authoringViewComponentChanged()'
                                          size='80' />
                 <br/>
@@ -240,6 +240,21 @@
                 <input type='checkbox'
                        ng-model='conceptMapController.authoringComponentContent.showPreviousWorkPrompt'
                        ng-change='conceptMapController.authoringViewComponentChanged()'/>
+            </div>
+            <div ng-if='conceptMapController.mode === "authoring"'>
+                <button ng-click='conceptMapController.showRubricAuthoring = !conceptMapController.showRubricAuthoring'>
+                    {{ 'EDIT_COMPONENT_RUBRIC' | translate }}
+                </button>
+                <div ng-show='conceptMapController.showRubricAuthoring'>
+                    <summernote id='{{conceptMapController.summernoteRubricId}}'
+                                ng-model='conceptMapController.summernoteRubricHTML'
+                                ng-change='conceptMapController.summernoteRubricHTMLChanged()'
+                                config='conceptMapController.summernoteRubricOptions'
+                                ng-model-options='{ debounce: 1000 }'
+                                rows='10'
+                                cols='100'>
+                    </summernote>
+                </div>
             </div>
             <div ng-if='conceptMapController.mode === "authoring"'>
                 <button ng-click='conceptMapController.showAdvancedAuthoring = !conceptMapController.showAdvancedAuthoring'>

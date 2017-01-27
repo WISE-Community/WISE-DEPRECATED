@@ -6,6 +6,21 @@
                size='80'/>
         <br/>
         <div ng-if='outsideURLController.mode === "authoring"'>
+            <button ng-click='outsideURLController.showRubricAuthoring = !outsideURLController.showRubricAuthoring'>
+                {{ 'EDIT_COMPONENT_RUBRIC' | translate }}
+            </button>
+            <div ng-show='outsideURLController.showRubricAuthoring'>
+                <summernote id='{{outsideURLController.summernoteRubricId}}'
+                            ng-model='outsideURLController.summernoteRubricHTML'
+                            ng-change='outsideURLController.summernoteRubricHTMLChanged()'
+                            config='outsideURLController.summernoteRubricOptions'
+                            ng-model-options='{ debounce: 1000 }'
+                            rows='10'
+                            cols='100'>
+                </summernote>
+            </div>
+        </div>
+        <div ng-if='outsideURLController.mode === "authoring"'>
             <button ng-click='outsideURLController.showAdvancedAuthoring = !outsideURLController.showAdvancedAuthoring'>
                     {{ outsideURLController.showAdvancedAuthoring ? ('HIDE_ADVANCED_AUTHORING' | translate) : ('SHOW_ADVANCED_AUTHORING' | translate) }}
             </button>

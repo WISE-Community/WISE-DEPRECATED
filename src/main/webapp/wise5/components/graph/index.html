@@ -180,6 +180,21 @@
                        ng-change='graphController.authoringViewComponentChanged()'/>
             </div>
             <div ng-if='graphController.mode === "authoring"'>
+                <button ng-click='graphController.showRubricAuthoring = !graphController.showRubricAuthoring'>
+                    {{ 'EDIT_COMPONENT_RUBRIC' | translate }}
+                </button>
+                <div ng-show='graphController.showRubricAuthoring'>
+                    <summernote id='{{graphController.summernoteRubricId}}'
+                                ng-model='graphController.summernoteRubricHTML'
+                                ng-change='graphController.summernoteRubricHTMLChanged()'
+                                config='graphController.summernoteRubricOptions'
+                                ng-model-options='{ debounce: 1000 }'
+                                rows='10'
+                                cols='100'>
+                    </summernote>
+                </div>
+            </div>
+            <div ng-if='graphController.mode === "authoring"'>
                 <button ng-click='graphController.showAdvancedAuthoring = !graphController.showAdvancedAuthoring'>
                         {{ graphController.showAdvancedAuthoring ? ('HIDE_ADVANCED_AUTHORING' | translate) : ('SHOW_ADVANCED_AUTHORING' | translate) }}
                 </button>

@@ -142,6 +142,21 @@
                ng-change='labelController.authoringViewComponentChanged()'/>
     </div>
     <div ng-if='labelController.mode === "authoring"'>
+        <button ng-click='labelController.showRubricAuthoring = !labelController.showRubricAuthoring'>
+            {{ 'EDIT_COMPONENT_RUBRIC' | translate }}
+        </button>
+        <div ng-show='labelController.showRubricAuthoring'>
+            <summernote id='{{labelController.summernoteRubricId}}'
+                        ng-model='labelController.summernoteRubricHTML'
+                        ng-change='labelController.summernoteRubricHTMLChanged()'
+                        config='labelController.summernoteRubricOptions'
+                        ng-model-options='{ debounce: 1000 }'
+                        rows='10'
+                        cols='100'>
+            </summernote>
+        </div>
+    </div>
+    <div ng-if='labelController.mode === "authoring"'>
         <button ng-click='labelController.showAdvancedAuthoring = !labelController.showAdvancedAuthoring'>
                 {{ labelController.showAdvancedAuthoring ? ('HIDE_ADVANCED_AUTHORING' | translate) : ('SHOW_ADVANCED_AUTHORING' | translate) }}
         </button>

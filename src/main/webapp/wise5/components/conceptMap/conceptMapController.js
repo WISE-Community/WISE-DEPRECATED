@@ -13,7 +13,7 @@ require('svg.draggable.js');
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var ConceptMapController = function () {
-    function ConceptMapController($filter, $injector, $mdDialog, $q, $rootScope, $scope, $timeout, AnnotationService, ConceptMapService, ConfigService, CRaterService, NodeService, ProjectService, StudentAssetService, StudentDataService) {
+    function ConceptMapController($filter, $injector, $mdDialog, $q, $rootScope, $scope, $timeout, AnnotationService, ConceptMapService, ConfigService, CRaterService, NodeService, ProjectService, StudentAssetService, StudentDataService, UtilService) {
         var _this = this;
 
         _classCallCheck(this, ConceptMapController);
@@ -33,6 +33,7 @@ var ConceptMapController = function () {
         this.ProjectService = ProjectService;
         this.StudentAssetService = StudentAssetService;
         this.StudentDataService = StudentDataService;
+        this.UtilService = UtilService;
         this.idToOrder = this.ProjectService.idToOrder;
 
         this.$translate = this.$filter('translate');
@@ -258,6 +259,18 @@ var ConceptMapController = function () {
                 this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
                 this.availableNodes = this.componentContent.nodes;
                 this.availableLinks = this.componentContent.links;
+
+                // generate the summernote rubric element id
+                this.summernoteRubricId = 'summernoteRubric_' + this.nodeId + '_' + this.componentId;
+
+                // set the component rubric into the summernote rubric
+                this.summernoteRubricHTML = this.componentContent.rubric;
+
+                // set the rubric summernote options
+                this.summernoteRubricOptions = {
+                    height: 300,
+                    disableDragAndDrop: true
+                };
 
                 this.updateAdvancedAuthoringView();
 
@@ -4724,6 +4737,39 @@ var ConceptMapController = function () {
             // the authoring component content has changed so we will save the project
             this.authoringViewComponentChanged();
         }
+
+        /**
+         * The author has changed the rubric
+         */
+
+    }, {
+        key: 'summernoteRubricHTMLChanged',
+        value: function summernoteRubricHTMLChanged() {
+
+            // get the summernote rubric html
+            var html = this.summernoteRubricHTML;
+
+            /*
+             * remove the absolute asset paths
+             * e.g.
+             * <img src='https://wise.berkeley.edu/curriculum/3/assets/sun.png'/>
+             * will be changed to
+             * <img src='sun.png'/>
+             */
+            html = this.ConfigService.removeAbsoluteAssetPaths(html);
+
+            /*
+             * replace <a> and <button> elements with <wiselink> elements when
+             * applicable
+             */
+            html = this.UtilService.insertWISELinks(html);
+
+            // update the component rubric
+            this.authoringComponentContent.rubric = html;
+
+            // the authoring component content has changed so we will save the project
+            this.authoringViewComponentChanged();
+        }
     }]);
 
     return ConceptMapController;
@@ -4731,7 +4777,7 @@ var ConceptMapController = function () {
 
 ;
 
-ConceptMapController.$inject = ['$filter', '$injector', '$mdDialog', '$q', '$rootScope', '$scope', '$timeout', 'AnnotationService', 'ConceptMapService', 'ConfigService', 'CRaterService', 'NodeService', 'ProjectService', 'StudentAssetService', 'StudentDataService'];
+ConceptMapController.$inject = ['$filter', '$injector', '$mdDialog', '$q', '$rootScope', '$scope', '$timeout', 'AnnotationService', 'ConceptMapService', 'ConfigService', 'CRaterService', 'NodeService', 'ProjectService', 'StudentAssetService', 'StudentDataService', 'UtilService'];
 
 exports.default = ConceptMapController;
 //# sourceMappingURL=conceptMapController.js.map

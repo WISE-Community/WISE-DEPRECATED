@@ -14,7 +14,8 @@ class AudioOscillatorController {
                 AudioOscillatorService,
                 ProjectService,
                 StudentAssetService,
-                StudentDataService) {
+                StudentDataService,
+                UtilService) {
 
         this.$filter = $filter
         this.$injector = $injector;
@@ -29,6 +30,7 @@ class AudioOscillatorController {
         this.ProjectService = ProjectService;
         this.StudentAssetService = StudentAssetService;
         this.StudentDataService = StudentDataService;
+        this.UtilService = UtilService;
         this.idToOrder = this.ProjectService.idToOrder;
 
         this.$translate = this.$filter('translate');
@@ -180,6 +182,18 @@ class AudioOscillatorController {
                 this.isSubmitButtonVisible = false;
                 this.isDisabled = true;
             } else if (this.mode === 'authoring') {
+                // generate the summernote rubric element id
+                this.summernoteRubricId = 'summernoteRubric_' + this.nodeId + '_' + this.componentId;
+
+                // set the component rubric into the summernote rubric
+                this.summernoteRubricHTML = this.componentContent.rubric;
+
+                // set the rubric summernote options
+                this.summernoteRubricOptions = {
+                    height: 300,
+                    disableDragAndDrop: true
+                };
+
                 this.updateAdvancedAuthoringView();
 
                 $scope.$watch(function() {
@@ -1454,6 +1468,36 @@ class AudioOscillatorController {
         // the authoring component content has changed so we will save the project
         this.authoringViewComponentChanged();
     }
+
+    /**
+     * The author has changed the rubric
+     */
+    summernoteRubricHTMLChanged() {
+
+        // get the summernote rubric html
+        var html = this.summernoteRubricHTML;
+
+        /*
+         * remove the absolute asset paths
+         * e.g.
+         * <img src='https://wise.berkeley.edu/curriculum/3/assets/sun.png'/>
+         * will be changed to
+         * <img src='sun.png'/>
+         */
+        html = this.ConfigService.removeAbsoluteAssetPaths(html);
+
+        /*
+         * replace <a> and <button> elements with <wiselink> elements when
+         * applicable
+         */
+        html = this.UtilService.insertWISELinks(html);
+
+        // update the component rubric
+        this.authoringComponentContent.rubric = html;
+
+        // the authoring component content has changed so we will save the project
+        this.authoringViewComponentChanged();
+    }
 };
 
 AudioOscillatorController.$inject = [
@@ -1469,7 +1513,8 @@ AudioOscillatorController.$inject = [
     'AudioOscillatorService',
     'ProjectService',
     'StudentAssetService',
-    'StudentDataService'
+    'StudentDataService',
+    'UtilService'
 ];
 
 export default AudioOscillatorController;

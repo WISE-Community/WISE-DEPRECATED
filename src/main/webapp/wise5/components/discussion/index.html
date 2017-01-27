@@ -49,6 +49,21 @@
                ng-change='discussionController.authoringViewComponentChanged()'/>
     </div>
     <div ng-if='discussionController.mode === "authoring"'>
+        <button ng-click='discussionController.showRubricAuthoring = !discussionController.showRubricAuthoring'>
+            {{ 'EDIT_COMPONENT_RUBRIC' | translate }}
+        </button>
+        <div ng-show='discussionController.showRubricAuthoring'>
+            <summernote id='{{discussionController.summernoteRubricId}}'
+                        ng-model='discussionController.summernoteRubricHTML'
+                        ng-change='discussionController.summernoteRubricHTMLChanged()'
+                        config='discussionController.summernoteRubricOptions'
+                        ng-model-options='{ debounce: 1000 }'
+                        rows='10'
+                        cols='100'>
+            </summernote>
+        </div>
+    </div>
+    <div ng-if='discussionController.mode === "authoring"'>
         <button ng-click='discussionController.showAdvancedAuthoring = !discussionController.showAdvancedAuthoring'>
                 {{ openResponseController.showAdvancedAuthoring ? ('HIDE_ADVANCED_AUTHORING' | translate) : ('SHOW_ADVANCED_AUTHORING' | translate) }}
         </button>

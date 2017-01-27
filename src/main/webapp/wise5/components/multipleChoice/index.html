@@ -95,6 +95,21 @@
                ng-change='multipleChoiceController.authoringViewComponentChanged()'/>
     </div>
     <div ng-if='multipleChoiceController.mode === "authoring"'>
+        <button ng-click='multipleChoiceController.showRubricAuthoring = !multipleChoiceController.showRubricAuthoring'>
+            {{ 'EDIT_COMPONENT_RUBRIC' | translate }}
+        </button>
+        <div ng-show='multipleChoiceController.showRubricAuthoring'>
+            <summernote id='{{multipleChoiceController.summernoteRubricId}}'
+                        ng-model='multipleChoiceController.summernoteRubricHTML'
+                        ng-change='multipleChoiceController.summernoteRubricHTMLChanged()'
+                        config='multipleChoiceController.summernoteRubricOptions'
+                        ng-model-options='{ debounce: 1000 }'
+                        rows='10'
+                        cols='100'>
+            </summernote>
+        </div>
+    </div>
+    <div ng-if='multipleChoiceController.mode === "authoring"'>
         <button ng-click='multipleChoiceController.showAdvancedAuthoring = !multipleChoiceController.showAdvancedAuthoring'>
                 {{ multipleChoiceController.showAdvancedAuthoring ? ('HIDE_ADVANCED_AUTHORING' | translate) : ('SHOW_ADVANCED_AUTHORING' | translate) }}
         </button>

@@ -10,6 +10,21 @@
                   rows='10'
                   cols='100'></summernote>
         <div ng-if='htmlController.mode === "authoring"'>
+            <button ng-click='htmlController.showRubricAuthoring = !htmlController.showRubricAuthoring'>
+                {{ 'EDIT_COMPONENT_RUBRIC' | translate }}
+            </button>
+            <div ng-show='htmlController.showRubricAuthoring'>
+                <summernote id='{{htmlController.summernoteRubricId}}'
+                            ng-model='htmlController.summernoteRubricHTML'
+                            ng-change='htmlController.summernoteRubricHTMLChanged()'
+                            config='htmlController.summernoteRubricOptions'
+                            ng-model-options='{ debounce: 1000 }'
+                            rows='10'
+                            cols='100'>
+                </summernote>
+            </div>
+        </div>
+        <div ng-if='htmlController.mode === "authoring"'>
             <button ng-click='htmlController.showAdvancedAuthoring = !htmlController.showAdvancedAuthoring'>
                     {{ htmlController.showAdvancedAuthoring ? ('HIDE_ADVANCED_AUTHORING' | translate) : ('SHOW_ADVANCED_AUTHORING' | translate) }}
             </button>

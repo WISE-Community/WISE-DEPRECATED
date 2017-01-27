@@ -2,18 +2,22 @@ class OutsideURLController {
     constructor($q,
                 $scope,
                 $sce,
+                ConfigService,
                 NodeService,
                 OutsideURLService,
                 ProjectService,
-                StudentDataService) {
+                StudentDataService,
+                UtilService) {
 
         this.$q = $q;
         this.$scope = $scope;
         this.$sce = $sce;
+        this.ConfigService = ConfigService;
         this.NodeService = NodeService;
         this.OutsideURLService = OutsideURLService;
         this.ProjectService = ProjectService;
         this.StudentDataService = StudentDataService;
+        this.UtilService = UtilService;
 
         // the node id of the current node
         this.nodeId = null;
@@ -67,6 +71,18 @@ class OutsideURLController {
             this.componentId = this.componentContent.id;
 
             if (this.mode === 'authoring') {
+                // generate the summernote rubric element id
+                this.summernoteRubricId = 'summernoteRubric_' + this.nodeId + '_' + this.componentId;
+
+                // set the component rubric into the summernote rubric
+                this.summernoteRubricHTML = this.componentContent.rubric;
+
+                // set the rubric summernote options
+                this.summernoteRubricOptions = {
+                    height: 300,
+                    disableDragAndDrop: true
+                };
+
                 this.updateAdvancedAuthoringView();
 
                 $scope.$watch(() => {
@@ -198,16 +214,48 @@ class OutsideURLController {
 
         });
     };
+
+    /**
+     * The author has changed the rubric
+     */
+    summernoteRubricHTMLChanged() {
+
+        // get the summernote rubric html
+        var html = this.summernoteRubricHTML;
+
+        /*
+         * remove the absolute asset paths
+         * e.g.
+         * <img src='https://wise.berkeley.edu/curriculum/3/assets/sun.png'/>
+         * will be changed to
+         * <img src='sun.png'/>
+         */
+        html = this.ConfigService.removeAbsoluteAssetPaths(html);
+
+        /*
+         * replace <a> and <button> elements with <wiselink> elements when
+         * applicable
+         */
+        html = this.UtilService.insertWISELinks(html);
+
+        // update the component rubric
+        this.authoringComponentContent.rubric = html;
+
+        // the authoring component content has changed so we will save the project
+        this.authoringViewComponentChanged();
+    }
 }
 
 OutsideURLController.$inject = [
     '$q',
     '$scope',
     '$sce',
+    'ConfigService',
     'NodeService',
     'OutsideURLService',
     'ProjectService',
-    'StudentDataService'
+    'StudentDataService',
+    'UtilService'
 ];
 
 export default OutsideURLController;

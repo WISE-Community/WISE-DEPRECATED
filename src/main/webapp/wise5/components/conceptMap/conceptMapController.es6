@@ -19,7 +19,8 @@ class ConceptMapController {
                 NodeService,
                 ProjectService,
                 StudentAssetService,
-                StudentDataService) {
+                StudentDataService,
+                UtilService) {
 
         this.$filter = $filter;
         this.$injector = $injector;
@@ -36,6 +37,7 @@ class ConceptMapController {
         this.ProjectService = ProjectService;
         this.StudentAssetService = StudentAssetService;
         this.StudentDataService = StudentDataService;
+        this.UtilService = UtilService;
         this.idToOrder = this.ProjectService.idToOrder;
 
         this.$translate = this.$filter('translate');
@@ -264,6 +266,18 @@ class ConceptMapController {
                 this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
                 this.availableNodes = this.componentContent.nodes;
                 this.availableLinks = this.componentContent.links;
+
+                // generate the summernote rubric element id
+                this.summernoteRubricId = 'summernoteRubric_' + this.nodeId + '_' + this.componentId;
+
+                // set the component rubric into the summernote rubric
+                this.summernoteRubricHTML = this.componentContent.rubric;
+
+                // set the rubric summernote options
+                this.summernoteRubricOptions = {
+                    height: 300,
+                    disableDragAndDrop: true
+                };
 
                 this.updateAdvancedAuthoringView();
 
@@ -4377,6 +4391,36 @@ class ConceptMapController {
         // the authoring component content has changed so we will save the project
         this.authoringViewComponentChanged();
     }
+
+    /**
+     * The author has changed the rubric
+     */
+    summernoteRubricHTMLChanged() {
+
+        // get the summernote rubric html
+        var html = this.summernoteRubricHTML;
+
+        /*
+         * remove the absolute asset paths
+         * e.g.
+         * <img src='https://wise.berkeley.edu/curriculum/3/assets/sun.png'/>
+         * will be changed to
+         * <img src='sun.png'/>
+         */
+        html = this.ConfigService.removeAbsoluteAssetPaths(html);
+
+        /*
+         * replace <a> and <button> elements with <wiselink> elements when
+         * applicable
+         */
+        html = this.UtilService.insertWISELinks(html);
+
+        // update the component rubric
+        this.authoringComponentContent.rubric = html;
+
+        // the authoring component content has changed so we will save the project
+        this.authoringViewComponentChanged();
+    }
 };
 
 ConceptMapController.$inject = [
@@ -4394,7 +4438,8 @@ ConceptMapController.$inject = [
     'NodeService',
     'ProjectService',
     'StudentAssetService',
-    'StudentDataService'
+    'StudentDataService',
+    'UtilService'
 ];
 
 export default ConceptMapController;

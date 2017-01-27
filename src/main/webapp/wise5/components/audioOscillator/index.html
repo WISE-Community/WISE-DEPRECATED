@@ -119,6 +119,21 @@
                ng-change='audioOscillatorController.authoringViewComponentChanged()'/>
     </div>
     <div ng-if='audioOscillatorController.mode === "authoring"'>
+        <button ng-click='audioOscillatorController.showRubricAuthoring = !audioOscillatorController.showRubricAuthoring'>
+            {{ 'EDIT_COMPONENT_RUBRIC' | translate }}
+        </button>
+        <div ng-show='audioOscillatorController.showRubricAuthoring'>
+            <summernote id='{{audioOscillatorController.summernoteRubricId}}'
+                        ng-model='audioOscillatorController.summernoteRubricHTML'
+                        ng-change='audioOscillatorController.summernoteRubricHTMLChanged()'
+                        config='audioOscillatorController.summernoteRubricOptions'
+                        ng-model-options='{ debounce: 1000 }'
+                        rows='10'
+                        cols='100'>
+            </summernote>
+        </div>
+    </div>
+    <div ng-if='audioOscillatorController.mode === "authoring"'>
         <button ng-click='audioOscillatorController.showAdvancedAuthoring = !audioOscillatorController.showAdvancedAuthoring'>
                 {{ audioOscillatorController.showAdvancedAuthoring ? ('HIDE_ADVANCED_AUTHORING' | translate) : ('SHOW_ADVANCED_AUTHORING' | translate) }}
         </button>

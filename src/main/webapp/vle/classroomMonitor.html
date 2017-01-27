@@ -10,14 +10,14 @@
         <link rel="stylesheet" type="text/css" href="css/classroomMonitor/monitor-styles.css">
 
         <!-- Place favicon.ico and apple-touch-icon(s) in the root directory -->
-        
+
         <script src="lib/modernizr-2.6.2-respond-1.1.0.min.js"></script>
     </head>
 	<body>
 		<!--[if lt IE 8]>
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
-        
+
         <nav id="monitorTopNav" class="top-nav navbar navbar-inverse navbar-fixed-top" role="navigation">
        		<!-- Brand and toggle get grouped for better mobile display -->
 			<div class="navbar-header">
@@ -28,7 +28,7 @@
 				</button>
 				<span class="navbar-brand"><span id="runTitle"></span><span id="runId" class="small"></span></span>
 			</div>
-			
+
 			<!-- Collect the nav links, forms, and other content for toggling -->
 			<div class="collapse navbar-collapse navbar-right">
 				<ul class="nav navbar-nav">
@@ -47,7 +47,7 @@
 			<!-- /.navbar-collapse -->
 			<!-- </div>  -->
        	</nav>
-       	
+
        	<menu id="monitorMenu" class="panel">
        		<div class="panel-body menu">
        			<div class="btn-toolbar pull-left" role="toolbar">
@@ -72,7 +72,7 @@
                         </label>
 					</div>
 				</div>
-				
+
 				<div class="btn-toolbar pull-right" role="toolbar">
 					<!--<div id="runTools" class="btn-group btn-group-sm">
 						<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" disabled>
@@ -112,7 +112,7 @@
 				</div>
 			</div>
        	</menu>
-       	
+
        	<div id="pageContent">
        		<section id="studentProgress">
        			<table id="studentProgressTable" class="table table-bordered" cellspacing="0" width="100%">
@@ -221,44 +221,44 @@
        		<section id="notes"></section>
        		-->
        	</div>
-       	
+
        	<!-- <button id="save" class="btn btn-sm btn-danger" data-i18n="classroomMonitor_grading_save">Save Changes</button> -->
        	<a id="newWork" class="btn btn-danger"><span class="fa fa-bell"></span> New Work! Click to Update</a>
-       	
+
        	</div>
-		
+
 		<footer class="panel panel-default" id="monitorFooter">
 			<div class="panel-body menu">
 				<div class="pull-left"><span id="studentsOnline" class="label label-default">Workgroups online: 0</span></div>
 			</div>
 		</footer>
-		
+
 		<div id="loading">
 			<div class="jumbotron">
 				<span class="fa fa-circle-o-notch fa-spin"></span>
 			</div>
     	</div>
-		
-		
+
+
 		<script src='util/eventmanager.js'></script>
 		<script src="util/scriptloader.js"></script>
 		<script src="https://www.google.com/jsapi"></script>
-		
+
 		<script>
 			//load the package to graph google charts
 			google.load("visualization", "1", {packages:["corechart"]});
-			
+
 			function load(getClassroomMonitorConfigUrl) {
 				eventManager.fire('classroomMonitorConfigUrlReceived', [getClassroomMonitorConfigUrl]);
 			}
-			
+
 			/**
 			 * Called when the user closes page
 			 */
 			window.onunload=function(){
 				env.onWindowUnload();
 			};
-			
+
 			/*
 			 * Listener that is run when the bootstrap loading is complete.
 			 * Loads and starts the authoring view.
@@ -269,22 +269,22 @@
 						//env.startGrading(gradingConfigUrl, runId);
 						window.parent.topiframeOnLoad();
 					};
-			
+
 					eventManager.subscribe('loadingViewComplete', classroomMonitorListener);
 					createEnvironment('env', eventManager);
 					env.startView('classroomMonitor');
 				};
 			}
-			
+
 			/*
-			 * Loads scripts when body is loaded 
+			 * Loads scripts when body is loaded
 			 */
 			window.onload = function(){
 				scriptloader.bootstrap(this, bootstrapListener);
 			};
 		</script>
-		
-		 <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. 
+
+		 <!-- Google Analytics: change UA-XXXXX-X to be your site's ID.
         <script>
             (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
             function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;

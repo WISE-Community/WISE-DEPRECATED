@@ -263,7 +263,7 @@
     </div>
     <div ng-if='openResponseController.mode === "authoring"'>
         <button ng-click='openResponseController.showRubricAuthoring = !openResponseController.showRubricAuthoring'>
-            {{ openResponseController.showRubricAuthoring ? ('EDIT_COMPONENT_RUBRIC' | translate) : ('EDIT_COMPONENT_RUBRIC' | translate) }}
+            {{ 'EDIT_COMPONENT_RUBRIC' | translate }}
         </button>
         <div ng-show='openResponseController.showRubricAuthoring'>
             <summernote id='{{openResponseController.summernoteRubricId}}'
