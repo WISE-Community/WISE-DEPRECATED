@@ -9,13 +9,14 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var DiscussionController = function () {
-    function DiscussionController($filter, $injector, $q, $rootScope, $scope, AnnotationService, ConfigService, DiscussionService, NodeService, NotificationService, ProjectService, StudentAssetService, StudentDataService, StudentWebSocketService, UtilService, $mdMedia) {
+    function DiscussionController($filter, $injector, $mdDialog, $q, $rootScope, $scope, AnnotationService, ConfigService, DiscussionService, NodeService, NotificationService, ProjectService, StudentAssetService, StudentDataService, StudentWebSocketService, UtilService, $mdMedia) {
         var _this2 = this;
 
         _classCallCheck(this, DiscussionController);
 
         this.$filter = $filter;
         this.$injector = $injector;
+        this.$mdDialog = $mdDialog;
         this.$q = $q;
         this.$rootScope = $rootScope;
         this.$scope = $scope;
@@ -203,10 +204,26 @@ var DiscussionController = function () {
                 // set the component rubric into the summernote rubric
                 this.summernoteRubricHTML = this.componentContent.rubric;
 
-                // set the rubric summernote options
+                // the tooltip text for the insert WISE asset button
+                var insertAssetString = this.$translate('html.insertAsset');
+
+                /*
+                 * create the custom button for inserting WISE assets into
+                 * summernote
+                 */
+                var InsertAssetButton = this.UtilService.createInsertAssetButton(this, this.nodeId, this.componentId, 'rubric', insertAssetString);
+
+                /*
+                 * the options that specifies the tools to display in the
+                 * summernote prompt
+                 */
                 this.summernoteRubricOptions = {
+                    toolbar: [['style', ['style']], ['font', ['bold', 'underline', 'clear']], ['fontname', ['fontname']], ['color', ['color']], ['para', ['ul', 'ol', 'paragraph']], ['table', ['table']], ['insert', ['link', 'video']], ['view', ['fullscreen', 'codeview', 'help']], ['customButton', ['insertAssetButton']]],
                     height: 300,
-                    disableDragAndDrop: true
+                    disableDragAndDrop: true,
+                    buttons: {
+                        insertAssetButton: InsertAssetButton
+                    }
                 };
 
                 this.updateAdvancedAuthoringView();
@@ -534,6 +551,76 @@ var DiscussionController = function () {
             return $mdMedia('gt-sm');
         }, function (md) {
             $scope.mdScreen = md;
+        });
+
+        /*
+         * Listen for the assetSelected event which occurs when the user
+         * selects an asset from the choose asset popup
+         */
+        this.$scope.$on('assetSelected', function (event, args) {
+
+            if (args != null) {
+
+                // make sure the event was fired for this component
+                if (args.nodeId == _this2.nodeId && args.componentId == _this2.componentId) {
+                    // the asset was selected for this component
+                    var assetItem = args.assetItem;
+
+                    if (assetItem != null) {
+                        var fileName = assetItem.fileName;
+
+                        if (fileName != null) {
+                            /*
+                             * get the assets directory path
+                             * e.g.
+                             * /wise/curriculum/3/
+                             */
+                            var assetsDirectoryPath = _this2.ConfigService.getProjectAssetsDirectoryPath();
+                            var fullAssetPath = assetsDirectoryPath + '/' + fileName;
+
+                            var summernoteId = '';
+
+                            if (args.target == 'prompt') {
+                                // the target is the summernote prompt element
+                                summernoteId = 'summernotePrompt_' + _this2.nodeId + '_' + _this2.componentId;
+                            } else if (args.target == 'rubric') {
+                                // the target is the summernote rubric element
+                                summernoteId = 'summernoteRubric_' + _this2.nodeId + '_' + _this2.componentId;
+                            }
+
+                            if (summernoteId != '') {
+                                if (_this2.UtilService.isImage(fileName)) {
+                                    /*
+                                     * move the cursor back to its position when the asset chooser
+                                     * popup was clicked
+                                     */
+                                    $('#' + summernoteId).summernote('editor.restoreRange');
+                                    $('#' + summernoteId).summernote('editor.focus');
+
+                                    // add the image html
+                                    $('#' + summernoteId).summernote('insertImage', fullAssetPath, fileName);
+                                } else if (_this2.UtilService.isVideo(fileName)) {
+                                    /*
+                                     * move the cursor back to its position when the asset chooser
+                                     * popup was clicked
+                                     */
+                                    $('#' + summernoteId).summernote('editor.restoreRange');
+                                    $('#' + summernoteId).summernote('editor.focus');
+
+                                    // insert the video element
+                                    var videoElement = document.createElement('video');
+                                    videoElement.controls = 'true';
+                                    videoElement.innerHTML = "<source ng-src='" + fullAssetPath + "' type='video/mp4'>";
+                                    $('#' + summernoteId).summernote('insertNode', videoElement);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            // close the popup
+            _this2.$mdDialog.hide();
         });
     }
 
@@ -1538,7 +1625,7 @@ var DiscussionController = function () {
     return DiscussionController;
 }();
 
-DiscussionController.$inject = ['$filter', '$injector', '$q', '$rootScope', '$scope', 'AnnotationService', 'ConfigService', 'DiscussionService', 'NodeService', 'NotificationService', 'ProjectService', 'StudentAssetService', 'StudentDataService', 'StudentWebSocketService', 'UtilService', '$mdMedia'];
+DiscussionController.$inject = ['$filter', '$injector', '$mdDialog', '$q', '$rootScope', '$scope', 'AnnotationService', 'ConfigService', 'DiscussionService', 'NodeService', 'NotificationService', 'ProjectService', 'StudentAssetService', 'StudentDataService', 'StudentWebSocketService', 'UtilService', '$mdMedia'];
 
 exports.default = DiscussionController;
 //# sourceMappingURL=discussionController.js.map

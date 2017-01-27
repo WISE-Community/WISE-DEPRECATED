@@ -131,10 +131,26 @@ var HTMLController = function () {
                 // set the component rubric into the summernote rubric
                 this.summernoteRubricHTML = this.componentContent.rubric;
 
-                // set the rubric summernote options
+                // the tooltip text for the insert WISE asset button
+                var insertAssetString = this.$translate('html.insertAsset');
+
+                /*
+                 * create the custom button for inserting WISE assets into
+                 * summernote
+                 */
+                var InsertAssetButton = this.UtilService.createInsertAssetButton(this, this.nodeId, this.componentId, 'rubric', insertAssetString);
+
+                /*
+                 * the options that specifies the tools to display in the
+                 * summernote prompt
+                 */
                 this.summernoteRubricOptions = {
+                    toolbar: [['style', ['style']], ['font', ['bold', 'underline', 'clear']], ['fontname', ['fontname']], ['color', ['color']], ['para', ['ul', 'ol', 'paragraph']], ['table', ['table']], ['insert', ['link', 'video']], ['view', ['fullscreen', 'codeview', 'help']], ['customButton', ['insertAssetButton']]],
                     height: 300,
-                    disableDragAndDrop: true
+                    disableDragAndDrop: true,
+                    buttons: {
+                        insertAssetButton: InsertAssetButton
+                    }
                 };
 
                 this.updateAdvancedAuthoringView();
