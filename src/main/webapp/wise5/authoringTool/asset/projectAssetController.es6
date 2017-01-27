@@ -32,6 +32,7 @@ class ProjectAssetController {
 
         // whether the asset page is being displayed in a popup
         this.popup = false;
+        this.projectId = null;
         this.nodeId = null;
         this.componentId = null;
         this.target = null;
@@ -40,6 +41,11 @@ class ProjectAssetController {
             if (this.$stateParams.popup) {
                 // this asset page is being displayed in a popup
                 this.popup = true;
+            }
+
+            if (this.$stateParams.projectId) {
+                // get the project id that opened this popup
+                this.projectId = this.$stateParams.projectId;
             }
 
             if (this.$stateParams.nodeId) {
@@ -167,6 +173,7 @@ class ProjectAssetController {
         // fire the event to notify listeners that an asset was selected
         var params = {
             assetItem: assetItem,
+            projectId: this.projectId,
             nodeId: this.nodeId,
             componentId: this.componentId,
             target: this.target

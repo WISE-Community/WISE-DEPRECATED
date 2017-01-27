@@ -2,13 +2,15 @@
 
 class NodeProgressController {
 
-    constructor($scope,
+    constructor($mdDialog,
+                $scope,
                 $state,
                 ProjectService,
                 StudentStatusService,
                 TeacherDataService,
                 TeacherWebSocketService) {
 
+        this.$mdDialog = $mdDialog;
         this.$scope = $scope;
         this.$state = $state;
         this.ProjectService = ProjectService;
@@ -60,6 +62,12 @@ class NodeProgressController {
 
         if (currentPeriod) {
             this.isPaused = this.TeacherDataService.isPeriodPaused(currentPeriod.periodId);
+        }
+
+        this.showRubricButton = false;
+
+        if (this.projectHasRubric()) {
+            this.showRubricButton = true;
         }
 
         /**
@@ -176,9 +184,51 @@ class NodeProgressController {
     pauseScreensChanged(isPaused) {
         this.TeacherDataService.pauseScreensChanged(isPaused);
     }
+
+    /**
+     * Check if the project has a rubric
+     * @return whether the project has a rubric
+     */
+    projectHasRubric() {
+
+        // get the project rubric
+        var projectRubric = this.ProjectService.getProjectRubric();
+
+        if (projectRubric != null && projectRubric != '') {
+            // the project has a rubric
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Show the rubric in the grading view. We will show the step rubric and the
+     * component rubrics.
+     */
+    showProjectRubric() {
+
+        var projectRubric = "<div style='margin-left:30px;margin-right:30px;margin-top:30px;margin-bottom:30px;'>";
+
+        // get the project title
+        projectRubric += '<h3>' + this.ProjectService.getProjectTitle() + '</h3>';
+
+        // get the project rubric
+        projectRubric += this.ProjectService.replaceAssetPaths(this.ProjectService.getProjectRubric());
+
+        projectRubric += '</div>';
+
+        // display the rubrics in a popup
+        this.$mdDialog.show({
+            template: projectRubric,
+            clickOutsideToClose: true,
+            escapeToClose: true
+        });
+    }
 }
 
 NodeProgressController.$inject = [
+    '$mdDialog',
     '$scope',
     '$state',
     'ProjectService',

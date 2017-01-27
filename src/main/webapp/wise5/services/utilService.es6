@@ -2,7 +2,8 @@
 
 class UtilService {
 
-    constructor() {
+    constructor($rootScope) {
+        this.$rootScope = $rootScope;
     }
 
     /**
@@ -500,7 +501,9 @@ class UtilService {
      * @param tooltip the tooltip text for the custom button
      * @return custom summernote button
      */
-    createInsertAssetButton(controller, nodeId, componentId, target, tooltip) {
+    createInsertAssetButton(controller, projectId, nodeId, componentId, target, tooltip) {
+
+        var thisRootScope = this.$rootScope;
 
         // a custom button that opens the asset chooser
         var InsertAssetButton = function(context) {
@@ -517,12 +520,23 @@ class UtilService {
                     // create the params for opening the asset chooser
                     var params = {};
                     params.popup = true;
-                    params.nodeId = nodeId;
-                    params.componentId = componentId;
+
+                    if (projectId != null) {
+                        params.projectId = projectId;
+                    }
+
+                    if (nodeId != null) {
+                        params.nodeId = nodeId;
+                    }
+
+                    if (componentId != null) {
+                        params.componentId = componentId;
+                    }
+
                     params.target = target;
 
                     // display the asset chooser
-                    controller.$rootScope.$broadcast('openAssetChooser', params);
+                    thisRootScope.$broadcast('openAssetChooser', params);
                 }
             });
 
@@ -544,7 +558,9 @@ class UtilService {
      * @param tooltip the tooltip text for the custom button
      * @return custom summernote button
      */
-    createInsertWISELinkButton(controller, nodeId, componentId, target, tooltip) {
+    createInsertWISELinkButton(controller, projectId, nodeId, componentId, target, tooltip) {
+
+        var thisRootScope = this.$rootScope;
 
         // a custom button that opens the WISE Link authoring popup
         var InsertWISELinkButton = function(context) {
@@ -560,12 +576,23 @@ class UtilService {
 
                     // create the params for opening the WISE Link chooser
                     var params = {};
-                    params.nodeId = nodeId;
-                    params.componentId = componentId;
+
+                    if (projectId != null) {
+                        params.projectId = projectId;
+                    }
+
+                    if (nodeId != null) {
+                        params.nodeId = nodeId;
+                    }
+
+                    if (componentId != null) {
+                        params.componentId = componentId;
+                    }
+
                     params.target = target;
 
                     // display the WISE Link authoring popup
-                    controller.$rootScope.$broadcast('openWISELinkChooser', params);
+                    thisRootScope.$broadcast('openWISELinkChooser', params);
                 }
             });
 
@@ -583,6 +610,8 @@ if (!Array.prototype.last) {
     };
 };
 
-UtilService.$inject = [];
+UtilService.$inject = [
+    '$rootScope'
+];
 
 export default UtilService;

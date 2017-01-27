@@ -8418,6 +8418,27 @@ var ProjectService = function () {
 
             return branchPathTakenConstraints;
         }
+
+        /**
+         * Get the project level rubric
+         * @return the project level rubric
+         */
+
+    }, {
+        key: 'getProjectRubric',
+        value: function getProjectRubric() {
+            return this.project.rubric;
+        }
+
+        /**
+         * Set the project level rubric
+         */
+
+    }, {
+        key: 'setProjectRubric',
+        value: function setProjectRubric(html) {
+            this.project.rubric = html;
+        }
     }]);
 
     return ProjectService;

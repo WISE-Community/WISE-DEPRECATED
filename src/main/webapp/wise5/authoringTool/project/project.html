@@ -42,6 +42,8 @@
         ng-disabled="projectController.insertGroupMode || projectController.insertNodeMode"></button>
 <button id="importStepButton" ng-click='projectController.toggleImportView()' translate="importStep"
         ng-disabled="projectController.insertGroupMode || projectController.insertNodeMode"></button>
+<button id="editProjectRubricButton" ng-click='projectController.toggleEditProjectRubricView()' translate="editProjectRubric"
+        ng-disabled="projectController.insertGroupMode || projectController.insertNodeMode"></button>
 <button id="moveButton" ng-click='projectController.move()' translate="move"
         ng-disabled="projectController.getSelectedItems().length == 0 || projectController.insertGroupMode || projectController.insertNodeMode"></button>
 <button id="copyButton" ng-click='projectController.copy()' translate="copy"
@@ -110,9 +112,20 @@
     <br/><br/>
     <button ng-click='projectController.importMode = false' translate='CANCEL'></button>
 </div>
+<div ng-show='projectController.editProjectRubricMode'>
+    <h5>Edit Project Rubric</h5>
+    <summernote id='{{projectController.summernoteRubricId}}'
+                ng-model='projectController.summernoteRubricHTML'
+                ng-change='projectController.summernoteRubricHTMLChanged()'
+                config='projectController.summernoteRubricOptions'
+                ng-model-options='{ debounce: 1000 }'
+                rows='10'
+                cols='100'>
+    </summernote>
+</div>
 <div ng-repeat='item in projectController.items | toArray | orderBy : "order"'
      ng-class='{"node-select--group": projectController.isGroupNode(item.$key), "node-select--node": !projectController.isGroupNode(item.$key)}'
-     ng-show='!projectController.importMode && !projectController.showCreateGroup && !projectController.showCreateNode'>
+     ng-show='!projectController.importMode && !projectController.showCreateGroup && !projectController.showCreateNode && !projectController.editProjectRubricMode'>
     <input type='checkbox'
            ng-model='item.checked'
            ng-if='item.order!==0'
@@ -153,7 +166,7 @@
         {{projectController.getNodeTitleByNodeId(inactiveGroup.id)}}
     </h6>
 </div>
-<div ng-show='!projectController.importMode && !projectController.showCreateGroup && !projectController.showCreateNode'>
+<div ng-show='!projectController.importMode && !projectController.showCreateGroup && !projectController.showCreateNode && !projectController.editProjectRubricMode'>
 <h6 style='display:inline' translate='inactiveSteps'></h6>
     <button ng-show='projectController.insertNodeMode'
             ng-click='projectController.insertInside("inactiveNodes")'

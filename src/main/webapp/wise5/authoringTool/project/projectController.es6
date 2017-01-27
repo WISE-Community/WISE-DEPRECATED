@@ -4,6 +4,7 @@ class ProjectController {
 
     constructor($filter,
                 $interval,
+                $mdDialog,
                 $q,
                 $scope,
                 $state,
@@ -15,6 +16,7 @@ class ProjectController {
                 UtilService) {
         this.$filter = $filter;
         this.$interval = $interval;
+        this.$mdDialog = $mdDialog;
         this.$q = $q;
         this.$scope = $scope;
         this.$state = $state;
@@ -40,6 +42,44 @@ class ProjectController {
         // notify others that this project is being authored
         this.ProjectService.notifyAuthorProjectBegin(this.projectId);
 
+        // generate the summernote rubric element id
+        this.summernoteRubricId = 'summernoteRubric_' + this.projectId;
+
+        // set the project rubric into the summernote rubric
+        this.summernoteRubricHTML = this.ProjectService.replaceAssetPaths(this.ProjectService.getProjectRubric());
+
+        // the tooltip text for the insert WISE asset button
+        var insertAssetString = this.$translate('html.insertAsset');
+
+        /*
+         * create the custom button for inserting WISE assets into
+         * summernote
+         */
+        var InsertAssetButton = this.UtilService.createInsertAssetButton(this, this.projectId, null, null, 'rubric', insertAssetString);
+
+        /*
+         * the options that specifies the tools to display in the
+         * summernote prompt
+         */
+        this.summernoteRubricOptions = {
+            toolbar: [
+                ['style', ['style']],
+                ['font', ['bold', 'underline', 'clear']],
+                ['fontname', ['fontname']],
+                ['color', ['color']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['table', ['table']],
+                ['insert', ['link', 'video']],
+                ['view', ['fullscreen', 'codeview', 'help']],
+                ['customButton', ['insertAssetButton']]
+            ],
+            height: 300,
+            disableDragAndDrop: true,
+            buttons: {
+                insertAssetButton: InsertAssetButton
+            }
+        };
+
         this.$scope.$on('currentAuthorsReceived', (event, args) => {
             let currentAuthorsUsernames = args.currentAuthorsUsernames;
             // get the user name of the signed in user
@@ -56,6 +96,73 @@ class ProjectController {
         this.$scope.$on("$destroy", () => {
             // notify others that this project is no longer being authored
             this.ProjectService.notifyAuthorProjectEnd(this.projectId);
+        });
+
+        /*
+         * Listen for the assetSelected event which occurs when the user
+         * selects an asset from the choose asset popup
+         */
+        this.$scope.$on('assetSelected', (event, args) => {
+
+            if (args != null) {
+
+                // make sure the event was fired for this component
+                if (args.projectId == this.projectId) {
+                    // the asset was selected for this component
+                    var assetItem = args.assetItem;
+
+                    if (assetItem != null) {
+                        var fileName = assetItem.fileName;
+
+                        if (fileName != null) {
+                            /*
+                             * get the assets directory path
+                             * e.g.
+                             * /wise/curriculum/3/
+                             */
+                            var assetsDirectoryPath = this.ConfigService.getProjectAssetsDirectoryPath();
+                            var fullAssetPath = assetsDirectoryPath + '/' + fileName;
+
+                            var summernoteId = '';
+
+                            if (args.target == 'rubric') {
+                                // the target is the summernote rubric element
+                                summernoteId = 'summernoteRubric_' + this.projectId;
+                            }
+
+                            if (summernoteId != '') {
+                                if (this.UtilService.isImage(fileName)) {
+                                    /*
+                                     * move the cursor back to its position when the asset chooser
+                                     * popup was clicked
+                                     */
+                                    $('#' + summernoteId).summernote('editor.restoreRange');
+                                    $('#' + summernoteId).summernote('editor.focus');
+
+                                    // add the image html
+                                    $('#' + summernoteId).summernote('insertImage', fullAssetPath, fileName);
+                                } else if (this.UtilService.isVideo(fileName)) {
+                                    /*
+                                     * move the cursor back to its position when the asset chooser
+                                     * popup was clicked
+                                     */
+                                    $('#' + summernoteId).summernote('editor.restoreRange');
+                                    $('#' + summernoteId).summernote('editor.focus');
+
+                                    // insert the video element
+                                    var videoElement = document.createElement('video');
+                                    videoElement.controls = 'true';
+                                    videoElement.innerHTML = "<source ng-src='" + fullAssetPath + "' type='video/mp4'>";
+                                    $('#' + summernoteId).summernote('insertNode', videoElement);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            // close the popup
+            this.$mdDialog.hide();
         });
     };
 
@@ -1041,11 +1148,48 @@ class ProjectController {
 
         return selectedNodes;
     }
+
+    /**
+     * Toggle the import view and load the project drop downs if necessary
+     */
+    toggleEditProjectRubricView() {
+        this.editProjectRubricMode = !this.editProjectRubricMode;
+    }
+
+    /**
+     * The author has changed the rubric
+     */
+    summernoteRubricHTMLChanged() {
+
+        // get the summernote rubric html
+        var html = this.summernoteRubricHTML;
+
+        /*
+         * remove the absolute asset paths
+         * e.g.
+         * <img src='https://wise.berkeley.edu/curriculum/3/assets/sun.png'/>
+         * will be changed to
+         * <img src='sun.png'/>
+         */
+        html = this.ConfigService.removeAbsoluteAssetPaths(html);
+
+        /*
+         * replace <a> and <button> elements with <wiselink> elements when
+         * applicable
+         */
+        html = this.UtilService.insertWISELinks(html);
+
+        // update the project rubric
+        this.ProjectService.setProjectRubric(html);
+
+        this.ProjectService.saveProject();
+    }
 }
 
 ProjectController.$inject = [
     '$filter',
     '$interval',
+    '$mdDialog',
     '$q',
     '$scope',
     '$state',

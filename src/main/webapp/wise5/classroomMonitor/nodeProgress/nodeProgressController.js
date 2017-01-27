@@ -9,11 +9,12 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var NodeProgressController = function () {
-    function NodeProgressController($scope, $state, ProjectService, StudentStatusService, TeacherDataService, TeacherWebSocketService) {
+    function NodeProgressController($mdDialog, $scope, $state, ProjectService, StudentStatusService, TeacherDataService, TeacherWebSocketService) {
         var _this = this;
 
         _classCallCheck(this, NodeProgressController);
 
+        this.$mdDialog = $mdDialog;
         this.$scope = $scope;
         this.$state = $state;
         this.ProjectService = ProjectService;
@@ -65,6 +66,12 @@ var NodeProgressController = function () {
 
         if (currentPeriod) {
             this.isPaused = this.TeacherDataService.isPeriodPaused(currentPeriod.periodId);
+        }
+
+        this.showRubricButton = false;
+
+        if (this.projectHasRubric()) {
+            this.showRubricButton = true;
         }
 
         /**
@@ -201,12 +208,59 @@ var NodeProgressController = function () {
         value: function pauseScreensChanged(isPaused) {
             this.TeacherDataService.pauseScreensChanged(isPaused);
         }
+
+        /**
+         * Check if the project has a rubric
+         * @return whether the project has a rubric
+         */
+
+    }, {
+        key: 'projectHasRubric',
+        value: function projectHasRubric() {
+
+            // get the project rubric
+            var projectRubric = this.ProjectService.getProjectRubric();
+
+            if (projectRubric != null && projectRubric != '') {
+                // the project has a rubric
+                return true;
+            }
+
+            return false;
+        }
+
+        /**
+         * Show the rubric in the grading view. We will show the step rubric and the
+         * component rubrics.
+         */
+
+    }, {
+        key: 'showProjectRubric',
+        value: function showProjectRubric() {
+
+            var projectRubric = "<div style='margin-left:30px;margin-right:30px;margin-top:30px;margin-bottom:30px;'>";
+
+            // get the project title
+            projectRubric += '<h3>' + this.ProjectService.getProjectTitle() + '</h3>';
+
+            // get the project rubric
+            projectRubric += this.ProjectService.replaceAssetPaths(this.ProjectService.getProjectRubric());
+
+            projectRubric += '</div>';
+
+            // display the rubrics in a popup
+            this.$mdDialog.show({
+                template: projectRubric,
+                clickOutsideToClose: true,
+                escapeToClose: true
+            });
+        }
     }]);
 
     return NodeProgressController;
 }();
 
-NodeProgressController.$inject = ['$scope', '$state', 'ProjectService', 'StudentStatusService', 'TeacherDataService', 'TeacherWebSocketService'];
+NodeProgressController.$inject = ['$mdDialog', '$scope', '$state', 'ProjectService', 'StudentStatusService', 'TeacherDataService', 'TeacherWebSocketService'];
 
 exports.default = NodeProgressController;
 //# sourceMappingURL=nodeProgressController.js.map

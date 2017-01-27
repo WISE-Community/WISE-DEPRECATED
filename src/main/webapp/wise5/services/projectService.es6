@@ -7854,6 +7854,21 @@ class ProjectService {
 
         return branchPathTakenConstraints;
     }
+
+    /**
+     * Get the project level rubric
+     * @return the project level rubric
+     */
+    getProjectRubric() {
+        return this.project.rubric;
+    }
+
+    /**
+     * Set the project level rubric
+     */
+    setProjectRubric(html) {
+        this.project.rubric = html;
+    }
 }
 
 ProjectService.$inject = [

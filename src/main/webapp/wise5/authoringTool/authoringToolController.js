@@ -90,6 +90,7 @@ var AuthoringToolController = function () {
             // create the params for opening the asset chooser
             var stateParams = {};
             stateParams.popup = params.popup;
+            stateParams.projectId = params.projectId;
             stateParams.nodeId = params.nodeId;
             stateParams.componentId = params.componentId;
             stateParams.target = params.target;

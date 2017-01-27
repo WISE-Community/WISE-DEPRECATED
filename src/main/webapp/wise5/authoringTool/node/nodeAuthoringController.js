@@ -9,12 +9,15 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var NodeAuthoringController = function () {
-    function NodeAuthoringController($anchorScroll, $location, $filter, $scope, $state, $stateParams, $timeout, ConfigService, ProjectService, UtilService) {
+    function NodeAuthoringController($anchorScroll, $filter, $location, $mdDialog, $scope, $state, $stateParams, $timeout, ConfigService, ProjectService, UtilService) {
+        var _this = this;
+
         _classCallCheck(this, NodeAuthoringController);
 
         this.$anchorScroll = $anchorScroll;
-        this.$location = $location;
         this.$filter = $filter;
+        this.$location = $location;
+        this.$mdDialog = $mdDialog;
         this.$scope = $scope;
         this.$state = $state;
         this.$stateParams = $stateParams;
@@ -223,10 +226,26 @@ var NodeAuthoringController = function () {
         // create the summernote rubric element id
         this.summernoteRubricId = 'summernoteRubric_' + this.nodeId;
 
-        // set the summernote rubric options
+        // the tooltip text for the insert WISE asset button
+        var insertAssetString = this.$translate('html.insertAsset');
+
+        /*
+         * create the custom button for inserting WISE assets into
+         * summernote
+         */
+        var InsertAssetButton = this.UtilService.createInsertAssetButton(this, null, this.nodeId, null, 'rubric', insertAssetString);
+
+        /*
+         * the options that specifies the tools to display in the
+         * summernote prompt
+         */
         this.summernoteRubricOptions = {
+            toolbar: [['style', ['style']], ['font', ['bold', 'underline', 'clear']], ['fontname', ['fontname']], ['color', ['color']], ['para', ['ul', 'ol', 'paragraph']], ['table', ['table']], ['insert', ['link', 'video']], ['view', ['fullscreen', 'codeview', 'help']], ['customButton', ['insertAssetButton']]],
             height: 300,
-            disableDragAndDrop: true
+            disableDragAndDrop: true,
+            buttons: {
+                insertAssetButton: InsertAssetButton
+            }
         };
 
         /*
@@ -234,6 +253,73 @@ var NodeAuthoringController = function () {
          * rubric html
          */
         this.summernoteRubricHTML = this.ProjectService.replaceAssetPaths(this.node.rubric);
+
+        /*
+         * Listen for the assetSelected event which occurs when the user
+         * selects an asset from the choose asset popup
+         */
+        this.$scope.$on('assetSelected', function (event, args) {
+
+            if (args != null) {
+
+                // make sure the event was fired for this component
+                if (args.nodeId == _this.nodeId && args.componentId == null) {
+                    // the asset was selected for this component
+                    var assetItem = args.assetItem;
+
+                    if (assetItem != null) {
+                        var fileName = assetItem.fileName;
+
+                        if (fileName != null) {
+                            /*
+                             * get the assets directory path
+                             * e.g.
+                             * /wise/curriculum/3/
+                             */
+                            var assetsDirectoryPath = _this.ConfigService.getProjectAssetsDirectoryPath();
+                            var fullAssetPath = assetsDirectoryPath + '/' + fileName;
+
+                            var summernoteId = '';
+
+                            if (args.target == 'rubric') {
+                                // the target is the summernote rubric element
+                                summernoteId = 'summernoteRubric_' + _this.nodeId;
+                            }
+
+                            if (summernoteId != '') {
+                                if (_this.UtilService.isImage(fileName)) {
+                                    /*
+                                     * move the cursor back to its position when the asset chooser
+                                     * popup was clicked
+                                     */
+                                    $('#' + summernoteId).summernote('editor.restoreRange');
+                                    $('#' + summernoteId).summernote('editor.focus');
+
+                                    // add the image html
+                                    $('#' + summernoteId).summernote('insertImage', fullAssetPath, fileName);
+                                } else if (_this.UtilService.isVideo(fileName)) {
+                                    /*
+                                     * move the cursor back to its position when the asset chooser
+                                     * popup was clicked
+                                     */
+                                    $('#' + summernoteId).summernote('editor.restoreRange');
+                                    $('#' + summernoteId).summernote('editor.focus');
+
+                                    // insert the video element
+                                    var videoElement = document.createElement('video');
+                                    videoElement.controls = 'true';
+                                    videoElement.innerHTML = "<source ng-src='" + fullAssetPath + "' type='video/mp4'>";
+                                    $('#' + summernoteId).summernote('insertNode', videoElement);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            // close the popup
+            _this.$mdDialog.hide();
+        });
     }
 
     /**
@@ -584,7 +670,7 @@ var NodeAuthoringController = function () {
     }, {
         key: 'createComponent',
         value: function createComponent() {
-            var _this = this;
+            var _this2 = this;
 
             // create a component and add it to this node
             this.ProjectService.createComponent(this.nodeId, this.selectedComponent);
@@ -597,8 +683,8 @@ var NodeAuthoringController = function () {
 
             // Scroll to the bottom of the page where the new component was added
             this.$timeout(function () {
-                _this.$location.hash('bottom');
-                _this.$anchorScroll();
+                _this2.$location.hash('bottom');
+                _this2.$anchorScroll();
             });
         }
 
@@ -2124,7 +2210,7 @@ var NodeAuthoringController = function () {
 
 ;
 
-NodeAuthoringController.$inject = ['$anchorScroll', '$location', '$filter', '$scope', '$state', '$stateParams', '$timeout', 'ConfigService', 'ProjectService', 'UtilService'];
+NodeAuthoringController.$inject = ['$anchorScroll', '$filter', '$location', '$mdDialog', '$scope', '$state', '$stateParams', '$timeout', 'ConfigService', 'ProjectService', 'UtilService'];
 
 exports.default = NodeAuthoringController;
 //# sourceMappingURL=nodeAuthoringController.js.map

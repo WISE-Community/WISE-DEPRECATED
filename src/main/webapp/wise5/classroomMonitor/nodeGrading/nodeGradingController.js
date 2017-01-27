@@ -750,6 +750,8 @@ var NodeGradingController = function () {
                 }
             }
 
+            accumulatedRubrics += '</div>';
+
             // inject the asset paths into the rubrics
             accumulatedRubrics = this.ProjectService.replaceAssetPaths(accumulatedRubrics);
 

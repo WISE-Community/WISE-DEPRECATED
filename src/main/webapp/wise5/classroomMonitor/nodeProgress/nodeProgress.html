@@ -4,6 +4,10 @@
             <h2 class="accent-2">
                 <div class="content-head__item">{{nodeProgressController.getNodeCompletion('group0')}}%<span class="md-subhead" translate="completion"></span></div>
             </h2>
+            <div ng-show="nodeProgressController.showRubricButton">
+                <md-button ng-click="nodeProgressController.showProjectRubric()"
+                           ng-class="md-primary">{{ 'showRubric' | translate }}</md-button>
+            </div>
             <span flex></span>
             <div>
                 <md-switch aria-label="Lock student screens switch"

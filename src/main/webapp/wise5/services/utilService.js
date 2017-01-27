@@ -9,8 +9,10 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var UtilService = function () {
-    function UtilService() {
+    function UtilService($rootScope) {
         _classCallCheck(this, UtilService);
+
+        this.$rootScope = $rootScope;
     }
 
     /**
@@ -562,7 +564,9 @@ var UtilService = function () {
 
     }, {
         key: "createInsertAssetButton",
-        value: function createInsertAssetButton(controller, nodeId, componentId, target, tooltip) {
+        value: function createInsertAssetButton(controller, projectId, nodeId, componentId, target, tooltip) {
+
+            var thisRootScope = this.$rootScope;
 
             // a custom button that opens the asset chooser
             var InsertAssetButton = function InsertAssetButton(context) {
@@ -579,12 +583,23 @@ var UtilService = function () {
                         // create the params for opening the asset chooser
                         var params = {};
                         params.popup = true;
-                        params.nodeId = nodeId;
-                        params.componentId = componentId;
+
+                        if (projectId != null) {
+                            params.projectId = projectId;
+                        }
+
+                        if (nodeId != null) {
+                            params.nodeId = nodeId;
+                        }
+
+                        if (componentId != null) {
+                            params.componentId = componentId;
+                        }
+
                         params.target = target;
 
                         // display the asset chooser
-                        controller.$rootScope.$broadcast('openAssetChooser', params);
+                        thisRootScope.$broadcast('openAssetChooser', params);
                     }
                 });
 
@@ -609,7 +624,9 @@ var UtilService = function () {
 
     }, {
         key: "createInsertWISELinkButton",
-        value: function createInsertWISELinkButton(controller, nodeId, componentId, target, tooltip) {
+        value: function createInsertWISELinkButton(controller, projectId, nodeId, componentId, target, tooltip) {
+
+            var thisRootScope = this.$rootScope;
 
             // a custom button that opens the WISE Link authoring popup
             var InsertWISELinkButton = function InsertWISELinkButton(context) {
@@ -625,12 +642,23 @@ var UtilService = function () {
 
                         // create the params for opening the WISE Link chooser
                         var params = {};
-                        params.nodeId = nodeId;
-                        params.componentId = componentId;
+
+                        if (projectId != null) {
+                            params.projectId = projectId;
+                        }
+
+                        if (nodeId != null) {
+                            params.nodeId = nodeId;
+                        }
+
+                        if (componentId != null) {
+                            params.componentId = componentId;
+                        }
+
                         params.target = target;
 
                         // display the WISE Link authoring popup
-                        controller.$rootScope.$broadcast('openWISELinkChooser', params);
+                        thisRootScope.$broadcast('openWISELinkChooser', params);
                     }
                 });
 
@@ -653,7 +681,7 @@ if (!Array.prototype.last) {
     };
 };
 
-UtilService.$inject = [];
+UtilService.$inject = ['$rootScope'];
 
 exports.default = UtilService;
 //# sourceMappingURL=utilService.js.map

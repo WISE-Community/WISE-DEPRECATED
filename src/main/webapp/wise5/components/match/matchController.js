@@ -167,7 +167,7 @@ var MatchController = function () {
                  * create the custom button for inserting WISE assets into
                  * summernote
                  */
-                var InsertAssetButton = this.UtilService.createInsertAssetButton(this, this.nodeId, this.componentId, 'rubric', insertAssetString);
+                var InsertAssetButton = this.UtilService.createInsertAssetButton(this, null, this.nodeId, this.componentId, 'rubric', insertAssetString);
 
                 /*
                  * the options that specifies the tools to display in the

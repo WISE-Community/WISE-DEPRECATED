@@ -92,7 +92,7 @@ class HTMLController {
                  * create the custom button for inserting a WISE Link into
                  * summernote
                  */
-                var InsertWISELinkButton = this.UtilService.createInsertWISELinkButton(this, this.nodeId, this.componentId, 'prompt', insertWISELinkString);
+                var InsertWISELinkButton = this.UtilService.createInsertWISELinkButton(this, null, this.nodeId, this.componentId, 'prompt', insertWISELinkString);
 
                 // the tooltip text for the insert WISE asset button
                 var insertAssetString = this.$translate('html.insertAsset');
@@ -101,7 +101,7 @@ class HTMLController {
                  * create the custom button for inserting WISE assets into
                  * summernote
                  */
-                var InsertAssetButton = this.UtilService.createInsertAssetButton(this, this.nodeId, this.componentId, 'prompt', insertAssetString);
+                var InsertAssetButton = this.UtilService.createInsertAssetButton(this, null, this.nodeId, this.componentId, 'prompt', insertAssetString);
 
                 /*
                  * the options that specifies the tools to display in the
@@ -146,7 +146,7 @@ class HTMLController {
                  * create the custom button for inserting WISE assets into
                  * summernote
                  */
-                var InsertAssetButton = this.UtilService.createInsertAssetButton(this, this.nodeId, this.componentId, 'rubric', insertAssetString);
+                var InsertAssetButton = this.UtilService.createInsertAssetButton(this, null, this.nodeId, this.componentId, 'rubric', insertAssetString);
 
                 /*
                  * the options that specifies the tools to display in the
