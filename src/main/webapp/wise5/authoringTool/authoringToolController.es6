@@ -123,6 +123,7 @@ class AuthoringToolController {
 
             // create the params for opening the WISE Link authoring popup
             var stateParams = {};
+            stateParams.projectId = params.projectId;
             stateParams.nodeId = params.nodeId;
             stateParams.componentId = params.componentId;
             stateParams.target = params.target;

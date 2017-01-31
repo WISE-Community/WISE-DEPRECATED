@@ -28,7 +28,16 @@
             <li>{{ 'title' | translate }} <input ng-model="reportNote.title" /></li>
             <li>{{ 'description' | translate }} <textarea rows="5" cols="50" ng-model="reportNote.description" /></li>
             <li>{{ 'prompt' | translate }} <textarea rows="5" cols="50" ng-model="reportNote.prompt" /></li>
-            <li>{{ 'content' | translate }} <textarea rows="15" cols="50" ng-model="reportNote.content" /></li>
+            <li>{{ 'content' | translate }} <textarea rows="15" cols="50" ng-model="reportNote.content" />
+                <summernote id='{{reportNote.summernoteId}}'
+                    ng-model='reportNote.summernoteHTML'
+                    ng-change='authorNotebookController.summernoteHTMLChanged(reportNote)'
+                    config='reportNote.summernoteOptions'
+                    ng-model-options='{ debounce: 1000 }'
+                    rows='10'
+                    cols='100'>
+                </summernote>
+            </li>
         </ul>
     </ul>
 </ul>

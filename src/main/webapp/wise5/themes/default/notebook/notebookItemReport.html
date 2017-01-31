@@ -11,7 +11,8 @@
         <summernote id="{{notebookItemReportController.reportId}}"
                     ng-if="notebookItemReportController.mode != 'classroomMonitor'"
                     class="notebook-item--report__content"
-                    ng-model="notebookItemReportController.reportItem.content.content"
+                    ng-model="notebookItemReportController.reportItemContent"
+                    ng-change="notebookItemReportController.reportItemContentChanged()"
                     config="notebookItemReportController.summernoteOptions"></summernote>
         <div ng-if="notebookItemReportController.mode == 'classroomMonitor'"
              class="notebook-item--report__content"><compile data="notebookItemReportController.reportItem.content.content"></compile></div>

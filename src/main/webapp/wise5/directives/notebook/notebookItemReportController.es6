@@ -53,6 +53,9 @@ class NotebookItemReportController {
         this.notebookConfig = this.NotebookService.getNotebookConfig();
         this.label = this.notebookConfig.itemTypes.report.label;
 
+        // replace relative asset paths with absolute asset paths
+        this.reportItemContent = this.ProjectService.injectAssetPaths(this.reportItem.content.content);
+
         // summernote editor options
         this.summernoteOptions = {
             toolbar: [
@@ -251,6 +254,20 @@ class NotebookItemReportController {
     setSaveMessage(message, time) {
         this.saveMessage.text = message;
         this.saveMessage.time = time;
+    }
+
+    /**
+     * The report item content changed
+     */
+    reportItemContentChanged() {
+        /*
+         * remove the absolute asset paths
+         * e.g.
+         * <img src='https://wise.berkeley.edu/curriculum/3/assets/sun.png'/>
+         * will be changed to
+         * <img src='sun.png'/>
+         */
+        this.reportItem.content.content = this.ConfigService.removeAbsoluteAssetPaths(this.reportItemContent);
     }
 }
 

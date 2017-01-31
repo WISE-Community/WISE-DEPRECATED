@@ -760,7 +760,7 @@ class ProjectService {
                         // get the delimiter which will be \' or \"
                         delimiter = matchedString.substr(0,2);
                     } else {
-                        // the string does not have escaped qoutes for example "hello.png"
+                        // the string does not have escaped quotes for example "hello.png"
 
                         // get everything between the quotes
                         matchedStringWithoutQuotes = matchedString.substr(1, matchedString.length - 2);
@@ -769,9 +769,18 @@ class ProjectService {
                         delimiter = matchedString.substr(0,1);
                     }
 
-                    //var matchedStringWithoutFirstAndLastQuote = matchedString.substr(1, matchedString.length - 2);  // everything but the beginning and end quote (' or ")
-                    // make a new string with the contentBaseURL + assets/ prepended to the path
-                    return delimiter + contentBaseURL + "assets/" + matchedStringWithoutQuotes + delimiter;
+                    if (matchedStringWithoutQuotes != null && matchedStringWithoutQuotes.startsWith("/")) {
+                        /*
+                         * the matched string starts with a "/" which means it's
+                         * an absolute path and does not require path prepending
+                         * so we will just return the original unmodified string
+                         */
+                        return matchedStringWithoutQuotes;
+                    } else {
+                        //var matchedStringWithoutFirstAndLastQuote = matchedString.substr(1, matchedString.length - 2);  // everything but the beginning and end quote (' or ")
+                        // make a new string with the contentBaseURL + assets/ prepended to the path
+                        return delimiter + contentBaseURL + "assets/" + matchedStringWithoutQuotes + delimiter;
+                    }
                 }
             );
         }

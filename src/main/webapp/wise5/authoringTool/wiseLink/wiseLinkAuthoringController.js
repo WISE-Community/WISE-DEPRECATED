@@ -21,6 +21,7 @@ var WISELinkAuthoringController = function () {
          * get the node id and component id of the component that has opened
          * the WISE link authoring popup
          */
+        this.projectId = $stateParams.projectId;
         this.nodeId = $stateParams.nodeId;
         this.componentId = $stateParams.componentId;
         this.target = $stateParams.target;
@@ -115,6 +116,7 @@ var WISELinkAuthoringController = function () {
             } else {
                 // fire the event to notify listeners that a WISE Link should be created
                 var params = {
+                    projectId: this.projectId,
                     nodeId: this.nodeId,
                     componentId: this.componentId,
                     target: this.target,
