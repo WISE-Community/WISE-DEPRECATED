@@ -244,7 +244,7 @@ class LabelController {
                 this.summernoteRubricHTML = this.componentContent.rubric;
 
                 // the tooltip text for the insert WISE asset button
-                var insertAssetString = this.$translate('html.insertAsset');
+                var insertAssetString = this.$translate('INSERT_ASSET');
 
                 /*
                  * create the custom button for inserting WISE assets into

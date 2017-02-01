@@ -86,7 +86,7 @@ class HTMLController {
                 var thisController = this;
 
                 // the tooltip text for the the WISE Link authoring button
-                var insertWISELinkString = this.$translate('html.insertWISELink');
+                var insertWISELinkString = this.$translate('INSERT_WISE_LINK');
 
                 /*
                  * create the custom button for inserting a WISE Link into
@@ -95,7 +95,7 @@ class HTMLController {
                 var InsertWISELinkButton = this.UtilService.createInsertWISELinkButton(this, null, this.nodeId, this.componentId, 'prompt', insertWISELinkString);
 
                 // the tooltip text for the insert WISE asset button
-                var insertAssetString = this.$translate('html.insertAsset');
+                var insertAssetString = this.$translate('INSERT_ASSET');
 
                 /*
                  * create the custom button for inserting WISE assets into
@@ -140,7 +140,7 @@ class HTMLController {
                 this.summernoteRubricHTML = this.componentContent.rubric;
 
                 // the tooltip text for the insert WISE asset button
-                var insertAssetString = this.$translate('html.insertAsset');
+                var insertAssetString = this.$translate('INSERT_ASSET');
 
                 /*
                  * create the custom button for inserting WISE assets into

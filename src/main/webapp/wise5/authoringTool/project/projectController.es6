@@ -49,7 +49,7 @@ class ProjectController {
         this.summernoteRubricHTML = this.ProjectService.replaceAssetPaths(this.ProjectService.getProjectRubric());
 
         // the tooltip text for the insert WISE asset button
-        var insertAssetString = this.$translate('html.insertAsset');
+        var insertAssetString = this.$translate('INSERT_ASSET');
 
         /*
          * create the custom button for inserting WISE assets into
