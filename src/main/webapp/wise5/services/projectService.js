@@ -870,7 +870,7 @@ var ProjectService = function () {
                         delimiter = matchedString.substr(0, 1);
                     }
 
-                    if (matchedStringWithoutQuotes != null && matchedStringWithoutQuotes.startsWith("/")) {
+                    if (matchedStringWithoutQuotes != null && matchedStringWithoutQuotes.length > 0 && matchedStringWithoutQuotes.charAt(0) == "/") {
                         /*
                          * the matched string starts with a "/" which means it's
                          * an absolute path and does not require path prepending
