@@ -55,7 +55,7 @@
         </div>
         <div class="annotations--grading__score" flex-xs="100" ng-if="$ctrl.hasMaxScore" layout="row" layout-align="start start">
             <md-input-container class="md-no-float">
-                <label class="input-label md-no-float">
+                <label class="input-label annotations--grading__score__label">
                     <span ng-if="$ctrl.latestAnnotations.score.type === 'autoScore'" class="animate-fade">{{ 'AUTO_SCORE' | translate }}</span>
                     <span ng-if="$ctrl.latestAnnotations.score.type !== 'autoScore'">
                         <span ng-if="$ctrl.score != null" class="animate-fade">{{ 'SCORE' | translate }}</span>
@@ -72,10 +72,4 @@
             </md-input-container>
         </div>
     </div>
-    <!--<div ng-if="$ctrl.latestTeacherAnnotationTime" layout="row" layout-align="end center" class="animate-fade">
-        <div class="annotations--grading__info md-caption text-secondary">
-            Feedback Sent: <span class="component__actions__more" am-time-ago="$ctrl.latestTeacherAnnotationTime"></span>
-            <md-tooltip md-direction="top">{{ $ctrl.latestTeacherAnnotationTime | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip>
-        </div>
-    </div>-->
 </div>

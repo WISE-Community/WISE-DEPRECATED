@@ -30,14 +30,16 @@
         min-width: 108px;
     }
 
-    .input-label {
-        margin: 3px 0;
-    }
-
     input {
         font-size: rem(1.8);
         width: 54px;
     }
+}
+
+.annotations--grading__score__label {
+    transform: none !important;
+    padding: 0;
+    margin: 3px 0 8px;
 }
 
 .annotations--grading__score__max {
