@@ -1,3 +1,9 @@
+<style>
+    md-dialog {
+        display: initial;
+        width: 80%;
+    }
+</style>
 <div class="l-constrained">
     <div class="flex md-subhead content-head" layout="row" layout-align="start center" layout-wrap layout-margin>
         <h2 class="accent-2" layout="row">
@@ -6,7 +12,7 @@
         </h2>
         <div ng-show="nodeGradingController.showRubricButton">
             <md-button ng-click="nodeGradingController.showRubric()"
-                       ng-class="md-primary">{{ 'showRubric' | translate }}</md-button>
+                       ng-class="md-primary">{{ 'showStepRubric' | translate }}</md-button>
         </div>
         <span flex></span>
         <span class="text-secondary">

@@ -206,21 +206,61 @@ class NodeProgressController {
      * Show the rubric in the grading view. We will show the step rubric and the
      * component rubrics.
      */
-    showProjectRubric() {
-
-        var projectRubric = "<div style='margin-left:30px;margin-right:30px;margin-top:30px;margin-bottom:30px;'>";
+    showRubric() {
 
         // get the project title
-        projectRubric += '<h3>' + this.ProjectService.getProjectTitle() + '</h3>';
+        var projectTitle = this.ProjectService.getProjectTitle();
 
-        // get the project rubric
-        projectRubric += this.ProjectService.replaceAssetPaths(this.ProjectService.getProjectRubric());
+        /*
+         * create the header for the popup that contains the project title,
+         * 'Open in New Tab' button, and 'Close' button
+         */
+        var popupHeader = "<div style='display: flex; margin-left: 30px; margin-right: 30px; margin-top: 30px; margin-bottom: 30px;'><div style='flex: 50%'><h3>" + projectTitle + "</h3></div><div style='flex: 50%; text-align: right'><md-button class='md-primary md-raised' ng-click='openRubricInNewTab()' translate='openInNewTab'></md-button> <md-button class='md-primary md-raised' ng-click='closeRubric()' translate='CLOSE'></md-button></div></div>";
 
-        projectRubric += '</div>';
+        /*
+         * create the header for the new tab that contains the project title
+         */
+        var tabHeader = "<link rel='stylesheet' href='../wise5/lib/bootstrap/css/bootstrap.min.css' /><link rel='stylesheet' href='../wise5/lib/summernote/dist/summernote.css' /><div style='display: flex; margin-left: 30px; margin-right: 30px; margin-top: 30px; margin-bottom: 30px;'><h1>" + projectTitle + "</h1></div>";
 
-        // display the rubrics in a popup
+        // create the div that will hold the rubric content
+        var rubricContent = "<div style='margin-left:30px;margin-right:30px;margin-top:30px;margin-bottom:30px;'>";
+
+        // get the rubric content
+        rubricContent += this.ProjectService.replaceAssetPaths(this.ProjectService.getProjectRubric());
+
+        rubricContent += '</div>';
+
+        // create the popup content
+        var popupContent = popupHeader + rubricContent;
+
+        // create the tab content
+        var tabContent = tabHeader + rubricContent;
+
+        // display the rubric in a popup
         this.$mdDialog.show({
-            template: projectRubric,
+            template: popupContent,
+            controller: ['$scope', '$mdDialog',
+                function DialogController($scope, $mdDialog) {
+
+                    // display the rubric in a new tab
+                    $scope.openRubricInNewTab = function() {
+
+                        // open a new tab
+                        var w = window.open('', '_blank');
+
+                        // write the rubric content to the new tab
+                        w.document.write(tabContent);
+
+                        // close the popup
+                        $mdDialog.hide();
+                    }
+
+                    // close the popup
+                    $scope.closeRubric = function() {
+                        $mdDialog.hide();
+                    }
+                }
+            ],
             clickOutsideToClose: true,
             escapeToClose: true
         });

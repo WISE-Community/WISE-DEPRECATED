@@ -1,3 +1,9 @@
+<style>
+    md-dialog {
+        display: initial;
+        width: 80%;
+    }
+</style>
 <div class="view-content--with-sidemenu" ng-if="nodeProgressController.isGroupNode(nodeProgressController.nodeId)">
     <div class="l-constrained l-constrained-md md-padding nav">
         <div class="flex md-subhead content-head" layout="row" layout-align="start center" layout-wrap layout-margin>
@@ -5,8 +11,8 @@
                 <div class="content-head__item">{{nodeProgressController.getNodeCompletion('group0')}}%<span class="md-subhead" translate="completion"></span></div>
             </h2>
             <div ng-show="nodeProgressController.showRubricButton">
-                <md-button ng-click="nodeProgressController.showProjectRubric()"
-                           ng-class="md-primary">{{ 'showRubric' | translate }}</md-button>
+                <md-button ng-click="nodeProgressController.showRubric()"
+                           ng-class="md-primary">{{ 'showProjectRubric' | translate }}</md-button>
             </div>
             <span flex></span>
             <div>

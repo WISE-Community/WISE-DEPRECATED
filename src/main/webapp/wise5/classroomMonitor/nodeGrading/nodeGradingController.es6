@@ -629,25 +629,28 @@ class NodeGradingController {
      */
     showRubric() {
 
-        /*
-         * we will accumulate the rubrics from the step and the step's
-         * components
-         */
-        var accumulatedRubrics = '';
-
         // get the step number and title
-        var title = this.ProjectService.getNodePositionAndTitleByNodeId(this.nodeId);
+        var stepNumberAndTitle = this.ProjectService.getNodePositionAndTitleByNodeId(this.nodeId);
 
-        accumulatedRubrics += "<div style='margin-left:30px;margin-right:30px;margin-top:30px;margin-bottom:30px;'>";
+        /*
+         * create the header for the popup that contains the project title,
+         * 'Open in New Tab' button, and 'Close' button
+         */
+        var popupHeader = "<div style='display: flex; margin-left: 30px; margin-right: 30px; margin-top: 30px; margin-bottom: 30px;'><div style='flex: 50%'><h3>" + stepNumberAndTitle + "</h3></div><div style='flex: 50%; text-align: right'><md-button class='md-primary md-raised' ng-click='openRubricInNewTab()' translate='openInNewTab'></md-button> <md-button class='md-primary md-raised' ng-click='closeRubric()' translate='CLOSE'></md-button></div></div>";
 
-        // show the step number and title
-        accumulatedRubrics += '<h3>' + title + '</h3>';
+        /*
+         * create the header for the new tab that contains the project title
+         */
+        var tabHeader = "<link rel='stylesheet' href='../wise5/lib/bootstrap/css/bootstrap.min.css' /><link rel='stylesheet' href='../wise5/lib/summernote/dist/summernote.css' /><div style='display: flex; margin-left: 30px; margin-right: 30px; margin-top: 30px; margin-bottom: 30px;'><h1>" + stepNumberAndTitle + "</h1></div>";
+
+        // create the div that will hold the rubric content
+        var rubricContent = "<div style='margin-left:30px;margin-right:30px;margin-top:30px;margin-bottom:30px;'>";
 
         // get the step rubric
         var nodeRubric = this.nodeContent.rubric;
 
         if (nodeRubric != null) {
-            accumulatedRubrics += nodeRubric;
+            rubricContent += nodeRubric;
         }
 
         // get the components
@@ -666,26 +669,52 @@ class NodeGradingController {
 
                     if (componentRubric != null && componentRubric != '') {
 
-                        if (accumulatedRubrics != '') {
+                        if (rubricContent != '') {
                             // separate component rubrics with a line break
-                            accumulatedRubrics += '<br/>';
+                            rubricContent += '<br/>';
                         }
 
                         // append the component rubric
-                        accumulatedRubrics += componentRubric;
+                        rubricContent += componentRubric;
                     }
                 }
             }
         }
 
-        accumulatedRubrics += '</div>';
-
         // inject the asset paths into the rubrics
-        accumulatedRubrics = this.ProjectService.replaceAssetPaths(accumulatedRubrics);
+        rubricContent = this.ProjectService.replaceAssetPaths(rubricContent);
 
-        // display the rubrics in a popup
+        // create the popup content
+        var popupContent = popupHeader + rubricContent;
+
+        // create the tab content
+        var tabContent = tabHeader + rubricContent;
+
+        // display the rubric in a popup
         this.$mdDialog.show({
-            template: accumulatedRubrics,
+            template: popupContent,
+            controller: ['$scope', '$mdDialog',
+                function DialogController($scope, $mdDialog) {
+
+                    // display the rubric in a new tab
+                    $scope.openRubricInNewTab = function() {
+
+                        // open a new tab
+                        var w = window.open('', '_blank');
+
+                        // write the rubric content to the new tab
+                        w.document.write(tabContent);
+
+                        // close the popup
+                        $mdDialog.hide();
+                    }
+
+                    // close the popup
+                    $scope.closeRubric = function() {
+                        $mdDialog.hide();
+                    }
+                }
+            ],
             clickOutsideToClose: true,
             escapeToClose: true
         });
