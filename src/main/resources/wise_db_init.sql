@@ -211,9 +211,9 @@
         message varchar(255) not null,
         groupId varchar(30),
         nodeId varchar(30),
-        serverSaveTime timestamp not null,
-        timeDismissed timestamp,
-        timeGenerated timestamp not null,
+        serverSaveTime timestamp not null default current_timestamp,
+        timeDismissed timestamp null default null,
+        timeGenerated timestamp not null default current_timestamp,
         type varchar(255),
         fromWorkgroupId bigint,
         periodId bigint not null,
@@ -593,16 +593,16 @@
         primary key (id)
     ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-    alter table acl_class 
+    alter table acl_class
         add constraint UK_iy7ua5fso3il3u3ymoc4uf35w  unique (class);
 
-    alter table acl_entry 
+    alter table acl_entry
         add constraint UK_gh5egfpe4gaqokya6s0567b0l  unique (acl_object_identity, ace_order);
 
-    alter table acl_object_identity 
+    alter table acl_object_identity
         add constraint UK_ehrgv7ffpt0jenafv0o1bu5tm  unique (object_id_class, object_id_identity);
 
-    alter table acl_sid 
+    alter table acl_sid
         add constraint UK_meabypi3cnm8604op6qvd517v  unique (sid, principal);
 
     create index runIdIndex on annotations (runId);
@@ -613,7 +613,7 @@
 
     create index workgroupIdIndex on events (workgroupId);
 
-    alter table granted_authorities 
+    alter table granted_authorities
         add constraint UK_cgffgw24ojv4o1oe9cpgdy60k  unique (authority);
 
     create index runIdAndWorkgroupIdIndex on ideabasket (runId, workgroupId);
@@ -632,16 +632,16 @@
 
     create index runIdAndWorkgroupIdIndex on portfolio (runId, workgroupId);
 
-    alter table projects 
+    alter table projects
         add constraint UK_t592fa1q3xyjf1qsx8t4qkrt5  unique (metadata_fk);
 
-    alter table runs 
+    alter table runs
         add constraint UK_dxea1ifhea203qe2ie4lsd8vb  unique (run_code);
 
-    alter table runs_related_to_announcements 
+    alter table runs_related_to_announcements
         add constraint UK_5wvxgfc1e0xwlprdhcycju191  unique (announcements_fk);
 
-    alter table runs_related_to_groups 
+    alter table runs_related_to_groups
         add constraint UK_kcgmq40wsaa12f22mebooiyfv  unique (groups_fk);
 
     create index runIdIndex on runstatus (runId);
@@ -658,150 +658,150 @@
 
     create index workgroupIdIndex on studentstatus (workgroupId);
 
-    alter table user_details 
+    alter table user_details
         add constraint UK_qqadnciq8gixe1qmxd0rj9cyk  unique (username);
 
-    alter table userinfo 
+    alter table userinfo
         add constraint UK_dp78k1tuh3whhutek48hts0wy  unique (workgroupId);
 
     create index workgroupIdIndex on userinfo (workgroupId);
 
-    alter table users 
+    alter table users
         add constraint UK_ol2kbitd35lc87ddawfhiu9ll  unique (user_details_fk);
 
-    alter table acl_entry 
-        add constraint FK_i6xyfccd4y3wlwhgwpo4a9rm1 
-        foreign key (sid) 
+    alter table acl_entry
+        add constraint FK_i6xyfccd4y3wlwhgwpo4a9rm1
+        foreign key (sid)
         references acl_sid (id);
 
-    alter table acl_entry 
-        add constraint FK_fhuoesmjef3mrv0gpja4shvcr 
-        foreign key (acl_object_identity) 
+    alter table acl_entry
+        add constraint FK_fhuoesmjef3mrv0gpja4shvcr
+        foreign key (acl_object_identity)
         references acl_object_identity (id);
 
-    alter table acl_object_identity 
-        add constraint FK_6c3ugmk053uy27bk2sred31lf 
-        foreign key (object_id_class) 
+    alter table acl_object_identity
+        add constraint FK_6c3ugmk053uy27bk2sred31lf
+        foreign key (object_id_class)
         references acl_class (id);
 
-    alter table acl_object_identity 
-        add constraint FK_nxv5we2ion9fwedbkge7syoc3 
-        foreign key (owner_sid) 
+    alter table acl_object_identity
+        add constraint FK_nxv5we2ion9fwedbkge7syoc3
+        foreign key (owner_sid)
         references acl_sid (id);
 
-    alter table acl_object_identity 
-        add constraint FK_6oap2k8q5bl33yq3yffrwedhf 
-        foreign key (parent_object) 
+    alter table acl_object_identity
+        add constraint FK_6oap2k8q5bl33yq3yffrwedhf
+        foreign key (parent_object)
         references acl_object_identity (id);
 
-    alter table annotation 
-        add constraint FK_d46ducyl96kyvs66kqcupm1yo 
-        foreign key (fromUser_id) 
+    alter table annotation
+        add constraint FK_d46ducyl96kyvs66kqcupm1yo
+        foreign key (fromUser_id)
         references userinfo (id);
 
-    alter table annotation 
-        add constraint FK_j0nvgi7bbyvuscs4demti1wco 
-        foreign key (stepWork_id) 
+    alter table annotation
+        add constraint FK_j0nvgi7bbyvuscs4demti1wco
+        foreign key (stepWork_id)
         references stepwork (id);
 
-    alter table annotation 
-        add constraint FK_rg9ukck99cs044ofyhohguv8 
-        foreign key (toUser_id) 
+    alter table annotation
+        add constraint FK_rg9ukck99cs044ofyhohguv8
+        foreign key (toUser_id)
         references userinfo (id);
 
-    alter table annotations 
-        add constraint FK_3uwsbpxbqpqynfwt7oym6p59g 
-        foreign key (fromWorkgroupId) 
+    alter table annotations
+        add constraint FK_3uwsbpxbqpqynfwt7oym6p59g
+        foreign key (fromWorkgroupId)
         references wiseworkgroups (id);
 
-    alter table annotations 
-        add constraint FK_k3bkb9frmuj637vfehvmnrdqo 
-        foreign key (periodId) 
+    alter table annotations
+        add constraint FK_k3bkb9frmuj637vfehvmnrdqo
+        foreign key (periodId)
         references groups (id);
 
-    alter table annotations 
-        add constraint FK_qoauslcyxtauxtlgeipbsxj1n 
-        foreign key (runId) 
+    alter table annotations
+        add constraint FK_qoauslcyxtauxtlgeipbsxj1n
+        foreign key (runId)
         references runs (id);
 
-    alter table annotations 
-        add constraint FK_lklpu3fwsovjhx5wqsjlah0ot 
-        foreign key (studentWorkId) 
+    alter table annotations
+        add constraint FK_lklpu3fwsovjhx5wqsjlah0ot
+        foreign key (studentWorkId)
         references studentWork (id);
 
-    alter table annotations 
-        add constraint FK_ss22rostrwvgvh4x7n5mmq173 
-        foreign key (toWorkgroupId) 
+    alter table annotations
+        add constraint FK_ss22rostrwvgvh4x7n5mmq173
+        foreign key (toWorkgroupId)
         references wiseworkgroups (id);
 
-    alter table craterrequest 
-        add constraint FK_rx43blmi6te4f1ttt3j1s9vr1 
-        foreign key (stepWorkId) 
+    alter table craterrequest
+        add constraint FK_rx43blmi6te4f1ttt3j1s9vr1
+        foreign key (stepWorkId)
         references stepwork (id);
 
-    alter table events 
-        add constraint FK_hvs65ix9oss3abisglg7r502r 
-        foreign key (periodId) 
+    alter table events
+        add constraint FK_hvs65ix9oss3abisglg7r502r
+        foreign key (periodId)
         references groups (id);
 
-    alter table events 
-        add constraint FK_18ony502dcyxdrgjriir0u8bm 
-        foreign key (runId) 
+    alter table events
+        add constraint FK_18ony502dcyxdrgjriir0u8bm
+        foreign key (runId)
         references runs (id);
 
-    alter table events 
-        add constraint FK_jh9ptmwgfdnyq9flj9mly66qd 
-        foreign key (workgroupId) 
+    alter table events
+        add constraint FK_jh9ptmwgfdnyq9flj9mly66qd
+        foreign key (workgroupId)
         references wiseworkgroups (id);
 
-    alter table groups 
-        add constraint FK_x1sf5l9k6d5g1t7kemday5ib 
-        foreign key (parent_fk) 
+    alter table groups
+        add constraint FK_x1sf5l9k6d5g1t7kemday5ib
+        foreign key (parent_fk)
         references groups (id);
 
-    alter table groups_related_to_users 
-        add constraint FK_du79ka4in4vrs0t6fpslc991w 
-        foreign key (user_fk) 
+    alter table groups_related_to_users
+        add constraint FK_du79ka4in4vrs0t6fpslc991w
+        foreign key (user_fk)
         references users (id);
 
-    alter table groups_related_to_users 
-        add constraint FK_arb3y3vuj8r7ns7if3cicin5k 
-        foreign key (group_fk) 
+    alter table groups_related_to_users
+        add constraint FK_arb3y3vuj8r7ns7if3cicin5k
+        foreign key (group_fk)
         references groups (id);
 
-    alter table modules 
-        add constraint FK_9qido677ahgt2n9yiftoj65r3 
-        foreign key (id) 
+    alter table modules
+        add constraint FK_9qido677ahgt2n9yiftoj65r3
+        foreign key (id)
         references curnits (id);
 
-    alter table newsitem 
-        add constraint FK_iekdwpu7jkpuwafy4uvocjg3s 
-        foreign key (owner) 
+    alter table newsitem
+        add constraint FK_iekdwpu7jkpuwafy4uvocjg3s
+        foreign key (owner)
         references users (id);
 
-    alter table notebookItems 
-        add constraint FK_ise5npapdk8l8oboed1cwdpvy 
-        foreign key (periodId) 
+    alter table notebookItems
+        add constraint FK_ise5npapdk8l8oboed1cwdpvy
+        foreign key (periodId)
         references groups (id);
 
-    alter table notebookItems 
-        add constraint FK_ovww8da6he3tajdqcv5kjnkyc 
-        foreign key (runId) 
+    alter table notebookItems
+        add constraint FK_ovww8da6he3tajdqcv5kjnkyc
+        foreign key (runId)
         references runs (id);
 
-    alter table notebookItems 
-        add constraint FK_qhj21osipe081frv53u06gsf7 
-        foreign key (studentAssetId) 
+    alter table notebookItems
+        add constraint FK_qhj21osipe081frv53u06gsf7
+        foreign key (studentAssetId)
         references studentAssets (id);
 
-    alter table notebookItems 
-        add constraint FK_o7cl4ipb1r8i5golyna3hd3iq 
-        foreign key (studentWorkId) 
+    alter table notebookItems
+        add constraint FK_o7cl4ipb1r8i5golyna3hd3iq
+        foreign key (studentWorkId)
         references studentWork (id);
 
-    alter table notebookItems 
-        add constraint FK_1kysecht20yj67y65kh1n1agw 
-        foreign key (workgroupId) 
+    alter table notebookItems
+        add constraint FK_1kysecht20yj67y65kh1n1agw
+        foreign key (workgroupId)
         references wiseworkgroups (id);
 
     alter table notification
@@ -824,229 +824,229 @@
         foreign key (toWorkgroupId)
         references wiseworkgroups (id);
 
-    alter table peerreviewgate 
-        add constraint FK_bulp6tbwu3b9o6eagiq95i2r9 
-        foreign key (node_id) 
+    alter table peerreviewgate
+        add constraint FK_bulp6tbwu3b9o6eagiq95i2r9
+        foreign key (node_id)
         references node (id);
 
-    alter table peerreviewwork 
-        add constraint FK_ihv9jbfykdl41nyaonh0m2ymg 
-        foreign key (annotation_id) 
+    alter table peerreviewwork
+        add constraint FK_ihv9jbfykdl41nyaonh0m2ymg
+        foreign key (annotation_id)
         references annotation (id);
 
-    alter table peerreviewwork 
-        add constraint FK_s4tcwkylkiblmkb0txmtueu01 
-        foreign key (node_id) 
+    alter table peerreviewwork
+        add constraint FK_s4tcwkylkiblmkb0txmtueu01
+        foreign key (node_id)
         references node (id);
 
-    alter table peerreviewwork 
-        add constraint FK_83d9ghow3iirt1fvlu08gyo05 
-        foreign key (reviewerUserInfo_id) 
+    alter table peerreviewwork
+        add constraint FK_83d9ghow3iirt1fvlu08gyo05
+        foreign key (reviewerUserInfo_id)
         references userinfo (id);
 
-    alter table peerreviewwork 
-        add constraint FK_p6ifyownuo964toju5ryuwg9i 
-        foreign key (stepWork_id) 
+    alter table peerreviewwork
+        add constraint FK_p6ifyownuo964toju5ryuwg9i
+        foreign key (stepWork_id)
         references stepwork (id);
 
-    alter table peerreviewwork 
-        add constraint FK_9g9bu7b97h9nsjjmxlyfpv3lu 
-        foreign key (userInfo_id) 
+    alter table peerreviewwork
+        add constraint FK_9g9bu7b97h9nsjjmxlyfpv3lu
+        foreign key (userInfo_id)
         references userinfo (id);
 
-    alter table premadecommentlists 
-        add constraint FK_6b3n93jbwosh3vltge9l7tech 
-        foreign key (owner) 
+    alter table premadecommentlists
+        add constraint FK_6b3n93jbwosh3vltge9l7tech
+        foreign key (owner)
         references users (id);
 
-    alter table premadecomments 
-        add constraint FK_3r3j3qrueilqtvvl5bbpsmj5y 
-        foreign key (owner) 
+    alter table premadecomments
+        add constraint FK_3r3j3qrueilqtvvl5bbpsmj5y
+        foreign key (owner)
         references users (id);
 
-    alter table premadecomments_related_to_premadecommentlists 
-        add constraint FK_86bl25uq177xpco33trwjb7od 
-        foreign key (premadecomments_fk) 
+    alter table premadecomments_related_to_premadecommentlists
+        add constraint FK_86bl25uq177xpco33trwjb7od
+        foreign key (premadecomments_fk)
         references premadecomments (id);
 
-    alter table premadecomments_related_to_premadecommentlists 
-        add constraint FK_3u4rbdp8k8fywqwxobmlexoj 
-        foreign key (premadecommentslist_fk) 
+    alter table premadecomments_related_to_premadecommentlists
+        add constraint FK_3u4rbdp8k8fywqwxobmlexoj
+        foreign key (premadecommentslist_fk)
         references premadecommentlists (id);
 
-    alter table projects 
-        add constraint FK_89hfo2jpmi5bd7a73w8cy7h4t 
-        foreign key (curnit_fk) 
+    alter table projects
+        add constraint FK_89hfo2jpmi5bd7a73w8cy7h4t
+        foreign key (curnit_fk)
         references curnits (id);
 
-    alter table projects 
-        add constraint FK_t592fa1q3xyjf1qsx8t4qkrt5 
-        foreign key (metadata_fk) 
+    alter table projects
+        add constraint FK_t592fa1q3xyjf1qsx8t4qkrt5
+        foreign key (metadata_fk)
         references project_metadata (id);
 
-    alter table projects 
-        add constraint FK_lglinci94nt1chg4acxpds1nh 
-        foreign key (owner_fk) 
+    alter table projects
+        add constraint FK_lglinci94nt1chg4acxpds1nh
+        foreign key (owner_fk)
         references users (id);
 
-    alter table projects_related_to_bookmarkers 
-        add constraint FK_fenusge1cdckorb9yur1o2rh8 
-        foreign key (bookmarkers) 
+    alter table projects_related_to_bookmarkers
+        add constraint FK_fenusge1cdckorb9yur1o2rh8
+        foreign key (bookmarkers)
         references users (id);
 
-    alter table projects_related_to_bookmarkers 
-        add constraint FK_7hx2irt01trvr794torxcwqsg 
-        foreign key (projects_fk) 
+    alter table projects_related_to_bookmarkers
+        add constraint FK_7hx2irt01trvr794torxcwqsg
+        foreign key (projects_fk)
         references projects (id);
 
-    alter table projects_related_to_shared_owners 
-        add constraint FK_g7j1ver46vlscdpc1yj4whlah 
-        foreign key (shared_owners_fk) 
+    alter table projects_related_to_shared_owners
+        add constraint FK_g7j1ver46vlscdpc1yj4whlah
+        foreign key (shared_owners_fk)
         references users (id);
 
-    alter table projects_related_to_shared_owners 
-        add constraint FK_3mfji8oq2i1j2gs1qwrl3trg8 
-        foreign key (projects_fk) 
+    alter table projects_related_to_shared_owners
+        add constraint FK_3mfji8oq2i1j2gs1qwrl3trg8
+        foreign key (projects_fk)
         references projects (id);
 
-    alter table projects_related_to_tags 
-        add constraint FK_ewjh3a7iw7rush60sie8rou53 
-        foreign key (tag_fk) 
+    alter table projects_related_to_tags
+        add constraint FK_ewjh3a7iw7rush60sie8rou53
+        foreign key (tag_fk)
         references tags (id);
 
-    alter table projects_related_to_tags 
-        add constraint FK_hfttryi4o1jquauowc5csxxf3 
-        foreign key (project_fk) 
+    alter table projects_related_to_tags
+        add constraint FK_hfttryi4o1jquauowc5csxxf3
+        foreign key (project_fk)
         references projects (id);
 
-    alter table runs 
-        add constraint FK_rtby4u6ckas8uabbsphui5c3g 
-        foreign key (owner_fk) 
+    alter table runs
+        add constraint FK_rtby4u6ckas8uabbsphui5c3g
+        foreign key (owner_fk)
         references users (id);
 
-    alter table runs 
-        add constraint FK_fipl4dw621w08oghwrx2b23qx 
-        foreign key (project_fk) 
+    alter table runs
+        add constraint FK_fipl4dw621w08oghwrx2b23qx
+        foreign key (project_fk)
         references projects (id);
 
-    alter table runs 
-        add constraint FK_99toogxqkbwxwc6o7ah5sv5st 
-        foreign key (id) 
+    alter table runs
+        add constraint FK_99toogxqkbwxwc6o7ah5sv5st
+        foreign key (id)
         references offerings (id);
 
-    alter table runs_related_to_announcements 
-        add constraint FK_5wvxgfc1e0xwlprdhcycju191 
-        foreign key (announcements_fk) 
+    alter table runs_related_to_announcements
+        add constraint FK_5wvxgfc1e0xwlprdhcycju191
+        foreign key (announcements_fk)
         references announcements (id);
 
-    alter table runs_related_to_announcements 
-        add constraint FK_rohbpw2w3diu07k5fpq2rqqf6 
-        foreign key (runs_fk) 
+    alter table runs_related_to_announcements
+        add constraint FK_rohbpw2w3diu07k5fpq2rqqf6
+        foreign key (runs_fk)
         references runs (id);
 
-    alter table runs_related_to_groups 
-        add constraint FK_kcgmq40wsaa12f22mebooiyfv 
-        foreign key (groups_fk) 
+    alter table runs_related_to_groups
+        add constraint FK_kcgmq40wsaa12f22mebooiyfv
+        foreign key (groups_fk)
         references groups (id);
 
-    alter table runs_related_to_groups 
-        add constraint FK_6ejb2o01s8ck8tanryen4hpbl 
-        foreign key (runs_fk) 
+    alter table runs_related_to_groups
+        add constraint FK_6ejb2o01s8ck8tanryen4hpbl
+        foreign key (runs_fk)
         references runs (id);
 
-    alter table runs_related_to_shared_owners 
-        add constraint FK_buumthln7k9jh05fr6cceqhn5 
-        foreign key (shared_owners_fk) 
+    alter table runs_related_to_shared_owners
+        add constraint FK_buumthln7k9jh05fr6cceqhn5
+        foreign key (shared_owners_fk)
         references users (id);
 
-    alter table runs_related_to_shared_owners 
-        add constraint FK_jdrsuik03ou6b3oxpwai3tcsy 
-        foreign key (runs_fk) 
+    alter table runs_related_to_shared_owners
+        add constraint FK_jdrsuik03ou6b3oxpwai3tcsy
+        foreign key (runs_fk)
         references runs (id);
 
-    alter table stepwork 
-        add constraint FK_m3n3kdn3kcerb4bl35pc447cn 
-        foreign key (node_id) 
+    alter table stepwork
+        add constraint FK_m3n3kdn3kcerb4bl35pc447cn
+        foreign key (node_id)
         references node (id);
 
-    alter table stepwork 
-        add constraint FK_opop9oerhku71x4bsy2y08o16 
-        foreign key (userInfo_id) 
+    alter table stepwork
+        add constraint FK_opop9oerhku71x4bsy2y08o16
+        foreign key (userInfo_id)
         references userinfo (id);
 
-    alter table studentAssets 
-        add constraint FK_gkc4jns85mcoslbxsmv4ie439 
-        foreign key (periodId) 
+    alter table studentAssets
+        add constraint FK_gkc4jns85mcoslbxsmv4ie439
+        foreign key (periodId)
         references groups (id);
 
-    alter table studentAssets 
-        add constraint FK_rp03jp240sd652ufbuagpk8yr 
-        foreign key (runId) 
+    alter table studentAssets
+        add constraint FK_rp03jp240sd652ufbuagpk8yr
+        foreign key (runId)
         references runs (id);
 
-    alter table studentAssets 
-        add constraint FK_ek7vyrj5s18xxq7376c4ml182 
-        foreign key (workgroupId) 
+    alter table studentAssets
+        add constraint FK_ek7vyrj5s18xxq7376c4ml182
+        foreign key (workgroupId)
         references wiseworkgroups (id);
 
-    alter table studentWork 
-        add constraint FK_5a5bt8rjamjme0re6qlf7hs1y 
-        foreign key (periodId) 
+    alter table studentWork
+        add constraint FK_5a5bt8rjamjme0re6qlf7hs1y
+        foreign key (periodId)
         references groups (id);
 
-    alter table studentWork 
-        add constraint FK_hf57jgwp7plk8p935k9engx6v 
-        foreign key (runId) 
+    alter table studentWork
+        add constraint FK_hf57jgwp7plk8p935k9engx6v
+        foreign key (runId)
         references runs (id);
 
-    alter table studentWork 
-        add constraint FK_5ojijtumnugj5h36q4g9fi0en 
-        foreign key (workgroupId) 
+    alter table studentWork
+        add constraint FK_5ojijtumnugj5h36q4g9fi0en
+        foreign key (workgroupId)
         references wiseworkgroups (id);
 
-    alter table student_user_details 
-        add constraint FK_qgv3p8ouoryypy2eacb5ma8xc 
-        foreign key (id) 
+    alter table student_user_details
+        add constraint FK_qgv3p8ouoryypy2eacb5ma8xc
+        foreign key (id)
         references user_details (id);
 
-    alter table teacher_user_details 
-        add constraint FK_731ea05n5p0yt79n2xsi93326 
-        foreign key (id) 
+    alter table teacher_user_details
+        add constraint FK_731ea05n5p0yt79n2xsi93326
+        foreign key (id)
         references user_details (id);
 
-    alter table user_details_related_to_roles 
-        add constraint FK_msgwl9684bgxnfdqbopnf662w 
-        foreign key (granted_authorities_fk) 
+    alter table user_details_related_to_roles
+        add constraint FK_msgwl9684bgxnfdqbopnf662w
+        foreign key (granted_authorities_fk)
         references granted_authorities (id);
 
-    alter table user_details_related_to_roles 
-        add constraint FK_lwjrxu9hloy65rh3s8s8ol41q 
-        foreign key (user_details_fk) 
+    alter table user_details_related_to_roles
+        add constraint FK_lwjrxu9hloy65rh3s8s8ol41q
+        foreign key (user_details_fk)
         references user_details (id);
 
-    alter table users 
-        add constraint FK_ol2kbitd35lc87ddawfhiu9ll 
-        foreign key (user_details_fk) 
+    alter table users
+        add constraint FK_ol2kbitd35lc87ddawfhiu9ll
+        foreign key (user_details_fk)
         references user_details (id);
 
-    alter table wiseworkgroups 
-        add constraint FK_6uylikvjy2shywbjils4pw5uc 
-        foreign key (period) 
+    alter table wiseworkgroups
+        add constraint FK_6uylikvjy2shywbjils4pw5uc
+        foreign key (period)
         references groups (id);
 
-    alter table wiseworkgroups 
-        add constraint FK_f24mfvwckptrwk3kk37q6bnay 
-        foreign key (id) 
+    alter table wiseworkgroups
+        add constraint FK_f24mfvwckptrwk3kk37q6bnay
+        foreign key (id)
         references workgroups (id);
 
-    alter table workgroups 
-        add constraint FK_l3p60cdyaxu6nxi2wgurypey9 
-        foreign key (group_fk) 
+    alter table workgroups
+        add constraint FK_l3p60cdyaxu6nxi2wgurypey9
+        foreign key (group_fk)
         references groups (id);
 
-    alter table workgroups 
-        add constraint FK_sy995385kq0w6liidq3fidpvx 
-        foreign key (offering_fk) 
+    alter table workgroups
+        add constraint FK_sy995385kq0w6liidq3fidpvx
+        foreign key (offering_fk)
         references offerings (id);
 
 -- initial data for wise below
@@ -1063,4 +1063,3 @@ INSERT INTO users (id, OPTLOCK, user_details_fk) VALUES (1,0,1),(2,0,2);
 INSERT INTO teacher_user_details (city,country,curriculumsubjects,displayname,isEmailValid,firstname,lastlogintime,lastname,numberoflogins,schoollevel,schoolname,signupdate,state,id) VALUES ('Berkeley','USA',NULL,'adminuser',0,'ad',NULL,'min',0,3,'Berkeley','2010-10-25 15:41:31','CA',1),('Berkeley','USA',NULL,'preview',0,'pre',NULL,'view',0,3,'Berkeley','2010-10-25 15:41:31','CA',2);
 
 INSERT INTO user_details_related_to_roles VALUES (1,1),(1,2),(1,3),(1,5),(2,1),(2,3),(2,5);
-
