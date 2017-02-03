@@ -63,7 +63,7 @@ public class HibernateStudentWorkDao extends AbstractHibernateDao<StudentWork> i
         String queryString =
                 "SELECT sw.id, sw.nodeId, sw.componentId, sw.componentType, 'step number', 'step title', 'component part number', " +
                 "sw.isAutoSave, sw.isSubmit, sw.clientSaveTime, sw.serverSaveTime, sw.studentData, sw.periodId, sw.runId, sw.workgroupId, " +
-                "g.name 'Period Name', ud.username 'Teacher Username', r.project_fk 'Project ID', GROUP_CONCAT(gu.user_fk SEPARATOR ', ') 'WISE IDs' " +
+                "g.name as \"Period Name\", ud.username as \"Teacher Username\", r.project_fk as \"Project ID\", GROUP_CONCAT(gu.user_fk SEPARATOR ', ') \"WISE IDs\" " +
                 "FROM studentWork sw, " +
                 "workgroups w, " +
                 "groups_related_to_users gu, " +
@@ -73,7 +73,7 @@ public class HibernateStudentWorkDao extends AbstractHibernateDao<StudentWork> i
                 "user_details ud " +
                 "where sw.runId = :runId and sw.workgroupId = w.id and w.group_fk = gu.group_fk and g.id = sw.periodId and " +
                 "sw.runId = r.id and r.owner_fk = u.id and u.user_details_fk = ud.id " +
-                "group by sw.id order by workgroupId";
+                "group by sw.id, sw.nodeId, sw.componentId, sw.componentType, sw.isAutoSave, sw.isSubmit, sw.clientSaveTime, sw.serverSaveTime, sw.studentData, sw.periodId, sw.runId, sw.workgroupId, g.name, ud.username, r.project_fk order by workgroupId";
         Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
         SQLQuery query = session.createSQLQuery(queryString);
         query.setParameter("runId", runId);
@@ -87,6 +87,34 @@ public class HibernateStudentWorkDao extends AbstractHibernateDao<StudentWork> i
     }
 
     public List<Object[]> getStudentEventExport(Integer runId) {
+        String queryString =
+                "SELECT e.id, e.nodeId, e.componentId, e.componentType, 'step number', 'step title', 'component part number', " +
+                "e.clientSaveTime, e.serverSaveTime, e.category, e.context, e.event, e.data, e.periodId, e.runId, e.workgroupId, " +
+                "g.name as \"Period Name\", ud.username as \"Teacher Username\", r.project_fk as \"Project ID\", GROUP_CONCAT(gu.user_fk SEPARATOR ', ') \"WISE IDs\" " +
+        "FROM events e, " +
+                "workgroups w, " +
+                "groups_related_to_users gu, " +
+                "groups g, " +
+                "runs r, " +
+                "users u, " +
+                "user_details ud " +
+                "where e.runId = :runId and e.workgroupId = w.id and w.group_fk = gu.group_fk and g.id = e.periodId and " +
+                "e.runId = r.id and r.owner_fk = u.id and u.user_details_fk = ud.id " +
+                "group by e.id, e.nodeId, e.componentId, e.componentType, e.clientSaveTime, e.serverSaveTime, e.category, e.context, e.event, e.data, e.periodId, e.runId, e.workgroupId, g.name, ud.username, r.project_fk order by workgroupId ";
+
+        Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
+        SQLQuery query = session.createSQLQuery(queryString);
+        query.setParameter("runId", runId);
+        List resultList = new ArrayList<Object[]>();
+        Object[] headerRow = new String[]{"id","node id","component id","component type","step number","step title","component part number",
+                "client save time","server save time","category", "context", "event", "data","period id","run id","workgroup id",
+                "period name", "teacher username", "project id", "WISE ids"};
+        resultList.add(headerRow);
+        resultList.addAll(query.list());
+        return resultList;
+    }
+
+    public List<Object[]> getStudentEventExport0(Integer runId) {
         String queryString =
                 "SELECT e.id, e.nodeId, e.componentId, e.componentType, 'step number', 'step title', 'component part number', " +
                 "e.clientSaveTime, e.serverSaveTime, e.category, e.context, e.event, e.data, e.periodId, e.runId, e.workgroupId, " +
@@ -152,27 +180,27 @@ public class HibernateStudentWorkDao extends AbstractHibernateDao<StudentWork> i
             sessionCriteria.add(Restrictions.eq("componentType", componentType));
         }
         if (components != null) {
-            
+
             // create the criteria to accept any of the components by using an 'or' conditional
             Disjunction disjunction = Restrictions.disjunction();
-            
+
             // loop through all the components
             for (int c = 0; c < components.size(); c++) {
                 JSONObject component = components.get(c);
-                
+
                 if (component != null) {
                     try {
                         // get the node id and component id of the component
                         String tempNodeId = component.getString("nodeId");
                         String tempComponentId = component.getString("componentId");
-                        
+
                         // create restrictions to match the node id and component id
                         SimpleExpression nodeIdRestriction = Restrictions.eq("nodeId", tempNodeId);
                         SimpleExpression componentIdRestriction = Restrictions.eq("componentId", tempComponentId);
-                        
+
                         // require the node id and component id to match by using an 'and' conditional
                         Conjunction conjunction = Restrictions.conjunction(nodeIdRestriction, componentIdRestriction);
-                        
+
                         // add the restriction to the 'or' conditional
                         disjunction.add(conjunction);
                     } catch (JSONException e) {
@@ -180,7 +208,7 @@ public class HibernateStudentWorkDao extends AbstractHibernateDao<StudentWork> i
                     }
                 }
             }
-            
+
             // add the restriction to the main criteria
             sessionCriteria.add(disjunction);
         }
