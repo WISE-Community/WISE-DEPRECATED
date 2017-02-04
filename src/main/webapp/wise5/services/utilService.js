@@ -247,7 +247,7 @@ var UtilService = function () {
         /**
          * Check if the asset is a video
          * @param fileName the file name of the asset
-         * @return whether the asset is an image or not
+         * @return whether the asset is a video or not
          */
 
     }, {
@@ -259,9 +259,9 @@ var UtilService = function () {
                 var lowerCaseFileName = fileName.toLowerCase();
 
                 // regex to match video extensions
-                var imageExtensionsRegEx = new RegExp('.*\.(mp4|mpg|mpeg|m2v|avi|gifv|mov|qt)');
+                var videoExtensionsRegEx = new RegExp('.*\.(mp4|mpg|mpeg|m4v|m2v|avi|gifv|mov|qt)');
 
-                var matchResult = lowerCaseFileName.match(imageExtensionsRegEx);
+                var matchResult = lowerCaseFileName.match(videoExtensionsRegEx);
 
                 if (matchResult != null) {
                     // we have found a match so the asset is a video
