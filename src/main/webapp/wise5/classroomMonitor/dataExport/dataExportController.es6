@@ -217,6 +217,7 @@ class DataExportController {
                 let COLUMN_INDEX_COMPONENT_PART_NUMBER = 6;
                 let COLUMN_INDEX_TYPE = 9;
                 let COLUMN_INDEX_STUDENT_DATA = 10;
+                let COLUMN_INDEX_WORKGROUP_ID = 13;
                 let COLUMN_INDEX_WISE_IDS = 17;
                 let COLUMN_INDEX_WISE_ID_1 = 17;
                 let COLUMN_INDEX_WISE_ID_2 = 18;
@@ -226,7 +227,7 @@ class DataExportController {
                 if (exportType === "latestNotebookItems") {
                     let hash = {};  // store latestStudentWork. Assume that key = (localNotebookItemId)
                     result = result.reverse().filter( (studentWorkRow) => {
-                        let hashKey = studentWorkRow[COLUMN_INDEX_LOCAL_NOTEBOOK_ITEM_ID];
+                        let hashKey = studentWorkRow[COLUMN_INDEX_LOCAL_NOTEBOOK_ITEM_ID] + "_" + studentWorkRow[COLUMN_INDEX_WORKGROUP_ID];
                         if (!hash.hasOwnProperty(hashKey)) {
                             // remember in hash
                             hash[hashKey] = studentWorkRow;

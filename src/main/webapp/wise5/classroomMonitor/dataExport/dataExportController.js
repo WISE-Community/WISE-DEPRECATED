@@ -246,6 +246,7 @@ var DataExportController = function () {
                         var COLUMN_INDEX_COMPONENT_PART_NUMBER = 6;
                         var COLUMN_INDEX_TYPE = 9;
                         var COLUMN_INDEX_STUDENT_DATA = 10;
+                        var COLUMN_INDEX_WORKGROUP_ID = 13;
                         var COLUMN_INDEX_WISE_IDS = 17;
                         var COLUMN_INDEX_WISE_ID_1 = 17;
                         var COLUMN_INDEX_WISE_ID_2 = 18;
@@ -256,7 +257,7 @@ var DataExportController = function () {
                             (function () {
                                 var hash = {}; // store latestStudentWork. Assume that key = (localNotebookItemId)
                                 result = result.reverse().filter(function (studentWorkRow) {
-                                    var hashKey = studentWorkRow[COLUMN_INDEX_LOCAL_NOTEBOOK_ITEM_ID];
+                                    var hashKey = studentWorkRow[COLUMN_INDEX_LOCAL_NOTEBOOK_ITEM_ID] + "_" + studentWorkRow[COLUMN_INDEX_WORKGROUP_ID];
                                     if (!hash.hasOwnProperty(hashKey)) {
                                         // remember in hash
                                         hash[hashKey] = studentWorkRow;
