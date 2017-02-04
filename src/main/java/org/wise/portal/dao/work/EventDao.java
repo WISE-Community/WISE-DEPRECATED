@@ -40,4 +40,9 @@ public interface EventDao<T extends Event> extends SimpleDao<T> {
     List<Event> getEventsByParams(Integer id, Run run, Group period, WISEWorkgroup workgroup,
                                     String nodeId, String componentId, String componentType,
                                     String context, String category, String event);
+    /**
+     * Returns a list of events for the specified runs in an exportable format
+     */
+    List<Object[]> getStudentEventExport(Integer runId);
+
 }

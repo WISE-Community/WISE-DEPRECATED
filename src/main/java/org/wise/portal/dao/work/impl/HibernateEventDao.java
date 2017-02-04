@@ -24,6 +24,7 @@
 package org.wise.portal.dao.work.impl;
 
 import org.hibernate.Criteria;
+import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
@@ -34,6 +35,7 @@ import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.workgroup.WISEWorkgroup;
 import org.wise.vle.domain.work.Event;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -50,6 +52,34 @@ public class HibernateEventDao extends AbstractHibernateDao<Event> implements Ev
     @Override
     protected Class<? extends Event> getDataObjectClass() {
         return Event.class;
+    }
+
+    public List<Object[]> getStudentEventExport(Integer runId) {
+        String queryString =
+                "SELECT e.id, e.nodeId, e.componentId, e.componentType, 'step number', 'step title', 'component part number', " +
+                        "e.clientSaveTime, e.serverSaveTime, e.category, e.context, e.event, e.data, e.periodId, e.runId, e.workgroupId, " +
+                        "g.name as \"Period Name\", ud.username as \"Teacher Username\", r.project_fk as \"Project ID\", GROUP_CONCAT(gu.user_fk SEPARATOR ', ') \"WISE IDs\" " +
+                        "FROM events e, " +
+                        "workgroups w, " +
+                        "groups_related_to_users gu, " +
+                        "groups g, " +
+                        "runs r, " +
+                        "users u, " +
+                        "user_details ud " +
+                        "where e.runId = :runId and e.workgroupId = w.id and w.group_fk = gu.group_fk and g.id = e.periodId and " +
+                        "e.runId = r.id and r.owner_fk = u.id and u.user_details_fk = ud.id " +
+                        "group by e.id, e.nodeId, e.componentId, e.componentType, e.clientSaveTime, e.serverSaveTime, e.category, e.context, e.event, e.data, e.periodId, e.runId, e.workgroupId, g.name, ud.username, r.project_fk order by workgroupId ";
+
+        Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
+        SQLQuery query = session.createSQLQuery(queryString);
+        query.setParameter("runId", runId);
+        List resultList = new ArrayList<Object[]>();
+        Object[] headerRow = new String[]{"id","node id","component id","component type","step number","step title","component part number",
+                "client save time","server save time","category", "context", "event", "data","period id","run id","workgroup id",
+                "period name", "teacher username", "project id", "WISE ids"};
+        resultList.add(headerRow);
+        resultList.addAll(query.list());
+        return resultList;
     }
 
     @Override

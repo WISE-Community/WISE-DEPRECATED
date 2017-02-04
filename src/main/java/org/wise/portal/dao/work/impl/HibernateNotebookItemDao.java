@@ -64,9 +64,9 @@ public class HibernateNotebookItemDao
 
     public List<Object[]> getNotebookItemExport(Integer runId) {
         String queryString =
-                "SELECT n.id, n.nodeId, n.componentId, 'step number', 'step title', 'component part number', " +
+                "SELECT n.id, n.localNotebookItemId, n.nodeId, n.componentId, 'step number', 'step title', 'component part number', " +
                         "n.clientSaveTime, n.serverSaveTime, n.type, n.content, n.periodId, n.runId, n.workgroupId, " +
-                        "g.name 'Period Name', ud.username 'Teacher Username', r.project_fk 'Project ID', GROUP_CONCAT(gu.user_fk SEPARATOR ', ') 'WISE IDs' " +
+                        "g.name as \"Period Name\", ud.username as \"Teacher Username\", r.project_fk as \"Project ID\", GROUP_CONCAT(gu.user_fk SEPARATOR ', ') \"WISE IDs\" " +
                         "FROM notebookItems n, " +
                         "workgroups w, " +
                         "groups_related_to_users gu, " +
@@ -76,12 +76,12 @@ public class HibernateNotebookItemDao
                         "user_details ud " +
                         "where n.runId = :runId and n.workgroupId = w.id and w.group_fk = gu.group_fk and g.id = n.periodId and " +
                         "n.runId = r.id and r.owner_fk = u.id and u.user_details_fk = ud.id " +
-                        "group by n.id order by workgroupId";
+                        "group by n.id, n.localNotebookItemId, n.nodeId, n.componentId, n.clientSaveTime, n.serverSaveTime, n.type, n.content, n.periodId, n.runId, n.workgroupId, g.name, ud.username, r.project_fk order by workgroupId";
         Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
         SQLQuery query = session.createSQLQuery(queryString);
         query.setParameter("runId", runId);
         List resultList = new ArrayList<Object[]>();
-        Object[] headerRow = new String[]{"id","node id","component id","step number","step title","component part number",
+        Object[] headerRow = new String[]{"id","note item id","node id","component id","step number","step title","component part number",
                 "client save time","server save time","type","content","period id","run id","workgroup id",
                 "period name", "teacher username", "project id", "WISE ids"};
         resultList.add(headerRow);

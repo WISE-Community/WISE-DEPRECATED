@@ -89,7 +89,7 @@ public class TeacherDataController {
                     PrintWriter writer = response.getWriter();
                     writer.write(resultArray.toString());
                     writer.close();
-                } else if ("notebookItems".equals(exportType)) {
+                } else if ("allNotebookItems".equals(exportType) || "latestNotebookItems".equals(exportType)) {
                     JSONArray resultArray = vleService.getNotebookExport(runId);
                     PrintWriter writer = response.getWriter();
                     writer.write(resultArray.toString());

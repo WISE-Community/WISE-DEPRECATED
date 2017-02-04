@@ -234,73 +234,96 @@ var DataExportController = function () {
                             csvString += "\r\n";
                         }
                     })();
-                } else if (exportType === "notebookItems") {
-                    exportFilename = "notebook_" + runId + ".csv";
+                } else if (exportType === "latestNotebookItems" || exportType === "allNotebookItems") {
+                    (function () {
+                        exportFilename = "notebook_" + runId + ".csv";
 
-                    var COLUMN_INDEX_NODE_ID = 1;
-                    var COLUMN_INDEX_COMPONENT_ID = 2;
-                    var COLUMN_INDEX_STEP_NUMBER = 3;
-                    var COLUMN_INDEX_STEP_TITLE = 4;
-                    var COLUMN_INDEX_COMPONENT_PART_NUMBER = 5;
-                    var COLUMN_INDEX_TYPE = 8;
-                    var COLUMN_INDEX_STUDENT_DATA = 9;
-                    var COLUMN_INDEX_WISE_IDS = 16;
-                    var COLUMN_INDEX_WISE_ID_1 = 16;
-                    var COLUMN_INDEX_WISE_ID_2 = 17;
-                    var COLUMN_INDEX_WISE_ID_3 = 18;
-                    var COLUMN_INDEX_STUDENT_RESPONSE = 19;
+                        var COLUMN_INDEX_LOCAL_NOTEBOOK_ITEM_ID = 1;
+                        var COLUMN_INDEX_NODE_ID = 2;
+                        var COLUMN_INDEX_COMPONENT_ID = 3;
+                        var COLUMN_INDEX_STEP_NUMBER = 4;
+                        var COLUMN_INDEX_STEP_TITLE = 5;
+                        var COLUMN_INDEX_COMPONENT_PART_NUMBER = 6;
+                        var COLUMN_INDEX_TYPE = 9;
+                        var COLUMN_INDEX_STUDENT_DATA = 10;
+                        var COLUMN_INDEX_WISE_IDS = 17;
+                        var COLUMN_INDEX_WISE_ID_1 = 17;
+                        var COLUMN_INDEX_WISE_ID_2 = 18;
+                        var COLUMN_INDEX_WISE_ID_3 = 19;
+                        var COLUMN_INDEX_STUDENT_RESPONSE = 20;
 
-                    for (var rowIndex = 0; rowIndex < result.length; rowIndex++) {
-                        var row = result[rowIndex];
-
-                        if (rowIndex === 0) {
-                            // append additional header columns
-                            row[COLUMN_INDEX_WISE_ID_1] = "WISE ID 1";
-                            row[COLUMN_INDEX_WISE_ID_2] = "WISE ID 2";
-                            row[COLUMN_INDEX_WISE_ID_3] = "WISE ID 3";
-                            row[COLUMN_INDEX_STUDENT_RESPONSE] = "response";
-                        } else {
-                            // for all non-header rows, fill in step numbers, titles, and component part numbers.
-                            var _nodeId2 = row[COLUMN_INDEX_NODE_ID];
-                            var _componentId2 = row[COLUMN_INDEX_COMPONENT_ID];
-                            row[COLUMN_INDEX_STEP_NUMBER] = _this2.ProjectService.getNodePositionById(_nodeId2);
-                            row[COLUMN_INDEX_STEP_TITLE] = _this2.ProjectService.getNodeTitleByNodeId(_nodeId2);
-                            row[COLUMN_INDEX_COMPONENT_PART_NUMBER] = _this2.ProjectService.getComponentPositionByNodeIdAndComponentId(_nodeId2, _componentId2) + 1; // make it 1-indexed for researchers
-                            var wiseIDs = row[COLUMN_INDEX_WISE_IDS];
-                            var wiseIDsArray = wiseIDs.split(",");
-                            row[COLUMN_INDEX_WISE_ID_1] = wiseIDsArray[0];
-                            row[COLUMN_INDEX_WISE_ID_2] = wiseIDsArray[1] || "";
-                            row[COLUMN_INDEX_WISE_ID_3] = wiseIDsArray[2] || "";
-
-                            // get the student data JSON and extract responses into its own column
-                            var studentDataJSONCell = row[COLUMN_INDEX_STUDENT_DATA];
-                            if (row[COLUMN_INDEX_TYPE] === "report") {
-                                if (studentDataJSONCell.content != null) {
-                                    row[COLUMN_INDEX_STUDENT_RESPONSE] = _this2.escapeContent(studentDataJSONCell.content);
-                                } else {
-                                    row[COLUMN_INDEX_STUDENT_RESPONSE] = "";
-                                }
-                            } else if (row[COLUMN_INDEX_TYPE] === "note") {
-                                if (studentDataJSONCell.text != null) {
-                                    row[COLUMN_INDEX_STUDENT_RESPONSE] = _this2.escapeContent(studentDataJSONCell.text);
-                                } else {
-                                    row[COLUMN_INDEX_STUDENT_RESPONSE] = "";
-                                }
-                            }
+                        if (exportType === "latestNotebookItems") {
+                            (function () {
+                                var hash = {}; // store latestStudentWork. Assume that key = (localNotebookItemId)
+                                result = result.reverse().filter(function (studentWorkRow) {
+                                    var hashKey = studentWorkRow[COLUMN_INDEX_LOCAL_NOTEBOOK_ITEM_ID];
+                                    if (!hash.hasOwnProperty(hashKey)) {
+                                        // remember in hash
+                                        hash[hashKey] = studentWorkRow;
+                                        return true;
+                                    } else {
+                                        // we already have the latest, so we can disregard this studentWorkRow.
+                                        return false;
+                                    }
+                                }).reverse();
+                                exportFilename = "latest_notebook_items_" + runId + ".csv";
+                            })();
+                        } else if (exportType === "allNotebookItems") {
+                            exportFilename = "all_notebook_items_" + runId + ".csv";
                         }
 
-                        // append row to csvString
-                        for (var cellIndex = 0; cellIndex < row.length; cellIndex++) {
-                            var cell = row[cellIndex];
-                            if ((typeof cell === "undefined" ? "undefined" : _typeof(cell)) === "object") {
-                                cell = "\"" + JSON.stringify(cell).replace(/"/g, '""') + "\"";
-                            } else if (typeof cell === "string") {
-                                cell = "\"" + cell + "\"";
+                        for (var rowIndex = 0; rowIndex < result.length; rowIndex++) {
+                            var row = result[rowIndex];
+
+                            if (rowIndex === 0) {
+                                // append additional header columns
+                                row[COLUMN_INDEX_WISE_ID_1] = "WISE ID 1";
+                                row[COLUMN_INDEX_WISE_ID_2] = "WISE ID 2";
+                                row[COLUMN_INDEX_WISE_ID_3] = "WISE ID 3";
+                                row[COLUMN_INDEX_STUDENT_RESPONSE] = "response";
+                            } else {
+                                // for all non-header rows, fill in step numbers, titles, and component part numbers.
+                                var _nodeId2 = row[COLUMN_INDEX_NODE_ID];
+                                var _componentId2 = row[COLUMN_INDEX_COMPONENT_ID];
+                                row[COLUMN_INDEX_STEP_NUMBER] = _this2.ProjectService.getNodePositionById(_nodeId2);
+                                row[COLUMN_INDEX_STEP_TITLE] = _this2.ProjectService.getNodeTitleByNodeId(_nodeId2);
+                                row[COLUMN_INDEX_COMPONENT_PART_NUMBER] = _this2.ProjectService.getComponentPositionByNodeIdAndComponentId(_nodeId2, _componentId2) + 1; // make it 1-indexed for researchers
+                                var wiseIDs = row[COLUMN_INDEX_WISE_IDS];
+                                var wiseIDsArray = wiseIDs.split(",");
+                                row[COLUMN_INDEX_WISE_ID_1] = wiseIDsArray[0];
+                                row[COLUMN_INDEX_WISE_ID_2] = wiseIDsArray[1] || "";
+                                row[COLUMN_INDEX_WISE_ID_3] = wiseIDsArray[2] || "";
+
+                                // get the student data JSON and extract responses into its own column
+                                var studentDataJSONCell = row[COLUMN_INDEX_STUDENT_DATA];
+                                if (row[COLUMN_INDEX_TYPE] === "report") {
+                                    if (studentDataJSONCell.content != null) {
+                                        row[COLUMN_INDEX_STUDENT_RESPONSE] = _this2.escapeContent(studentDataJSONCell.content);
+                                    } else {
+                                        row[COLUMN_INDEX_STUDENT_RESPONSE] = "";
+                                    }
+                                } else if (row[COLUMN_INDEX_TYPE] === "note") {
+                                    if (studentDataJSONCell.text != null) {
+                                        row[COLUMN_INDEX_STUDENT_RESPONSE] = _this2.escapeContent(studentDataJSONCell.text);
+                                    } else {
+                                        row[COLUMN_INDEX_STUDENT_RESPONSE] = "";
+                                    }
+                                }
                             }
-                            csvString += cell + ",";
+
+                            // append row to csvString
+                            for (var cellIndex = 0; cellIndex < row.length; cellIndex++) {
+                                var cell = row[cellIndex];
+                                if ((typeof cell === "undefined" ? "undefined" : _typeof(cell)) === "object") {
+                                    cell = "\"" + JSON.stringify(cell).replace(/"/g, '""') + "\"";
+                                } else if (typeof cell === "string") {
+                                    cell = "\"" + cell + "\"";
+                                }
+                                csvString += cell + ",";
+                            }
+                            csvString += "\r\n";
                         }
-                        csvString += "\r\n";
-                    }
+                    })();
                 }
 
                 var csvBlob = new Blob([csvString], { type: 'text/csv' });
@@ -315,34 +338,6 @@ var DataExportController = function () {
                 window.setTimeout(function () {
                     URL.revokeObjectURL(csvUrl); // tell browser to release URL reference
                 }, 3000);
-
-                /* TODO: get OCPU working again
-                 //ocpu.seturl("//localhost:1234/ocpu/library/wise/R");
-                 ocpu.seturl("http://128.32.189.240:81/ocpu/user/wiser/library/wiser/R");
-                 //perform the request
-                 var request = ocpu.call("extractchoices", {
-                 "csvFile": csvFile
-                 }, (session) => {
-                 session.getStdout((returnedCSVString) => {
-                 var csvBlob = new Blob([returnedCSVString], {type: 'text/csv'});
-                 var csvUrl = URL.createObjectURL(csvBlob);
-                 var a = document.createElement("a");
-                 document.body.appendChild(a);
-                 a.href = csvUrl;
-                 a.download = "export_" + runId + ".csv";
-                 a.click();
-                  // timeout is required for FF.
-                 window.setTimeout(() => {
-                 URL.revokeObjectURL(csvUrl);  // tell browser to release URL reference
-                 }, 3000);
-                  //return returnedCSVString;
-                 });
-                 });
-                  //if R returns an error, alert the error message
-                 request.fail(() => {
-                 alert("Server error: " + request.responseText);
-                 });
-                 */
             });
         }
     }, {
