@@ -133,14 +133,14 @@ public class VLEServiceImpl implements VLEService {
             Object[] notebookItemExportRow = notebookItemExport.get(i);
 
             // format the timestamps so they don't have a trailing ".0" at the end and mess up display in excel
-            Timestamp notebookItemExportRowClientSaveTimeTimestamp = (Timestamp) notebookItemExportRow[6];
-            notebookItemExportRow[6] = df.format(notebookItemExportRowClientSaveTimeTimestamp);
-            Timestamp notebookItemExportRowServerSaveTimeTimestamp = (Timestamp) notebookItemExportRow[7];
-            notebookItemExportRow[7] = df.format(notebookItemExportRowServerSaveTimeTimestamp);
+            Timestamp notebookItemExportRowClientSaveTimeTimestamp = (Timestamp) notebookItemExportRow[7];
+            notebookItemExportRow[7] = df.format(notebookItemExportRowClientSaveTimeTimestamp);
+            Timestamp notebookItemExportRowServerSaveTimeTimestamp = (Timestamp) notebookItemExportRow[8];
+            notebookItemExportRow[8] = df.format(notebookItemExportRowServerSaveTimeTimestamp);
 
-            String notebookItemExportRowStudentDataString = (String) notebookItemExportRow[9];
+            String notebookItemExportRowStudentDataString = (String) notebookItemExportRow[10];
             try {
-                notebookItemExportRow[9] = new JSONObject(notebookItemExportRowStudentDataString);
+                notebookItemExportRow[10] = new JSONObject(notebookItemExportRowStudentDataString);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -180,7 +180,7 @@ public class VLEServiceImpl implements VLEService {
 
     public JSONArray getStudentEventExport(Integer runId) {
         SimpleDateFormat df = new SimpleDateFormat("YYYY/MM/dd HH:mm:ss");
-        List<Object[]> studentEventExport = studentWorkDao.getStudentEventExport(runId);
+        List<Object[]> studentEventExport = eventDao.getStudentEventExport(runId);
         for (int i = 1; i < studentEventExport.size(); i++) {
             // skip header row
             Object[] studentEventExportRow = studentEventExport.get(i);

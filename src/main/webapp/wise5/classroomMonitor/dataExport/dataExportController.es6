@@ -206,21 +206,40 @@ class DataExportController {
                     csvString += "\r\n";
                 }
 
-            } else if (exportType === "notebookItems") {
+            } else if (exportType === "latestNotebookItems" || exportType === "allNotebookItems") {
                 exportFilename = "notebook_" + runId + ".csv";
 
-                let COLUMN_INDEX_NODE_ID = 1;
-                let COLUMN_INDEX_COMPONENT_ID = 2;
-                let COLUMN_INDEX_STEP_NUMBER = 3;
-                let COLUMN_INDEX_STEP_TITLE = 4;
-                let COLUMN_INDEX_COMPONENT_PART_NUMBER = 5;
-                let COLUMN_INDEX_TYPE = 8;
-                let COLUMN_INDEX_STUDENT_DATA = 9;
-                let COLUMN_INDEX_WISE_IDS = 16;
-                let COLUMN_INDEX_WISE_ID_1 = 16;
-                let COLUMN_INDEX_WISE_ID_2 = 17;
-                let COLUMN_INDEX_WISE_ID_3 = 18;
-                let COLUMN_INDEX_STUDENT_RESPONSE = 19;
+                let COLUMN_INDEX_LOCAL_NOTEBOOK_ITEM_ID = 1;
+                let COLUMN_INDEX_NODE_ID = 2;
+                let COLUMN_INDEX_COMPONENT_ID = 3;
+                let COLUMN_INDEX_STEP_NUMBER = 4;
+                let COLUMN_INDEX_STEP_TITLE = 5;
+                let COLUMN_INDEX_COMPONENT_PART_NUMBER = 6;
+                let COLUMN_INDEX_TYPE = 9;
+                let COLUMN_INDEX_STUDENT_DATA = 10;
+                let COLUMN_INDEX_WISE_IDS = 17;
+                let COLUMN_INDEX_WISE_ID_1 = 17;
+                let COLUMN_INDEX_WISE_ID_2 = 18;
+                let COLUMN_INDEX_WISE_ID_3 = 19;
+                let COLUMN_INDEX_STUDENT_RESPONSE = 20;
+
+                if (exportType === "latestNotebookItems") {
+                    let hash = {};  // store latestStudentWork. Assume that key = (localNotebookItemId)
+                    result = result.reverse().filter( (studentWorkRow) => {
+                        let hashKey = studentWorkRow[COLUMN_INDEX_LOCAL_NOTEBOOK_ITEM_ID];
+                        if (!hash.hasOwnProperty(hashKey)) {
+                            // remember in hash
+                            hash[hashKey] = studentWorkRow;
+                            return true;
+                        } else {
+                            // we already have the latest, so we can disregard this studentWorkRow.
+                            return false;
+                        }
+                    }).reverse();
+                    exportFilename = "latest_notebook_items_" + runId + ".csv";
+                } else if (exportType === "allNotebookItems") {
+                    exportFilename = "all_notebook_items_" + runId + ".csv";
+                }
 
                 for (let rowIndex = 0; rowIndex < result.length; rowIndex++) {
                     let row = result[rowIndex];
@@ -287,37 +306,6 @@ class DataExportController {
             window.setTimeout(() => {
                 URL.revokeObjectURL(csvUrl);  // tell browser to release URL reference
             }, 3000);
-
-            /* TODO: get OCPU working again
-             //ocpu.seturl("//localhost:1234/ocpu/library/wise/R");
-             ocpu.seturl("http://128.32.189.240:81/ocpu/user/wiser/library/wiser/R");
-             //perform the request
-             var request = ocpu.call("extractchoices", {
-             "csvFile": csvFile
-             }, (session) => {
-             session.getStdout((returnedCSVString) => {
-             var csvBlob = new Blob([returnedCSVString], {type: 'text/csv'});
-             var csvUrl = URL.createObjectURL(csvBlob);
-             var a = document.createElement("a");
-             document.body.appendChild(a);
-             a.href = csvUrl;
-             a.download = "export_" + runId + ".csv";
-             a.click();
-
-             // timeout is required for FF.
-             window.setTimeout(() => {
-             URL.revokeObjectURL(csvUrl);  // tell browser to release URL reference
-             }, 3000);
-
-             //return returnedCSVString;
-             });
-             });
-
-             //if R returns an error, alert the error message
-             request.fail(() => {
-             alert("Server error: " + request.responseText);
-             });
-             */
         });
     }
 

@@ -44,9 +44,4 @@ public interface StudentWorkDao<T extends StudentWork> extends SimpleDao<T> {
                                                     List<JSONObject> components);
 
     List<Object[]> getStudentWorkExport(Integer runId);
-
-    /**
-     * Returns a list of events for the specified runs in an exportable format
-     */
-    List<Object[]> getStudentEventExport(Integer runId);
 }
