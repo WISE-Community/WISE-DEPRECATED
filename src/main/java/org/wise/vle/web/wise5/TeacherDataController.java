@@ -53,9 +53,12 @@ public class TeacherDataController {
     @Autowired
     private Properties wiseProperties;
 
+    /**
+     * Handles requests for exporting of data for teachers/researchers like student work, events, notebook items
+     */
     @ResponseBody
     @RequestMapping(method = RequestMethod.GET, value = "/teacher/export/{runId}/{exportType}")
-    public void getWISE5TeacherData(
+    public void getWISE5TeacherExport(
             @PathVariable Integer runId,
             @PathVariable String exportType,
             @RequestParam(value = "id", required = false) Integer id,
@@ -91,6 +94,11 @@ public class TeacherDataController {
                     writer.close();
                 } else if ("allNotebookItems".equals(exportType) || "latestNotebookItems".equals(exportType)) {
                     JSONArray resultArray = vleService.getNotebookExport(runId);
+                    PrintWriter writer = response.getWriter();
+                    writer.write(resultArray.toString());
+                    writer.close();
+                } else if ("notifications".equals(exportType)) {
+                    JSONArray resultArray = vleService.getNotificationExport(runId);
                     PrintWriter writer = response.getWriter();
                     writer.write(resultArray.toString());
                     writer.close();

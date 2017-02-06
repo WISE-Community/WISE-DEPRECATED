@@ -50,14 +50,19 @@ public interface VLEService {
                                             List<JSONObject> components);
 
     /**
-     * @return JSONArray of student work for researcher export
+     * @return JSONArray of student work for researcher export for the given run id.
      */
     JSONArray getStudentWorkExport(Integer runId);
 
     /**
-     * @return JSON array of notebook items for researcher export
+     * @return JSON array of notebook items for researcher export for the given run id.
      */
     JSONArray getNotebookExport(Integer runId);
+
+    /**
+     * @return JSONArray of notification for researcher export for the given run id.
+     */
+    JSONArray getNotificationExport(Integer runId);
 
     /**
 	 * Saves StudentWork in the data store

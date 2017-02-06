@@ -293,6 +293,54 @@ class DataExportController {
                     }
                     csvString += "\r\n";
                 }
+            } else if (exportType === "notifications") {
+                exportFilename = "notifications_" + runId + ".csv";
+
+                let COLUMN_INDEX_NODE_ID = 1;
+                let COLUMN_INDEX_COMPONENT_ID = 2;
+                let COLUMN_INDEX_STEP_NUMBER = 4;
+                let COLUMN_INDEX_STEP_TITLE = 5;
+                let COLUMN_INDEX_COMPONENT_PART_NUMBER = 6;
+                let COLUMN_INDEX_TYPE = 10;
+                let COLUMN_INDEX_WISE_IDS = 21;
+                let COLUMN_INDEX_WISE_ID_1 = 21;
+                let COLUMN_INDEX_WISE_ID_2 = 22;
+                let COLUMN_INDEX_WISE_ID_3 = 23;
+
+                for (let rowIndex = 0; rowIndex < result.length; rowIndex++) {
+                    let row = result[rowIndex];
+
+                    if (rowIndex === 0) {
+                        // append additional header columns
+                        row[COLUMN_INDEX_WISE_ID_1] = "WISE ID 1";
+                        row[COLUMN_INDEX_WISE_ID_2] = "WISE ID 2";
+                        row[COLUMN_INDEX_WISE_ID_3] = "WISE ID 3";
+                    } else {
+                        // for all non-header rows, fill in step numbers, titles, and component part numbers.
+                        let nodeId = row[COLUMN_INDEX_NODE_ID];
+                        let componentId = row[COLUMN_INDEX_COMPONENT_ID];
+                        row[COLUMN_INDEX_STEP_NUMBER] = this.ProjectService.getNodePositionById(nodeId);
+                        row[COLUMN_INDEX_STEP_TITLE] = this.ProjectService.getNodeTitleByNodeId(nodeId);
+                        row[COLUMN_INDEX_COMPONENT_PART_NUMBER] = this.ProjectService.getComponentPositionByNodeIdAndComponentId(nodeId, componentId) + 1; // make it 1-indexed for researchers
+                        let wiseIDs = row[COLUMN_INDEX_WISE_IDS];
+                        let wiseIDsArray = wiseIDs.split(",");
+                        row[COLUMN_INDEX_WISE_ID_1] = wiseIDsArray[0];
+                        row[COLUMN_INDEX_WISE_ID_2] = wiseIDsArray[1] || "";
+                        row[COLUMN_INDEX_WISE_ID_3] = wiseIDsArray[2] || "";
+                    }
+
+                    // append row to csvString
+                    for (let cellIndex = 0; cellIndex < row.length; cellIndex++) {
+                        let cell = row[cellIndex];
+                        if (typeof cell === "object") {
+                            cell = "\"" + JSON.stringify(cell).replace(/"/g, '""') + "\"";
+                        } else if (typeof cell === "string") {
+                            cell = "\"" + cell + "\"";
+                        }
+                        csvString += cell + ",";
+                    }
+                    csvString += "\r\n";
+                }
             }
 
             let csvBlob = new Blob([csvString], {type: 'text/csv'});

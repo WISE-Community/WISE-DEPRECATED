@@ -325,6 +325,54 @@ var DataExportController = function () {
                             csvString += "\r\n";
                         }
                     })();
+                } else if (exportType === "notifications") {
+                    exportFilename = "notifications_" + runId + ".csv";
+
+                    var COLUMN_INDEX_NODE_ID = 1;
+                    var COLUMN_INDEX_COMPONENT_ID = 2;
+                    var COLUMN_INDEX_STEP_NUMBER = 4;
+                    var COLUMN_INDEX_STEP_TITLE = 5;
+                    var COLUMN_INDEX_COMPONENT_PART_NUMBER = 6;
+                    var COLUMN_INDEX_TYPE = 10;
+                    var COLUMN_INDEX_WISE_IDS = 21;
+                    var COLUMN_INDEX_WISE_ID_1 = 21;
+                    var COLUMN_INDEX_WISE_ID_2 = 22;
+                    var COLUMN_INDEX_WISE_ID_3 = 23;
+
+                    for (var rowIndex = 0; rowIndex < result.length; rowIndex++) {
+                        var row = result[rowIndex];
+
+                        if (rowIndex === 0) {
+                            // append additional header columns
+                            row[COLUMN_INDEX_WISE_ID_1] = "WISE ID 1";
+                            row[COLUMN_INDEX_WISE_ID_2] = "WISE ID 2";
+                            row[COLUMN_INDEX_WISE_ID_3] = "WISE ID 3";
+                        } else {
+                            // for all non-header rows, fill in step numbers, titles, and component part numbers.
+                            var _nodeId3 = row[COLUMN_INDEX_NODE_ID];
+                            var _componentId3 = row[COLUMN_INDEX_COMPONENT_ID];
+                            row[COLUMN_INDEX_STEP_NUMBER] = _this2.ProjectService.getNodePositionById(_nodeId3);
+                            row[COLUMN_INDEX_STEP_TITLE] = _this2.ProjectService.getNodeTitleByNodeId(_nodeId3);
+                            row[COLUMN_INDEX_COMPONENT_PART_NUMBER] = _this2.ProjectService.getComponentPositionByNodeIdAndComponentId(_nodeId3, _componentId3) + 1; // make it 1-indexed for researchers
+                            var wiseIDs = row[COLUMN_INDEX_WISE_IDS];
+                            var wiseIDsArray = wiseIDs.split(",");
+                            row[COLUMN_INDEX_WISE_ID_1] = wiseIDsArray[0];
+                            row[COLUMN_INDEX_WISE_ID_2] = wiseIDsArray[1] || "";
+                            row[COLUMN_INDEX_WISE_ID_3] = wiseIDsArray[2] || "";
+                        }
+
+                        // append row to csvString
+                        for (var cellIndex = 0; cellIndex < row.length; cellIndex++) {
+                            var cell = row[cellIndex];
+                            if ((typeof cell === "undefined" ? "undefined" : _typeof(cell)) === "object") {
+                                cell = "\"" + JSON.stringify(cell).replace(/"/g, '""') + "\"";
+                            } else if (typeof cell === "string") {
+                                cell = "\"" + cell + "\"";
+                            }
+                            csvString += cell + ",";
+                        }
+                        csvString += "\r\n";
+                    }
                 }
 
                 var csvBlob = new Blob([csvString], { type: 'text/csv' });
