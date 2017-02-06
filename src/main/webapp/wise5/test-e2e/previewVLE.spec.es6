@@ -11,7 +11,7 @@ describe('WISE5 Student VLE Preview', () => {
     var previousButton = element(by.xpath('//button[@aria-label="Previous Item"]'));
     var nextButton = element(by.xpath('//button[@aria-label="Next Item"]'));
     var closeButton = element(by.xpath('//button[@aria-label="Project Plan"]'));
-    var accountButton = element(by.xpath('//button[@aria-label="Open user menu"]'));
+    var accountButton = element(by.xpath('//button[@aria-label="Open account menu"]'));
     var accountMenu = element(by.cssContainingText('.md-open-menu-container','Preview Team'));
     var notificationButton = element(by.xpath('//button[@aria-label="View notifications"]'));
     var notificationMenu = element(by.cssContainingText('.md-open-menu-container','Alerts'));
