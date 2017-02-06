@@ -3,7 +3,6 @@
 import NavItemController from './themeComponents/navItem/navItemController';
 import StepToolsCtrl from './themeComponents/stepTools/stepToolsController';
 import NodeStatusIconCtrl from './themeComponents/nodeStatusIcon/nodeStatusIconController';
-import ProjectStatusController from './themeComponents/projectStatus/projectStatusController';
 import NotebookMenuCtrl from './themeComponents/notebookMenu/notebookMenuController';
 import NotebookToolsCtrl from './themeComponents/notebookTools/notebookToolsController';
 

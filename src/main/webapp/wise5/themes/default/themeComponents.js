@@ -16,10 +16,6 @@ var _nodeStatusIconController = require('./themeComponents/nodeStatusIcon/nodeSt
 
 var _nodeStatusIconController2 = _interopRequireDefault(_nodeStatusIconController);
 
-var _projectStatusController = require('./themeComponents/projectStatus/projectStatusController');
-
-var _projectStatusController2 = _interopRequireDefault(_projectStatusController);
-
 var _notebookMenuController = require('./themeComponents/notebookMenu/notebookMenuController');
 
 var _notebookMenuController2 = _interopRequireDefault(_notebookMenuController);
