@@ -1,6 +1,7 @@
 {
 	"accountMenuItems": "{{item}} itens",
 	"accountMenuPoints": "{{point}} pontos",
+	"accountMenuTeam": "",
 	"accountMenuTotalScore": "Total de pontos",
 	"addItem": "",
 	"addItemTo": "",
@@ -50,6 +51,7 @@
 	"on": "",
 	"off": "",
 	"ofProjectCompleted": "",
+	"openAccountMenu": "",
 	"planningMode": "",
 	"planningModeOnlyOnePlanningModeAllowed": "",
 	"planningModeStepsUnVisitable": "",

@@ -1,6 +1,7 @@
 {
     "accountMenuItems": "{{item}} items",
     "accountMenuPoints": "{{point}} points",
+    "accountMenuTeam": "(Team {{id}})",
     "accountMenuTotalScore": "Total Score",
     "addItem": "Add Item",
     "addItemTo": "Add Item to",
@@ -50,6 +51,7 @@
     "on": "ON",
     "off": "OFF",
     "ofProjectCompleted": " of Project Completed",
+    "openAccountMenu": "Open account menu",
     "planningMode": "Planning Mode",
     "planningModeOnlyOnePlanningModeAllowed": "You can only work on one Planning Activity at a time. Turn off Planning Mode on the existing Planning Activity before working on this one.",
     "planningModeStepsUnVisitable": "You are not allowed to view items while in Planning Mode. Please turn off Planning Mode and try again.",

@@ -26,6 +26,11 @@
     }
 }
 
+.account-menu__icon {
+    background-color: color('text-light');
+    border-radius: 50%;
+}
+
 .account-menu__caret {
     position: absolute;
     right: 28px;
@@ -51,6 +56,11 @@
 
 .account-menu__info__title {
     font-weight: 700;
+}
+
+.account-menu__info__team {
+    font-weight: 400;
+    color: color('text-secondary');
 }
 
 .account-menu__users {

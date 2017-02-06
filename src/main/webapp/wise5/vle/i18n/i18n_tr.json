@@ -1,6 +1,7 @@
 {
 	"accountMenuItems": "{{item}} öğeler",
 	"accountMenuPoints": "{{point}} puanlar",
+	"accountMenuTeam": "",
 	"accountMenuTotalScore": "Toplam puan",
 	"addItem": "",
 	"addItemTo": "",
@@ -50,6 +51,7 @@
 	"on": "",
 	"off": "",
 	"ofProjectCompleted": "",
+	"openAccountMenu": "",
 	"planningMode": "",
 	"planningModeOnlyOnePlanningModeAllowed": "",
 	"planningModeStepsUnVisitable": "",

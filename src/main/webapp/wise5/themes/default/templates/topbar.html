@@ -19,11 +19,10 @@
                 <ng-include src="vleController.themePath + '/templates/notificationMenu.html'"></ng-include>
             </md-menu-content>
         </md-menu>
-        <md-progress-circular class="menu-progress" md-mode="determinate" md-diameter="26" value="{{ themeCtrl.rootNodeStatus.progress.completionPct }}"></md-progress-circular>
-        <div class="menu-progress-bg"></div>
-        <md-menu id='accountMenu' md-position-mode="target-right target" md-offset="8 26">
-            <md-button aria-label="Open user menu" class="md-icon-button" ng-click="$mdOpenMenu(); $event.stopPropagation();">
-                <md-icon md-menu-origin> account_circle </md-icon>
+        <md-progress-circular class="menu-progress" md-mode="determinate" md-diameter="32" value="{{ themeCtrl.rootNodeStatus.progress.completionPct }}"></md-progress-circular>
+        <md-menu id='accountMenu' md-position-mode="target-right target" md-offset="8 28">
+            <md-button aria-label="{{'openAccountMenu' | translate}}" class="md-icon-button" ng-click="$mdOpenMenu(); $event.stopPropagation();">
+                <md-icon md-menu-origin class="account-menu__icon" style="color: {{themeCtrl.getAvatarColorForWorkgroupId(themeCtrl.workgroupId)}};"> account_circle </md-icon>
             </md-button>
             <md-menu-content width="5" class="account-menu">
                 <ng-include src="vleController.themePath + '/templates/accountMenu.html'"></ng-include>

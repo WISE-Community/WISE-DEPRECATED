@@ -3,25 +3,14 @@ $menu-sidebar-width: 56px;
 
 // 2. Base
 .menu-progress {
-    width: 26px;
-    height: 26px;
     position: absolute;
-    top: 12px;
-    right: 15px;
+    top: 9px;
+    right: 12px;
 
     path {
         stroke: color('accent-3') !important;
+        stroke-width: 2px;
     }
-}
-
-.menu-progress-bg {
-    border-radius: 50%;
-    border: 2.6px solid rgba(255,255,255,0.4);
-    height: 26px;
-    width: 26px;
-    position: absolute;
-    top: 12px;
-    right: 15px;
 }
 
 .menu-sidenav {
