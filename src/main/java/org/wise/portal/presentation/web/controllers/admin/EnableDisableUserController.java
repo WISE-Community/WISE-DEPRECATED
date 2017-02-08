@@ -45,7 +45,7 @@ import org.wise.portal.service.user.UserService;
  * @author Hiroki Terashima
  */
 @Controller
-@RequestMapping("/admin/account/enableDisableUser")
+@RequestMapping("/admin/account/enabledisableuser")
 public class EnableDisableUserController {
 
 	@Autowired
@@ -60,7 +60,7 @@ public class EnableDisableUserController {
 		// retrieve a list of already-disabled user accounts.
 		List<User> disabledUsers = userService.retrieveDisabledUsers();
 		modelMap.put("disabledUsers", disabledUsers);
-		return "/admin/account/enableDisableUser";
+		return "/admin/account/enabledisableuser";
 	}
 
 	@RequestMapping(method = RequestMethod.POST)	
