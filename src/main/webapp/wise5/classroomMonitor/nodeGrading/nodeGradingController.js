@@ -336,7 +336,7 @@ var NodeGradingController = function () {
                 var names = this.ConfigService.getUserNamesByWorkgroupId(workgroupId);
                 var l = names.length;
                 for (var i = 0; i < l; i++) {
-                    var name = names[0].name;
+                    var name = names[i].name;
                     usernames += name;
 
                     if (i < l - 1) {
@@ -833,10 +833,10 @@ var NodeGradingController = function () {
                     orderBy = ['-usernames'];
                     break;
                 case 'status':
-                    orderBy = ['completionStatus', 'score'];
+                    orderBy = ['completionStatus', 'usernames'];
                     break;
                 case '-status':
-                    orderBy = ['-completionStatus', 'score'];
+                    orderBy = ['-completionStatus', 'usernames'];
                     break;
                 case 'score':
                     orderBy = ['score', 'usernames'];

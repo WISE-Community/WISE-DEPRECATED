@@ -314,7 +314,7 @@ class NodeGradingController {
             let names = this.ConfigService.getUserNamesByWorkgroupId(workgroupId);
             let l = names.length;
             for (let i = 0; i < l; i++) {
-                let name = names[0].name;
+                let name = names[i].name;
                 usernames += name;
 
                 if (i < (l-1)) {
@@ -761,10 +761,10 @@ class NodeGradingController {
                 orderBy = ['-usernames'];
                 break;
             case 'status':
-                orderBy = ['completionStatus', 'score'];
+                orderBy = ['completionStatus', 'usernames'];
                 break;
             case '-status':
-                orderBy = ['-completionStatus', 'score'];
+                orderBy = ['-completionStatus', 'usernames'];
                 break;
             case 'score':
                 orderBy = ['score', 'usernames'];
