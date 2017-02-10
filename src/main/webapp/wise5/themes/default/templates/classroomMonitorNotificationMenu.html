@@ -13,7 +13,7 @@
     </md-toolbar>
     <md-divider></md-divider>
     <md-content class="account-menu__actions" flex>
-        <div class="md-padding center" ng-if="!classroomMonitorController.getNewNotifications().length"><span class="md-body-1">{{ 'youHaveNoAlerts' | translate }}</span></div>
+        <div class="md-padding center" ng-if="!classroomMonitorController.getNewNotifications().length"><span class="md-body-1">{{ 'noAlerts' | translate }}</span></div>
         <md-list class="notification-list" ng-if="classroomMonitorController.getNewNotifications().length">
             <md-list-item ng-repeat="notification in classroomMonitorController.getNewNotifications() track by $index"
                           ng-click="classroomMonitorController.dismissNotificationAndVisitNode(notification)"
