@@ -67,7 +67,6 @@ gulp.task('watch-sass', ['set-watch'], function() {
 
 // -----------------------------------------------------------------------------
 // merge i18n json files
-// If key doesn't exist in foreignLocale, sets it value to "".
 // Removes extra keys from foreignLocale
 // -----------------------------------------------------------------------------
 gulp.task('update-i18n', function() {
@@ -111,9 +110,10 @@ gulp.task('update-i18n', function() {
             }
             // now look for keys that don't exist in the foreignLocale and set value to ""
             for (var key in english) {
-              if (foreignLocale[key] == null) {
-                result[key] = "";
-                  updatedAtLeasetOneI18NFile = true;
+              if (foreignLocale[key] == null || foreignLocale[key] == "") {
+                  //result[key] = "";
+                  //updatedAtLeasetOneI18NFile = true;
+                  delete result[key];
               }
             }
 

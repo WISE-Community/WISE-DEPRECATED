@@ -1,17 +1,1 @@
-{
-	"audioOscillator.add": "",
-	"audioOscillator.addOscillatorType": "",
-	"audioOscillator.errorYouHaveAlreadyAddedOscillatorType": "",
-	"audioOscillator.frequency": "",
-	"audioOscillator.importData": "",
-	"audioOscillator.oscillatorGridSize": "",
-	"audioOscillator.oscillatorType": "",
-	"audioOscillator.oscillatorTypes": "",
-	"audioOscillator.oscillatorHeight": "",
-	"audioOscillator.oscillatorWidth": "",
-	"audioOscillator.oscilloscopeStopAfterGoodDraw": "",
-	"audioOscillator.play": "",
-	"audioOscillator.save": "",
-	"audioOscillator.startingFrequency": "",
-	"audioOscillator.stop": ""
-}
+{}
