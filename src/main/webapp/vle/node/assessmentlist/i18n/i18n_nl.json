@@ -7,6 +7,10 @@
         "value": "Vraag",
         "description": "The text 'question' in the step header, right above where the prompt/question is shown"
     },
+    "save": {
+        "value": "Bewaar",
+        "description": "The text 'Save' on the button shown at the bottom of the questionnaire"
+    },
     "submit": {
         "value": "Voeg de vragenlijst toe",
         "description": "The text 'Submit the Questionnaire' on the button shown at the bottom of the questionnaire"
