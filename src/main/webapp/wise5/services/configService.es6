@@ -785,6 +785,28 @@ class ConfigService {
 
         return html
     }
+
+    /**
+     * Get the WISE IDs for a workgroup
+     * @param workgroupId get the WISE IDs for this workgroup
+     * @return an array of WISE IDs
+     */
+    getWISEIds(workgroupId) {
+
+        var wiseIds = [];
+
+        if (workgroupId != null) {
+            // get the user info object for the workgroup id
+            var userInfo = this.getUserInfoByWorkgroupId(workgroupId);
+
+            if (userInfo != null) {
+                // get the WISE IDs
+                wiseIds = userInfo.userIds;
+            }
+        }
+
+        return wiseIds;
+    }
 };
 
 ConfigService.$inject = [

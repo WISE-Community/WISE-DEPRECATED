@@ -601,6 +601,25 @@ class UtilService {
 
         return InsertWISELinkButton;
     }
+
+    /**
+     * Remove html tags from the string. Also remove new lines.
+     * @param html an html string
+     * @return text without html tags
+     */
+    removeHTMLTags(html) {
+
+        // remove tags
+        var text = html.replace(/<\/?[^>]+(>|$)/g, " ");
+
+        // remove new lines
+        text = text.replace(/\n/g, " ");
+
+        // remove line returns
+        text = text.replace(/\r/g, " ");
+
+        return text;
+    }
 }
 
 // Get the last element of the array

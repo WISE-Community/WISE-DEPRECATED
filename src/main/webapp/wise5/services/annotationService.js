@@ -829,6 +829,85 @@ var AnnotationService = function () {
 
             return inActiveGlobalAnnotations;
         }
+    }, {
+        key: 'getLatestTeacherScoreAnnotationByStudentWorkId',
+
+
+        /**
+         * Get the latest teacher score annotation for a student work id
+         * @param studentWorkId the student work id
+         * @return the latest teacher score annotation for the student work
+         */
+        value: function getLatestTeacherScoreAnnotationByStudentWorkId(studentWorkId) {
+            return this.getLatestAnnotationByStudentWorkIdAndType(studentWorkId, 'score');
+        }
+
+        /**
+         * Get the latest teacher comment annotation for a student work id
+         * @param studentWorkId the student work id
+         * @return the latest teacher comment annotation for the student work
+         */
+
+    }, {
+        key: 'getLatestTeacherCommentAnnotationByStudentWorkId',
+        value: function getLatestTeacherCommentAnnotationByStudentWorkId(studentWorkId) {
+            return this.getLatestAnnotationByStudentWorkIdAndType(studentWorkId, 'comment');
+        }
+
+        /**
+         * Get the latest auto score annotation for a student work id
+         * @param studentWorkId the student work id
+         * @return the latest auto score annotation for the student work
+         */
+
+    }, {
+        key: 'getLatestAutoScoreAnnotationByStudentWorkId',
+        value: function getLatestAutoScoreAnnotationByStudentWorkId(studentWorkId) {
+            return this.getLatestAnnotationByStudentWorkIdAndType(studentWorkId, 'autoScore');
+        }
+
+        /**
+         * Get the latest auto comment annotation for a student work id
+         * @param studentWorkId the student work id
+         * @return the latest auto comment annotation for the student work
+         */
+
+    }, {
+        key: 'getLatestAutoCommentAnnotationByStudentWorkId',
+        value: function getLatestAutoCommentAnnotationByStudentWorkId(studentWorkId) {
+            return this.getLatestAnnotationByStudentWorkIdAndType(studentWorkId, 'autoComment');
+        }
+
+        /**
+         * Get the latest annotation for the given student work and annotation type
+         * @param studentWorkId the student work id
+         * @param type the type of annotation
+         * @return the latest annotation for the given student work and annotation type
+         */
+
+    }, {
+        key: 'getLatestAnnotationByStudentWorkIdAndType',
+        value: function getLatestAnnotationByStudentWorkIdAndType(studentWorkId, type) {
+
+            // loop through all the annotations backwards
+            for (var a = this.annotations.length - 1; a >= 0; a--) {
+
+                // get an annotation
+                var annotation = this.annotations[a];
+
+                if (annotation != null) {
+                    if (studentWorkId == annotation.studentWorkId && type == annotation.type) {
+                        /*
+                         * we have found an annotation with the given student work
+                         * id and annotation type
+                         */
+                        return annotation;
+                    }
+                }
+            }
+
+            return null;
+        }
     }]);
 
     return AnnotationService;

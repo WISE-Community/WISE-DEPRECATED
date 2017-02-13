@@ -99,10 +99,65 @@ class TeacherDataService {
     }
 
     /**
+     * Get the data for the export and generate the csv file that will be downloaded
+     * @param exportType the type of export
+     */
+    getExport(exportType) {
+        let exportURL = this.ConfigService.getConfigParam('runDataExportURL');
+        let runId = this.ConfigService.getRunId();
+        exportURL += "/" + runId + "/" + exportType;
+
+        if (exportType === "allStudentWork" || exportType === "latestStudentWork") {
+            let params = {};
+            params.runId = this.ConfigService.getRunId();
+            params.getStudentWork = true;
+            params.getAnnotations = true;
+
+            return this.retrieveStudentData(params);
+        } else if (exportType === "events") {
+            let httpParams = {
+                method : 'GET',
+                url : exportURL,
+                params : {}
+            };
+
+            return this.$http(httpParams).then((result) => {
+                return result.data;
+            });
+        } else if (exportType === "latestNotebookItems" || exportType === "allNotebookItems") {
+            let httpParams = {
+                method : 'GET',
+                url : exportURL,
+                params : {}
+            };
+
+            return this.$http(httpParams).then((result) => {
+                return result.data;
+            });
+        } else if (exportType === "notifications") {
+            let httpParams = {
+                method : 'GET',
+                url : exportURL,
+                params : {}
+            };
+
+            return this.$http(httpParams).then((result) => {
+                return result.data;
+            });
+        } else if (exoprtType === "studentAssets") {
+            window.location.href = exportURL;
+            let deferred = this.$q.defer();
+            let promise = deferred.promise;
+            deferred.resolve([]);
+            return promise;
+        }
+    }
+
+    /**
      * Retrieves the export given the export Type
      * @param exportType
      */
-    getExport(exportType) {
+    getExport0(exportType) {
         let exportURL = this.ConfigService.getConfigParam('runDataExportURL');
         let runId = this.ConfigService.getRunId();
         exportURL += "/" + runId + "/" + exportType;
@@ -512,6 +567,107 @@ class TeacherDataService {
         }
 
         return latestComponentState;
+    }
+
+    /**
+     * Get the latest component states for a workgroup. Each component state
+     * will be the latest component state for a component.
+     * @param workgroupId the workgroup id
+     * @return an array of latest component states
+     */
+    getLatestComponentStatesByWorkgroupId(workgroupId) {
+        var componentStates = [];
+
+        if (workgroupId != null) {
+
+            // get all the component states for a workgroup
+            var componentStatesForWorkgroup = this.getComponentStatesByWorkgroupId(workgroupId);
+
+            if (componentStatesForWorkgroup != null) {
+
+                // mapping of component to revision count
+                var componentRevisionCount = {};
+
+                /*
+                 * used to keep track of the components we have found component
+                 * states for already
+                 */
+                var componentsFound = {};
+
+                // loop through the component states forwards
+                for (var csf = 0; csf < componentStatesForWorkgroup.length; csf++) {
+
+                    // get a component state
+                    var componentState = componentStatesForWorkgroup[csf];
+
+                    if (componentState != null) {
+
+                        // get the node id and component id of the component state
+                        var nodeId = componentState.nodeId;
+                        var componentId = componentState.componentId;
+
+                        // generate the component key e.g. "node2_bb83hs0sd8"
+                        var key = nodeId + "-" + componentId;
+
+                        if (componentRevisionCount[key] == null) {
+                            // initialize the component revision count for this component to 1 if there is no entry
+                            componentRevisionCount[key] = 1;
+                        }
+
+                        // get the revision count
+                        var revisionCount = componentRevisionCount[key];
+
+                        // set the revision count into the component state
+                        componentState.revisionCount = revisionCount;
+
+                        // increment the revision count for the component
+                        componentRevisionCount[key] = revisionCount + 1;
+                    }
+                }
+
+                // loop through the component states backwards
+                for(var csb = componentStatesForWorkgroup.length - 1; csb >= 0; csb--) {
+
+                    // get a component state
+                    var componentState = componentStatesForWorkgroup[csb];
+
+                    if (componentState != null) {
+
+                        // get the node id and component id of the component state
+                        var nodeId = componentState.nodeId;
+                        var componentId = componentState.componentId;
+
+                        // generate the component key e.g. "node2_bb83hs0sd8"
+                        var key = nodeId + "-" + componentId;
+
+                        if (componentsFound[key] == null) {
+                            /*
+                             * we have not found a component state for this
+                             * component yet so we will add it to the array
+                             * of component states
+                             */
+                            componentStates.push(componentState);
+
+                            /*
+                             * add an entry into the components found so that
+                             * don't add any more component states from this
+                             * component
+                             */
+                            componentsFound[key] = true;
+                        }
+                    }
+                }
+
+                /*
+                 * reverse the component states array since we have been adding
+                 * component states from newest to oldest order but we want them
+                 * in oldest to newest order
+                 */
+                componentStates.reverse();
+            }
+        }
+
+        return componentStates;
     }
 
     getComponentStatesByWorkgroupIdAndNodeId(workgroupId, nodeId) {
