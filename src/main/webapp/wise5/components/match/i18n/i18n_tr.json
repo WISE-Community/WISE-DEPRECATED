@@ -1,15 +1,1 @@
-{
-	"match.addBucket": "",
-	"match.addChoice": "",
-	"match.areYouSureYouWantToDeleteThisBucket": "",
-	"match.areYouSureYouWantToDeleteThisChoice": "",
-	"match.buckets": "",
-	"match.choices": "",
-	"match.correctBucketButWrongPosition": "",
-	"match.deleteBucket": "",
-	"match.deleteChoice": "",
-	"match.incorrectPositionFeedback": "",
-	"match.labelForChoicesBucket": "",
-	"match.ordered": "",
-	"match.position": ""
-}
+{}

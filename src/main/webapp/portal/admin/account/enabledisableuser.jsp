@@ -20,7 +20,7 @@
 <script type='text/javascript'>
 	function enableAccount(username) {
 		$.ajax({
-			url:"enableDisableUser",
+			url:"enabledisableuser",
 			type:"POST",
 			data:{"doEnable":true,"username":username},
 			success:function(data,textStatus,jqHXR) {
@@ -34,7 +34,7 @@
 	function disableAccount() {
 		var username = $("#usernameToDisable").val();
 		$.ajax({
-			url:"enableDisableUser",
+			url:"enabledisableuser",
 			type:"POST",
 			data:{"doEnable":false,"username":username},
 			success:function(data,textStatus,jqHXR) {

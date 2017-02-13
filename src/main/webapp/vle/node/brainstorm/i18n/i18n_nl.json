@@ -4,7 +4,7 @@
         "description": "The title for a brainstorm step"
     },
     "instructions": {
-        "value": "Lees onderstaande brainstorm topic, en schrijf je antwoord vervolgens in de witte ruimte. Klik {0} om je werk op te slaan en de antwoorden van andere studenten te bekijken. ",
+        "value": "Lees onderstaand brainstorm topic, en schrijf je antwoord vervolgens in de witte ruimte. Klik {0} om je werk op te slaan en de antwoorden van andere studenten te bekijken. ",
         "description": "The instructions for the brainstorm step"
     },
     "my_response": {
