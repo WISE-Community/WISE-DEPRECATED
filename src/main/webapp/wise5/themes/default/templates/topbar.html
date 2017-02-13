@@ -12,7 +12,7 @@
         <span flex></span>
         <md-menu md-position-mode="target-right target" md-offset="40 26">
             <md-button aria-label="View notifications" class="md-icon-button notification-btn" ng-click="$mdOpenMenu(); $event.stopPropagation();">
-                <span ng-show="vleController.hasNewNotifications()" class="notification-count">{{vleController.getNewNotifications().length}}</span>
+                <span ng-show="vleController.hasNewNotifications()" class="notification-count">{{vleController.newNotifications.length}}</span>
                 <md-icon md-menu-origin> notifications </md-icon>
             </md-button>
             <md-menu-content width="5" class="account-menu">

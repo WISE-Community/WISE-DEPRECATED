@@ -99,8 +99,15 @@ class VLEController {
             },
             (newValue, oldValue) => {
                 this.notifications = this.NotificationService.notifications;
+                this.newNotifications = this.getNewNotifications();
             }
         );
+
+        this.$scope.$on('notificationChanged', (event, notification) => {
+            // update new notifications
+            this.notifications = this.NotificationService.notifications;
+            this.newNotifications = this.getNewNotifications();
+        });
 
         this.$scope.$on('componentStudentDataChanged', () => {
             this.StudentDataService.updateNodeStatuses();
@@ -336,7 +343,7 @@ class VLEController {
      * Returns true iff there are new notifications
      */
     hasNewNotifications() {
-        return this.getNewNotifications().length > 0;
+        return this.newNotifications.length > 0;
     }
 
     /**
@@ -348,13 +355,62 @@ class VLEController {
 
     /**
      * Returns all notifications that have not been dismissed yet
+     * The newNotifications is an array of notification aggregate objects that looks like this:
+     * [
+     *  {
+     *    "nodeId": "node2",
+     *    "type": "DiscussionReply",   // ["DiscussionReply", "teacherToStudent"]
+     *    "notifications": [{ id: 1117} , { id: 1120 }]      // array of actual undismissed notifications with this nodeId and type
+     *  },
+     *  ...
+     * ]
+     * The annotation aggregates will be sorted by latest first -> oldest last
      */
     getNewNotifications() {
-        return this.notifications.filter(
-            function(notification) {
-                return notification.timeDismissed == null;
+        let newNotificationAggregates = [];
+        // get activeNotifications
+        for (let notification of this.notifications) {
+            if (notification.timeDismissed == null) {
+                // go through all the undimissed notifications and populate the newNotifications array
+                let notificationNodeId = notification.nodeId;
+                let notificationType = notification.type;
+                let newNotificationForNodeIdAndTypeExists = false;
+                for (let newNotificationAggregate of newNotificationAggregates) {
+                    if (newNotificationAggregate.nodeId == notificationNodeId && newNotificationAggregate.type == notificationType) {
+                        newNotificationForNodeIdAndTypeExists = true;
+                        newNotificationAggregate.notifications.push(notification);
+                        // update latestNotificationTimestamp if needed
+                        if (notification.timeGenerated > newNotificationAggregate.latestNotificationTimestamp) {
+                            newNotificationAggregate.latestNotificationTimestamp = notification.timeGenerated;
+                        }
+                    }
+                }
+                if (!newNotificationForNodeIdAndTypeExists) {
+                    let message = "";
+                    if (notificationType === "DiscussionReply") {
+                        message = this.$translate('newRepliesOnDiscussionPost');
+                    } else if (notificationType === "teacherToStudent") {
+                        message = this.$translate('newFeedbackFromTeacher');
+                    } else if (notificationType === "CRaterResult") {
+                        message = this.$translate('newFeedback');
+                    }
+                    let newNotificationAggregate = {
+                        latestNotificationTimestamp: notification.timeGenerated,
+                        message: message,
+                        nodeId: notificationNodeId,
+                        notifications: [notification],
+                        type: notificationType
+                    };
+                    newNotificationAggregates.push(newNotificationAggregate);
+                }
             }
-        );
+        }
+
+        // now sort the aggregates by latestNotificationTimestamp, latest -> oldest
+        newNotificationAggregates.sort((n1, n2) => {
+           return n2.latestNotificationTimestamp - n1.latestNotificationTimestamp;
+        });
+        return newNotificationAggregates;
     }
 
     /**
@@ -370,40 +426,6 @@ class VLEController {
     }
 
     /**
-     * Show confirmation dialog before dismissing all notifications
-     */
-    confirmDismissAllNotifications(ev) {
-        if (this.getNewNotifications().length > 1) {
-            let confirm = this.$mdDialog.confirm()
-                .parent(angular.element($('._md-open-menu-container._md-active')))// TODO: hack for now (showing md-dialog on top of md-menu)
-                .ariaLabel(this.$translate('dismissNotificationsTitle'))
-                .textContent(this.$translate('dismissNotificationsMessage'))
-                .targetEvent(ev)
-                .ok(this.$translate('yes'))
-                .cancel(this.$translate('no'));
-
-            this.$mdDialog.show(confirm).then(() => {
-                this.dismissAllNotifications(ev);
-            });
-        } else {
-            this.dismissAllNotifications(ev);
-        }
-    }
-
-    /**
-     * Dismiss all new notifications
-     */
-    dismissAllNotifications(ev) {
-        let newNotifications = this.getNewNotifications();
-        newNotifications.map((newNotification) => {
-            // only dismiss notifications that don't require a dismiss code
-            if (newNotification.data == null || newNotification.data.dismissCode == null) {
-                this.dismissNotification(ev, newNotification);
-            }
-        });
-    }
-
-    /**
      * Dismiss the specified notification
      * @param notification
      */
@@ -413,9 +435,10 @@ class VLEController {
             this.NotificationService.dismissNotification(notification);
         } else {
             // ask user to input dimiss code before dimissing it
-            let args = {};
-            args.event = event;
-            args.notification = notification;
+            let args = {
+                event: event,
+                notification: notification
+            };
             this.$rootScope.$broadcast('viewCurrentAmbientNotification', args);
 
             // hide any open menus (i.e. the notifications menu)
@@ -439,16 +462,34 @@ class VLEController {
     }
 
     /**
-     * Dismiss the specified notification and visit the node
-     * @param nodeId
+     * Dismiss the notification aggregate object, which effectively dismisses all notifications
+     * for the nodeId and type of the aggregate object.
+     * @param event
+     * @param notificationAggregate
      */
-    dismissNotificationAndVisitNode(event, notification) {
-        if (notification.data == null || notification.data.dismissCode == null) {
-            // only dismiss notifications that don't require a dismiss code, but still allow them to move to the node
-            this.dismissNotification(event, notification);
+    dismissNotificationAggregate(event, notificationAggregate) {
+        if (notificationAggregate != null && notificationAggregate.notifications != null) {
+            for (let notification of notificationAggregate.notifications) {
+                this.dismissNotification(event, notification);
+            }
+        }
+    };
+
+    /**
+     * Dismiss the specified notification aggregate object and visit the node
+     * @param notificationAggregate, which contains nodeId, type, and notifications of that nodeId and type
+     */
+    dismissNotificationAggregateAndVisitNode(event, notificationAggregate) {
+        if (notificationAggregate != null && notificationAggregate.notifications != null) {
+            for (let notification of notificationAggregate.notifications) {
+                if (notification.data == null || notification.data.dismissCode == null) {
+                    // only dismiss notifications that don't require a dismiss code, but still allow them to move to the node
+                    this.dismissNotification(event, notification);
+                }
+            }
         }
 
-        let goToNodeId = notification.nodeId;
+        let goToNodeId = notificationAggregate.nodeId;
         if (goToNodeId != null) {
             this.StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(goToNodeId);
         }
