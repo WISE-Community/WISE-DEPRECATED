@@ -26,6 +26,19 @@ class AnnotationService {
     }
 
     /**
+     * Get the annotation with the specified id, or null if not found
+     * @param annotationId
+     */
+    getAnnotationById(annotationId) {
+        for (let annotation of this.annotations) {
+            if (annotation.id === annotationId) {
+                return annotation;
+            }
+        }
+        return null;
+    }
+
+    /**
      * Get the latest annotation with the given params
      * @param params an object containing the params to match
      * @returns the latest annotation that matches the params

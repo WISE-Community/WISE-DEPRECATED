@@ -35,6 +35,44 @@ var AnnotationService = function () {
         }
 
         /**
+         * Get the annotation with the specified id, or null if not found
+         * @param annotationId
+         */
+
+    }, {
+        key: 'getAnnotationById',
+        value: function getAnnotationById(annotationId) {
+            var _iteratorNormalCompletion = true;
+            var _didIteratorError = false;
+            var _iteratorError = undefined;
+
+            try {
+                for (var _iterator = this.annotations[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                    var annotation = _step.value;
+
+                    if (annotation.id === annotationId) {
+                        return annotation;
+                    }
+                }
+            } catch (err) {
+                _didIteratorError = true;
+                _iteratorError = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion && _iterator.return) {
+                        _iterator.return();
+                    }
+                } finally {
+                    if (_didIteratorError) {
+                        throw _iteratorError;
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        /**
          * Get the latest annotation with the given params
          * @param params an object containing the params to match
          * @returns the latest annotation that matches the params

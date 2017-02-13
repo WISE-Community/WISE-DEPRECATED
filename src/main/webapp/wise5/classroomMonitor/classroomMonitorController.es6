@@ -141,6 +141,7 @@ class ClassroomMonitorController {
             },
             (newValue, oldValue) => {
                 this.notifications = this.NotificationService.notifications;
+                this.newNotifications = this.getNewNotifications();
             }
         );
 
@@ -178,7 +179,7 @@ class ClassroomMonitorController {
      * TODO: move to TeacherDataService
      */
     hasNewNotifications() {
-        return this.getNewNotifications().length > 0;
+        return this.newNotifications.length > 0;
     }
 
     /**

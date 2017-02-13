@@ -287,6 +287,7 @@ var NotificationService = function () {
     }, {
         key: 'dismissNotificationToServer',
         value: function dismissNotificationToServer(notification) {
+            var _this4 = this;
 
             notification.timeDismissed = Date.parse(new Date()); // set dismissed time to now.
 
@@ -324,6 +325,7 @@ var NotificationService = function () {
                         // parse the data string into a JSON object
                         notification.data = angular.fromJson(notification.data);
                     }
+                    _this4.$rootScope.$broadcast('notificationChanged', notification);
                     return notification;
                 });
             }
