@@ -125,6 +125,7 @@ var ClassroomMonitorController = function () {
             return _this.NotificationService.notifications.length;
         }, function (newValue, oldValue) {
             _this.notifications = _this.NotificationService.notifications;
+            _this.newNotifications = _this.getNewNotifications();
         });
 
         // save event when classroom monitor session is started
@@ -173,7 +174,7 @@ var ClassroomMonitorController = function () {
          * TODO: move to TeacherDataService
          */
         value: function hasNewNotifications() {
-            return this.getNewNotifications().length > 0;
+            return this.newNotifications.length > 0;
         }
 
         /**

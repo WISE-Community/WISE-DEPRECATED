@@ -7,7 +7,7 @@
         <span flex></span>
         <md-menu md-position-mode="target-right target" md-offset="40 26">
             <md-button aria-label="View notifications" class="md-icon-button notification-btn" ng-click="$mdOpenMenu()">
-                <span ng-show="classroomMonitorController.hasNewNotifications()" class="notification-count">{{classroomMonitorController.getNewNotifications().length}}</span>
+                <span ng-show="classroomMonitorController.hasNewNotifications()" class="notification-count">{{classroomMonitorController.newNotifications.length}}</span>
                 <md-icon md-menu-origin> notifications </md-icon>
             </md-button>
             <md-menu-content width="5" class="account-menu">

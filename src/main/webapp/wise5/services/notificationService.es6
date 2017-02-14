@@ -287,6 +287,7 @@ class NotificationService {
                     // parse the data string into a JSON object
                     notification.data = angular.fromJson(notification.data);
                 }
+                this.$rootScope.$broadcast('notificationChanged', notification);
                 return notification;
             })
         }
@@ -314,7 +315,6 @@ class NotificationService {
         } else {
             return this.notifications;
         }
-
     }
 
     /**

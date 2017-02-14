@@ -2,29 +2,22 @@
 <div layout="column" class="account-menu--fixed-height account-menu--fixed-width">
     <md-toolbar md-theme="light" class="account-menu__info md-subhead" layout="row" layout-align="start center">
         <span class="accent-1 account-menu__info__title" layout="row" layout-align="start center"><md-icon class="accent-1"> notifications </md-icon>&nbsp;<span translate="notificationsTitle"></span></span>
-        <!--<span flex></span>
-        <md-button class="md-icon-button"
-                   aria-label="Clear all notifications"
-                   md-prevent-menu-close="md-prevent-menu-close"
-                   ng-disabled="vleController.getNewNotifications().length < 1"
-                   ng-click="vleController.confirmDismissAllNotifications($event)">
-            <md-icon> clear_all </md-icon>
-        </md-button>-->
     </md-toolbar>
     <md-divider></md-divider>
     <md-content class="account-menu__actions" flex>
-        <div class="md-padding center" ng-if="!vleController.getNewNotifications().length"><span class="md-body-1" translate="noAlerts"></span></div>
-        <md-list class="notification-list" ng-if="vleController.getNewNotifications().length">
-            <md-list-item ng-repeat="notification in vleController.getNewNotifications() track by $index"
-                          ng-click="vleController.dismissNotificationAndVisitNode($event, notification)"
+        <div class="md-padding center" ng-if="!vleController.newNotifications.length"><span class="md-body-1" translate="noAlerts"></span></div>
+        <md-list class="notification-list" ng-if="vleController.newNotifications.length">
+
+            <md-list-item ng-repeat="notificationAggregate in vleController.newNotifications track by $index"
+                          ng-click="vleController.dismissNotificationAggregateAndVisitNode($event, notificationAggregate)"
                           md-autofocus="$first"
                           class="md-2-line">
                 <div class="md-list-item-text">
-                    <div class="md-body-1 primary">{{notification.message}}</div>
-                    <h4 class="notification-list-item__source">{{vleController.ProjectService.getNodePositionAndTitleByNodeId(notification.nodeId)}}</h4>
+                    <div class="md-body-1 primary">{{notificationAggregate.message}}</div>
+                    <h4 class="notification-list-item__source">{{vleController.ProjectService.getNodePositionAndTitleByNodeId(notificationAggregate.nodeId)}}</h4>
                 </div>
                 <md-button class="md-icon-button" md-prevent-menu-close="md-prevent-menu-close"
-                           ng-click="vleController.dismissNotification($event, notification)">
+                           ng-click="vleController.dismissNotificationAggregate($event, notificationAggregate)">
                     <md-icon>clear</md-icon>
                 </md-button>
             </md-list-item>

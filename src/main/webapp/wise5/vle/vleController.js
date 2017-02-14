@@ -95,6 +95,13 @@ var VLEController = function () {
             return _this.NotificationService.notifications.length;
         }, function (newValue, oldValue) {
             _this.notifications = _this.NotificationService.notifications;
+            _this.newNotifications = _this.getNewNotifications();
+        });
+
+        this.$scope.$on('notificationChanged', function (event, notification) {
+            // update new notifications
+            _this.notifications = _this.NotificationService.notifications;
+            _this.newNotifications = _this.getNewNotifications();
         });
 
         this.$scope.$on('componentStudentDataChanged', function () {
@@ -345,7 +352,7 @@ var VLEController = function () {
          * Returns true iff there are new notifications
          */
         value: function hasNewNotifications() {
-            return this.getNewNotifications().length > 0;
+            return this.newNotifications.length > 0;
         }
 
         /**
@@ -360,14 +367,109 @@ var VLEController = function () {
 
         /**
          * Returns all notifications that have not been dismissed yet
+         * The newNotifications is an array of notification aggregate objects that looks like this:
+         * [
+         *  {
+         *    "nodeId": "node2",
+         *    "type": "DiscussionReply",   // ["DiscussionReply", "teacherToStudent"]
+         *    "notifications": [{ id: 1117} , { id: 1120 }]      // array of actual undismissed notifications with this nodeId and type
+         *  },
+         *  ...
+         * ]
+         * The annotation aggregates will be sorted by latest first -> oldest last
          */
 
     }, {
         key: 'getNewNotifications',
         value: function getNewNotifications() {
-            return this.notifications.filter(function (notification) {
-                return notification.timeDismissed == null;
+            var newNotificationAggregates = [];
+            // get activeNotifications
+            var _iteratorNormalCompletion = true;
+            var _didIteratorError = false;
+            var _iteratorError = undefined;
+
+            try {
+                for (var _iterator = this.notifications[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                    var notification = _step.value;
+
+                    if (notification.timeDismissed == null) {
+                        // go through all the undimissed notifications and populate the newNotifications array
+                        var notificationNodeId = notification.nodeId;
+                        var notificationType = notification.type;
+                        var newNotificationForNodeIdAndTypeExists = false;
+                        var _iteratorNormalCompletion2 = true;
+                        var _didIteratorError2 = false;
+                        var _iteratorError2 = undefined;
+
+                        try {
+                            for (var _iterator2 = newNotificationAggregates[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+                                var _newNotificationAggregate = _step2.value;
+
+                                if (_newNotificationAggregate.nodeId == notificationNodeId && _newNotificationAggregate.type == notificationType) {
+                                    newNotificationForNodeIdAndTypeExists = true;
+                                    _newNotificationAggregate.notifications.push(notification);
+                                    // update latestNotificationTimestamp if needed
+                                    if (notification.timeGenerated > _newNotificationAggregate.latestNotificationTimestamp) {
+                                        _newNotificationAggregate.latestNotificationTimestamp = notification.timeGenerated;
+                                    }
+                                }
+                            }
+                        } catch (err) {
+                            _didIteratorError2 = true;
+                            _iteratorError2 = err;
+                        } finally {
+                            try {
+                                if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                                    _iterator2.return();
+                                }
+                            } finally {
+                                if (_didIteratorError2) {
+                                    throw _iteratorError2;
+                                }
+                            }
+                        }
+
+                        if (!newNotificationForNodeIdAndTypeExists) {
+                            var message = "";
+                            if (notificationType === "DiscussionReply") {
+                                message = this.$translate('newRepliesOnDiscussionPost');
+                            } else if (notificationType === "teacherToStudent") {
+                                message = this.$translate('newFeedbackFromTeacher');
+                            } else if (notificationType === "CRaterResult") {
+                                message = this.$translate('newFeedback');
+                            }
+                            var newNotificationAggregate = {
+                                latestNotificationTimestamp: notification.timeGenerated,
+                                message: message,
+                                nodeId: notificationNodeId,
+                                notifications: [notification],
+                                type: notificationType
+                            };
+                            newNotificationAggregates.push(newNotificationAggregate);
+                        }
+                    }
+                }
+
+                // now sort the aggregates by latestNotificationTimestamp, latest -> oldest
+            } catch (err) {
+                _didIteratorError = true;
+                _iteratorError = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion && _iterator.return) {
+                        _iterator.return();
+                    }
+                } finally {
+                    if (_didIteratorError) {
+                        throw _iteratorError;
+                    }
+                }
+            }
+
+            newNotificationAggregates.sort(function (n1, n2) {
+                return n2.latestNotificationTimestamp - n1.latestNotificationTimestamp;
             });
+            return newNotificationAggregates;
         }
 
         /**
@@ -384,45 +486,6 @@ var VLEController = function () {
         }
 
         /**
-         * Show confirmation dialog before dismissing all notifications
-         */
-
-    }, {
-        key: 'confirmDismissAllNotifications',
-        value: function confirmDismissAllNotifications(ev) {
-            var _this2 = this;
-
-            if (this.getNewNotifications().length > 1) {
-                var confirm = this.$mdDialog.confirm().parent(angular.element($('._md-open-menu-container._md-active'))) // TODO: hack for now (showing md-dialog on top of md-menu)
-                .ariaLabel(this.$translate('dismissNotificationsTitle')).textContent(this.$translate('dismissNotificationsMessage')).targetEvent(ev).ok(this.$translate('yes')).cancel(this.$translate('no'));
-
-                this.$mdDialog.show(confirm).then(function () {
-                    _this2.dismissAllNotifications(ev);
-                });
-            } else {
-                this.dismissAllNotifications(ev);
-            }
-        }
-
-        /**
-         * Dismiss all new notifications
-         */
-
-    }, {
-        key: 'dismissAllNotifications',
-        value: function dismissAllNotifications(ev) {
-            var _this3 = this;
-
-            var newNotifications = this.getNewNotifications();
-            newNotifications.map(function (newNotification) {
-                // only dismiss notifications that don't require a dismiss code
-                if (newNotification.data == null || newNotification.data.dismissCode == null) {
-                    _this3.dismissNotification(ev, newNotification);
-                }
-            });
-        }
-
-        /**
          * Dismiss the specified notification
          * @param notification
          */
@@ -435,9 +498,10 @@ var VLEController = function () {
                 this.NotificationService.dismissNotification(notification);
             } else {
                 // ask user to input dimiss code before dimissing it
-                var args = {};
-                args.event = event;
-                args.notification = notification;
+                var args = {
+                    event: event,
+                    notification: notification
+                };
                 this.$rootScope.$broadcast('viewCurrentAmbientNotification', args);
 
                 // hide any open menus (i.e. the notifications menu)
@@ -464,19 +528,82 @@ var VLEController = function () {
         }
 
         /**
-         * Dismiss the specified notification and visit the node
-         * @param nodeId
+         * Dismiss the notification aggregate object, which effectively dismisses all notifications
+         * for the nodeId and type of the aggregate object.
+         * @param event
+         * @param notificationAggregate
          */
 
     }, {
-        key: 'dismissNotificationAndVisitNode',
-        value: function dismissNotificationAndVisitNode(event, notification) {
-            if (notification.data == null || notification.data.dismissCode == null) {
-                // only dismiss notifications that don't require a dismiss code, but still allow them to move to the node
-                this.dismissNotification(event, notification);
+        key: 'dismissNotificationAggregate',
+        value: function dismissNotificationAggregate(event, notificationAggregate) {
+            if (notificationAggregate != null && notificationAggregate.notifications != null) {
+                var _iteratorNormalCompletion3 = true;
+                var _didIteratorError3 = false;
+                var _iteratorError3 = undefined;
+
+                try {
+                    for (var _iterator3 = notificationAggregate.notifications[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+                        var notification = _step3.value;
+
+                        this.dismissNotification(event, notification);
+                    }
+                } catch (err) {
+                    _didIteratorError3 = true;
+                    _iteratorError3 = err;
+                } finally {
+                    try {
+                        if (!_iteratorNormalCompletion3 && _iterator3.return) {
+                            _iterator3.return();
+                        }
+                    } finally {
+                        if (_didIteratorError3) {
+                            throw _iteratorError3;
+                        }
+                    }
+                }
+            }
+        }
+    }, {
+        key: 'dismissNotificationAggregateAndVisitNode',
+
+
+        /**
+         * Dismiss the specified notification aggregate object and visit the node
+         * @param notificationAggregate, which contains nodeId, type, and notifications of that nodeId and type
+         */
+        value: function dismissNotificationAggregateAndVisitNode(event, notificationAggregate) {
+            if (notificationAggregate != null && notificationAggregate.notifications != null) {
+                var _iteratorNormalCompletion4 = true;
+                var _didIteratorError4 = false;
+                var _iteratorError4 = undefined;
+
+                try {
+                    for (var _iterator4 = notificationAggregate.notifications[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+                        var notification = _step4.value;
+
+                        if (notification.data == null || notification.data.dismissCode == null) {
+                            // only dismiss notifications that don't require a dismiss code, but still allow them to move to the node
+                            this.dismissNotification(event, notification);
+                        }
+                    }
+                } catch (err) {
+                    _didIteratorError4 = true;
+                    _iteratorError4 = err;
+                } finally {
+                    try {
+                        if (!_iteratorNormalCompletion4 && _iterator4.return) {
+                            _iterator4.return();
+                        }
+                    } finally {
+                        if (_didIteratorError4) {
+                            throw _iteratorError4;
+                        }
+                    }
+                }
             }
 
-            var goToNodeId = notification.nodeId;
+            var goToNodeId = notificationAggregate.nodeId;
             if (goToNodeId != null) {
                 this.StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(goToNodeId);
             }
