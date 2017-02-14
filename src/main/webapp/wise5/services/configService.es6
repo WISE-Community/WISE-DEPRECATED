@@ -239,11 +239,33 @@ class ConfigService {
             var myClassInfo = myUserInfo.myClassInfo;
             if (myClassInfo != null) {
                 classmateUserInfos = myClassInfo.classmateUserInfos;
+
+                // sort the classmate userinfos by ascending workgroup id
+                classmateUserInfos.sort(this.compareClassmateUserInfos);
             }
         }
 
         return classmateUserInfos;
     };
+
+    /**
+     * Used to sort the classmate user infos by ascending workgroup id.
+     * Use by calling myArray.sort(compareClassmateUserInfos)
+     * @param a a user info object
+     * @param b a user info Object
+     * @return -1 if a comes before b
+     * 1 if a comes after b
+     * 0 if a equals b
+     */
+    compareClassmateUserInfos(a, b) {
+        if (a.workgroupId < b.workgroupId) {
+            return -1;
+        } else if (a.workgroupId > b.workgroupId) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
 
     getTeacherWorkgroupId() {
         var teacherWorkgroupId = null;

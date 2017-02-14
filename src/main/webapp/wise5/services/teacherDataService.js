@@ -121,9 +121,18 @@ var TeacherDataService = function () {
                 params.runId = this.ConfigService.getRunId();
                 params.getStudentWork = true;
                 params.getAnnotations = true;
+                params.getEvents = false;
 
                 return this.retrieveStudentData(params);
             } else if (exportType === "events") {
+                var _params = {};
+                _params.runId = this.ConfigService.getRunId();
+                _params.getStudentWork = false;
+                _params.getAnnotations = false;
+                _params.getEvents = true;
+
+                return this.retrieveStudentData(_params);
+            } else if (exportType === "latestNotebookItems" || exportType === "allNotebookItems") {
                 var httpParams = {
                     method: 'GET',
                     url: exportURL,
@@ -133,7 +142,7 @@ var TeacherDataService = function () {
                 return this.$http(httpParams).then(function (result) {
                     return result.data;
                 });
-            } else if (exportType === "latestNotebookItems" || exportType === "allNotebookItems") {
+            } else if (exportType === "notifications") {
                 var _httpParams = {
                     method: 'GET',
                     url: exportURL,
@@ -143,17 +152,7 @@ var TeacherDataService = function () {
                 return this.$http(_httpParams).then(function (result) {
                     return result.data;
                 });
-            } else if (exportType === "notifications") {
-                var _httpParams2 = {
-                    method: 'GET',
-                    url: exportURL,
-                    params: {}
-                };
-
-                return this.$http(_httpParams2).then(function (result) {
-                    return result.data;
-                });
-            } else if (exoprtType === "studentAssets") {
+            } else if (exportType === "studentAssets") {
                 window.location.href = exportURL;
                 var deferred = this.$q.defer();
                 var promise = deferred.promise;
@@ -631,8 +630,8 @@ var TeacherDataService = function () {
 
                 if (componentStatesForWorkgroup != null) {
 
-                    // mapping of component to revision count
-                    var componentRevisionCount = {};
+                    // mapping of component to revision counter
+                    var componentRevisionCounter = {};
 
                     /*
                      * used to keep track of the components we have found component
@@ -655,19 +654,19 @@ var TeacherDataService = function () {
                             // generate the component key e.g. "node2_bb83hs0sd8"
                             var key = nodeId + "-" + componentId;
 
-                            if (componentRevisionCount[key] == null) {
-                                // initialize the component revision count for this component to 1 if there is no entry
-                                componentRevisionCount[key] = 1;
+                            if (componentRevisionCounter[key] == null) {
+                                // initialize the component revision counter for this component to 1 if there is no entry
+                                componentRevisionCounter[key] = 1;
                             }
 
-                            // get the revision count
-                            var revisionCount = componentRevisionCount[key];
+                            // get the revision counter
+                            var revisionCounter = componentRevisionCounter[key];
 
-                            // set the revision count into the component state
-                            componentState.revisionCount = revisionCount;
+                            // set the revision counter into the component state
+                            componentState.revisionCounter = revisionCounter;
 
-                            // increment the revision count for the component
-                            componentRevisionCount[key] = revisionCount + 1;
+                            // increment the revision counter for the component
+                            componentRevisionCounter[key] = revisionCounter + 1;
                         }
                     }
 

@@ -408,6 +408,7 @@ class DataExportController {
 
     /**
      * Export all the student work
+     * @param exportType the export type e.g. "allStudentWork" or "latestStudentWork"
      */
     exportStudentWork(exportType) {
 
@@ -461,25 +462,30 @@ class DataExportController {
                 "Start Date",
                 "End Date",
                 "Student Work ID",
-                "Timestamp",
+                "Server Timestamp",
+                "Client Timestamp",
                 "Node ID",
                 "Component ID",
                 "Component Part Number",
-                "Teacher Score Timestamp",
+                "Teacher Score Server Timestamp",
+                "Teacher Score Client Timestamp",
                 "Teacher Score",
                 "Max Teacher Score",
-                "Teacher Comment Timestamp",
+                "Teacher Comment Server Timestamp",
+                "Teacher Comment Client Timestamp",
                 "Teacher Comment",
-                "Auto Score Timestamp",
+                "Auto Score Server Timestamp",
+                "Auto Score Client Timestamp",
                 "Auto Score",
                 "Max Auto Score",
-                "Auto Comment Timestamp",
+                "Auto Comment Server Timestamp",
+                "Auto Comment Client Timestamp",
                 "Auto Comment",
                 "Step Title",
                 "Component Type",
                 "Component Prompt",
                 "Student Data",
-                "Component Revision Count",
+                "Component Revision Counter",
                 "Is Correct",
                 "Is Submit",
                 "Submit Count",
@@ -528,11 +534,11 @@ class DataExportController {
                         var wiseId3 = wiseIds[2];
 
                         /*
-                         * a mapping from component to component revision count.
+                         * a mapping from component to component revision counter.
                          * the key will be {{nodeId}}_{{componentId}} and the
                          * value will be a number.
                          */
-                        var componentRevisionCount = {};
+                        var componentRevisionCounter = {};
 
                         // get the component states for the workgroup
                         var componentStates = [];
@@ -565,7 +571,7 @@ class DataExportController {
 
                                     if (exportRow) {
 
-                                        var row = this.createStudentWorkExportRow(columnNames, columnNameToNumber, rowCounter, workgroupId, wiseId1, wiseId2, wiseId3, periodName, componentRevisionCount, componentState);
+                                        var row = this.createStudentWorkExportRow(columnNames, columnNameToNumber, rowCounter, workgroupId, wiseId1, wiseId2, wiseId3, periodName, componentRevisionCounter, componentState);
 
                                         // add the row to the rows
                                         rows.push(row);
@@ -604,11 +610,11 @@ class DataExportController {
      * @param wiseId2 the WISE ID 2
      * @param wiseId3 the WISE ID 3
      * @param periodName the period name
-     * @param componentRevisionCount the mapping of component to revision count
+     * @param componentRevisionCounter the mapping of component to revision counter
      * @param componentState the component state
      * @return an array containing the cells in the row
      */
-    createStudentWorkExportRow(columnNames, columnNameToNumber, rowCounter, workgroupId, wiseId1, wiseId2, wiseId3, periodName, componentRevisionCount, componentState) {
+    createStudentWorkExportRow(columnNames, columnNameToNumber, rowCounter, workgroupId, wiseId1, wiseId2, wiseId3, periodName, componentRevisionCounter, componentState) {
 
         // create the row and prepopulate the elements with an empty string
         var row = new Array(columnNames.length);
@@ -649,18 +655,27 @@ class DataExportController {
         // set the student work id
         row[columnNameToNumber["Student Work ID"]] = componentState.id;
 
-        // get the server save time
-        var serverSaveTime = new Date(componentState.serverSaveTime);
-        var serverSaveTimeString = serverSaveTime.toDateString() + " " + serverSaveTime.toLocaleTimeString();
+        if (componentState.serverSaveTime != null) {
+            // get the server save time
+            var serverSaveTime = new Date(componentState.serverSaveTime);
 
-        // get the client save time
-        var clientSaveTime = new Date(componentState.clientSaveTime);
-        var clientSaveTimeString = clientSaveTime.toDateString() + " " + clientSaveTime.toLocaleTimeString();
+            if (serverSaveTime != null) {
+                // get the time stamp string e.g. Wed Apr 06 2016 9:05:38 AM
+                var serverSaveTimeString = serverSaveTime.toDateString() + " " + serverSaveTime.toLocaleTimeString();
+                row[columnNameToNumber["Server Timestamp"]] = serverSaveTimeString;
+            }
+        }
 
-        // set the timestamp
-        row[columnNameToNumber["Timestamp"]] = serverSaveTimeString;
-        //row[columnNameToNumber["Server Save Time"]] = serverSaveTimeString;
-        //row[columnNameToNumber["Client Save Time"]] = clientSaveTimeString;
+        if (componentState.clientSaveTime != null) {
+            // get the client save time
+            var clientSaveTime = new Date(componentState.clientSaveTime);
+
+            if (clientSaveTime != null) {
+                // get the time stamp string e.g. Wed Apr 06 2016 9:05:38 AM
+                var clientSaveTimeString = clientSaveTime.toDateString() + " " + clientSaveTime.toLocaleTimeString();
+                row[columnNameToNumber["Client Timestamp"]] = clientSaveTimeString;
+            }
+        }
 
         // set the node id
         row[columnNameToNumber["Node ID"]] = componentState.nodeId;
@@ -680,17 +695,21 @@ class DataExportController {
         // get the component
         var component = this.ProjectService.getComponentByNodeIdAndComponentId(componentState.nodeId, componentState.componentId);
 
-        // set the component type
-        row[columnNameToNumber["Component Type"]] = component.type;
+        if (component != null) {
+            // set the component type
+            row[columnNameToNumber["Component Type"]] = component.type;
 
-        // get the prompt with the html tags removed
-        var prompt = this.UtilService.removeHTMLTags(component.prompt);
+            if (component.prompt != null) {
+                // get the prompt with the html tags removed
+                var prompt = this.UtilService.removeHTMLTags(component.prompt);
 
-        // replace " with ""
-        prompt = prompt.replace(/"/g, '""');
+                // replace " with ""
+                prompt = prompt.replace(/"/g, '""');
 
-        // set the prompt with the html tags removed
-        row[columnNameToNumber["Component Prompt"]] = prompt;
+                // set the prompt with the html tags removed
+                row[columnNameToNumber["Component Prompt"]] = prompt;
+            }
+        }
 
         // get the annotations
         var teacherScoreAnnotation = this.AnnotationService.getLatestTeacherScoreAnnotationByStudentWorkId(componentState.id);
@@ -701,14 +720,24 @@ class DataExportController {
         if (teacherScoreAnnotation != null) {
             // handle the teacher score
 
-            var teacherScoreSaveTime = new Date(teacherScoreAnnotation.serverSaveTime);
+            if (teacherScoreAnnotation.serverSaveTime != null) {
+                var teacherScoreServerSaveTime = new Date(teacherScoreAnnotation.serverSaveTime);
 
-            if (teacherScoreSaveTime != null) {
-                // get the teacher score timestamp
-                var teacherScoreSaveTimeString = teacherScoreSaveTime.toDateString() + " " + teacherScoreSaveTime.toLocaleTimeString();
+                if (teacherScoreServerSaveTime != null) {
+                    // get the teacher score server timestamp e.g. Wed Apr 06 2016 9:05:38 AM
+                    var teacherScoreServerSaveTimeString = teacherScoreServerSaveTime.toDateString() + " " + teacherScoreServerSaveTime.toLocaleTimeString();
+                    row[columnNameToNumber["Teacher Score Server Timestamp"]] = teacherScoreServerSaveTimeString;
+                }
+            }
 
-                // set the teacher score timestamp
-                row[columnNameToNumber["Teacher Score Timestamp"]] = teacherScoreSaveTimeString;
+            if (teacherScoreAnnotation.clientSaveTime != null) {
+                var teacherScoreClientSaveTime = new Date(teacherScoreAnnotation.clientSaveTime);
+
+                if (teacherScoreClientSaveTime != null) {
+                    // get the teacher score client timestamp e.g. Wed Apr 06 2016 9:05:38 AM
+                    var teacherScoreClientSaveTimeString = teacherScoreClientSaveTime.toDateString() + " " + teacherScoreClientSaveTime.toLocaleTimeString();
+                    row[columnNameToNumber["Teacher Score Client Timestamp"]] = teacherScoreClientSaveTimeString;
+                }
             }
 
             var data = teacherScoreAnnotation.data;
@@ -735,14 +764,24 @@ class DataExportController {
         if (teacherCommentAnnotation != null) {
             // handle the teacher comment
 
-            var teacherCommentSaveTime = new Date(teacherCommentAnnotation.serverSaveTime);
+            if (teacherCommentAnnotation.serverSaveTime != null) {
+                var teacherCommentServerSaveTime = new Date(teacherCommentAnnotation.serverSaveTime);
 
-            if (teacherCommentSaveTime != null) {
-                // get the teacher comment timestamp
-                var teacherCommentSaveTimeString = teacherCommentSaveTime.toDateString() + " " + teacherCommentSaveTime.toLocaleTimeString();
+                if (teacherCommentServerSaveTime != null) {
+                    // get the teacher comment server timestamp e.g. Wed Apr 06 2016 9:05:38 AM
+                    var teacherCommentServerSaveTimeString = teacherCommentServerSaveTime.toDateString() + " " + teacherCommentServerSaveTime.toLocaleTimeString();
+                    row[columnNameToNumber["Teacher Comment Server Timestamp"]] = teacherCommentServerSaveTimeString;
+                }
+            }
 
-                // set the teacher comment timestamp
-                row[columnNameToNumber["Teacher Comment Timestamp"]] = teacherCommentSaveTimeString;
+            if (teacherCommentAnnotation.clientSaveTime != null) {
+                var teacherCommentClientSaveTime = new Date(teacherCommentAnnotation.clientSaveTime);
+
+                if (teacherCommentClientSaveTime != null) {
+                    // get the teacher comment client timestamp e.g. Wed Apr 06 2016 9:05:38 AM
+                    var teacherCommentClientSaveTimeString = teacherCommentClientSaveTime.toDateString() + " " + teacherCommentClientSaveTime.toLocaleTimeString();
+                    row[columnNameToNumber["Teacher Comment Client Timestamp"]] = teacherCommentClientSaveTimeString;
+                }
             }
 
             var data = teacherCommentAnnotation.data;
@@ -761,14 +800,24 @@ class DataExportController {
         if (autoScoreAnnotation != null) {
             // handle the auto score
 
-            var autoScoreSaveTime = new Date(autoScoreAnnotation.serverSaveTime);
+            if (autoScoreAnnotation.serverSaveTime != null) {
+                var autoScoreServerSaveTime = new Date(autoScoreAnnotation.serverSaveTime);
 
-            if (autoScoreSaveTime != null) {
-                // get the auto score timestamp
-                var autoScoreSaveTimeString = autoScoreSaveTime.toDateString() + " " + autoScoreSaveTime.toLocaleTimeString();
+                if (autoScoreServerSaveTime != null) {
+                    // get the auto score server timestamp e.g. Wed Apr 06 2016 9:05:38 AM
+                    var autoScoreServerSaveTimeString = autoScoreServerSaveTime.toDateString() + " " + autoScoreServerSaveTime.toLocaleTimeString();
+                    row[columnNameToNumber["Auto Score Server Timestamp"]] = autoScoreServerSaveTimeString;
+                }
+            }
 
-                // set the auto score timestamp
-                row[columnNameToNumber["Auto Score Timestamp"]] = autoScoreSaveTimeString;
+            if (autoScoreAnnotation.clientSaveTime != null) {
+                var autoScoreClientSaveTime = new Date(autoScoreAnnotation.clientSaveTime);
+
+                if (autoScoreClientSaveTime != null) {
+                    // get the auto score client timestamp e.g. Wed Apr 06 2016 9:05:38 AM
+                    var autoScoreClientSaveTimeString = autoScoreClientSaveTime.toDateString() + " " + autoScoreClientSaveTime.toLocaleTimeString();
+                    row[columnNameToNumber["Auto Score Client Timestamp"]] = autoScoreClientSaveTimeString;
+                }
             }
 
             var data = autoScoreAnnotation.data;
@@ -795,14 +844,24 @@ class DataExportController {
         if (autoCommentAnnotation != null) {
             // handle the auto comment
 
-            var autoCommentSaveTime = new Date(autoCommentAnnotation.serverSaveTime);
+            if (autoCommentAnnotation.serverSaveTime != null) {
+                var autoCommentServerSaveTime = new Date(autoCommentAnnotation.serverSaveTime);
 
-            if (autoCommentSaveTime != null) {
-                // get the auto comment timestamp
-                var autoCommentSaveTimeString = autoCommentSaveTime.toDateString() + " " + autoCommentSaveTime.toLocaleTimeString();
+                if (autoCommentServerSaveTime != null) {
+                    // get the auto comment server timestamp e.g. Wed Apr 06 2016 9:05:38 AM
+                    var autoCommentServerSaveTimeString = autoCommentServerSaveTime.toDateString() + " " + autoCommentServerSaveTime.toLocaleTimeString();
+                    row[columnNameToNumber["Auto Comment Server Timestamp"]] = autoCommentServerSaveTimeString;
+                }
+            }
 
-                // set the auto comment timestamp
-                row[columnNameToNumber["Auto Comment Timestamp"]] = autoCommentSaveTimeString;
+            if (autoCommentAnnotation.clientSaveTime != null) {
+                var autoCommentClientSaveTime = new Date(autoCommentAnnotation.clientSaveTime);
+
+                if (autoCommentClientSaveTime != null) {
+                    // get the auto comment timestamp e.g. Wed Apr 06 2016 9:05:38 AM
+                    var autoCommentClientSaveTimeString = autoCommentClientSaveTime.toDateString() + " " + autoCommentClientSaveTime.toLocaleTimeString();
+                    row[columnNameToNumber["Auto Comment Client Timestamp"]] = autoCommentClientSaveTimeString;
+                }
             }
 
             var data = autoCommentAnnotation.data;
@@ -843,36 +902,36 @@ class DataExportController {
             }
         }
 
-        // create the {{nodeId}}_{{componentId}} key to look up the component revision count
+        // create the {{nodeId}}_{{componentId}} key to look up the component revision counter
         var nodeIdAndComponentId = componentState.nodeId + "_" + componentState.componentId;
 
-        if (componentRevisionCount[nodeIdAndComponentId] == null) {
-            // initialize the component revision count for this component to 1 if there is no entry
-            componentRevisionCount[nodeIdAndComponentId] = 1;
+        if (componentRevisionCounter[nodeIdAndComponentId] == null) {
+            // initialize the component revision counter for this component to 1 if there is no entry
+            componentRevisionCounter[nodeIdAndComponentId] = 1;
         }
 
-        // get the revision count
-        var revisionCount = componentRevisionCount[nodeIdAndComponentId];
+        // get the revision counter
+        var revisionCounter = componentRevisionCounter[nodeIdAndComponentId];
 
-        if (componentState.revisionCount == null) {
+        if (componentState.revisionCounter == null) {
             /*
-             * use the revision count obtained from the componentRevisionCount
+             * use the revision counter obtained from the componentRevisionCounter
              * mapping. this case will happen when we are exporting all student
              * work.
              */
-            row[columnNameToNumber["Component Revision Count"]] = revisionCount;
+            row[columnNameToNumber["Component Revision Counter"]] = revisionCounter;
         } else {
             /*
-             * use the revision count from the value in the component state.
+             * use the revision counter from the value in the component state.
              * this case will happen when we are exporting latest student work
-             * because the revision count needs to be previously calculated
+             * because the revision counter needs to be previously calculated
              * and then set into the component state
              */
-            row[columnNameToNumber["Component Revision Count"]] = componentState.revisionCount;
+            row[columnNameToNumber["Component Revision Counter"]] = componentState.revisionCounter;
         }
 
-        // increment the revision count
-        componentRevisionCount[nodeIdAndComponentId] = revisionCount + 1;
+        // increment the revision counter
+        componentRevisionCounter[nodeIdAndComponentId] = revisionCounter + 1;
 
         var isSubmit = componentState.isSubmit;
 
@@ -1038,9 +1097,319 @@ class DataExportController {
     }
 
     /**
+     * Export the events
+     */
+    exportEvents(exportType) {
+
+        var selectedNodes = null;
+
+        if (this.exportStepSelectionType === "exportSelectSteps") {
+            // we are going to export the work for the steps that were selected
+
+            // get the steps that were selected
+            selectedNodes = this.getSelectedNodesToExport();
+
+            if (selectedNodes == null || selectedNodes.length == 0) {
+                /*
+                 * the user did not select any steps to export so we will not
+                 * generate the export
+                 */
+                alert('Please select a step to export.');
+                return;
+            }
+        }
+
+        // request the student data from the server and then generate the export
+        this.TeacherDataService.getExport("events").then((result) => {
+
+            // get the workgroups in the class
+            var workgroups = this.ConfigService.getClassmateUserInfos();
+
+            // get the run id
+            var runId = this.ConfigService.getRunId();
+
+            // the rows that will show up in the export
+            var rows = [];
+
+            // the counter for the rows
+            var rowCounter = 1;
+
+            // mapping from column name to column number
+            var columnNameToNumber = {};
+
+            // an array of column names
+            var columnNames = [
+                "#",
+                "Workgroup ID",
+                "WISE ID 1",
+                "WISE ID 2",
+                "WISE ID 3",
+                "Class Period",
+                "Project ID",
+                "Project Name",
+                "Run ID",
+                "Start Date",
+                "End Date",
+                "Event ID",
+                "Server Timestamp",
+                "Client Timestamp",
+                "Node ID",
+                "Component ID",
+                "Component Part Number",
+                "Step Title",
+                "Component Type",
+                "Component Prompt",
+                "Group Event Counter",
+                "Context",
+                "Category",
+                "Event",
+                "Event Data"
+            ];
+
+            var headerRow = [];
+
+            // generate the header row by looping through all the column names
+            for (var c = 0; c < columnNames.length; c++) {
+
+                // get a column name
+                var columnName = columnNames[c];
+
+                if (columnName != null) {
+                    // add a mapping from column name to column number
+                    columnNameToNumber[columnName] = c;
+                }
+
+                // add the column name to the header row
+                headerRow.push(columnName);
+            }
+
+            // add the header row to the rows
+            rows.push(headerRow);
+
+            if (workgroups != null) {
+
+                // loop through all the workgroup
+                for (var w = 0; w < workgroups.length; w++) {
+
+                    // get a workgroup
+                    var workgroup = workgroups[w];
+
+                    if (workgroup != null) {
+
+                        // get the workgroup information
+                        var workgroupId = workgroup.workgroupId;
+                        var periodName = workgroup.periodName;
+                        var userInfo = this.ConfigService.getUserInfoByWorkgroupId(workgroupId);
+
+                        // get the WISE IDs
+                        var wiseIds = this.ConfigService.getWISEIds(workgroupId);
+                        var wiseId1 = wiseIds[0];
+                        var wiseId2 = wiseIds[1];
+                        var wiseId3 = wiseIds[2];
+
+                        /*
+                         * a mapping from component to component event count.
+                         * the key will be {{nodeId}}_{{componentId}} and the
+                         * value will be a number.
+                         */
+                        var componentEventCount = {};
+
+                        // get the events for the workgroup
+                        var events = [];
+
+                        events = this.TeacherDataService.getEventsByWorkgroupId(workgroupId);
+
+                        if (events != null) {
+
+                            // loop through all the events
+                            for (var e = 0; e < events.length; e++) {
+
+                                // get an event
+                                var event = events[e];
+
+                                if (event != null) {
+
+                                    var row = this.createEventExportRow(columnNames, columnNameToNumber, rowCounter, workgroupId, wiseId1, wiseId2, wiseId3, periodName, componentEventCount, event);
+
+                                    // add the row to the rows
+                                    rows.push(row);
+
+                                    // increment the row counter
+                                    rowCounter++;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            var fileName = "events_" + runId;
+
+            // generate the csv file and have the client download it
+            this.generateCSVFile(rows, fileName);
+        });
+    }
+
+    /**
+     * Create the array that will be used as a row in the events export
+     * @param columnNames all the header column name
+     * @param columnNameToNumber the mapping from column name to column number
+     * @param rowCounter the current row number
+     * @param workgroupId the workgroup id
+     * @param wiseId1 the WISE ID 1
+     * @param wiseId2 the WISE ID 2
+     * @param wiseId3 the WISE ID 3
+     * @param periodName the period name
+     * @param componentEventCount the mapping of component to event count
+     * @param event the event
+     * @return an array containing the cells in the row
+     */
+    createEventExportRow(columnNames, columnNameToNumber, rowCounter, workgroupId, wiseId1, wiseId2, wiseId3, periodName, componentEventCount, event) {
+
+        // create the row and prepopulate the elements with an empty string
+        var row = new Array(columnNames.length);
+        row.fill("");
+
+        // set the row number
+        row[columnNameToNumber["#"]] = rowCounter;
+
+        // set workgroup id
+        row[columnNameToNumber["Workgroup ID"]] = workgroupId;
+
+        if (wiseId1 != null) {
+            // set the WISE ID 1
+            row[columnNameToNumber["WISE ID 1"]] = wiseId1;
+        }
+
+        if (wiseId2 != null) {
+            // set the WISE ID 2
+            row[columnNameToNumber["WISE ID 2"]] = wiseId2;
+        }
+
+        if (wiseId3 != null) {
+            // set the WISE ID 3
+            row[columnNameToNumber["WISE ID 3"]] = wiseId3;
+        }
+
+        row[columnNameToNumber["Class Period"]] = periodName;
+
+        // set the project id
+        row[columnNameToNumber["Project ID"]] = this.ConfigService.getProjectId();
+
+        // set the project name
+        row[columnNameToNumber["Project Name"]] = this.ProjectService.getProjectTitle();
+
+        // set the run id
+        row[columnNameToNumber["Run ID"]] = this.ConfigService.getRunId();
+
+        // set the student work id
+        row[columnNameToNumber["Event ID"]] = event.id;
+
+        if (event.serverSaveTime != null) {
+            // get the server save time
+            var serverSaveTime = new Date(event.serverSaveTime);
+
+            if (serverSaveTime != null) {
+                var serverSaveTimeString = serverSaveTime.toDateString() + " " + serverSaveTime.toLocaleTimeString();
+
+                // set the timestamp
+                row[columnNameToNumber["Server Timestamp"]] = serverSaveTimeString;
+            }
+        }
+
+        if (event.clientSaveTime != null) {
+            // get the client save time
+            var clientSaveTime = new Date(event.clientSaveTime);
+
+            if (clientSaveTime != null) {
+                var clientSaveTimeString = clientSaveTime.toDateString() + " " + clientSaveTime.toLocaleTimeString();
+
+                row[columnNameToNumber["Client Timestamp"]] = clientSaveTimeString;
+            }
+        }
+
+        if (event.nodeId != null) {
+            // set the node id
+            row[columnNameToNumber["Node ID"]] = event.nodeId;
+        }
+
+        if (event.componentId != null) {
+            // set the component id
+            row[columnNameToNumber["Component ID"]] = event.componentId;
+        }
+
+        var stepTitle = this.ProjectService.getNodePositionAndTitleByNodeId(event.nodeId);
+
+        if (stepTitle != null) {
+            // set the step title
+            row[columnNameToNumber["Step Title"]] = stepTitle;
+        }
+
+        // get the component part number
+        var componentPartNumber = this.ProjectService.getComponentPositionByNodeIdAndComponentId(event.nodeId, event.componentId);
+
+        if (componentPartNumber != -1) {
+            // set the component part number
+            row[columnNameToNumber["Component Part Number"]] = componentPartNumber + 1;
+        }
+
+        // get the component
+        var component = this.ProjectService.getComponentByNodeIdAndComponentId(event.nodeId, event.componentId);
+
+        if (component != null) {
+            // set the component type
+            row[columnNameToNumber["Component Type"]] = component.type;
+
+            // get the prompt with the html tags removed
+            var prompt = this.UtilService.removeHTMLTags(component.prompt);
+
+            // replace " with ""
+            prompt = prompt.replace(/"/g, '""');
+
+            // set the prompt with the html tags removed
+            row[columnNameToNumber["Component Prompt"]] = prompt;
+        }
+
+        // create the {{nodeId}}_{{componentId}} key to look up the component event count
+        var nodeIdAndComponentId = event.nodeId + "_" + event.componentId;
+
+        if (componentEventCount[nodeIdAndComponentId] == null) {
+            // initialize the component event count for this component to 1 if there is no entry
+            componentEventCount[nodeIdAndComponentId] = 1;
+        }
+
+        // get the revision counter
+        var revisionCounter = componentEventCount[nodeIdAndComponentId];
+        row[columnNameToNumber["Group Event Counter"]] = revisionCounter;
+
+        // increment the revision counter
+        componentEventCount[nodeIdAndComponentId] = revisionCounter + 1;
+
+        // set the context
+        if (event.context != null) {
+            row[columnNameToNumber["Context"]] = event.context;
+        }
+
+        // set the category
+        if (event.category != null) {
+            row[columnNameToNumber["Category"]] = event.category;
+        }
+
+        // set the event
+        if (event.event != null) {
+            row[columnNameToNumber["Event"]] = event.event;
+        }
+
+        // set the event data JSON
+        row[columnNameToNumber["Event Data"]] = event;
+
+        return row;
+    }
+
+    /**
      * Export all events for this run in CSV format
      */
-    exportEvents() {
+    exportEvents0() {
 
         this.TeacherDataService.getExport("events").then((result) => {
             if (result == null) {

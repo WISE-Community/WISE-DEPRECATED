@@ -678,14 +678,18 @@ var UtilService = function () {
         key: "removeHTMLTags",
         value: function removeHTMLTags(html) {
 
-            // remove tags
-            var text = html.replace(/<\/?[^>]+(>|$)/g, " ");
+            var text = '';
 
-            // remove new lines
-            text = text.replace(/\n/g, " ");
+            if (html != null) {
+                // remove tags
+                text = html.replace(/<\/?[^>]+(>|$)/g, " ");
 
-            // remove line returns
-            text = text.replace(/\r/g, " ");
+                // remove new lines
+                text = text.replace(/\n/g, " ");
+
+                // remove line returns
+                text = text.replace(/\r/g, " ");
+            }
 
             return text;
         }
