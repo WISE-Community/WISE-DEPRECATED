@@ -478,7 +478,7 @@ class NodeAuthoringController {
                                 } else if (name == 'choiceChosen') {
                                     // this is a choice chosen criteria
 
-                                    // set the branch criterion to choise chosen
+                                    // set the branch criterion to choice chosen
                                     this.createBranchCriterion = 'choiceChosen';
 
                                     if (params != null && params.choiceIds != null && params.choiceIds.length > 0) {
@@ -678,12 +678,58 @@ class NodeAuthoringController {
     }
 
     /**
-     * Author chose/updated a transition criteria, which is saved in this.selectedTransitionCriteria.
-     * The original transitionCriteria is passed in as originalTransitionCriteria parameter.
-     * @param originalTransitionCriteria
+     * The transition criteria node id changed so we will update the params
+     * accordingly.
+     * @param transitionCriteria the transition criteria object that changed
      */
-    transitionCriteriaChanged(transitionIndex, criteriaIndex, newTransitionCriteria) {
-        this.node.transitionLogic.transitions[transitionIndex].criteria[criteriaIndex] = newTransitionCriteria;
+    transitionCriteriaNodeIdChanged(transitionCriteria) {
+
+        if (transitionCriteria!= null && transitionCriteria.params != null) {
+            // remember the node id
+            var nodeId = transitionCriteria.params.nodeId;
+
+            // clear the params
+            transitionCriteria.params = {};
+
+            if (nodeId != null) {
+                // set the node id back into the params
+                transitionCriteria.params.nodeId = nodeId;
+            }
+        }
+
+        // save the node
+        this.authoringViewNodeChanged();
+    }
+
+    /**
+     * The transition criteria component id changed so we will update the params
+     * accordingly.
+     * @param transitionCriteria the transition criteria object that changed
+     */
+    transitionCriteriaComponentIdChanged(transitionCriteria) {
+
+        if (transitionCriteria!= null && transitionCriteria.params != null) {
+
+            // remember the node id and component id
+            var nodeId = transitionCriteria.params.nodeId;
+            var componentId = transitionCriteria.params.componentId;
+
+            // clear the params
+            transitionCriteria.params = {};
+
+            if (nodeId != null) {
+                // set the node id back into the params
+                transitionCriteria.params.nodeId = nodeId;
+            }
+
+            if (componentId != null) {
+                // set the component id back into the params
+                transitionCriteria.params.componentId = componentId;
+            }
+        }
+
+        // save the node
+        this.authoringViewNodeChanged();
     }
 
     /**
@@ -1147,13 +1193,34 @@ class NodeAuthoringController {
 
     /**
      * A removal criteria name has changed so we will clear the params so
-     * that the params from the previous removal criteria name do not persist
+     * that the params from the previous removal criteria name do not persist.
+     * @param transitionCriteria the transition criteria object
      */
     transitionCriteriaNameChanged(transitionCriteria) {
 
         if (transitionCriteria != null) {
+
+            var nodeId = null;
+            var componentId = null;
+
+            if (transitionCriteria.params != null) {
+                // remember the node id and component id
+                nodeId = transitionCriteria.params.nodeId;
+                componentId = transitionCriteria.params.componentId;
+            }
+
             // clear the params
             transitionCriteria.params = {};
+
+            if (nodeId != null) {
+                // set the node id back into the params
+                transitionCriteria.params.nodeId = nodeId;
+            }
+
+            if (componentId != null) {
+                // set the component id back into the params
+                transitionCriteria.params.componentId = componentId;
+            }
         }
 
         // save the project
@@ -1377,14 +1444,14 @@ class NodeAuthoringController {
                 this.ProjectService.setTransitionLogicField(nodeId, 'maxPathsVisitable', 1);
             } else if (this.createBranchCriterion == 'score') {
                 // the branch is based on score
-                this.ProjectService.setTransitionLogicField(nodeId, 'howToChooseAmongAvailablePaths', 'score');
-                this.ProjectService.setTransitionLogicField(nodeId, 'whenToChoosePath', 'enterNode');
+                this.ProjectService.setTransitionLogicField(nodeId, 'howToChooseAmongAvailablePaths', 'random');
+                this.ProjectService.setTransitionLogicField(nodeId, 'whenToChoosePath', 'studentDataChanged');
                 this.ProjectService.setTransitionLogicField(nodeId, 'canChangePath', false);
                 this.ProjectService.setTransitionLogicField(nodeId, 'maxPathsVisitable', 1);
             } else if (this.createBranchCriterion == 'choiceChosen') {
                 // the branch is based on choice chosen
-                this.ProjectService.setTransitionLogicField(nodeId, 'howToChooseAmongAvailablePaths', 'choiceChosen');
-                this.ProjectService.setTransitionLogicField(nodeId, 'whenToChoosePath', 'enterNode');
+                this.ProjectService.setTransitionLogicField(nodeId, 'howToChooseAmongAvailablePaths', 'random');
+                this.ProjectService.setTransitionLogicField(nodeId, 'whenToChoosePath', 'studentDataChanged');
                 this.ProjectService.setTransitionLogicField(nodeId, 'canChangePath', false);
                 this.ProjectService.setTransitionLogicField(nodeId, 'maxPathsVisitable', 1);
             } else if (this.createBranchCriterion == 'random') {
