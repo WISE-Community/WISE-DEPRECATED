@@ -8284,12 +8284,13 @@ var ProjectService = function () {
                     makeThisNodeNotVisibleConstraint.action = 'makeThisNodeNotVisible';
                     makeThisNodeNotVisibleConstraint.targetId = targetNodeId;
                     makeThisNodeNotVisibleConstraint.removalCriteria = [];
-                    var noteVisibleRemovalCriterion = {};
-                    noteVisibleRemovalCriterion.name = 'branchPathTaken';
-                    noteVisibleRemovalCriterion.params = {};
-                    noteVisibleRemovalCriterion.params.fromNodeId = fromNodeId;
-                    noteVisibleRemovalCriterion.params.toNodeId = toNodeId;
-                    makeThisNodeNotVisibleConstraint.removalCriteria.push(noteVisibleRemovalCriterion);
+                    var notVisibleRemovalCriterion = {};
+                    notVisibleRemovalCriterion.name = 'branchPathTaken';
+                    notVisibleRemovalCriterion.params = {};
+                    notVisibleRemovalCriterion.params.fromNodeId = fromNodeId;
+                    notVisibleRemovalCriterion.params.toNodeId = toNodeId;
+                    makeThisNodeNotVisibleConstraint.removalConditional = 'all';
+                    makeThisNodeNotVisibleConstraint.removalCriteria.push(notVisibleRemovalCriterion);
                     node.constraints.push(makeThisNodeNotVisibleConstraint);
 
                     /*
@@ -8301,12 +8302,13 @@ var ProjectService = function () {
                     makeThisNodeNotVisitableConstraint.action = 'makeThisNodeNotVisitable';
                     makeThisNodeNotVisitableConstraint.targetId = targetNodeId;
                     makeThisNodeNotVisitableConstraint.removalCriteria = [];
-                    var noteVisitableRemovalCriterion = {};
-                    noteVisitableRemovalCriterion.name = 'branchPathTaken';
-                    noteVisitableRemovalCriterion.params = {};
-                    noteVisitableRemovalCriterion.params.fromNodeId = fromNodeId;
-                    noteVisitableRemovalCriterion.params.toNodeId = toNodeId;
-                    makeThisNodeNotVisitableConstraint.removalCriteria.push(noteVisitableRemovalCriterion);
+                    var notVisitableRemovalCriterion = {};
+                    notVisitableRemovalCriterion.name = 'branchPathTaken';
+                    notVisitableRemovalCriterion.params = {};
+                    notVisitableRemovalCriterion.params.fromNodeId = fromNodeId;
+                    notVisitableRemovalCriterion.params.toNodeId = toNodeId;
+                    makeThisNodeNotVisitableConstraint.removalConditional = 'all';
+                    makeThisNodeNotVisitableConstraint.removalCriteria.push(notVisitableRemovalCriterion);
                     node.constraints.push(makeThisNodeNotVisitableConstraint);
                 }
             }
