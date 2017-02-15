@@ -9,6 +9,7 @@ import org.wise.portal.domain.run.impl.RunImpl;
 import org.wise.portal.domain.workgroup.WISEWorkgroup;
 import org.wise.portal.domain.workgroup.impl.WISEWorkgroupImpl;
 import org.wise.vle.domain.PersistableDomain;
+import org.wise.vle.domain.work.NotebookItem;
 import org.wise.vle.domain.work.StudentWork;
 
 import javax.persistence.*;
@@ -56,6 +57,13 @@ public class Annotation extends PersistableDomain {
     @ManyToOne(targetEntity = StudentWork.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
     @JoinColumn(name = "studentWorkId", nullable = true)
     private StudentWork studentWork;
+
+    @Column(name = "localNotebookItemId", length = 30, nullable = true)
+    private String localNotebookItemId;
+
+    @ManyToOne(targetEntity = NotebookItem.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
+    @JoinColumn(name = "notebookItemId", nullable = true)
+    private NotebookItem notebookItem;
 
     @Column(name = "type", length = 30, nullable = false)
     private String type;
@@ -141,6 +149,22 @@ public class Annotation extends PersistableDomain {
         this.studentWork = studentWork;
     }
 
+    public String getLocalNotebookItemId() {
+        return localNotebookItemId;
+    }
+
+    public void setLocalNotebookItemId(String localNotebookItemId) {
+        this.localNotebookItemId = localNotebookItemId;
+    }
+
+    public NotebookItem getNotebookItem() {
+        return notebookItem;
+    }
+
+    public void setNotebookItem(NotebookItem notebookItem) {
+        this.notebookItem = notebookItem;
+    }
+
     public String getType() {
         return type;
     }
@@ -221,6 +245,16 @@ public class Annotation extends PersistableDomain {
             // set the component state id
             if (this.studentWork != null) {
                 eventJSONObject.put("studentWorkId", this.studentWork.getId());
+            }
+
+            // set the local notebook item id
+            if (this.localNotebookItemId != null) {
+                eventJSONObject.put("localNotebookItemId", this.localNotebookItemId);
+            }
+
+            // set the notebook item
+            if (this.notebookItem != null) {
+                eventJSONObject.put("notebookItemId", this.notebookItem.getId());
             }
 
             // set the type

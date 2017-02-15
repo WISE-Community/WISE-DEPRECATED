@@ -422,7 +422,7 @@ public class VLEServiceImpl implements VLEService {
     @Override
     public List<Annotation> getAnnotations(
             Integer id, Integer runId, Integer periodId, Integer fromWorkgroupId, Integer toWorkgroupId,
-            String nodeId, String componentId, Integer studentWorkId, String type) {
+            String nodeId, String componentId, Integer studentWorkId, String localNotebookItemId, Integer notebookItemId, String type) {
         Run run = null;
         if (runId != null) {
             try {
@@ -465,8 +465,17 @@ public class VLEServiceImpl implements VLEService {
             }
         }
 
+        NotebookItem notebookItem = null;
+        if (notebookItemId != null) {
+            try {
+                notebookItem = (NotebookItem) notebookItemDao.getById(notebookItemId);
+            } catch (ObjectNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+
         return annotationDao.getAnnotationsByParams(id, run, period, fromWorkgroup, toWorkgroup,
-                nodeId, componentId, studentWork, type);
+                nodeId, componentId, studentWork, localNotebookItemId,  notebookItem, type);
     }
 
     @Override
@@ -479,6 +488,8 @@ public class VLEServiceImpl implements VLEService {
             String nodeId,
             String componentId,
             Integer studentWorkId,
+            String localNotebookItemId,
+            Integer notebookItemId,
             String type,
             String data,
             String clientSaveTime) throws ObjectNotFoundException {
@@ -486,7 +497,7 @@ public class VLEServiceImpl implements VLEService {
         Annotation annotation;
         if (id != null) {
             // if the id is passed in, the client is requesting an update, so fetch the Event from data store
-            List<Annotation> annotations = getAnnotations(id, null, null, null, null, null, null, null, null);
+            List<Annotation> annotations = getAnnotations(id, null, null, null, null, null, null, null, null, null, null);
             if (annotations != null && annotations.size() > 0) {
                 // TODO: maybe we want a getEventById method here?
                 annotation = annotations.get(0);
@@ -535,6 +546,16 @@ public class VLEServiceImpl implements VLEService {
         if (studentWorkId != null) {
             try {
                 annotation.setStudentWork((StudentWork) studentWorkDao.getById(studentWorkId));
+            } catch (ObjectNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+        if (localNotebookItemId != null) {
+            annotation.setLocalNotebookItemId(localNotebookItemId);
+        }
+        if (notebookItemId != null) {
+            try {
+                annotation.setNotebookItem((NotebookItem) notebookItemDao.getById(notebookItemId));
             } catch (ObjectNotFoundException e) {
                 e.printStackTrace();
             }

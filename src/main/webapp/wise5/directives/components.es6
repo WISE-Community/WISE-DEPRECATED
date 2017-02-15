@@ -1,9 +1,9 @@
 'use strict';
 
 import Annotation from './annotation/annotation';
-import ComponentAnnotations from './componentAnnotations/componentAnnotations';
 import Compile from './compile/compile';
 import Component from './component/component';
+import ComponentAnnotations from './componentAnnotations/componentAnnotations';
 import ComponentGrading from './componentGrading/componentGrading';
 import DisableDeleteKeypress from './disableDeleteKeypress/disableDeleteKeypress';
 import Draggable from './draggable/draggable';
@@ -11,6 +11,8 @@ import GlobalAnnotations from './globalAnnotations/globalAnnotations';
 import GlobalAnnotationsList from './globalAnnotationsList/globalAnnotationsList';
 import ListenForDeleteKeypress from './listenForDeleteKeypress/listenForDeleteKeypress';
 import Notebook from './notebook/notebook';
+import NotebookItemAnnotations from './notebookItemAnnotations/notebookItemAnnotations';
+import NotebookItemGrading from './notebookItemGrading/notebookItemGrading';
 import PossibleScore from './possibleScore/possibleScore';
 import Wiselink from './wiselink/wiselink';
 
@@ -26,6 +28,8 @@ Components.component('draggable', Draggable);
 Components.component('globalAnnotations', GlobalAnnotations);
 Components.component('globalAnnotationsList', GlobalAnnotationsList);
 Components.component('listenForDeleteKeypress', ListenForDeleteKeypress);
+Components.component('notebookItemAnnotations', NotebookItemAnnotations);
+Components.component('notebookItemGrading', NotebookItemGrading);
 Components.component('possibleScore', PossibleScore);
 Components.component('wiselink', Wiselink);
 

@@ -40,6 +40,7 @@ import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.vle.wise5.VLEService;
 import org.wise.portal.service.websocket.WISEWebSocketHandler;
 import org.wise.vle.domain.annotation.wise5.Annotation;
+import org.wise.vle.domain.work.NotebookItem;
 import org.wise.vle.domain.work.StudentWork;
 import org.wise.vle.domain.work.Event;
 
@@ -86,6 +87,8 @@ public class StudentDataController {
             @RequestParam(value = "fromWorkgroupId", required = false) Integer fromWorkgroupId,
             @RequestParam(value = "toWorkgroupId", required = false) Integer toWorkgroupId,
             @RequestParam(value = "studentWorkId", required = false) Integer studentWorkId,
+            @RequestParam(value = "localNotebookItemId", required = false) String localNotebookItemId,
+            @RequestParam(value = "notebookItemId", required = false) Integer notebookItemId,
             @RequestParam(value = "annotationType", required = false) String annotationType,
             @RequestParam(value = "components", required = false) List<JSONObject> components
             ) {
@@ -133,7 +136,7 @@ public class StudentDataController {
         if (getAnnotations) {
             List<Annotation> annotations = vleService.getAnnotations(
                     id, runId, periodId, fromWorkgroupId, toWorkgroupId,
-                    nodeId, componentId, studentWorkId, annotationType);
+                    nodeId, componentId, studentWorkId, localNotebookItemId, notebookItemId, annotationType);
 
             JSONArray annotationsJSONArray = new JSONArray();
 
@@ -298,6 +301,8 @@ public class StudentDataController {
                                                 annotationJSONObject.getString("nodeId") + "_" + annotationJSONObject.getString("componentId"))
                                         ) {
                                     // this is an annotation for a StudentWork that we just saved.
+                                    String localNotebookItemId = null;  // since this is an annotation on student work, notebook item should be null.
+                                    Integer notebookItemId = null;   // since this is an annotation on student work, notebook item should be null.
                                     StudentWork savedStudentWork = savedStudentWorkList.get(annotationJSONObject.getString("nodeId") + "_" + annotationJSONObject.getString("componentId"));
                                     Integer savedStudentWorkId = savedStudentWork.getId();
                                     annotation = vleService.saveAnnotation(
@@ -309,6 +314,8 @@ public class StudentDataController {
                                             annotationJSONObject.isNull("nodeId") ? null : annotationJSONObject.getString("nodeId"),
                                             annotationJSONObject.isNull("componentId") ? null : annotationJSONObject.getString("componentId"),
                                             savedStudentWorkId,
+                                            localNotebookItemId,
+                                            notebookItemId,
                                             annotationJSONObject.isNull("type") ? null : annotationJSONObject.getString("type"),
                                             annotationJSONObject.isNull("data") ? null : annotationJSONObject.getString("data"),
                                             annotationJSONObject.isNull("clientSaveTime") ? null : annotationJSONObject.getString("clientSaveTime"));
@@ -342,6 +349,8 @@ public class StudentDataController {
                                             annotationJSONObject.isNull("nodeId") ? null : annotationJSONObject.getString("nodeId"),
                                             annotationJSONObject.isNull("componentId") ? null : annotationJSONObject.getString("componentId"),
                                             annotationJSONObject.isNull("studentWorkId") ? null : annotationJSONObject.getInt("studentWorkId"),
+                                            annotationJSONObject.isNull("localNotebookItemId") ? null : annotationJSONObject.getString("localNotebookItemId"),
+                                            annotationJSONObject.isNull("notebookItemId") ? null : annotationJSONObject.getInt("notebookItemId"),
                                             annotationJSONObject.isNull("type") ? null : annotationJSONObject.getString("type"),
                                             annotationJSONObject.isNull("data") ? null : annotationJSONObject.getString("data"),
                                             annotationJSONObject.isNull("clientSaveTime") ? null : annotationJSONObject.getString("clientSaveTime"));

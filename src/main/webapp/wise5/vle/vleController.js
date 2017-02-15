@@ -429,12 +429,19 @@ var VLEController = function () {
                             }
                         }
 
+                        var notebookItemId = null; // if this notification was created because teacher commented on a notebook report.
                         if (!newNotificationForNodeIdAndTypeExists) {
                             var message = "";
                             if (notificationType === "DiscussionReply") {
                                 message = this.$translate('newRepliesOnDiscussionPost');
                             } else if (notificationType === "teacherToStudent") {
                                 message = this.$translate('newFeedbackFromTeacher');
+                                if (notification.data != null && notification.data.annotationId != null) {
+                                    var annotation = this.AnnotationService.getAnnotationById(notification.data.annotationId);
+                                    if (annotation != null && annotation.notebookItemId != null) {
+                                        notebookItemId = annotation.notebookItemId;
+                                    }
+                                }
                             } else if (notificationType === "CRaterResult") {
                                 message = this.$translate('newFeedback');
                             }
@@ -442,6 +449,7 @@ var VLEController = function () {
                                 latestNotificationTimestamp: notification.timeGenerated,
                                 message: message,
                                 nodeId: notificationNodeId,
+                                notebookItemId: notebookItemId,
                                 notifications: [notification],
                                 type: notificationType
                             };
@@ -604,8 +612,22 @@ var VLEController = function () {
             }
 
             var goToNodeId = notificationAggregate.nodeId;
+            var notebookItemId = notificationAggregate.notebookItemId;
             if (goToNodeId != null) {
                 this.StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(goToNodeId);
+            } else if (notebookItemId != null) {
+                var notebookItem = this.NotebookService.getNotebookItemByNotebookItemId(notebookItemId);
+                if (notebookItem != null) {
+                    if (notebookItem.type === "note") {
+                        // open note view
+                        this.$rootScope.$broadcast('setNotebookFilter', { filter: "note", ev: event });
+                        this.$rootScope.$broadcast('toggleNotebook', { ev: event, open: true });
+                    } else if (notebookItem.type === "report") {
+                        // open report view
+                        this.$rootScope.$broadcast('setNotebookFilter', { filter: "report", ev: event });
+                        this.$rootScope.$broadcast('toggleNotebook', { ev: event, open: true });
+                    }
+                }
             }
         }
 
