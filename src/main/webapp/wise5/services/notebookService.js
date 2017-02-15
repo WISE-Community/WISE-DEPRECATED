@@ -185,6 +185,26 @@ var NotebookService = function () {
             return this.config;
         }
     }, {
+        key: "getReportNoteContentByReportId",
+
+
+        /**
+         * Returns the report content for the specified reportId, or null if not exists.
+         * @param reportId
+         */
+        value: function getReportNoteContentByReportId(reportId) {
+            var result = null;
+            var reportNotes = this.notebookConfig.itemTypes.report.notes;
+            for (var i = 0; i < reportNotes.length; i++) {
+                var reportNote = reportNotes[i];
+                if (reportNote.reportId === reportId) {
+                    result = reportNote;
+                    break;
+                }
+            }
+            return result;
+        }
+    }, {
         key: "isNotebookEnabled",
         value: function isNotebookEnabled() {
             return this.config.enabled;
@@ -303,6 +323,27 @@ var NotebookService = function () {
                 }
             }
         }
+
+        /**
+         * Returns the notebook item with the specified notebook item id.
+         */
+
+    }, {
+        key: "getNotebookItemByNotebookItemId",
+        value: function getNotebookItemByNotebookItemId(notebookItemId) {
+            var workgroupId = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+
+            var notebookByWorkgroup = this.getNotebookByWorkgroup(workgroupId);
+            if (notebookByWorkgroup != null) {
+                var allNotebookItems = notebookByWorkgroup.allItems;
+                for (var a = 0; a < allNotebookItems.length; a++) {
+                    var notebookItem = allNotebookItems[a];
+                    if (notebookItem.id === notebookItemId) {
+                        return notebookItem;
+                    }
+                }
+            }
+        }
     }, {
         key: "getNotebookByWorkgroup",
         value: function getNotebookByWorkgroup() {
@@ -320,17 +361,6 @@ var NotebookService = function () {
                 };
             }
             return notebookByWorkgroup;
-        }
-    }, {
-        key: "hasStudentWorkNotebookItem",
-        value: function hasStudentWorkNotebookItem(studentWork) {
-            for (var i = 0; i < this.notebook.items.length; i++) {
-                var notebookItem = this.notebook.items[i];
-                if (notebookItem.studentWorkId === studentWork.id) {
-                    return true;
-                }
-            }
-            return false;
         }
     }, {
         key: "saveNotebookItem",

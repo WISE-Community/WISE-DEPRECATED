@@ -159,6 +159,23 @@ class NotebookService {
         return this.config;
     };
 
+    /**
+     * Returns the report content for the specified reportId, or null if not exists.
+     * @param reportId
+     */
+    getReportNoteContentByReportId(reportId) {
+        let result = null;
+        let reportNotes = this.notebookConfig.itemTypes.report.notes;
+        for (let i = 0; i < reportNotes.length; i++) {
+            let reportNote = reportNotes[i];
+            if (reportNote.reportId === reportId) {
+                result = reportNote;
+                break;
+            }
+        }
+        return result;
+    }
+
     isNotebookEnabled() {
         return this.config.enabled;
     };
@@ -268,6 +285,22 @@ class NotebookService {
         }
     }
 
+    /**
+     * Returns the notebook item with the specified notebook item id.
+     */
+    getNotebookItemByNotebookItemId(notebookItemId, workgroupId = null) {
+        let notebookByWorkgroup = this.getNotebookByWorkgroup(workgroupId);
+        if (notebookByWorkgroup != null) {
+            let allNotebookItems = notebookByWorkgroup.allItems;
+            for (let a = 0; a < allNotebookItems.length; a++) {
+                let notebookItem = allNotebookItems[a];
+                if (notebookItem.id === notebookItemId) {
+                    return notebookItem;
+                }
+            }
+        }
+    }
+
     getNotebookByWorkgroup(workgroupId = null) {
         if (workgroupId == null) {
             workgroupId = this.ConfigService.getWorkgroupId();
@@ -282,16 +315,6 @@ class NotebookService {
         }
         return notebookByWorkgroup;
     }
-
-    hasStudentWorkNotebookItem(studentWork) {
-        for (let i = 0; i < this.notebook.items.length; i++) {
-            let notebookItem = this.notebook.items[i];
-            if (notebookItem.studentWorkId === studentWork.id) {
-                return true;
-            }
-        }
-        return false;
-    };
 
     saveNotebookItem(notebookItemId, nodeId, localNotebookItemId, type, title, content, clientSaveTime = null, clientDeleteTime = null) {
         if (this.ConfigService.isPreview()) {

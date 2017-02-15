@@ -111,11 +111,10 @@ class NotificationService {
                         if (notification.nodeId != null) {
                             notification.nodePosition = this.ProjectService.getNodePositionById(notification.nodeId);
                             notification.nodePositionAndTitle = this.ProjectService.getNodePositionAndTitleByNodeId(notification.nodeId);
-
-                            if (notification.data != null) {
-                                // parse the data string into a JSON object
-                                notification.data = angular.fromJson(notification.data);
-                            }
+                        }
+                        if (notification.data != null) {
+                            // parse the data string into a JSON object
+                            notification.data = angular.fromJson(notification.data);
                         }
                     });
                 } else {

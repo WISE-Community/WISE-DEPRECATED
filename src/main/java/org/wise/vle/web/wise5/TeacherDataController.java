@@ -178,6 +178,8 @@ public class TeacherDataController {
             @RequestParam(value = "fromWorkgroupId", required = false) Integer fromWorkgroupId,
             @RequestParam(value = "toWorkgroupId", required = false) Integer toWorkgroupId,
             @RequestParam(value = "studentWorkId", required = false) Integer studentWorkId,
+            @RequestParam(value = "localNotebookItemId", required = false) String localNotebookItemId,
+            @RequestParam(value = "notebookItemId", required = false) Integer notebookItemId,
             @RequestParam(value = "annotationType", required = false) String annotationType,
             @RequestParam(value = "components", required = false) List<JSONObject> components
 
@@ -236,7 +238,7 @@ public class TeacherDataController {
                 if (getAnnotations) {
                     List<Annotation> annotations = vleService.getAnnotations(
                             id, runId, periodId, fromWorkgroupId, toWorkgroupId,
-                            nodeId, componentId, studentWorkId, annotationType);
+                            nodeId, componentId, studentWorkId, localNotebookItemId, notebookItemId, annotationType);
 
                     JSONArray annotationsJSONArray = new JSONArray();
 
@@ -309,6 +311,8 @@ public class TeacherDataController {
                                         annotationJSONObject.isNull("nodeId") ? null : annotationJSONObject.getString("nodeId"),
                                         annotationJSONObject.isNull("componentId") ? null : annotationJSONObject.getString("componentId"),
                                         annotationJSONObject.isNull("studentWorkId") ? null : annotationJSONObject.getInt("studentWorkId"),
+                                        annotationJSONObject.isNull("localNotebookItemId") ? null : annotationJSONObject.getString("localNotebookItemId"),
+                                        annotationJSONObject.isNull("notebookItemId") ? null : annotationJSONObject.getInt("notebookItemId"),
                                         annotationJSONObject.isNull("type") ? null : annotationJSONObject.getString("type"),
                                         annotationJSONObject.isNull("data") ? null : annotationJSONObject.getString("data"),
                                         annotationJSONObject.isNull("clientSaveTime") ? null : annotationJSONObject.getString("clientSaveTime"));

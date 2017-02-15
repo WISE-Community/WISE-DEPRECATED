@@ -25,9 +25,10 @@
                 ng-show="authorNotebookController.project.notebook.itemTypes.report.notes == null ||
             authorNotebookController.project.notebook.itemTypes.report.notes.length < 1">{{ 'addReportNote' | translate }}</button>
         <ul ng-repeat="reportNote in authorNotebookController.project.notebook.itemTypes.report.notes">
-            <li>{{ 'title' | translate }} <input ng-model="reportNote.title" /></li>
-            <li>{{ 'description' | translate }} <textarea rows="5" cols="50" ng-model="reportNote.description" /></li>
-            <li>{{ 'prompt' | translate }} <textarea rows="5" cols="50" ng-model="reportNote.prompt" /></li>
+            <li>{{ 'title' | translate }} <input ng-model="reportNote.title" ng-model-options='{ debounce: 1000 }' /></li>
+            <li>{{ 'MAX_SCORE' | translate }} <input ng-model="reportNote.maxScore" ng-model-options='{ debounce: 1000 }' /></li>
+            <li>{{ 'description' | translate }} <textarea rows="5" cols="50" ng-model="reportNote.description" ng-model-options='{ debounce: 1000 }' /></li>
+            <li>{{ 'prompt' | translate }} <textarea rows="5" cols="50" ng-model="reportNote.prompt" ng-model-options='{ debounce: 1000 }' /></li>
             <li>{{ 'content' | translate }} <textarea rows="15" cols="50" ng-model="reportNote.content" />
                 <summernote id='{{reportNote.summernoteId}}'
                     ng-model='reportNote.summernoteHTML'

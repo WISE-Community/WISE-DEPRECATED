@@ -39,6 +39,7 @@ var AnnotationController = function () {
                 annotationParams.toWorkgroupId = this.toWorkgroupId;
                 annotationParams.type = this.type;
                 annotationParams.studentWorkId = this.componentStateId;
+                annotationParams.notebookItemId = this.notebookItemId;
 
                 // get the latest annotation that matches the params
                 this.annotation = this.AnnotationService.getLatestAnnotation(annotationParams);
@@ -61,6 +62,7 @@ var AnnotationController = function () {
             _annotationParams.toWorkgroupId = this.toWorkgroupId;
             _annotationParams.type = this.type;
             _annotationParams.studentWorkId = this.componentStateId;
+            _annotationParams.notebookItemId = this.notebookItemId;
 
             if (this.active) {
                 /*
@@ -130,11 +132,12 @@ var AnnotationController = function () {
                 // convert the value to a number if possible
                 value = this.UtilService.convertStringToNumber(value);
 
-                var data = {};
-                data.value = value;
+                var data = {
+                    value: value
+                };
 
                 // create the annotation object
-                var annotation = this.AnnotationService.createAnnotation(this.annotationId, this.runId, this.periodId, this.fromWorkgroupId, this.toWorkgroupId, this.nodeId, this.componentId, this.componentStateId, this.type, data, clientSaveTime);
+                var annotation = this.AnnotationService.createAnnotation(this.annotationId, this.runId, this.periodId, this.fromWorkgroupId, this.toWorkgroupId, this.nodeId, this.componentId, this.componentStateId, this.localNotebookItemId, this.notebookItemId, this.type, data, clientSaveTime);
 
                 // save the annotation to the server
                 this.AnnotationService.saveAnnotation(annotation).then(function (result) {
@@ -166,6 +169,7 @@ var Annotation = {
         fromWorkgroupId: '<',
         toWorkgroupId: '<',
         componentStateId: '<',
+        notebookItemId: '<',
         active: '<',
         maxScore: '<'
     },

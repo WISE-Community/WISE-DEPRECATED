@@ -65,6 +65,8 @@
         periodId bigint not null,
         runId bigint not null,
         studentWorkId integer,
+        localNotebookItemId varchar(30),
+        notebookItemId integer,
         toWorkgroupId bigint not null,
         primary key (id)
     ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
@@ -733,6 +735,11 @@
         add constraint FK_ss22rostrwvgvh4x7n5mmq173
         foreign key (toWorkgroupId)
         references wiseworkgroups (id);
+
+    alter table annotations
+        add constraint FK_lklpu3fwsovjhx5wqsjlah0ov
+        foreign key (notebookItemId)
+        references notebookItems (id);
 
     alter table craterrequest
         add constraint FK_rx43blmi6te4f1ttt3j1s9vr1
