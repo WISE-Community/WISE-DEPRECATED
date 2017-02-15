@@ -775,7 +775,7 @@ class ProjectService {
                          * an absolute path and does not require path prepending
                          * so we will just return the original unmodified string
                          */
-                        return matchedStringWithoutQuotes;
+                        return delimiter + matchedStringWithoutQuotes + delimiter;
                     } else {
                         //var matchedStringWithoutFirstAndLastQuote = matchedString.substr(1, matchedString.length - 2);  // everything but the beginning and end quote (' or ")
                         // make a new string with the contentBaseURL + assets/ prepended to the path
