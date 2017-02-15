@@ -8,10 +8,6 @@ var _annotation = require('./annotation/annotation');
 
 var _annotation2 = _interopRequireDefault(_annotation);
 
-var _componentAnnotations = require('./componentAnnotations/componentAnnotations');
-
-var _componentAnnotations2 = _interopRequireDefault(_componentAnnotations);
-
 var _compile = require('./compile/compile');
 
 var _compile2 = _interopRequireDefault(_compile);
@@ -19,6 +15,10 @@ var _compile2 = _interopRequireDefault(_compile);
 var _component = require('./component/component');
 
 var _component2 = _interopRequireDefault(_component);
+
+var _componentAnnotations = require('./componentAnnotations/componentAnnotations');
+
+var _componentAnnotations2 = _interopRequireDefault(_componentAnnotations);
 
 var _componentGrading = require('./componentGrading/componentGrading');
 
@@ -48,6 +48,14 @@ var _notebook = require('./notebook/notebook');
 
 var _notebook2 = _interopRequireDefault(_notebook);
 
+var _notebookItemAnnotations = require('./notebookItemAnnotations/notebookItemAnnotations');
+
+var _notebookItemAnnotations2 = _interopRequireDefault(_notebookItemAnnotations);
+
+var _notebookItemGrading = require('./notebookItemGrading/notebookItemGrading');
+
+var _notebookItemGrading2 = _interopRequireDefault(_notebookItemGrading);
+
 var _possibleScore = require('./possibleScore/possibleScore');
 
 var _possibleScore2 = _interopRequireDefault(_possibleScore);
@@ -70,6 +78,8 @@ Components.component('draggable', _draggable2.default);
 Components.component('globalAnnotations', _globalAnnotations2.default);
 Components.component('globalAnnotationsList', _globalAnnotationsList2.default);
 Components.component('listenForDeleteKeypress', _listenForDeleteKeypress2.default);
+Components.component('notebookItemAnnotations', _notebookItemAnnotations2.default);
+Components.component('notebookItemGrading', _notebookItemGrading2.default);
 Components.component('possibleScore', _possibleScore2.default);
 Components.component('wiselink', _wiselink2.default);
 

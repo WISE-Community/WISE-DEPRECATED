@@ -138,11 +138,10 @@ var NotificationService = function () {
                             if (notification.nodeId != null) {
                                 notification.nodePosition = _this2.ProjectService.getNodePositionById(notification.nodeId);
                                 notification.nodePositionAndTitle = _this2.ProjectService.getNodePositionAndTitleByNodeId(notification.nodeId);
-
-                                if (notification.data != null) {
-                                    // parse the data string into a JSON object
-                                    notification.data = angular.fromJson(notification.data);
-                                }
+                            }
+                            if (notification.data != null) {
+                                // parse the data string into a JSON object
+                                notification.data = angular.fromJson(notification.data);
                             }
                         });
                     } else {

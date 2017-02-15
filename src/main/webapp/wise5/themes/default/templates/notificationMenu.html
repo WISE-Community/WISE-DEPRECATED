@@ -14,7 +14,8 @@
                           class="md-2-line">
                 <div class="md-list-item-text">
                     <div class="md-body-1 primary">{{notificationAggregate.message}}</div>
-                    <h4 class="notification-list-item__source">{{vleController.ProjectService.getNodePositionAndTitleByNodeId(notificationAggregate.nodeId)}}</h4>
+                    <h4 class="notification-list-item__source" ng-if="notificationAggregate.nodeId != null">{{vleController.ProjectService.getNodePositionAndTitleByNodeId(notificationAggregate.nodeId)}}</h4>
+                    <h4 class="notification-list-item__source" ng-if="notificationAggregate.notebookItemId != null">{{ "NOTEBOOK" | translate }}</h4>
                 </div>
                 <md-button class="md-icon-button" md-prevent-menu-close="md-prevent-menu-close"
                            ng-click="vleController.dismissNotificationAggregate($event, notificationAggregate)">

@@ -35,6 +35,7 @@ class AnnotationController {
                 annotationParams.toWorkgroupId = this.toWorkgroupId;
                 annotationParams.type = this.type;
                 annotationParams.studentWorkId = this.componentStateId;
+                annotationParams.notebookItemId = this.notebookItemId;
 
                 // get the latest annotation that matches the params
                 this.annotation = this.AnnotationService.getLatestAnnotation(annotationParams);
@@ -57,6 +58,7 @@ class AnnotationController {
             annotationParams.toWorkgroupId = this.toWorkgroupId;
             annotationParams.type = this.type;
             annotationParams.studentWorkId = this.componentStateId;
+            annotationParams.notebookItemId = this.notebookItemId;
 
             if (this.active) {
                 /*
@@ -128,8 +130,9 @@ class AnnotationController {
             // convert the value to a number if possible
             value = this.UtilService.convertStringToNumber(value);
 
-            let data = {};
-            data.value = value;
+            let data = {
+                value: value
+            };
 
             // create the annotation object
             let annotation = this.AnnotationService.createAnnotation(
@@ -141,6 +144,8 @@ class AnnotationController {
                 this.nodeId,
                 this.componentId,
                 this.componentStateId,
+                this.localNotebookItemId,
+                this.notebookItemId,
                 this.type,
                 data,
                 clientSaveTime);
@@ -180,6 +185,7 @@ const Annotation = {
         fromWorkgroupId: '<',
         toWorkgroupId: '<',
         componentStateId: '<',
+        notebookItemId: '<',
         active: '<',
         maxScore: '<'
     },

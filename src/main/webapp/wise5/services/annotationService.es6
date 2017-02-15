@@ -44,20 +44,20 @@ class AnnotationService {
      * @returns the latest annotation that matches the params
      */
     getLatestAnnotation(params) {
-        var annotation = null;
+        let annotation = null;
 
         if (params != null) {
-            var nodeId = params.nodeId;
-            var componentId = params.componentId;
-            var fromWorkgroupId = params.fromWorkgroupId;
-            var toWorkgroupId = params.toWorkgroupId;
-            var type = params.type;
+            let nodeId = params.nodeId;
+            let componentId = params.componentId;
+            let fromWorkgroupId = params.fromWorkgroupId;
+            let toWorkgroupId = params.toWorkgroupId;
+            let type = params.type;
 
-            var annotations = this.annotations;
+            let annotations = this.annotations;
 
             if (annotations != null) {
-                for (var a = annotations.length - 1; a >= 0; a--) {
-                    var tempAnnotation = annotations[a];
+                for (let a = annotations.length - 1; a >= 0; a--) {
+                    let tempAnnotation = annotations[a];
 
                     if (tempAnnotation != null) {
                         let match = true;
@@ -118,7 +118,7 @@ class AnnotationService {
      */
     createAnnotation(
         annotationId, runId, periodId, fromWorkgroupId, toWorkgroupId,
-        nodeId, componentId, studentWorkId,
+        nodeId, componentId, studentWorkId, localNotebookItemId, notebookItemId,
         annotationType, data, clientSaveTime) {
 
         var annotation = {};
@@ -130,6 +130,8 @@ class AnnotationService {
         annotation.nodeId = nodeId;
         annotation.componentId = componentId;
         annotation.studentWorkId = studentWorkId;
+        annotation.localNotebookItemId = localNotebookItemId;
+        annotation.notebookItemId = notebookItemId;
         annotation.type = annotationType;
         annotation.data = data;
         annotation.clientSaveTime = clientSaveTime;
@@ -145,13 +147,13 @@ class AnnotationService {
     saveAnnotation(annotation) {
 
         if (annotation != null) {
-            var annotations = [];
+            let annotations = [];
             annotations.push(annotation);
 
             // loop through all the annotations and inject a request token
             if (annotations != null && annotations.length > 0) {
-                for (var a = 0; a < annotations.length; a++) {
-                    var annotation = annotations[a];
+                for (let a = 0; a < annotations.length; a++) {
+                    let annotation = annotations[a];
 
                     if (annotation != null) {
                         annotation.requestToken = this.UtilService.generateKey(); // use this to keep track of unsaved annotations.
@@ -162,40 +164,42 @@ class AnnotationService {
                 annotations = [];
             }
 
-            var params = {};
-            params.runId = this.ConfigService.getRunId();
-            params.workgroupId = this.ConfigService.getWorkgroupId();
-            params.annotations = angular.toJson(annotations);
+            let params = {
+                runId: this.ConfigService.getRunId(),
+                workgroupId: this.ConfigService.getWorkgroupId(),
+                annotations: angular.toJson(annotations)
+            };
 
-            var httpParams = {};
-            httpParams.method = 'POST';
-            httpParams.url = this.ConfigService.getConfigParam('teacherDataURL');
-            httpParams.headers = {'Content-Type': 'application/x-www-form-urlencoded'};
-            httpParams.data = $.param(params);
+            let httpParams = {
+                method: "POST",
+                url: this.ConfigService.getConfigParam('teacherDataURL'),
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                data: $.param(params)
+            };
 
             return this.$http(httpParams).then(angular.bind(this, function(result) {
 
-                var localAnnotation = null;
+                let localAnnotation = null;
 
                 if (result != null && result.data != null) {
-                    var data = result.data;
+                    let data = result.data;
 
                     if (data != null) {
 
                         // get the saved annotations
-                        var savedAnnotations = data.annotations;
+                        let savedAnnotations = data.annotations;
 
                         // get the local annotations
-                        var localAnnotations = this.annotations;
+                        let localAnnotations = this.annotations;
 
                         if (savedAnnotations != null && localAnnotations != null) {
 
                             // loop through all the saved annotations
-                            for (var x = 0; x < savedAnnotations.length; x++) {
-                                var savedAnnotation = savedAnnotations[x];
+                            for (let x = 0; x < savedAnnotations.length; x++) {
+                                let savedAnnotation = savedAnnotations[x];
 
                                 // loop through all the local annotations
-                                for (var y = localAnnotations.length - 1; y >= 0; y--) {
+                                for (let y = localAnnotations.length - 1; y >= 0; y--) {
                                     localAnnotation = localAnnotations[y];
 
                                     if (localAnnotation.id != null &&
@@ -435,12 +439,14 @@ class AnnotationService {
         var annotationId = null;
         var fromWorkgroupId = null;
         var studentWorkId = null;
+        var localNotebookItemId = null;
+        var notebookItemId = null;
         var annotationType = 'autoScore';
         var clientSaveTime = Date.parse(new Date());
 
         var annotation = this.createAnnotation(
             annotationId, runId, periodId, fromWorkgroupId, toWorkgroupId,
-            nodeId, componentId, studentWorkId,
+            nodeId, componentId, studentWorkId, localNotebookItemId, notebookItemId,
             annotationType, data, clientSaveTime
         );
 
@@ -461,12 +467,14 @@ class AnnotationService {
         var annotationId = null;
         var fromWorkgroupId = null;
         var studentWorkId = null;
+        var localNotebookItemId = null;
+        var notebookItemId = null;
         var annotationType = 'autoComment';
         var clientSaveTime = Date.parse(new Date());
 
         var annotation = this.createAnnotation(
             annotationId, runId, periodId, fromWorkgroupId, toWorkgroupId,
-            nodeId, componentId, studentWorkId,
+            nodeId, componentId, studentWorkId, localNotebookItemId, notebookItemId,
             annotationType, data, clientSaveTime
         );
 
@@ -500,6 +508,72 @@ class AnnotationService {
             'comment': latestCommentAnnotation
         };
     };
+
+    /**
+     * Get the latest annotations for a given notebook item (as an object)
+     * @param workgroupId the workgroup id that did the notebook
+     * @param localNotebookItemId unique id for note and its revisions ["finalReport", "xyzabc", ...]
+     */
+    getLatestNotebookItemAnnotations(workgroupId, localNotebookItemId) {
+        let latestScoreAnnotation = null;
+        let latestCommentAnnotation = null;
+
+        // get the latest score annotation for this component
+        latestScoreAnnotation = this.getLatestNotebookItemScoreAnnotation(workgroupId, localNotebookItemId);
+
+        // get the latest comment annotation for this component
+        latestCommentAnnotation = this.getLatestNotebookItemCommentAnnotation(workgroupId, localNotebookItemId);
+
+        return {
+            'score': latestScoreAnnotation,
+            'comment': latestCommentAnnotation
+        };
+    };
+
+    /**
+     * Get the latest score annotation for this workgroup and localNotebookItemId, or null if not found
+     * @param workgroupId the workgroup id that did the notebook
+     * @param localNotebookItemId unique id for note and its revisions ["finalReport", "xyzabc", ...]
+     */
+    getLatestNotebookItemScoreAnnotation(workgroupId, localNotebookItemId) {
+
+        let annotations = this.getAnnotations();
+
+        // loop through all the annotations from newest to oldest
+        for (let a = annotations.length - 1; a >= 0; a--) {
+            let annotation = annotations[a];
+
+            if (annotation != null && annotation.type === "score" && annotation.notebookItemId != null &&
+                annotation.localNotebookItemId === localNotebookItemId) {
+                return annotation;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Get the latest comment annotation for this workgroup and localNotebookItemId, or null if not found
+     * @param workgroupId the workgroup id that did the notebook
+     * @param localNotebookItemId unique id for note and its revisions ["finalReport", "xyzabc", ...]
+     */
+    getLatestNotebookItemCommentAnnotation(workgroupId, localNotebookItemId) {
+
+        let annotations = this.getAnnotations();
+
+        // loop through all the annotations from newest to oldest
+        for (let a = annotations.length - 1; a >= 0; a--) {
+            let annotation = annotations[a];
+
+            if (annotation != null && annotation.type === "comment" && annotation.notebookItemId != null &&
+                annotation.localNotebookItemId === localNotebookItemId) {
+                return annotation;
+            }
+        }
+
+        return null;
+    }
+
 
     /**
      * Get the latest score annotation

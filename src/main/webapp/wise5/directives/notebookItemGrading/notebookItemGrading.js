@@ -8,21 +8,33 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var ComponentGradingController = function () {
-    function ComponentGradingController($filter, $mdDialog, $scope, AnnotationService, ConfigService, TeacherDataService, UtilService) {
+var NotebookItemGradingController = function () {
+    function NotebookItemGradingController($filter, $mdDialog, $scope, AnnotationService, ConfigService, NotebookService, TeacherDataService, UtilService) {
         var _this = this;
 
-        _classCallCheck(this, ComponentGradingController);
+        _classCallCheck(this, NotebookItemGradingController);
 
         this.$filter = $filter;
         this.$mdDialog = $mdDialog;
         this.$scope = $scope;
         this.AnnotationService = AnnotationService;
         this.ConfigService = ConfigService;
+        this.NotebookService = NotebookService;
         this.TeacherDataService = TeacherDataService;
         this.UtilService = UtilService;
 
         this.$translate = this.$filter('translate');
+
+        this.notebookItemId = this.notebookItem.id;
+        this.localNotebookItemId = this.notebookItem.localNotebookItemId;
+        this.toWorkgroupId = this.notebookItem.workgroupId;
+        this.maxScore = 0;
+        if (this.notebookItem != null && this.notebookItem.content != null && this.notebookItem.content.reportId != null) {
+            var reportNoteContent = this.NotebookService.getReportNoteContentByReportId(this.notebookItem.content.reportId);
+            if (reportNoteContent != null && reportNoteContent.maxScore != null) {
+                this.maxScore = reportNoteContent.maxScore;
+            }
+        }
 
         this.$onInit = function () {
             _this.runId = _this.ConfigService.getRunId();
@@ -43,7 +55,7 @@ var ComponentGradingController = function () {
         this.$onChanges = function (changes) {
 
             if (changes.maxScore) {
-                _this.hasMaxScore = typeof _this.maxScore === 'number';
+                _this.hasMaxScore = typeof _this.notebookItem.maxScore === 'number' || _this.notebookItem.maxScore == null;
             }
 
             _this.componentStates = _this.TeacherDataService.getComponentStatesByWorkgroupIdAndComponentId(_this.toWorkgroupId, _this.componentId);
@@ -76,7 +88,7 @@ var ComponentGradingController = function () {
         });
     }
 
-    _createClass(ComponentGradingController, [{
+    _createClass(NotebookItemGradingController, [{
         key: 'processAnnotations',
         value: function processAnnotations() {
             this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.toWorkgroupId);
@@ -95,53 +107,6 @@ var ComponentGradingController = function () {
             }
 
             this.latestTeacherAnnotationTime = this.getLatestTeacherAnnotationTime();
-
-            this.hasNewWork = this.hasNewWork();
-        }
-    }, {
-        key: 'hasNewWork',
-        value: function hasNewWork() {
-            var result = false;
-
-            if (this.latestComponentStateTime) {
-                // there is work for this component
-
-                if (this.latestTeacherAnnotationTime) {
-                    if (this.latestComponentStateTime > this.latestTeacherAnnotationTime) {
-                        // latest component state is newer than latest annotation, so work is new
-                        result = true;
-                        this.comment = null;
-                    }
-                } else {
-                    // there are no annotations, so work is new
-                    result = true;
-                }
-            }
-
-            return result;
-        }
-
-        /**
-         * Returns true if the latest comment is an auto comment and it's
-         * studentWorkId matches the latest component state's id
-         */
-
-    }, {
-        key: 'showAutoComment',
-        value: function showAutoComment() {
-            var result = false;
-            var latestComment = this.latestAnnotations.comment;
-            if (latestComment && latestComment.type === 'autoComment') {
-                var n = this.componentStates.length;
-                if (n > 0) {
-                    var latestComponentState = this.componentStates[n - 1];
-                    if (latestComponentState.id === latestComment.studentWorkId) {
-                        result = true;
-                    }
-                }
-            }
-
-            return result;
         }
 
         /**
@@ -213,49 +178,17 @@ var ComponentGradingController = function () {
 
             return time;
         }
-    }, {
-        key: 'showRevisions',
-        value: function showRevisions($event) {
-            var workgroupId = this.toWorkgroupId;
-            var componentId = this.componentId;
-            var maxScore = this.maxScore;
-            var userNames = this.userNames;
-
-            this.$mdDialog.show({
-                parent: angular.element(document.body),
-                targetEvent: $event,
-                fullscreen: true,
-                template: '<md-dialog aria-label="Revisions for {{userNames}}" class="dialog--wider">\n                    <md-toolbar md-theme="light">\n                        <div class="md-toolbar-tools">\n                            <h2 class="overflow--ellipsis">Revisions for {{userNames}}</h2>\n                            <span flex></span>\n                            <md-button class="md-icon-button" ng-click="close()">\n                                <md-icon aria-label="Close dialog"> close </md-icon>\n                            </md-button>\n                        </div>\n                    </md-toolbar>\n                    <md-dialog-content class="md-dialog-content gray-light-bg">\n                        <workgroup-component-revisions workgroup-id="workgroupId" component-id="{{componentId}}" max-score="maxScore"></workgroup-component-revisions>\n                    </md-dialog-content>\n                </md-dialog>',
-                locals: {
-                    workgroupId: workgroupId,
-                    componentId: componentId,
-                    maxScore: maxScore,
-                    userNames: userNames
-                },
-                controller: RevisionsController
-            });
-            function RevisionsController($scope, $mdDialog, workgroupId, componentId, maxScore, userNames) {
-                $scope.workgroupId = workgroupId;
-                $scope.componentId = componentId;
-                $scope.maxScore = maxScore;
-                $scope.userNames = userNames;
-                $scope.close = function () {
-                    $mdDialog.hide();
-                };
-            }
-            RevisionsController.$inject = ["$scope", "$mdDialog", "workgroupId", "componentId", "maxScore", "userNames"];
-        }
 
         /**
          * Save the annotation to the server
-         * @param type String to indicate which type of annotation to post
+         * @param type String to indicate which type of annotation to post [score,comment]
          */
 
     }, {
         key: 'postAnnotation',
         value: function postAnnotation(type) {
 
-            if (this.runId != null && this.periodId != null && this.nodeId != null && this.componentId != null && this.toWorkgroupId != null && type) {
+            if (this.runId != null && this.periodId != null && this.notebookItemId != null && this.toWorkgroupId != null && type) {
 
                 // get the current time
                 var clientSaveTime = new Date().getTime();
@@ -274,48 +207,43 @@ var ComponentGradingController = function () {
                 }
 
                 if (type === 'comment' && value || type === 'score' && typeof value === 'number' && value >= 0) {
-                    var data = {};
-                    data.value = value;
-                    var localNotebookItemId = null; // we're not grading notebook item in this view.
-                    var notebookItemId = null; // we're not grading notebook item in this view.
+                    var data = {
+                        value: value
+                    };
+                    var componentStateId = null; // we're not grading studentWork in this view, only notebook items
 
                     // create the annotation object
-                    var annotation = this.AnnotationService.createAnnotation(this.annotationId, this.runId, this.periodId, this.fromWorkgroupId, this.toWorkgroupId, this.nodeId, this.componentId, this.componentStateId, localNotebookItemId, notebookItemId, type, data, clientSaveTime);
+                    var annotation = this.AnnotationService.createAnnotation(this.annotationId, this.runId, this.periodId, fromWorkgroupId, this.toWorkgroupId, this.nodeId, this.componentId, componentStateId, this.localNotebookItemId, this.notebookItemId, type, data, clientSaveTime);
 
                     // save the annotation to the server
                     this.AnnotationService.saveAnnotation(annotation).then(function (result) {
                         /*let localAnnotation = result;
-                         if (localAnnotation != null) {
-                            if (this.annotationId == null) {
-                                // set the annotation id if there was no annotation id
-                                this.annotationId = localAnnotation.id;
-                            }
-                             this.processAnnotations();
-                        }*/
+                          if (localAnnotation != null) {
+                         if (this.annotationId == null) {
+                         // set the annotation id if there was no annotation id
+                         this.annotationId = localAnnotation.id;
+                         }
+                          this.processAnnotations();
+                         }*/
                     });
                 }
             }
         }
     }]);
 
-    return ComponentGradingController;
+    return NotebookItemGradingController;
 }();
 
-ComponentGradingController.$inject = ['$filter', '$mdDialog', '$scope', 'AnnotationService', 'ConfigService', 'TeacherDataService', 'UtilService'];
+NotebookItemGradingController.$inject = ['$filter', '$mdDialog', '$scope', 'AnnotationService', 'ConfigService', 'NotebookService', 'TeacherDataService', 'UtilService'];
 
-var ComponentGrading = {
+var NotebookItemGrading = {
     bindings: {
-        nodeId: '<',
-        componentId: '<',
         maxScore: '<',
-        fromWorkgroupId: '<',
-        toWorkgroupId: '<',
-        componentStateId: '<',
-        active: '<'
+        notebookItem: '<'
     },
-    templateUrl: 'wise5/directives/componentGrading/componentGrading.html',
-    controller: ComponentGradingController
+    templateUrl: 'wise5/directives/notebookItemGrading/notebookItemGrading.html',
+    controller: NotebookItemGradingController
 };
 
-exports.default = ComponentGrading;
-//# sourceMappingURL=componentGrading.js.map
+exports.default = NotebookItemGrading;
+//# sourceMappingURL=notebookItemGrading.js.map

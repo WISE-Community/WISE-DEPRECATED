@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -101,14 +101,14 @@ public interface VLEService {
      */
     List<Annotation> getAnnotations(
             Integer id, Integer runId, Integer periodId, Integer fromWorkgroupId, Integer toWorkgroupId,
-            String nodeId, String componentId, Integer studentWorkId, String type);
+            String nodeId, String componentId, Integer studentWorkId, String localNotebookItemId, Integer notebookItemId, String type);
 
     /**
      * Saves Annotation in the data store
      */
     Annotation saveAnnotation(
             Integer id, Integer runId, Integer periodId, Integer fromWorkgroupId, Integer toWorkgroupId,
-            String nodeId, String componentId, Integer studentWorkId,
+            String nodeId, String componentId, Integer studentWorkId, String localNotebookItemId, Integer notebookItemId,
             String type, String data,
             String clientSaveTime) throws ObjectNotFoundException;
 
