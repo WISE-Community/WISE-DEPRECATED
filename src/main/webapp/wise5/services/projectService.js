@@ -4859,18 +4859,58 @@ var ProjectService = function () {
 
                                     for (var tc = 0; tc < transitionsCopy.length; tc++) {
                                         var tempTransition = transitionsCopy[tc];
+
+                                        if (tempTransition != null) {
+                                            var tempToNodeId = tempTransition.to;
+
+                                            if (tempToNodeId != null) {
+                                                var parentIdOfToNode = this.getParentGroupId(tempToNodeId);
+
+                                                if (parentIdOfNodeToRemove != parentIdOfToNode) {
+                                                    // remove the transition
+
+                                                    transitionsCopy.splice(tc, 1);
+                                                    tc--;
+                                                }
+                                            }
+                                        }
                                     }
-                                    if (tempTransition != null) {
-                                        var tempToNodeId = tempTransition.to;
+                                }
 
-                                        if (tempToNodeId != null) {
-                                            var parentIdOfToNode = this.getParentGroupId(tempToNodeId);
+                                if (this.isFirstNodeInBranchPath(nodeId)) {
+                                    /*
+                                     * Get the node ids that have a branchPathTaken
+                                     * constraint from the before node and to the node
+                                     * we are removing. If there are any, we need to
+                                     * update the branchPathTaken constraint with the
+                                     * next nodeId that comes after the node we are
+                                     * removing.
+                                     */
+                                    var nodeIdsInBranch = this.getNodeIdsInBranch(node.id, nodeId);
 
-                                            if (parentIdOfNodeToRemove != parentIdOfToNode) {
-                                                // remove the transition
+                                    if (nodeIdsInBranch != null) {
 
-                                                transitionsCopy.splice(tc, 1);
-                                                tc--;
+                                        // loop through all the node ids in the branch
+                                        for (var nib = 0; nib < nodeIdsInBranch.length; nib++) {
+                                            var nodeIdInBranch = nodeIdsInBranch[nib];
+                                            var nodeInBranch = this.getNodeById(nodeIdInBranch);
+
+                                            // loop through all the transitions in the node we are removing
+                                            for (var tc = 0; tc < transitionsCopy.length; tc++) {
+                                                var transitionCopy = transitionsCopy[tc];
+
+                                                if (transitionCopy != null) {
+                                                    var currentFromNodeId = node.id;
+                                                    var currentToNodeId = nodeId;
+                                                    var newFromNodeId = node.id;
+                                                    var newToNodeId = transitionCopy.to;
+
+                                                    /*
+                                                     * change the branch path taken constraint by changing
+                                                     * the toNodeId
+                                                     */
+                                                    this.updateBranchPathTakenConstraint(nodeInBranch, currentFromNodeId, currentToNodeId, newFromNodeId, newToNodeId);
+                                                }
                                             }
                                         }
                                     }
@@ -4879,8 +4919,41 @@ var ProjectService = function () {
                                 // remove the transition to the node we are removing
                                 transitions.splice(t, 1);
 
-                                // insert the transitions from the node we are removing
-                                transitions = transitions.concat(transitionsCopy);
+                                if (transitionsCopy != null) {
+                                    var insertIndex = t;
+
+                                    /*
+                                     * loop through all the transitions from the node we are removing
+                                     * and insert them into the transitions of the from node
+                                     * e.g.
+                                     * the node that comes before the node we are removing has these transitions
+                                     * "transitions": [
+                                     *     {
+                                     *         "to": "node4"
+                                     *     },
+                                     *     {
+                                     *         "to": "node6"
+                                     *     }
+                                     * ]
+                                     *
+                                     * we are removing node4. node4 has a transition to node5.
+                                     *
+                                     * the node that comes before the node we are removing now has these transitions
+                                     * "transitions": [
+                                     *     {
+                                     *         "to": "node5"
+                                     *     },
+                                     *     {
+                                     *         "to": "node6"
+                                     *     }
+                                     * ]
+                                     */
+                                    for (var tc = 0; tc < transitionsCopy.length; tc++) {
+                                        // insert a transition from the node we are removing
+                                        transitions.splice(insertIndex, 0, transitionsCopy[tc]);
+                                        insertIndex++;
+                                    }
+                                }
 
                                 // check if the node we are moving is a group
                                 if (this.isGroupNode(nodeId)) {
@@ -8431,6 +8504,68 @@ var ProjectService = function () {
         }
 
         /**
+         * Update the branch path taken constraint
+         * @param node update the branch path taken constraints in this node
+         * @param currentFromNodeId the current from node id
+         * @param currentToNodeId the current to node id
+         * @param newFromNodeId the new from node id
+         * @param newToNodeId the new to node id
+         */
+
+    }, {
+        key: 'updateBranchPathTakenConstraint',
+        value: function updateBranchPathTakenConstraint(node, currentFromNodeId, currentToNodeId, newFromNodeId, newToNodeId) {
+
+            if (node != null) {
+                var constraints = node.constraints;
+
+                if (constraints != null) {
+
+                    // loop through all the constraints for the node
+                    for (var c = 0; c < constraints.length; c++) {
+                        var constraint = constraints[c];
+
+                        if (constraint != null) {
+
+                            var removalCriteria = constraint.removalCriteria;
+
+                            if (removalCriteria != null) {
+
+                                // loop through all the removal criteria
+                                for (var r = 0; r < removalCriteria.length; r++) {
+                                    var removalCriterion = removalCriteria[r];
+
+                                    if (removalCriterion != null) {
+
+                                        if (removalCriterion.name === 'branchPathTaken') {
+                                            // we have found a branchPathTaken removal criterion
+
+                                            var params = removalCriterion.params;
+
+                                            if (params != null) {
+
+                                                if (params.fromNodeId === currentFromNodeId && params.toNodeId === currentToNodeId) {
+
+                                                    /*
+                                                     * we have found a branchPathTaken removal criterion
+                                                     * with the fromNodeId and toNodeId that we are
+                                                     * looking for so we will now update the values
+                                                     */
+                                                    params.fromNodeId = newFromNodeId;
+                                                    params.toNodeId = newToNodeId;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        /**
          * Get the project level rubric
          * @return the project level rubric
          */
@@ -8449,6 +8584,76 @@ var ProjectService = function () {
         key: 'setProjectRubric',
         value: function setProjectRubric(html) {
             this.project.rubric = html;
+        }
+
+        /**
+         * Check if a node is a branch point
+         * @param nodeId the node id
+         * @return whether the node is a branch point
+         */
+
+    }, {
+        key: 'isBranchPoint',
+        value: function isBranchPoint(nodeId) {
+
+            var transitions = this.getTransitionsByFromNodeId(nodeId);
+
+            if (transitions != null) {
+                if (transitions.length > 1) {
+                    /*
+                     * the node contains more than one transition which means it is
+                     * a branch point
+                     */
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /**
+         * Check if a node is the first node in a branch path
+         * @param nodeId the node id
+         * @return whether the node is the first node in a branch path
+         */
+
+    }, {
+        key: 'isFirstNodeInBranchPath',
+        value: function isFirstNodeInBranchPath(nodeId) {
+
+            var nodes = this.getNodes();
+
+            if (nodes != null) {
+                for (var n = 0; n < nodes.length; n++) {
+                    var node = nodes[n];
+
+                    if (node != null && node.transitionLogic != null && node.transitionLogic.transitions != null) {
+
+                        var transitions = node.transitionLogic.transitions;
+
+                        if (transitions.length > 1) {
+                            /*
+                             * there is more than one transition from this node
+                             * which means it is a branch point
+                             */
+
+                            for (var t = 0; t < transitions.length; t++) {
+                                var transition = transitions[t];
+
+                                if (transition != null) {
+                                    var transitionTo = transition.to;
+
+                                    if (transitionTo === nodeId) {
+                                        return true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            return false;
         }
     }]);
 
