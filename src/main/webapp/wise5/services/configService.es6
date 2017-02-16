@@ -239,9 +239,6 @@ class ConfigService {
             var myClassInfo = myUserInfo.myClassInfo;
             if (myClassInfo != null) {
                 classmateUserInfos = myClassInfo.classmateUserInfos;
-
-                // sort the classmate userinfos by ascending workgroup id
-                classmateUserInfos.sort(this.compareClassmateUserInfos);
             }
         }
 
@@ -249,15 +246,44 @@ class ConfigService {
     };
 
     /**
+     * Get the classmate user infos sorted by ascending workgroup id
+     * @return an array of classmate user info objects sorted by ascending
+     * workgroup id
+     */
+    getClassmateUserInfosSortedByWorkgroupId() {
+
+        var sortedClassmateUserInfos = [];
+
+        // get all the classmate user info objects
+        var classmateUserInfos = this.getClassmateUserInfos();
+
+        if (classmateUserInfos != null) {
+
+            /*
+             * loop through all the classmate user info objects and add it to
+             * new array of classmate user infos
+             */
+            for (var c = 0; c < classmateUserInfos.length; c++) {
+                sortedClassmateUserInfos.push(classmateUserInfos[c]);
+            }
+        }
+
+        // sort the new classmate user infos array by ascending workgroup id
+        sortedClassmateUserInfos.sort(this.compareClassmateUserInfosByWorkgroupId);
+
+        return sortedClassmateUserInfos;
+    }
+
+    /**
      * Used to sort the classmate user infos by ascending workgroup id.
-     * Use by calling myArray.sort(compareClassmateUserInfos)
+     * Use by calling myArray.sort(compareClassmateUserInfosByWorkgroupId)
      * @param a a user info object
      * @param b a user info Object
      * @return -1 if a comes before b
      * 1 if a comes after b
      * 0 if a equals b
      */
-    compareClassmateUserInfos(a, b) {
+    compareClassmateUserInfosByWorkgroupId(a, b) {
         if (a.workgroupId < b.workgroupId) {
             return -1;
         } else if (a.workgroupId > b.workgroupId) {

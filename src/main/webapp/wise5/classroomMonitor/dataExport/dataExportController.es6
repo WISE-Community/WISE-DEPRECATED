@@ -434,7 +434,7 @@ class DataExportController {
         this.TeacherDataService.getExport("allStudentWork").then((result) => {
 
             // get the workgroups in the class
-            var workgroups = this.ConfigService.getClassmateUserInfos();
+            var workgroups = this.ConfigService.getClassmateUserInfosSortedByWorkgroupId();
 
             // get the run id
             var runId = this.ConfigService.getRunId();
@@ -1123,7 +1123,7 @@ class DataExportController {
         this.TeacherDataService.getExport("events").then((result) => {
 
             // get the workgroups in the class
-            var workgroups = this.ConfigService.getClassmateUserInfos();
+            var workgroups = this.ConfigService.getClassmateUserInfosSortedByWorkgroupId();
 
             // get the run id
             var runId = this.ConfigService.getRunId();
