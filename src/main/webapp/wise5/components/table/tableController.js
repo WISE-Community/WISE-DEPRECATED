@@ -218,24 +218,8 @@ var TableController = function () {
             if (componentState == null) {
                 // check if we need to import work
 
-                var importPreviousWorkNodeId = this.componentContent.importPreviousWorkNodeId;
-                var importPreviousWorkComponentId = this.componentContent.importPreviousWorkComponentId;
-
-                if (importPreviousWorkNodeId == null || importPreviousWorkNodeId == '') {
-                    /*
-                     * check if the node id is in the field that we used to store
-                     * the import previous work node id in
-                     */
-                    importPreviousWorkNodeId = this.componentContent.importWorkNodeId;
-                }
-
-                if (importPreviousWorkComponentId == null || importPreviousWorkComponentId == '') {
-                    /*
-                     * check if the component id is in the field that we used to store
-                     * the import previous work component id in
-                     */
-                    importPreviousWorkComponentId = this.componentContent.importWorkComponentId;
-                }
+                var importPreviousWorkNodeId = this.getImportPreviousWorkNodeId();
+                var importPreviousWorkComponentId = this.getImportPreviousWorkComponentId();
 
                 if (importPreviousWorkNodeId != null && importPreviousWorkComponentId != null) {
                     // import the work from the other component
@@ -627,8 +611,16 @@ var TableController = function () {
          */
         value: function resetTable() {
 
-            // get the original table from the step content
-            this.tableData = this.getCopyOfTableData(this.componentContent.tableData);
+            var importPreviousWorkNodeId = this.getImportPreviousWorkNodeId();
+            var importPreviousWorkComponentId = this.getImportPreviousWorkComponentId();
+
+            if (importPreviousWorkNodeId != null && importPreviousWorkComponentId != null) {
+                // import the work from the other component
+                this.importWork();
+            } else {
+                // get the original table from the step content
+                this.tableData = this.getCopyOfTableData(this.componentContent.tableData);
+            }
 
             // the table has changed so we will perform additional processing
             this.studentDataChanged();
@@ -814,6 +806,28 @@ var TableController = function () {
             return deferred.promise;
         }
     }, {
+        key: 'createBlankComponentState',
+
+
+        /**
+         * Create a new component state with no student data
+         * @return a component state with no student data
+         */
+        value: function createBlankComponentState() {
+
+            // create a new component state
+            var componentState = this.NodeService.createNewComponentState();
+
+            if (componentState != null) {
+                var studentData = {};
+
+                // set the student data into the component state
+                componentState.studentData = studentData;
+            }
+
+            return componentState;
+        }
+    }, {
         key: 'createComponentStateAdditionalProcessing',
 
 
@@ -941,68 +955,29 @@ var TableController = function () {
 
             if (componentContent != null) {
 
-                // get the import previous work node id and component id
-                var importPreviousWorkNodeId = componentContent.importPreviousWorkNodeId;
-                var importPreviousWorkComponentId = componentContent.importPreviousWorkComponentId;
-
-                if (importPreviousWorkNodeId == null || importPreviousWorkNodeId == '') {
-
-                    /*
-                     * check if the node id is in the field that we used to store
-                     * the import previous work node id in
-                     */
-                    if (componentContent.importWorkNodeId != null && componentContent.importWorkNodeId != '') {
-                        importPreviousWorkNodeId = componentContent.importWorkNodeId;
-                    }
-                }
-
-                if (importPreviousWorkComponentId == null || importPreviousWorkComponentId == '') {
-
-                    /*
-                     * check if the component id is in the field that we used to store
-                     * the import previous work component id in
-                     */
-                    if (componentContent.importWorkComponentId != null && componentContent.importWorkComponentId != '') {
-                        importPreviousWorkComponentId = componentContent.importWorkComponentId;
-                    }
-                }
+                var importPreviousWorkNodeId = this.getImportPreviousWorkNodeId();
+                var importPreviousWorkComponentId = this.getImportPreviousWorkComponentId();
 
                 if (importPreviousWorkNodeId != null && importPreviousWorkComponentId != null) {
 
-                    // get the latest component state for this component
-                    var componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
+                    // get the latest component state from the component we are importing from
+                    var importWorkComponentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(importPreviousWorkNodeId, importPreviousWorkComponentId);
 
-                    /*
-                     * we will only import work into this component if the student
-                     * has not done any work for this component
-                     */
-                    if (componentState == null) {
-                        // the student has not done any work for this component
+                    if (importWorkComponentState != null) {
 
-                        // get the latest component state from the component we are importing from
-                        var importWorkComponentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(importPreviousWorkNodeId, importPreviousWorkComponentId);
+                        // create a blank component state without student work
+                        var defaultComponentState = this.createBlankComponentState();
 
-                        if (importWorkComponentState != null) {
-                            /*
-                             * populate a new component state with the work from the
-                             * imported component state
-                             */
-                            var populatedComponentState = this.TableService.populateComponentState(importWorkComponentState);
-
-                            /*
-                            // create a component state with no table data
-                            var defaultComponentState = this.createComponentState();
-                             if (defaultComponentState != null && defaultComponentState.studentData != null) {
-                                // set the authored component content table data into the component state
-                                defaultComponentState.studentData.tableData = this.getCopyOfTableData(this.componentContent.tableData);
-                            }
-                             // copy the cell text values into the default component state
-                            var mergedComponentState = this.copyTableDataCellText(populatedComponentState, defaultComponentState);
-                            */
-
-                            // populate the component state into this component
-                            this.setStudentWork(populatedComponentState);
+                        if (defaultComponentState != null && defaultComponentState.studentData != null) {
+                            // set the authored component content table data into the component state
+                            defaultComponentState.studentData.tableData = this.getCopyOfTableData(this.componentContent.tableData);
                         }
+
+                        // copy the cell text values into the default component state
+                        var mergedComponentState = this.copyTableDataCellText(importWorkComponentState, defaultComponentState);
+
+                        // set the merged component state into this component
+                        this.setStudentWork(mergedComponentState);
                     }
                 }
             }
@@ -1866,8 +1841,10 @@ var TableController = function () {
                                 // get the cell value
                                 var cellValue = this.getTableDataCellValue(x, y, fromTableData);
 
-                                // set the cell value
-                                this.setTableDataCellValue(x, y, toTableData, cellValue);
+                                if (cellValue != null) {
+                                    // set the cell value
+                                    this.setTableDataCellValue(x, y, toTableData, cellValue);
+                                }
                             }
                         }
                     }
@@ -2139,6 +2116,56 @@ var TableController = function () {
 
             // the authoring component content has changed so we will save the project
             this.authoringViewComponentChanged();
+        }
+
+        /**
+         * Get the import previous work node id
+         * @return the import previous work node id or null
+         */
+
+    }, {
+        key: 'getImportPreviousWorkNodeId',
+        value: function getImportPreviousWorkNodeId() {
+            var importPreviousWorkNodeId = null;
+
+            if (this.componentContent != null && this.componentContent.importPreviousWorkNodeId != null) {
+                importPreviousWorkNodeId = this.componentContent.importPreviousWorkNodeId;
+
+                if (importPreviousWorkNodeId == null || importPreviousWorkNodeId == '') {
+                    /*
+                     * check if the node id is in the field that we used to store
+                     * the import previous work node id in
+                     */
+                    importPreviousWorkNodeId = this.componentContent.importWorkNodeId;
+                }
+            }
+
+            return importPreviousWorkNodeId;
+        }
+
+        /**
+         * Get the import previous work component id
+         * @return the import previous work component id or null
+         */
+
+    }, {
+        key: 'getImportPreviousWorkComponentId',
+        value: function getImportPreviousWorkComponentId() {
+            var importPreviousWorkComponentId = null;
+
+            if (this.componentContent != null && this.componentContent.importPreviousWorkComponentId != null) {
+                var importPreviousWorkComponentId = this.componentContent.importPreviousWorkComponentId;
+
+                if (importPreviousWorkComponentId == null || importPreviousWorkComponentId == '') {
+                    /*
+                     * check if the component id is in the field that we used to store
+                     * the import previous work component id in
+                     */
+                    importPreviousWorkComponentId = this.componentContent.importWorkComponentId;
+                }
+            }
+
+            return importPreviousWorkComponentId;
         }
     }]);
 
