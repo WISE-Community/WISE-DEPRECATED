@@ -329,28 +329,28 @@ public class WISE5AuthorProjectController {
             Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(projectFile), "UTF-8"));
             writer.write(projectJSONString.toString());
             writer.close();
-            
+
             // check if we need to update the project name in the project table in the db
             try {
                 // convert the project JSON string into a JSON object
                 JSONObject projectJSONObject = new JSONObject(projectJSONString);
-                
+
                 // get the metadata object from the project
                 JSONObject projectMetadata = projectJSONObject.getJSONObject("metadata");
-                
+
                 if (projectMetadata != null) {
                     // get the project title from the metadata
                     String projectTitle = projectMetadata.getString("title");
-                    
+
                     if (projectTitle != null) {
-                        
+
                         // check if the project title has changed
                         if (!projectTitle.equals(project.getName())) {
                             // the project title has changed
-                            
+
                             // set the project title in the db table
                             project.setName(projectTitle);
-                            
+
                             // update the project
                             this.projectService.updateProject(project, user);
                         }
@@ -453,7 +453,7 @@ public class WISE5AuthorProjectController {
                 projectAssetTotalSizeMax = new Long(wiseProperties.getProperty("project_max_total_assets_size", "15728640"));
             }
             Long runId = this.getRunId(projectId);
-            
+
             config.put("projectId", projectId);
             config.put("projectURL", projectURL);
             config.put("projectAssetTotalSizeMax", projectAssetTotalSizeMax);
@@ -519,11 +519,11 @@ public class WISE5AuthorProjectController {
 
                     // get the run id if it exists
                     Long runId = this.getRunId(projectId);
-                    
+
                     if (runId != null) {
                         projectJSONObject.put("runId", runId);
                     }
-                    
+
                     wise5ProjectsOwnedByUser.add(projectJSONObject);
                 }
             }
@@ -929,7 +929,7 @@ public class WISE5AuthorProjectController {
             out.close();
         }
     }
-    
+
     /**
      * Get the run id that uses the project id
      * @param projectId the project id
@@ -937,25 +937,25 @@ public class WISE5AuthorProjectController {
      * in a run
      */
     private Long getRunId(Long projectId) {
-        
+
         Long runId = null;
-        
+
         if (projectId != null) {
             // get the runs that use the project
             List<Run> runs = this.runService.getProjectRuns(projectId);
-            
+
             if (runs != null && runs.size() > 0) {
 
                 // get the first run since a project can only be used in one run
                 Run run = runs.get(0);
-                
+
                 if (run != null) {
                     // add the runId to the JSON object
                     runId = run.getId();
                 }
             }
         }
-        
+
         return runId;
     }
 
@@ -1075,88 +1075,88 @@ public class WISE5AuthorProjectController {
             @RequestParam(value = "toProjectId", required = true) Integer toProjectId,
             @RequestParam(value = "fromProjectId", required = true) Integer fromProjectId,
             HttpServletResponse response) throws Exception {
-        
+
         // get the signed in user
         User user = ControllerUtil.getSignedInUser();
-        
+
         // get the project that is being authored
         Project project = projectService.getById(toProjectId);
-        
+
         if (!projectService.canAuthorProject(project, user)) {
             /*
-             * the user does not have access to author the project so we will 
+             * the user does not have access to author the project so we will
              * not proceed
              */
             return null;
         }
-        
+
         /*
          * Regex string to match asset file references in the step/component
          * content.
          * e.g. carbon.png
          */
         String patternString = "(\'|\"|\\\\\'|\\\\\")([^:][^/]?[^/]?[a-zA-Z0-9@\\._\\/\\s\\-]*[.](png|jpe?g|pdf|gif|mov|mp4|mp3|wav|swf|css|txt|json|xlsx?|doc|html.*?|js))(\'|\"|\\\\\'|\\\\\")";
-        
+
         // compile the regex
         Pattern pattern = Pattern.compile(patternString);
-        
+
         // run the regex on the string of steps
         Matcher matcher = pattern.matcher(steps);
-        
+
         /*
          * this list will hold all the file names that are referenced by the
          * steps that we are importing
          */
         List<String> fileNames = new ArrayList<String>();
-        
+
         while(matcher.find()) {
             String group0 = matcher.group(0); //\"nyan_cat.png\"
             String group1 = matcher.group(1); //\"
             String group2 = matcher.group(2); //nyan_cat.png
             String group3 = matcher.group(3); //\"
-            
+
             // get the file name
             String fileName = matcher.group(2);
-            
+
             // add the file name to our list of file names
             fileNames.add(fileName);
         }
-        
+
         // remove duplicates from the list of file names
         fileNames = fileNames.stream().distinct().collect(Collectors.toList());
-        
+
         //get the from project
         Project fromProject = projectService.getById(fromProjectId);
 
         //get the from project url e.g. /171/project.json
         String fromProjectUrl = (String) fromProject.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
-        
+
         //get the to project
         Project toProject = projectService.getById(toProjectId);
 
         //get the to project url e.g. /172/project.json
         String toProjectUrl = (String) toProject.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
-        
+
         //get the curriculum base directory e.g. /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum
         String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
-        
+
         //the file separator for the OS e.g. /
         String fileSeparator = System.getProperty("file.separator");
-        
+
         //get the full project file url e.g. /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum/171/wise4.project.json
         String fullFromProjectFileUrl = curriculumBaseDir + fromProjectUrl;
-        
+
         //get the full project file url e.g. /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum/172/project.json
         String fullToProjectFileUrl = curriculumBaseDir + toProjectUrl;
 
         //get the project folder e.g. /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum/171
         String fullFromProjectFolderUrl = curriculumBaseDir + fromProjectUrl.substring(0, fromProjectUrl.lastIndexOf(fileSeparator));
         File fromProjectFolder = new File(fullFromProjectFolderUrl);
-        
+
         //get the project folder e.g. /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum/172
         String fullToProjectFolderUrl = curriculumBaseDir + toProjectUrl.substring(0, toProjectUrl.lastIndexOf(fileSeparator));
         File toProjectFolder = new File(fullToProjectFolderUrl);
-        
+
         //get the project assets folder e.g. /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum/171/assets
         String fromProjectAssetsUrl = fullFromProjectFolderUrl + "/assets";
         File fromProjectAssetsFolder = new File(fromProjectAssetsUrl);
@@ -1164,34 +1164,34 @@ public class WISE5AuthorProjectController {
         //get the project assets folder e.g. /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum/172/assets
         String toProjectAssetsUrl = fullToProjectFolderUrl + "/assets";
         File toProjectAssetsFolder = new File(toProjectAssetsUrl);
-        
+
         /*
-         * loop through all the asset file names that are referenced in the 
+         * loop through all the asset file names that are referenced in the
          * steps we are importing
          */
         for (int f = 0; f < fileNames.size(); f++) {
-            
+
             // get a file name
             String fileName = fileNames.get(f);
-            
+
             /*
              * Import the asset to the project we are importing to. If the
              * project already contains a file with the same file name and does
              * not have the same file content, it will be given a new file name.
-             * The file name that is used will be returned by 
+             * The file name that is used will be returned by
              * importAssetInContent().
              */
             String newFileName = FileManager.importAssetInContent(fileName, null, fromProjectAssetsFolder, toProjectAssetsFolder);
-            
+
             // check if the file name was changed
-            if (!fileName.equals(newFileName)) {
+            if (newFileName != null && !fileName.equals(newFileName)) {
                 // the file name was changed so we need to update the step content
-                
+
                 // replace all instances of the file name with the new file name
                 steps = steps.replaceAll(fileName, newFileName);
             }
         }
-        
+
         /*
          * send back the steps string which may have been modified if we needed
          * to change a file name
