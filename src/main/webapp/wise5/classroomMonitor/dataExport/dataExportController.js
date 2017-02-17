@@ -11,11 +11,12 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var DataExportController = function () {
-    function DataExportController($rootScope, $scope, $state, AnnotationService, ConfigService, ProjectService, StudentStatusService, TeacherDataService, TeacherWebSocketService, UtilService) {
+    function DataExportController($injector, $rootScope, $scope, $state, AnnotationService, ConfigService, ProjectService, StudentStatusService, TeacherDataService, TeacherWebSocketService, UtilService) {
         var _this = this;
 
         _classCallCheck(this, DataExportController);
 
+        this.$injector = $injector;
         this.$rootScope = $rootScope;
         this.$scope = $scope;
         this.$state = $state;
@@ -852,13 +853,6 @@ var DataExportController = function () {
                 // set the student data JSON
                 row[columnNameToNumber["Student Data"]] = studentData;
 
-                var response = studentData.response;
-
-                if (response != null) {
-                    // set the response
-                    row[columnNameToNumber["Response"]] = response;
-                }
-
                 var isCorrect = studentData.isCorrect;
 
                 if (isCorrect != null) {
@@ -867,6 +861,25 @@ var DataExportController = function () {
                         row[columnNameToNumber["Is Correct"]] = 1;
                     } else {
                         row[columnNameToNumber["Is Correct"]] = 0;
+                    }
+                }
+            }
+
+            // get the component type
+            var componentType = componentState.componentType;
+
+            if (componentType != null) {
+                // get the component type service
+                var componentService = this.$injector.get(componentType + 'Service');
+
+                if (componentService != null && componentService.getStudentDataString != null) {
+
+                    // get the student data string from the component state
+                    var studentDataString = componentService.getStudentDataString(componentState);
+
+                    if (studentDataString != null) {
+                        // set the response
+                        row[columnNameToNumber["Response"]] = studentDataString;
                     }
                 }
             }
@@ -1852,7 +1865,7 @@ var DataExportController = function () {
     return DataExportController;
 }();
 
-DataExportController.$inject = ['$rootScope', '$scope', '$state', 'AnnotationService', 'ConfigService', 'ProjectService', 'StudentStatusService', 'TeacherDataService', 'TeacherWebSocketService', 'UtilService'];
+DataExportController.$inject = ['$injector', '$rootScope', '$scope', '$state', 'AnnotationService', 'ConfigService', 'ProjectService', 'StudentStatusService', 'TeacherDataService', 'TeacherWebSocketService', 'UtilService'];
 
 exports.default = DataExportController;
 //# sourceMappingURL=dataExportController.js.map
