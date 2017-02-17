@@ -536,6 +536,7 @@ var DataExportController = function () {
 
                                         if (exportRow) {
 
+                                            // create the export row
                                             var row = _this2.createStudentWorkExportRow(columnNames, columnNameToNumber, rowCounter, workgroupId, wiseId1, wiseId2, wiseId3, periodName, componentRevisionCounter, componentState);
 
                                             // add the row to the rows
@@ -957,6 +958,35 @@ var DataExportController = function () {
         }
 
         /**
+         * Check if a node is selected
+         * @param selectedNodes an array of node ids
+         * e.g.
+         * ["node1", "node2"]
+         * @param nodeId the node id to check
+         * @return whether the node is selected
+         */
+
+    }, {
+        key: "isNodeSelected",
+        value: function isNodeSelected(selectedNodes, nodeId) {
+            var result = false;
+
+            if (selectedNodes != null && nodeId != null) {
+
+                // check if the node is selected
+                if (selectedNodes.indexOf(nodeId) == -1) {
+                    // the node is not selected
+                    result = false;
+                } else {
+                    // the node is selected
+                    result = true;
+                }
+            }
+
+            return result;
+        }
+
+        /**
          * Generate the csv file and have the client download it
          * @param rows a 2D array that represents the rows in the export
          * each row contains an array. the inner array contains strings or
@@ -1178,13 +1208,42 @@ var DataExportController = function () {
 
                                     if (event != null) {
 
-                                        var row = _this3.createEventExportRow(columnNames, columnNameToNumber, rowCounter, workgroupId, wiseId1, wiseId2, wiseId3, periodName, componentEventCount, event);
+                                        var exportRow = true;
 
-                                        // add the row to the rows
-                                        rows.push(row);
+                                        if (_this3.exportStepSelectionType === "exportSelectSteps") {
+                                            // we are only exporting selected steps
 
-                                        // increment the row counter
-                                        rowCounter++;
+                                            if (event.nodeId != null && event.componentId != null) {
+                                                // this is a component event
+
+                                                if (!_this3.isComponentSelected(selectedNodes, event.nodeId, event.componentId)) {
+                                                    // the event is for a component that is not selected
+                                                    exportRow = false;
+                                                }
+                                            } else if (event.nodeId != null) {
+                                                // this is a node event
+
+                                                if (!_this3.isNodeSelected(selectedNodes, event.nodeId)) {
+                                                    // the event is for a node that is not selected
+                                                    exportRow = false;
+                                                }
+                                            } else {
+                                                // this is a global event
+                                                exportRow = false;
+                                            }
+                                        }
+
+                                        if (exportRow) {
+
+                                            // create the export row
+                                            var row = _this3.createEventExportRow(columnNames, columnNameToNumber, rowCounter, workgroupId, wiseId1, wiseId2, wiseId3, periodName, componentEventCount, event);
+
+                                            // add the row to the rows
+                                            rows.push(row);
+
+                                            // increment the row counter
+                                            rowCounter++;
+                                        }
                                     }
                                 }
                             }
