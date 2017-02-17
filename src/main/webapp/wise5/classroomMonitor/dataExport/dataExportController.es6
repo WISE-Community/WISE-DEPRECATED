@@ -2,7 +2,8 @@
 
 class DataExportController {
 
-    constructor($rootScope,
+    constructor($injector,
+                $rootScope,
                 $scope,
                 $state,
                 AnnotationService,
@@ -12,6 +13,8 @@ class DataExportController {
                 TeacherDataService,
                 TeacherWebSocketService,
                 UtilService) {
+
+        this.$injector = $injector;
         this.$rootScope = $rootScope;
         this.$scope = $scope;
         this.$state = $state;
@@ -884,13 +887,6 @@ class DataExportController {
             // set the student data JSON
             row[columnNameToNumber["Student Data"]] = studentData;
 
-            var response = studentData.response;
-
-            if (response != null) {
-                // set the response
-                row[columnNameToNumber["Response"]] = response;
-            }
-
             var isCorrect = studentData.isCorrect;
 
             if (isCorrect != null) {
@@ -899,6 +895,25 @@ class DataExportController {
                     row[columnNameToNumber["Is Correct"]] = 1;
                 } else {
                     row[columnNameToNumber["Is Correct"]] = 0;
+                }
+            }
+        }
+
+        // get the component type
+        var componentType = componentState.componentType;
+
+        if (componentType != null) {
+            // get the component type service
+            var componentService = this.$injector.get(componentType + 'Service');
+
+            if (componentService != null && componentService.getStudentDataString != null) {
+
+                // get the student data string from the component state
+                var studentDataString = componentService.getStudentDataString(componentState);
+
+                if (studentDataString != null) {
+                    // set the response
+                    row[columnNameToNumber["Response"]] = studentDataString;
                 }
             }
         }
@@ -1856,6 +1871,7 @@ class DataExportController {
 }
 
 DataExportController.$inject = [
+    '$injector',
     '$rootScope',
     '$scope',
     '$state',

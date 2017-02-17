@@ -177,6 +177,27 @@ class OpenResponseService extends NodeService {
     componentHasWork(component) {
         return true;
     }
+
+    /**
+     * Get the human readable student data string
+     * @param componentState the component state
+     * @return a human readable student data string
+     */
+    getStudentDataString(componentState) {
+
+        var studentDataString = "";
+
+        if (componentState != null) {
+            var studentData = componentState.studentData;
+
+            if (studentData != null) {
+                // get the response the student typed
+                studentDataString = studentData.response;
+            }
+        }
+
+        return studentDataString;
+    }
 }
 
 OpenResponseService.$inject = [

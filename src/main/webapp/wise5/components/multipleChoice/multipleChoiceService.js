@@ -324,6 +324,55 @@ var MultipleChoiceService = function (_NodeService) {
         value: function componentHasWork(component) {
             return true;
         }
+
+        /**
+         * Get the human readable student data string
+         * @param componentState the component state
+         * @return a human readable student data string
+         */
+
+    }, {
+        key: 'getStudentDataString',
+        value: function getStudentDataString(componentState) {
+
+            var studentDataString = "";
+
+            if (componentState != null) {
+                var studentData = componentState.studentData;
+
+                if (studentData != null) {
+
+                    // get the choices the student chose
+                    var studentChoices = studentData.studentChoices;
+
+                    if (studentChoices != null) {
+
+                        // loop through all the choices the student chose
+                        for (var c = 0; c < studentChoices.length; c++) {
+                            var studentChoice = studentChoices[c];
+
+                            if (studentChoice != null) {
+
+                                // get the choice text
+                                var text = studentChoice.text;
+
+                                if (text != null) {
+                                    if (studentDataString != "") {
+                                        // separate the choices with a comma
+                                        studentDataString += ", ";
+                                    }
+
+                                    // append the choice text
+                                    studentDataString += text;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            return studentDataString;
+        }
     }]);
 
     return MultipleChoiceService;
