@@ -73,7 +73,7 @@
                                          size='80'
                                          ng-model='graphController.authoringComponentContent.backgroundImage'
                                          ng-model-options='{ debounce: 1000 }'
-                                         ng-change='graphController.authoringViewComponentChanged()'/>
+                                         ng-change='graphController.authoringViewComponentChanged()'/> <button translate='CHOOSE' ng-click='graphController.chooseBackgroundImage()'></button>
                 <br/>
                 <br/>
                 {{ 'graph.enableTrials' | translate }} <input type='checkbox'

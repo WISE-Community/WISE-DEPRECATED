@@ -590,6 +590,14 @@ class LabelController {
                             } else if (args.target == 'rubric') {
                                 // the target is the summernote rubric element
                                 summernoteId = 'summernoteRubric_' + this.nodeId + '_' + this.componentId;
+                            } else if (args.target == 'background') {
+                                // the target is the background image
+
+                                // set the background file name
+                                this.authoringComponentContent.backgroundImage = fileName;
+
+                                // the authoring component content has changed so we will save the project
+                                this.authoringViewComponentChanged();
                             }
 
                             if (summernoteId != '') {
@@ -2224,6 +2232,23 @@ class LabelController {
 
         // the authoring component content has changed so we will save the project
         this.authoringViewComponentChanged();
+    }
+
+
+    /**
+     * Show the asset popup to allow the author to choose the background image
+     */
+    chooseBackgroundImage() {
+
+        // generate the parameters
+        var params = {};
+        params.popup = true;
+        params.nodeId = this.nodeId;
+        params.componentId = this.componentId;
+        params.target = 'background';
+
+        // display the asset chooser
+        this.$rootScope.$broadcast('openAssetChooser', params);
     }
 }
 

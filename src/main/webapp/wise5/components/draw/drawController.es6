@@ -224,6 +224,7 @@ class DrawController {
                     return this.authoringComponentContent;
                 }.bind(this), function(newValue, oldValue) {
                     this.componentContent = this.ProjectService.injectAssetPaths(newValue);
+                    this.initializeDrawingTool();
                 }.bind(this), true);
             }
 
@@ -487,6 +488,17 @@ class DrawController {
                             } else if (args.target == 'rubric') {
                                 // the target is the summernote rubric element
                                 summernoteId = 'summernoteRubric_' + this.nodeId + '_' + this.componentId;
+                            } else if (args.target == 'background') {
+                                // the target is the background image
+
+                                // set the background file name
+                                this.authoringComponentContent.background = fileName;
+
+                                /*
+                                 * the authoring view background has changed so we will
+                                 * perform any changes if needed and then save the project
+                                 */
+                                this.authoringViewBackgroundChanged();
                             }
 
                             if (summernoteId != '') {
@@ -1881,6 +1893,68 @@ class DrawController {
         this.authoringComponentContent.rubric = html;
 
         // the authoring component content has changed so we will save the project
+        this.authoringViewComponentChanged();
+    }
+
+    /**
+     * Show the asset popup to allow the author to choose the background image
+     */
+    chooseBackgroundImage() {
+
+        // generate the parameters
+        var params = {};
+        params.popup = true;
+        params.nodeId = this.nodeId;
+        params.componentId = this.componentId;
+        params.target = 'background';
+
+        // display the asset chooser
+        this.$rootScope.$broadcast('openAssetChooser', params);
+    }
+
+    /**
+     * The background has changed so we will update the starter draw data if
+     * it has been set and then save the project
+     */
+    authoringViewBackgroundChanged() {
+
+        // get the starter draw data string
+        var starterDrawData = this.authoringComponentContent.starterDrawData;
+
+        if (starterDrawData != null) {
+
+            // get the starter draw data JSON object
+            var starterDrawDataJSON = angular.fromJson(starterDrawData);
+
+            if (starterDrawDataJSON != null &&
+                starterDrawDataJSON.canvas != null &&
+                starterDrawDataJSON.canvas.backgroundImage != null &&
+                starterDrawDataJSON.canvas.backgroundImage.src != null) {
+
+                // get the background
+                var background = this.authoringComponentContent.background;
+
+                /*
+                 * get the project assets directory path
+                 * e.g. https://www.berkeley.edu/curriculum/25/assets
+                 */
+                var projectAssetsDirectoryPath = this.ConfigService.getProjectAssetsDirectoryPath(true);
+
+                /*
+                 * generate the absolute path to the background image
+                 * e.g. https://www.berkeley.edu/curriculum/25/assets/earth.png
+                 */
+                var newSrc = projectAssetsDirectoryPath + "/" + background;
+
+                // set the new src
+                starterDrawDataJSON.canvas.backgroundImage.src = newSrc;
+
+                // convert the starter draw data back into a string
+                this.authoringComponentContent.starterDrawData = angular.toJson(starterDrawDataJSON);
+            }
+        }
+
+        // save the project
         this.authoringViewComponentChanged();
     }
 }

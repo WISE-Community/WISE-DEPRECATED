@@ -30,7 +30,7 @@
                 <input type='text'
                        size='80'
                        ng-model='drawController.authoringComponentContent.background'
-                       ng-change='drawController.authoringViewComponentChanged()'/>
+                       ng-change='drawController.authoringViewBackgroundChanged()'/> <button translate='CHOOSE' ng-click='drawController.chooseBackgroundImage()'></button>
                 <br/>
                 {{ 'WIDTH' | translate }}: <input type='number'
                               ng-model='drawController.authoringComponentContent.width'

@@ -30,7 +30,7 @@
         {{ 'BACKGROUND_IMAGE' | translate }}: <input ng-model='labelController.authoringComponentContent.backgroundImage'
                                  ng-change='labelController.authoringViewComponentChanged()'
                                  ng-model-options='{ debounce: 1000 }'
-                                 size='50'/>
+                                 size='50'/> <button translate='CHOOSE' ng-click='labelController.chooseBackgroundImage()'></button>
         <br/>
         {{ 'label.allowStudentToUploadImageForBackground' | translate }}
         <input type='checkbox'

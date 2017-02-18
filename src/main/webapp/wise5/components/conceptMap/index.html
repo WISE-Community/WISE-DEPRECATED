@@ -41,7 +41,7 @@
                 <br/>
                 {{ 'BACKGROUND_IMAGE' | translate }}: <input ng-model='conceptMapController.authoringComponentContent.background'
                                          ng-change='conceptMapController.authoringViewComponentChanged()'
-                                         size='80' />
+                                         size='80' /> <button translate='CHOOSE' ng-click='conceptMapController.chooseBackgroundImage()'></button>
                 <br/>
                 {{ 'conceptMap.stretchBackground' | translate }}: <input type='checkbox'
                                            ng-model='conceptMapController.authoringComponentContent.stretchBackground'
@@ -63,7 +63,7 @@
                     <input ng-model='node.fileName'
                            ng-change='conceptMapController.authoringViewComponentChanged()'
                            size='30'
-                           ng-model-options='{ debounce: 1000 }'/>
+                           ng-model-options='{ debounce: 1000 }'/> <button translate='CHOOSE' ng-click='conceptMapController.chooseNodeImage(node.id)'></button>
                     {{ 'conceptMap.label' | translate }}:
                     <input ng-model='node.label'
                            ng-change='conceptMapController.authoringViewComponentChanged()'

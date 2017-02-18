@@ -715,6 +715,14 @@ var GraphController = function () {
                             } else if (args.target == 'rubric') {
                                 // the target is the summernote rubric element
                                 summernoteId = 'summernoteRubric_' + _this.nodeId + '_' + _this.componentId;
+                            } else if (args.target == 'background') {
+                                // the target is the background image
+
+                                // set the background file name
+                                _this.authoringComponentContent.backgroundImage = fileName;
+
+                                // the authoring component content has changed so we will save the project
+                                _this.authoringViewComponentChanged();
                             }
 
                             if (summernoteId != '') {
@@ -4128,6 +4136,25 @@ var GraphController = function () {
 
             // the authoring component content has changed so we will save the project
             this.authoringViewComponentChanged();
+        }
+
+        /**
+         * Show the asset popup to allow the author to choose the background image
+         */
+
+    }, {
+        key: 'chooseBackgroundImage',
+        value: function chooseBackgroundImage() {
+
+            // generate the parameters
+            var params = {};
+            params.popup = true;
+            params.nodeId = this.nodeId;
+            params.componentId = this.componentId;
+            params.target = 'background';
+
+            // display the asset chooser
+            this.$rootScope.$broadcast('openAssetChooser', params);
         }
     }]);
 

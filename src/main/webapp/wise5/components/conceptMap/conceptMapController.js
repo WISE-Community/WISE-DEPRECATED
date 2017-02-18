@@ -480,6 +480,27 @@ var ConceptMapController = function () {
                             } else if (args.target == 'rubric') {
                                 // the target is the summernote rubric element
                                 summernoteId = 'summernoteRubric_' + _this.nodeId + '_' + _this.componentId;
+                            } else if (args.target == 'background') {
+                                // the target is the background image
+
+                                // set the background file name
+                                _this.authoringComponentContent.background = fileName;
+
+                                // the authoring component content has changed so we will save the project
+                                _this.authoringViewComponentChanged();
+                            } else if (args.target != null && args.target.indexOf('node') == 0) {
+                                // the target is a node image
+
+                                // get the concept map node
+                                var node = _this.authoringViewGetNodeById(args.target);
+
+                                if (node != null) {
+                                    // set the file name of the node
+                                    node.fileName = fileName;
+                                }
+
+                                // the authoring component content has changed so we will save the project
+                                _this.authoringViewBackgroundChanged();
                             }
 
                             if (summernoteId != '') {
@@ -2136,6 +2157,34 @@ var ConceptMapController = function () {
              * content
              */
             this.authoringViewComponentChanged();
+        }
+
+        /**
+         * Get the concept map node with the given id
+         * @param nodeId the concept map node id
+         * @return the concept map node with the given node id
+         */
+
+    }, {
+        key: 'authoringViewGetNodeById',
+        value: function authoringViewGetNodeById(nodeId) {
+
+            if (nodeId != null && this.authoringComponentContent != null && this.authoringComponentContent.nodes != null) {
+
+                // loop through all the concept map nodes
+                for (var n = 0; n < this.authoringComponentContent.nodes.length; n++) {
+                    var node = this.authoringComponentContent.nodes[n];
+
+                    if (node != null) {
+                        if (nodeId === node.id) {
+                            // we have found the concept map node that we want
+                            return node;
+                        }
+                    }
+                }
+            }
+
+            return null;
         }
 
         /**
@@ -4855,6 +4904,44 @@ var ConceptMapController = function () {
 
             // the authoring component content has changed so we will save the project
             this.authoringViewComponentChanged();
+        }
+
+        /**
+         * Show the asset popup to allow the author to choose the background image
+         */
+
+    }, {
+        key: 'chooseBackgroundImage',
+        value: function chooseBackgroundImage() {
+
+            // generate the parameters
+            var params = {};
+            params.popup = true;
+            params.nodeId = this.nodeId;
+            params.componentId = this.componentId;
+            params.target = 'background';
+
+            // display the asset chooser
+            this.$rootScope.$broadcast('openAssetChooser', params);
+        }
+
+        /**
+         * Show the asset popup to allow the author to choose an image for the node
+         * @param conceptMapNodeId the id of the node in the concept map
+         */
+
+    }, {
+        key: 'chooseNodeImage',
+        value: function chooseNodeImage(conceptMapNodeId) {
+            // generate the parameters
+            var params = {};
+            params.popup = true;
+            params.nodeId = this.nodeId;
+            params.componentId = this.componentId;
+            params.target = conceptMapNodeId;
+
+            // display the asset chooser
+            this.$rootScope.$broadcast('openAssetChooser', params);
         }
     }]);
 

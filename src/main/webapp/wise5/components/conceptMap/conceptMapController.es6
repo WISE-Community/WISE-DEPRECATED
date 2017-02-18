@@ -501,6 +501,27 @@ class ConceptMapController {
                             } else if (args.target == 'rubric') {
                                 // the target is the summernote rubric element
                                 summernoteId = 'summernoteRubric_' + this.nodeId + '_' + this.componentId;
+                            } else if (args.target == 'background') {
+                                // the target is the background image
+
+                                // set the background file name
+                                this.authoringComponentContent.background = fileName;
+
+                                // the authoring component content has changed so we will save the project
+                                this.authoringViewComponentChanged();
+                            } else if (args.target != null && args.target.indexOf('node') == 0) {
+                                // the target is a node image
+
+                                // get the concept map node
+                                var node = this.authoringViewGetNodeById(args.target);
+
+                                if (node != null) {
+                                    // set the file name of the node
+                                    node.fileName = fileName;
+                                }
+
+                                // the authoring component content has changed so we will save the project
+                                this.authoringViewBackgroundChanged();
                             }
 
                             if (summernoteId != '') {
@@ -2053,6 +2074,33 @@ class ConceptMapController {
          * content
          */
         this.authoringViewComponentChanged();
+    }
+
+    /**
+     * Get the concept map node with the given id
+     * @param nodeId the concept map node id
+     * @return the concept map node with the given node id
+     */
+    authoringViewGetNodeById(nodeId) {
+
+        if (nodeId != null &&
+            this.authoringComponentContent != null &&
+            this.authoringComponentContent.nodes != null) {
+
+            // loop through all the concept map nodes
+            for (var n = 0; n < this.authoringComponentContent.nodes.length; n++) {
+                var node = this.authoringComponentContent.nodes[n];
+
+                if (node != null) {
+                    if (nodeId === node.id) {
+                        // we have found the concept map node that we want
+                        return node;
+                    }
+                }
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -4516,6 +4564,38 @@ class ConceptMapController {
 
         // the authoring component content has changed so we will save the project
         this.authoringViewComponentChanged();
+    }
+
+    /**
+     * Show the asset popup to allow the author to choose the background image
+     */
+    chooseBackgroundImage() {
+
+        // generate the parameters
+        var params = {};
+        params.popup = true;
+        params.nodeId = this.nodeId;
+        params.componentId = this.componentId;
+        params.target = 'background';
+
+        // display the asset chooser
+        this.$rootScope.$broadcast('openAssetChooser', params);
+    }
+
+    /**
+     * Show the asset popup to allow the author to choose an image for the node
+     * @param conceptMapNodeId the id of the node in the concept map
+     */
+    chooseNodeImage(conceptMapNodeId) {
+        // generate the parameters
+        var params = {};
+        params.popup = true;
+        params.nodeId = this.nodeId;
+        params.componentId = this.componentId;
+        params.target = conceptMapNodeId;
+
+        // display the asset chooser
+        this.$rootScope.$broadcast('openAssetChooser', params);
     }
 };
 
