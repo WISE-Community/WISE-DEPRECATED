@@ -36,7 +36,7 @@ gulp.task('compile-sass', function() {
         .pipe(gulpif(global.isWatching, newer({dest: './', ext: '.css', extra: paths })))
         .pipe(sourcemaps.init())
         .pipe(sass(sassOptions).on('error', sass.logError))
-        .pipe(postcss([ autoprefixer(autoprefixerOptions), cssnano/*, rtlcss*/ ]) )
+        .pipe(postcss([ autoprefixer(autoprefixerOptions), cssnano({zindex: false})/*, rtlcss*/ ]) )
         .pipe(sourcemaps.write('.'))
         //.pipe(rename({suffix: ".min"}))
         .pipe(gulp.dest('./'))
