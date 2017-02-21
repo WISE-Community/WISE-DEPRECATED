@@ -574,7 +574,7 @@ class StudentDataService {
             } else if (functionName === 'isCompleted') {
                 result = this.evaluateIsCompletedCriteria(criteria);
             } else if (functionName === 'isCorrect') {
-
+                result = this.evaluateIsCorrectCriteria(criteria);
             } else if (functionName === 'choiceChosen') {
                 result = this.evaluateChoiceChosenCriteria(criteria);
             } else if (functionName === 'isPlanningActivityCompleted') {
@@ -605,6 +605,51 @@ class StudentDataService {
         }
 
         return result;
+    }
+
+    /**
+     * Check if the isCorrect criteria was satisfied
+     * @param criteria an isCorrect criteria
+     * @returns whether the criteria was satisfied or not
+     */
+    evaluateIsCorrectCriteria(criteria) {
+
+        if (criteria != null && criteria.params != null) {
+
+            // get the criteria params
+            var params = criteria.params;
+            var nodeId = params.nodeId;
+            var componentId = params.componentId;
+
+            if (nodeId != null && componentId != null) {
+
+                // get the component states for the component
+                var componentStates = this.getComponentStatesByNodeIdAndComponentId(nodeId, componentId);
+
+                if (componentStates != null) {
+
+                    // loop through all the component states
+                    for (var c = 0; c < componentStates.length; c++) {
+                        
+                        var componentState = componentStates[c];
+
+                        if (componentState != null) {
+
+                            var studentData = componentState.studentData;
+
+                            if (studentData != null) {
+                                if (studentData.isCorrect) {
+                                    // the student answered correctly
+                                    return true;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return false;
     }
 
     /**
