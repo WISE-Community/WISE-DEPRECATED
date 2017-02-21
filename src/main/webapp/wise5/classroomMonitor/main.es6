@@ -36,6 +36,7 @@ import MultipleChoiceComponentModule from '../components/multipleChoice/multiple
 import NodeGradingController from './nodeGrading/nodeGradingController';
 import NodeProgressController from './nodeProgress/nodeProgressController';
 import NodeService from '../services/nodeService';
+import Notebook from '../directives/notebook/notebook';
 import NotebookGradingController from './notebook/notebookGradingController';
 import NotebookService from '../services/notebookService';
 import NotificationService from '../services/notificationService';
@@ -79,6 +80,7 @@ let classroomMonitorModule = angular.module('classroomMonitor', [
         'ngMaterial',
         'ngSanitize',
         'ngWebSocket',
+        'notebook',
         'openResponseComponentModule',
         'outsideURLComponentModule',
         'pascalprecht.translate',

@@ -1,3 +1,13 @@
+md-toolbar {
+    &.md-light-theme {
+        border-bottom: 1px solid color('gray-light');
+    }
+}
+
+.md-toolbar-tools {
+    font-size: 18px;
+}
+
 .md-toolbar--wise {
     min-height: $wise-toolbar-height;
 
@@ -13,8 +23,11 @@
     }
 }
 
-.md-toolbar-tools {
-    font-size: 18px;
+.md-toolbar--wise--sm {
+    .md-toolbar-tools {
+        padding: 0 8px;
+        font-size: $body-font-size-base;
+    }
 }
 
 .md-toolbar--sidenav {

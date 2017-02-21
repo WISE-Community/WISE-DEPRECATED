@@ -29,7 +29,9 @@ var NotebookService = function () {
         this.config = {
             enabled: false,
             label: "Notebook",
+            icon: "book",
             enableAddNew: true,
+            addIcon: "note_add",
             itemTypes: {
                 note: {
                     enabled: true,
@@ -40,7 +42,7 @@ var NotebookService = function () {
                     label: {
                         singular: "note",
                         plural: "notes",
-                        link: "Notes",
+                        link: "Manage Notes",
                         icon: "note",
                         color: "#1565C0"
                     }
@@ -54,13 +56,15 @@ var NotebookService = function () {
                     label: {
                         singular: "question",
                         plural: "questions",
-                        link: "Questions",
+                        link: "Manage Questions",
                         icon: "live_help",
                         color: "#F57C00"
                     }
                 },
                 report: {
                     enabled: false,
+                    enableLink: true,
+                    type: "report",
                     label: {
                         singular: "report",
                         plural: "reports",

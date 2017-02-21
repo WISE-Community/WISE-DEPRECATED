@@ -37,6 +37,7 @@ import MatchComponentModule from '../components/match/matchComponentModule';
 import MultipleChoiceComponentModule from '../components/multipleChoice/multipleChoiceComponentModule';
 import NodeAuthoringController from './node/nodeAuthoringController';
 import NodeService from '../services/nodeService';
+import Notebook from '../directives/notebook/notebook';
 import NotebookService from '../services/notebookService';
 import NotificationService from '../services/notificationService';
 import OpenResponseComponentModule from '../components/openResponse/openResponseComponentModule';
@@ -82,6 +83,7 @@ let authoringModule = angular.module('authoring', [
     'ngMaterial',
     'ngSanitize',
     'ngWebSocket',
+    'notebook',
     'openResponseComponentModule',
     'outsideURLComponentModule',
     'pascalprecht.translate',

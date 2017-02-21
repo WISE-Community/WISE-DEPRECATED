@@ -1,16 +1,12 @@
 'use strict';
 
+//import EditNotebookItemController from './notebook/editNotebookItemController';
+
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _editNotebookItemController = require('./notebook/editNotebookItemController');
-
-var _editNotebookItemController2 = _interopRequireDefault(_editNotebookItemController);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -239,34 +235,34 @@ var ThemeController = function () {
         });
 
         // show edit note dialog on 'editNote' event
-        this.$scope.$on('editNote', function (event, args) {
-            var itemId = args.itemId;
-            var ev = args.ev;
-            _this.editNote(itemId, true, null, ev);
-        });
+        /*this.$scope.$on('editNote', (event, args) => {
+            let itemId = args.itemId;
+            let ev = args.ev;
+            this.editNote(itemId, true, null, ev);
+        });*/
 
         // show edit note dialog on 'addNewNote' event
-        this.$scope.$on('addNewNote', function (event, args) {
-            var ev = args.ev;
-            var file = args.file;
-            _this.editNote(null, true, file, ev);
-        });
+        /*this.$scope.$on('addNewNote', (event, args) => {
+            let ev = args.ev;
+            let file = args.file;
+            this.editNote(null, true, file, ev);
+        });*/
 
         // show delete note confirm dialog on 'deleteNote' event
-        this.$scope.$on('deleteNote', function (event, args) {
-            var itemId = args.itemId;
-            var ev = args.ev;
-            var doDelete = true;
-            _this.deleteNote(itemId, ev, doDelete);
-        });
+        /*this.$scope.$on('deleteNote', (event, args) => {
+            let itemId = args.itemId;
+            let ev = args.ev;
+            let doDelete = true;
+            this.deleteNote(itemId, ev, doDelete);
+        });*/
 
         // show delete note confirm dialog on 'reviveNote' event
-        this.$scope.$on('reviveNote', function (event, args) {
-            var itemId = args.itemId;
-            var ev = args.ev;
-            var doDelete = false;
-            _this.deleteNote(itemId, ev, doDelete);
-        });
+        /*this.$scope.$on('reviveNote', (event, args) => {
+            let itemId = args.itemId;
+            let ev = args.ev;
+            let doDelete = false;
+            this.deleteNote(itemId, ev, doDelete);
+        });*/
 
         // a group node has turned on or off planning mode
         this.$scope.$on('togglePlanningMode', function (event, args) {
@@ -438,10 +434,7 @@ var ThemeController = function () {
         /**
         * Open or close the notebook and save notebook open/close events
         */
-
-    }, {
-        key: 'toggleNotebook',
-        value: function toggleNotebook(ev, open) {
+        /*toggleNotebook(ev, open) {
             //this.notebookOpen = !this.notebookOpen;
             if (this.layoutState === 'notebook' && !open) {
                 this.setLayoutState();
@@ -451,63 +444,57 @@ var ThemeController = function () {
                 this.setLayoutState('notebook');
                 this.NotebookService.saveNotebookToggleEvent(true, this.currentNode);
             }
-        }
+        }*/
 
         /**
          * Open or close the notebook nav menu
          */
-
-    }, {
-        key: 'toggleNotebookNav',
-        value: function toggleNotebookNav() {
+        /*toggleNotebookNav() {
             this.notebookNavOpen = !this.notebookNavOpen;
-        }
+        }*/
 
         /**
          * Delete the note specified by the itemId.
          */
-
-    }, {
-        key: 'deleteNote',
-        value: function deleteNote(itemId, ev) {
-            var _this2 = this;
-
-            var doDelete = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
-
-            var confirm = null;
-
-            if (doDelete) {
-                confirm = this.$mdDialog.confirm().title(this.$translate('deleteNoteConfirmMessage')).ariaLabel('delete note confirmation').targetEvent(ev).ok(this.$translate('delete')).cancel(this.$translate('cancel'));
+        /*deleteNote(itemId, ev, doDelete = true) {
+            let confirm = null;
+             if (doDelete) {
+                confirm = this.$mdDialog.confirm()
+                    .title(this.$translate('deleteNoteConfirmMessage'))
+                    .ariaLabel('delete note confirmation')
+                    .targetEvent(ev)
+                    .ok(this.$translate('delete'))
+                    .cancel(this.$translate('cancel'));
             } else {
-                confirm = this.$mdDialog.confirm().title(this.$translate('reviveNoteConfirmMessage')).ariaLabel('revive note confirmation').targetEvent(ev).ok(this.$translate('revive')).cancel(this.$translate('cancel'));
+                confirm = this.$mdDialog.confirm()
+                    .title(this.$translate('reviveNoteConfirmMessage'))
+                    .ariaLabel('revive note confirmation')
+                    .targetEvent(ev)
+                    .ok(this.$translate('revive'))
+                    .cancel(this.$translate('cancel'));
             }
-
-            this.$mdDialog.show(confirm).then(function () {
-                var noteCopy = angular.copy(_this2.NotebookService.getLatestNotebookItemByLocalNotebookItemId(itemId));
+             this.$mdDialog.show(confirm).then(() => {
+                let noteCopy = angular.copy(this.NotebookService.getLatestNotebookItemByLocalNotebookItemId(itemId));
                 noteCopy.id = null; // set to null so we're creating a new notebook item. An edit to a notebook item results in a new entry in the db.
-                noteCopy.content.clientSaveTime = Date.parse(new Date()); // set save timestamp
-                var clientDeleteTime = null; // if delete timestamp is null, then we are in effect un-deleting this note item
+                noteCopy.content.clientSaveTime = Date.parse(new Date());  // set save timestamp
+                let clientDeleteTime = null;  // if delete timestamp is null, then we are in effect un-deleting this note item
                 if (doDelete) {
-                    clientDeleteTime = Date.parse(new Date()); // set delete timestamp
+                    clientDeleteTime = Date.parse(new Date());  // set delete timestamp
                 }
-                _this2.NotebookService.saveNotebookItem(noteCopy.id, noteCopy.nodeId, noteCopy.localNotebookItemId, noteCopy.type, noteCopy.title, noteCopy.content, noteCopy.content.clientSaveTime, clientDeleteTime);
-            }, function () {
+                this.NotebookService.saveNotebookItem(noteCopy.id, noteCopy.nodeId, noteCopy.localNotebookItemId,
+                    noteCopy.type, noteCopy.title, noteCopy.content, noteCopy.content.clientSaveTime, clientDeleteTime);
+            }, () => {
                 // they chose not to delete. Do nothing, the dialog will close.
             });
         }
-    }, {
-        key: 'editNote',
-        value: function editNote(itemId, isEditMode, file, ev) {
-            var showFullScreen = this.$mdMedia('xs');
-            var notebookItemTemplate = this.themePath + '/notebook/editNotebookItem.html';
-
-            // Display a dialog where students can view/add/edit a notebook item
+         editNote(itemId, isEditMode, file, ev) {
+            let notebookItemTemplate = this.themePath + '/notebook/editNotebookItem.html';
+             // Display a dialog where students can view/add/edit a notebook item
             this.$mdDialog.show({
                 parent: angular.element(document.body),
                 targetEvent: ev,
-                fullscreen: showFullScreen,
                 templateUrl: notebookItemTemplate,
-                controller: _editNotebookItemController2.default,
+                controller: EditNotebookItemController,
                 controllerAs: 'editNotebookItemController',
                 bindToController: true,
                 locals: {
@@ -516,7 +503,7 @@ var ThemeController = function () {
                     file: file
                 }
             });
-        }
+        }*/
 
         /**
          * The user has moved the mouse so we will notify the Session Service

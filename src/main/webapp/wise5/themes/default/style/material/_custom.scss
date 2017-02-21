@@ -180,13 +180,8 @@ md-input-container {
         }
     }
 
-    &.md-fab {
-        @include md-shadow-bottom-z-1();
-    }
-
     &:not([disabled]) {
-        &.md-raised,
-        &.md-fab {
+        &.md-raised {
             &.md-focused {
                 @include md-shadow-bottom-z-1();
             }

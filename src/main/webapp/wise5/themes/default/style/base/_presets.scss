@@ -5,6 +5,7 @@ $avatar-icon-padding-lg: 8px !default;
 // 2. Base
 body {
   background: color('body-bg');
+  overflow: hidden;
 }
 
 // Typography
@@ -27,6 +28,10 @@ blockquote {
     border-style: solid;
     border-color: color('primary');
     border-width: 0 0 0 3px;
+}
+
+.button--small {
+    min-width: 0;
 }
 
 .overflow--ellipsis {

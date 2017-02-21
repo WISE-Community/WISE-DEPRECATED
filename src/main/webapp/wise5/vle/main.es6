@@ -190,21 +190,21 @@ let vleModule = angular.module('vle', [
                             let theme = ProjectService.getThemePath() + '/theme.js';
                             let def = $q.defer();
 
-                  					System.import(theme).then(m => {
-                  						let themeModule = m.default;
-                  						if (!m.default.name) {
-                  							let key = Object.keys(m.default);
-                  							themeModule = m.default[key[0]];
-                  						}
+                            System.import(theme).then(m => {
+                                let themeModule = m.default;
+                                if (!m.default.name) {
+                                    let key = Object.keys(m.default);
+                                    themeModule = m.default[key[0]];
+                                }
 
-                  						$ocLazyLoad.load(themeModule).then(() => {
-                  							def.resolve();
-                  						}, err => {
-                  							throw err;
-                  						});
-                  					});
+                                $ocLazyLoad.load(themeModule).then(() => {
+                                    def.resolve();
+                                }, err => {
+                                    throw err;
+                                });
+                            });
 
-                  					return def.promise;
+                            return def.promise;
                         }
                     }
                 })
@@ -225,7 +225,7 @@ let vleModule = angular.module('vle', [
                         }
                     }
                 })
-                .state('root.notebook', {
+                /*.state('root.notebook', {
                     url: '/notebook/:nodeid',
                     views: {
                         'notebookView': {
@@ -239,7 +239,7 @@ let vleModule = angular.module('vle', [
                             }]
                         }
                     }
-                });
+                })*/;
 
             $httpProvider.interceptors.push('HttpInterceptor');
 

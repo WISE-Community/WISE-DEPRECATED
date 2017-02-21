@@ -18,7 +18,7 @@
         	System.import('${contextPath}/wise5/vle/bootstrap');
 	    </script>
 	</head>
-	<body>
+	<body class="vle">
 		<div ng-view>
 				<div ui-view></div>
 		</div>

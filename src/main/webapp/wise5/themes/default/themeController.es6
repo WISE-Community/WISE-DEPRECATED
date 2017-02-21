@@ -1,6 +1,6 @@
 'use strict';
 
-import EditNotebookItemController from './notebook/editNotebookItemController';
+//import EditNotebookItemController from './notebook/editNotebookItemController';
 
 class ThemeController {
     constructor($scope,
@@ -257,34 +257,34 @@ class ThemeController {
         });
 
         // show edit note dialog on 'editNote' event
-        this.$scope.$on('editNote', (event, args) => {
+        /*this.$scope.$on('editNote', (event, args) => {
             let itemId = args.itemId;
             let ev = args.ev;
             this.editNote(itemId, true, null, ev);
-        });
+        });*/
 
         // show edit note dialog on 'addNewNote' event
-        this.$scope.$on('addNewNote', (event, args) => {
+        /*this.$scope.$on('addNewNote', (event, args) => {
             let ev = args.ev;
             let file = args.file;
             this.editNote(null, true, file, ev);
-        });
+        });*/
 
         // show delete note confirm dialog on 'deleteNote' event
-        this.$scope.$on('deleteNote', (event, args) => {
+        /*this.$scope.$on('deleteNote', (event, args) => {
             let itemId = args.itemId;
             let ev = args.ev;
             let doDelete = true;
             this.deleteNote(itemId, ev, doDelete);
-        });
+        });*/
 
         // show delete note confirm dialog on 'reviveNote' event
-        this.$scope.$on('reviveNote', (event, args) => {
+        /*this.$scope.$on('reviveNote', (event, args) => {
             let itemId = args.itemId;
             let ev = args.ev;
             let doDelete = false;
             this.deleteNote(itemId, ev, doDelete);
-        });
+        });*/
 
         // a group node has turned on or off planning mode
         this.$scope.$on('togglePlanningMode', (event, args) => {
@@ -445,7 +445,7 @@ class ThemeController {
     /**
     * Open or close the notebook and save notebook open/close events
     */
-    toggleNotebook(ev, open) {
+    /*toggleNotebook(ev, open) {
         //this.notebookOpen = !this.notebookOpen;
         if (this.layoutState === 'notebook' && !open) {
             this.setLayoutState();
@@ -455,19 +455,19 @@ class ThemeController {
             this.setLayoutState('notebook');
             this.NotebookService.saveNotebookToggleEvent(true, this.currentNode);
         }
-    }
+    }*/
 
     /**
      * Open or close the notebook nav menu
      */
-    toggleNotebookNav() {
+    /*toggleNotebookNav() {
         this.notebookNavOpen = !this.notebookNavOpen;
-    }
+    }*/
 
     /**
      * Delete the note specified by the itemId.
      */
-    deleteNote(itemId, ev, doDelete = true) {
+    /*deleteNote(itemId, ev, doDelete = true) {
         let confirm = null;
 
         if (doDelete) {
@@ -502,14 +502,12 @@ class ThemeController {
     }
 
     editNote(itemId, isEditMode, file, ev) {
-        let showFullScreen = this.$mdMedia('xs');
         let notebookItemTemplate = this.themePath + '/notebook/editNotebookItem.html';
 
         // Display a dialog where students can view/add/edit a notebook item
         this.$mdDialog.show({
             parent: angular.element(document.body),
             targetEvent: ev,
-            fullscreen: showFullScreen,
             templateUrl: notebookItemTemplate,
             controller: EditNotebookItemController,
             controllerAs: 'editNotebookItemController',
@@ -520,7 +518,7 @@ class ThemeController {
                 file: file
             }
         });
-    }
+    }*/
 
     /**
      * The user has moved the mouse so we will notify the Session Service

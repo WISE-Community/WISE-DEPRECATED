@@ -44,10 +44,6 @@ var _listenForDeleteKeypress = require('./listenForDeleteKeypress/listenForDelet
 
 var _listenForDeleteKeypress2 = _interopRequireDefault(_listenForDeleteKeypress);
 
-var _notebook = require('./notebook/notebook');
-
-var _notebook2 = _interopRequireDefault(_notebook);
-
 var _notebookItemAnnotations = require('./notebookItemAnnotations/notebookItemAnnotations');
 
 var _notebookItemAnnotations2 = _interopRequireDefault(_notebookItemAnnotations);
@@ -66,7 +62,8 @@ var _wiselink2 = _interopRequireDefault(_wiselink);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var Components = angular.module('components', ['notebook']);
+//import Notebook from './notebook/notebook';
+var Components = angular.module('components', [/*'notebook'*/]);
 
 Components.component('annotation', _annotation2.default);
 Components.component('compile', _compile2.default);

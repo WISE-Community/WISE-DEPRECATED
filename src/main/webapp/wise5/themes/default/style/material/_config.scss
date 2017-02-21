@@ -1,7 +1,7 @@
 // Helpers
 @function rem($multiplier) {
-  $font-size: 10px;
-  @return $multiplier * $font-size;
+    $font-size: 10px;
+    @return $multiplier * $font-size;
 }
 
 // Angular Material variables for use and !default overrides
@@ -24,8 +24,8 @@ $layout-breakpoint-lg:     1920px;
 
 $button-border-radius: 3px;
 
-//$tooltip-fontsize-lg: rem(1);
-$tooltip-fontsize-sm: rem(1);
+$tooltip-fontsize-lg: rem(1.1);
+$tooltip-fontsize-sm: rem(1.1);
 //$tooltip-height-lg: rem(2.2);
 $tooltip-height-sm: rem(2.2);
 //$tooltip-top-margin-lg: rem(1.4);
