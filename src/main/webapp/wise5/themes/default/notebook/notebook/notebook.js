@@ -36,6 +36,11 @@ var NotebookController = function () {
         this.itemId = null;
         this.item = null;
         this.config = this.NotebookService.config;
+
+        if (!this.config.enabled) {
+            return;
+        }
+
         this.workgroupId = this.ConfigService.getWorkgroupId();
         //this.reportVisible = false;
         this.reportVisible = this.config.itemTypes.report.enabled;
@@ -229,7 +234,7 @@ NotebookController.$inject = ['$filter', '$mdDialog', '$scope', '$rootScope', 'C
 
 var Notebook = {
     bindings: {},
-    template: '<div ng-if="$ctrl.config.enabled" ng-class="{\'notes-visible\': $ctrl.notesVisible}">\n            <div class="notebook-overlay"></div>\n            <notebook-launcher config="$ctrl.config" \n                               note-count="$ctrl.notebook.items.length"\n                               notes-visible="$ctrl.notesVisible"\n                               on-open="$ctrl.open(value, event)"></notebook-launcher>\n            <notebook-report ng-if="$ctrl.config.itemTypes.report.enabled"\n                             visible="$ctrl.reportVisible"\n                             insert-content="$ctrl.insertContent"\n                             insert-mode="$ctrl.insertMode"\n                             config="$ctrl.config"\n                             reportId="$ctrl.reportId"\n                             on-collapse="$ctrl.insertMode=false"\n                             on-insert="$ctrl.setInsertMode()"></notebook-container>\n        </div>\n        <notebook-notes ng-if="$ctrl.config.enabled"\n                        notebook="$ctrl.notebook"\n                        notes-visible="$ctrl.notesVisible"\n                        config="$ctrl.config"\n                        insert-mode="$ctrl.insertMode"\n                        workgroup-id="$ctrl.workgroupId"\n                        on-close="$ctrl.closeNotes()"\n                        on-insert="$ctrl.insert(value, event)"></notebook-notes>',
+    template: '<div ng-if="$ctrl.config.enabled" ng-class="{\'notes-visible\': $ctrl.notesVisible}">\n            <div class="notebook-overlay"></div>\n            <notebook-launcher config="$ctrl.config"\n                               note-count="$ctrl.notebook.items.length"\n                               notes-visible="$ctrl.notesVisible"\n                               on-open="$ctrl.open(value, event)"></notebook-launcher>\n            <notebook-report ng-if="$ctrl.config.itemTypes.report.enabled"\n                             visible="$ctrl.reportVisible"\n                             insert-content="$ctrl.insertContent"\n                             insert-mode="$ctrl.insertMode"\n                             config="$ctrl.config"\n                             reportId="$ctrl.reportId"\n                             on-collapse="$ctrl.insertMode=false"\n                             on-insert="$ctrl.setInsertMode()"></notebook-container>\n        </div>\n        <notebook-notes ng-if="$ctrl.config.enabled"\n                        notebook="$ctrl.notebook"\n                        notes-visible="$ctrl.notesVisible"\n                        config="$ctrl.config"\n                        insert-mode="$ctrl.insertMode"\n                        workgroup-id="$ctrl.workgroupId"\n                        on-close="$ctrl.closeNotes()"\n                        on-insert="$ctrl.insert(value, event)"></notebook-notes>',
     controller: NotebookController
 };
 

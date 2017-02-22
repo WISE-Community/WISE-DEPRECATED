@@ -23,11 +23,16 @@ class NotebookController {
         this.StudentDataService = StudentDataService;
 
         this.$translate = this.$filter('translate');
-        
+
         this.themePath = this.ProjectService.getThemePath();
         this.itemId = null;
         this.item = null;
         this.config = this.NotebookService.config;
+        
+        if (!this.config.enabled) {
+            return;
+        }
+
         this.workgroupId = this.ConfigService.getWorkgroupId();
         //this.reportVisible = false;
         this.reportVisible = this.config.itemTypes.report.enabled;
@@ -38,7 +43,7 @@ class NotebookController {
         this.$scope.$on('notebookUpdated', (event, args) => {
             this.notebook = angular.copy(args.notebook);
         });
-        
+
         // show edit note dialog on 'editNote' event
         this.$scope.$on('editNote', (event, args) => {
             let itemId = args.itemId;
@@ -109,7 +114,7 @@ class NotebookController {
             }
         });
     }
-    
+
     /**
      * Delete the note specified by the itemId.
      */
@@ -186,21 +191,21 @@ class NotebookController {
             this.NotebookService.addNewItem(event);
         }
     }
-    
+
     closeNotes($event) {
         this.notesVisible = false;
         this.insertMode = false;
     }
-    
+
     /*closeReport() {
         this.reportVisible = false;
     }*/
-    
+
     setInsertMode() {
         this.insertMode = true;
         this.notesVisible = true;
     }
-    
+
     insert(value, $event) {
         // user is inserting new content into the report
         this.insertContent = angular.copy(this.NotebookService.getLatestNotebookItemByLocalNotebookItemId(value, this.workgroupId));
@@ -225,7 +230,7 @@ const Notebook = {
     template:
         `<div ng-if="$ctrl.config.enabled" ng-class="{'notes-visible': $ctrl.notesVisible}">
             <div class="notebook-overlay"></div>
-            <notebook-launcher config="$ctrl.config" 
+            <notebook-launcher config="$ctrl.config"
                                note-count="$ctrl.notebook.items.length"
                                notes-visible="$ctrl.notesVisible"
                                on-open="$ctrl.open(value, event)"></notebook-launcher>
