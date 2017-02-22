@@ -361,6 +361,14 @@ class ConceptMapService extends NodeService {
 
         var result = false;
 
+        if (ruleName === true) {
+            // the rule name is not actually a rule but is the true boolean
+            return true;
+        } else if (ruleName === false) {
+            // the rule name is not actually a rule but is the false boolean
+            return false;
+        }
+
         // get the rule
         var rule = this.getRuleByRuleName(componentContent, ruleName);
 
