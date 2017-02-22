@@ -5957,7 +5957,21 @@ var ProjectService = function () {
 
                     // generate the message
                     message += 'Obtain a score of ' + scoresString + ' on "' + nodeTitle + '"';
-                } else if (name === 'choiceChosen') {} else if (name === 'branchPathTaken') {} else if (name === 'isPlanningActivityCompleted') {
+                } else if (name === 'choiceChosen') {} else if (name === 'usedXSubmits') {
+                    var nodeId = params.nodeId;
+                    var nodeTitle = '';
+
+                    // get the number of times the student must submit
+                    var requiredSubmitCount = params.requiredSubmitCount;
+
+                    if (nodeId != null) {
+                        // get the step number and title
+                        nodeTitle = this.getNodePositionAndTitleByNodeId(nodeId);
+                    }
+
+                    // generate the message
+                    message += 'Submit ' + requiredSubmitCount + ' times on "' + nodeTitle + '"';
+                } else if (name === 'branchPathTaken') {} else if (name === 'isPlanningActivityCompleted') {
                     var nodeId = params.nodeId;
                     if (nodeId != null) {
                         var nodeTitle = this.getNodePositionAndTitleByNodeId(nodeId);

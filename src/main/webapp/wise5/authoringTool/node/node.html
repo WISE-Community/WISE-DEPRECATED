@@ -338,6 +338,12 @@ TODO: implement me. Allow authors to view assets while authoring node conent. Pe
                            ng-change='nodeAuthoringController.authoringViewNodeChanged()'
                            ng-list=','/>
                 </div>
+                <div ng-if='param.value == "requiredSubmitCount"'>
+                    <input type='number'
+                           ng-model='criteria.params.requiredSubmitCount'
+                           ng-model-options='{ debounce: 1000 }'
+                           ng-change='nodeAuthoringController.authoringViewNodeChanged()'/>
+                </div>
                 <div ng-if='param.value == "choiceIds" && "radio" == nodeAuthoringController.getChoiceTypeByNodeIdAndComponentId(criteria.params.nodeId, criteria.params.componentId)'>
                     <md-select id="radioChoiceIdsSelectMenu"
                                md-theme="default"

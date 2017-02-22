@@ -156,6 +156,24 @@ class NodeAuthoringController {
                 ]
             },
             {
+                value: "usedXSubmits",
+                text: this.$translate('usedXSubmits'),
+                params: [
+                    {
+                        value: "nodeId",
+                        text: this.$translate('nodeID')
+                    },
+                    {
+                        value: "componentId",
+                        text: this.$translate('componentID')
+                    },
+                    {
+                        value: "requiredSubmitCount",
+                        text: this.$translate('requiredSubmitCount')
+                    }
+                ]
+            },
+            {
                 value: "isVisible",
                 text: this.$translate('isVisible'),
                 params: [

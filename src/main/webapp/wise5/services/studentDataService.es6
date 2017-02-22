@@ -581,6 +581,8 @@ class StudentDataService {
                 result = this.evaluateIsPlanningActivityCompletedCriteria(criteria);
             } else if (functionName === 'score') {
                 result = this.evaluateScoreCriteria(criteria);
+            } else if (functionName === 'usedXSubmits') {
+                result = this.evaluateUsedXSubmitsCriteria(criteria);
             } else if (functionName === '') {
 
             }
@@ -630,7 +632,7 @@ class StudentDataService {
 
                     // loop through all the component states
                     for (var c = 0; c < componentStates.length; c++) {
-                        
+
                         var componentState = componentStates[c];
 
                         if (componentState != null) {
@@ -1039,6 +1041,86 @@ class StudentDataService {
 
         return result;
     };
+
+    /**
+     * Evaluate the used x submits criteria which requires the student to submit
+     * at least x number of times.
+     * @param criteria the criteria to evaluate
+     * @returns a boolean value whether the student submitted at least x number
+     * of times
+     */
+    evaluateUsedXSubmitsCriteria(criteria) {
+        var result = false;
+
+        var params = criteria.params;
+
+        if (params != null) {
+
+            // get the node id and component id to check the submit counter for
+            var nodeId = params.nodeId;
+            var componentId = params.componentId;
+
+            // get the number of submits required
+            var requiredSubmitCount = params.requiredSubmitCount;
+
+            if (nodeId != null && componentId != null) {
+
+                // get the component states for the component
+                var componentStates = this.getComponentStatesByNodeIdAndComponentId(nodeId, componentId);
+
+                if (componentStates != null) {
+
+                    // counter for manually counting the component states with isSubmit=true
+                    var manualSubmitCounter = 0;
+
+                    // counter for remembering the highest submitCounter value found in studentData objects
+                    var highestSubmitCounter = 0;
+
+                    /*
+                     * We are counting with two submit counters for backwards compatibility.
+                     * Some componentStates only have isSubmit=true and do not keep an
+                     * updated submitCounter for the number of submits.
+                     */
+
+                    // loop through all the component states
+                    for (var c = 0; c < componentStates.length; c++) {
+
+                        var componentState = componentStates[c];
+
+                        if (componentState != null) {
+
+                            if (componentState.isSubmit) {
+                                // this is a submit component state
+                                manualSubmitCounter++;
+                            }
+
+                            var studentData = componentState.studentData;
+
+                            if (studentData != null) {
+
+                                if (studentData.submitCounter != null) {
+                                    if (studentData.submitCounter > highestSubmitCounter) {
+                                        /*
+                                         * the submit counter in the student data is higher
+                                         * than we have previously seen
+                                         */
+                                        highestSubmitCounter = studentData.submitCounter;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    if (manualSubmitCounter >= requiredSubmitCount || highestSubmitCounter >= requiredSubmitCount) {
+                        // the student submitted the required number of times
+                        result = true;
+                    }
+                }
+            }
+        }
+
+        return result;
+    }
 
     /**
      * Populate the stack history and visited nodes history

@@ -131,6 +131,7 @@
     "removalConditional": "Removal Conditional",
     "removalCriteriaName": "Removal Criteria Name",
     "removeBranch": "Remove Branch",
+    "requiredSubmitCount": "Required Submit Count",
     "saveErrorAdvancedAuthoring": "Error saving advanced authoring, possibly due to malformed JSON content. Check that your JSON is valid. Your changes have not been saved.",
     "saving": "Saving...",
     "scoresParens": "Score(s)",
@@ -151,6 +152,7 @@
     "transitionToStep": "Which Step this path leads to",
     "transitions": "Paths",
     "undo": "Undo",
+    "usedXSubmits": "Used X Submits",
     "viewHistory": "View History",
     "whenToChoosePath": "When to choose path",
     "yes": "Yes"
