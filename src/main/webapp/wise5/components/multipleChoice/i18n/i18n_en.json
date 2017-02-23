@@ -1,7 +1,8 @@
 {
     "multipleChoice.addChoice": "Add Choice",
     "multipleChoice.checkbox": "Checkbox",
-    "multipleChoice.numberOfAttempts": "Number of Attempts",
     "multipleChoice.radio": "Radio",
-    "multipleChoice.userChose": "User chose '{{choiceText}}' (Choice Id: {{choiceId}}) on this component."
+    "multipleChoice.userChose": "User chose '{{choiceText}}' (Choice Id: {{choiceId}}) on this component.",
+    "multipleChoice.youHaveUsedXofYAttempt": "You have used {{x}} of {{y}} attempt",
+    "multipleChoice.youHaveUsedXofYAttempts": "You have used {{x}} of {{y}} attempts"
 }

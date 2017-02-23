@@ -69,9 +69,6 @@ var MultipleChoiceController = function () {
         // holds whether the student answered correctly if there is a correct answer
         this.isCorrect = null;
 
-        // keep track of the number of submits
-        this.numberOfAttempts = null;
-
         // whether the latest work was submitted or not
         this.isSubmit = null;
 
@@ -92,6 +89,9 @@ var MultipleChoiceController = function () {
 
         // the latest annotations
         this.latestAnnotations = null;
+
+        // counter to keep track of the number of submits
+        this.submitCounter = 0;
 
         // get the current node and node id
         var currentNode = this.StudentDataService.getCurrentNode();
@@ -229,6 +229,24 @@ var MultipleChoiceController = function () {
                 this.setStudentWork(componentState);
             }
 
+            if (componentState != null && componentState.isSubmit) {
+                /*
+                 * the latest component state is a submit. this is used to
+                 * determine if we should show the feedback.
+                 */
+                this.isLatestComponentStateSubmit = true;
+            }
+
+            // check if the student has used up all of their submits
+            if (this.componentContent.maxSubmitCount != null && this.submitCounter >= this.componentContent.maxSubmitCount) {
+                /*
+                 * the student has used up all of their chances to submit so we
+                 * will disable the choices and the submit button
+                 */
+                this.isDisabled = true;
+                this.isSubmitButtonDisabled = true;
+            }
+
             // check if we need to lock this component
             this.calculateDisabled();
 
@@ -290,11 +308,40 @@ var MultipleChoiceController = function () {
 
             // make sure the node id matches our parent node
             if (this.nodeId === nodeId) {
-                this.isSubmit = true;
-                this.incrementNumberOfAttempts();
 
-                // set saveFailed to true; will be set to false on save success response from server
-                this.saveFailed = true;
+                if (this.isSubmitDirty) {
+                    // the student has unsubmitted work
+
+                    var performSubmit = true;
+
+                    // check if the student has used up all of their submits
+                    if (this.componentContent.maxSubmitCount != null && this.submitCounter >= this.componentContent.maxSubmitCount) {
+                        // the student has used up all of their submits
+                        performSubmit = false;
+                    }
+
+                    if (performSubmit) {
+                        this.isSubmit = true;
+                        this.isCorrect = null;
+                        this.hideAllFeedback();
+
+                        // increment the submit counter
+                        this.incrementSubmitCounter();
+
+                        // check if the student has used up all of their submits
+                        if (this.componentContent.maxSubmitCount != null && this.submitCounter >= this.componentContent.maxSubmitCount) {
+                            /*
+                             * the student has used up all of their submits so we will
+                             * disable the choices and buttons
+                             */
+                            this.isDisabled = true;
+                            this.isSubmitButtonDisabled = true;
+                        }
+
+                        // set saveFailed to true; will be set to false on save success response from server
+                        this.saveFailed = true;
+                    }
+                }
             }
         }));
 
@@ -473,16 +520,16 @@ var MultipleChoiceController = function () {
                         this.isCorrect = studentData.isCorrect;
                     }
 
-                    if (componentState.isSubmit) {
+                    if (this.showFeedback && componentState.isSubmit) {
                         // the previous work was a submit so we will show the feedback
                         this.showFeedbackForChoiceIds(choiceIds);
                     }
 
-                    var numberOfAttempts = studentData.numberOfAttempts;
+                    var submitCounter = studentData.submitCounter;
 
-                    if (numberOfAttempts != null) {
-                        // show the number of attempts
-                        this.numberOfAttempts = numberOfAttempts;
+                    if (submitCounter != null) {
+                        // populate the submit counter
+                        this.submitCounter = submitCounter;
                     }
 
                     this.processLatestSubmit();
@@ -750,16 +797,57 @@ var MultipleChoiceController = function () {
          */
         value: function submitButtonClicked() {
             // TODO: add confirmation dialog if lock after submit is enabled on this component
-            this.isSubmit = true;
-            this.isCorrect = null;
-            this.hideAllFeedback();
-            this.incrementNumberOfAttempts();
 
             // set saveFailed to true; will be set to false on save success response from server
             this.saveFailed = true;
 
-            // tell the parent node that this component wants to submit
-            this.$scope.$emit('componentSubmitTriggered', { nodeId: this.nodeId, componentId: this.componentId });
+            var performSubmit = true;
+
+            if (this.componentContent.maxSubmitCount != null) {
+                // there is a max submit count
+
+                // calculate the number of submits this student has left
+                var numberOfSubmitsLeft = this.componentContent.maxSubmitCount - this.submitCounter;
+
+                var message = '';
+
+                if (numberOfSubmitsLeft <= 0) {
+                    // the student does not have any more chances to submit
+                    performSubmit = false;
+                } else if (numberOfSubmitsLeft == 1) {
+                    /*
+                     * the student has one more chance to submit left so maybe
+                     * we should ask the student if they are sure they want to submit
+                     */
+                } else if (numberOfSubmitsLeft > 1) {
+                    /*
+                     * the student has more than one chance to submit left so maybe
+                     * we should ask the student if they are sure they want to submit
+                     */
+                }
+            }
+
+            if (performSubmit) {
+                this.isSubmit = true;
+                this.isCorrect = null;
+                this.hideAllFeedback();
+
+                // increment the submit counter
+                this.incrementSubmitCounter();
+
+                // check if the student has used up all of their submits
+                if (this.componentContent.maxSubmitCount != null && this.submitCounter >= this.componentContent.maxSubmitCount) {
+                    /*
+                     * the student has used up all of their submits so we will
+                     * disable the choices and buttons
+                     */
+                    this.isDisabled = true;
+                    this.isSubmitButtonDisabled = true;
+                }
+
+                // tell the parent node that this component wants to submit
+                this.$scope.$emit('componentSubmitTriggered', { nodeId: this.nodeId, componentId: this.componentId });
+            }
         }
     }, {
         key: 'hideAllFeedback',
@@ -784,29 +872,23 @@ var MultipleChoiceController = function () {
             }
         }
     }, {
-        key: 'incrementNumberOfAttempts',
+        key: 'incrementSubmitCounter',
 
 
         /**
-         * Increment the number of attempts the student has made
+         * Increment the submit counter
          */
-        value: function incrementNumberOfAttempts() {
-            if (!this.saveFailed) {
-                if (this.numberOfAttempts == null) {
-                    this.numberOfAttempts = 0;
-                }
-
-                this.numberOfAttempts++;
-            }
+        value: function incrementSubmitCounter() {
+            this.submitCounter++;
         }
-    }, {
-        key: 'checkAnswer',
-
 
         /**
          * Check the answer the student has submitted and display feedback
          * for the choices the student has checked
          */
+
+    }, {
+        key: 'checkAnswer',
         value: function checkAnswer() {
             var isCorrect = false;
 
@@ -920,6 +1002,9 @@ var MultipleChoiceController = function () {
             // get this component id
             var componentId = this.getComponentId();
 
+            this.isCorrect = null;
+            this.isLatestComponentStateSubmit = false;
+
             /*
              * the student work in this component has changed so we will tell
              * the parent node that the student data will need to be saved.
@@ -955,7 +1040,7 @@ var MultipleChoiceController = function () {
                 // set the student choices into the component state
                 studentData.studentChoices = this.getStudentChoiceObjects();
 
-                if (action === 'submit' || action === 'save') {
+                if (action === 'submit') {
                     /*
                      * the student has clicked submit or save so we will
                      * check if the student has chosen all the correct choices.
@@ -985,13 +1070,23 @@ var MultipleChoiceController = function () {
                          * doesn't maintain the same value
                          */
                         this.isSubmit = false;
+
+                        /*
+                         * the latest component state is a submit. this is used to
+                         * determine if we should show the feedback.
+                         */
+                        this.isLatestComponentStateSubmit = true;
                     }
+                } else if (action === 'save') {
+                    /*
+                     * the latest component state is not a submit. this is used to
+                     * determine if we should show the feedback.
+                     */
+                    this.isLatestComponentStateSubmit = false;
                 }
 
-                if (this.numberOfAttempts != null) {
-                    // set the number of attempts the student has made
-                    studentData.numberOfAttempts = this.numberOfAttempts;
-                }
+                // set the submit counter
+                studentData.submitCounter = this.submitCounter;
 
                 componentState.studentData = studentData;
             }
