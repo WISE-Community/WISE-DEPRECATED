@@ -1140,21 +1140,30 @@ public class WISE5AuthorProjectController {
         //get the curriculum base directory e.g. /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum
         String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
 
-        //the file separator for the OS e.g. /
-        String fileSeparator = System.getProperty("file.separator");
-
         //get the full project file url e.g. /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum/171/wise4.project.json
         String fullFromProjectFileUrl = curriculumBaseDir + fromProjectUrl;
 
         //get the full project file url e.g. /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum/172/project.json
         String fullToProjectFileUrl = curriculumBaseDir + toProjectUrl;
 
+        // get the index of the last separator from the fromProjectUrl
+        int fromProjectUrlLastIndexOfSlash = fromProjectUrl.lastIndexOf("/");
+        if (fromProjectUrlLastIndexOfSlash == -1) {
+            fromProjectUrlLastIndexOfSlash = fromProjectUrl.lastIndexOf("\\");
+        }
+
         //get the project folder e.g. /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum/171
-        String fullFromProjectFolderUrl = curriculumBaseDir + fromProjectUrl.substring(0, fromProjectUrl.lastIndexOf(fileSeparator));
+        String fullFromProjectFolderUrl = curriculumBaseDir + fromProjectUrl.substring(0, fromProjectUrlLastIndexOfSlash);
         File fromProjectFolder = new File(fullFromProjectFolderUrl);
 
+        // get the index of the last separator from the toProjectUrl
+        int toProjectUrlLastIndexOfSlash = toProjectUrl.lastIndexOf("/");
+        if (toProjectUrlLastIndexOfSlash == -1) {
+            toProjectUrlLastIndexOfSlash = toProjectUrl.lastIndexOf("\\");
+        }
+
         //get the project folder e.g. /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum/172
-        String fullToProjectFolderUrl = curriculumBaseDir + toProjectUrl.substring(0, toProjectUrl.lastIndexOf(fileSeparator));
+        String fullToProjectFolderUrl = curriculumBaseDir + toProjectUrl.substring(0, toProjectUrlLastIndexOfSlash);
         File toProjectFolder = new File(fullToProjectFolderUrl);
 
         //get the project assets folder e.g. /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum/171/assets
