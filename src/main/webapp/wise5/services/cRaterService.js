@@ -406,7 +406,7 @@ var CRaterService = function () {
                                     if (previousScore.toString().match("[" + previousScoreMatch + "]") && currentScore.toString().match("[" + currentScoreMatch + "]")) {
 
                                         /*
-                                         * the previous score and current score match the 
+                                         * the previous score and current score match the
                                          * expected scores so we have found the rule we want
                                          */
                                         scoringRule = multipleAttemptScoringRule;

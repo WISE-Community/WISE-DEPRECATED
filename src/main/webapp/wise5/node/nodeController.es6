@@ -819,7 +819,13 @@ class NodeController {
                     componentState.isAutoSave = isAutoSave;
 
                     if (isSubmit) {
-                        componentState.isSubmit = true;
+                        /*
+                         * set the isSubmit value in the component state if
+                         * it wasn't set by the component
+                         */
+                        if (componentState.isSubmit == null) {
+                            componentState.isSubmit = true;
+                        }
                     }
                 } else {
                     /*
@@ -833,7 +839,13 @@ class NodeController {
                         componentState.isAutoSave = false;
 
                         if (isSubmit) {
-                            componentState.isSubmit = true;
+                            /*
+                             * set the isSubmit value in the component state if
+                             * it wasn't set by the component
+                             */
+                            if (componentState.isSubmit == null) {
+                                componentState.isSubmit = true;
+                            }
                         }
                     }
                 }
