@@ -117,7 +117,7 @@
                 style="width: {{embeddedController.width}}; height: {{embeddedController.height}}; max-width: {{embeddedController.maxWidth}}; max-height: {{embeddedController.maxHeight}};"></iframe>
         <div ng-if="embeddedController.isSaveButtonVisible || embeddedController.isSubmitButtonVisible"
              class="component__actions" layout="row" layout-align="start center">
-            <md-button class="md-raised"
+            <md-button class="md-raised md-primary"
                        ng-class="{'md-raised': !embeddedController.isSubmitButtonVisible}"
                        ng-click="embeddedController.saveButtonClicked()"
                        ng-disabled="embeddedController.isDisabled || !embeddedController.isDirty"

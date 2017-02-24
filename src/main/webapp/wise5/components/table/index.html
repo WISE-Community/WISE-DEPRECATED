@@ -182,7 +182,7 @@
         </table>
         <div ng-if="tableController.isSaveButtonVisible || tableController.isSubmitButtonVisible"
              class="component__actions" layout="row" layout-align="start center">
-            <md-button class="md-primary"
+            <md-button class="md-raised md-primary"
                        ng-class="{'md-raised': !tableController.isSubmitButtonVisible}"
                        ng-click='tableController.saveButtonClicked()'
                        ng-disabled='tableController.isDisabled || !tableController.isDirty'

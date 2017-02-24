@@ -289,7 +289,7 @@
             <highchart id="{{graphController.chartId}}" config="graphController.chartConfig"></highchart>
             <div ng-if="graphController.isSaveButtonVisible || graphController.isSubmitButtonVisible"
                  class="component__actions" layout="row" layout-align="start center">
-                <md-button class="md-primary"
+                <md-button class="md-raised md-primary"
                            ng-class="{'md-raised': !graphController.isSubmitButtonVisible}"
                            ng-click='graphController.saveButtonClicked()'
                            ng-if='graphController.isSaveButtonVisible'

@@ -241,7 +241,7 @@
     </div>
     <div ng-if="matchController.isSaveButtonVisible || matchController.isSubmitButtonVisible"
          class="component__actions" layout="row" layout-align="start center">
-        <md-button class="md-primary"
+        <md-button class="md-raised md-primary"
                    ng-class="{'md-raised': !matchController.isSubmitButtonVisible}"
                    ng-click='matchController.saveButtonClicked()'
                    ng-if='matchController.isSaveButtonVisible'

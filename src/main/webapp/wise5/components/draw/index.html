@@ -275,7 +275,7 @@
     </md-button>
     <div ng-if="drawController.isSaveButtonVisible || drawController.isSubmitButtonVisible"
          class="component__actions" layout="row" layout-align="start center">
-        <md-button class="md-primary"
+        <md-button class="md-raised md-primary"
                    ng-class="{'md-raised': !drawController.isSubmitButtonVisible}"
                    ng-click='drawController.saveButtonClicked()'
                    ng-disabled='drawController.isDisabled || !drawController.isDirty'
