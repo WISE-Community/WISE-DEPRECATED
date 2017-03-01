@@ -92,6 +92,12 @@ class MultipleChoiceController {
         // counter to keep track of the number of submits
         this.submitCounter = 0;
 
+        // whether this component has been authored with a correct answer
+        this.hasCorrectAnswer = false;
+
+        // whether the latest component state was a submit
+        this.isLatestComponentStateSubmit = false;
+
         // get the current node and node id
         var currentNode = this.StudentDataService.getCurrentNode();
         if (currentNode != null) {
@@ -192,6 +198,9 @@ class MultipleChoiceController {
                     this.componentContent = this.ProjectService.injectAssetPaths(newValue);
                 }.bind(this), true);
             }
+
+            // check if there is a correct answer
+            this.hasCorrectAnswer = this.hasCorrectChoices();
 
             this.showFeedback = this.componentContent.showFeedback;
 
@@ -789,6 +798,12 @@ class MultipleChoiceController {
             }
 
             if (performSubmit) {
+
+                /*
+                 * set isSubmit to true so that when the component state is
+                 * created, it will know it is a submit component state
+                 * instead of just a save component state
+                 */
                 this.isSubmit = true;
 
                 // clear the isCorrect value because it will be evaluated again later
@@ -860,7 +875,7 @@ class MultipleChoiceController {
         var isCorrect = false;
 
         // check if any correct choices have been authored
-        if (this.hasFeedback() || this.hasCorrectChoices()) {
+        if (this.hasFeedback() || this.hasCorrectAnswer) {
 
             var isCorrectSoFar = true;
 
@@ -897,7 +912,7 @@ class MultipleChoiceController {
             isCorrect = isCorrectSoFar;
         }
 
-        if (this.hasCorrectChoices()) {
+        if (this.hasCorrectAnswer) {
             this.isCorrect = isCorrect;
         }
     };
