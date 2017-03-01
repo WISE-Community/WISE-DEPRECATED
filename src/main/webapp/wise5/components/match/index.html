@@ -15,6 +15,13 @@
         <input type='checkbox'
                ng-model='matchController.authoringComponentContent.showSubmitButton'
                ng-change='matchController.authoringViewComponentChanged()'/>
+        <div ng-show='matchController.authoringComponentContent.showSubmitButton'
+             style='display:inline'>
+            {{ 'MAX_SUBMIT' | translate }}:
+            <input type='number'
+                   ng-model='matchController.authoringComponentContent.maxSubmitCount'
+                   ng-change='matchController.authoringViewComponentChanged()'/>
+        </div>
         <br/>
         {{ 'MAX_SCORE' | translate }}:
         <input type='number'
@@ -193,6 +200,12 @@
                                             <span flex></span>
                                             <md-icon>open_with</md-icon>
                                         </div>
+                                        <p class="match-feedback md-body-2" ng-show="item.feedback" ng-class='{"success-bg": !matchController.hasCorrectAnswer || item.isCorrect, "info-bg": item.isIncorrectPosition, "warn-bg": !item.isCorrect}'>
+                                            <md-icon ng-if="matchController.hasCorrectAnswer && item.isCorrect"> check </md-icon>
+                                            <md-icon ng-if="matchController.hasCorrectAnswer && item.isIncorrectPosition"> warning </md-icon>
+                                            <md-icon ng-if="matchController.hasCorrectAnswer && !item.isCorrect && !item.isIncorrectPosition"> clear </md-icon>
+                                            <span><compile data='item.feedback'></compile></span>
+                                        </p>
                                     </div>
                                 </md-list-item>
                             </div>
@@ -223,10 +236,10 @@
                                                 <span flex></span>
                                                 <md-icon>open_with</md-icon>
                                             </div>
-                                            <p class="match-feedback md-body-2" ng-show="item.feedback" ng-class='{"success-bg": item.isCorrect, "info-bg": item.isIncorrectPosition, "warn-bg": !item.isCorrect}'>
-                                                <md-icon ng-if="item.isCorrect"> check </md-icon>
-                                                <md-icon ng-if="item.isIncorrectPosition"> warning </md-icon>
-                                                <md-icon ng-if="!item.isCorrect && !item.isIncorrectPosition"> clear </md-icon>
+                                            <p class="match-feedback md-body-2" ng-show="item.feedback" ng-class='{"success-bg": !matchController.hasCorrectAnswer || item.isCorrect, "info-bg": item.isIncorrectPosition, "warn-bg": !item.isCorrect}'>
+                                                <md-icon ng-if="matchController.hasCorrectAnswer && item.isCorrect"> check </md-icon>
+                                                <md-icon ng-if="matchController.hasCorrectAnswer && item.isIncorrectPosition"> warning </md-icon>
+                                                <md-icon ng-if="matchController.hasCorrectAnswer && !item.isCorrect && !item.isIncorrectPosition"> clear </md-icon>
                                                 <span><compile data='item.feedback'></compile></span>
                                             </p>
                                         </div>
@@ -239,6 +252,13 @@
             </div>
         </div>
     </div>
+    <div>
+        <div class="md-caption" ng-if="matchController.hasCorrectAnswer && matchController.componentContent.maxSubmitCount != null && matchController.componentContent.maxSubmitCount == 1 " ng-show="matchController.componentContent.maxSubmitCount != null" translate="YOU_HAVE_USED_X_OF_Y_ATTEMPT" translate-values="{x: matchController.submitCounter, y: matchController.componentContent.maxSubmitCount}"></div>
+        <div class="md-caption" ng-if="matchController.hasCorrectAnswer && matchController.componentContent.maxSubmitCount != null && matchController.componentContent.maxSubmitCount > 1 " ng-show="matchController.componentContent.maxSubmitCount != null" translate="YOU_HAVE_USED_X_OF_Y_ATTEMPTS" translate-values="{x: matchController.submitCounter, y: matchController.componentContent.maxSubmitCount}"></div>
+        <div ng-if="matchController.isLatestComponentStateSubmit == false || !matchController.hasCorrectAnswer">&nbsp</div>
+        <div ng-if="matchController.isLatestComponentStateSubmit && matchController.hasCorrectAnswer && matchController.isCorrect === true" style="color: green">{{ 'CORRECT' | translate }}!</div>
+        <div ng-if="matchController.isLatestComponentStateSubmit && matchController.hasCorrectAnswer && matchController.isCorrect === false" style="color: red">{{ 'INCORRECT' | translate }}</div>
+    </div>
     <div ng-if="matchController.isSaveButtonVisible || matchController.isSubmitButtonVisible"
          class="component__actions" layout="row" layout-align="start center">
         <md-button class="md-raised md-primary"
@@ -249,7 +269,7 @@
         <md-button class="md-raised md-primary"
                    ng-click='matchController.submitButtonClicked()'
                    ng-if='matchController.isSubmitButtonVisible'
-                   ng-disabled='matchController.isDisabled || !matchController.isSubmitDirty'>{{ 'SUBMIT' | translate }}</md-button>
+                   ng-disabled='matchController.isSubmitButtonDisabled || matchController.isDisabled || !matchController.isSubmitDirty'>{{ 'SUBMIT' | translate }}</md-button>
         <span ng-show="matchController.saveMessage.text"
               class="component__actions__info md-caption">
             {{matchController.saveMessage.text}} <span class="component__actions__more"><md-tooltip md-direction="top">{{ matchController.saveMessage.time | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip><span am-time-ago="matchController.saveMessage.time"></span></span>

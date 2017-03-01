@@ -51,7 +51,10 @@ var MatchService = function (_NodeService) {
             component.showSubmitButton = true;
             component.choices = [];
             component.buckets = [];
-            component.feedback = [];
+            component.feedback = [{
+                "bucketId": "0",
+                "choices": []
+            }];
             component.ordered = false;
 
             return component;

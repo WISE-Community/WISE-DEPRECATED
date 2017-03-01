@@ -68,9 +68,6 @@ class MatchController {
         // the buckets
         this.buckets = [];
 
-        // the number of times the student has submitted
-        this.numberOfSubmits = 0;
-
         // whether the student has correctly placed the choices
         this.isCorrect = null;
 
@@ -97,6 +94,18 @@ class MatchController {
 
         // the latest annotations
         this.latestAnnotations = null;
+
+        // counter to keep track of the number of submits
+        this.submitCounter = 0;
+
+        // the id for the source bucket
+        this.sourceBucketId = "0";
+
+        // whether this component has been authored with a correct answer
+        this.hasCorrectAnswer = false;
+
+        // whether the latest component state was a submit
+        this.isLatestComponentStateSubmit = false;
 
         // get the current node and node id
         var currentNode = this.StudentDataService.getCurrentNode();
@@ -210,6 +219,9 @@ class MatchController {
                 }.bind(this), true);
             }
 
+            // check if there is a correct answer
+            this.hasCorrectAnswer = this.hasCorrectChoices();
+
             /*
              * initialize the choices and buckets with the values from the
              * component content
@@ -253,6 +265,24 @@ class MatchController {
             } else {
                 // populate the student work into this component
                 this.setStudentWork(componentState);
+            }
+
+            if (componentState != null && componentState.isSubmit) {
+                /*
+                 * the latest component state is a submit. this is used to
+                 * determine if we should show the feedback.
+                 */
+                this.isLatestComponentStateSubmit = true;
+            }
+
+            // check if the student has used up all of their submits
+            if (this.componentContent.maxSubmitCount != null && this.submitCounter >= this.componentContent.maxSubmitCount) {
+                /*
+                 * the student has used up all of their chances to submit so we
+                 * will disable the submit button
+                 */
+                this.isDisabled = true;
+                this.isSubmitButtonDisabled = true;
             }
 
             // check if we need to lock this component
@@ -355,11 +385,10 @@ class MatchController {
 
             // make sure the node id matches our parent node
             if (this.nodeId === nodeId) {
-                this.isSubmit = true;
-                this.incrementNumberOfSubmits();
 
-                // set saveFailed to true; will be set to false on save success response from server
-                this.saveFailed = true;
+                // trigger the submit
+                var submitTriggeredBy = 'nodeSubmitButton';
+                this.submit(submitTriggeredBy);
             }
         }));
 
@@ -391,7 +420,11 @@ class MatchController {
                 if (isSubmit) {
                     this.setSaveMessage(this.$translate('SUBMITTED'), clientSaveTime);
 
-                    this.submit();
+                    this.lockIfNecessary();
+
+                    // set isSubmitDirty to false because the component state was just submitted and notify node
+                    this.isSubmitDirty = false;
+                    this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: false});
                 } else if (isAutoSave) {
                     this.setSaveMessage(this.$translate('AUTO_SAVED'), clientSaveTime);
                 } else {
@@ -526,54 +559,76 @@ class MatchController {
 
                 // get the buckets and number of submits
                 let componentStateBuckets = studentData.buckets;
-                let componentStateNumberOfSubmits = studentData.numberOfSubmits;
 
                 // set the buckets
                 if (componentStateBuckets != null) {
+
+                    // clear the choices bucket
+                    let choicesBucket = this.getBucketById(this.sourceBucketId);
+                    choicesBucket.items = [];
+
                     let bucketIds = this.buckets.map(b => { return b.id; });
                     let choiceIds = this.choices.map(c => { return c.id; });
 
                     for (let i = 0, l = componentStateBuckets.length; i < l; i++) {
                         let componentStateBucketId = componentStateBuckets[i].id;
-                        if (componentStateBucketId !== 0) {
-                            // componentState bucket is a valid bucket, so process choices
-                            if (bucketIds.indexOf(componentStateBucketId) > -1) {
-                                let currentBucket = componentStateBuckets[i];
-                                let currentChoices = currentBucket.items;
+                        // componentState bucket is a valid bucket, so process choices
+                        if (bucketIds.indexOf(componentStateBucketId) > -1) {
+                            let currentBucket = componentStateBuckets[i];
+                            let currentChoices = currentBucket.items;
 
-                                for (let x = 0, len = currentChoices.length; x < len; x++) {
-                                    let currentChoice = currentChoices[x];
-                                    let currentChoiceId = currentChoice.id;
-                                    let currentChoiceLocation = choiceIds.indexOf(currentChoiceId);
-                                    if (currentChoiceLocation > -1) {
-                                        // choice is valid and used by student in a valid bucket, so add it to that bucket
-                                        let bucket = this.getBucketById(componentStateBucketId);
-                                        // content for choice with this id may have change, so get updated content
-                                        let updatedChoice = this.getChoiceById(currentChoiceId);
-                                        bucket.items.push(updatedChoice);
-                                        choiceIds.splice(currentChoiceLocation, 1);
-                                    }
+                            for (let x = 0, len = currentChoices.length; x < len; x++) {
+                                let currentChoice = currentChoices[x];
+                                let currentChoiceId = currentChoice.id;
+                                let currentChoiceLocation = choiceIds.indexOf(currentChoiceId);
+                                if (currentChoiceLocation > -1) {
+                                    // choice is valid and used by student in a valid bucket, so add it to that bucket
+                                    let bucket = this.getBucketById(componentStateBucketId);
+                                    // content for choice with this id may have change, so get updated content
+                                    let updatedChoice = this.getChoiceById(currentChoiceId);
+                                    bucket.items.push(updatedChoice);
+                                    choiceIds.splice(currentChoiceLocation, 1);
                                 }
                             }
                         }
                     }
 
-                    // add unused choices to default choices bucket
-                    let choicesBucket = this.getBucketById(0);
-                    choicesBucket.items = [];
+                    // add unused choices to the source bucket
                     for (let i = 0, l = choiceIds.length; i < l; i++) {
                         choicesBucket.items.push(this.getChoiceById(choiceIds[i]));
                     }
                 }
 
-                // set the number of submits
-                if (componentStateNumberOfSubmits) {
-                    this.numberOfSubmits = componentStateNumberOfSubmits;
+                var submitCounter = studentData.submitCounter;
+
+                if (submitCounter != null) {
+                    // populate the submit counter
+                    this.submitCounter = submitCounter;
                 }
 
-                if (this.numberOfSubmits > 0) {
-                    componentState.isSubmit ? this.checkAnswer() : this.processLatestSubmit(true);
+                if (this.submitCounter > 0) {
+                    // the student has submitted at least once in the past
+
+                    if (componentState.isSubmit) {
+                        /*
+                         * the component state was a submit so we will check the
+                         * answer
+                         */
+                        this.checkAnswer()
+                    } else {
+                        /*
+                         * The component state was not a submit but the student
+                         * submitted some time in the past. We want to show the
+                         * feedback for choices that have not moved since the
+                         * student submitted.
+                         */
+                        this.processLatestSubmit(true);
+                    }
                 } else {
+                    /*
+                     * there was no submit in the past but we will still need to
+                     * check if submit is dirty.
+                     */
                     this.processLatestSubmit(true);
                 }
             }
@@ -581,8 +636,10 @@ class MatchController {
     };
 
     /**
-     * Get the latest submitted componentState and check answer for choices that haven't changed since
-     * @param onload boolean whether this function is being executed on the initial component load or not
+     * Get the latest submitted componentState and display feedback for choices
+     * that haven't changed since. This will also determine if submit is dirty.
+     * @param onload boolean whether this function is being executed on the
+     * initial component load or not
      */
     processLatestSubmit(onload) {
         let componentStates = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(this.nodeId, this.componentId);
@@ -603,20 +660,53 @@ class MatchController {
             let excludeIds = [];
             let latestSubmitStateBuckets = latestSubmitState.studentData.buckets;
 
-            for (let b = 0, l = latestSubmitStateBuckets.length; b < l; b++) {
-                let submitBucket = latestSubmitStateBuckets[b];
-                let submitBucketId = submitBucket.id;
+            // loop through all the buckets in the latest student data
+            for (let b = 0; b < this.buckets.length; b++) {
 
-                if (latestBucketIds.indexOf(submitBucketId) > -1) {
-                    let latestBucket = this.getBucketById(submitBucketId);
-                    if (latestBucket) {
-                        let submitChoiceIds = submitBucket.items.map(c => { return c.id; });
+                // get a bucket from the latest student data
+                let latestBucket = this.buckets[b];
+
+                if (latestBucket != null) {
+                    let latestBucketId = latestBucket.id;
+
+                    // get the same bucket in the previously submitted student data
+                    let submitBucket = this.getBucketById(latestBucketId, latestSubmitStateBuckets);
+
+                    if (submitBucket != null) {
+                        // get the choice ids in the bucket in the latest student data
                         let latestBucketChoiceIds = latestBucket.items.map(c => { return c.id; });
-                        for (let c = 0, len = submitChoiceIds.length; c < len; c++) {
-                            let submitChoiceId = submitChoiceIds[c];
+
+                        // get the choice ids in the bucket in the previously submitted student data
+                        let submitChoiceIds = submitBucket.items.map(c => { return c.id; });
+
+                        // loop through all the choice ids in the bucket in the latest student data
+                        for (let c = 0; c < latestBucketChoiceIds.length; c++) {
                             let latestBucketChoiceId = latestBucketChoiceIds[c];
-                            if (submitChoiceId !== latestBucketChoiceId) {
-                                excludeIds.push(submitChoiceId);
+
+                            if (submitChoiceIds.indexOf(latestBucketChoiceId) == -1) {
+                                /*
+                                 * the choice in the latest state is not in the same
+                                 * bucket as it was in the last submit so we will
+                                 * not show the feedback for this choice by adding
+                                 * it to the excluded choice ids
+                                 */
+                                excludeIds.push(latestBucketChoiceId);
+                            } else {
+                                /*
+                                 * the choice is in the same bucket as it was in
+                                 * the last submit
+                                 */
+
+                                 if (this.choiceHasCorrectPosition(latestBucketChoiceId)) {
+                                     /*
+                                      * the choice has a correct position so we will check if
+                                      * the position is the same in the submit vs the latest
+                                      */
+                                     if (c != submitChoiceIds.indexOf(latestBucketChoiceId)) {
+                                         // the position has changed so we will not show the feedback
+                                         excludeIds.push(latestBucketChoiceId);
+                                     }
+                                 }
                             }
                         }
                     }
@@ -645,12 +735,19 @@ class MatchController {
                 let serverSaveTime = latestState.serverSaveTime;
                 let clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
                 if (latestState.isSubmit) {
+                    // set whether the latest component state is correct
+                    this.isCorrect = latestState.isCorrect;
                     // latest state is a submission, so set isSubmitDirty to false and notify node
                     this.isSubmitDirty = false;
                     this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: false});
                     // set save message
                     this.setSaveMessage(this.$translate('LAST_SUBMITTED'), clientSaveTime);
                 } else {
+                    /*
+                     * the latest component state was not a submit so we will
+                     * not show whether it was correct or incorrect
+                     */
+                    this.isCorrect = null;
                     // latest state is not a submission, so set isSubmitDirty to true and notify node
                     this.isSubmitDirty = true;
                     this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: true});
@@ -722,7 +819,7 @@ class MatchController {
              * the student first starts working
              */
             let originBucket = {};
-            originBucket.id = 0;
+            originBucket.id = this.sourceBucketId;
             originBucket.value = this.componentContent.choicesLabel ? this.componentContent.choicesLabel : this.$translate('match.choices');
             originBucket.type = 'bucket';
             originBucket.items = [];
@@ -786,45 +883,110 @@ class MatchController {
     };
 
     /**
-     * Called when the student clicks the submit button
-     */
-    submitButtonClicked() {
-        // TODO: add confirmation dialog if lock after submit is enabled on this component
-        this.isSubmit = true;
-        this.incrementNumberOfSubmits();
-
-        // set saveFailed to true; will be set to false on save success response from server
-        this.saveFailed = true;
-
-        // tell the parent node that this component wants to submit
-        this.$scope.$emit('componentSubmitTriggered', {nodeId: this.nodeId, componentId: this.componentId});
-    };
-
-    /**
     * Called when either the component or node is submitted
     */
-    submit() {
+    lockIfNecessary() {
         // check if we need to lock the component after the student submits
         if (this.isLockAfterSubmit()) {
             this.isDisabled = true;
         }
 
         // check if the student answered correctly
-        this.processLatestSubmit();
+        //this.processLatestSubmit();
     }
 
     /**
-     * Increment the number of attempts the student has made
+     * Called when the student clicks the submit button
      */
-    incrementNumberOfSubmits() {
-        if (!this.saveFailed) {
-            if (this.numberOfSubmits == null) {
-                this.numberOfSubmits = 0;
+    submitButtonClicked() {
+        // trigger the submit
+        var submitTriggeredBy = 'componentSubmitButton';
+        this.submit(submitTriggeredBy);
+    };
+
+    /**
+     * A submit was triggered by the component submit button or node submit button
+     * @param submitTriggeredBy what triggered the submit
+     * e.g. 'componentSubmitButton' or 'nodeSubmitButton'
+     */
+    submit(submitTriggeredBy) {
+
+        if (this.isSubmitDirty) {
+            // the student has unsubmitted work
+
+            var performSubmit = true;
+
+            if (this.componentContent.maxSubmitCount != null) {
+                // there is a max submit count
+
+                // calculate the number of submits this student has left
+                var numberOfSubmitsLeft = this.componentContent.maxSubmitCount - this.submitCounter;
+
+                var message = '';
+
+                if (numberOfSubmitsLeft <= 0) {
+                    // the student does not have any more chances to submit
+                    performSubmit = false;
+                } else if (numberOfSubmitsLeft == 1) {
+                    /*
+                     * the student has one more chance to submit left so maybe
+                     * we should ask the student if they are sure they want to submit
+                     */
+                } else if (numberOfSubmitsLeft > 1) {
+                    /*
+                     * the student has more than one chance to submit left so maybe
+                     * we should ask the student if they are sure they want to submit
+                     */
+                }
             }
 
-            this.numberOfSubmits++;
+            if (performSubmit) {
+
+                /*
+                 * set isSubmit to true so that when the component state is
+                 * created, it will know it is a submit component state
+                 * instead of just a save component state
+                 */
+                this.isSubmit = true;
+
+                // clear the isCorrect value because it will be evaluated again later
+                this.isCorrect = null;
+
+                // increment the submit counter
+                this.incrementSubmitCounter();
+
+                // check if the student has used up all of their submits
+                if (this.componentContent.maxSubmitCount != null && this.submitCounter >= this.componentContent.maxSubmitCount) {
+                    /*
+                     * the student has used up all of their submits so we will
+                     * disable the submit button
+                     */
+                    this.isDisabled = true;
+                    this.isSubmitButtonDisabled = true;
+                }
+
+                if (submitTriggeredBy == null || submitTriggeredBy === 'componentSubmitButton') {
+                    // tell the parent node that this component wants to submit
+                    this.$scope.$emit('componentSubmitTriggered', {nodeId: this.nodeId, componentId: this.componentId});
+                } else if (submitTriggeredBy === 'nodeSubmitButton') {
+                    // nothing extra needs to be performed
+                }
+            } else {
+                /*
+                 * the student has cancelled the submit so if a component state
+                 * is created, it will just be a regular save and not submit
+                 */
+                this.isSubmit = false;
+            }
         }
-    };
+    }
+
+    /**
+     * Increment the submit counter
+     */
+    incrementSubmitCounter() {
+        this.submitCounter++;
+    }
 
     /**
      * Check if the student has answered correctly
@@ -859,6 +1021,9 @@ class MatchController {
                             if (item != null) {
                                 let choiceId = item.id;
 
+                                // check if the choice has a correct bucket it should be in
+                                let choiceIdHasCorrectBucket = this.choiceHasCorrectBucket(choiceId);
+
                                 // get the feedback object for the bucket and choice
                                 let feedbackObject = this.getFeedbackObject(bucketId, choiceId);
 
@@ -868,12 +1033,38 @@ class MatchController {
                                     let feedbackPosition = feedbackObject.position;
                                     let feedbackIsCorrect = feedbackObject.isCorrect;
 
-                                    // set the default feedback if none is authored
-                                    if (feedback) {
-                                        if (feedbackIsCorrect) {
-                                            feedback = this.$translate('CORRECT');
-                                        } else {
-                                            feedback = this.$translate('INCORRECT');
+                                    if (this.hasCorrectAnswer) {
+
+                                        if (!choiceIdHasCorrectBucket) {
+                                            /*
+                                             * the component has a correct answer but there
+                                             * is no correct bucket for the current choice
+                                             */
+
+                                            if (bucketId == this.sourceBucketId) {
+                                                /*
+                                                 * the choice is in the source bucket and
+                                                 * the choice does not have a correct bucket
+                                                 * so we will mark the choice as correct
+                                                 */
+                                                feedbackIsCorrect = true;
+                                            }
+                                        }
+                                    }
+
+                                    if (feedback == null || feedback == '') {
+                                        // there is no authored feedback
+
+                                        if (this.hasCorrectAnswer) {
+                                            /*
+                                             * there is a correct answer for the component
+                                             * so we will show default feedback
+                                             */
+                                            if (feedbackIsCorrect) {
+                                                feedback = this.$translate('CORRECT');
+                                            } else {
+                                                feedback = this.$translate('INCORRECT');
+                                            }
                                         }
                                     }
 
@@ -951,6 +1142,16 @@ class MatchController {
                                     }
                                 }
 
+                                if (!this.hasCorrectAnswer) {
+                                    /*
+                                     * the component does not have a correct answer
+                                     * so we will clear the isCorrect and isIncorrectPosition
+                                     * fields
+                                     */
+                                    item.isCorrect = null;
+                                    item.isIncorrectPosition = null;
+                                }
+
                                 if (excludeIds.indexOf(choiceId) > -1) {
                                     // don't show feedback for choices that should be excluded
                                     item.feedback = null;
@@ -962,12 +1163,34 @@ class MatchController {
             }
         }
 
-        /*
-         * set the isCorrect value into the controller
-         * so we can read it later
-         */
-        this.isCorrect = isCorrect;
+        if (this.hasCorrectAnswer) {
+            /*
+             * set the isCorrect value into the controller
+             * so we can read it later
+             */
+            this.isCorrect = isCorrect;
+        } else {
+            this.isCorrect = null;
+        }
     };
+
+    /**
+     * Get the array of feedback
+     * @return the array of feedback objects
+     */
+    getFeedback() {
+        var feedback = null;
+
+        var componentContent = this.componentContent;
+
+        if (componentContent != null) {
+
+            // get the feedback from the component content
+            feedback = componentContent.feedback;
+        }
+
+        return feedback;
+    }
 
     /**
      * Get the feedback object for the combination of bucket and choice
@@ -978,54 +1201,49 @@ class MatchController {
     getFeedbackObject(bucketId, choiceId) {
         var feedbackObject = null;
 
-        var componentContent = this.componentContent;
+        // get the feedback
+        var feedback = this.getFeedback();
 
-        if (componentContent != null) {
+        if (feedback != null) {
 
-            // get the feedback
-            var feedback = componentContent.feedback;
+            /*
+             * loop through the feedback. each element in the feedback represents
+             * a bucket
+             */
+            for (var f = 0; f < feedback.length; f++) {
 
-            if (feedback != null) {
+                // get a bucket feedback object
+                var bucketFeedback = feedback[f];
 
-                /*
-                 * loop through the feedback. each element in the feedback represents
-                 * a bucket
-                 */
-                for (var f = 0; f < feedback.length; f++) {
+                if (bucketFeedback != null) {
 
-                    // get a bucket feedback object
-                    var bucketFeedback = feedback[f];
+                    // get the bucket id
+                    var tempBucketId = bucketFeedback.bucketId;
 
-                    if (bucketFeedback != null) {
+                    if (bucketId === tempBucketId) {
+                        // we have found the bucket we are looking for
 
-                        // get the bucket id
-                        var tempBucketId = bucketFeedback.bucketId;
+                        var choices = bucketFeedback.choices;
 
-                        if (bucketId === tempBucketId) {
-                            // we have found the bucket we are looking for
+                        if (choices != null) {
 
-                            var choices = bucketFeedback.choices;
+                            // loop through all the choice feedback
+                            for (var c = 0; c < choices.length; c++) {
+                                var choiceFeedback = choices[c];
 
-                            if (choices != null) {
+                                if (choiceFeedback != null) {
+                                    var tempChoiceId = choiceFeedback.choiceId;
 
-                                // loop through all the choice feedback
-                                for (var c = 0; c < choices.length; c++) {
-                                    var choiceFeedback = choices[c];
-
-                                    if (choiceFeedback != null) {
-                                        var tempChoiceId = choiceFeedback.choiceId;
-
-                                        if (choiceId === tempChoiceId) {
-                                            // we have found the choice we are looking for
-                                            feedbackObject = choiceFeedback;
-                                            break;
-                                        }
+                                    if (choiceId === tempChoiceId) {
+                                        // we have found the choice we are looking for
+                                        feedbackObject = choiceFeedback;
+                                        break;
                                     }
                                 }
+                            }
 
-                                if (feedbackObject != null) {
-                                    break;
-                                }
+                            if (feedbackObject != null) {
+                                break;
                             }
                         }
                     }
@@ -1047,11 +1265,17 @@ class MatchController {
         this.isDirty = true;
         this.$scope.$emit('componentDirty', {componentId: this.componentId, isDirty: true});
 
+        this.isSubmitDirty = true;
+        this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: true});
+
         // clear out the save message
         this.setSaveMessage('', null);
 
         // get this part id
         var componentId = this.getComponentId();
+
+        this.isCorrect = null;
+        this.isLatestComponentStateSubmit = false;
 
         /*
          * the student work in this component has changed so we will tell
@@ -1063,8 +1287,6 @@ class MatchController {
 
         // create a component state populated with the student data
         this.createComponentState(action).then((componentState) => {
-
-            this.processLatestSubmit();
             this.$scope.$emit('componentStudentDataChanged', {componentId: componentId, componentState: componentState});
         });
     };
@@ -1084,27 +1306,55 @@ class MatchController {
 
             let studentData = {};
 
+
+            if (action === 'submit') {
+
+                /*
+                 * check if the choices are in the correct buckets and also
+                 * display feedback
+                 */
+                this.checkAnswer();
+
+                if (this.hasCorrectAnswer && this.isCorrect != null) {
+                    /*
+                     * there are correct choices so we will set whether the
+                     * student was correct
+                     */
+                    studentData.isCorrect = this.isCorrect;
+                }
+
+                /*
+                 * the latest component state is a submit. this is used to
+                 * determine if we should show the feedback.
+                 */
+                this.isLatestComponentStateSubmit = true;
+            } else {
+
+                // clear the feedback in the choices
+                this.clearFeedback();
+                this.processLatestSubmit();
+
+                /*
+                 * the latest component state is not a submit. this is used to
+                 * determine if we should show the feedback.
+                 */
+                this.isLatestComponentStateSubmit = false;
+            }
+
             // set the buckets into the student data
             studentData.buckets = this.getCopyOfBuckets();
 
-            // set the number of submits into the student data
-            studentData.numberOfSubmits = this.numberOfSubmits;
+            // the student submitted this work
+            componentState.isSubmit = this.isSubmit;
 
-            if (this.isCorrect != null) {
-                // set whether the student was correct
-                studentData.isCorrect = this.isCorrect;
-            }
+            // set the submit counter
+            studentData.submitCounter = this.submitCounter;
 
-            if (this.isSubmit) {
-                // the student submitted this work
-                componentState.isSubmit = this.isSubmit;
-
-                /*
-                 * reset the isSubmit value so that the next component state
-                 * doesn't maintain the same value
-                 */
-                this.isSubmit = false;
-            }
+            /*
+             * reset the isSubmit value so that the next component state
+             * doesn't maintain the same value
+             */
+            this.isSubmit = false;
 
             //set the student data into the component state
             componentState.studentData = studentData;
@@ -1761,21 +2011,29 @@ class MatchController {
     /**
      * Get the bucket by id from the authoring component content
      * @param id the bucket id
+     * @param buckets (optional) the buckets to get the bucket from
      * @returns the bucket object from the authoring component content
      */
-    getBucketById(id) {
+    getBucketById(id, buckets) {
 
         var bucket = null;
 
-        // get the buckets
-        var buckets = this.buckets ? this.buckets : this.authoringComponentContent.buckets;
+        if (buckets == null) {
+            if (this.buckets != null) {
+                // get the buckets from the component
+                buckets = this.buckets;
+            } else {
+                // get the buckets from the authoring component content
+                buckets = this.authoringComponentContent.buckets;
+            }
+        }
 
         // loop through the buckets
         for (var b = 0; b < buckets.length; b++) {
             var tempBucket = buckets[b];
 
             if (tempBucket != null) {
-                if (id === tempBucket.id) {
+                if (id == tempBucket.id) {
                     // we have found the bucket we want
                     bucket = tempBucket;
                     break;
@@ -2148,6 +2406,201 @@ class MatchController {
 
         // the authoring component content has changed so we will save the project
         this.authoringViewComponentChanged();
+    }
+
+    /**
+     * Check if the component has been authored with a correct choice
+     * @return whether the component has been authored with a correct choice
+     */
+    hasCorrectChoices() {
+        var result = false;
+
+        // get the component content
+        var componentContent = this.componentContent;
+
+        if (componentContent != null) {
+
+            // get the buckets
+            var buckets = componentContent.feedback;
+
+            if (buckets != null) {
+
+                // loop through all the buckets
+                for (var b = 0; b < buckets.length; b++) {
+                    var bucket = buckets[b];
+
+                    if (bucket != null) {
+
+                        // get the choices
+                        var choices = bucket.choices;
+
+                        if (choices != null) {
+
+                            // loop through all the choices
+                            for (var c = 0; c < choices.length; c++) {
+                                var choice = choices[c];
+
+                                if (choice != null) {
+                                    if (choice.isCorrect) {
+                                        // there is a correct choice
+                                        return true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return false;
+    };
+
+    /**
+     * Remove a choice from a bucket
+     * @param choiceId the choice id we want to remove
+     * @param bucketId remove the choice from this bucket
+     */
+    removeChoiceFromBucket(choiceId, bucketId) {
+
+        if (choiceId != null && bucketId != null) {
+
+            // get the bucket
+            var bucket = this.getBucketById(bucketId);
+
+            if (bucket != null) {
+
+                // get the choices in the bucket
+                var bucketItems = bucket.items;
+
+                if (bucketItems != null) {
+
+                    // loop through all the choices in the bucket
+                    for (var i = 0; i < bucketItems.length; i++) {
+                        var bucketItem = bucketItems[i];
+
+                        if (bucketItem != null && bucketItem.id === choiceId) {
+                            // we have found the choice we want to remove
+                            bucketItems.splice(i, 1);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Clear the feedback and isCorrect fields in all the choices
+     */
+    clearFeedback() {
+
+        // get all the choices
+        var choices = this.getChoices();
+
+        if (choices != null) {
+
+            // loop through all the choices
+            for (var c = 0; c < choices.length; c++) {
+                var choice = choices[c];
+
+                if (choice != null) {
+                    // set the feedback fields to null
+                    choice.isCorrect = null;
+                    choice.isIncorrectPosition = null;
+                    choice.feedback = null;
+                }
+            }
+        }
+    }
+
+    /**
+     * Check if a choice has a correct bucket
+     * @param choiceId the choice id
+     * @return whether the choice has a correct bucket
+     */
+    choiceHasCorrectBucket(choiceId) {
+
+        var buckets = this.getFeedback();
+
+        if (buckets != null) {
+
+            // loop through all the buckets
+            for (var b = 0; b < buckets.length; b++) {
+                var bucket = buckets[b];
+
+                if (bucket != null) {
+                    var choices = bucket.choices;
+
+                    if (choices != null) {
+
+                        // loop through all the choices in the bucket
+                        for (var c = 0; c < choices.length; c++) {
+                            var choice = choices[c];
+
+                            if (choice != null && choice.choiceId === choiceId) {
+                                // we have found the choice we are looking for
+
+                                if (choice.isCorrect) {
+                                    /*
+                                     * the item is correct when placed in this bucket
+                                     * which means this choice does have a correct
+                                     * bucket
+                                     */
+                                    return true;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Check if the choice has a correct position
+     * @param choiceId the choice id
+     * @return whether the choice has a correct position in any bucket
+     */
+    choiceHasCorrectPosition(choiceId) {
+        var buckets = this.getFeedback();
+
+        if (buckets != null) {
+
+            // loop through all the buckets
+            for (var b = 0; b < buckets.length; b++) {
+                var bucket = buckets[b];
+
+                if (bucket != null) {
+                    var choices = bucket.choices;
+
+                    if (choices != null) {
+
+                        // loop through all the choices in the bucket
+                        for (var c = 0; c < choices.length; c++) {
+                            var choice = choices[c];
+
+                            if (choice != null && choice.choiceId === choiceId) {
+                                // we have found the choice we are looking for
+
+                                if (choice.position != null) {
+                                    /*
+                                     * the item has a position when placed in this bucket
+                                     * which means this choice does have a correct
+                                     * position
+                                     */
+                                    return true;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return false;
     }
 }
 
