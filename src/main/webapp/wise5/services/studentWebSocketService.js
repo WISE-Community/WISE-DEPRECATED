@@ -90,6 +90,7 @@ var StudentWebSocketService = function () {
                 // save the new annotation locally
                 var annotationData = data.annotationData;
                 this.StudentDataService.AnnotationService.addOrUpdateAnnotation(annotationData);
+                this.$rootScope.$broadcast('newAnnotationReceived', { annotation: annotationData });
 
                 // fire the new notification
                 var notificationData = data.notificationData;

@@ -12,7 +12,7 @@ $notebook-sidebar-width: 56px;
     border-radius: 4px 4px 0 0;
     margin: 0;
     height: 100%;
-    
+
     .note-toolbar {
         margin: -8px -8px 8px;
         padding: 4px;
@@ -20,12 +20,12 @@ $notebook-sidebar-width: 56px;
         border-top: 1px solid color('gray-light');
         border-bottom: 1px solid color('gray-light');
         border-radius: 0;
-        
+
         .btn-group {
             margin-top: 0;
         }
     }
-    
+
     .note-btn {
         border: 0 none;
         border-top-left-radius: 0;
@@ -48,8 +48,7 @@ $notebook-sidebar-width: 56px;
 .notes-visible {
     @media only screen and (min-width: $layout-breakpoint-sm) {
         .notebook-report-container {
-            //right: 336px;
-            right: 416px;
+            right: 516px;
             transition: right 250ms;
         }
     }
@@ -96,9 +95,9 @@ $notebook-sidebar-width: 56px;
     h1, h2, h3, h4 {
         font-size: rem(2.2);
     }
-    
+
     background-color: #ffffff;
-    
+
     .note-editor.note-frame {
         border: 0 none;
         border-top: 1px solid color('gray-light');
@@ -106,7 +105,7 @@ $notebook-sidebar-width: 56px;
         padding: 0;
         box-shadow: none;
     }
-    
+
     .note-resizebar {
         display: none;
     }
@@ -127,13 +126,13 @@ $notebook-sidebar-width: 56px;
             max-width: none;
             height: auto;
             width: auto;
-            
+
             .notebook-report {
                 border-radius: 0;
             }
         }
     }
-    
+
     .notebook-tools--full {
         display: none;
     }
@@ -277,6 +276,7 @@ $notebook-sidebar-width: 56px;
     margin: 0;
     padding: 0 8px;
     color: #ffffff;
+    background-color: color('gray-darkest');
     border-bottom-left-radius: $card-border-radius;
     border-bottom-right-radius: $card-border-radius;
 
@@ -449,6 +449,12 @@ $notebook-sidebar-width: 56px;
 .notebook-sidebar {
     @media only screen and (min-width: $layout-breakpoint-xs) {
         width: 400px;
+        max-width: none;
+    }
+
+    @media only screen and (min-width: $layout-breakpoint-sm) {
+        width: 500px;
+        max-width: none;
     }
 }
 
@@ -457,19 +463,15 @@ $notebook-sidebar-width: 56px;
     overflow: auto;
     margin-top: 16px;
     margin-bottom: 76px;
-    
+
     .notebook-item {
         width: 100%;
     }
-    
+
     .notebook-item__content {
         height: 200px;
         min-width: 0;
     }
-}
-
-.notebook-items--insert {
-    margin-top: 0;
 }
 
 @media only screen and (max-width: ($layout-breakpoint-xs - 1)) {

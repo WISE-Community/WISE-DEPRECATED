@@ -151,14 +151,14 @@ const NotebookItem = {
                 <span class="notebook-item__content__location"><md-icon> place </md-icon><span class="md-body-1">{{$ctrl.getItemNodePosition()}}</span></span>
                 <span flex></span>
                 <md-button class="md-icon-button"
-                           ng-if="$ctrl.item.serverDeleteTime == null"
+                           ng-if="$ctrl.item.serverDeleteTime == null && !$ctrl.isChooseMode"
                            aria-label="Delete notebook item"
                            ng-click="$ctrl.doDelete($event)">
                     <md-icon> delete </md-icon>
                     <md-tooltip md-direction="top">{{ 'DELETE' | translate }}</md-tooltip>
                 </md-button>
                 <md-button class="md-icon-button"
-                           ng-if="$ctrl.item.serverDeleteTime != null"
+                           ng-if="$ctrl.item.serverDeleteTime != null && !$ctrl.isChooseMode"
                            aria-label="Revive notebook item"
                            ng-click="$ctrl.doRevive($event)">
                     <md-icon> undo </md-icon>

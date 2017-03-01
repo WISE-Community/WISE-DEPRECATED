@@ -28,7 +28,7 @@ class NotebookController {
         this.itemId = null;
         this.item = null;
         this.config = this.NotebookService.config;
-        
+
         if (!this.config.enabled) {
             return;
         }
@@ -201,9 +201,11 @@ class NotebookController {
         this.reportVisible = false;
     }*/
 
-    setInsertMode() {
-        this.insertMode = true;
-        this.notesVisible = true;
+    setInsertMode(value) {
+        this.insertMode = value;
+        if (value) {
+            this.notesVisible = true;
+        }
     }
 
     insert(value, $event) {
@@ -235,13 +237,14 @@ const Notebook = {
                                notes-visible="$ctrl.notesVisible"
                                on-open="$ctrl.open(value, event)"></notebook-launcher>
             <notebook-report ng-if="$ctrl.config.itemTypes.report.enabled"
-                             visible="$ctrl.reportVisible"
                              insert-content="$ctrl.insertContent"
                              insert-mode="$ctrl.insertMode"
                              config="$ctrl.config"
                              reportId="$ctrl.reportId"
+                             visible="$ctrl.reportVisible"
+                             workgroup-id="$ctrl.workgroupId"
                              on-collapse="$ctrl.insertMode=false"
-                             on-insert="$ctrl.setInsertMode()"></notebook-container>
+                             on-set-insert-mode="$ctrl.setInsertMode(value)"></notebook-container>
         </div>
         <notebook-notes ng-if="$ctrl.config.enabled"
                         notebook="$ctrl.notebook"
@@ -250,7 +253,8 @@ const Notebook = {
                         insert-mode="$ctrl.insertMode"
                         workgroup-id="$ctrl.workgroupId"
                         on-close="$ctrl.closeNotes()"
-                        on-insert="$ctrl.insert(value, event)"></notebook-notes>`,
+                        on-insert="$ctrl.insert(value, event)"
+                        on-set-insert-mode="$ctrl.setInsertMode(value)"></notebook-notes>`,
     controller: NotebookController
 };
 

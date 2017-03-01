@@ -76,6 +76,18 @@ class StudentDataService {
                 });
             })
         });
+
+        /**
+         * Listen for the 'newAnnotationReceived' event which is fired when
+         * student receives a new annotation from the server
+         */
+        this.$rootScope.$on('newAnnotationReceived', (event, args) => {
+            if (args) {
+                // get the annotation that was saved to the server
+                let annotation = args.annotation;
+                this.handleAnnotationReceived(annotation);
+            }
+        });
     }
 
     retrieveStudentData() {
@@ -1276,6 +1288,19 @@ class StudentDataService {
             this.studentData.annotations.push(annotation);
         }
     };
+
+    handleAnnotationReceived(annotation) {
+        // add the annotation to the local annotations array
+        this.studentData.annotations.push(annotation);
+
+        if (annotation.notebookItemId) {
+            // broadcast the event that a new notebook item annotation has been received
+            this.$rootScope.$broadcast('notebookItemAnnotationReceived', {annotation: annotation});
+        } else {
+            // broadcast the event that a new annotation has been received
+            this.$rootScope.$broadcast('annotationReceived', {annotation: annotation});
+        }
+    }
 
     saveComponentEvent(component, category, event, data) {
         if (component == null || category == null || event == null) {

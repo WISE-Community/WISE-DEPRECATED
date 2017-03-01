@@ -177,14 +177,11 @@ md-input-container {
     &.md-raised {
         &:not([disabled]) {
             @include md-shadow-bottom-z-1();
-        }
-    }
 
-    &:not([disabled]) {
-        &.md-raised {
-            &.md-focused {
+            &.md-focused, &:focus {
                 @include md-shadow-bottom-z-1();
             }
+
             &:active {
                 @include md-shadow-bottom-z-2();
             }

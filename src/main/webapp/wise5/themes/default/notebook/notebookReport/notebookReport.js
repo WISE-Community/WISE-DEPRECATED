@@ -9,13 +9,15 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var NotebookReportController = function () {
-    function NotebookReportController($filter, $mdSidenav, ConfigService, NotebookService, ProjectService) {
+    function NotebookReportController($filter, $mdSidenav, $scope, AnnotationService, ConfigService, NotebookService, ProjectService) {
         var _this = this;
 
         _classCallCheck(this, NotebookReportController);
 
         this.$filter = $filter;
         this.$mdSidenav = $mdSidenav;
+        this.$scope = $scope;
+        this.AnnotationService = AnnotationService;
         this.ConfigService = ConfigService;
         this.NotebookService = NotebookService;
         this.ProjectService = ProjectService;
@@ -48,10 +50,23 @@ var NotebookReportController = function () {
                 return;
             }
         }
+        // get the max score
+        this.maxScore = 0;
+        var localNotebookItemId = null; // unique id that is local to this student, that identifies a note and its revisions. e.g. "finalReport", "xyzabc"
+        if (this.reportItem.content != null && this.reportItem.content.reportId != null) {
+            localNotebookItemId = this.reportItem.localNotebookItemId;
+            var reportNoteContent = this.NotebookService.getReportNoteContentByReportId(this.reportItem.content.reportId);
+            if (reportNoteContent != null && reportNoteContent.maxScore != null) {
+                this.maxScore = reportNoteContent.maxScore;
+            }
+        }
         // set the id to null so it can be inserted as initial version, as opposed to updated. this is true for both new and just-loaded reports.
         this.reportItem.id = null;
         // replace relative asset paths with absolute asset paths
         this.reportItemContent = this.ProjectService.injectAssetPaths(this.reportItem.content.content);
+        // get the latest annotations
+        this.latestAnnotations = this.AnnotationService.getLatestNotebookItemAnnotations(this.workgroupId, this.reportId);
+
         // start auto-saving
         this.startAutoSaveInterval();
 
@@ -141,6 +156,19 @@ var NotebookReportController = function () {
                 }
             }
         };
+
+        /**
+         * Captures the annotation received event, checks whether the given
+         * annotation id matches this report id, updates UI accordingly
+         */
+        this.$scope.$on('notebookItemAnnotationReceived', function (event, args) {
+            var annotation = args.annotation;
+            if (annotation.localNotebookItemId === _this.reportId) {
+                // there is a new annotation for this report
+                _this.hasNewAnnotation = true;
+                _this.latestAnnotations = _this.AnnotationService.getLatestNotebookItemAnnotations(_this.workgroupId, _this.reportId);
+            }
+        });
     }
 
     _createClass(NotebookReportController, [{
@@ -165,7 +193,7 @@ var NotebookReportController = function () {
     }, {
         key: 'addNotebookItemContent',
         value: function addNotebookItemContent($event) {
-            this.onInsert($event);
+            this.onSetInsertMode({ value: true });
         }
     }, {
         key: 'changed',
@@ -227,6 +255,7 @@ var NotebookReportController = function () {
             this.NotebookService.saveNotebookItem(this.reportItem.id, this.reportItem.nodeId, this.reportItem.localNotebookItemId, this.reportItem.type, this.reportItem.title, this.reportItem.content, this.reportItem.content.clientSaveTime).then(function (result) {
                 if (result) {
                     _this3.dirty = false;
+                    _this3.hasNewAnnotation = false;
                     _this3.reportItem.id = result.id; // set the reportNotebookItemId to the newly-incremented id so that future saves during this visit will be an update instead of an insert.
                     var serverSaveTime = result.serverSaveTime;
                     var clientSaveTime = _this3.ConfigService.convertToClientTimestamp(serverSaveTime);
@@ -254,7 +283,7 @@ var NotebookReportController = function () {
     return NotebookReportController;
 }();
 
-NotebookReportController.$inject = ['$filter', '$mdSidenav', 'ConfigService', 'NotebookService', 'ProjectService'];
+NotebookReportController.$inject = ['$filter', '$mdSidenav', '$scope', 'AnnotationService', 'ConfigService', 'NotebookService', 'ProjectService'];
 
 var NotebookReport = {
     bindings: {
@@ -263,11 +292,12 @@ var NotebookReport = {
         insertMode: '<',
         reportId: '<',
         visible: '<',
-        onInsert: '&',
-        onCollapse: '&'
+        workgroupId: '<',
+        onCollapse: '&',
+        onSetInsertMode: '&'
         //onClose: '&'
     },
-    template: '<div ng-if="($ctrl.visible && $ctrl.full && !$ctrl.collapsed) || $ctrl.insertMode" class="notebook-report-backdrop"></div>\n        <div ng-if="$ctrl.visible" class="notebook-report-container"\n              ng-class="{\'notebook-report-container__collapsed\': $ctrl.collapsed, \'notebook-report-container__full\': $ctrl.full && !$ctrl.collapsed}">\n            <md-card class="notebook-report md-whiteframe-3dp l-constrained-md">\n                <md-toolbar ng-click="$ctrl.collapsed ? $ctrl.collapse() : return" class="md-toolbar--wise md-toolbar--wise--sm notebook-report__toolbar">\n                    <md-toolbar-tools class="md-toolbar-tools">\n                        <md-icon>assignment</md-icon>&nbsp;\n                        <span ng-if="$ctrl.collapsed" class="overflow--ellipsis notebook-report__toolbar__title">{{$ctrl.reportItem.content.title}}</span>\n                        <span flex></span>\n                        <md-button aria-label="{{\'toggleFullScreen\' | translate}}" title="{{\'toggleFullScreen\' | translate}}" class="md-icon-button notebook-tools--full"\n                                   ng-if="!$ctrl.full || $ctrl.collapsed" ng-click="$ctrl.fullscreen()">\n                            <md-icon> zoom_out_map </md-icon>\n                        </md-button>\n                        <md-button aria-label="{{\'toggleFullScreen\' | translate}}" title="{{\'toggleFullScreen\' | translate}}" class="md-icon-button notebook-tools--full"\n                                   ng-if="$ctrl.full && !$ctrl.collapsed" ng-click="$ctrl.fullscreen()">\n                            <md-icon> fullscreen_exit </md-icon>\n                        </md-button>\n                        <md-button aria-label="{{\'collapse\' | translate}}" title="{{\'collapse\' | translate}}" class="md-icon-button"\n                                   ng-if="!$ctrl.collapsed" ng-click="$event.stopPropagation(); $ctrl.collapse()">\n                            <md-icon> arrow_drop_down </md-icon>\n                        </md-button>\n                        <md-button aria-label="{{\'restore\' | translate}}" title="{{\'restore\' | translate}}" class="md-icon-button"\n                                   ng-if="$ctrl.collapsed" ng-click="$event.stopPropagation(); $ctrl.collapse()">\n                            <md-icon> arrow_drop_up </md-icon>\n                        </md-button>\n                        <!--<md-button aria-label="{{\'close\' | translate}}" class="md-icon-button"\n                                   ng-click="$ctrl.onClose()">\n                            <md-icon> close </md-icon>\n                        </md-button>-->\n                    </md-toolbar-tools>\n                </md-toolbar>\n                <md-content class="notebook-report__content" flex ui-scrollpoint ui-scrollpoint-action="$ctrl.setEditorPosition">\n                    <div class="notebook-report__content__header" layout="row" layout-align="start center">\n                        <span style="color: {{$ctrl.config.itemTypes.report.label.color}};">{{$ctrl.reportItem.content.title}}</span>\n                        <span flex></span>\n                        <md-icon aria-label="{{$ctrl.reportItem.content.title}} info" style="color: {{$ctrl.config.itemTypes.report.label.color}};">\n                            info\n                            <md-tooltip md-direction="left">{{$ctrl.reportItem.content.prompt}}</md-tooltip>\n                        </md-icon>\n                    </div>\n                    <summernote id="{{$ctrl.reportId}}"\n                                class="notebook-item--report__content"\n                                ng-model="$ctrl.reportItemContent"\n                                ng-change="$ctrl.changed($ctrl.reportItemContent)"\n                                config="$ctrl.summernoteOptions"></summernote>\n                </md-content>\n                <md-card-actions class="notebook-report__actions">\n                    <div id="{{$ctrl.reportId}}-toolbar"></div>\n                    <div layout="row" layout-align="start center">\n                        <md-button class="md-primary md-raised button--small"\n                                   aria-label="{{ \'save\' | translate }}"\n                                   ng-disabled="!$ctrl.dirty"\n                                   ng-click="$ctrl.saveNotebookReportItem()">{{ \'save\' | translate }}</md-button>\n                        <span ng-show="$ctrl.saveMessage.text"\n                              class="component__actions__info md-caption">\n                              {{$ctrl.saveMessage.text}} <span class="component__actions__more"><md-tooltip md-direction="top">{{ $ctrl.saveMessage.time | amDateFormat:\'ddd, MMM D YYYY, h:mm a\' }}</md-tooltip><span am-time-ago="$ctrl.saveMessage.time"></span></span>\n                        </span>\n                    </div>\n                </md-card-actions>\n            </md-card>\n        </div>',
+    template: '<div ng-if="($ctrl.visible && $ctrl.full && !$ctrl.collapsed) || $ctrl.insertMode" class="notebook-report-backdrop"></div>\n        <div ng-if="$ctrl.visible" class="notebook-report-container"\n              ng-class="{\'notebook-report-container__collapsed\': $ctrl.collapsed, \'notebook-report-container__full\': $ctrl.full && !$ctrl.collapsed}">\n            <md-card class="notebook-report md-whiteframe-3dp l-constrained">\n                <md-toolbar ng-click="$ctrl.collapsed ? $ctrl.collapse() : return" class="md-toolbar--wise md-toolbar--wise--sm notebook-report__toolbar">\n                    <md-toolbar-tools class="md-toolbar-tools">\n                        <md-icon>assignment</md-icon>&nbsp;\n                        <span ng-if="$ctrl.collapsed" class="overflow--ellipsis notebook-report__toolbar__title">{{$ctrl.reportItem.content.title}}</span>\n                        <span flex></span>\n                        <md-button aria-label="{{\'toggleFullScreen\' | translate}}" title="{{\'toggleFullScreen\' | translate}}" class="md-icon-button notebook-tools--full"\n                                   ng-click="$ctrl.fullscreen()">\n                            <md-icon> zoom_out_map </md-icon>\n                        </md-button>\n                        <md-button aria-label="{{\'collapse\' | translate}}" title="{{\'collapse\' | translate}}" class="md-icon-button"\n                                   ng-if="!$ctrl.collapsed" ng-click="$event.stopPropagation(); $ctrl.collapse()">\n                            <md-icon> arrow_drop_down </md-icon>\n                        </md-button>\n                        <md-button aria-label="{{\'restore\' | translate}}" title="{{\'restore\' | translate}}" class="md-icon-button"\n                                   ng-if="$ctrl.collapsed" ng-click="$event.stopPropagation(); $ctrl.collapse()">\n                            <md-icon> arrow_drop_up </md-icon>\n                        </md-button>\n                    </md-toolbar-tools>\n                </md-toolbar>\n                <md-content class="notebook-report__content" flex ui-scrollpoint ui-scrollpoint-action="$ctrl.setEditorPosition">\n                    <div class="notebook-report__content__header" layout="row" layout-align="start center">\n                        <span style="color: {{$ctrl.config.itemTypes.report.label.color}};">{{$ctrl.reportItem.content.title}}</span>\n                        <span flex></span>\n                        <md-icon aria-label="{{$ctrl.reportItem.content.title}} info" style="color: {{$ctrl.config.itemTypes.report.label.color}};">\n                            info\n                            <md-tooltip md-direction="left">{{$ctrl.reportItem.content.prompt}}</md-tooltip>\n                        </md-icon>\n                    </div>\n                    <notebook-report-annotations annotations="$ctrl.latestAnnotations"\n                                                 has-new="$ctrl.hasNewAnnotation"\n                                                 max-score="$ctrl.maxScore"></notebook-report-annotations>\n                    <summernote id="{{$ctrl.reportId}}"\n                                class="notebook-item--report__content"\n                                ng-model="$ctrl.reportItemContent"\n                                ng-change="$ctrl.changed($ctrl.reportItemContent)"\n                                config="$ctrl.summernoteOptions"></summernote>\n                </md-content>\n                <md-card-actions class="notebook-report__actions">\n                    <div id="{{$ctrl.reportId}}-toolbar"></div>\n                    <div layout="row" layout-align="start center">\n                        <md-button class="md-primary md-raised button--small"\n                                   aria-label="{{ \'save\' | translate }}"\n                                   ng-disabled="!$ctrl.dirty"\n                                   ng-click="$ctrl.saveNotebookReportItem()">{{ \'save\' | translate }}</md-button>\n                        <span ng-show="$ctrl.saveMessage.text"\n                              class="component__actions__info md-caption">\n                              {{$ctrl.saveMessage.text}} <span class="component__actions__more"><md-tooltip md-direction="top">{{ $ctrl.saveMessage.time | amDateFormat:\'ddd, MMM D YYYY, h:mm a\' }}</md-tooltip><span am-time-ago="$ctrl.saveMessage.time"></span></span>\n                        </span>\n                    </div>\n                </md-card-actions>\n            </md-card>\n        </div>',
     controller: NotebookReportController
 };
 

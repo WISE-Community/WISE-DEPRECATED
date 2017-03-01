@@ -5,7 +5,10 @@ $avatar-icon-padding-lg: 8px !default;
 // 2. Base
 body {
   background: color('body-bg');
-  overflow: hidden;
+
+  &.vle {
+      overflow: hidden;
+  }
 }
 
 // Typography

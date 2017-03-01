@@ -20,6 +20,10 @@ var _notebookReport = require('./notebookReport/notebookReport');
 
 var _notebookReport2 = _interopRequireDefault(_notebookReport);
 
+var _notebookReportAnnotations = require('./notebookReportAnnotations/notebookReportAnnotations');
+
+var _notebookReportAnnotations2 = _interopRequireDefault(_notebookReportAnnotations);
+
 var _notebookLauncher = require('./notebookLauncher/notebookLauncher');
 
 var _notebookLauncher2 = _interopRequireDefault(_notebookLauncher);
@@ -32,6 +36,7 @@ NotebookComponents.component('notebook', _notebook2.default);
 NotebookComponents.component('notebookItem', _notebookItem2.default);
 NotebookComponents.component('notebookNotes', _notebookNotes2.default);
 NotebookComponents.component('notebookReport', _notebookReport2.default);
+NotebookComponents.component('notebookReportAnnotations', _notebookReportAnnotations2.default);
 NotebookComponents.component('notebookLauncher', _notebookLauncher2.default);
 
 exports.default = NotebookComponents;

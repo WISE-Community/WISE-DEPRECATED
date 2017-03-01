@@ -1,14 +1,35 @@
 .annotations--student {
-    margin: 12px 2px;
+    margin: 16px 4px 16px 62px;
+    position: relative;
+    font-size: rem(1.5);
 
     hr {
-        margin: 8px 0;
+        margin: 10px 0 8px;
         border-color: rgba(0,0,0,.12);
+    }
+
+    &:after {
+        content: "";
+        position: absolute;
+        width: 0;
+        height: 0;
+        left: -16px;
+        right: auto;
+        top: 0px;
+        bottom: auto;
+        border-top: 20px solid transparent;
+        border-bottom: 20px solid transparent;
+        border-right: 16px solid color('gray-darker');
     }
 }
 
+.annotations--student--report {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
 .component-section.flex-gt-sm-100 {
-    .annotations--student {
+    /*.annotations--student {
         @media only screen and (min-width: ($layout-breakpoint-xs)) {
             margin-left: 16px;
             margin-right: 16px;
@@ -18,31 +39,35 @@
             margin-left: 24px;
             margin-right: 24px;
         }
-    }
+    }*/
 }
 
 .annotations--student__header {
     position: relative;
-    border-top-left-radius: 4px;
+    //border-top-left-radius: 4px;
     border-top-right-radius: 4px;
-    padding: 12px;
-    font-weight: 500;
+    padding: 10px 12px;
+    font-weight: 600;
     transition: all 1s;
+    color: #ffffff;
 }
 
 .annotations--student__avatar {
-    background-color: #ffffff;
+    background-color: color('accent-1');
     padding: 2px;
     position: absolute;
+    top: 0;
+    left: -62px;
 }
 
 .annotations--student__icon {
     transition: all 1s;
+    color: #ffffff;
 }
 
 .annotations--student__title {
-    margin-left: 64px;
-    color: #ffffff;
+    //margin-left: 64px;
+    //color: #ffffff;
 
     //padding: 8px 12px;
     //border-radius: 4px;
@@ -56,7 +81,7 @@
     //margin-top: -6px;
     //padding: 12px 16px;
     //border-top: 1px solid color('gray-light');
-    padding: 32px 16px 12px;
+    padding: 12px;
     //background-color: color('gray-lightest');
     border-bottom-left-radius: $card-border-radius;
     border-bottom-right-radius: $card-border-radius;
@@ -75,11 +100,11 @@
 }
 
 .annotations--student__status {
-    background-color: #ffffff;
+    //background-color: #ffffff;
     display: inline-block;
     margin-left: 8px;
     margin: 0 6px;
-    font-size: rem(1.4);
+    font-size: rem(1.2);
 
     &.ng-enter, &.ng-leave {
         transition: all 1s;
@@ -104,9 +129,9 @@
 
 .annotations--inside {
     .annotations--student {
-        margin: 8px 8px 12px;
+        margin-left: 72px;
 
-        @media only screen and (min-width: ($layout-breakpoint-xs)) {
+        /*@media only screen and (min-width: ($layout-breakpoint-xs)) {
             margin-left: 16px;
             margin-right: 16px;
         }
@@ -114,6 +139,6 @@
         @media only screen and (min-width: ($layout-breakpoint-sm)) {
             margin-left: 24px;
             margin-right: 24px;
-        }
+        }*/
     }
 }

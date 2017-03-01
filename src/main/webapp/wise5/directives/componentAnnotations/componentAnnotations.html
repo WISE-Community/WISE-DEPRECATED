@@ -1,14 +1,12 @@
 <md-card class="annotations--student"
          ng-if="(componentAnnotationsCtrl.showScore && componentAnnotationsCtrl.annotations.score) || (componentAnnotationsCtrl.showComment && componentAnnotationsCtrl.annotations.comment)">
-    <md-card-title class="annotations--student__header"
-                   ng-class="{'info-bg': componentAnnotationsCtrl.isNewAnnotation(), 'gray-darker-bg': !componentAnnotationsCtrl.isNewAnnotation()}">
-        <div class="annotations--student__avatar avatar--icon avatar--square md-48 avatar md-whiteframe-1dp">
-            <md-icon class="annotations--student__icon md-48 accent-1">{{componentAnnotationsCtrl.icon}}</md-icon>
+    <md-card-title class="annotations--student__header gray-darker-bg">
+        <div class="annotations--student__avatar avatar--icon avatar--square md-36 avatar md-whiteframe-1dp">
+            <md-icon class="annotations--student__icon md-36">{{componentAnnotationsCtrl.icon}}</md-icon>
         </div>
         <div class="annotations--student__title" layout="row" flex>
             <span>{{componentAnnotationsCtrl.label}}</span>
-            <span flex></span>
-            <span ng-if="componentAnnotationsCtrl.isNewAnnotation()" class="badge annotations--student__status info animate-fade" translate="new"></span>
+            <span ng-if="componentAnnotationsCtrl.isNewAnnotation()" class="badge annotations--student__status info-bg animate-fade" translate="new"></span>
         </div>
     </md-card-title>
     <md-card-content class="annotations--student__body md-body-1">
