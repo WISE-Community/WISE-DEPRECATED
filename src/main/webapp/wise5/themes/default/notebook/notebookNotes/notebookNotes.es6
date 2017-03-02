@@ -3,31 +3,48 @@
 class NotebookNotesController {
     constructor($filter,
                 $rootScope) {
-                    
+
         this.$translate = $filter('translate');
         this.$rootScope = $rootScope;
-        
+
         this.$onChanges = (changes) => {
-            if(changes.notebook) {
+            if (changes.notebook) {
                 this.notebook = angular.copy(changes.notebook.currentValue);
+                this.hasNotes = Object.keys(this.notebook.items).length ? true : false;
+            }
+
+            if (changes.insertMode) {
+                if (changes.insertMode.currentValue) {
+                    this.color = '';
+                } else {
+                    this.color = this.config.itemTypes.note.label.color;
+                }
             }
         }
     }
-    
+
     getTitle() {
         let title = '';
         if (this.insertMode) {
-            title = this.$translate('addToReport', { reportLabel: this.config.itemTypes.report.label.singular });
+            title = this.$translate('selectItemToInsert');
         } else {
             title = this.config.itemTypes.note.label.link;
         }
         return title;
     }
-    
+
+    getColor() {
+        let color = '';
+        if (!this.isChooseMode) {
+            color = this.config.itemTypes.note.label.color;
+        }
+        return color;
+    }
+
     deleteItem($ev, $itemId, doDelete = true) {
         this.$rootScope.$broadcast('deleteNote', {itemId: $itemId, ev: $ev});
     }
-    
+
     reviveItem(ev, itemId) {
         this.$rootScope.$broadcast('reviveNote', {itemId: $itemId, ev: $ev});
     }
@@ -36,7 +53,7 @@ class NotebookNotesController {
         //this.NotebookService.editItem(ev, itemId);
         this.$rootScope.$broadcast('editNote', {itemId: $itemId, ev: $ev});
     }
-    
+
     select($ev, $itemId) {
         if (this.insertMode) {
             this.onInsert({value: $itemId, event: $ev});
@@ -44,13 +61,17 @@ class NotebookNotesController {
             this.editItem($ev, $itemId);
         }
     }
-    
+
     edit(itemId) {
         alert("Edit the item: " + itemId);
     }
 
     close($event) {
         this.onClose($event);
+    }
+
+    cancelInsertMode($event) {
+        this.onSetInsertMode({value: false});
     }
 }
 
@@ -67,7 +88,8 @@ const NotebookNotes = {
         notesVisible: '<',
         workgroupId: '<',
         onClose: '&',
-        onInsert: '&'
+        onInsert: '&',
+        onSetInsertMode: '&'
     },
     template:
         `<md-sidenav md-component-id="notes"
@@ -76,20 +98,27 @@ const NotebookNotes = {
                      md-disable-backdrop
                      layout="column"
                      class="md-sidenav-right notebook-sidebar">
-            <md-toolbar md-theme="light">
+            <md-toolbar md-theme="light" class="md-whiteframe-1dp">
                 <div class="md-toolbar-tools notebook-sidebar__header">
-                    <span style="color: {{$ctrl.config.itemTypes.note.label.color}}">{{$ctrl.getTitle()}}</span>
+                    <span style="color: {{$ctrl.color}}">{{$ctrl.getTitle()}}</span>
+                    <!--<md-button ng-if="$ctrl.insertMode"
+                               ng-click="$ctrl.cancelInsertMode($event)"
+                               md-theme="default"
+                               class="md-accent button--small"
+                               aria-label="{{ 'Cancel' | translate }}">
+                        {{ 'Cancel' | translate }}
+                    </md-button>-->
                     <span flex></span>
-                    <md-button ng-click="$ctrl.close($event)" class="md-icon-button" aria-label="{{ 'Close' | translate }}">
+                    <md-button ng-click="$ctrl.close($event)"
+                               class="md-icon-button"
+                               aria-label="{{ 'Close' | translate }}">
                         <md-icon>close</md-icon>
                     </md-button>
                 </div>
             </md-toolbar>
             <md-content>
-                <div ng-if="$ctrl.insertMode" class="heavy md-padding md-caption">
-                    {{ 'selectItemToInsert' | translate }}
-                </div>
                 <div class="notebook-items" ng-class="{'notebook-items--insert': $ctrl.insertMode}" layout="row" layout-wrap>
+                    <div class="md-padding" ng-if="!$ctrl.hasNotes" translate="noNotes" translate-value-term="{{$ctrl.config.itemTypes.note.label.plural}}"></div>
                     <notebook-item ng-repeat="(localNotebookItemId, notes) in $ctrl.notebook.items"
                                  ng-if="notes.last().type === 'note'"
                                  config="$ctrl.config"

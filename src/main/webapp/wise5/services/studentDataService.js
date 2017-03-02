@@ -80,6 +80,18 @@ var StudentDataService = function () {
                 });
             });
         });
+
+        /**
+         * Listen for the 'newAnnotationReceived' event which is fired when
+         * student receives a new annotation from the server
+         */
+        this.$rootScope.$on('newAnnotationReceived', function (event, args) {
+            if (args) {
+                // get the annotation that was saved to the server
+                var annotation = args.annotation;
+                _this.handleAnnotationReceived(annotation);
+            }
+        });
     }
 
     _createClass(StudentDataService, [{
@@ -1351,6 +1363,20 @@ var StudentDataService = function () {
         value: function addAnnotation(annotation) {
             if (this.studentData != null && this.studentData.annotations != null) {
                 this.studentData.annotations.push(annotation);
+            }
+        }
+    }, {
+        key: 'handleAnnotationReceived',
+        value: function handleAnnotationReceived(annotation) {
+            // add the annotation to the local annotations array
+            this.studentData.annotations.push(annotation);
+
+            if (annotation.notebookItemId) {
+                // broadcast the event that a new notebook item annotation has been received
+                this.$rootScope.$broadcast('notebookItemAnnotationReceived', { annotation: annotation });
+            } else {
+                // broadcast the event that a new annotation has been received
+                this.$rootScope.$broadcast('annotationReceived', { annotation: annotation });
             }
         }
     }, {

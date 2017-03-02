@@ -48,6 +48,11 @@ var VLEController = function () {
         // get the max score for the project
         this.maxScore = this.ProjectService.getMaxScore();
 
+        // get the notebook config
+        this.notebookConfig = this.NotebookService.getNotebookConfig();
+        // Get report, if enabled; assume only one report for now
+        this.reportItem = this.notebookConfig.itemTypes.report.notes[0];
+
         this.$scope.$on('currentNodeChanged', function (event, args) {
             var previousNode = args.previousNode;
             var currentNode = _this.StudentDataService.getCurrentNode();
@@ -436,10 +441,16 @@ var VLEController = function () {
                                 message = this.$translate('newRepliesOnDiscussionPost');
                             } else if (notificationType === "teacherToStudent") {
                                 message = this.$translate('newFeedbackFromTeacher');
-                                if (notification.data != null && notification.data.annotationId != null) {
-                                    var annotation = this.AnnotationService.getAnnotationById(notification.data.annotationId);
-                                    if (annotation != null && annotation.notebookItemId != null) {
-                                        notebookItemId = annotation.notebookItemId;
+                                if (notification.data != null) {
+                                    if (typeof notification.data === 'string') {
+                                        notification.data = angular.fromJson(notification.data);
+                                    }
+
+                                    if (notification.data.annotationId != null) {
+                                        var annotation = this.AnnotationService.getAnnotationById(notification.data.annotationId);
+                                        if (annotation != null && annotation.notebookItemId != null) {
+                                            notebookItemId = annotation.notebookItemId;
+                                        }
                                     }
                                 }
                             } else if (notificationType === "CRaterResult") {
@@ -616,18 +627,24 @@ var VLEController = function () {
             if (goToNodeId != null) {
                 this.StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(goToNodeId);
             } else if (notebookItemId != null) {
-                var notebookItem = this.NotebookService.getNotebookItemByNotebookItemId(notebookItemId);
+                // assume notification with notebookItemId is for the report for now,
+                // as we don't currently support annotations on notes
+
+                // show report annotations
+                this.$rootScope.$broadcast('showReportAnnotations', { ev: event });
+
+                /*let notebookItem = this.NotebookService.getNotebookItemByNotebookItemId(notebookItemId, this.workgroupId);
                 if (notebookItem != null) {
-                    if (notebookItem.type === "note") {
+                      if (notebookItem.type === "note") {
                         // open note view
-                        this.$rootScope.$broadcast('setNotebookFilter', { filter: "note", ev: event });
-                        this.$rootScope.$broadcast('toggleNotebook', { ev: event, open: true });
+                        this.$rootScope.$broadcast('setNotebookFilter', {filter: "note", ev: event});
+                        this.$rootScope.$broadcast('toggleNotebook', {ev: event, open: true});
                     } else if (notebookItem.type === "report") {
                         // open report view
-                        this.$rootScope.$broadcast('setNotebookFilter', { filter: "report", ev: event });
-                        this.$rootScope.$broadcast('toggleNotebook', { ev: event, open: true });
+                        this.$rootScope.$broadcast('setNotebookFilter', {filter: "report", ev: event});
+                        this.$rootScope.$broadcast('toggleNotebook', {ev: event, open: true});
                     }
-                }
+                }*/
             }
         }
 

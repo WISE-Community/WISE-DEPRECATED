@@ -3,17 +3,23 @@
 class NotebookReportController {
     constructor($filter,
                 $mdSidenav,
+                $scope,
+                $timeout,
+                AnnotationService,
                 ConfigService,
                 NotebookService,
                 ProjectService) {
         this.$filter = $filter;
         this.$mdSidenav = $mdSidenav;
+        this.$scope = $scope;
+        this.$timeout = $timeout;
+        this.AnnotationService = AnnotationService;
         this.ConfigService = ConfigService;
         this.NotebookService = NotebookService;
         this.ProjectService = ProjectService;
-        
+
         this.$translate = this.$filter('translate');
-        
+
         this.full = false;
         this.collapsed = true;
 
@@ -24,7 +30,7 @@ class NotebookReportController {
             text: '',
             time: ''
         };
-        
+
         // assume only one report for now
         this.reportId = this.config.itemTypes.report.notes[0].reportId;
         this.reportItem = this.NotebookService.getLatestNotebookReportItemByReportId(this.reportId, this.workgroupId);
@@ -40,13 +46,26 @@ class NotebookReportController {
                 return;
             }
         }
+        // get the max score
+        this.maxScore = 0;
+        let localNotebookItemId = null;  // unique id that is local to this student, that identifies a note and its revisions. e.g. "finalReport", "xyzabc"
+        if (this.reportItem.content != null && this.reportItem.content.reportId != null) {
+            localNotebookItemId = this.reportItem.localNotebookItemId;
+            let reportNoteContent = this.NotebookService.getReportNoteContentByReportId(this.reportItem.content.reportId);
+            if (reportNoteContent != null && reportNoteContent.maxScore != null) {
+                this.maxScore = reportNoteContent.maxScore;
+            }
+        }
         // set the id to null so it can be inserted as initial version, as opposed to updated. this is true for both new and just-loaded reports.
         this.reportItem.id = null;
         // replace relative asset paths with absolute asset paths
         this.reportItemContent = this.ProjectService.injectAssetPaths(this.reportItem.content.content);
+        // get the latest annotations
+        this.latestAnnotations = this.AnnotationService.getLatestNotebookItemAnnotations(this.workgroupId, this.reportId);
+
         // start auto-saving
         this.startAutoSaveInterval();
-        
+
         // summernote editor options
         this.summernoteOptions = {
             toolbar: [
@@ -89,21 +108,21 @@ class NotebookReportController {
                 }
             }
         };
-        
+
         this.$onChanges = (changes) => {
             if (changes.insertContent && !changes.insertContent.isFirstChange() && changes.insertContent.currentValue) {
                 // a notebook item is being inserted into the report
                 let item = angular.copy(changes.insertContent.currentValue);
-                
+
                 // prepare summernote editor instance
                 let reportElement = $('#' + this.reportId);
                 reportElement.summernote('focus');
                 reportElement.summernote('restoreRange');
-                
+
                 // create a jQuery DOM element to insert into the Summernote report editor
                 let $item = $('<p>');
                 let hasAttachments = false;
-                
+
                 if (item.content) {
                     if (item.content.attachments) {
                         if (item.content.attachments.length) {
@@ -135,19 +154,51 @@ class NotebookReportController {
                         reportElement.summernote('insertNode', $item[0]);
                     }
                 }
-                
+
             }
         }
+
+        /**
+         * Captures the annotation received event, checks whether the given
+         * annotation id matches this report id, updates UI accordingly
+         */
+        this.$scope.$on('notebookItemAnnotationReceived', (event, args) => {
+            let annotation = args.annotation;
+            if (annotation.localNotebookItemId === this.reportId) {
+                // there is a new annotation for this report
+                this.hasNewAnnotation = true;
+                this.latestAnnotations = this.AnnotationService.getLatestNotebookItemAnnotations(this.workgroupId, this.reportId);
+            }
+        });
+
+        /**
+         * Captures the show report annotations event, opens report (if collapsed)
+         * and scrolls to the report annotations display
+         */
+        this.$scope.$on('showReportAnnotations', (args) => {
+            if (this.collapsed) {
+                // open the report
+                this.collapse();
+            }
+
+            // scroll to report annotations (bottom)
+            let $notebookReportContent = $('.notebook-report__content');
+            $timeout(() => {
+                $notebookReportContent.animate({
+                    scrollTop: $notebookReportContent.prop('scrollHeight')
+                }, 500);
+            }, 500);
+        });
     }
-    
+
     collapse() {
         this.collapsed = !this.collapsed;
-        
+
         if (this.collapsed) {
             this.onCollapse();
         }
     }
-    
+
     fullscreen() {
         if (this.collapsed) {
             this.full = true;
@@ -156,15 +207,15 @@ class NotebookReportController {
             this.full = !this.full;
         }
     }
-    
+
     addNotebookItemContent($event) {
-        this.onInsert($event);
+        this.onSetInsertMode({value: true});
     }
-    
+
     changed(value) {
         // report content had changed
         this.dirty = true;
-        
+
         /*
          * remove the absolute asset paths
          * e.g.
@@ -174,7 +225,7 @@ class NotebookReportController {
          */
         this.reportItem.content.content = this.ConfigService.removeAbsoluteAssetPaths(value);
     }
-    
+
     /**
      * Start the auto save interval for this report
      */
@@ -189,14 +240,14 @@ class NotebookReportController {
             }
         }, this.autoSaveInterval);
     }
-    
+
     /**
      * Stop the auto save interval for this report
      */
     stopAutoSaveInterval() {
         clearInterval(this.autoSaveIntervalId);
     }
-    
+
     /**
      * Save the notebook report item to server
      */
@@ -208,6 +259,7 @@ class NotebookReportController {
             .then((result) => {
                 if (result) {
                     this.dirty = false;
+                    this.hasNewAnnotation = false;
                     this.reportItem.id = result.id; // set the reportNotebookItemId to the newly-incremented id so that future saves during this visit will be an update instead of an insert.
                     let serverSaveTime = result.serverSaveTime;
                     let clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
@@ -217,7 +269,7 @@ class NotebookReportController {
                 }
             });
     }
-    
+
     /**
      * Set the message next to the save button
      * @param message the message to display
@@ -232,6 +284,9 @@ class NotebookReportController {
 NotebookReportController.$inject = [
     '$filter',
     '$mdSidenav',
+    '$scope',
+    '$timeout',
+    'AnnotationService',
     'ConfigService',
     'NotebookService',
     'ProjectService'
@@ -244,27 +299,24 @@ const NotebookReport = {
         insertMode: '<',
         reportId: '<',
         visible: '<',
-        onInsert: '&',
-        onCollapse: '&'
+        workgroupId: '<',
+        onCollapse: '&',
+        onSetInsertMode: '&'
         //onClose: '&'
     },
     template:
         `<div ng-if="($ctrl.visible && $ctrl.full && !$ctrl.collapsed) || $ctrl.insertMode" class="notebook-report-backdrop"></div>
         <div ng-if="$ctrl.visible" class="notebook-report-container"
               ng-class="{'notebook-report-container__collapsed': $ctrl.collapsed, 'notebook-report-container__full': $ctrl.full && !$ctrl.collapsed}">
-            <md-card class="notebook-report md-whiteframe-3dp l-constrained-md">
+            <md-card class="notebook-report md-whiteframe-3dp l-constrained">
                 <md-toolbar ng-click="$ctrl.collapsed ? $ctrl.collapse() : return" class="md-toolbar--wise md-toolbar--wise--sm notebook-report__toolbar">
                     <md-toolbar-tools class="md-toolbar-tools">
                         <md-icon>assignment</md-icon>&nbsp;
                         <span ng-if="$ctrl.collapsed" class="overflow--ellipsis notebook-report__toolbar__title">{{$ctrl.reportItem.content.title}}</span>
                         <span flex></span>
                         <md-button aria-label="{{'toggleFullScreen' | translate}}" title="{{'toggleFullScreen' | translate}}" class="md-icon-button notebook-tools--full"
-                                   ng-if="!$ctrl.full || $ctrl.collapsed" ng-click="$ctrl.fullscreen()">
+                                   ng-click="$ctrl.fullscreen()">
                             <md-icon> zoom_out_map </md-icon>
-                        </md-button>
-                        <md-button aria-label="{{'toggleFullScreen' | translate}}" title="{{'toggleFullScreen' | translate}}" class="md-icon-button notebook-tools--full"
-                                   ng-if="$ctrl.full && !$ctrl.collapsed" ng-click="$ctrl.fullscreen()">
-                            <md-icon> fullscreen_exit </md-icon>
                         </md-button>
                         <md-button aria-label="{{'collapse' | translate}}" title="{{'collapse' | translate}}" class="md-icon-button"
                                    ng-if="!$ctrl.collapsed" ng-click="$event.stopPropagation(); $ctrl.collapse()">
@@ -274,14 +326,8 @@ const NotebookReport = {
                                    ng-if="$ctrl.collapsed" ng-click="$event.stopPropagation(); $ctrl.collapse()">
                             <md-icon> arrow_drop_up </md-icon>
                         </md-button>
-                        <!--<md-button aria-label="{{'close' | translate}}" class="md-icon-button"
-                                   ng-click="$ctrl.onClose()">
-                            <md-icon> close </md-icon>
-                        </md-button>-->
                     </md-toolbar-tools>
-                </md-toolbar>
-                <md-content class="notebook-report__content" flex ui-scrollpoint ui-scrollpoint-action="$ctrl.setEditorPosition">
-                    <div class="notebook-report__content__header" layout="row" layout-align="start center">
+                    <div class="notebook-report__content__header md-whiteframe-1dp" layout="row" layout-align="start center">
                         <span style="color: {{$ctrl.config.itemTypes.report.label.color}};">{{$ctrl.reportItem.content.title}}</span>
                         <span flex></span>
                         <md-icon aria-label="{{$ctrl.reportItem.content.title}} info" style="color: {{$ctrl.config.itemTypes.report.label.color}};">
@@ -289,11 +335,16 @@ const NotebookReport = {
                             <md-tooltip md-direction="left">{{$ctrl.reportItem.content.prompt}}</md-tooltip>
                         </md-icon>
                     </div>
+                </md-toolbar>
+                <md-content class="notebook-report__content" flex>
                     <summernote id="{{$ctrl.reportId}}"
                                 class="notebook-item--report__content"
                                 ng-model="$ctrl.reportItemContent"
                                 ng-change="$ctrl.changed($ctrl.reportItemContent)"
                                 config="$ctrl.summernoteOptions"></summernote>
+                    <notebook-report-annotations annotations="$ctrl.latestAnnotations"
+                                                 has-new="$ctrl.hasNewAnnotation"
+                                                 max-score="$ctrl.maxScore"></notebook-report-annotations>
                 </md-content>
                 <md-card-actions class="notebook-report__actions">
                     <div id="{{$ctrl.reportId}}-toolbar"></div>

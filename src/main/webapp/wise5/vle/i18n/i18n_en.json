@@ -3,6 +3,7 @@
     "accountMenuPoints": "{{point}} points",
     "accountMenuTeam": "(Team {{id}})",
     "accountMenuTotalScore": "Total Score",
+    "actionRequired": "Action Required",
     "addItem": "Add Item",
     "addItemTo": "Add Item to",
     "addNewNote": "Add New Note",

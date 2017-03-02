@@ -173,18 +173,16 @@ md-input-container {
 
 .md-button {
     padding: 0 8px;
+    font-weight: 700;
 
     &.md-raised {
         &:not([disabled]) {
             @include md-shadow-bottom-z-1();
-        }
-    }
 
-    &:not([disabled]) {
-        &.md-raised {
-            &.md-focused {
+            &.md-focused, &:focus {
                 @include md-shadow-bottom-z-1();
             }
+
             &:active {
                 @include md-shadow-bottom-z-2();
             }
@@ -197,7 +195,7 @@ md-input-container {
 }
 
 md-select-menu md-option[selected] {
-    font-weight: 600;
+    font-weight: 700;
 }
 
 md-dialog {

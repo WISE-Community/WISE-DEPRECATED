@@ -20,6 +20,15 @@ var NotebookNotesController = function () {
         this.$onChanges = function (changes) {
             if (changes.notebook) {
                 _this.notebook = angular.copy(changes.notebook.currentValue);
+                _this.hasNotes = Object.keys(_this.notebook.items).length ? true : false;
+            }
+
+            if (changes.insertMode) {
+                if (changes.insertMode.currentValue) {
+                    _this.color = '';
+                } else {
+                    _this.color = _this.config.itemTypes.note.label.color;
+                }
             }
         };
     }
@@ -29,11 +38,20 @@ var NotebookNotesController = function () {
         value: function getTitle() {
             var title = '';
             if (this.insertMode) {
-                title = this.$translate('addToReport', { reportLabel: this.config.itemTypes.report.label.singular });
+                title = this.$translate('selectItemToInsert');
             } else {
                 title = this.config.itemTypes.note.label.link;
             }
             return title;
+        }
+    }, {
+        key: 'getColor',
+        value: function getColor() {
+            var color = '';
+            if (!this.isChooseMode) {
+                color = this.config.itemTypes.note.label.color;
+            }
+            return color;
         }
     }, {
         key: 'deleteItem',
@@ -72,6 +90,11 @@ var NotebookNotesController = function () {
         value: function close($event) {
             this.onClose($event);
         }
+    }, {
+        key: 'cancelInsertMode',
+        value: function cancelInsertMode($event) {
+            this.onSetInsertMode({ value: false });
+        }
     }]);
 
     return NotebookNotesController;
@@ -87,9 +110,10 @@ var NotebookNotes = {
         notesVisible: '<',
         workgroupId: '<',
         onClose: '&',
-        onInsert: '&'
+        onInsert: '&',
+        onSetInsertMode: '&'
     },
-    template: '<md-sidenav md-component-id="notes"\n                     md-is-open="$ctrl.notesVisible"\n                     md-whiteframe="4"\n                     md-disable-backdrop\n                     layout="column"\n                     class="md-sidenav-right notebook-sidebar">\n            <md-toolbar md-theme="light">\n                <div class="md-toolbar-tools notebook-sidebar__header">\n                    <span style="color: {{$ctrl.config.itemTypes.note.label.color}}">{{$ctrl.getTitle()}}</span>\n                    <span flex></span>\n                    <md-button ng-click="$ctrl.close($event)" class="md-icon-button" aria-label="{{ \'Close\' | translate }}">\n                        <md-icon>close</md-icon>\n                    </md-button>\n                </div>\n            </md-toolbar>\n            <md-content>\n                <div ng-if="$ctrl.insertMode" class="heavy md-padding md-caption">\n                    {{ \'selectItemToInsert\' | translate }}\n                </div>\n                <div class="notebook-items" ng-class="{\'notebook-items--insert\': $ctrl.insertMode}" layout="row" layout-wrap>\n                    <notebook-item ng-repeat="(localNotebookItemId, notes) in $ctrl.notebook.items"\n                                 ng-if="notes.last().type === \'note\'"\n                                 config="$ctrl.config"\n                                 item-id="localNotebookItemId"\n                                 is-edit-allowed="!$ctrl.insertMode"\n                                 is-choose-mode="$ctrl.insertMode"\n                                 workgroup-id="$ctrl.workgroupId"\n                                 on-select="$ctrl.select($ev, $itemId)"\n                                 on-delete="$ctrl.deleteItem($ev, $itemId)"\n                                 style="display: flex;"\n                                 flex="100"\n                                 flex-gt-xs="50">\n                    </notebook-item>\n                    <!-- TODO: show deleted items somewhere\n                        <notebook-item ng-repeat="(localNotebookItemId, notes) in $ctrl.notebook.deletedItems"\n                                       ng-if="notes.last().type === \'note\'"\n                                       config="$ctrl.config"\n                                       item-id="localNotebookItemId"\n                                       is-edit-allowed="!$ctrl.insertMode"\n                                       is-choose-mode="$ctrl.insertMode"\n                                       workgroup-id="$ctrl.workgroupId"\n                                       on-select="$ctrl.select($ev, $itemId)"\n                                       on-revive="$ctrl.deleteItem($ev, $itemId)"\n                                       style="display: flex;"\n                                       flex="100"\n                                       flex-gt-xs="50">\n                        </notebook-item>\n                    -->\n                </div> <!-- TODO: add questions when supported -->\n            </md-content>\n        </md-sidenav>',
+    template: '<md-sidenav md-component-id="notes"\n                     md-is-open="$ctrl.notesVisible"\n                     md-whiteframe="4"\n                     md-disable-backdrop\n                     layout="column"\n                     class="md-sidenav-right notebook-sidebar">\n            <md-toolbar md-theme="light" class="md-whiteframe-1dp">\n                <div class="md-toolbar-tools notebook-sidebar__header">\n                    <span style="color: {{$ctrl.color}}">{{$ctrl.getTitle()}}</span>\n                    <!--<md-button ng-if="$ctrl.insertMode"\n                               ng-click="$ctrl.cancelInsertMode($event)"\n                               md-theme="default"\n                               class="md-accent button--small"\n                               aria-label="{{ \'Cancel\' | translate }}">\n                        {{ \'Cancel\' | translate }}\n                    </md-button>-->\n                    <span flex></span>\n                    <md-button ng-click="$ctrl.close($event)"\n                               class="md-icon-button"\n                               aria-label="{{ \'Close\' | translate }}">\n                        <md-icon>close</md-icon>\n                    </md-button>\n                </div>\n            </md-toolbar>\n            <md-content>\n                <div class="notebook-items" ng-class="{\'notebook-items--insert\': $ctrl.insertMode}" layout="row" layout-wrap>\n                    <div class="md-padding" ng-if="!$ctrl.hasNotes" translate="noNotes" translate-value-term="{{$ctrl.config.itemTypes.note.label.plural}}"></div>\n                    <notebook-item ng-repeat="(localNotebookItemId, notes) in $ctrl.notebook.items"\n                                 ng-if="notes.last().type === \'note\'"\n                                 config="$ctrl.config"\n                                 item-id="localNotebookItemId"\n                                 is-edit-allowed="!$ctrl.insertMode"\n                                 is-choose-mode="$ctrl.insertMode"\n                                 workgroup-id="$ctrl.workgroupId"\n                                 on-select="$ctrl.select($ev, $itemId)"\n                                 on-delete="$ctrl.deleteItem($ev, $itemId)"\n                                 style="display: flex;"\n                                 flex="100"\n                                 flex-gt-xs="50">\n                    </notebook-item>\n                    <!-- TODO: show deleted items somewhere\n                        <notebook-item ng-repeat="(localNotebookItemId, notes) in $ctrl.notebook.deletedItems"\n                                       ng-if="notes.last().type === \'note\'"\n                                       config="$ctrl.config"\n                                       item-id="localNotebookItemId"\n                                       is-edit-allowed="!$ctrl.insertMode"\n                                       is-choose-mode="$ctrl.insertMode"\n                                       workgroup-id="$ctrl.workgroupId"\n                                       on-select="$ctrl.select($ev, $itemId)"\n                                       on-revive="$ctrl.deleteItem($ev, $itemId)"\n                                       style="display: flex;"\n                                       flex="100"\n                                       flex-gt-xs="50">\n                        </notebook-item>\n                    -->\n                </div> <!-- TODO: add questions when supported -->\n            </md-content>\n        </md-sidenav>',
     controller: NotebookNotesController
 };
 

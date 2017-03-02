@@ -44,10 +44,6 @@ var _listenForDeleteKeypress = require('./listenForDeleteKeypress/listenForDelet
 
 var _listenForDeleteKeypress2 = _interopRequireDefault(_listenForDeleteKeypress);
 
-var _notebookItemAnnotations = require('./notebookItemAnnotations/notebookItemAnnotations');
-
-var _notebookItemAnnotations2 = _interopRequireDefault(_notebookItemAnnotations);
-
 var _notebookItemGrading = require('./notebookItemGrading/notebookItemGrading');
 
 var _notebookItemGrading2 = _interopRequireDefault(_notebookItemGrading);
@@ -62,8 +58,10 @@ var _wiselink2 = _interopRequireDefault(_wiselink);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-//import Notebook from './notebook/notebook';
 var Components = angular.module('components', [/*'notebook'*/]);
+//import Notebook from './notebook/notebook';
+//import NotebookItemAnnotations from './notebookItemAnnotations/notebookItemAnnotations';
+
 
 Components.component('annotation', _annotation2.default);
 Components.component('compile', _compile2.default);
@@ -75,7 +73,7 @@ Components.component('draggable', _draggable2.default);
 Components.component('globalAnnotations', _globalAnnotations2.default);
 Components.component('globalAnnotationsList', _globalAnnotationsList2.default);
 Components.component('listenForDeleteKeypress', _listenForDeleteKeypress2.default);
-Components.component('notebookItemAnnotations', _notebookItemAnnotations2.default);
+//Components.component('notebookItemAnnotations', NotebookItemAnnotations);
 Components.component('notebookItemGrading', _notebookItemGrading2.default);
 Components.component('possibleScore', _possibleScore2.default);
 Components.component('wiselink', _wiselink2.default);

@@ -70,10 +70,11 @@ class StudentWebSocketService {
             this.$rootScope.$broadcast('newNotification', data.data);
         } else if (messageType === 'annotationNotification') {
             // a new annotation + notification combo object was sent over websocket
-            
+
             // save the new annotation locally
             let annotationData = data.annotationData;
             this.StudentDataService.AnnotationService.addOrUpdateAnnotation(annotationData);
+            this.$rootScope.$broadcast('newAnnotationReceived', {annotation: annotationData});
 
             // fire the new notification
             let notificationData = data.notificationData;
