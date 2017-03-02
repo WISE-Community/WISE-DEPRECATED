@@ -1614,13 +1614,15 @@ var DataExportController = function () {
                         var studentDataJSONCell = row[COLUMN_INDEX_STUDENT_DATA];
                         if (row[COLUMN_INDEX_TYPE] === "report") {
                             if (studentDataJSONCell.content != null) {
-                                row[COLUMN_INDEX_STUDENT_RESPONSE] = _this5.escapeContent(studentDataJSONCell.content);
+                                //row[COLUMN_INDEX_STUDENT_RESPONSE] = this.escapeContent(studentDataJSONCell.content);
+                                row[COLUMN_INDEX_STUDENT_RESPONSE] = _this5.UtilService.removeHTMLTags(studentDataJSONCell.content);
                             } else {
                                 row[COLUMN_INDEX_STUDENT_RESPONSE] = "";
                             }
                         } else if (row[COLUMN_INDEX_TYPE] === "note") {
                             if (studentDataJSONCell.text != null) {
-                                row[COLUMN_INDEX_STUDENT_RESPONSE] = _this5.escapeContent(studentDataJSONCell.text);
+                                //row[COLUMN_INDEX_STUDENT_RESPONSE] = this.escapeContent(studentDataJSONCell.text);
+                                row[COLUMN_INDEX_STUDENT_RESPONSE] = _this5.UtilService.removeHTMLTags(studentDataJSONCell.text);
                             } else {
                                 row[COLUMN_INDEX_STUDENT_RESPONSE] = "";
                             }
