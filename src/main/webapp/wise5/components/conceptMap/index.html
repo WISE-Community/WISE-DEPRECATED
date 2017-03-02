@@ -287,6 +287,11 @@
                                ng-click="conceptMapController.resetConceptMap()">
                                {{ 'RESET' | translate }}
                     </md-button>
+                    <md-button class="md-accent"
+                               ng-click='conceptMapController.snip($event)'
+                               ng-if='conceptMapController.showSnipButton()'>
+                        <md-icon> content_cut </md-icon>  {{ 'ADD_TO_NOTEBOOK' | translate:{label:tableController.notebookConfig.label} }}
+                    </md-button>
                     <div id="conceptMapContainer" style="display: flex">
                         <div id="selectNodeBar" style="flex: 10; border: 1px solid black">
                             <div ng-repeat="availableNode in conceptMapController.availableNodes"
@@ -380,7 +385,7 @@
                            translate="SAVE"></md-button>
                 <md-button class="md-raised md-primary"
                            ng-click="conceptMapController.submitButtonClicked()"
-                           ng-disabled="conceptMapController.isDisabled || !conceptMapController.isSubmitDirty"
+                           ng-disabled="conceptMapController.isSubmitButtonDisabled || conceptMapController.isDisabled || !conceptMapController.isSubmitDirty"
                            ng-if="conceptMapController.isSubmitButtonVisible"
                            aria-label="Submit"
                            translate="SUBMIT"></md-button>

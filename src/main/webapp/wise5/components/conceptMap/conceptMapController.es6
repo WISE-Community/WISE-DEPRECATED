@@ -5,8 +5,10 @@ import 'svg.draggable.js';
 
 class ConceptMapController {
 
-    constructor($filter,
+    constructor($anchorScroll,
+                $filter,
                 $injector,
+                $location,
                 $mdDialog,
                 $q,
                 $rootScope,
@@ -17,13 +19,16 @@ class ConceptMapController {
                 ConfigService,
                 CRaterService,
                 NodeService,
+                NotebookService,
                 ProjectService,
                 StudentAssetService,
                 StudentDataService,
                 UtilService) {
 
+        this.$anchorScroll = $anchorScroll;
         this.$filter = $filter;
         this.$injector = $injector;
+        this.$location = $location;
         this.$mdDialog = $mdDialog;
         this.$q = $q;
         this.$rootScope = $rootScope;
@@ -34,6 +39,7 @@ class ConceptMapController {
         this.ConfigService = ConfigService;
         this.CRaterService = CRaterService;
         this.NodeService = NodeService;
+        this.NotebookService = NotebookService;
         this.ProjectService = ProjectService;
         this.StudentAssetService = StudentAssetService;
         this.StudentDataService = StudentDataService;
@@ -98,6 +104,9 @@ class ConceptMapController {
 
         // whether the submit button is disabled
         this.isSubmitButtonDisabled = false;
+
+        // whether the snip table button is shown or not
+        this.isSnipButtonVisible = true;
 
         // whether the advanced authoring textarea is displayed
         this.showAdvancedAuthoring = false;
@@ -254,11 +263,13 @@ class ConceptMapController {
                 this.isPromptVisible = false;
                 this.isSaveButtonVisible = false;
                 this.isSubmitButtonVisible = false;
+                this.isSnipButtonVisible = false;
                 this.isDisabled = true;
             } else if (this.mode === 'showPreviousWork') {
                 this.isPromptVisible = true;
                 this.isSaveButtonVisible = false;
                 this.isSubmitButtonVisible = false;
+                this.isSnipButtonVisible = false;
                 this.isDisabled = true;
             } else if (this.mode === 'authoring') {
                 this.isPromptVisible = true;
@@ -390,7 +401,10 @@ class ConceptMapController {
 
             // make sure the node id matches our parent node
             if (this.nodeId === nodeId) {
-                this.isSubmit = true;
+
+                // trigger the submit
+                var submitTriggeredBy = 'nodeSubmitButton';
+                this.submit(submitTriggeredBy);
             }
         }.bind(this));
 
@@ -416,9 +430,9 @@ class ConceptMapController {
 
                 // set save message
                 if (isSubmit) {
-                    this.setSaveMessage('SUBMITTED', clientSaveTime);
+                    this.setSaveMessage(this.$translate('SUBMITTED'), clientSaveTime);
 
-                    this.submit();
+                    this.lockIfNecessary();
 
                     // set isSubmitDirty to false because the component state was just submitted and notify node
                     this.isSubmitDirty = false;
@@ -935,152 +949,173 @@ class ConceptMapController {
      * Called when the student clicks the submit button
      */
     submitButtonClicked() {
+        // trigger the submit
+        var submitTriggeredBy = 'componentSubmitButton';
+        this.submit(submitTriggeredBy);
+    };
 
-        var performSubmit = true;
+    /**
+     * A submit was triggered by the component submit button or node submit button
+     * @param submitTriggeredBy what triggered the submit
+     * e.g. 'componentSubmitButton' or 'nodeSubmitButton'
+     */
+    submit(submitTriggeredBy) {
 
-        if (this.componentContent.maxSubmitCount != null) {
-            // there is a max submit count
+        if (this.isSubmitDirty) {
 
-            // calculate the number of submits this student has left
-            var numberOfSubmitsLeft = this.componentContent.maxSubmitCount - this.submitCounter;
+            var performSubmit = true;
 
-            var message = '';
+            if (this.componentContent.maxSubmitCount != null) {
+                // there is a max submit count
 
-            if (numberOfSubmitsLeft <= 0) {
+                // calculate the number of submits this student has left
+                var numberOfSubmitsLeft = this.componentContent.maxSubmitCount - this.submitCounter;
 
-                // the student does not have any more chances to submit
-                alert(this.$translate('conceptMap.youHaveNoMoreChances'));
-                performSubmit = false;
-            } else if (numberOfSubmitsLeft == 1) {
+                var message = '';
 
-                // ask the student if they are sure they want to submit
-                message = this.$translate('conceptMap.youHaveOneChance', {numberOfSubmitsLeft: numberOfSubmitsLeft});
-                performSubmit = confirm(message);
-            } else if (numberOfSubmitsLeft > 1) {
+                if (numberOfSubmitsLeft <= 0) {
 
-                // ask the student if they are sure they want to submit
-                message = this.$translate('conceptMap.youHaveMultipleChances', {numberOfSubmitsLeft: numberOfSubmitsLeft});
-                performSubmit = confirm(message);
+                    // the student does not have any more chances to submit
+                    alert(this.$translate('conceptMap.youHaveNoMoreChances'));
+                    performSubmit = false;
+                } else if (numberOfSubmitsLeft == 1) {
+
+                    // ask the student if they are sure they want to submit
+                    message = this.$translate('conceptMap.youHaveOneChance', {numberOfSubmitsLeft: numberOfSubmitsLeft});
+                    performSubmit = confirm(message);
+                } else if (numberOfSubmitsLeft > 1) {
+
+                    // ask the student if they are sure they want to submit
+                    message = this.$translate('conceptMap.youHaveMultipleChances', {numberOfSubmitsLeft: numberOfSubmitsLeft});
+                    performSubmit = confirm(message);
+                }
             }
-        }
 
-        if (performSubmit) {
-            // increment the submit counter
-            this.submitCounter++;
+            if (performSubmit) {
+                // increment the submit counter
+                this.submitCounter++;
 
-            // check if the student has used up all of their submits
-            if (this.componentContent.maxSubmitCount != null && this.submitCounter >= this.componentContent.maxSubmitCount) {
+                // check if the student has used up all of their submits
+                if (this.componentContent.maxSubmitCount != null && this.submitCounter >= this.componentContent.maxSubmitCount) {
+                    /*
+                     * the student has used up all of their submits so we will
+                     * disable the submit button
+                     */
+                    //this.isDisabled = true;
+                    this.isSubmitButtonDisabled = true;
+                }
+
+                // get the custom rule evaluator code that was authored
+                var customRuleEvaluator = this.componentContent.customRuleEvaluator;
+
+                // get the component content
+                var componentContent = this.componentContent;
+
+                // get the student concept map
+                var conceptMapData = this.getConceptMapData();
+
+                var thisConceptMapService = this.ConceptMapService;
+
+                // the result will be stored in this variable
+                var thisResult = {};
+
                 /*
-                 * the student has used up all of their submits so we will
-                 * disable the submit button
+                 * create the any function that can be called in the custom rule
+                 * evaluator code. the arguments to the any function are rule names.
+                 * for example if we are looking for any of the links below
+                 * Sun (Infrared Radiation) Space
+                 * Sun (Heat) Space
+                 * Sun (Solar Radiation) Space
+                 * we will call the any function like this
+                 * any("Sun (Infrared Radiation) Space", "Sun (Heat) Space", "Sun (Solar Radiation) Space")
+                 * these dynamic arguments will be placed in the arguments variable
                  */
-                this.isSubmitButtonDisabled = true;
-            }
+                var any = function() {
+                    return thisConceptMapService.any(componentContent, conceptMapData, arguments);
+                };
 
-            // get the custom rule evaluator code that was authored
-            var customRuleEvaluator = this.componentContent.customRuleEvaluator;
-
-            // get the component content
-            var componentContent = this.componentContent;
-
-            // get the student concept map
-            var conceptMapData = this.getConceptMapData();
-
-            var thisConceptMapService = this.ConceptMapService;
-
-            // the result will be stored in this variable
-            var thisResult = {};
-
-            /*
-             * create the any function that can be called in the custom rule
-             * evaluator code. the arguments to the any function are rule names.
-             * for example if we are looking for any of the links below
-             * Sun (Infrared Radiation) Space
-             * Sun (Heat) Space
-             * Sun (Solar Radiation) Space
-             * we will call the any function like this
-             * any("Sun (Infrared Radiation) Space", "Sun (Heat) Space", "Sun (Solar Radiation) Space")
-             * these dynamic arguments will be placed in the arguments variable
-             */
-            var any = function() {
-                return thisConceptMapService.any(componentContent, conceptMapData, arguments);
-            };
-
-            /*
-             * create the all function that can be called in the custom rule
-             * evaluator code. the arguments to the all function are rule names.
-             * for example if we are looking for all of the links below
-             * Sun (Infrared Radiation) Space
-             * Sun (Heat) Space
-             * Sun (Solar Radiation) Space
-             * we will call the any function like this
-             * all("Sun (Infrared Radiation) Space", "Sun (Heat) Space", "Sun (Solar Radiation) Space")
-             * these dynamic arguments will be placed in the arguments variable
-             */
-            var all = function() {
-                return thisConceptMapService.all(componentContent, conceptMapData, arguments);
-            }
-
-            /*
-             * create the setResult function that can be called in the custom rule
-             * evaluator code
-             */
-            var setResult = function(result) {
-                thisResult = result;
-            }
-
-            // run the custom rule evaluator
-            eval(customRuleEvaluator);
-
-            // remember the auto feedback result
-            this.autoFeedbackResult = thisResult;
-
-            var resultString = "";
-
-            if (this.componentContent.showAutoScore && thisResult.score != null) {
-                // display the score
-                resultString += this.$translate('SCORE') + ": " + thisResult.score;
-
-                if (this.componentContent.maxScore != null && this.componentContent.maxScore != '') {
-                    // show the max score as the denominator
-                    resultString += "/" + this.componentContent.maxScore;
+                /*
+                 * create the all function that can be called in the custom rule
+                 * evaluator code. the arguments to the all function are rule names.
+                 * for example if we are looking for all of the links below
+                 * Sun (Infrared Radiation) Space
+                 * Sun (Heat) Space
+                 * Sun (Solar Radiation) Space
+                 * we will call the any function like this
+                 * all("Sun (Infrared Radiation) Space", "Sun (Heat) Space", "Sun (Solar Radiation) Space")
+                 * these dynamic arguments will be placed in the arguments variable
+                 */
+                var all = function() {
+                    return thisConceptMapService.all(componentContent, conceptMapData, arguments);
                 }
-            }
 
-            if (this.componentContent.showAutoFeedback && thisResult.feedback != null) {
+                /*
+                 * create the setResult function that can be called in the custom rule
+                 * evaluator code
+                 */
+                var setResult = function(result) {
+                    thisResult = result;
+                }
+
+                // run the custom rule evaluator
+                eval(customRuleEvaluator);
+
+                // remember the auto feedback result
+                this.autoFeedbackResult = thisResult;
+
+                var resultString = "";
+
+                if (this.componentContent.showAutoScore && thisResult.score != null) {
+                    // display the score
+                    resultString += this.$translate('SCORE') + ": " + thisResult.score;
+
+                    if (this.componentContent.maxScore != null && this.componentContent.maxScore != '') {
+                        // show the max score as the denominator
+                        resultString += "/" + this.componentContent.maxScore;
+                    }
+                }
+
+                if (this.componentContent.showAutoFeedback && thisResult.feedback != null) {
+                    if (resultString != "") {
+                        // add a new line if the result string is not empty
+                        resultString += "<br/>";
+                    }
+
+                    // display the feedback
+                    resultString += this.$translate('FEEDBACK') + ": " + thisResult.feedback;
+                }
+
                 if (resultString != "") {
-                    // add a new line if the result string is not empty
-                    resultString += "<br/>";
+                    // show the auto feedback in a modal dialog
+                    this.$mdDialog.show(
+                        this.$mdDialog.alert()
+                        .parent(angular.element(document.querySelector('#feedbackDiv')))
+                        .clickOutsideToClose(true)
+                        .title(this.$translate('FEEDBACK'))
+                        .htmlContent(resultString)
+                        .ariaLabel(this.$translate('FEEDBACK'))
+                        .ok(this.$translate('CLOSE'))
+                    );
                 }
 
-                // display the feedback
-                resultString += this.$translate('FEEDBACK') + ": " + thisResult.feedback;
+                // remember the feedback string
+                this.autoFeedbackString = resultString;
+
+                this.isSubmit = true;
+
+                // tell the parent node that this component wants to submit
+                this.$scope.$emit('componentSubmitTriggered', {nodeId: this.nodeId, componentId: this.componentId});
+            } else {
+                /*
+                 * the student has cancelled the submit so if a component state
+                 * is created, it will just be a regular save and not submit
+                 */
+                this.isSubmit = false;
             }
-
-            if (resultString != "") {
-                // show the auto feedback in a modal dialog
-                this.$mdDialog.show(
-                    this.$mdDialog.alert()
-                    .parent(angular.element(document.querySelector('#feedbackDiv')))
-                    .clickOutsideToClose(true)
-                    .title(this.$translate('FEEDBACK'))
-                    .htmlContent(resultString)
-                    .ariaLabel(this.$translate('FEEDBACK'))
-                    .ok(this.$translate('CLOSE'))
-                );
-            }
-
-            // remember the feedback string
-            this.autoFeedbackString = resultString;
-
-            this.isSubmit = true;
-
-            // tell the parent node that this component wants to submit
-            this.$scope.$emit('componentSubmitTriggered', {nodeId: this.nodeId, componentId: this.componentId});
         }
     };
 
-    submit() {
+    lockIfNecessary() {
         // check if we need to lock the component after the student submits
         if (this.isLockAfterSubmit()) {
             this.isDisabled = true;
@@ -1149,9 +1184,10 @@ class ConceptMapController {
         var conceptMapData = this.getConceptMapData();
         studentData.conceptMapData = conceptMapData;
 
+        // the student submitted this work
+        componentState.isSubmit = this.isSubmit;
+
         if (this.isSubmit) {
-            // the student submitted this work
-            componentState.isSubmit = this.isSubmit;
 
             /*
              * reset the isSubmit value so that the next component state
@@ -1285,108 +1321,11 @@ class ConceptMapController {
      */
     createComponentStateAdditionalProcessing(deferred, componentState, action) {
 
-        var performCRaterScoring = false;
-
-        // determine if we need to perform CRater scoring
-        if (action == 'submit') {
-            if (this.isCRaterScoreOnSubmit(this.componentContent)) {
-                performCRaterScoring = true;
-            }
-        } else if (action == 'save') {
-            if (this.isCRaterScoreOnSave(this.componentContent)) {
-                performCRaterScoring = true;
-            }
-        } else if (action == 'change' || action == null) {
-            if (this.isCRaterScoreOnChange(this.componentContent)) {
-                performCRaterScoring = true;
-            }
-        }
-
-        if (performCRaterScoring) {
-            // we need to perform CRater scoring
-
-            var cRaterItemType = this.CRaterService.getCRaterItemType(this.componentContent);
-            var cRaterItemId = this.CRaterService.getCRaterItemId(this.componentContent);
-            var cRaterRequestType = 'scoring';
-            var cRaterResponseId = new Date().getTime();
-            var studentData = this.studentResponse;
-
-            /*
-             * display a dialog message while the student waits for their work
-             * to be scored by CRater
-             */
-            this.messageDialog = this.$mdDialog.show({
-                template: '<md-dialog aria-label="' + this.$translate('conceptMap.pleaseWait') + '"><md-dialog-content><div class="md-dialog-content">' + this.$translate('conceptMap.pleaseWaitWeAreScoringYourWork') + '</div></md-dialog-content></md-dialog>',
-                fullscreen: true,
-                escapeToClose: false
-            });
-
-            // make the CRater request to score the student data
-            this.CRaterService.makeCRaterRequest(cRaterItemType, cRaterItemId, cRaterRequestType, cRaterResponseId, studentData).then((result) => {
-
-                if (result != null) {
-
-                    // get the CRater response
-                    var data = result.data;
-
-                    if (data != null) {
-
-                        /*
-                         * annotations we put in the component state will be
-                         * removed from the component state and saved separately
-                         */
-                        componentState.annotations = [];
-
-                        // get the CRater score
-                        var score = data.score;
-                        var concepts = data.concepts;
-
-                        if (score != null) {
-                            // create the auto score annotation
-                            var autoScoreAnnotationData = {};
-                            autoScoreAnnotationData.value = score;
-                            autoScoreAnnotationData.maxAutoScore = this.ProjectService.getMaxScoreForComponent(this.nodeId, this.componentId);
-                            autoScoreAnnotationData.concepts = concepts;
-                            autoScoreAnnotationData.autoGrader = 'cRater';
-
-                            var autoScoreAnnotation = this.createAutoScoreAnnotation(autoScoreAnnotationData);
-                            componentState.annotations.push(autoScoreAnnotation);
-
-                            // get the feedback text
-                            var autoComment = this.CRaterService.getCRaterFeedbackTextByScore(this.componentContent, score);
-
-                            if (autoComment != null) {
-                                // create the auto comment annotation
-                                var autoCommentAnnotationData = {};
-                                autoCommentAnnotationData.value = autoComment;
-                                autoCommentAnnotationData.concepts = concepts;
-                                autoCommentAnnotationData.autoGrader = 'cRater';
-
-                                var autoCommentAnnotation = this.createAutoCommentAnnotation(autoCommentAnnotationData);
-                                componentState.annotations.push(autoCommentAnnotation);
-                            }
-                        }
-                    }
-                }
-
-                if (this.messageDialog != null) {
-                    /*
-                     * hide the dialog that tells the student to wait since
-                     * the work has been scored.
-                     */
-                    this.$mdDialog.hide(this.messageDialog);
-                }
-
-                // resolve the promise now that we are done performing additional processing
-                deferred.resolve(componentState);
-            });
-        } else {
-            /*
-             * we don't need to perform any additional processing so we can resolve
-             * the promise immediately
-             */
-            deferred.resolve(componentState);
-        }
+        /*
+         * we don't need to perform any additional processing so we can resolve
+         * the promise immediately
+         */
+        deferred.resolve(componentState);
     }
 
     /**
@@ -4597,11 +4536,256 @@ class ConceptMapController {
         // display the asset chooser
         this.$rootScope.$broadcast('openAssetChooser', params);
     }
+
+
+    /**
+     * Check whether we need to show the snip button
+     * @return whether to show the snip button
+     */
+    showSnipButton() {
+        if (this.NotebookService.isNotebookEnabled() && this.isSnipButtonVisible) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Snip the concept map by converting it to an image
+     * @param $event the click event
+     */
+    snip($event) {
+
+        // get the svg element. this will obtain an array.
+        var svgElement = angular.element('#svg_' + this.nodeId + '_' + this.componentId);
+
+        if (svgElement != null && svgElement.length > 0) {
+
+            // hide all the iframes otherwise html2canvas may cut off the table
+            this.UtilService.hideIFrames();
+
+            // scroll to the component so html2canvas doesn't cut off the table
+            this.$location.hash(this.componentId);
+            this.$anchorScroll();
+
+            // get the svg element
+            svgElement = svgElement[0];
+
+            // get the svg element as a string
+            var serializer = new XMLSerializer();
+            var svgString = serializer.serializeToString(svgElement);
+
+            // find all the images in the svg and replace them with Base64 images
+            this.getHrefToBase64ImageReplacements(svgString).then((images) => {
+
+                /*
+                 * Loop through all the image objects. Each object contains
+                 * an image href and a Base64 image.
+                 */
+                for (var i = 0; i < images.length; i++) {
+
+                    // get an image object
+                    var imagePair = images[i];
+
+                    // get the image href e.g. /wise/curriculum/25/assets/Sun.png
+                    var imageHref = imagePair.imageHref;
+
+                    // get the Base64 image
+                    var base64Image = imagePair.base64Image;
+
+                    // create a regex to match the image href
+                    var imageRegEx = new RegExp(imageHref, 'g');
+
+                    /*
+                     * replace all the instances of the image href with the
+                     * Base64 image
+                     */
+                    svgString = svgString.replace(imageRegEx, base64Image);
+                }
+
+                // create a canvas to draw the image on
+                var myCanvas = document.createElement("canvas");
+                var ctx = myCanvas.getContext("2d");
+
+                // create an svg blob
+                var svg = new Blob([svgString], {type:"image/svg+xml;charset=utf-8"});
+                var domURL = self.URL || self.webkitURL || self;
+                var url = domURL.createObjectURL(svg);
+                var image = new Image;
+
+                /*
+                 * set the UtilService in a local variable so we can access it
+                 * in the onload callback function
+                 */
+                var thisUtilService = this.UtilService;
+
+                // the function that is called after the image is fully loaded
+                image.onload = (event) => {
+
+                    // get the image that was loaded
+                    var image = event.target;
+
+                    // set the dimensions of the canvas
+                    myCanvas.width = image.width;
+                    myCanvas.height = image.height;
+                    ctx.drawImage(image, 0, 0);
+
+                    // get the canvas as a Base64 string
+                    var base64Image = myCanvas.toDataURL('image/png');
+
+                    // get the image object
+                    var imageObject = thisUtilService.getImageObjectFromBase64String(base64Image);
+
+                    // create a notebook item with the image populated into it
+                    this.NotebookService.addNewItem($event, imageObject);
+
+                    // we are done capturing the table so we will show the iframes again
+                    this.UtilService.showIFrames();
+
+                    /*
+                     * scroll to the component in case the view has shifted after
+                     * showing the iframe
+                     */
+                    this.$location.hash(this.componentId);
+                    this.$anchorScroll();
+                };
+
+                // set the src of the image so that the image gets loaded
+                image.src = url;
+            });
+        }
+    }
+
+    /**
+     * Get all the image hrefs in the svg string
+     * @param svgString the svg string
+     * @return an array of image hrefs
+     */
+    getImagesInSVG(svgString) {
+
+        // used to hold all the images we find
+        var images = [];
+
+        if (svgString != null) {
+
+            /*
+             * the regex to match href values in image elements
+             * e.g.
+             * if the svg contained in image element like this
+             * <image id="SvgjsImage1007" xlink:href="/wise/curriculum/25/assets/Sun.png" width="100" height="100"/>
+             * it would match it and the matching group would contain
+             * /wise/curriculum/25/assets/Sun.png
+             */
+            var regex = /<image.*?xlink:href="(.*?)".*?\/>/g;
+
+            // find the first match in the svg string
+            var result = regex.exec(svgString);
+
+            while(result != null) {
+
+                /*
+                 * get the href image from the match
+                 * e.g.
+                 * /wise/curriculum/25/assets/Sun.png
+                 */
+                var imageHref = result[1];
+
+                // add the href to our array of hrefs
+                images.push(imageHref);
+
+                // try to find the next match
+                result = regex.exec(svgString);
+            }
+        }
+
+        return images;
+    }
+
+    /**
+     * Get Base64 images from image hrefs
+     * @param svgString the svg string
+     * @return a promise that will return an array of objects. The objects will
+     * contain an image href and a Base64 image.
+     */
+    getHrefToBase64ImageReplacements(svgString) {
+
+        // an array to hold all the promises
+        var promises = [];
+
+        // get all the image hrefs
+        var imageHrefs = this.getImagesInSVG(svgString);
+
+        // loop through all the images
+        for (var i = 0; i < imageHrefs.length; i++) {
+
+            // get an image href
+            var imageHref = imageHrefs[i];
+
+            // get the Base64 of the image
+            var promise = this.getBase64Image(imageHref);
+
+            promises.push(promise);
+        }
+
+        return this.$q.all(promises);
+    }
+
+    /**
+     * Get the Base64 image from an image href. An image href will look like
+     * /wise/curriculum/25/assets/Sun.png
+     * @param imageHref the image href
+     * @return a promise that will return an object containing the image href
+     * and the Base64 image
+     */
+    getBase64Image(imageHref) {
+
+        var deferred = this.$q.defer();
+
+        // create the image object that we will load the image into
+        var image = new Image;
+
+        // create a new canvas to render the image in
+        var myCanvas = document.createElement("canvas");
+        var ctx = myCanvas.getContext("2d");
+
+        // the function that is called after the image is fully loaded
+        image.onload = function(event) {
+
+            // get the image that was loaded
+            var image = event.target;
+
+            // set the canvas dimensions to match the image
+            myCanvas.width = image.width;
+            myCanvas.height = image.height;
+
+            // draw the image in the canvas
+            ctx.drawImage(image, 0, 0);
+
+            // get the Base64 string of the canvas
+            var base64Image = myCanvas.toDataURL('image/png');
+
+            // create an object that will contain the image href and Base64 image
+            var result = {};
+            result.imageHref = imageHref;
+            result.base64Image = base64Image;
+
+            // resolve the promise with the object
+            deferred.resolve(result);
+        }
+
+        // load the image
+        image.src = imageHref;
+
+        // return the promise
+        return deferred.promise;
+    }
 };
 
 ConceptMapController.$inject = [
+    '$anchorScroll',
     '$filter',
     '$injector',
+    '$location',
     '$mdDialog',
     '$q',
     '$rootScope',
@@ -4612,6 +4796,7 @@ ConceptMapController.$inject = [
     'ConfigService',
     'CRaterService',
     'NodeService',
+    'NotebookService',
     'ProjectService',
     'StudentAssetService',
     'StudentDataService',
