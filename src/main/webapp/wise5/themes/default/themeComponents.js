@@ -16,14 +16,6 @@ var _nodeStatusIconController = require('./themeComponents/nodeStatusIcon/nodeSt
 
 var _nodeStatusIconController2 = _interopRequireDefault(_nodeStatusIconController);
 
-var _notebookMenuController = require('./themeComponents/notebookMenu/notebookMenuController');
-
-var _notebookMenuController2 = _interopRequireDefault(_notebookMenuController);
-
-var _notebookToolsController = require('./themeComponents/notebookTools/notebookToolsController');
-
-var _notebookToolsController2 = _interopRequireDefault(_notebookToolsController);
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var NavItem = {
@@ -53,27 +45,9 @@ var StepTools = {
     controller: 'StepToolsCtrl as stepToolsCtrl'
 };
 
-var NotebookMenu = {
-    bindings: {
-        nodeId: '<',
-        viewMode: '@',
-        notebookFilter: '<'
-    },
-    template: '<ng-include src="notebookMenuCtrl.getTemplateUrl()"></ng-include>',
-    controller: 'NotebookMenuCtrl as notebookMenuCtrl'
-};
-
-var NotebookTools = {
-    bindings: {
-        notebookFilter: '<'
-    },
-    template: '<ng-include src="notebookToolsCtrl.getTemplateUrl()"></ng-include>',
-    controller: 'NotebookToolsCtrl as notebookToolsCtrl'
-};
-
 var ThemeComponents = angular.module('theme.components', []);
 
-ThemeComponents.controller(_navItemController2.default.name, _navItemController2.default).controller(_stepToolsController2.default.name, _stepToolsController2.default).controller(_nodeStatusIconController2.default.name, _nodeStatusIconController2.default).controller(_notebookMenuController2.default.name, _notebookMenuController2.default).controller(_notebookToolsController2.default.name, _notebookToolsController2.default).component('navItem', NavItem).component('nodeStatusIcon', NodeStatusIcon).component('stepTools', StepTools).component('notebookMenu', NotebookMenu).component('notebookTools', NotebookTools);
+ThemeComponents.controller(_navItemController2.default.name, _navItemController2.default).controller(_stepToolsController2.default.name, _stepToolsController2.default).controller(_nodeStatusIconController2.default.name, _nodeStatusIconController2.default).component('navItem', NavItem).component('nodeStatusIcon', NodeStatusIcon).component('stepTools', StepTools);
 
 exports.default = ThemeComponents;
 //# sourceMappingURL=themeComponents.js.map
