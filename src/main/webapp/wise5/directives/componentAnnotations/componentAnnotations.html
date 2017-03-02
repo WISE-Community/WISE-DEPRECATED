@@ -12,9 +12,11 @@
     <md-card-content class="annotations--student__body md-body-1">
         <div ng-if="componentAnnotationsCtrl.showComment && componentAnnotationsCtrl.annotations.comment.data.value"><compile data="componentAnnotationsCtrl.annotations.comment.data.value"></compile></div>
         <hr ng-if="componentAnnotationsCtrl.annotations.comment" />
-        <div class="annotations--student__score md-body-2"
-             layout="row" laoyut-align="start center">
-            <span ng-if="componentAnnotationsCtrl.showScore && componentAnnotationsCtrl.annotations.score" translate="scoreLabelAndValue" translate-value-score="{{componentAnnotationsCtrl.annotations.score.data.value}}{{componentAnnotationsCtrl.maxScoreDisplay}}"></span>
+        <div layout="row" laoyut-align="start center">
+            <span ng-if="componentAnnotationsCtrl.showScore && componentAnnotationsCtrl.annotations.score"
+                  class="annotations--student__score"
+                  translate="scoreLabelAndValue"
+                  translate-value-score="{{componentAnnotationsCtrl.annotations.score.data.value}}{{componentAnnotationsCtrl.maxScoreDisplay}}"></span>
             <span flex></span>
             <span>
                 <span class="annotations__info" am-time-ago="componentAnnotationsCtrl.getLatestAnnotationTime()"></span>

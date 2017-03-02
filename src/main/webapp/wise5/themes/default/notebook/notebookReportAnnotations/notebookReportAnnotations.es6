@@ -148,9 +148,11 @@ const NotebookReportAnnotations = {
                 <md-card-content class="annotations--student__body md-body-1">
                     <div ng-if="$ctrl.showComment && $ctrl.annotations.comment.data.value"><compile data="$ctrl.annotations.comment.data.value"></compile></div>
                     <hr ng-if="$ctrl.annotations.comment" />
-                    <div class="annotations--student__score md-body-2"
-                         layout="row" laoyut-align="start center">
-                        <span ng-if="$ctrl.showScore && $ctrl.annotations.score" translate="scoreLabelAndValue" translate-value-score="{{$ctrl.annotations.score.data.value}}{{$ctrl.maxScoreDisplay}}"></span>
+                    <div layout="row" laoyut-align="start center">
+                        <span ng-if="$ctrl.showScore && $ctrl.annotations.score"
+                              class="annotations--student__score"
+                              translate="scoreLabelAndValue"
+                              translate-value-score="{{$ctrl.annotations.score.data.value}}{{$ctrl.maxScoreDisplay}}"></span>
                         <span flex></span>
                         <span>
                             <span class="annotations__info" am-time-ago="$ctrl.latestAnnotationTime"></span>

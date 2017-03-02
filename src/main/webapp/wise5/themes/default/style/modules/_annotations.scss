@@ -123,12 +123,15 @@
     }
 }
 
+.annotations--student__score {
+    font-weight: 700;
+}
+
 .annotations__info {
     font-style: italic;
     opacity: 0.8;
-    color: color('text-secondary');
     border-bottom: 1px dotted;
-    font-size: rem(1.2);
+    font-size: rem(1.3);
 }
 
 .annotations--inside {
