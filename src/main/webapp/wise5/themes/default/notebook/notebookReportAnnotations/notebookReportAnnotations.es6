@@ -134,7 +134,7 @@ const NotebookReportAnnotations = {
         maxScore: '<'
     },
     template:
-        `<div class="md-padding gray-light-bg" ng-if="$ctrl.show">
+        `<div class="md-padding gray-lightest-bg annotations-container--student--report" ng-if="$ctrl.show">
             <md-card class="annotations--student annotations--student--report">
                 <md-card-title class="annotations--student__header gray-darker-bg">
                     <div class="annotations--student__avatar avatar--icon avatar--square md-36 avatar md-whiteframe-1dp">

@@ -98,7 +98,7 @@ const NotebookNotes = {
                      md-disable-backdrop
                      layout="column"
                      class="md-sidenav-right notebook-sidebar">
-            <md-toolbar md-theme="light">
+            <md-toolbar md-theme="light" class="md-whiteframe-1dp">
                 <div class="md-toolbar-tools notebook-sidebar__header">
                     <span style="color: {{$ctrl.color}}">{{$ctrl.getTitle()}}</span>
                     <!--<md-button ng-if="$ctrl.insertMode"

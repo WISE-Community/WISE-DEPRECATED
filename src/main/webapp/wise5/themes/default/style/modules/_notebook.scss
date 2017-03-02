@@ -36,7 +36,7 @@ $notebook-sidebar-width: 56px;
 }
 
 .notebook-report-container {
-    height: 450px;
+    height: 550px;
     width: 450px;
     max-height: 90%;
     bottom: 0;
@@ -77,7 +77,7 @@ $notebook-sidebar-width: 56px;
     width: 300px;
     height: auto;
 
-    .notebook-report__content, .notebook-report__actions {
+    .notebook-report__content, .notebook-report__actions, .notebook-report__content__header {
         display: none;
     }
 }
@@ -100,7 +100,6 @@ $notebook-sidebar-width: 56px;
 
     .note-editor.note-frame {
         border: 0 none;
-        border-top: 1px solid color('gray-light');
         border-radius: 0;
         padding: 0;
         box-shadow: none;
@@ -113,6 +112,8 @@ $notebook-sidebar-width: 56px;
 
 .notebook-report__content__header {
     padding: 8px;
+    background-color: #ffffff;
+    font-size: rem(1.6);
 }
 
 @media only screen and (max-width: $layout-breakpoint-xs - 1) {

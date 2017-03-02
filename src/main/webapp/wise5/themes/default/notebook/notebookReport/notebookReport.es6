@@ -305,9 +305,7 @@ const NotebookReport = {
                             <md-icon> arrow_drop_up </md-icon>
                         </md-button>
                     </md-toolbar-tools>
-                </md-toolbar>
-                <md-content class="notebook-report__content" flex ui-scrollpoint ui-scrollpoint-action="$ctrl.setEditorPosition">
-                    <div class="notebook-report__content__header" layout="row" layout-align="start center">
+                    <div class="notebook-report__content__header md-whiteframe-1dp" layout="row" layout-align="start center">
                         <span style="color: {{$ctrl.config.itemTypes.report.label.color}};">{{$ctrl.reportItem.content.title}}</span>
                         <span flex></span>
                         <md-icon aria-label="{{$ctrl.reportItem.content.title}} info" style="color: {{$ctrl.config.itemTypes.report.label.color}};">
@@ -315,14 +313,16 @@ const NotebookReport = {
                             <md-tooltip md-direction="left">{{$ctrl.reportItem.content.prompt}}</md-tooltip>
                         </md-icon>
                     </div>
-                    <notebook-report-annotations annotations="$ctrl.latestAnnotations"
-                                                 has-new="$ctrl.hasNewAnnotation"
-                                                 max-score="$ctrl.maxScore"></notebook-report-annotations>
+                </md-toolbar>
+                <md-content class="notebook-report__content" flex>
                     <summernote id="{{$ctrl.reportId}}"
                                 class="notebook-item--report__content"
                                 ng-model="$ctrl.reportItemContent"
                                 ng-change="$ctrl.changed($ctrl.reportItemContent)"
                                 config="$ctrl.summernoteOptions"></summernote>
+                    <notebook-report-annotations annotations="$ctrl.latestAnnotations"
+                                                 has-new="$ctrl.hasNewAnnotation"
+                                                 max-score="$ctrl.maxScore"></notebook-report-annotations>
                 </md-content>
                 <md-card-actions class="notebook-report__actions">
                     <div id="{{$ctrl.reportId}}-toolbar"></div>

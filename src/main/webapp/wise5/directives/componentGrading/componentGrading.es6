@@ -206,7 +206,7 @@ class ComponentGradingController {
             fullscreen: true,
             template:
                 `<md-dialog aria-label="Revisions for {{userNames}}" class="dialog--wider">
-                    <md-toolbar md-theme="light">
+                    <md-toolbar md-theme="light md-whiteframe-1dp">
                         <div class="md-toolbar-tools">
                             <h2 class="overflow--ellipsis">Revisions for {{userNames}}</h2>
                             <span flex></span>
