@@ -4,6 +4,7 @@ class NotebookReportController {
     constructor($filter,
                 $mdSidenav,
                 $scope,
+                $timeout,
                 AnnotationService,
                 ConfigService,
                 NotebookService,
@@ -11,6 +12,7 @@ class NotebookReportController {
         this.$filter = $filter;
         this.$mdSidenav = $mdSidenav;
         this.$scope = $scope;
+        this.$timeout = $timeout;
         this.AnnotationService = AnnotationService;
         this.ConfigService = ConfigService;
         this.NotebookService = NotebookService;
@@ -168,6 +170,25 @@ class NotebookReportController {
                 this.latestAnnotations = this.AnnotationService.getLatestNotebookItemAnnotations(this.workgroupId, this.reportId);
             }
         });
+
+        /**
+         * Captures the show report annotations event, opens report (if collapsed)
+         * and scrolls to the report annotations display
+         */
+        this.$scope.$on('showReportAnnotations', (args) => {
+            if (this.collapsed) {
+                // open the report
+                this.collapse();
+            }
+
+            // scroll to report annotations (bottom)
+            let $notebookReportContent = $('.notebook-report__content');
+            $timeout(() => {
+                $notebookReportContent.animate({
+                    scrollTop: $notebookReportContent.prop('scrollHeight')
+                }, 500);
+            }, 500);
+        });
     }
 
     collapse() {
@@ -264,6 +285,7 @@ NotebookReportController.$inject = [
     '$filter',
     '$mdSidenav',
     '$scope',
+    '$timeout',
     'AnnotationService',
     'ConfigService',
     'NotebookService',

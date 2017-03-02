@@ -9,7 +9,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var NotebookReportController = function () {
-    function NotebookReportController($filter, $mdSidenav, $scope, AnnotationService, ConfigService, NotebookService, ProjectService) {
+    function NotebookReportController($filter, $mdSidenav, $scope, $timeout, AnnotationService, ConfigService, NotebookService, ProjectService) {
         var _this = this;
 
         _classCallCheck(this, NotebookReportController);
@@ -17,6 +17,7 @@ var NotebookReportController = function () {
         this.$filter = $filter;
         this.$mdSidenav = $mdSidenav;
         this.$scope = $scope;
+        this.$timeout = $timeout;
         this.AnnotationService = AnnotationService;
         this.ConfigService = ConfigService;
         this.NotebookService = NotebookService;
@@ -169,6 +170,25 @@ var NotebookReportController = function () {
                 _this.latestAnnotations = _this.AnnotationService.getLatestNotebookItemAnnotations(_this.workgroupId, _this.reportId);
             }
         });
+
+        /**
+         * Captures the show report annotations event, opens report (if collapsed)
+         * and scrolls to the report annotations display
+         */
+        this.$scope.$on('showReportAnnotations', function (args) {
+            if (_this.collapsed) {
+                // open the report
+                _this.collapse();
+            }
+
+            // scroll to report annotations (bottom)
+            var $notebookReportContent = $('.notebook-report__content');
+            $timeout(function () {
+                $notebookReportContent.animate({
+                    scrollTop: $notebookReportContent.prop('scrollHeight')
+                }, 500);
+            }, 500);
+        });
     }
 
     _createClass(NotebookReportController, [{
@@ -283,7 +303,7 @@ var NotebookReportController = function () {
     return NotebookReportController;
 }();
 
-NotebookReportController.$inject = ['$filter', '$mdSidenav', '$scope', 'AnnotationService', 'ConfigService', 'NotebookService', 'ProjectService'];
+NotebookReportController.$inject = ['$filter', '$mdSidenav', '$scope', '$timeout', 'AnnotationService', 'ConfigService', 'NotebookService', 'ProjectService'];
 
 var NotebookReport = {
     bindings: {
