@@ -173,6 +173,7 @@ md-input-container {
 
 .md-button {
     padding: 0 8px;
+    font-weight: 700;
 
     &.md-raised {
         &:not([disabled]) {
@@ -194,7 +195,7 @@ md-input-container {
 }
 
 md-select-menu md-option[selected] {
-    font-weight: 600;
+    font-weight: 700;
 }
 
 md-dialog {
