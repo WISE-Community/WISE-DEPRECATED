@@ -4,11 +4,11 @@ import webfontloader from 'webfontloader';
 webfontloader.load({
     fontinactive: function (family, fvd) {
         switch(family) {
-            case 'RobotoDraft':
+            case 'Roboto':
                 webfontloader.load({
                     custom: {
-                        families: ['RobotoDraft:300,400,500,700,i4'],
-                        urls: [ 'wise5/style/fonts/localFonts.css' ]
+                        families: ['Roboto:300,400,500,700,400italic'],
+                        urls: [ 'wise5/style/fonts/roboto/roboto.css' ]
                     }
                 });
                 break;
@@ -16,13 +16,13 @@ webfontloader.load({
                 webfontloader.load({
                     custom: {
                         families: ['Material Icons'],
-                        urls: [ 'wise5/style/fonts/localIconFonts.css' ]
+                        urls: [ 'wise5/style/fonts/material-icons/material-icons.css' ]
                     }
                 });
                 break;
         }
     },
     google: {
-        families: ['RobotoDraft:300,400,500,700,i4', 'Material Icons']
+        families: ['Roboto:300,400,500,700,400italic', 'Material Icons']
     }
 });

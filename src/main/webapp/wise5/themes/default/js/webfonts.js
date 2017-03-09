@@ -10,11 +10,11 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 _webfontloader2.default.load({
     fontinactive: function fontinactive(family, fvd) {
         switch (family) {
-            case 'RobotoDraft':
+            case 'Roboto':
                 _webfontloader2.default.load({
                     custom: {
-                        families: ['RobotoDraft:300,400,500,700,i4'],
-                        urls: ['wise5/style/fonts/localFonts.css']
+                        families: ['Roboto:300,400,500,700,400italic'],
+                        urls: ['wise5/style/fonts/roboto/roboto.css']
                     }
                 });
                 break;
@@ -22,14 +22,14 @@ _webfontloader2.default.load({
                 _webfontloader2.default.load({
                     custom: {
                         families: ['Material Icons'],
-                        urls: ['wise5/style/fonts/localIconFonts.css']
+                        urls: ['wise5/style/fonts/material-icons/material-icons.css']
                     }
                 });
                 break;
         }
     },
     google: {
-        families: ['RobotoDraft:300,400,500,700,i4', 'Material Icons']
+        families: ['Roboto:300,400,500,700,400italic', 'Material Icons']
     }
 });
 //# sourceMappingURL=webfonts.js.map
