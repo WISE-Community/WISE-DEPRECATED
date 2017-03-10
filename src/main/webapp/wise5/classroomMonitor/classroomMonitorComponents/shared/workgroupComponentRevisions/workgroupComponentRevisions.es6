@@ -122,7 +122,7 @@ const WorkgroupComponentRevisions = {
                 <md-list-item class="list-item md-3-line md-whiteframe-1dp component-revisions__item" ng-class="{'component-revisions__item--latest': $first}">
                     <div class="md-list-item-text component-revisions__item__text">
                         <div layout="row">
-                            <span class="md-body-2 text-secondary">
+                            <span class="md-body-2">
                                 #{{$ctrl.componentStates.length - $index}}
                                 <span ng-if="$first"> (Latest)</span>
                             </span>
