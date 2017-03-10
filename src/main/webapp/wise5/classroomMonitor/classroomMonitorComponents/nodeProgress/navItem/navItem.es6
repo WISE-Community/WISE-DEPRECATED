@@ -43,6 +43,9 @@ class NavItemController {
         this.previousNode = null;
         this.isCurrentNode = (this.currentNode.id === this.nodeId);
 
+        // the current period
+        this.currentPeriod = this.TeacherDataService.getCurrentPeriod();
+
         // the max score for the node
         this.maxScore = this.ProjectService.getMaxScoreForNode(this.nodeId);
 
@@ -158,6 +161,7 @@ class NavItemController {
 
         // listen for the currentPeriodChanged event
         this.$rootScope.$on('currentPeriodChanged', (event, args) => {
+            this.currentPeriod = args.currentPeriod;
             this.setWorkgroupsOnNodeData();
             this.getAlertNotifications();
         });
@@ -285,8 +289,7 @@ class NavItemController {
      */
     getNodeCompletion() {
         // get the currently selected period
-        let currentPeriod = this.TeacherDataService.getCurrentPeriod();
-        let periodId = currentPeriod.periodId;
+        let periodId = this.currentPeriod.periodId;
 
         // get the percentage of the class or period that has completed the node
         let completionPercentage = this.StudentStatusService.getNodeCompletion(this.nodeId, periodId);
@@ -301,32 +304,10 @@ class NavItemController {
      */
     getNodeAverageScore() {
         // get the currently selected period
-        let currentPeriod = this.TeacherDataService.getCurrentPeriod();
-        let periodId = currentPeriod.periodId;
+        let periodId = this.currentPeriod.periodId;
 
-        // get the average score for the node
-        let averageScore = this.StudentStatusService.getNodeAverageScore(this.nodeId, periodId);
-
-        let averageScoreDisplay = null;
-
-        if (typeof this.maxScore === 'number') {
-            if (averageScore === null) {
-                averageScore = "-";
-            } else {
-                averageScore = this.$filter('number')(averageScore, 1);
-            }
-            // create the average score display e.g. 8/10
-            averageScoreDisplay = averageScore + '/' + this.maxScore;
-        }
-
-        return averageScoreDisplay;
-    }
-
-    /**
-     * Get the current period
-     */
-    getCurrentPeriod() {
-        return this.TeacherDataService.getCurrentPeriod();
+        // get and return the average score for the node
+        return this.StudentStatusService.getNodeAverageScore(this.nodeId, periodId);
     }
 
     /**
@@ -335,10 +316,10 @@ class NavItemController {
      */
     getWorkgroupIdsOnNode() {
         // get the currently selected period
-        let currentPeriod = this.getCurrentPeriod().periodId;
+        let periodId = this.currentPeriod.periodId;
 
         // get the workgroups that are on the node in the period
-        return this.StudentStatusService.getWorkgroupIdsOnNode(this.nodeId, currentPeriod);
+        return this.StudentStatusService.getWorkgroupIdsOnNode(this.nodeId, periodId);
     }
 
 
@@ -370,8 +351,7 @@ class NavItemController {
 
     getAlertNotifications() {
         // get the currently selected period
-        let currentPeriod = this.TeacherDataService.getCurrentPeriod();
-        let periodId = currentPeriod.periodId;
+        let periodId = this.currentPeriod.periodId;
 
         let args = {};
         args.nodeId = this.nodeId;
@@ -388,7 +368,7 @@ class NavItemController {
         let nAlerts = this.alertNotifications.length;
         for (let i = 0; i < nAlerts; i++) {
             let alert = this.alertNotifications[i];
-           
+
             if (!alert.timeDismissed) {
                 result = true;
                 break;

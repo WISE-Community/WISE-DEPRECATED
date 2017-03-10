@@ -34,7 +34,7 @@ var NodeGradingController = function () {
 
         // the max score for the node
         this.maxScore = this.ProjectService.getMaxScoreForNode(this.nodeId);
-        this.hasMaxScore = typeof this.maxScore === 'number';
+        this.showScore = this.ProjectService.nodeHasWork(this.nodeId);
 
         var startNodeId = this.ProjectService.getStartNodeId();
         this.rootNode = this.ProjectService.getRootNode(startNodeId);

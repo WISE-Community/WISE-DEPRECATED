@@ -41,6 +41,9 @@ var NavItemController = function () {
         this.previousNode = null;
         this.isCurrentNode = this.currentNode.id === this.nodeId;
 
+        // the current period
+        this.currentPeriod = this.TeacherDataService.getCurrentPeriod();
+
         // the max score for the node
         this.maxScore = this.ProjectService.getMaxScoreForNode(this.nodeId);
 
@@ -154,6 +157,7 @@ var NavItemController = function () {
 
         // listen for the currentPeriodChanged event
         this.$rootScope.$on('currentPeriodChanged', function (event, args) {
+            _this.currentPeriod = args.currentPeriod;
             _this.setWorkgroupsOnNodeData();
             _this.getAlertNotifications();
         });
@@ -301,8 +305,7 @@ var NavItemController = function () {
         key: 'getNodeCompletion',
         value: function getNodeCompletion() {
             // get the currently selected period
-            var currentPeriod = this.TeacherDataService.getCurrentPeriod();
-            var periodId = currentPeriod.periodId;
+            var periodId = this.currentPeriod.periodId;
 
             // get the percentage of the class or period that has completed the node
             var completionPercentage = this.StudentStatusService.getNodeCompletion(this.nodeId, periodId);
@@ -320,35 +323,10 @@ var NavItemController = function () {
         key: 'getNodeAverageScore',
         value: function getNodeAverageScore() {
             // get the currently selected period
-            var currentPeriod = this.TeacherDataService.getCurrentPeriod();
-            var periodId = currentPeriod.periodId;
+            var periodId = this.currentPeriod.periodId;
 
-            // get the average score for the node
-            var averageScore = this.StudentStatusService.getNodeAverageScore(this.nodeId, periodId);
-
-            var averageScoreDisplay = null;
-
-            if (typeof this.maxScore === 'number') {
-                if (averageScore === null) {
-                    averageScore = "-";
-                } else {
-                    averageScore = this.$filter('number')(averageScore, 1);
-                }
-                // create the average score display e.g. 8/10
-                averageScoreDisplay = averageScore + '/' + this.maxScore;
-            }
-
-            return averageScoreDisplay;
-        }
-
-        /**
-         * Get the current period
-         */
-
-    }, {
-        key: 'getCurrentPeriod',
-        value: function getCurrentPeriod() {
-            return this.TeacherDataService.getCurrentPeriod();
+            // get and return the average score for the node
+            return this.StudentStatusService.getNodeAverageScore(this.nodeId, periodId);
         }
 
         /**
@@ -360,10 +338,10 @@ var NavItemController = function () {
         key: 'getWorkgroupIdsOnNode',
         value: function getWorkgroupIdsOnNode() {
             // get the currently selected period
-            var currentPeriod = this.getCurrentPeriod().periodId;
+            var periodId = this.currentPeriod.periodId;
 
             // get the workgroups that are on the node in the period
-            return this.StudentStatusService.getWorkgroupIdsOnNode(this.nodeId, currentPeriod);
+            return this.StudentStatusService.getWorkgroupIdsOnNode(this.nodeId, periodId);
         }
     }, {
         key: 'setWorkgroupsOnNodeData',
@@ -396,8 +374,7 @@ var NavItemController = function () {
         key: 'getAlertNotifications',
         value: function getAlertNotifications() {
             // get the currently selected period
-            var currentPeriod = this.TeacherDataService.getCurrentPeriod();
-            var periodId = currentPeriod.periodId;
+            var periodId = this.currentPeriod.periodId;
 
             var args = {};
             args.nodeId = this.nodeId;
