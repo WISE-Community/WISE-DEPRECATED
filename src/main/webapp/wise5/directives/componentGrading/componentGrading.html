@@ -63,6 +63,7 @@
                 </label>
                 <input type="number"
                        placeholder="0"
+                       min="0"
                        ng-model="$ctrl.score"
                        ng-disabled="!$ctrl.active"
                        ng-change="$ctrl.postAnnotation('score')"
