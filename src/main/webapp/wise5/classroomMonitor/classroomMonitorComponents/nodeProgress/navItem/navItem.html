@@ -40,7 +40,7 @@
             </md-list>
         </md-card-content>
         <md-card-footer class="nav-item__more md-body-1" layout="row" layout-align="center center" flex>
-            <ng-include src="'wise5/classroomMonitor/classroomMonitorComponents/nodeProgress/navItem/navItemProgress.html'"></ng-include>
+            <nav-item-progress node-completion="$ctrl.getNodeCompletion()" period-name="$ctrl.currentPeriod.periodName"></nav-item-progress>
             <span flex></span>
             <workgroups-on-node node-title="$ctrl.nodeTitle" workgroups="$ctrl.workgroupsOnNodeData" online="$ctrl.isWorkgroupOnlineOnNode"></workgroups-on-node>
         </md-card-footer>
