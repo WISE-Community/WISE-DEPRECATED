@@ -86,5 +86,7 @@
     "UP": "Up",
     "VERSIONS": "Versions",
     "WIDTH": "Width",
-    "WORKGROUP_ID": "Workgroup ID"
+    "WORKGROUP_ID": "Workgroup ID",
+    "YOU_HAVE_USED_X_OF_Y_ATTEMPT": "You have used {{x}} of {{y}} attempt",
+    "YOU_HAVE_USED_X_OF_Y_ATTEMPTS": "You have used {{x}} of {{y}} attempts"
 }
