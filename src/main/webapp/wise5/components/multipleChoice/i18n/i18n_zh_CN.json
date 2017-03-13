@@ -1,1 +1,8 @@
-{}
+{
+    "multipleChoice.addChoice": "添加选项",
+    "multipleChoice.checkbox": "复选",
+    "multipleChoice.radio": "单选",
+    "multipleChoice.userChose": "用户在组件上选择 '{{choiceText}}' (选项编号: {{choiceId}}) 。",
+    "multipleChoice.youHaveUsedXofYAttempt": "您已经尝试了{{x}}次（最多{{y}} 次）",
+    "multipleChoice.youHaveUsedXofYAttempts": "您已经尝试了{{x}}次（最多{{y}} 次）"
+}

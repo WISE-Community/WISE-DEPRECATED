@@ -1,1 +1,10 @@
-{}
+{
+    "table.areYouSureYouWantToDecreaseTheNumberOfColumns": "您真的要减少列数么？",
+    "table.areYouSureYouWantToDecreaseTheNumberOfRows": "您真的要减少行数么？",
+    "table.areYouSureYouWantToDeleteThisColumn": "您真的要删除这一列么？",
+    "table.areYouSureYouWantToDeleteThisRow": "您真的要删除这一行么？",
+    "table.cellSize": "单元格大小",
+    "table.columns": "列数",
+    "table.importData": "导入数据",
+    "table.rows": "行数"
+}
