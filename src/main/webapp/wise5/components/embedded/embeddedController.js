@@ -173,11 +173,27 @@ var EmbeddedController = function () {
             } else if (messageEventData.messageType === "getStudentWork") {
                 // the embedded application is requesting the student work
 
+                // the params for getting the student work
+                var getStudentWorkParams = messageEventData.getStudentWorkParams;
+
                 // get the student work
-                var studentWork = this.getStudentWork();
+                var studentWork = this.getStudentWork(messageEventData.getStudentWorkParams);
 
                 var message = studentWork;
                 message.messageType = 'studentWork';
+                message.getStudentWorkParams = getStudentWorkParams;
+
+                // send the student work to the embedded application
+                this.sendMessageToApplication(message);
+            } else if (messageEventData.messageType === "getLatestStudentWork") {
+                // the embedded application is requesting the student work
+
+                // get the latest student work
+                var latestComponentState = this.getLatestStudentWork();
+
+                var message = {};
+                message.messageType = 'latestStudentWork';
+                message.latestStudentWork = latestComponentState;
 
                 // send the student work to the embedded application
                 this.sendMessageToApplication(message);
@@ -319,15 +335,6 @@ var EmbeddedController = function () {
             if (_this.nodeId === nodeId) {
                 _this.isSubmit = true;
             }
-
-            // get the student work
-            var studentWork = _this.getStudentWork();
-
-            var message = studentWork;
-            message.messageType = 'nodeSubmitClicked';
-
-            // send the student data to the embedded application
-            _this.sendMessageToApplication(message);
         });
 
         this.$scope.$on('studentWorkSavedToServer', function (event, args) {
@@ -365,22 +372,18 @@ var EmbeddedController = function () {
                         _this.setSaveMessage(_this.$translate('SAVED'), clientSaveTime);
                     }
 
-                    // Tell application that this componentState was successfully saved to server;
-                    // include saved state and updated save message
-                    var successMessage = {
-                        messageType: "componentStateSaved",
-                        componentState: componentState,
-                        saveMessage: _this.saveMessage
-                    };
-                    _this.sendMessageToApplication(successMessage);
-
                     // clear out componentState
                     _this.componentState = {};
                 }
             }
 
+            // the params for getting the student work to be sent to the model
+            var getStudentWorkParams = {};
+            getStudentWorkParams.getLatestStudentWorkFromThisComponent = true;
+            getStudentWorkParams.getLatestStudentWorkFromThisNode = true;
+
             // get the student work
-            var studentWork = _this.getStudentWork();
+            var studentWork = _this.getStudentWork(getStudentWorkParams);
 
             var message = studentWork;
             message.messageType = 'studentWork';
@@ -1104,69 +1107,124 @@ var EmbeddedController = function () {
             this.$scope.$emit('componentSubmitTriggered', { nodeId: this.nodeId, componentId: this.componentId });
         }
     }, {
-        key: 'getStudentWork',
+        key: 'getLatestStudentWork',
 
 
         /**
-         * Get the student work from the components in this node and potentially
-         * from other components
-         * @return an object containing work from the components in this node and
-         * potentially from other components
+         * Get the latest component state from this component
+         * @return the latest component state
          */
-        value: function getStudentWork() {
+        value: function getLatestStudentWork() {
+
+            // get the latest component state from this component
+            var latestComponentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
+
+            return latestComponentState;
+        }
+
+        /**
+         * Get the student work from the specified components/nodes
+         * @param params the params for getting the student work
+         * @return an object containing other objects that contain work from the
+         * specified components/nodes
+         */
+
+    }, {
+        key: 'getStudentWork',
+        value: function getStudentWork(params) {
 
             var studentWork = {};
 
-            // get the latest component states from this node
-            var studentWorkFromThisNode = this.StudentDataService.getLatestComponentStatesByNodeId(this.nodeId);
-            studentWork.studentWorkFromThisNode = studentWorkFromThisNode;
+            if (params != null && params.getLatestStudentWorkFromThisComponent) {
+                // get the latest student work from this component
+                studentWork.latestStudentWorkFromThisComponent = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
+            }
 
-            /*
-             * this is an array that contains objects with a nodeId and componentId
-             * fields. this specifies what student data we need to obtain.
-             */
-            var getStudentWorkFromOtherComponents = this.componentContent.getStudentWorkFromOtherComponents;
+            if (params != null && params.getAllStudentWorkFromThisComponent) {
+                // get all the student work from this component
+                studentWork.allStudentWorkFromThisComponent = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(this.nodeId, this.componentId);
+            }
 
-            if (getStudentWorkFromOtherComponents != null) {
-                var studentWorkFromOtherComponents = [];
+            if (params != null && params.getLatestStudentWorkFromThisNode) {
+                // get the latest student work from the components in this node
+                studentWork.latestStudentWorkFromThisNode = this.StudentDataService.getLatestComponentStatesByNodeId(this.nodeId);
+            }
 
-                // loop through all the objects
-                for (var c = 0; c < getStudentWorkFromOtherComponents.length; c++) {
-                    var otherComponent = getStudentWorkFromOtherComponents[c];
+            if (params != null && params.getAllStudentWorkFromThisNode) {
+                // get all the student work from the components in this node
+                studentWork.allStudentWorkFromThisNode = this.StudentDataService.getComponentStatesByNodeId(this.nodeId);
+            }
 
-                    if (otherComponent != null) {
+            if (params != null && params.getLatestStudentWorkFromOtherComponents) {
+                // get the latest student work from other specified components
 
-                        // get the node id and component id
-                        var tempNodeId = otherComponent.nodeId;
-                        var tempComponentId = otherComponent.componentId;
+                // an array of objects that contain a nodeId and component Id
+                var otherComponents = params.otherComponents;
 
-                        if (tempNodeId != null) {
+                var latestStudentWorkFromOtherComponents = [];
 
-                            if (tempComponentId != null) {
+                if (otherComponents != null) {
+
+                    // loop through all the components we need to get work from
+                    for (var c = 0; c < otherComponents.length; c++) {
+                        var otherComponent = otherComponents[c];
+
+                        if (otherComponent != null) {
+
+                            // get the node id and component id
+                            var tempNodeId = otherComponent.nodeId;
+                            var tempComponentId = otherComponent.componentId;
+
+                            if (tempNodeId != null && tempComponentId != null) {
 
                                 // get the latest component state for the given component
                                 var tempComponentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(tempNodeId, tempComponentId);
 
-                                if (tempComponentState == null) {
-                                    /*
-                                     * there is no component state for the component
-                                     * so we will just add an object with a node id field
-                                     * and component id field and no other fields to show
-                                     * that there is no student data for the component.
-                                     */
-                                    tempComponentState = {};
-                                    tempComponentState.nodeId = tempNodeId;
-                                    tempComponentState.componentId = tempComponentId;
+                                if (tempComponentState != null) {
+                                    // add the component state to the array
+                                    latestStudentWorkFromOtherComponents.push(tempComponentState);
                                 }
-
-                                // add the component state to the array
-                                studentWorkFromOtherComponents.push(tempComponentState);
                             }
                         }
                     }
                 }
 
-                studentWork.studentWorkFromOtherComponents = studentWorkFromOtherComponents;
+                studentWork.latestStudentWorkFromOtherComponents = latestStudentWorkFromOtherComponents;
+            }
+
+            if (params != null && params.getAllStudentWorkFromOtherComponents) {
+                // get all the student work from other specified components
+                var otherComponents = params.otherComponents;
+
+                var allStudentWorkFromOtherComponents = [];
+
+                if (otherComponents != null) {
+
+                    // loop throuh all the components we need to get work from
+                    for (var c = 0; c < otherComponents.length; c++) {
+                        var otherComponent = otherComponents[c];
+
+                        if (otherComponent != null) {
+
+                            // get the node id and component id
+                            var tempNodeId = otherComponent.nodeId;
+                            var tempComponentId = otherComponent.componentId;
+
+                            if (tempNodeId != null && tempComponentId != null) {
+
+                                // get the component states for the given component
+                                var tempComponentStates = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(tempNodeId, tempComponentId);
+
+                                if (tempComponentStates != null && tempComponentStates.length > 0) {
+                                    // add the component states to the array
+                                    allStudentWorkFromOtherComponents = allStudentWorkFromOtherComponents.concat(tempComponentStates);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                studentWork.allStudentWorkFromOtherComponents = allStudentWorkFromOtherComponents;
             }
 
             return studentWork;
