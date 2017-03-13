@@ -57,19 +57,22 @@ var GraphService = function (_NodeService) {
             component.canCreateNewTrials = false;
             component.canDeleteTrials = false;
             component.showAllTrialsOnNewTrial = false;
+            component.graphType = 'line';
             component.xAxis = {
                 title: {
                     text: this.$translate('graph.timeSeconds')
                 },
                 min: 0,
-                max: 10
+                max: 10,
+                units: this.$translate('graph.secondsUnit')
             };
             component.yAxis = {
                 title: {
-                    text: this.$translate('graph.postitionMeters')
+                    text: this.$translate('graph.positionMeters')
                 },
                 min: 0,
-                max: 10
+                max: 10,
+                units: this.$translate('graph.metersUnit')
             };
             component.series = [{
                 name: this.$translate('graph.prediction'),

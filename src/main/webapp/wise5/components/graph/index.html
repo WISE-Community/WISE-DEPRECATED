@@ -30,9 +30,10 @@
                                     ng-change='graphController.authoringViewComponentChanged()'
                                     ng-model-options='{ debounce: 1000 }'
                                     size='30'/>
-                {{ 'graph.graphType' | translate }}: <input ng-model='graphController.authoringComponentContent.graphType'
-                                   ng-model-options='{ debounce: 1000 }'
-                                   ng-change='graphController.authoringViewComponentChanged()'/>
+                {{ 'graph.graphType' | translate }}:
+                                   <select ng-model='graphController.authoringComponentContent.graphType'
+                                           ng-options='availableGraphType.value as availableGraphType.text for availableGraphType in graphController.availableGraphTypes'
+                                           ng-change='graphController.authoringViewGraphTypeChanged(graphController.authoringComponentContent.graphType, "{{graphController.authoringComponentContent.graphType}}")'></select>
                 <br/>
                 {{ 'graph.graphWidth' | translate }}: <input type='number'
                                     ng-model='graphController.authoringComponentContent.width'
@@ -44,21 +45,44 @@
                                      ng-change='graphController.authoringViewComponentChanged()'/>
                 <br/>
                 {{ 'graph.xAxisTitle' | translate }}: <input ng-model='graphController.authoringComponentContent.xAxis.title.text'
-                                     ng-model-options='{ debounce: 1000 }'
-                                     ng-change='graphController.authoringViewComponentChanged()'/>
-                {{ 'graph.xMin' | translate }}: <input type='number'
-                              ng-model='graphController.authoringComponentContent.xAxis.min'
-                              ng-model-options='{ debounce: 1000 }'
-                              ng-change='graphController.authoringViewComponentChanged()'/>
-                {{ 'graph.xMax' | translate }}: <input type='number'
-                              ng-model='graphController.authoringComponentContent.xAxis.max'
-                              ng-model-options='{ debounce: 1000 }'
-                              ng-change='graphController.authoringViewComponentChanged()'/>
+                                                             ng-model-options='{ debounce: 1000 }'
+                                                             ng-change='graphController.authoringViewComponentChanged()'/>
+                <span ng-if='graphController.authoringComponentContent.graphType == "line" || graphController.authoringComponentContent.graphType == "scatter"'>
+                    {{ 'graph.xAxisUnits' | translate }} ({{ 'OPTIONAL' | translate }}): <input ng-model='graphController.authoringComponentContent.xAxis.units'
+                                                             ng-model-options='{ debounce: 1000 }'
+                                                             ng-change='graphController.authoringViewComponentChanged()'/>
+                    {{ 'graph.xMin' | translate }}: <input type='number'
+                                  ng-model='graphController.authoringComponentContent.xAxis.min'
+                                  ng-model-options='{ debounce: 1000 }'
+                                  ng-change='graphController.authoringViewComponentChanged()'/>
+                    {{ 'graph.xMax' | translate }}: <input type='number'
+                                  ng-model='graphController.authoringComponentContent.xAxis.max'
+                                  ng-model-options='{ debounce: 1000 }'
+                                  ng-change='graphController.authoringViewComponentChanged()'/>
+                    X Axis Locked: <input type='checkbox'
+                                ng-model='graphController.authoringComponentContent.xAxis.locked'
+                                ng-change='graphController.authoringViewComponentChanged()'/>
+                </span>
+                <br/>
+                    <span ng-if='graphController.authoringComponentContent.graphType == "column"'>
+                        Categories <button ng-click='graphController.authoringAddXAxisCategory()'>Add Category</button>
+                    </span>
+                <br/>
+                <div ng-repeat='category in graphController.authoringComponentContent.xAxis.categories track by $index'>
+                    <input ng-model='graphController.authoringComponentContent.xAxis.categories[$index]'
+                           ng-change='graphController.authoringViewComponentChanged()'/>
+                    <button ng-click='graphController.authoringDeleteXAxisCategory($index)'>Delete</button>
+                </div>
                 <br/>
                 <br/>
                 {{ 'graph.yAxisTitle' | translate }}: <input ng-model='graphController.authoringComponentContent.yAxis.title.text'
-                                     ng-model-options='{ debounce: 1000 }'
-                                     ng-change='graphController.authoringViewComponentChanged()'/>
+                                                             ng-model-options='{ debounce: 1000 }'
+                                                             ng-change='graphController.authoringViewComponentChanged()'/>
+                <span ng-if='graphController.authoringComponentContent.graphType == "line" || graphController.authoringComponentContent.graphType == "scatter"'>
+                    {{ 'graph.yAxisUnits' | translate }} ({{ 'OPTIONAL' | translate }}): <input ng-model='graphController.authoringComponentContent.yAxis.units'
+                                                             ng-model-options='{ debounce: 1000 }'
+                                                             ng-change='graphController.authoringViewComponentChanged()'/>
+                </span>
                 {{ 'graph.yMin' | translate }}: <input type='number'
                               ng-model='graphController.authoringComponentContent.yAxis.min'
                               ng-model-options='{ debounce: 1000 }'
@@ -66,6 +90,9 @@
                 {{ 'graph.yMax' | translate }}: <input type='number'
                               ng-model='graphController.authoringComponentContent.yAxis.max'
                               ng-model-options='{ debounce: 1000 }'
+                              ng-change='graphController.authoringViewComponentChanged()'/>
+                Y Axis Locked: <input type='checkbox'
+                              ng-model='graphController.authoringComponentContent.yAxis.locked'
                               ng-change='graphController.authoringViewComponentChanged()'/>
                 <br/>
                 <br/>
@@ -114,14 +141,40 @@
                                   ng-model-options='{ debounce: 1000 }'
                                   ng-change='graphController.authoringViewComponentChanged()'/>
                     <br/>
-                    {{ 'graph.symbol' | translate }}: <input ng-model='series.marker.symbol'
-                                   ng-model-options='{ debounce: 1000 }'
-                                   ng-change='graphController.authoringViewComponentChanged()'/>
-                    <br/>
+                    <div ng-if='graphController.authoringComponentContent.graphType == "line" || graphController.authoringComponentContent.graphType == "scatter"'>
+                        {{ 'graph.symbol' | translate }}: <input ng-model='series.marker.symbol'
+                                       ng-model-options='{ debounce: 1000 }'
+                                       ng-change='graphController.authoringViewComponentChanged()'/>
+                        <br/>
+                    </div>
                     {{ 'graph.canStudentEdit' | translate }}: <input type='checkbox'
                                              ng-model='series.canEdit'
                                              ng-model-options='{ debounce: 1000 }'
                                              ng-change='graphController.authoringViewComponentChanged()'/>
+                    <br/>
+                    Data Points <button ng-click='graphController.authoringAddSeriesDataPoint(series)'>Add</button>
+                    <br/>
+                    <div ng-repeat='dataPoint in series.data track by $index'>
+                        <span ng-if='graphController.authoringComponentContent.graphType == "line" || graphController.authoringComponentContent.graphType == "scatter"'>
+                            {{$index + 1}}.
+                            x: <input type='number'
+                                   ng-model='series.data[$index][0]'
+                                   style='width:5em'
+                                   ng-change='graphController.authoringViewComponentChanged()'/>
+                            y: <input type='number'
+                                   ng-model='series.data[$index][1]'
+                                   style='width:5em'
+                                   ng-change='graphController.authoringViewComponentChanged()'/>
+                        </span>
+                        <span ng-if='graphController.authoringComponentContent.graphType == "column"'>
+                            {{graphController.authoringComponentContent.xAxis.categories[$index]}}
+                            <input type='number'
+                                   ng-model='series.data[$index]'
+                                   style='width:5em'
+                                   ng-change='graphController.authoringViewComponentChanged()'/>
+                        </span>
+                        <button ng-click='graphController.authoringDeleteSeriesDataPoint(series, $index)'>X</button>
+                    </div>
                     <br/>
                     <button ng-click='graphController.authoringDeleteSeriesClicked($index)'>{{ 'graph.deleteSeries' | translate }}</button>
                 </div>

@@ -133,6 +133,18 @@ var GraphController = function () {
         // the id of the chart element
         this.chartId = 'chart1';
 
+        // the available graph types
+        this.availableGraphTypes = [{
+            value: "line",
+            text: "Line Plot"
+        }, {
+            value: "column",
+            text: "Column Plot"
+        }, {
+            value: "scatter",
+            text: "Scatter Plot"
+        }];
+
         // the width of the graph
         this.width = null;
 
@@ -948,19 +960,118 @@ var GraphController = function () {
 
             this.chartConfig = {
                 options: {
-                    tooltip: {
-                        formatter: function formatter() {
-                            /*
-                             * When the user mouseovers a point, display a tooltip that looks like
-                             *
-                             * x: 10
-                             * y: 15
-                             *
-                             */
-                            var x = thisGraphController.roundToNearestTenth(this.x);
-                            var y = thisGraphController.roundToNearestTenth(this.y);
+                    tooltip: { formatter: function formatter() {
 
-                            return 'x: ' + x + '<br/>y: ' + y;
+                            if (this.series != null) {
+
+                                var xText = '';
+                                var yText = '';
+
+                                var xAxisUnits = '';
+                                var yAxisUnits = '';
+
+                                if (this.series.xAxis != null && this.series.xAxis.userOptions != null && this.series.xAxis.userOptions.units != null) {
+
+                                    // get the x axis units
+                                    xAxisUnits = this.series.xAxis.userOptions.units;
+                                }
+                                if (this.series.yAxis != null && this.series.yAxis.userOptions != null && this.series.yAxis.userOptions.units != null) {
+
+                                    // get the y axis units
+                                    yAxisUnits = this.series.yAxis.userOptions.units;
+                                }
+
+                                if (this.series.type === 'line' || this.series.type === 'scatter') {
+                                    // the series is a line or scatter plot
+
+                                    var text = '';
+
+                                    // get the series name
+                                    var seriesName = this.series.name;
+
+                                    // get the x and y values
+                                    var x = thisGraphController.roundToNearestTenth(this.x);
+                                    var y = thisGraphController.roundToNearestTenth(this.y);
+
+                                    if (seriesName != null && seriesName != '') {
+                                        // add the series name
+                                        text += '<b>' + seriesName + '</b><br/>';
+                                    }
+
+                                    if (x != null && x != '') {
+
+                                        // get the x value
+                                        xText += x;
+
+                                        if (xAxisUnits != null && xAxisUnits != '') {
+                                            // add the x units
+                                            xText += ' ' + xAxisUnits;
+                                        }
+                                    }
+
+                                    if (y != null && y != '') {
+
+                                        // get the y value
+                                        yText += y;
+
+                                        if (yAxisUnits != null && yAxisUnits != '') {
+
+                                            // add the y units
+                                            yText += ' ' + yAxisUnits;
+                                        }
+                                    }
+
+                                    if (xText != null && xText != '') {
+
+                                        // add the x text
+                                        text += xText;
+                                    }
+
+                                    if (yText != null && yText != '') {
+
+                                        if (xText != null && xText != '') {
+                                            // separate the xText and the yText with a comma
+                                            text += ', ';
+                                        }
+
+                                        // add the y text
+                                        text += yText;
+                                    }
+
+                                    return text;
+                                } else if (this.series.type === 'column') {
+                                    // the series is a column graph
+
+                                    var text = '';
+
+                                    // get the series name
+                                    var seriesName = this.series.name;
+
+                                    // get the x and y values
+                                    var x = this.x;
+                                    var y = this.y;
+
+                                    if (seriesName != null && seriesName != '') {
+                                        // add the series name
+                                        text += '<b>' + seriesName + '</b><br/>';
+                                    }
+
+                                    if (x != null && x != '') {
+                                        // get the x valuen
+                                        xText += x;
+                                    }
+
+                                    if (y != null && y != '') {
+                                        // get the y value
+                                        yText += y;
+                                    }
+
+                                    // add the x and y text
+                                    text += xText + ' ' + yText;
+
+                                    return text;
+                                }
+                            }
                         }
                     },
                     chart: {
@@ -3610,6 +3721,7 @@ var GraphController = function () {
                                     var seriesName = singleSeries.name;
                                     var seriesData = singleSeries.data;
                                     var seriesColor = singleSeries.color;
+                                    var marker = singleSeries.marker;
 
                                     // make a series object
                                     var newSeries = {};
@@ -3618,6 +3730,10 @@ var GraphController = function () {
                                     newSeries.color = seriesColor;
                                     newSeries.canEdit = false;
                                     newSeries.allowPointSelect = false;
+
+                                    if (marker != null) {
+                                        newSeries.marker = marker;
+                                    }
 
                                     // add the series to the trial
                                     latestTrial.series.push(newSeries);
@@ -3719,7 +3835,7 @@ var GraphController = function () {
 
             if (minMaxValues != null) {
 
-                if (xAxis != null) {
+                if (xAxis != null && !xAxis.locked) {
                     if (minMaxValues.xMin < xAxis.min) {
                         /*
                          * there is a point that has a smaller x value than the
@@ -3743,7 +3859,7 @@ var GraphController = function () {
                     }
                 }
 
-                if (yAxis != null) {
+                if (yAxis != null && !yAxis.locked) {
                     if (minMaxValues.yMin < yAxis.min) {
                         /*
                          * there is a point that has a smaller y value than the
@@ -3824,6 +3940,9 @@ var GraphController = function () {
                                          */
                                         tempX = tempData[0];
                                         tempY = tempData[1];
+                                    } else if (tempData.constructor.name == 'Number') {
+                                        // the element is a number
+                                        tempY = tempData;
                                     }
                                 }
 
@@ -4155,6 +4274,284 @@ var GraphController = function () {
 
             // display the asset chooser
             this.$rootScope.$broadcast('openAssetChooser', params);
+        }
+
+        /**
+         * Add an x axis category
+         */
+
+    }, {
+        key: 'authoringAddXAxisCategory',
+        value: function authoringAddXAxisCategory() {
+
+            // add an empty string as a new category
+            this.authoringComponentContent.xAxis.categories.push('');
+
+            // the authoring component content has changed so we will save the project
+            this.authoringViewComponentChanged();
+        }
+
+        /**
+         * Delete an x axis category
+         * @param index the index of the category to delete
+         */
+
+    }, {
+        key: 'authoringDeleteXAxisCategory',
+        value: function authoringDeleteXAxisCategory(index) {
+
+            // remove the category at the given index
+            this.authoringComponentContent.xAxis.categories.splice(index, 1);
+
+            // the authoring component content has changed so we will save the project
+            this.authoringViewComponentChanged();
+        }
+
+        /**
+         * Add an empty data point to the series
+         * @param series the series to add the empty data point to
+         */
+
+    }, {
+        key: 'authoringAddSeriesDataPoint',
+        value: function authoringAddSeriesDataPoint(series) {
+
+            if (series != null && series.data != null) {
+
+                if (this.authoringComponentContent.graphType === 'line' || this.authoringComponentContent.graphType === 'scatter') {
+
+                    // add an empty data point to the series
+                    series.data.push([]);
+                } else if (this.authoringComponentContent.graphType === 'column') {
+                    // add an empty data point to the series
+                    series.data.push(null);
+                }
+            }
+
+            // the authoring component content has changed so we will save the project
+            this.authoringViewComponentChanged();
+        }
+
+        /**
+         * Delete a data point from a series
+         * @param series the series to delete a data point from
+         * @param index the index of the data point to delete
+         */
+
+    }, {
+        key: 'authoringDeleteSeriesDataPoint',
+        value: function authoringDeleteSeriesDataPoint(series, index) {
+
+            if (series != null && series.data != null) {
+                // delete the data point at the given index
+                series.data.splice(index, 1);
+            }
+
+            // the authoring component content has changed so we will save the project
+            this.authoringViewComponentChanged();
+        }
+
+        /**
+         * The graph type changed so we will handle updating the series data points
+         * @param newValue the new value of the graph type
+         * @param oldValue the old value of the graph type
+         */
+
+    }, {
+        key: 'authoringViewGraphTypeChanged',
+        value: function authoringViewGraphTypeChanged(newValue, oldValue) {
+
+            // ask if the author is sure they want to change the graph type
+            var answer = confirm('Are you sure you want to change the graph type?');
+
+            if (answer) {
+                // the author answered yes so we will change the graph type
+
+                if (newValue === 'line' || newValue === 'scatter') {
+                    // the new value is a line or scatter plot
+
+                    if (oldValue === 'column') {
+                        // the graph type is changing from a column to a line or scatter
+                        this.authoringComponentContent.xAxis.min = 0;
+                        this.authoringComponentContent.xAxis.max = 10;
+                        this.authoringConvertAllSeriesDataPoints(newValue);
+                        this.authoringAddSymbolsToSeries();
+                    }
+                    delete this.authoringComponentContent.xAxis.categories;
+                } else if (newValue === 'column') {
+                    // the new value is a column plot
+
+                    if (oldValue === 'line' || oldValue === 'scatter') {
+                        // the graph type is changing from a line or scatter to a column
+                        delete this.authoringComponentContent.xAxis.min;
+                        delete this.authoringComponentContent.xAxis.max;
+                        delete this.authoringComponentContent.xAxis.units;
+                        delete this.authoringComponentContent.yAxis.units;
+                        this.authoringComponentContent.xAxis.categories = [];
+                        this.authoringConvertAllSeriesDataPoints(newValue);
+                        this.authoringRemoveSymbolsFromSeries();
+                    }
+                }
+            } else {
+                // the author answered no so we will not change the graph type
+
+                // revert the graph type to the previous value
+                this.authoringComponentContent.graphType = oldValue;
+            }
+
+            // the authoring component content has changed so we will save the project
+            this.authoringViewComponentChanged();
+        }
+
+        /**
+         * Add symbols to all the series
+         */
+
+    }, {
+        key: 'authoringAddSymbolsToSeries',
+        value: function authoringAddSymbolsToSeries() {
+
+            // get all the series
+            var series = this.authoringComponentContent.series;
+
+            if (series != null) {
+
+                // loop through all the series
+                for (var s = 0; s < series.length; s++) {
+
+                    // get a series
+                    var tempSeries = series[s];
+
+                    if (tempSeries != null) {
+                        // set the symbol to circle
+                        tempSeries.marker = {};
+                        tempSeries.marker.symbol = 'circle';
+                    }
+                }
+            }
+        }
+
+        /**
+         * Remove symbols from all the series
+         */
+
+    }, {
+        key: 'authoringRemoveSymbolsFromSeries',
+        value: function authoringRemoveSymbolsFromSeries() {
+
+            // get all the series
+            var series = this.authoringComponentContent.series;
+
+            if (series != null) {
+
+                // loop through all the series
+                for (var s = 0; s < series.length; s++) {
+
+                    // get a series
+                    var tempSeries = series[s];
+
+                    if (tempSeries != null) {
+                        // delete the marker object which contains the symbol
+                        delete tempSeries.marker;
+                    }
+                }
+            }
+        }
+
+        /**
+         * Convert the data points in all the series
+         * @param graphType the new graph type to convert the data points to
+         */
+
+    }, {
+        key: 'authoringConvertAllSeriesDataPoints',
+        value: function authoringConvertAllSeriesDataPoints(graphType) {
+
+            // get all the series
+            var series = this.authoringComponentContent.series;
+
+            if (series != null) {
+
+                // loop through all the series
+                for (var s = 0; s < series.length; s++) {
+
+                    // get a series
+                    var tempSeries = series[s];
+
+                    // convert the data points in the series
+                    this.convertSeriesDataPoints(tempSeries, graphType);
+                }
+            }
+        }
+
+        /**
+         * Convert all the data points in the series
+         * @param series convert the data points in the series
+         * @param newGraphType the new graph type to convert to
+         */
+
+    }, {
+        key: 'convertSeriesDataPoints',
+        value: function convertSeriesDataPoints(series, newGraphType) {
+
+            if (series != null && series.data != null) {
+
+                // get the data from the series
+                var data = series.data;
+
+                // an array to hold the new data after it has been converted
+                var newData = [];
+
+                // loop through all the data points
+                for (var d = 0; d < data.length; d++) {
+                    var oldDataPoint = data[d];
+
+                    if (newGraphType === 'line' || newGraphType === 'scatter') {
+                        // the new graph type is a line or scatter
+
+                        if (!Array.isArray(oldDataPoint)) {
+                            /*
+                             * the old data point is not an array which means it is
+                             * a single value such as a number
+                             */
+                            // create an array to hold [x, y]
+                            var newDataPoint = [d + 1, oldDataPoint];
+
+                            // add the new data point to our new data array
+                            newData.push(newDataPoint);
+                        } else {
+                            // the old data point is an array so we can re-use it
+                            newData.push(oldDataPoint);
+                        }
+                    } else if (newGraphType === 'column') {
+                        // the new graph type is a column
+
+                        if (Array.isArray(oldDataPoint)) {
+                            /*
+                             * the old data point is an array which is most likely
+                             * in the form of [x, y]
+                             */
+
+                            // get the y value
+                            var newDataPoint = oldDataPoint[1];
+
+                            if (newDataPoint != null) {
+                                // add the y value as the data point
+                                newData.push(newDataPoint);
+                            }
+                        } else {
+                            /*
+                             * the old data is not an array which means it is a
+                             * single value such as a number so we can re-use it
+                             */
+                            newData.push(oldDataPoint);
+                        }
+                    }
+                }
+
+                // set the new data into the series
+                series.data = newData;
+            }
         }
     }]);
 
