@@ -145,7 +145,7 @@ var WorkgroupNodeGradingController = function () {
                 this.hiddenComponents.push(componentId);
             }
 
-            this.onUpdate({ value: this.hiddenComponents, event: event });
+            this.onUpdate({ value: this.hiddenComponents, event: $event });
         }
     }]);
 

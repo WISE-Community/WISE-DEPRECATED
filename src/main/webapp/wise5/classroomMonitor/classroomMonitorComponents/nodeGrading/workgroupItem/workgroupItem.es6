@@ -19,7 +19,7 @@ class WorkgroupItemController {
             }
 
             if (changesObj.maxScore) {
-                this.hasMaxScore = typeof changesObj.maxScore.currentValue === 'number';
+                this.maxScore = typeof changesObj.maxScore.currentValue === 'number' ? changesObj.maxScore.currentValue : 0;
             }
 
             if (changesObj.workgroupData) {
@@ -27,7 +27,7 @@ class WorkgroupItemController {
                 this.hasAlert = workgroupData.hasAlert;
                 this.hasNewAlert = workgroupData.hasNewAlert;
                 this.status = workgroupData.completionStatus;
-                this.score = workgroupData.score > -1 ? workgroupData.score : '-';
+                this.score = workgroupData.score >= 0 ? workgroupData.score : '-';
             }
 
             this.update();
@@ -90,6 +90,7 @@ const WorkgroupItem = {
         expand: '<',
         maxScore: '<',
         nodeId: '<',
+        showScore: '<',
         workgroupId: '<',
         workgroupData: '<',
         hiddenComponents: '<',
@@ -109,7 +110,7 @@ const WorkgroupItem = {
                 <div flex="30" layout="row" layout-align="center center">
                     <workgroup-node-status status-text="{{$ctrl.statusText}}" status-class="{{$ctrl.statusClass}}"></workgroup-node-status>
                 </div>
-                <div ng-if="$ctrl.hasMaxScore" flex="20" layout="row" layout-align="center center">
+                <div ng-if="$ctrl.showScore" flex="20" layout="row" layout-align="center center">
                     <workgroup-node-score score="{{$ctrl.score}}" max-score="{{$ctrl.maxScore}}"></workgroup-node-score>
                 </div>
             </div>

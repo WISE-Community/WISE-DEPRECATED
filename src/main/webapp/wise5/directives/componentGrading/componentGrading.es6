@@ -37,7 +37,7 @@ class ComponentGradingController {
         this.$onChanges = (changes) => {
 
             if (changes.maxScore) {
-                this.hasMaxScore = (typeof this.maxScore === 'number');
+                this.maxScore = typeof changes.maxScore.currentValue === 'number' ? changes.maxScore.currentValue : 0;
             }
 
             this.componentStates = this.TeacherDataService.getComponentStatesByWorkgroupIdAndComponentId(this.toWorkgroupId, this.componentId);
@@ -119,13 +119,15 @@ class ComponentGradingController {
      */
     showAutoComment() {
         let result = false;
-        let latestComment = this.latestAnnotations.comment;
-        if (latestComment && latestComment.type === 'autoComment') {
-            let n = this.componentStates.length;
-            if (n > 0) {
-                let latestComponentState = this.componentStates[n-1]
-                if (latestComponentState.id === latestComment.studentWorkId) {
-                    result = true;
+        if (this.latestAnnotations) {
+            let latestComment = this.latestAnnotations.comment;
+            if (latestComment && latestComment.type === 'autoComment') {
+                let n = this.componentStates.length;
+                if (n > 0) {
+                    let latestComponentState = this.componentStates[n-1]
+                    if (latestComponentState.id === latestComment.studentWorkId) {
+                        result = true;
+                    }
                 }
             }
         }
@@ -206,18 +208,23 @@ class ComponentGradingController {
             fullscreen: true,
             template:
                 `<md-dialog aria-label="Revisions for {{userNames}}" class="dialog--wider">
-                    <md-toolbar md-theme="light md-whiteframe-1dp">
-                        <div class="md-toolbar-tools">
+                    <md-toolbar>
+                        <div class="md-toolbar-tools gray-darkest-bg">
                             <h2 class="overflow--ellipsis">Revisions for {{userNames}}</h2>
                             <span flex></span>
                             <md-button class="md-icon-button" ng-click="close()">
-                                <md-icon aria-label="Close dialog"> close </md-icon>
+                                <md-icon aria-label="{{'close' | translate}}"> close </md-icon>
                             </md-button>
                         </div>
                     </md-toolbar>
-                    <md-dialog-content class="md-dialog-content gray-light-bg">
-                        <workgroup-component-revisions workgroup-id="workgroupId" component-id="{{componentId}}" max-score="maxScore"></workgroup-component-revisions>
+                    <md-dialog-content>
+                        <div class="md-dialog-content gray-lighter-bg">
+                            <workgroup-component-revisions workgroup-id="workgroupId" component-id="{{componentId}}" max-score="maxScore"></workgroup-component-revisions>
+                        </div>
                     </md-dialog-content>
+                    <md-dialog-actions layout="row" layout-align="end center">
+                        <md-button ng-click="close()" aria-label="{{'close' | translate}}">{{'close' | translate}}</md-button>
+                    </md-dialog-actions>
                 </md-dialog>`,
             locals: {
                 workgroupId: workgroupId,

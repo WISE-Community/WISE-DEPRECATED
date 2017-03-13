@@ -1,1 +1,17 @@
-{}
+{
+    "audioOscillator.add": "添加",
+    "audioOscillator.addOscillatorType": "添加振荡器类型",
+    "audioOscillator.errorYouHaveAlreadyAddedOscillatorType": "错误：您已经添加了{{oscillatorTypeToAdd}}",
+    "audioOscillator.frequency": "频率",
+    "audioOscillator.importData": "导入数据",
+    "audioOscillator.oscillatorGridSize": "示波器网格大小",
+    "audioOscillator.oscillatorType": "振荡器类型",
+    "audioOscillator.oscillatorTypes": "振荡器类型",
+    "audioOscillator.oscillatorHeight": "示波器高度",
+    "audioOscillator.oscillatorWidth": "示波器宽度",
+    "audioOscillator.oscilloscopeStopAfterGoodDraw": "示波器在波形完整后停止",
+    "audioOscillator.play": "运行",
+    "audioOscillator.save": "保存",
+    "audioOscillator.startingFrequency": "起始频率",
+    "audioOscillator.stop": "停止"
+}

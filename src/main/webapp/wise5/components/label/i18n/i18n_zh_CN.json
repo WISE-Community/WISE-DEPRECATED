@@ -1,1 +1,21 @@
-{}
+{
+    "label.addFile": "添加文件",
+    "label.addLabel": "添加标签",
+    "label.allowStudentToUploadImageForBackground": "允许学生上传背景图片",
+    "label.aNewLabel": "一个新标签",
+    "label.areYouSureYouWantToChangeTheBackgroundImage": "您真的要修改背景图片么？",
+    "label.areYouSureYouWantToDeleteThisLabel": "您真的要删除该标签么？\n\n{{selectedLabelText}}",
+    "label.canStudentCreateLabels": "允许学生创建标签",
+    "label.canStudentDeleteLabels": "允许学生删除标签",
+    "label.clickOnTheImageOr": "点击图片或",
+    "label.color": "颜色",
+    "label.deleteLabel": "删除标签",
+    "label.enterTextHere": "在此输入文本",
+    "label.labels": "标签",
+    "label.labelText": "标签文本",
+    "label.relativeTextXLocation": "文本水平位置X",
+    "label.relativeTextYLocation": "文本垂直位置Y",
+    "label.uploadBackgroundImage": "上传背景图片",
+    "label.xLocation": "X 位置",
+    "label.yLocation": "Y 位置"
+}

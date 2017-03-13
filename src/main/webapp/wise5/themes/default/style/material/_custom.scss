@@ -173,7 +173,6 @@ md-input-container {
 
 .md-button {
     padding: 0 8px;
-    font-weight: 700;
 
     &.md-raised {
         &:not([disabled]) {
@@ -195,11 +194,12 @@ md-input-container {
 }
 
 md-select-menu md-option[selected] {
-    font-weight: 700;
+    font-weight: 500;
 }
 
 md-dialog {
     max-width: 90%;
+    display: flex !important; // TODO: not sure why this is necessary for some dialogs (compenent revision display for example get 'display: initial' added automatically)
 
     .md-dialog-content {
         padding: 16px;

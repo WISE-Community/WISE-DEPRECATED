@@ -43,7 +43,7 @@ var ComponentGradingController = function () {
         this.$onChanges = function (changes) {
 
             if (changes.maxScore) {
-                _this.hasMaxScore = typeof _this.maxScore === 'number';
+                _this.maxScore = typeof changes.maxScore.currentValue === 'number' ? changes.maxScore.currentValue : 0;
             }
 
             _this.componentStates = _this.TeacherDataService.getComponentStatesByWorkgroupIdAndComponentId(_this.toWorkgroupId, _this.componentId);
@@ -130,13 +130,15 @@ var ComponentGradingController = function () {
         key: 'showAutoComment',
         value: function showAutoComment() {
             var result = false;
-            var latestComment = this.latestAnnotations.comment;
-            if (latestComment && latestComment.type === 'autoComment') {
-                var n = this.componentStates.length;
-                if (n > 0) {
-                    var latestComponentState = this.componentStates[n - 1];
-                    if (latestComponentState.id === latestComment.studentWorkId) {
-                        result = true;
+            if (this.latestAnnotations) {
+                var latestComment = this.latestAnnotations.comment;
+                if (latestComment && latestComment.type === 'autoComment') {
+                    var n = this.componentStates.length;
+                    if (n > 0) {
+                        var latestComponentState = this.componentStates[n - 1];
+                        if (latestComponentState.id === latestComment.studentWorkId) {
+                            result = true;
+                        }
                     }
                 }
             }
@@ -225,7 +227,7 @@ var ComponentGradingController = function () {
                 parent: angular.element(document.body),
                 targetEvent: $event,
                 fullscreen: true,
-                template: '<md-dialog aria-label="Revisions for {{userNames}}" class="dialog--wider">\n                    <md-toolbar md-theme="light md-whiteframe-1dp">\n                        <div class="md-toolbar-tools">\n                            <h2 class="overflow--ellipsis">Revisions for {{userNames}}</h2>\n                            <span flex></span>\n                            <md-button class="md-icon-button" ng-click="close()">\n                                <md-icon aria-label="Close dialog"> close </md-icon>\n                            </md-button>\n                        </div>\n                    </md-toolbar>\n                    <md-dialog-content class="md-dialog-content gray-light-bg">\n                        <workgroup-component-revisions workgroup-id="workgroupId" component-id="{{componentId}}" max-score="maxScore"></workgroup-component-revisions>\n                    </md-dialog-content>\n                </md-dialog>',
+                template: '<md-dialog aria-label="Revisions for {{userNames}}" class="dialog--wider">\n                    <md-toolbar>\n                        <div class="md-toolbar-tools gray-darkest-bg">\n                            <h2 class="overflow--ellipsis">Revisions for {{userNames}}</h2>\n                            <span flex></span>\n                            <md-button class="md-icon-button" ng-click="close()">\n                                <md-icon aria-label="{{\'close\' | translate}}"> close </md-icon>\n                            </md-button>\n                        </div>\n                    </md-toolbar>\n                    <md-dialog-content>\n                        <div class="md-dialog-content gray-lighter-bg">\n                            <workgroup-component-revisions workgroup-id="workgroupId" component-id="{{componentId}}" max-score="maxScore"></workgroup-component-revisions>\n                        </div>\n                    </md-dialog-content>\n                    <md-dialog-actions layout="row" layout-align="end center">\n                        <md-button ng-click="close()" aria-label="{{\'close\' | translate}}">{{\'close\' | translate}}</md-button>\n                    </md-dialog-actions>\n                </md-dialog>',
                 locals: {
                     workgroupId: workgroupId,
                     componentId: componentId,
