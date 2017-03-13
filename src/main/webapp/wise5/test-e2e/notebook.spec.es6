@@ -7,10 +7,21 @@ describe('WISE5 Notebook in Preview Mode', () => {
         });
     };
 
+    let notebookButton = element(by.tagName('notebook'));
+    let notebookReport = element(by.tagName('notebook-report'));
+    let notebookReportToolbar = notebookReport.element(by.css('.notebook-report__toolbar'));
+    let notebookReportContainer = notebookReport.element(by.css('.notebook-report-container'));
+    let notebookLauncherButton = element(by.tagName('notebook-launcher'));
+    let insertNoteButton = element(by.css('.notebook-item--report__add-note'));
+    let fullScreenButton = element(by.css('[ng-click="$ctrl.fullscreen()"]'));
+    let collapseButton = element(by.css('[ng-click="$event.stopPropagation(); $ctrl.collapse()"]'));
+
+    /*
     let notebookButton = element(by.xpath('//md-toolbar/button[@aria-label="View Notes"]'));
     let reportButton = element(by.xpath('//md-toolbar/button[@aria-label="View Report"]'));
     let addNoteButton = element(by.xpath('//md-toolbar/button[@aria-label="Add Notebook item"]'));
     let addNoteDialog = element(by.xpath('//md-dialog[@aria-label="Add note"]'));
+    */
 
     it('should load the vle and go to node 1 and show notebook buttons', () => {
         browser.get('http://localhost:8080/wise/project/demo#/vle/node1');
@@ -18,11 +29,42 @@ describe('WISE5 Notebook in Preview Mode', () => {
         browser.wait((nodeDropDownMenu).isPresent(), 5000);  // give it at most 5 seconds to load.
         expect(browser.getTitle()).toEqual('WISE');
         expect(nodeDropDownMenu.getText()).toBe('1.1: HTML Step');
-        expect(notebookButton.isPresent()).toBeTruthy();
-        expect(reportButton.isPresent()).toBeTruthy();
-        expect(addNoteButton.isPresent()).toBeTruthy();
-        expect(addNoteDialog.isPresent()).toBeFalsy();
+        expect(notebookButton.isDisplayed()).toBeTruthy();
+        expect(notebookReport.isDisplayed()).toBeTruthy();
+
+        expect(notebookReportToolbar.isDisplayed()).toBeTruthy();
+        expect(notebookLauncherButton.isDisplayed()).toBeTruthy();
+        expect(insertNoteButton.isDisplayed()).toBeFalsy();
+        expect(fullScreenButton.isDisplayed()).toBeTruthy();
+        expect(collapseButton.isDisplayed()).toBeTruthy();
+        expect(hasClass(notebookReportContainer, 'notebook-report-container__collapsed')).toBeTruthy(); // notebook report should be collapsed at this point
+
+        notebookReportToolbar.click(); // clicking on the notebook report should display the report
+        expect(notebookLauncherButton.isDisplayed()).toBeTruthy(); // notebook fab icon should still be displayed
+        expect(insertNoteButton.isDisplayed()).toBeTruthy();
+        expect(fullScreenButton.isDisplayed()).toBeTruthy();
+        expect(collapseButton.isDisplayed()).toBeTruthy();
+        expect(hasClass(notebookReportContainer, 'notebook-report-container__collapsed')).toBeFalsy(); // notebook report should be displayed at this point, in small view
+
+        collapseButton.click(); // clicking on collapse button should minimize the report
+        expect(notebookReportToolbar.isDisplayed()).toBeTruthy();
+        expect(notebookLauncherButton.isDisplayed()).toBeTruthy(); // notebook fab icon should still be displayed
+        expect(insertNoteButton.isDisplayed()).toBeFalsy();
+        expect(fullScreenButton.isDisplayed()).toBeTruthy();
+        expect(collapseButton.isDisplayed()).toBeTruthy();
+        expect(hasClass(notebookReportContainer, 'notebook-report-container__collapsed')).toBeTruthy(); // notebook report should be collapsed at this point
+
+        fullScreenButton.click();  // clicking on fullscreen button should display the report in full screen mode.
+        expect(notebookLauncherButton.isDisplayed()).toBeTruthy(); // notebook fab icon should still be displayed
+        expect(insertNoteButton.isDisplayed()).toBeTruthy();
+        expect(fullScreenButton.isDisplayed()).toBeTruthy();
+        expect(collapseButton.isDisplayed()).toBeTruthy();
+        expect(hasClass(notebookReportContainer, 'notebook-report-container__collapsed')).toBeFalsy(); // notebook report should be displayed at this point, in full view
+        expect(hasClass(notebookReportContainer, 'notebook-report-container__full')).toBeTruthy(); // notebook report should be displayed at this point, in full view
     });
+
+    /*
+    TODO: update these tests to match the new UI design
 
     it('should open and close the notebook notes view', () => {
         // Click on the notebook icon to open the notebook notes view
@@ -116,4 +158,5 @@ describe('WISE5 Notebook in Preview Mode', () => {
         var notebookItemContentLocation = element(by.cssContainingText('.notebook-item__content__location','1.1'));
         expect(notebookItemContentLocation.isPresent()).toBeTruthy();
     });
+    */
 });
