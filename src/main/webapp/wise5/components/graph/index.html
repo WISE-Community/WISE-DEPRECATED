@@ -102,6 +102,9 @@
                                          ng-model-options='{ debounce: 1000 }'
                                          ng-change='graphController.authoringViewComponentChanged()'/> <button translate='CHOOSE' ng-click='graphController.chooseBackgroundImage()'></button>
                 <br/>
+                {{ 'graph.canStudentHideSeriesOnLegendClick' | translate }} <input type='checkbox'
+                                                                    ng-model='graphController.authoringComponentContent.canStudentHideSeriesOnLegendClick'
+                                                                    ng-change='graphController.authoringViewEnableTrialsClicked()'/>
                 <br/>
                 {{ 'graph.enableTrials' | translate }} <input type='checkbox'
                                      ng-model='graphController.authoringComponentContent.enableTrials'
@@ -123,7 +126,6 @@
                                                              ng-show='graphController.authoringComponentContent.enableTrials'
                                                              ng-change='graphController.authoringViewComponentChanged()'/>
                 </div>
-                <br/>
                 {{ 'graph.enableFileUpload' | translate }} <input type='checkbox'
                                      ng-model='graphController.authoringComponentContent.enableFileUpload'
                                      ng-change='graphController.authoringViewComponentChanged()'/>

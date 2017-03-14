@@ -6,6 +6,7 @@
     "graph.canStudentCreateTrials": "Can Student Create Trials",
     "graph.canStudentDeleteTrials": "Can Student Delete Trials",
     "graph.canStudentEdit": "Can Student Edit",
+    "graph.canStudentHideSeriesOnLegendClick": "Can Student Hide Series By Clicking On Legend",
     "graph.color": "Color",
     "graph.deleteSeries": "Delete Series",
     "graph.enableFileUpload": "Enable File Upload",

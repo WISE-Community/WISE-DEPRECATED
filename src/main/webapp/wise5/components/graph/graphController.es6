@@ -1143,6 +1143,19 @@ class GraphController {
                 plotOptions: {
                     series: {
                         stickyTracking: false,
+                        events: {
+                            legendItemClick: function(event) {
+                                // the student clicked on a series in the legend
+
+                                if (thisGraphController.componentContent.canStudentHideSeriesOnLegendClick != null) {
+                                    // the value has been authored so we will use it
+                                    return thisGraphController.componentContent.canStudentHideSeriesOnLegendClick;
+                                } else {
+                                    // if this has not been authored, we will default to not hiding the series
+                                    return false;
+                                }
+                            }
+                        },
                         point: {
                             events: {
                                 drag: function (e) {
