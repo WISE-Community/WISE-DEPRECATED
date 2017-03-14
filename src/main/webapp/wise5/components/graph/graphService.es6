@@ -32,6 +32,7 @@ class GraphService extends NodeService {
         component.canDeleteTrials = false;
         component.showAllTrialsOnNewTrial = false;
         component.canStudentHideSeriesOnLegendClick = false;
+        component.roundValuesTo = null;
         component.graphType = 'line';
         component.xAxis = {
             title: {

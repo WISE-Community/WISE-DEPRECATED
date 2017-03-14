@@ -59,13 +59,13 @@
                                   ng-model='graphController.authoringComponentContent.xAxis.max'
                                   ng-model-options='{ debounce: 1000 }'
                                   ng-change='graphController.authoringViewComponentChanged()'/>
-                    X Axis Locked: <input type='checkbox'
+                    {{ 'graph.xAxisLocked' | translate }}: <input type='checkbox'
                                 ng-model='graphController.authoringComponentContent.xAxis.locked'
                                 ng-change='graphController.authoringViewComponentChanged()'/>
                 </span>
                 <br/>
                     <span ng-if='graphController.authoringComponentContent.graphType == "column"'>
-                        Categories <button ng-click='graphController.authoringAddXAxisCategory()'>Add Category</button>
+                        {{ 'graph.categories' | translate }} <button ng-click='graphController.authoringAddXAxisCategory()'>Add Category</button>
                     </span>
                 <br/>
                 <div ng-repeat='category in graphController.authoringComponentContent.xAxis.categories track by $index'>
@@ -91,10 +91,13 @@
                               ng-model='graphController.authoringComponentContent.yAxis.max'
                               ng-model-options='{ debounce: 1000 }'
                               ng-change='graphController.authoringViewComponentChanged()'/>
-                Y Axis Locked: <input type='checkbox'
+                {{ 'graph.yAxisLocked' | translate }}: <input type='checkbox'
                               ng-model='graphController.authoringComponentContent.yAxis.locked'
                               ng-change='graphController.authoringViewComponentChanged()'/>
                 <br/>
+                {{ 'graph.roundValuesTo' | translate }} <select ng-model='graphController.authoringComponentContent.roundValuesTo'
+                                                                ng-options='availableRoundingOption.value as availableRoundingOption.text for availableRoundingOption in graphController.availableRoundingOptions'
+                                                                ng-change='graphController.authoringViewComponentChanged()'/>
                 <br/>
                 {{ 'BACKGROUND_IMAGE' | translate }}: <input type='text'
                                          size='80'
@@ -144,8 +147,8 @@
                                   ng-change='graphController.authoringViewComponentChanged()'/>
                     <br/>
                     <div ng-if='graphController.authoringComponentContent.graphType == "line" || graphController.authoringComponentContent.graphType == "scatter"'>
-                        {{ 'graph.symbol' | translate }}: <input ng-model='series.marker.symbol'
-                                       ng-model-options='{ debounce: 1000 }'
+                        {{ 'graph.symbol' | translate }}: <select ng-model='series.marker.symbol'
+                                       ng-options='availableSymbol.value as availableSymbol.text for availableSymbol in graphController.availableSymbols'
                                        ng-change='graphController.authoringViewComponentChanged()'/>
                         <br/>
                     </div>
@@ -154,16 +157,16 @@
                                              ng-model-options='{ debounce: 1000 }'
                                              ng-change='graphController.authoringViewComponentChanged()'/>
                     <br/>
-                    Data Points <button ng-click='graphController.authoringAddSeriesDataPoint(series)'>Add</button>
+                    {{ 'graph.dataPoints' | translate }} <button ng-click='graphController.authoringAddSeriesDataPoint(series)'>Add</button>
                     <br/>
                     <div ng-repeat='dataPoint in series.data track by $index'>
                         <span ng-if='graphController.authoringComponentContent.graphType == "line" || graphController.authoringComponentContent.graphType == "scatter"'>
                             {{$index + 1}}.
-                            x: <input type='number'
+                            {{ 'graph.x' | translate }}: <input type='number'
                                    ng-model='series.data[$index][0]'
                                    style='width:5em'
                                    ng-change='graphController.authoringViewComponentChanged()'/>
-                            y: <input type='number'
+                            {{ 'graph.y' | translate }}: <input type='number'
                                    ng-model='series.data[$index][1]'
                                    style='width:5em'
                                    ng-change='graphController.authoringViewComponentChanged()'/>

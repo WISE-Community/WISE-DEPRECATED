@@ -132,18 +132,62 @@ class GraphController {
         // the available graph types
         this.availableGraphTypes = [
             {
-                value: "line",
-                text: "Line Plot"
+                value: 'line',
+                text: this.$translate('graph.linePlot')
             },
             {
-                value: "column",
-                text: "Column Plot"
+                value: 'column',
+                text: this.$translate('graph.columnPlot')
             },
             {
-                value: "scatter",
-                text: "Scatter Plot"
+                value: 'scatter',
+                text: this.$translate('graph.scatterPlot')
             }
         ];
+
+        // the options for rounding data point values
+        this.availableRoundingOptions = [
+            {
+                value: null,
+                text: this.$translate('graph.noRounding')
+            },
+            {
+                value: 'integer',
+                text: this.$translate('graph.roundToInteger')
+            },
+            {
+                value: 'tenth',
+                text: this.$translate('graph.roundToTenth')
+            },
+            {
+                value: 'hundredth',
+                text: this.$translate('graph.roundToHundredth')
+            }
+        ];
+
+        // the options for data point symbols
+        this.availableSymbols = [
+            {
+                value: 'circle',
+                text: this.$translate('graph.circle')
+            },
+            {
+                value: 'square',
+                text: this.$translate('graph.square')
+            },
+            {
+                value: 'triangle',
+                text: this.$translate('graph.triangle')
+            },
+            {
+                value: 'triangle-down',
+                text: this.$translate('graph.triangleDown')
+            },
+            {
+                value: 'diamond',
+                text: this.$translate('graph.diamond')
+            }
+        ]
 
         // the width of the graph
         this.width = null;
@@ -922,7 +966,14 @@ class GraphController {
                     tempSeries.allowPointSelect = false;
                 } else if (tempSeries.canEdit && this.isActiveSeries(tempSeries)) {
                     // set the fields to allow points to be draggable
-                    tempSeries.draggableX = true;
+
+                    if (this.componentContent.graphType === 'line' || this.componentContent.graphType === 'scatter') {
+                        // students can drag points horizontally on line and scatter plots
+                        tempSeries.draggableX = true;
+                    } else if (this.componentContent.graphType === 'column') {
+                        // students can not drag points horizontally on column plots
+                        tempSeries.draggableX = false;
+                    }
                     tempSeries.draggableY = true;
                     tempSeries.allowPointSelect = true;
                     tempSeries.cursor = 'move';
@@ -1004,8 +1055,8 @@ class GraphController {
                                 var seriesName = this.series.name;
 
                                 // get the x and y values
-                                var x = thisGraphController.roundToNearestTenth(this.x);
-                                var y = thisGraphController.roundToNearestTenth(this.y);
+                                var x = thisGraphController.performRounding(this.x);
+                                var y = thisGraphController.performRounding(this.y);
 
                                 if (seriesName != null && seriesName != '') {
                                     // add the series name
@@ -1095,68 +1146,74 @@ class GraphController {
                     plotBackgroundImage: this.backgroundImage,
                     events: {
                         click: function(e) {
-                            // get the current time
-                            var currentTime = new Date().getTime();
 
-                            // check if a drop event recently occurred
-                            if (thisGraphController.lastDropTime != null) {
+                            if (thisGraphController.componentContent.graphType == 'line' ||
+                                thisGraphController.componentContent.graphType == 'scatter') {
+                                // only attempt to add a new point if the graph type is line or scatter
 
-                                // check if the last drop event was not within the last 100 milliseconds
-                                if ((currentTime - thisGraphController.lastDropTime) < 100) {
-                                    /*
-                                     * the last drop event was within the last 100 milliseconds so we
-                                     * will not register this click. we need to do this because when
-                                     * students drag points, a click event is fired when they release
-                                     * the mouse button. we don't want that click event to create a new
-                                     * point so we need to ignore it.
-                                     */
-                                    return;
+                                // get the current time
+                                var currentTime = new Date().getTime();
+
+                                // check if a drop event recently occurred
+                                if (thisGraphController.lastDropTime != null) {
+
+                                    // check if the last drop event was not within the last 100 milliseconds
+                                    if ((currentTime - thisGraphController.lastDropTime) < 100) {
+                                        /*
+                                         * the last drop event was within the last 100 milliseconds so we
+                                         * will not register this click. we need to do this because when
+                                         * students drag points, a click event is fired when they release
+                                         * the mouse button. we don't want that click event to create a new
+                                         * point so we need to ignore it.
+                                         */
+                                        return;
+                                    }
                                 }
-                            }
 
-                            //check if the student can change the graph
-                            if (!thisGraphController.isDisabled) {
+                                //check if the student can change the graph
+                                if (!thisGraphController.isDisabled) {
 
-                                // get the active series
-                                var activeSeries = thisGraphController.activeSeries;
+                                    // get the active series
+                                    var activeSeries = thisGraphController.activeSeries;
 
-                                // check if the student is allowed to edit the active series
-                                if (activeSeries != null && thisGraphController.canEdit(activeSeries)) {
+                                    // check if the student is allowed to edit the active series
+                                    if (activeSeries != null && thisGraphController.canEdit(activeSeries)) {
 
-                                    // make sure the series is visible
+                                        // make sure the series is visible
 
-                                    // get the active series id
-                                    var activeSeriesId = activeSeries.id;
+                                        // get the active series id
+                                        var activeSeriesId = activeSeries.id;
 
-                                    // loop through all the series
-                                    for (var s = 0; s < this.series.length; s++) {
-                                        var tempSeries = this.series[s];
+                                        // loop through all the series
+                                        for (var s = 0; s < this.series.length; s++) {
+                                            var tempSeries = this.series[s];
 
-                                        if (tempSeries != null) {
-                                            if (activeSeriesId == tempSeries.options.id) {
-                                                // we have found the active series
+                                            if (tempSeries != null) {
+                                                if (activeSeriesId == tempSeries.options.id) {
+                                                    // we have found the active series
 
-                                                if (!tempSeries.visible) {
-                                                    // the series is not visible so we will not add the point
-                                                    alert(thisGraphController.$translate('graph.studentAddingPointToHiddenSeriesMessage'));
-                                                    return;
+                                                    if (!tempSeries.visible) {
+                                                        // the series is not visible so we will not add the point
+                                                        alert(thisGraphController.$translate('graph.studentAddingPointToHiddenSeriesMessage'));
+                                                        return;
+                                                    }
                                                 }
                                             }
                                         }
+
+                                        /*
+                                         * get the x and y positions that were clicked and round
+                                         * them to the nearest tenth
+                                         */
+                                        var x = thisGraphController.performRounding(e.xAxis[0].value);
+                                        var y = thisGraphController.performRounding(e.yAxis[0].value);
+
+                                        // add the point to the series
+                                        thisGraphController.addPointToSeries(activeSeries, x, y);
+
+                                        // notify the controller that the student data has changed
+                                        thisGraphController.studentDataChanged();
                                     }
-
-                                    /*
-                                     * get the x and y positions that were clicked and round
-                                     * them to the nearest tenth
-                                     */
-                                    var x = thisGraphController.roundToNearestTenth(e.xAxis[0].value);
-                                    var y = thisGraphController.roundToNearestTenth(e.yAxis[0].value);
-
-                                    // add the point to the series
-                                    thisGraphController.addPointToSeries(activeSeries, x, y);
-
-                                    // notify the controller that the student data has changed
-                                    thisGraphController.studentDataChanged();
                                 }
                             }
                         }
@@ -1223,8 +1280,8 @@ class GraphController {
                                                  * get the x and y positions where the point was dropped and round
                                                  * them to the nearest tenth
                                                  */
-                                                var x = thisGraphController.roundToNearestTenth(target.x);
-                                                var y = thisGraphController.roundToNearestTenth(target.y);
+                                                var x = thisGraphController.performRounding(target.x);
+                                                var y = thisGraphController.performRounding(target.y);
 
                                                 // get the index of the point
                                                 var index = target.index;
@@ -2544,20 +2601,6 @@ class GraphController {
 
         return nextSeriesId;
     };
-
-    /**
-     * Round a number to the nearest tenth
-     */
-    roundToNearestTenth(x) {
-
-        // make sure x is a number
-        x = parseFloat(x);
-
-        // round the number to the nearest tenth
-        x = Math.round(x * 10) / 10;
-
-        return x;
-    }
 
     /**
      * Handle the delete key press
@@ -4130,7 +4173,7 @@ class GraphController {
     authoringViewGraphTypeChanged(newValue, oldValue) {
 
         // ask if the author is sure they want to change the graph type
-        var answer = confirm('Are you sure you want to change the graph type?');
+        var answer = confirm(this.$translate('graph.areYouSureYouWantToChangeTheGraphType'));
 
         if (answer) {
             // the author answered yes so we will change the graph type
@@ -4309,6 +4352,72 @@ class GraphController {
             // set the new data into the series
             series.data = newData;
         }
+    }
+
+    /**
+     * Round the number according to the authoring settings
+     * @param number a number
+     * @return the rounded number
+     */
+    performRounding(number) {
+
+        if (this.componentContent.roundValuesTo === 'integer') {
+            number = this.roundToNearestInteger(number);
+        } else if (this.componentContent.roundValuesTo === 'tenth') {
+            number = this.roundToNearestTenth(number);
+        } else if (this.componentContent.roundValuesTo === 'hundredth') {
+            number = this.roundToNearestHundredth(number);
+        }
+
+        return number;
+    }
+
+    /**
+     * Round a number to the nearest integer
+     * @param x a number
+     * @return the number rounded to the nearest integer
+     */
+    roundToNearestInteger(x) {
+
+        // make sure x is a number
+        x = parseFloat(x);
+
+        // round to the nearest integer
+        x = Math.round(x);
+
+        return x;
+    }
+
+    /**
+     * Round a number to the nearest tenth
+     * @param x a number
+     * @return the number rounded to the nearest tenth
+     */
+    roundToNearestTenth(x) {
+
+        // make sure x is a number
+        x = parseFloat(x);
+
+        // round the number to the nearest tenth
+        x = Math.round(x * 10) / 10;
+
+        return x;
+    }
+
+    /**
+     * Round a number to the nearest hundredth
+     * @param x a number
+     * @return the number rounded to the nearest hundredth
+     */
+    roundToNearestHundredth(x) {
+
+        // make sure x is a number
+        x = parseFloat(x);
+
+        // round the number to the nearest hundredth
+        x = Math.round(x * 100) / 100;
+
+        return x;
     }
 }
 
