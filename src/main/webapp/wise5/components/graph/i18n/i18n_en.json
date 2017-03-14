@@ -30,6 +30,7 @@
     "graph.selectTrialsToShow": "Select trials to show",
     "graph.selectTrialToEdit": "Select trial to edit",
     "graph.series": "Series",
+    "graph.studentAddingPointToHiddenSeriesMessage": "The series you are trying to add a point to is currently hidden. Please show the series by clicking the series name in the legend and try adding the point again.",
     "graph.symbol": "Symbol",
     "graph.timeSeconds": "Time (seconds)",
     "graph.trial": "Trial",

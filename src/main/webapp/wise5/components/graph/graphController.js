@@ -1109,6 +1109,28 @@ var GraphController = function () {
                                     // check if the student is allowed to edit the active series
                                     if (activeSeries != null && thisGraphController.canEdit(activeSeries)) {
 
+                                        // make sure the series is visible
+
+                                        // get the active series id
+                                        var activeSeriesId = activeSeries.id;
+
+                                        // loop through all the series
+                                        for (var s = 0; s < this.series.length; s++) {
+                                            var tempSeries = this.series[s];
+
+                                            if (tempSeries != null) {
+                                                if (activeSeriesId == tempSeries.options.id) {
+                                                    // we have found the active series
+
+                                                    if (!tempSeries.visible) {
+                                                        // the series is not visible so we will not add the point
+                                                        alert(thisGraphController.$translate('graph.studentAddingPointToHiddenSeriesMessage'));
+                                                        return;
+                                                    }
+                                                }
+                                            }
+                                        }
+
                                         /*
                                          * get the x and y positions that were clicked and round
                                          * them to the nearest tenth
