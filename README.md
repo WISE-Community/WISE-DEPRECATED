@@ -4,10 +4,7 @@ Web-based Inquiry Science Education (WISE)
 
 Get WISE running locally using Docker: https://github.com/WISE-Community/WISE/wiki/WISE-Docker
 
-Setup WISE Local Development
-* Develop WISE without IDE for Windows and Mac OSX developers using Docker (quick and easy, recommeded if you have OSX or Windows): https://github.com/WISE-Community/WISE/wiki/How-to-Setup-WISE:-Local-Development-Environment-using-Docker
-* Develop WISE without IDE for Mac OSX developers (quick and easy, recommeded if you have OSX and want an alternative to the Docker method above): https://github.com/WISE-Community/WISE/wiki/How-to-Setup-WISE:-Local-Development-Environment-without-using-IDE-(MAC-OSX)
-* Develop WISE with Eclipse (longer to set up but provides more debugging options): https://github.com/WISE-Community/WISE/wiki/How-to-Setup-WISE:-Local-Development-Environment-using-Eclipse
+Develop WISE locally using Docker: https://github.com/WISE-Community/WISE/wiki/WISE-Development-using-Docker
  
 Setup WISE on a Server: https://github.com/WISE-Community/WISE/wiki/How-to-Setup-WISE-on-a-Server
 
