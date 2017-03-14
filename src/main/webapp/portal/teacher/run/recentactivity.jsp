@@ -2,7 +2,7 @@
 
 <script type="text/javascript">
 	$(document).ready(function() {
-		
+
 		// setup grading dialogs
 		$('.grading, .researchTools').on('click',function() {
 			var settings = $(this).attr('id');
@@ -23,7 +23,7 @@
 			});
 			$("#gradingDialog > #gradingIfrm").attr('src',path);
 		});
-		
+
 		// setup grading dialogs
 		$('.classroomMonitor').on('click',function() {
 			var settings = $(this).attr('id');
@@ -57,7 +57,7 @@
 			});
 			$("#shareDialog > #shareIfrm").attr('src',path);
 		});
-		
+
 		// setup edit run settings dialog
 		$('.editRun').on('click',function() {
 			var title = $(this).attr('title');
@@ -83,7 +83,7 @@
 			});
 			$("#editRunDialog > #editIfrm").attr('src',path);
 		});
-		
+
 		// setup my notes dialog
 		$('.myNotes').on('click',function() {
 			var title = $(this).attr('title');
@@ -104,7 +104,7 @@
 			});
 			$("#myNotesDialog > #myNotesIfrm").attr('src',path);
 		});
-		
+
 		// setup edit manage announcements dialog
 		$('.editAnnouncements').on('click',function() {
 			var title = $(this).attr('title');
@@ -125,7 +125,7 @@
 			});
 			$("#editAnnouncementsDialog > #announceIfrm").attr('src',path);
 		});
-		
+
 		// setup manage students dialog
 		$('.manageStudents').on('click',function() {
 			var title = $(this).attr('title');
@@ -165,7 +165,7 @@
 			});
 			$("#manageStudentsDialog > #manageStudentsIfrm").attr('src',path);
 		});
-		
+
 		// setup archive and restore run dialogs
 		$('.archiveRun, .activateRun').on('click',function() {
 			var title = $(this).attr('title');
@@ -196,7 +196,7 @@
 			});
 			$("#archiveRunDialog > #archiveIfrm").attr('src',path);
 		});
-		
+
 		// Set up view project details click action for each project id link
 		$('a.projectDetail, a.projectInfo').on('click',function() {
 			var title = $(this).attr('title');
@@ -239,7 +239,7 @@
 					$(this).dialog('close');
 				},
 				'<spring:message code="ok" />': function() {
-					var processingHtml = '<p>' + processing + '</p>' + 
+					var processingHtml = '<p>' + processing + '</p>' +
 						'<p><img src="${contextPath}/themes/default/images/rel_interstitial_loading.gif" /></p>';
 					$('#unshareDialog').css('text-align','center');
 					$('#unshareDialog').html(processingHtml);
@@ -280,7 +280,7 @@
 					<thead>
 					    <tr>
 					       <th style="width:215px;" class="tableHeaderMain runHeader"><spring:message code="teacher.run.recentactivity.activeRuns"/></th>
-					       <th style="width:155px;" class="tableHeaderMain studentHeader"><spring:message code="teacher.run.recentactivity.students" /></th>      
+					       <th style="width:155px;" class="tableHeaderMain studentHeader"><spring:message code="teacher.run.recentactivity.students" /></th>
 					       <th style="width:285px;" class="tableHeaderMain toolsHeader"><spring:message code="teacher.run.recentactivity.gradingAndTools" /></th>
 					       <th class="tableHeaderMain hidden"><spring:message code="teacher.run.recentactivity.runCreated" /></th>
 					       <th class="tableHeaderMain hidden"><spring:message code="teacher.run.recentactivity.runEnded" /></th>
@@ -293,6 +293,8 @@
 					  <c:if test="${fn:length(current_run_list) > 0}">
 						  <c:forEach var="run" items="${current_run_list}">
 						  <sec:accesscontrollist domainObject="${run}" hasPermission="16" var="isRunOwner"></sec:accesscontrollist>
+						  <sec:accesscontrollist domainObject="${run}" hasPermission="2" var="hasWriteAccess"></sec:accesscontrollist>
+						  <sec:accesscontrollist domainObject="${run}" hasPermission="1" var="hasReadAccess"></sec:accesscontrollist>
 						  <tr id="runTitleRow_${run.id}" class="runRow">
 						    <td>
 						    	<div class="runTitle">${run.name}</div>
@@ -301,21 +303,32 @@
 							    	    <c:if test="${sharedowner == user}">
 								    	    	<!-- the project run is shared with the logged-in user. -->
 							    	    	<c:set var="ownership" value="shared" />
-							    	    	<div class="sharedIcon">
-								    	    	<img src="${contextPath}/<spring:theme code="shared"/>" alt="shared project" /> <spring:message code="teacher.run.recentactivity.ownedBy"/>
-								    	    	${run.owner.userDetails.firstname} ${run.owner.userDetails.lastname}
-							    	    	</div>
+											<c:choose>
+												<c:when test="${hasWriteAccess}">
+													<!-- the logged-in user has write access so we will show the name of the run owner -->
+													<div class="sharedIcon">
+										    	    	<img src="${contextPath}/<spring:theme code="shared"/>" alt="shared project" /> <spring:message code="teacher.run.recentactivity.ownedBy"/>
+										    	    	${run.owner.userDetails.firstname} ${run.owner.userDetails.lastname}
+									    	    	</div>
+												</c:when>
+												<c:otherwise>
+													<!-- the logged-in user only has read access so we will not show the name of the run owner -->
+													<div class="sharedIcon">
+										    	    	<img src="${contextPath}/<spring:theme code="shared"/>" alt="shared project" /> <spring:message code="teacher.run.recentactivity.shared"/>
+									    	    	</div>
+												</c:otherwise>
+											</c:choose>
 							    	    	<!-- let the user unshare themself from the run. -->
 							    	    	<a class="unshare" onClick="unshareFromRun('${run.id}','<spring:escapeBody javaScriptEscape="true">${run.name}</spring:escapeBody>');"><spring:message code="teacher.run.recentactivity.removeSelf"/></a>
 							    	    </c:if>
 							    	</c:forEach>
-						     
+
 								<table class="runTitleTable">
 						      			<tr>
 											<th><spring:message code="teacher.run.recentactivity.studentAccessCode" /></th>
 											<td class="accesscode">${run.runcode}</td>
 										</tr>
-										
+
 						      			<tr>
 						      				<th><spring:message code="teacher.run.recentactivity.runId" /></th>
 						      				<td>${run.id}</td>
@@ -346,9 +359,9 @@
 						      				</tr>
 						      			</c:if>
 								</table>
-						      	
+
 							</td>
-														
+
 						    <td style="padding:.5em 0;">
 						    	<table class="currentRunInfoTable">
 						          <tr>
@@ -374,7 +387,7 @@
 				 	                <tr><td colspan="2" class="manageStudentGroups"><a class="manageStudents" title="<spring:message code="teacher.run.recentactivity.manageStudents"/>: ${run.name} (<spring:message code="teacher.run.recentactivity.runId2"/> ${run.id})" id="runId=${run.id}"><img class="icon" alt="groups" src="${contextPath}/<spring:theme code="connected"/>" /><span><spring:message code="teacher.run.recentactivity.manageStudents"/></span></a></td></tr>
 				 	              </c:if>
 						        </table>
-						    </td> 
+						    </td>
 						    <td>
 							 <ul class="actionList">
 							    	<spring:message code="teacher.run.recentactivity.gradingAndFeedback" var="gradingAndFeedback"/>
@@ -404,13 +417,13 @@
 							    	<sec:accesscontrollist domainObject="${run}" hasPermission="16">
 							      		<li><a id="myNotes_${run.id}" class="myNotes" title="<spring:message code="teacher.run.notes.myNotes"/>: ${run.name} (<spring:message code="teacher.run.recentactivity.runId2"/> ${run.id})" ><img class="icon" alt="notes" src="${contextPath}/<spring:theme code="edit"/>" /><spring:message code="teacher.run.notes.myNotes"/></a></li>
 							      		<li><a id="editAnnouncements_${run.id}" class="editAnnouncements" title="<spring:message code="teacher.run.recentactivity.manageAnnouncements"/>: ${run.name} (<spring:message code="teacher.run.recentactivity.runId2"/> ${run.id})" ><img class="icon" alt="announcements" src="${contextPath}/<spring:theme code="chat"/>" /><spring:message code="teacher.run.recentactivity.manageAnnouncements"/></a></li>
-  			   					        <li><a id="shareRun_${run.id}" class="shareRun" title="<spring:message code="teacher.run.recentactivity.sharingPermissions"/>: ${run.name} (<spring:message code="teacher.run.recentactivity.runId2"/> ${run.id})"><img class="icon" alt="share" src="${contextPath}/<spring:theme code="agent"/>" /><span><spring:message code="teacher.run.recentactivity.shareWithAnotherTeacher"/></span></a></li> 
+  			   					        <li><a id="shareRun_${run.id}" class="shareRun" title="<spring:message code="teacher.run.recentactivity.sharingPermissions"/>: ${run.name} (<spring:message code="teacher.run.recentactivity.runId2"/> ${run.id})"><img class="icon" alt="share" src="${contextPath}/<spring:theme code="agent"/>" /><span><spring:message code="teacher.run.recentactivity.shareWithAnotherTeacher"/></span></a></li>
 			 	                    </sec:accesscontrollist>
 									<c:if test="${run.project.wiseVersion == null || run.project.wiseVersion == 4}">
 										<li><a class="researchTools" title="<spring:message code="teacher.run.recentactivity.researcherTools"/>: ${run.name} (<spring:message code="teacher.run.recentactivity.runId2"/> ${run.id})" id="runId=${run.id}&gradingType=export"><img class="icon" alt="export" src="${contextPath}/<spring:theme code="save"/>" /><span><spring:message code="teacher.run.recentactivity.researcherTools"/> <spring:message code="teacher.run.recentactivity.exportStudentData"/></span></a></li>
 									</c:if>
 									<li><a href="${contextPath}/contact/contactwise.html?projectId=${run.project.id}&runId=${run.id}"><img class="icon" alt="contact" src="${contextPath}/<spring:theme code="email"/>" /><span><spring:message code="teacher.run.recentactivity.reportAProblem"/></span></a></li>
-				                    <sec:accesscontrollist domainObject="${run}" hasPermission="16">					    	
+				                    <sec:accesscontrollist domainObject="${run}" hasPermission="16">
 							    	  <li><a class="archiveRun" id="archiveRun_runId=${run.id}&runName=<c:out value="${fn:escapeXml(run.name)}" />" title="<spring:message code="teacher.run.recentactivity.archive"/>: ${run.name} (<spring:message code="teacher.run.recentactivity.runId2"/> ${run.id})"><img class="icon" alt="archive" src="${contextPath}/<spring:theme code="lock"/>" /><span><spring:message code="teacher.run.recentactivity.archiveEndRun"/></span></a></li>
 							    	</sec:accesscontrollist>
 							    </ul>

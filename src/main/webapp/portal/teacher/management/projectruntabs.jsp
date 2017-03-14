@@ -31,6 +31,8 @@
 						<c:if test="${fn:length(current_run_list) > 0}">
 							<c:forEach var="run" items="${current_run_list}">
 								<sec:accesscontrollist domainObject="${run}" hasPermission="16" var="isRunOwner"></sec:accesscontrollist>
+								<sec:accesscontrollist domainObject="${run}" hasPermission="2" var="hasWriteAccess"></sec:accesscontrollist>
+								<sec:accesscontrollist domainObject="${run}" hasPermission="1" var="hasReadAccess"></sec:accesscontrollist>
 								<tr id="runTitleRow_${run.id}" class="runRow">
 									<td>
 										<div class="runTitle">${run.name}</div>
@@ -39,10 +41,21 @@
 											<c:if test="${sharedowner == user}">
 												<!-- the project run is shared with the logged-in user. -->
 												<c:set var="ownership" value="shared" />
-												<div class="sharedIcon">
-													<img src="${contextPath}/<spring:theme code="shared"/>" alt="shared project" /> <spring:message code="teacher.management.projectruntabs.ownedBy"/>
-														${run.owner.userDetails.firstname} ${run.owner.userDetails.lastname}
-												</div>
+												<c:choose>
+													<c:when test="${hasWriteAccess}">
+														<!-- the logged-in user has write access so we will show the name of the run owner -->
+														<div class="sharedIcon">
+															<img src="${contextPath}/<spring:theme code="shared"/>" alt="shared project" /> <spring:message code="teacher.management.projectruntabs.ownedBy"/>
+															${run.owner.userDetails.firstname} ${run.owner.userDetails.lastname}
+														</div>
+													</c:when>
+													<c:otherwise>
+														<!-- the logged-in user has only read access so we will not show the name of the run owner -->
+														<div class="sharedIcon">
+															<img src="${contextPath}/<spring:theme code="shared"/>" alt="shared project" /> <spring:message code="teacher.management.projectruntabs.shared"/>
+														</div>
+													</c:otherwise>
+												</c:choose>
 												<!-- let the user unshare self from the run. -->
 												<a class="unshare" onClick="unshareFromRun('${run.id}','<spring:escapeBody javaScriptEscape="true">${run.name}</spring:escapeBody>');"><spring:message code="teacher.management.projectruntabs.unshare"/></a>
 											</c:if>
@@ -199,7 +212,8 @@
 						<tbody>
 						<c:if test="${fn:length(ended_run_list) > 0}">
 							<c:forEach var="run" items="${ended_run_list}">
-
+							<sec:accesscontrollist domainObject="${run}" hasPermission="2" var="hasWriteAccess"></sec:accesscontrollist>
+							<sec:accesscontrollist domainObject="${run}" hasPermission="1" var="hasReadAccess"></sec:accesscontrollist>
 								<tr id="runTitleRow_${run.id}" class="runRow">
 									<td>
 										<div class="runTitle">${run.name}</div>
@@ -207,10 +221,21 @@
 										<c:forEach var="sharedowner" items="${run.sharedowners}">
 											<c:if test="${sharedowner == user}">
 												<c:set var="ownership" value="shared" />
-												<div class="sharedIcon">
-													<img src="${contextPath}/<spring:theme code="shared"/>" alt="shared project" /> <spring:message code="teacher.management.projectruntabs.ownedBy"/>
-													${run.owner.userDetails.firstname} ${run.owner.userDetails.lastname}
-												</div>
+												<c:choose>
+													<c:when test="${hasWriteAccess}">
+														<!-- the logged-in user has write access so we will show the name of the run owner -->
+														<div class="sharedIcon">
+											    	    	<img src="${contextPath}/<spring:theme code="shared"/>" alt="shared project" /> <spring:message code="teacher.management.projectruntabs.ownedBy"/>
+											    	    	${run.owner.userDetails.firstname} ${run.owner.userDetails.lastname}
+										    	    	</div>
+													</c:when>
+													<c:otherwise>
+														<!-- the logged-in user only has read access so we will not show the name of the run owner -->
+														<div class="sharedIcon">
+											    	    	<img src="${contextPath}/<spring:theme code="shared"/>" alt="shared project" /> <spring:message code="teacher.management.projectruntabs.shared"/>
+										    	    	</div>
+													</c:otherwise>
+												</c:choose>
 												<!-- let the user unshare themself from the run. -->
 												<a class="unshare" onClick="unshareFromRun('${run.id}','<spring:escapeBody javaScriptEscape="true">${run.name}</spring:escapeBody>');"><spring:message code="teacher.management.projectruntabs.unshare"/></a>
 											</c:if>
@@ -355,7 +380,7 @@
 			},
 			"fnInitComplete": function(){
 				// setup tabs
-				$( "#runTabs" ).tabs({ 
+				$( "#runTabs" ).tabs({
 					active: 0,
 					activate: function(event, ui){
 						// Make top header scroll with page
@@ -377,7 +402,7 @@
 			},
 			"sDom":'<"top"lip>rt<"bottom"ip><"clear">'
 		});
-		
+
 		// define sort options
 		var sortParams = {
 			"items": [
@@ -387,14 +412,14 @@
 				{"label": "<spring:message code="teacher.management.projectruntabs.sort_ZA"/>", "column": 8, "direction": "desc" }
 			]
 		}
-		
+
 		var i;
 		for(i=0; i<oTable.length; i++){
 			oTable.dataTableExt.iApiIndex = i;
 			var wrapper = oTable.fnSettings().nTableWrapper;
 			var table = oTable.fnSettings();
 			var id = $(table.oInstance).attr('id');
-			
+
 			// Define FacetedFilter options
 			var facets = new FacetedFilter( table, {
 				"bScroll": false,
@@ -422,10 +447,10 @@
 					}
 				]
 			});
-			
+
 			// add sort logic
 			setSort(i,sortParams,wrapper);
-			
+
 			// Make top header scroll with page
 			var $stickyEl = $('.dataTables_wrapper .top');
 			var elTop = $stickyEl.offset().top,
@@ -441,7 +466,7 @@
 		        }
 		    });
 		}
-		
+
 		// setup sorting
 		function setSort(index,sortParams,wrapper) {
 			if(sortParams.items.length){
@@ -452,7 +477,7 @@
 				});
 				sortHtml +=	'</select></div>';
 				$(wrapper).children('.top').prepend(sortHtml);
-				
+
 				$('#sort_' + index).change(function(){
 					$.fn.dataTableExt.iApiIndex = index;
 					var i = $('option:selected', '#sort_' + index).index();
@@ -460,13 +485,13 @@
 				});
 			}
 		};
-		
+
 		// reset cloumn widths on run tables (datatables seems to change these)
 		$('.runHeader').width(220);
 		$('.studentHeader').width(155);
 		$('.toolsHeader').width(285);
 	});
-	
+
 	// setup grading and classroom monitor dialogs
 	$('.grading, .researchTools').on('click',function(){
 		var settings = $(this).attr('id');
@@ -488,7 +513,7 @@
 		});
 		$("#gradingDialog > #gradingIfrm").attr('src',path);
 	});
-	
+
 	// setup grading and classroom monitor dialogs
 	$('.classroomMonitor').on('click',function(){
 		var settings = $(this).attr('id');
@@ -513,7 +538,7 @@
 			width: '650',
 			height: '450',
 			title: title,
-			close: function(){ 
+			close: function(){
 				$(this).html('');
 			},
 			buttons: {
@@ -522,7 +547,7 @@
 		});
 		$("#shareDialog > #shareIfrm").attr('src',path);
 	});
-	
+
 	// setup edit run settings dialog
 	$('.editRun').on('click',function(){
 		var title = $(this).attr('title');
@@ -538,7 +563,7 @@
 				if(document.getElementById('editIfrm').contentWindow['runUpdated']){
 					window.location.reload();
 				}
-				$(this).html(''); 
+				$(this).html('');
 			},
 			buttons: {
 				Close: function(){
@@ -548,7 +573,7 @@
 		});
 		$("#editRunDialog > #editIfrm").attr('src',path);
 	});
-	
+
 	// setup my notes dialog
 	$('.myNotes').on('click',function(){
 		var title = $(this).attr('title');
@@ -569,7 +594,7 @@
 		});
 		$("#myNotesDialog > #myNotesIfrm").attr('src',path);
 	});
-	
+
 	// setup edit manage announcements dialog
 	$('.editAnnouncements').on('click',function(){
 		var title = $(this).attr('title');
@@ -590,7 +615,7 @@
 		});
 		$("#editAnnouncementsDialog > #announceIfrm").attr('src',path);
 	});
-	
+
 	// setup archive and restore run dialogs
 	$('.archiveRun, .activateRun').on('click',function(){
 		var title = $(this).attr('title');
@@ -621,7 +646,7 @@
 		});
 		$("#archiveRunDialog > #archiveIfrm").attr('src',path);
 	});
-	
+
 	// setup manage students dialog
 	$('.manageStudents').on('click',function(){
 		var title = $(this).attr('title');
@@ -664,7 +689,7 @@
 		});
 		$("#manageStudentsDialog > #manageStudentsIfrm").attr('src',path);
 	});
-	
+
 	// Set up view project details click action for each project id link
 	$('a.projectDetail, a.projectInfo').on('click',function(){
 		var title = $(this).attr('title');
@@ -689,7 +714,7 @@
 		});
 		$("#projectDetailDialog > #projectIfrm").attr('src',path);
 	});
-	
+
 	function unshareFromRun(runId,runName) {
 		var agreed = false,
 			dialogContent = '<spring:message code="teacher.management.projectruntabs.unshare.dialog.confirm" htmlEscape="false" />',
@@ -707,7 +732,7 @@
 					$(this).dialog('close');
 				},
 				'<spring:message code="ok" />': function(){
-					var processingHtml = '<p>' + processing + '</p>' + 
+					var processingHtml = '<p>' + processing + '</p>' +
 						'<p><img src="${contextPath}/themes/default/images/rel_interstitial_loading.gif" /></p>';
 					$('#unshareDialog').css('text-align','center');
 					$('#unshareDialog').html(processingHtml);
