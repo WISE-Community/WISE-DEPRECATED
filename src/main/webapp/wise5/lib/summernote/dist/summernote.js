@@ -6,7 +6,7 @@
  * Copyright 2013-2016 Alan Hong. and other contributors
  * summernote may be freely distributed under the MIT license./
  *
- * Date: 2017-02-16T00:16Z
+ * Date: 2016-08-07T05:11Z
  */
 (function (factory) {
   /* global define */
@@ -1874,7 +1874,7 @@
   var airEditor = renderer.create('<div class="note-editor"/>');
   var airEditable = renderer.create('<div class="note-editable" contentEditable="true"/>');
 
-  var buttonGroup = renderer.create('<div class="note-btn-group btn-group dropup">');
+  var buttonGroup = renderer.create('<div class="note-btn-group btn-group">');
   var button = renderer.create('<button type="button" class="note-btn btn btn-default btn-sm" tabindex="-1">', function ($node, options) {
     if (options && options.tooltip) {
       $node.attr({
@@ -1882,7 +1882,7 @@
       }).tooltip({
         container: 'body',
         trigger: 'hover',
-        placement: 'top'
+        placement: 'bottom'
       });
     }
   });
@@ -1930,7 +1930,7 @@
     $node.find('.note-color-btn').tooltip({
       container: 'body',
       trigger: 'hover',
-      placement: 'top'
+      placement: 'bottom'
     });
   });
 
@@ -1962,7 +1962,7 @@
     '  <div class="popover-content note-children-container"/>',
     '</div>'
   ].join(''), function ($node, options) {
-    var direction = typeof options.direction !== 'undefined' ? options.direction : 'top';
+    var direction = typeof options.direction !== 'undefined' ? options.direction : 'bottom';
 
     $node.addClass(direction);
 
