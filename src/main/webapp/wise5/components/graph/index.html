@@ -216,7 +216,7 @@
                        ng-change='graphController.authoringViewComponentChanged()'/>
             </div>
             <div ng-if='graphController.mode === "authoring" && graphController.authoringComponentContent.showPreviousWork'>
-                {{ 'showPreviousWorkStep' | translate }}:
+                {{ 'SHOW_PREVIOUS_WORK_STEP' | translate }}:
                 <select ng-model='graphController.authoringComponentContent.showPreviousWorkNodeId'
                         ng-change='graphController.authoringShowPreviousWorkNodeIdChanged()'>
                     <option></option>
@@ -236,6 +236,36 @@
                 <input type='checkbox'
                        ng-model='graphController.authoringComponentContent.showPreviousWorkPrompt'
                        ng-change='graphController.authoringViewComponentChanged()'/>
+            </div>
+            <div ng-if='graphController.mode === "authoring" && graphController.authoringComponentContent.enableConnectedComponents'>
+
+            </div>
+            <button ng-click='graphController.addConnectedComponent()'>{{ 'ADD_CONNECTED_COMPONENT' | translate }}</button>
+            <div ng-repeat='connectedComponent in graphController.authoringComponentContent.connectedComponents track by $index'>
+                <table border='1'>
+                    <tr>
+                        <td>
+                            {{ 'CONNECTED_COMPONENT_NODE_ID' | translate }}:
+                            <select ng-model='connectedComponent.nodeId'
+                                    ng-change='graphController.authoringViewComponentChanged()'>
+                                <option></option>
+                                <option ng-repeat='item in graphController.idToOrder | toArray | orderBy : "order"'
+                                        value='{{item.$key}}'
+                                        ng-if='graphController.isApplicationNode(item.$key)'>{{graphController.getNodePositionAndTitleByNodeId(item.$key)}}</option>
+                            </select>
+                            <br/>
+                            {{ 'CONNECTED_COMPONENT_COMPONENT_ID' | translate }}:
+                            <select ng-model='connectedComponent.componentId'
+                                    ng-change='graphController.authoringViewComponentChanged()'
+                                    ng-options='component.id as component.type disable when !graphController.componentHasWork(component) for component in graphController.getComponentsByNodeId(connectedComponent.nodeId)'>
+                                <option></option>
+                            </select>
+                        </td>
+                        <td>
+                            <button ng-click='graphController.deleteConnectedComponent($index)'>{{ 'DELETE' | translate }}</button>
+                        </td>
+                    </tr>
+                </table>
             </div>
             <div ng-if='graphController.mode === "authoring"'>
                 <button ng-click='graphController.showRubricAuthoring = !graphController.showRubricAuthoring'>

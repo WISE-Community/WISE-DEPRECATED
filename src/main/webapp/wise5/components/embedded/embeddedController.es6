@@ -266,6 +266,7 @@ class EmbeddedController {
                         ['style', ['style']],
                         ['font', ['bold', 'underline', 'clear']],
                         ['fontname', ['fontname']],
+                        ['fontsize', ['fontsize']],
                         ['color', ['color']],
                         ['para', ['ul', 'ol', 'paragraph']],
                         ['table', ['table']],
