@@ -1000,22 +1000,84 @@ var NodeController = function () {
 
                                     if (connectedComponentParams != null) {
 
-                                        // get the connected component id
-                                        var connectedComponentId = connectedComponentParams.id;
+                                        // get the node id
+                                        var nodeId = connectedComponentParams.nodeId;
 
-                                        // check if the component id matches the one that has changed
-                                        if (connectedComponentId === changedComponentId) {
+                                        // get the component id
+                                        var componentId = connectedComponentParams.componentId;
 
-                                            var connectedComponent = this.getComponentById(connectedComponentId);
+                                        /*
+                                         * get the id which is the old field that we used to store
+                                         * the component id in. this is here to maintain backwards
+                                         * compatibility.
+                                         */
+                                        var id = connectedComponentParams.id;
 
-                                            // get the scope for the listening component
-                                            var componentScope = this.componentToScope[tempComponentId];
+                                        if (nodeId != null && componentId != null) {
+                                            // the node id and component id was provided
+                                            var connectedComponentId = componentId;
+                                            var connectedNodeId = nodeId;
 
-                                            // check if the listening component has a handler function
-                                            if (componentScope.handleConnectedComponentStudentDataChanged != null) {
+                                            // check if the component id matches the one that has changed
+                                            if (connectedNodeId == this.nodeId && connectedComponentId === changedComponentId) {
 
-                                                // tell the listening part to handle the student data changing
-                                                componentScope.handleConnectedComponentStudentDataChanged(connectedComponent, connectedComponentParams, componentState);
+                                                var connectedComponent = this.getComponentById(connectedComponentId);
+
+                                                // get the scope for the listening component
+                                                var componentScope = this.componentToScope[tempComponentId];
+
+                                                // check if the listening component has a handler function
+                                                if (componentScope.handleConnectedComponentStudentDataChanged != null) {
+
+                                                    // tell the listening part to handle the student data changing
+                                                    componentScope.handleConnectedComponentStudentDataChanged(connectedComponent, connectedComponentParams, componentState);
+                                                }
+                                            }
+                                        } else if (componentId != null) {
+                                            /*
+                                             * the node id was not provided but the component id was provided
+                                             * so we will assume the component id is in the current node
+                                             */
+                                            var connectedComponentId = componentId;
+
+                                            // check if the component id matches the one that has changed
+                                            if (connectedComponentId === changedComponentId) {
+
+                                                var connectedComponent = this.getComponentById(connectedComponentId);
+
+                                                // get the scope for the listening component
+                                                var componentScope = this.componentToScope[tempComponentId];
+
+                                                // check if the listening component has a handler function
+                                                if (componentScope.handleConnectedComponentStudentDataChanged != null) {
+
+                                                    // tell the listening part to handle the student data changing
+                                                    componentScope.handleConnectedComponentStudentDataChanged(connectedComponent, connectedComponentParams, componentState);
+                                                }
+                                            }
+                                        } else if (id != null) {
+                                            /*
+                                             * the node id and component id were not provided but the
+                                             * id was provided which is the old field we used to set
+                                             * the component id in. this is here to maintain backwards
+                                             * compatibility.
+                                             */
+                                            var connectedComponentId = id;
+
+                                            // check if the component id matches the one that has changed
+                                            if (connectedComponentId === changedComponentId) {
+
+                                                var connectedComponent = this.getComponentById(connectedComponentId);
+
+                                                // get the scope for the listening component
+                                                var componentScope = this.componentToScope[tempComponentId];
+
+                                                // check if the listening component has a handler function
+                                                if (componentScope.handleConnectedComponentStudentDataChanged != null) {
+
+                                                    // tell the listening part to handle the student data changing
+                                                    componentScope.handleConnectedComponentStudentDataChanged(connectedComponent, connectedComponentParams, componentState);
+                                                }
                                             }
                                         }
                                     }
