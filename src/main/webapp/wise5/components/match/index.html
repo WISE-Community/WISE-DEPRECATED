@@ -142,51 +142,53 @@
                ng-model='matchController.authoringComponentContent.showPreviousWorkPrompt'
                ng-change='matchController.authoringViewComponentChanged()'/>
     </div>
-    <button ng-click='matchController.addConnectedComponent()'>{{ 'ADD_CONNECTED_COMPONENT' | translate }}</button>
-    <div ng-repeat='connectedComponent in matchController.authoringComponentContent.connectedComponents track by $index'>
-        <table border='1'>
-            <tr>
-                <td style='padding:5'>
-                    {{ 'CONNECTED_COMPONENT' | translate }}
-                </td>
-                <td style='padding:5'>
-                    <div style='display:none'>
-                        {{ 'NODE_ID' | translate }}:
-                        <select ng-model='connectedComponent.nodeId'
+    <div ng-if='matchController.mode === "authoring"'>
+        <button ng-click='matchController.addConnectedComponent()'>{{ 'ADD_CONNECTED_COMPONENT' | translate }}</button>
+        <div ng-repeat='connectedComponent in matchController.authoringComponentContent.connectedComponents track by $index'>
+            <table border='1'>
+                <tr>
+                    <td style='padding:5'>
+                        {{ 'CONNECTED_COMPONENT' | translate }}
+                    </td>
+                    <td style='padding:5'>
+                        <div style='display:none'>
+                            {{ 'NODE_ID' | translate }}:
+                            <select ng-model='connectedComponent.nodeId'
+                                    ng-change='matchController.authoringViewComponentChanged()'>
+                                <option></option>
+                                <option ng-repeat='item in matchController.idToOrder | toArray | orderBy : "order"'
+                                        value='{{item.$key}}'
+                                        ng-if='matchController.isApplicationNode(item.$key)'>{{matchController.getNodePositionAndTitleByNodeId(item.$key)}}</option>
+                            </select>
+                        </div>
+                        <div>
+                            {{ 'COMPONENT_ID' | translate }}:
+                            <select ng-model='connectedComponent.componentId'
+                                    ng-change='matchController.authoringViewComponentChanged()'>
+                                <option></option>
+                                <option ng-repeat='(componentIndex, component) in matchController.getComponentsByNodeId(connectedComponent.nodeId)'
+                                        ng-disabled='!matchController.componentHasWork(component)'
+                                        value='{{component.id}}'>
+                                    {{componentIndex + 1}}. {{component.type}}
+                                </option>
+                            </select>
+                        </div>
+                    </td>
+                    <td style='padding:5'>
+                        <select ng-model='connectedComponent.updateOn'
                                 ng-change='matchController.authoringViewComponentChanged()'>
-                            <option></option>
-                            <option ng-repeat='item in matchController.idToOrder | toArray | orderBy : "order"'
-                                    value='{{item.$key}}'
-                                    ng-if='matchController.isApplicationNode(item.$key)'>{{matchController.getNodePositionAndTitleByNodeId(item.$key)}}</option>
+                                <option ng-repeat='updateOnOption in matchController.connectedComponentUpdateOnOptions'
+                                        value='{{updateOnOption.value}}'>
+                                    {{updateOnOption.text}}
+                                </option>
                         </select>
-                    </div>
-                    <div>
-                        {{ 'COMPONENT_ID' | translate }}:
-                        <select ng-model='connectedComponent.componentId'
-                                ng-change='matchController.authoringViewComponentChanged()'>
-                            <option></option>
-                            <option ng-repeat='(componentIndex, component) in matchController.getComponentsByNodeId(connectedComponent.nodeId)'
-                                    ng-disabled='!matchController.componentHasWork(component)'
-                                    value='{{component.id}}'>
-                                {{componentIndex + 1}}. {{component.type}}
-                            </option>
-                        </select>
-                    </div>
-                </td>
-                <td style='padding:5'>
-                    <select ng-model='connectedComponent.updateOn'
-                            ng-change='matchController.authoringViewComponentChanged()'>
-                            <option ng-repeat='updateOnOption in matchController.connectedComponentUpdateOnOptions'
-                                    value='{{updateOnOption.value}}'>
-                                {{updateOnOption.text}}
-                            </option>
-                    </select>
-                </td>
-                <td style='padding:5'>
-                    <button ng-click='matchController.deleteConnectedComponent($index)'>{{ 'DELETE' | translate }}</button>
-                </td>
-            </tr>
-        </table>
+                    </td>
+                    <td style='padding:5'>
+                        <button ng-click='matchController.deleteConnectedComponent($index)'>{{ 'DELETE' | translate }}</button>
+                    </td>
+                </tr>
+            </table>
+        </div>
     </div>
     <div ng-if='matchController.mode === "authoring"'>
         <button ng-click='matchController.showRubricAuthoring = !matchController.showRubricAuthoring'>

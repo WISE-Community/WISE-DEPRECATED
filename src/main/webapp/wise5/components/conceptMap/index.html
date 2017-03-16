@@ -241,51 +241,53 @@
                        ng-model='conceptMapController.authoringComponentContent.showPreviousWorkPrompt'
                        ng-change='conceptMapController.authoringViewComponentChanged()'/>
             </div>
-            <button ng-click='conceptMapController.addConnectedComponent()'>{{ 'ADD_CONNECTED_COMPONENT' | translate }}</button>
-            <div ng-repeat='connectedComponent in conceptMapController.authoringComponentContent.connectedComponents track by $index'>
-                <table border='1'>
-                    <tr>
-                        <td style='padding:5'>
-                            {{ 'CONNECTED_COMPONENT' | translate }}
-                        </td>
-                        <td style='padding:5'>
-                            <div style='display:none'>
-                                {{ 'NODE_ID' | translate }}:
-                                <select ng-model='connectedComponent.nodeId'
+            <div ng-if='conceptMapController.mode === "authoring"'>
+                <button ng-click='conceptMapController.addConnectedComponent()'>{{ 'ADD_CONNECTED_COMPONENT' | translate }}</button>
+                <div ng-repeat='connectedComponent in conceptMapController.authoringComponentContent.connectedComponents track by $index'>
+                    <table border='1'>
+                        <tr>
+                            <td style='padding:5'>
+                                {{ 'CONNECTED_COMPONENT' | translate }}
+                            </td>
+                            <td style='padding:5'>
+                                <div style='display:none'>
+                                    {{ 'NODE_ID' | translate }}:
+                                    <select ng-model='connectedComponent.nodeId'
+                                            ng-change='conceptMapController.authoringViewComponentChanged()'>
+                                        <option></option>
+                                        <option ng-repeat='item in conceptMapController.idToOrder | toArray | orderBy : "order"'
+                                                value='{{item.$key}}'
+                                                ng-if='conceptMapController.isApplicationNode(item.$key)'>{{conceptMapController.getNodePositionAndTitleByNodeId(item.$key)}}</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    {{ 'COMPONENT_ID' | translate }}:
+                                    <select ng-model='connectedComponent.componentId'
+                                            ng-change='conceptMapController.authoringViewComponentChanged()'>
+                                        <option></option>
+                                        <option ng-repeat='(componentIndex, component) in conceptMapController.getComponentsByNodeId(connectedComponent.nodeId)'
+                                                ng-disabled='!conceptMapController.componentHasWork(component)'
+                                                value='{{component.id}}'>
+                                            {{componentIndex + 1}}. {{component.type}}
+                                        </option>
+                                    </select>
+                                </div>
+                            </td>
+                            <td style='padding:5'>
+                                <select ng-model='connectedComponent.updateOn'
                                         ng-change='conceptMapController.authoringViewComponentChanged()'>
-                                    <option></option>
-                                    <option ng-repeat='item in conceptMapController.idToOrder | toArray | orderBy : "order"'
-                                            value='{{item.$key}}'
-                                            ng-if='conceptMapController.isApplicationNode(item.$key)'>{{conceptMapController.getNodePositionAndTitleByNodeId(item.$key)}}</option>
+                                        <option ng-repeat='updateOnOption in conceptMapController.connectedComponentUpdateOnOptions'
+                                                value='{{updateOnOption.value}}'>
+                                            {{updateOnOption.text}}
+                                        </option>
                                 </select>
-                            </div>
-                            <div>
-                                {{ 'COMPONENT_ID' | translate }}:
-                                <select ng-model='connectedComponent.componentId'
-                                        ng-change='conceptMapController.authoringViewComponentChanged()'>
-                                    <option></option>
-                                    <option ng-repeat='(componentIndex, component) in conceptMapController.getComponentsByNodeId(connectedComponent.nodeId)'
-                                            ng-disabled='!conceptMapController.componentHasWork(component)'
-                                            value='{{component.id}}'>
-                                        {{componentIndex + 1}}. {{component.type}}
-                                    </option>
-                                </select>
-                            </div>
-                        </td>
-                        <td style='padding:5'>
-                            <select ng-model='connectedComponent.updateOn'
-                                    ng-change='conceptMapController.authoringViewComponentChanged()'>
-                                    <option ng-repeat='updateOnOption in conceptMapController.connectedComponentUpdateOnOptions'
-                                            value='{{updateOnOption.value}}'>
-                                        {{updateOnOption.text}}
-                                    </option>
-                            </select>
-                        </td>
-                        <td style='padding:5'>
-                            <button ng-click='conceptMapController.deleteConnectedComponent($index)'>{{ 'DELETE' | translate }}</button>
-                        </td>
-                    </tr>
-                </table>
+                            </td>
+                            <td style='padding:5'>
+                                <button ng-click='conceptMapController.deleteConnectedComponent($index)'>{{ 'DELETE' | translate }}</button>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
             </div>
             <div ng-if='conceptMapController.mode === "authoring"'>
                 <button ng-click='conceptMapController.showRubricAuthoring = !conceptMapController.showRubricAuthoring'>
