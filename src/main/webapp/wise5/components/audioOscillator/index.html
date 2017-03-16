@@ -215,7 +215,7 @@
     <br/>
     {{ 'audioOscillator.frequency' | translate }}: <input type='number'
                       ng-model='audioOscillatorController.frequency'
-                      ng-change='audioOscillatorController.frequencyChanged()'/>
+                      ng-change='audioOscillatorController.frequencyChanged()'/> {{ 'audioOscillator.hz' | translate }}
     <br/>
     <button ng-click='audioOscillatorController.playStopClicked()'>{{audioOscillatorController.playStopButtonText}}</button>
     <br/>
@@ -235,6 +235,18 @@
               class="component-content__actions__info md-caption">
               {{audioOscillatorController.saveMessage.text}} <span class="component-content__actions__more"><md-tooltip md-direction="top">{{ audioOscillatorController.saveMessage.time | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip><span am-time-ago="audioOscillatorController.saveMessage.time"></span></span>
         </span>
+    </div>
+    <div ng-if='audioOscillatorController.mode === "grading"'>
+        {{ 'audioOscillator.frequenciesPlayed' | translate }}: {{audioOscillatorController.frequenciesPlayed}}
+        <br/>
+        {{ 'audioOscillator.frequenciesPlayedSorted' | translate }}: {{audioOscillatorController.frequenciesPlayedSorted}}
+        <br/>
+        {{ 'audioOscillator.numberOfFrequenciesPlayed' | translate }}: {{audioOscillatorController.numberOfFrequenciesPlayed}}
+        <br/>
+        {{ 'audioOscillator.minFrequencyPlayed' | translate }}: {{audioOscillatorController.minFrequencyPlayed}}
+        <br/>
+        {{ 'audioOscillator.maxFrequencyPlayed' | translate }}: {{audioOscillatorController.maxFrequencyPlayed}}
+        <br/>
     </div>
     <component-annotations ng-if="audioOscillatorController.mode === 'student'"
                            annotations='audioOscillatorController.latestAnnotations'

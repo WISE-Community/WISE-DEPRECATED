@@ -122,8 +122,8 @@ var AudioOscillatorService = function (_NodeService) {
                         var state = componentStates[i];
                         if (state.isSubmit && state.studentData) {
                             // component state is a submission
-                            if (state.studentData.response) {
-                                // there is a response so the component is completed
+                            if (state.studentData.frequenciesPlayed != null && studentData.frequenciesPlayed.length > 0) {
+                                // the student has played at least one frequency so the component is completed
                                 result = true;
                                 break;
                             }
@@ -134,11 +134,11 @@ var AudioOscillatorService = function (_NodeService) {
                     var _l = componentStates.length - 1;
                     var componentState = componentStates[_l];
 
-                    var studentData = componentState.studentData;
+                    var _studentData = componentState.studentData;
 
-                    if (studentData != null) {
-                        if (studentData.response) {
-                            // there is a response so the component is completed
+                    if (_studentData != null) {
+                        if (_studentData.frequenciesPlayed != null && _studentData.frequenciesPlayed.length > 0) {
+                            // the student has played at least one frequency so the component is completed
                             result = true;
                         }
                     }

@@ -6,6 +6,8 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var AudioOscillatorController = function () {
@@ -47,6 +49,21 @@ var AudioOscillatorController = function () {
 
         // holds the text that the student has typed
         this.studentResponse = '';
+
+        // an array of frequencies that the student has played
+        this.frequenciesPlayed = [];
+
+        // an array of sorted frequencies that the student has played
+        this.frequenciesPlayedSorted = [];
+
+        // the number of frequences the student has played
+        this.numberOfFrequenciesPlayed = 0;
+
+        // the lowest frequency the student played
+        this.minFrequencyPlayed = null;
+
+        // the highest frequency the student played
+        this.maxFrequencyPlayed = null;
 
         // holds student attachments like assets
         this.attachments = [];
@@ -567,11 +584,35 @@ var AudioOscillatorController = function () {
                 var studentData = componentState.studentData;
 
                 if (studentData != null) {
-                    var response = studentData.response;
 
-                    if (response != null) {
-                        // populate the text the student previously typed
-                        this.studentResponse = response;
+                    if (studentData.frequenciesPlayed != null) {
+                        // the frequencies the student has played
+                        this.frequenciesPlayed = studentData.frequenciesPlayed;
+
+                        if (this.frequenciesPlayed.length > 0) {
+                            // repopulate the last frequency played
+                            this.frequency = this.frequenciesPlayed[this.frequenciesPlayed.length - 1];
+                        }
+                    }
+
+                    if (studentData.frequenciesPlayedSorted != null) {
+                        // the sorted frequencies the student has played
+                        this.frequenciesPlayedSorted = studentData.frequenciesPlayedSorted;
+                    }
+
+                    if (studentData.numberOfFrequenciesPlayed != null) {
+                        // the number of frequencies the student has played
+                        this.numberOfFrequenciesPlayed = studentData.numberOfFrequenciesPlayed;
+                    }
+
+                    if (studentData.minFrequencyPlayed != null) {
+                        // the minimum frequency the student has played
+                        this.minFrequencyPlayed = studentData.minFrequencyPlayed;
+                    }
+
+                    if (studentData.maxFrequencyPlayed != null) {
+                        // the maximum frequency the student has played
+                        this.maxFrequencyPlayed = studentData.maxFrequencyPlayed;
                     }
 
                     var attachments = studentData.attachments;
@@ -686,14 +727,25 @@ var AudioOscillatorController = function () {
             });
         }
     }, {
-        key: 'getStudentResponse',
+        key: 'setFrequenciesPlayed',
 
 
         /**
-         * Get the student response
+         * Set the frequencies played array
+         * @param frequenciesPlayed an array of numbers
          */
-        value: function getStudentResponse() {
-            return this.studentResponse;
+        value: function setFrequenciesPlayed(frequenciesPlayed) {
+            this.frequenciesPlayed = frequenciesPlayed;
+        }
+
+        /**
+         * Get the frequencies the student played
+         */
+
+    }, {
+        key: 'getFrequenciesPlayed',
+        value: function getFrequenciesPlayed() {
+            return this.frequenciesPlayed;
         }
     }, {
         key: 'createComponentState',
@@ -710,12 +762,24 @@ var AudioOscillatorController = function () {
             // create a new component state
             var componentState = this.NodeService.createNewComponentState();
 
-            // get the text the student typed
-            var response = this.getStudentResponse();
-
             // set the response into the component state
             var studentData = {};
-            studentData.response = response;
+
+            // set the frequencies the student has played
+            studentData.frequenciesPlayed = this.frequenciesPlayed;
+
+            // set the sorted frequencies the student has played
+            studentData.frequenciesPlayedSorted = this.frequenciesPlayedSorted;
+
+            // set the number of frequencies the student has played
+            studentData.numberOfFrequenciesPlayed = this.numberOfFrequenciesPlayed;
+
+            // set the minimum frequency the student has played
+            studentData.minFrequencyPlayed = this.minFrequencyPlayed;
+
+            // set the maximum frequency the student has played
+            studentData.maxFrequencyPlayed = this.maxFrequencyPlayed;
+
             studentData.attachments = angular.copy(this.attachments); // create a copy without reference to original array
 
             if (this.isSubmit) {
@@ -953,6 +1017,43 @@ var AudioOscillatorController = function () {
             this.drawOscilloscope(this.analyser);
 
             this.isPlaying = true;
+
+            /*
+             * add the current frequency to the array of frequencies the student
+             * has played
+             */
+            this.addFrequencyPlayed(this.frequency);
+
+            // set the student data to dirty
+            this.studentDataChanged();
+        }
+
+        /**
+         * Add a frequency the student has played
+         * @param frequency the new frequency the student has played
+         */
+
+    }, {
+        key: 'addFrequencyPlayed',
+        value: function addFrequencyPlayed(frequency) {
+
+            // add the new frequency to the array of frequencies
+            this.frequenciesPlayed.push(frequency);
+
+            // make a copy of the frequencies played and sort it
+            this.frequenciesPlayedSorted = this.UtilService.makeCopyOfJSONObject(this.frequenciesPlayed);
+            this.frequenciesPlayedSorted.sort(function (a, b) {
+                return a - b;
+            });
+
+            // get the number of frequencies the student has played
+            this.numberOfFrequenciesPlayed = this.frequenciesPlayed.length;
+
+            // get the minimum frequency the student has played
+            this.minFrequencyPlayed = Math.min.apply(Math, _toConsumableArray(this.frequenciesPlayed));
+
+            // get the maximum frequency the student has played
+            this.maxFrequencyPlayed = Math.max.apply(Math, _toConsumableArray(this.frequenciesPlayed));
         }
 
         /**

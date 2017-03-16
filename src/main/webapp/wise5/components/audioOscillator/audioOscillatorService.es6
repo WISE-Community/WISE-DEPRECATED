@@ -92,8 +92,8 @@ class AudioOscillatorService extends NodeService {
                     let state = componentStates[i];
                     if (state.isSubmit && state.studentData) {
                         // component state is a submission
-                        if (state.studentData.response) {
-                            // there is a response so the component is completed
+                        if (state.studentData.frequenciesPlayed != null && studentData.frequenciesPlayed.length > 0) {
+                            // the student has played at least one frequency so the component is completed
                             result = true;
                             break;
                         }
@@ -107,8 +107,8 @@ class AudioOscillatorService extends NodeService {
                 let studentData = componentState.studentData;
 
                 if (studentData != null) {
-                    if (studentData.response) {
-                        // there is a response so the component is completed
+                    if (studentData.frequenciesPlayed != null && studentData.frequenciesPlayed.length > 0) {
+                        // the student has played at least one frequency so the component is completed
                         result = true;
                     }
                 }
