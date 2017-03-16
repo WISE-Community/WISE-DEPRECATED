@@ -31,7 +31,7 @@ ExplanationBuilderNode.authoringToolDescription = "Students use ideas from their
 ExplanationBuilderNode.prototype.i18nEnabled = true;
 ExplanationBuilderNode.prototype.i18nPath = "vle/node/explanationbuilder/i18n/";
 ExplanationBuilderNode.prototype.supportedLocales = {
-	"en_US":"en_US",
+	"en":"en",
 	"es":"es",
 	"iw":"he",
 	"ko":"ko",

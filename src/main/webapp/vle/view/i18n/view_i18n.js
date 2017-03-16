@@ -7,7 +7,7 @@ View.prototype.i18n = {
 };
 
 // default locale, in case all else fails...this guy will save the day. He's like Superman.
-View.prototype.i18n.defaultLocale = "en_US";
+View.prototype.i18n.defaultLocale = "en";
 
 /**
  * Map of supportedLocales to their equivalent locale codes that WISE knows about.
@@ -19,7 +19,7 @@ View.prototype.i18n.defaultLocale = "en_US";
  */  
 View.prototype.i18n.supportedLocales = {
 		main: {
-			"en_US":"en_US",
+			"en":"en",
 			"es":"es",
 			"fr":"fr",
 			"iw":"he",
@@ -35,7 +35,7 @@ View.prototype.i18n.supportedLocales = {
 			"zh_TW":"zh_TW"
 		},
 		theme: {
-			"en_US":"en_US",
+			"en":"en",
 			"es":"es",
 			"it":"it",
 			"iw":"he",

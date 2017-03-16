@@ -829,7 +829,9 @@
 		<property name="securityMetadataSource">
 			<sec:filter-security-metadata-source use-expressions="false">
 				<sec:intercept-url pattern="/admin*" access="ROLE_ADMINISTRATOR,ROLE_RESEARCHER" />
-        <sec:intercept-url pattern="/curriculum/**" access="ROLE_ANONYMOUS,ROLE_USER" />
+				<sec:intercept-url pattern="/translate*" access="ROLE_ADMINISTRATOR,ROLE_TRANSLATOR" />
+				<sec:intercept-url pattern="/translate/**" access="ROLE_ADMINISTRATOR,ROLE_TRANSLATOR" />
+		        <sec:intercept-url pattern="/curriculum/**" access="ROLE_ANONYMOUS,ROLE_USER" />
 				<sec:intercept-url pattern="/student/join" access="ROLE_ANONYMOUS,ROLE_USER" />
 				<sec:intercept-url pattern="/student*" access="ROLE_STUDENT,ROLE_TEACHER,ROLE_ADMINISTRATOR,ROLE_RESEARCHER" />
 				<sec:intercept-url pattern="/student.html" access="ROLE_ANONYMOUS,ROLE_USER" />

@@ -7,7 +7,7 @@ SensorNode.authoringToolDescription = "Students plot points on a graph and can u
 SensorNode.prototype.i18nEnabled = true;
 SensorNode.prototype.i18nPath = "vle/node/sensor/i18n/";
 SensorNode.prototype.supportedLocales = {
-	"en_US":"en_US",
+	"en":"en",
 	"es":"es",
 	"iw":"he",
 	"nl":"nl",

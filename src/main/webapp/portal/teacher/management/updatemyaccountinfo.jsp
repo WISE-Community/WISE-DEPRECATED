@@ -165,6 +165,12 @@
 
 						</form:form>
 					</div>
+					<sec:authorize access="!hasAnyRole('ROLE_TRANSLATOR,ROLE_ADMINISTRATOR')">
+						<div id="translateWISEMessage" class="panelFooter" style="text-align:left; padding:10px; color:#745A33">
+							<span>Interested in helping us translate WISE in another language? Please <a href="${contextPath}/contact/contactwise.html">contact us</a>.</span>
+						</div>
+					</sec:authorize>
+
 				</div>
 			</div>
 		</div>

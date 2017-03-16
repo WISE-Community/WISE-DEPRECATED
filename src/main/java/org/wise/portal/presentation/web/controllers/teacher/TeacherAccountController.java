@@ -147,7 +147,7 @@ public class TeacherAccountController {
 			//populate the model with objects the form requires 
 			modelMap.put("schoollevels", Schoollevel.values());
 			modelMap.put("curriculumsubjects",Curriculumsubjects.values());
-			modelMap.put("languages", new String[]{"en_US", "zh_TW", "zh_CN", "nl", "he", "ja", "ko", "es", "pt", "tr"});
+			modelMap.put("languages", new String[]{"en", "zh_TW", "zh_CN", "nl", "he", "ja", "ko", "es", "pt", "tr"});
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

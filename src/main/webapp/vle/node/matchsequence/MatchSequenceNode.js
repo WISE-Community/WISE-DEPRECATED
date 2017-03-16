@@ -10,7 +10,7 @@ MatchSequenceNode.authoringToolDescription = "Students drag and drop choices int
 MatchSequenceNode.prototype.i18nEnabled = true;
 MatchSequenceNode.prototype.i18nPath = "vle/node/matchsequence/i18n/";
 MatchSequenceNode.prototype.supportedLocales = {
-		"en_US":"en_US",
+		"en":"en",
 		"es":"es",
 		"iw":"he",
 		"ja":"ja",

@@ -10,7 +10,7 @@ NoteNode.authoringToolDescription = "Students write text to answer a question or
 NoteNode.prototype.i18nEnabled = true;
 NoteNode.prototype.i18nPath = "vle/node/openresponse/i18n/";
 NoteNode.prototype.supportedLocales = {
-			"en_US":"en_US",
+			"en":"en",
 			"iw":"he",
 			"ja":"ja",
 			"es":"es",
