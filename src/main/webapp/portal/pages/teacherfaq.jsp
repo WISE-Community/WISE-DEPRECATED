@@ -252,15 +252,11 @@
 						</ul>
 					</div>
 
-					<div class="question"><spring:message code="pages.teacherfaq.canIRunWISE2ProjectsInWISE4Question" /></div>
+					<div class="question"><spring:message code="pages.teacherfaq.wiseInAnotherLanguageQuestion" /></div>
 					<div class="answer">
-						<ul>
-						    <li><spring:message code="pages.teacherfaq.canIRunWISE2ProjectsInWISE4AnswerPart1" /> (<a href="<spring:message code="pages.teacherfaq.wise2Link" />"><spring:message code="pages.teacherfaq.wise2Link" /></a>)</li>
-						    <li><a href="${contextPath}/contact/contactwise.html"><spring:message code="pages.teacherfaq.canIRunWISE2ProjectsInWISE4AnswerPart2" /></a></li>
-						    <li><spring:message code="pages.teacherfaq.canIRunWISE2ProjectsInWISE4AnswerPart3" /></li>
-						</ul>
+						<spring:message code="pages.teacherfaq.wiseInAnotherLanguageAnswer" />
 					</div>
-					
+
 					<div class="question"><spring:message code="pages.teacherfaq.whoContactWhenHaveProblemQuestion" /></div>
 					<div class="answer">
 						<spring:message code="pages.teacherfaq.whoContactWhenHaveProblemAnswer" />

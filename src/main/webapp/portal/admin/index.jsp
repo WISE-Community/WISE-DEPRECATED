@@ -161,6 +161,7 @@
 						<spring:message code='misc' />
 					</div>
 					<div class="sectionContent">
+						<h5><a href="${contextPath}/translate"><spring:message code='admin.index.translateWISE' /></a></h5>
 						<h5><a href="${contextPath}/admin/run/mergespreadsheets.html"><spring:message code='admin.index.mergeFiles' /></a></h5>
 					</div>
 

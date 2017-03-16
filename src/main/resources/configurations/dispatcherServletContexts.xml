@@ -134,6 +134,7 @@
 	<mvc:resources mapping="/pages/resources/**" location="/portal/pages/resources/" order="1" />
 	<mvc:resources mapping="/portal/javascript/**" location="/portal/javascript/" order="1" />
 	<mvc:resources mapping="/portal/themes/**" location="/portal/themes/" order="1" />
+	<mvc:resources mapping="/portal/translate/**" location="/portal/translate/" order="1" />
 	<mvc:resources mapping="/vle/**" location="/vle/" order="1" />
 	<mvc:resources mapping="/wise5/**" location="/wise5/" order="1" />
 	<mvc:resources mapping="/curriculum/**" location="/curriculum/" order="1" />

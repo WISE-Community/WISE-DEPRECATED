@@ -39,7 +39,7 @@ GrapherNode.authoringToolDescription = "This is a lightweight version of the gra
 GrapherNode.prototype.i18nEnabled = true;
 GrapherNode.prototype.i18nPath = "vle/node/grapher/i18n/";
 GrapherNode.prototype.supportedLocales = {
-	"en_US":"en_US",
+	"en":"en",
 	"es":"es",
 	"ko":"ko",
 	"iw":"he",

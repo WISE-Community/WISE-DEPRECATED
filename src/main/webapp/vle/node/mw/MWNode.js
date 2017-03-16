@@ -7,7 +7,7 @@ MWNode.authoringToolDescription = "Students work on a Molecular Workbench applet
 MWNode.prototype.i18nEnabled = true;
 MWNode.prototype.i18nPath = "vle/node/mw/i18n/";
 MWNode.prototype.supportedLocales = {
-			"en_US":"en_US",
+			"en":"en",
 			"es":"es",
 			"iw":"he",
 			"ja":"ja",
