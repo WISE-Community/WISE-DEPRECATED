@@ -541,9 +541,9 @@ TODO: implement me. Allow authors to view assets while authoring node conent. Pe
     </div>
 </div>
 
-<div ng-repeat='component in nodeAuthoringController.components'>
+<div ng-repeat='(componentIndex, component) in nodeAuthoringController.components'>
     <div style="margin-top: 7px; border-top: 2px dotted black">
-        {{component.type}}
+        {{componentIndex + 1}}. {{component.type}}
         <button ng-click='nodeAuthoringController.moveComponentUp(component.id)' ng-disabled='nodeAuthoringController.components.length <= 1' translate="moveUp"></button>
         <button ng-click='nodeAuthoringController.moveComponentDown(component.id)' ng-disabled='nodeAuthoringController.components.length <= 1' translate="moveDown"></button>
         <button ng-click='nodeAuthoringController.deleteComponent(component.id)' translate="DELETE"></button>
