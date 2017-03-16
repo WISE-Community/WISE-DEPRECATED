@@ -12,7 +12,7 @@ OpenResponseNode.prototype.i18nEnabled = true;
 OpenResponseNode.prototype.i18nType = "OpenResponseNode";
 OpenResponseNode.prototype.i18nPath = "vle/node/openresponse/i18n/";
 OpenResponseNode.prototype.supportedLocales = {
-			"en_US":"en_US",
+			"en":"en",
 			"ja":"ja",
 			"iw":"he",
 			"es":"es",

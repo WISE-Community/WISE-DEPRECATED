@@ -13,7 +13,7 @@ BrainstormNode.authoringToolDescription = "Students post comments for everyone i
 BrainstormNode.prototype.i18nEnabled = true;
 BrainstormNode.prototype.i18nPath = "vle/node/brainstorm/i18n/";
 BrainstormNode.prototype.supportedLocales = {
-			"en_US":"en_US",
+			"en":"en",
 			"es":"es",
 			"iw":"he",
 			"ja":"ja",

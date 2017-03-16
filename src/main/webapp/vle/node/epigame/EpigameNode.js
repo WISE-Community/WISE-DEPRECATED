@@ -4,7 +4,7 @@ EpigameNode.prototype.parent = Node.prototype;
 EpigameNode.prototype.i18nEnabled = true;
 EpigameNode.prototype.i18nPath = "/vlewrapper/vle/node/epigame/i18n/";
 EpigameNode.prototype.supportedLocales = {
-	"en_US":"en_US"	
+	"en":"en"
 };
 
 /*

@@ -6,7 +6,7 @@ AssessmentListNode.authoringToolDescription = "Students answer a collection of q
 AssessmentListNode.prototype.i18nEnabled = true;
 AssessmentListNode.prototype.i18nPath = "vle/node/assessmentlist/i18n/";
 AssessmentListNode.prototype.supportedLocales = {
-		"en_US":"en_US",
+		"en":"en",
 		"es":"es",
 		"fr":"fr",
 		"iw":"he",

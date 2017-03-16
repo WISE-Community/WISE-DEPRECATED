@@ -1,9 +1,16 @@
 {
-	"averageScore": "平均点",
-	"downloadStudentWork": "ワークをダウンロード",
-	"gradeByStep": "ステップ別に採点",
-	"gradeByWorkgroup": "チーム別に採点",
-	"newWorkCounter": "新しいワーク数: {{count}}",
-	"numberOfStudentOnStep": "ステップにいる人数",
-	"pauseStudentScreens": "生徒の画面をブロックアウト"
+    "averageScore": "平均点",
+    "downloadStudentWork": "ワークをダウンロード",
+    "gradeByStep": "ステップ別に採点",
+    "gradeByWorkgroup": "チーム別に採点",
+    "newWorkCounter": "新しいワーク数: {{count}}",
+    "numberOfStudentOnStep": "ステップにいる人数",
+    "pauseStudentScreens": "生徒の画面をブロックアウト",
+    "allPeriods": "全組",
+    "cancel": "取消",
+    "close": "閉じる",
+    "completed": "完成",
+    "completion": "完成度",
+    "currentLocation": "現在地",
+    "classroomMonitor": "クラスモニター"
 }

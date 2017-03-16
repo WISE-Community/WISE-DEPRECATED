@@ -259,7 +259,7 @@ public class StudentAccountController {
     public String initializeFormNewStudent(ModelMap model) { 
 		model.put("genders", Gender.values());
 		model.put("accountQuestions",AccountQuestion.values());
-		model.put("languages", new String[]{"en_US", "zh_TW", "zh_CN", "nl", "he", "ja", "ko", "es", "pt", "tr"});
+		model.put("languages", new String[]{"en", "zh_TW", "zh_CN", "nl", "he", "ja", "ko", "es", "pt", "tr"});
 		model.addAttribute("studentAccountForm", new StudentAccountForm());
         return "student/join";
     } 
@@ -269,7 +269,7 @@ public class StudentAccountController {
 		User user = ControllerUtil.getSignedInUser();
 		model.put("genders", Gender.values());
 		model.put("accountQuestions",AccountQuestion.values());
-		model.put("languages", new String[]{"en_US", "zh_TW", "zh_CN", "nl", "he", "ja", "ko", "es", "pt", "tr"});
+		model.put("languages", new String[]{"en", "zh_TW", "zh_CN", "nl", "he", "ja", "ko", "es", "pt", "tr"});
 		model.addAttribute("studentAccountForm",  new StudentAccountForm((StudentUserDetails) user.getUserDetails()));
         return "student/updatestudentaccount"; 
     } 

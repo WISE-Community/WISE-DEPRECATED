@@ -75,6 +75,10 @@ $(document).ready(function() {
 							   	  <td><a target=_blank href="${discourseSSOLoginURL}"><spring:message code="wiseTeacherCommunity"/></a></td>
 							   </tr>
                  			</c:if>
+
+							<sec:authorize access="hasAnyRole('ROLE_TRANSLATOR,ROLE_ADMINISTRATOR')">
+								<td><a href="${contextPath}/translate">Translate WISE</a></td>
+							</sec:authorize>
 						</table>
 					</div>
 				</div>
@@ -131,7 +135,6 @@ $(document).ready(function() {
                     <span><spring:message code="wiseTeacherCommunity.questionsUsingWISE"/> <a target=_blank href="${discourseSSOLoginURL}"><spring:message code="wiseTeacherCommunity.askWISECommunity"/></a></span>
                  </div>
                  </c:if>
-
 			</div>
 		</div>
 		<div style="clear: both;"></div>

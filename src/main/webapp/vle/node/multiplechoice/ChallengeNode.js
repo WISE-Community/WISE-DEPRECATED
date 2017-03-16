@@ -9,7 +9,7 @@ ChallengeNode.authoringToolDescription = "Students answer a multiple choice ques
 ChallengeNode.prototype.i18nEnabled = true;
 ChallengeNode.prototype.i18nPath = "vle/node/multiplechoice/i18n/";
 ChallengeNode.prototype.supportedLocales = {
-	"en_US":"en_US",
+	"en":"en",
 	"es":"es",
 	"nl":"nl",
 	"nl_GE":"nl",
