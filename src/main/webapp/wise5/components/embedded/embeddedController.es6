@@ -198,6 +198,18 @@ class EmbeddedController {
         // listen for message events from embedded iframe application
         this.$window.addEventListener('message', this.messageEventListener);
 
+        // the options for when to update this component from a connected component
+        this.connectedComponentUpdateOnOptions = [
+            {
+                value: 'change',
+                text: 'Change'
+            },
+            {
+                value: 'submit',
+                text: 'Submit'
+            }
+        ];
+
         // get the current node and node id
         var currentNode = this.StudentDataService.getCurrentNode();
         if (currentNode != null) {
@@ -1232,6 +1244,46 @@ class EmbeddedController {
 
         // update the component rubric
         this.authoringComponentContent.rubric = html;
+
+        // the authoring component content has changed so we will save the project
+        this.authoringViewComponentChanged();
+    }
+
+    /**
+     * Add a connected component
+     */
+    addConnectedComponent() {
+
+        /*
+         * create the new connected component object that will contain a
+         * node id and component id
+         */
+        var newConnectedComponent = {};
+        newConnectedComponent.nodeId = this.nodeId;
+        newConnectedComponent.componentId = null;
+        newConnectedComponent.updateOn = 'change';
+
+        // initialize the array of connected components if it does not exist yet
+        if (this.authoringComponentContent.connectedComponents == null) {
+            this.authoringComponentContent.connectedComponents = [];
+        }
+
+        // add the connected component
+        this.authoringComponentContent.connectedComponents.push(newConnectedComponent);
+
+        // the authoring component content has changed so we will save the project
+        this.authoringViewComponentChanged();
+    }
+
+    /**
+     * Delete a connected component
+     * @param index the index of the component to delete
+     */
+    deleteConnectedComponent(index) {
+
+        if (this.authoringComponentContent.connectedComponents != null) {
+            this.authoringComponentContent.connectedComponents.splice(index, 1);
+        }
 
         // the authoring component content has changed so we will save the project
         this.authoringViewComponentChanged();

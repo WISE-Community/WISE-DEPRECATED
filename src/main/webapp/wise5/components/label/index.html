@@ -141,6 +141,52 @@
                ng-model='labelController.authoringComponentContent.showPreviousWorkPrompt'
                ng-change='labelController.authoringViewComponentChanged()'/>
     </div>
+    <button ng-click='labelController.addConnectedComponent()'>{{ 'ADD_CONNECTED_COMPONENT' | translate }}</button>
+    <div ng-repeat='connectedComponent in labelController.authoringComponentContent.connectedComponents track by $index'>
+        <table border='1'>
+            <tr>
+                <td style='padding:5'>
+                    {{ 'CONNECTED_COMPONENT' | translate }}
+                </td>
+                <td style='padding:5'>
+                    <div style='display:none'>
+                        {{ 'NODE_ID' | translate }}:
+                        <select ng-model='connectedComponent.nodeId'
+                                ng-change='labelController.authoringViewComponentChanged()'>
+                            <option></option>
+                            <option ng-repeat='item in labelController.idToOrder | toArray | orderBy : "order"'
+                                    value='{{item.$key}}'
+                                    ng-if='labelController.isApplicationNode(item.$key)'>{{labelController.getNodePositionAndTitleByNodeId(item.$key)}}</option>
+                        </select>
+                    </div>
+                    <div>
+                        {{ 'COMPONENT_ID' | translate }}:
+                        <select ng-model='connectedComponent.componentId'
+                                ng-change='labelController.authoringViewComponentChanged()'>
+                            <option></option>
+                            <option ng-repeat='(componentIndex, component) in labelController.getComponentsByNodeId(connectedComponent.nodeId)'
+                                    ng-disabled='!labelController.componentHasWork(component)'
+                                    value='{{component.id}}'>
+                                {{componentIndex + 1}}. {{component.type}}
+                            </option>
+                        </select>
+                    </div>
+                </td>
+                <td style='padding:5'>
+                    <select ng-model='connectedComponent.updateOn'
+                            ng-change='labelController.authoringViewComponentChanged()'>
+                            <option ng-repeat='updateOnOption in labelController.connectedComponentUpdateOnOptions'
+                                    value='{{updateOnOption.value}}'>
+                                {{updateOnOption.text}}
+                            </option>
+                    </select>
+                </td>
+                <td style='padding:5'>
+                    <button ng-click='labelController.deleteConnectedComponent($index)'>{{ 'DELETE' | translate }}</button>
+                </td>
+            </tr>
+        </table>
+    </div>
     <div ng-if='labelController.mode === "authoring"'>
         <button ng-click='labelController.showRubricAuthoring = !labelController.showRubricAuthoring'>
             {{ 'EDIT_COMPONENT_RUBRIC' | translate }}

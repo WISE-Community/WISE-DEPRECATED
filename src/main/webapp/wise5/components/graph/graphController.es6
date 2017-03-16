@@ -187,13 +187,25 @@ class GraphController {
                 value: 'diamond',
                 text: this.$translate('graph.diamond')
             }
-        ]
+        ];
 
         // the width of the graph
         this.width = null;
 
         // the height of the graph
         this.height = null;
+
+        // the options for when to update this component from a connected component
+        this.connectedComponentUpdateOnOptions = [
+            {
+                value: 'change',
+                text: 'Change'
+            },
+            {
+                value: 'submit',
+                text: 'Submit'
+            }
+        ];
 
         // get the current node and node id
         var currentNode = this.StudentDataService.getCurrentNode();
@@ -4433,6 +4445,7 @@ class GraphController {
         var newConnectedComponent = {};
         newConnectedComponent.nodeId = this.nodeId;
         newConnectedComponent.componentId = null;
+        newConnectedComponent.updateOn = 'change';
 
         // initialize the array of connected components if it does not exist yet
         if (this.authoringComponentContent.connectedComponents == null) {
