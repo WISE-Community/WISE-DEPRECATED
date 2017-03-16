@@ -5924,19 +5924,19 @@ var ProjectService = function () {
                     var nodeId = params.nodeId;
                     if (nodeId != null) {
                         var nodeTitle = this.getNodePositionAndTitleByNodeId(nodeId);
-                        message += 'Complete "' + nodeTitle + '"';
+                        message += this.$translate('completeNodeTitle', { nodeTitle: nodeTitle });
                     }
                 } else if (name === 'isVisited') {
                     var nodeId = params.nodeId;
                     if (nodeId != null) {
                         var nodeTitle = this.getNodePositionAndTitleByNodeId(nodeId);
-                        message += 'Visit "' + nodeTitle + '"';
+                        message += this.$translate('visitNodeTitle', { nodeTitle: nodeTitle });
                     }
                 } else if (name === 'isCorrect') {
                     var nodeId = params.nodeId;
                     if (nodeId != null) {
                         var nodeTitle = this.getNodePositionAndTitleByNodeId(nodeId);
-                        message += 'Correctly answer "' + nodeTitle + '"';
+                        message += this.$translate('correctlyAnswerNodeTitle', { nodeTitle: nodeTitle });
                     }
                 } else if (name === 'score') {
                     var nodeId = params.nodeId;
@@ -5956,7 +5956,7 @@ var ProjectService = function () {
                     }
 
                     // generate the message
-                    message += 'Obtain a score of ' + scoresString + ' on "' + nodeTitle + '"';
+                    message += this.$translate('obtainAScoreOfXOnNodeTitle', { score: scoresString, nodeTitle: nodeTitle });
                 } else if (name === 'choiceChosen') {} else if (name === 'usedXSubmits') {
                     var nodeId = params.nodeId;
                     var nodeTitle = '';
@@ -5970,12 +5970,16 @@ var ProjectService = function () {
                     }
 
                     // generate the message
-                    message += 'Submit ' + requiredSubmitCount + ' times on "' + nodeTitle + '"';
+                    if (requiredSubmitCount == 1) {
+                        message += this.$translate('submitXTimeOnNodeTitle', { requiredSubmitCount: requiredSubmitCount, nodeTitle: nodeTitle });
+                    } else {
+                        message += this.$translate('submitXTimesOnNodeTitle', { requiredSubmitCount: requiredSubmitCount, nodeTitle: nodeTitle });
+                    }
                 } else if (name === 'branchPathTaken') {} else if (name === 'isPlanningActivityCompleted') {
                     var nodeId = params.nodeId;
                     if (nodeId != null) {
                         var nodeTitle = this.getNodePositionAndTitleByNodeId(nodeId);
-                        message += 'Complete "' + nodeTitle + '"';
+                        message += this.$translate('completeNodeTitle', { nodeTitle: nodeTitle });
                     }
                 }
             }

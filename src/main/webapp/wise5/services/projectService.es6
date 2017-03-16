@@ -5433,9 +5433,9 @@ class ProjectService {
             var removalCriteria = constraint.removalCriteria;
 
             if (removalConditional === 'any') {
-                message += this.$translate('TO_VISIT_STEP_YOU_MUST_PERFORM_ONE_OF_THE_ACTIONS_BELOW', { nodeTitle: nodeTitle}) + ':<br/>';
+                message += this.$translate('TO_VISIT_STEP_YOU_MUST_PERFORM_ONE_OF_THE_ACTIONS_BELOW', { nodeTitle: nodeTitle }) + ':<br/>';
             } else {
-                message += this.$translate('TO_VISIT_STEP_YOU_MUST_PERFORM_ALL_OF_THE_ACTIONS_BELOW', { nodeTitle: nodeTitle}) + ':<br/>';
+                message += this.$translate('TO_VISIT_STEP_YOU_MUST_PERFORM_ALL_OF_THE_ACTIONS_BELOW', { nodeTitle: nodeTitle }) + ':<br/>';
             }
 
             if (removalCriteria != null) {
@@ -5486,19 +5486,19 @@ class ProjectService {
                 var nodeId = params.nodeId;
                 if (nodeId != null) {
                     var nodeTitle = this.getNodePositionAndTitleByNodeId(nodeId);
-                    message += 'Complete "' + nodeTitle + '"';
+                    message += this.$translate('completeNodeTitle', { nodeTitle: nodeTitle });
                 }
             } else if (name === 'isVisited') {
                 var nodeId = params.nodeId;
                 if (nodeId != null) {
                     var nodeTitle = this.getNodePositionAndTitleByNodeId(nodeId);
-                    message += 'Visit "' + nodeTitle + '"';
+                    message += this.$translate('visitNodeTitle', { nodeTitle: nodeTitle });
                 }
             } else if (name === 'isCorrect') {
                 var nodeId = params.nodeId;
                 if (nodeId != null) {
                     var nodeTitle = this.getNodePositionAndTitleByNodeId(nodeId);
-                    message += 'Correctly answer "' + nodeTitle + '"';
+                    message += this.$translate('correctlyAnswerNodeTitle', { nodeTitle: nodeTitle });
                 }
             } else if (name === 'score') {
                 var nodeId = params.nodeId;
@@ -5518,7 +5518,7 @@ class ProjectService {
                 }
 
                 // generate the message
-                message += 'Obtain a score of ' + scoresString + ' on "' + nodeTitle + '"';
+                message += this.$translate('obtainAScoreOfXOnNodeTitle', { score: scoresString, nodeTitle: nodeTitle });
             } else if (name === 'choiceChosen') {
 
             } else if (name === 'usedXSubmits') {
@@ -5534,14 +5534,18 @@ class ProjectService {
                 }
 
                 // generate the message
-                message += 'Submit ' + requiredSubmitCount + ' times on "' + nodeTitle + '"';
+                if (requiredSubmitCount == 1) {
+                    message += this.$translate('submitXTimeOnNodeTitle', { requiredSubmitCount: requiredSubmitCount, nodeTitle: nodeTitle });
+                } else {
+                    message += this.$translate('submitXTimesOnNodeTitle', { requiredSubmitCount: requiredSubmitCount, nodeTitle: nodeTitle });
+                }
             } else if (name === 'branchPathTaken') {
 
             } else if (name === 'isPlanningActivityCompleted') {
                 var nodeId = params.nodeId;
                 if (nodeId != null) {
                     var nodeTitle = this.getNodePositionAndTitleByNodeId(nodeId);
-                    message += 'Complete "' + nodeTitle + '"';
+                    message += this.$translate('completeNodeTitle', { nodeTitle: nodeTitle });
                 }
             }
         }

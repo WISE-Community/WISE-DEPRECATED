@@ -19,6 +19,8 @@
     "chooseItemToSnipToNotebook": "Choose Item to Snip to Notebook",
     "chooseNotebookItemToAdd": "Choose an item to add",
     "collapse": "Collapse",
+    "completeNodeTitle": "Complete \"{{nodeTitle}}\"",
+    "correctlyAnswerNodeTitle": "Correctly answer \"{{nodeTitle}}\"",
     "deletedNotes": "Deleted Notes",
     "deleteNoteConfirmMessage": "Are you sure you want to delete this note?",
     "deleteStudentAssetFromNotebookNotImplementedYet": "Delete student asset from notebook not implemented yet",
@@ -54,6 +56,7 @@
     "noteAnyWorkYouHaveDoneOnThisItemWillBeLost": "Note: Any work you have done on the item will be lost.",
     "noteThisChooserScreenIsOnlyAvailableInPreviewMode": "Note: This chooser screen is only available in preview mode. Students will not see this screen in a classroom run and will instead be assigned a branch path automatically. Once you have chosen a branch, complete the current step and then click the Next arrow.",
     "notificationsTitle": "Alerts",
+    "obtainAScoreOfXOnNodeTitle": "Obtain a score of {{score}} on \"{{nodeTitle}}\"",
     "ok": "OK",
     "on": "ON",
     "off": "OFF",
@@ -84,6 +87,8 @@
     "sessionTimeout": "Session Timeout",
     "signOut": "Sign Out",
     "sorryYouCannotViewThisItemYet": "Sorry, you cannot view this item yet.",
+    "submitXTimeOnNodeTitle": "Submit {{requiredSubmitCount}} time on \"{{nodeTitle}}\"",
+    "submitXTimesOnNodeTitle": "Submit {{requiredSubmitCount}} times on \"{{nodeTitle}}\"",
     "teacherFeedbackLabel": "Teacher Feedback",
     "toggleFullScreen": "Toggle full screen",
     "theStudentAssetsWillAppearHereOnceYouSetUpAClassroomRun": "The student assets will appear here once you set up a classroom run.",
@@ -91,6 +96,7 @@
     "useThisFile": "Use this file",
     "viewDeletedNotes": "View deleted {{noteLabelPlural}}",
     "viewNote": "View {{noteLabel}}",
+    "visitNodeTitle": "Visit \"{{nodeTitle}}\"",
     "yes": "Yes",
     "yourTeacherHasPausedAllTheScreensInTheClass": "Your teacher has paused all the screens in the class."
 }
