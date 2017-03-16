@@ -62,42 +62,42 @@ public class TranslateWISEController {
     private IMailFacade mailService = null;
 
     private static final Map<String, String> projectToFileDirMap;
+
     static
     {
         projectToFileDirMap = new HashMap<String, String>();
-        projectToFileDirMap.put("assessmentlist", "src/main/webapp/vle/node/assessmentlist/i18n/");
-        projectToFileDirMap.put("audioOscillator5", "src/main/webapp/wise5/components/audioOscillator/i18n/");
-        projectToFileDirMap.put("authoringTool5", "src/main/webapp/wise5/authoringTool/i18n/");
-        projectToFileDirMap.put("brainstorm", "src/main/webapp/vle/node/brainstorm/i18n/");
-        projectToFileDirMap.put("branching", "src/main/webapp/vle/node/branching/i18n/");
-        projectToFileDirMap.put("classroomMonitor5", "src/main/webapp/wise5/classroomMonitor/i18n/");
-        projectToFileDirMap.put("conceptMap5", "src/main/webapp/wise5/components/conceptMap/i18n/");
-        projectToFileDirMap.put("discussion5", "src/main/webapp/wise5/components/discussion/i18n/");
-        projectToFileDirMap.put("draw", "src/main/webapp/vle/node/draw/i18n/");
-        projectToFileDirMap.put("draw5", "src/main/webapp/wise5/components/draw/i18n/");
-        projectToFileDirMap.put("embedded5", "src/main/webapp/wise5/components/embedded/i18n/");
-        projectToFileDirMap.put("explanationbuilder", "src/main/webapp/vle/node/explanationbuilder/i18n/");
-        projectToFileDirMap.put("fillin", "src/main/webapp/vle/node/fillin/i18n/");
-        projectToFileDirMap.put("flash", "src/main/webapp/vle/node/flash/i18n/");
-        projectToFileDirMap.put("grapher", "src/main/webapp/vle/node/grapher/i18n/");
-        projectToFileDirMap.put("graph5", "src/main/webapp/wise5/components/graph/i18n/");
-        projectToFileDirMap.put("label5", "src/main/webapp/wise5/components/label/i18n/");
-        projectToFileDirMap.put("matchsequence", "src/main/webapp/vle/node/matchsequence/i18n/");
-        projectToFileDirMap.put("match5", "src/main/webapp/wise5/components/match/i18n/");
-        projectToFileDirMap.put("mw", "src/main/webapp/vle/node/mw/i18n/");
-        projectToFileDirMap.put("multiplechoice", "src/main/webapp/vle/node/multiplechoice/i18n/");
-        projectToFileDirMap.put("multipleChoice5", "src/main/webapp/wise5/components/multipleChoice/i18n/");
-        projectToFileDirMap.put("netlogo", "src/main/webapp/vle/node/netlogo/i18n/");
-        projectToFileDirMap.put("openresponse", "src/main/webapp/vle/node/openresponse/i18n/");
-        projectToFileDirMap.put("openResponse5", "src/main/webapp/wise5/components/openResponse/i18n/");
-        projectToFileDirMap.put("sensor", "src/main/webapp/vle/node/sensor/i18n/");
-        projectToFileDirMap.put("table", "src/main/webapp/vle/node/table/i18n/");
-        projectToFileDirMap.put("table5", "src/main/webapp/wise5/components/table/i18n/");
-        projectToFileDirMap.put("themewise", "src/main/webapp/vle/themes/wise/i18n/");
-        projectToFileDirMap.put("themestarmap", "src/main/webapp/vle/themes/starmap/i18n/");
-        projectToFileDirMap.put("portal", "src/main/resources/i18n/");
-        projectToFileDirMap.put("vle", "src/main/webapp/vle/view/i18n/");
-        projectToFileDirMap.put("vle5", "src/main/webapp/wise5/vle/i18n/");
+        projectToFileDirMap.put("assessmentlist", "vle/node/assessmentlist/i18n/");
+        projectToFileDirMap.put("audioOscillator5", "wise5/components/audioOscillator/i18n/");
+        projectToFileDirMap.put("authoringTool5", "wise5/authoringTool/i18n/");
+        projectToFileDirMap.put("brainstorm", "vle/node/brainstorm/i18n/");
+        projectToFileDirMap.put("branching", "vle/node/branching/i18n/");
+        projectToFileDirMap.put("classroomMonitor5", "wise5/classroomMonitor/i18n/");
+        projectToFileDirMap.put("conceptMap5", "wise5/components/conceptMap/i18n/");
+        projectToFileDirMap.put("discussion5", "wise5/components/discussion/i18n/");
+        projectToFileDirMap.put("draw", "vle/node/draw/i18n/");
+        projectToFileDirMap.put("draw5", "wise5/components/draw/i18n/");
+        projectToFileDirMap.put("embedded5", "wise5/components/embedded/i18n/");
+        projectToFileDirMap.put("explanationbuilder", "vle/node/explanationbuilder/i18n/");
+        projectToFileDirMap.put("fillin", "vle/node/fillin/i18n/");
+        projectToFileDirMap.put("flash", "vle/node/flash/i18n/");
+        projectToFileDirMap.put("grapher", "vle/node/grapher/i18n/");
+        projectToFileDirMap.put("graph5", "wise5/components/graph/i18n/");
+        projectToFileDirMap.put("label5", "wise5/components/label/i18n/");
+        projectToFileDirMap.put("matchsequence", "vle/node/matchsequence/i18n/");
+        projectToFileDirMap.put("match5", "wise5/components/match/i18n/");
+        projectToFileDirMap.put("mw", "vle/node/mw/i18n/");
+        projectToFileDirMap.put("multiplechoice", "vle/node/multiplechoice/i18n/");
+        projectToFileDirMap.put("multipleChoice5", "wise5/components/multipleChoice/i18n/");
+        projectToFileDirMap.put("netlogo", "vle/node/netlogo/i18n/");
+        projectToFileDirMap.put("openresponse", "vle/node/openresponse/i18n/");
+        projectToFileDirMap.put("openResponse5", "wise5/components/openResponse/i18n/");
+        projectToFileDirMap.put("sensor", "vle/node/sensor/i18n/");
+        projectToFileDirMap.put("table", "vle/node/table/i18n/");
+        projectToFileDirMap.put("table5", "wise5/components/table/i18n/");
+        projectToFileDirMap.put("themewise", "vle/themes/wise/i18n/");
+        projectToFileDirMap.put("themestarmap", "vle/themes/starmap/i18n/");
+        projectToFileDirMap.put("vle", "vle/view/i18n/");
+        projectToFileDirMap.put("vle5", "wise5/vle/i18n/");
     }
 
     /**
@@ -157,23 +157,36 @@ public class TranslateWISEController {
     }
 
     protected File getTranslationFile(String projectType, String locale) throws Exception {
-        String projectFileDir = projectToFileDirMap.get(projectType);
-
-        String projectFilePath = "";
 
         if ("portal".equals(projectType)) {
+            // portal properties is in src/main/resource and is a resource, so we must load it differently.
+            String propertiesFilePath = "";
             if ("en".equals(locale)) {
-                projectFilePath = projectFileDir + "i18n.properties";   // special case
+                // in properties file, only "en" doesn't have _en.json at the end. All other locales have i18n_ja.properties, i18n_de.properties, etc.
+                propertiesFilePath = TranslateWISEController.class.getResource("/i18n/i18n.properties").getFile();
             } else {
-                projectFilePath = projectFileDir + "i18n_" + locale + ".properties";
+                propertiesFilePath = TranslateWISEController.class.getResource("/i18n/i18n_" + locale + ".properties").getFile();
             }
+            System.out.println(propertiesFilePath);
+            File propertiesFile = new File(propertiesFilePath);
+            return propertiesFile;
         } else {
-            projectFilePath = projectFileDir + "i18n_" + locale + ".json";
-        }
+            // lookup the fileDirMapping
+            String projectFileDir = projectToFileDirMap.get(projectType);
 
-        System.out.println(projectFilePath);
-        File projectFile = new File(projectFilePath);
-        return projectFile;
+            String projectFilePath = projectFileDir + "i18n_" + locale + ".json";
+            // prepend wiseBaseDir
+            String wiseBaseDir = wiseProperties.getProperty("wiseBaseDir", "/");
+            if (!wiseBaseDir.endsWith("/")) {
+                // make sure wiseBaseDir ends with "/" or the path will be incorrect.
+                wiseBaseDir += "/";
+            }
+            projectFilePath = wiseBaseDir + projectFilePath;
+
+            System.out.println(projectFilePath);
+            File projectFile = new File(projectFilePath);
+            return projectFile;
+        }
     }
 
     /**
