@@ -245,21 +245,31 @@
                 <table border='1'>
                     <tr>
                         <td>
-                            {{ 'CONNECTED_COMPONENT_NODE_ID' | translate }}:
-                            <select ng-model='connectedComponent.nodeId'
-                                    ng-change='graphController.authoringViewComponentChanged()'>
-                                <option></option>
-                                <option ng-repeat='item in graphController.idToOrder | toArray | orderBy : "order"'
-                                        value='{{item.$key}}'
-                                        ng-if='graphController.isApplicationNode(item.$key)'>{{graphController.getNodePositionAndTitleByNodeId(item.$key)}}</option>
-                            </select>
-                            <br/>
-                            {{ 'CONNECTED_COMPONENT_COMPONENT_ID' | translate }}:
-                            <select ng-model='connectedComponent.componentId'
-                                    ng-change='graphController.authoringViewComponentChanged()'
-                                    ng-options='component.id as component.type disable when !graphController.componentHasWork(component) for component in graphController.getComponentsByNodeId(connectedComponent.nodeId)'>
-                                <option></option>
-                            </select>
+                            {{ 'CONNECTED_COMPONENT' | translate }}
+                        </td>
+                        <td>
+                            <div style='display:none'>
+                                {{ 'NODE_ID' | translate }}:
+                                <select ng-model='connectedComponent.nodeId'
+                                        ng-change='graphController.authoringViewComponentChanged()'>
+                                    <option></option>
+                                    <option ng-repeat='item in graphController.idToOrder | toArray | orderBy : "order"'
+                                            value='{{item.$key}}'
+                                            ng-if='graphController.isApplicationNode(item.$key)'>{{graphController.getNodePositionAndTitleByNodeId(item.$key)}}</option>
+                                </select>
+                            </div>
+                            <div>
+                                {{ 'COMPONENT_ID' | translate }}:
+                                <select ng-model='connectedComponent.componentId'
+                                        ng-change='graphController.authoringViewComponentChanged()'>
+                                    <option></option>
+                                    <option ng-repeat='(componentIndex, component) in graphController.getComponentsByNodeId(connectedComponent.nodeId)'
+                                            ng-disabled='!graphController.componentHasWork(component)'
+                                            value='{{component.id}}'>
+                                        {{componentIndex + 1}}: {{component.type}}
+                                    </option>
+                                </select>
+                            </div>
                         </td>
                         <td>
                             <button ng-click='graphController.deleteConnectedComponent($index)'>{{ 'DELETE' | translate }}</button>
