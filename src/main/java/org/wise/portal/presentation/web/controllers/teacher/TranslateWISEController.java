@@ -177,6 +177,10 @@ public class TranslateWISEController {
             String projectFilePath = projectFileDir + "i18n_" + locale + ".json";
             // prepend wiseBaseDir
             String wiseBaseDir = wiseProperties.getProperty("wiseBaseDir", "/");
+            if (!wiseBaseDir.endsWith("/")) {
+                // make sure wiseBaseDir ends with "/" or the path will be incorrect.
+                wiseBaseDir += "/";
+            }
             projectFilePath = wiseBaseDir + projectFilePath;
 
             System.out.println(projectFilePath);
