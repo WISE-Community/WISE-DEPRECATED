@@ -76,6 +76,9 @@ var GraphController = function () {
             time: ''
         };
 
+        // the graph type
+        this.graphType = null;
+
         // holds all the series
         this.series = [];
 
@@ -240,6 +243,14 @@ var GraphController = function () {
 
             // set the chart id
             this.chartId = 'chart' + this.componentId;
+
+            // get the graph type
+            this.graphType = this.componentContent.graphType;
+
+            if (this.graphType == null) {
+                // there is no graph type so we will default to line plot
+                this.graphType = 'line';
+            }
 
             if (this.componentContent.canCreateNewTrials) {
                 this.canCreateNewTrials = this.componentContent.canCreateNewTrials;
@@ -827,9 +838,6 @@ var GraphController = function () {
             // get the title
             var title = this.componentContent.title;
 
-            // get the graph type
-            var graphType = this.componentContent.graphType;
-
             // get the x and y axis attributes from the student data
             var xAxis = this.xAxis;
             var yAxis = this.yAxis;
@@ -955,10 +963,10 @@ var GraphController = function () {
                     } else if (tempSeries.canEdit && this.isActiveSeries(tempSeries)) {
                         // set the fields to allow points to be draggable
 
-                        if (this.componentContent.graphType === 'line' || this.componentContent.graphType === 'scatter') {
+                        if (this.graphType === 'line' || this.graphType === 'scatter') {
                             // students can drag points horizontally on line and scatter plots
                             tempSeries.draggableX = true;
-                        } else if (this.componentContent.graphType === 'column') {
+                        } else if (this.graphType === 'column') {
                             // students can not drag points horizontally on column plots
                             tempSeries.draggableX = false;
                         }
@@ -1126,12 +1134,12 @@ var GraphController = function () {
                     chart: {
                         width: this.width,
                         height: this.height,
-                        type: graphType,
+                        type: this.graphType,
                         plotBackgroundImage: this.backgroundImage,
                         events: {
                             click: function click(e) {
 
-                                if (thisGraphController.componentContent.graphType == 'line' || thisGraphController.componentContent.graphType == 'scatter') {
+                                if (thisGraphController.graphType == 'line' || thisGraphController.graphType == 'scatter') {
                                     // only attempt to add a new point if the graph type is line or scatter
 
                                     // get the current time
