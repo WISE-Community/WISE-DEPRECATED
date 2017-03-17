@@ -341,7 +341,7 @@ var TeacherDataService = function () {
             }
 
             if (params.getEvents == null) {
-                params.getEvents = false;
+                params.getEvents = true;
             }
 
             if (params.getAnnotations == null) {

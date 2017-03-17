@@ -264,6 +264,19 @@ var NodeGradingController = function () {
                 }
             }
 
+            if (!this.ProjectService.nodeHasWork(this.nodeId)) {
+                /*
+                 * the step does not generate any work so we will look for a visit
+                 * event to determine completion
+                 */
+
+                var events = this.TeacherDataService.getEventsByWorkgroupIdAndNodeId(workgroupId, this.nodeId);
+
+                if (events != null && events.length > 0) {
+                    isCompleted = true;
+                }
+            }
+
             return {
                 isCompleted: isCompleted,
                 latestWorkTime: latestWorkTime,
