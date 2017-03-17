@@ -244,7 +244,7 @@ var vleModule = _angular2.default.module('vle', [(0, _angularDragula2.default)(_
             },
             notebook: function notebook(NotebookService, ConfigService, StudentAssetService, studentData, config, project) {
                 return StudentAssetService.retrieveAssets().then(function (studentAssets) {
-                    NotebookService.retrieveNotebookItems(ConfigService.getWorkgroupId()).then(function (notebook) {
+                    return NotebookService.retrieveNotebookItems(ConfigService.getWorkgroupId()).then(function (notebook) {
                         return notebook;
                     });
                 });

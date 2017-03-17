@@ -154,7 +154,7 @@ let vleModule = angular.module('vle', [
                         },
                         notebook: function (NotebookService, ConfigService, StudentAssetService, studentData, config, project) {
                             return StudentAssetService.retrieveAssets().then((studentAssets) => {
-                                NotebookService.retrieveNotebookItems(ConfigService.getWorkgroupId()).then((notebook) => {
+                                return NotebookService.retrieveNotebookItems(ConfigService.getWorkgroupId()).then((notebook) => {
                                     return notebook;
                                 });
                             });

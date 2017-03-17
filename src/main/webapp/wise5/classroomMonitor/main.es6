@@ -214,7 +214,7 @@ let classroomMonitorModule = angular.module('classroomMonitor', [
                         notebook: function (NotebookService, ConfigService, config, project, StudentAssetService) {
                             if (!ConfigService.isPreview()) {
                                 //StudentAssetService.retrieveAssets().then((studentAssets) => {
-                                    NotebookService.retrieveNotebookItems().then((notebook) => {
+                                    return NotebookService.retrieveNotebookItems().then((notebook) => {
                                         return notebook;
                                     });
                                 //});

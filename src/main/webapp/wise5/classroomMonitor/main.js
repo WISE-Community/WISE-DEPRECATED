@@ -310,7 +310,7 @@ var classroomMonitorModule = _angular2.default.module('classroomMonitor', [(0, _
             notebook: function notebook(NotebookService, ConfigService, config, project, StudentAssetService) {
                 if (!ConfigService.isPreview()) {
                     //StudentAssetService.retrieveAssets().then((studentAssets) => {
-                    NotebookService.retrieveNotebookItems().then(function (notebook) {
+                    return NotebookService.retrieveNotebookItems().then(function (notebook) {
                         return notebook;
                     });
                     //});
