@@ -25,6 +25,20 @@
                    ng-change='embeddedController.authoringViewComponentChanged()'
                    ng-model-options='{ debounce: 1000 }'
                    style='width: 3em'/>
+            <br/>
+            {{ 'WIDTH' | translate }}
+            <input type='number'
+                   ng-model='embeddedController.authoringComponentContent.width'
+                   ng-change='embeddedController.authoringViewComponentChanged()'
+                   ng-model-options='{ debounce: 1000 }'
+                   style='width: 5em'/>
+            <br/>
+            {{ 'HEIGHT' | translate }}
+            <input type='number'
+                   ng-model='embeddedController.authoringComponentContent.height'
+                   ng-change='embeddedController.authoringViewComponentChanged()'
+                   ng-model-options='{ debounce: 1000 }'
+                   style='width: 5em'/>
         </div>
         <div ng-if='embeddedController.mode === "authoring2"'>
             {{ 'IMPORT_PREVIOUS_WORK' | translate }}:
@@ -155,14 +169,17 @@
                           cols='100'></textarea>
             </div>
         </div>
-        <md-button class="md-accent md-primary"
-                    ng-click='embeddedController.snipModel($event)'
-                    ng-show='embeddedController.showSnipModelButton()'>
-            <md-icon> content_cut </md-icon>  {{ 'ADD_TO_NOTEBOOK' | translate:{label:embeddedController.notebookConfig.label} }}
-        </md-button>
-        <iframe ng-attr-id="{{'componentApp_' + embeddedController.componentId}}" ng-src='{{embeddedController.url}}'
-                class="embedded-content__iframe"
-                style="width: {{embeddedController.width}}; height: {{embeddedController.height}}; max-width: {{embeddedController.maxWidth}}; max-height: {{embeddedController.maxHeight}};"></iframe>
+        <div style="text-align: center">
+            <md-button class="md-accent md-primary"
+                        ng-click='embeddedController.snipModel($event)'
+                        ng-show='embeddedController.showSnipModelButton()'>
+                <md-icon> content_cut </md-icon>  {{ 'ADD_TO_NOTEBOOK' | translate:{label:embeddedController.notebookConfig.label} }}
+            </md-button>
+            <br/>
+            <iframe ng-attr-id="{{'componentApp_' + embeddedController.componentId}}" ng-src='{{embeddedController.url}}'
+                    class="embedded-content__iframe"
+                    style="width: {{embeddedController.width}}; height: {{embeddedController.height}};"></iframe>
+        </div>
         <div ng-if="embeddedController.isSaveButtonVisible || embeddedController.isSubmitButtonVisible"
              class="component__actions" layout="row" layout-align="start center">
             <md-button class="md-raised md-primary"

@@ -315,16 +315,10 @@ var EmbeddedController = function () {
             }
 
             // get the width
-            this.width = this.componentContent.width ? this.componentContent.width : "100%";
+            this.width = this.componentContent.width ? this.componentContent.width : '100%';
 
             // get the height
-            this.height = this.componentContent.height ? this.componentContent.height : "100%";
-
-            // get the max width
-            this.maxWidth = this.componentContent.maxWidth ? this.componentContent.maxWidth : "none";
-
-            // get the max height
-            this.maxHeight = this.componentContent.maxHeight ? this.componentContent.maxHeight : "none";
+            this.height = this.componentContent.height ? this.componentContent.height : '100%';
 
             if (this.$scope.$parent.nodeController != null) {
                 // register this component with the parent node
