@@ -120,7 +120,7 @@ class HTMLController {
                         ['view', ['fullscreen', 'codeview', 'help']],
                         ['customButton', ['insertWISELinkButton', 'insertAssetButton']]
                     ],
-                    height: 300,
+                    height: 600,
                     disableDragAndDrop: true,
                     buttons: {
                         insertWISELinkButton: InsertWISELinkButton,

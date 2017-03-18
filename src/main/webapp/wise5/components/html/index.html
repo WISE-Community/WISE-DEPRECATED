@@ -38,5 +38,5 @@
             </div>
         </div>
     </div>
-    <div><compile data='htmlController.componentContent.html'></compile></div>
+    <div ng-if='htmlController.mode !== "authoring"'><compile data='htmlController.componentContent.html'></compile></div>
 </div>

@@ -111,7 +111,7 @@ var HTMLController = function () {
                  */
                 this.summernotePromptOptions = {
                     toolbar: [['style', ['style']], ['font', ['bold', 'underline', 'clear']], ['fontname', ['fontname']], ['fontsize', ['fontsize']], ['color', ['color']], ['para', ['ul', 'ol', 'paragraph']], ['table', ['table']], ['insert', ['link', 'video']], ['view', ['fullscreen', 'codeview', 'help']], ['customButton', ['insertWISELinkButton', 'insertAssetButton']]],
-                    height: 300,
+                    height: 600,
                     disableDragAndDrop: true,
                     buttons: {
                         insertWISELinkButton: InsertWISELinkButton,
