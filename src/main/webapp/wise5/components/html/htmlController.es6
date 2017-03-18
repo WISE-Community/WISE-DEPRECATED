@@ -117,8 +117,9 @@ class HTMLController {
                         ['para', ['ul', 'ol', 'paragraph']],
                         ['table', ['table']],
                         ['insert', ['link', 'video']],
-                        ['view', ['fullscreen', 'codeview', 'help']],
-                        ['customButton', ['insertWISELinkButton', 'insertAssetButton']]
+                        ['customButton', ['insertWISELinkButton', 'insertAssetButton']],
+                        ['view', ['fullscreen', 'help']],
+                        ['view', ['codeview']]
                     ],
                     height: 600,
                     disableDragAndDrop: true,
