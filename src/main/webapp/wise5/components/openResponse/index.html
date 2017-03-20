@@ -4,12 +4,12 @@
     </style>
 
     <div ng-if='openResponseController.mode === "authoring" && !openResponseController.authoringComponentContent.showPreviousWork'>
-        {{ 'PROMPT' | translate }}:
+        {{ 'PROMPT' | translate }} <span>({{ 'openResponse.tip' | translate }})<md-tooltip>{{ 'openResponse.promptTip' | translate }}</md-tooltip></span>:
         <br/>
         <textarea ng-model='openResponseController.authoringComponentContent.prompt'
                   ng-change='openResponseController.authoringViewComponentChanged()'
                   ng-model-options='{ debounce: 1000 }'
-                  rows='10'
+                  rows='5'
                   cols='100'></textarea>
         <br/>
         {{ 'openResponse.starterSentence' | translate }} ({{ 'openResponse.optional' | translate }}):
