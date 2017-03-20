@@ -1,21 +1,21 @@
 /**
  * Copyright (c) 2007-2015 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
- * 
+ *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
- * 
+ *
  * Permission is hereby granted, without written agreement and without license
  * or royalty fees, to use, copy, modify, and distribute this software and its
  * documentation for any purpose, provided that the above copyright notice and
  * the following two paragraphs appear in all copies of this software.
- * 
+ *
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
  * PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
  * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
  * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
- * 
+ *
  * IN NO EVENT SHALL REGENTS BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT,
  * SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, INCLUDING LOST PROFITS,
  * ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF
@@ -84,35 +84,35 @@ public class WISEAuthenticationProcessingFilter extends UsernamePasswordAuthenti
 
     public static final Integer recentFailedLoginTimeLimit = 15;
     public static final Integer recentFailedLoginAttemptsLimit = 5;
-    
+
     private static final Log LOGGER = LogFactory
             .getLog(WISEAuthenticationProcessingFilter.class);
 
     /**
      * Check if the user is required to enter ReCaptcha text. If the
      * user is required to enter ReCaptcha text we will check if the
-     * user has entered the correct ReCaptcha text. If ReCaptcha is 
+     * user has entered the correct ReCaptcha text. If ReCaptcha is
      * not required or if the ReCaptcha has been entered correctly,
      * continue on with the authentication process.
-     * 
+     *
      * @param request
      * @param response
      */
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
                     throws AuthenticationException {
-        
+
         // check if the user is required to enter ReCaptcha text
         if (isReCaptchaRequired(request, response)) {
             // the user is required to enter ReCaptcha text
-            
+
             String errorMessage = null;
-            
+
             if (!isReCaptchaResponseValid(request, response)) {
                 //the user has not answered the ReCaptcha correctly
                 errorMessage = "Please verify that you are not a robot.";
             }
-            
+
             if (errorMessage != null) {
                 try {
                     /*
@@ -120,16 +120,16 @@ public class WISEAuthenticationProcessingFilter extends UsernamePasswordAuthenti
                      * pass the ReCaptcha
                      */
                     unsuccessfulAuthentication(request, response, new AuthenticationException(errorMessage) {});
-                    
+
                     return null;
                 } catch (IOException e) {
                     e.printStackTrace();
                 } catch (ServletException e) {
                     e.printStackTrace();
-                }                
+                }
             }
         }
-        
+
         return super.attemptAuthentication(request, response);
 }
 
@@ -143,23 +143,23 @@ public class WISEAuthenticationProcessingFilter extends UsernamePasswordAuthenti
      */
     public boolean isReCaptchaRequired(HttpServletRequest request, HttpServletResponse response) {
         boolean result = false;
-        
+
         //get the public and private keys from the wise.properties
         String reCaptchaPublicKey = wiseProperties.getProperty("recaptcha_public_key");
         String reCaptchaPrivateKey = wiseProperties.getProperty("recaptcha_private_key");
-        
+
         //check if the public and private ReCaptcha keys are valid
         boolean reCaptchaKeyValid = isReCaptchaKeyValid(reCaptchaPublicKey, reCaptchaPrivateKey);
-        
+
         if (reCaptchaKeyValid) {
             //the ReCaptcha keys are valid
-            
+
             //get the user name that was entered into the user name field
             String userName = request.getParameter("username");
-            
+
             //get the user object
             User user = userService.retrieveUserByUsername(userName);
-            
+
             /*
              * get the user so we can check if they have been failing to login
              * multiple times recently and if so, we will display a captcha to
@@ -198,10 +198,10 @@ public class WISEAuthenticationProcessingFilter extends UsernamePasswordAuthenti
                 }
             }
         }
-        
+
         return result;
     }
-    
+
     /**
      * Check if the user has entered the correct text for ReCaptcha
      * @param request
@@ -210,18 +210,18 @@ public class WISEAuthenticationProcessingFilter extends UsernamePasswordAuthenti
      */
     protected boolean isReCaptchaResponseValid(HttpServletRequest request, HttpServletResponse response) {
         Boolean result = false;
-        
+
         //get the public and private keys from the wise.properties
         String reCaptchaPublicKey = wiseProperties.getProperty("recaptcha_public_key");
         String reCaptchaPrivateKey = wiseProperties.getProperty("recaptcha_private_key");
-        
+
         // get the google reCaptcha response
         String gRecaptchaResponse = request.getParameter("g-recaptcha-response");
 
         if (checkReCaptchaResponse(reCaptchaPrivateKey, reCaptchaPublicKey, gRecaptchaResponse)) {
             result = true;
         }
-        
+
         return result;
     }
 
@@ -236,9 +236,9 @@ public class WISEAuthenticationProcessingFilter extends UsernamePasswordAuthenti
     public static boolean isReCaptchaKeyValid(String reCaptchaPublicKey, String recaptchaPrivateKey) {
         boolean isValid = false;
 
-        if (reCaptchaPublicKey != null && recaptchaPrivateKey != null) {
+        if (reCaptchaPublicKey != null && !"".equals(reCaptchaPublicKey) && recaptchaPrivateKey != null && !"".equals(recaptchaPrivateKey)) {
 
-            //make a new instace of the captcha so we can make sure th key is valid
+            //make a new instace of the captcha so we can make sure the key is valid
             ReCaptcha c = ReCaptchaFactory.newSecureReCaptcha(reCaptchaPublicKey, recaptchaPrivateKey, false);
 
             /*
@@ -251,7 +251,7 @@ public class WISEAuthenticationProcessingFilter extends UsernamePasswordAuthenti
             /*
              * try to retrieve the src url by matching everything between the
              * quotes of src=""
-             * 
+             *
              * e.g. http://api.recaptcha.net/challenge?k=yourpublickey
              */
             Pattern pattern = Pattern.compile(".*src=\"(.*)\".*");
@@ -282,7 +282,7 @@ public class WISEAuthenticationProcessingFilter extends UsernamePasswordAuthenti
                 /*
                  * if the public key was invalid the text returned from the url will
                  * look like
-                 * 
+                 *
                  * document.write('Input error: k: Format of site key was invalid\n');
                  */
                 if (!responseText.contains("Input error")) {
@@ -340,7 +340,7 @@ public class WISEAuthenticationProcessingFilter extends UsernamePasswordAuthenti
                     throws IOException, ServletException {
         super.unsuccessfulAuthentication(request, response, failed);
     }
-    
+
     /**
      * Check if the response is valid
      * @param reCaptchaPrivateKey the ReCaptcha private key
@@ -349,25 +349,25 @@ public class WISEAuthenticationProcessingFilter extends UsernamePasswordAuthenti
      * @return whether the user answered the ReCaptcha successfully
      */
     public static boolean checkReCaptchaResponse(String reCaptchaPrivateKey, String reCaptchaPublicKey, String gRecaptchaResponse) {
-        
+
         boolean isValid = false;
-        
+
         //check if the public key is valid in case the admin entered it wrong
         boolean reCaptchaKeyValid = isReCaptchaKeyValid(reCaptchaPublicKey, reCaptchaPrivateKey);
 
         if (reCaptchaKeyValid &&
-                reCaptchaPrivateKey != null && 
-                reCaptchaPublicKey != null && 
+                reCaptchaPrivateKey != null &&
+                reCaptchaPublicKey != null &&
                 gRecaptchaResponse != null &&
                 !gRecaptchaResponse.equals("")) {
 
             try {
-                
+
                 // the url to verify the response
                 URL verifyURL = new URL("https://www.google.com/recaptcha/api/siteverify");
                 HttpsURLConnection connection = (HttpsURLConnection) verifyURL.openConnection();
                 connection.setRequestMethod("POST");
-                
+
                 // set the params
                 String postParams = "secret=" + reCaptchaPrivateKey + "&response=" + gRecaptchaResponse;
 
@@ -404,7 +404,7 @@ public class WISEAuthenticationProcessingFilter extends UsernamePasswordAuthenti
                 e.printStackTrace();
             }
         }
-        
+
         return isValid;
     }
 }
