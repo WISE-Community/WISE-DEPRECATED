@@ -6,32 +6,38 @@
                size='80'/>
         <br/>
         <div ng-if='outsideURLController.mode === "authoring"'>
-            <button ng-click='outsideURLController.showRubricAuthoring = !outsideURLController.showRubricAuthoring'>
-                {{ 'EDIT_COMPONENT_RUBRIC' | translate }}
-            </button>
-            <div ng-show='outsideURLController.showRubricAuthoring'>
-                <summernote id='{{outsideURLController.summernoteRubricId}}'
-                            ng-model='outsideURLController.summernoteRubricHTML'
-                            ng-change='outsideURLController.summernoteRubricHTMLChanged()'
-                            config='outsideURLController.summernoteRubricOptions'
-                            ng-model-options='{ debounce: 1000 }'
-                            rows='10'
-                            cols='100'>
-                </summernote>
-            </div>
-        </div>
-        <div ng-if='outsideURLController.mode === "authoring"'>
-            <button ng-click='outsideURLController.showAdvancedAuthoring = !outsideURLController.showAdvancedAuthoring'>
-                    {{ outsideURLController.showAdvancedAuthoring ? ('HIDE_ADVANCED_AUTHORING' | translate) : ('SHOW_ADVANCED_AUTHORING' | translate) }}
-            </button>
+            <br/>
+            <button ng-click='outsideURLController.showAdvancedAuthoring = !outsideURLController.showAdvancedAuthoring'>Advanced</button>
             <br/>
             <div ng-show='outsideURLController.showAdvancedAuthoring'>
-                <textarea ng-model='outsideURLController.authoringComponentContentJSONString'
-                          ng-change='outsideURLController.advancedAuthoringViewComponentChanged()'
-                          ng-model-options="{ updateOn: 'blur' }"
-                          rows='10'
-                          cols='100'></textarea>
+                <button ng-click='outsideURLController.showRubricAuthoring = !outsideURLController.showRubricAuthoring'>
+                    {{ 'EDIT_COMPONENT_RUBRIC' | translate }}
+                </button>
+                <div ng-show='outsideURLController.showRubricAuthoring'>
+                    <summernote id='{{outsideURLController.summernoteRubricId}}'
+                                ng-model='outsideURLController.summernoteRubricHTML'
+                                ng-change='outsideURLController.summernoteRubricHTMLChanged()'
+                                config='outsideURLController.summernoteRubricOptions'
+                                ng-model-options='{ debounce: 1000 }'
+                                rows='10'
+                                cols='100'>
+                    </summernote>
+                </div>
+                <div ng-if='outsideURLController.mode === "authoring"'>
+                    <button ng-click='outsideURLController.showJSON = !outsideURLController.showJSON'>
+                            {{ 'SHOW_JSON' | translate }}
+                    </button>
+                    <br/>
+                    <div ng-show='outsideURLController.showJSON'>
+                        <textarea ng-model='outsideURLController.authoringComponentContentJSONString'
+                                  ng-change='outsideURLController.advancedAuthoringViewComponentChanged()'
+                                  ng-model-options="{ updateOn: 'blur' }"
+                                  rows='10'
+                                  cols='100'></textarea>
+                    </div>
+                </div>
             </div>
+            <br/>
         </div>
     </div>
     <iframe ng-src='{{outsideURLController.url}}'

@@ -68,8 +68,11 @@ var DiscussionController = function () {
         // whether the student work is for a submit
         this.isSubmit = false;
 
-        // whether the advanced authoring textarea is displayed
+        // flag for whether to show the advanced authoring
         this.showAdvancedAuthoring = false;
+
+        // whether the JSON authoring is displayed
+        this.showJSONAuthoring = false;
 
         // will hold the class responses
         this.classResponses = [];

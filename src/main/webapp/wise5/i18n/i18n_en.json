@@ -1,6 +1,7 @@
 {
     "ADD_CONNECTED_COMPONENT": "Add Connected Component",
     "ADD_TO_NOTEBOOK": "Add To Notebook",
+    "ADVANCED": "Advanced",
     "ARE_YOU_SURE_YOU_WANT_TO_CHANGE_THIS_COMPONENT_TYPE": "Are you sure you want to change this component type?",
     "AUTO_COMMENT": "Auto Comment",
     "AUTO_SAVED": "Auto-saved",
@@ -66,8 +67,8 @@
     "SCORE": "Score",
     "SEND_COMMENT": "Send Comment",
     "SET_SCORE": "Set Score",
-    "SHOW_ADVANCED_AUTHORING": "Show Advanced Authoring",
     "SHOW_FEEDBACK": "Show Feedback",
+    "SHOW_JSON": "Show JSON",
     "SHOW_PREVIOUS_WORK": "Show Previous Work",
     "SHOW_PREVIOUS_WORK_COMPONENT": "Show Previous Work Component",
     "SHOW_PREVIOUS_WORK_PROMPT": "Show Previous Work Prompt",

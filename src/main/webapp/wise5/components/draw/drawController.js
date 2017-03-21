@@ -72,8 +72,11 @@ var DrawController = function () {
         // whether the submit button is shown or not
         this.isSubmitButtonVisible = false;
 
-        // whether the advanced authoring textarea is displayed
+        // flag for whether to show the advanced authoring
         this.showAdvancedAuthoring = false;
+
+        // whether the JSON authoring is displayed
+        this.showJSONAuthoring = false;
 
         // whether the reset button is visible or not
         this.isResetButtonVisible = false;
@@ -1836,6 +1839,10 @@ var DrawController = function () {
         key: 'authoringEnableAllToolsButtonClicked',
         value: function authoringEnableAllToolsButtonClicked() {
 
+            if (this.authoringComponentContent.tools == null) {
+                this.authoringComponentContent.tools = [];
+            }
+
             // enable all the tools
             this.authoringComponentContent.tools.select = true;
             this.authoringComponentContent.tools.line = true;
@@ -1864,6 +1871,10 @@ var DrawController = function () {
     }, {
         key: 'authoringDisableAllToolsButtonClicked',
         value: function authoringDisableAllToolsButtonClicked() {
+
+            if (this.authoringComponentContent.tools == null) {
+                this.authoringComponentContent.tools = [];
+            }
 
             // disable all the tools
             this.authoringComponentContent.tools.select = false;
