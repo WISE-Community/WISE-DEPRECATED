@@ -11,6 +11,7 @@
     "babel-cli": "6.14.0",
     "babel-preset-es2015": "6.14.0",
     "browser-sync": "^2.11.1",
+    "concurrently": "^3.4.0",
     "connect-history-api-fallback": "^1.1.0",
     "cssnano": "^3.4.0",
     "eslint": "^3.5.0",
@@ -38,7 +39,7 @@
   "scripts": {
     "browser-sync": "./node_modules/browser-sync/bin/browser-sync.js start --config bs-config.js",
     "postinstall": "node ./node_modules/jspm/jspm.js install -y",
-    "watch-all": "npm run transpile & npm run watch-sass",
+    "watch-all": "concurrently --kill-others \"npm run transpile\" \"npm run watch-sass\"",
     "transpile": "node ./node_modules/babel-cli/bin/babel.js --extensions .es6 --source-maps --presets babel-preset-es2015 --watch src/main/webapp/wise5/ --only wise5/services,wise5/classroomMonitor,wise5/authoringTool,wise5/directives,wise5/components,wise5/filters,wise5/vle,wise5/controllers,wise5/node/,wise5/themes,wise5/test-unit,wise5/test-e2e --out-dir src/main/webapp/wise5/",
     "watch-sass": "npm rebuild node-sass && node ./node_modules/gulp/bin/gulp.js",
     "update-i18n": "node ./node_modules/gulp/bin/gulp.js update-i18n",
