@@ -13,14 +13,17 @@ MultipleChoiceNode.prototype.i18nPath = "vle/node/multiplechoice/i18n/";
 MultipleChoiceNode.prototype.supportedLocales = {
 	"en":"en",
 	"es":"es",
+	"de":"de",
 	"fr":"fr",
 	"iw":"he",
+	"ja":"ja",
 	"ko":"ko",
 	"nl":"nl",
 	"nl_GE":"nl",
 	"nl_DE":"nl",
 	"tr":"tr",
-	"zh_CN":"zh_CN"
+	"zh_CN":"zh_CN",
+	"zh_TW":"zh_TW"
 };
 
 MultipleChoiceNode.tagMapFunctions = [
