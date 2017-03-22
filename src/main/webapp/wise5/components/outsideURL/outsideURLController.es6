@@ -39,8 +39,11 @@ class OutsideURLController {
         // field that will hold the authoring component content
         this.authoringComponentContent = null;
 
-        // whether the advanced authoring textarea is displayed
+        // flag for whether to show the advanced authoring
         this.showAdvancedAuthoring = false;
+
+        // whether the JSON authoring is displayed
+        this.showJSONAuthoring = false;
 
         // the url to the web page to display
         this.url = null;

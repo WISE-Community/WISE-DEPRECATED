@@ -28,7 +28,7 @@
     "openResponse.pleaseWaitWeAreScoringYourWork": "Please wait, we are scoring your work.",
     "openResponse.previousScore": "Previous Score",
     "openResponse.previousVersions": "Previous Versions",
-    "openResponse.promptTip": "If you want to create a more detailed prompt, use an HTML component before this Open Response component",
+    "openResponse.promptTip": "If you want to use rich visuals (images, videos, links, bullets, etc.) in your prompt, use an HTML component above this",
     "openResponse.scoreOn": "Score On",
     "openResponse.starterSentence": "Starter Sentence",
     "openResponse.tip": "Tip",

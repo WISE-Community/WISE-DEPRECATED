@@ -57,8 +57,11 @@ var MultipleChoiceController = function () {
             time: ''
         };
 
-        // whether the advanced authoring textarea is displayed
+        // flag for whether to show the advanced authoring
         this.showAdvancedAuthoring = false;
+
+        // whether the JSON authoring is displayed
+        this.showJSONAuthoring = false;
 
         // holds the ids of the choices the student has chosen
         this.studentChoices = [];

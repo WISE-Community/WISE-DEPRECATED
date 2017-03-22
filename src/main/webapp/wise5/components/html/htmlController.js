@@ -44,8 +44,11 @@ var HTMLController = function () {
         // whether this part is showing previous work
         this.isShowPreviousWork = false;
 
-        // whether the advanced authoring textarea is displayed
+        // flag for whether to show the advanced authoring
         this.showAdvancedAuthoring = false;
+
+        // whether the JSON authoring is displayed
+        this.showJSONAuthoring = false;
 
         // the summernote prompt element id
         this.summernotePromptId = '';

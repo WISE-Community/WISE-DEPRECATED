@@ -108,8 +108,11 @@ class ConceptMapController {
         // whether the snip table button is shown or not
         this.isSnipButtonVisible = true;
 
-        // whether the advanced authoring textarea is displayed
+        // flag for whether to show the advanced authoring
         this.showAdvancedAuthoring = false;
+
+        // whether the JSON authoring is displayed
+        this.showJSONAuthoring = false;
 
         // the latest annotations
         this.latestAnnotations = null;

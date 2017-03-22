@@ -7,25 +7,8 @@
         <textarea ng-model='labelController.authoringComponentContent.prompt'
                   ng-change='labelController.authoringViewComponentChanged()'
                   ng-model-options='{ debounce: 1000 }'
-                  rows='5'
+                  rows='3'
                   cols='100'></textarea>
-        <br/>
-        {{ 'SHOW_SAVE_BUTTON' | translate }}:
-        <input type='checkbox'
-               ng-model='labelController.authoringComponentContent.showSaveButton'
-               ng-change='labelController.authoringViewComponentChanged()'/>
-        <br/>
-        {{ 'SHOW_SUBMIT_BUTTON' | translate }}:
-        <input type='checkbox'
-               ng-model='labelController.authoringComponentContent.showSubmitButton'
-               ng-change='labelController.authoringViewComponentChanged()'/>
-        <br/>
-        {{ 'MAX_SCORE' | translate }}:
-        <input type='number'
-               ng-model='labelController.authoringComponentContent.maxScore'
-               ng-change='labelController.authoringViewComponentChanged()'
-               ng-model-options='{ debounce: 1000 }'
-               style='width: 3em'/>
         <br/>
         {{ 'BACKGROUND_IMAGE' | translate }}: <input ng-model='labelController.authoringComponentContent.backgroundImage'
                                  ng-change='labelController.authoringViewComponentChanged()'
@@ -56,7 +39,7 @@
                        ng-model-options='{ debounce: 1000 }'
                        style='width: 4em'/>
         <br/>
-        {{ 'label.labels' | translate }} <button ng-click='labelController.authoringAddLabelClicked()'>{{ 'label.addLabel' | translate }}</button>
+        {{ 'label.labels' | translate }}
         <div ng-repeat='label in labelController.authoringComponentContent.labels track by $index'
              style='border: 1px solid black'>
             {{ 'TEXT' | translate }}: <input ng-model='label.text'
@@ -87,135 +70,161 @@
             <br/>
             <button ng-click='labelController.authoringDeleteLabelClicked($index)'>{{ 'label.deleteLabel' | translate }}</button>
         </div>
+        <button ng-click='labelController.authoringAddLabelClicked()'>{{ 'label.addLabel' | translate }}</button>
     </div>
     <div ng-if='labelController.mode === "authoring"'>
-        {{ 'IMPORT_PREVIOUS_WORK' | translate }}:
-        <input type='checkbox'
-               ng-model='labelController.authoringComponentContent.importPreviousWork'
-               ng-click='labelController.authoringImportPreviousWorkClicked()'
-               ng-change='labelController.authoringViewComponentChanged()'/>
-    </div>
-    <div ng-if='labelController.mode === "authoring" && labelController.authoringComponentContent.importPreviousWork'>
-        {{ 'IMPORT_PREVIOUS_WORK_STEP' | translate }}:
-        <select ng-model='labelController.authoringComponentContent.importPreviousWorkNodeId'
-                ng-change='labelController.authoringImportPreviousWorkNodeIdChanged()'>
-            <option></option>
-            <option ng-repeat='item in labelController.idToOrder | toArray | orderBy : "order"'
-                    value='{{item.$key}}'
-                    ng-if='labelController.isApplicationNode(item.$key)'>{{labelController.getNodePositionAndTitleByNodeId(item.$key)}}</option>
-        </select>
         <br/>
-        {{ 'IMPORT_PREVIOUS_WORK_COMPONENT' | translate }}:
-        <select ng-model='labelController.authoringComponentContent.importPreviousWorkComponentId'
-                ng-change='labelController.authoringImportPreviousWorkComponentIdChanged()'
-                ng-options='component.id as component.type disable when !labelController.componentHasWork(component) for component in labelController.getComponentsByNodeId(labelController.authoringComponentContent.importPreviousWorkNodeId)'>
-            <option></option>
-        </select>
-    </div>
-    <div ng-if='labelController.mode === "authoring"'>
-        {{ 'SHOW_PREVIOUS_WORK' | translate }}:
-        <input type='checkbox'
-               ng-model='labelController.authoringComponentContent.showPreviousWork'
-               ng-click='labelController.authoringShowPreviousWorkClicked()'
-               ng-change='labelController.authoringViewComponentChanged()'/>
-    </div>
-    <div ng-if='labelController.mode === "authoring" && labelController.authoringComponentContent.showPreviousWork'>
-        {{ 'SHOW_PREVIOUS_WORK_STEP' | translate }}:
-        <select ng-model='labelController.authoringComponentContent.showPreviousWorkNodeId'
-                ng-change='labelController.authoringShowPreviousWorkNodeIdChanged()'>
-            <option></option>
-            <option ng-repeat='item in labelController.idToOrder | toArray | orderBy : "order"'
-                    value='{{item.$key}}'
-                    ng-if='labelController.isApplicationNode(item.$key)'>{{labelController.getNodePositionAndTitleByNodeId(item.$key)}}</option>
-        </select>
-        <br/>
-        {{ 'SHOW_PREVIOUS_WORK_COMPONENT' | translate }}:
-        <select ng-model='labelController.authoringComponentContent.showPreviousWorkComponentId'
-                ng-change='labelController.authoringShowPreviousWorkComponentIdChanged()'
-                ng-options='component.id as component.type disable when !labelController.componentHasWork(component) for component in labelController.getComponentsByNodeId(labelController.authoringComponentContent.showPreviousWorkNodeId)'>
-            <option></option>
-        </select>
-        <br/>
-        {{ 'SHOW_PREVIOUS_WORK_PROMPT' | translate }}:
-        <input type='checkbox'
-               ng-model='labelController.authoringComponentContent.showPreviousWorkPrompt'
-               ng-change='labelController.authoringViewComponentChanged()'/>
-    </div>
-    <div ng-if='labelController.mode === "authoring"'>
-        <button ng-click='labelController.addConnectedComponent()'>{{ 'ADD_CONNECTED_COMPONENT' | translate }}</button>
-        <div ng-repeat='connectedComponent in labelController.authoringComponentContent.connectedComponents track by $index'>
-            <table border='1'>
-                <tr>
-                    <td style='padding:5'>
-                        {{ 'CONNECTED_COMPONENT' | translate }}
-                    </td>
-                    <td style='padding:5'>
-                        <div style='display:none'>
-                            {{ 'NODE_ID' | translate }}:
-                            <select ng-model='connectedComponent.nodeId'
-                                    ng-change='labelController.authoringViewComponentChanged()'>
-                                <option></option>
-                                <option ng-repeat='item in labelController.idToOrder | toArray | orderBy : "order"'
-                                        value='{{item.$key}}'
-                                        ng-if='labelController.isApplicationNode(item.$key)'>{{labelController.getNodePositionAndTitleByNodeId(item.$key)}}</option>
-                            </select>
-                        </div>
-                        <div>
-                            {{ 'COMPONENT_ID' | translate }}:
-                            <select ng-model='connectedComponent.componentId'
-                                    ng-change='labelController.authoringViewComponentChanged()'>
-                                <option></option>
-                                <option ng-repeat='(componentIndex, component) in labelController.getComponentsByNodeId(connectedComponent.nodeId)'
-                                        ng-disabled='!labelController.componentHasWork(component)'
-                                        value='{{component.id}}'>
-                                    {{componentIndex + 1}}. {{component.type}}
-                                </option>
-                            </select>
-                        </div>
-                    </td>
-                    <td style='padding:5'>
-                        <select ng-model='connectedComponent.updateOn'
-                                ng-change='labelController.authoringViewComponentChanged()'>
-                                <option ng-repeat='updateOnOption in labelController.connectedComponentUpdateOnOptions'
-                                        value='{{updateOnOption.value}}'>
-                                    {{updateOnOption.text}}
-                                </option>
-                        </select>
-                    </td>
-                    <td style='padding:5'>
-                        <button ng-click='labelController.deleteConnectedComponent($index)'>{{ 'DELETE' | translate }}</button>
-                    </td>
-                </tr>
-            </table>
-        </div>
-    </div>
-    <div ng-if='labelController.mode === "authoring"'>
-        <button ng-click='labelController.showRubricAuthoring = !labelController.showRubricAuthoring'>
-            {{ 'EDIT_COMPONENT_RUBRIC' | translate }}
-        </button>
-        <div ng-show='labelController.showRubricAuthoring'>
-            <summernote id='{{labelController.summernoteRubricId}}'
-                        ng-model='labelController.summernoteRubricHTML'
-                        ng-change='labelController.summernoteRubricHTMLChanged()'
-                        config='labelController.summernoteRubricOptions'
-                        ng-model-options='{ debounce: 1000 }'
-                        rows='10'
-                        cols='100'>
-            </summernote>
-        </div>
-    </div>
-    <div ng-if='labelController.mode === "authoring"'>
-        <button ng-click='labelController.showAdvancedAuthoring = !labelController.showAdvancedAuthoring'>
-                {{ labelController.showAdvancedAuthoring ? ('HIDE_ADVANCED_AUTHORING' | translate) : ('SHOW_ADVANCED_AUTHORING' | translate) }}
-        </button>
+        <button ng-click='labelController.showAdvancedAuthoring = !labelController.showAdvancedAuthoring'>{{ 'ADVANCED' | translate }}</button>
         <br/>
         <div ng-show='labelController.showAdvancedAuthoring'>
-            <textarea ng-model='labelController.authoringComponentContentJSONString'
-                      ng-change='labelController.advancedAuthoringViewComponentChanged()'
-                      ng-model-options="{ updateOn: 'blur' }"
-                      rows='20'
-                      cols='100'></textarea>
+            {{ 'SHOW_SAVE_BUTTON' | translate }}:
+            <input type='checkbox'
+                   ng-model='labelController.authoringComponentContent.showSaveButton'
+                   ng-change='labelController.authoringViewComponentChanged()'/>
+            <br/>
+            {{ 'SHOW_SUBMIT_BUTTON' | translate }}:
+            <input type='checkbox'
+                   ng-model='labelController.authoringComponentContent.showSubmitButton'
+                   ng-change='labelController.authoringViewComponentChanged()'/>
+            <br/>
+            {{ 'MAX_SCORE' | translate }}:
+            <input type='number'
+                   ng-model='labelController.authoringComponentContent.maxScore'
+                   ng-change='labelController.authoringViewComponentChanged()'
+                   ng-model-options='{ debounce: 1000 }'
+                   style='width: 3em'/>
+            <br/>
+            <div ng-if='labelController.mode === "authoring"'>
+                {{ 'IMPORT_PREVIOUS_WORK' | translate }}:
+                <input type='checkbox'
+                       ng-model='labelController.authoringComponentContent.importPreviousWork'
+                       ng-click='labelController.authoringImportPreviousWorkClicked()'
+                       ng-change='labelController.authoringViewComponentChanged()'/>
+            </div>
+            <div ng-if='labelController.mode === "authoring" && labelController.authoringComponentContent.importPreviousWork'>
+                {{ 'IMPORT_PREVIOUS_WORK_STEP' | translate }}:
+                <select ng-model='labelController.authoringComponentContent.importPreviousWorkNodeId'
+                        ng-change='labelController.authoringImportPreviousWorkNodeIdChanged()'>
+                    <option></option>
+                    <option ng-repeat='item in labelController.idToOrder | toArray | orderBy : "order"'
+                            value='{{item.$key}}'
+                            ng-if='labelController.isApplicationNode(item.$key)'>{{labelController.getNodePositionAndTitleByNodeId(item.$key)}}</option>
+                </select>
+                <br/>
+                {{ 'IMPORT_PREVIOUS_WORK_COMPONENT' | translate }}:
+                <select ng-model='labelController.authoringComponentContent.importPreviousWorkComponentId'
+                        ng-change='labelController.authoringImportPreviousWorkComponentIdChanged()'
+                        ng-options='component.id as component.type disable when !labelController.componentHasWork(component) for component in labelController.getComponentsByNodeId(labelController.authoringComponentContent.importPreviousWorkNodeId)'>
+                    <option></option>
+                </select>
+            </div>
+            <div ng-if='labelController.mode === "authoring"'>
+                {{ 'SHOW_PREVIOUS_WORK' | translate }}:
+                <input type='checkbox'
+                       ng-model='labelController.authoringComponentContent.showPreviousWork'
+                       ng-click='labelController.authoringShowPreviousWorkClicked()'
+                       ng-change='labelController.authoringViewComponentChanged()'/>
+            </div>
+            <div ng-if='labelController.mode === "authoring" && labelController.authoringComponentContent.showPreviousWork'>
+                {{ 'SHOW_PREVIOUS_WORK_STEP' | translate }}:
+                <select ng-model='labelController.authoringComponentContent.showPreviousWorkNodeId'
+                        ng-change='labelController.authoringShowPreviousWorkNodeIdChanged()'>
+                    <option></option>
+                    <option ng-repeat='item in labelController.idToOrder | toArray | orderBy : "order"'
+                            value='{{item.$key}}'
+                            ng-if='labelController.isApplicationNode(item.$key)'>{{labelController.getNodePositionAndTitleByNodeId(item.$key)}}</option>
+                </select>
+                <br/>
+                {{ 'SHOW_PREVIOUS_WORK_COMPONENT' | translate }}:
+                <select ng-model='labelController.authoringComponentContent.showPreviousWorkComponentId'
+                        ng-change='labelController.authoringShowPreviousWorkComponentIdChanged()'
+                        ng-options='component.id as component.type disable when !labelController.componentHasWork(component) for component in labelController.getComponentsByNodeId(labelController.authoringComponentContent.showPreviousWorkNodeId)'>
+                    <option></option>
+                </select>
+                <br/>
+                {{ 'SHOW_PREVIOUS_WORK_PROMPT' | translate }}:
+                <input type='checkbox'
+                       ng-model='labelController.authoringComponentContent.showPreviousWorkPrompt'
+                       ng-change='labelController.authoringViewComponentChanged()'/>
+            </div>
+            <div ng-if='labelController.mode === "authoring"'>
+                <button ng-click='labelController.addConnectedComponent()'>{{ 'ADD_CONNECTED_COMPONENT' | translate }}</button>
+                <div ng-repeat='connectedComponent in labelController.authoringComponentContent.connectedComponents track by $index'>
+                    <table border='1'>
+                        <tr>
+                            <td style='padding:5'>
+                                {{ 'CONNECTED_COMPONENT' | translate }}
+                            </td>
+                            <td style='padding:5'>
+                                <div style='display:none'>
+                                    {{ 'NODE_ID' | translate }}:
+                                    <select ng-model='connectedComponent.nodeId'
+                                            ng-change='labelController.authoringViewComponentChanged()'>
+                                        <option></option>
+                                        <option ng-repeat='item in labelController.idToOrder | toArray | orderBy : "order"'
+                                                value='{{item.$key}}'
+                                                ng-if='labelController.isApplicationNode(item.$key)'>{{labelController.getNodePositionAndTitleByNodeId(item.$key)}}</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    {{ 'COMPONENT_ID' | translate }}:
+                                    <select ng-model='connectedComponent.componentId'
+                                            ng-change='labelController.authoringViewComponentChanged()'>
+                                        <option></option>
+                                        <option ng-repeat='(componentIndex, component) in labelController.getComponentsByNodeId(connectedComponent.nodeId)'
+                                                ng-disabled='!labelController.componentHasWork(component)'
+                                                value='{{component.id}}'>
+                                            {{componentIndex + 1}}. {{component.type}}
+                                        </option>
+                                    </select>
+                                </div>
+                            </td>
+                            <td style='padding:5'>
+                                <select ng-model='connectedComponent.updateOn'
+                                        ng-change='labelController.authoringViewComponentChanged()'>
+                                        <option ng-repeat='updateOnOption in labelController.connectedComponentUpdateOnOptions'
+                                                value='{{updateOnOption.value}}'>
+                                            {{updateOnOption.text}}
+                                        </option>
+                                </select>
+                            </td>
+                            <td style='padding:5'>
+                                <button ng-click='labelController.deleteConnectedComponent($index)'>{{ 'DELETE' | translate }}</button>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div ng-if='labelController.mode === "authoring"'>
+                <button ng-click='labelController.showRubricAuthoring = !labelController.showRubricAuthoring'>
+                    {{ 'EDIT_COMPONENT_RUBRIC' | translate }}
+                </button>
+                <div ng-show='labelController.showRubricAuthoring'>
+                    <summernote id='{{labelController.summernoteRubricId}}'
+                                ng-model='labelController.summernoteRubricHTML'
+                                ng-change='labelController.summernoteRubricHTMLChanged()'
+                                config='labelController.summernoteRubricOptions'
+                                ng-model-options='{ debounce: 1000 }'
+                                rows='10'
+                                cols='100'>
+                    </summernote>
+                </div>
+            </div>
+            <div ng-if='labelController.mode === "authoring"'>
+                <button ng-click='labelController.showJSON = !labelController.showJSON'>
+                        {{ 'SHOW_JSON' | translate }}
+                </button>
+                <br/>
+                <div ng-show='labelController.showJSON'>
+                    <textarea ng-model='labelController.authoringComponentContentJSONString'
+                              ng-change='labelController.advancedAuthoringViewComponentChanged()'
+                              ng-model-options="{ updateOn: 'blur' }"
+                              rows='20'
+                              cols='100'></textarea>
+                </div>
+            </div>
         </div>
+        <br/>
     </div>
     <div class="component__prompt">
         <div class="component__prompt__content"><compile data='labelController.getPrompt()'></compile></div>

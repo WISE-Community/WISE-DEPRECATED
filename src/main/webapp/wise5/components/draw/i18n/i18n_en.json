@@ -26,6 +26,7 @@
     "draw.sendForwardToolTooltip": "Send selected objects to front",
     "draw.shapeTool": "Shape Tool",
     "draw.shapeToolTooltip": "Shape tool (click and hold to show available shapes)",
+    "draw.stamps": "Stamps",
     "draw.stampTool": "Stamp Tool",
     "draw.stampToolTooltip": "Stamp tool (click and hold to show available categories)",
     "draw.strokeColorTool": "Stroke Color Tool",

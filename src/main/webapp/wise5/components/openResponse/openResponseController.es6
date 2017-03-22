@@ -97,9 +97,6 @@ class OpenResponseController {
         // whether the submit button is disabled
         this.isSubmitButtonDisabled = false;
 
-        // whether the advanced authoring textarea is displayed
-        this.showAdvancedAuthoring = false;
-
         // whether we're only showing the student work
         this.onlyShowWork = false;
 
@@ -111,6 +108,12 @@ class OpenResponseController {
 
         // counter to keep track of the number of submits
         this.submitCounter = 0;
+
+        // flag for whether to show the advanced authoring
+        this.showAdvancedAuthoring = false;
+
+        // whether the JSON authoring is displayed
+        this.showJSONAuthoring = false;
 
         //var scope = this;
         let themePath = this.ProjectService.getThemePath();
