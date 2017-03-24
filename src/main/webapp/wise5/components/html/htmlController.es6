@@ -124,7 +124,7 @@ class HTMLController {
                         ['view', ['fullscreen', 'help']],
                         ['view', ['codeview']]
                     ],
-                    height: 600,
+                    minHeight: 300,
                     disableDragAndDrop: true,
                     buttons: {
                         insertWISELinkButton: InsertWISELinkButton,
