@@ -72,6 +72,7 @@ public class TranslateWISEController {
         projectToFileDirMap.put("brainstorm", "vle/node/brainstorm/i18n/");
         projectToFileDirMap.put("branching", "vle/node/branching/i18n/");
         projectToFileDirMap.put("classroomMonitor5", "wise5/classroomMonitor/i18n/");
+        projectToFileDirMap.put("common5", "wise5/i18n/");
         projectToFileDirMap.put("conceptMap5", "wise5/components/conceptMap/i18n/");
         projectToFileDirMap.put("discussion5", "wise5/components/discussion/i18n/");
         projectToFileDirMap.put("draw", "vle/node/draw/i18n/");

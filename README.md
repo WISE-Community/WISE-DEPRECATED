@@ -1,13 +1,15 @@
 Web-based Inquiry Science Education (WISE) 
 ====
+
+[![Join the chat at https://gitter.im/WISE-Community/WISE](https://badges.gitter.im/WISE-Community/WISE.svg)](https://gitter.im/WISE-Community/WISE?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Build Status](https://travis-ci.org/WISE-Community/WISE.svg?branch=master)](https://travis-ci.org/WISE-Community/WISE)
 
-Get WISE running locally using Docker: https://github.com/WISE-Community/WISE/wiki/WISE-Docker
+Setup WISE on a Server: https://github.com/WISE-Community/WISE/wiki/How-to-Setup-WISE-on-a-Server
+
+Run WISE locally using Docker: https://github.com/WISE-Community/WISE/wiki/WISE-Docker
 
 Develop WISE locally using Docker: https://github.com/WISE-Community/WISE/wiki/WISE-Development-using-Docker
  
-Setup WISE on a Server: https://github.com/WISE-Community/WISE/wiki/How-to-Setup-WISE-on-a-Server
-
 Design Doc and Notes: https://github.com/WISE-Community/WISE/wiki/WISE5-Design-Documentation-and-Notes
 
 Other documentation: https://github.com/WISE-Community/WISE/wiki

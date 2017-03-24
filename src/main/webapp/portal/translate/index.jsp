@@ -290,6 +290,7 @@
                     </div>
                     <h1>WISE5</h1>
                     <div style="margin-left:50px">
+                        <h3><a href="translate?userLocale=${param.userLocale}&projectType=common5">Common Phrases <span class='stats5' projectType='common5'></span></a></h3>
                         <h3><a href="translate?userLocale=${param.userLocale}&projectType=vle5">Virtual Learning Environment (VLE) <span class='stats5' projectType='vle5'></span></a></h3>
                         <h3><a href="translate?userLocale=${param.userLocale}&projectType=authoringTool5">Authoring Tool <span class='stats5' projectType='authoringTool5'></span></a></h3>
                         <h3><a href="translate?userLocale=${param.userLocale}&projectType=classroomMonitor5">Classroom Monitor <span class='stats5' projectType='classroomMonitor5'></span></a></h3>
