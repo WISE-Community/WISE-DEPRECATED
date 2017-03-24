@@ -46,6 +46,7 @@
                                 ng-change='graphController.authoringViewComponentChanged()'/>
                 </span>
                 <span ng-if='graphController.authoringComponentContent.graphType == "column"'>
+                    <br/>
                     {{ 'graph.categories' | translate }} <button ng-click='graphController.authoringAddXAxisCategory()'>Add Category</button>
                 </span>
                 <div ng-repeat='category in graphController.authoringComponentContent.xAxis.categories track by $index'>
