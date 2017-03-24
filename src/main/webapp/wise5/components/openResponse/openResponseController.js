@@ -254,6 +254,14 @@ var OpenResponseController = function () {
                     this.isSubmitDirty = false;
                     this.isSaveButtonVisible = this.componentContent.showSaveButton;
                     this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
+
+                    if (this.componentContent.starterSentence != null) {
+                        /*
+                         * the student has not done any work and there is a starter sentence
+                         * so we will populate the textarea with the starter sentence
+                         */
+                        this.studentResponse = this.componentContent.starterSentence;
+                    }
                 }.bind(this), true);
             }
 
