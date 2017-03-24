@@ -78,7 +78,6 @@
     "save": "Save",
     "saved": "Saved",
     "scoreLabel": "Score:",
-    "scoreLabelAndValue": "Score: {{score}}",
     "selectItemToInsert": "Select item to insert",
     "serverError": "Server error: ",
     "serverErrorCheckYourInternetConnection": "Server error. Check your internet connection.",

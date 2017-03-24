@@ -293,6 +293,16 @@ var EmbeddedController = function () {
                     return this.authoringComponentContent;
                 }.bind(this), function (newValue, oldValue) {
                     this.componentContent = this.ProjectService.injectAssetPaths(newValue);
+
+                    this.isSaveButtonVisible = this.componentContent.showSaveButton;
+                    this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
+
+                    // get the width
+                    this.width = this.componentContent.width ? this.componentContent.width : '100%';
+
+                    // get the height
+                    this.height = this.componentContent.height ? this.componentContent.height : '100%';
+
                     this.setURL(this.componentContent.url);
                 }.bind(this), true);
             } else if (this.mode === 'grading') {

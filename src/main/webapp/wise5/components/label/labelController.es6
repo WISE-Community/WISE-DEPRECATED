@@ -252,6 +252,9 @@ class LabelController {
                 this.canDeleteLabels = false;
                 this.isDisabled = true;
             } else if (this.mode === 'authoring') {
+                this.isSaveButtonVisible = this.componentContent.showSaveButton;
+                this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
+
                 // generate the summernote rubric element id
                 this.summernoteRubricId = 'summernoteRubric_' + this.nodeId + '_' + this.componentId;
 
@@ -297,6 +300,9 @@ class LabelController {
                     return this.authoringComponentContent;
                 }.bind(this), function(newValue, oldValue) {
                     this.componentContent = this.ProjectService.injectAssetPaths(newValue);
+
+                    this.isSaveButtonVisible = this.componentContent.showSaveButton;
+                    this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
 
                     if (this.canvas != null) {
 

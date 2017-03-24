@@ -226,95 +226,100 @@
         </div>
         <br/>
     </div>
-    <div class="component__prompt">
-        <div class="component__prompt__content"><compile data='labelController.getPrompt()'></compile></div>
-        <possible-score max-score="labelController.componentContent.maxScore"
-                        ng-if="labelController.mode === 'student' && !labelController.latestAnnotations.score"></possible-score>
-    </div>
-    <div class="input-wrapper">
-        <md-button class="md-raised md-primary"
-                   ng-click="labelController.newLabelButtonClicked()"
-                   ng-disabled="labelController.isDisabled"
-                   ng-if="labelController.showNewLabelButton() && !labelController.createLabelMode && labelController.selectedLabel == null">New Label</md-button>
-        <span ng-show="labelController.createLabelMode">{{labelController.newLabelMessage}}</span>
-        <md-button class="md-raised md-primary"
-                   ng-click="labelController.cancelButtonClicked()"
-                   ng-disabled="labelController.isDisabled"
-                   ng-if="labelController.showCancelButton()">{{ 'CANCEL' | translate }}</md-button>
-        <span ng-show="labelController.editLabelMode">{{ 'label.labelText' | translate }}:</span>
-        <input type="text"
-               id="editLabelTextInput"
-               ng-model="labelController.selectedLabel.text.text"
-               ng-show="labelController.editLabelMode"
-               ng-change="labelController.selectedLabelTextChanged(labelController.selectedLabel.text, labelController.selectedLabel.text.text)"
-               size="50"/>
-        <md-button class="md-raised md-primary"
-                   ng-click="labelController.saveLabelButtonClicked()"
-                   ng-disabled="labelController.isDisabled"
-                   ng-show="labelController.editLabelMode">{{ 'SAVE' | translate }}</md-button>
-        <md-button class="md-raised md-primary"
-                   ng-click="labelController.cancelLabelButtonClicked()"
-                   ng-disabled="labelController.isDisabled"
-                   ng-show="labelController.editLabelMode">{{ 'CANCEL' | translate }}</md-button>
-        <md-button class="md-raised md-primary"
-                   ng-click="labelController.deleteLabelButtonClicked()"
-                   ng-disabled="labelController.isDisabled"
-                   ng-show="labelController.editLabelMode">{{ 'DELETE' | translate }}</md-button>
-        <md-button class="md-accent md-primary"
-                ng-click='labelController.snipImage($event)'
-                ng-if='labelController.showSnipImageButton()'>
-            <md-icon> content_cut </md-icon>  {{ 'ADD_TO_NOTEBOOK' | translate:{label:labelController.notebookConfig.label} }}
-        </md-button>
-        <br/>
-        <div ng-show="labelController.componentContent.enableStudentUploadBackground">
-            {{ 'label.uploadBackgroundImage' | translate }}:
-            <input type="file"
-                   ng-show="labelController.componentContent.enableStudentUploadBackground"
-                   onchange="angular.element(this).scope().fileUploadChanged(this)"
-                   style="display:inline"/>
+    <div ng-style='labelController.mode === "authoring" && {"border": "1px solid black", "padding": "20px"}'>
+        <div ng-if='labelController.mode === "authoring"'>
+            <h5>{{ 'PREVIEW' | translate }}</h5>
         </div>
-        <br/>
-        <div id="canvasParent_{{labelController.canvasId}}">
-            <canvas id="{{labelController.canvasId}}" width="800" height="600" style="border:1px solid black;"></canvas>
+        <div class="component__prompt">
+            <div class="component__prompt__content"><compile data='labelController.getPrompt()'></compile></div>
+            <possible-score max-score="labelController.componentContent.maxScore"
+                            ng-if="labelController.mode === 'student' && !labelController.latestAnnotations.score"></possible-score>
         </div>
-    </div>
-        <div class="component__actions" ng-show="labelController.attachments.length && labelController.isStudentAttachmentEnabled" layout="row" layout-wrap="true">
-            <div class="component__add-attachment">
-                <md-button class="md-accent"
-                           ng-click="nodeController.showStudentAssets($event, component.id, labelController.isDisabled)">
-                    <md-icon>image</md-icon> <span>{{ 'label.addFile' | translate }}</span>
-                </md-button>
+        <div class="input-wrapper">
+            <md-button class="md-raised md-primary"
+                       ng-click="labelController.newLabelButtonClicked()"
+                       ng-disabled="labelController.isDisabled"
+                       ng-if="labelController.showNewLabelButton() && !labelController.createLabelMode && labelController.selectedLabel == null">New Label</md-button>
+            <span ng-show="labelController.createLabelMode">{{labelController.newLabelMessage}}</span>
+            <md-button class="md-raised md-primary"
+                       ng-click="labelController.cancelButtonClicked()"
+                       ng-disabled="labelController.isDisabled"
+                       ng-if="labelController.showCancelButton()">{{ 'CANCEL' | translate }}</md-button>
+            <span ng-show="labelController.editLabelMode">{{ 'label.labelText' | translate }}:</span>
+            <input type="text"
+                   id="editLabelTextInput"
+                   ng-model="labelController.selectedLabel.text.text"
+                   ng-show="labelController.editLabelMode"
+                   ng-change="labelController.selectedLabelTextChanged(labelController.selectedLabel.text, labelController.selectedLabel.text.text)"
+                   size="50"/>
+            <md-button class="md-raised md-primary"
+                       ng-click="labelController.saveLabelButtonClicked()"
+                       ng-disabled="labelController.isDisabled"
+                       ng-show="labelController.editLabelMode">{{ 'SAVE' | translate }}</md-button>
+            <md-button class="md-raised md-primary"
+                       ng-click="labelController.cancelLabelButtonClicked()"
+                       ng-disabled="labelController.isDisabled"
+                       ng-show="labelController.editLabelMode">{{ 'CANCEL' | translate }}</md-button>
+            <md-button class="md-raised md-primary"
+                       ng-click="labelController.deleteLabelButtonClicked()"
+                       ng-disabled="labelController.isDisabled"
+                       ng-show="labelController.editLabelMode">{{ 'DELETE' | translate }}</md-button>
+            <md-button class="md-accent md-primary"
+                    ng-click='labelController.snipImage($event)'
+                    ng-if='labelController.showSnipImageButton()'>
+                <md-icon> content_cut </md-icon>  {{ 'ADD_TO_NOTEBOOK' | translate:{label:labelController.notebookConfig.label} }}
+            </md-button>
+            <br/>
+            <div ng-show="labelController.componentContent.enableStudentUploadBackground">
+                {{ 'label.uploadBackgroundImage' | translate }}:
+                <input type="file"
+                       ng-show="labelController.componentContent.enableStudentUploadBackground"
+                       onchange="angular.element(this).scope().fileUploadChanged(this)"
+                       style="display:inline"/>
             </div>
-            <div class="component__attachment" ng-repeat="attachment in labelController.attachments">
-                <img ng-src="{{attachment.iconURL}}" class="component__attachment__content" />
-                <md-button class="component__attachment__delete" ng-click='labelController.removeAttachment(attachment)' title="Remove file"><md-icon>cancel</md-icon></md-button>
+            <br/>
+            <div id="canvasParent_{{labelController.canvasId}}">
+                <canvas id="{{labelController.canvasId}}" width="800" height="600" style="border:1px solid black;"></canvas>
             </div>
         </div>
-        <div ng-if="labelController.isSaveButtonVisible || labelController.isSubmitButtonVisible"
-             class="component__actions" layout="row" layout-align="start center">
-            <md-button class="md-raised md-primary"
-                       ng-click='labelController.saveButtonClicked()'
-                       ng-if='labelController.isSaveButtonVisible'
-                       ng-disabled='labelController.isDisabled || !labelController.isDirty'>{{ 'SAVE' | translate }}</md-button>
-            <md-button class="md-raised md-primary"
-                       ng-click='labelController.submitButtonClicked()'
-                       ng-if='labelController.isSubmitButtonVisible'
-                       ng-disabled='labelController.isDisabled || !labelController.isSubmitDirty'>{{ 'SUBMIT' | translate }}</md-button>
-            <span ng-show="labelController.saveMessage.text"
-                  class="component__actions__info md-caption">
-                {{labelController.saveMessage.text}} <span class="component__actions__more"><md-tooltip md-direction="top">{{ labelController.saveMessage.time | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip><span am-time-ago="labelController.saveMessage.time"></span></span>
-            </span>
+            <div class="component__actions" ng-show="labelController.attachments.length && labelController.isStudentAttachmentEnabled" layout="row" layout-wrap="true">
+                <div class="component__add-attachment">
+                    <md-button class="md-accent"
+                               ng-click="nodeController.showStudentAssets($event, component.id, labelController.isDisabled)">
+                        <md-icon>image</md-icon> <span>{{ 'label.addFile' | translate }}</span>
+                    </md-button>
+                </div>
+                <div class="component__attachment" ng-repeat="attachment in labelController.attachments">
+                    <img ng-src="{{attachment.iconURL}}" class="component__attachment__content" />
+                    <md-button class="component__attachment__delete" ng-click='labelController.removeAttachment(attachment)' title="Remove file"><md-icon>cancel</md-icon></md-button>
+                </div>
+            </div>
+            <div ng-if="labelController.isSaveButtonVisible || labelController.isSubmitButtonVisible"
+                 class="component__actions" layout="row" layout-align="start center">
+                <md-button class="md-raised md-primary"
+                           ng-click='labelController.saveButtonClicked()'
+                           ng-if='labelController.isSaveButtonVisible'
+                           ng-disabled='labelController.isDisabled || !labelController.isDirty'>{{ 'SAVE' | translate }}</md-button>
+                <md-button class="md-raised md-primary"
+                           ng-click='labelController.submitButtonClicked()'
+                           ng-if='labelController.isSubmitButtonVisible'
+                           ng-disabled='labelController.isDisabled || !labelController.isSubmitDirty'>{{ 'SUBMIT' | translate }}</md-button>
+                <span ng-show="labelController.saveMessage.text"
+                      class="component__actions__info md-caption">
+                    {{labelController.saveMessage.text}} <span class="component__actions__more"><md-tooltip md-direction="top">{{ labelController.saveMessage.time | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip><span am-time-ago="labelController.saveMessage.time"></span></span>
+                </span>
+            </div>
+            <component-annotations ng-if="labelController.mode === 'student' || labelController.mode === 'authoring'"
+                                   annotations='labelController.latestAnnotations'
+                                   max-score="labelController.componentContent.maxScore"></component-annotations>
         </div>
-        <component-annotations ng-if="labelController.mode === 'student'"
-                               annotations='labelController.latestAnnotations'
-                               max-score="labelController.componentContent.maxScore"></component-annotations>
+        <component-grading ng-if="labelController.mode === 'grading'"
+                           node-id='labelController.nodeId'
+                           component-id='labelController.componentId'
+                           max-score="labelController.componentContent.maxScore"
+                           from-workgroup-id='teacherWorkgroupId'
+                           to-workgroup-id='workgroupId'
+                           component-state-id='componentState.id'
+                           active="true"></component-grading>
     </div>
-    <component-grading ng-if="labelController.mode === 'grading'"
-                       node-id='labelController.nodeId'
-                       component-id='labelController.componentId'
-                       max-score="labelController.componentContent.maxScore"
-                       from-workgroup-id='teacherWorkgroupId'
-                       to-workgroup-id='workgroupId'
-                       component-state-id='componentState.id'
-                       active="true"></component-grading>
 </div>

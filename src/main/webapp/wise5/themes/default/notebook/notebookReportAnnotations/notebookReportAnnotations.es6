@@ -151,7 +151,7 @@ const NotebookReportAnnotations = {
                     <div layout="row" laoyut-align="start center">
                         <span ng-if="$ctrl.showScore && $ctrl.annotations.score"
                               class="annotations--student__score"
-                              translate="scoreLabelAndValue"
+                              translate="SCORE_LABEL_AND_VALUE"
                               translate-value-score="{{$ctrl.annotations.score.data.value}}{{$ctrl.maxScoreDisplay}}"></span>
                         <span flex></span>
                         <span>

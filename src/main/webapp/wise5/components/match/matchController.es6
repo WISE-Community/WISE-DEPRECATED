@@ -180,6 +180,9 @@ class MatchController {
                 this.isSubmitButtonVisible = false;
                 this.isDisabled = true;
             } else if (this.mode === 'authoring') {
+                this.isSaveButtonVisible = this.componentContent.showSaveButton;
+                this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
+
                 // generate the summernote rubric element id
                 this.summernoteRubricId = 'summernoteRubric_' + this.nodeId + '_' + this.componentId;
 
@@ -225,6 +228,14 @@ class MatchController {
                     return this.authoringComponentContent;
                 }.bind(this), function(newValue, oldValue) {
                     this.componentContent = this.ProjectService.injectAssetPaths(newValue);
+
+                    this.isSaveButtonVisible = this.componentContent.showSaveButton;
+                    this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
+
+                    this.isCorrect = null;
+                    this.submitCounter = 0;
+                    this.isDisabled = false;
+                    this.isSubmitButtonDisabled = false;
 
                     /*
                      * initialize the choices and buckets with the values from the
@@ -894,6 +905,15 @@ class MatchController {
     saveButtonClicked() {
         this.isSubmit = false;
 
+        if (this.mode === 'authoring') {
+            /*
+             * we are in authoring mode so we will set isDirty to false here
+             * because the 'componentSaveTriggered' event won't work in
+             * authoring mode
+             */
+            this.isDirty = false;
+        }
+
         // tell the parent node that this component wants to save
         this.$scope.$emit('componentSaveTriggered', {nodeId: this.nodeId, componentId: this.componentId});
     };
@@ -979,6 +999,17 @@ class MatchController {
                      */
                     this.isDisabled = true;
                     this.isSubmitButtonDisabled = true;
+                }
+
+                if (this.mode === 'authoring') {
+                    /*
+                     * we are in authoring mode so we will set values appropriately
+                     * here because the 'componentSubmitTriggered' event won't
+                     * work in authoring mode
+                     */
+                    this.isDirty = false;
+                    this.isSubmitDirty = false;
+                    this.createComponentState('submit');
                 }
 
                 if (submitTriggeredBy == null || submitTriggeredBy === 'componentSubmitButton') {

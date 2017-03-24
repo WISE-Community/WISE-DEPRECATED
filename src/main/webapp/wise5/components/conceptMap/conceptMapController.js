@@ -948,6 +948,15 @@ var ConceptMapController = function () {
         value: function saveButtonClicked() {
             this.isSubmit = false;
 
+            if (this.mode === 'authoring') {
+                /*
+                 * we are in authoring mode so we will set isDirty to false here
+                 * because the 'componentSaveTriggered' event won't work in
+                 * authoring mode
+                 */
+                this.isDirty = false;
+            }
+
             // tell the parent node that this component wants to save
             this.$scope.$emit('componentSaveTriggered', { nodeId: this.nodeId, componentId: this.componentId });
         }
@@ -1108,6 +1117,17 @@ var ConceptMapController = function () {
 
                     this.isSubmit = true;
 
+                    if (this.mode === 'authoring') {
+                        /*
+                         * we are in the authoring view so we will set the
+                         * latest score and comment annotations manually
+                         */
+
+                        this.isDirty = false;
+                        this.isSubmitDirty = false;
+                        this.createComponentState('submit');
+                    }
+
                     // tell the parent node that this component wants to submit
                     this.$scope.$emit('componentSubmitTriggered', { nodeId: this.nodeId, componentId: this.componentId });
                 } else {
@@ -1245,6 +1265,18 @@ var ConceptMapController = function () {
 
                             // add the annotation to the component state
                             componentState.annotations.push(scoreAnnotation);
+
+                            if (this.mode === 'authoring') {
+                                if (this.latestAnnotations == null) {
+                                    this.latestAnnotations = {};
+                                }
+
+                                /*
+                                 * we are in the authoring view so we will set the
+                                 * latest score annotation manually
+                                 */
+                                this.latestAnnotations.score = scoreAnnotation;
+                            }
                         }
 
                         if (this.autoFeedbackResult.feedback != null) {
@@ -1260,6 +1292,18 @@ var ConceptMapController = function () {
 
                             // add the annotation to the component state
                             componentState.annotations.push(commentAnnotation);
+
+                            if (this.mode === 'authoring') {
+                                if (this.latestAnnotations == null) {
+                                    this.latestAnnotations = {};
+                                }
+
+                                /*
+                                 * we are in the authoring view so we will set the
+                                 * latest comment annotation manually
+                                 */
+                                this.latestAnnotations.comment = commentAnnotation;
+                            }
                         }
                     }
                 }

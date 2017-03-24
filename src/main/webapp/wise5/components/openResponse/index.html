@@ -339,9 +339,9 @@
         </div>
         <br/>
     </div>
-    <div ng-style='openResponseController.mode === "authoring" && {"border": "1px solid black"}'>
+    <div ng-style='openResponseController.mode === "authoring" && {"border": "1px solid black", "padding": "20px"}'>
         <div ng-if='openResponseController.mode === "authoring"'>
-            <h5>Preview</h5>
+            <h5>{{ 'PREVIEW' | translate }}</h5>
         </div>
         <md-input-container class="input-container md-block input-container--open-response input-container--component md-no-float">
             <label class="input-label md-no-float" ng-disabled="openResponseController.isDisabled"
@@ -405,7 +405,7 @@
                   {{openResponseController.saveMessage.text}} <span class="component__actions__more"><md-tooltip md-direction="top">{{ openResponseController.saveMessage.time | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip><span am-time-ago="openResponseController.saveMessage.time"></span></span>
             </span>
         </div>
-        <component-annotations ng-if="openResponseController.mode === 'student'"
+        <component-annotations ng-if="openResponseController.mode === 'student' || openResponseController.mode === 'authoring'"
                                annotations='openResponseController.latestAnnotations'
                                max-score="openResponseController.componentContent.maxScore"></component-annotations>
         <component-grading ng-if="openResponseController.mode === 'grading'"

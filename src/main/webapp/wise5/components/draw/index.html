@@ -8,7 +8,7 @@
                           rows='3'
                           cols='100'></textarea>
                 <br/>
-                {{ 'BACKGROUND_IMAGE' | translate }} ({{ 'OPTIONAL' | translate }}):
+                {{ 'BACKGROUND_IMAGE' | translate }}:
                 <input type='text'
                        size='80'
                        ng-model='drawController.authoringComponentContent.background'
@@ -301,76 +301,81 @@
         </div>
         <br/>
     </div>
-    <div class="component__prompt">
-        <div class="component__prompt__content"><compile data='drawController.getPrompt()'></compile></div>
-        <possible-score max-score="drawController.componentContent.maxScore"
-                        ng-if="drawController.mode === 'student' && !drawController.latestAnnotations.score"></possible-score>
-    </div>
-    <div class="component__actions" layout="row">
-        <md-button class="md-accent" ng-show="drawController.isStudentAttachmentEnabled"
-                   ng-click="nodeController.showStudentAssets($event, component.id, drawController.isDisabled)">
-            <md-icon>image</md-icon> {{ 'draw.insertFile' | translate }}
+    <div ng-style='drawController.mode === "authoring" && {"border": "1px solid black", "padding": "20px"}'>
+        <div ng-if='drawController.mode === "authoring"'>
+            <h5>{{ 'PREVIEW' | translate }}</h5>
+        </div>
+        <div class="component__prompt">
+            <div class="component__prompt__content"><compile data='drawController.getPrompt()'></compile></div>
+            <possible-score max-score="drawController.componentContent.maxScore"
+                            ng-if="drawController.mode === 'student' && !drawController.latestAnnotations.score"></possible-score>
+        </div>
+        <div class="component__actions" layout="row">
+            <md-button class="md-accent" ng-show="drawController.isStudentAttachmentEnabled"
+                       ng-click="nodeController.showStudentAssets($event, component.id, drawController.isDisabled)">
+                <md-icon>image</md-icon> {{ 'draw.insertFile' | translate }}
+            </md-button>
+        </div>
+        <md-button class="md-accent"
+                ng-click="drawController.resetButtonClicked()"
+                ng-show="drawController.isResetButtonVisible">
+                <md-icon> restore </md-icon> {{ 'RESET' | translate }}
         </md-button>
-    </div>
-    <md-button class="md-accent"
-            ng-click="drawController.resetButtonClicked()"
-            ng-show="drawController.isResetButtonVisible">
-            <md-icon> restore </md-icon> {{ 'RESET' | translate }}
-    </md-button>
-    <md-button class="md-accent md-primary"
-            ng-click='drawController.snipDrawing($event)'
-            ng-if='drawController.showSnipDrawingButton()'>
-        <md-icon> content_cut </md-icon> {{ 'ADD_TO_NOTEBOOK' | translate:{label:drawController.notebookConfig.label} }}
-    </md-button>
-    <div data-drop="true"
-         jqyoui-droppable="{onDrop: 'drawController.dropCallback(item, $index)'}">
-        <div id="{{drawController.drawingToolId}}"></div>
-        <!--
-        <h2>API examples:</h2>
-        <div>
-          <button id="set-background">Set background</button>
-          <input type="text" id="background-src" value="https://ccshutterbugtest.s3.amazonaws.com/7a72684bb7e.png" size="70" />
-          <button id="resize-background">Resize background to canvas</button>
-          <button id="resize-canvas">Resize cavas to background</button>
-          <button id="shrink-background">Shrink background to cavas</button>
+        <md-button class="md-accent md-primary"
+                ng-click='drawController.snipDrawing($event)'
+                ng-if='drawController.showSnipDrawingButton()'>
+            <md-icon> content_cut </md-icon> {{ 'ADD_TO_NOTEBOOK' | translate:{label:drawController.notebookConfig.label} }}
+        </md-button>
+        <div data-drop="true"
+             jqyoui-droppable="{onDrop: 'drawController.dropCallback(item, $index)'}">
+            <div id="{{drawController.drawingToolId}}"></div>
+            <!--
+            <h2>API examples:</h2>
+            <div>
+              <button id="set-background">Set background</button>
+              <input type="text" id="background-src" value="https://ccshutterbugtest.s3.amazonaws.com/7a72684bb7e.png" size="70" />
+              <button id="resize-background">Resize background to canvas</button>
+              <button id="resize-canvas">Resize cavas to background</button>
+              <button id="shrink-background">Shrink background to cavas</button>
+            </div>
+            <div>
+              <button id="clear">Clear</button>
+              <button id="save">Save</button>
+              <button id="load" disabled>Load</button>
+            </div>
+            -->
         </div>
-        <div>
-          <button id="clear">Clear</button>
-          <button id="save">Save</button>
-          <button id="load" disabled>Load</button>
+        <md-button class="revision md-icon-button" ng-click='nodeController.showRevisions($event, component.id)'
+                   ng-if="nodeController.getRevisions(component.id).length > 1">
+            <md-icon> history </md-icon>
+            <md-tooltip md-direction="top">{{nodeController.getRevisions(component.id).length}} {{ 'draw.versions' | translate }}</md-tooltip>
+        </md-button>
+        <div ng-if="drawController.isSaveButtonVisible || drawController.isSubmitButtonVisible"
+             class="component__actions" layout="row" layout-align="start center">
+            <md-button class="md-raised md-primary"
+                       ng-class="{'md-raised': !drawController.isSubmitButtonVisible}"
+                       ng-click='drawController.saveButtonClicked()'
+                       ng-disabled='drawController.isDisabled || !drawController.isDirty'
+                       ng-show='drawController.isSaveButtonVisible'>{{ 'SAVE' | translate }}</md-button>
+            <md-button class="md-raised md-primary"
+                       ng-click='drawController.submitButtonClicked()'
+                       ng-disabled='drawController.isDisabled || !drawController.isSubmitDirty'
+                       ng-show='drawController.isSubmitButtonVisible'>{{ 'SUBMIT' | translate }}</md-button>
+            <span ng-show="drawController.saveMessage.text"
+                  class="component__actions__info md-caption">
+                  {{drawController.saveMessage.text}} <span class="component__actions__more"><md-tooltip md-direction="top">{{ drawController.saveMessage.time | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip><span am-time-ago="drawController.saveMessage.time"></span></span>
+            </span>
         </div>
-        -->
+        <component-annotations ng-if="drawController.mode === 'student'"
+                               annotations='drawController.latestAnnotations'
+                               max-score="drawController.componentContent.maxScore"></component-annotations>
+        <component-grading ng-if="drawController.mode === 'grading'"
+                          node-id='drawController.nodeId'
+                          component-id='drawController.componentId'
+                          max-score="drawController.componentContent.maxScore"
+                          from-workgroup-id='teacherWorkgroupId'
+                          to-workgroup-id='workgroupId'
+                          component-state-id='componentState.id'
+                          active="true"></component-grading>
     </div>
-    <md-button class="revision md-icon-button" ng-click='nodeController.showRevisions($event, component.id)'
-               ng-if="nodeController.getRevisions(component.id).length > 1">
-        <md-icon> history </md-icon>
-        <md-tooltip md-direction="top">{{nodeController.getRevisions(component.id).length}} {{ 'draw.versions' | translate }}</md-tooltip>
-    </md-button>
-    <div ng-if="drawController.isSaveButtonVisible || drawController.isSubmitButtonVisible"
-         class="component__actions" layout="row" layout-align="start center">
-        <md-button class="md-raised md-primary"
-                   ng-class="{'md-raised': !drawController.isSubmitButtonVisible}"
-                   ng-click='drawController.saveButtonClicked()'
-                   ng-disabled='drawController.isDisabled || !drawController.isDirty'
-                   ng-show='drawController.isSaveButtonVisible'>{{ 'SAVE' | translate }}</md-button>
-        <md-button class="md-raised md-primary"
-                   ng-click='drawController.submitButtonClicked()'
-                   ng-disabled='drawController.isDisabled || !drawController.isSubmitDirty'
-                   ng-show='drawController.isSubmitButtonVisible'>{{ 'SUBMIT' | translate }}</md-button>
-        <span ng-show="drawController.saveMessage.text"
-              class="component__actions__info md-caption">
-              {{drawController.saveMessage.text}} <span class="component__actions__more"><md-tooltip md-direction="top">{{ drawController.saveMessage.time | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip><span am-time-ago="drawController.saveMessage.time"></span></span>
-        </span>
-    </div>
-    <component-annotations ng-if="drawController.mode === 'student'"
-                           annotations='drawController.latestAnnotations'
-                           max-score="drawController.componentContent.maxScore"></component-annotations>
-    <component-grading ng-if="drawController.mode === 'grading'"
-                      node-id='drawController.nodeId'
-                      component-id='drawController.componentId'
-                      max-score="drawController.componentContent.maxScore"
-                      from-workgroup-id='teacherWorkgroupId'
-                      to-workgroup-id='workgroupId'
-                      component-state-id='componentState.id'
-                      active="true"></component-grading>
 </div>

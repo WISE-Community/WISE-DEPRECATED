@@ -258,11 +258,15 @@ class AudioOscillatorController {
                 $scope.$watch(function() {
                     return this.authoringComponentContent;
                 }.bind(this), function(newValue, oldValue) {
+
                     // stop the audio if it is playing
                     this.stop();
 
                     // inject asset paths if necessary
                     this.componentContent = this.ProjectService.injectAssetPaths(newValue);
+
+                    this.isSaveButtonVisible = this.componentContent.showSaveButton;
+                    this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
 
                     // load the parameters into the component
                     this.setParametersFromComponentContent();
@@ -670,6 +674,15 @@ class AudioOscillatorController {
     saveButtonClicked() {
         this.isSubmit = false;
 
+        if (this.mode === 'authoring') {
+            /*
+             * we are in authoring mode so we will set isDirty to false here
+             * because the 'componentSaveTriggered' event won't work in
+             * authoring mode
+             */
+            this.isDirty = false;
+        }
+
         // tell the parent node that this component wants to save
         this.$scope.$emit('componentSaveTriggered', {nodeId: this.nodeId, componentId: this.componentId});
     };
@@ -679,6 +692,16 @@ class AudioOscillatorController {
      */
     submitButtonClicked() {
         this.isSubmit = true;
+
+        if (this.mode === 'authoring') {
+            /*
+             * we are in authoring mode so we will set values appropriately
+             * here because the 'componentSubmitTriggered' event won't
+             * work in authoring mode
+             */
+            this.isDirty = false;
+            this.isSubmitDirty = false;
+        }
 
         // tell the parent node that this component wants to submit
         this.$scope.$emit('componentSubmitTriggered', {nodeId: this.nodeId, componentId: this.componentId});

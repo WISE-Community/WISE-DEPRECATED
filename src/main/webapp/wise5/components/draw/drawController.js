@@ -196,6 +196,10 @@ var DrawController = function () {
                 this.isSnipDrawingButtonVisible = false;
                 this.isDisabled = true;
             } else if (this.mode === 'authoring') {
+                this.isSaveButtonVisible = this.componentContent.showSaveButton;
+                this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
+                this.isResetButtonVisible = true;
+
                 // generate the summernote rubric element id
                 this.summernoteRubricId = 'summernoteRubric_' + this.nodeId + '_' + this.componentId;
 
@@ -228,10 +232,14 @@ var DrawController = function () {
                 this.updateAdvancedAuthoringView();
 
                 $scope.$watch(function () {
+                    console.log(this.authoringComponentContent);
                     return this.authoringComponentContent;
                 }.bind(this), function (newValue, oldValue) {
+                    console.log('watch');
                     this.componentContent = this.ProjectService.injectAssetPaths(newValue);
                     this.initializeDrawingTool();
+                    this.isSaveButtonVisible = this.componentContent.showSaveButton;
+                    this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
                 }.bind(this), true);
             }
 
@@ -680,7 +688,7 @@ var DrawController = function () {
                 // we will only display the tools the authored specified to show
 
                 // the title for the select button
-                var selectTitle = this.$translate('draw.selectTool');
+                var selectTitle = this.$translate('draw.selectToolTooltip');
 
                 if (tools.select) {
                     $('#drawingtool_' + this.nodeId + '_' + this.componentId).find('[title="' + selectTitle + '"]').show();
@@ -734,7 +742,7 @@ var DrawController = function () {
                 }
 
                 // the title for the clone button
-                var cloneTitle = this.$translate('draw.cloneTool');
+                var cloneTitle = this.$translate('draw.cloneToolTooltip');
 
                 if (tools.clone) {
                     $('#drawingtool_' + this.nodeId + '_' + this.componentId).find('[title="' + cloneTitle + '"]').show();
@@ -1840,7 +1848,7 @@ var DrawController = function () {
         value: function authoringEnableAllToolsButtonClicked() {
 
             if (this.authoringComponentContent.tools == null) {
-                this.authoringComponentContent.tools = [];
+                this.authoringComponentContent.tools = {};
             }
 
             // enable all the tools
@@ -1873,7 +1881,7 @@ var DrawController = function () {
         value: function authoringDisableAllToolsButtonClicked() {
 
             if (this.authoringComponentContent.tools == null) {
-                this.authoringComponentContent.tools = [];
+                this.authoringComponentContent.tools = {};
             }
 
             // disable all the tools

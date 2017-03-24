@@ -316,6 +316,10 @@ class DiscussionController {
                 this.$scope.discussionController.isSubmit = true;
             }
 
+            if (this.mode === 'authoring') {
+                this.createComponentState('submit');
+            }
+
             // tell the parent node that this component wants to submit
             this.$scope.$emit('componentSubmitTriggered', {nodeId: this.$scope.discussionController.nodeId, componentId: this.$scope.discussionController.componentId});
         }.bind(this);
@@ -771,7 +775,7 @@ class DiscussionController {
 
             componentState.studentData = studentData;
 
-            if (this.ConfigService.isPreview() && !this.componentStateIdReplyingTo) {
+            if ((this.ConfigService.isPreview() && !this.componentStateIdReplyingTo) || this.mode === 'authoring') {
                 // create a dummy component state id if we're in preview mode and posting a new response
                 componentState.id = this.UtilService.generateKey();
             }
@@ -785,6 +789,42 @@ class DiscussionController {
                  * doesn't maintain the same value
                  */
                 this.isSubmit = false;
+
+                if (this.mode === 'authoring') {
+                    if (this.StudentDataService.studentData == null) {
+                        /*
+                         * initialize the student data since this usually doesn't
+                         * occur in the authoring mode
+                         */
+                        this.StudentDataService.studentData = {};
+                        this.StudentDataService.studentData.componentStates = [];
+                    }
+
+                    /*
+                     * set the node id and component id into the component state.
+                     * this is usually performed in the nodeController but since
+                     * we are in the authoring mode, the nodeController never gets
+                     * called
+                     */
+                    componentState.nodeId = this.nodeId;
+                    componentState.componentId = this.componentId;
+
+                    // add the component state to the StudentDataService studentData
+                    this.StudentDataService.studentData.componentStates.push(componentState);
+
+                    // get the component states for this component
+                    var componentStates = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(this.nodeId, this.componentId);
+
+                    // set the component states into the component
+                    this.setClassResponses(componentStates);
+
+                    /*
+                     * clear the input where the user has entered the text they
+                     * are posting
+                     */
+                    this.clearComponentValues();
+                    this.isDirty = false;
+                }
             }
         }
 

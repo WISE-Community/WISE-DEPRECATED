@@ -310,6 +310,11 @@ var GraphController = function () {
                 this.isDisabled = true;
                 this.backgroundImage = this.componentContent.backgroundImage;
             } else if (this.mode === 'authoring') {
+                this.isSaveButtonVisible = this.componentContent.showSaveButton;
+                this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
+                this.isResetSeriesButtonVisible = true;
+                this.isSelectSeriesVisible = true;
+
                 // generate the summernote rubric element id
                 this.summernoteRubricId = 'summernoteRubric_' + this.nodeId + '_' + this.componentId;
 
@@ -349,6 +354,14 @@ var GraphController = function () {
                     this.xAxis = null;
                     this.yAxis = null;
                     this.backgroundImage = this.componentContent.backgroundImage;
+                    this.isSaveButtonVisible = this.componentContent.showSaveButton;
+                    this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
+                    this.isResetSeriesButtonVisible = true;
+                    this.isSelectSeriesVisible = true;
+                    this.setSeries(this.UtilService.makeCopyOfJSONObject(this.componentContent.series));
+                    this.setActiveSeriesByIndex(0);
+                    this.trials = [];
+                    this.newTrial();
                     this.setupGraph();
                 }.bind(this), true);
             }

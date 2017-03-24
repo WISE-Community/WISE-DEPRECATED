@@ -167,6 +167,10 @@ class MultipleChoiceController {
                 this.isSubmitButtonVisible = false;
                 this.isDisabled = true;
             } else if (this.mode === 'authoring') {
+                this.isPromptVisible = true;
+                this.isSaveButtonVisible = this.componentContent.showSaveButton;
+                this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
+
                 // generate the summernote rubric element id
                 this.summernoteRubricId = 'summernoteRubric_' + this.nodeId + '_' + this.componentId;
 
@@ -212,6 +216,8 @@ class MultipleChoiceController {
                     return this.authoringComponentContent;
                 }.bind(this), function(newValue, oldValue) {
                     this.componentContent = this.ProjectService.injectAssetPaths(newValue);
+                    this.isSaveButtonVisible = this.componentContent.showSaveButton;
+                    this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
                 }.bind(this), true);
             }
 
@@ -761,6 +767,15 @@ class MultipleChoiceController {
         this.isCorrect = null;
         this.hideAllFeedback();
 
+        if (this.mode === 'authoring') {
+            /*
+             * we are in authoring mode so we will set isDirty to false here
+             * because the 'componentSaveTriggered' event won't work in
+             * authoring mode
+             */
+            this.isDirty = false;
+        }
+
         // tell the parent node that this component wants to save
         this.$scope.$emit('componentSaveTriggered', {nodeId: this.nodeId, componentId: this.componentId});
     };
@@ -839,6 +854,18 @@ class MultipleChoiceController {
                      */
                     this.isDisabled = true;
                     this.isSubmitButtonDisabled = true;
+                }
+
+                if (this.mode === 'authoring') {
+                    /*
+                     * we are in authoring mode so we will set values appropriately
+                     * here because the 'componentSubmitTriggered' event won't
+                     * work in authoring mode
+                     */
+                    this.checkAnswer();
+                    this.isLatestComponentStateSubmit = true;
+                    this.isDirty = false;
+                    this.isSubmitDirty = false;
                 }
 
                 if (submitTriggeredBy == null || submitTriggeredBy === 'componentSubmitButton') {

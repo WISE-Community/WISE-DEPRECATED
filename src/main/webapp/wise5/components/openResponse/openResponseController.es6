@@ -211,6 +211,10 @@ class OpenResponseController {
                 this.isSubmitButtonVisible = false;
                 this.isDisabled = true;
             } else if (this.mode === 'authoring') {
+                this.isPromptVisible = true;
+                this.isSaveButtonVisible = this.componentContent.showSaveButton;
+                this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
+
                 // generate the summernote rubric element id
                 this.summernoteRubricId = 'summernoteRubric_' + this.nodeId + '_' + this.componentId;
 
@@ -255,7 +259,20 @@ class OpenResponseController {
                 $scope.$watch(function() {
                     return this.authoringComponentContent;
                 }.bind(this), function(newValue, oldValue) {
+                    // inject the asset paths into the new component content
                     this.componentContent = this.ProjectService.injectAssetPaths(newValue);
+
+                    /*
+                     * reset the values so that the preview is refreshed with
+                     * the new content
+                     */
+                    this.submitCounter = 0;
+                    this.studentResponse = '';
+                    this.latestAnnotations = null;
+                    this.isDirty = false;
+                    this.isSubmitDirty = false;
+                    this.isSaveButtonVisible = this.componentContent.showSaveButton;
+                    this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
                 }.bind(this), true);
             }
 
@@ -609,6 +626,15 @@ class OpenResponseController {
     saveButtonClicked() {
         this.isSubmit = false;
 
+        if (this.mode === 'authoring') {
+            /*
+             * we are in authoring mode so we will set isDirty to false here
+             * because the 'componentSaveTriggered' event won't work in
+             * authoring mode
+             */
+            this.isDirty = false;
+        }
+
         // tell the parent node that this component wants to save
         this.$scope.$emit('componentSaveTriggered', {nodeId: this.nodeId, componentId: this.componentId});
     };
@@ -681,6 +707,17 @@ class OpenResponseController {
                      * disable the submit button
                      */
                     this.isSubmitButtonDisabled = true;
+                }
+
+                if (this.mode === 'authoring') {
+                    /*
+                     * we are in authoring mode so we will set values appropriately
+                     * here because the 'componentSubmitTriggered' event won't
+                     * work in authoring mode
+                     */
+                    this.isDirty = false;
+                    this.isSubmitDirty = false;
+                    this.createComponentState('submit');
                 }
 
                 if (submitTriggeredBy == null || submitTriggeredBy === 'componentSubmitButton') {
@@ -879,57 +916,70 @@ class OpenResponseController {
 
                             let annotationGroupForScore = null;
 
-                            // get the previous score and comment annotations
-                            let latestAnnotations = this.$scope.$parent.nodeController.getLatestComponentAnnotations(this.componentId);
+                            if (this.$scope.$parent.nodeController != null) {
+                                // get the previous score and comment annotations
+                                let latestAnnotations = this.$scope.$parent.nodeController.getLatestComponentAnnotations(this.componentId);
 
-                            let previousScore = null;
+                                let previousScore = null;
 
-                            if (latestAnnotations != null && latestAnnotations.score != null &&
-                                latestAnnotations.score.data != null) {
+                                if (latestAnnotations != null && latestAnnotations.score != null &&
+                                    latestAnnotations.score.data != null) {
 
-                                // get the previous score annotation value
-                                previousScore = latestAnnotations.score.data.value;
-                            }
-
-                            if (this.componentContent.enableGlobalAnnotations && this.componentContent.globalAnnotationSettings != null) {
-
-                                let globalAnnotationMaxCount = 0;
-                                if (this.componentContent.globalAnnotationSettings.globalAnnotationMaxCount != null) {
-                                    globalAnnotationMaxCount = this.componentContent.globalAnnotationSettings.globalAnnotationMaxCount;
+                                    // get the previous score annotation value
+                                    previousScore = latestAnnotations.score.data.value;
                                 }
-                                // get the annotation properties for the score that the student got.
-                                annotationGroupForScore = this.ProjectService.getGlobalAnnotationGroupByScore(this.componentContent, previousScore, score);
 
-                                // check if we need to apply this globalAnnotationSetting to this annotation: we don't need to if we've already reached the maxCount
-                                if (annotationGroupForScore != null) {
-                                    let globalAnnotationGroupsByNodeIdAndComponentId = this.AnnotationService.getAllGlobalAnnotationGroups(this.nodeId, this.componentId);
-                                    annotationGroupForScore.annotationGroupCreatedTime = autoScoreAnnotation.clientSaveTime;  // save annotation creation time
+                                if (this.componentContent.enableGlobalAnnotations && this.componentContent.globalAnnotationSettings != null) {
 
-                                    if (globalAnnotationGroupsByNodeIdAndComponentId.length >= globalAnnotationMaxCount) {
-                                        // we've already applied this annotation properties to maxCount annotations, so we don't need to apply it any more.
-                                        annotationGroupForScore = null;
+                                    let globalAnnotationMaxCount = 0;
+                                    if (this.componentContent.globalAnnotationSettings.globalAnnotationMaxCount != null) {
+                                        globalAnnotationMaxCount = this.componentContent.globalAnnotationSettings.globalAnnotationMaxCount;
+                                    }
+                                    // get the annotation properties for the score that the student got.
+                                    annotationGroupForScore = this.ProjectService.getGlobalAnnotationGroupByScore(this.componentContent, previousScore, score);
+
+                                    // check if we need to apply this globalAnnotationSetting to this annotation: we don't need to if we've already reached the maxCount
+                                    if (annotationGroupForScore != null) {
+                                        let globalAnnotationGroupsByNodeIdAndComponentId = this.AnnotationService.getAllGlobalAnnotationGroups(this.nodeId, this.componentId);
+                                        annotationGroupForScore.annotationGroupCreatedTime = autoScoreAnnotation.clientSaveTime;  // save annotation creation time
+
+                                        if (globalAnnotationGroupsByNodeIdAndComponentId.length >= globalAnnotationMaxCount) {
+                                            // we've already applied this annotation properties to maxCount annotations, so we don't need to apply it any more.
+                                            annotationGroupForScore = null;
+                                        }
+                                    }
+
+                                    if (annotationGroupForScore != null && annotationGroupForScore.isGlobal && annotationGroupForScore.unGlobalizeCriteria != null) {
+                                        // check if this annotation is global and what criteria needs to be met to un-globalize.
+                                        annotationGroupForScore.unGlobalizeCriteria.map( (unGlobalizeCriteria) => {
+                                            // if the un-globalize criteria is time-based (e.g. isVisitedAfter, isRevisedAfter, isVisitedAndRevisedAfter, etc), store the timestamp of this annotation in the criteria
+                                            // so we can compare it when we check for criteria satisfaction.
+                                            if (unGlobalizeCriteria.params != null) {
+                                                unGlobalizeCriteria.params.criteriaCreatedTimestamp = autoScoreAnnotation.clientSaveTime;  // save annotation creation time to criteria
+                                            }
+                                        });
+                                    }
+
+                                    if (annotationGroupForScore != null) {
+                                        // copy over the annotation properties into the autoScoreAnnotation's data
+                                        angular.merge(autoScoreAnnotation.data, annotationGroupForScore);
                                     }
                                 }
-
-                                if (annotationGroupForScore != null && annotationGroupForScore.isGlobal && annotationGroupForScore.unGlobalizeCriteria != null) {
-                                    // check if this annotation is global and what criteria needs to be met to un-globalize.
-                                    annotationGroupForScore.unGlobalizeCriteria.map( (unGlobalizeCriteria) => {
-                                        // if the un-globalize criteria is time-based (e.g. isVisitedAfter, isRevisedAfter, isVisitedAndRevisedAfter, etc), store the timestamp of this annotation in the criteria
-                                        // so we can compare it when we check for criteria satisfaction.
-                                        if (unGlobalizeCriteria.params != null) {
-                                            unGlobalizeCriteria.params.criteriaCreatedTimestamp = autoScoreAnnotation.clientSaveTime;  // save annotation creation time to criteria
-                                        }
-                                    });
-                                }
-
-                                if (annotationGroupForScore != null) {
-                                    // copy over the annotation properties into the autoScoreAnnotation's data
-                                    angular.merge(autoScoreAnnotation.data, annotationGroupForScore);
-                                }
-
                             }
 
                             componentState.annotations.push(autoScoreAnnotation);
+
+                            if (this.mode === 'authoring') {
+                                if (this.latestAnnotations == null) {
+                                    this.latestAnnotations = {};
+                                }
+
+                                /*
+                                 * we are in the authoring view so we will set the
+                                 * latest score annotation manually
+                                 */
+                                this.latestAnnotations.score = autoScoreAnnotation;
+                            }
 
                             var autoComment = null;
 
@@ -964,6 +1014,18 @@ class OpenResponseController {
                                     }
                                 }
                                 componentState.annotations.push(autoCommentAnnotation);
+
+                                if (this.mode === 'authoring') {
+                                    if (this.latestAnnotations == null) {
+                                        this.latestAnnotations = {};
+                                    }
+
+                                    /*
+                                     * we are in the authoring view so we will set the
+                                     * latest comment annotation manually
+                                     */
+                                    this.latestAnnotations.comment = autoCommentAnnotation;
+                                }
                             }
                             if (this.componentContent.enableNotifications) {
                                 // get the notification properties for the score that the student got.

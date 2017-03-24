@@ -202,69 +202,73 @@
         </div>
         <br/>
     </div>
-    <div id='prompt' ng-show='audioOscillatorController.isPromptVisible'><compile data='audioOscillatorController.getPrompt()'></compile></div>
-    <div class="component-content__actions" layout="row">
-        <md-button class="md-accent" ng-show="audioOscillatorController.isStudentAttachmentEnabled"
-                   ng-click="nodeController.showStudentAssets($event, component.id, audioOscillatorController.isDisabled)">
-            <md-icon>image</md-icon> {{ 'audioOscillator.importData' | translate }}
-        </md-button>
-    </div>
-    <span ng-if='audioOscillatorController.oscillatorTypes.length == 0 || audioOscillatorController.oscillatorTypes.length == 1'>
-        {{ 'audioOscillator.oscillatorType' | translate }}: {{audioOscillatorController.oscillatorType}}
-    </span>
-    <span ng-if='audioOscillatorController.oscillatorTypes.length > 1'>
-        {{ 'audioOscillator.oscillatorType' | translate }}:
-        <select ng-model='audioOscillatorController.oscillatorType'
-                ng-change='audioOscillatorController.oscillatorTypeChanged()'>
-            <option ng-repeat='oscillatorType in audioOscillatorController.oscillatorTypes'
-                    value='{{oscillatorType}}'>{{oscillatorType}}</option>
-        </select>
-    </span>
-    <br/>
-    {{ 'audioOscillator.frequency' | translate }}: <input type='number'
-                      ng-model='audioOscillatorController.frequency'
-                      ng-change='audioOscillatorController.frequencyChanged()'/> {{ 'audioOscillator.hz' | translate }}
-    <br/>
-    <button ng-click='audioOscillatorController.playStopClicked()'>{{audioOscillatorController.playStopButtonText}}</button>
-    <br/>
-    <canvas id='{{audioOscillatorController.oscilloscopeId}}' width={{audioOscillatorController.oscilloscopeWidth}} height={{audioOscillatorController.oscilloscopeHeight}} style="border:1px solid lightgrey"></canvas>
-    <div ng-if="audioOscillatorController.isSaveButtonVisible || audioOscillatorController.isSubmitButtonVisible"
-         class="component-content__actions" layout="row" layout-align="start center">
-        <md-button class="md-primary"
-                   ng-class="{'md-raised': !audioOscillatorController.isSubmitButtonVisible}"
-                   ng-click='audioOscillatorController.saveButtonClicked()'
-                   ng-if='audioOscillatorController.isSaveButtonVisible'
-                   ng-disabled='audioOscillatorController.isDisabled || !audioOscillatorController.isDirty'>{{ 'SAVE' | translate }}</md-button>
-        <md-button class="md-raised md-primary"
-                   ng-click='audioOscillatorController.submitButtonClicked()'
-                   ng-if='audioOscillatorController.isSubmitButtonVisible'
-                   ng-disabled='audioOscillatorController.isDisabled || !audioOscillatorController.isSubmitDirty'>{{ 'SUBMIT' | translate }}</md-button>
-        <span ng-show="audioOscillatorController.saveMessage.text"
-              class="component-content__actions__info md-caption">
-              {{audioOscillatorController.saveMessage.text}} <span class="component-content__actions__more"><md-tooltip md-direction="top">{{ audioOscillatorController.saveMessage.time | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip><span am-time-ago="audioOscillatorController.saveMessage.time"></span></span>
+    <div ng-style='audioOscillatorController.mode === "authoring" && {"border": "1px solid black", "padding": "20px"}'>
+        <div ng-if='audioOscillatorController.mode === "authoring"'>
+            <h5>{{ 'PREVIEW' | translate }}</h5>
+        </div>
+        <div id='prompt' ng-show='audioOscillatorController.isPromptVisible'><compile data='audioOscillatorController.getPrompt()'></compile></div>
+        <div class="component-content__actions" layout="row">
+            <md-button class="md-accent" ng-show="audioOscillatorController.isStudentAttachmentEnabled"
+                       ng-click="nodeController.showStudentAssets($event, component.id, audioOscillatorController.isDisabled)">
+                <md-icon>image</md-icon> {{ 'audioOscillator.importData' | translate }}
+            </md-button>
+        </div>
+        <span ng-if='audioOscillatorController.oscillatorTypes.length == 0 || audioOscillatorController.oscillatorTypes.length == 1'>
+            {{ 'audioOscillator.oscillatorType' | translate }}: {{audioOscillatorController.oscillatorType}}
         </span>
+        <span ng-if='audioOscillatorController.oscillatorTypes.length > 1'>
+            {{ 'audioOscillator.oscillatorType' | translate }}:
+            <select ng-model='audioOscillatorController.oscillatorType'
+                    ng-change='audioOscillatorController.oscillatorTypeChanged()'>
+                <option ng-repeat='oscillatorType in audioOscillatorController.oscillatorTypes'
+                        value='{{oscillatorType}}'>{{oscillatorType}}</option>
+            </select>
+        </span>
+        <br/>
+        {{ 'audioOscillator.frequency' | translate }}: <input type='number'
+                          ng-model='audioOscillatorController.frequency'
+                          ng-change='audioOscillatorController.frequencyChanged()'/> {{ 'audioOscillator.hz' | translate }}
+        <br/>
+        <button ng-click='audioOscillatorController.playStopClicked()'>{{audioOscillatorController.playStopButtonText}}</button>
+        <br/>
+        <canvas id='{{audioOscillatorController.oscilloscopeId}}' width={{audioOscillatorController.oscilloscopeWidth}} height={{audioOscillatorController.oscilloscopeHeight}} style="border:1px solid lightgrey"></canvas>
+        <div ng-if="audioOscillatorController.isSaveButtonVisible || audioOscillatorController.isSubmitButtonVisible"
+             class="component-content__actions" layout="row" layout-align="start center">
+            <md-button class="md-raised md-primary"
+                       ng-click='audioOscillatorController.saveButtonClicked()'
+                       ng-if='audioOscillatorController.isSaveButtonVisible'
+                       ng-disabled='audioOscillatorController.isDisabled || !audioOscillatorController.isDirty'>{{ 'SAVE' | translate }}</md-button>
+            <md-button class="md-raised md-primary"
+                       ng-click='audioOscillatorController.submitButtonClicked()'
+                       ng-if='audioOscillatorController.isSubmitButtonVisible'
+                       ng-disabled='audioOscillatorController.isDisabled || !audioOscillatorController.isSubmitDirty'>{{ 'SUBMIT' | translate }}</md-button>
+            <span ng-show="audioOscillatorController.saveMessage.text"
+                  class="component-content__actions__info md-caption">
+                  {{audioOscillatorController.saveMessage.text}} <span class="component-content__actions__more"><md-tooltip md-direction="top">{{ audioOscillatorController.saveMessage.time | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip><span am-time-ago="audioOscillatorController.saveMessage.time"></span></span>
+            </span>
+        </div>
+        <div ng-if='audioOscillatorController.mode === "grading"'>
+            {{ 'audioOscillator.frequenciesPlayed' | translate }}: {{audioOscillatorController.frequenciesPlayed}}
+            <br/>
+            {{ 'audioOscillator.frequenciesPlayedSorted' | translate }}: {{audioOscillatorController.frequenciesPlayedSorted}}
+            <br/>
+            {{ 'audioOscillator.numberOfFrequenciesPlayed' | translate }}: {{audioOscillatorController.numberOfFrequenciesPlayed}}
+            <br/>
+            {{ 'audioOscillator.minFrequencyPlayed' | translate }}: {{audioOscillatorController.minFrequencyPlayed}}
+            <br/>
+            {{ 'audioOscillator.maxFrequencyPlayed' | translate }}: {{audioOscillatorController.maxFrequencyPlayed}}
+            <br/>
+        </div>
+        <component-annotations ng-if="audioOscillatorController.mode === 'student'"
+                               annotations='audioOscillatorController.latestAnnotations'
+                               max-score="audioOscillatorController.componentContent.maxScore"></component-annotations>
+        <component-grading ng-if="audioOscillatorController.mode === 'grading'"
+                          node-id='audioOscillatorController.nodeId'
+                          component-id='audioOscillatorController.componentId'
+                          max-score="audioOscillatorController.componentContent.maxScore"
+                          from-workgroup-id='teacherWorkgroupId'
+                          to-workgroup-id='workgroupId'
+                          component-state-id='componentState.id'
+                          active="true"></component-grading>
     </div>
-    <div ng-if='audioOscillatorController.mode === "grading"'>
-        {{ 'audioOscillator.frequenciesPlayed' | translate }}: {{audioOscillatorController.frequenciesPlayed}}
-        <br/>
-        {{ 'audioOscillator.frequenciesPlayedSorted' | translate }}: {{audioOscillatorController.frequenciesPlayedSorted}}
-        <br/>
-        {{ 'audioOscillator.numberOfFrequenciesPlayed' | translate }}: {{audioOscillatorController.numberOfFrequenciesPlayed}}
-        <br/>
-        {{ 'audioOscillator.minFrequencyPlayed' | translate }}: {{audioOscillatorController.minFrequencyPlayed}}
-        <br/>
-        {{ 'audioOscillator.maxFrequencyPlayed' | translate }}: {{audioOscillatorController.maxFrequencyPlayed}}
-        <br/>
-    </div>
-    <component-annotations ng-if="audioOscillatorController.mode === 'student'"
-                           annotations='audioOscillatorController.latestAnnotations'
-                           max-score="audioOscillatorController.componentContent.maxScore"></component-annotations>
-    <component-grading ng-if="audioOscillatorController.mode === 'grading'"
-                      node-id='audioOscillatorController.nodeId'
-                      component-id='audioOscillatorController.componentId'
-                      max-score="audioOscillatorController.componentContent.maxScore"
-                      from-workgroup-id='teacherWorkgroupId'
-                      to-workgroup-id='workgroupId'
-                      component-state-id='componentState.id'
-                      active="true"></component-grading>
 </div>

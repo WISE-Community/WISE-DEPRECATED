@@ -453,6 +453,7 @@ public class WISE5AuthorProjectController {
                 projectAssetTotalSizeMax = new Long(wiseProperties.getProperty("project_max_total_assets_size", "15728640"));
             }
             Long runId = this.getRunId(projectId);
+            String cRaterRequestURL = wiseBaseURL + "/cRater";  // the url to make CRater requests
 
             config.put("projectId", projectId);
             config.put("projectURL", projectURL);
@@ -463,6 +464,7 @@ public class WISE5AuthorProjectController {
             config.put("saveProjectURL", saveProjectURL);
             config.put("commitProjectURL", commitProjectURL);
             config.put("importStepsURL", importStepsURL);
+            config.put("cRaterRequestURL", cRaterRequestURL);
             config.put("mode", "author");
 
             if (runId != null) {
