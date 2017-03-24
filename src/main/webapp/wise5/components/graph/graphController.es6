@@ -381,6 +381,7 @@ class GraphController {
                     this.backgroundImage = this.componentContent.backgroundImage;
                     this.isSaveButtonVisible = this.componentContent.showSaveButton;
                     this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
+                    this.graphType = this.componentContent.graphType;
                     this.isResetSeriesButtonVisible = true;
                     this.isSelectSeriesVisible = true;
                     this.setSeries(this.UtilService.makeCopyOfJSONObject(this.componentContent.series));
