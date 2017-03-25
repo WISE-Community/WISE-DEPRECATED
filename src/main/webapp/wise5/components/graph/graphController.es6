@@ -1328,8 +1328,15 @@ class GraphController {
                                                 var data = activeSeries.data;
 
                                                 if (data != null) {
+
                                                     // update the point
-                                                    data[index] = [x, y];
+                                                    if (thisGraphController.graphType == 'line' ||
+                                                        thisGraphController.graphType == 'scatter') {
+
+                                                        data[index] = [x, y];
+                                                    } else if (thisGraphController.graphType == 'column') {
+                                                        data[index] = y;
+                                                    }
 
                                                     // tell the controller the student data has changed
                                                     thisGraphController.studentDataChanged();
