@@ -321,7 +321,16 @@ var ConceptMapController = function () {
                     this.width = this.componentContent.width;
                     this.height = this.componentContent.height;
 
-                    this.setupSVG();
+                    /*
+                     * make sure the SVG element can be accessed. we need to
+                     * perform this check because this watch is getting fired
+                     * before angular sets the svgId on the svg element. if
+                     * setupSVG() is called before the svgId is set on the svg
+                     * element, we will get an error.
+                     */
+                    if (document.getElementById(this.svgId) != null) {
+                        this.setupSVG();
+                    }
                 }.bind(this), true);
             }
 
