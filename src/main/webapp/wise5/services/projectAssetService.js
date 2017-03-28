@@ -29,22 +29,30 @@ var ProjectAssetService = function () {
         value: function deleteAssetItem(assetItem) {
             var _this = this;
 
-            var projectAssetURL = this.ConfigService.getConfigParam('projectAssetURL');
+            var params = {
+                assetFileName: assetItem.fileName
+            };
 
-            var httpParams = {};
-            httpParams.method = 'POST';
-            httpParams.url = projectAssetURL;
-            httpParams.headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
-
-            var params = {};
-            params.assetFileName = assetItem.fileName;
-            httpParams.data = $.param(params);
+            var httpParams = {
+                method: 'POST',
+                url: this.ConfigService.getConfigParam('projectAssetURL'),
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                data: $.param(params)
+            };
 
             return this.$http(httpParams).then(function (result) {
                 var projectAssetsJSON = result.data;
                 _this.projectAssets = projectAssetsJSON;
                 return projectAssetsJSON;
             });
+        }
+    }, {
+        key: 'downloadAssetItem',
+        value: function downloadAssetItem(assetItem) {
+            var assetFileName = assetItem.fileName;
+
+            // ask the browser to download this asset by setting the location
+            window.location = this.ConfigService.getConfigParam('projectAssetURL') + "/download?assetFileName=" + assetFileName;
         }
     }, {
         key: 'getFullAssetItemURL',

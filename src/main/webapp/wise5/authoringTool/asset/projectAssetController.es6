@@ -147,6 +147,13 @@ class ProjectAssetController {
     }
 
     /**
+     * Download an asset
+     */
+    downloadAsset(assetItem) {
+        this.ProjectAssetService.downloadAssetItem(assetItem);
+    }
+
+    /**
      * Show asset image in a popup dialog and give author an option to delete it.
      */
     viewAsset(assetItem) {
