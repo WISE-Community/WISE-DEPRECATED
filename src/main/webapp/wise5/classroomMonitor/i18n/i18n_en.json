@@ -99,6 +99,7 @@
     "teamsOnItemTitle": "Teams on item",
     "teamNoWorkSubmitted": "Team hasn't submitted any work for this step",
     "timeSpent": "Time Spent",
+    "toggleTeamWorkDisplay": "Show/hide team's work for this step",
     "visited": "Visited",
     "yes": "Yes"
 }
