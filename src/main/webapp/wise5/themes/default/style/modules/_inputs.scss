@@ -101,3 +101,13 @@ $input-action-vertical-offset-richtext: -7px;
         color: color('primary');
     }
 }
+
+.autocomplete {
+    input {
+        text-overflow: ellipsis;
+        overflow: hidden;
+        word-wrap: none;
+        font-weight: 500;
+        color: color('text-secondary');
+    }
+}

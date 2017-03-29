@@ -22,6 +22,10 @@ var _workgroupComponentRevisions = require('./workgroupComponentRevisions/workgr
 
 var _workgroupComponentRevisions2 = _interopRequireDefault(_workgroupComponentRevisions);
 
+var _workgroupSelect = require('./workgroupSelect/workgroupSelect');
+
+var _workgroupSelect2 = _interopRequireDefault(_workgroupSelect);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var Shared = angular.module('shared', []);
@@ -31,6 +35,7 @@ Shared.component('alertStatusCorner', _alertStatusCorner2.default);
 Shared.component('alertStatusIcon', _alertStatusIcon2.default);
 Shared.component('periodSelect', _periodSelect2.default);
 Shared.component('workgroupComponentRevisions', _workgroupComponentRevisions2.default);
+Shared.component('workgroupSelect', _workgroupSelect2.default);
 
 exports.default = Shared;
 //# sourceMappingURL=shared.js.map
