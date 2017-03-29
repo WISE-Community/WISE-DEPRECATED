@@ -1569,19 +1569,21 @@ var DataExportController = function () {
                 var COLUMN_INDEX_STUDENT_RESPONSE = 20;
 
                 if (exportType === "latestNotebookItems") {
-                    var hash = {}; // store latestStudentWork. Assume that key = (localNotebookItemId)
-                    result = result.reverse().filter(function (studentWorkRow) {
-                        var hashKey = studentWorkRow[COLUMN_INDEX_LOCAL_NOTEBOOK_ITEM_ID] + "_" + studentWorkRow[COLUMN_INDEX_WORKGROUP_ID];
-                        if (!hash.hasOwnProperty(hashKey)) {
-                            // remember in hash
-                            hash[hashKey] = studentWorkRow;
-                            return true;
-                        } else {
-                            // we already have the latest, so we can disregard this studentWorkRow.
-                            return false;
-                        }
-                    }).reverse();
-                    exportFilename = "latest_notebook_items_" + runId + ".csv";
+                    (function () {
+                        var hash = {}; // store latestStudentWork. Assume that key = (localNotebookItemId)
+                        result = result.reverse().filter(function (studentWorkRow) {
+                            var hashKey = studentWorkRow[COLUMN_INDEX_LOCAL_NOTEBOOK_ITEM_ID] + "_" + studentWorkRow[COLUMN_INDEX_WORKGROUP_ID];
+                            if (!hash.hasOwnProperty(hashKey)) {
+                                // remember in hash
+                                hash[hashKey] = studentWorkRow;
+                                return true;
+                            } else {
+                                // we already have the latest, so we can disregard this studentWorkRow.
+                                return false;
+                            }
+                        }).reverse();
+                        exportFilename = "latest_notebook_items_" + runId + ".csv";
+                    })();
                 } else if (exportType === "allNotebookItems") {
                     exportFilename = "all_notebook_items_" + runId + ".csv";
                 }

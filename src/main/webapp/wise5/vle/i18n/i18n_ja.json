@@ -12,10 +12,10 @@
     "goHome": "ホームに戻る",
     "newNote": "新規ノート",
     "noAlerts": "ここには何もありません",
+    "notificationsTitle": "通知",
     "projectCompletion": "完成度",
     "projectPlan": "プロジェクトマップ",
     "signOut": "ログアウト",
     "typeYourNoteHere": "ここにノートを書いてください。。。",
-    "yes": "はい",
-    "notificationsTitle": "通知"
+    "yes": "はい"
 }

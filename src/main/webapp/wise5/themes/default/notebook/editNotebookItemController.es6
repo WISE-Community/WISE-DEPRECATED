@@ -188,8 +188,8 @@ class EditNotebookItemController {
         // notebook item has changed
         // set whether save button should be enabled
         let saveEnabled = false;
-        if (this.item.content.text || this.item.content.attachments.length) {
-            // note has text and/or attachments, so we can save
+        if (this.item.content.text || !this.isRequireTextOnEveryNote() && this.item.content.attachments.length) {
+            // note has text and/or attachments when text is not required, so we can save
             saveEnabled = true;
         }
         this.saveEnabled = saveEnabled;
@@ -197,8 +197,18 @@ class EditNotebookItemController {
         this.setShowUpload();
     }
 
+    isRequireTextOnEveryNote() {
+        return this.notebookConfig.itemTypes != null &&
+            this.notebookConfig.itemTypes.note != null &&
+            this.notebookConfig.itemTypes.note.requireTextOnEveryNote;
+    }
+
     setShowUpload() {
-        this.showUpload = this.item.content.attachments && this.item.content.attachments.length < 1;
+        this.showUpload = this.notebookConfig.itemTypes != null &&
+                    this.notebookConfig.itemTypes.note != null &&
+                    this.notebookConfig.itemTypes.note.enableStudentUploads &&
+                    this.item.content.attachments &&
+                    this.item.content.attachments.length < 1;
     }
 }
 

@@ -214,8 +214,8 @@ var EditNotebookItemController = function () {
             // notebook item has changed
             // set whether save button should be enabled
             var saveEnabled = false;
-            if (this.item.content.text || this.item.content.attachments.length) {
-                // note has text and/or attachments, so we can save
+            if (this.item.content.text || !this.isRequireTextOnEveryNote() && this.item.content.attachments.length) {
+                // note has text and/or attachments when text is not required, so we can save
                 saveEnabled = true;
             }
             this.saveEnabled = saveEnabled;
@@ -223,9 +223,14 @@ var EditNotebookItemController = function () {
             this.setShowUpload();
         }
     }, {
+        key: 'isRequireTextOnEveryNote',
+        value: function isRequireTextOnEveryNote() {
+            return this.notebookConfig.itemTypes != null && this.notebookConfig.itemTypes.note != null && this.notebookConfig.itemTypes.note.requireTextOnEveryNote;
+        }
+    }, {
         key: 'setShowUpload',
         value: function setShowUpload() {
-            this.showUpload = this.item.content.attachments && this.item.content.attachments.length < 1;
+            this.showUpload = this.notebookConfig.itemTypes != null && this.notebookConfig.itemTypes.note != null && this.notebookConfig.itemTypes.note.enableStudentUploads && this.item.content.attachments && this.item.content.attachments.length < 1;
         }
     }]);
 

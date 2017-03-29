@@ -7025,6 +7025,7 @@ class ProjectService {
                         "enableAddNote": true,
                         "enableClipping": true,
                         "enableStudentUploads": true,
+                        "requireTextOnEveryNote": false,
                         "label": {
                             "singular": this.$translate('NOTE_LOWERCASE'),
                             "plural": this.$translate('NOTES_LOWERCASE'),

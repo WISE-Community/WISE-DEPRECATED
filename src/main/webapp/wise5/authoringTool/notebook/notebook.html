@@ -12,6 +12,9 @@
         <li>{{ 'labelPlural' | translate }} <input ng-model="authorNotebookController.project.notebook.itemTypes.note.label.plural" /></li>
         <li>{{ 'labelLink' | translate }} <input ng-model="authorNotebookController.project.notebook.itemTypes.note.label.link" /></li>
         <li><input type="checkbox" ng-model="authorNotebookController.project.notebook.itemTypes.note.enableAddNote"/>{{ 'enableAddNote' | translate }}</li>
+        <ul>
+            <li><input type="checkbox" ng-model="authorNotebookController.project.notebook.itemTypes.note.requireTextOnEveryNote"/>{{ 'requireTextOnEveryNote' | translate }}</li>
+        </ul>
         <li><input type="checkbox" ng-model="authorNotebookController.project.notebook.itemTypes.note.enableClipping"/>{{ 'enableClipping' | translate }}</li>
         <li><input type="checkbox" ng-model="authorNotebookController.project.notebook.itemTypes.note.enableStudentUploads"/>{{ 'enableStudentUploads' | translate }}</li>
     </ul>

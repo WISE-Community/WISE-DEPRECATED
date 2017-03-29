@@ -28,6 +28,7 @@ class NotebookService {
             itemTypes: {
                 note: {
                     enabled: true,
+                    requireTextOnEveryNote: false,
                     enableLink: true,
                     enableClipping: true,
                     enableStudentUploads: true,
