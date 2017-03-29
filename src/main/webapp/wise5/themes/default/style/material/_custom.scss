@@ -273,3 +273,31 @@ md-select {
         }
     }
 }
+
+// hack for now to make autocomplete menu items wrap text instead of hiding overflow
+.md-autocomplete-suggestions {
+    li {
+        overflow: auto;
+        line-height: normal;
+        height: auto;
+        min-height: 48px;
+        white-space: normal;
+
+        // layout-row
+        display: flex;
+        flex-direction: row;
+        box-sizing: border-box;
+        -webkit-box-direction: normal;
+        -webkit-box-orient: horizontal;
+
+        // layout-align="start-center"
+        justify-content: flex-start;
+        align-items: center;
+        align-content: center;
+        max-width: 100%;
+        > * {
+          max-width: 100%;
+          box-sizing: border-box;
+        }
+    }
+}
