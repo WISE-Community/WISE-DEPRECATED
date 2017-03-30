@@ -23,6 +23,19 @@
     <md-list class="user-list">
         <md-list-item class="md-whiteframe-z1 list-item list-item--actions">
             <workgroup-select></workgroup-select>
+            <span flex></span>
+            <div class="text-secondary">
+                <md-button aria-label="{{ 'explandAllTeams' | translate }}"
+                           class="button--small md-primary"
+                           ng-click="nodeGradingController.expandAll()">
+                    <md-icon>expand_more</md-icon> {{ 'All' | translate }}
+                </md-button>
+                <md-button aria-label="{{ 'collapseAllTeams' | translate }}"
+                           class="button--small md-primary"
+                           ng-click="nodeGradingController.collapseAll()">
+                    <md-icon>expand_less</md-icon> {{ 'All' | translate }}
+                </md-button>
+            </div>
         </md-list-item>
         <md-list-item class="thead md-whiteframe-z1">
             <div class="md-list-item-text thead__row" layout="row" flex>

@@ -549,23 +549,6 @@ class NodeGradingController {
         return show;
     }
 
-    onUpdateExpand(workgroupId, value) {
-        this.workVisibilityById[workgroupId] = !this.workVisibilityById[workgroupId];
-    }
-
-    onUpdateHiddenComponents(value, event) {
-        let target = event.target;
-        let viewportOffsetTop = target.getBoundingClientRect().top;
-
-        this.hiddenComponents = value;
-        this.hiddenComponents = angular.copy(this.hiddenComponents);
-
-        this.$timeout(() => {
-            this.updateScroll(target, viewportOffsetTop);
-        }, 100);
-
-    }
-
     updateScroll(target, viewportOffsetTop) {
         let newViewportOffsetTop = target.getBoundingClientRect().top;
         let delta = viewportOffsetTop - newViewportOffsetTop;
@@ -768,6 +751,47 @@ class NodeGradingController {
         }
 
         return orderBy;
+    }
+
+    /**
+     * Expand all workgroups to show student work
+     */
+    expandAll() {
+        let n = this.workgroups.length;
+
+        for (let i = 0; i < n; i++) {
+            let id = this.workgroups[i].workgroupId;
+            this.workVisibilityById[id] = true;
+        }
+    }
+
+    /**
+     * Collapse all workgroups to hide student work
+     */
+    collapseAll() {
+        let n = this.workgroups.length;
+
+        for (let i = 0; i < n; i++) {
+            let id = this.workgroups[i].workgroupId;
+            this.workVisibilityById[id] = false;
+        }
+    }
+
+    onUpdateExpand(workgroupId, value) {
+        this.workVisibilityById[workgroupId] = !this.workVisibilityById[workgroupId];
+    }
+
+    onUpdateHiddenComponents(value, event) {
+        let target = event.target;
+        let viewportOffsetTop = target.getBoundingClientRect().top;
+
+        this.hiddenComponents = value;
+        this.hiddenComponents = angular.copy(this.hiddenComponents);
+
+        this.$timeout(() => {
+            this.updateScroll(target, viewportOffsetTop);
+        }, 100);
+
     }
 }
 

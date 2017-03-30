@@ -609,26 +609,6 @@ var NodeGradingController = function () {
             return show;
         }
     }, {
-        key: 'onUpdateExpand',
-        value: function onUpdateExpand(workgroupId, value) {
-            this.workVisibilityById[workgroupId] = !this.workVisibilityById[workgroupId];
-        }
-    }, {
-        key: 'onUpdateHiddenComponents',
-        value: function onUpdateHiddenComponents(value, event) {
-            var _this2 = this;
-
-            var target = event.target;
-            var viewportOffsetTop = target.getBoundingClientRect().top;
-
-            this.hiddenComponents = value;
-            this.hiddenComponents = angular.copy(this.hiddenComponents);
-
-            this.$timeout(function () {
-                _this2.updateScroll(target, viewportOffsetTop);
-            }, 100);
-        }
-    }, {
         key: 'updateScroll',
         value: function updateScroll(target, viewportOffsetTop) {
             var newViewportOffsetTop = target.getBoundingClientRect().top;
@@ -838,6 +818,56 @@ var NodeGradingController = function () {
             }
 
             return orderBy;
+        }
+
+        /**
+         * Expand all workgroups to show student work
+         */
+
+    }, {
+        key: 'expandAll',
+        value: function expandAll() {
+            var n = this.workgroups.length;
+
+            for (var i = 0; i < n; i++) {
+                var id = this.workgroups[i].workgroupId;
+                this.workVisibilityById[id] = true;
+            }
+        }
+
+        /**
+         * Collapse all workgroups to hide student work
+         */
+
+    }, {
+        key: 'collapseAll',
+        value: function collapseAll() {
+            var n = this.workgroups.length;
+
+            for (var i = 0; i < n; i++) {
+                var id = this.workgroups[i].workgroupId;
+                this.workVisibilityById[id] = false;
+            }
+        }
+    }, {
+        key: 'onUpdateExpand',
+        value: function onUpdateExpand(workgroupId, value) {
+            this.workVisibilityById[workgroupId] = !this.workVisibilityById[workgroupId];
+        }
+    }, {
+        key: 'onUpdateHiddenComponents',
+        value: function onUpdateHiddenComponents(value, event) {
+            var _this2 = this;
+
+            var target = event.target;
+            var viewportOffsetTop = target.getBoundingClientRect().top;
+
+            this.hiddenComponents = value;
+            this.hiddenComponents = angular.copy(this.hiddenComponents);
+
+            this.$timeout(function () {
+                _this2.updateScroll(target, viewportOffsetTop);
+            }, 100);
         }
     }]);
 

@@ -6,6 +6,10 @@
         margin: 8px 0;
         min-width: 250px;
 
+        @media only screen and (min-width: $layout-breakpoint-sm) {
+            min-width: 400px;
+        }
+
         md-autocomplete-wrap {
             background-color: #ffffff;
 

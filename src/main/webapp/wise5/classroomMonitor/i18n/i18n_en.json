@@ -1,4 +1,5 @@
 {
+    "all": "All",
     "allPeriods": "All Periods",
     "allWork": "All Work",
     "allStudentWork": "All Student Work",
@@ -6,6 +7,7 @@
     "cancel": "Cancel",
     "classroomMonitor": "Classroom Monitor",
     "close": "Close",
+    "collapseAllTeams": "Collapse all teams",
     "completed": "Completed",
     "completion": "completion",
     "currentLocation": "Current Location",
@@ -24,6 +26,7 @@
     "downloadStudentAssets": "Download Student Assets",
     "downloadStudentWork": "Download All Work",
     "events": "Events",
+    "expandAllTeams": "Expand all teams",
     "export": "Export",
     "exportAllNotebookItems": "Export All Notebook Items",
     "exportAllSteps": "Export all steps",
