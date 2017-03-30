@@ -96,7 +96,6 @@ public class ExportProjectController {
 		String sep = "/";
 
 		String rawProjectUrl = (String) project.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
-		System.out.println("rawProjectUrl: " + rawProjectUrl);
 		projectJSONFilename = rawProjectUrl.substring(rawProjectUrl.lastIndexOf(sep) + 1);
 		String projectJSONFullPath = curriculumBaseDir + sep + rawProjectUrl;
 		String foldername = rawProjectUrl.substring(1, rawProjectUrl.lastIndexOf(sep));
@@ -139,7 +138,6 @@ public class ExportProjectController {
 			len = zipFolderAbsolutePath.lastIndexOf("\\");
 		}
 		String baseName = zipFolderAbsolutePath.substring(0, len + 1);
-    System.out.println("basename:" + baseName);
 		addFolderToZip(zipFolder, out, baseName);
 
 		out.close();
@@ -207,7 +205,6 @@ public class ExportProjectController {
 	 * @return newFilename
 	 */
 	private static String updateFilename(String oldFilename) {
-		System.out.println("oldFilename: " + oldFilename);
 		int lastIndexOfSlash = oldFilename.lastIndexOf("/");
 		if (lastIndexOfSlash == -1) {
 			lastIndexOfSlash = oldFilename.lastIndexOf("\\");
