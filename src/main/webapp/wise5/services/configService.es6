@@ -252,11 +252,14 @@ class ConfigService {
 
     setClassmateDisplayNames() {
         let classmateUserInfos = this.getClassmateUserInfos();
-        let n = classmateUserInfos.length;
 
-        for (let i = 0; i < n; i++) {
-            let workgroup = classmateUserInfos[i];
-            workgroup.displayNames = this.getDisplayUserNamesByWorkgroupId(workgroup.workgroupId);
+        if (classmateUserInfos) {
+            let n = classmateUserInfos.length;
+
+            for (let i = 0; i < n; i++) {
+                let workgroup = classmateUserInfos[i];
+                workgroup.displayNames = this.getDisplayUserNamesByWorkgroupId(workgroup.workgroupId);
+            }
         }
     }
 

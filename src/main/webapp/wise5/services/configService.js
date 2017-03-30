@@ -299,11 +299,14 @@ var ConfigService = function () {
         key: 'setClassmateDisplayNames',
         value: function setClassmateDisplayNames() {
             var classmateUserInfos = this.getClassmateUserInfos();
-            var n = classmateUserInfos.length;
 
-            for (var i = 0; i < n; i++) {
-                var workgroup = classmateUserInfos[i];
-                workgroup.displayNames = this.getDisplayUserNamesByWorkgroupId(workgroup.workgroupId);
+            if (classmateUserInfos) {
+                var n = classmateUserInfos.length;
+
+                for (var i = 0; i < n; i++) {
+                    var workgroup = classmateUserInfos[i];
+                    workgroup.displayNames = this.getDisplayUserNamesByWorkgroupId(workgroup.workgroupId);
+                }
             }
         }
 
