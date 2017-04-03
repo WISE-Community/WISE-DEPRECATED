@@ -10,6 +10,13 @@
             <button ng-click='outsideURLController.showAdvancedAuthoring = !outsideURLController.showAdvancedAuthoring'>Advanced</button>
             <br/>
             <div ng-show='outsideURLController.showAdvancedAuthoring'>
+                {{ 'COMPONENT_WIDTH' | translate }}:
+                <input type='number'
+                       ng-model='outsideURLController.authoringComponentContent.componentWidth'
+                       ng-change='outsideURLController.authoringViewComponentChanged()'
+                       ng-model-options='{ debounce: 1000 }'
+                       style='width: 3em'/>
+                <br/>
                 <button ng-click='outsideURLController.showRubricAuthoring = !outsideURLController.showRubricAuthoring'>
                     {{ 'EDIT_COMPONENT_RUBRIC' | translate }}
                 </button>

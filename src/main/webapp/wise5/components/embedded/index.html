@@ -45,6 +45,13 @@
                        ng-model-options='{ debounce: 1000 }'
                        style='width: 3em'/>
                 <br/>
+                {{ 'COMPONENT_WIDTH' | translate }}:
+                <input type='number'
+                       ng-model='embeddedController.authoringComponentContent.componentWidth'
+                       ng-change='embeddedController.authoringViewComponentChanged()'
+                       ng-model-options='{ debounce: 1000 }'
+                       style='width: 3em'/>
+                <br/>
                 <div ng-if='embeddedController.mode === "authoring2"'>
                     {{ 'IMPORT_PREVIOUS_WORK' | translate }}:
                     <input type='checkbox'

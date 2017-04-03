@@ -49,6 +49,13 @@
                    ng-model-options='{ debounce: 1000 }'
                    style='width: 3em'/>
             <br/>
+            {{ 'COMPONENT_WIDTH' | translate }}:
+            <input type='number'
+                   ng-model='multipleChoiceController.authoringComponentContent.componentWidth'
+                   ng-change='multipleChoiceController.authoringViewComponentChanged()'
+                   ng-model-options='{ debounce: 1000 }'
+                   style='width: 3em'/>
+            <br/>
             {{ 'SHOW_FEEDBACK' | translate }}: <input type='checkbox'
                                   ng-model='multipleChoiceController.authoringComponentContent.showFeedback'
                                   ng-change='multipleChoiceController.authoringViewComponentChanged()'/>

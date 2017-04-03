@@ -94,6 +94,13 @@
                    ng-model-options='{ debounce: 1000 }'
                    style='width: 3em'/>
             <br/>
+            {{ 'COMPONENT_WIDTH' | translate }}:
+            <input type='number'
+                   ng-model='labelController.authoringComponentContent.componentWidth'
+                   ng-change='labelController.authoringViewComponentChanged()'
+                   ng-model-options='{ debounce: 1000 }'
+                   style='width: 3em'/>
+            <br/>
             <div ng-if='labelController.mode === "authoring"'>
                 {{ 'IMPORT_PREVIOUS_WORK' | translate }}:
                 <input type='checkbox'

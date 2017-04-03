@@ -11,6 +11,13 @@
             <button ng-click='htmlController.showAdvancedAuthoring = !htmlController.showAdvancedAuthoring'>{{ 'ADVANCED' | translate }}</button>
             <div ng-show='htmlController.showAdvancedAuthoring'>
                 <div ng-if='htmlController.mode === "authoring"'>
+                    {{ 'COMPONENT_WIDTH' | translate }}:
+                    <input type='number'
+                           ng-model='htmlController.authoringComponentContent.componentWidth'
+                           ng-change='htmlController.authoringViewComponentChanged()'
+                           ng-model-options='{ debounce: 1000 }'
+                           style='width: 3em'/>
+                    <br/>
                     <button ng-click='htmlController.showRubricAuthoring = !htmlController.showRubricAuthoring'>
                         {{ 'EDIT_COMPONENT_RUBRIC' | translate }}
                     </button>

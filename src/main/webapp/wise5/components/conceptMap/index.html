@@ -98,6 +98,13 @@
                            ng-model-options='{ debounce: 1000 }'
                            style='width: 3em'/>
                     <br/>
+                    {{ 'COMPONENT_WIDTH' | translate }}:
+                    <input type='number'
+                           ng-model='conceptMapController.authoringComponentContent.componentWidth'
+                           ng-change='conceptMapController.authoringViewComponentChanged()'
+                           ng-model-options='{ debounce: 1000 }'
+                           style='width: 3em'/>
+                    <br/>
                     {{ 'BACKGROUND_IMAGE' | translate }}: <input ng-model='conceptMapController.authoringComponentContent.background'
                                              ng-change='conceptMapController.authoringViewComponentChanged()'
                                              size='80' /> <button translate='CHOOSE' ng-click='conceptMapController.chooseBackgroundImage()'></button>
