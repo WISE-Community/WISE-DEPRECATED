@@ -26,6 +26,7 @@ class TeacherDataService {
         };
 
         this.currentPeriod = null;
+        this.currentWorkgroup = null;
         this.currentNode = null;
         this.previousStep = null;
         this.runStatus = null;
@@ -784,6 +785,13 @@ class TeacherDataService {
         let previousPeriod = this.currentPeriod;
         this.currentPeriod = period;
 
+        if (period.periodId !== -1 && this.currentWorkgroup) {
+            if (this.currentWorkgroup.periodId !== period.periodId) {
+                // currentWorkgroup is not in currentPeriod, so set currentWorkgroup to null
+                this.currentWorkgroup = null;
+            }
+        }
+
         // broadcast the event that the current period has changed
         this.$rootScope.$broadcast('currentPeriodChanged', {previousPeriod: previousPeriod, currentPeriod: this.currentPeriod});
     }
@@ -794,6 +802,14 @@ class TeacherDataService {
 
     getPeriods() {
         return this.periods;
+    }
+
+    setCurrentWorkgroup(workgroup) {
+        this.currentWorkgroup = workgroup;
+    }
+
+    getCurrentWorkgroup() {
+        return this.currentWorkgroup;
     }
 
     /**

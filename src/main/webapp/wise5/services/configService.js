@@ -11,12 +11,15 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var ConfigService = function () {
-    function ConfigService($http, $location) {
+    function ConfigService($filter, $http, $location) {
         _classCallCheck(this, ConfigService);
 
+        this.$filter = $filter;
         this.$http = $http;
         this.$location = $location;
         this.config = null;
+
+        this.$translate = this.$filter('translate');
     }
 
     _createClass(ConfigService, [{
@@ -24,6 +27,8 @@ var ConfigService = function () {
         value: function setConfig(config) {
             this.config = config;
             this.sortClassmateUserInfosAlphabeticallyByName();
+            this.setPermissions();
+            this.setClassmateDisplayNames();
         }
     }, {
         key: 'retrieveConfig',
@@ -291,14 +296,28 @@ var ConfigService = function () {
             return classmateUserInfos;
         }
     }, {
-        key: 'getClassmateUserInfosSortedByWorkgroupId',
+        key: 'setClassmateDisplayNames',
+        value: function setClassmateDisplayNames() {
+            var classmateUserInfos = this.getClassmateUserInfos();
 
+            if (classmateUserInfos) {
+                var n = classmateUserInfos.length;
+
+                for (var i = 0; i < n; i++) {
+                    var workgroup = classmateUserInfos[i];
+                    workgroup.displayNames = this.getDisplayUserNamesByWorkgroupId(workgroup.workgroupId);
+                }
+            }
+        }
 
         /**
          * Get the classmate user infos sorted by ascending workgroup id
          * @return an array of classmate user info objects sorted by ascending
          * workgroup id
          */
+
+    }, {
+        key: 'getClassmateUserInfosSortedByWorkgroupId',
         value: function getClassmateUserInfosSortedByWorkgroupId() {
 
             var sortedClassmateUserInfos = [];
@@ -437,6 +456,38 @@ var ConfigService = function () {
             }
 
             return result;
+        }
+    }, {
+        key: 'setPermissions',
+        value: function setPermissions() {
+            // get the role of the teacher for the run e.g. 'owner', 'write', 'read'
+            var role = this.getTeacherRole(this.getWorkgroupId());
+
+            if (role === 'owner') {
+                // the teacher is the owner of the run and has full access
+                this.config.canViewStudentNames = true;
+                this.config.canGradeStudentWork = true;
+            } else if (role === 'write') {
+                // the teacher is a shared teacher that can grade the student work
+                this.config.canViewStudentNames = true;
+                this.config.canGradeStudentWork = true;
+            } else if (role === 'read') {
+                // the teacher is a shared teacher that can only view the student work
+                this.config.canViewStudentNames = false;
+                this.config.canGradeStudentWork = false;
+            } else {
+                // teacher role is null, so assume we're in student mode
+                this.config.canViewStudentNames = true;
+                this.config.canGradeStudentWork = false;
+            }
+        }
+    }, {
+        key: 'getPermissions',
+        value: function getPermissions() {
+            return {
+                canViewStudentNames: this.config.canViewStudentNames,
+                canGradeStudentWork: this.config.canGradeStudentWork
+            };
         }
     }, {
         key: 'getUserInfoByWorkgroupId',
@@ -582,6 +633,31 @@ var ConfigService = function () {
             }
 
             return userNamesObjects;
+        }
+    }, {
+        key: 'getDisplayUserNamesByWorkgroupId',
+        value: function getDisplayUserNamesByWorkgroupId(workgroupId) {
+            var usernames = '';
+
+            if (workgroupId != null) {
+                if (this.config.canViewStudentNames) {
+                    var names = this.getUserNamesByWorkgroupId(workgroupId);
+                    var l = names.length;
+                    for (var i = 0; i < l; i++) {
+                        var name = names[i].name;
+                        usernames += name;
+
+                        if (i < l - 1) {
+                            usernames += ', ';
+                        }
+                    }
+                } else {
+                    // current user is not allowed to view student names, so return string with workgroupId
+                    usernames = this.$translate('teamId', { id: workgroupId });
+                }
+            }
+
+            return usernames;
         }
     }, {
         key: 'isPreview',
@@ -966,7 +1042,7 @@ var ConfigService = function () {
 
 ;
 
-ConfigService.$inject = ['$http', '$location'];
+ConfigService.$inject = ['$filter', '$http', '$location'];
 
 exports.default = ConfigService;
 //# sourceMappingURL=configService.js.map

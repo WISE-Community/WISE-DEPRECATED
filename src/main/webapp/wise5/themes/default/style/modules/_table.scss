@@ -9,11 +9,11 @@
 
 .thead__row {
     height: 100%;
-    margin: 0 8px;
+    margin: 0;
 
-    @media only screen and (min-width: $layout-breakpoint-xs) {
-        margin: 0 16px;
-    }
+    //@media only screen and (min-width: $layout-breakpoint-xs) {
+        //margin: 0 16px;
+    //}
 }
 
 .thead__link {

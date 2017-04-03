@@ -63,29 +63,16 @@ var NodeGradingController = function () {
                 _this.nodeContent = node;
             }
 
-            _this.workgroupIds = _this.ConfigService.getClassmateWorkgroupIds();
+            _this.workgroups = _this.ConfigService.getClassmateUserInfos();
             _this.workgroupsById = {}; // object that will hold workgroup names, statuses, scores, notifications, etc.
             _this.workVisibilityById = {}; // object that specifies whether student work is visible for each workgroup
 
             _this.canViewStudentNames = true;
             _this.canGradeStudentWork = true;
 
-            // get the role of the teacher for the run e.g. 'owner', 'write', 'read'
-            var role = _this.ConfigService.getTeacherRole(_this.teacherWorkgroupId);
-
-            if (role === 'owner') {
-                // the teacher is the owner of the run and has full access
-                _this.canViewStudentNames = true;
-                _this.canGradeStudentWork = true;
-            } else if (role === 'write') {
-                // the teacher is a shared teacher that can grade the student work
-                _this.canViewStudentNames = true;
-                _this.canGradeStudentWork = true;
-            } else if (role === 'read') {
-                // the teacher is a shared teacher that can only view the student work
-                _this.canViewStudentNames = false;
-                _this.canGradeStudentWork = false;
-            }
+            var permissions = _this.ConfigService.getPermissions();
+            _this.canViewStudentNames = permissions.canViewStudentNames;
+            _this.canGradeStudentWork = permissions.canGradeStudentWork;
 
             _this.annotationMappings = {};
 
@@ -176,10 +163,10 @@ var NodeGradingController = function () {
     _createClass(NodeGradingController, [{
         key: 'setWorkgroupsById',
         value: function setWorkgroupsById() {
-            var l = this.workgroupIds.length;
+            var l = this.workgroups.length;
             for (var i = 0; i < l; i++) {
-                var id = this.workgroupIds[i];
-                this.workgroupsById[id] = {};
+                var id = this.workgroups[i].workgroupId;
+                this.workgroupsById[id] = this.workgroups[i];
                 this.workVisibilityById[id] = false;
 
                 this.updateWorkgroup(id, true);
@@ -205,7 +192,6 @@ var NodeGradingController = function () {
                 workgroup.hasNewWork = completionStatus.hasNewWork;
                 workgroup.completionStatus = this.getWorkgroupCompletionStatus(completionStatus);
                 workgroup.score = this.getNodeScoreByWorkgroupId(workgroupId);
-                workgroup.usernames = this.getUsernamesByWorkgroupId(workgroupId);
 
                 if (!init) {
                     this.workgroupsById[workgroupId] = angular.copy(workgroup);
@@ -333,35 +319,6 @@ var NodeGradingController = function () {
         value: function getNodeScoreByWorkgroupId(workgroupId) {
             var score = this.AnnotationService.getScore(workgroupId, this.nodeId);
             return typeof score === 'number' ? score : -1;
-        }
-
-        /**
-         * Returns the usernames for a given workgroupId
-         * @param workgroupId a workgroup ID number
-         * @returns String the workgroup usernames
-         */
-
-    }, {
-        key: 'getUsernamesByWorkgroupId',
-        value: function getUsernamesByWorkgroupId(workgroupId) {
-            var usernames = '';
-            if (this.canViewStudentNames) {
-                var names = this.ConfigService.getUserNamesByWorkgroupId(workgroupId);
-                var l = names.length;
-                for (var i = 0; i < l; i++) {
-                    var name = names[i].name;
-                    usernames += name;
-
-                    if (i < l - 1) {
-                        usernames += ', ';
-                    }
-                }
-            } else {
-                // current user is not allowed to view student names, so return string with workgroupId
-                usernames = this.$translate('teamId', { workgroupId: this.workgroupId });
-            }
-
-            return usernames;
         }
 
         /**
@@ -620,35 +577,36 @@ var NodeGradingController = function () {
         }
 
         /**
-         * Checks whether a workgroup is in the current period
+         * Checks whether a workgroup should be shown
          * @param workgroupId the workgroupId to look for
-         * @returns boolean whether the workgroup is in the current period
+         * @returns boolean whether the workgroup should be shown
          */
 
     }, {
-        key: 'isWorkgroupInCurrentPeriod',
-        value: function isWorkgroupInCurrentPeriod(workgroupId) {
-            return this.getCurrentPeriod().periodName === "All" || this.getPeriodIdByWorkgroupId(workgroupId) === this.getCurrentPeriod().periodId;
-        }
-    }, {
-        key: 'onUpdateExpand',
-        value: function onUpdateExpand(workgroupId, value) {
-            this.workVisibilityById[workgroupId] = !this.workVisibilityById[workgroupId];
-        }
-    }, {
-        key: 'onUpdateHiddenComponents',
-        value: function onUpdateHiddenComponents(value, event) {
-            var _this2 = this;
+        key: 'isWorkgroupShown',
+        value: function isWorkgroupShown(workgroupId) {
+            var show = false;
 
-            var target = event.target;
-            var viewportOffsetTop = target.getBoundingClientRect().top;
+            var currentPeriodId = this.getCurrentPeriod().periodId;
+            var workgroup = this.workgroupsById[workgroupId];
+            var periodId = workgroup.periodId;
 
-            this.hiddenComponents = value;
-            this.hiddenComponents = angular.copy(this.hiddenComponents);
+            if (currentPeriodId === -1 || currentPeriodId === periodId) {
+                // workgroup is in current period
+                var currentWorkgroup = this.TeacherDataService.getCurrentWorkgroup();
+                if (currentWorkgroup) {
+                    // there is a currently selected workgroup, so check if this one matches
+                    if (currentWorkgroup.workgroupId === parseInt(workgroupId)) {
+                        // workgroupIds match, so show this one
+                        show = true;
+                    }
+                } else {
+                    // there is no currently selected workgroup, so show this one
+                    show = true;
+                }
+            }
 
-            this.$timeout(function () {
-                _this2.updateScroll(target, viewportOffsetTop);
-            }, 100);
+            return show;
         }
     }, {
         key: 'updateScroll',
@@ -840,26 +798,76 @@ var NodeGradingController = function () {
 
             switch (this.sort) {
                 case 'team':
-                    orderBy = ['usernames'];
+                    orderBy = ['displayNames'];
                     break;
                 case '-team':
-                    orderBy = ['-usernames'];
+                    orderBy = ['-displayNames'];
                     break;
                 case 'status':
-                    orderBy = ['completionStatus', 'usernames'];
+                    orderBy = ['completionStatus', 'displayNames'];
                     break;
                 case '-status':
-                    orderBy = ['-completionStatus', 'usernames'];
+                    orderBy = ['-completionStatus', 'displayNames'];
                     break;
                 case 'score':
-                    orderBy = ['score', 'usernames'];
+                    orderBy = ['score', 'displayNames'];
                     break;
                 case '-score':
-                    orderBy = ['-score', 'usernames'];
+                    orderBy = ['-score', 'displayNames'];
                     break;
             }
 
             return orderBy;
+        }
+
+        /**
+         * Expand all workgroups to show student work
+         */
+
+    }, {
+        key: 'expandAll',
+        value: function expandAll() {
+            var n = this.workgroups.length;
+
+            for (var i = 0; i < n; i++) {
+                var id = this.workgroups[i].workgroupId;
+                this.workVisibilityById[id] = true;
+            }
+        }
+
+        /**
+         * Collapse all workgroups to hide student work
+         */
+
+    }, {
+        key: 'collapseAll',
+        value: function collapseAll() {
+            var n = this.workgroups.length;
+
+            for (var i = 0; i < n; i++) {
+                var id = this.workgroups[i].workgroupId;
+                this.workVisibilityById[id] = false;
+            }
+        }
+    }, {
+        key: 'onUpdateExpand',
+        value: function onUpdateExpand(workgroupId, value) {
+            this.workVisibilityById[workgroupId] = !this.workVisibilityById[workgroupId];
+        }
+    }, {
+        key: 'onUpdateHiddenComponents',
+        value: function onUpdateHiddenComponents(value, event) {
+            var _this2 = this;
+
+            var target = event.target;
+            var viewportOffsetTop = target.getBoundingClientRect().top;
+
+            this.hiddenComponents = value;
+            this.hiddenComponents = angular.copy(this.hiddenComponents);
+
+            this.$timeout(function () {
+                _this2.updateScroll(target, viewportOffsetTop);
+            }, 100);
         }
     }]);
 

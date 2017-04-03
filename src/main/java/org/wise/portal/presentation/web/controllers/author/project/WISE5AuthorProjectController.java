@@ -698,6 +698,32 @@ public class WISE5AuthorProjectController {
     }
 
     /**
+     * Prints specified project asset in output stream so it can be downloaded by the user
+     */
+    @RequestMapping(value = "/project/asset/{projectId}/download", method = RequestMethod.GET)
+    protected void downloadProjectAsset(
+            HttpServletResponse response,
+            @PathVariable Long projectId,
+            @RequestParam(value = "assetFileName", required = true) String assetFileName) throws Exception {
+        try {
+            Project project = projectService.getById(projectId);
+            User user = ControllerUtil.getSignedInUser();
+            if (projectService.canAuthorProject(project, user)) {
+                String projectAssetsPath = getProjectAssetsDirectoryPath(project);
+                File projectAssetFile = new File(projectAssetsPath + "/" + assetFileName);
+
+                response.setContentType("application/octet-stream");
+                response.setHeader("Content-Disposition", "attachment;filename=\"" + assetFileName + "\"");
+                FileUtils.copyFile(projectAssetFile, response.getOutputStream());
+            }
+        } catch (ObjectNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+        }
+    }
+
+    /**
      * Saves POSTed file into the project's asset folder
      */
     @RequestMapping(method = RequestMethod.POST, value = "/project/asset/{projectId}")

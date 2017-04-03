@@ -86,7 +86,6 @@ WorkgroupItemController.$inject = [
 
 const WorkgroupItem = {
     bindings: {
-        canViewStudentNames: '<',
         expand: '<',
         maxScore: '<',
         nodeId: '<',
@@ -100,12 +99,13 @@ const WorkgroupItem = {
     controller: WorkgroupItemController,
     template:
         `<md-list-item class="list-item list-item-condensed md-whiteframe-z1"
+                       aria-label="{{ toggleTeamWorkDisplay | translate }}"
                        ng-class="{'list-item--warn': $ctrl.statusClass === 'warn', 'list-item--info': $ctrl.statusClass === 'info', 'list-item--expanded': $ctrl.showWork}"
                        ng-click="$ctrl.toggleExpand()"
                        layout-wrap>
             <div class="md-list-item-text" layout="row" flex>
                 <div flex layout="row" layout-align="start center">
-                    <workgroup-info has-alert="$ctrl.hasAlert" has-new-alert="$ctrl.hasNewAlert" usernames="{{$ctrl.workgroupData.usernames}}" workgroup-id="$ctrl.workgroupId"></workgroup-info>
+                    <workgroup-info has-alert="$ctrl.hasAlert" has-new-alert="$ctrl.hasNewAlert" has-new-work="$ctrl.hasNewWork" usernames="{{$ctrl.workgroupData.displayNames}}" workgroup-id="$ctrl.workgroupId"></workgroup-info>
                 </div>
                 <div flex="30" layout="row" layout-align="center center">
                     <workgroup-node-status status-text="{{$ctrl.statusText}}" status-class="{{$ctrl.statusClass}}"></workgroup-node-status>

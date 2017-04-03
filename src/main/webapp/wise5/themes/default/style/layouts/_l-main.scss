@@ -55,17 +55,34 @@
 }
 
 .content-head {
-    margin: 8px 0;
+    margin: 8px 0 12px;
 
     h1, h2, h3 {
         font-weight: 300;
+        margin-top: 0;
+        margin-bottom: 0;
+
+        @media only screen and (max-width: $layout-breakpoint-sm - 1) {
+            font-size: rem(3.2);
+        }
     }
 }
 
 .content-head__item {
-    margin-right: 16px;
+    margin: 0 8px;
 
     .md-subhead {
         padding-left: 4px;
+
+        @media only screen and (max-width: $layout-breakpoint-sm - 1) {
+            display: block;
+            padding-left: 0;
+        }
+    }
+
+    md-icon {
+        @media only screen and (max-width: $layout-breakpoint-sm - 1) {
+            display: none;
+        }
     }
 }

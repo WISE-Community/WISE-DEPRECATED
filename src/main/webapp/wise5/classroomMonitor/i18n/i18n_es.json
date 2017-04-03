@@ -1,9 +1,9 @@
 {
-	"averageScore": "Puntaje Promedio",
-	"downloadStudentWork": "Bajar trabajo de estudiante",
-	"gradeByStep": "Calificar por paso",
-	"gradeByWorkgroup": "Calificar por grupo",
-	"newWorkCounter": "Nueva cuenta de trabajo: {{count}}",
-	"numberOfStudentOnStep": "# de estudiantes por paso",
-	"pauseStudentScreens": "Pausar pantallas de los estudiantes"
+    "averageScore": "Puntaje Promedio",
+    "downloadStudentWork": "Bajar trabajo de estudiante",
+    "gradeByStep": "Calificar por paso",
+    "gradeByWorkgroup": "Calificar por grupo",
+    "newWorkCounter": "Nueva cuenta de trabajo: {{count}}",
+    "numberOfStudentOnStep": "# de estudiantes por paso",
+    "pauseStudentScreens": "Pausar pantallas de los estudiantes"
 }

@@ -1,4 +1,5 @@
 {
+    "all": "All",
     "allPeriods": "All Periods",
     "allWork": "All Work",
     "allStudentWork": "All Student Work",
@@ -6,6 +7,7 @@
     "cancel": "Cancel",
     "classroomMonitor": "Classroom Monitor",
     "close": "Close",
+    "collapseAllTeams": "Collapse all teams",
     "completed": "Completed",
     "completion": "completion",
     "currentLocation": "Current Location",
@@ -24,6 +26,7 @@
     "downloadStudentAssets": "Download Student Assets",
     "downloadStudentWork": "Download All Work",
     "events": "Events",
+    "expandAllTeams": "Expand all teams",
     "export": "Export",
     "exportAllNotebookItems": "Export All Notebook Items",
     "exportAllSteps": "Export all steps",
@@ -36,6 +39,7 @@
     "exportStudentAssets": "Export Student Assets",
     "exportView": "Data Export",
     "exportViewLabel": "View Export Student Data",
+    "findATeam": "Find a team",
     "goHome": "Go Home",
     "gradeByStep": "Grade By Step",
     "gradeByWorkgroup": "Grade By Workgroup",
@@ -46,7 +50,8 @@
     "latestStudentWork": "Latest Student Work",
     "newWork": "New Work",
     "newWorkCounter": "New Work Count: {{count}}",
-    "noNotes": "Student hasn't created any notes yet.",
+    "noMatchesFound": "No matches found",
+    "noNotes": "Team hasn't created any notes yet.",
     "notebookView": "Student Notebooks",
     "notebookViewLabel": "View Student Notebooks",
     "notesTipsView": "Teaching Tips & Notes",
@@ -97,6 +102,7 @@
     "teamsOnItemTitle": "Teams on item",
     "teamNoWorkSubmitted": "Team hasn't submitted any work for this step",
     "timeSpent": "Time Spent",
+    "toggleTeamWorkDisplay": "Show/hide team's work for this step",
     "visited": "Visited",
     "yes": "Yes"
 }

@@ -11,22 +11,30 @@ class ProjectAssetService {
     }
 
     deleteAssetItem(assetItem) {
-        var projectAssetURL = this.ConfigService.getConfigParam('projectAssetURL');
 
-        var httpParams = {};
-        httpParams.method = 'POST';
-        httpParams.url = projectAssetURL;
-        httpParams.headers = {'Content-Type': 'application/x-www-form-urlencoded'};
+        let params = {
+            assetFileName: assetItem.fileName
+        };
 
-        var params = {};
-        params.assetFileName = assetItem.fileName;
-        httpParams.data = $.param(params);
+        let httpParams = {
+            method: 'POST',
+            url: this.ConfigService.getConfigParam('projectAssetURL'),
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            data: $.param(params)
+        };
 
         return this.$http(httpParams).then((result) => {
-            var projectAssetsJSON = result.data;
+            let projectAssetsJSON = result.data;
             this.projectAssets = projectAssetsJSON;
             return projectAssetsJSON;
         });
+    }
+
+    downloadAssetItem(assetItem) {
+      let assetFileName = assetItem.fileName;
+
+      // ask the browser to download this asset by setting the location
+      window.location = this.ConfigService.getConfigParam('projectAssetURL') + "/download?assetFileName=" + assetFileName;
     }
 
     getFullAssetItemURL(assetItem) {

@@ -2,15 +2,20 @@
 
 class ConfigService {
 
-    constructor($http, $location) {
+    constructor($filter, $http, $location) {
+        this.$filter = $filter;
         this.$http = $http;
         this.$location = $location;
         this.config = null;
+
+        this.$translate = this.$filter('translate');
     };
 
     setConfig(config) {
         this.config = config;
         this.sortClassmateUserInfosAlphabeticallyByName();
+        this.setPermissions();
+        this.setClassmateDisplayNames();
     };
 
     retrieveConfig(configURL) {
@@ -245,6 +250,19 @@ class ConfigService {
         return classmateUserInfos;
     };
 
+    setClassmateDisplayNames() {
+        let classmateUserInfos = this.getClassmateUserInfos();
+
+        if (classmateUserInfos) {
+            let n = classmateUserInfos.length;
+
+            for (let i = 0; i < n; i++) {
+                let workgroup = classmateUserInfos[i];
+                workgroup.displayNames = this.getDisplayUserNamesByWorkgroupId(workgroup.workgroupId);
+            }
+        }
+    }
+
     /**
      * Get the classmate user infos sorted by ascending workgroup id
      * @return an array of classmate user info objects sorted by ascending
@@ -378,6 +396,36 @@ class ConfigService {
 
         return result;
     };
+
+    setPermissions() {
+        // get the role of the teacher for the run e.g. 'owner', 'write', 'read'
+        let role = this.getTeacherRole(this.getWorkgroupId());
+
+        if (role === 'owner') {
+            // the teacher is the owner of the run and has full access
+            this.config.canViewStudentNames = true;
+            this.config.canGradeStudentWork = true;
+        } else if (role === 'write') {
+            // the teacher is a shared teacher that can grade the student work
+            this.config.canViewStudentNames = true;
+            this.config.canGradeStudentWork = true;
+        } else if (role === 'read') {
+            // the teacher is a shared teacher that can only view the student work
+            this.config.canViewStudentNames = false;
+            this.config.canGradeStudentWork = false;
+        } else {
+            // teacher role is null, so assume we're in student mode
+            this.config.canViewStudentNames = true;
+            this.config.canGradeStudentWork = false;
+        }
+    }
+
+    getPermissions() {
+        return {
+            canViewStudentNames: this.config.canViewStudentNames,
+            canGradeStudentWork: this.config.canGradeStudentWork
+        }
+    }
 
     getUserInfoByWorkgroupId(workgroupId) {
         var userInfo = null;
@@ -513,6 +561,30 @@ class ConfigService {
         }
 
         return userNamesObjects;
+    };
+
+    getDisplayUserNamesByWorkgroupId(workgroupId) {
+        let usernames = '';
+
+        if (workgroupId != null) {
+            if (this.config.canViewStudentNames) {
+                let names = this.getUserNamesByWorkgroupId(workgroupId);
+                let l = names.length;
+                for (let i = 0; i < l; i++) {
+                    let name = names[i].name;
+                    usernames += name;
+
+                    if (i < (l-1)) {
+                        usernames += ', ';
+                    }
+                }
+            } else {
+                // current user is not allowed to view student names, so return string with workgroupId
+                usernames = this.$translate('teamId', {id: workgroupId});
+            }
+        }
+
+        return usernames;
     };
 
     isPreview() {
@@ -858,6 +930,7 @@ class ConfigService {
 };
 
 ConfigService.$inject = [
+    '$filter',
     '$http',
     '$location'
 ];

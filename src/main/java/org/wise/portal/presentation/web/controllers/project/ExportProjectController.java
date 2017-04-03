@@ -1,21 +1,21 @@
 /**
  * Copyright (c) 2008-2015 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
- * 
+ *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
- * 
+ *
  * Permission is hereby granted, without written agreement and without license
  * or royalty fees, to use, copy, modify, and distribute this software and its
  * documentation for any purpose, provided that the above copyright notice and
  * the following two paragraphs appear in all copies of this software.
- * 
+ *
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
  * PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
  * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
  * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
- * 
+ *
  * IN NO EVENT SHALL REGENTS BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT,
  * SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, INCLUDING LOST PROFITS,
  * ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF
@@ -56,7 +56,7 @@ import org.wise.portal.service.project.ProjectService;
 
 /**
  * Exports Project as zip.
- * 
+ *
  * @author Hiroki Terashima
  */
 @Controller
@@ -65,7 +65,7 @@ public class ExportProjectController {
 
 	@Autowired
 	private ProjectService projectService;
-	
+
 	@Autowired
 	private Properties wiseProperties;
 
@@ -88,12 +88,12 @@ public class ExportProjectController {
 			// project is marked as being public
 		} else {
 			response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "You are not authorized to access this page");
-			return null;			
+			return null;
 		}
 
 		String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
 
-		String sep = System.getProperty("file.separator");
+		String sep = "/";
 
 		String rawProjectUrl = (String) project.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
 		projectJSONFilename = rawProjectUrl.substring(rawProjectUrl.lastIndexOf(sep) + 1);
@@ -116,7 +116,7 @@ public class ExportProjectController {
 			metaOut.close();
 		}
 
-		// zip the folder and write to outputstream		
+		// zip the folder and write to outputstream
 		ServletOutputStream outputStream = response.getOutputStream();
 
 		//create ZipOutputStream object
@@ -130,9 +130,14 @@ public class ExportProjectController {
 		//get path prefix so that the zip file does not contain the whole path
 		// eg. if folder to be zipped is /home/lalit/test
 		// the zip file when opened will have test folder and not home/lalit/test folder
-		int len = zipFolder.getAbsolutePath().lastIndexOf(File.separator);
-		String baseName = zipFolder.getAbsolutePath().substring(0,len+1);
-
+    String zipFolderAbsolutePath = zipFolder.getAbsolutePath();
+		int len = 0;
+		if (zipFolderAbsolutePath.lastIndexOf("/") != -1) {
+			len = zipFolderAbsolutePath.lastIndexOf("/");
+		} else {
+			len = zipFolderAbsolutePath.lastIndexOf("\\");
+		}
+		String baseName = zipFolderAbsolutePath.substring(0, len + 1);
 		addFolderToZip(zipFolder, out, baseName);
 
 		out.close();
@@ -153,7 +158,7 @@ public class ExportProjectController {
 				if (authority.getAuthority().equals(UserDetailsService.ADMIN_ROLE)) {
 					// if signed in user is an admin, (s)he can export all projects.
 					return true;
-				} else if(authority.getAuthority().equals(UserDetailsService.TEACHER_ROLE)) {
+				} else if (authority.getAuthority().equals(UserDetailsService.TEACHER_ROLE)) {
 					//the signed in user is a teacher
 					return this.projectService.canAuthorProject(project, signedInUser) ||
 							this.projectService.canReadProject(project, signedInUser);
@@ -170,19 +175,19 @@ public class ExportProjectController {
 			if (file.isDirectory()) {
 				// add folder to zip
 				String name = file.getAbsolutePath().substring(baseName.length());
-				ZipEntry zipEntry = new ZipEntry(name+"/");
+				ZipEntry zipEntry = new ZipEntry(name + "/");
 				zip.putNextEntry(zipEntry);
 				zip.closeEntry();
 				addFolderToZip(file, zip, baseName);
 			} else {
-				// it's a file.	
+				// it's a file.
 				String name = file.getAbsolutePath().substring(baseName.length());
 				String updatedFilename = null;
 				if (name.endsWith("wise4.project.json") && !"wise4.project.json".equals(this.projectJSONFilename)) {
-					// jump to the next iteration, since we don't need to add this file (wise4.project.json) to the zip. 
+					// jump to the next iteration, since we don't need to add this file (wise4.project.json) to the zip.
 					// we want to add the other *.project.json file (e.g. "GCC.project.json") as wise4.project.json to the zip.
-					continue;  
-				} 
+					continue;
+				}
 				updatedFilename = updateFilename(name);
 				ZipEntry zipEntry = new ZipEntry(updatedFilename);
 				zip.putNextEntry(zipEntry);
@@ -201,12 +206,15 @@ public class ExportProjectController {
 	 */
 	private static String updateFilename(String oldFilename) {
 		int lastIndexOfSlash = oldFilename.lastIndexOf("/");
-		String prepend = oldFilename.substring(0, lastIndexOfSlash);
+		if (lastIndexOfSlash == -1) {
+			lastIndexOfSlash = oldFilename.lastIndexOf("\\");
+		}
+		String prepend = oldFilename.substring(0, lastIndexOfSlash + 1);
 		if (oldFilename.endsWith(".project.json")) {
-			return prepend+"/wise4.project.json";
+			return prepend + "wise4.project.json";
 		} else if (oldFilename.endsWith(".project-min.json")) {
-			return prepend+"/wise4.project-min.json";
-		} 
+			return prepend + "wise4.project-min.json";
+		}
 		return oldFilename;
 	}
 }

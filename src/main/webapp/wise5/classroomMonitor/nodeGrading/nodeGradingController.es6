@@ -65,29 +65,16 @@ class NodeGradingController {
                 this.nodeContent = node;
             }
 
-            this.workgroupIds = this.ConfigService.getClassmateWorkgroupIds();
+            this.workgroups = this.ConfigService.getClassmateUserInfos();
             this.workgroupsById = {}; // object that will hold workgroup names, statuses, scores, notifications, etc.
             this.workVisibilityById = {}; // object that specifies whether student work is visible for each workgroup
 
             this.canViewStudentNames = true;
             this.canGradeStudentWork = true;
 
-            // get the role of the teacher for the run e.g. 'owner', 'write', 'read'
-            var role = this.ConfigService.getTeacherRole(this.teacherWorkgroupId);
-
-            if (role === 'owner') {
-                // the teacher is the owner of the run and has full access
-                this.canViewStudentNames = true;
-                this.canGradeStudentWork = true;
-            } else if (role === 'write') {
-                // the teacher is a shared teacher that can grade the student work
-                this.canViewStudentNames = true;
-                this.canGradeStudentWork = true;
-            } else if (role === 'read') {
-                // the teacher is a shared teacher that can only view the student work
-                this.canViewStudentNames = false;
-                this.canGradeStudentWork = false;
-            }
+            let permissions = this.ConfigService.getPermissions();
+            this.canViewStudentNames = permissions.canViewStudentNames;
+            this.canGradeStudentWork = permissions.canGradeStudentWork;
 
             this.annotationMappings = {};
 
@@ -169,10 +156,10 @@ class NodeGradingController {
      * Build the workgroupsById object
      */
     setWorkgroupsById() {
-        let l = this.workgroupIds.length;
+        let l = this.workgroups.length;
         for (let i = 0; i < l; i++) {
-            let id = this.workgroupIds[i];
-            this.workgroupsById[id] = {};
+            let id = this.workgroups[i].workgroupId;
+            this.workgroupsById[id] = this.workgroups[i];
             this.workVisibilityById[id] = false;
 
             this.updateWorkgroup(id, true);
@@ -195,7 +182,6 @@ class NodeGradingController {
             workgroup.hasNewWork = completionStatus.hasNewWork;
             workgroup.completionStatus = this.getWorkgroupCompletionStatus(completionStatus);
             workgroup.score = this.getNodeScoreByWorkgroupId(workgroupId);
-            workgroup.usernames = this.getUsernamesByWorkgroupId(workgroupId);
 
             if (!init) {
                 this.workgroupsById[workgroupId] = angular.copy(workgroup);
@@ -314,32 +300,6 @@ class NodeGradingController {
     getNodeScoreByWorkgroupId(workgroupId) {
         let score = this.AnnotationService.getScore(workgroupId, this.nodeId);
         return (typeof score === 'number' ? score : -1);
-    }
-
-    /**
-     * Returns the usernames for a given workgroupId
-     * @param workgroupId a workgroup ID number
-     * @returns String the workgroup usernames
-     */
-    getUsernamesByWorkgroupId(workgroupId) {
-        let usernames = '';
-        if (this.canViewStudentNames) {
-            let names = this.ConfigService.getUserNamesByWorkgroupId(workgroupId);
-            let l = names.length;
-            for (let i = 0; i < l; i++) {
-                let name = names[i].name;
-                usernames += name;
-
-                if (i < (l-1)) {
-                    usernames += ', ';
-                }
-            }
-        } else {
-            // current user is not allowed to view student names, so return string with workgroupId
-            usernames = this.$translate('teamId', {workgroupId: this.workgroupId});
-        }
-
-        return usernames;
     }
 
     /**
@@ -560,30 +520,33 @@ class NodeGradingController {
     }
 
     /**
-     * Checks whether a workgroup is in the current period
+     * Checks whether a workgroup should be shown
      * @param workgroupId the workgroupId to look for
-     * @returns boolean whether the workgroup is in the current period
+     * @returns boolean whether the workgroup should be shown
      */
-    isWorkgroupInCurrentPeriod(workgroupId) {
-        return (this.getCurrentPeriod().periodName === "All" ||
-            this.getPeriodIdByWorkgroupId(workgroupId) === this.getCurrentPeriod().periodId);
-    }
+    isWorkgroupShown(workgroupId) {
+        let show = false;
 
-    onUpdateExpand(workgroupId, value) {
-        this.workVisibilityById[workgroupId] = !this.workVisibilityById[workgroupId];
-    }
+        let currentPeriodId = this.getCurrentPeriod().periodId;
+        let workgroup = this.workgroupsById[workgroupId];
+        let periodId = workgroup.periodId;
 
-    onUpdateHiddenComponents(value, event) {
-        let target = event.target;
-        let viewportOffsetTop = target.getBoundingClientRect().top;
+        if (currentPeriodId === -1 || currentPeriodId === periodId) {
+            // workgroup is in current period
+            let currentWorkgroup = this.TeacherDataService.getCurrentWorkgroup();
+            if (currentWorkgroup) {
+                // there is a currently selected workgroup, so check if this one matches
+                if (currentWorkgroup.workgroupId === parseInt(workgroupId)) {
+                    // workgroupIds match, so show this one
+                    show = true;
+                }
+            } else {
+                // there is no currently selected workgroup, so show this one
+                show = true;
+            }
+        }
 
-        this.hiddenComponents = value;
-        this.hiddenComponents = angular.copy(this.hiddenComponents);
-
-        this.$timeout(() => {
-            this.updateScroll(target, viewportOffsetTop);
-        }, 100);
-
+        return show;
     }
 
     updateScroll(target, viewportOffsetTop) {
@@ -768,26 +731,67 @@ class NodeGradingController {
 
         switch (this.sort) {
             case 'team':
-                orderBy = ['usernames'];
+                orderBy = ['displayNames'];
                 break;
             case '-team':
-                orderBy = ['-usernames'];
+                orderBy = ['-displayNames'];
                 break;
             case 'status':
-                orderBy = ['completionStatus', 'usernames'];
+                orderBy = ['completionStatus', 'displayNames'];
                 break;
             case '-status':
-                orderBy = ['-completionStatus', 'usernames'];
+                orderBy = ['-completionStatus', 'displayNames'];
                 break;
             case 'score':
-                orderBy = ['score', 'usernames'];
+                orderBy = ['score', 'displayNames'];
                 break;
             case '-score':
-                orderBy = ['-score', 'usernames'];
+                orderBy = ['-score', 'displayNames'];
                 break;
         }
 
         return orderBy;
+    }
+
+    /**
+     * Expand all workgroups to show student work
+     */
+    expandAll() {
+        let n = this.workgroups.length;
+
+        for (let i = 0; i < n; i++) {
+            let id = this.workgroups[i].workgroupId;
+            this.workVisibilityById[id] = true;
+        }
+    }
+
+    /**
+     * Collapse all workgroups to hide student work
+     */
+    collapseAll() {
+        let n = this.workgroups.length;
+
+        for (let i = 0; i < n; i++) {
+            let id = this.workgroups[i].workgroupId;
+            this.workVisibilityById[id] = false;
+        }
+    }
+
+    onUpdateExpand(workgroupId, value) {
+        this.workVisibilityById[workgroupId] = !this.workVisibilityById[workgroupId];
+    }
+
+    onUpdateHiddenComponents(value, event) {
+        let target = event.target;
+        let viewportOffsetTop = target.getBoundingClientRect().top;
+
+        this.hiddenComponents = value;
+        this.hiddenComponents = angular.copy(this.hiddenComponents);
+
+        this.$timeout(() => {
+            this.updateScroll(target, viewportOffsetTop);
+        }, 100);
+
     }
 }
 
