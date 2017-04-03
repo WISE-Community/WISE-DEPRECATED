@@ -3556,7 +3556,7 @@ var ProjectService = function () {
             newNode.transitionLogic = {};
             newNode.transitionLogic.transitions = [];
 
-            newNode.showSaveButton = true;
+            newNode.showSaveButton = false;
             newNode.showSubmitButton = false;
             newNode.components = [];
 
@@ -5165,7 +5165,7 @@ var ProjectService = function () {
                 // get the node we will create the component in
                 var node = this.getNodeById(nodeId);
 
-                // get the service for the node type
+                // get the service for the component type
                 var service = this.$injector.get(componentType + 'Service');
 
                 if (node != null && service != null) {
@@ -5173,8 +5173,272 @@ var ProjectService = function () {
                     // create the new component
                     var component = service.createComponent();
 
+                    if (service.componentHasWork()) {
+                        /*
+                         * the component has student work so we will need to
+                         * determine if we need to show the save button on the
+                         * component or the step
+                         */
+
+                        if (node.showSaveButton == true) {
+                            /*
+                             * the step is showing a save button so we will not show
+                             * the save button on this new component
+                             */
+                        } else {
+                            // the step is not showing a save button
+
+                            if (this.doesAnyComponentShowSubmitButton(node.id)) {
+                                /*
+                                 * at least one of the other components in the step are
+                                 * showing a submit button so we will also show the save
+                                 * button on this new component
+                                 */
+
+                                // turn on the component save button
+                                component.showSaveButton = true;
+                            } else {
+                                /*
+                                 * none of the other components are showing a submit button
+                                 * so we will show the save button on the step
+                                 */
+
+                                // turn on the step save button
+                                node.showSaveButton = true;
+                            }
+                        }
+                    }
+
                     // add the component to the node
                     this.addComponentToNode(node, component);
+                }
+            }
+        }
+
+        /**
+         * Does any component in the step generate work
+         * @param nodeId the node id
+         * @return whether any components in the step generates work
+         */
+
+    }, {
+        key: 'doesAnyComponentHaveWork',
+        value: function doesAnyComponentHaveWork(nodeId) {
+
+            // get the node
+            var node = this.getNodeById(nodeId);
+
+            if (node != null) {
+
+                // get the components in the node
+                var components = node.components;
+
+                if (components != null) {
+
+                    // loop through all the components
+                    for (var c = 0; c < components.length; c++) {
+
+                        // get a component
+                        var component = components[c];
+
+                        if (component != null) {
+                            var componentType = component.type;
+
+                            // get the service for the component type
+                            var service = this.$injector.get(componentType + 'Service');
+
+                            if (service != null) {
+                                if (service.componentHasWork()) {
+                                    return true;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        /**
+         * Check if any of the components in the node are showing their save button
+         * @param nodeId the node id to check
+         * @return whether any of the components in the node show their save button
+         */
+
+    }, {
+        key: 'doesAnyComponentShowSaveButton',
+        value: function doesAnyComponentShowSaveButton(nodeId) {
+
+            var result = false;
+
+            // get the node
+            var node = this.getNodeById(nodeId);
+
+            if (node != null) {
+
+                // get the components in the node
+                var components = node.components;
+
+                if (components != null) {
+
+                    // loop through all the components
+                    for (var c = 0; c < components.length; c++) {
+
+                        // get a component
+                        var component = components[c];
+
+                        if (component != null) {
+                            if (component.showSaveButton == true) {
+                                // the component is showing their save button
+                                result = true;
+                            }
+                        }
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        /**
+         * Check if any of the components in the node are showing their submit button
+         * @param nodeId the node id to check
+         * @return whether any of the components in the node show their submit button
+         */
+
+    }, {
+        key: 'doesAnyComponentShowSubmitButton',
+        value: function doesAnyComponentShowSubmitButton(nodeId) {
+
+            var result = false;
+
+            // get the node
+            var node = this.getNodeById(nodeId);
+
+            if (node != null) {
+
+                // get the components in the node
+                var components = node.components;
+
+                if (components != null) {
+
+                    // loop through all the components
+                    for (var c = 0; c < components.length; c++) {
+
+                        // get a component
+                        var component = components[c];
+
+                        if (component != null) {
+                            if (component.showSubmitButton == true) {
+                                // the component is showing their save button
+                                result = true;
+                            }
+                        }
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        /**
+         * Turn on the save button in all the components in the step
+         * @param nodeId the node id
+         */
+
+    }, {
+        key: 'turnOnSaveButtonInComponents',
+        value: function turnOnSaveButtonInComponents(nodeId) {
+
+            // get the node
+            var node = this.getNodeById(nodeId);
+
+            if (node != null) {
+
+                // get the components in the node
+                var components = node.components;
+
+                if (components != null) {
+
+                    // loop through all the components
+                    for (var c = 0; c < components.length; c++) {
+
+                        // get a component
+                        var component = components[c];
+
+                        if (component != null) {
+
+                            // get the component type
+                            var componentType = component.type;
+
+                            if (componentType != null) {
+
+                                // get the service for the component type
+                                var service = this.$injector.get(componentType + 'Service');
+
+                                if (service != null) {
+
+                                    // check if this component uses a save button
+                                    if (service.componentUsesSaveButton()) {
+
+                                        // turn on the save button in the component
+                                        component.showSaveButton = true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        /**
+         * Turn off the submit button in all the components in the step
+         * @param nodeId the node id
+         */
+
+    }, {
+        key: 'turnOffSaveButtonInComponents',
+        value: function turnOffSaveButtonInComponents(nodeId) {
+            // get the node
+            var node = this.getNodeById(nodeId);
+
+            if (node != null) {
+
+                // get the components in the node
+                var components = node.components;
+
+                if (components != null) {
+
+                    // loop through all the components
+                    for (var c = 0; c < components.length; c++) {
+
+                        // get a component
+                        var component = components[c];
+
+                        if (component != null) {
+
+                            // get the component type
+                            var componentType = component.type;
+
+                            if (componentType != null) {
+
+                                // get the service for the component type
+                                var service = this.$injector.get(componentType + 'Service');
+
+                                if (service != null) {
+
+                                    // check if this component uses a save button
+                                    if (service.componentUsesSaveButton()) {
+
+                                        // turn on the save button in the component
+                                        component.showSaveButton = false;
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }

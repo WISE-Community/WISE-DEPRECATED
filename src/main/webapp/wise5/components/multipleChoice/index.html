@@ -17,7 +17,7 @@
             <br/>
             {{ 'FEEDBACK' | translate }}: <input ng-model='choice.feedback' ng-change='multipleChoiceController.authoringViewFeedbackChanged()' ng-model-options='{ debounce: 1000 }' size='100'/>
             <br/>
-            <div>{{ 'IS_CORRECT' | translate }}: <input type='checkbox' ng-model='choice.isCorrect' ng-change='multipleChoiceController.authoringViewComponentChanged()'/></div>
+            <div>{{ 'IS_CORRECT' | translate }}: <input type='checkbox' ng-model='choice.isCorrect' ng-change='multipleChoiceController.authoringViewFeedbackChanged()'/></div>
             <button ng-click='multipleChoiceController.deleteChoice(choice.id)'>{{ 'DELETE' | translate }}</button>
         </div>
         <button ng-click='multipleChoiceController.addChoice()'>{{ 'multipleChoice.addChoice' | translate }}</button>
@@ -33,7 +33,7 @@
             <br/>
             {{ 'SHOW_SUBMIT_BUTTON' | translate }}: <input type='checkbox'
                                        ng-model='multipleChoiceController.authoringComponentContent.showSubmitButton'
-                                       ng-change='multipleChoiceController.authoringViewComponentChanged()'/>
+                                       ng-change='multipleChoiceController.showSubmitButtonValueChanged()'/>
             <div ng-show='multipleChoiceController.authoringComponentContent.showSubmitButton'
                  style='display:inline'>
                 {{ 'MAX_SUBMIT' | translate }}:
@@ -231,7 +231,6 @@
         <div ng-if="multipleChoiceController.isSaveButtonVisible || multipleChoiceController.isSubmitButtonVisible"
              class="component__actions" layout="row" layout-align="start center">
             <md-button class="md-raised md-primary"
-                       ng-class="{'md-raised': !multipleChoiceController.isSubmitButtonVisible}"
                        ng-click='multipleChoiceController.saveButtonClicked()'
                        ng-disabled='multipleChoiceController.isDisabled || !multipleChoiceController.isDirty'
                        ng-show='multipleChoiceController.isSaveButtonVisible'

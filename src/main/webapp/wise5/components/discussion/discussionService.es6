@@ -38,7 +38,7 @@ class DiscussionService extends NodeService {
         component.type = 'Discussion';
         component.prompt = this.$translate('ENTER_PROMPT_HERE');
         component.showSaveButton = false;
-        component.showSubmitButton = true;
+        component.showSubmitButton = false;
         component.isStudentAttachmentEnabled = true;
         component.gateClassmateResponses = true;
         return component;
@@ -252,6 +252,22 @@ class DiscussionService extends NodeService {
      */
     componentHasWork(component) {
         return true;
+    }
+
+    /**
+     * Whether this component uses a save button
+     * @return whether this component uses a save button
+     */
+    componentUsesSaveButton() {
+        return false;
+    }
+
+    /**
+     * Whether this component uses a submit button
+     * @return whether this component uses a submit button
+     */
+    componentUsesSubmitButton() {
+        return false;
     }
 }
 

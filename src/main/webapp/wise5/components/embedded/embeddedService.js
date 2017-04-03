@@ -101,11 +101,33 @@ var EmbeddedService = function (_NodeService) {
         /**
          * Whether this component generates student work
          * @param component (optional) the component object. if the component object
-         * is not provided, we will use the default value of whether the 
+         * is not provided, we will use the default value of whether the
          * component type usually has work.
          * @return whether this component generates student work
          */
         value: function componentHasWork(component) {
+            return true;
+        }
+
+        /**
+         * Whether this component uses a save button
+         * @return whether this component uses a save button
+         */
+
+    }, {
+        key: 'componentUsesSaveButton',
+        value: function componentUsesSaveButton() {
+            return true;
+        }
+
+        /**
+         * Whether this component uses a submit button
+         * @return whether this component uses a submit button
+         */
+
+    }, {
+        key: 'componentUsesSubmitButton',
+        value: function componentUsesSubmitButton() {
             return true;
         }
     }]);

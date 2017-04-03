@@ -33,8 +33,8 @@ class ConceptMapService extends NodeService {
         component.rules = [];
         component.starterConceptMap = null;
         component.customRuleEvaluator = "";
-        component.showAutoScore = true;
-        component.showAutoFeedback = true;
+        component.showAutoScore = false;
+        component.showAutoFeedback = false;
         return component;
     }
 
@@ -785,6 +785,22 @@ class ConceptMapService extends NodeService {
      * @return whether this component generates student work
      */
     componentHasWork(component) {
+        return true;
+    }
+
+    /**
+     * Whether this component uses a save button
+     * @return whether this component uses a save button
+     */
+    componentUsesSaveButton() {
+        return true;
+    }
+
+    /**
+     * Whether this component uses a submit button
+     * @return whether this component uses a submit button
+     */
+    componentUsesSubmitButton() {
         return true;
     }
 }

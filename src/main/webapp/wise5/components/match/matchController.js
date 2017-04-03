@@ -2873,6 +2873,129 @@ var MatchController = function () {
             // the authoring component content has changed so we will save the project
             this.authoringViewComponentChanged();
         }
+
+        /**
+         * Check if this component has been authored to have feedback or a correct
+         * choice
+         * @return whether this component has feedback or a correct choice
+         */
+
+    }, {
+        key: 'componentHasFeedback',
+        value: function componentHasFeedback() {
+
+            // get the feedback
+            var feedback = this.authoringComponentContent.feedback;
+
+            if (feedback != null) {
+
+                // loop through all the feedback buckets
+                for (var f = 0; f < feedback.length; f++) {
+
+                    var tempFeedback = feedback[f];
+
+                    if (tempFeedback != null) {
+                        var tempChoices = tempFeedback.choices;
+
+                        if (tempChoices != null) {
+
+                            // loop through the feedback choices
+                            for (var c = 0; c < tempChoices.length; c++) {
+                                var tempChoice = tempChoices[c];
+
+                                if (tempChoice != null) {
+
+                                    if (tempChoice.feedback != null && tempChoice.feedback != '') {
+                                        // this choice has feedback
+                                        return true;
+                                    }
+
+                                    if (tempChoice.isCorrect) {
+                                        // this choice is correct
+                                        return true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        /**
+         * The author has changed the feedback so we will enable the submit button
+         */
+
+    }, {
+        key: 'authoringViewFeedbackChanged',
+        value: function authoringViewFeedbackChanged() {
+
+            var show = true;
+
+            if (this.componentHasFeedback()) {
+                // this component has feedback so we will show the submit button
+                show = true;
+            } else {
+                /*
+                 * this component does not have feedback so we will not show the
+                 * submit button
+                 */
+                show = false;
+            }
+
+            // show or hide the submit button
+            this.setShowSubmitButtonValue(show);
+
+            // save the component
+            this.authoringViewComponentChanged();
+        }
+
+        /**
+         * Set the show submit button value
+         * @param show whether to show the submit button
+         */
+
+    }, {
+        key: 'setShowSubmitButtonValue',
+        value: function setShowSubmitButtonValue(show) {
+
+            if (show == null || show == false) {
+                // we are hiding the submit button
+                this.authoringComponentContent.showSaveButton = false;
+                this.authoringComponentContent.showSubmitButton = false;
+            } else {
+                // we are showing the submit button
+                this.authoringComponentContent.showSaveButton = true;
+                this.authoringComponentContent.showSubmitButton = true;
+            }
+
+            /*
+             * notify the parent node that this component is changing its
+             * showSubmitButton value so that it can show save buttons on the
+             * step or sibling components accordingly
+             */
+            this.$scope.$emit('componentShowSubmitButtonValueChanged', { nodeId: this.nodeId, componentId: this.componentId, showSubmitButton: show });
+        }
+
+        /**
+         * The showSubmitButton value has changed
+         */
+
+    }, {
+        key: 'showSubmitButtonValueChanged',
+        value: function showSubmitButtonValueChanged() {
+
+            /*
+             * perform additional processing for when we change the showSubmitButton
+             * value
+             */
+            this.setShowSubmitButtonValue(this.authoringComponentContent.showSubmitButton);
+
+            // the authoring component content has changed so we will save the project
+            this.authoringViewComponentChanged();
+        }
     }]);
 
     return MatchController;

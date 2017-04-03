@@ -58,7 +58,7 @@ var DiscussionService = function (_NodeService) {
             component.type = 'Discussion';
             component.prompt = this.$translate('ENTER_PROMPT_HERE');
             component.showSaveButton = false;
-            component.showSubmitButton = true;
+            component.showSubmitButton = false;
             component.isStudentAttachmentEnabled = true;
             component.gateClassmateResponses = true;
             return component;
@@ -289,6 +289,28 @@ var DiscussionService = function (_NodeService) {
          */
         value: function componentHasWork(component) {
             return true;
+        }
+
+        /**
+         * Whether this component uses a save button
+         * @return whether this component uses a save button
+         */
+
+    }, {
+        key: 'componentUsesSaveButton',
+        value: function componentUsesSaveButton() {
+            return false;
+        }
+
+        /**
+         * Whether this component uses a submit button
+         * @return whether this component uses a submit button
+         */
+
+    }, {
+        key: 'componentUsesSubmitButton',
+        value: function componentUsesSubmitButton() {
+            return false;
         }
     }]);
 

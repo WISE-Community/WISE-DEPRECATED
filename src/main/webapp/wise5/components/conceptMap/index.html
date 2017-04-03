@@ -82,7 +82,7 @@
                     {{ 'SHOW_SUBMIT_BUTTON' | translate }}:
                     <input type='checkbox'
                            ng-model='conceptMapController.authoringComponentContent.showSubmitButton'
-                           ng-change='conceptMapController.authoringViewShowSubmitButtonClicked()'/>
+                           ng-change='conceptMapController.showSubmitButtonValueChanged()'/>
                     <div ng-show='conceptMapController.authoringComponentContent.showSubmitButton'
                          style='display:inline'>
                         {{ 'MAX_SUBMIT' | translate }}:

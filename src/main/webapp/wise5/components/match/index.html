@@ -48,12 +48,12 @@
                 <br/>
                 {{ 'FEEDBACK' | translate }}: <input ng-model='choiceFeedback.feedback'
                                  ng-model-options='{ debounce: 1000 }'
-                       ng-change='matchController.authoringViewComponentChanged()'
+                       ng-change='matchController.authoringViewFeedbackChanged()'
                        size='60'/>
                 <br/>
                 {{ 'IS_CORRECT' | translate }}: <input type='checkbox'
                                    ng-model='choiceFeedback.isCorrect'
-                                   ng-change='matchController.authoringViewComponentChanged()'/>
+                                   ng-change='matchController.authoringViewFeedbackChanged()'/>
                 <br/>
                 <span ng-show='matchController.authoringComponentContent.ordered && choiceFeedback.isCorrect'>
                     {{ 'match.position' | translate }}: <input type='number'
@@ -82,7 +82,7 @@
             {{ 'SHOW_SUBMIT_BUTTON' | translate }}:
             <input type='checkbox'
                    ng-model='matchController.authoringComponentContent.showSubmitButton'
-                   ng-change='matchController.authoringViewComponentChanged()'/>
+                   ng-change='matchController.showSubmitButtonValueChanged()'/>
             <div ng-show='matchController.authoringComponentContent.showSubmitButton'
                  style='display:inline'>
                 {{ 'MAX_SUBMIT' | translate }}:

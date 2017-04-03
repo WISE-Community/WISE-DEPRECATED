@@ -186,6 +186,28 @@ var LabelService = function (_NodeService) {
         value: function componentHasWork(component) {
             return true;
         }
+
+        /**
+         * Whether this component uses a save button
+         * @return whether this component uses a save button
+         */
+
+    }, {
+        key: 'componentUsesSaveButton',
+        value: function componentUsesSaveButton() {
+            return true;
+        }
+
+        /**
+         * Whether this component uses a submit button
+         * @return whether this component uses a submit button
+         */
+
+    }, {
+        key: 'componentUsesSubmitButton',
+        value: function componentUsesSubmitButton() {
+            return true;
+        }
     }]);
 
     return LabelService;

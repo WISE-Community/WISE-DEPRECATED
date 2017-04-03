@@ -79,6 +79,22 @@ class HTMLService extends NodeService {
     componentHasWork(component) {
         return false;
     }
+
+    /**
+     * Whether this component uses a save button
+     * @return whether this component uses a save button
+     */
+    componentUsesSaveButton() {
+        return false;
+    }
+
+    /**
+     * Whether this component uses a submit button
+     * @return whether this component uses a submit button
+     */
+    componentUsesSubmitButton() {
+        return false;
+    }
 }
 
 HTMLService.$inject = [

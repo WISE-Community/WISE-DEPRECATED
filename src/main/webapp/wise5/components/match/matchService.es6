@@ -22,7 +22,7 @@ class MatchService extends NodeService {
         component.type = 'Match';
         component.prompt = this.$translate('ENTER_PROMPT_HERE');
         component.showSaveButton = false;
-        component.showSubmitButton = true;
+        component.showSubmitButton = false;
         component.choices = [];
         component.buckets = [];
         component.feedback = [
@@ -185,6 +185,22 @@ class MatchService extends NodeService {
      * @return whether this component generates student work
      */
     componentHasWork(component) {
+        return true;
+    }
+
+    /**
+     * Whether this component uses a save button
+     * @return whether this component uses a save button
+     */
+    componentUsesSaveButton() {
+        return true;
+    }
+
+    /**
+     * Whether this component uses a submit button
+     * @return whether this component uses a submit button
+     */
+    componentUsesSubmitButton() {
         return true;
     }
 }

@@ -1601,12 +1601,59 @@ class MultipleChoiceController {
     };
 
     /**
+     * Check if this component has been authored to have feedback or has a
+     * correct choice
+     * @return whether this component has feedback or has a correct choice
+     */
+    componentHasFeedback() {
+
+        // get the choices
+        var choices = this.authoringComponentContent.choices;
+
+        if (choices != null) {
+
+            // loop through all the choices
+            for (var c = 0; c < choices.length; c++) {
+                var choice = choices[c];
+
+                if (choice != null) {
+
+                    if (choice.feedback != null && choice.feedback != '') {
+                        // the choice has feedback
+                        return true;
+                    }
+
+                    if (choice.isCorrect) {
+                        // the choice is correct
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * The author has changed the feedback so we will enable the submit button
      */
     authoringViewFeedbackChanged() {
 
-        // enable the submit button
-        this.authoringComponentContent.showSubmitButton = true;
+        var show = true;
+
+        if (this.componentHasFeedback()) {
+            // this component has feedback so we will show the submit button
+            show = true;
+        } else {
+            /*
+             * this component does not have feedback so we will not show the
+             * submit button
+             */
+            show = false;
+        }
+
+        // show or hide the submit button
+        this.setShowSubmitButtonValue(show);
 
         // save the component
         this.authoringViewComponentChanged();
@@ -2066,6 +2113,45 @@ class MultipleChoiceController {
         if (this.authoringComponentContent.connectedComponents != null) {
             this.authoringComponentContent.connectedComponents.splice(index, 1);
         }
+
+        // the authoring component content has changed so we will save the project
+        this.authoringViewComponentChanged();
+    }
+
+    /**
+     * Set the show submit button value
+     * @param show whether to show the submit button
+     */
+    setShowSubmitButtonValue(show) {
+
+        if (show == null || show == false) {
+            // we are hiding the submit button
+            this.authoringComponentContent.showSaveButton = false;
+            this.authoringComponentContent.showSubmitButton = false;
+        } else {
+            // we are showing the submit button
+            this.authoringComponentContent.showSaveButton = true;
+            this.authoringComponentContent.showSubmitButton = true;
+        }
+
+        /*
+         * notify the parent node that this component is changing its
+         * showSubmitButton value so that it can show save buttons on the
+         * step or sibling components accordingly
+         */
+        this.$scope.$emit('componentShowSubmitButtonValueChanged', {nodeId: this.nodeId, componentId: this.componentId, showSubmitButton: show});
+    }
+
+    /**
+     * The showSubmitButton value has changed
+     */
+    showSubmitButtonValueChanged() {
+
+        /*
+         * perform additional processing for when we change the showSubmitButton
+         * value
+         */
+        this.setShowSubmitButtonValue(this.authoringComponentContent.showSubmitButton);
 
         // the authoring component content has changed so we will save the project
         this.authoringViewComponentChanged();

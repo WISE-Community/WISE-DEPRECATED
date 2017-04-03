@@ -59,8 +59,8 @@ var ConceptMapService = function (_NodeService) {
             component.rules = [];
             component.starterConceptMap = null;
             component.customRuleEvaluator = "";
-            component.showAutoScore = true;
-            component.showAutoFeedback = true;
+            component.showAutoScore = false;
+            component.showAutoFeedback = false;
             return component;
         }
 
@@ -878,6 +878,28 @@ var ConceptMapService = function (_NodeService) {
     }, {
         key: 'componentHasWork',
         value: function componentHasWork(component) {
+            return true;
+        }
+
+        /**
+         * Whether this component uses a save button
+         * @return whether this component uses a save button
+         */
+
+    }, {
+        key: 'componentUsesSaveButton',
+        value: function componentUsesSaveButton() {
+            return true;
+        }
+
+        /**
+         * Whether this component uses a submit button
+         * @return whether this component uses a submit button
+         */
+
+    }, {
+        key: 'componentUsesSubmitButton',
+        value: function componentUsesSubmitButton() {
             return true;
         }
     }]);

@@ -198,6 +198,22 @@ class OpenResponseService extends NodeService {
 
         return studentDataString;
     }
+
+    /**
+     * Whether this component uses a save button
+     * @return whether this component uses a save button
+     */
+    componentUsesSaveButton() {
+        return true;
+    }
+
+    /**
+     * Whether this component uses a submit button
+     * @return whether this component uses a submit button
+     */
+    componentUsesSubmitButton() {
+        return true;
+    }
 }
 
 OpenResponseService.$inject = [

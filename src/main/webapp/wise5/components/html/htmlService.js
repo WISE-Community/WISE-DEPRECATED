@@ -114,6 +114,28 @@ var HTMLService = function (_NodeService) {
         value: function componentHasWork(component) {
             return false;
         }
+
+        /**
+         * Whether this component uses a save button
+         * @return whether this component uses a save button
+         */
+
+    }, {
+        key: 'componentUsesSaveButton',
+        value: function componentUsesSaveButton() {
+            return false;
+        }
+
+        /**
+         * Whether this component uses a submit button
+         * @return whether this component uses a submit button
+         */
+
+    }, {
+        key: 'componentUsesSubmitButton',
+        value: function componentUsesSubmitButton() {
+            return false;
+        }
     }]);
 
     return HTMLService;

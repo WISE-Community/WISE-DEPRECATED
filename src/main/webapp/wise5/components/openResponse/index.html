@@ -42,7 +42,7 @@
             <span>{{ 'SHOW_SUBMIT_BUTTON' | translate }}:</span>
             <input type='checkbox'
                    ng-model='openResponseController.authoringComponentContent.showSubmitButton'
-                   ng-change='openResponseController.authoringViewComponentChanged()'/>
+                   ng-change='openResponseController.showSubmitButtonValueChanged()'/>
             <div ng-show='openResponseController.authoringComponentContent.showSubmitButton'
                  style='display:inline'>
                 <span>{{ 'MAX_SUBMIT' | translate }}:</span>

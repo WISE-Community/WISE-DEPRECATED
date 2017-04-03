@@ -2466,6 +2466,51 @@ var LabelController = function () {
             // the authoring component content has changed so we will save the project
             this.authoringViewComponentChanged();
         }
+
+        /**
+         * Set the show submit button value
+         * @param show whether to show the submit button
+         */
+
+    }, {
+        key: 'setShowSubmitButtonValue',
+        value: function setShowSubmitButtonValue(show) {
+
+            if (show == null || show == false) {
+                // we are hiding the submit button
+                this.authoringComponentContent.showSaveButton = false;
+                this.authoringComponentContent.showSubmitButton = false;
+            } else {
+                // we are showing the submit button
+                this.authoringComponentContent.showSaveButton = true;
+                this.authoringComponentContent.showSubmitButton = true;
+            }
+
+            /*
+             * notify the parent node that this component is changing its
+             * showSubmitButton value so that it can show save buttons on the
+             * step or sibling components accordingly
+             */
+            this.$scope.$emit('componentShowSubmitButtonValueChanged', { nodeId: this.nodeId, componentId: this.componentId, showSubmitButton: show });
+        }
+
+        /**
+         * The showSubmitButton value has changed
+         */
+
+    }, {
+        key: 'showSubmitButtonValueChanged',
+        value: function showSubmitButtonValueChanged() {
+
+            /*
+             * perform additional processing for when we change the showSubmitButton
+             * value
+             */
+            this.setShowSubmitButtonValue(this.authoringComponentContent.showSubmitButton);
+
+            // the authoring component content has changed so we will save the project
+            this.authoringViewComponentChanged();
+        }
     }]);
 
     return LabelController;

@@ -159,7 +159,7 @@
             {{ 'SHOW_SUBMIT_BUTTON' | translate }}:
             <input type='checkbox'
                    ng-model='drawController.authoringComponentContent.showSubmitButton'
-                   ng-change='drawController.authoringViewComponentChanged()'/>
+                   ng-change='drawController.showSubmitButtonValueChanged()'/>
 
             <br/>
             {{ 'MAX_SCORE' | translate }}:
@@ -353,7 +353,6 @@
         <div ng-if="drawController.isSaveButtonVisible || drawController.isSubmitButtonVisible"
              class="component__actions" layout="row" layout-align="start center">
             <md-button class="md-raised md-primary"
-                       ng-class="{'md-raised': !drawController.isSubmitButtonVisible}"
                        ng-click='drawController.saveButtonClicked()'
                        ng-disabled='drawController.isDisabled || !drawController.isDirty'
                        ng-show='drawController.isSaveButtonVisible'>{{ 'SAVE' | translate }}</md-button>

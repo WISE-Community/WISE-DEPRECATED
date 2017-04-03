@@ -128,6 +128,22 @@ class AudioOscillatorService extends NodeService {
     componentHasWork(component) {
         return true;
     }
+
+    /**
+     * Whether this component uses a save button
+     * @return whether this component uses a save button
+     */
+    componentUsesSaveButton() {
+        return true;
+    }
+
+    /**
+     * Whether this component uses a submit button
+     * @return whether this component uses a submit button
+     */
+    componentUsesSubmitButton() {
+        return true;
+    }
 }
 
 AudioOscillatorService.$inject = [

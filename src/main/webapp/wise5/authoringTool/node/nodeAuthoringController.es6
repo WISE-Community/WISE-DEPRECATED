@@ -4,6 +4,7 @@ class NodeAuthoringController {
 
     constructor($anchorScroll,
                 $filter,
+                $injector,
                 $location,
                 $mdDialog,
                 $scope,
@@ -16,6 +17,7 @@ class NodeAuthoringController {
 
         this.$anchorScroll = $anchorScroll;
         this.$filter = $filter;
+        this.$injector = $injector;
         this.$location = $location;
         this.$mdDialog = $mdDialog;
         this.$scope = $scope;
@@ -420,6 +422,54 @@ class NodeAuthoringController {
 
             // close the popup
             this.$mdDialog.hide();
+        });
+
+        this.$scope.$on('componentShowSubmitButtonValueChanged', (event, args) => {
+            var nodeId = args.nodeId;
+            var componentId = args.componentId;
+            var showSubmitButton = args.showSubmitButton;
+
+            if (showSubmitButton) {
+                /*
+                 * a component is showing their submit button so we will hide
+                 * the step save button and submit buttons
+                 */
+
+                this.node.showSaveButton = false;
+                this.node.showSubmitButton = false;
+
+                // turn on the save buttons for all components in this step
+                this.ProjectService.turnOnSaveButtonInComponents(this.node.id);
+            } else {
+                /*
+                 * a component is hiding their submit button so we may need
+                 * to show the step save button
+                 */
+
+                if (this.ProjectService.doesAnyComponentShowSubmitButton(this.node.id)) {
+                    /*
+                     * there is at least one component in the step that is showing
+                     * their submit button so we will show the save button on
+                     * all the components
+                     */
+
+                    // turn on the save buttons for all components in this step
+                    this.ProjectService.turnOnSaveButtonInComponents(this.node.id);
+                } else {
+                    /*
+                     * no components in this step show their submit button so we
+                     * will show the step save button
+                     */
+                    this.node.showSaveButton = true;
+                    this.node.showSubmitButton = false;
+
+                    // turn off the save buttons for all the components
+                    this.ProjectService.turnOffSaveButtonInComponents(this.node.id);
+                }
+            }
+
+            // save changes
+            this.authoringViewNodeChanged();
         });
     }
 
@@ -840,8 +890,72 @@ class NodeAuthoringController {
             // delete the component from the node
             this.ProjectService.deleteComponent(this.nodeId, componentId);
 
+            if (this.ProjectService.doesAnyComponentShowSubmitButton(this.nodeId)) {
+                /*
+                 * there is a component in this step that is showing their
+                 * submit button
+                 */
+            } else {
+                /*
+                 * there is no component in this step that is showing their
+                 * submit button
+                 */
+
+                if (this.ProjectService.doesAnyComponentHaveWork(this.nodeId)) {
+                    /*
+                     * there is a component that generates work so we will show
+                     * the step save button
+                     */
+                    this.node.showSaveButton = true;
+                    this.node.showSubmitButton = false;
+
+                    // hide the save button in all the components
+                    this.hideAllComponentSaveButtons();
+                } else {
+                    /*
+                     * there are no components in the step that generates work
+                     * so we will not show the step save button
+                     */
+                    this.node.showSaveButton = false;
+                    this.node.showSubmitButton = false;
+                }
+            }
+
             // save the project
             this.ProjectService.saveProject();
+        }
+    }
+
+    /**
+     * Hide the save button in all the components
+     */
+    hideAllComponentSaveButtons() {
+
+        var components = this.components;
+
+        if (components != null) {
+
+            // loop through all the components
+            for (var c = 0; c < components.length; c++) {
+                var component = components[c];
+
+                if (component != null) {
+                    var componentType = component.type;
+
+                    // get the service for the component type
+                    var service = this.$injector.get(componentType + 'Service');
+
+                    if (service != null) {
+                        if (service.componentUsesSaveButton()) {
+                            /*
+                             * this component uses a save button so we will hide
+                             * it
+                             */
+                            component.showSaveButton = false;
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -2249,6 +2363,7 @@ class NodeAuthoringController {
 NodeAuthoringController.$inject = [
     '$anchorScroll',
     '$filter',
+    '$injector',
     '$location',
     '$mdDialog',
     '$scope',
