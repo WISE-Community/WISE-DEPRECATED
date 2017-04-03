@@ -2108,6 +2108,78 @@ class TableController {
         // the authoring component content has changed so we will save the project
         this.authoringViewComponentChanged();
     }
+
+    /**
+     * Make all the cells uneditable
+     */
+    makeAllCellsUneditable() {
+
+        // get the table data
+        var tableData = this.authoringComponentContent.tableData;
+
+        if (tableData != null) {
+
+            // loop through all the rows
+            for (var r = 0; r < tableData.length; r++) {
+                var row = tableData[r];
+
+                if (row != null) {
+
+                    // loop through all the cells in the row
+                    for (var c = 0; c < row.length; c++) {
+
+                        // get a cell
+                        var cell = row[c];
+
+                        if (cell != null) {
+
+                            // make the cell uneditable
+                            cell.editable = false;
+                        }
+                    }
+                }
+            }
+        }
+
+        // the authoring component content has changed so we will save the project
+        this.authoringViewComponentChanged();
+    }
+
+    /**
+     * Make all the cells edtiable
+     */
+    makeAllCellsEditable() {
+
+        // get the table data
+        var tableData = this.authoringComponentContent.tableData;
+
+        if (tableData != null) {
+
+            // loop through all the rows
+            for (var r = 0; r < tableData.length; r++) {
+                var row = tableData[r];
+
+                if (row != null) {
+
+                    // loop through all the cells in the row
+                    for (var c = 0; c < row.length; c++) {
+
+                        // get a cell
+                        var cell = row[c];
+
+                        if (cell != null) {
+
+                            // make the cell editable
+                            cell.editable = true;
+                        }
+                    }
+                }
+            }
+        }
+
+        // the authoring component content has changed so we will save the project
+        this.authoringViewComponentChanged();
+    }
 }
 
 TableController.$inject = [

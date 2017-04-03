@@ -27,14 +27,14 @@
                 <tr>
                     <td style='border: 1px solid black;'></td>
                     <td ng-repeat='x in getNumber(tableController.authoringComponentContent.numColumns) track by $index'style='border: 1px solid black;'>
-                        <button ng-click='tableController.authoringViewInsertColumn($index)'>I</button>
-                        <button ng-click='tableController.authoringViewDeleteColumn($index)'>D</button>
+                        <button ng-click='tableController.authoringViewInsertColumn($index)' title='{{ "table.insertColumn" | translate }}'>+</button>
+                        <button ng-click='tableController.authoringViewDeleteColumn($index)' title='{{ "table.deleteColumn" | translate }}'>x</button>
                     </td>
                 </tr>
                 <tr ng-repeat='row in tableController.authoringComponentContent.tableData'>
                     <td style='border: 1px solid black;'>
-                        <button ng-click='tableController.authoringViewInsertRow($index)'>I</button>
-                        <button ng-click='tableController.authoringViewDeleteRow($index)'>D</button>
+                        <button ng-click='tableController.authoringViewInsertRow($index)' title='{{ "table.insertRow" | translate }}'>+</button>
+                        <button ng-click='tableController.authoringViewDeleteRow($index)' title='{{ "table.deleteRow" | translate }}'>x</button>
                     </td>
                     <td ng-repeat='cell in row' style='border: 1px solid black;'>
                         <input type='text'
@@ -43,8 +43,8 @@
                                ng-change='tableController.authoringViewComponentChanged()'
                                size='20'/>
                         <br/>
-                        U <input type='checkbox' ng-model='cell.editable' ng-checked='!cell.editable' ng-true-value='false' ng-false-value='true' ng-change='tableController.authoringViewComponentChanged()'/>
-                        S <input type='number' ng-model='cell.size'
+                        <span title='{{ "table.uneditable" | translate }}'>{{ "table.uneditableSymbol" | translate }}</span> <input type='checkbox' title='{{ "table.uneditable" | translate }}' ng-model='cell.editable' ng-checked='!cell.editable' ng-true-value='false' ng-false-value='true' ng-change='tableController.authoringViewComponentChanged()'/>
+                        <span title='{{ "table.size" | translate }}'>{{ "table.sizeSymbol" | translate }}</span> <input type='number' title='{{ "table.size" | translate }}' ng-model='cell.size'
                                  ng-model-options='{ debounce: 1000 }'
                                  ng-change='tableController.authoringViewComponentChanged()' size='3' style='width: 3em'/>
                     </td>
@@ -80,6 +80,9 @@
                        ng-model-options='{ debounce: 1000 }'
                        style='width: 3em'/>
                 <br/>
+                <button ng-click='tableController.makeAllCellsUneditable()'>Make All Cells Uneditable</button>
+                <button ng-click='tableController.makeAllCellsEditable()'>Make All Cells Editable</button>
+                </br>
                 <div ng-if='tableController.mode === "authoring"'>
                     {{ 'IMPORT_PREVIOUS_WORK' | translate }}:
                     <input type='checkbox'
