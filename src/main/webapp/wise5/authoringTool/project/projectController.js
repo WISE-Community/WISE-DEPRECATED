@@ -157,14 +157,6 @@ var ProjectController = function () {
     }
 
     _createClass(ProjectController, [{
-        key: 'updateProjectAsText',
-
-
-        // updates projectAsText field, which is the string representation of the project that we'll show in the textarea
-        value: function updateProjectAsText() {
-            this.projectAsText = JSON.stringify(this.ProjectService.project, null, 4);
-        }
-    }, {
         key: 'previewProject',
 
 
@@ -321,7 +313,6 @@ var ProjectController = function () {
              * author decides where to place it
              */
             this.nodeToAdd = newGroup;
-            //this.updateProjectAsText();
 
             // turn off the create group div
             this.showCreateGroup = false;
@@ -352,7 +343,6 @@ var ProjectController = function () {
              * author decides where to place it
              */
             this.nodeToAdd = newNode;
-            //this.updateProjectAsText();
 
             // turn off the create node div
             this.showCreateNode = false;
@@ -1272,13 +1262,33 @@ var ProjectController = function () {
         }
 
         /**
-         * Toggle the import view and load the project drop downs if necessary
+         * Toggle the view to edit project rubric
          */
 
     }, {
         key: 'toggleEditProjectRubricView',
         value: function toggleEditProjectRubricView() {
             this.editProjectRubricMode = !this.editProjectRubricMode;
+        }
+
+        /**
+         * Toggle the view to edit project JSON
+         */
+
+    }, {
+        key: 'toggleEditProjectJSONView',
+        value: function toggleEditProjectJSONView() {
+            this.editProjectJSONMode = !this.editProjectJSONMode;
+            if (this.editProjectJSONMode) {
+                // updates projectAsText field, which is the string representation of the project that we'll show in the textarea
+                this.projectJSONString = angular.toJson(this.ProjectService.project, 4);
+            } else {
+                // save project
+                var project = angular.fromJson(this.projectJSONString);
+                this.ProjectService.setProject(project);
+                // save and refresh the project
+                this.checkPotentialStartNodeIdChangeThenSaveProject();
+            }
         }
 
         /**

@@ -167,11 +167,6 @@ class ProjectController {
         });
     };
 
-    // updates projectAsText field, which is the string representation of the project that we'll show in the textarea
-    updateProjectAsText() {
-        this.projectAsText = JSON.stringify(this.ProjectService.project, null, 4);
-    };
-
     /**
      * Launch the project in preview mode
      */
@@ -292,7 +287,6 @@ class ProjectController {
          * author decides where to place it
          */
         this.nodeToAdd = newGroup;
-        //this.updateProjectAsText();
 
         // turn off the create group div
         this.showCreateGroup = false;
@@ -320,7 +314,6 @@ class ProjectController {
          * author decides where to place it
          */
         this.nodeToAdd = newNode;
-        //this.updateProjectAsText();
 
         // turn off the create node div
         this.showCreateNode = false;
@@ -1151,10 +1144,27 @@ class ProjectController {
     }
 
     /**
-     * Toggle the import view and load the project drop downs if necessary
+     * Toggle the view to edit project rubric
      */
     toggleEditProjectRubricView() {
         this.editProjectRubricMode = !this.editProjectRubricMode;
+    }
+
+    /**
+     * Toggle the view to edit project JSON
+     */
+    toggleEditProjectJSONView() {
+        this.editProjectJSONMode = !this.editProjectJSONMode;
+        if (this.editProjectJSONMode) {
+            // updates projectAsText field, which is the string representation of the project that we'll show in the textarea
+            this.projectJSONString = angular.toJson(this.ProjectService.project, 4);
+        } else {
+            // save project
+            let project = angular.fromJson(this.projectJSONString);
+            this.ProjectService.setProject(project);
+            // save and refresh the project
+            this.checkPotentialStartNodeIdChangeThenSaveProject();
+        }
     }
 
     /**
