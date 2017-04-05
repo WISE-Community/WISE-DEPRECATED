@@ -9,7 +9,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var ComponentGradingController = function () {
-    function ComponentGradingController($filter, $mdDialog, $scope, AnnotationService, ConfigService, TeacherDataService, UtilService) {
+    function ComponentGradingController($filter, $mdDialog, $scope, AnnotationService, ConfigService, ProjectService, TeacherDataService, UtilService) {
         var _this = this;
 
         _classCallCheck(this, ComponentGradingController);
@@ -19,6 +19,7 @@ var ComponentGradingController = function () {
         this.$scope = $scope;
         this.AnnotationService = AnnotationService;
         this.ConfigService = ConfigService;
+        this.ProjectService = ProjectService;
         this.TeacherDataService = TeacherDataService;
         this.UtilService = UtilService;
 
@@ -73,6 +74,11 @@ var ComponentGradingController = function () {
                     }
                 }
             }
+        });
+
+        this.$scope.$on('projectSaved', function (event, args) {
+            // update maxScore
+            _this.maxScore = _this.ProjectService.getMaxScoreForComponent(_this.nodeId, _this.componentId);
         });
     }
 
@@ -298,12 +304,34 @@ var ComponentGradingController = function () {
                 }
             }
         }
+
+        /**
+         * Save the maxScore of this component to the server
+         */
+
+    }, {
+        key: 'updateMaxScore',
+        value: function updateMaxScore() {
+
+            if (this.runId != null && this.periodId != null && this.nodeId != null && this.componentId != null) {
+
+                // get the new maxScore
+                var maxScore = this.maxScore;
+                // convert to number if possible
+                maxScore = this.UtilService.convertStringToNumber(maxScore);
+
+                if (typeof maxScore === 'number' && maxScore >= 0) {
+                    this.ProjectService.setMaxScoreForComponent(this.nodeId, this.componentId, maxScore);
+                    this.ProjectService.saveProject();
+                }
+            }
+        }
     }]);
 
     return ComponentGradingController;
 }();
 
-ComponentGradingController.$inject = ['$filter', '$mdDialog', '$scope', 'AnnotationService', 'ConfigService', 'TeacherDataService', 'UtilService'];
+ComponentGradingController.$inject = ['$filter', '$mdDialog', '$scope', 'AnnotationService', 'ConfigService', 'ProjectService', 'TeacherDataService', 'UtilService'];
 
 var ComponentGrading = {
     bindings: {

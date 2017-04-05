@@ -5282,6 +5282,22 @@ class ProjectService {
     }
 
     /**
+     * Set the max score for a component
+     * @param nodeId set the max score from a component in this node
+     * @param componentId set the max score from this component
+     * @param maxScore set it to this maxScore
+     */
+    setMaxScoreForComponent(nodeId, componentId, maxScore) {
+        if (nodeId != null && componentId != null && maxScore != null && typeof maxScore === 'number') {
+            let component = this.getComponentByNodeIdAndComponentId(nodeId, componentId);
+
+            if (component != null) {
+                component.maxScore = maxScore;
+            }
+        }
+    }
+
+    /**
      * Determine if a node id is a direct child of a group
      * @param nodeId the node id
      * @param groupId the group id

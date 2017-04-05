@@ -6,6 +6,7 @@ class ComponentGradingController {
                 $scope,
                 AnnotationService,
                 ConfigService,
+                ProjectService,
                 TeacherDataService,
                 UtilService,) {
         this.$filter = $filter;
@@ -13,6 +14,7 @@ class ComponentGradingController {
         this.$scope = $scope;
         this.AnnotationService = AnnotationService;
         this.ConfigService = ConfigService;
+        this.ProjectService = ProjectService;
         this.TeacherDataService = TeacherDataService;
         this.UtilService = UtilService;
 
@@ -69,6 +71,12 @@ class ComponentGradingController {
                 }
             }
         });
+
+        this.$scope.$on('projectSaved', (event, args) => {
+            // update maxScore
+            this.maxScore = this.ProjectService.getMaxScoreForComponent(this.nodeId, this.componentId);
+        });
+
     }
 
     processAnnotations() {
@@ -313,6 +321,28 @@ class ComponentGradingController {
             }
         }
     }
+
+    /**
+     * Save the maxScore of this component to the server
+     */
+    updateMaxScore() {
+
+        if (this.runId != null &&
+            this.periodId != null &&
+            this.nodeId != null &&
+            this.componentId != null) {
+
+            // get the new maxScore
+            let maxScore = this.maxScore;
+            // convert to number if possible
+            maxScore = this.UtilService.convertStringToNumber(maxScore);
+
+            if (typeof maxScore === 'number' && maxScore >= 0) {
+                this.ProjectService.setMaxScoreForComponent(this.nodeId, this.componentId, maxScore);
+                this.ProjectService.saveProject();
+            }
+        }
+    }
 }
 
 ComponentGradingController.$inject = [
@@ -321,6 +351,7 @@ ComponentGradingController.$inject = [
     '$scope',
     'AnnotationService',
     'ConfigService',
+    'ProjectService',
     'TeacherDataService',
     'UtilService'
 ];

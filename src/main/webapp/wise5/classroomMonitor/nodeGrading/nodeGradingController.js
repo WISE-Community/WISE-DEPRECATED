@@ -86,6 +86,11 @@ var NodeGradingController = function () {
             document.body.scrollTop = document.documentElement.scrollTop = 0;
         });
 
+        this.$scope.$on('projectSaved', function (event, args) {
+            // update maxScore
+            _this.maxScore = _this.ProjectService.getMaxScoreForNode(_this.nodeId);
+        });
+
         this.$scope.$on('notificationAdded', function (event, notification) {
             if (notification.type === 'CRaterResult') {
                 // there is a new CRaterResult notification
