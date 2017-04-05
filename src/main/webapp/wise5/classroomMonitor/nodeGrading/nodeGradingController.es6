@@ -88,6 +88,11 @@ class NodeGradingController {
             document.body.scrollTop = document.documentElement.scrollTop = 0;
         });
 
+        this.$scope.$on('projectSaved', (event, args) => {
+            // update maxScore
+            this.maxScore = this.ProjectService.getMaxScoreForNode(this.nodeId);
+        });
+
         this.$scope.$on('notificationAdded', (event, notification) => {
             if (notification.type === 'CRaterResult') {
                 // there is a new CRaterResult notification

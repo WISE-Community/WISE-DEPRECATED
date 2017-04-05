@@ -795,10 +795,8 @@ public class InformationController {
 
 				Run run = this.runService.retrieveById(runId);
 				config.put("runName", run.getName());  // set the run name
-				rawProjectUrl = (String) run.getProject().getCurnit().accept(new CurnitGetCurnitUrlVisitor());
-
-				// get the project
-				project = run.getProject();
+				project = run.getProject();  // get the project
+				rawProjectUrl = (String) project.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
 
 				Workgroup workgroup = getWorkgroup(request, run);
 				if (workgroup == null) {
@@ -867,6 +865,12 @@ public class InformationController {
 					config.put("teacherDataURL", wiseBaseURL + "/teacher/data");
 					config.put("runDataExportURL", wiseBaseURL + "/teacher/export");
 					config.put("studentNotebookURL", wiseBaseURL + "/teacher/notebook/" + runId);
+					if ("classroomMonitor".equals(mode)) {
+						// set the saveProjectURL so teachers can set max scores via Classroom Monitor tool
+						String projectId = project.getId().toString();
+						String saveProjectURL = wiseBaseURL + "/project/save/" + projectId;
+						config.put("saveProjectURL", saveProjectURL);
+					}
 				}
 			}
 
