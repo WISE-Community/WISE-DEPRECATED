@@ -384,14 +384,17 @@ class ConfigService {
     };
 
     sortClassmateUserInfosAlphabeticallyByNameHelper(a, b) {
-        var aUserName = a.userName;
-        var bUserName = b.userName;
         var result = 0;
 
-        if (aUserName < bUserName) {
-            result = -1;
-        } else if (aUserName > bUserName) {
-            result = 1;
+        if (a != null && a.userName != null && b != null && b.userName != null) {
+            var aUserName = a.userName.toLowerCase();
+            var bUserName = b.userName.toLowerCase();
+
+            if (aUserName < bUserName) {
+                result = -1;
+            } else if (aUserName > bUserName) {
+                result = 1;
+            }
         }
 
         return result;
