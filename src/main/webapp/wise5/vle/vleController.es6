@@ -554,6 +554,53 @@ class VLEController {
         this.$mdDialog.hide( this.pauseDialog, "finished" );
         this.pauseDialog = undefined;
     }
+
+    /**
+     * Check if the VLE is in preview mode
+     * @return whether the VLE is in preview mode
+     */
+    isPreview() {
+        return this.ConfigService.isPreview();
+    }
+
+    /**
+     * Check if there are any constraints in the project
+     * @return whether there are any constraints in the project
+     */
+    hasConstraints() {
+
+        var hasActiveConstraints = false;
+
+        // get the active constraints
+        var activeConstraints = this.ProjectService.activeConstraints;
+
+        if (activeConstraints != null && activeConstraints.length > 0) {
+            // there are active constraints
+            hasActiveConstraints = true;
+        }
+
+        return hasActiveConstraints;
+    }
+
+    /**
+     * Disable all the constraints
+     */
+    disableConstraints() {
+
+        // check if we are in preview mode
+        if (this.ConfigService.isPreview()) {
+            // we are in preview mode so we will disable all the constraints
+
+            // clear all the active constraints
+            this.ProjectService.activeConstraints = [];
+
+            /*
+             * update the node statuses so that they are re-evaluated now that
+             * all the constraints have been removed
+             */
+            this.StudentDataService.updateNodeStatuses();
+        }
+    }
 }
 
 VLEController.$inject = [
