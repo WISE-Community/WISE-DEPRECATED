@@ -334,10 +334,20 @@ var ProjectService = function () {
                         }
 
                         if (constraints != null) {
-                            for (var c = 0; c < constraints.length; c++) {
-                                var constraint = constraints[c];
 
-                                this.activeConstraints.push(constraint);
+                            if (this.ConfigService.isPreview() == true && this.ConfigService.getConfigParam('constraints') === false) {
+                                /*
+                                 * if we are in preview mode and constraints are set
+                                 * to false, we will not add the constraints
+                                 */
+                            } else {
+                                // all other cases we will add the constraints
+
+                                for (var c = 0; c < constraints.length; c++) {
+                                    var constraint = constraints[c];
+
+                                    this.activeConstraints.push(constraint);
+                                }
                             }
                         }
                     }
