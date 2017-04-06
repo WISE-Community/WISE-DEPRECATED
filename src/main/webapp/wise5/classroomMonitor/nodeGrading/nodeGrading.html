@@ -67,6 +67,7 @@
                         workgroup-data="workgroup"
                         hidden-components="nodeGradingController.hiddenComponents"
                         on-update-hidden="nodeGradingController.onUpdateHiddenComponents(value, event)"
-                        on-update-expand="nodeGradingController.onUpdateExpand(workgroupId, value)"></workgroup-item>
+                        on-update-expand="nodeGradingController.onUpdateExpand(workgroupId, value)"
+                        in-view="nodeGradingController.workgroupInView(workgroup.$key, $inview)"></workgroup-item>
     </md-list>
 </div>

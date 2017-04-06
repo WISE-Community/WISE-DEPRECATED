@@ -66,6 +66,7 @@ var NodeGradingController = function () {
             _this.workgroups = _this.ConfigService.getClassmateUserInfos();
             _this.workgroupsById = {}; // object that will hold workgroup names, statuses, scores, notifications, etc.
             _this.workVisibilityById = {}; // object that specifies whether student work is visible for each workgroup
+            _this.workgroupInViewById = {}; // object that holds whether the workgroup is in view or not
 
             _this.canViewStudentNames = true;
             _this.canGradeStudentWork = true;
@@ -832,12 +833,25 @@ var NodeGradingController = function () {
     }, {
         key: 'expandAll',
         value: function expandAll() {
-            var n = this.workgroups.length;
 
-            for (var i = 0; i < n; i++) {
+            // loop through all the workgroups
+            for (var i = 0; i < this.workgroups.length; i++) {
+
+                // get a workgroup id
                 var id = this.workgroups[i].workgroupId;
-                this.workVisibilityById[id] = true;
+
+                // check if the workgroup is currently in view
+                if (this.workgroupInViewById[id]) {
+                    // the workgroup is currently in view so we will expand it
+                    this.workVisibilityById[id] = true;
+                }
             }
+
+            /*
+             * set the boolean flag to denote that we are currently expanding
+             * all the workgroups
+             */
+            this.isExpandAll = true;
         }
 
         /**
@@ -853,6 +867,12 @@ var NodeGradingController = function () {
                 var id = this.workgroups[i].workgroupId;
                 this.workVisibilityById[id] = false;
             }
+
+            /*
+             * set the boolean flag to denote that we are not currently expanding
+             * all the workgroups
+             */
+            this.isExpandAll = false;
         }
     }, {
         key: 'onUpdateExpand',
@@ -873,6 +893,30 @@ var NodeGradingController = function () {
             this.$timeout(function () {
                 _this2.updateScroll(target, viewportOffsetTop);
             }, 100);
+        }
+
+        /**
+         * A workgroup row has either come into view or gone out of view
+         * @param workgroupId the workgroup id that has come into view or gone out
+         * of view
+         * @param inview whether the row is in view or not
+         */
+
+    }, {
+        key: 'workgroupInView',
+        value: function workgroupInView(workgroupId, inview) {
+
+            // remember whether the workgroup is in view or not
+            this.workgroupInViewById[workgroupId] = inview;
+
+            if (this.isExpandAll) {
+                // we are currently in expand all mode
+
+                if (inview) {
+                    // the workgroup row is in view so we will expand it
+                    this.workVisibilityById[workgroupId] = true;
+                }
+            }
         }
     }]);
 

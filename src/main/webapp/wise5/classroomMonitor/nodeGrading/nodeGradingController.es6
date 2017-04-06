@@ -68,6 +68,7 @@ class NodeGradingController {
             this.workgroups = this.ConfigService.getClassmateUserInfos();
             this.workgroupsById = {}; // object that will hold workgroup names, statuses, scores, notifications, etc.
             this.workVisibilityById = {}; // object that specifies whether student work is visible for each workgroup
+            this.workgroupInViewById = {}; // object that holds whether the workgroup is in view or not
 
             this.canViewStudentNames = true;
             this.canGradeStudentWork = true;
@@ -762,12 +763,25 @@ class NodeGradingController {
      * Expand all workgroups to show student work
      */
     expandAll() {
-        let n = this.workgroups.length;
 
-        for (let i = 0; i < n; i++) {
+        // loop through all the workgroups
+        for (let i = 0; i < this.workgroups.length; i++) {
+
+            // get a workgroup id
             let id = this.workgroups[i].workgroupId;
-            this.workVisibilityById[id] = true;
+
+            // check if the workgroup is currently in view
+            if (this.workgroupInViewById[id]) {
+                // the workgroup is currently in view so we will expand it
+                this.workVisibilityById[id] = true;
+            }
         }
+
+        /*
+         * set the boolean flag to denote that we are currently expanding
+         * all the workgroups
+         */
+        this.isExpandAll = true;
     }
 
     /**
@@ -780,6 +794,12 @@ class NodeGradingController {
             let id = this.workgroups[i].workgroupId;
             this.workVisibilityById[id] = false;
         }
+
+        /*
+         * set the boolean flag to denote that we are not currently expanding
+         * all the workgroups
+         */
+        this.isExpandAll = false;
     }
 
     onUpdateExpand(workgroupId, value) {
@@ -797,6 +817,27 @@ class NodeGradingController {
             this.updateScroll(target, viewportOffsetTop);
         }, 100);
 
+    }
+
+    /**
+     * A workgroup row has either come into view or gone out of view
+     * @param workgroupId the workgroup id that has come into view or gone out
+     * of view
+     * @param inview whether the row is in view or not
+     */
+    workgroupInView(workgroupId, inview) {
+
+        // remember whether the workgroup is in view or not
+        this.workgroupInViewById[workgroupId] = inview;
+
+        if (this.isExpandAll) {
+            // we are currently in expand all mode
+
+            if (inview) {
+                // the workgroup row is in view so we will expand it
+                this.workVisibilityById[workgroupId] = true;
+            }
+        }
     }
 }
 

@@ -4,6 +4,7 @@ import '../themes/default/js/webfonts';
 import $ from 'jquery';
 import angular from 'angular';
 import angularDragula from 'angular-dragula';
+import angularInview from 'angular-inview';
 import angularMoment from 'angular-moment';
 import angularToArrayFilter from 'lib/angular-toArrayFilter/toArrayFilter';
 import angularUIRouter from 'angular-ui-router';
@@ -60,6 +61,7 @@ import moment from 'moment';
 let classroomMonitorModule = angular.module('classroomMonitor', [
         angularDragula(angular),
         'angularMoment',
+        'angular-inview',
         'angular-toArrayFilter',
         'audioOscillatorComponentModule',
         'components',

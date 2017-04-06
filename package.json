@@ -75,6 +75,7 @@
       "angular": "github:angular/bower-angular@^1.5.8",
       "angular-animate": "github:angular/bower-angular-animate@^1.5.8",
       "angular-dragula": "npm:angular-dragula@^1.2.6",
+      "angular-inview": "npm:angular-inview@^2.1.0",
       "angular-material": "github:angular/bower-material@^1.1.1",
       "angular-mocks": "github:angular/bower-angular-mocks@^1.5.8",
       "angular-moment": "npm:angular-moment@^1.0.0-beta.6",

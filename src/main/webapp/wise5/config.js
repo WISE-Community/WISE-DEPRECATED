@@ -12,6 +12,7 @@ System.config({
     "angular": "github:angular/bower-angular@1.5.8",
     "angular-animate": "github:angular/bower-angular-animate@1.5.8",
     "angular-dragula": "npm:angular-dragula@1.2.8",
+    "angular-inview": "npm:angular-inview@2.1.0",
     "angular-material": "github:angular/bower-material@1.1.3",
     "angular-mocks": "github:angular/bower-angular-mocks@1.5.8",
     "angular-moment": "npm:angular-moment@1.0.0",
@@ -116,6 +117,9 @@ System.config({
       "atoa": "npm:atoa@1.0.0",
       "dragula": "npm:dragula@3.7.2",
       "process": "github:jspm/nodelibs-process@0.1.2"
+    },
+    "npm:angular-inview@2.1.0": {
+      "angular": "npm:angular@1.5.8"
     },
     "npm:angular-moment@1.0.0": {
       "moment": "npm:moment@2.16.0"
