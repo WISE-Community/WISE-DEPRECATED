@@ -6,15 +6,13 @@
 
 <ul ng-show="authorNotebookController.project.notebook.enabled">
     <li>{{ 'notebookLabel' | translate }} <input ng-model="authorNotebookController.project.notebook.label" /></li>
+    <li><input type="checkbox" ng-model="authorNotebookController.project.notebook.enableAddNew"/>{{ 'enableAddNoteButton' | translate }}</li>
     <li><input type="checkbox" ng-model="authorNotebookController.project.notebook.itemTypes.note.enabled"/>{{ 'enableNoteItemType' | translate }}</li>
     <ul id="notebookNoteItemType" ng-show="authorNotebookController.project.notebook.itemTypes.note.enabled">
         <li>{{ 'labelSingular' | translate }} <input ng-model="authorNotebookController.project.notebook.itemTypes.note.label.singular" /></li>
         <li>{{ 'labelPlural' | translate }} <input ng-model="authorNotebookController.project.notebook.itemTypes.note.label.plural" /></li>
         <li>{{ 'labelLink' | translate }} <input ng-model="authorNotebookController.project.notebook.itemTypes.note.label.link" /></li>
-        <li><input type="checkbox" ng-model="authorNotebookController.project.notebook.itemTypes.note.enableAddNote"/>{{ 'enableAddNote' | translate }}</li>
-        <ul>
-            <li><input type="checkbox" ng-model="authorNotebookController.project.notebook.itemTypes.note.requireTextOnEveryNote"/>{{ 'requireTextOnEveryNote' | translate }}</li>
-        </ul>
+        <li><input type="checkbox" ng-model="authorNotebookController.project.notebook.itemTypes.note.requireTextOnEveryNote"/>{{ 'requireTextOnEveryNote' | translate }}</li>
         <li><input type="checkbox" ng-model="authorNotebookController.project.notebook.itemTypes.note.enableClipping"/>{{ 'enableClipping' | translate }}</li>
         <li><input type="checkbox" ng-model="authorNotebookController.project.notebook.itemTypes.note.enableStudentUploads"/>{{ 'enableStudentUploads' | translate }}</li>
     </ul>
