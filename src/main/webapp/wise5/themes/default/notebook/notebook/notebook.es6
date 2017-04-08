@@ -244,7 +244,7 @@ const Notebook = {
                              visible="$ctrl.reportVisible"
                              workgroup-id="$ctrl.workgroupId"
                              on-collapse="$ctrl.insertMode=false"
-                             on-set-insert-mode="$ctrl.setInsertMode(value)"></notebook-container>
+                             on-set-insert-mode="$ctrl.setInsertMode(value)"></notebook-report>
         </div>
         <notebook-notes ng-if="$ctrl.config.enabled"
                         notebook="$ctrl.notebook"
