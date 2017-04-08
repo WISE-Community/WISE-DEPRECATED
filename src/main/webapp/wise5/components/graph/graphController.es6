@@ -208,6 +208,10 @@ class GraphController {
                 text: 'Change'
             },
             {
+                value: 'save',
+                text: 'Save'
+            },
+            {
                 value: 'submit',
                 text: 'Submit'
             }
@@ -487,15 +491,36 @@ class GraphController {
                             // get the index of the series that we will put the data into
                             var seriesIndex = connectedComponentParams.seriesIndex;
 
-                            if (seriesIndex != null) {
+                            if (seriesIndex == null) {
+                                seriesIndex = 0;
+                            }
 
-                                var studentDataVersion = this.$scope.graphController.studentDataVersion;
+                            var studentDataVersion = this.$scope.graphController.studentDataVersion;
 
-                                if (studentDataVersion == null || studentDataVersion == 1) {
-                                    // the student data is version 1 which has no trials
+                            if (studentDataVersion == null || studentDataVersion == 1) {
+                                // the student data is version 1 which has no trials
+
+                                // get the series
+                                var series = this.$scope.graphController.series[seriesIndex];
+
+                                if (series == null) {
+                                    // the series is null so we will create a series
+                                    series = {};
+                                    this.$scope.graphController.series[seriesIndex] = series;
+                                }
+
+                                // set the data into the series
+                                series.data = data;
+                            } else {
+                                // the student data is the newer version that has trials
+
+                                // get the active trial
+                                var trial = this.$scope.graphController.activeTrial;
+
+                                if (trial != null && trial.series != null) {
 
                                     // get the series
-                                    var series = this.$scope.graphController.series[seriesIndex];
+                                    var series = trial.series[seriesIndex];
 
                                     if (series == null) {
                                         // the series is null so we will create a series
@@ -505,26 +530,6 @@ class GraphController {
 
                                     // set the data into the series
                                     series.data = data;
-                                } else {
-                                    // the student data is the newer version that has trials
-
-                                    // get the active trial
-                                    var trial = this.$scope.graphController.activeTrial;
-
-                                    if (trial != null && trial.series != null) {
-
-                                        // get the series
-                                        var series = trial.series[seriesIndex];
-
-                                        if (series == null) {
-                                            // the series is null so we will create a series
-                                            series = {};
-                                            this.$scope.graphController.series[seriesIndex] = series;
-                                        }
-
-                                        // set the data into the series
-                                        series.data = data;
-                                    }
                                 }
                             }
 
@@ -551,7 +556,7 @@ class GraphController {
                         var studentData = componentState.studentData;
 
                         // parse the latest trial and set it into the component
-                        this.parseLatestTrial(studentData);
+                        this.parseLatestTrial(studentData, connectedComponentParams);
 
                         /*
                          * notify the controller that the student data has
@@ -3447,91 +3452,12 @@ class GraphController {
     };
 
     /**
-     * Parse the trials and set it into the component
-     * @param studentData the student data object that has a trials field
-     */
-    parseTrials0(studentData) {
-
-        if (studentData != null) {
-
-            // get the trials
-            var trials = studentData.trials;
-
-            if (trials != null) {
-
-                this.trials = [];
-
-                // loop through all the trials in the student data
-                for (var t = 0; t < trials.length; t++) {
-                    var tempTrial = trials[t];
-
-                    if (tempTrial != null) {
-
-                        // create a trial object
-                        var newTrial = {};
-
-                        if (tempTrial.name != null) {
-
-                            // set the trial name
-                            newTrial.name = tempTrial.name;
-                        }
-
-                        if (tempTrial.series != null) {
-
-                            // set the trial series
-                            newTrial.series = [];
-
-                            var tempSeries = tempTrial.series;
-
-                            if (tempSeries != null) {
-
-                                // loop through all the series in the trial
-                                for (var s = 0; s < tempSeries.length; s++) {
-
-                                    // get a single series
-                                    var singleSeries = tempSeries[s];
-
-                                    if (singleSeries != null) {
-
-                                        // get the series name and data
-                                        var seriesName = singleSeries.name;
-                                        var seriesData = singleSeries.data;
-
-                                        // make a series object
-                                        var newSeries = {};
-                                        newSeries.name = seriesName;
-                                        newSeries.data = seriesData;
-                                        newSeries.canEdit = false;
-                                        newSeries.allowPointSelect = false;
-
-                                        // add the series to the trial
-                                        newTrial.series.push(newSeries);
-                                    }
-                                }
-                            }
-                        }
-
-                        // add the trial to the array of trials
-                        this.trials.push(newTrial);
-                    }
-                }
-
-                if (trials.length > 0) {
-                    // make the last trial the active trial
-                    this.activeTrial = this.trials[trials.length - 1];
-                }
-            }
-
-            // redraw the graph so that the active trial gets displayed
-            this.activeTrialChanged();
-        }
-    }
-
-    /**
      * Parse the latest trial and set it into the component
      * @param studentData the student data object that has a trials field
+     * @param params (optional) parameters that specify what to use from the
+     * student data
      */
-    parseLatestTrial(studentData) {
+    parseLatestTrial(studentData, params) {
 
         if (studentData != null) {
 
@@ -3577,7 +3503,6 @@ class GraphController {
                         }
                     }
                 }
-
 
                 // get the trial with the given trial id
                 var latestTrial = this.getTrialById(latestStudentDataTrialId);
@@ -3633,31 +3558,40 @@ class GraphController {
                         // loop through all the series in the trial
                         for (var s = 0; s < tempSeries.length; s++) {
 
-                            // get a single series
-                            var singleSeries = tempSeries[s];
+                            /*
+                             * check if there are any params. if series numbers
+                             * are specified in the params, we will only use
+                             * those series numbers.
+                             */
+                            if (params == null || params.seriesNumbers == null ||
+                                (params.seriesNumbers != null && params.seriesNumbers.indexOf(s) != -1)) {
 
-                            if (singleSeries != null) {
+                                // get a single series
+                                var singleSeries = tempSeries[s];
 
-                                // get the series name and data
-                                var seriesName = singleSeries.name;
-                                var seriesData = singleSeries.data;
-                                var seriesColor = singleSeries.color;
-                                var marker = singleSeries.marker;
+                                if (singleSeries != null) {
 
-                                // make a series object
-                                var newSeries = {};
-                                newSeries.name = seriesName;
-                                newSeries.data = seriesData;
-                                newSeries.color = seriesColor;
-                                newSeries.canEdit = false;
-                                newSeries.allowPointSelect = false;
+                                    // get the series name and data
+                                    var seriesName = singleSeries.name;
+                                    var seriesData = singleSeries.data;
+                                    var seriesColor = singleSeries.color;
+                                    var marker = singleSeries.marker;
 
-                                if (marker != null) {
-                                    newSeries.marker = marker;
+                                    // make a series object
+                                    var newSeries = {};
+                                    newSeries.name = seriesName;
+                                    newSeries.data = seriesData;
+                                    newSeries.color = seriesColor;
+                                    newSeries.canEdit = false;
+                                    newSeries.allowPointSelect = false;
+
+                                    if (marker != null) {
+                                        newSeries.marker = marker;
+                                    }
+
+                                    // add the series to the trial
+                                    latestTrial.series.push(newSeries);
                                 }
-
-                                // add the series to the trial
-                                latestTrial.series.push(newSeries);
                             }
                         }
                     }
@@ -4468,7 +4402,7 @@ class GraphController {
     /**
      * Add a connected component
      */
-    addConnectedComponent() {
+    authoringAddConnectedComponent() {
 
         /*
          * create the new connected component object that will contain a
@@ -4495,7 +4429,7 @@ class GraphController {
      * Delete a connected component
      * @param index the index of the component to delete
      */
-    deleteConnectedComponent(index) {
+    authoringDeleteConnectedComponent(index) {
 
         if (this.authoringComponentContent.connectedComponents != null) {
             this.authoringComponentContent.connectedComponents.splice(index, 1);
@@ -4542,6 +4476,137 @@ class GraphController {
 
         // the authoring component content has changed so we will save the project
         this.authoringViewComponentChanged();
+    }
+
+    /**
+     * Add a connected component series number
+     * @param connectedComponent the connected component object
+     */
+    authoringAddConnectedComponentSeriesNumber(connectedComponent) {
+
+        if (connectedComponent != null) {
+
+            // initialize the series numbers if necessary
+            if (connectedComponent.seriesNumbers == null) {
+                connectedComponent.seriesNumbers = [];
+            }
+
+            // add an empty value into the series numbers
+            connectedComponent.seriesNumbers.push(null);
+
+            // the authoring component content has changed so we will save the project
+            this.authoringViewComponentChanged();
+        }
+    }
+
+    /**
+     * Delete a connected component series number
+     * @param connectedComponent the connected component object
+     * @param seriesNumberIndex the series number index to delete
+     */
+    authoringDeleteConnectedComponentSeriesNumber(connectedComponent, seriesNumberIndex) {
+
+        if (connectedComponent != null) {
+
+            // initialize the series numbers if necessary
+            if (connectedComponent.seriesNumbers == null) {
+                connectedComponent.seriesNumbers = [];
+            }
+
+            // remove the element at the given index
+            connectedComponent.seriesNumbers.splice(seriesNumberIndex, 1);
+
+            // the authoring component content has changed so we will save the project
+            this.authoringViewComponentChanged();
+        }
+    }
+
+    /**
+     * The author has changed a series number
+     * @param connectedComponent the connected component object
+     * @param seriesNumberIndex the series number index to update
+     * @param value the new series number value
+     */
+    authoringConnectedComponentSeriesNumberChanged(connectedComponent, seriesNumberIndex, value) {
+
+        if (connectedComponent != null) {
+
+            // initialize the series numbers if necessary
+            if (connectedComponent.seriesNumbers == null) {
+                connectedComponent.seriesNumbers = [];
+            }
+
+            // make sure the index is in the range of acceptable indexes
+            if (seriesNumberIndex < connectedComponent.seriesNumbers.length) {
+
+                // update the series number at the given index
+                connectedComponent.seriesNumbers[seriesNumberIndex] = value;
+            }
+
+            // the authoring component content has changed so we will save the project
+            this.authoringViewComponentChanged();
+        }
+    }
+
+    /**
+     * Get the connected component type
+     * @param connectedComponent get the component type of this connected component
+     * @return the connected component type
+     */
+    authoringGetConnectedComponentType(connectedComponent) {
+
+        var connectedComponentType = null;
+
+        if (connectedComponent != null) {
+
+            // get the node id and component id of the connected component
+            var nodeId = connectedComponent.nodeId;
+            var componentId = connectedComponent.componentId;
+
+            // get the component
+            var component = this.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
+
+            if (component != null) {
+                // get the component type
+                connectedComponentType = component.type;
+            }
+        }
+
+        return connectedComponentType;
+    }
+
+    /**
+     * The connected component component id has changed
+     * @param connectedComponent the connected component that has changed
+     */
+    authoringConnectedComponentComponentIdChanged(connectedComponent) {
+
+        if (connectedComponent != null) {
+
+            // get the new component type
+            var connectedComponentType = this.authoringGetConnectedComponentType(connectedComponent);
+
+            if (connectedComponentType != 'Embedded') {
+                /*
+                 * the component type is not Embedded so we will remove the
+                 * seriesNumbers field
+                 */
+                delete connectedComponent['seriesNumbers'];
+            }
+
+            if (connectedComponentType != 'Table') {
+                /*
+                 * the component type is not Table so we will remove the
+                 * skipFirstRow, xColumn, and yColumn fields
+                 */
+                delete connectedComponent['skipFirstRow'];
+                delete connectedComponent['xColumn'];
+                delete connectedComponent['yColumn'];
+            }
+
+            // the authoring component content has changed so we will save the project
+            this.authoringViewComponentChanged();
+        }
     }
 }
 

@@ -1,5 +1,6 @@
 {
     "graph.addSeries": "Add Series",
+    "graph.addSeriesNumber": "Add Series Number",
     "graph.areYouSureYouWantToChangeTheGraphType": "Are you sure you want to change the graph type?",
     "graph.areYouSureYouWantToOverwriteTheCurrentLineData": "Are you sure you want to overwrite the current line data?",
     "graph.areYouSureYouWantToResetTheSeries": "Are you sure you want to reset the series?",
@@ -43,6 +44,8 @@
     "graph.selectTrialsToShow": "Select trials to show",
     "graph.selectTrialToEdit": "Select trial to edit",
     "graph.series": "Series",
+    "graph.seriesNumbers": "Series Numbers",
+    "graph.skipFirstRow": "Skip First Row",
     "graph.square": "Square",
     "graph.studentAddingPointToHiddenSeriesMessage": "The series you are trying to add a point to is currently hidden. Please show the series by clicking the series name in the legend and try adding the point again.",
     "graph.symbol": "Symbol",
@@ -55,12 +58,14 @@
     "graph.xAxisLocked": "X Axis Locked",
     "graph.xAxisTitle": "X Axis Title",
     "graph.xAxisUnits": "X Axis Units",
+    "graph.xColumn": "X Column",
     "graph.xMax": "X Max",
     "graph.xMin": "X Min",
     "graph.y": "y",
     "graph.yAxisLocked": "Y Axis Locked",
     "graph.yAxisTitle": "Y Axis Title",
     "graph.yAxisUnits": "Y Axis Units",
+    "graph.yColumn": "Y Column",
     "graph.yMax": "Y Max",
     "graph.yMin": "Y Min"
 }
