@@ -185,12 +185,7 @@ class HTMLController {
                     this.componentContent = this.ProjectService.injectAssetPaths(newValue);
                 }.bind(this), true);
             } else if (this.mode === 'grading') {
-                /*
-                 * do not display the html in the grading tool. we may want to
-                 * change this in the future to allow the teacher to toggle
-                 * seeing the html on and off.
-                 */
-                this.componentContent.html = '';
+                
             } else if (this.mode === 'student') {
                 if (this.componentContent != null) {
                     this.html = this.componentContent.html;
