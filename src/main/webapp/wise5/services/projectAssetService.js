@@ -126,13 +126,13 @@ var ProjectAssetService = function () {
             // get the project content as a string
             var projectJSONString = angular.toJson(this.ProjectService.project);
 
-            // an array to hold the html files that the project uses
-            var usedHtmlFiles = [];
+            // an array to hold the text files that the project uses
+            var allTextFiles = [];
 
             if (assets != null && assets.files != null) {
 
                 /*
-                 * loop through all the asset files to find the html files that
+                 * loop through all the asset files to find the text files that
                  * are actually used in the project
                  */
                 for (var a = 0; a < assets.files.length; a++) {
@@ -141,46 +141,127 @@ var ProjectAssetService = function () {
                     if (asset != null) {
                         var fileName = asset.fileName;
 
-                        // check if the file is an html file
-                        if (this.UtilService.endsWith(fileName, ".html") || this.UtilService.endsWith(fileName, ".htm")) {
-                            // the file is an html file
+                        // check if the file is a text file
+                        if (this.UtilService.endsWith(fileName, ".html") || this.UtilService.endsWith(fileName, ".htm") || this.UtilService.endsWith(fileName, ".js")) {
 
-                            // check if the html file is used in the project
-                            if (projectJSONString.indexOf(fileName) != -1) {
-                                // the file is used in the project
-                                usedHtmlFiles.push(fileName);
-                            }
+                            // the file is a text file
+                            allTextFiles.push(fileName);
                         }
                     }
                 }
             }
 
+            var usedTextFiles = [];
+
             /*
-             * Retrieve all the html files that are used in the project. If there
-             * are not html files that are used in the project, then then() will
+             * Retrieve all the text files that are used in the project. If there
+             * are no text files that are used in the project, the then() will
              * still be called.
              */
-            this.getHtmlFiles(usedHtmlFiles).then(function (htmlFiles) {
+            this.getTextFiles(allTextFiles).then(function (textFiles) {
 
                 /*
-                 * this variable will hold the project json string as well as
-                 * the html file content so we can look for assets that are used
-                 * in the project
+                 * this variable will hold all the text content that is used in
+                 * the project so we can look for asset references to determine
+                 * which assets are used
                  */
-                var allContent = projectJSONString;
+                var allUsedTextContent = projectJSONString;
 
-                // loop through all the html files that are used in the project
-                for (var h = 0; h < htmlFiles.length; h++) {
-                    var htmlFile = htmlFiles[h];
+                /*
+                 * used to keep track of all the text file names that are used in
+                 * the project
+                 */
+                var usedTextFileNames = [];
 
-                    if (htmlFile != null) {
+                /*
+                 * boolean flag that will help us determine if we need to loop
+                 * all the text files again
+                 */
+                var foundNewUsedTextFile = true;
 
-                        // get the html file content
-                        var htmlFileContent = htmlFile.data;
+                /*
+                 * Gather all the content for all the text files that are used.
+                 * We will keep looping until we no longer find anymore new text
+                 * files that are used.
+                 * Say for example whale.html is used in a component in the project.
+                 * whaly.html references whale.js
+                 * In this case the first iteration of the while loop will find
+                 * whale.html is used. Then in the second iteration of the while
+                 * loop, it will find that whale.js is used.
+                 */
+                while (foundNewUsedTextFile) {
 
-                        // add the html file content to our allContent variable
-                        allContent += '\n';
-                        allContent += htmlFileContent;
+                    /*
+                     * reset this to false so that we can tell if a new text file
+                     * is found to be used in this current iteration of the while
+                     * loop
+                     */
+                    foundNewUsedTextFile = false;
+
+                    // loop through all the text files
+                    for (var h = 0; h < textFiles.length; h++) {
+
+                        // get a texzt file object
+                        var textFile = textFiles[h];
+
+                        if (textFile != null) {
+
+                            /*
+                             * get the url to the text file
+                             * e.g. /wise/curriculum/26/assets/whale.html
+                             */
+                            var url = textFile.config.url;
+
+                            // get the file name
+                            var fileName = '';
+
+                            // get the last index of '/'
+                            var lastIndexOfSlash = url.lastIndexOf('/');
+
+                            if (lastIndexOfSlash == -1) {
+                                // the url does not contain a '/'
+                                fileName = url;
+                            } else {
+                                /*
+                                 * the url does contain a '/' so we will get everything
+                                 * after it
+                                 */
+                                fileName = url.substring(lastIndexOfSlash + 1);
+                            }
+
+                            /*
+                             * check if we have already found that this text file
+                             * is used
+                             */
+                            if (usedTextFileNames.indexOf(fileName) == -1) {
+                                /*
+                                 * this is a file name that isn't yet in the array
+                                 * of file names that are used
+                                 */
+
+                                if (allUsedTextContent.indexOf(fileName) != -1) {
+                                    // the file name is referenced in the content
+
+                                    // add the file name to our array of used text file names
+                                    usedTextFileNames.push(fileName);
+
+                                    // get the file content
+                                    var data = textFile.data;
+
+                                    /*
+                                     * add the content of the file to our variable that
+                                     * contains all the used text content
+                                     */
+                                    allUsedTextContent += data;
+
+                                    /*
+                                     * set the boolean flag so that we will iterate
+                                     * the while loop again
+                                     */
+                                    foundNewUsedTextFile = true;
+                                }
+                            }
+                        }
                     }
                 }
 
@@ -193,7 +274,7 @@ var ProjectAssetService = function () {
                         if (asset != null) {
                             var fileName = asset.fileName;
 
-                            if (allContent.indexOf(fileName) != -1) {
+                            if (allUsedTextContent.indexOf(fileName) != -1) {
                                 // the file is used in the project
                                 asset.used = true;
                             } else {
@@ -207,28 +288,28 @@ var ProjectAssetService = function () {
         }
 
         /**
-         * Retrieve html files using a promise all
-         * @param htmlFileNames a list of html file names
-         * @return a promise that will retrieve all the html files
+         * Retrieve text files using a promise all
+         * @param textFileNames a list of text file names
+         * @return a promise that will retrieve all the text files
          */
 
     }, {
-        key: 'getHtmlFiles',
-        value: function getHtmlFiles(htmlFileNames) {
+        key: 'getTextFiles',
+        value: function getTextFiles(textFileNames) {
 
             var promises = [];
 
             // get the project assets path e.g. /wise/curriculum/3/assets
             var projectAssetsDirectoryPath = this.ConfigService.getProjectAssetsDirectoryPath();
 
-            // loop through all the html file names
-            for (var h = 0; h < htmlFileNames.length; h++) {
+            // loop through all the text file names
+            for (var t = 0; t < textFileNames.length; t++) {
 
-                // get an html file name
-                var htmlFileName = htmlFileNames[h];
+                // get an text file name
+                var textFileName = textFileNames[t];
 
-                // create a promise that will return the contents of the html file
-                var promise = this.$http.get(projectAssetsDirectoryPath + '/' + htmlFileName);
+                // create a promise that will return the contents of the text file
+                var promise = this.$http.get(projectAssetsDirectoryPath + '/' + textFileName);
 
                 // add the promise to our list of promises
                 promises.push(promise);
