@@ -197,7 +197,7 @@ let authoringModule = angular.module('authoring', [
                         project: (ProjectService, projectConfig) => {
                             return ProjectService.retrieveProject();
                         },
-                        projectAssets: (ProjectAssetService, projectConfig) => {
+                        projectAssets: (ProjectAssetService, projectConfig, project) => {
                             return ProjectAssetService.retrieveProjectAssets();
                         },
                         language: ($translate, ConfigService, projectConfig) => {

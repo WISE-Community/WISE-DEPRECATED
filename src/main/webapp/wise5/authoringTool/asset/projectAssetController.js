@@ -81,6 +81,9 @@ var ProjectAssetController = function () {
         }, function () {
             _this.sortAssets(_this.assetSortBy);
         });
+
+        // calculate whether the assets are used in the project
+        this.ProjectAssetService.calculateAssetUsage();
     }
 
     _createClass(ProjectAssetController, [{
@@ -145,6 +148,9 @@ var ProjectAssetController = function () {
                 // the user answered yes to delete the file
                 this.ProjectAssetService.deleteAssetItem(assetItem).then(function (newProjectAssets) {
                     _this2.projectAssets = _this2.ProjectAssetService.projectAssets;
+
+                    // calculate whether the assets are used in the project
+                    _this2.ProjectAssetService.calculateAssetUsage();
                 });
             }
         }
@@ -220,6 +226,9 @@ var ProjectAssetController = function () {
                     }
                 }
                 _this3.projectAssets = _this3.ProjectAssetService.projectAssets;
+
+                // calculate whether the assets are used in the project
+                _this3.ProjectAssetService.calculateAssetUsage();
             });
         }
 

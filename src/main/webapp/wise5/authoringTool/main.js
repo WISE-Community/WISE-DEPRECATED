@@ -299,7 +299,7 @@ var authoringModule = _angular2.default.module('authoring', [(0, _angularDragula
             project: function project(ProjectService, projectConfig) {
                 return ProjectService.retrieveProject();
             },
-            projectAssets: function projectAssets(ProjectAssetService, projectConfig) {
+            projectAssets: function projectAssets(ProjectAssetService, projectConfig, project) {
                 return ProjectAssetService.retrieveProjectAssets();
             },
             language: function language($translate, ConfigService, projectConfig) {

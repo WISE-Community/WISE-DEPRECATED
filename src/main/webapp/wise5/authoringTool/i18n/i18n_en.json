@@ -113,6 +113,7 @@
     "notebook": "Notebook",
     "notebookLabel": "Notebook Label",
     "notebookSettings": "Notebook Settings",
+    "notUsed": "Not Used",
     "noUndoAvailable": "There are no changes to undo",
     "numberOfBranchPaths": "Number of Branch Paths",
     "openBranchPathXStepsChooser": "Open Branch Path {{branchNumber}} Steps Chooser",

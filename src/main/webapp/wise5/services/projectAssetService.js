@@ -11,13 +11,14 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var ProjectAssetService = function () {
-    function ProjectAssetService($q, $http, $rootScope, ConfigService, Upload) {
+    function ProjectAssetService($q, $http, $rootScope, ConfigService, ProjectService, Upload) {
         _classCallCheck(this, ProjectAssetService);
 
         this.$q = $q;
         this.$http = $http;
         this.$rootScope = $rootScope;
         this.ConfigService = ConfigService;
+        this.ProjectService = ProjectService;
         this.Upload = Upload;
         this.projectAssets = {};
         this.projectAssetTotalSizeMax = this.ConfigService.getConfigParam('projectAssetTotalSizeMax');
@@ -69,6 +70,7 @@ var ProjectAssetService = function () {
             return this.$http.get(projectAssetURL).then(function (result) {
                 var projectAssetsJSON = result.data;
                 _this2.projectAssets = projectAssetsJSON;
+                _this2.calculateAssetUsage();
                 return projectAssetsJSON;
             });
         }
@@ -105,12 +107,140 @@ var ProjectAssetService = function () {
             });
             return this.$q.all(promises);
         }
+
+        /**
+         * Calculate which assets are used or not used
+         */
+
+    }, {
+        key: 'calculateAssetUsage',
+        value: function calculateAssetUsage() {
+
+            /*
+             * a list of all the project assets. each element in the list is an
+             * object that contains the file name and file size
+             */
+            var assets = this.projectAssets;
+
+            // get the project content as a string
+            var projectJSONString = angular.toJson(this.ProjectService.project);
+
+            // an array to hold the html files that the project uses
+            var usedHtmlFiles = [];
+
+            if (assets != null && assets.files != null) {
+
+                /*
+                 * loop through all the asset files to find the html files that
+                 * are actually used in the project
+                 */
+                for (var a = 0; a < assets.files.length; a++) {
+                    var asset = assets.files[a];
+
+                    if (asset != null) {
+                        var fileName = asset.fileName;
+
+                        // check if the file is an html file
+                        if (fileName.endsWith(".html") || fileName.endsWith(".htm")) {
+                            // the file is an html file
+
+                            // check if the html file is used in the project
+                            if (projectJSONString.indexOf(fileName) != -1) {
+                                // the file is used in the project
+                                usedHtmlFiles.push(fileName);
+                            }
+                        }
+                    }
+                }
+            }
+
+            /*
+             * Retrieve all the html files that are used in the project. If there
+             * are not html files that are used in the project, then then() will
+             * still be called.
+             */
+            this.getHtmlFiles(usedHtmlFiles).then(function (htmlFiles) {
+
+                /*
+                 * this variable will hold the project json string as well as
+                 * the html file content so we can look for assets that are used
+                 * in the project
+                 */
+                var allContent = projectJSONString;
+
+                // loop through all the html files that are used in the project
+                for (var h = 0; h < htmlFiles.length; h++) {
+                    var htmlFile = htmlFiles[h];
+
+                    if (htmlFile != null) {
+
+                        // get the html file content
+                        var htmlFileContent = htmlFile.data;
+
+                        // add the html file content to our allContent variable
+                        allContent += '\n';
+                        allContent += htmlFileContent;
+                    }
+                }
+
+                if (assets != null && assets.files != null) {
+
+                    // loop through all the assets
+                    for (var a = 0; a < assets.files.length; a++) {
+                        var asset = assets.files[a];
+
+                        if (asset != null) {
+                            var fileName = asset.fileName;
+
+                            if (allContent.indexOf(fileName) != -1) {
+                                // the file is used in the project
+                                asset.used = true;
+                            } else {
+                                // the file is not used in the project
+                                asset.used = false;
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        /**
+         * Retrieve html files using a promise all
+         * @param htmlFileNames a list of html file names
+         * @return a promise that will retrieve all the html files
+         */
+
+    }, {
+        key: 'getHtmlFiles',
+        value: function getHtmlFiles(htmlFileNames) {
+
+            var promises = [];
+
+            // get the project assets path e.g. /wise/curriculum/3/assets
+            var projectAssetsDirectoryPath = this.ConfigService.getProjectAssetsDirectoryPath();
+
+            // loop through all the html file names
+            for (var h = 0; h < htmlFileNames.length; h++) {
+
+                // get an html file name
+                var htmlFileName = htmlFileNames[h];
+
+                // create a promise that will return the contents of the html file
+                var promise = this.$http.get(projectAssetsDirectoryPath + '/' + htmlFileName);
+
+                // add the promise to our list of promises
+                promises.push(promise);
+            }
+
+            return this.$q.all(promises);
+        }
     }]);
 
     return ProjectAssetService;
 }();
 
-ProjectAssetService.$inject = ['$q', '$http', '$rootScope', 'ConfigService', 'Upload'];
+ProjectAssetService.$inject = ['$q', '$http', '$rootScope', 'ConfigService', 'ProjectService', 'Upload'];
 
 exports.default = ProjectAssetService;
 //# sourceMappingURL=projectAssetService.js.map

@@ -86,6 +86,9 @@ class ProjectAssetController {
                 this.sortAssets(this.assetSortBy);
             }
         );
+
+        // calculate whether the assets are used in the project
+        this.ProjectAssetService.calculateAssetUsage();
     }
 
     sortAssets(sortBy) {
@@ -142,6 +145,9 @@ class ProjectAssetController {
             // the user answered yes to delete the file
             this.ProjectAssetService.deleteAssetItem(assetItem).then((newProjectAssets) => {
                 this.projectAssets = this.ProjectAssetService.projectAssets;
+
+                // calculate whether the assets are used in the project
+                this.ProjectAssetService.calculateAssetUsage();
             });
         }
     }
@@ -209,6 +215,9 @@ class ProjectAssetController {
                 }
             }
             this.projectAssets = this.ProjectAssetService.projectAssets;
+
+            // calculate whether the assets are used in the project
+            this.ProjectAssetService.calculateAssetUsage();
         });
     }
 

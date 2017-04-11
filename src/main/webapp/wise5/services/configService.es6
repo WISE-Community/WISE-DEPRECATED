@@ -836,9 +836,9 @@ class ConfigService {
      * @return the project assets folder path
      * e.g.
      * with host
-     * http://wise.berkeley.edu/wise/curriculum/3/
+     * http://wise.berkeley.edu/wise/curriculum/3/assets
      * without host
-     * /wise/curriculum/3/
+     * /wise/curriculum/3/assets
      */
     getProjectAssetsDirectoryPath(includeHost) {
         var projectAssetsDirectoryPath = null;
@@ -853,13 +853,13 @@ class ConfigService {
 
                 /*
                  * get the full path including the host
-                 * e.g. http://wise.berkeley.edu/wise/curriculum/3/
+                 * e.g. http://wise.berkeley.edu/wise/curriculum/3/assets
                  */
                 projectAssetsDirectoryPath = host + projectBaseURL + 'assets';
             } else {
                 /*
                  * get the full path not including the host
-                 * e.g. /wise/curriculum/3/
+                 * e.g. /wise/curriculum/3/assets
                  */
                 projectAssetsDirectoryPath = projectBaseURL + 'assets';
             }

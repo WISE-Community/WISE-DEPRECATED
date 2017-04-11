@@ -69,6 +69,9 @@
                     <md-tooltip md-direction="top"><span translate="download"></span></md-tooltip>
                     <md-icon ng-click="projectAssetController.downloadAsset(assetItem)">file_download</md-icon>
                 </span>
+                <span ng-if="assetItem.used === false">
+                    <span style="color:red">({{ 'notUsed' | translate }})</span>
+                </span>
             </li>
         </ul>
     </div>
