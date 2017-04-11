@@ -349,7 +349,7 @@ var AnnotationService = function () {
                     if (annotation != null && annotation.toWorkgroupId == workgroupId) {
 
                         // check that the annotation is a score annotation
-                        if (annotation.type === 'score') {
+                        if (annotation.type === 'score' || annotation.type === "autoScore") {
 
                             var nodeId = annotation.nodeId;
                             var componentId = annotation.componentId;
