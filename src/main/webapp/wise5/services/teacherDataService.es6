@@ -313,7 +313,7 @@ class TeacherDataService {
         }
 
         if (params.getEvents == null) {
-            params.getEvents = true;
+            params.getEvents = false;
         }
 
         if (params.getAnnotations == null) {

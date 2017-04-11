@@ -245,11 +245,11 @@ var NodeGradingController = function () {
             var latestWorkTime = this.getLatestWorkTimeByWorkgroupId(workgroupId);
 
             var latestAnnotationTime = this.getLatestAnnotationTimeByWorkgroupId(workgroupId);
+            var studentStatus = this.StudentStatusService.getStudentStatusForWorkgroupId(workgroupId);
+            var nodeStatus = studentStatus.nodeStatuses[this.nodeId];
 
             if (latestWorkTime) {
                 // workgroup has at least one componentState for this node, so check if node is completed
-                var studentStatus = this.StudentStatusService.getStudentStatusForWorkgroupId(workgroupId);
-                var nodeStatus = studentStatus.nodeStatuses[this.nodeId];
 
                 if (nodeStatus) {
                     isCompleted = nodeStatus.isCompleted;
@@ -257,15 +257,9 @@ var NodeGradingController = function () {
             }
 
             if (!this.ProjectService.nodeHasWork(this.nodeId)) {
-                /*
-                 * the step does not generate any work so we will look for a visit
-                 * event to determine completion
-                 */
-
-                var events = this.TeacherDataService.getEventsByWorkgroupIdAndNodeId(workgroupId, this.nodeId);
-
-                if (events != null && events.length > 0) {
-                    isCompleted = true;
+                // the step does not generate any work so completion = visited
+                if (nodeStatus) {
+                    isCompleted = nodeStatus.isVisited;
                 }
             }
 

@@ -229,13 +229,12 @@ class NodeGradingController {
         // TODO: store this info in the nodeStatus so we don't have to calculate every time?
         let latestWorkTime = this.getLatestWorkTimeByWorkgroupId(workgroupId);
 
-
         let latestAnnotationTime = this.getLatestAnnotationTimeByWorkgroupId(workgroupId);
+        let studentStatus = this.StudentStatusService.getStudentStatusForWorkgroupId(workgroupId);
+        let nodeStatus = studentStatus.nodeStatuses[this.nodeId];
 
         if (latestWorkTime) {
             // workgroup has at least one componentState for this node, so check if node is completed
-            let studentStatus = this.StudentStatusService.getStudentStatusForWorkgroupId(workgroupId);
-            let nodeStatus = studentStatus.nodeStatuses[this.nodeId];
 
             if (nodeStatus) {
                 isCompleted = nodeStatus.isCompleted;
@@ -243,15 +242,9 @@ class NodeGradingController {
         }
 
         if (!this.ProjectService.nodeHasWork(this.nodeId)) {
-            /*
-             * the step does not generate any work so we will look for a visit
-             * event to determine completion
-             */
-
-            var events = this.TeacherDataService.getEventsByWorkgroupIdAndNodeId(workgroupId, this.nodeId);
-
-            if (events != null && events.length > 0) {
-                isCompleted = true;
+            // the step does not generate any work so completion = visited
+            if (nodeStatus) {
+                isCompleted = nodeStatus.isVisited;
             }
         }
 
