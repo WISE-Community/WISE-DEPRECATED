@@ -13,6 +13,10 @@
     }
 }
 
+.nav-contents--root {
+    padding: 6px;
+}
+
 .nav-item__grading {
     background-color: #ffffff;
     margin-bottom: 16px;
@@ -30,4 +34,17 @@
 
 .nav-item__grading__timestamp {
     border-bottom: 1px dotted;
+}
+
+.student-select {
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.workgroup-progress {
+    margin-bottom: 8px;
+
+    @media (min-width: $layout-breakpoint-xs) {
+        margin-bottom: 0;
+    }
 }

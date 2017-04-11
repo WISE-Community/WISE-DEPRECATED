@@ -40,9 +40,17 @@
             </md-list>
         </md-card-content>
         <md-card-footer class="nav-item__more md-body-1" layout="row" layout-align="center center" flex>
-            <nav-item-progress node-completion="$ctrl.getNodeCompletion()" period-name="$ctrl.currentPeriod.periodName"></nav-item-progress>
+            <nav-item-progress node-completion="$ctrl.getNodeCompletion()"
+                               period-name="$ctrl.currentPeriod.periodName"
+                               workgroup="$ctrl.currentWorkgroup"></nav-item-progress>
             <span flex></span>
-            <workgroups-on-node node-title="$ctrl.nodeTitle" workgroups="$ctrl.workgroupsOnNodeData" online="$ctrl.isWorkgroupOnlineOnNode"></workgroups-on-node>
+            <nav-item-score ng-if="$ctrl.currentWorkgroup"
+                            max-score="$ctrl.maxScore"
+                            average-score="$ctrl.getNodeAverageScore()"></nav-item-score>
+            <workgroups-on-node ng-if="!$ctrl.currentWorkgroup"
+                                node-title="$ctrl.nodeTitle"
+                                workgroups="$ctrl.workgroupsOnNodeData"
+                                online="$ctrl.isWorkgroupOnlineOnNode"></workgroups-on-node>
         </md-card-footer>
     </md-card>
 
@@ -55,11 +63,20 @@
             <md-icon md-font-set="{{$ctrl.icon.fontSet}}" class="md-light">{{$ctrl.icon.fontName}}</md-icon>
         </div>
         <p flex layout="row" layout-align="start center">
-            <span>{{ $ctrl.nodeTitle }}</span> <alert-status-icon has-alert="$ctrl.hasAlert" has-new-alert="$ctrl.newAlert"></alert-status-icon>
+            <span>{{ $ctrl.nodeTitle }}</span>&nbsp;
+            <node-completion-icon ng-if="$ctrl.currentWorkgroup" node-status="$ctrl.currentNodeStatus"></node-completion-icon>
+            <alert-status-icon has-alert="$ctrl.hasAlert" has-new-alert="$ctrl.newAlert"></alert-status-icon>
             <span flex></span>
-            <nav-item-score max-score="$ctrl.maxScore" average-score="$ctrl.getNodeAverageScore()"></nav-item-score>
-            <nav-item-progress node-completion="$ctrl.getNodeCompletion()" period-name="$ctrl.currentPeriod.periodName"></nav-item-progress>
-            <workgroups-on-node node-title="$ctrl.nodeTitle"
+            <nav-item-score ng-class="{'nav-item--list__info-item': !$ctrl.currentWorkgroup}"
+                            max-score="$ctrl.maxScore"
+                            average-score="$ctrl.getNodeAverageScore()"></nav-item-score>
+            <nav-item-progress class="nav-item--list__info-item"
+                               ng-if="!$ctrl.currentWorkgroup"
+                               node-completion="$ctrl.getNodeCompletion()"
+                               period-name="$ctrl.currentPeriod.periodName"
+                               workgroup="$ctrl.currentWorkgroup"></nav-item-progress>
+            <workgroups-on-node ng-if="!$ctrl.currentWorkgroup"
+                                node-title="$ctrl.nodeTitle"
                                 workgroups="$ctrl.workgroupsOnNodeData"
                                 online="$ctrl.isWorkgroupOnlineOnNode"></workgroups-on-node>
         </p>

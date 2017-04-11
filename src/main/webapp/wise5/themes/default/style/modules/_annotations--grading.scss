@@ -1,7 +1,7 @@
 .annotations--grading {
     //margin: 8px 2px 4px;
     //padding: 12px 8px 8px;
-    border: 1px solid color('primary');
+    border: 2px solid color('primary');
     background-color: lighten(color('primary'), 58%);
 
     margin: 8px 0 0;
@@ -27,7 +27,7 @@
 .annotations--grading__score {
     @media only screen and (min-width: $layout-breakpoint-xs) {
         margin-left: 16px;
-        min-width: 108px;
+        //min-width: 108px;
     }
 
     input {
@@ -36,13 +36,19 @@
     }
 }
 
+.annotations--grading__score__max {
+    margin-left: 8px;
+}
+
 .annotations--grading__score__label {
     transform: none !important;
+    width: auto;
+    display: block;
     padding: 0;
     margin: 3px 0 8px;
 }
 
-.annotations--grading__score__max {
+.annotations--grading__score__divider {
     position: relative;
     top: 12px;
     margin-left: 4px;
@@ -50,7 +56,5 @@
 
 .annotations--grading__auto-comment {
     margin: 12px 4px 16px;
-    padding: 0 8px;
-    //color: color('text-secondary');
-    border-left: 3px solid color('text-disabled');
+    //border-left: 3px solid color('gray-light');
 }

@@ -845,12 +845,8 @@ var TeacherDataService = function () {
             var previousPeriod = this.currentPeriod;
             this.currentPeriod = period;
 
-            if (period.periodId !== -1 && this.currentWorkgroup) {
-                if (this.currentWorkgroup.periodId !== period.periodId) {
-                    // currentWorkgroup is not in currentPeriod, so set currentWorkgroup to null
-                    this.currentWorkgroup = null;
-                }
-            }
+            // whenever the current period is set, clear the currently selected workgroup
+            this.setCurrentWorkgroup(null);
 
             // broadcast the event that the current period has changed
             this.$rootScope.$broadcast('currentPeriodChanged', { previousPeriod: previousPeriod, currentPeriod: this.currentPeriod });
@@ -869,6 +865,9 @@ var TeacherDataService = function () {
         key: 'setCurrentWorkgroup',
         value: function setCurrentWorkgroup(workgroup) {
             this.currentWorkgroup = workgroup;
+
+            // broadcast the event that the current workgroup has changed
+            this.$rootScope.$broadcast('currentWorkgroupChanged', { currentWorkgroup: this.currentWorkgroup });
         }
     }, {
         key: 'getCurrentWorkgroup',

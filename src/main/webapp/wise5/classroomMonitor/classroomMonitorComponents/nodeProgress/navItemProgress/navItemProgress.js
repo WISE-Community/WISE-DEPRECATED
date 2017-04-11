@@ -6,9 +6,10 @@ Object.defineProperty(exports, "__esModule", {
 var NavItemProgress = {
     bindings: {
         nodeCompletion: '<',
-        periodName: '<'
+        periodName: '<',
+        workgroup: '<'
     },
-    template: '<span class="nav-item--list__info-item"s>\n            <span layout="row" layout-align="start center">\n                <span class="progress-wrapper" tabindex="0">\n                    <md-progress-linear class="nav-item__progress" md-mode="determinate" value="{{$ctrl.nodeCompletion}}"></md-progress-linear>\n                    <md-tooltip ng-switch on="$ctrl.periodName" md-direction="top">\n                        <span ng-switch-when="All" translate="periodAllPercentCompleted" translate-value-percent="{{$ctrl.nodeCompletion}}" />\n                        <span ng-switch-default translate="periodPercentCompleted" translate-values="{period: {{$ctrl.periodName}}, percent: {{$ctrl.nodeCompletion}}}" />\n                    </md-tooltip>\n                </span>\n                <span class="nav-item__progress-value md-body-2 text-secondary">{{$ctrl.nodeCompletion}}%</span>\n            </span>\n        </span>'
+    template: '<span layout="row" layout-align="start center">\n            <span class="progress-wrapper" tabindex="0">\n                <md-progress-linear class="nav-item__progress" md-mode="determinate" value="{{$ctrl.nodeCompletion}}"></md-progress-linear>\n                <md-progress-linear class="nav-item__progress" md-mode="determinate" value="{{$ctrl.nodeCompletion}}"></md-progress-linear>\n                <md-tooltip ng-if="!$ctrl.workgroup" ng-switch on="$ctrl.periodName" md-direction="top">\n                    <span ng-switch-when="All" translate="percentCompletedPeriodAll" translate-value-percent="{{$ctrl.nodeCompletion}}" />\n                    <span ng-switch-default translate="percentCompletedPeriod" translate-values="{period: {{$ctrl.periodName}}, percent: {{$ctrl.nodeCompletion}}}" />\n                </md-tooltip>\n                <md-tooltip ng-if="$ctrl.workgroup" md-direction="top">\n                    <span translate="percentCompleted" translate-value-percent="{{$ctrl.nodeCompletion}}" />\n                </md-tooltip>\n            </span>\n            <span class="nav-item__progress-value md-body-2 text-secondary">{{$ctrl.nodeCompletion}}%</span>\n        </span>'
 };
 
 exports.default = NavItemProgress;
