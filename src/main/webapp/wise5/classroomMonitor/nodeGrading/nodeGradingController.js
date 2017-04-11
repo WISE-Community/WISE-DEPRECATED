@@ -561,7 +561,17 @@ var NodeGradingController = function () {
             // get the average score for the node
             var averageScore = this.StudentStatusService.getNodeAverageScore(this.nodeId, periodId);
 
-            return averageScore === null ? 'N/A' : this.$filter('number')(averageScore, 1);
+            if (averageScore === null) {
+                averageScore = 'N/A';
+            } else {
+                if (averageScore % 1 !== 0) {
+                    averageScore = this.$filter('number')(averageScore, 1);
+                } else {
+                    averageScore = averageScore;
+                }
+            }
+
+            return averageScore;
         }
 
         /**
@@ -892,7 +902,7 @@ var NodeGradingController = function () {
 
             this.$timeout(function () {
                 _this2.updateScroll(target, viewportOffsetTop);
-            }, 100);
+            }, 200);
         }
 
         /**

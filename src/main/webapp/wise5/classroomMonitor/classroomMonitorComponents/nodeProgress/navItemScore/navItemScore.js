@@ -25,8 +25,14 @@ var NavItemScoreController = function NavItemScoreController($filter) {
             if (typeof _this.maxScore === 'number') {
                 // there is a max score
                 if (typeof _this.averageScore === 'number') {
-                    // there is and average score
-                    averageScore = _this.averageScore > 0 ? _this.$filter('number')(_this.averageScore, 1) : 0;
+                    // there is an average score
+                    if (_this.averageScore >= 0) {
+                        if (_this.averageScore % 1 !== 0) {
+                            averageScore = _this.$filter('number')(_this.averageScore, 1);
+                        } else {
+                            averageScore = _this.averageScore;
+                        }
+                    }
                 } else {
                     averageScore = "-";
                 }
@@ -34,7 +40,13 @@ var NavItemScoreController = function NavItemScoreController($filter) {
                 _this.averageScoreDisplay = averageScore + '/' + _this.maxScore;
             } else {
                 // there is no max score
-                averageScore = _this.averageScore > 0 ? _this.$filter('number')(_this.averageScore, 1) : 0;
+                if (_this.averageScore >= 0) {
+                    if (_this.averageScore % 1 !== 0) {
+                        averageScore = _this.$filter('number')(_this.averageScore, 1);
+                    } else {
+                        averageScore = _this.averageScore;
+                    }
+                }
                 // create the average score display e.g. 8/0
                 _this.averageScoreDisplay = averageScore + '/0';
             }
@@ -51,7 +63,7 @@ var NavItemScore = {
         averageScore: '<',
         maxScore: '<'
     },
-    template: '<span class="nav-item--list__info-item" ng-if="$ctrl.showScore">\n            <md-icon class="score"> grade </md-icon>\n            <span class="md-body-2 text-secondary">{{$ctrl.averageScoreDisplay}}</span>\n        </span>',
+    template: '<span ng-if="$ctrl.showScore">\n            <md-icon class="score"> grade </md-icon>\n            <span class="md-body-2 text-secondary">{{$ctrl.averageScoreDisplay}}</span>\n        </span>',
     controller: NavItemScoreController
 };
 

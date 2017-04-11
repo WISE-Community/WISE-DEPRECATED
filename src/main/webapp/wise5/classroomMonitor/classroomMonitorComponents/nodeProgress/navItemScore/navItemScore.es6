@@ -16,8 +16,14 @@ class NavItemScoreController {
                 if (typeof this.maxScore === 'number') {
                     // there is a max score
                     if (typeof this.averageScore === 'number') {
-                        // there is and average score
-                        averageScore = this.averageScore > 0 ? this.$filter('number')(this.averageScore, 1) : 0;
+                        // there is an average score
+                        if (this.averageScore >= 0) {
+                            if (this.averageScore % 1 !== 0) {
+                                averageScore = this.$filter('number')(this.averageScore, 1);
+                            } else {
+                                averageScore = this.averageScore;
+                            }
+                        }
                     } else {
                         averageScore = "-";
                     }
@@ -25,7 +31,13 @@ class NavItemScoreController {
                     this.averageScoreDisplay = averageScore + '/' + this.maxScore;
                 } else {
                     // there is no max score
-                    averageScore = this.averageScore > 0 ? this.$filter('number')(this.averageScore, 1) : 0;
+                    if (this.averageScore >= 0) {
+                        if (this.averageScore % 1 !== 0) {
+                            averageScore = this.$filter('number')(this.averageScore, 1);
+                        } else {
+                            averageScore = this.averageScore;
+                        }
+                    }
                     // create the average score display e.g. 8/0
                     this.averageScoreDisplay = averageScore + '/0';
                 }
@@ -46,7 +58,7 @@ const NavItemScore = {
         maxScore: '<'
     },
     template:
-        `<span class="nav-item--list__info-item" ng-if="$ctrl.showScore">
+        `<span ng-if="$ctrl.showScore">
             <md-icon class="score"> grade </md-icon>
             <span class="md-body-2 text-secondary">{{$ctrl.averageScoreDisplay}}</span>
         </span>`,

@@ -507,7 +507,17 @@ class NodeGradingController {
         // get the average score for the node
         let averageScore = this.StudentStatusService.getNodeAverageScore(this.nodeId, periodId);
 
-        return (averageScore === null ? 'N/A' : this.$filter('number')(averageScore, 1));
+        if (averageScore === null) {
+            averageScore = 'N/A';
+        } else {
+            if (averageScore % 1 !== 0) {
+                averageScore = this.$filter('number')(averageScore, 1);
+            } else {
+                averageScore = averageScore;
+            }
+        }
+
+        return averageScore;
     }
 
     /**
@@ -815,7 +825,7 @@ class NodeGradingController {
 
         this.$timeout(() => {
             this.updateScroll(target, viewportOffsetTop);
-        }, 100);
+        }, 200);
 
     }
 
