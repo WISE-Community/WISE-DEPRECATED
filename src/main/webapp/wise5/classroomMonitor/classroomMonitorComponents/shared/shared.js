@@ -14,6 +14,10 @@ var _alertStatusIcon = require('./alertStatusIcon/alertStatusIcon');
 
 var _alertStatusIcon2 = _interopRequireDefault(_alertStatusIcon);
 
+var _nodeCompletionIcon = require('./nodeCompletionIcon/nodeCompletionIcon');
+
+var _nodeCompletionIcon2 = _interopRequireDefault(_nodeCompletionIcon);
+
 var _periodSelect = require('./periodSelect/periodSelect');
 
 var _periodSelect2 = _interopRequireDefault(_periodSelect);
@@ -33,6 +37,7 @@ var Shared = angular.module('shared', []);
 //Shared.component('accountMenu', AccountMenu);
 Shared.component('alertStatusCorner', _alertStatusCorner2.default);
 Shared.component('alertStatusIcon', _alertStatusIcon2.default);
+Shared.component('nodeCompletionIcon', _nodeCompletionIcon2.default);
 Shared.component('periodSelect', _periodSelect2.default);
 Shared.component('workgroupComponentRevisions', _workgroupComponentRevisions2.default);
 Shared.component('workgroupSelect', _workgroupSelect2.default);

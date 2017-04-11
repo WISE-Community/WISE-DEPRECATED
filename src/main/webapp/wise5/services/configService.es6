@@ -537,6 +537,20 @@ class ConfigService {
         return userName;
     };
 
+    getDisplayNamesByWorkgroupId(workgroupId) {
+        var displayNames = null;
+
+        if (workgroupId != null) {
+            var userInfo = this.getUserInfoByWorkgroupId(workgroupId);
+
+            if (userInfo != null) {
+                displayNames = userInfo.displayNames;
+            }
+        }
+
+        return displayNames;
+    };
+
     getUserNamesByWorkgroupId(workgroupId) {
         let userNamesObjects = [];
 

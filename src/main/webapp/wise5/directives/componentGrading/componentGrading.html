@@ -38,9 +38,9 @@
             <md-input-container class="input-container md-block md-no-float"
                                 ng-show="$ctrl.edit || !$ctrl.showAutoComment()"
                                 flex>
-                <label class="input-label md-no-float" ng-disabled="!$ctrl.active"><md-icon class="md-accent">account_box</md-icon>
-                    <span ng-if="$ctrl.comment">{{ 'TEACHER_COMMENT' | translate }}</span>
-                    <span ng-if="!$ctrl.comment">{{ 'SEND_COMMENT' | translate }}</span>
+                <label class="input-label md-no-float" ng-disabled="!$ctrl.active">
+                    <md-icon class="md-accent">account_box</md-icon>
+                    {{ 'TEACHER_COMMENT' | translate }}
                 </label>
                 <div class="input-wrapper">
                     <textarea md-detect-hidden
@@ -56,10 +56,7 @@
             <md-input-container class="md-no-float">
                 <label class="input-label annotations--grading__score__label">
                     <span ng-if="$ctrl.latestAnnotations.score.type === 'autoScore'">{{ 'AUTO_SCORE' | translate }}</span>
-                    <span ng-if="$ctrl.latestAnnotations.score.type !== 'autoScore'">
-                        <span ng-if="$ctrl.score != null">{{ 'SCORE' | translate }}</span>
-                        <span ng-if="$ctrl.score == null">{{ 'SET_SCORE' | translate }}</span>
-                    </span>
+                    <span ng-if="$ctrl.latestAnnotations.score.type !== 'autoScore'">{{ 'SCORE' | translate }}</span>
                 </label>
                 <input type="number"
                        placeholder="0"
@@ -68,18 +65,17 @@
                        ng-disabled="!$ctrl.active"
                        ng-change="$ctrl.postAnnotation('score')"
                        ng-model-options="{ debounce: 5000 }">
-                <span class="annotations--grading__score__max md-subhead text-secondary"> / </span>
+                <span class="annotations--grading__score__divider md-subhead text-secondary"> / </span>
             </md-input-container>
-            <md-input-container class="md-no-float">
-                <label class="input-label annotations--grading__score__label">{{ 'MAX_SCORE' | translate }}
-                </label>
+            <md-input-container class="md-no-float annotations--grading__score__max">
+                <label class="input-label annotations--grading__score__label">{{ 'MAX' | translate }}</label>
                 <input type="number"
-                           placeholder="0"
-                           min="0"
-                           ng-model="$ctrl.maxScore"
-                           ng-disabled="!$ctrl.active"
-                           ng-change="$ctrl.updateMaxScore()"
-                           ng-model-options="{ debounce: 5000 }">
+                       placeholder="0"
+                       min="0"
+                       ng-model="$ctrl.maxScore"
+                       ng-disabled="!$ctrl.active"
+                       ng-change="$ctrl.updateMaxScore()"
+                       ng-model-options="{ debounce: 5000 }">
             </md-input-container>
         </div>
     </div>

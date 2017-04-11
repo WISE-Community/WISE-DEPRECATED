@@ -19,7 +19,12 @@ class NodeProgressController {
         this.TeacherWebSocketService = TeacherWebSocketService;
         this.currentGroup = null;
 
+        // the current workgroup
+        this.currentWorkgroup = this.TeacherDataService.getCurrentWorkgroup();
+
         this.items = this.ProjectService.idToOrder;
+
+        this.maxScore = this.ProjectService.getMaxScore();
 
         this.nodeId = null;
         let stateParams = null;
@@ -106,6 +111,11 @@ class NodeProgressController {
             this.isPaused = this.TeacherDataService.isPeriodPaused(currentPeriod.periodId);
         });
 
+        // listen for the currentWorkgroupChanged event
+        this.$scope.$on('currentWorkgroupChanged', (event, args) => {
+            this.currentWorkgroup = args.currentWorkgroup;
+        });
+
         /**
          * Listen for state change event
          */
@@ -125,10 +135,47 @@ class NodeProgressController {
             }
         });
 
+        this.$scope.$on('$destroy', () => {
+            // set the currently selected workgroup to null on state exit
+            this.TeacherDataService.setCurrentWorkgroup(null);
+        });
+
         // save event when node progress view is displayed
         let context = "ClassroomMonitor", nodeId = this.nodeId, componentId = null, componentType = null,
             category = "Navigation", event = "nodeProgressViewDisplayed", data = { nodeId: this.nodeId };
         this.TeacherDataService.saveEvent(context, nodeId, componentId, componentType, category, event, data);
+    }
+
+    /**
+     * Gets and returns the studentStatus object for the currently selected workgroup
+     * @return studentStatus object or null
+     */
+    getCurrentWorkgroupCompletion() {
+        let completion = null;
+
+        if (this.currentWorkgroup) {
+            // get the workgroup's studentStatus
+            let status = this.StudentStatusService.getStudentStatusForWorkgroupId(this.currentWorkgroup.workgroupId);
+            if (status) {
+                completion = status.projectCompletion;
+            }
+        }
+
+        return completion;
+    }
+
+    /**
+     * Gets and returns the total project score for the currently selected workgroup
+     * @return score object or null
+     */
+    getCurrentWorkgroupScore() {
+        let score = null;
+
+        if (this.currentWorkgroup) {
+            score = this.TeacherDataService.getTotalScoreByWorkgroupId(this.currentWorkgroup.workgroupId);
+        }
+
+        return score;
     }
 
     isGroupNode(nodeId) {

@@ -316,7 +316,8 @@ const NotebookReport = {
                         <span flex></span>
                         <md-button aria-label="{{'toggleFullScreen' | translate}}" title="{{'toggleFullScreen' | translate}}" class="md-icon-button notebook-tools--full"
                                    ng-click="$ctrl.fullscreen()">
-                            <md-icon> zoom_out_map </md-icon>
+                            <md-icon ng-if="!$ctrl.full || $ctrl.collapsed"> fullscreen </md-icon>
+                            <md-icon ng-if="$ctrl.full && !$ctrl.collapsed"> fullscreen_exit </md-icon>
                         </md-button>
                         <md-button aria-label="{{'collapse' | translate}}" title="{{'collapse' | translate}}" class="md-icon-button"
                                    ng-if="!$ctrl.collapsed" ng-click="$event.stopPropagation(); $ctrl.collapse()">

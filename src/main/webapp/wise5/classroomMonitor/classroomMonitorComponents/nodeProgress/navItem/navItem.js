@@ -9,7 +9,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var NavItemController = function () {
-    function NavItemController($element, $filter, $mdDialog, $rootScope, $scope, $state, ConfigService, NodeService, NotificationService, ProjectService, StudentDataService, StudentStatusService, TeacherDataService, TeacherWebSocketService) {
+    function NavItemController($element, $filter, $mdDialog, $rootScope, $scope, $state, AnnotationService, ConfigService, NodeService, NotificationService, ProjectService, StudentDataService, StudentStatusService, TeacherDataService, TeacherWebSocketService) {
         var _this = this;
 
         _classCallCheck(this, NavItemController);
@@ -20,6 +20,7 @@ var NavItemController = function () {
         this.$rootScope = $rootScope;
         this.$scope = $scope;
         this.$state = $state;
+        this.AnnotationService = AnnotationService;
         this.ConfigService = ConfigService;
         this.NodeService = NodeService;
         this.NotificationService = NotificationService;
@@ -43,6 +44,10 @@ var NavItemController = function () {
 
         // the current period
         this.currentPeriod = this.TeacherDataService.getCurrentPeriod();
+
+        // the current workgroup
+        this.currentWorkgroup = this.TeacherDataService.getCurrentWorkgroup();
+        this.setCurrentNodeStatus();
 
         // the max score for the node
         this.maxScore = this.ProjectService.getMaxScoreForNode(this.nodeId);
@@ -153,12 +158,20 @@ var NavItemController = function () {
         // listen for the studentStatusReceived event
         this.$rootScope.$on('studentStatusReceived', function (event, args) {
             _this.setWorkgroupsOnNodeData();
+            _this.setCurrentNodeStatus();
         });
 
         // listen for the currentPeriodChanged event
         this.$rootScope.$on('currentPeriodChanged', function (event, args) {
             _this.currentPeriod = args.currentPeriod;
             _this.setWorkgroupsOnNodeData();
+            _this.getAlertNotifications();
+        });
+
+        // listen for the currentWorkgroupChanged event
+        this.$rootScope.$on('currentWorkgroupChanged', function (event, args) {
+            _this.currentWorkgroup = args.currentWorkgroup;
+            _this.setCurrentNodeStatus();
             _this.getAlertNotifications();
         });
     }
@@ -297,36 +310,48 @@ var NavItemController = function () {
         }
 
         /**
-         * Get the percentage of the class or period that has completed this node
-         * @returns the percentage of the class or period that has completed the node
+         * Get the percentage of the node that the class, period, or workgroup has completed
+         * @returns the percentage of the node that the class, period, or workgroup has completed
          */
 
     }, {
         key: 'getNodeCompletion',
         value: function getNodeCompletion() {
-            // get the currently selected period
-            var periodId = this.currentPeriod.periodId;
+            if (this.currentWorkgroup) {
+                // get the percentage of the node that the workgroup has completed
+                return this.currentNodeStatus.progress.completionPct;
+            } else {
+                // there is no currently selected workgroup, so get the currently selected period
+                var periodId = this.currentPeriod.periodId;
 
-            // get the percentage of the class or period that has completed the node
-            var completionPercentage = this.StudentStatusService.getNodeCompletion(this.nodeId, periodId);
+                // et the percentage of the node that the class or period has completed
+                return this.StudentStatusService.getNodeCompletion(this.nodeId, periodId);
+            }
 
             return completionPercentage;
         }
 
         /**
          * Get the average score for the node
-         * @param nodeId the node id
          * @returns the average score for the node
          */
 
     }, {
         key: 'getNodeAverageScore',
         value: function getNodeAverageScore() {
-            // get the currently selected period
-            var periodId = this.currentPeriod.periodId;
+            // get the currently seleceted workgroupId
+            var workgroupId = this.currentWorkgroup ? this.currentWorkgroup.workgroupId : null;
 
-            // get and return the average score for the node
-            return this.StudentStatusService.getNodeAverageScore(this.nodeId, periodId);
+            if (workgroupId) {
+                // get and return score for currently selected workgroup
+                return this.AnnotationService.getScore(workgroupId, this.nodeId);
+            } else {
+                // there is no currently selected workgroup, so get the currently selected period
+                var periodId = this.currentPeriod.periodId;
+
+                // get and return the average score for the node
+                return this.StudentStatusService.getNodeAverageScore(this.nodeId, periodId);
+            }
         }
 
         /**
@@ -371,14 +396,27 @@ var NavItemController = function () {
             this.isWorkgroupOnlineOnNode = workgroupOnlineOnNode;
         }
     }, {
+        key: 'setCurrentNodeStatus',
+        value: function setCurrentNodeStatus() {
+            if (this.currentWorkgroup) {
+                // get the workgroup's studentStatus
+                var studentStatus = this.StudentStatusService.getStudentStatusForWorkgroupId(this.currentWorkgroup.workgroupId);
+
+                // get the percentage of the node that the workgroup has completed
+                this.currentNodeStatus = studentStatus.nodeStatuses[this.nodeId];
+            }
+        }
+    }, {
         key: 'getAlertNotifications',
         value: function getAlertNotifications() {
             // get the currently selected period
             var periodId = this.currentPeriod.periodId;
+            var workgroupId = this.currentWorkgroup ? this.currentWorkgroup.workgroupId : null;
 
             var args = {};
             args.nodeId = this.nodeId;
             args.periodId = periodId;
+            args.workgroupId = workgroupId;
             this.alertNotifications = this.NotificationService.getAlertNotifications(args);
 
             this.hasAlert = this.alertNotifications.length > 0;
@@ -406,7 +444,7 @@ var NavItemController = function () {
     return NavItemController;
 }();
 
-NavItemController.$inject = ['$element', '$filter', '$mdDialog', '$rootScope', '$scope', '$state', 'ConfigService', 'NodeService', 'NotificationService', 'ProjectService', 'StudentDataService', 'StudentStatusService', 'TeacherDataService', 'TeacherWebSocketService'];
+NavItemController.$inject = ['$element', '$filter', '$mdDialog', '$rootScope', '$scope', '$state', 'AnnotationService', 'ConfigService', 'NodeService', 'NotificationService', 'ProjectService', 'StudentDataService', 'StudentStatusService', 'TeacherDataService', 'TeacherWebSocketService'];
 
 var NavItem = {
     bindings: {

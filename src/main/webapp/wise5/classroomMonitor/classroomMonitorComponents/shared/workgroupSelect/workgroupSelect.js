@@ -19,6 +19,7 @@ var WorkgroupSelectController = function () {
         this.TeacherDataService = TeacherDataService;
 
         this.$onInit = function () {
+            _this.canViewStudentNames = _this.ConfigService.getPermissions().canViewStudentNames;
             _this.workgroups = _this.ConfigService.getClassmateUserInfos();
             _this.periodId = _this.TeacherDataService.getCurrentPeriod().periodId;
             _this.selectedItem = _this.getCurrentWorkgroup();
@@ -29,33 +30,8 @@ var WorkgroupSelectController = function () {
          */
         this.$scope.$on('currentPeriodChanged', function (event, args) {
             _this.periodId = args.currentPeriod.periodId;
-
-            if (_this.selectedItem) {
-                if (_this.periodId !== -1 && _this.periodId !== _this.selectedItem.periodId) {
-                    _this.selectedItem = null;
-                    _this.setCurrentWorkgroup(null);
-                }
-            }
+            _this.selectedItem = _this.getCurrentWorkgroup();
         });
-
-        /**
-         * Listen for current period changed event
-         */
-        //this.$scope.$on('currentWorkgroupChanged', (event, args) => {
-        //this.currentWorkgroup = args.currentWorkgroup;
-        //});
-
-        /*this.$onChanges = (changesObj) => {
-            if (changesObj.periodId) {
-                let currentPeriodId = changesObj.periodId.currentValue;
-                if (this.selectedItem) {
-                    if (currentPeriodId !== -1 && currentPeriodId !== this.selectedItem.periodId) {
-                        this.selectedItem = null;
-                        this.setCurrentWorkgroup(null);
-                    }
-                }
-            }
-        };*/
     }
 
     _createClass(WorkgroupSelectController, [{
@@ -82,7 +58,7 @@ var WorkgroupSelectController = function () {
         }
 
         /**
-         * Return workgroups with username(s) content that query text matches
+         * Return workgroups with username text that query string matches
          * @param query String to search for
          * @return Array of workgroups
          */
@@ -98,8 +74,28 @@ var WorkgroupSelectController = function () {
                 var periodId = workgroup.periodId;
                 if (this.periodId === -1 || periodId === this.periodId) {
                     var displayNames = workgroup.displayNames;
-                    if (displayNames.search(new RegExp(query, 'i')) > -1 || !query) {
-                        items.push(workgroup);
+
+                    if (!this.byTeam && this.canViewStudentNames) {
+                        var names = displayNames.split(',');
+                        var l = names.length;
+                        for (var x = 0; x < l; x++) {
+                            var name = names[x].trim();
+                            // get the index of the first empty space
+                            var indexOfSpace = name.indexOf(' ');
+                            // get the student first name e.g. "Spongebob"
+                            var firstName = name.substring(0, indexOfSpace);
+                            var lastName = name.substring(indexOfSpace + 1);
+
+                            var current = angular.copy(workgroup);
+                            current.displayNames = lastName + ', ' + firstName;
+                            if (current.displayNames.search(new RegExp(query, 'i')) > -1 || !query) {
+                                items.push(current);
+                            }
+                        }
+                    } else {
+                        if (displayNames.search(new RegExp(query, 'i')) > -1 || !query) {
+                            items.push(workgroup);
+                        }
                     }
                 }
             }
@@ -119,8 +115,10 @@ var WorkgroupSelectController = function () {
 WorkgroupSelectController.$inject = ['$scope', 'ConfigService', 'TeacherDataService'];
 
 var WorkgroupSelect = {
-    bindings: {},
-    template: '<md-autocomplete class="autocomplete"\n                          md-no-cache="true"\n                          md-selected-item="$ctrl.selectedItem"\n                          md-search-text="$ctrl.searchText"\n                          md-selected-item-change="$ctrl.selectedItemChange()"\n                          md-items="workgroup in $ctrl.querySearch($ctrl.searchText) | orderBy: \'displayNames\'"\n                          md-item-text="workgroup.displayNames"\n                          md-min-length="0"\n                          ng-init="$ctrl.searchText=$ctrl.selectedItem.displayNames"\n                          placeholder="{{\'findATeam\' | translate}}">\n            <md-item-template>\n                <span md-highlight-text="$ctrl.searchText" md-highlight-flags="ig">{{workgroup.displayNames}}</span>\n            </md-item-template>\n            <md-not-found>\n                {{\'noMatchesFound\' | translate}}\n            </md-not-found>\n        </md-autocomplete>',
+    bindings: {
+        byTeam: '<'
+    },
+    template: '<md-autocomplete class="autocomplete"\n                          md-no-cache="true"\n                          md-selected-item="$ctrl.selectedItem"\n                          md-search-text="$ctrl.searchText"\n                          md-selected-item-change="$ctrl.selectedItemChange()"\n                          md-items="workgroup in $ctrl.querySearch($ctrl.searchText) | orderBy: \'displayNames\'"\n                          md-item-text="workgroup.displayNames"\n                          md-min-length="0"\n                          ng-init="$ctrl.searchText=$ctrl.selectedItem.displayNames"\n                          placeholder="{{\'findAStudent\' | translate}}"\n                          title="{{\'findAStudent\' | translate}}">\n            <md-item-template>\n                <span md-highlight-text="$ctrl.searchText" md-highlight-flags="ig">{{workgroup.displayNames}}</span>\n            </md-item-template>\n            <md-not-found>\n                {{\'noMatchesFound\' | translate}}\n            </md-not-found>\n        </md-autocomplete>',
     controller: WorkgroupSelectController
 };
 

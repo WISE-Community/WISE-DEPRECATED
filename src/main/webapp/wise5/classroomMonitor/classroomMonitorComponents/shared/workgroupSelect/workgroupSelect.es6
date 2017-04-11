@@ -9,6 +9,7 @@ class WorkgroupSelectController {
         this.TeacherDataService = TeacherDataService;
 
         this.$onInit = () => {
+            this.canViewStudentNames = this.ConfigService.getPermissions().canViewStudentNames;
             this.workgroups = this.ConfigService.getClassmateUserInfos();
             this.periodId = this.TeacherDataService.getCurrentPeriod().periodId;
             this.selectedItem = this.getCurrentWorkgroup();
@@ -19,33 +20,8 @@ class WorkgroupSelectController {
          */
         this.$scope.$on('currentPeriodChanged', (event, args) => {
             this.periodId = args.currentPeriod.periodId;
-
-            if (this.selectedItem) {
-                if (this.periodId !== -1 && this.periodId !== this.selectedItem.periodId) {
-                    this.selectedItem = null;
-                    this.setCurrentWorkgroup(null);
-                }
-            }
+            this.selectedItem = this.getCurrentWorkgroup();
         });
-
-        /**
-         * Listen for current period changed event
-         */
-        //this.$scope.$on('currentWorkgroupChanged', (event, args) => {
-            //this.currentWorkgroup = args.currentWorkgroup;
-        //});
-
-        /*this.$onChanges = (changesObj) => {
-            if (changesObj.periodId) {
-                let currentPeriodId = changesObj.periodId.currentValue;
-                if (this.selectedItem) {
-                    if (currentPeriodId !== -1 && currentPeriodId !== this.selectedItem.periodId) {
-                        this.selectedItem = null;
-                        this.setCurrentWorkgroup(null);
-                    }
-                }
-            }
-        };*/
     };
 
     /**
@@ -65,7 +41,7 @@ class WorkgroupSelectController {
     }
 
     /**
-     * Return workgroups with username(s) content that query text matches
+     * Return workgroups with username text that query string matches
      * @param query String to search for
      * @return Array of workgroups
      */
@@ -78,8 +54,28 @@ class WorkgroupSelectController {
             let periodId = workgroup.periodId;
             if (this.periodId === -1 || periodId === this.periodId) {
                 let displayNames = workgroup.displayNames;
-                if (displayNames.search(new RegExp(query, 'i')) > -1 || !query) {
-                    items.push(workgroup);
+
+                if (!this.byTeam && this.canViewStudentNames) {
+                    let names = displayNames.split(',');
+                    let l = names.length;
+                    for (let x = 0; x < l; x++) {
+                        let name = names[x].trim();
+                        // get the index of the first empty space
+                        let indexOfSpace = name.indexOf(' ');
+                        // get the student first name e.g. "Spongebob"
+                        let firstName = name.substring(0, indexOfSpace);
+                        let lastName = name.substring(indexOfSpace+1);
+
+                        let current = angular.copy(workgroup);
+                        current.displayNames = lastName + ', ' + firstName;
+                        if (current.displayNames.search(new RegExp(query, 'i')) > -1 || !query) {
+                            items.push(current);
+                        }
+                    }
+                } else {
+                    if (displayNames.search(new RegExp(query, 'i')) > -1 || !query) {
+                        items.push(workgroup);
+                    }
                 }
             }
         }
@@ -99,7 +95,9 @@ WorkgroupSelectController.$inject = [
 ];
 
 const WorkgroupSelect = {
-    bindings: {},
+    bindings: {
+        byTeam: '<'
+    },
     template:
         `<md-autocomplete class="autocomplete"
                           md-no-cache="true"
@@ -110,7 +108,8 @@ const WorkgroupSelect = {
                           md-item-text="workgroup.displayNames"
                           md-min-length="0"
                           ng-init="$ctrl.searchText=$ctrl.selectedItem.displayNames"
-                          placeholder="{{'findATeam' | translate}}">
+                          placeholder="{{'findAStudent' | translate}}"
+                          title="{{'findAStudent' | translate}}">
             <md-item-template>
                 <span md-highlight-text="$ctrl.searchText" md-highlight-flags="ig">{{workgroup.displayNames}}</span>
             </md-item-template>

@@ -7,6 +7,7 @@ class NavItemController {
                 $rootScope,
                 $scope,
                 $state,
+                AnnotationService,
                 ConfigService,
                 NodeService,
                 NotificationService,
@@ -22,6 +23,7 @@ class NavItemController {
         this.$rootScope = $rootScope;
         this.$scope = $scope;
         this.$state = $state;
+        this.AnnotationService = AnnotationService;
         this.ConfigService = ConfigService;
         this.NodeService = NodeService;
         this.NotificationService = NotificationService;
@@ -45,6 +47,10 @@ class NavItemController {
 
         // the current period
         this.currentPeriod = this.TeacherDataService.getCurrentPeriod();
+
+        // the current workgroup
+        this.currentWorkgroup = this.TeacherDataService.getCurrentWorkgroup();
+        this.setCurrentNodeStatus();
 
         // the max score for the node
         this.maxScore = this.ProjectService.getMaxScoreForNode(this.nodeId);
@@ -157,12 +163,20 @@ class NavItemController {
         // listen for the studentStatusReceived event
         this.$rootScope.$on('studentStatusReceived', (event, args) => {
             this.setWorkgroupsOnNodeData();
+            this.setCurrentNodeStatus();
         });
 
         // listen for the currentPeriodChanged event
         this.$rootScope.$on('currentPeriodChanged', (event, args) => {
             this.currentPeriod = args.currentPeriod;
             this.setWorkgroupsOnNodeData();
+            this.getAlertNotifications();
+        });
+
+        // listen for the currentWorkgroupChanged event
+        this.$rootScope.$on('currentWorkgroupChanged', (event, args) => {
+            this.currentWorkgroup = args.currentWorkgroup;
+            this.setCurrentNodeStatus();
             this.getAlertNotifications();
         });
     }
@@ -284,30 +298,42 @@ class NavItemController {
     }
 
     /**
-     * Get the percentage of the class or period that has completed this node
-     * @returns the percentage of the class or period that has completed the node
+     * Get the percentage of the node that the class, period, or workgroup has completed
+     * @returns the percentage of the node that the class, period, or workgroup has completed
      */
     getNodeCompletion() {
-        // get the currently selected period
-        let periodId = this.currentPeriod.periodId;
+        if (this.currentWorkgroup) {
+            // get the percentage of the node that the workgroup has completed
+            return this.currentNodeStatus.progress.completionPct;
+        } else {
+            // there is no currently selected workgroup, so get the currently selected period
+            let periodId = this.currentPeriod.periodId;
 
-        // get the percentage of the class or period that has completed the node
-        let completionPercentage = this.StudentStatusService.getNodeCompletion(this.nodeId, periodId);
+            // et the percentage of the node that the class or period has completed
+            return this.StudentStatusService.getNodeCompletion(this.nodeId, periodId);
+        }
 
         return completionPercentage;
     }
 
     /**
      * Get the average score for the node
-     * @param nodeId the node id
      * @returns the average score for the node
      */
     getNodeAverageScore() {
-        // get the currently selected period
-        let periodId = this.currentPeriod.periodId;
+        // get the currently seleceted workgroupId
+        let workgroupId = this.currentWorkgroup ? this.currentWorkgroup.workgroupId : null;
 
-        // get and return the average score for the node
-        return this.StudentStatusService.getNodeAverageScore(this.nodeId, periodId);
+        if (workgroupId) {
+            // get and return score for currently selected workgroup
+            return this.AnnotationService.getScore(workgroupId, this.nodeId);
+        } else {
+            // there is no currently selected workgroup, so get the currently selected period
+            let periodId = this.currentPeriod.periodId;
+
+            // get and return the average score for the node
+            return this.StudentStatusService.getNodeAverageScore(this.nodeId, periodId);
+        }
     }
 
     /**
@@ -321,7 +347,6 @@ class NavItemController {
         // get the workgroups that are on the node in the period
         return this.StudentStatusService.getWorkgroupIdsOnNode(this.nodeId, periodId);
     }
-
 
     setWorkgroupsOnNodeData() {
         let workgroupIdsOnNode = this.getWorkgroupIdsOnNode();
@@ -349,13 +374,25 @@ class NavItemController {
         this.isWorkgroupOnlineOnNode = workgroupOnlineOnNode;
     }
 
+    setCurrentNodeStatus() {
+        if (this.currentWorkgroup) {
+            // get the workgroup's studentStatus
+            let studentStatus = this.StudentStatusService.getStudentStatusForWorkgroupId(this.currentWorkgroup.workgroupId);
+
+            // get the percentage of the node that the workgroup has completed
+            this.currentNodeStatus = studentStatus.nodeStatuses[this.nodeId];
+        }
+    }
+
     getAlertNotifications() {
         // get the currently selected period
         let periodId = this.currentPeriod.periodId;
+        let workgroupId = this.currentWorkgroup ? this.currentWorkgroup.workgroupId : null;
 
         let args = {};
         args.nodeId = this.nodeId;
         args.periodId = periodId;
+        args.workgroupId = workgroupId;
         this.alertNotifications = this.NotificationService.getAlertNotifications(args);
 
         this.hasAlert = (this.alertNotifications.length > 0);
@@ -386,6 +423,7 @@ NavItemController.$inject = [
     '$rootScope',
     '$scope',
     '$state',
+    'AnnotationService',
     'ConfigService',
     'NodeService',
     'NotificationService',

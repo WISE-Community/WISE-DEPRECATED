@@ -608,6 +608,21 @@ var ConfigService = function () {
             return userName;
         }
     }, {
+        key: 'getDisplayNamesByWorkgroupId',
+        value: function getDisplayNamesByWorkgroupId(workgroupId) {
+            var displayNames = null;
+
+            if (workgroupId != null) {
+                var userInfo = this.getUserInfoByWorkgroupId(workgroupId);
+
+                if (userInfo != null) {
+                    displayNames = userInfo.displayNames;
+                }
+            }
+
+            return displayNames;
+        }
+    }, {
         key: 'getUserNamesByWorkgroupId',
         value: function getUserNamesByWorkgroupId(workgroupId) {
             var userNamesObjects = [];
