@@ -11,7 +11,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var ProjectAssetService = function () {
-    function ProjectAssetService($q, $http, $rootScope, ConfigService, ProjectService, Upload) {
+    function ProjectAssetService($q, $http, $rootScope, ConfigService, ProjectService, Upload, UtilService) {
         _classCallCheck(this, ProjectAssetService);
 
         this.$q = $q;
@@ -20,6 +20,7 @@ var ProjectAssetService = function () {
         this.ConfigService = ConfigService;
         this.ProjectService = ProjectService;
         this.Upload = Upload;
+        this.UtilService = UtilService;
         this.projectAssets = {};
         this.projectAssetTotalSizeMax = this.ConfigService.getConfigParam('projectAssetTotalSizeMax');
         this.projectAssetUsagePercentage = 0;
@@ -141,7 +142,7 @@ var ProjectAssetService = function () {
                         var fileName = asset.fileName;
 
                         // check if the file is an html file
-                        if (fileName.endsWith(".html") || fileName.endsWith(".htm")) {
+                        if (this.UtilService.endsWith(fileName, ".html") || this.UtilService.endsWith(fileName, ".htm")) {
                             // the file is an html file
 
                             // check if the html file is used in the project
@@ -240,7 +241,7 @@ var ProjectAssetService = function () {
     return ProjectAssetService;
 }();
 
-ProjectAssetService.$inject = ['$q', '$http', '$rootScope', 'ConfigService', 'ProjectService', 'Upload'];
+ProjectAssetService.$inject = ['$q', '$http', '$rootScope', 'ConfigService', 'ProjectService', 'Upload', 'UtilService'];
 
 exports.default = ProjectAssetService;
 //# sourceMappingURL=projectAssetService.js.map

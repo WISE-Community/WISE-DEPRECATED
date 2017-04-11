@@ -624,6 +624,22 @@ class UtilService {
 
         return text;
     }
+
+    /**
+     * Check if a string ends with a specific string
+     * @param subjectString the main string
+     * @param searchString the potential end of the string
+     * @param position (optional) the position to start searching
+     * @return whether the subjectString ends with the searchString
+     */
+    endsWith(subjectString, searchString, position) {
+        if (typeof position !== 'number' || !isFinite(position) || Math.floor(position) !== position || position > subjectString.length) {
+            position = subjectString.length;
+        }
+        position -= searchString.length;
+        var lastIndex = subjectString.lastIndexOf(searchString, position);
+        return lastIndex !== -1 && lastIndex === position;
+    }
 }
 
 // Get the last element of the array

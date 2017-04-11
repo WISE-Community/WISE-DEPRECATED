@@ -1,11 +1,12 @@
 class ProjectAssetService {
-    constructor($q, $http, $rootScope, ConfigService, ProjectService, Upload) {
+    constructor($q, $http, $rootScope, ConfigService, ProjectService, Upload, UtilService) {
         this.$q = $q;
         this.$http = $http;
         this.$rootScope = $rootScope;
         this.ConfigService = ConfigService;
         this.ProjectService = ProjectService;
         this.Upload = Upload;
+        this.UtilService = UtilService;
         this.projectAssets = {};
         this.projectAssetTotalSizeMax = this.ConfigService.getConfigParam('projectAssetTotalSizeMax');
         this.projectAssetUsagePercentage = 0;
@@ -114,7 +115,7 @@ class ProjectAssetService {
                     var fileName = asset.fileName;
 
                     // check if the file is an html file
-                    if (fileName.endsWith(".html") || fileName.endsWith(".htm")) {
+                    if (this.UtilService.endsWith(fileName, ".html") || this.UtilService.endsWith(fileName, ".htm")) {
                         // the file is an html file
 
                         // check if the html file is used in the project
@@ -213,7 +214,8 @@ ProjectAssetService.$inject = [
     '$rootScope',
     'ConfigService',
     'ProjectService',
-    'Upload'
+    'Upload',
+    'UtilService'
 ];
 
 export default ProjectAssetService;
