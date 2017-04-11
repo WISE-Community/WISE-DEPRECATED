@@ -3442,7 +3442,7 @@
                     "enableTrials": false,
                     "canCreateNewTrials": false,
                     "canDeleteTrials": false,
-                    "showAllTrialsOnNewTrial": false,
+                    "hideAllTrialsOnNewTrial": false,
                     "xAxis": {
                         "title": {
                             "text": "Time (seconds)"
@@ -3494,7 +3494,7 @@
                     "enableTrials": true,
                     "canCreateNewTrials": true,
                     "canDeleteTrials": true,
-                    "showAllTrialsOnNewTrial": false,
+                    "hideAllTrialsOnNewTrial": false,
                     "xAxis": {
                         "title": {
                             "text": "Time (seconds)"
