@@ -908,8 +908,9 @@ class OpenResponseController {
                         componentState.annotations = [];
 
                         // get the CRater score
-                        var score = data.score;
-                        var concepts = data.concepts;
+                        let score = data.score;
+                        let concepts = data.concepts;
+                        let previousScore = null;
 
                         if (score != null) {
 
@@ -927,8 +928,6 @@ class OpenResponseController {
                             if (this.$scope.$parent.nodeController != null) {
                                 // get the previous score and comment annotations
                                 let latestAnnotations = this.$scope.$parent.nodeController.getLatestComponentAnnotations(this.componentId);
-
-                                let previousScore = null;
 
                                 if (latestAnnotations != null && latestAnnotations.score != null &&
                                     latestAnnotations.score.data != null) {

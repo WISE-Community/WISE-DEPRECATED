@@ -56,8 +56,8 @@ describe('WISE Classroom Monitor', function () {
                 // check for elements on the page
                 expect(element(by.xpath('//button[@aria-label="Classroom Monitor menu"]')).isPresent()).toBeTruthy();
                 //expect(element(by.xpath('//a[@aria-label="View Dashboard"]')).isPresent()).toBeTruthy();
-                expect(element(by.xpath('//a[@aria-label="View Project Status"]')).isPresent()).toBeTruthy();
-                expect(element(by.xpath('//a[@aria-label="View Student Progress"]')).isPresent()).toBeTruthy();
+                expect(element(by.xpath('//a[@aria-label="Grading & Feedback"]')).isPresent()).toBeTruthy();
+                expect(element(by.xpath('//a[@aria-label="Student Summary"]')).isPresent()).toBeTruthy();
                 expect(element(by.xpath('//md-switch[@aria-label="Lock student screens switch"]')).isPresent()).toBeTruthy();
 
                 var notificationButton = element(by.xpath('//button[@aria-label="View notifications"]'));
