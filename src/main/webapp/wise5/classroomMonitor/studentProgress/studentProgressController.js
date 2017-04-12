@@ -359,6 +359,12 @@ var StudentProgressController = function () {
 
             return workgroupsSorted;
         }
+    }, {
+        key: 'showWorkgroupProjectView',
+        value: function showWorkgroupProjectView(workgroup) {
+            this.TeacherDataService.setCurrentWorkgroup(workgroup);
+            this.$state.go('root.nodeProgress');
+        }
     }]);
 
     return StudentProgressController;

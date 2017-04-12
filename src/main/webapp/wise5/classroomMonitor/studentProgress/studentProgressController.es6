@@ -20,7 +20,7 @@ class StudentProgressController {
         this.TeacherWebSocketService = TeacherWebSocketService;
 
         this.teacherWorkgroupId = this.ConfigService.getWorkgroupId();
-        
+
         this.studentsOnline = this.TeacherWebSocketService.getStudentsOnline();
 
         this.workgroups = this.sortWorkgroupsByOnline();
@@ -28,13 +28,13 @@ class StudentProgressController {
         this.studentStatuses = this.StudentStatusService.getStudentStatuses();
 
         this.maxScore = this.ProjectService.getMaxScore();
-        
+
         this.canViewStudentNames = true;
         this.canGradeStudentWork = true;
-        
+
         // get the role of the teacher for the run e.g. 'owner', 'write', 'read'
         var role = this.ConfigService.getTeacherRole(this.teacherWorkgroupId);
-        
+
         if (role === 'owner') {
             // the teacher is the owner of the run and has full access
             this.canViewStudentNames = true;
@@ -325,6 +325,11 @@ class StudentProgressController {
         var workgroupsSorted = workgroupsOnline.concat(workgroupsOffline);
 
         return workgroupsSorted;
+    }
+
+    showWorkgroupProjectView(workgroup) {
+        this.TeacherDataService.setCurrentWorkgroup(workgroup);
+        this.$state.go('root.nodeProgress');
     }
 }
 
