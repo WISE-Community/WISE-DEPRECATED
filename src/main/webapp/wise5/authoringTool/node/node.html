@@ -269,6 +269,7 @@ TODO: implement me. Allow authors to view assets while authoring node conent. Pe
                                ng-change='nodeAuthoringController.authoringViewNodeChanged()'
                                aria-label="TransitionCriteriaNode"
                                style="margin-left:30px; width:600px">
+                        <md-option value="''">(Please Choose a Step)</md-option>
                         <md-option ng-repeat="item in projectController.items | toArray | orderBy : 'order'"
                                    value="{{ item.$key }}"
                                    ng-class="{'node-select-option--group': projectController.isGroupNode(item.$key), 'node-select-option--node': !projectController.isGroupNode(item.$key)}">
@@ -287,6 +288,7 @@ TODO: implement me. Allow authors to view assets while authoring node conent. Pe
                                ng-change='nodeAuthoringController.authoringViewNodeChanged()'
                                aria-label="TransitionCriteriaComponent"
                                style="margin-left:30px; width:600px">
+                        <md-option ng-value="''">(Please Choose a Component)</md-option>
                         <md-option ng-repeat="component in projectController.getComponentsByNodeId(criteria.params.nodeId)"
                                    value="{{ component.id }}">
                         <span layout="row" layout-align="start center">

@@ -117,6 +117,8 @@
     "noUndoAvailable": "There are no changes to undo",
     "numberOfBranchPaths": "Number of Branch Paths",
     "openBranchPathXStepsChooser": "Open Branch Path {{branchNumber}} Steps Chooser",
+    "pleaseChooseAnAction": "Please Choose an Action",
+    "pleaseChooseARemovalCriteria": "Please Choose a Removal Criteria",
     "preview": "Preview",
     "previewProject": "Preview Project",
     "previewProjectWithoutConstraints": "Preview Project Without Constraints",

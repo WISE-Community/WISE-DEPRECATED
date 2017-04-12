@@ -44,45 +44,53 @@ class NodeAuthoringController {
         // the available constraint actions
         this.constraintActions = [
             {
-                value: "makeThisNodeNotVisible",
-                text: this.$translate('makeThisNodeNotVisible')
-            },
-            {
-                value: "makeThisNodeNotVisitable",
-                text: this.$translate('makeThisNodeNotVisitable')
-            },
-            {
-                value: "makeAllNodesAfterThisNotVisible",
-                text: this.$translate('makeAllNodesAfterThisNotVisible')
+                value: "",
+                text: this.$translate('pleaseChooseAnAction')
             },
             {
                 value: "makeAllNodesAfterThisNotVisitable",
                 text: this.$translate('makeAllNodesAfterThisNotVisitable')
             },
             {
-                value: "makeAllOtherNodesNotVisible",
-                text: this.$translate('makeAllOtherNodesNotVisible')
+                value: "makeAllNodesAfterThisNotVisible",
+                text: this.$translate('makeAllNodesAfterThisNotVisible')
             },
             {
                 value: "makeAllOtherNodesNotVisitable",
                 text: this.$translate('makeAllOtherNodesNotVisitable')
+            },
+            {
+                value: "makeAllOtherNodesNotVisible",
+                text: this.$translate('makeAllOtherNodesNotVisible')
+            },
+            {
+                value: "makeThisNodeNotVisitable",
+                text: this.$translate('makeThisNodeNotVisitable')
+            },
+            {
+                value: "makeThisNodeNotVisible",
+                text: this.$translate('makeThisNodeNotVisible')
             }
         ];
 
         // the available removal conditionals
         this.removalConditionals = [
             {
-                value: "any",
-                text: this.$translate('any')
-            },
-            {
                 value: "all",
                 text: this.$translate('all')
+            },
+            {
+                value: "any",
+                text: this.$translate('any')
             }
         ];
 
         // the available removal criteria
         this.removalCriteria = [
+            {
+                value: "",
+                text: this.$translate('pleaseChooseARemovalCriteria')
+            },
             {
                 value: "isCompleted",
                 text: this.$translate('isCompleted'),
@@ -1194,7 +1202,7 @@ class NodeAuthoringController {
         // create the constraint object
         var constraint = {};
         constraint.id = newNodeConstraintId;
-        constraint.action = null;
+        constraint.action = "";
         constraint.targetId = this.nodeId;
         constraint.removalConditional = "all";
         constraint.removalCriteria = [];
@@ -1318,7 +1326,31 @@ class NodeAuthoringController {
         if (criteria != null) {
             // clear the params
             criteria.params = {};
+
+            // get the params for the given criteria name
+            var params = this.getRemovalCriteriaParamsByName(criteria.name);
+
+            if (params != null) {
+
+                // loop through all the params
+                for (var p = 0; p < params.length; p++) {
+                    var paramObject = params[p];
+
+                    if (paramObject != null) {
+                        var value = paramObject.value;
+
+                        // intialize the param value
+                        criteria.params[value] = '';
+
+                        if (value == 'nodeId') {
+                            // default the node id param to this node
+                            criteria.params[value] = this.nodeId;
+                        }
+                    }
+                }
+            }
         }
+
 
         // save the project
         this.authoringViewNodeChanged();
