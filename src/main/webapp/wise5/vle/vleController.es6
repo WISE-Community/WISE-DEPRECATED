@@ -50,6 +50,8 @@ class VLEController {
         // get the max score for the project
         this.maxScore = this.ProjectService.getMaxScore();
 
+        this.notebookEnabled = this.NotebookService.isNotebookEnabled();
+
         // get the notebook config
         this.notebookConfig = this.NotebookService.getNotebookConfig();
         // Get report, if enabled; assume only one report for now
@@ -231,10 +233,6 @@ class VLEController {
                 this.pauseScreen();
             }
         }
-    }
-
-    isNotebookEnabled() {
-        return this.NotebookService.isNotebookEnabled();
     }
 
     // TODO: remove and use inline clipping (with guidance)
