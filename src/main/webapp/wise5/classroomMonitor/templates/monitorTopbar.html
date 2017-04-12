@@ -6,7 +6,7 @@
         <h3>{{classroomMonitorController.projectName}} <span class="md-caption">(Run ID: {{classroomMonitorController.runId}})</span></h3>
         <span flex></span>
         <md-menu md-position-mode="target-right target" md-offset="40 26">
-            <md-button aria-label="View notifications" class="md-icon-button notification-btn" ng-click="$mdOpenMenu()">
+            <md-button aria-label="View notifications" class="md-icon-button notification-btn" ng-click="$mdMenu.open($event)">
                 <span ng-show="classroomMonitorController.hasNewNotifications()" class="notification-count">{{classroomMonitorController.newNotifications.length}}</span>
                 <md-icon md-menu-origin> notifications </md-icon>
             </md-button>
@@ -15,11 +15,11 @@
             </md-menu-content>
         </md-menu>
         <md-menu id='accountMenu' md-position-mode="target-right target" md-offset="8 26">
-            <md-button aria-label="Open user menu" class="md-icon-button" ng-click="$mdOpenMenu()">
+            <md-button aria-label="Open user menu" class="md-icon-button" ng-click="$mdMenu.open($event)">
                 <md-icon md-menu-origin> account_box </md-icon>
             </md-button>
             <md-menu-content width="5" class="account-menu">
-                <ng-include src="'wise5/classroomMonitor/templates/accountMenu.html'"></ng-include>
+                <account-menu></account-menu>
             </md-menu-content>
         </md-menu>
     </div>
