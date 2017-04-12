@@ -231,20 +231,22 @@ class NodeGradingController {
 
         let latestAnnotationTime = this.getLatestAnnotationTimeByWorkgroupId(workgroupId);
         let studentStatus = this.StudentStatusService.getStudentStatusForWorkgroupId(workgroupId);
-        let nodeStatus = studentStatus.nodeStatuses[this.nodeId];
+        if (studentStatus != null) {
+            let nodeStatus = studentStatus.nodeStatuses[this.nodeId];
 
-        if (latestWorkTime) {
-            // workgroup has at least one componentState for this node, so check if node is completed
+            if (latestWorkTime) {
+                // workgroup has at least one componentState for this node, so check if node is completed
 
-            if (nodeStatus) {
-                isCompleted = nodeStatus.isCompleted;
+                if (nodeStatus) {
+                    isCompleted = nodeStatus.isCompleted;
+                }
             }
-        }
 
-        if (!this.ProjectService.nodeHasWork(this.nodeId)) {
-            // the step does not generate any work so completion = visited
-            if (nodeStatus) {
-                isCompleted = nodeStatus.isVisited;
+            if (!this.ProjectService.nodeHasWork(this.nodeId)) {
+                // the step does not generate any work so completion = visited
+                if (nodeStatus) {
+                    isCompleted = nodeStatus.isVisited;
+                }
             }
         }
 
