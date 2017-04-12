@@ -7,14 +7,19 @@
 <div class="view-content--with-sidemenu" ng-if="nodeProgressController.isGroupNode(nodeProgressController.nodeId)">
     <div class="l-constrained l-constrained-md md-padding nav">
         <div class="flex md-subhead content-head" layout="row" layout-align="start center" layout-wrap>
-            <h2 class="accent-2">
-                <div class="content-head__item">{{nodeProgressController.getNodeCompletion('group0')}}%<span class="md-subhead" translate="completion"></span></div>
-            </h2>
+            <div layout="row" layout-align="start center">
+                <h2 class="accent-2">
+                    <div class="content-head__item">{{nodeProgressController.getNodeCompletion('group0')}}%<span class="md-subhead" translate="completion"></span></div>
+                </h2>
+                <div layout-margin>
+                    <period-select></period-select>
+                </div>
+            </div>
+            <span flex></span>
             <div ng-show="nodeProgressController.showRubricButton">
                 <md-button ng-click="nodeProgressController.showRubric()"
                            ng-class="md-primary">{{ 'showProjectRubric' | translate }}</md-button>
             </div>
-            <span flex></span>
             <div>
                 <md-switch aria-label="Lock student screens switch"
                            ng-model="nodeProgressController.isPaused"
@@ -28,31 +33,24 @@
                     </md-tooltip>
                 </md-switch>
             </div>
-            <div layout="row" layout-align="end center" flex-xs="100" layout-margin>
-                <span class="text-secondary">
-                    <ng-pluralize count="nodeProgressController.getNumberOfStudentsOnNode(nodeProgressController.rootNode.id)"
-                        when="{'0': '{{&quot;numberOfTeams_0&quot; | translate}}',
-                            'one': '{{&quot;numberOfTeams_1&quot; | translate}}',
-                            'other': '{{&quot;numberOfTeams_other&quot; | translate:{count:nodeProgressController.getNumberOfStudentsOnNode(nodeProgressController.rootNode.id)} }}'}">
-                    </ng-pluralize>
-                </span>
-                <span hide-gt-xs flex></span>
-                <period-select></period-select>
-            </div>
         </div>
 
         <div class="md-whiteframe-1dp gray-bg">
             <md-list class="user-list student-select">
                 <md-list-item class="list-item list-item--actions" layout-wrap>
-                    <div flex-xs="100">
+                    <div flex-sm="100" flex-xs="100">
                         <workgroup-select></workgroup-select>
                     </div>
                     <span flex></span>
-                    <div class="workgroup-progress" layout-align="center center" flex-xs="100">
-                        <workgroup-progress ng-if="nodeProgressController.currentWorkgroup"
-                                            completion="nodeProgressController.getCurrentWorkgroupCompletion()"
-                                            score="nodeProgressController.getCurrentWorkgroupScore()"
-                                            max-score="nodeProgressController.maxScore"></workgroup-progress>
+                    <div class="workgroup-progress" layout-align="center center" flex-sm="100" flex-xs="100">
+                        <div ng-if="nodeProgressController.currentWorkgroup">
+                            <workgroup-progress color="{{ nodeProgressController.getCurrentWorkgroupAvatarColor() }}"
+                                                completion="nodeProgressController.getCurrentWorkgroupCompletion()"
+                                                display-names="{{ nodeProgressController.getCurrentWorkgroupDisplayNames() }}"
+                                                max-score="nodeProgressController.maxScore"
+                                                number-of-students="nodeProgressController.getCurrentWorkgroupNumberOfStudents()"
+                                                score="nodeProgressController.getCurrentWorkgroupScore()"></workgroup-progress>
+                        </div>
                         <div ng-if="!nodeProgressController.currentWorkgroup" class="text-secondary center md-caption md-padding">
                             <span ng-if="nodeProgressController.getCurrentPeriod().periodId === -1">{{ 'showingStatsForAllTeams' | translate }}</span>
                             <span ng-if="nodeProgressController.getCurrentPeriod().periodId !== -1">{{ 'showingStatsForAllTeamsInPeriod' | translate:{periodName: nodeProgressController.getCurrentPeriod().periodName} }}</span>

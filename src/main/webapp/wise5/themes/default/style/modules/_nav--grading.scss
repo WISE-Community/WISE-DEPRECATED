@@ -44,7 +44,7 @@
 .workgroup-progress {
     margin-bottom: 8px;
 
-    @media (min-width: $layout-breakpoint-xs) {
+    @media (min-width: $layout-breakpoint-sm) {
         margin-bottom: 0;
     }
 }

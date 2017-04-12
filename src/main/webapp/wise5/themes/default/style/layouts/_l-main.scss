@@ -82,9 +82,5 @@
 
     md-icon {
         vertical-align: text-bottom;
-
-        @media only screen and (max-width: $layout-breakpoint-sm - 1) {
-            display: none;
-        }
     }
 }

@@ -48,6 +48,8 @@ var VLEController = function () {
         // get the max score for the project
         this.maxScore = this.ProjectService.getMaxScore();
 
+        this.notebookEnabled = this.NotebookService.isNotebookEnabled();
+
         // get the notebook config
         this.notebookConfig = this.NotebookService.getNotebookConfig();
         // Get report, if enabled; assume only one report for now
@@ -228,15 +230,10 @@ var VLEController = function () {
         }
     }
 
+    // TODO: remove and use inline clipping (with guidance)
+
+
     _createClass(VLEController, [{
-        key: 'isNotebookEnabled',
-        value: function isNotebookEnabled() {
-            return this.NotebookService.isNotebookEnabled();
-        }
-
-        // TODO: remove and use inline clipping (with guidance)
-
-    }, {
         key: 'snipNewNote',
         value: function snipNewNote($event) {
             // Ask all of the components on the page for snippable items
@@ -635,7 +632,7 @@ var VLEController = function () {
 
                 /*let notebookItem = this.NotebookService.getNotebookItemByNotebookItemId(notebookItemId, this.workgroupId);
                 if (notebookItem != null) {
-                      if (notebookItem.type === "note") {
+                        if (notebookItem.type === "note") {
                         // open note view
                         this.$rootScope.$broadcast('setNotebookFilter', {filter: "note", ev: event});
                         this.$rootScope.$broadcast('toggleNotebook', {ev: event, open: true});

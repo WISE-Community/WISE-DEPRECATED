@@ -1,23 +1,18 @@
 <div class="l-constrained node-grading">
     <div class="flex md-subhead content-head" layout="row" layout-align="start center" layout-wrap>
-        <h2 class="accent-2" layout="row" layout-align="start center">
-            <div class="content-head__item">{{nodeGradingController.getNodeCompletion(nodeGradingController.nodeId)}}%</span><span class="md-subhead" translate="completion"></div>
-            <div class="content-head__item" ng-if="nodeGradingController.showScore" layout="row" layout-align="start center"><md-icon class="score md-48">grade</md-icon> <div>{{nodeGradingController.getNodeAverageScore()}}<span class="md-subhead" translate="meanScore"></div>
-        </h2>
+        <div layout="row" layout-align="start center" layout-wrap>
+            <div class="accent-2" layout="row" layout-align="start center">
+                <h2 class="content-head__item">{{nodeGradingController.getNodeCompletion(nodeGradingController.nodeId)}}%<span class="md-subhead" translate="completion"></span></h2>
+                <h2 class="content-head__item" ng-if="nodeGradingController.showScore" layout="row" layout-align="start center"><md-icon class="score md-48 hide-xs">grade</md-icon> <span>{{nodeGradingController.getNodeAverageScore()}}<span class="md-subhead" translate="meanScore"></span></h2>
+            </div>
+            <div layout-margin>
+                <period-select></period-select>
+            </div>
+        </div>
+        <span flex></span>
         <md-button ng-show="nodeGradingController.showRubricButton"
                    ng-click="nodeGradingController.showRubric()"
                    ng-class="md-primary">{{ 'showStepRubric' | translate }}</md-button>
-        <span flex></span>
-        <div>
-            <span class="text-secondary" layout-margin>
-               <ng-pluralize count="nodeGradingController.getNumberOfStudentsInPeriod()"
-                   when="{'0': '{{&quot;numberOfTeams_0&quot; | translate}}',
-                       'one': '{{&quot;numberOfTeams_1&quot; | translate}}',
-                       'other': '{{&quot;numberOfTeams_other&quot; | translate:{count:nodeGradingController.getNumberOfStudentsInPeriod()} }}'}">
-               </ng-pluralize>
-            </span>
-            <period-select></period-select>
-        </div>
     </div>
 
     <md-list class="user-list">
