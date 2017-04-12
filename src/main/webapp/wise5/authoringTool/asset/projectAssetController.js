@@ -31,6 +31,15 @@ var ProjectAssetController = function () {
         this.projectAssetTotalSizeMax = ProjectAssetService.projectAssetTotalSizeMax;
         this.projectAssetUsagePercentage = ProjectAssetService.projectAssetUsagePercentage;
 
+        // the amount of space the unused files use
+        this.totalUnusedFilesSize = 0;
+
+        /*
+         * the amount of space the unused files use as a percentage of the
+         * total amount of allowed space for the project
+         */
+        this.unusedFilesPercentage = 0;
+
         // whether the asset page is being displayed in a popup
         this.popup = false;
         this.projectId = null;
@@ -83,7 +92,10 @@ var ProjectAssetController = function () {
         });
 
         // calculate whether the assets are used in the project
-        this.ProjectAssetService.calculateAssetUsage();
+        this.ProjectAssetService.calculateAssetUsage().then(function (totalUnusedFilesSize) {
+            // set the total unused files size
+            _this.setTotalUnusedFilesSize(totalUnusedFilesSize);
+        });
     }
 
     _createClass(ProjectAssetController, [{
@@ -150,7 +162,10 @@ var ProjectAssetController = function () {
                     _this2.projectAssets = _this2.ProjectAssetService.projectAssets;
 
                     // calculate whether the assets are used in the project
-                    _this2.ProjectAssetService.calculateAssetUsage();
+                    _this2.ProjectAssetService.calculateAssetUsage().then(function (totalUnusedFilesSize) {
+                        // set the total unused files size
+                        _this2.setTotalUnusedFilesSize(totalUnusedFilesSize);
+                    });
                 });
             }
         }
@@ -228,7 +243,10 @@ var ProjectAssetController = function () {
                 _this3.projectAssets = _this3.ProjectAssetService.projectAssets;
 
                 // calculate whether the assets are used in the project
-                _this3.ProjectAssetService.calculateAssetUsage();
+                _this3.ProjectAssetService.calculateAssetUsage().then(function (totalUnusedFilesSize) {
+                    // set the total unused files size
+                    _this3.setTotalUnusedFilesSize(totalUnusedFilesSize);
+                });
             });
         }
 
@@ -286,6 +304,26 @@ var ProjectAssetController = function () {
                 // this asset view was opened as a page
                 this.$state.go('root.project', { projectId: this.projectId });
             }
+        }
+
+        /**
+         * Set the total amount of space the unused files use
+         * @param totalUnusedFilesSize the total amount of space the unused files
+         * use
+         */
+
+    }, {
+        key: 'setTotalUnusedFilesSize',
+        value: function setTotalUnusedFilesSize(totalUnusedFilesSize) {
+
+            // set the total amount of space the unused files use
+            this.totalUnusedFilesSize = totalUnusedFilesSize;
+
+            /*
+             * calculate the amount of space the unused files use as a
+             * percentage of the total amount of allowed space for the project
+             */
+            this.unusedFilesPercentage = this.totalUnusedFilesSize / this.projectAssetTotalSizeMax * 100;
         }
     }]);
 

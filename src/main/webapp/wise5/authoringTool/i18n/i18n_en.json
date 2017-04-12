@@ -154,6 +154,7 @@
     "transitionToStep": "Which Step this path leads to",
     "transitions": "Paths",
     "undo": "Undo",
+    "unusedFiles": "Unused Files",
     "usedXSubmits": "Used X Submits",
     "viewHistory": "View History",
     "whenToChoosePath": "When to choose path",

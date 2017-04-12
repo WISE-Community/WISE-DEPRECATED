@@ -46,6 +46,7 @@
       translate-value-usage="{{projectAssetController.projectAssets.totalFileSize | appropriateSizeText }}"
       translate-value-max="{{projectAssetController.projectAssetTotalSizeMax | appropriateSizeText }}"
       translate-value-percentage="{{projectAssetController.projectAssetUsagePercentage | roundToDecimal:0 }}"></span>
+<span ng-if="projectAssetController.totalUnusedFilesSize != null && projectAssetController.totalUnusedFilesSize != 0" style="color:red">({{ 'unusedFiles' | translate }} {{projectAssetController.totalUnusedFilesSize | appropriateSizeText}} ({{projectAssetController.unusedFilesPercentage | roundToDecimal:0}}%))</span>
 <span id="assetMessage">{{projectAssetController.assetMessage}}</span><br/>
 <span translate="sortAssets" />: <select ng-model="projectAssetController.assetSortBy">
     <option value="aToZ" translate="fileNameAToZ"></option>

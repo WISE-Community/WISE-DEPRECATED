@@ -111,6 +111,8 @@ var ProjectAssetService = function () {
 
         /**
          * Calculate which assets are used or not used
+         * @return a promise that returns the total amount of space the unused
+         * files use
          */
 
     }, {
@@ -158,7 +160,7 @@ var ProjectAssetService = function () {
              * are no text files that are used in the project, the then() will
              * still be called.
              */
-            this.getTextFiles(allTextFiles).then(function (textFiles) {
+            return this.getTextFiles(allTextFiles).then(function (textFiles) {
 
                 /*
                  * this variable will hold all the text content that is used in
@@ -265,6 +267,9 @@ var ProjectAssetService = function () {
                     }
                 }
 
+                // field to calculate how much disk space the unused files are using
+                var totalUnusedFilesSize = 0;
+
                 if (assets != null && assets.files != null) {
 
                     // loop through all the assets
@@ -280,10 +285,15 @@ var ProjectAssetService = function () {
                             } else {
                                 // the file is not used in the project
                                 asset.used = false;
+
+                                // add the file size to the total
+                                totalUnusedFilesSize += asset.fileSize;
                             }
                         }
                     }
                 }
+
+                return totalUnusedFilesSize;
             });
         }
 
