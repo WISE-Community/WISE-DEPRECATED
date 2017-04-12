@@ -165,57 +165,60 @@ TODO: implement me. Allow authors to view assets while authoring node conent. Pe
     <button style="margin-left:40px; margin-bottom:10px"
             ng-click='nodeAuthoringController.addNewTransition()' translate="addNewTransition"></button>
 
-    <div id="howToChooseAmongAvailablePaths" style="margin-left:40px">
-        <span>{{'howToChooseAmongAvailablePaths' | translate}}:</span>
-        <md-select id="stepSelectMenu" md-theme="default" class="node-select md-subhead"
-                   ng-model="nodeAuthoringController.node.transitionLogic.howToChooseAmongAvailablePaths"
+    <div ng-show="nodeAuthoringController.node.transitionLogic.transitions.length > 1">
+        <div id="howToChooseAmongAvailablePaths">
+            <span>{{'howToChooseAmongAvailablePaths' | translate}}:</span>
+            <md-select id="stepSelectMenu" md-theme="default" class="node-select md-subhead"
+                       ng-model="nodeAuthoringController.node.transitionLogic.howToChooseAmongAvailablePaths"
+                       ng-change="nodeAuthoringController.authoringViewNodeChanged()"
+                       aria-label="howToChooseAmongAvailablePaths" style="margin-left:30px; width:600px">
+                <md-option ng-repeat="item in nodeAuthoringController.howToChooseAmongAvailablePathsOptions"
+                           value="{{ item }}">
+                    <span layout="row" layout-align="start center">
+                        <span class="node-select__text">{{item}}</span>
+                    </span>
+                </md-option>
+            </md-select>
+        </div>
+
+        <div id="whenToChoosePath">
+            <span>{{'whenToChoosePath' | translate}}:</span>
+            <md-select id="stepSelectMenu" md-theme="default" class="node-select md-subhead"
+                       ng-model="nodeAuthoringController.node.transitionLogic.whenToChoosePath"
+                       ng-change="nodeAuthoringController.authoringViewNodeChanged()"
+                       aria-label="whenToChoosePath" style="margin-left:30px; width:600px">
+                <md-option ng-repeat="item in nodeAuthoringController.whenToChoosePathOptions"
+                           value="{{ item }}">
+                    <span layout="row" layout-align="start center">
+                        <span class="node-select__text">{{item}}</span>
+                    </span>
+                </md-option>
+            </md-select>
+        </div>
+
+        <div id="canChangePath">
+            <span>{{'canChangePath' | translate}}:</span>
+            <md-select id="stepSelectMenu" md-theme="default" class="node-select md-subhead"
+                       ng-model="nodeAuthoringController.node.transitionLogic.canChangePath"
+                       ng-change="nodeAuthoringController.authoringViewNodeChanged()"
+                       aria-label="canChangePath" style="margin-left:30px; width:600px">
+                <md-option ng-repeat="item in nodeAuthoringController.canChangePathOptions"
+                           ng-value="item">
+                    <span layout="row" layout-align="start center">
+                        <span class="node-select__text">{{item}}</span>
+                    </span>
+                </md-option>
+            </md-select>
+        </div>
+
+        <div><span translate="maxPathsVisitable"></span> :
+            <input ng-model="nodeAuthoringController.node.transitionLogic.maxPathsVisitable"
                    ng-change="nodeAuthoringController.authoringViewNodeChanged()"
-                   aria-label="howToChooseAmongAvailablePaths" style="margin-left:30px; width:600px">
-            <md-option ng-repeat="item in nodeAuthoringController.howToChooseAmongAvailablePathsOptions"
-                       value="{{ item }}">
-                <span layout="row" layout-align="start center">
-                    <span class="node-select__text">{{item}}</span>
-                </span>
-            </md-option>
-        </md-select>
+                   ng-model-options='{ debounce: 1000 }' size='60' />
+        </div>
     </div>
 
-    <div id="whenToChoosePath" style="margin-left:40px">
-        <span>{{'whenToChoosePath' | translate}}:</span>
-        <md-select id="stepSelectMenu" md-theme="default" class="node-select md-subhead"
-                   ng-model="nodeAuthoringController.node.transitionLogic.whenToChoosePath"
-                   ng-change="nodeAuthoringController.authoringViewNodeChanged()"
-                   aria-label="whenToChoosePath" style="margin-left:30px; width:600px">
-            <md-option ng-repeat="item in nodeAuthoringController.whenToChoosePathOptions"
-                       value="{{ item }}">
-                <span layout="row" layout-align="start center">
-                    <span class="node-select__text">{{item}}</span>
-                </span>
-            </md-option>
-        </md-select>
-    </div>
-
-    <div id="canChangePath" style="margin-left:40px">
-        <span>{{'canChangePath' | translate}}:</span>
-        <md-select id="stepSelectMenu" md-theme="default" class="node-select md-subhead"
-                   ng-model="nodeAuthoringController.node.transitionLogic.canChangePath"
-                   ng-change="nodeAuthoringController.authoringViewNodeChanged()"
-                   aria-label="canChangePath" style="margin-left:30px; width:600px">
-            <md-option ng-repeat="item in nodeAuthoringController.canChangePathOptions"
-                       ng-value="item">
-                <span layout="row" layout-align="start center">
-                    <span class="node-select__text">{{item}}</span>
-                </span>
-            </md-option>
-        </md-select>
-    </div>
-
-    <div><span translate="maxPathsVisitable"></span> :
-        <input ng-model="nodeAuthoringController.node.transitionLogic.maxPathsVisitable"
-               ng-change="nodeAuthoringController.authoringViewNodeChanged()"
-               ng-model-options='{ debounce: 1000 }' size='60' />
-    </div>
-
+    <br/>
     <button ng-click='nodeAuthoringController.saveTransitions()' translate="SAVE"></button>
 </div>
 

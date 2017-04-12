@@ -727,6 +727,33 @@ class NodeAuthoringController {
             };
             nodeTransitions.push(newTransition);
         }
+
+        if (nodeTransitions.length > 1) {
+            /*
+             * there is more than one transition so we will set default values
+             * for the transition logic parameters if they haven't already been
+             * set
+             */
+            
+            if (this.node.transitionLogic.howToChooseAmongAvailablePaths == null) {
+                this.node.transitionLogic.howToChooseAmongAvailablePaths = 'workgroupId';
+            }
+
+            if (this.node.transitionLogic.whenToChoosePath == null) {
+                this.node.transitionLogic.whenToChoosePath = 'enterNode';
+            }
+
+            if (this.node.transitionLogic.canChangePath == null) {
+                this.node.transitionLogic.canChangePath = false;
+            }
+
+            if (this.node.transitionLogic.maxPathsVisitable == null) {
+                this.node.transitionLogic.maxPathsVisitable = 1;
+            }
+        }
+
+        // save changes
+        this.authoringViewNodeChanged();
     }
 
     /**
@@ -819,6 +846,18 @@ class NodeAuthoringController {
         if (index > -1) {
             nodeTransitions.splice(index, 1);
         }
+
+        if (nodeTransitions.length <= 1) {
+            /*
+             * there is zero or one transition so we will clear the parameters
+             * below since they only apply when there are multiple transitions
+             */
+            this.node.transitionLogic.howToChooseAmongAvailablePaths = null;
+            this.node.transitionLogic.whenToChoosePath = null;
+            this.node.transitionLogic.canChangePath = null;
+            this.node.transitionLogic.maxPathsVisitable = null;
+        }
+
         // save changes
         this.authoringViewNodeChanged();
     }
