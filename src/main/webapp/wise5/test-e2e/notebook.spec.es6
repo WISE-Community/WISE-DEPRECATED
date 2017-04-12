@@ -11,8 +11,9 @@ describe('WISE5 Notebook in Preview Mode', () => {
     let notebookReport = element(by.tagName('notebook-report'));
     let notebookReportToolbar = notebookReport.element(by.css('.notebook-report__toolbar'));
     let notebookReportContainer = notebookReport.element(by.css('.notebook-report-container'));
-    let notebookLauncherButton = element(by.tagName('notebook-launcher'));
-    let insertNoteButton = element(by.css('.notebook-item--report__add-note'));
+    let notebookLauncherButton = element(by.xpath('//button[@aria-label="Notebook"]'));
+    let addNoteButton = element(by.xpath('//button[@aria-label="Add note"]'));  // add note button in fab menu
+    let insertNoteButton = element(by.css('.notebook-item--report__add-note'));  // insert note button inside report dialog
     let fullScreenButton = element(by.css('[ng-click="$ctrl.fullscreen()"]'));
     let collapseButton = element(by.css('[ng-click="$event.stopPropagation(); $ctrl.collapse()"]'));
 
@@ -34,14 +35,18 @@ describe('WISE5 Notebook in Preview Mode', () => {
 
         expect(notebookReportToolbar.isDisplayed()).toBeTruthy();
         expect(notebookLauncherButton.isDisplayed()).toBeTruthy();
+        expect(addNoteButton.isDisplayed()).toBeFalsy();
         expect(insertNoteButton.isDisplayed()).toBeFalsy();
         expect(fullScreenButton.isDisplayed()).toBeTruthy();
         expect(collapseButton.isDisplayed()).toBeTruthy();
         expect(hasClass(notebookReportContainer, 'notebook-report-container__collapsed')).toBeTruthy(); // notebook report should be collapsed at this point
+    });
 
+    it('should open the report in different modes', () => {
         notebookReportToolbar.click(); // clicking on the notebook report should display the report
         expect(notebookLauncherButton.isDisplayed()).toBeTruthy(); // notebook fab icon should still be displayed
         expect(insertNoteButton.isDisplayed()).toBeTruthy();
+        expect(addNoteButton.isDisplayed()).toBeFalsy();
         expect(fullScreenButton.isDisplayed()).toBeTruthy();
         expect(collapseButton.isDisplayed()).toBeTruthy();
         expect(hasClass(notebookReportContainer, 'notebook-report-container__collapsed')).toBeFalsy(); // notebook report should be displayed at this point, in small view
@@ -50,6 +55,7 @@ describe('WISE5 Notebook in Preview Mode', () => {
         expect(notebookReportToolbar.isDisplayed()).toBeTruthy();
         expect(notebookLauncherButton.isDisplayed()).toBeTruthy(); // notebook fab icon should still be displayed
         expect(insertNoteButton.isDisplayed()).toBeFalsy();
+        expect(addNoteButton.isDisplayed()).toBeFalsy();
         expect(fullScreenButton.isDisplayed()).toBeTruthy();
         expect(collapseButton.isDisplayed()).toBeTruthy();
         expect(hasClass(notebookReportContainer, 'notebook-report-container__collapsed')).toBeTruthy(); // notebook report should be collapsed at this point
@@ -57,32 +63,75 @@ describe('WISE5 Notebook in Preview Mode', () => {
         fullScreenButton.click();  // clicking on fullscreen button should display the report in full screen mode.
         expect(notebookLauncherButton.isDisplayed()).toBeTruthy(); // notebook fab icon should still be displayed
         expect(insertNoteButton.isDisplayed()).toBeTruthy();
+        expect(addNoteButton.isDisplayed()).toBeFalsy();
         expect(fullScreenButton.isDisplayed()).toBeTruthy();
         expect(collapseButton.isDisplayed()).toBeTruthy();
         expect(hasClass(notebookReportContainer, 'notebook-report-container__collapsed')).toBeFalsy(); // notebook report should be displayed at this point, in full view
         expect(hasClass(notebookReportContainer, 'notebook-report-container__full')).toBeTruthy(); // notebook report should be displayed at this point, in full view
+
+        collapseButton.click(); // clicking on collapse button should minimize the report
+        collapseButton.click();  // clicking on collapse button should display the report in full screen mode again
+        expect(notebookLauncherButton.isDisplayed()).toBeTruthy(); // notebook fab icon should still be displayed
+        expect(insertNoteButton.isDisplayed()).toBeTruthy();
+        expect(addNoteButton.isDisplayed()).toBeFalsy();
+        expect(fullScreenButton.isDisplayed()).toBeTruthy();
+        expect(collapseButton.isDisplayed()).toBeTruthy();
+        expect(hasClass(notebookReportContainer, 'notebook-report-container__collapsed')).toBeFalsy(); // notebook report should be displayed at this point, in full view
+        expect(hasClass(notebookReportContainer, 'notebook-report-container__full')).toBeTruthy(); // notebook report should be displayed at this point, in full view
+        collapseButton.click(); // clicking on collapse button should minimize the report
+    });
+
+    it('should snip image to notebook', () => {
+        let nyanCatImage = element(by.xpath('//img[@src="/wise/curriculum/demo/assets/nyan_cat.png"]'));
+        expect(nyanCatImage.isDisplayed()).toBeTruthy();
+        nyanCatImage.click();  // click on the nyan cat image
+        let addNoteDialog = element(by.xpath('//md-dialog[@aria-label="Add note"]'));  // dialog for adding a new note
+        expect(addNoteDialog.isDisplayed()).toBeTruthy();  // add note dialog should appear
+        let addNoteCancelButton = addNoteDialog.element(by.xpath('//md-dialog-actions/button[@aria-label="Cancel"]'));
+        expect(addNoteCancelButton.isPresent()).toBeTruthy();
+
+        // clicking on the cancelAddNoteButton should dismiss the add note dialog
+        addNoteCancelButton.click();
+        expect(addNoteButton.isDisplayed()).toBeFalsy();
+        expect(addNoteDialog.isPresent()).toBeFalsy();
+
+        // add again, without text
+        nyanCatImage.click();  // click on the nyan cat image
+        expect(addNoteDialog.isDisplayed()).toBeTruthy();  // add note dialog should appear
+        let addNoteSaveButton = addNoteDialog.element(by.xpath('//md-dialog-actions/button[@aria-label="Save"]'));
+        expect(addNoteSaveButton.isPresent()).toBeTruthy();
+        addNoteSaveButton.click();
     });
 
     /*
-    TODO: update these tests to match the new UI design
-
     it('should open and close the notebook notes view', () => {
         // Click on the notebook icon to open the notebook notes view
-        notebookButton.click();
-        // the url should change to /notebook
-        expect(browser.getCurrentUrl()).toEqual('http://localhost:8080/wise/project/demo#/notebook/');
+        browser.actions().mouseMove(notebookLauncherButton).perform();
+
+        //notebookLauncherButton.click();
+        //browser.wait((addNoteButton).isPresent(), 1000);  // give it at most 1 seconds to load.
+        expect(addNoteButton.isDisplayed()).toBeTruthy();
+        browser.actions().mouseMove(addNoteButton).perform();
+
+        addNoteButton.click();  // click on the add note button
+        expect(addNoteDialog.isDisplayed()).toBeTruthy();
+
         // check that UI elements are displayed
-        let closeNotebookButton = element(by.xpath('//md-toolbar/div/button[@aria-label="Close Notebook"]'));
-        expect(closeNotebookButton.isPresent()).toBeTruthy();
-        let notebookTitle = $(".toolbar-title");
-        expect(notebookTitle.getText()).toBe("Notes");
+        let cancelAddNoteButton = addNoteDialog.element(by.xpath('//md-dialog-actions/button[@aria-label="Cancel"]'));
+        expect(cancelAddNoteButton.isPresent()).toBeTruthy();
 
-        // Clicking on the closeNotebookButton should dismiss the notebook and bring user back to original step
-        closeNotebookButton.click();
-        expect(browser.getCurrentUrl()).toEqual('http://localhost:8080/wise/project/demo#/vle/node1');
+        // clicking on the cancelAddNoteButton should dismiss the add note dialog
+        cancelAddNoteButton.click();
+        expect(addNoteButton.isDisplayed()).toBeFalsy();
+        expect(addNoteDialog.isDisplayed()).toBeFalsy();
     });
+    */
 
-    it('should open and close the notebook report view', () => {
+    /*
+     TODO: update these tests to match the new UI design
+
+
+     it('should open and close the notebook report view', () => {
         // Click on the report icon to open the notebook report view
         reportButton.click();
         // the url should change to /notebook
