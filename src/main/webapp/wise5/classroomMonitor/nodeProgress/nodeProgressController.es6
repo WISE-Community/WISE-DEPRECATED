@@ -5,6 +5,7 @@ class NodeProgressController {
     constructor($mdDialog,
                 $scope,
                 $state,
+                ConfigService,
                 ProjectService,
                 StudentStatusService,
                 TeacherDataService,
@@ -13,6 +14,7 @@ class NodeProgressController {
         this.$mdDialog = $mdDialog;
         this.$scope = $scope;
         this.$state = $state;
+        this.ConfigService = ConfigService;
         this.ProjectService = ProjectService;
         this.StudentStatusService = StudentStatusService;
         this.TeacherDataService = TeacherDataService;
@@ -144,38 +146,6 @@ class NodeProgressController {
         let context = "ClassroomMonitor", nodeId = this.nodeId, componentId = null, componentType = null,
             category = "Navigation", event = "nodeProgressViewDisplayed", data = { nodeId: this.nodeId };
         this.TeacherDataService.saveEvent(context, nodeId, componentId, componentType, category, event, data);
-    }
-
-    /**
-     * Gets and returns the studentStatus object for the currently selected workgroup
-     * @return studentStatus object or null
-     */
-    getCurrentWorkgroupCompletion() {
-        let completion = null;
-
-        if (this.currentWorkgroup) {
-            // get the workgroup's studentStatus
-            let status = this.StudentStatusService.getStudentStatusForWorkgroupId(this.currentWorkgroup.workgroupId);
-            if (status) {
-                completion = status.projectCompletion;
-            }
-        }
-
-        return completion;
-    }
-
-    /**
-     * Gets and returns the total project score for the currently selected workgroup
-     * @return score object or null
-     */
-    getCurrentWorkgroupScore() {
-        let score = null;
-
-        if (this.currentWorkgroup) {
-            score = this.TeacherDataService.getTotalScoreByWorkgroupId(this.currentWorkgroup.workgroupId);
-        }
-
-        return score;
     }
 
     isGroupNode(nodeId) {
@@ -312,12 +282,88 @@ class NodeProgressController {
             escapeToClose: true
         });
     }
+
+    /**
+     * Gets and returns the avatar color the currently selected workgroup
+     * @return color string or null
+     */
+    getCurrentWorkgroupAvatarColor() {
+        let color = '';
+        if (this.currentWorkgroup) {
+            color = this.ConfigService.getAvatarColorForWorkgroupId(this.currentWorkgroup.workgroupId);
+        }
+        return color;
+    }
+
+    /**
+     * Gets and returns the project completion for the currently selected workgroup
+     * @return completion object or null
+     */
+    getCurrentWorkgroupCompletion() {
+        let completion = null;
+
+        if (this.currentWorkgroup) {
+            // get the workgroup's studentStatus
+            let status = this.StudentStatusService.getStudentStatusForWorkgroupId(this.currentWorkgroup.workgroupId);
+            if (status) {
+                completion = status.projectCompletion;
+            }
+        }
+
+        return completion;
+    }
+
+    /**
+     * Gets and returns the display names for the currently selected workgroup
+     * @return names string or null
+     */
+    getCurrentWorkgroupDisplayNames() {
+        let names = '';
+        if (this.currentWorkgroup) {
+            names = this.ConfigService.getDisplayNamesByWorkgroupId(this.currentWorkgroup.workgroupId);
+        }
+        return names;
+    }
+
+    /**
+     * Gets and returns the number of students in the currently selected workgroup
+     * @return number of students or null
+     */
+    getCurrentWorkgroupNumberOfStudents() {
+        let num = null;
+
+        if (this.currentWorkgroup) {
+            let userInfo = this.ConfigService.getUserInfoByWorkgroupId(this.currentWorkgroup.workgroupId);
+
+            if (userInfo != null) {
+                let userNames = userInfo.userName.split(':');
+                num = userNames.length;
+            }
+        }
+
+        return num;
+    };
+
+    /**
+     * Gets and returns the total project score for the currently selected workgroup
+     * @return score object or null
+     */
+    getCurrentWorkgroupScore() {
+        let score = null;
+
+        if (this.currentWorkgroup) {
+            score = this.TeacherDataService.getTotalScoreByWorkgroupId(this.currentWorkgroup.workgroupId);
+        }
+
+        return score;
+    }
 }
 
 NodeProgressController.$inject = [
     '$mdDialog',
     '$scope',
     '$state',
+    'ConfigService',
     'ProjectService',
     'StudentStatusService',
     'TeacherDataService',

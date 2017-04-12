@@ -9,7 +9,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var NodeProgressController = function () {
-    function NodeProgressController($mdDialog, $scope, $state, ProjectService, StudentStatusService, TeacherDataService, TeacherWebSocketService) {
+    function NodeProgressController($mdDialog, $scope, $state, ConfigService, ProjectService, StudentStatusService, TeacherDataService, TeacherWebSocketService) {
         var _this = this;
 
         _classCallCheck(this, NodeProgressController);
@@ -17,6 +17,7 @@ var NodeProgressController = function () {
         this.$mdDialog = $mdDialog;
         this.$scope = $scope;
         this.$state = $state;
+        this.ConfigService = ConfigService;
         this.ProjectService = ProjectService;
         this.StudentStatusService = StudentStatusService;
         this.TeacherDataService = TeacherDataService;
@@ -155,45 +156,7 @@ var NodeProgressController = function () {
         this.TeacherDataService.saveEvent(context, nodeId, componentId, componentType, category, event, data);
     }
 
-    /**
-     * Gets and returns the studentStatus object for the currently selected workgroup
-     * @return studentStatus object or null
-     */
-
-
     _createClass(NodeProgressController, [{
-        key: 'getCurrentWorkgroupCompletion',
-        value: function getCurrentWorkgroupCompletion() {
-            var completion = null;
-
-            if (this.currentWorkgroup) {
-                // get the workgroup's studentStatus
-                var status = this.StudentStatusService.getStudentStatusForWorkgroupId(this.currentWorkgroup.workgroupId);
-                if (status) {
-                    completion = status.projectCompletion;
-                }
-            }
-
-            return completion;
-        }
-
-        /**
-         * Gets and returns the total project score for the currently selected workgroup
-         * @return score object or null
-         */
-
-    }, {
-        key: 'getCurrentWorkgroupScore',
-        value: function getCurrentWorkgroupScore() {
-            var score = null;
-
-            if (this.currentWorkgroup) {
-                score = this.TeacherDataService.getTotalScoreByWorkgroupId(this.currentWorkgroup.workgroupId);
-            }
-
-            return score;
-        }
-    }, {
         key: 'isGroupNode',
         value: function isGroupNode(nodeId) {
             return this.ProjectService.isGroupNode(nodeId);
@@ -346,12 +309,102 @@ var NodeProgressController = function () {
                 escapeToClose: true
             });
         }
+
+        /**
+         * Gets and returns the avatar color the currently selected workgroup
+         * @return color string or null
+         */
+
+    }, {
+        key: 'getCurrentWorkgroupAvatarColor',
+        value: function getCurrentWorkgroupAvatarColor() {
+            var color = '';
+            if (this.currentWorkgroup) {
+                color = this.ConfigService.getAvatarColorForWorkgroupId(this.currentWorkgroup.workgroupId);
+            }
+            return color;
+        }
+
+        /**
+         * Gets and returns the project completion for the currently selected workgroup
+         * @return completion object or null
+         */
+
+    }, {
+        key: 'getCurrentWorkgroupCompletion',
+        value: function getCurrentWorkgroupCompletion() {
+            var completion = null;
+
+            if (this.currentWorkgroup) {
+                // get the workgroup's studentStatus
+                var status = this.StudentStatusService.getStudentStatusForWorkgroupId(this.currentWorkgroup.workgroupId);
+                if (status) {
+                    completion = status.projectCompletion;
+                }
+            }
+
+            return completion;
+        }
+
+        /**
+         * Gets and returns the display names for the currently selected workgroup
+         * @return names string or null
+         */
+
+    }, {
+        key: 'getCurrentWorkgroupDisplayNames',
+        value: function getCurrentWorkgroupDisplayNames() {
+            var names = '';
+            if (this.currentWorkgroup) {
+                names = this.ConfigService.getDisplayNamesByWorkgroupId(this.currentWorkgroup.workgroupId);
+            }
+            return names;
+        }
+
+        /**
+         * Gets and returns the number of students in the currently selected workgroup
+         * @return number of students or null
+         */
+
+    }, {
+        key: 'getCurrentWorkgroupNumberOfStudents',
+        value: function getCurrentWorkgroupNumberOfStudents() {
+            var num = null;
+
+            if (this.currentWorkgroup) {
+                var userInfo = this.ConfigService.getUserInfoByWorkgroupId(this.currentWorkgroup.workgroupId);
+
+                if (userInfo != null) {
+                    var userNames = userInfo.userName.split(':');
+                    num = userNames.length;
+                }
+            }
+
+            return num;
+        }
+    }, {
+        key: 'getCurrentWorkgroupScore',
+
+
+        /**
+         * Gets and returns the total project score for the currently selected workgroup
+         * @return score object or null
+         */
+        value: function getCurrentWorkgroupScore() {
+            var score = null;
+
+            if (this.currentWorkgroup) {
+                score = this.TeacherDataService.getTotalScoreByWorkgroupId(this.currentWorkgroup.workgroupId);
+            }
+
+            return score;
+        }
     }]);
 
     return NodeProgressController;
 }();
 
-NodeProgressController.$inject = ['$mdDialog', '$scope', '$state', 'ProjectService', 'StudentStatusService', 'TeacherDataService', 'TeacherWebSocketService'];
+NodeProgressController.$inject = ['$mdDialog', '$scope', '$state', 'ConfigService', 'ProjectService', 'StudentStatusService', 'TeacherDataService', 'TeacherWebSocketService'];
 
 exports.default = NodeProgressController;
 //# sourceMappingURL=nodeProgressController.js.map

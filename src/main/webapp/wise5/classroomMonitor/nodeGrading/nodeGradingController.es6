@@ -505,11 +505,7 @@ class NodeGradingController {
         if (averageScore === null) {
             averageScore = 'N/A';
         } else {
-            if (averageScore % 1 !== 0) {
-                averageScore = this.$filter('number')(averageScore, 1);
-            } else {
-                averageScore = averageScore;
-            }
+            averageScore = this.$filter('number')(averageScore, 1);
         }
 
         return averageScore;

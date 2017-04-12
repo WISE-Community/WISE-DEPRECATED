@@ -101,6 +101,11 @@ label {
     display: block;
 }
 
+.more-info {
+    border-bottom: 1px dotted;
+    font-style: italic;
+}
+
 // Color
 // Set classes for each named color in the $colors map
 @each $key, $value in $colors {
