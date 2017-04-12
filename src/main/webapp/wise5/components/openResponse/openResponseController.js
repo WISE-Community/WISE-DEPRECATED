@@ -922,6 +922,7 @@ var OpenResponseController = function () {
                             // get the CRater score
                             var score = data.score;
                             var concepts = data.concepts;
+                            var previousScore = null;
 
                             if (score != null) {
                                 var autoComment;
@@ -946,12 +947,10 @@ var OpenResponseController = function () {
                                         // get the previous score and comment annotations
                                         var latestAnnotations = _this3.$scope.$parent.nodeController.getLatestComponentAnnotations(_this3.componentId);
 
-                                        var _previousScore = null;
-
                                         if (latestAnnotations != null && latestAnnotations.score != null && latestAnnotations.score.data != null) {
 
                                             // get the previous score annotation value
-                                            _previousScore = latestAnnotations.score.data.value;
+                                            previousScore = latestAnnotations.score.data.value;
                                         }
 
                                         if (_this3.componentContent.enableGlobalAnnotations && _this3.componentContent.globalAnnotationSettings != null) {
@@ -961,7 +960,7 @@ var OpenResponseController = function () {
                                                 globalAnnotationMaxCount = _this3.componentContent.globalAnnotationSettings.globalAnnotationMaxCount;
                                             }
                                             // get the annotation properties for the score that the student got.
-                                            annotationGroupForScore = _this3.ProjectService.getGlobalAnnotationGroupByScore(_this3.componentContent, _previousScore, score);
+                                            annotationGroupForScore = _this3.ProjectService.getGlobalAnnotationGroupByScore(_this3.componentContent, previousScore, score);
 
                                             // check if we need to apply this globalAnnotationSetting to this annotation: we don't need to if we've already reached the maxCount
                                             if (annotationGroupForScore != null) {
