@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html dir="${textDirection}">
 <head>
-<link rel="shortcut icon" href="${contextPath}/<spring:theme code="favicon"/>" />
+<%@ include file="../../favicon.jsp"%>
 <title><spring:message code="manageAccount"/></title>
 
 <link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
@@ -20,9 +20,9 @@
 <div id="pageWrapper">
 
 	<%@ include file="../../headermain.jsp"%>
-	
+
 	<div id="page">
-		
+
 		<div id="pageContent">
 			<div class="infoContent">
 				<div class="panelHeader"><spring:message code="changePassword"/></div>
@@ -39,7 +39,7 @@
 		</div>
 		<div style="clear: both;"></div>
 	</div>   <!-- End of page-->
-	
+
 	<%@ include file="../../footer.jsp"%>
 </div>
 </body>

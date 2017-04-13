@@ -5,7 +5,7 @@
 <head>
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta http-equiv="X-UA-Compatible" content="chrome=1"/>
-<link rel="shortcut icon" href="${contextPath}/<spring:theme code="favicon"/>" />
+<%@ include file="../favicon.jsp"%>
 <title><spring:message code="pages.features.title" /></title>
 
 <link href="${contextPath}/<spring:theme code="globalstyles"/>" rel="stylesheet" type="text/css" />
@@ -21,14 +21,14 @@
 <body>
 <div id="pageWrapper">
 	<%@ include file="../headermain.jsp"%>
-	
+
 	<div id="page">
-		
+
 		<div id="pageContent">
 			<div class="contentPanel">
-			
+
 				<div class="panelHeader"><spring:message code="pages.features.title" /></div>
-				
+
 				<div class="panelContent">
 					<div class="featuresShowcase right">
 						<img src="${contextPath}/<spring:theme code="wise_vle"/>" alt="<spring:message code="pages.features.vle" />" />
@@ -88,14 +88,14 @@
 						</div>
 						<div style="clear:both;"></div>
 					</div>
-					
+
 				</div>
 			</div>
-		
+
 		</div>
 		<div style="clear: both;"></div>
 	</div>   <!-- End of page -->
-	
+
 	<%@ include file="../footer.jsp"%>
 </div>
 </body>

@@ -4,7 +4,7 @@
 <html dir="${textDirection}">
 <head>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-<link rel="shortcut icon" href="${contextPath}/<spring:theme code="favicon"/>" />
+<%@ include file="../favicon.jsp"%>
 <title><spring:message code="student.teamsignin.teamSignIn" /></title>
 
 <link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
@@ -31,18 +31,18 @@
         //clear the username from the form
 		document.getElementById("username" + teammateAbsentIndex).value = "";
     }
-    
+
     /**
      * An absent checkbox was clicked
      * @param teammateIndex the index of the teammate
      */
     function absentClicked(teammateIndex) {
-        
+
     	if ($('#absent' + teammateIndex).prop('checked')) {
     	    // the user is absent
     	    $('#password' + teammateIndex).prop('disabled', true);
     	    $('#password' + teammateIndex).css('background-color', 'lightgrey');
-    	    
+
             // clear the associated password field
             $('#password' + teammateIndex).val('');
     	} else {
@@ -51,17 +51,17 @@
     	    $('#password' + teammateIndex).css('background-color', '');
     	}
     }
-    
+
     /**
      * Initialize the form by greying out password fields if a
      * teammate is specified as absent
      */
     function initializeForm() {
-        
+
         // loop through all the teammates
         for (var i = 1; i < 10; i++) {
             var teammateIndex = i + 1;
-            
+
             if ($('#absent' + teammateIndex).prop('checked')) {
                 // the absent checkbox is checked so we will grey out and disable the password field
                 $('#password' + teammateIndex).prop('disabled', true);
@@ -69,7 +69,7 @@
             }
         }
     }
-    
+
     $(document).ready(function() {
     	$("#runproject").click(function() {
 	    	// show a loading dialog while the form is being submitted.
@@ -83,7 +83,7 @@
 	            });
 	    	}
         })
-        
+
         initializeForm();
     });
 </script>
@@ -144,13 +144,13 @@
 					</tr>
 		  		</c:forEach>
 			</table>
-			
+
 	<div><a href="${contextPath}/forgotaccount/student/passwordreminder.html" id="forgotlink"><spring:message code="student.teamsignin.forgotUsernameOrPassword"/></a>  </div>
-	
+
 	 <div id="finalRunProjectButton" onclick="setTimeout('self.close()', 15000);">
  	    <input type="submit" class="wisebutton" name="_finish" value="Run Project" id="runproject" />
 	</div>
-					
+
 	</form:form>
 </div>
 </body>

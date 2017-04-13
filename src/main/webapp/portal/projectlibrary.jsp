@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html dir="${textDirection}">
 <head>
-<link rel="shortcut icon" href="${contextPath}/<spring:theme code="favicon"/>" />
+<%@ include file="favicon.jsp"%>
 <title><spring:message code="teacher.management.library.title" /></title>
 
 <link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />

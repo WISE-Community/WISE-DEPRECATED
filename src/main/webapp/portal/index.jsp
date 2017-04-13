@@ -4,7 +4,7 @@
 <head>
 <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta http-equiv="X-UA-Compatible" content="chrome=1"/>
-<link rel="shortcut icon" href="${contextPath}/<spring:theme code="favicon"/>" />
+<%@ include file="favicon.jsp"%>
 <title><spring:message code="wiseTitle" /></title>
 
 <link href="${contextPath}/<spring:theme code="globalstyles"/>" rel="stylesheet" type="text/css" />
@@ -38,15 +38,15 @@
 <script src="${contextPath}/<spring:theme code="easyaccordion.js"/>" type="text/javascript"></script>
 <script src="${contextPath}/<spring:theme code="tinycarousel.js"/>" type="text/javascript"></script>
 <script src="${contextPath}/<spring:theme code="superfishsource"/>" type="text/javascript"></script>
-	
+
 </head>
 <body>
 <div id="pageWrapper">
 	<%@ include file="headermain.jsp"%>
 	<div id="page">
-		
+
 		<div id="pageContent">
-		
+
 			<div class="showcase">
 				<div id="about">
 					<div class="panelHead"><span><spring:message code="index.whatIsWise" /></span></div>
@@ -77,7 +77,7 @@
 					</div>
 				</div>
 			</div>
-			
+
 			<div class="showcase">
 				<div id="projectHeader" class="feature"><span class="featureContent"><spring:message code="index.projects" /></span><a class="projectsLink" href="projectlibrary" title="<spring:message code="index.projects" />"><spring:message code="index.browseCurricula" /></a></div>
 				<div id="features">
@@ -259,7 +259,7 @@
 				</div>
 				<div style="clear:both;"></div>
 			</div>
-			
+
 			<div class="showcase">
 				<a id="wiseAdvantage" href="pages/wise-advantage.html" class="panelSection">
 					<div class="panelHead"><span><spring:message code="index.wiseAdvantage" /></span><span class="panelLink">+</span></div>
@@ -275,7 +275,7 @@
 				</a>
 				<div style="clear:both;"></div>
 			</div>
-			
+
 			<div id="bottomLinks" class="showcase">
 				<div id="telsLink"><a href="http://telscenter.org" target="_blank"><img src="${contextPath}/<spring:theme code="tels"/>"/></a></div>
 				<div id="telsLinkLabel"><spring:message code="index.telsCommunity" /></div>
@@ -293,14 +293,14 @@
 
 <script type="text/javascript">
 	$(document).ready(function(){
-		
-		//focus cursor into the First Name field on page ready 
+
+		//focus cursor into the First Name field on page ready
 		if($('#username').length){
 			$('#username').focus();
 		}
-		
+
 		$('#newsContent').jScrollPane();
-		
+
 		// Set up view project details click action for each project id link
 		$('#projectShowcase').on('click','a.projectDetail',function(){
 			var title = $(this).attr('title');
@@ -321,12 +321,12 @@
 			});
 			$("#projectDetailDialog > #projectIfrm").attr('src',path);
 		});
-		
-		setTimeout("loadProjectThumbnails()",500);		
+
+		setTimeout("loadProjectThumbnails()",500);
 	});
-	
+
 	$(window).load(function() {
-		
+
 		// initiate showcase slider
 		$('#showcaseSlider').nivoSlider({
 			effect:'sliceDownRight',
@@ -344,29 +344,29 @@
 	        	$('#about .panelHead span').fadeIn('fast');
 	        }
 		});
-		
+
 		// set random opening slide for project showcase
 		var numSlides = $('#projectShowcase dt').length;
 		var start = Math.floor(Math.random()*numSlides);
-		
+
 		// initiate project showcase accordion
-		$('#project-showcase').easyAccordion({ 
+		$('#project-showcase').easyAccordion({
 		   autoStart: false,
 		   slideNum: false,
 		   startSlide: start
 		});
-		
+
 		$('.tinycarousel').tinycarousel({ axis: 'y', pager: true, duration:500 });
 	});
-	
+
 	// load thumbnails for each project by looking for curriculum_folder/assets/project_thumb.png (makes a ajax GET request)
 	// If found (returns 200 status), it will replace the default image with the fetched image.
 	// If not found (returns 400 status), it will do nothing, and the default image will be used.
-	function loadProjectThumbnails() {		
+	function loadProjectThumbnails() {
 		$(".projectThumb").each(
 			function() {
 				var thumbUrl = $(this).attr("thumbUrl");
-				
+
 				try {
                     if (window.location.protocol == "https:" && thumbUrl.substr(0,5) == "http:") {
                         thumbUrl = "https:" + thumbUrl.substr(5);

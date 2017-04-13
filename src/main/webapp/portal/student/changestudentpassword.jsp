@@ -4,19 +4,19 @@
 <html dir="${textDirection}">
 <head>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-<link rel="shortcut icon" href="${contextPath}/<spring:theme code="favicon"/>" />
+<%@ include file="../favicon.jsp"%>
 <title><spring:message code="student.title" /></title>
 
 <link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
 <link href="${contextPath}/<spring:theme code="stylesheet"/>" media="screen" rel="stylesheet" type="text/css" />
-    
+
 </head>
 <body style="background:#fff;">
 <div class="dialogContent">
 
 	<div class="dialogSection formSection">
 		<form:form method="post" action="changestudentpassword.html" commandName="changeStudentPasswordParameters" id="changestudentpassword" autocomplete='off'>
-			
+
 		<div>
 			<label for="changestudentpassword"><spring:message code="changePassword_current" /></label>
 	      	<form:password path="passwd0" />
@@ -29,7 +29,7 @@
 			<label for="changestudentpassword"><spring:message code="changePassword_confirm" /></label>
 			<form:password path="passwd2" />
 		</div>
-		
+
 		<!-- Support for Spring errors object -->
 		<div class="errorMsgNoBg">
 			<spring:bind path="changeStudentPasswordParameters.*">
@@ -38,7 +38,7 @@
 			  </c:forEach>
 			</spring:bind>
 		</div>
-		
+
 		<div>
 		    <input type="submit" id="teachersave" value="<spring:message code="saveChanges"/>" />
     	</div>

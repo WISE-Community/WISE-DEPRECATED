@@ -10,11 +10,11 @@
 <link href="${contextPath}/<spring:theme code="stylesheet"/>" media="screen" rel="stylesheet" type="text/css" />
 <link href="${contextPath}/<spring:theme code="teacherprojectstylesheet" />" media="screen" rel="stylesheet" type="text/css" />
 <link href="${contextPath}/<spring:theme code="teacherhomepagestylesheet" />" media="screen" rel="stylesheet" type="text/css" />
-<link rel="shortcut icon" href="${contextPath}/<spring:theme code="favicon"/>" />
-    
+<%@ include file="../../favicon.jsp"%>
+
 <script src="${contextPath}/<spring:theme code="generalsource" />" type="text/javascript"></script>
 
-    
+
 <title><spring:message code="wiseAdmin" /></title>
 
 <script type='text/javascript'>
@@ -25,7 +25,7 @@ function lookupFieldChanged() {
 		$("#equalsCriteria").attr("selected","selected");
 		$("#likeCriteria").hide();
 	} else {
-		$("#likeCriteria").show();		
+		$("#likeCriteria").show();
 	}
 };
 </script>
@@ -61,15 +61,15 @@ function lookupFieldChanged() {
 			<form:option value="${field}">${field}</form:option>
 		</c:forEach>
 	</form:select>
-	
+
 	<form:label path="lookupCriteria">  <spring:message code="admin.account.lookupteacher.that" />  </form:label>
 	<form:select path="lookupCriteria" id="lookupCriteria">
 		<form:option id="likeCriteria" value="like"><spring:message code="admin.account.lookupteacher.contains" /></form:option>
 		<form:option id="equalsCriteria" value="="><spring:message code="admin.account.lookupteacher.matches" /></form:option>
 	</form:select>
-	
+
 	<form:input path="lookupData" id="lookupData"/>
-	
+
 	<input type="hidden" name="userType" value="${userType}" />
 	<input type="submit" id="save" value="<spring:message code="submit" />" />
 </form:form>

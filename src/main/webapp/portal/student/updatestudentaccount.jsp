@@ -4,7 +4,7 @@
 <html dir="${textDirection}">
 <head>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-<link rel="shortcut icon" href="${contextPath}/<spring:theme code="favicon"/>" />
+<%@ include file="../favicon.jsp"%>
 <title><spring:message code="student.title" /></title>
 
 <link href="${contextPath}/<spring:theme code="stylesheet"/>" media="screen" rel="stylesheet" type="text/css" />
@@ -39,7 +39,7 @@
 							<tr>
 						    	<td><label for="language" id="language"><spring:message code="student.index.language" /></label></td>
 								<td>
-									<form:select path="userDetails.language" id="language">           
+									<form:select path="userDetails.language" id="language">
 							    		<c:forEach items="${languages}" var="languageOption">
 							            	<form:option value="${languageOption}"><spring:message code="language.${languageOption}" /></form:option>
 							          	</c:forEach>

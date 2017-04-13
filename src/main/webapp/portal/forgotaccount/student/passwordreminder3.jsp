@@ -4,23 +4,23 @@
 <html dir="${textDirection}">
 <head>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-<link rel="shortcut icon" href="${contextPath}/<spring:theme code="favicon"/>" />
+<%@ include file="../../favicon.jsp"%>
 <title><spring:message code="forgotaccount.student.passwordreminder3.passwordReminderStep3"/></title>
 
-<link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />  
+<link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
 <link href="${contextPath}/<spring:theme code="stylesheet"/>" media="screen" rel="stylesheet"  type="text/css" />
 
 </head>
 <body>
 <div id="pageWrapper">
-	
+
 	<div id="page">
-		
+
 		<div id="pageContent" style="min-height:400px;">
 			<div id="headerSmall">
 				<a id="name" href="${contextPath}/index.html" title="<spring:message code="wiseHomepage"/>"><spring:message code="wise"/></a>
 			</div>
-			
+
 			<div class="infoContent">
 				<div class="panelHeader"><spring:message code="forgotaccount.student.passwordreminder3.studentLostUsernamePassword"/></div>
 				<div class="infoContentBox">
@@ -40,14 +40,14 @@
 								<td><input id="verifyPassword" name="verifyPassword" type="password" size="25" tabindex="2" /></td>
 							</tr>
 							<tr>
-								<td colspan="2">		
+								<td colspan="2">
 									<div id="finalPasswordReminderButtons">
-									<input type="hidden" name="_page" value="3" />							
-									<input type="submit" name="_finish" value="SUBMIT" /> 
+									<input type="hidden" name="_page" value="3" />
+									<input type="submit" name="_finish" value="SUBMIT" />
 									</div>
 								</td>
 							</tr>
-							</table>		
+							</table>
 						</form>
 					</div>
 				<div class="errorMsgNoBg">

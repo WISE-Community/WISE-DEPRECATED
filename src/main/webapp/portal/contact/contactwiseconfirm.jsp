@@ -4,7 +4,7 @@
 <html dir="${textDirection}">
 <head>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-<link rel="shortcut icon" href="${contextPath}/<spring:theme code="favicon"/>" />
+<%@ include file="../favicon.jsp"%>
 <title><spring:message code="contact.contactwiseconfirm.contactWISEGeneralIssues" /></title>
 
 <link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
@@ -22,11 +22,11 @@
 <div id="pageWrapper">
 
 	<%@ include file="../headermain.jsp"%>
-	
+
 	<div id="page">
-		
+
 		<div id="pageContent">
-		
+
 			<div class="infoContent">
 				<div class="panelHeader"><spring:message code="contact.contactwiseconfirm.contactWISE"/></div>
 				<div class="infoContentBox">
@@ -39,7 +39,7 @@
 		</div>
 		<div style="clear: both;"></div>
 	</div>   <!-- End of page -->
-	
+
 	<%@ include file="../footer.jsp"%>
 </div>
 </body>

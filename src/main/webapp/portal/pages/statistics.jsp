@@ -5,7 +5,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="chrome=1" />
-<link rel="shortcut icon" href="${contextPath}/<spring:theme code="favicon"/>" />
+<%@ include file="../favicon.jsp"%>
 <title><spring:message code="pages.statistics.title" /></title>
 
 <script src="${contextPath}/<spring:theme code="jquerysource"/>" type="text/javascript"></script>
@@ -171,7 +171,7 @@ function isLastDayOfMonth(day, month) {
  */
 function isLastEntryOfDay(portalStatisticsEntry, nextPortalStatisticsEntry) {
 	var result = false;
-	
+
 	if(nextPortalStatisticsEntry == null) {
 		//there is no next entry so this is the last entry of the day
 		result = true;
@@ -179,30 +179,30 @@ function isLastEntryOfDay(portalStatisticsEntry, nextPortalStatisticsEntry) {
 		//get the timestamps for both entries
 		var timestamp = portalStatisticsEntry.timestamp;
 		var nextTimestamp = nextPortalStatisticsEntry.timestamp;
-		
+
 		//get the timestamp as a Date object
 		var date = new Date(timestamp);
 		var hour = date.getHours();
 		var day = date.getDate();
 		var month = date.getMonth() + 1;
 		var year = date.getFullYear();
-		
+
 		//get the next timestamp as a Date object
 		var nextEntryDate = new Date(nextTimestamp);
 		var nextEntryHour = nextEntryDate.getHours();
 		var nextEntryDay = nextEntryDate.getDate();
 		var nextEntryMonth = nextEntryDate.getMonth() + 1;
 		var nextEntryYear = nextEntryDate.getFullYear();
-		
+
 		if(day != nextEntryDay) {
 			/*
 			 * the day is not the same, so the current
 			 * entry is the last entry of the day
 			 */
 			result = true;
-		}		
+		}
 	}
-	
+
 	return result;
 }
 
@@ -214,7 +214,7 @@ function isLastEntryOfDay(portalStatisticsEntry, nextPortalStatisticsEntry) {
  */
 function isLastEntryOfMonth(portalStatisticsEntry, nextPortalStatisticsEntry) {
 	var result = false;
-	
+
 	if(nextPortalStatisticsEntry == null) {
 		//there is no next entry so this is the last entry of the day
 		result = true;
@@ -222,30 +222,30 @@ function isLastEntryOfMonth(portalStatisticsEntry, nextPortalStatisticsEntry) {
 		//get the timestamps for both entries
 		var timestamp = portalStatisticsEntry.timestamp;
 		var nextTimestamp = nextPortalStatisticsEntry.timestamp;
-		
+
 		//get the timestamp as a Date object
 		var date = new Date(timestamp);
 		var hour = date.getHours();
 		var day = date.getDate();
 		var month = date.getMonth() + 1;
 		var year = date.getFullYear();
-		
+
 		//get the next timestamp as a Date object
 		var nextEntryDate = new Date(nextTimestamp);
 		var nextEntryHour = nextEntryDate.getHours();
 		var nextEntryDay = nextEntryDate.getDate();
 		var nextEntryMonth = nextEntryDate.getMonth() + 1;
 		var nextEntryYear = nextEntryDate.getFullYear();
-		
+
 		if(month != nextEntryMonth) {
 			/*
 			 * the month is not the same, so the current
 			 * entry is the last entry of the month
 			 */
 			result = true;
-		}		
+		}
 	}
-	
+
 	return result;
 }
 
@@ -357,7 +357,7 @@ function parsePortalStatistics(portalStatisticsArray) {
 	for(var x=0; x<portalStatisticsArray.length; x++) {
 		//get an entry
 		var portalStatisticsEntry = portalStatisticsArray[x];
-		
+
 		//get the next entry for comparison purposes
 		var nextPortalStatisticsEntry = portalStatisticsArray[x + 1];
 
@@ -396,7 +396,7 @@ function parsePortalStatistics(portalStatisticsArray) {
 			 */
 			monthEndEntry = portalStatisticsEntry;
 		}
-		
+
 		if(monthStartEntry == null) {
 			//this is the first portal statistics entry so we will remember it
 			monthStartEntry = portalStatisticsEntry;
@@ -498,19 +498,19 @@ function parseVLEStatistics(vleStatisticsArray) {
 		var totalAnnotationCount = vleStatisticsEntry.totalAnnotationCount;
 
 		//add the counts to our arrays
-		
+
 		if(totalHintViewCount != null) {
 			totalHintViewCountArray.push([timestamp, totalHintViewCount]);
 		}
-		
+
 		if(totalNodeCount != null) {
 			totalNodeCountArray.push([timestamp, totalNodeCount]);
 		}
-		
+
 		if(totalStepWorkCount != null) {
 			totalStepWorkCountArray.push([timestamp, totalStepWorkCount]);
 		}
-		
+
 		if(totalAnnotationCount != null) {
 			totalAnnotationCountArray.push([timestamp, totalAnnotationCount]);
 		}
@@ -651,17 +651,17 @@ function removeNodeText(text) {
  */
 function getVerticalText(text) {
 	var verticalText = "";
-	
+
 	nodeTypeSplit = text.split('');
 
 	for(var x=0; x<nodeTypeSplit.length; x++) {
 		var nodeTypeChar = nodeTypeSplit[x];
 		var br = "";
-		
+
 		if(x != nodeTypeSplit.length - 1) {
 			br = "<br>";
 		}
-		
+
 		verticalText += nodeTypeChar + br;
 	}
 
@@ -700,7 +700,7 @@ function doneParsingStatistics(context) {
 	if(doneParsingPortalStatistics && doneParsingVLEStatistics) {
 		//remove the 'Loading Statistics...' text
 		$('#loadingStatisticsMessageDiv').html('');
-		
+
 		/*
 		 * we are done parsing the portal and vle statistics so we will
 		 * generate the radio buttons and graphs
@@ -718,11 +718,11 @@ function showGraph(graphId) {
 	//boolean values to determine what type of graph it is
 	var lineGraph = false;
 	var barGraph = false;
-	
+
 	//the array that we will use to plot the data
 	var graphData = [];
 
-	//the object that will hold the parameters for plotting the graph 
+	//the object that will hold the parameters for plotting the graph
 	var graphParams = {};
 
 	var graphColor = "green";
@@ -985,19 +985,19 @@ function showGraph(graphId) {
             //cursor is hovering over a data point so we will show the tooltip
             if (previousPoint != item.dataIndex) {
                 previousPoint = item.dataIndex;
-                
+
                 $("#tooltip").remove();
                 var x = item.datapoint[0].toFixed(2);
                 var y = item.datapoint[1].toFixed(2);
 
 				x = parseInt(x);
 				y = parseInt(y);
-				
+
                 var text = "";
-                
+
 				if(lineGraph) {
 					//we are on a line graph
-					
+
 					//get the date
 					var date = new Date(x);
 					var month = date.getMonth() + 1;
@@ -1013,7 +1013,7 @@ function showGraph(graphId) {
 					text = "(" + monthName + " " + day + ", " + year + " = " + y + ")";
 				} else if(barGraph) {
 					//we are on a bar graph
-					
+
 					//get the name of the data bar
 					var barName = item.series.xaxis.ticks[x].label;
 
@@ -1027,13 +1027,13 @@ function showGraph(graphId) {
 					 */
 					text = "(" + barName + " = " + y + ")";
 				}
-                
+
                 showTooltip(item.pageX, item.pageY, text);
             }
         } else {
             //cursor is not hovering over a data point so we will not show the tooltip
             $("#tooltip").remove();
-            previousPoint = null;            
+            previousPoint = null;
         }
     });
 }
@@ -1066,7 +1066,7 @@ function generateRadioButtonsDivs() {
 			radioButtonsHtml += "<br>";
 		} else {
 			//add a radio button
-			radioButtonsHtml += "<input id='" + graphId + "RadioButton' type='radio' name='selectGraphRadioButton' onclick='showGraph(\"" + graphId + "\")' />" + graphLabel + "<br>";			
+			radioButtonsHtml += "<input id='" + graphId + "RadioButton' type='radio' name='selectGraphRadioButton' onclick='showGraph(\"" + graphId + "\")' />" + graphLabel + "<br>";
 		}
 	}
 

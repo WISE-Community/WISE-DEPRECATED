@@ -13,10 +13,10 @@
 </head>
 <body style="background:#FFF;">
 
-<div class="dialogContent">		
+<div class="dialogContent">
 
 	<div class="sectionHead"><spring:message code="teacher.management.changestudentperiod.header"/></div>
-	
+
 	<form:form method="post" action="changestudentperiod.html" commandName="changePeriodParameters" id="changestudentperiod" autocomplete='off'>
 		<div class="sectionContent">
 			<span style="color:#ff0000;"><spring:message code="teacher.management.changestudentperiod.warning"/></span>
@@ -35,13 +35,13 @@
 								${period.name}
 							</form:option>
 						</c:forEach>
-						</form:select>	
+						</form:select>
 						<br/>
-					</td> 
+					</td>
 				</tr>
 			</table>
 		</div>
-	
+
 	    <div class="sectionContent" style="text-align:center;">
 	    	<input type="submit" value="<spring:message code="saveChanges"/>"/>
 	    </div>

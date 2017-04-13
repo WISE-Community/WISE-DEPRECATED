@@ -10,7 +10,7 @@
 <link href="${contextPath}/<spring:theme code="stylesheet"/>" media="screen" rel="stylesheet" type="text/css" />
 <link href="${contextPath}/<spring:theme code="teacherprojectstylesheet" />" media="screen" rel="stylesheet" type="text/css" />
 <link href="${contextPath}/<spring:theme code="teacherhomepagestylesheet" />" media="screen" rel="stylesheet" type="text/css" />
-<link rel="shortcut icon" href="${contextPath}/<spring:theme code="favicon"/>" />
+<%@ include file="../../favicon.jsp"%>
 
 <script src="${contextPath}/<spring:theme code="generalsource" />" type="text/javascript"></script>
 
@@ -18,7 +18,7 @@
 <title><spring:message code="wiseAdmin" /></title>
 
 <script type='text/javascript'>
-	
+
 	function checkboxClicked(authorityName) {
 		var grantOrRevoke = "";
 		if ($("#"+authorityName + ":checked").length > 0) {
@@ -35,11 +35,11 @@
 				userName:"${user.userDetails.username}"
 				},
 			success:function(data,textStatus,jqHXR) {
-			}			
+			}
 		});
-		
+
 	};
-	
+
 </script>
 </head>
 

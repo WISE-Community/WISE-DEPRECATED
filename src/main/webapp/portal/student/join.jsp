@@ -4,7 +4,7 @@
 <html dir="${textDirection}">
 <head>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-<link rel="shortcut icon" href="${contextPath}/<spring:theme code="favicon"/>" />
+<%@ include file="../favicon.jsp"%>
 <title><spring:message code="student.registerstudent.studentRegistration" /></title>
 
 <link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
@@ -20,12 +20,12 @@
 
 <script type="text/javascript">
 $(document).ready(function() {
-	
+
 	//focus cursor into the First Name field on page ready iff there are no errors
 	if ($(".errorMsgNoBg").children().length == 0) {
 		if ($('#firstname').length) {
 			$('#firstname').focus();
-		}		
+		}
 	}
 });
 
@@ -40,7 +40,7 @@ isRunCodeValid = false;
 
 function findPeriods() {
 	isRunCodeValid = false;
-	
+
 	  var successCallback = function(o) {
   			var periodSelect = document.getElementById("runCode_part2");
 			periodSelect.innerHTML = "";
@@ -55,7 +55,7 @@ function findPeriods() {
 			  	op.appendChild(document.createTextNode("<spring:message code='student.addproject.selectClassPeriod' htmlEscape='false' />"));
 			  	op.value = 'none';
   				periodSelect.appendChild(op);
-			  	
+
 			  	var periodsArr = responseText.split(",");
 		  		for (var i=0; i < periodsArr.length; i++) {
 			  		var periodName = periodsArr[i];
@@ -76,7 +76,7 @@ function findPeriods() {
 	if (runcode != null && runcode != "") {
 		$.ajax({
 			url:"${contextPath}/runInfo?runcode=" + runcode,
-			dataType:"text",		
+			dataType:"text",
 			success:successCallback,
 			error:failureCallback
 		});
@@ -105,7 +105,7 @@ function checkForExistingAccountsAndCreateAccount() {
 		alert("<spring:message code='error.lastname-illegal-characters'/>");
 		return;
      }
-	 
+
 	if (!isCreateAccountParametersValid()) {
 		//create account parameters are not valid
 	} else if (checkForExistingAccounts()) {
@@ -119,9 +119,9 @@ function checkForExistingAccountsAndCreateAccount() {
 
 		//the message to display in the popup
 		var existingAccountsHtml = "";
-		
+
 		existingAccountsHtml += "<h1 style='color:red;text-align:center'><spring:message code='warning_all_caps'/></h1>";
-		
+
 		if (existingAccountsArray.length > 1) {
 			//message to display if we found multiple accounts
 			existingAccountsHtml += "<p style='color:red'><spring:message code='student.registerstudent.accountsAlreadyExistWarning'/></p>";
@@ -129,9 +129,9 @@ function checkForExistingAccountsAndCreateAccount() {
 			//message to display if we found a single account
 			existingAccountsHtml += "<p style='color:red'><spring:message code='student.registerstudent.accountAlreadyExistsWarning'/></p>";
 		}
-		
+
 		existingAccountsHtml += "<br>";
-		
+
 		//loop through all the existing accounts
 		for(var x=0; x<existingAccountsArray.length; x++) {
 			//get a user name
@@ -141,19 +141,19 @@ function checkForExistingAccountsAndCreateAccount() {
 			existingAccountsHtml += "<a href='../login?userName=" + userName + "'>";
 			existingAccountsHtml += userName;
 			existingAccountsHtml += "</a>";
-			
+
 			existingAccountsHtml += "<br><br>";
 		}
 
 		existingAccountsHtml += "<p style='text-align:center'>------------------------------------------------------------</p><br>";
 
 		existingAccountsHtml += "<p><spring:message code='student.registerstudent.forceCreateNewAccount'/></p>";
-		
+
 		//add the button that will create a brand new account if none of the existing accounts belongs to the user
 		existingAccountsHtml += "<table style='width:100%'><tr><td style='width:100%' align='center'><a onclick='checkIfReallyWantToCreateAccount()' class='wisebutton'><spring:message code='student.registerstudent.createNewAccount'/></a></td</tr></table>";
 
 		existingAccountsHtml += "<br>";
-		
+
 		//add the html to the div
 		$('#existingAccountsDialog').html(existingAccountsHtml);
 
@@ -198,7 +198,7 @@ function checkForExistingAccounts() {
 	});
 
 	var existingAccounts = false;
-	
+
 	if ($('#existingAccounts').html() != '' && $('#existingAccounts').html() != '[]') {
 		//there are existing accounts that match
 		existingAccounts = true;
@@ -208,13 +208,13 @@ function checkForExistingAccounts() {
 }
 
 /**
- * Ask the student again if they are really sure they 
+ * Ask the student again if they are really sure they
  * have never created an account before.
  */
 function checkIfReallyWantToCreateAccount() {
-	//ask the student again 
+	//ask the student again
 	var answer = confirm("<spring:message code='student.registerstudent.confirmNoPreviousAccount' />");
-	
+
 	if (answer) {
 		//create the account if they answered 'OK'
 		createAccount();
@@ -226,7 +226,7 @@ function checkIfReallyWantToCreateAccount() {
  */
 function isCreateAccountParametersValid() {
 	var result = false;
-	
+
 	//get the parameters the student entered
 	var runCode = document.getElementById("runCode_part1").value;
 	var period = document.getElementById("runCode_part2").value;
@@ -235,7 +235,7 @@ function isCreateAccountParametersValid() {
 	var password = document.getElementById("password").value;
 	var repeatedPassword = document.getElementById("repeatedPassword").value;
 	var accountAnswer = document.getElementById("accountAnswer").value;
-	
+
 	if (firstname == null || firstname == '') {
 		//first name is blank
 		alert("<spring:message code='student.registerstudent.firstNameCanNotBeBlank' />");
@@ -279,13 +279,13 @@ function isCreateAccountParametersValid() {
 			result = false;
 		} else {
 			/*
-			 * the run code is valid and the period is filled in and these are 
+			 * the run code is valid and the period is filled in and these are
 			 * the last elements to validate so all the parameters are valid
 			 */
-			result = true;			
+			result = true;
 		}
 	}
-	
+
 	return result;
 }
 
@@ -315,14 +315,14 @@ function setup() {
 function checkRunCode() {
 	//get the run code the student has entered
 	var runCode = $('#runCode_part1').val();
-	
+
 	/*
 	 * the run code regex to check if the run code the student entered is
 	 * in the proper format so we can make the request to get the periods.
 	 * the proper format is any number of letters followed by 3 digits.
 	 */
 	var runCodePattern = /^[A-Za-z]*\d\d\d$/
-	
+
 	/*
 	 * check if the run code has changed since the last time the student
 	 * has entered the run code
@@ -330,7 +330,7 @@ function checkRunCode() {
 	if (runCode != previousRunCode) {
 		//run code has changed
 		isRunCodeValid = false;
-		
+
 		if (runCode.match(runCodePattern)) {
 			/*
 			 * run code matches the proper run code format so we will try
@@ -339,7 +339,7 @@ function checkRunCode() {
 			findPeriods();
 		} else {
 			/*
-			 * the run code the student entered is not in the proper 
+			 * the run code the student entered is not in the proper
 			 * format so we will not try to find the periods. we will
 			 * clear out the periods drop down in case it was previously
 			 * populated.
@@ -347,12 +347,12 @@ function checkRunCode() {
 			var periodSelect = document.getElementById("runCode_part2");
 			periodSelect.innerHTML = "";
 			periodSelect.disabled = true;
-		}		
+		}
 	}
-	
+
 	/*
-	 * remember the value the student entered so we can compare it the next 
-	 * time this function is called 
+	 * remember the value the student entered so we can compare it the next
+	 * time this function is called
 	 */
 	previousRunCode = runCode;
 }
@@ -361,19 +361,19 @@ function checkRunCode() {
 <body>
 <%@ page buffer="64kb" %>
 <div id="pageWrapper">
-	
+
 	<div id="page">
-		
+
 		<div id="pageContent" style="min-height:400px;">
 			<div id="headerSmall">
 				<a id="name" href="${contextPath}/" title="WISE Homepage"></a>
 			</div>
-			
+
 			<div class="infoContent">
 				<div class="panelHeader"><spring:message code="student.registerstudent.studentRegistration"/></div>
 				<div class="infoContentBox">
 					<div><spring:message code="student.registerstudent.formInstructions"/></div>
-      
+
 					<!-- Support for Spring errors object -->
 					<div class="errorMsgNoBg">
 						<spring:bind path="studentAccountForm.*">
@@ -384,37 +384,37 @@ function checkRunCode() {
 					</div>
 
 					<form:form id="studentRegForm" commandName="studentAccountForm" method="post" action="join" autocomplete='off'>
-					  
+
 					  <table class="regTable">
 					  	<tr>
-					  		<td><label for="studentFirstName"><spring:message code="student.registerstudent.firstName"/></label></td>	    
+					  		<td><label for="studentFirstName"><spring:message code="student.registerstudent.firstName"/></label></td>
 					  	  	<td><form:input path="userDetails.firstname" id="firstname" size="25" maxlength="25" tabindex="1"/>
 							    <form:errors path="userDetails.firstname" />
-						    	<span class="hint"><spring:message code="student.registerstudent.firstNameOnlyLetters"/><span class="hint-pointer"></span></span> 
+						    	<span class="hint"><spring:message code="student.registerstudent.firstNameOnlyLetters"/><span class="hint-pointer"></span></span>
 					   		</td>
 					   	</tr>
-					
+
 					  	<tr>
 					  		<td><label for="studentLastName"><spring:message code="student.registerstudent.lastName"/></label></td>
 							<td><form:input path="userDetails.lastname" id="lastname" size="25" maxlength="25" tabindex="2"/>
 							    <form:errors path="userDetails.lastname" />
-						    	<span class="hint"><spring:message code="student.registerstudent.lastNameOnlyLetters"/><span class="hint-pointer"></span></span> 
+						    	<span class="hint"><spring:message code="student.registerstudent.lastNameOnlyLetters"/><span class="hint-pointer"></span></span>
 						   	</td>
 						</tr>
-					            
+
 					  	<tr>
 					  		<td><label for="studentGender"><spring:message code="student.registerstudent.gender"/></label></td>
-							<td><form:select path="userDetails.gender" id="gender" tabindex="3">       
+							<td><form:select path="userDetails.gender" id="gender" tabindex="3">
 						          <c:forEach items="${genders}" var="genderchoice">
 						            <form:option value="${genderchoice}">
 						            	<spring:message code="genders.${genderchoice}" />
 						            </form:option>
 						          </c:forEach>
-						      	</form:select> 
-						        <span class="hint"><spring:message code="student.registerstudent.genderSelectChoice"/><span class="hint-pointer"></span></span> 
+						      	</form:select>
+						        <span class="hint"><spring:message code="student.registerstudent.genderSelectChoice"/><span class="hint-pointer"></span></span>
 					    	</td>
 					    </tr>
-					            
+
 					    <tr>
 					    	<td><label for="studentBirthMonth"><spring:message code="student.registerstudent.birthMonth"/></label></td>
 							<td><form:select path="birthmonth" id="birthmonth" tabindex="4">
@@ -425,10 +425,10 @@ function checkRunCode() {
 									</form:option>
 								</c:forEach>
 							    </form:select>
-						        <span class="hint"><spring:message code="student.registerstudent.birthDayHelp"/><span class="hint-pointer"></span></span> 
+						        <span class="hint"><spring:message code="student.registerstudent.birthDayHelp"/><span class="hint-pointer"></span></span>
 					    	</td>
 					    </tr>
-					        
+
 						<tr>
 							<td><label for="studentBirthDate"><spring:message code="student.registerstudent.birthDate"/></label></td>
 					  		<td><form:select path="birthdate" id="birthdate" tabindex="5">
@@ -441,26 +441,26 @@ function checkRunCode() {
 							 	</form:select>
 							</td>
 						</tr>
-				                   
+
 					 	<tr>
 					 		<td><label for="studentPassword"><spring:message code="student.registerstudent.typePassword"/></label></td>
 					  		<td><form:password path="userDetails.password" id="password" size="25" maxlength="25" tabindex="6"/>
 								<!-- <form:errors path="userDetails.password"/> -->
-					      		<span class="hint"><spring:message code="student.registerstudent.passwordHelp"/><span class="hint-pointer"></span></span> 
+					      		<span class="hint"><spring:message code="student.registerstudent.passwordHelp"/><span class="hint-pointer"></span></span>
 				            </td>
 				        </tr>
-				
+
 					    <tr>
 					    	<td><label for="studentPasswordRepeat"><spring:message code="student.registerstudent.verifyPassword"/></label></td>
-						  	<td><form:password path="repeatedPassword" id="repeatedPassword" size="25" maxlength="25" tabindex="7"/> 
-					            <form:errors path="repeatedPassword" />      	  
+						  	<td><form:password path="repeatedPassword" id="repeatedPassword" size="25" maxlength="25" tabindex="7"/>
+					            <form:errors path="repeatedPassword" />
 						        <span class="hint"><spring:message code="student.registerstudent.verifyPasswordHelp"/><span class="hint-pointer"></span></span>
 				            </td>
 				        </tr>
-				      
+
 					  	<tr>
 					  		<td><label for="reminderQuestion"><spring:message code="student.registerstudent.securityQuestion"/></label></td>
-					  		<td><form:select path="userDetails.accountQuestion" id="accountQuestion" tabindex="8" >  
+					  		<td><form:select path="userDetails.accountQuestion" id="accountQuestion" tabindex="8" >
 					            <form:errors path="userDetails.accountQuestion" />
 						        	<c:forEach items="${accountQuestions}" var="questionchoice">
 							            <form:option value="${questionchoice}">
@@ -471,14 +471,14 @@ function checkRunCode() {
 						         <span class="hint"><spring:message code="student.registerstudent.securityQuestionHelp"/><span class="hint-pointer"></span></span>
 							</td>
 						</tr>
-				
+
 					  	<tr>
 					  		<td><label for="reminderAnswer" id="reminderAnswer"><spring:message code="student.registerstudent.securityQuestionAnswer"/></label></td>
 							<td><form:input path="userDetails.accountAnswer" id="accountAnswer" size="25" maxlength="25" tabindex="9"/>
-								<span class="hint"><spring:message code="student.registerstudent.securityQuestionAnswerHelp"/><span class="hint-pointer"></span></span>			
+								<span class="hint"><spring:message code="student.registerstudent.securityQuestionAnswerHelp"/><span class="hint-pointer"></span></span>
 						    </td>
 						</tr>
-				
+
 						<tr>
 							<td><label for="runCode_part1" id="runCode_part1_label"><spring:message code="student.registerstudent.accessCode"/></label></td>
 							<td><form:input path="runCode_part1" id="runCode_part1" size="25" maxlength="25" tabindex="10" onkeyup="checkRunCode()"/>
@@ -486,7 +486,7 @@ function checkRunCode() {
 						          <span class="hint"><spring:message code="student.registerstudent.accessCodeHelp"/><span class="hint-pointer"></span></span>
 						    </td>
 						</tr>
-				
+
 				      	<tr>
 				      		<td><label for="runCode_part2" id="runCode_part2_label"><spring:message code="student.registerstudent.classPeriod"/></label></td>
 					  		<td><form:select path="runCode_part2" id="runCode_part2" tabindex="11" disabled="true"></form:select>
@@ -494,17 +494,17 @@ function checkRunCode() {
 					          <span class="hint"><spring:message code="student.registerstudent.selectPeriodHelp"/><span class="hint-pointer"></span></span>
 					        </td>
 					    </tr>
-				      
+
 					  <form:hidden path="projectCode" id="projectCode"/>
-				               
+
 					</table>
-					      
-					      
+
+
 				  	<div style="margin-top:1em;">
 				 	  	<a style="margin-bottom:1em;" class="wisebutton" onclick="checkForExistingAccountsAndCreateAccount()"><spring:message code="student.registerstudent.createAccount"/></a>
 				 	  	<a href="${contextPath}/"><spring:message code="cancel"/></a>
-					 </div> 
-					 
+					 </div>
+
 					 </form:form>
 
 					<div id="existingAccounts" style="display:none"></div>

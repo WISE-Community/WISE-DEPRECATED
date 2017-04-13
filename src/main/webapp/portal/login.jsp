@@ -7,7 +7,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
 <meta name="description" content="login for portal"/>
-<link rel="shortcut icon" href="${contextPath}/<spring:theme code="favicon"/>" />
+<%@ include file="favicon.jsp"%>
 <title><spring:message code="signIn" /></title>
 
 <link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
@@ -28,7 +28,7 @@ function validateLoginForm() {
 <body onload="document.getElementById('username').focus();">
 
 <div id="pageWrapper" style="min-width:550px; background:transparent;">
-			
+
 			<div class="infoContent loginContent">
 				<div class="panelHeader"><spring:message code="signIn"/></div>
 				<div>
@@ -61,7 +61,7 @@ function validateLoginForm() {
 							<input type="submit" id="signInButton" name="signInButton" class="wisebutton smallbutton" value="<spring:message code="signIn"/>"></input>
 						</div>
 					</form>
-			    	<div id="forgotLogin">   
+			    	<div id="forgotLogin">
 				        <ul id="signInLinkPosition"> <!-- TODO: make these open in top window -->
 				       		<li><a href="forgotaccount/selectaccounttype.html" class="forgotlink"><spring:message code="login.forgot"/></a>  </li>
 				       		<li><a href="join" class="joinlink"><spring:message code="login.createAccount"/></a></li>

@@ -1,7 +1,7 @@
 <%@ include file="../include.jsp"%>
 <head>
     <title>WISE 4 to 5 Project Converter</title>
-
+    <%@ include file="../favicon.jsp"%>
     <script src="${contextPath}/<spring:theme code="jquerysource"/>" type="text/javascript"></script>
     <script src="${contextPath}/<spring:theme code="wise4to5projectconverter"/>" type="text/javascript"></script>
 </head>

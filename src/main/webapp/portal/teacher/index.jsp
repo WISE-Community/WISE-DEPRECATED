@@ -4,7 +4,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="chrome=1" />
-<link rel="shortcut icon" href="${contextPath}/<spring:theme code="favicon"/>" />
+<%@ include file="../favicon.jsp"%>
 <title><spring:message code="teacher.index.wiseTeacherDashboard" /></title>
 
 <link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
@@ -12,7 +12,7 @@
 <link href="${contextPath}/<spring:theme code="teacherhomepagestylesheet" />" media="screen" rel="stylesheet" type="text/css" />
 <link href="${contextPath}/<spring:theme code="superfishstylesheet"/>" media="screen" rel="stylesheet" type="text/css" >
 
-<script type="text/javascript" src="${contextPath}/<spring:theme code="jquerysource"/>"></script> 
+<script type="text/javascript" src="${contextPath}/<spring:theme code="jquerysource"/>"></script>
 <script type="text/javascript" src="${contextPath}/<spring:theme code="jqueryuisource"/>"></script>
 <script type="text/javascript" src="${contextPath}/<spring:theme code="superfishsource"/>"></script>
 <script type="text/javascript" src="${contextPath}/<spring:theme code="jquerymigrate.js"/>"></script>
@@ -36,7 +36,7 @@ $(document).ready(function() {
         welcomeMsg = goodEveningMsg;
     }
 
-    $("#welcomeMsg").html(welcomeMsg);    
+    $("#welcomeMsg").html(welcomeMsg);
 });
 </script>
 </head>
@@ -44,17 +44,17 @@ $(document).ready(function() {
 <div id="pageWrapper">
 
 	<%@ include file="../headermain.jsp"%>
-	
+
     <c:set var="current_date" value="<%=new java.util.Date()%>" />
 	<div id="page">
-		
+
 		<div id="pageContent">
 			<div class="sidebar sidebarLeft">
 				<div class="sidePanel">
 					<div class="panelHeader"><spring:message code="teacher.index.quickLinks" /></div>
-					
+
 					<div class="panelContent">
-				
+
 						<table id="teacherQuickLinks">
 							<tr>
 								<td><a href="${contextPath}/pages/gettingstarted.html" target="_blank"><spring:message code="teacher.index.quickstartGuide"/></a></td>
@@ -82,12 +82,12 @@ $(document).ready(function() {
 						</table>
 					</div>
 				</div>
-				
+
 				<div class='sidePanel'>
 					<div class="panelHeader"><spring:message code="teacher.index.messages" /></div>
-					
+
 					<div class="panelContent">
-			
+
 						<table id="teacherMessageTable">
 							<tr>
 								<td>
@@ -119,17 +119,17 @@ $(document).ready(function() {
 					</div>
 				</div>
 			</div>
-			
+
 			<div class="contentPanel contentRight">
 				<div class="panelHeader">
 					<spring:message code="teacher.index.recentActivity" />
 					<span class="pageTitle"><spring:message code="teacher.index.teacherHome"/></span>
 				</div>
-				
+
 				<div class="panelContent">
 					<%@ include file="run/recentactivity.jsp"%>
 				</div>
-				
+
 				<c:if test="${discourseSSOLoginURL != null}">
 				 <div id="discourseDiv" class="panelFooter" style="text-align:center; padding:10px; color:#745A33">
                     <span><spring:message code="wiseTeacherCommunity.questionsUsingWISE"/> <a target=_blank href="${discourseSSOLoginURL}"><spring:message code="wiseTeacherCommunity.askWISECommunity"/></a></span>
@@ -139,7 +139,7 @@ $(document).ready(function() {
 		</div>
 		<div style="clear: both;"></div>
 	</div>   <!-- End of page -->
-	
+
 	<%@ include file="../footer.jsp" %>
 </div>
 <div id="archiveRunDialog" style="overflow:hidden;" class="dialog"></div>
@@ -153,7 +153,7 @@ $(document).ready(function() {
 
 <script type="text/javascript">
     /**
-     * Asynchronously updates the run with the given id on the server and 
+     * Asynchronously updates the run with the given id on the server and
      * displays the appropriate reponse when completed.
      */
     $('.extendReminderLink').on('click',function(){
@@ -204,10 +204,10 @@ $(document).ready(function() {
                    }
     			}
     		});
-    		$("#archiveRunDialog > #archiveIfrm").attr('src',path);        	
+    		$("#archiveRunDialog > #archiveIfrm").attr('src',path);
         });
-        
-        
+
+
         /**
 		 * the user has clicked "Edit Premade Comments" from the drop down on
 		 * the teacher home page.

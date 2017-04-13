@@ -4,7 +4,7 @@
 <html dir="${textDirection}">
 <head>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-<link rel="shortcut icon" href="${contextPath}/<spring:theme code="favicon"/>" />
+<%@ include file="../favicon.jsp"%>
 <title>WISE Credits</title>
 
 <link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
@@ -17,7 +17,7 @@
 	color: #0000FF;
 	padding: 0 0 0 5px;
 }
-	
+
 #previewProjectTitle {
 	clear:both;
 	width:95%;
@@ -32,15 +32,15 @@
 	vertical-align:text-bottom;
 	padding:10px 0;
 }
-		
+
 #boxPreviewProject {
 	border: 1px solid #006600;
 	width:95%;
 	margin:15px auto 30px auto;
 }
-	
+
 #creditsIntroText {
-	margin:20px; 
+	margin:20px;
 	line-height:130%;
 }
 
@@ -61,24 +61,24 @@
     color:#FFFFFF;
     font-size:1.4em;
 	font-weight:bold;
-	font-variant:small-caps; 
+	font-variant:small-caps;
 	vertical-align:top;
 }
 
 #creditsTeamTable td {
 	padding: 10px;
 	border:1px solid #333333;
-	background-image: url(../images/textureUltraLightBlue.png); 
-    background-position: top;	
+	background-image: url(../images/textureUltraLightBlue.png);
+    background-position: top;
     background-repeat: repeat;
     vertical-align:top;
 }
 
 .creditCategory {
-	font-style:italic; 
+	font-style:italic;
 	color:#000033;
 	font-size:.9em;
-	width:100px; 
+	width:100px;
 }
 
 #creditsTeamTable dl {
@@ -86,13 +86,13 @@
 	margin:0;
 	padding:0;
 }
- 
+
  #creditsTeamTable dt {
-	float:left; 
+	float:left;
 	width:180px;
 	font-weight:bold;
 	font-size:.9em;
-	margin-left:10px; 
+	margin-left:10px;
 }
 
 #creditsTeamTable dd {
@@ -105,14 +105,14 @@
 	color:green;
 	margin-left:25px;
 }
-	
+
 .alumnaeHeader {
 	margin: 10px 10px 0 10px;
 	font-size:.8em;
-	font-variant:small-caps; 
+	font-variant:small-caps;
 	color:#333333;
 }
-	
+
 .alumnaeNames {
 	margin: 5px 10px 0 10px;
 	font-size:.9em;
@@ -135,15 +135,15 @@
 <div id="creditsIntroText">+credits.3=The open-source WISE 4.0 science education system -- in conjunction with the TELS, CLEAR, MODELS, LOOPS, and VISUAL research projects -- has reached fruition through the dedicated efforts of the individuals listed below.</div>
 
 <table border="0" cellpadding="4" id="creditsTeamTable">
-	<tr>  
-		<th colspan=2> 
+	<tr>
+		<th colspan=2>
 		contributors&nbsp;<span style="font-size:.8em;font-weight:normal;">(alphabetical per section)</span>
-		</th>  
+		</th>
 	</tr>
 	<tr>
-		<td class="creditCategory">Program Directors</td> 
+		<td class="creditCategory">Program Directors</td>
 		<td>
-		<dl> 
+		<dl>
 			<dt>Ken Bell</dt>
 				<dd>The Concord Consortium<span class="email">email: kbell at concord dot org</span></dd>
 			<dt>Jane Bowyer</dt>
@@ -169,12 +169,12 @@
 			<dt>Bob Tinker</dt>
 				<dd>The Concord Consortium <span class="email">email: bob at concord dot org<span></dd>
 		</dl>
-		</td> 	
-	</tr> 
+		</td>
+	</tr>
 	<tr>
-		<td class="creditCategory">Software Programming Team</td> 
+		<td class="creditCategory">Software Programming Team</td>
 		<td>
-			<dl> 
+			<dl>
 			<dt>Jon Breitbart</dt>
 				<dd>Univerity of California, Berkeley <span class="email">email: breity at berkeley dot edu</span></dd>
 			<dt>Geoffrey Kwan</dt>
@@ -185,22 +185,22 @@
 				<dd>Univerity of California, Berkeley <span class="email">email: hirochan at berkeley dot edu</span></dd>
 			</dl>
 			<div class="alumnaeHeader">WISE 2.0, WISE 3.0 and Contributors (alphabetical)</div>
-			<div class="alumnaeNames">Sally Ahn, Turadg Aleahmad, Stephen Bannasch, Scott Cytacki, Brian Levy, Jeff Marrow, Dustin Masterson, Zach Millman, Anthony Perritano, Archana Raghunathan, 
+			<div class="alumnaeNames">Sally Ahn, Turadg Aleahmad, Stephen Bannasch, Scott Cytacki, Brian Levy, Jeff Marrow, Dustin Masterson, Zach Millman, Anthony Perritano, Archana Raghunathan,
 Jinna Lei, Noah Paessel, Greg Pitter, Rokham Sadeghnezhadfard, Jeff Schoner, Nathaniel Titterton, Aaron Unger, Cynick Young, Laurel Williams</div>
-				
-		</td> 	
+
+		</td>
 	</tr>
 	<tr>
-		<td class="creditCategory">Interactive Design (UX/Interface)</td> 
+		<td class="creditCategory">Interactive Design (UX/Interface)</td>
 		<td>
-			<dl> 
+			<dl>
 			<dt>Matt Fishbach</dt>
 				<dd>Univerity of California, Berkeley<span class="email">email: fish771 at yahoo dot com</span>
 			</dl>
-		</td> 
+		</td>
 	</tr>
 	<tr>
-		<td class="creditCategory">Project Manager</td> 
+		<td class="creditCategory">Project Manager</td>
 		<td>
 			<dl>
 			<dt>Kathy Benneman</dt>
@@ -208,19 +208,19 @@ Jinna Lei, Noah Paessel, Greg Pitter, Rokham Sadeghnezhadfard, Jeff Schoner, Nat
 			</dl>
 			<div class="alumnaeHeader">alumnae</div>
 			<div class="alumnaeNames">Freda Husic</div>
-		</td>  
+		</td>
 	</tr>
 	<tr>
-		<td class="creditCategory">Classroom/Teacher Support</td> 
+		<td class="creditCategory">Classroom/Teacher Support</td>
 		<td>
 			<dl>
 			<dt>Doug Kirkpatrick</dt>
 				<dd>Univerity of California, Berkeley  <span class="email">email: dougkirk at berkeley dot edu</span></dd>
 			</dl>
-		</td>  
+		</td>
 	</tr>
 	<tr>
-		<td class="creditCategory">Project & Grant Support</td> 
+		<td class="creditCategory">Project & Grant Support</td>
 		<td>
 		<dl>
 		<dt>David Crowell</dt>
@@ -228,12 +228,12 @@ Jinna Lei, Noah Paessel, Greg Pitter, Rokham Sadeghnezhadfard, Jeff Schoner, Nat
 
 		<dt>Suparna Kudesia  </dt>
 				<dd>Univerity of California, Berkeley <span class="email">email: skudesia at berkeley dot edu</span></dd>
-		</dl> 
-		</td> 
-		
+		</dl>
+		</td>
+
 	</tr>
 	<tr>
-	<td class="creditCategory">WISE/TELS Research Team</td>  
+	<td class="creditCategory">WISE/TELS Research Team</td>
 		<td>
 		<dl class="secondaryDL">
 			<dt>Hsin-Yi Chang</dt> <dd></dd>
@@ -273,20 +273,20 @@ Jinna Lei, Noah Paessel, Greg Pitter, Rokham Sadeghnezhadfard, Jeff Schoner, Nat
 		</td>
 	</tr>
 	<tr>
-		<td class="creditCategory">Participating School Districts</td> 
+		<td class="creditCategory">Participating School Districts</td>
 		<td>
 			<dl class="secondaryDL">
 			<dt>Mount Diablo Unified (CA)</dt>
 				<dd>Foothill Middle School, Sequoia MS, Pine Hollow MS</dd>
 			<dt>Martinez Unified (CA)</dt>
 				<dd>Martinez Middle School, Martinez High School</dd>
-			<dt>Albany Unified (CA)</dt> 
-				<dd>Albany Middle School, Albany High School</dd> 
+			<dt>Albany Unified (CA)</dt>
+				<dd>Albany Middle School, Albany High School</dd>
 			</dl>
-		</td>  
+		</td>
 	</tr>
 	<tr>
-		<td class="creditCategory">WISE Translators</td>  
+		<td class="creditCategory">WISE Translators</td>
 		<td>
 			<dl>
 			<dt>Chinese (Simplified)</dt>
@@ -308,21 +308,21 @@ Jinna Lei, Noah Paessel, Greg Pitter, Rokham Sadeghnezhadfard, Jeff Schoner, Nat
 			<dt>Spanish</dt>
 				<dd>Cristian Rizzi</dd>
 			</dl>
-		</td>  
-	</tr>	
+		</td>
+	</tr>
 	<tr>
-		<td class="creditCategory">Special Thanks To</td>  
+		<td class="creditCategory">Special Thanks To</td>
 		<td>
 			<dl>
 			<dt>Amanda the Panda</dt>
 				<dd>The WISE Mascot, 1996-2010</dd>
 			</dl>
-		</td>  
-	</tr>	
+		</td>
+	</tr>
 	</table>
 
 </div>
-	
+
 </div>   <!-- end of centered div-->
 </body>
 </html>
