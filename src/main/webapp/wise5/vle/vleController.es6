@@ -57,6 +57,14 @@ class VLEController {
         // Get report, if enabled; assume only one report for now
         this.reportItem = this.notebookConfig.itemTypes.report.notes[0];
 
+        // whether constraints have been disabled
+        this.constraintsDisabled = false;
+
+        if (this.ConfigService.getConfigParam('constraints') == false) {
+            // constraints are disabled
+            this.constraintsDisabled = true;
+        }
+
         this.$scope.$on('currentNodeChanged', (event, args) => {
             var previousNode = args.previousNode;
             var currentNode = this.StudentDataService.getCurrentNode();
@@ -588,6 +596,8 @@ class VLEController {
         // check if we are in preview mode
         if (this.ConfigService.isPreview()) {
             // we are in preview mode so we will disable all the constraints
+
+            this.constraintsDisabled = true;
 
             // clear all the active constraints
             this.ProjectService.activeConstraints = [];

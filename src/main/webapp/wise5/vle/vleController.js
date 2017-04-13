@@ -55,6 +55,14 @@ var VLEController = function () {
         // Get report, if enabled; assume only one report for now
         this.reportItem = this.notebookConfig.itemTypes.report.notes[0];
 
+        // whether constraints have been disabled
+        this.constraintsDisabled = false;
+
+        if (this.ConfigService.getConfigParam('constraints') == false) {
+            // constraints are disabled
+            this.constraintsDisabled = true;
+        }
+
         this.$scope.$on('currentNodeChanged', function (event, args) {
             var previousNode = args.previousNode;
             var currentNode = _this.StudentDataService.getCurrentNode();
@@ -632,7 +640,7 @@ var VLEController = function () {
 
                 /*let notebookItem = this.NotebookService.getNotebookItemByNotebookItemId(notebookItemId, this.workgroupId);
                 if (notebookItem != null) {
-                        if (notebookItem.type === "note") {
+                      if (notebookItem.type === "note") {
                         // open note view
                         this.$rootScope.$broadcast('setNotebookFilter', {filter: "note", ev: event});
                         this.$rootScope.$broadcast('toggleNotebook', {ev: event, open: true});
@@ -714,6 +722,8 @@ var VLEController = function () {
             // check if we are in preview mode
             if (this.ConfigService.isPreview()) {
                 // we are in preview mode so we will disable all the constraints
+
+                this.constraintsDisabled = true;
 
                 // clear all the active constraints
                 this.ProjectService.activeConstraints = [];

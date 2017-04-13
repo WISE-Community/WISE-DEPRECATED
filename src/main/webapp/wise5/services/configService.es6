@@ -38,15 +38,19 @@ class ConfigService {
 
             var constraints = true;
 
-            // get the full url
-            var absURL = this.$location.$$absUrl;
+            if (configJSON.mode == 'preview') {
+                // constraints can only be disabled using the url in preview mode
 
-            // regex to match constraints=false in the url
-            var constraintsRegEx = new RegExp("constraints=false", 'gi');
+                // get the full url
+                var absURL = this.$location.$$absUrl;
 
-            if (absURL != null && absURL.match(constraintsRegEx)) {
-                // the url contains constraints=false
-                constraints = false;
+                // regex to match constraints=false in the url
+                var constraintsRegEx = new RegExp("constraints=false", 'gi');
+
+                if (absURL != null && absURL.match(constraintsRegEx)) {
+                    // the url contains constraints=false
+                    constraints = false;
+                }
             }
 
             // set the constraints value into the config so we can access it later
