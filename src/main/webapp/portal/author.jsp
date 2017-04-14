@@ -10,7 +10,7 @@
     <base href="${contextPath}/" target="_blank">
     <meta name="description" content="WISE Authoring Tool">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="shortcut icon" href="${contextPath}/<spring:theme code="favicon"/>" />
+    <%@ include file="favicon.jsp"%>
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
 
     <script src="${contextPath}/wise5/jspm_packages/system.js"></script>
