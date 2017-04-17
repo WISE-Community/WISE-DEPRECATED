@@ -124,7 +124,7 @@ View.prototype.startClassroomMonitor = function() {
     /*
      * load the project. when the project loading is completed we will
      * get the student statuses, get the students online list, and then
-     * start the websocket connection 
+     * start the websocket connection
      */
     this.loadProject(this.config.getConfigParam('projectURL'), this.config.getConfigParam('projectBaseURL'), true);
 };
@@ -587,7 +587,7 @@ View.prototype.createClassroomMonitorButtons = function() {
     studentProgressButton.addClass(chooseClassroomMonitorDisplayButtonClass);
 
     /*
-     * make the button yellow since the pause screens display is 
+     * make the button yellow since the pause screens display is
      * the display we show when the classroom monitor starts up
      */
     this.setActiveButtonBackgroundColor(studentProgressButton);
@@ -723,7 +723,7 @@ View.prototype.createClassroomMonitorPeriods = function() {
     allPeriodsButton.addClass(periodButtonClass);
 
     /*
-     * make the button yellow since all periods is selected 
+     * make the button yellow since all periods is selected
      * when the classroom monitor starts up
      */
     this.setActiveButtonBackgroundColor(allPeriodsButton);
@@ -745,7 +745,7 @@ View.prototype.createClassroomMonitorPeriods = function() {
         thisView.setActiveButtonBackgroundColor(this, periodButtonClass);
 
         /*
-         * a period button has been clicked so we will perform 
+         * a period button has been clicked so we will perform
          * any necessary changes to the UI
          */
         thisView.periodButtonClicked(periodId);
@@ -786,7 +786,7 @@ View.prototype.createClassroomMonitorPeriods = function() {
                 thisView.setActiveButtonBackgroundColor(this, periodButtonClass);
 
                 /*
-                 * a period button has been clicked so we will perform 
+                 * a period button has been clicked so we will perform
                  * any necessary changes to the UI
                  */
                 thisView.periodButtonClicked(periodId);
@@ -880,7 +880,7 @@ View.prototype.showPeriodInStudentProgressDisplay = function(periodId) {
          * show all the student rows in the period within the
          * student progress display. if the student progress display
          * is not currently being displayed, the rows will
-         * not be shown but they will be shown when the teacher 
+         * not be shown but they will be shown when the teacher
          * switches to the student progress display.
          */
         $('.' + periodIdClass).show();
@@ -916,7 +916,7 @@ View.prototype.showPeriodInStepProgressDisplay = function(periodId) {
             var isStudentOnStep = this.isStudentOnlineAndOnStep(nodeId, periodId);
 
             /*
-             * update the number of students on the step and the 
+             * update the number of students on the step and the
              * number of students who have completed the step
              */
             this.updateStepProgress(nodeId, numberOfStudentsOnStep, completionPercentage, isStudentOnStep);
@@ -1014,8 +1014,8 @@ View.prototype.fixClassroomMonitorDisplayHeight = function() {
         /*
          * resize the height of the topifrm that contains the classroomMonitorIfrm
          * so that there will be no scroll bars
-         * 
-         * this block is only applicable when classroom monitor is launched in a 
+         *
+         * this block is only applicable when classroom monitor is launched in a
          * floating window, not when launched in a new tab/window.
          */
         $('#topifrm', parent.document).height(height);
@@ -1507,7 +1507,7 @@ View.prototype.createStudentProgressDisplay = function() {
     // add period filter and header text
     this.addSectionHeader(table, $('#studentProgressTable_wrapper'), view.getI18NString('classroomMonitor_studentProgress_title'), { 'periodCol': 2 });
 
-    //set the interval to update the time spent values every 10 seconds for students that are online 
+    //set the interval to update the time spent values every 10 seconds for students that are online
     setInterval(this.updateStudentProgressTimeSpentInterval, 10000);
 
     // get annotations and populate scores
@@ -1645,10 +1645,10 @@ View.prototype.ideaBasketClickedHandler = function(workgroupId) {
 
     //get the url for requesting idea baskets
     var ideaBasketURL = this.getConfig().getConfigParam('ideaBasketURL');
-    
+
     //remove any GET parameters from the url since we will be using our own parameters
     ideaBasketURL = ideaBasketURL.substring(0, ideaBasketURL.indexOf('?'));
-    
+
     var getIdeaBasketParams = {
         action:'getIdeaBasket',
         runId:runId,
@@ -1794,6 +1794,11 @@ View.prototype.showIdeaBasketItem = function(workgroupId) {
 
                     //get the created on timestamp
                     var timeCreatedFormatted = this.formatTimestamp(timeCreated);
+
+                    if (idea.isPublishedToPublic) {
+                        // the student has made this idea public
+                        ideaText += " (Public)";
+                    }
 
                     //create the object that will be turned into a DataTable row
                     var ideaObject = {
@@ -2294,7 +2299,7 @@ View.prototype.insertNodeRevisions = function(nodeId, workgroupId, position, mod
                              * this is the latest work for this step and the teacher has
                              * not scored this specific work and the student work was not
                              * auto graded so we will display the latest teacher score or
-                             * latest auto graded score from the latest previous work 
+                             * latest auto graded score from the latest previous work
                              * for this step that does have a score
                              */
 
@@ -2525,7 +2530,7 @@ View.prototype.insertNodeRevisions = function(nodeId, workgroupId, position, mod
                                  * this is the latest work for this step and the teacher has
                                  * not commented on this specific work and the student work was not
                                  * auto graded so we will display the latest teacher comment or
-                                 * latest auto graded feedback from the latest previous work 
+                                 * latest auto graded feedback from the latest previous work
                                  * for this step that does have a comment/feedback
                                  */
 
@@ -2775,7 +2780,7 @@ View.prototype.createGradeByStudentDisplayTableRow = function(nodeId, workgroupI
 
             var stepTitle = '';
 
-            //we will not display number of students on step or completion percentage for sequences 
+            //we will not display number of students on step or completion percentage for sequences
             if(nodeType == 'sequence') {
                 //the node is an activity
                 var nodePrefix = 'Activity';
@@ -3372,7 +3377,7 @@ View.prototype.flagCheckBoxClicked = function(nodeId, workgroupId, stepWorkId, m
 
     //get the url for saving the flag annotation
     var flagsURL = this.getConfig().getConfigParam('flagsURL');
-    
+
     var value = '';
 
     //check if we are flagging or unflagging the flag
@@ -3683,7 +3688,7 @@ View.prototype.getCommentTextAreaValue = function(stepWorkId, nodeId, workgroupI
  */
 View.prototype.postAnnotation = function(nodeId, toWorkgroup, fromWorkgroup, type, value, runId, stepWorkId, mode) {
     var annotationsURL = this.getConfig().getConfigParam('annotationsURL');
-    
+
     //encode the value in case it contains special characters
     value = encodeURIComponent(value);
 
@@ -4145,7 +4150,7 @@ View.prototype.createStepProgressDisplay = function() {
                         nodeTitle = view.getI18NString('activityTerm') + ' ' + numberAndTitle;
                         rowClass = ' activity';
 
-                        //we will not display number of students on step or completion percentage for sequences 
+                        //we will not display number of students on step or completion percentage for sequences
                         studentsOnStepHtml = null;
                         stepCompletion = null;
                     } else {
@@ -4749,7 +4754,7 @@ View.prototype.stepRowClickedHandler = function(nodeId) {
 
     //get the url for retrieving student data
     var studentDataURL = this.getConfig().getConfigParam('studentDataURL');
-    
+
     var runId = this.getConfig().getConfigParam('runId'),
         grading = true,
         getRevisions = true,
@@ -4954,7 +4959,7 @@ View.prototype.showPromptClickedHandler = function(nodeId) {
 
     if(display == 'none') {
         /*
-         * the prompt row is not displayed so we will display it and 
+         * the prompt row is not displayed so we will display it and
          * change the link text
          */
         $('#' + stepPromptTRId).show();
@@ -5104,7 +5109,7 @@ View.prototype.createGradeByStepDisplayTableRow = function(nodeId, workgroupId) 
 View.prototype.getStudentStatuses = function() {
     //get the student status url we will use to make the request
     var studentStatusURL = this.getConfig().getConfigParam('studentStatusURL');
-    
+
     //get the run id
     var runId = this.getConfig().getConfigParam('runId');
 
@@ -5120,7 +5125,7 @@ View.prototype.getStudentStatuses = function() {
     var studentStatusParams = {
         runId:runId
     }
-    
+
     if (studentStatusURL != null) {
         //make the request to the server for the student statuses
         this.connectionManager.request('GET', 3, studentStatusURL, studentStatusParams, this.getStudentStatusesCallback, this, this.getStudentStatusesFail, false, null);
@@ -5174,7 +5179,7 @@ View.prototype.getStudentStatusesFail = function(responseText, responseXML, view
 View.prototype.getRunStatus = function() {
     //get the run status url we will use to make the request
     var runStatusURL = this.getConfig().getConfigParam('runStatusURL');
-    
+
     //get the run id
     var runId = this.getConfig().getConfigParam('runId');
 
@@ -5182,7 +5187,7 @@ View.prototype.getRunStatus = function() {
     var runStatusParams = {
         runId:runId
     }
-    
+
     if(runStatusURL != null) {
         //make the request to the server for the student statuses
         this.connectionManager.request('GET', 3, runStatusURL, runStatusParams, this.getRunStatusCallback, this, this.getRunStatusFail, false, null);
@@ -5924,11 +5929,11 @@ View.prototype.updateStudentProgressTimeSpent = function(workgroupId) {
                     var timeSpentSeconds = parseInt(timeSpentMilliseconds / 1000);
 
                     /*
-                     * add the time difference between when the student posted the student 
-                     * status and when the teacher retrieved the student status. this value 
+                     * add the time difference between when the student posted the student
+                     * status and when the teacher retrieved the student status. this value
                      * will usually be 0 except when the teacher opens the classroom monitor
                      * after the student logs in.
-                     * 
+                     *
                      * case 1: student logs in while the teacher does not have the classroom monitor open.
                      * for example, if the student posts a student status, and then the teacher opens the
                      * classroom monitor 1 minute later, there will be a 60 second time difference
@@ -5938,7 +5943,7 @@ View.prototype.updateStudentProgressTimeSpent = function(workgroupId) {
                      * the student has spent on the step after the teacher has opened the classroom monitor.
                      * we need to use these two time differences (server side difference and client side
                      * difference) because we can't assume server and client timestamps are synced.
-                     * 
+                     *
                      * case 2: student logs in while the teacher has the classroom monitor open.
                      * in this case the student will post the student status and the teacher
                      * will receive it immediately so there is essentially 0 time difference
@@ -6658,7 +6663,7 @@ View.prototype.isStudentOnline = function(workgroupId) {
 View.prototype.sendRunStatus = function(pauseMessage) {
     //get the run status url we will use to make the request
     var runStatusURL = this.getConfig().getConfigParam('runStatusURL');
-    
+
     //get the run id
     var runId = this.getConfig().getConfigParam('runId');
 
@@ -7638,7 +7643,7 @@ View.prototype.createExportForm = function() {
     exportForm.attr('method', 'GET');
 
     /*
-     * add the fields in the form that will be passed to the 
+     * add the fields in the form that will be passed to the
      * server when the request for the export file is made
      */
     exportForm.append('<input type="hidden" name="runId" id="runId" value=""/>');
@@ -7946,7 +7951,7 @@ View.prototype.customExportStudentWorkButtonClicked = function() {
         customExportTable.append(selectStepsTableRow);
 
         /*
-         * create the row for the custom latest student work export 
+         * create the row for the custom latest student work export
          * that will show up at the bottom of the screen
          */
         var exportCustomLatestStudentWorkRow2 = this.createExportStudentWorkRow('Export Custom Latest Student Work', 'customLatestStudentWork');
@@ -8084,7 +8089,7 @@ View.prototype.createCustomExportSelectStepsTableHelper = function(table, node) 
     } else {
         /*
          * we need to skip the first sequence because that is always the
-         * master sequence. we will encounter the master sequence when 
+         * master sequence. we will encounter the master sequence when
          * this.activityNumber is 0, so all the subsequent activities will
          * start at 1.
          */
@@ -8340,7 +8345,7 @@ View.prototype.createSpecialExportSelectStepsTableHelper = function(table, node)
     } else {
         /*
          * we need to skip the first sequence because that is always the
-         * master sequence. we will encounter the master sequence when 
+         * master sequence. we will encounter the master sequence when
          * this.activityNumber is 0, so all the subsequent activities will
          * start at 1.
          */
@@ -8625,7 +8630,7 @@ View.prototype.createStudentHeaderTable = function(studentNames, workgroupId, pe
 
     if(showStudentWorkLink) {
         /*
-         * hide the number of items to review if we are showing the student 
+         * hide the number of items to review if we are showing the student
          * work link which means we are displaying the student idea basket
          */
         numberOfItemsToReviewDiv.css('display', 'none');
@@ -8881,7 +8886,7 @@ View.prototype.createShowClassroomDisplay = function() {
         var thisView = event.data.thisView;
         var showClassroomCanvas = event.data.showClassroomCanvas;
 
-        //the teacher has clicked on the show classroom canvas  
+        //the teacher has clicked on the show classroom canvas
         thisView.showClassroomCanvasClicked(showClassroomCanvas, event);
     });
 
@@ -9090,7 +9095,7 @@ View.prototype.retrievePremadeComments = function() {
 
         //get the url that will retrieve the premade comments
         var premadeCommentsURL = this.getConfig().getConfigParam('premadeCommentsURL');
-        
+
         //callback when we have received the premade comments from the server
         var getPremadeCommentsCallback = function(text, xml, args) {
             var thisView = args[0];
@@ -9468,7 +9473,7 @@ View.prototype.createPremadeCommentsListDiv = function(premadeCommentList, signe
 View.prototype.postPremadeComments = function(premadeCommentAction, postPremadeCommentsCallback, premadeCommentListId, premadeCommentListLabel, premadeCommentId, premadeComment, isGlobal, premadeCommentListPositions, projectId) {
     //get the url that will post the premade comment to the server
     var premadeCommentsURL = this.getConfig().getConfigParam('premadeCommentsURL');
-    
+
     //called when we fail to send the premade comment data to the server
     var postPremadeCommentsCallbackFail = function(text, args) {
 
@@ -11431,7 +11436,7 @@ View.prototype.showShowSummaryReportDisplay = function() {
 View.prototype.getSummaryReportData = function() {
     //get the url for retrieving student data
     var studentDataURL = this.getConfig().getConfigParam('studentDataURL');
-    
+
     var nodeIds = this.getProject().getNodeIds().join(':');
 
     var runId = this.getConfig().getConfigParam('runId'),
@@ -11931,15 +11936,15 @@ View.prototype.sortByRevisionCount = function(objectA, objectB) {
 
 View.prototype.sortByAverageAutoScorePercentage = function(objectA, objectB) {
     var result = 0;
-    
+
     var aAverageAutoScorePercentage = objectA.averageAutoScorePercentage;
     var bAverageAutoScorePercentage = objectB.averageAutoScorePercentage;
-    
+
     if (aAverageAutoScorePercentage == null && bAverageAutoScorePercentage == null) {
-        
+
         var aAverageAutoScore = objectA.averageAutoScore;
         var bAverageAutoScore = objectB.averageAutoScore;
-        
+
         if (aAverageAutoScore < bAverageAutoScore) {
             result = -1;
         } else if (aAverageAutoScore > bAverageAutoScore) {
@@ -11950,14 +11955,14 @@ View.prototype.sortByAverageAutoScorePercentage = function(objectA, objectB) {
     } else if(aAverageAutoScorePercentage == null && bAverageAutoScorePercentage != null) {
         result = -1;
     } else if(aAverageAutoScorePercentage != null && bAverageAutoScorePercentage != null) {
-        
+
         if (aAverageAutoScorePercentage < bAverageAutoScorePercentage) {
             result = -1;
         } else if (aAverageAutoScorePercentage > bAverageAutoScorePercentage) {
             result = 1;
         }
     }
-    
+
     return result;
 };
 
@@ -12216,15 +12221,15 @@ View.prototype.calculateAutoScoreForNode = function(summaryReport, nodeId) {
         if (annotations != null) {
             autoGradedNodeIds = this.getAutoGradedNodeIds(annotations.annotationsArray);
         }
-        
+
         var nodeType = null;
-        
+
         var projectNode = this.getProject().getNodeById(nodeId);
-        
+
         if (projectNode != null) {
             nodeType = projectNode.type;
         }
-        
+
         var periodIds = this.getUserAndClassInfo().getPeriodIds();
         periodIds.unshift('all');
 
@@ -12291,7 +12296,7 @@ View.prototype.calculateAutoScoreForNode = function(summaryReport, nodeId) {
                                                 workgroup.timeSpent = 0;
                                             }
                                             */
-                                            
+
                                             if (workgroup != null) {
                                                 workgroup.autoScore = autoScore;
                                             }
@@ -12316,39 +12321,39 @@ View.prototype.calculateAutoScoreForNode = function(summaryReport, nodeId) {
                     periodForNode.maxAutoScore = null;
                 }
             } else if(nodeType === 'Mysystem2Node') {
-                
+
                 var rawWorkForNodeId = this.getAllRawWorkByNodeId(nodeId);
-                
+
                 var autoGradedScoreTotal = 0;
                 var autoGradedScoreCount = 0;
-                
+
                 var workgroupIdsWithAutoGradedMySystem2 = [];
-                
+
                 for (var m = rawWorkForNodeId.length - 1; m >= 0; m--) {
                     var work = rawWorkForNodeId[m];
-                    
+
                     if (work != null) {
                         var workgroupId = work.workgroupId;
-                        
+
                         if (workgroupIdsWithAutoGradedMySystem2.indexOf(workgroupId) == -1) {
-                            
+
                             var data = work.data;
-                            
+
                             if (data != null) {
                                 var autoScore = this.getLatestMySystem2Score(data);
-                                
+
                                 if (autoScore != null) {
-                                    
+
                                     autoGradedScoreTotal += autoScore;
                                     autoGradedScoreCount++;
-                                    
+
                                     workgroupIdsWithAutoGradedMySystem2.push(workgroupId);
-                                    
+
                                     var workgroups = periodForNode.workgroups;
-                                    
+
                                     if (workgroups != null) {
                                         var workgroup = workgroups[workgroupId];
-                                        
+
                                         /*
                                         if (workgroup == null) {
                                             // make a workgroup object
@@ -12359,7 +12364,7 @@ View.prototype.calculateAutoScoreForNode = function(summaryReport, nodeId) {
                                             workgroup.timeSpent = 0;
                                         }
                                         */
-                                        
+
                                         if (workgroup != null) {
                                             workgroup.autoScore = autoScore;
                                         }
@@ -12369,10 +12374,10 @@ View.prototype.calculateAutoScoreForNode = function(summaryReport, nodeId) {
                         }
                     }
                 }
-                
+
                 if (autoGradedScoreCount != 0) {
                     periodForNode.averageAutoScore = autoGradedScoreTotal / autoGradedScoreCount;
-                    
+
                     if (periodForNode.maxAutoScore != null && periodForNode.maxAutoScore != null) {
                         periodForNode.averageAutoScorePercentage = periodForNode.averageAutoScore / periodForNode.maxAutoScore;
                     }
@@ -12487,21 +12492,21 @@ View.prototype.calculateSortedNodesArrays = function(summaryReport) {
 };
 
 View.prototype.getAllRawWorkByNodeId = function(nodeId) {
-    
+
     var rawWorkByNodeId = [];
-    
+
     var allRawWork = this.allRawWork;
-    
+
     if (allRawWork != null) {
         for (var w = 0; w < allRawWork.length; w++) {
             var rawWork = allRawWork[w];
-            
+
             if (rawWork != null) {
                 var data = rawWork.data;
-                
+
                 if (data != null) {
                     var rawWorkNodeId = data.nodeId;
-                    
+
                     if (nodeId === rawWorkNodeId) {
                         rawWorkByNodeId.push(rawWork);
                     }
@@ -12509,7 +12514,7 @@ View.prototype.getAllRawWorkByNodeId = function(nodeId) {
             }
         }
     }
-    
+
     return rawWorkByNodeId;
 };
 
