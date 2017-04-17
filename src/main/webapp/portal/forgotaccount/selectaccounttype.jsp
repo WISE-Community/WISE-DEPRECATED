@@ -4,7 +4,7 @@
 <html dir="${textDirection}">
 <head>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-<link rel="shortcut icon" href="${contextPath}/<spring:theme code="favicon"/>" />
+<%@ include file="../favicon.jsp"%>
 <title><spring:message code="forgotaccount.selectaccounttype.findYourPassword" /></title>
 
 <link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
@@ -13,14 +13,14 @@
 </head>
 <body>
 <div id="pageWrapper">
-	
+
 	<div id="page">
-		
+
 		<div id="pageContent" style="min-height:400px;">
 			<div id="headerSmall">
 				<a id="name" href="${contextPath}/" title="<spring:message code="wiseHomepage" />"><spring:message code="wise" /></a>
 			</div>
-			
+
 			<div class="infoContent">
 				<div class="panelHeader"><spring:message code="forgotaccount.selectaccounttype.lostUsernameOrPassword"/></div>
 				<div class="infoContentBox">
@@ -33,6 +33,6 @@
 			</div>
 		</div>
 	</div>
-</div>	
+</div>
 </body>
 </html>

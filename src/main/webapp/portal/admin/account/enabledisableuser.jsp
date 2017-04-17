@@ -10,7 +10,7 @@
 <link href="${contextPath}/<spring:theme code="stylesheet"/>" media="screen" rel="stylesheet" type="text/css" />
 <link href="${contextPath}/<spring:theme code="teacherprojectstylesheet" />" media="screen" rel="stylesheet" type="text/css" />
 <link href="${contextPath}/<spring:theme code="teacherhomepagestylesheet" />" media="screen" rel="stylesheet" type="text/css" />
-<link rel="shortcut icon" href="${contextPath}/<spring:theme code="favicon"/>" />
+<%@ include file="../../favicon.jsp"%>
 
 <script src="${contextPath}/<spring:theme code="generalsource" />" type="text/javascript"></script>
 
@@ -30,7 +30,7 @@
 			}
 		});
 	};
-	
+
 	function disableAccount() {
 		var username = $("#usernameToDisable").val();
 		$.ajax({
@@ -42,8 +42,8 @@
 					var disabledAccountHtml = "<div id='"+username+"'>"+username+"&nbsp;&nbsp;&nbsp;&nbsp;| "+
 						"<a href='#' onclick=\"javascript:popup640('../../teacher/account/info?userName="+username+"');\"><spring:message code="info" /></a> | "+
 						"<a href='#' onclick=\"javascript:enableAccount('"+username+"')\"><spring:message code="admin.account.enabledisableuser.reEnableAccout" /></a>"+
-						"</div>";				
-					
+						"</div>";
+
 					$("#disabledAccounts").append(disabledAccountHtml)
 				} else {
 					alert(jqHXR.responseText);
@@ -64,7 +64,7 @@
 	<br/>
 	<h3><spring:message code="admin.account.enabledisableuser.disableAccout" /></h3>
 	<div id='msg'><spring:message code="admin.account.enabledisableuser.typeUsername" /></div><br/>
-	
+
 	<form id='disableAccountForm'>
 		<input type="text" id="usernameToDisable"/>
 		<input type="button" value="Disable Account" onclick="disableAccount();"/>
@@ -76,10 +76,10 @@
 		<c:set var="disabledUsername"
 			value="${disabledUser.userDetails.username}" />
 		<div id='${disabledUsername}'>
-		<c:out value="${disabledUsername}" />&nbsp;&nbsp;&nbsp;&nbsp;| 
+		<c:out value="${disabledUsername}" />&nbsp;&nbsp;&nbsp;&nbsp;|
 		<a href="#" onclick="javascript:popup640('../../teacher/account/info?userName=${disabledUsername}');"><spring:message code="info" /></a> |
 		<a href="#" onclick="javascript:enableAccount('${disabledUsername}')"><spring:message code="admin.account.enabledisableuser.reEnableAccout" /></a>
-		</div>				
+		</div>
 	</c:forEach>
 	</div>
 </div>

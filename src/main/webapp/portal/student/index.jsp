@@ -5,7 +5,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta http-equiv="X-UA-Compatible" content="chrome=1" />
-<link rel="shortcut icon" href="${contextPath}/<spring:theme code="favicon"/>" />
+<%@ include file="../favicon.jsp"%>
 <title><spring:message code="student.title" /></title>
 
 <link href="${contextPath}/<spring:theme code="jquerystylesheet"/>" media="screen" rel="stylesheet"  type="text/css" />
@@ -33,10 +33,10 @@ $(document).ready(function() {
 	// create add project dialog
 	$("#addprojectLink").bind("click", function() {
 		var addProjectDialogHtml = '<div style="display:none; overflow-y:hidden;" id="addProjectDialog">'+
-		'<iframe id="addProjectFrame" width="100%" height="99%" frameborder="0" allowTransparency="false"> </iframe>'+			
+		'<iframe id="addProjectFrame" width="100%" height="99%" frameborder="0" allowTransparency="false"> </iframe>'+
 		'</div>';
 		if ($("#addProjectDialog").length == 0) {
-			$("#page").append(addProjectDialogHtml);	
+			$("#page").append(addProjectDialogHtml);
 		}
 		$("#addProjectDialog").dialog({
 			position:["center","center"],
@@ -58,7 +58,7 @@ $(document).ready(function() {
 		'<iframe id="changePasswordFrame" src="${contextPath}/student/changestudentpassword.html" width="100%" height="99%" allowTransparency="false"> </iframe>'+
 		'</div>';
 		if ($("#changePasswordDialog").length == 0) {
-			$("#page").append(changePasswordDialogHtml);	
+			$("#page").append(changePasswordDialogHtml);
 		}
 		$("#changePasswordDialog").dialog({
 			modal:true,
@@ -72,14 +72,14 @@ $(document).ready(function() {
 		});
 
 	});
-	
+
 	// create update userinfo dialog
 	$("#updateStudentAccountLink").bind("click", function() {
 		var updateStudentAccountDialogHtml = '<div style="display:none; overflow-y:hidden;" id="updateStudentAccountDialog">'+
-		'<iframe id="updateStudentAccountFrame" width="100%" height="99%" frameborder="0" allowTransparency="false"> </iframe>'+			
+		'<iframe id="updateStudentAccountFrame" width="100%" height="99%" frameborder="0" allowTransparency="false"> </iframe>'+
 		'</div>';
 		if ($("#updateStudentAccountDialog").length == 0) {
-			$("#page").append(updateStudentAccountDialogHtml);	
+			$("#page").append(updateStudentAccountDialogHtml);
 		}
 		$("#updateStudentAccountDialog").dialog({
 			position:["center","center"],
@@ -95,13 +95,13 @@ $(document).ready(function() {
 		$("#updateStudentAccountDialog > #updateStudentAccountFrame").attr("src", "${contextPath}/student/updatestudentaccount.html");
 
 	});
-	
+
 	// setup announcement link click handlers
 	$('.viewAnnouncements').on('click',function(){
 		var runIds = $(this).attr('id').replace('viewAnnouncements_','');
 		showAnnouncements(runIds);
 	});
-	
+
 	/* Shows announcements dialog
 	** @param runIds String of Ids (comma separated) of runs to show announcements for
 	** @param title String for title of dialog window
@@ -134,19 +134,19 @@ $(document).ready(function() {
 		});
 		$("#announcementsDialog > #announceIfrm").attr('src',path);
 	};
-	
+
 	// make tabs for current/archived runs
     $("#tabSystem").tabs();
-	
+
 	// check for new teacher announcements and display
 	var newAnnouncements = "<c:out value="${newAnnouncements}" />";
-	
+
 	if(newAnnouncements > 0){
 		var title = "<spring:message code="student.index.messages_new"/>";
 		var announcementRunIds = "<c:out value="${announcementRunIds}" />";
 		showAnnouncements(announcementRunIds,title,'true');
 	}
-	
+
 });
 </script>
 
@@ -155,14 +155,14 @@ $(document).ready(function() {
 <div id="pageWrapper">
 
 	<%@ include file="../headermain.jsp"%>
-	
+
 	<div id="page">
-		
+
 		<div id="pageContent">
-	
+
 
 			<%@page import="java.util.*" %>
-	
+
 			<div class="sidebar sidebarLeft">
 				<div class="sidePanel">
 					<div class="panelHeader"><spring:message code="student.index.welcome"/></div>
@@ -186,7 +186,7 @@ $(document).ready(function() {
 				<div class="sidePanel">
 					<div class="panelHeader"><spring:message code="student.index.accountOptions" /></div>
 					<div class="panelContent">
-				
+
 						<div id="optionButtons" class="sideContent">
 							<ul>
 								<li>
@@ -210,11 +210,11 @@ $(document).ready(function() {
 											<spring:message code="student.index.firstVisit"/>
 										</c:when>
 										<c:otherwise>
-											<fmt:formatDate value="${lastLoginTime}" 
+											<fmt:formatDate value="${lastLoginTime}"
 												type="both" dateStyle="short" timeStyle="short" />
 										</c:otherwise>
 									</c:choose>
-										
+
 									</td>
 								</tr>
 								<tr>
@@ -233,7 +233,7 @@ $(document).ready(function() {
 									<td id="numberOfLogins">${user.userDetails.numberOfLogins}</td>
 								</tr>
 								<tr>
-									<td class="listTitle2"><spring:message code="student.index.language"/></td> 
+									<td class="listTitle2"><spring:message code="student.index.language"/></td>
 									<c:choose>
 									<c:when test="${user.userDetails.language == null}">
 										<td id="language"><spring:message code="default"/> (<a id="updateStudentAccountLink"><spring:message code="change" /></a>)</td>
@@ -245,22 +245,22 @@ $(document).ready(function() {
 								</tr>
 							</table>
 						</div>
-					
+
 						<div class="sideContent">
-						
+
 							<div style="text-align:center; margin-top:5px"><img src="${contextPath}/<spring:theme code="wise4_logo_new_sm"/>" alt="WISE" /></div>
-							
+
 							<spring:htmlEscape defaultHtmlEscape="false">
             				<spring:escapeBody htmlEscape="false">
 								<div class="displayAsEnglish"><spring:message code="legalCopyright"/></div>
 							</spring:escapeBody>
 							</spring:htmlEscape>
-							
+
 						</div>
 					</div>
 				</div>
 			</div>
-		
+
 		<div class="contentPanel contentRight">
 			<div class="panelHeader"><spring:message code="student.index.projectMenu"/></div>
 			<div class="panelContent">
@@ -268,23 +268,23 @@ $(document).ready(function() {
 			   		<ul style='height:1.9em;'>   <!-- HT says: I don't know why but if I don't set height, the ul's height is much larger than it should be. -->
 			        	<li><a href="#currentRuns"><spring:message code="student.index.currentProjectRuns"/></a></li>
 			        	<li><a href="#archivedRuns"><spring:message code="student.index.archivedProjectRuns"/></a></li>
-			    	</ul>            
+			    	</ul>
 					<div id="currentRuns">
 						<c:choose>
 						<c:when test="${fn:length(current_run_list) > 0}" >
-					
+
 						<c:forEach var="studentRunInfo"  items="${current_run_list}">
-							
+
 							<table class="runTable" >
-					
+
 								<tr class="projectMainRow">
 									<td class="rowLabel"><spring:message code="title"/></td>
 									<td>
 										<div class="studentTitleText">${studentRunInfo.run.name}</div>
 									</td>
 									<td rowspan="5" style="width:30%; padding:2px;">
-										<ul class="studentActionList">   
-												
+										<ul class="studentActionList">
+
 											<c:choose>
 												<c:when test="${studentRunInfo.workgroup == null}">
 													<li class="startProject"><a href='${contextPath}/student/startproject?runId=${studentRunInfo.run.id}' class="wisebutton" id='${studentRunInfo.run.id}' ><spring:message code="student.index.runProject"/></a></li>
@@ -298,7 +298,7 @@ $(document).ready(function() {
 														<c:otherwise>
 															<li class="startProject"><a href='${contextPath}/student/teamsignin.html?runId=${studentRunInfo.run.id}'
 																id='${studentRunInfo.run.id}' class="wisebutton"><spring:message code="student.index.runProject"/></a></li>
-														</c:otherwise>														
+														</c:otherwise>
 													</c:choose>
 												</c:otherwise>
 											</c:choose>
@@ -310,7 +310,7 @@ $(document).ready(function() {
 								<tr>
 									<td class="rowLabel"><spring:message code="student.index.accessCode"/></td>
 									<td>${studentRunInfo.run.runcode}</td>
-							  	</tr>	
+							  	</tr>
 								<tr>
 									<td class="rowLabel"><spring:message code="teacher_cap"/></td>
 									<td>
@@ -320,14 +320,14 @@ $(document).ready(function() {
 										</c:when>
 										<c:otherwise>
 											<spring:message code="student.index.teamNotEstablishedYet"/>
-										</c:otherwise>	
+										</c:otherwise>
 							      		</c:choose>
 									</td>
 									</tr>
 								<tr>
 									<td class="rowLabel"><spring:message code="run_period"/></td>
 									<td >${studentRunInfo.group.name} <span id="periodMessage"><spring:message code="student.index.changePeriodHelpMessage"/></span></td>
-							  	
+
 							  	</tr>
 								<tr>
 									<td class="rowLabel"><spring:message code="team_cap"/></td>
@@ -338,31 +338,31 @@ $(document).ready(function() {
 											${member.userDetails.username}
 									 		   <c:if test="${membersStatus.last=='false'}">
 						     					&
-						    				</c:if> 
+						    				</c:if>
 											</c:forEach>
 										</c:when>
 										<c:otherwise>
-											<div class="teamNotRegisteredMessage"><spring:message code="student.index.getStartedMessage"/></div>  
-										</c:otherwise>	
+											<div class="teamNotRegisteredMessage"><spring:message code="student.index.getStartedMessage"/></div>
+										</c:otherwise>
 							      		</c:choose>
 									</td>
 								</tr>
-							</table>	
+							</table>
 						</c:forEach>
 						</c:when>
 						<c:otherwise>
-							<spring:message code="student.index.addProjectMessage"/>			    
+							<spring:message code="student.index.addProjectMessage"/>
 						</c:otherwise>
 						</c:choose>
 					</div>  <!--  closes <div id='currentRuns'> -->
 					<div id="archivedRuns">
-						<p class="info"><spring:message code="student.index.archivedRunMessage"/></p> 
-		
+						<p class="info"><spring:message code="student.index.archivedRunMessage"/></p>
+
 						<c:choose>
 						<c:when test="${fn:length(ended_run_list) > 0}" >
 						<c:forEach var="studentRunInfo"  items="${ended_run_list}">
 							<table class="runTable" >
-				
+
 								<tr class="projectMainRow">
 									<td class="rowLabel"><spring:message code="title"/></td>
 									<td class="studentCurrentTitleCell">
@@ -374,7 +374,7 @@ $(document).ready(function() {
 											</li>
 										</ul>
 								 	</td>
-								</tr>	
+								</tr>
 								<tr>
 									<td class="rowLabel"><spring:message code="teacher_cap"/></td>
 									<td>
@@ -383,15 +383,15 @@ $(document).ready(function() {
 											${studentRunInfo.run.owner.userDetails.displayname}
 										</c:when>
 										<c:otherwise>
-											<spring:message code="student.index.teamNotEstablishedYet"/>			    
-										</c:otherwise>	
+											<spring:message code="student.index.teamNotEstablishedYet"/>
+										</c:otherwise>
 							      		</c:choose>
 									</td>
 									</tr>
 								<tr>
 									<td class="rowLabel"><spring:message code="run_period"/></td>
 									<td>${studentRunInfo.group.name}</td>
-							  	
+
 							  	</tr>
 								<tr>
 									<td class="rowLabel"><spring:message code="team_cap"/></td>
@@ -402,12 +402,12 @@ $(document).ready(function() {
 											${member.userDetails.username}
 									 		   <c:if test="${membersStatus.last=='false'}">
 						     					&
-						    				</c:if> 
+						    				</c:if>
 											</c:forEach>
 										</c:when>
 										<c:otherwise>
-											<spring:message code="student.index.teamNotEstablishedYet"/>			    
-										</c:otherwise>	
+											<spring:message code="student.index.teamNotEstablishedYet"/>
+										</c:otherwise>
 							      		</c:choose>
 									</td>
 								</tr>
@@ -419,7 +419,7 @@ $(document).ready(function() {
 						</c:forEach>
 						</c:when>
 						<c:otherwise>
-								<spring:message code="student.index.noArchivedProjects"/>	    
+								<spring:message code="student.index.noArchivedProjects"/>
 						</c:otherwise>
 						</c:choose>
 					</div>
@@ -429,7 +429,7 @@ $(document).ready(function() {
 		</div>
 		<div style="clear: both;"></div>
 	</div>   <!-- End of page -->
-	
+
 	<%@ include file="../footer.jsp" %>
 </div>
 

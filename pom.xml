@@ -41,7 +41,7 @@
 	<artifactId>wise</artifactId>
 	<packaging>war</packaging>
 	<name>Web-based Inquiry Science Environment</name>
-	<version>5.3.3</version>
+	<version>5.4</version>
 	<url>http://wise5.org</url>
 	<developers>
 		<developer>

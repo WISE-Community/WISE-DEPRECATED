@@ -5,7 +5,7 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<meta http-equiv="X-UA-Compatible" content="chrome=1" />
-	<link rel="shortcut icon" href="${contextPath}/<spring:theme code="favicon"/>" />
+	<%@ include file="../favicon.jsp"%>
 	<title><spring:message code="wiseAdmin" /></title>
 
 	<link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet" type="text/css" />

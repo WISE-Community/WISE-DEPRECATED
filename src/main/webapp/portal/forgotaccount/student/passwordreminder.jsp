@@ -4,25 +4,25 @@
 <html dir="${textDirection}">
 <head>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-<link rel="shortcut icon" href="${contextPath}/<spring:theme code="favicon"/>" />
+<%@ include file="../../favicon.jsp"%>
 <title><spring:message code="forgotaccount.student.passwordreminder.forgotPasswordStudentReminder"/></title>
 
-<link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />  
+<link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
 <link href="${contextPath}/<spring:theme code="stylesheet"/>" media="screen" rel="stylesheet"  type="text/css" />
-   
-<script src="${contextPath}/<spring:theme code="generalsource"/>" type="text/javascript"></script>	
+
+<script src="${contextPath}/<spring:theme code="generalsource"/>" type="text/javascript"></script>
 
 </head>
 <body>
 <div id="pageWrapper">
-	
+
 	<div id="page">
-		
+
 		<div id="pageContent" style="min-height:400px;">
 			<div id="headerSmall">
 				<a id="name" href="${contextPath}/index.html" title="<spring:message code="wiseHomepage" />"><spring:message code="wise" /></a>
 			</div>
-			
+
 			<div class="infoContent">
 				<div class="panelHeader"><spring:message code="forgotaccount.student.passwordreminder.studentLostUsernamePassword"/></div>
 				<div class="infoContentBox">
@@ -31,11 +31,11 @@
 						<form:form id="username" name="retrievepassword" method="post" commandName="passwordReminderParameters" autocomplete='off'>
 							<label style="font-weight:bold;" for="send_username"><spring:message code="forgotaccount.student.passwordreminder.username" />:</label>
 				  			<input class="dataBoxStyle" type="text" name="username" id="userName" size="20" tabindex="1" />
-				 			
+
 							<!-- 			Special script pulls focus onto immediately preceding Input field-->
 				 			<script type="text/javascript">document.getElementById('userName').focus();
-							</script> 
-							<input type="hidden" name="_page" value="1" />							
+							</script>
+							<input type="hidden" name="_page" value="1" />
 							<input style="margin-left:20px; text-align:center;width:55px;" type="submit" id="next" name="_target1" value="<spring:message code="forgotaccount.student.passwordreminder.next" />" />
 						</form:form>
 					</div>

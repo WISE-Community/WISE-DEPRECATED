@@ -4,7 +4,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="chrome=1" />
-<link rel="shortcut icon" href="${contextPath}/<spring:theme code="favicon"/>" />
+<%@ include file="favicon.jsp"%>
 <title>WISE</title>
 
 <script type="text/javascript">
@@ -34,7 +34,7 @@ function startWithConfig() {
 	window.frames['topifrm'].document.dir = "${textDirection}";
 	window.frames['topifrm'].eventManager.subscribe('fatalError', notifyFatal);
 	window.frames['topifrm'].view.startVLEFromConfig(vleConfigUrl);
-};	
+};
 </script>
 </head>
 <body style="height:100%; overflow-y:hidden; margin:0px;">

@@ -4,23 +4,23 @@
 <html dir="${textDirection}">
 <head>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-<link rel="shortcut icon" href="${contextPath}/<spring:theme code="favicon"/>" />
+<%@ include file="../../favicon.jsp"%>
 <title><spring:message code="forgotaccount.student.searchforstudentusername.searchForUsernameViaProjectCode"/></title>
 
-<link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" /> 
-<link href="${contextPath}/<spring:theme code="stylesheet"/>" media="screen" rel="stylesheet"  type="text/css" />	
+<link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
+<link href="${contextPath}/<spring:theme code="stylesheet"/>" media="screen" rel="stylesheet"  type="text/css" />
 
 </head>
 <body>
 <div id="pageWrapper">
-	
+
 	<div id="page">
-		
+
 		<div id="pageContent" style="min-height:400px;">
 			<div id="headerSmall">
 				<a id="name" href="${contextPath}/index.html" title="<spring:message code="wiseHomepage" />"><spring:message code="wise" /></a>
 			</div>
-			
+
 			<div class="infoContent">
 				<div class="panelHeader"><spring:message code="forgotaccount.student.searchforstudentusername.studentLostUsernamePassword"/></div>
 				<div class="infoContentBox">
@@ -31,7 +31,7 @@
 							<table width="100%" style="border-collapse:separate;border-spacing:10px">
 								<tr>
 									<td align="right"><label id="firstNameLabel" for="firstName"><spring:message code="forgotaccount.student.searchforstudentusername.firstName"/>:</label></td>
-									<td align="left"><form:input path="firstName" id="firstName" tabindex="1"/></td>	
+									<td align="left"><form:input path="firstName" id="firstName" tabindex="1"/></td>
 								</tr>
 								<tr>
 									<td align="right"><label id="lastNameLabel" for="lastName"><spring:message code="forgotaccount.student.searchforstudentusername.lastName"/>:</label></td>

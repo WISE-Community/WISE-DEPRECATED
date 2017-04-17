@@ -5,7 +5,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta http-equiv="X-UA-Compatible" content="chrome=1" />
-<link rel="shortcut icon" href="${contextPath}/<spring:theme code="favicon"/>" />
+<%@ include file="../../favicon.jsp"%>
 <title><spring:message code="teacher.run.editrun.editRun"/></title>
 
 <script type="text/javascript" src="${contextPath}/<spring:theme code="jquerysource"/>"></script>
@@ -22,7 +22,7 @@
     function getNotesJSON() {
     	var notesStr = $("#privateNotes").html();
 		if (notesStr != "") {
-			return JSON.parse(notesStr);		
+			return JSON.parse(notesStr);
 		} else {
 			return {"generalComments":""};
 		}
@@ -36,16 +36,16 @@
 		$(".save").click(function() {
 			var privateNotes = getNotesJSON("private");
 			privateNotes.generalComments = $("#privateNotesTextarea").val();
-			
+
 			$.ajax(
-					{   type:'POST', 
-						url:'updaterun.html', 
+					{   type:'POST',
+						url:'updaterun.html',
 						data:"command=saveNotes"+
 							  "&runId="+$("#runId").html()+
 							  "&privateNotes="+JSON.stringify(privateNotes),
 						error:function() {
 							alert('Failed to save notes. Please contact WISE Staff. Sorry about the inconvience.');
-						}, 
+						},
 						success:function() {
 							writeMessage('<spring:message code="teacher.run.notes.saveSuccess"/>');
 						}
@@ -61,7 +61,7 @@
 
 	<div id="runId" style="display:none;">${run.id}</div>
 	<div id='msgDiv'></div>
-	
+
 	<div id='runInfo' class="dialogSection">
 		<span style='font-color:gray'>Write any personal notes for this classroom run here. Other users will not be able to see them.</span><br/>
 		<textarea cols="100" rows="14" id='privateNotesTextarea'></textarea><br/>

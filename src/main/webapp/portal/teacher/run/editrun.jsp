@@ -5,7 +5,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta http-equiv="X-UA-Compatible" content="chrome=1" />
-<link rel="shortcut icon" href="${contextPath}/<spring:theme code="favicon"/>" />
+<%@ include file="../../favicon.jsp"%>
 <title><spring:message code="teacher.run.editrun.editRun"/></title>
 
 <script type="text/javascript" src="${contextPath}/<spring:theme code="generalsource"/>"></script>
@@ -17,7 +17,7 @@
 
 <script type='text/javascript'>
 	var runUpdated = false;
-	
+
 	function updateRunTitle(runId){
 		$('#msgDiv').html('');
 		var val = $('#editRunTitleInput').val();
@@ -44,7 +44,7 @@
 			return;
 		} else if ($("#period_"+val+"").length > 0) {
 			writeMessage('<spring:message code="teacher.run.editrun.alreadyHavePeriodWithThisName"/>');
-			return;			
+			return;
 		}
 
 		$.ajax({type:'POST', url:'updaterun.html', data:'command=addPeriod&runId=' + runId + '&name=' + val, error:updateFailure, success:updatePeriodSuccess});
@@ -58,7 +58,7 @@
 	function updateSuccess(){
 		writeMessage('<spring:message code="teacher.run.editrun.successfullyUpdatedRunSettings"/>');
 	}
-	
+
 	function updateTitleSuccess(){
 		runUpdated = true;
 		writeMessage('<spring:message code="teacher.run.editrun.successfullyUpdatedRunTitle"/>');
@@ -75,7 +75,7 @@
 		writeMessage('<spring:message code="teacher.run.editrun.periodSuccessfullyAdded"/>');
 	}
 
-	$(document).ready(function() {		
+	$(document).ready(function() {
 		$(".runInfoOption").bind("click", function() {
 			$('#msgDiv').html('');
 			var runId = $("#runId").html();
@@ -83,7 +83,7 @@
 			var isEnabled = this.checked;
 
 			$.ajax({type:'POST', url:'updaterun.html', data:'command='+infoOptionName+'&runId=' + runId + '&isEnabled=' + isEnabled, error:updateFailure, success:updateSuccess});
-			
+
 			if(infoOptionName == 'enableRealTime' && isEnabled == false) {
 				//hide the Classroom Monitor link because the teacher has enabled real time
 				$('#runId\\=' + runId + '\\&gradingType\\=monitor', window.parent.document).hide();

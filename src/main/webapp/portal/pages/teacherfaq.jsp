@@ -6,7 +6,7 @@
 <meta name=Title content="<spring:message code="pages.teacherfaq.wise4TeacherInformationSheet" />">
 <meta name=Keywords content="">
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-<link rel="shortcut icon" href="${contextPath}/<spring:theme code="favicon"/>" />
+<%@ include file="../favicon.jsp"%>
 <title><spring:message code="pages.teacherfaq.wise4TeacherInformationSheet" /></title>
 
 <link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
@@ -41,7 +41,7 @@
 <div id="pageWrapper">
 
 	<%@ include file="../headermain.jsp"%>
-	
+
 	<div id="page">
 
 		<div id="pageContent">
@@ -59,7 +59,7 @@
 						<li><a href="#technicalQuestions"><spring:message code="pages.teacherfaq.technicalQuestions" /></a></li>
 					</ul>
 				</div>
-			
+
 				<div class="sectionHead" id="studentManagement"><spring:message code="pages.teacherfaq.studentManagement" /></div>
 				<div class="sectionContent">
 					<div class="question"><spring:message code="pages.teacherfaq.shouldIRegisterStudentsQuestion" /></div>
@@ -70,7 +70,7 @@
     						<li><spring:message code="pages.teacherfaq.shouldIRegisterStudentsAnswerPart3" /></li>
 						</ul>
 					</div>
-				
+
 					<div class="question"><spring:message code="pages.teacherfaq.studentForgotUsernameOrPasswordQuestion" /></div>
 					<div class="answer">
 						<ul>
@@ -92,7 +92,7 @@
 						    <li><spring:message code="pages.teacherfaq.howChangeStudentTeamAnswerPart7" /></li>
 						</ul>
 					</div>
-					
+
 					<div class="question"><spring:message code="pages.teacherfaq.howChangeStudentPasswordQuestion" /></div>
 					<div class="answer">
 					<ul>
@@ -107,7 +107,7 @@
 					    </li>
 					</ul>
 					</div>
-					
+
 					<div class="question"><spring:message code="pages.teacherfaq.iDoNotRememberAccessCodeQuestion" /></div>
 					<div class="answer">
 					<ul>
@@ -151,36 +151,36 @@
 						    <li><spring:message code="pages.teacherfaq.howStudentsSeeMyCommentsAndScoresAnswerPart2" /></li>
 						    <li><spring:message code="pages.teacherfaq.howStudentsSeeMyCommentsAndScoresAnswerPart3" /></li>
 						    <li><spring:message code="pages.teacherfaq.howStudentsSeeMyCommentsAndScoresAnswerPart4" /></li>
-						</ul>					
+						</ul>
 					</div>
 
 					<div class="question"><spring:message code="pages.teacherfaq.whereFindLessonPlansAndStandardsQuestion" /></div>
 					<div class="answer">
-						<spring:message code="pages.teacherfaq.whereFindLessonPlansAndStandardsAnswer" />		
+						<spring:message code="pages.teacherfaq.whereFindLessonPlansAndStandardsAnswer" />
 					</div>
 
 					<div class="question"><spring:message code="pages.teacherfaq.howFitProjectIntoMyCurriculumQuestion" /></div>
 					<div class="answer">
-						<spring:message code="pages.teacherfaq.howFitProjectIntoMyCurriculumAnswer" />	
-					</div>	
-					
+						<spring:message code="pages.teacherfaq.howFitProjectIntoMyCurriculumAnswer" />
+					</div>
+
 					<div class="question"><spring:message code="pages.teacherfaq.whatIfRunOutOfLabTimeQuestion" /></div>
 					<div class="answer">
-						<spring:message code="pages.teacherfaq.whatIfRunOutOfLabTimeAnswer" />	
-					</div>			
-						
+						<spring:message code="pages.teacherfaq.whatIfRunOutOfLabTimeAnswer" />
+					</div>
+
 					<div class="question"><spring:message code="pages.teacherfaq.iDoNotRememberTeacherAccessCodeQuestion" /></div>
 					<div class="answer">
 						<spring:message code="pages.teacherfaq.iDoNotRememberTeacherAccessCodeAnswer" />
-					</div>	
-																	
+					</div>
+
 					<div class="question"><spring:message code="pages.teacherfaq.whyIsNavigationBarDisappearingQuestion" /></div>
 					<div class="answer">
-						<spring:message code="pages.teacherfaq.whyIsNavigationBarDisappearingAnswer" /> 
-					</div>		
+						<spring:message code="pages.teacherfaq.whyIsNavigationBarDisappearingAnswer" />
+					</div>
 
 				</div>
-				
+
 				<div class="sectionHead" id="assessmentOfStudentWork"><spring:message code="pages.teacherfaq.assessmentOfStudentWork" /></div>
 				<div class="sectionContent">
 					<div class="question"><spring:message code="pages.teacherfaq.whereFindStudentWorkQuestion" /></div>
@@ -190,13 +190,13 @@
 						    <li><spring:message code="pages.teacherfaq.whereFindStudentWorkAnswerPart2" /></li>
 						</ul>
 					</div>
-					
+
 					<div class="question"><spring:message code="pages.teacherfaq.whatShouldILookForInStudentAnswersQuestion" /></div>
 					<div class="answer">
-						<spring:message code="pages.teacherfaq.whatShouldILookForInStudentAnswersAnswer" /><br/><br/> 
+						<spring:message code="pages.teacherfaq.whatShouldILookForInStudentAnswersAnswer" /><br/><br/>
 						<a href="${contextPath}/<spring:theme code="sample_rubric"/>"><spring:message code="pages.teacherfaq.sampleRubric" /></a>
 					</div>
-					
+
 					<div class="question"><spring:message code="pages.teacherfaq.howEncourageStudentsReviewNotesAndCommentsQuestion" /></div>
 					<div class="answer">
 						<spring:message code="pages.teacherfaq.howEncourageStudentsReviewNotesAndCommentsAnswer" />
@@ -206,24 +206,24 @@
 					<div class="answer">
 						<spring:message code="pages.teacherfaq.howFindTimeToGradeAllStudentWorkAnswer" />
 					</div>
-										
+
 				</div>
 
 				<div class="sectionHead" id="realtime"><spring:message code="pages.teacherfaq.realTimeClassroomMonitor" /></div>
 				<div class="sectionContent">
-				
+
 					<div class="question"><spring:message code="pages.teacherfaq.whatIsRealTimeClassroomMonitorQuestion" /></div>
 					<div class="answer"><spring:message code="pages.teacherfaq.whatIsRealTimeClassroomMonitorAnswer" /></div>
-				
+
 					<div class="question"><spring:message code="pages.teacherfaq.whatAreTechnicalRequirementsForRealTimeClassroomMonitorQuestion" /></div>
 					<div class="answer"><spring:message code="pages.teacherfaq.whatAreTechnicalRequirementsForRealTimeClassroomMonitorAnswer" /></div>
-				
+
 					<div class="question"><spring:message code="pages.teacherfaq.howTurnOnOffRealTimeClassroomMonitorQuestion" /></div>
 					<div class="answer"><spring:message code="pages.teacherfaq.howTurnOnOffRealTimeClassroomMonitorAnswer" /></div>
-					
+
 					<div class="question"><spring:message code="pages.teacherfaq.doesRealTimeClassroomMonitorWorkOnTabletQuestion" /></div>
 					<div class="answer"><spring:message code="pages.teacherfaq.doesRealTimeClassroomMonitorWorkOnTabletAnswer" /></div>
-					
+
 					<div class="question"><spring:message code="pages.teacherfaq.canRealTimeClassroomMonitorPauseStudentScreensQuestion" /></div>
 					<div class="answer"><spring:message code="pages.teacherfaq.canRealTimeClassroomMonitorPauseStudentScreensAnswer" /></div>
 				</div>
@@ -234,16 +234,16 @@
 					<div class="answer">
 						<spring:message code="pages.teacherfaq.websiteWontLoadAnswerPart1" />
 						<a href="${contextPath}/pages/check.html"><spring:message code="pages.teacherfaq.wiseCompatibilityTest" /></a><br/><br/>
-						
+
 						<spring:message code="pages.teacherfaq.websiteWontLoadAnswerPart2" />
-						<a target=_blank href="http://www.wikihow.com/Clear-Your-Browser's-Cache"><spring:message code="pages.teacherfaq.howToClearCache" /></a>					
+						<a target=_blank href="http://www.wikihow.com/Clear-Your-Browser's-Cache"><spring:message code="pages.teacherfaq.howToClearCache" /></a>
 					</div>
-					
+
 					<div class="question"><spring:message code="pages.teacherfaq.howManyComputersDoINeedQuestion" /></div>
 					<div class="answer">
 						<spring:message code="pages.teacherfaq.howManyComputersDoINeedAnswer" />
 					</div>
-					
+
 					<div class="question"><spring:message code="pages.teacherfaq.whatIfTroubleLoggingInQuestion" /></div>
 					<div class="answer">
 						<ul>
@@ -261,9 +261,9 @@
 					<div class="answer">
 						<spring:message code="pages.teacherfaq.whoContactWhenHaveProblemAnswer" />
 					</div>
-					
+
 				</div>
-				
+
 				</div>  <!--  end of panelContent -->
 			</div>  <!--  end of contentPanel -->
 

@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html dir="${textDirection}">
 <head>
-<link rel="shortcut icon" href="${contextPath}/<spring:theme code="favicon"/>" />
+<%@ include file="../../favicon.jsp"%>
 <title><spring:message code="teacher.management.classroomruns.title" /></title>
 
 <link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
@@ -24,27 +24,27 @@ var isTeacherIndex = true; //global var used by spawned pages (i.e. archive run)
 <div id="pageWrapper">
 
 	<%@ include file="../../headermain.jsp"%>
-		
+
 	<div id="page">
-			
+
 		<div id="pageContent">
-			
+
 			<div class="contentPanel">
-			
+
 				<div class="panelHeader">
 					<spring:message code="teacher.management.classroomruns.title" />
 					<span class="pageTitle"><spring:message code="header_location_teacherManagement"/></span>
 				</div>
-				
+
 				<div class="panelContent">
 					<%@ include file="projectruntabs.jsp"%>
 				</div>
-					
+
 			</div>
 		</div>
 		<div style="clear: both;"></div>
 	</div>   <!-- End of page -->
-	
+
 	<%@ include file="../../footer.jsp"%>
 </div>
 </body>

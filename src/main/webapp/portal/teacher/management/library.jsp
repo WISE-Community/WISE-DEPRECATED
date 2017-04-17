@@ -5,7 +5,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta http-equiv="X-UA-Compatible" content="chrome=1" />
-<link rel="shortcut icon" href="${contextPath}/<spring:theme code="favicon"/>" />
+<%@ include file="../../favicon.jsp"%>
 <title><spring:message code="teacher.management.library.title" /></title>
 
 <link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
@@ -26,18 +26,18 @@ var isTeacherIndex = true; //global var used by spawned pages (i.e. archive run)
 <div id="pageWrapper">
 
 	<%@ include file="../../headermain.jsp"%>
-		
+
 	<div id="page">
-			
+
 		<div id="pageContent">
-			
+
 			<div class="contentPanel">
-			
+
 				<div class="panelHeader">
 					<spring:message code="teacher.management.library.title" />
 					<span class="pageTitle"><spring:message code="header_location_teacherManagement"/></span>
 				</div>
-				
+
 				<div class="panelContent">
 					<%@ include file="projectlibrarydisplay.jsp"%>
 				</div>
@@ -45,7 +45,7 @@ var isTeacherIndex = true; //global var used by spawned pages (i.e. archive run)
 		</div>
 		<div style="clear: both;"></div>
 	</div>   <!-- End of page -->
-	
+
 	<%@ include file="../../footer.jsp"%>
 </div>
 </body>

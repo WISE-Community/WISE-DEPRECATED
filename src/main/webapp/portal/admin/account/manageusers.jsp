@@ -3,14 +3,14 @@
 <html dir="${textDirection}">
 <head>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-<script type="text/javascript" src="${contextPath}/<spring:theme code="jquerysource"/>"></script>  
+<script type="text/javascript" src="${contextPath}/<spring:theme code="jquerysource"/>"></script>
 <link href="${contextPath}/<spring:theme code="stylesheet"/>" media="screen" rel="stylesheet" type="text/css" />
 <link href="${contextPath}/<spring:theme code="teacherprojectstylesheet" />" media="screen" rel="stylesheet" type="text/css" />
 <link href="${contextPath}/<spring:theme code="teacherhomepagestylesheet" />" media="screen" rel="stylesheet" type="text/css" />
-<link rel="shortcut icon" href="${contextPath}/<spring:theme code="favicon"/>" />
-    
+<%@ include file="../../favicon.jsp"%>
+
 <script src="${contextPath}/<spring:theme code="generalsource" />" type="text/javascript"></script>
-    
+
 <title><spring:message code="wiseAdmin" /></title>
 
 <script type="text/javascript">
@@ -60,7 +60,7 @@ a:hover {
 </style>
 </head>
 <body>
-<jsp:useBean id="now" class="java.util.Date"/>    
+<jsp:useBean id="now" class="java.util.Date"/>
 <fmt:formatDate value="${now}" pattern="yyyy-MM-dd" var="today"/>
 
 <h5 style="color:#0000CC;"><a href="${contextPath}/admin"><spring:message code="returnToMainAdminPage" /></a></h5>
@@ -108,8 +108,8 @@ a:hover {
 		</c:otherwise>
 		</c:choose>
 			<td>${username}</td>
-			<td><a onclick="javascript:popup640('../../teacher/management/changepassword.html?userName=${username}');"><spring:message code="changePassword" /></a></td> 
-			<td><a href="${contextPath}/login/impersonate?username=${username}"><spring:message code="admin.account.manageusers.logInAsThisUser" /></a></td> 
+			<td><a onclick="javascript:popup640('../../teacher/management/changepassword.html?userName=${username}');"><spring:message code="changePassword" /></a></td>
+			<td><a href="${contextPath}/login/impersonate?username=${username}"><spring:message code="admin.account.manageusers.logInAsThisUser" /></a></td>
 			<td><a onclick="javascript:popup640('../../student/account/info?userName=${username}');"><spring:message code="info" /></a></td>
 			<c:if test="${not empty studentUserArray[1]}">
 				<td>
@@ -170,7 +170,7 @@ a:hover {
 		</tr>
 	</c:forEach>
 </table>
-		
+
 </c:when>
 <c:otherwise>
 
