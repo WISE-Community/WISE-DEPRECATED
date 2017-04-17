@@ -1,9 +1,9 @@
 /*
  * This is a branching step object that developers can use to create new
  * step types.
- * 
+ *
  * TODO: Copy this file and rename it to
- * 
+ *
  * <new step type>.js
  * e.g. for example if you are creating a quiz step it would look
  * something like quiz.js
@@ -16,11 +16,11 @@
  *
  * e.g. for example if you are creating a quiz step it would look something like
  * wise/src/main/webapp/vle/node/quiz/
- * 
- * 
+ *
+ *
  * TODO: in this file, change all occurrences of the word 'Branching' to the
  * name of your new step type
- * 
+ *
  * <new step type>
  * e.g. for example if you are creating a quiz step it would look
  * something like Quiz
@@ -30,9 +30,9 @@
  * This is the constructor for the object that will perform the logic for
  * the step when the students work on it. An instance of this object will
  * be created in the .html for this step (look at branching.html)
- * 
+ *
  * TODO: rename Branching
- * 
+ *
  * @constructor
  */
 function Branching(node) {
@@ -43,9 +43,9 @@ function Branching(node) {
 	this.chosenPathName = null; //the title of the path that was chosen
 
 	if(node.studentWork != null) {
-		this.states = node.studentWork; 
+		this.states = node.studentWork;
 	} else {
-		this.states = [];  
+		this.states = [];
 	};
 };
 
@@ -55,35 +55,42 @@ function Branching(node) {
  */
 Branching.prototype.translateOperand = function(operand) {
 	if (operand == "WISE_WORKGROUP_ID") {
-		if (this.view.getConfig().getConfigParam("mode") === "preview") {
-		    // generate a random integer for the workgroup id
-			return Math.floor(Math.random() * 100000);
-		} else {
-			return this.view.getUserAndClassInfo().getWorkgroupId();
+
+		// get the workgroup id
+		var workgroupId = this.view.getUserAndClassInfo().getWorkgroupId();
+
+		if (workgroupId == null) {
+			/*
+			 * if the user is previewing the project, there may be no workgroup
+			 * id so we will randomly generate one
+			 */
+			workgroupId = Math.floor(Math.random() * 100000);
 		}
+
+		return workgroupId;
 	}
 	return operand;
 };
 
 /**
- * 
+ *
  * @param annotationKey key in the run annotations e.g. "groups"
  */
 Branching.prototype.annotationLookup = function(annotationKey) {
 	var annotationValue = null;
-	
+
 	//get the run annotations object
 	var runAnnotationsObj = this.node.view.getAnnotationsByType("run");
-	
+
 	if(runAnnotationsObj != null) {
 		//get the run annotations array
 		var runAnnotations = runAnnotationsObj.getAnnotationsByType("run");
-		
+
 		if(runAnnotations != null) {
 			if (runAnnotations.length > 0) {
 				//get the latest run annotation
 				runAnnotation = runAnnotations[runAnnotations.length - 1];
-				
+
 				if(runAnnotation != null && runAnnotation.value != null) {
 					//get the value from the annotation
 					annotationValue = runAnnotation.value[annotationKey];
@@ -91,9 +98,9 @@ Branching.prototype.annotationLookup = function(annotationKey) {
 			}
 		}
 	}
-	
+
 	return annotationValue;
-};	
+};
 
 /**
  * Determine which path to visit
@@ -118,10 +125,10 @@ Branching.prototype.getPathToVisit = function() {
 	} else if (branchingFunction == "annotationLookup") {
 		if (this.view.getConfig().getConfigParam("mode") === "preview") {
 			// choose the first path for preview
-			pathToVisit = this.content.paths[0];			
+			pathToVisit = this.content.paths[0];
 		} else {
 			result = this.annotationLookup(branchingFunctionParams[0]);
-			
+
 			if(result != null) {
 				for (var i=0; i<this.content.paths.length; i++) {
 					var path = this.content.paths[i];
@@ -154,7 +161,7 @@ Branching.prototype.getPathToVisit = function() {
 								pathToVisit = path;
 								return pathToVisit;
 							}
-						}			
+						}
 					}
 				}
 			}
@@ -162,14 +169,14 @@ Branching.prototype.getPathToVisit = function() {
 	} else if (branchingFunction === 'random') {
 	    // get the paths
 	    var paths = this.content.paths;
-	    
+
 	    if (paths != null) {
 	        //  get the number of possible paths
 	        var numPaths = paths.length;
-	        
+
 	        // choose one of the paths at random
 	        var pathIndex = Math.floor(Math.random() * numPaths);
-	        
+
 	        // get the randomly chosen path
 	        pathToVisit = this.content.paths[pathIndex];
 	    }
@@ -183,7 +190,7 @@ Branching.prototype.getPathToVisit = function() {
  * This includes setting up the html ui elements as well as reloading any
  * previous work the student has submitted when they previously worked on this
  * step, if any.
- * 
+ *
  * note: you do not have to use 'promptDiv' or 'studentResponseTextArea', they
  * are just provided as examples. you may create your own html ui elements in
  * the .html file for this step (look at branching.html).
@@ -242,7 +249,7 @@ Branching.prototype.showBranchPage = function() {
 			}
 		}
 	};
-	
+
 	$("#pathsDiv").html("");
 	$("#pathsDiv").append(inCompleteBranchLinks);
 	$("#pathsDiv").append(completedBranchLinks);
@@ -299,7 +306,7 @@ Branching.prototype.getOrderedVisiblePathIds = function() {
 	        branchPathOrder = this.shuffleArray(branchPathOrder);
 	    } else {
     		var branchPathOrderCriteriaNodeId = this.content.branchPathOrderCriteria.criteriaNodeId;
-    		var branchPathOrderCriteriaNode = this.view.getProject().getNodeById(branchPathOrderCriteriaNodeId);		
+    		var branchPathOrderCriteriaNode = this.view.getProject().getNodeById(branchPathOrderCriteriaNodeId);
     		var branchPathOrderValues = branchPathOrderCriteriaNode.getBranchPathOrderValues(allPathsJSONArray);
     		var branchPathOrderCriteriaMappingArray = this.content.branchPathOrderCriteria.criteriaMappingArray;
     		for (var i = 0; i < branchPathOrderValues.length; i++) {
@@ -320,7 +327,7 @@ Branching.prototype.getOrderedVisiblePathIds = function() {
 			branchPathOrder.push(pathJSONObj.identifier);
 		}
 	}
-	
+
 	// now limit the number of paths in the return array based on maxPathsVisible value
 	var maxPathsVisible = (this.content.maxPathVisible != null) ? this.content.maxPathVisible : allPathsJSONArray.length; // determine how many paths are visible at this time. defaults to all paths.
 	var orderedVisiblePaths = [];
@@ -331,7 +338,7 @@ Branching.prototype.getOrderedVisiblePathIds = function() {
 			orderedVisiblePaths.push(branchPathIdentifier);
 			// if student has already completed a branch, don't count it towards the limit
 			if (!this.node.isBranchPathCompleted(this.node.getPathJSONByPathId(branchPathIdentifier))) {
-				numPathsVisibleSoFar++;							
+				numPathsVisibleSoFar++;
 			}
 		}
 	}
@@ -388,20 +395,20 @@ Branching.prototype.doBranch = function(pathToVisitJSONObj) {
 	this.view.updateNavigationLogic();
 
 	// render the next node, which should be the first node of the branched path
-	this.view.renderNextNode();	
-	
+	this.view.renderNextNode();
+
     // get all the branch node ids
     var branchingNodeIds = this.view.getProject().getNodeIdsByNodeType('BranchingNode');
-    
+
     // loop through all the branch nodes
     for (var b = 0; b < branchingNodeIds.length; b++) {
         var branchingNodeId = branchingNodeIds[b];
         var branchingNode = this.view.getProject().getNodeById(branchingNodeId);
-        
+
         if (branchingNode != null) {
-            
+
             /*
-             * show or hide the paths for the branch node depending on whether 
+             * show or hide the paths for the branch node depending on whether
              * they have been visited or not
              */
             branchingNode.processPathVisibility();
@@ -419,7 +426,7 @@ Branching.prototype.hideAllExceptBranchStep = function() {
 		var sequenceId = pathJSONObj.sequenceRef;
 		var pathSequence = this.view.getProject().getNodeById(sequenceId);
 		var doDisplay = false;
-		this.displayInNavigationIncludingChildren(pathSequence,doDisplay);		
+		this.displayInNavigationIncludingChildren(pathSequence,doDisplay);
 	}
 };
 
@@ -460,9 +467,9 @@ Branching.prototype.displayInNavigationIncludingChildren = function(node,doDispl
 
 /**
  * This function retrieves the latest student work
- * 
+ *
  * TODO: rename Branching
- * 
+ *
  * @return the latest state object or null if the student has never submitted
  * work for this step
  */
@@ -481,10 +488,10 @@ Branching.prototype.getLatestState = function() {
 /**
  * This function retrieves the student work from the html ui, creates a state
  * object to represent the student work, and then saves the student work.
- * 
+ *
  * TODO: rename Branching
- * 
- * note: you do not have to use 'studentResponseTextArea', they are just 
+ *
+ * note: you do not have to use 'studentResponseTextArea', they are just
  * provided as examples. you may create your own html ui elements in
  * the .html file for this step (look at branching.html).
  */
@@ -498,21 +505,21 @@ Branching.prototype.save = function() {
 	/*
 	 * create the student state that will store the new work the student
 	 * just submitted
-	 * 
+	 *
 	 * TODO: rename BranchingState
-	 * 
+	 *
 	 * make sure you rename BranchingState to the state object type
 	 * that you will use for representing student data for this
 	 * type of step. copy and modify the file below
-	 * 
+	 *
 	 * wise/src/main/webapp/vle/node/branching/branchingState.js
-	 * 
+	 *
 	 * and use the object defined in your new state.js file instead
 	 * of BranchingState. for example if you are creating a new
 	 * quiz step type you would copy the file above to
-	 * 
+	 *
 	 * wise/src/main/webapp/vle/node/quiz/quizState.js
-	 * 
+	 *
 	 * and in that file you would define QuizState and therefore
 	 * would change the BranchingState to QuizState below
 	 */
@@ -527,7 +534,7 @@ Branching.prototype.save = function() {
 
 	//push the state object into this or object's own copy of states
 	this.states.push(branchingState);
-	
+
 	// update constraints
 	this.view.updateActiveTagMapConstraints();
 };
@@ -537,9 +544,9 @@ if(typeof eventManager != 'undefined'){
 	/*
 	 * TODO: rename branching to your new folder name
 	 * TODO: rename branching.js
-	 * 
+	 *
 	 * e.g. if you were creating a quiz step it would look like
-	 * 
+	 *
 	 * eventManager.fire('scriptLoaded', 'vle/node/quiz/quiz.js');
 	 */
 	eventManager.fire('scriptLoaded', 'vle/node/branching/branching.js');

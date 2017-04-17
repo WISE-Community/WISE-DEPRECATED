@@ -1,21 +1,21 @@
 /**
  * Copyright (c) 2008-2015 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
- * 
+ *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
- * 
+ *
  * Permission is hereby granted, without written agreement and without license
  * or royalty fees, to use, copy, modify, and distribute this software and its
  * documentation for any purpose, provided that the above copyright notice and
  * the following two paragraphs appear in all copies of this software.
- * 
+ *
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
  * PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
  * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
  * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
- * 
+ *
  * IN NO EVENT SHALL REGENTS BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT,
  * SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, INCLUDING LOST PROFITS,
  * ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF
@@ -47,30 +47,32 @@ import org.wise.portal.service.project.ProjectService;
 /**
  * Controller for previewing a specific project
  * Parameters can be projectId, runId, and externalId.
- * 
+ *
  * @author Matt Fishbach
  * @author Hiroki Terashima
  */
 @Controller
 public class PreviewProjectController {
-	
+
 	private static final String PROJECT_ID_PARAM_NAME = "projectId";
-	
+
 	private static final String PROJECT_ID_PARAM_NAME_LOWERCASE = "projectid";
 
 	private static final String RUN_ID_PARAM_NAME = "runId";
-	
+
 	private static final String VERSION_ID = "versionId";
 
 	private static final String STEP = "step";
-	
+
+	private static final String WORKGROUP_ID_PARAM_NAME = "workgroupId";
+
 	private static final String LANG = "lang";
-	
+
 	private static final String IS_CONSTRAINTS_DISABLED = "isConstraintsDisabled";
 
 	@Autowired
 	private ProjectService projectService;
-	
+
 	@Autowired
 	private RunService runService;
 
@@ -107,13 +109,13 @@ public class PreviewProjectController {
 			response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Could not determine project to preview.");
 			return null;
 		}
-		
+
 		Set<String> tagNames = new TreeSet<String>();
 		tagNames.add("library");
 
 		User user = ControllerUtil.getSignedInUser();
 
-		if (project.hasTags(tagNames) || 
+		if (project.hasTags(tagNames) ||
 				project.getFamilytag().equals(FamilyTag.TELS) || this.projectService.canReadProject(project, user)) {
 			PreviewProjectParameters params = new PreviewProjectParameters();
 			params.setUser(user);
@@ -121,6 +123,7 @@ public class PreviewProjectController {
 			params.setHttpServletRequest(request);
 			params.setVersionId(request.getParameter(VERSION_ID));
 			params.setStep(request.getParameter(STEP));
+			params.setWorkgroupId(request.getParameter(WORKGROUP_ID_PARAM_NAME));
 			String lang = request.getParameter(LANG);
 			if (lang != null) {
 	            params.setLang(lang);
@@ -130,12 +133,12 @@ public class PreviewProjectController {
 			if (isConstraintsDisabledStr != null) {
 				params.setConstraintsDisabled(Boolean.parseBoolean(isConstraintsDisabledStr));
 			}
-			
+
 			return (ModelAndView) projectService.previewProject(params);
 		} else {
 			//get the context path e.g. /wise
 			String contextPath = request.getContextPath();
-			
+
 			return new ModelAndView(new RedirectView(contextPath + "/accessdenied.html"));
 		}
     }

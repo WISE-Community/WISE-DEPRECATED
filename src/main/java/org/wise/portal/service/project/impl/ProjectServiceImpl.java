@@ -1,21 +1,21 @@
 /**
  * Copyright (c) 2008-2015 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
- * 
+ *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
- * 
+ *
  * Permission is hereby granted, without written agreement and without license
  * or royalty fees, to use, copy, modify, and distribute this software and its
  * documentation for any purpose, provided that the above copyright notice and
  * the following two paragraphs appear in all copies of this software.
- * 
+ *
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
  * PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
  * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
  * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
- * 
+ *
  * IN NO EVENT SHALL REGENTS BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT,
  * SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, INCLUDING LOST PROFITS,
  * ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF
@@ -90,13 +90,13 @@ public class ProjectServiceImpl implements ProjectService {
 	private ProjectDao<Project> projectDao;
 
 	private AclService<Persistable> aclService;
-	
+
 	@Autowired
 	private UserService userService;
 
 	@Autowired
 	private TagService tagService;
-	
+
 	@Autowired
 	private RunService runService;
 
@@ -234,7 +234,7 @@ public class ProjectServiceImpl implements ProjectService {
 		project.setParentProjectId(projectParameters.getParentProjectId());
 		project.setDateCreated(new Date());
 		this.projectDao.save(project);
-		this.aclService.addPermission(project, BasePermission.ADMINISTRATION);	
+		this.aclService.addPermission(project, BasePermission.ADMINISTRATION);
 
 		if (parentProjectId != null) {
 			Long newProjectId = (Long) project.getId();
@@ -347,7 +347,7 @@ public class ProjectServiceImpl implements ProjectService {
 					//this is set if the request is to preview the project and load a specific step such as 1.2
 					vleConfigUrl += "&step=" + step;
 				}
-				
+
 				String userSpecifiedLang = params.getLang();
 				if (userSpecifiedLang != null) {
 				    vleConfigUrl += "&lang=" + userSpecifiedLang;
@@ -363,6 +363,11 @@ public class ProjectServiceImpl implements ProjectService {
 					vleConfigUrl += "&versionId=" + versionId;
 				}
 
+				String workgroupId = params.getWorkgroupId();
+				if (workgroupId != null && !workgroupId.equals("")) {
+					vleConfigUrl += "&workgroupId=" + workgroupId;
+				}
+
 				//get the path to the project json file
 				String curriculumBaseWWW = wiseProperties.getProperty("curriculum_base_www");
 				String rawProjectUrl = (String) project.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
@@ -373,7 +378,7 @@ public class ProjectServiceImpl implements ProjectService {
 				modelAndView.addObject("vleurl", vleurl);
 				modelAndView.addObject("vleConfigUrl", vleConfigUrl);
 				modelAndView.addObject("contentUrl", contentUrl);
-				
+
 				return modelAndView;
 			} else {
 				return new ModelAndView(new RedirectView("../accessdenied.html"));
@@ -446,10 +451,10 @@ public class ProjectServiceImpl implements ProjectService {
 	public boolean canCreateRun(Project project, User user) {
 		Set<String> unallowed_tagnames = new HashSet<String>();
 		unallowed_tagnames.add("review");
-		return 
+		return
 				!project.hasTags(unallowed_tagnames) &&
-				(FamilyTag.TELS.equals(project.getFamilytag()) || 
-						this.aclService.hasPermission(project, BasePermission.ADMINISTRATION, user) || 
+				(FamilyTag.TELS.equals(project.getFamilytag()) ||
+						this.aclService.hasPermission(project, BasePermission.ADMINISTRATION, user) ||
 						this.aclService.hasPermission(project, BasePermission.READ, user));
 	}
 
@@ -475,9 +480,9 @@ public class ProjectServiceImpl implements ProjectService {
 	 */
 	@CacheEvict(value = "project", allEntries = true)
 	public Integer addTagToProject(String tagString, Long projectId) {
-		
+
 		Tag tag = this.tagService.createOrGetTag(tagString);
-		
+
 		Project project = null;
 
 		/* retrieve the project */
@@ -567,7 +572,7 @@ public class ProjectServiceImpl implements ProjectService {
 		return false;
 	}
 
-	
+
 	/**
 	 * @see org.wise.portal.service.project.ProjectService#getLibraryProjectList()
 	 */
@@ -589,21 +594,21 @@ public class ProjectServiceImpl implements ProjectService {
 		tagNames.add("public");
 		return getProjectListByTagNames(tagNames);
 	}
-	
+
 	/**
 	 * @see org.wise.portal.service.project.ProjectService#getProjectListByTagNames(java.util.Set)
 	 */
 	public List<Project> getProjectListByTagNames(Set<String> tagNames) {
 		return this.projectDao.getProjectListByTagNames(tagNames);
 	}
-	
+
 	/**
 	 * @see org.wise.portal.service.project.ProjectService#getProjectListByAuthor(java.lang.String)
 	 */
 	public List<Project> getProjectListByAuthorName(String authorName) {
 		return this.projectDao.getProjectListByAuthorName(authorName);
 	}
-	
+
 	@Override
 	public List<Project> getProjectListByTitle(String title) {
 		return this.projectDao.getProjectListByTitle(title);
@@ -618,7 +623,7 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 	/**
-	 * @throws ObjectNotFoundException 
+	 * @throws ObjectNotFoundException
 	 * @see org.wise.portal.service.project.ProjectService#identifyRootProjectId(java.lang.Long)
 	 */
 	public Long identifyRootProjectId(Project project) throws ObjectNotFoundException {

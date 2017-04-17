@@ -437,6 +437,7 @@ public class InformationController {
 		String runId = request.getParameter("runId");
 		String mode = request.getParameter("mode");
 		String step = request.getParameter("step");
+		String workgroupIdString = request.getParameter("workgroupId");
 		String userSpecifiedLang = request.getParameter("lang");
 		Long parentProjectId = null;
 		String runName = "";
@@ -662,6 +663,15 @@ public class InformationController {
                 String isConstraintsDisabledStr = request.getParameter("isConstraintsDisabled");
                 if (isConstraintsDisabledStr != null && Boolean.parseBoolean(isConstraintsDisabledStr)) {
                     config.put("isConstraintsDisabled", true);
+                }
+
+                if (workgroupIdString != null) {
+                    /*
+                     * This is set if the request is to preview the project and use
+                     * a specific workgroup id. This is usually used to test
+                     * branching based on workgroup id.
+                     */
+                    config.put("workgroupId", new Integer(workgroupIdString));
                 }
             } else {
                 // add non-preview project specific settings
