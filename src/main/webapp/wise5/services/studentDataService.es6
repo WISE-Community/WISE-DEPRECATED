@@ -32,6 +32,14 @@ class StudentDataService {
 
         this.maxPlanningNodeNumber = 0;
 
+        /*
+         * A counter to keep track of how many saveToServer requests we have
+         * made that we haven't received a response for yet. When this value
+         * goes back down to 0, we will send update the student status and then
+         * save it to the server.
+         */
+        this.saveToServerRequestCount = 0;
+
         // listen for node status changes
         this.$rootScope.$on('nodeStatusesChanged', (event, args) => {
             // calculate active global annotations and group them by group name as needed
@@ -410,6 +418,15 @@ class StudentDataService {
 
             this.nodeStatuses[nodeId].progress = this.getNodeProgressById(nodeId);
             this.nodeStatuses[nodeId].icon = this.ProjectService.getNodeIconByNodeId(nodeId);
+
+            // get the latest component state for the node
+            var latestComponentStatesForNode = this.getLatestComponentStateByNodeId(nodeId);
+
+            if (latestComponentStatesForNode != null) {
+                // set the latest component state timestamp into the node status
+                this.nodeStatuses[nodeId].latestComponentStateClientSaveTime = latestComponentStatesForNode.clientSaveTime;
+                this.nodeStatuses[nodeId].latestComponentStateServerSaveTime = latestComponentStatesForNode.serverSaveTime;
+            }
         }
 
         //return nodeStatus;
@@ -1376,6 +1393,12 @@ class StudentDataService {
 
     saveToServer(componentStates, nodeStates, events, annotations) {
 
+        /*
+         * increment the request count since we are about to save data
+         * to the server
+         */
+        this.saveToServerRequestCount += 1;
+
         // merge componentStates and nodeStates into StudentWork before posting
         var studentWorkList = [];
         if (componentStates != null && componentStates.length > 0) {
@@ -1472,6 +1495,13 @@ class StudentDataService {
                     }
                 }, result => {
                     // a server error occured
+
+                    /*
+                     * decrement the request count since this request failed
+                     * but is now completed
+                     */
+                    this.saveToServerRequestCount -= 1;
+
                     return null;
                 }
             );
@@ -1479,6 +1509,23 @@ class StudentDataService {
     };
 
     saveToServerSuccess(savedStudentDataResponse) {
+
+        /*
+         * decrement the request count since we have received a response to
+         * one of our save requests
+         */
+        this.saveToServerRequestCount -= 1;
+
+        if (this.saveToServerRequestCount == 0) {
+            /*
+             * we have received the reponse to all of the saveToServer requests
+             * so we will now update the student status and save it to the
+             * server
+             */
+            this.updateNodeStatuses();
+            this.saveStudentStatus();
+        }
+
         // set dummy serverSaveTime for use if we're in preview mode
         let serverSaveTime = Date.parse(new Date());
 
@@ -2535,7 +2582,7 @@ class StudentDataService {
 
     /**
      * Get the latest component states for a node
-     * @param nodeId get the component states for the node i
+     * @param nodeId get the component states for the node
      * @return an array containing the work for the node
      */
     getLatestComponentStatesByNodeId(nodeId) {
@@ -2587,6 +2634,31 @@ class StudentDataService {
         }
 
         return latestComponentStates;
+    }
+
+    /**
+     * Get the latest component state for a node
+     * @param nodeId get the latest component state for the node
+     * @return the latest component state for the node
+     */
+    getLatestComponentStateByNodeId(nodeId) {
+
+        var latestComponentState = null;
+
+        if (nodeId != null) {
+            var studentData = this.studentData;
+
+            if (studentData) {
+
+                // get the component states for the node
+                var componentStates = this.getComponentStatesByNodeId(nodeId);
+
+                // get the latest component state
+                latestComponentState = componentStates[componentStates.length - 1];
+            }
+        }
+
+        return latestComponentState;
     }
 
     /**
