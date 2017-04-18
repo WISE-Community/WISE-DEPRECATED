@@ -129,6 +129,8 @@ public class ChangeUserPasswordController {
 		return loggedInUser.getUserDetails().hasGrantedAuthority(UserDetailsService.ADMIN_ROLE) 
 				|| userToChange.equals(loggedInUser)
 				|| (userToChange.getUserDetails().hasGrantedAuthority(UserDetailsService.STUDENT_ROLE)
+				&& loggedInUser.getUserDetails().hasGrantedAuthority(UserDetailsService.RESEARCHER_ROLE))
+				|| (userToChange.getUserDetails().hasGrantedAuthority(UserDetailsService.STUDENT_ROLE)
 				   && studentService.isStudentAssociatedWithTeacher(userToChange, loggedInUser));
 	}
 	
