@@ -1,4 +1,4 @@
-#! /bin/sh
+#!/bin/sh
 # Starts WISE in tomcat-embedded mode using hsqldb and default settings stores in $SAMPLE_PROPERTIES_FILE
 # if arg1="run", keeps existing data and simply starts embedded tomcat server. If this is the first time running, it will
 # initialize the data before starting.

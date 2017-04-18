@@ -53,10 +53,27 @@
 	Select roles for ${user.userDetails.username}:<br/><br/>
 	<c:forEach var="authority" items="${allAuthorities}">
 		<c:set var="checked" value="" />
-		<c:if test="${user.userDetails.hasGrantedAuthority(authority.authority)}">
+		<c:set var="disabled" value="disabled" />
+ 		<c:if test="${user.userDetails.hasGrantedAuthority(authority.authority)}">
 			<c:set var="checked" value="checked" />
 		</c:if>
-		<input id="${authority.authority}" type="checkbox" value="${authority.authority}" ${checked} onclick="checkboxClicked('${authority.authority}')">${authority.authority}</input><br/>
+		<c:if test="${authority.authority == 'ROLE_ADMINISTRATOR'}">
+			<sec:authorize access="hasRole('ROLE_ADMINISTRATOR')">
+				<!-- administrators can set other administrators, except for the 'admin' user -->
+				<c:choose>
+					<c:when test="${user.userDetails.username == 'admin'}">
+						<c:set var="disabled" value="disabled" />
+					</c:when>
+					<c:otherwise>
+						<c:set var="disabled" value="" />
+					</c:otherwise>
+				</c:choose>
+			</sec:authorize>
+			<input id="${authority.authority}" type="checkbox" value="${authority.authority}" ${checked} ${disabled} onclick="checkboxClicked('${authority.authority}')">${authority.authority}</input><br/>
+		</c:if>
+		<c:if test="${authority.authority != 'ROLE_ADMINISTRATOR'}">
+			<input id="${authority.authority}" type="checkbox" value="${authority.authority}" ${checked} onclick="checkboxClicked('${authority.authority}')">${authority.authority}</input><br/>
+		</c:if>
 	</c:forEach>
 	<br/>
 </div>

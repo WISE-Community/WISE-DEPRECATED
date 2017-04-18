@@ -117,16 +117,17 @@ public class ChangeUserPasswordController {
      * Returns true iff the loggedInUser has permission to change the password 
      * of userToChange.
      *  This is true when:
-     *  1) loggedInUser is an admin
+     *  1) loggedInUser is an admin and userToChange is not "admin". (only "admin" can change "admin"'s password)
      *  2) loggedInUser == userToChange
-     *  3) loggedInUser is the teacher of userToChange
+     *  3) loggedInUser is a researcher and userToChange is any student
+     *  4) loggedInUser is the teacher of userToChange
      * @param loggedInUser
      * @param userToChange
      * @return
      */
     private boolean canChangePassword(User loggedInUser,
 			User userToChange) {
-		return loggedInUser.getUserDetails().hasGrantedAuthority(UserDetailsService.ADMIN_ROLE) 
+		return (loggedInUser.getUserDetails().hasGrantedAuthority(UserDetailsService.ADMIN_ROLE) && !userToChange.getUserDetails().getUsername().equals("admin"))
 				|| userToChange.equals(loggedInUser)
 				|| (userToChange.getUserDetails().hasGrantedAuthority(UserDetailsService.STUDENT_ROLE)
 				&& loggedInUser.getUserDetails().hasGrantedAuthority(UserDetailsService.RESEARCHER_ROLE))
