@@ -70,8 +70,7 @@ var VLEController = function () {
 
             _this.StudentDataService.updateStackHistory(currentNodeId);
             _this.StudentDataService.updateVisitedNodesHistory(currentNodeId);
-            _this.StudentDataService.updateNodeStatuses();
-            _this.StudentDataService.saveStudentStatus();
+
             //this.AnnotationService.updateAnnotations();
 
             _this.$state.go('root.vle', { nodeId: currentNodeId });

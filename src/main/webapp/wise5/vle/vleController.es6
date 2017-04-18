@@ -72,8 +72,7 @@ class VLEController {
 
             this.StudentDataService.updateStackHistory(currentNodeId);
             this.StudentDataService.updateVisitedNodesHistory(currentNodeId);
-            this.StudentDataService.updateNodeStatuses();
-            this.StudentDataService.saveStudentStatus();
+
             //this.AnnotationService.updateAnnotations();
 
             this.$state.go('root.vle', {nodeId:currentNodeId});
