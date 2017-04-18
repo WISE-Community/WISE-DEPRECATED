@@ -16,6 +16,9 @@
         .stepHeader {
             margin-left: 20px;
         }
+        .branchPathStepHeader {
+            margin-left: 40px;
+        }
     </style>
     <div style="float:right">
         <button id="previewProjectButton" ng-click='projectController.previewProject()' translate="previewProject"
@@ -139,7 +142,7 @@
         />
         <h6 ng-click='projectController.nodeClicked(item.$key)'
             style='display:inline; cursor:pointer'
-            ng-class='{"groupHeader": projectController.isGroupNode(item.$key), "stepHeader": !projectController.isGroupNode(item.$key)}'
+            ng-class='{"groupHeader": projectController.isGroupNode(item.$key), "stepHeader": !projectController.isGroupNode(item.$key), "branchPathStepHeader": projectController.isNodeInAnyBranchPath(item.$key)}'
             ng-if='item.order!==0'>
             {{projectController.getNodePositionById(item.$key)}} {{projectController.getNodeTitleByNodeId(item.$key)}}
         </h6>

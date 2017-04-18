@@ -1195,6 +1195,15 @@ class ProjectController {
 
         this.ProjectService.saveProject();
     }
+
+    /**
+     * Check if the node is in any branch path
+     * @param nodeId the node id of the node
+     * @return whether the node is in any branch path
+     */
+    isNodeInAnyBranchPath(nodeId) {
+        return this.ProjectService.isNodeInAnyBranchPath(nodeId);
+    }
 }
 
 ProjectController.$inject = [
