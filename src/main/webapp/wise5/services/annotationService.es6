@@ -5,12 +5,14 @@ class AnnotationService {
                 $http,
                 $rootScope,
                 ConfigService,
+                ProjectService,
                 UtilService) {
 
         this.$filter = $filter;
         this.$http = $http;
         this.$rootScope = $rootScope;
         this.ConfigService = ConfigService;
+        this.ProjectService = ProjectService;
         this.UtilService = UtilService;
 
         this.$translate = this.$filter('translate');
@@ -316,29 +318,33 @@ class AnnotationService {
                         var componentId = annotation.componentId;
                         var data = annotation.data;
 
-                        var scoreFound = nodeId + '-' + componentId;
+                        // make sure the annotation is for an active component
+                        if (this.ProjectService.isActive(nodeId, componentId)) {
+                            
+                            var scoreFound = nodeId + '-' + componentId;
 
-                        // check if we have obtained a score from this component already
-                        if (scoresFound.indexOf(scoreFound) == -1) {
-                            // we have not obtained a score from this component yet
+                            // check if we have obtained a score from this component already
+                            if (scoresFound.indexOf(scoreFound) == -1) {
+                                // we have not obtained a score from this component yet
 
-                            if (data != null) {
-                                var value = data.value;
+                                if (data != null) {
+                                    var value = data.value;
 
-                                if (!isNaN(value)) {
+                                    if (!isNaN(value)) {
 
-                                    if (totalScore == null) {
-                                        totalScore = value;
-                                    } else {
-                                        totalScore += value;
+                                        if (totalScore == null) {
+                                            totalScore = value;
+                                        } else {
+                                            totalScore += value;
+                                        }
+
+                                        /*
+                                         * remember that we have found a score for this component
+                                         * so that we don't double count it if the teacher scored
+                                         * the component more than once
+                                         */
+                                        scoresFound.push(scoreFound);
                                     }
-
-                                    /*
-                                     * remember that we have found a score for this component
-                                     * so that we don't double count it if the teacher scored
-                                     * the component more than once
-                                     */
-                                    scoresFound.push(scoreFound);
                                 }
                             }
                         }
@@ -944,6 +950,7 @@ AnnotationService.$inject = [
     '$http',
     '$rootScope',
     'ConfigService',
+    'ProjectService',
     'UtilService'
 ];
 

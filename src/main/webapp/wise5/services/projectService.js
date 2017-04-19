@@ -5593,7 +5593,9 @@ var ProjectService = function () {
         }
 
         /**
-         * Get the max score for the project
+         * Get the max score for the project. If the project contains branches, we
+         * will only calculate the max score for a single path from the first node
+         * to the last node in the project.
          * @returns the max score for the project or null if none of the components in the project
          * has max scores.
          */
@@ -5604,23 +5606,31 @@ var ProjectService = function () {
 
             var maxScore = null;
 
-            var nodes = this.project.nodes;
+            // get the start node id of the project
+            var startNodeId = this.getStartNodeId();
 
-            if (nodes != null) {
+            // get all the paths in the project
+            var allPaths = this.getAllPaths([], startNodeId);
 
-                // loop through all the nodes
-                for (var n = 0; n < nodes.length; n++) {
-                    var node = nodes[n];
+            if (allPaths != null && allPaths.length > 0) {
 
-                    if (node != null) {
-                        var nodeMaxScore = this.getMaxScoreForNode(node.id);
+                // get the first path
+                var firstPath = allPaths[0];
 
-                        if (nodeMaxScore != null) {
-                            if (maxScore == null) {
-                                maxScore = nodeMaxScore;
-                            } else {
-                                maxScore += nodeMaxScore;
-                            }
+                // loop through all the node ids in the path
+                for (var n = 0; n < firstPath.length; n++) {
+
+                    // get a node id
+                    var nodeId = firstPath[n];
+
+                    // get the max score for the node
+                    var nodeMaxScore = this.getMaxScoreForNode(nodeId);
+
+                    if (nodeMaxScore != null) {
+                        if (maxScore == null) {
+                            maxScore = nodeMaxScore;
+                        } else {
+                            maxScore += nodeMaxScore;
                         }
                     }
                 }
@@ -6998,43 +7008,78 @@ var ProjectService = function () {
         /**
          * Check if the node is active
          * @param nodeId the node to check
-         * @returns whether the node is in the active array
+         * @param componentId (optional) the component to check
+         * @returns whether the node or component is active
          */
 
     }, {
         key: 'isActive',
-        value: function isActive(nodeId) {
-
-            var result = true;
+        value: function isActive(nodeId, componentId) {
 
             if (nodeId != null) {
 
                 if (nodeId === 'inactiveNodes') {
                     // this occurs when the author puts a step into the inactive nodes
-                    result = false;
+                    return false;
                 } else if (nodeId === 'inactiveGroups') {
                     // this occurs when the author puts a group into the inactive groups
-                    result = false;
+                    return false;
                 } else if (this.isGroupNode(nodeId)) {
                     // the node is a group node
                     // TODO: implement this
                 } else {
                     // the node is a step node
 
-                    // get the inactive nodes
-                    var inactiveNodes = this.project.inactiveNodes;
+                    // get all the active nodes
+                    var activeNodes = this.project.nodes;
 
-                    if (inactiveNodes != null) {
+                    if (activeNodes != null) {
 
-                        // loop through all the inactive nodes
-                        for (var i = 0; i < inactiveNodes.length; i++) {
-                            var inactiveNode = inactiveNodes[i];
+                        // loop through all the active nodes
+                        for (var n = 0; n < activeNodes.length; n++) {
 
-                            if (inactiveNode != null) {
-                                if (nodeId === inactiveNode.id) {
-                                    // we have found the node in the inactive nodes
-                                    result = false;
-                                    break;
+                            // get an active node
+                            var activeNode = activeNodes[n];
+
+                            if (activeNode != null) {
+
+                                // get the active node id
+                                var activeNodeId = activeNode.id;
+
+                                if (nodeId == activeNodeId) {
+                                    // we have found the node id we are looking for
+
+                                    if (componentId != null) {
+                                        // we need to find the node id and component id
+
+                                        // get the components in the node
+                                        var activeComponents = activeNode.components;
+
+                                        if (activeComponents != null) {
+
+                                            // loop through all the components
+                                            for (var c = 0; c < activeComponents.length; c++) {
+
+                                                // get a component
+                                                var activeComponent = activeComponents[c];
+
+                                                if (activeComponent != null) {
+                                                    var activeComponentId = activeComponent.id;
+
+                                                    if (componentId == activeComponentId) {
+                                                        /*
+                                                         * we have found the component id we are
+                                                         * looking for so we are done
+                                                         */
+                                                        return true;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    } else {
+                                        //we only need to find the node id so we are done
+                                        return true;
+                                    }
                                 }
                             }
                         }
@@ -7042,7 +7087,7 @@ var ProjectService = function () {
                 }
             }
 
-            return result;
+            return false;
         }
 
         /**
