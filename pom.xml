@@ -14,7 +14,7 @@
 	this library; if not, write to the Free Software * Foundation, Inc., 51 Franklin 
 	Street, Fifth Floor, Boston, MA 02110-1301 USA -->
 
-<!-- * Copyright (c) 2008-2016 Regents of the University of California (Regents).
+<!-- * Copyright (c) 2008-2017 Regents of the University of California (Regents).
 	Created * by TELS, Graduate School of Education, University of California 
 	at Berkeley. * * This software is distributed under the GNU General Public 
 	License, v3. * * Permission is hereby granted, without written agreement 
@@ -457,9 +457,9 @@
 	</reporting>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<org.springframework.version>4.3.4.RELEASE</org.springframework.version>
-		<org.springframework.security.version>4.2.0.RELEASE</org.springframework.security.version>
-		<org.hibernate.version>5.0.10.Final</org.hibernate.version>
+		<org.springframework.version>4.3.8.RELEASE</org.springframework.version>
+		<org.springframework.security.version>4.2.2.RELEASE</org.springframework.security.version>
+		<org.hibernate.version>5.0.12.Final</org.hibernate.version>
 		<startup.listeners>
 		</startup.listeners>
 	</properties>
