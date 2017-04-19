@@ -8397,6 +8397,19 @@ class ProjectService {
 
         return false;
     }
+
+    /**
+     * Check if the node is in any branch path
+     * @param nodeId the node id of the node
+     * @return whether the node is in any branch path
+     */
+    isNodeInAnyBranchPath(nodeId) {
+        var branches = this.getBranches();
+
+        var result = this.isNodeIdInABranch(branches, nodeId);
+
+        return result;
+    }
 }
 
 ProjectService.$inject = [
