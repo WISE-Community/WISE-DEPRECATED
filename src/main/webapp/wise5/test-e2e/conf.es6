@@ -6,6 +6,7 @@ exports.config = {
 
     specs: [
         'previewVLE.spec.js',
+        'openResponse.spec.js',
         'notebook.spec.js',
         'portal.spec.js',
         'authoringTool.spec.js',

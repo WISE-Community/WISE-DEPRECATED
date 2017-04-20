@@ -35,7 +35,7 @@ describe('WISE5 Student VLE Preview', () => {
 
     it('should show step content on the page', () => {
         // Check that the html content is displayed on the page
-        var nodeContent = element(by.cssContainingText('.node-content','This is a step where authors can enter their own html.'));
+        let nodeContent = element(by.cssContainingText('.node-content','This is a step where authors can enter their own html.'));
         expect(nodeContent.isPresent()).toBeTruthy();
         expect(previousButton.getAttribute("disabled")).toBe("true");  // the previous button should be disabled on the first step.
     });
@@ -48,8 +48,7 @@ describe('WISE5 Student VLE Preview', () => {
         expect(element(by.model("stepToolsCtrl.toNodeId")).getText()).toBe('1.2: Open Response Step');
         expect(previousButton.getAttribute("disabled")).toBe(null);  // the previous button should be enabled on the second step.
 
-
-        var nodeContent = element(by.cssContainingText('.node-content','This is a step where students enter text.'));
+        let nodeContent = element(by.cssContainingText('.node-content','This is a step where students enter text.'));
         expect(nodeContent.isPresent()).toBeTruthy();
 
         nextButton.click();
@@ -83,8 +82,8 @@ describe('WISE5 Student VLE Preview', () => {
         expect(browser.getCurrentUrl()).toEqual('http://localhost:8080/wise/project/demo#/vle/group1');
 
         element.all(by.repeater('id in navCtrl.rootNode.ids')).then((groupNavItems) => {
-            var activity1 = groupNavItems[0];
-            var activity2 = groupNavItems[1];
+            let activity1 = groupNavItems[0];
+            let activity2 = groupNavItems[1];
 
             expect(activity1.element(by.className('md-title')).getText()).toEqual('1: Example Steps');
             expect(activity2.element(by.className('md-title')).getText()).toEqual('2: Example Features');
