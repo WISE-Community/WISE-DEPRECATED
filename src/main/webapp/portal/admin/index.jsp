@@ -35,6 +35,24 @@
 			}
 			return true;
 		}
+		$(document).ready(function() {
+		    $.ajax("${contextPath}/admin/latestWISEVersion").success(function(response) {
+		        if (response === "null") {
+		            $("#globalWISEVersion").html("Error retrieving global WISE version.");
+				} else {
+		            var globalWISEVersion = response;
+                    $("#globalWISEVersion").html(globalWISEVersion);
+                    var thisWISEVersion = $("#thisWISEVersion").html();
+                    if (thisWISEVersion != null && thisWISEVersion != "") {
+                        if (thisWISEVersion < globalWISEVersion) {
+                            $("#versionNotes").html("<a target=_blank href=\"${updateWISEURL}\">A new version of WISE is available. Please update!</a>");
+						} else {
+                            $("#versionNotes").html("WISE is up-to-date. :)");
+						}
+					}
+				}
+			});
+		})
 	</script>
 </head>
 <body>
@@ -204,17 +222,9 @@
 								<tbody>
 								<tr>
 									<td class="title">Version</td>
-									<td class="version-number">${thisWISEVersion}</td>
-									<td class="version-number">${globalWISEVersion}</td>
-									<c:choose>
-										<c:when test="${wiseUpdateUrl == null}">
-											<td class="version-notes">${versionNotes}</td>
-										</c:when>
-										<c:otherwise>
-											<td class="version-notes"><a target=_blank
-																		 href="${wiseUpdateUrl}">${versionNotes}</a></td>
-										</c:otherwise>
-									</c:choose>
+									<td class="version-number" id="thisWISEVersion">${thisWISEVersion}</td>
+									<td class="version-number" id="globalWISEVersion"></td>
+									<td class="version-notes" id="versionNotes"></td>
 								</tr>
 								</tbody>
 							</table>

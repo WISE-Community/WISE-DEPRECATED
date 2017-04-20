@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2016 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
@@ -55,10 +56,9 @@ import org.wise.portal.service.portal.PortalService;
  * @author Hiroki Terashima
  */
 @Controller
-@RequestMapping("/admin")
 public class AdminIndexController {
 
-	private static final String MASTER_GET_WISE_INFO_URL = "http://wise5.org/getWISEInfo.php";
+	private static final String GET_WISE_INFO_URL = "http://wise5.org/getWISEInfo.php";
 	
 	private static final String WISE_UPDATE_URL = "http://wise5.org";
 	
@@ -74,12 +74,11 @@ public class AdminIndexController {
 	@Autowired
 	private DailyAdminJob adminJob;
 
-	@RequestMapping(method = RequestMethod.GET)
+	@RequestMapping(value = "/admin", method = RequestMethod.GET)
 	protected ModelAndView handleRequestInternal(HttpServletRequest request) throws Exception {
 		ModelAndView modelAndView = new ModelAndView("admin/index");
 		
 		String thisWISEVersion = null;  // local WISE version  e.g. "4.8", "4.9.1", etc
-		String globalWISEVersion = null;  // master WISE version    e.g. "4.8", "4.9.1", etc
 
 		// get WISE version from src/main/resources/version.json
 		try {
@@ -90,37 +89,12 @@ public class AdminIndexController {
 			e.printStackTrace();
 		}
 
+		// add URL where people can download new versions of WISE
+		modelAndView.addObject("updateWISEURL", WISE_UPDATE_URL);
+
 		// add if this WISE instance allows batch creation of user accounts
 		modelAndView.addObject("isBatchCreateUserAccountsEnabled", Boolean.valueOf(wiseProperties.getProperty("isBatchCreateUserAccountsEnabled", "false")));
 
-		// get latest WISE info from master location
-		String globalWISEVersionJSONString = retrieveGlobalWISEVersionJSONString();
-		try {
-			// now parse global WISE version JSON and add to ModelAndView.
-			JSONObject globalWISEVersionJSON = new JSONObject(globalWISEVersionJSONString);
-			String globalWISEMajorVersion = globalWISEVersionJSON.getString("major");
-			String globalWISEMinorVersion = globalWISEVersionJSON.getString("minor");
-			globalWISEVersion = globalWISEMajorVersion + "." + globalWISEMinorVersion;
-			modelAndView.addObject("globalWISEVersion", globalWISEVersion);
-		} catch (Exception e) {
-			modelAndView.addObject("globalWISEVersion", "error retrieving latest WISE version");
-			e.printStackTrace();
-		}
-		
-		try {
-			// now compare the two versions and add version notes to ModelAndView obj
-			String versionNotes = "WISE is up to date!";
-			if (Integer.parseInt(thisWISEVersion.replace(".", "")) < Integer.parseInt(globalWISEVersion.replace(".", ""))) {
-				versionNotes = "A new version of WISE is available. Please update!";
-				modelAndView.addObject("wiseUpdateUrl", WISE_UPDATE_URL);
-			}
-			modelAndView.addObject("versionNotes", versionNotes);
-			
-		} catch (Exception e) {
-			// do nothing
-			e.printStackTrace();
-		}
-		
 		// now fetch recent commits
 		String recentCommitHistoryJSONString = retrieveRecentCommitHistoryJSONString();
 		try {
@@ -166,9 +140,31 @@ public class AdminIndexController {
 		return modelAndView;
 	}
 
+	/**
+	 * Gets the latest global WISE version from master location and writes it in the response.
+	 * If there was an error retrieving the latest version, write the error message in the response.
+ 	 */
+	@RequestMapping(value = "/admin/latestWISEVersion", method = RequestMethod.GET)
+	public void getLatestGlobalWISEVersion(
+			HttpServletResponse response
+	) throws IOException {
+		String latestWISEVersion = null;
+		String globalWISEVersionJSONString = retrieveGlobalWISEVersionJSONString();
+		try {
+			// now parse global WISE version JSON and add to ModelAndView.
+			JSONObject globalWISEVersionJSON = new JSONObject(globalWISEVersionJSONString);
+			String globalWISEMajorVersion = globalWISEVersionJSON.getString("major");
+			String globalWISEMinorVersion = globalWISEVersionJSON.getString("minor");
+			latestWISEVersion = globalWISEMajorVersion + "." + globalWISEMinorVersion;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		response.getWriter().print(latestWISEVersion);
+	}
+
 	private String retrieveGlobalWISEVersionJSONString() {
 		HttpClient client = HttpClientBuilder.create().build();
-		HttpGet request = new HttpGet(MASTER_GET_WISE_INFO_URL);
+		HttpGet request = new HttpGet(GET_WISE_INFO_URL);
 		
 		byte[] responseBody = null;
 		String responseString = null;
