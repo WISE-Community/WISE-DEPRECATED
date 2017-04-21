@@ -21,12 +21,15 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var ConceptMapService = function (_NodeService) {
     _inherits(ConceptMapService, _NodeService);
 
-    function ConceptMapService($filter, StudentDataService, UtilService) {
+    function ConceptMapService($filter, $q, $timeout, ConfigService, StudentDataService, UtilService) {
         _classCallCheck(this, ConceptMapService);
 
         var _this = _possibleConstructorReturn(this, (ConceptMapService.__proto__ || Object.getPrototypeOf(ConceptMapService)).call(this));
 
         _this.$filter = $filter;
+        _this.$q = $q;
+        _this.$timeout = $timeout;
+        _this.ConfigService = ConfigService;
         _this.StudentDataService = StudentDataService;
         _this.UtilService = UtilService;
         _this.$translate = _this.$filter('translate');
@@ -901,6 +904,483 @@ var ConceptMapService = function (_NodeService) {
         key: 'componentUsesSubmitButton',
         value: function componentUsesSubmitButton() {
             return true;
+        }
+
+        /**
+         * Populate the concept map data into the component
+         * @param draw the SVG draw div
+         * @param conceptMapData the concept map data which contains an array
+         * of nodes and an array of links
+         */
+
+    }, {
+        key: 'populateConceptMapData',
+        value: function populateConceptMapData(draw, conceptMapData) {
+
+            if (conceptMapData != null) {
+
+                // get the JSON nodes
+                var nodes = conceptMapData.nodes;
+
+                // this is used to hold the SVG node objects
+                var conceptMapNodes = [];
+
+                if (nodes != null) {
+
+                    // loop through all the nodes
+                    for (var n = 0; n < nodes.length; n++) {
+                        var node = nodes[n];
+
+                        var instanceId = node.instanceId;
+                        var originalId = node.originalId;
+                        var filePath = node.fileName;
+                        var label = node.label;
+                        var x = node.x;
+                        var y = node.y;
+                        var width = node.width;
+                        var height = node.height;
+
+                        // create a ConceptMapNode
+                        var conceptMapNode = this.newConceptMapNode(draw, instanceId, originalId, filePath, label, x, y, width, height);
+
+                        conceptMapNodes.push(conceptMapNode);
+                    }
+                }
+
+                // get the JSON links
+                var links = conceptMapData.links;
+
+                // this is used to hold the SVG link objects
+                var conceptMapLinks = [];
+
+                if (links != null) {
+
+                    // loop through all the links
+                    for (var l = 0; l < links.length; l++) {
+                        var link = links[l];
+
+                        var instanceId = link.instanceId;
+                        var originalId = link.originalId;
+                        var sourceNodeId = link.sourceNodeInstanceId;
+                        var destinationNodeId = link.destinationNodeInstanceId;
+                        var label = link.label;
+                        var color = link.color;
+                        var curvature = link.curvature;
+                        var startCurveUp = link.startCurveUp;
+                        var endCurveUp = link.endCurveUp;
+                        var sourceNode = null;
+                        var destinationNode = null;
+
+                        if (sourceNodeId != null) {
+                            sourceNode = this.getNodeById(conceptMapNodes, sourceNodeId);
+                        }
+
+                        if (destinationNodeId != null) {
+                            destinationNode = this.getNodeById(conceptMapNodes, destinationNodeId);
+                        }
+
+                        // create a ConceptMapLink
+                        var conceptMapLink = this.newConceptMapLink(draw, instanceId, originalId, sourceNode, destinationNode, label, color, curvature, startCurveUp, endCurveUp);
+
+                        conceptMapLinks.push(conceptMapLink);
+                    }
+                }
+
+                /*
+                 * move the link text group to the front so that they are on top
+                 * of links
+                 */
+                this.moveLinkTextToFront(conceptMapLinks);
+
+                // move the nodes to the front so that they are on top of links
+                this.moveNodesToFront(conceptMapNodes);
+
+                /*
+                 * set a timeout to refresh the link labels so that the rectangles
+                 * around the labels are properly resized
+                 */
+                // this.$timeout(() => {
+                //     this.refreshLinkLabels(conceptMapNodes, conceptMapLinks);
+                // });
+                this.refreshLinkLabels(conceptMapNodes, conceptMapLinks);
+            }
+        }
+
+        /**
+         * Move the link text group to the front
+         */
+
+    }, {
+        key: 'moveLinkTextToFront',
+        value: function moveLinkTextToFront(links) {
+
+            // loop through all the links
+            for (var l = 0; l < links.length; l++) {
+                var link = links[l];
+
+                if (link != null) {
+                    // move the link text group to the front
+                    link.moveTextGroupToFront();
+                }
+            }
+        }
+
+        /**
+         * Move the nodes to the front so that they show up above links
+         */
+
+    }, {
+        key: 'moveNodesToFront',
+        value: function moveNodesToFront(nodes) {
+
+            // loop through all the nodes
+            for (var n = 0; n < nodes.length; n++) {
+                var node = nodes[n];
+
+                if (node != null) {
+
+                    // get a node group
+                    var group = node.getGroup();
+
+                    if (group != null) {
+                        // move the node group to the front
+                        group.front();
+                    }
+                }
+            }
+        }
+
+        /**
+         * Refresh the link labels so that the rectangles around the text
+         * labels are resized to fit the text properly. This is required because
+         * the rectangles are not properly sized when the ConceptMapLinks are
+         * initialized. The rectangles need to be rendered first and then the
+         * labels need to be set in order for the rectangles to be resized properly.
+         * This is why this function is called in a $timeout.
+         */
+
+    }, {
+        key: 'refreshLinkLabels',
+        value: function refreshLinkLabels(nodes, links) {
+
+            if (nodes != null) {
+
+                // loop through all the nodes
+                for (var n = 0; n < nodes.length; n++) {
+                    var node = nodes[n];
+
+                    if (node != null) {
+                        // get the label from the node
+                        var label = node.getLabel();
+
+                        /*
+                         * set the label back into the node so that the rectangle
+                         * around the text label is resized to the text
+                         */
+                        node.setLabel(label);
+                    }
+                }
+            }
+
+            if (links != null) {
+
+                // loop throgh all the links
+                for (var l = 0; l < links.length; l++) {
+                    var link = links[l];
+
+                    if (link != null) {
+                        // get the label from the link
+                        var label = link.getLabel();
+
+                        /*
+                         * set the label back into the link so that the rectangle
+                         * around the text label is resized to the text
+                         */
+                        link.setLabel(label);
+                    }
+                }
+            }
+        }
+
+        /**
+         * Get a node by id.
+         * @param id the node id
+         * @returns the node with the given id or null
+         */
+
+    }, {
+        key: 'getNodeById',
+        value: function getNodeById(nodes, id) {
+            var node = null;
+
+            if (id != null) {
+
+                // loop through all the nodes
+                for (var n = 0; n < nodes.length; n++) {
+                    var tempNode = nodes[n];
+                    var tempNodeId = tempNode.getId();
+
+                    if (id == tempNodeId) {
+                        // we have found the node we want
+                        node = tempNode;
+                        break;
+                    }
+                }
+            }
+
+            return node;
+        }
+
+        /**
+         * Create an image from the concept map data
+         * @param conceptMapData concept map data from a student
+         */
+
+    }, {
+        key: 'createImage',
+        value: function createImage(conceptMapData) {
+            var _this2 = this;
+
+            // create a promise that will return an image of the concept map
+            var deferred = this.$q.defer();
+
+            // create a div to draw the SVG in
+            var svgElement = document.createElement("div");
+
+            var draw = SVG(svgElement);
+            draw.width(800);
+            draw.height(600);
+
+            if (svgElement != null) {
+
+                // populate the concept map data into the svg draw element
+                this.populateConceptMapData(draw, conceptMapData);
+
+                // get the svg element as a string
+                var svgString = svgElement.innerHTML;
+
+                // find all the images in the svg and replace them with Base64 images
+                this.getHrefToBase64ImageReplacements(svgString).then(function (images) {
+
+                    /*
+                     * Loop through all the image objects. Each object contains
+                     * an image href and a Base64 image.
+                     */
+                    for (var i = 0; i < images.length; i++) {
+
+                        // get an image object
+                        var imagePair = images[i];
+
+                        // get the image href e.g. /wise/curriculum/25/assets/Sun.png
+                        var imageHref = imagePair.imageHref;
+
+                        // get the last index of '/'
+                        var lastIndexOfSlash = imageHref.lastIndexOf('/');
+
+                        if (lastIndexOfSlash != -1) {
+                            // only get everything after the last '/'
+                            imageHref = imageHref.substring(lastIndexOfSlash + 1);
+                        }
+
+                        // get the Base64 image
+                        var base64Image = imagePair.base64Image;
+
+                        // create a regex to match the image href
+                        var imageRegEx = new RegExp(imageHref, 'g');
+
+                        /*
+                         * replace all the instances of the image href with the
+                         * Base64 image
+                         */
+                        svgString = svgString.replace(imageRegEx, base64Image);
+                    }
+
+                    // create a canvas to draw the image on
+                    var myCanvas = document.createElement("canvas");
+                    var ctx = myCanvas.getContext("2d");
+
+                    // create an svg blob
+                    var svg = new Blob([svgString], { type: "image/svg+xml;charset=utf-8" });
+                    var domURL = self.URL || self.webkitURL || self;
+                    var url = domURL.createObjectURL(svg);
+                    var image = new Image();
+
+                    /*
+                     * set the UtilService in a local variable so we can access it
+                     * in the onload callback function
+                     */
+                    var thisUtilService = _this2.UtilService;
+
+                    // the function that is called after the image is fully loaded
+                    image.onload = function (event) {
+
+                        // get the image that was loaded
+                        var image = event.target;
+
+                        // set the dimensions of the canvas
+                        myCanvas.width = image.width;
+                        myCanvas.height = image.height;
+                        ctx.drawImage(image, 0, 0);
+
+                        // get the canvas as a Base64 string
+                        var base64Image = myCanvas.toDataURL('image/png');
+
+                        // get the image object
+                        //var imageObject = thisUtilService.getImageObjectFromBase64String(base64Image);
+
+                        // resolve the promise with the image
+                        deferred.resolve(base64Image);
+                    };
+
+                    // set the src of the image so that the image gets loaded
+                    image.src = url;
+                });
+            }
+
+            return deferred.promise;
+        }
+
+        /**
+         * Get all the image hrefs in the svg string
+         * @param svgString the svg string
+         * @return an array of image hrefs
+         */
+
+    }, {
+        key: 'getImagesInSVG',
+        value: function getImagesInSVG(svgString) {
+
+            // used to hold all the images we find
+            var images = [];
+
+            if (svgString != null) {
+
+                /*
+                 * the regex to match href values in image elements
+                 * e.g.
+                 * if the svg contained in image element like this
+                 * <image id="SvgjsImage1007" xlink:href="/wise/curriculum/25/assets/Sun.png" width="100" height="100"/>
+                 * it would match it and the matching group would contain
+                 * /wise/curriculum/25/assets/Sun.png
+                 */
+                var regex = /<image.*?xlink:href="(.*?)".*?\/?>/g;
+
+                // find the first match in the svg string
+                var result = regex.exec(svgString);
+
+                while (result != null) {
+
+                    /*
+                     * get the href image from the match
+                     * e.g.
+                     * /wise/curriculum/25/assets/Sun.png
+                     */
+                    var imageHref = result[1];
+
+                    // add the href to our array of hrefs
+                    images.push(imageHref);
+
+                    // try to find the next match
+                    result = regex.exec(svgString);
+                }
+            }
+
+            return images;
+        }
+
+        /**
+         * Get Base64 images from image hrefs
+         * @param svgString the svg string
+         * @return a promise that will return an array of objects. The objects will
+         * contain an image href and a Base64 image.
+         */
+
+    }, {
+        key: 'getHrefToBase64ImageReplacements',
+        value: function getHrefToBase64ImageReplacements(svgString) {
+
+            // an array to hold all the promises
+            var promises = [];
+
+            // get all the image hrefs
+            var imageHrefs = this.getImagesInSVG(svgString);
+
+            // loop through all the images
+            for (var i = 0; i < imageHrefs.length; i++) {
+
+                // get an image href
+                var imageHref = imageHrefs[i];
+
+                if (imageHref.indexOf('/') == -1) {
+                    /*
+                     * the image href is relative so we need to make it absolute
+                     * so that the browser can retrieve it
+                     */
+
+                    // prepend the project asset directory path
+                    imageHref = this.ConfigService.getProjectAssetsDirectoryPath(true) + '/' + imageHref;
+                }
+
+                // get the Base64 of the image
+                var promise = this.getBase64Image(imageHref);
+
+                promises.push(promise);
+            }
+
+            return this.$q.all(promises);
+        }
+
+        /**
+         * Get the Base64 image from an image href. An image href will look like
+         * /wise/curriculum/25/assets/Sun.png
+         * @param imageHref the image href
+         * @return a promise that will return an object containing the image href
+         * and the Base64 image
+         */
+
+    }, {
+        key: 'getBase64Image',
+        value: function getBase64Image(imageHref) {
+
+            var deferred = this.$q.defer();
+
+            // create the image object that we will load the image into
+            var image = new Image();
+
+            // create a new canvas to render the image in
+            var myCanvas = document.createElement("canvas");
+            var ctx = myCanvas.getContext("2d");
+
+            // the function that is called after the image is fully loaded
+            image.onload = function (event) {
+
+                // get the image that was loaded
+                var image = event.target;
+
+                // set the canvas dimensions to match the image
+                myCanvas.width = image.width;
+                myCanvas.height = image.height;
+
+                // draw the image in the canvas
+                ctx.drawImage(image, 0, 0);
+
+                // get the Base64 string of the canvas
+                var base64Image = myCanvas.toDataURL('image/png');
+
+                // create an object that will contain the image href and Base64 image
+                var result = {};
+                result.imageHref = imageHref;
+                result.base64Image = base64Image;
+
+                // resolve the promise with the object
+                deferred.resolve(result);
+            };
+
+            // load the image
+            image.src = imageHref;
+
+            // return the promise
+            return deferred.promise;
         }
     }]);
 
@@ -3010,7 +3490,7 @@ var ConceptMapLink = function () {
     }, {
         key: 'createDeleteButtonGroup',
         value: function createDeleteButtonGroup() {
-            var _this2 = this;
+            var _this3 = this;
 
             // create a group to contain the elements of the delete button
             this.deleteButtonGroup = this.draw.group();
@@ -3088,12 +3568,12 @@ var ConceptMapLink = function () {
 
             // set the listener for when the mouse is over the group
             this.deleteButtonGroup.mouseover(function (event) {
-                _this2.deleteButtonGroupMouseOver(event);
+                _this3.deleteButtonGroupMouseOver(event);
             });
 
             // set the listener for when the mouse moves out of the group
             this.deleteButtonGroup.mouseout(function (event) {
-                _this2.deleteButtonGroupMouseOut(event);
+                _this3.deleteButtonGroupMouseOut(event);
             });
 
             // add the delete button group to the link group
@@ -3481,7 +3961,7 @@ var ConceptMapLink = function () {
     return ConceptMapLink;
 }();
 
-ConceptMapService.$inject = ['$filter', 'StudentDataService', 'UtilService'];
+ConceptMapService.$inject = ['$filter', '$q', '$timeout', 'ConfigService', 'StudentDataService', 'UtilService'];
 
 exports.default = ConceptMapService;
 //# sourceMappingURL=conceptMapService.js.map

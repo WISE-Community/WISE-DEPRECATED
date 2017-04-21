@@ -604,11 +604,6 @@ class DrawController {
         // set whether studentAttachment is enabled
         this.isStudentAttachmentEnabled = this.componentContent.isStudentAttachmentEnabled;
 
-        if (this.componentContent.background != null) {
-            // set the background from the component content
-            this.drawingTool.setBackgroundImage(this.componentContent.background);
-        }
-
         if (componentState == null) {
             /*
              * only import work or use starter draw data if the student
@@ -644,6 +639,16 @@ class DrawController {
             } else if (starterDrawData != null) {
                 // there is starter draw data so we will populate it into the draw tool
                 this.drawingTool.load(starterDrawData);
+
+                if (this.componentContent.background != null) {
+                    // set the background from the component content
+                    this.drawingTool.setBackgroundImage(this.componentContent.background);
+                }
+            } else {
+                if (this.componentContent.background != null) {
+                    // set the background from the component content
+                    this.drawingTool.setBackgroundImage(this.componentContent.background);
+                }
             }
         } else {
             // populate the student work into this component
@@ -906,19 +911,35 @@ class DrawController {
             // clear the drawing
             this.drawingTool.clear();
 
-            // check if we need to reload student data from a connected component
-            var latestConnectedComponentState = this.latestConnectedComponentState;
-            var latestConnectedComponentParams = this.latestConnectedComponentParams;
-
-            // get the starter draw data if any
-            var starterDrawData = this.componentContent.starterDrawData;
-
-            if (latestConnectedComponentState && latestConnectedComponentParams) {
+            if (this.latestConnectedComponentState && this.latestConnectedComponentParams) {
                 // reload the student data from the connected component
                 this.setDrawData(latestConnectedComponentState, latestConnectedComponentParams);
-            } else if (starterDrawData != null) {
+
+                if (this.componentContent.background != null && this.componentContent.background != '') {
+                    // set the background
+                    this.drawingTool.setBackgroundImage(this.componentContent.background);
+                }
+            } else if (this.componentContent.importPreviousWorkNodeId != null &&
+                       this.componentContent.importPreviousWorkNodeId != '' &&
+                       this.componentContent.importPreviousWorkComponentId != null &&
+                       this.componentContent.importPreviousWorkComponentId != '') {
+
+                // this component imports work from another component
+
+                // boolean flag to overwrite the work when we import
+                var overwrite = true;
+
+                // import work from another component
+                this.importWork(overwrite);
+            } else if (this.componentContent.starterDrawData != null) {
+
+                if (this.componentContent.background != null && this.componentContent.background != '') {
+                    // set the background
+                    this.drawingTool.setBackgroundImage(this.componentContent.background);
+                }
+
                 // there is starter draw data so we will populate it into the draw tool
-                this.drawingTool.load(starterDrawData);
+                this.drawingTool.load(this.componentContent.starterDrawData);
             }
         }
     }
@@ -1142,8 +1163,10 @@ class DrawController {
 
     /**
      * Import work from another component
+     * @param overwrite boolean value whether to import the work even if the
+     * student already has work for this component
      */
-    importWork() {
+    importWork(overwrite) {
 
         // get the component content
         var componentContent = this.componentContent;
@@ -1185,21 +1208,54 @@ class DrawController {
                  * we will only import work into this component if the student
                  * has not done any work for this component
                  */
-                if(componentState == null) {
+                if(componentState == null || overwrite == true) {
                     // the student has not done any work for this component
 
                     // get the latest component state from the component we are importing from
                     var importWorkComponentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(importPreviousWorkNodeId, importPreviousWorkComponentId);
 
                     if (importWorkComponentState != null) {
-                        /*
-                         * populate a new component state with the work from the
-                         * imported component state
-                         */
-                        var populatedComponentState = this.DrawService.populateComponentState(importWorkComponentState);
 
-                        // populate the component state into this component
-                        this.setStudentWork(populatedComponentState);
+                        if (importWorkComponentState.componentType == 'ConceptMap') {
+
+                            var conceptMapData = null;
+
+                            if (importWorkComponentState.studentData != null) {
+                                // get the concept map data from the other component state
+                                conceptMapData = importWorkComponentState.studentData.conceptMapData;
+                            }
+
+                            if (conceptMapData != null) {
+                                var serviceName = 'ConceptMapService';
+
+                                if (this.$injector.has(serviceName)) {
+
+                                    // get the ConceptMapService
+                                    var service = this.$injector.get(serviceName);
+
+                                    // create an image from the concept map data
+                                    service.createImage(conceptMapData).then((image) => {
+
+                                        // set the image as the background
+                                        this.drawingTool.setBackgroundImage(image);
+                                    });
+                                }
+                            }
+                        } else {
+                            /*
+                             * populate a new component state with the work from the
+                             * imported component state
+                             */
+                            var populatedComponentState = this.DrawService.populateComponentState(importWorkComponentState);
+
+                            // populate the component state into this component
+                            this.setStudentWork(populatedComponentState);
+
+                            if (this.componentContent.background != null && this.componentContent.background != '') {
+                                // set the background
+                                this.drawingTool.setBackgroundImage(this.componentContent.background);
+                            }
+                        }
                     }
                 }
             }
