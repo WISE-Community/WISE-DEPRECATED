@@ -263,29 +263,35 @@ class UtilService {
     insertWISELinkAnchors(html) {
 
         // find <a> elements with the parameter wiselink=true
-        var wiseLinkRegEx = new RegExp(/<a.*?wiselink="true".*?>(.*?)<\/a>/);
+        let wiseLinkRegEx = new RegExp(/<a.*?wiselink="true".*?>(.*?)<\/a>/);
 
         // find the first match
-        var wiseLinkRegExMatchResult = wiseLinkRegEx.exec(html);
+        let wiseLinkRegExMatchResult = wiseLinkRegEx.exec(html);
 
         // loop until we have replaced all the matches
         while(wiseLinkRegExMatchResult != null) {
 
             // get the whole <a> element
-            var anchorHTML = wiseLinkRegExMatchResult[0];
+            let anchorHTML = wiseLinkRegExMatchResult[0];
 
             // get the inner html of the <a> element
-            var anchorText = wiseLinkRegExMatchResult[1];
+            let anchorText = wiseLinkRegExMatchResult[1];
 
             // get the node id parameter of the <a> element
-            var nodeId = this.getWISELinkNodeId(anchorHTML);
+            let nodeId = this.getWISELinkNodeId(anchorHTML);
 
             if (nodeId == null) {
                 nodeId = '';
             }
 
+            let componentIdAttr = "";
+            let componentId = this.getWISELinkComponentId(anchorHTML);
+            if (componentId != null) {
+                componentIdAttr = "component-id='" + componentId + "'";
+            }
+
             // create the <wiselink> element
-            var wiselinkHtml = "<wiselink type='link' link-text='" + anchorText + "' node-id='" + nodeId + "'/>";
+            let wiselinkHtml = "<wiselink type='link' link-text='" + anchorText + "' node-id='" + nodeId + "' " + componentIdAttr + "/>";
 
             // replace the <a> element with the <wiselink> element
             html = html.replace(wiseLinkRegExMatchResult[0], wiselinkHtml);
@@ -328,8 +334,15 @@ class UtilService {
                 nodeId = '';
             }
 
+            let componentIdAttr = "";
+            let componentId = this.getWISELinkComponentId(buttonHTML);
+            if (componentId != null) {
+                componentIdAttr = "component-id='" + componentId + "'";
+            }
+
+
             // create the <wiselink> element
-            var wiselinkHtml = "<wiselink type='button' link-text='" + buttonText + "' node-id='" + nodeId + "'/>";
+            var wiselinkHtml = "<wiselink type='button' link-text='" + buttonText + "' node-id='" + nodeId + "' " + componentIdAttr + "/>";
 
             // replace the <button> element with the <wiselink> element
             html = html.replace(wiseLinkRegExMatchResult[0], wiselinkHtml);
@@ -351,14 +364,14 @@ class UtilService {
      */
     getWISELinkNodeId(html) {
 
-        var nodeId = null;
+        let nodeId = null;
 
         if (html != null) {
             // create the regex to find the node id parameter
-            var nodeIdRegEx = new RegExp(/node-id=["'b](.*?)["']/, 'g');
+            let nodeIdRegEx = new RegExp(/node-id=["'b](.*?)["']/, 'g');
 
             // try to find a match
-            var nodeIdRegExResult = nodeIdRegEx.exec(html);
+            let nodeIdRegExResult = nodeIdRegEx.exec(html);
 
             if (nodeIdRegExResult != null) {
                 // we have found a node id
@@ -370,6 +383,34 @@ class UtilService {
     }
 
     /**
+     * Get the component id from the wiselink element
+     * e.g.
+     * <wiselink node-id='node5' component-id='xyzabc' />
+     * the component id in this case is 'xyzabc'
+     * @param html the html for the element
+     * @return the component id from the component id parameter in the element
+     */
+    getWISELinkComponentId(html) {
+
+        let componentId = null;
+
+        if (html != null) {
+            // create the regex to find the component id parameter
+            let componentIdRegEx = new RegExp(/component-id=["'b](.*?)["']/, 'g');
+
+            // try to find a match
+            let componentIdRegExResult = componentIdRegEx.exec(html);
+
+            if (componentIdRegExResult != null) {
+                // we have found a node id
+                componentId = componentIdRegExResult[1];
+            }
+        }
+
+        return componentId;
+    }
+
+    /**
      * Get the link type from the wiselink element
      * e.g.
      * <wiselink type='button'/>
@@ -378,14 +419,14 @@ class UtilService {
      * @return the link type from the type parameter in the element
      */
     getWISELinkType(html) {
-        var type = null;
+        let type = null;
 
         if (html != null) {
             // create the regex to find the type
-            var typeRegEx = new RegExp(/type=["'b](.*?)["']/, 'g');
+            let typeRegEx = new RegExp(/type=["'b](.*?)["']/, 'g');
 
             // try to find a match
-            var typeRegExResult = typeRegEx.exec(html);
+            let typeRegExResult = typeRegEx.exec(html);
 
             if (typeRegExResult != null) {
                 // we have found a type
@@ -404,14 +445,14 @@ class UtilService {
      * @return the link text from the link text parameter in the element
      */
     getWISELinkLinkText(html) {
-        var linkText = null;
+        let linkText = null;
 
         if (html != null) {
             // create the regex to find the link text
-            var linkTextRegEx = new RegExp(/link-text=["'b](.*?)["']/, 'g');
+            let linkTextRegEx = new RegExp(/link-text=["'b](.*?)["']/, 'g');
 
             // try to find a match
-            var linkTextRegExResult = linkTextRegEx.exec(html);
+            let linkTextRegExResult = linkTextRegEx.exec(html);
 
             if (linkTextRegExResult != null) {
                 // we have found a link text
@@ -448,10 +489,10 @@ class UtilService {
     replaceWISELinksHelper(html, regex) {
 
         // create the regex
-        var wiseLinkRegEx = new RegExp(regex);
+        let wiseLinkRegEx = new RegExp(regex);
 
         // find the first match
-        var wiseLinkRegExMatchResult = wiseLinkRegEx.exec(html);
+        let wiseLinkRegExMatchResult = wiseLinkRegEx.exec(html);
 
         // loop until we have replaced all the matches
         while (wiseLinkRegExMatchResult != null) {
@@ -460,21 +501,26 @@ class UtilService {
              * get the whole match
              * e.g. <wiselink type='link' node-id='node5' link-text='Go to here'/>
              */
-            var wiseLinkHTML = wiseLinkRegExMatchResult[0];
+            let wiseLinkHTML = wiseLinkRegExMatchResult[0];
 
-            // get the node id, type and link text from the match
-            var nodeId = this.getWISELinkNodeId(wiseLinkHTML);
-            var type = this.getWISELinkType(wiseLinkHTML);
-            var linkText = this.getWISELinkLinkText(wiseLinkHTML);
+            // get the node id, component id (if exists), type and link text from the match
+            let nodeId = this.getWISELinkNodeId(wiseLinkHTML);
+            let componentId = this.getWISELinkComponentId(wiseLinkHTML);
+            let componentHTML = '';
+            if (componentId != null && componentId != '') {
+                componentHTML = "component-id='" + componentId + "'";
+            }
+            let type = this.getWISELinkType(wiseLinkHTML);
+            let linkText = this.getWISELinkLinkText(wiseLinkHTML);
 
-            var newElement = null;
+            let newElement = null;
 
             if (type == 'link') {
                 // create a link that represents the wiselink
-                newElement = "<a wiselink='true' node-id='" + nodeId + "'>" + linkText + "</a>";
+                newElement = "<a wiselink='true' node-id='" + nodeId + "' " + componentHTML + ">" + linkText + "</a>";
             } else if (type == 'button') {
                 // create a button that represents the wiselink
-                newElement = "<button wiselink='true' node-id='" + nodeId + "'>" + linkText + "</button>";
+                newElement = "<button wiselink='true' node-id='" + nodeId + "' " + componentHTML + ">" + linkText + "</button>";
             }
 
             if (newElement != null) {

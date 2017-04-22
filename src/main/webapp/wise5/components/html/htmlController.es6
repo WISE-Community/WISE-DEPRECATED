@@ -59,7 +59,7 @@ class HTMLController {
         // perform setup of this component
 
         // get the current node and node id
-        var currentNode = this.StudentDataService.getCurrentNode();
+        let currentNode = this.StudentDataService.getCurrentNode();
         if (currentNode != null) {
             this.nodeId = currentNode.id;
         } else {
@@ -86,25 +86,25 @@ class HTMLController {
             this.componentId = this.componentContent.id;
 
             if (this.mode === 'authoring') {
-                var thisController = this;
+                let thisController = this;
 
                 // the tooltip text for the the WISE Link authoring button
-                var insertWISELinkString = this.$translate('INSERT_WISE_LINK');
+                let insertWISELinkString = this.$translate('INSERT_WISE_LINK');
 
                 /*
                  * create the custom button for inserting a WISE Link into
                  * summernote
                  */
-                var InsertWISELinkButton = this.UtilService.createInsertWISELinkButton(this, null, this.nodeId, this.componentId, 'prompt', insertWISELinkString);
+                let InsertWISELinkButton = this.UtilService.createInsertWISELinkButton(this, null, this.nodeId, this.componentId, 'prompt', insertWISELinkString);
 
                 // the tooltip text for the insert WISE asset button
-                var insertAssetString = this.$translate('INSERT_ASSET');
+                let insertAssetString = this.$translate('INSERT_ASSET');
 
                 /*
                  * create the custom button for inserting WISE assets into
                  * summernote
                  */
-                var InsertAssetButton = this.UtilService.createInsertAssetButton(this, null, this.nodeId, this.componentId, 'prompt', insertAssetString);
+                let InsertAssetButton = this.UtilService.createInsertAssetButton(this, null, this.nodeId, this.componentId, 'prompt', insertAssetString);
 
                 /*
                  * the options that specifies the tools to display in the
@@ -145,13 +145,13 @@ class HTMLController {
                 this.summernoteRubricHTML = this.componentContent.rubric;
 
                 // the tooltip text for the insert WISE asset button
-                var insertAssetString = this.$translate('INSERT_ASSET');
+                let insertAssetString = this.$translate('INSERT_ASSET');
 
                 /*
                  * create the custom button for inserting WISE assets into
                  * summernote
                  */
-                var InsertAssetButton = this.UtilService.createInsertAssetButton(this, null, this.nodeId, this.componentId, 'rubric', insertAssetString);
+                let InsertAssetButton = this.UtilService.createInsertAssetButton(this, null, this.nodeId, this.componentId, 'rubric', insertAssetString);
 
                 /*
                  * the options that specifies the tools to display in the
@@ -205,17 +205,17 @@ class HTMLController {
          */
         this.$scope.$on('requestImage', (event, args) => {
             // get the node id and component id from the args
-            var nodeId = args.nodeId;
-            var componentId = args.componentId;
+            let nodeId = args.nodeId;
+            let componentId = args.componentId;
 
             // check if the image is being requested from this component
             if (this.nodeId === nodeId && this.componentId === componentId) {
 
                 // obtain the image objects
-                var imageObjects = this.getImageObjects();
+                let imageObjects = this.getImageObjects();
 
                 if (imageObjects != null) {
-                    var args = {};
+                    let args = {};
                     args.nodeId = nodeId;
                     args.componentId = componentId;
                     args.imageObjects = imageObjects;
@@ -237,10 +237,10 @@ class HTMLController {
                 // make sure the event was fired for this component
                 if (args.nodeId == this.nodeId && args.componentId == this.componentId) {
                     // the asset was selected for this component
-                    var assetItem = args.assetItem;
+                    let assetItem = args.assetItem;
 
                     if (assetItem != null) {
-                        var fileName = assetItem.fileName;
+                        let fileName = assetItem.fileName;
 
                         if (fileName != null) {
                             /*
@@ -248,10 +248,10 @@ class HTMLController {
                              * e.g.
                              * /wise/curriculum/3/
                              */
-                            var assetsDirectoryPath = this.ConfigService.getProjectAssetsDirectoryPath();
-                            var fullAssetPath = assetsDirectoryPath + '/' + fileName;
+                            let assetsDirectoryPath = this.ConfigService.getProjectAssetsDirectoryPath();
+                            let fullAssetPath = assetsDirectoryPath + '/' + fileName;
 
-                            var summernoteId = '';
+                            let summernoteId = '';
 
                             if (args.target == 'prompt') {
                                 // the target is the summernote prompt element
@@ -281,7 +281,7 @@ class HTMLController {
                                     $('#' + summernoteId).summernote('editor.focus');
 
                                     // insert the video element
-                                    var videoElement = document.createElement('video');
+                                    let videoElement = document.createElement('video');
                                     videoElement.controls = 'true';
                                     videoElement.innerHTML = "<source ng-src='" + fullAssetPath + "' type='video/mp4'>";
                                     $('#' + summernoteId).summernote('insertNode', videoElement);
@@ -307,13 +307,14 @@ class HTMLController {
                 if (args.nodeId == this.nodeId && args.componentId == this.componentId) {
 
                     // get the WISE Link parameters
-                    var wiseLinkNodeId = args.wiseLinkNodeId;
-                    var wiseLinkType = args.wiseLinkType;
-                    var wiseLinkText = args.wiseLinkText;
-                    var wiseLinkClass = args.wiseLinkClass;
-                    var target = args.target;
+                    let wiseLinkNodeId = args.wiseLinkNodeId;
+                    let wiseLinkComponentId = args.wiseLinkComponentId;
+                    let wiseLinkType = args.wiseLinkType;
+                    let wiseLinkText = args.wiseLinkText;
+                    let wiseLinkClass = args.wiseLinkClass;
+                    let target = args.target;
 
-                    var wiseLinkElement = null;
+                    let wiseLinkElement = null;
 
                     if (wiseLinkType == 'link') {
                         // we are creating a link
@@ -321,6 +322,9 @@ class HTMLController {
                         wiseLinkElement.innerHTML = wiseLinkText;
                         wiseLinkElement.setAttribute('wiselink', true);
                         wiseLinkElement.setAttribute('node-id', wiseLinkNodeId);
+                        if (wiseLinkComponentId != null && wiseLinkComponentId != '') {
+                            wiseLinkElement.setAttribute('component-id', wiseLinkComponentId);
+                        }
                         wiseLinkElement.setAttribute('type', wiseLinkType);
                         wiseLinkElement.setAttribute('link-text', wiseLinkText);
                     } else if (wiseLinkType == 'button') {
@@ -329,11 +333,14 @@ class HTMLController {
                         wiseLinkElement.innerHTML = wiseLinkText;
                         wiseLinkElement.setAttribute('wiselink', true);
                         wiseLinkElement.setAttribute('node-id', wiseLinkNodeId);
+                        if (wiseLinkComponentId != null && wiseLinkComponentId != '') {
+                            wiseLinkElement.setAttribute('component-id', wiseLinkComponentId);
+                        }
                         wiseLinkElement.setAttribute('type', wiseLinkType);
                         wiseLinkElement.setAttribute('link-text', wiseLinkText);
                     }
 
-                    var summernoteId = '';
+                    let summernoteId = '';
 
                     if (target == 'prompt') {
                         // get the id for the summernote prompt
@@ -354,7 +361,7 @@ class HTMLController {
                             $('#' + summernoteId).summernote('insertNode', wiseLinkElement);
 
                             // add a new line after the element we have just inserted
-                            var br = document.createElement('br');
+                            let br = document.createElement('br');
                             $('#' + summernoteId).summernote('insertNode', br);
                         }
                     }
@@ -392,7 +399,7 @@ class HTMLController {
              * create a new component by converting the JSON string in the advanced
              * authoring view into a JSON object
              */
-            var editedComponentContent = angular.fromJson(this.authoringComponentContentJSONString);
+            let editedComponentContent = angular.fromJson(this.authoringComponentContentJSONString);
 
             // replace the component in the project
             this.ProjectService.replaceComponent(this.nodeId, this.componentId, editedComponentContent);
@@ -422,22 +429,22 @@ class HTMLController {
      * @returns an image object
      */
     getImageObjects() {
-        var imageObjects = [];
+        let imageObjects = [];
 
         // get the image elements in the scope
         let componentId = this.componentId;
-        var imageElements = angular.element('#' + componentId + ' img');
+        let imageElements = angular.element('#' + componentId + ' img');
 
         if (imageElements != null) {
 
             // loop through all the image elements
-            for (var i = 0; i < imageElements.length; i++) {
-                var imageElement = imageElements[i];
+            for (let i = 0; i < imageElements.length; i++) {
+                let imageElement = imageElements[i];
 
                 if (imageElement != null) {
 
                     // create an image object
-                    var imageObject = this.UtilService.getImageObjectFromImageElement(imageElement);
+                    let imageObject = this.UtilService.getImageObjectFromImageElement(imageElement);
                     imageObjects.push(imageObject);
                 }
             }
@@ -453,7 +460,7 @@ class HTMLController {
     summernotePromptHTMLChanged() {
 
         // get the summernote prompt html
-        var html = this.summernotePromptHTML;
+        let html = this.summernotePromptHTML;
 
         /*
          * remove the absolute asset paths
@@ -483,7 +490,7 @@ class HTMLController {
     summernoteRubricHTMLChanged() {
 
         // get the summernote rubric html
-        var html = this.summernoteRubricHTML;
+        let html = this.summernoteRubricHTML;
 
         /*
          * remove the absolute asset paths

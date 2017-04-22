@@ -29,6 +29,7 @@ class WISELinkAuthoringController {
 
         // the model fields for the WISE link authoring
         this.wiseLinkNodeId = '';
+        this.wiseLinkComponentId = '';
         this.wiseLinkType = 'link';
         this.wiseLinkText = '';
         this.wiseLinkClass = '';
@@ -40,12 +41,14 @@ class WISELinkAuthoringController {
     wiseLinkNodeIdChanged() {
 
         if (this.wiseLinkNodeId != null && this.wiseLinkNodeId != '') {
+            // reset wiseLinkComonponentId
+            this.wiseLinkComponentId = '';
 
             // get the position of the step
-            var position = this.getNodePositionById(this.wiseLinkNodeId);
+            let position = this.getNodePositionById(this.wiseLinkNodeId);
 
             // get the title of the step
-            var title = this.getNodeTitleByNodeId(this.wiseLinkNodeId);
+            let title = this.getNodeTitleByNodeId(this.wiseLinkNodeId);
 
             // set the link text to display the position and title
             this.wiseLinkText = position + ': ' + title;
@@ -59,7 +62,7 @@ class WISELinkAuthoringController {
      */
     getNodePositionById(nodeId) {
         return this.ProjectService.getNodePositionById(nodeId);
-    };
+    }
 
     /**
      * Get the node title for a node
@@ -68,7 +71,7 @@ class WISELinkAuthoringController {
      */
     getNodeTitleByNodeId(nodeId) {
         return this.ProjectService.getNodeTitleByNodeId(nodeId);
-    };
+    }
 
     /**
      * Check if a node id is for a group
@@ -77,7 +80,16 @@ class WISELinkAuthoringController {
      */
     isGroupNode(nodeId) {
         return this.ProjectService.isGroupNode(nodeId);
-    };
+    }
+
+    /**
+     * Get the components in a step
+     * @param nodeId get the components in the step
+     * @returns the components in the step
+     */
+    getComponentsByNodeId(nodeId) {
+        return this.ProjectService.getComponentsByNodeId(nodeId);
+    }
 
     /**
      * Fire an event to create the WISE Link. Listeners will be the ones that
@@ -94,12 +106,13 @@ class WISELinkAuthoringController {
             alert('You must enter text.');
         } else {
             // fire the event to notify listeners that a WISE Link should be created
-            var params = {
+            let params = {
                 projectId: this.projectId,
                 nodeId: this.nodeId,
                 componentId: this.componentId,
                 target: this.target,
                 wiseLinkNodeId: this.wiseLinkNodeId,
+                wiseLinkComponentId: this.wiseLinkComponentId,
                 wiseLinkType: this.wiseLinkType,
                 wiseLinkText: this.wiseLinkText,
                 wiseLinkClass: this.wiseLinkClass
@@ -122,6 +135,6 @@ WISELinkAuthoringController.$inject = [
     '$stateParams',
     '$mdDialog',
     'ProjectService'
-]
+];
 
 export default WISELinkAuthoringController;

@@ -925,73 +925,113 @@ var OpenResponseController = function () {
                             var previousScore = null;
 
                             if (score != null) {
-                                var autoComment;
-                                var submitCounter;
-                                var autoCommentAnnotationData;
-                                var autoCommentAnnotation;
 
-                                (function () {
+                                // create the auto score annotation
+                                var autoScoreAnnotationData = {};
+                                autoScoreAnnotationData.value = score;
+                                autoScoreAnnotationData.maxAutoScore = _this3.ProjectService.getMaxScoreForComponent(_this3.nodeId, _this3.componentId);
+                                autoScoreAnnotationData.concepts = concepts;
+                                autoScoreAnnotationData.autoGrader = 'cRater';
 
-                                    // create the auto score annotation
-                                    var autoScoreAnnotationData = {};
-                                    autoScoreAnnotationData.value = score;
-                                    autoScoreAnnotationData.maxAutoScore = _this3.ProjectService.getMaxScoreForComponent(_this3.nodeId, _this3.componentId);
-                                    autoScoreAnnotationData.concepts = concepts;
-                                    autoScoreAnnotationData.autoGrader = 'cRater';
+                                var autoScoreAnnotation = _this3.createAutoScoreAnnotation(autoScoreAnnotationData);
 
-                                    var autoScoreAnnotation = _this3.createAutoScoreAnnotation(autoScoreAnnotationData);
+                                var annotationGroupForScore = null;
 
-                                    var annotationGroupForScore = null;
+                                if (_this3.$scope.$parent.nodeController != null) {
+                                    // get the previous score and comment annotations
+                                    var latestAnnotations = _this3.$scope.$parent.nodeController.getLatestComponentAnnotations(_this3.componentId);
 
-                                    if (_this3.$scope.$parent.nodeController != null) {
-                                        // get the previous score and comment annotations
-                                        var latestAnnotations = _this3.$scope.$parent.nodeController.getLatestComponentAnnotations(_this3.componentId);
+                                    if (latestAnnotations != null && latestAnnotations.score != null && latestAnnotations.score.data != null) {
 
-                                        if (latestAnnotations != null && latestAnnotations.score != null && latestAnnotations.score.data != null) {
-
-                                            // get the previous score annotation value
-                                            previousScore = latestAnnotations.score.data.value;
-                                        }
-
-                                        if (_this3.componentContent.enableGlobalAnnotations && _this3.componentContent.globalAnnotationSettings != null) {
-
-                                            var globalAnnotationMaxCount = 0;
-                                            if (_this3.componentContent.globalAnnotationSettings.globalAnnotationMaxCount != null) {
-                                                globalAnnotationMaxCount = _this3.componentContent.globalAnnotationSettings.globalAnnotationMaxCount;
-                                            }
-                                            // get the annotation properties for the score that the student got.
-                                            annotationGroupForScore = _this3.ProjectService.getGlobalAnnotationGroupByScore(_this3.componentContent, previousScore, score);
-
-                                            // check if we need to apply this globalAnnotationSetting to this annotation: we don't need to if we've already reached the maxCount
-                                            if (annotationGroupForScore != null) {
-                                                var globalAnnotationGroupsByNodeIdAndComponentId = _this3.AnnotationService.getAllGlobalAnnotationGroups(_this3.nodeId, _this3.componentId);
-                                                annotationGroupForScore.annotationGroupCreatedTime = autoScoreAnnotation.clientSaveTime; // save annotation creation time
-
-                                                if (globalAnnotationGroupsByNodeIdAndComponentId.length >= globalAnnotationMaxCount) {
-                                                    // we've already applied this annotation properties to maxCount annotations, so we don't need to apply it any more.
-                                                    annotationGroupForScore = null;
-                                                }
-                                            }
-
-                                            if (annotationGroupForScore != null && annotationGroupForScore.isGlobal && annotationGroupForScore.unGlobalizeCriteria != null) {
-                                                // check if this annotation is global and what criteria needs to be met to un-globalize.
-                                                annotationGroupForScore.unGlobalizeCriteria.map(function (unGlobalizeCriteria) {
-                                                    // if the un-globalize criteria is time-based (e.g. isVisitedAfter, isRevisedAfter, isVisitedAndRevisedAfter, etc), store the timestamp of this annotation in the criteria
-                                                    // so we can compare it when we check for criteria satisfaction.
-                                                    if (unGlobalizeCriteria.params != null) {
-                                                        unGlobalizeCriteria.params.criteriaCreatedTimestamp = autoScoreAnnotation.clientSaveTime; // save annotation creation time to criteria
-                                                    }
-                                                });
-                                            }
-
-                                            if (annotationGroupForScore != null) {
-                                                // copy over the annotation properties into the autoScoreAnnotation's data
-                                                angular.merge(autoScoreAnnotation.data, annotationGroupForScore);
-                                            }
-                                        }
+                                        // get the previous score annotation value
+                                        previousScore = latestAnnotations.score.data.value;
                                     }
 
-                                    componentState.annotations.push(autoScoreAnnotation);
+                                    if (_this3.componentContent.enableGlobalAnnotations && _this3.componentContent.globalAnnotationSettings != null) {
+
+                                        var globalAnnotationMaxCount = 0;
+                                        if (_this3.componentContent.globalAnnotationSettings.globalAnnotationMaxCount != null) {
+                                            globalAnnotationMaxCount = _this3.componentContent.globalAnnotationSettings.globalAnnotationMaxCount;
+                                        }
+                                        // get the annotation properties for the score that the student got.
+                                        annotationGroupForScore = _this3.ProjectService.getGlobalAnnotationGroupByScore(_this3.componentContent, previousScore, score);
+
+                                        // check if we need to apply this globalAnnotationSetting to this annotation: we don't need to if we've already reached the maxCount
+                                        if (annotationGroupForScore != null) {
+                                            var globalAnnotationGroupsByNodeIdAndComponentId = _this3.AnnotationService.getAllGlobalAnnotationGroups(_this3.nodeId, _this3.componentId);
+                                            annotationGroupForScore.annotationGroupCreatedTime = autoScoreAnnotation.clientSaveTime; // save annotation creation time
+
+                                            if (globalAnnotationGroupsByNodeIdAndComponentId.length >= globalAnnotationMaxCount) {
+                                                // we've already applied this annotation properties to maxCount annotations, so we don't need to apply it any more.
+                                                annotationGroupForScore = null;
+                                            }
+                                        }
+
+                                        if (annotationGroupForScore != null && annotationGroupForScore.isGlobal && annotationGroupForScore.unGlobalizeCriteria != null) {
+                                            // check if this annotation is global and what criteria needs to be met to un-globalize.
+                                            annotationGroupForScore.unGlobalizeCriteria.map(function (unGlobalizeCriteria) {
+                                                // if the un-globalize criteria is time-based (e.g. isVisitedAfter, isRevisedAfter, isVisitedAndRevisedAfter, etc), store the timestamp of this annotation in the criteria
+                                                // so we can compare it when we check for criteria satisfaction.
+                                                if (unGlobalizeCriteria.params != null) {
+                                                    unGlobalizeCriteria.params.criteriaCreatedTimestamp = autoScoreAnnotation.clientSaveTime; // save annotation creation time to criteria
+                                                }
+                                            });
+                                        }
+
+                                        if (annotationGroupForScore != null) {
+                                            // copy over the annotation properties into the autoScoreAnnotation's data
+                                            angular.merge(autoScoreAnnotation.data, annotationGroupForScore);
+                                        }
+                                    }
+                                }
+
+                                componentState.annotations.push(autoScoreAnnotation);
+
+                                if (_this3.mode === 'authoring') {
+                                    if (_this3.latestAnnotations == null) {
+                                        _this3.latestAnnotations = {};
+                                    }
+
+                                    /*
+                                     * we are in the authoring view so we will set the
+                                     * latest score annotation manually
+                                     */
+                                    _this3.latestAnnotations.score = autoScoreAnnotation;
+                                }
+
+                                var autoComment = null;
+
+                                // get the submit counter
+                                var submitCounter = _this3.submitCounter;
+
+                                if (_this3.componentContent.cRater.enableMultipleAttemptScoringRules && submitCounter > 1) {
+                                    /*
+                                     * this step has multiple attempt scoring rules and this is
+                                     * a subsequent submit
+                                     */
+                                    // get the feedback based upon the previous score and current score
+                                    autoComment = _this3.CRaterService.getMultipleAttemptCRaterFeedbackTextByScore(_this3.componentContent, previousScore, score);
+                                } else {
+                                    // get the feedback text
+                                    autoComment = _this3.CRaterService.getCRaterFeedbackTextByScore(_this3.componentContent, score);
+                                }
+
+                                if (autoComment != null) {
+                                    // create the auto comment annotation
+                                    var autoCommentAnnotationData = {};
+                                    autoCommentAnnotationData.value = autoComment;
+                                    autoCommentAnnotationData.concepts = concepts;
+                                    autoCommentAnnotationData.autoGrader = 'cRater';
+
+                                    var autoCommentAnnotation = _this3.createAutoCommentAnnotation(autoCommentAnnotationData);
+
+                                    if (_this3.componentContent.enableGlobalAnnotations) {
+                                        if (annotationGroupForScore != null) {
+                                            // copy over the annotation properties into the autoCommentAnnotation's data
+                                            angular.merge(autoCommentAnnotation.data, annotationGroupForScore);
+                                        }
+                                    }
+                                    componentState.annotations.push(autoCommentAnnotation);
 
                                     if (_this3.mode === 'authoring') {
                                         if (_this3.latestAnnotations == null) {
@@ -1000,78 +1040,27 @@ var OpenResponseController = function () {
 
                                         /*
                                          * we are in the authoring view so we will set the
-                                         * latest score annotation manually
+                                         * latest comment annotation manually
                                          */
-                                        _this3.latestAnnotations.score = autoScoreAnnotation;
+                                        _this3.latestAnnotations.comment = autoCommentAnnotation;
                                     }
+                                }
+                                if (_this3.componentContent.enableNotifications) {
+                                    // get the notification properties for the score that the student got.
+                                    var notificationForScore = _this3.ProjectService.getNotificationByScore(_this3.componentContent, previousScore, score);
 
-                                    autoComment = null;
-
-                                    // get the submit counter
-
-                                    submitCounter = _this3.submitCounter;
-
-
-                                    if (_this3.componentContent.cRater.enableMultipleAttemptScoringRules && submitCounter > 1) {
-                                        /*
-                                         * this step has multiple attempt scoring rules and this is
-                                         * a subsequent submit
-                                         */
-                                        // get the feedback based upon the previous score and current score
-                                        autoComment = _this3.CRaterService.getMultipleAttemptCRaterFeedbackTextByScore(_this3.componentContent, previousScore, score);
-                                    } else {
-                                        // get the feedback text
-                                        autoComment = _this3.CRaterService.getCRaterFeedbackTextByScore(_this3.componentContent, score);
+                                    if (notificationForScore != null) {
+                                        notificationForScore.score = score;
+                                        notificationForScore.nodeId = _this3.nodeId;
+                                        notificationForScore.componentId = _this3.componentId;
+                                        _this3.NotificationService.sendNotificationForScore(notificationForScore);
                                     }
+                                }
 
-                                    if (autoComment != null) {
-                                        // create the auto comment annotation
-                                        autoCommentAnnotationData = {};
-
-                                        autoCommentAnnotationData.value = autoComment;
-                                        autoCommentAnnotationData.concepts = concepts;
-                                        autoCommentAnnotationData.autoGrader = 'cRater';
-
-                                        autoCommentAnnotation = _this3.createAutoCommentAnnotation(autoCommentAnnotationData);
-
-
-                                        if (_this3.componentContent.enableGlobalAnnotations) {
-                                            if (annotationGroupForScore != null) {
-                                                // copy over the annotation properties into the autoCommentAnnotation's data
-                                                angular.merge(autoCommentAnnotation.data, annotationGroupForScore);
-                                            }
-                                        }
-                                        componentState.annotations.push(autoCommentAnnotation);
-
-                                        if (_this3.mode === 'authoring') {
-                                            if (_this3.latestAnnotations == null) {
-                                                _this3.latestAnnotations = {};
-                                            }
-
-                                            /*
-                                             * we are in the authoring view so we will set the
-                                             * latest comment annotation manually
-                                             */
-                                            _this3.latestAnnotations.comment = autoCommentAnnotation;
-                                        }
-                                    }
-                                    if (_this3.componentContent.enableNotifications) {
-                                        // get the notification properties for the score that the student got.
-                                        var notificationForScore = _this3.ProjectService.getNotificationByScore(_this3.componentContent, previousScore, score);
-
-                                        if (notificationForScore != null) {
-                                            notificationForScore.score = score;
-                                            notificationForScore.nodeId = _this3.nodeId;
-                                            notificationForScore.componentId = _this3.componentId;
-                                            _this3.NotificationService.sendNotificationForScore(notificationForScore);
-                                        }
-                                    }
-
-                                    // display global annotations dialog if needed
-                                    if (_this3.componentContent.enableGlobalAnnotations && annotationGroupForScore != null && annotationGroupForScore.isGlobal && annotationGroupForScore.isPopup) {
-                                        _this3.$scope.$emit('displayGlobalAnnotations');
-                                    }
-                                })();
+                                // display global annotations dialog if needed
+                                if (_this3.componentContent.enableGlobalAnnotations && annotationGroupForScore != null && annotationGroupForScore.isGlobal && annotationGroupForScore.isPopup) {
+                                    _this3.$scope.$emit('displayGlobalAnnotations');
+                                }
                             }
                         }
                     }

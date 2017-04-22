@@ -285,6 +285,7 @@ var HTMLController = function () {
 
                     // get the WISE Link parameters
                     var wiseLinkNodeId = args.wiseLinkNodeId;
+                    var wiseLinkComponentId = args.wiseLinkComponentId;
                     var wiseLinkType = args.wiseLinkType;
                     var wiseLinkText = args.wiseLinkText;
                     var wiseLinkClass = args.wiseLinkClass;
@@ -298,6 +299,9 @@ var HTMLController = function () {
                         wiseLinkElement.innerHTML = wiseLinkText;
                         wiseLinkElement.setAttribute('wiselink', true);
                         wiseLinkElement.setAttribute('node-id', wiseLinkNodeId);
+                        if (wiseLinkComponentId != null && wiseLinkComponentId != '') {
+                            wiseLinkElement.setAttribute('component-id', wiseLinkComponentId);
+                        }
                         wiseLinkElement.setAttribute('type', wiseLinkType);
                         wiseLinkElement.setAttribute('link-text', wiseLinkText);
                     } else if (wiseLinkType == 'button') {
@@ -306,6 +310,9 @@ var HTMLController = function () {
                         wiseLinkElement.innerHTML = wiseLinkText;
                         wiseLinkElement.setAttribute('wiselink', true);
                         wiseLinkElement.setAttribute('node-id', wiseLinkNodeId);
+                        if (wiseLinkComponentId != null && wiseLinkComponentId != '') {
+                            wiseLinkElement.setAttribute('component-id', wiseLinkComponentId);
+                        }
                         wiseLinkElement.setAttribute('type', wiseLinkType);
                         wiseLinkElement.setAttribute('link-text', wiseLinkText);
                     }

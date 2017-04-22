@@ -25,6 +25,21 @@
             </span>
         </md-option>
     </md-select>
+    <md-select md-theme="default"
+               class="node-select md-subhead"
+               ng-model="wiseLinkAuthoringController.wiseLinkComponentId"
+               placeholder="{{ 'chooseAComponentOptional' | translate }}"
+               style="width:600px">
+
+        <md-option ng-repeat="(componentIndex, component) in wiseLinkAuthoringController.getComponentsByNodeId(wiseLinkAuthoringController.wiseLinkNodeId)"
+                   value="{{ component.id }}">
+            <span layout="row" layout-align="start center">
+                <span class="node-select__text">{{componentIndex + 1}}. {{component.type}}</span>
+            </span>
+        </md-option>
+
+    </md-select>
+
     <br/>
     <md-radio-group ng-model="wiseLinkAuthoringController.wiseLinkType" class="md-primary">
         <md-radio-button value="link">{{ 'link' | translate }}</md-radio-button>
@@ -32,9 +47,17 @@
     </md-radio-group>
     <md-input-container>
         <label>{{ 'setLinkText' | translate }}</label>
-        <input ng-model="wiseLinkAuthoringController.wiseLinkText">
+        <input ng-model="wiseLinkAuthoringController.wiseLinkText"
+               ng-model-options='{ debounce: 1000 }'
+               size="50"/>
     </md-input-container>
     <br/>
-    <button ng-click='wiseLinkAuthoringController.createWISELink()'>{{ 'create' | translate }}</button>
-    <button ng-click='wiseLinkAuthoringController.cancelWISELink()'>{{ 'CANCEL' | translate }}</button>
+    <md-button class="md-raised md-primary"
+               ng-click="wiseLinkAuthoringController.createWISELink()">
+         <span>{{ 'create' | translate }}</span>
+    </md-button>
+    <md-button class="md-raised"
+               ng-click="wiseLinkAuthoringController.cancelWISELink()">
+        <span>{{ 'CANCEL' | translate }}</span>
+    </md-button>
 </div>
