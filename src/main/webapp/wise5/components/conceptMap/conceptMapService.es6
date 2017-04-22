@@ -1045,7 +1045,7 @@ class ConceptMapService extends NodeService {
             var svgString = svgElement.innerHTML;
 
             // find all the images in the svg and replace them with Base64 images
-            this.getHrefToBase64ImageReplacements(svgString).then((images) => {
+            this.getHrefToBase64ImageReplacements(svgString, true).then((images) => {
 
                 /*
                  * Loop through all the image objects. Each object contains
@@ -1126,6 +1126,47 @@ class ConceptMapService extends NodeService {
     }
 
     /**
+     * Get Base64 images from image hrefs
+     * @param svgString the svg string
+     * @param prependAssetsPath whether to prepend the assets directory path
+     * to the image references
+     * @return a promise that will return an array of objects. The objects will
+     * contain an image href and a Base64 image.
+     */
+    getHrefToBase64ImageReplacements(svgString, prependAssetsPath) {
+
+        // an array to hold all the promises
+        var promises = [];
+
+        // get all the image hrefs
+        var imageHrefs = this.getImagesInSVG(svgString);
+
+        // loop through all the images
+        for (var i = 0; i < imageHrefs.length; i++) {
+
+            // get an image href
+            var imageHref = imageHrefs[i];
+
+            if (prependAssetsPath) {
+                /*
+                 * the image href is relative so we need to make it absolute
+                 * so that the browser can retrieve it
+                 */
+
+                // prepend the project asset directory path
+                imageHref = this.ConfigService.getProjectAssetsDirectoryPath(true) + '/' + imageHref;
+            }
+
+            // get the Base64 of the image
+            var promise = this.getBase64Image(imageHref);
+
+            promises.push(promise);
+        }
+
+        return this.$q.all(promises);
+    }
+
+    /**
      * Get all the image hrefs in the svg string
      * @param svgString the svg string
      * @return an array of image hrefs
@@ -1168,45 +1209,6 @@ class ConceptMapService extends NodeService {
         }
 
         return images;
-    }
-
-    /**
-     * Get Base64 images from image hrefs
-     * @param svgString the svg string
-     * @return a promise that will return an array of objects. The objects will
-     * contain an image href and a Base64 image.
-     */
-    getHrefToBase64ImageReplacements(svgString) {
-
-        // an array to hold all the promises
-        var promises = [];
-
-        // get all the image hrefs
-        var imageHrefs = this.getImagesInSVG(svgString);
-
-        // loop through all the images
-        for (var i = 0; i < imageHrefs.length; i++) {
-
-            // get an image href
-            var imageHref = imageHrefs[i];
-
-            if (imageHref.indexOf('/') == -1) {
-                /*
-                 * the image href is relative so we need to make it absolute
-                 * so that the browser can retrieve it
-                 */
-
-                // prepend the project asset directory path
-                imageHref = this.ConfigService.getProjectAssetsDirectoryPath(true) + '/' + imageHref;
-            }
-
-            // get the Base64 of the image
-            var promise = this.getBase64Image(imageHref);
-
-            promises.push(promise);
-        }
-
-        return this.$q.all(promises);
     }
 
     /**

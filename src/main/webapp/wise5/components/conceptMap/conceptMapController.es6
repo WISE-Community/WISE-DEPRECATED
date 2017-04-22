@@ -4665,7 +4665,7 @@ class ConceptMapController {
             var svgString = serializer.serializeToString(svgElement);
 
             // find all the images in the svg and replace them with Base64 images
-            this.getHrefToBase64ImageReplacements(svgString).then((images) => {
+            this.ConceptMapService.getHrefToBase64ImageReplacements(svgString).then((images) => {
 
                 /*
                  * Loop through all the image objects. Each object contains
@@ -4723,7 +4723,7 @@ class ConceptMapController {
                     var base64Image = myCanvas.toDataURL('image/png');
 
                     // get the image object
-                    var imageObject = thisUtilService.getImageObjectFromBase64String(base64Image);
+                    var imageObject = thisUtilService.getImageObjectFromBase64String(base64Image, false);
 
                     // create a notebook item with the image populated into it
                     this.NotebookService.addNewItem($event, imageObject);
@@ -4743,130 +4743,6 @@ class ConceptMapController {
                 image.src = url;
             });
         }
-    }
-
-    /**
-     * Get all the image hrefs in the svg string
-     * @param svgString the svg string
-     * @return an array of image hrefs
-     */
-    getImagesInSVG(svgString) {
-
-        // used to hold all the images we find
-        var images = [];
-
-        if (svgString != null) {
-
-            /*
-             * the regex to match href values in image elements
-             * e.g.
-             * if the svg contained in image element like this
-             * <image id="SvgjsImage1007" xlink:href="/wise/curriculum/25/assets/Sun.png" width="100" height="100"/>
-             * it would match it and the matching group would contain
-             * /wise/curriculum/25/assets/Sun.png
-             */
-            var regex = /<image.*?xlink:href="(.*?)".*?\/>/g;
-
-            // find the first match in the svg string
-            var result = regex.exec(svgString);
-
-            while(result != null) {
-
-                /*
-                 * get the href image from the match
-                 * e.g.
-                 * /wise/curriculum/25/assets/Sun.png
-                 */
-                var imageHref = result[1];
-
-                // add the href to our array of hrefs
-                images.push(imageHref);
-
-                // try to find the next match
-                result = regex.exec(svgString);
-            }
-        }
-
-        return images;
-    }
-
-    /**
-     * Get Base64 images from image hrefs
-     * @param svgString the svg string
-     * @return a promise that will return an array of objects. The objects will
-     * contain an image href and a Base64 image.
-     */
-    getHrefToBase64ImageReplacements(svgString) {
-
-        // an array to hold all the promises
-        var promises = [];
-
-        // get all the image hrefs
-        var imageHrefs = this.getImagesInSVG(svgString);
-
-        // loop through all the images
-        for (var i = 0; i < imageHrefs.length; i++) {
-
-            // get an image href
-            var imageHref = imageHrefs[i];
-
-            // get the Base64 of the image
-            var promise = this.getBase64Image(imageHref);
-
-            promises.push(promise);
-        }
-
-        return this.$q.all(promises);
-    }
-
-    /**
-     * Get the Base64 image from an image href. An image href will look like
-     * /wise/curriculum/25/assets/Sun.png
-     * @param imageHref the image href
-     * @return a promise that will return an object containing the image href
-     * and the Base64 image
-     */
-    getBase64Image(imageHref) {
-
-        var deferred = this.$q.defer();
-
-        // create the image object that we will load the image into
-        var image = new Image;
-
-        // create a new canvas to render the image in
-        var myCanvas = document.createElement("canvas");
-        var ctx = myCanvas.getContext("2d");
-
-        // the function that is called after the image is fully loaded
-        image.onload = function(event) {
-
-            // get the image that was loaded
-            var image = event.target;
-
-            // set the canvas dimensions to match the image
-            myCanvas.width = image.width;
-            myCanvas.height = image.height;
-
-            // draw the image in the canvas
-            ctx.drawImage(image, 0, 0);
-
-            // get the Base64 string of the canvas
-            var base64Image = myCanvas.toDataURL('image/png');
-
-            // create an object that will contain the image href and Base64 image
-            var result = {};
-            result.imageHref = imageHref;
-            result.base64Image = base64Image;
-
-            // resolve the promise with the object
-            deferred.resolve(result);
-        }
-
-        // load the image
-        image.src = imageHref;
-
-        // return the promise
-        return deferred.promise;
     }
 
     /**
