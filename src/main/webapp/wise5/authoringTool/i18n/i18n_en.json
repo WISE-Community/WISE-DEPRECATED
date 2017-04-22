@@ -27,6 +27,7 @@
     "choiceChosen": "Choice Chosen",
     "choices": "Choices",
     "chooseComponent": "Choose Component",
+    "chooseAComponentOptional": "Choose a Component (optional)",
     "chooseMergePoint": "Choose Merge Point",
     "chooseNewLocation": "Choose the new location",
     "chooseAStep": "Choose a Step",

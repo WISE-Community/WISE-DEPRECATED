@@ -326,8 +326,14 @@ var UtilService = function () {
                     nodeId = '';
                 }
 
+                var componentIdAttr = "";
+                var componentId = this.getWISELinkComponentId(anchorHTML);
+                if (componentId != null) {
+                    componentIdAttr = "component-id='" + componentId + "'";
+                }
+
                 // create the <wiselink> element
-                var wiselinkHtml = "<wiselink type='link' link-text='" + anchorText + "' node-id='" + nodeId + "'/>";
+                var wiselinkHtml = "<wiselink type='link' link-text='" + anchorText + "' node-id='" + nodeId + "' " + componentIdAttr + "/>";
 
                 // replace the <a> element with the <wiselink> element
                 html = html.replace(wiseLinkRegExMatchResult[0], wiselinkHtml);
@@ -373,8 +379,14 @@ var UtilService = function () {
                     nodeId = '';
                 }
 
+                var componentIdAttr = "";
+                var componentId = this.getWISELinkComponentId(buttonHTML);
+                if (componentId != null) {
+                    componentIdAttr = "component-id='" + componentId + "'";
+                }
+
                 // create the <wiselink> element
-                var wiselinkHtml = "<wiselink type='button' link-text='" + buttonText + "' node-id='" + nodeId + "'/>";
+                var wiselinkHtml = "<wiselink type='button' link-text='" + buttonText + "' node-id='" + nodeId + "' " + componentIdAttr + "/>";
 
                 // replace the <button> element with the <wiselink> element
                 html = html.replace(wiseLinkRegExMatchResult[0], wiselinkHtml);
@@ -415,6 +427,37 @@ var UtilService = function () {
             }
 
             return nodeId;
+        }
+
+        /**
+         * Get the component id from the wiselink element
+         * e.g.
+         * <wiselink node-id='node5' component-id='xyzabc' />
+         * the component id in this case is 'xyzabc'
+         * @param html the html for the element
+         * @return the component id from the component id parameter in the element
+         */
+
+    }, {
+        key: "getWISELinkComponentId",
+        value: function getWISELinkComponentId(html) {
+
+            var componentId = null;
+
+            if (html != null) {
+                // create the regex to find the component id parameter
+                var componentIdRegEx = new RegExp(/component-id=["'b](.*?)["']/, 'g');
+
+                // try to find a match
+                var componentIdRegExResult = componentIdRegEx.exec(html);
+
+                if (componentIdRegExResult != null) {
+                    // we have found a node id
+                    componentId = componentIdRegExResult[1];
+                }
+            }
+
+            return componentId;
         }
 
         /**
@@ -522,8 +565,13 @@ var UtilService = function () {
                  */
                 var wiseLinkHTML = wiseLinkRegExMatchResult[0];
 
-                // get the node id, type and link text from the match
+                // get the node id, component id (if exists), type and link text from the match
                 var nodeId = this.getWISELinkNodeId(wiseLinkHTML);
+                var componentId = this.getWISELinkComponentId(wiseLinkHTML);
+                var componentHTML = '';
+                if (componentId != null && componentId != '') {
+                    componentHTML = "component-id='" + componentId + "'";
+                }
                 var type = this.getWISELinkType(wiseLinkHTML);
                 var linkText = this.getWISELinkLinkText(wiseLinkHTML);
 
@@ -531,10 +579,10 @@ var UtilService = function () {
 
                 if (type == 'link') {
                     // create a link that represents the wiselink
-                    newElement = "<a wiselink='true' node-id='" + nodeId + "'>" + linkText + "</a>";
+                    newElement = "<a wiselink='true' node-id='" + nodeId + "' " + componentHTML + ">" + linkText + "</a>";
                 } else if (type == 'button') {
                     // create a button that represents the wiselink
-                    newElement = "<button wiselink='true' node-id='" + nodeId + "'>" + linkText + "</button>";
+                    newElement = "<button wiselink='true' node-id='" + nodeId + "' " + componentHTML + ">" + linkText + "</button>";
                 }
 
                 if (newElement != null) {

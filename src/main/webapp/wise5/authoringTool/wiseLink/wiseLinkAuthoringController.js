@@ -34,6 +34,7 @@ var WISELinkAuthoringController = function () {
 
         // the model fields for the WISE link authoring
         this.wiseLinkNodeId = '';
+        this.wiseLinkComponentId = '';
         this.wiseLinkType = 'link';
         this.wiseLinkText = '';
         this.wiseLinkClass = '';
@@ -49,6 +50,8 @@ var WISELinkAuthoringController = function () {
         value: function wiseLinkNodeIdChanged() {
 
             if (this.wiseLinkNodeId != null && this.wiseLinkNodeId != '') {
+                // reset wiseLinkComonponentId
+                this.wiseLinkComponentId = '';
 
                 // get the position of the step
                 var position = this.getNodePositionById(this.wiseLinkNodeId);
@@ -72,39 +75,51 @@ var WISELinkAuthoringController = function () {
         value: function getNodePositionById(nodeId) {
             return this.ProjectService.getNodePositionById(nodeId);
         }
-    }, {
-        key: 'getNodeTitleByNodeId',
-
 
         /**
          * Get the node title for a node
          * @param nodeId the node id
          * @returns the node title
          */
+
+    }, {
+        key: 'getNodeTitleByNodeId',
         value: function getNodeTitleByNodeId(nodeId) {
             return this.ProjectService.getNodeTitleByNodeId(nodeId);
         }
-    }, {
-        key: 'isGroupNode',
-
 
         /**
          * Check if a node id is for a group
          * @param nodeId
          * @returns whether the node is a group node
          */
+
+    }, {
+        key: 'isGroupNode',
         value: function isGroupNode(nodeId) {
             return this.ProjectService.isGroupNode(nodeId);
         }
-    }, {
-        key: 'createWISELink',
 
+        /**
+         * Get the components in a step
+         * @param nodeId get the components in the step
+         * @returns the components in the step
+         */
+
+    }, {
+        key: 'getComponentsByNodeId',
+        value: function getComponentsByNodeId(nodeId) {
+            return this.ProjectService.getComponentsByNodeId(nodeId);
+        }
 
         /**
          * Fire an event to create the WISE Link. Listeners will be the ones that
          * actually create the WISE Link. The event that is fired will provide
          * the parameters for the WISE Link.
          */
+
+    }, {
+        key: 'createWISELink',
         value: function createWISELink() {
 
             if (this.wiseLinkNodeId == null || this.wiseLinkNodeId == '') {
@@ -121,6 +136,7 @@ var WISELinkAuthoringController = function () {
                     componentId: this.componentId,
                     target: this.target,
                     wiseLinkNodeId: this.wiseLinkNodeId,
+                    wiseLinkComponentId: this.wiseLinkComponentId,
                     wiseLinkType: this.wiseLinkType,
                     wiseLinkText: this.wiseLinkText,
                     wiseLinkClass: this.wiseLinkClass
