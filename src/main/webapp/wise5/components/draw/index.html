@@ -160,7 +160,13 @@
             <input type='checkbox'
                    ng-model='drawController.authoringComponentContent.showSubmitButton'
                    ng-change='drawController.showSubmitButtonValueChanged()'/>
-
+            <div ng-show='drawController.authoringComponentContent.showSubmitButton'
+                 style='display:inline'>
+                <span>{{ 'MAX_SUBMIT' | translate }}:</span>
+                <input type='number'
+                       ng-model='drawController.authoringComponentContent.maxSubmitCount'
+                       ng-change='drawController.authoringViewComponentChanged()'/>
+            </div>
             <br/>
             {{ 'MAX_SCORE' | translate }}:
             <input type='number'
@@ -365,7 +371,7 @@
                        ng-show='drawController.isSaveButtonVisible'>{{ 'SAVE' | translate }}</md-button>
             <md-button class="md-raised md-primary"
                        ng-click='drawController.submitButtonClicked()'
-                       ng-disabled='drawController.isDisabled || !drawController.isSubmitDirty'
+                       ng-disabled='drawController.isDisabled || !drawController.isSubmitDirty || drawController.isSubmitButtonDisabled'
                        ng-show='drawController.isSubmitButtonVisible'>{{ 'SUBMIT' | translate }}</md-button>
             <span ng-show="drawController.saveMessage.text"
                   class="component__actions__info md-caption">

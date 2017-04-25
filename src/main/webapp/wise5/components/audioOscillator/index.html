@@ -62,6 +62,13 @@
             <input type='checkbox'
                    ng-model='audioOscillatorController.authoringComponentContent.showSubmitButton'
                    ng-change='audioOscillatorController.showSubmitButtonValueChanged()'/>
+            <div ng-show='audioOscillatorController.authoringComponentContent.showSubmitButton'
+                 style='display:inline'>
+                <span>{{ 'MAX_SUBMIT' | translate }}:</span>
+                <input type='number'
+                       ng-model='audioOscillatorController.authoringComponentContent.maxSubmitCount'
+                       ng-change='audioOscillatorController.authoringViewComponentChanged()'/>
+            </div>
             <br/>
             {{ 'MAX_SCORE' | translate }}:
             <input type='number'
@@ -248,7 +255,7 @@
             <md-button class="md-raised md-primary"
                        ng-click='audioOscillatorController.submitButtonClicked()'
                        ng-if='audioOscillatorController.isSubmitButtonVisible'
-                       ng-disabled='audioOscillatorController.isDisabled || !audioOscillatorController.isSubmitDirty'>{{ 'SUBMIT' | translate }}</md-button>
+                       ng-disabled='audioOscillatorController.isDisabled || !audioOscillatorController.isSubmitDirty || audioOscillatorController.isSubmitButtonDisabled'>{{ 'SUBMIT' | translate }}</md-button>
             <span ng-show="audioOscillatorController.saveMessage.text"
                   class="component-content__actions__info md-caption">
                   {{audioOscillatorController.saveMessage.text}} <span class="component-content__actions__more"><md-tooltip md-direction="top">{{ audioOscillatorController.saveMessage.time | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip><span am-time-ago="audioOscillatorController.saveMessage.time"></span></span>

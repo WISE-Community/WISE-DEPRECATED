@@ -88,6 +88,12 @@ class LabelController {
         // whether the submit button is shown or not
         this.isSubmitButtonVisible = false;
 
+        // whether the submit button is disabled
+        this.isSubmitButtonDisabled = false;
+
+        // counter to keep track of the number of submits
+        this.submitCounter = 0;
+
         // flag for whether to show the advanced authoring
         this.showAdvancedAuthoring = false;
 
@@ -301,6 +307,7 @@ class LabelController {
                 }.bind(this), function(newValue, oldValue) {
                     this.componentContent = this.ProjectService.injectAssetPaths(newValue);
 
+                    this.submitCounter = 0;
                     this.isSaveButtonVisible = this.componentContent.showSaveButton;
                     this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
 
@@ -405,7 +412,10 @@ class LabelController {
 
             // make sure the node id matches our parent node
             if (this.nodeId === nodeId) {
-                this.isSubmit = true;
+
+                // trigger the submit
+                var submitTriggeredBy = 'nodeSubmitButton';
+                this.submit(submitTriggeredBy);
             }
         }));
 
@@ -434,7 +444,7 @@ class LabelController {
                 if (isSubmit) {
                     this.setSaveMessage(this.$translate('SUBMITTED'), clientSaveTime);
 
-                    this.submit();
+                    this.lockIfNecessary();
 
                     // set isSubmitDirty to false because the component state was just submitted and notify node
                     this.isSubmitDirty = false;
@@ -723,6 +733,15 @@ class LabelController {
             this.setBackgroundImage(this.componentContent.backgroundImage);
         }
 
+        // check if the student has used up all of their submits
+        if (this.componentContent.maxSubmitCount != null && this.submitCounter >= this.componentContent.maxSubmitCount) {
+            /*
+             * the student has used up all of their chances to submit so we
+             * will disable the submit button
+             */
+            this.isSubmitButtonDisabled = true;
+        }
+
         // check if we need to lock this component
         this.calculateDisabled();
 
@@ -755,6 +774,13 @@ class LabelController {
 
                 if (backgroundImage != null) {
                     this.setBackgroundImage(backgroundImage);
+                }
+
+                var submitCounter = studentData.submitCounter;
+
+                if (submitCounter != null) {
+                    // populate the submit counter
+                    this.submitCounter = submitCounter;
                 }
 
                 this.processLatestSubmit();
@@ -834,11 +860,100 @@ class LabelController {
      * Called when the student clicks the submit button
      */
     submitButtonClicked() {
-        this.isSubmit = true;
+
+        // trigger the submit
+        var submitTriggeredBy = 'componentSubmitButton';
+        this.submit(submitTriggeredBy);
+
+        //this.isSubmit = true;
 
         // tell the parent node that this component wants to submit
-        this.$scope.$emit('componentSubmitTriggered', {nodeId: this.nodeId, componentId: this.componentId});
+        //this.$scope.$emit('componentSubmitTriggered', {nodeId: this.nodeId, componentId: this.componentId});
     };
+
+    /**
+     * A submit was triggered by the component submit button or node submit button
+     * @param submitTriggeredBy what triggered the submit
+     * e.g. 'componentSubmitButton' or 'nodeSubmitButton'
+     */
+    submit(submitTriggeredBy) {
+
+        if (this.isSubmitDirty) {
+            // the student has unsubmitted work
+
+            var performSubmit = true;
+
+            if (this.componentContent.maxSubmitCount != null) {
+                // there is a max submit count
+
+                // calculate the number of submits this student has left
+                var numberOfSubmitsLeft = this.componentContent.maxSubmitCount - this.submitCounter;
+
+                var message = '';
+
+                if (numberOfSubmitsLeft <= 0) {
+                    // the student does not have any more chances to submit
+                    performSubmit = false;
+                } else if (numberOfSubmitsLeft == 1) {
+                    /*
+                     * the student has one more chance to submit left so maybe
+                     * we should ask the student if they are sure they want to submit
+                     */
+                } else if (numberOfSubmitsLeft > 1) {
+                    /*
+                     * the student has more than one chance to submit left so maybe
+                     * we should ask the student if they are sure they want to submit
+                     */
+                }
+            }
+
+            if (performSubmit) {
+
+                /*
+                 * set isSubmit to true so that when the component state is
+                 * created, it will know that is a submit component state
+                 * instead of just a save component state
+                 */
+                this.isSubmit = true;
+
+                // increment the submit counter
+                this.incrementSubmitCounter();
+
+                // check if the student has used up all of their submits
+                if (this.componentContent.maxSubmitCount != null && this.submitCounter >= this.componentContent.maxSubmitCount) {
+                    /*
+                     * the student has used up all of their submits so we will
+                     * disable the submit button
+                     */
+                    this.isSubmitButtonDisabled = true;
+                }
+
+                if (this.mode === 'authoring') {
+                    /*
+                     * we are in authoring mode so we will set values appropriately
+                     * here because the 'componentSubmitTriggered' event won't
+                     * work in authoring mode
+                     */
+                    this.isDirty = false;
+                    this.isSubmitDirty = false;
+                    this.createComponentState('submit');
+                }
+
+                if (submitTriggeredBy == null || submitTriggeredBy === 'componentSubmitButton') {
+                    // tell the parent node that this component wants to submit
+                    this.$scope.$emit('componentSubmitTriggered', {nodeId: this.nodeId, componentId: this.componentId});
+                } else if (submitTriggeredBy === 'nodeSubmitButton') {
+                    // nothing extra needs to be performed
+                }
+            } else {
+                /*
+                 * the student has cancelled the submit so if a component state
+                 * is created, it will just be a regular save and not submit
+                 */
+                this.isSubmit = false;
+            }
+        }
+    }
 
     /**
      * Called when the student clicks on the new label button to enter
@@ -858,7 +973,14 @@ class LabelController {
         this.isCancelButtonVisible = false;
     };
 
-    submit() {
+    /**
+     * Increment the submit counter
+     */
+    incrementSubmitCounter() {
+        this.submitCounter++;
+    }
+
+    lockIfNecessary() {
         // check if we need to lock the component after the student submits
         if (this.isLockAfterSubmit()) {
             this.isDisabled = true;
@@ -895,8 +1017,6 @@ class LabelController {
 
         // create a component state populated with the student data
         this.createComponentState(action).then((componentState) => {
-
-            this.processLatestSubmit();
             this.$scope.$emit('componentStudentDataChanged', {componentId: componentId, componentState: componentState});
         });
     };
@@ -1001,6 +1121,8 @@ class LabelController {
      */
     createComponentState(action) {
 
+        var deferred = this.$q.defer();
+
         // create a new component state
         var componentState = this.NodeService.createNewComponentState();
 
@@ -1014,23 +1136,20 @@ class LabelController {
             studentData.backgroundImage = backgroundImage;
         }
 
-        //studentData.attachments = this.attachments;
-
-        if (this.isSubmit) {
-            // the student submitted this work
-            componentState.isSubmit = this.isSubmit;
-
-            /*
-             * reset the isSubmit value so that the next component state
-             * doesn't maintain the same value
-             */
-            this.isSubmit = false;
-        }
+        // set the submit counter
+        studentData.submitCounter = this.submitCounter;
+        
+        // the student submitted this work
+        componentState.isSubmit = this.isSubmit;
 
         // set the student data into the component state
         componentState.studentData = studentData;
 
-        var deferred = this.$q.defer();
+        /*
+         * reset the isSubmit value so that the next component state
+         * doesn't maintain the same value
+         */
+        this.isSubmit = false;
 
         /*
          * perform any additional processing that is required before returning

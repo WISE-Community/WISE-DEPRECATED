@@ -178,7 +178,13 @@
                     <input type='checkbox'
                            ng-model='graphController.authoringComponentContent.showSubmitButton'
                            ng-change='graphController.showSubmitButtonValueChanged()'/>
-
+                    <div ng-show='graphController.authoringComponentContent.showSubmitButton'
+                         style='display:inline'>
+                        <span>{{ 'MAX_SUBMIT' | translate }}:</span>
+                        <input type='number'
+                               ng-model='graphController.authoringComponentContent.maxSubmitCount'
+                               ng-change='graphController.authoringViewComponentChanged()'/>
+                    </div>
                     <br/>
                     {{ 'MAX_SCORE' | translate }}:
                     <input type='number'
@@ -434,7 +440,7 @@
                     <md-button class="md-raised md-primary"
                                ng-click='graphController.submitButtonClicked()'
                                ng-if='graphController.isSubmitButtonVisible'
-                               ng-disabled='graphController.isDisabled || !graphController.isSubmitDirty'>{{ 'SUBMIT' | translate }}</md-button>
+                               ng-disabled='graphController.isDisabled || !graphController.isSubmitDirty || graphController.isSubmitButtonDisabled'>{{ 'SUBMIT' | translate }}</md-button>
                     <span ng-show="graphController.saveMessage.text"
                           class="component__actions__info md-caption">
                         {{graphController.saveMessage.text}} <span class="component__actions__more"><md-tooltip md-direction="top">{{ graphController.saveMessage.time | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip><span am-time-ago="graphController.saveMessage.time"></span></span>

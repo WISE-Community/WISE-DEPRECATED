@@ -812,19 +812,20 @@ class OpenResponseController {
         // create a new component state
         var componentState = this.NodeService.createNewComponentState();
 
+        // set the response into the component state
+        var studentData = {};
+
         // get the text the student typed
         var response = this.getStudentResponse();
 
-        // set the response into the component state
-        var studentData = {};
         studentData.response = response;
         studentData.attachments = angular.copy(this.attachments);  // create a copy without reference to original array
 
-        // the student submitted this work
-        componentState.isSubmit = this.isSubmit;
-
         // set the submit counter
         studentData.submitCounter = this.submitCounter;
+
+        // set the flag for whether the student submitted this work
+        componentState.isSubmit = this.isSubmit;
 
         // set the student data into the component state
         componentState.studentData = studentData;

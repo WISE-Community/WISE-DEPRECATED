@@ -101,6 +101,12 @@ var AudioOscillatorController = function () {
         // whether the submit button is shown or not
         this.isSubmitButtonVisible = false;
 
+        // whether the submit button is disabled
+        this.isSubmitButtonDisabled = false;
+
+        // counter to keep track of the number of submits
+        this.submitCounter = 0;
+
         // flag for whether to show the advanced authoring
         this.showAdvancedAuthoring = false;
 
@@ -245,6 +251,7 @@ var AudioOscillatorController = function () {
                     // inject asset paths if necessary
                     this.componentContent = this.ProjectService.injectAssetPaths(newValue);
 
+                    this.submitCounter = 0;
                     this.isSaveButtonVisible = this.componentContent.showSaveButton;
                     this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
 
@@ -310,6 +317,15 @@ var AudioOscillatorController = function () {
             } else {
                 // populate the student work into this component
                 this.setStudentWork(componentState);
+            }
+
+            // check if the student has used up all of their submits
+            if (this.componentContent.maxSubmitCount != null && this.submitCounter >= this.componentContent.maxSubmitCount) {
+                /*
+                 * the student has used up all of their chances to submit so we
+                 * will disable the submit button
+                 */
+                this.isSubmitButtonDisabled = true;
             }
 
             // check if we need to lock this component
@@ -390,7 +406,10 @@ var AudioOscillatorController = function () {
 
             // make sure the node id matches our parent node
             if (this.nodeId === nodeId) {
-                this.isSubmit = true;
+
+                // trigger the submit
+                var submitTriggeredBy = 'nodeSubmitButton';
+                this.submit(submitTriggeredBy);
             }
         }.bind(this));
 
@@ -418,7 +437,7 @@ var AudioOscillatorController = function () {
                 if (isSubmit) {
                     this.setSaveMessage(this.$translate('SUBMITTED'), clientSaveTime);
 
-                    this.submit();
+                    this.lockIfNecessary();
 
                     // set isSubmitDirty to false because the component state was just submitted and notify node
                     this.isSubmitDirty = false;
@@ -621,6 +640,13 @@ var AudioOscillatorController = function () {
                         this.maxFrequencyPlayed = studentData.maxFrequencyPlayed;
                     }
 
+                    var submitCounter = studentData.submitCounter;
+
+                    if (submitCounter != null) {
+                        // populate the submit counter
+                        this.submitCounter = submitCounter;
+                    }
+
                     var attachments = studentData.attachments;
 
                     if (attachments != null) {
@@ -689,24 +715,110 @@ var AudioOscillatorController = function () {
          * Called when the student clicks the submit button
          */
         value: function submitButtonClicked() {
-            this.isSubmit = true;
-
-            if (this.mode === 'authoring') {
-                /*
-                 * we are in authoring mode so we will set values appropriately
-                 * here because the 'componentSubmitTriggered' event won't
-                 * work in authoring mode
-                 */
-                this.isDirty = false;
-                this.isSubmitDirty = false;
-            }
-
-            // tell the parent node that this component wants to submit
-            this.$scope.$emit('componentSubmitTriggered', { nodeId: this.nodeId, componentId: this.componentId });
+            // trigger the submit
+            var submitTriggeredBy = 'componentSubmitButton';
+            this.submit(submitTriggeredBy);
         }
     }, {
         key: 'submit',
-        value: function submit() {
+
+
+        /**
+         * A submit was triggered by the component submit button or node submit button
+         * @param submitTriggeredBy what triggered the submit
+         * e.g. 'componentSubmitButton' or 'nodeSubmitButton'
+         */
+        value: function submit(submitTriggeredBy) {
+
+            if (this.isSubmitDirty) {
+                // the student has unsubmitted work
+
+                var performSubmit = true;
+
+                if (this.componentContent.maxSubmitCount != null) {
+                    // there is a max submit count
+
+                    // calculate the number of submits this student has left
+                    var numberOfSubmitsLeft = this.componentContent.maxSubmitCount - this.submitCounter;
+
+                    var message = '';
+
+                    if (numberOfSubmitsLeft <= 0) {
+                        // the student does not have any more chances to submit
+                        performSubmit = false;
+                    } else if (numberOfSubmitsLeft == 1) {
+                        /*
+                         * the student has one more chance to submit left so maybe
+                         * we should ask the student if they are sure they want to submit
+                         */
+                    } else if (numberOfSubmitsLeft > 1) {
+                        /*
+                         * the student has more than one chance to submit left so maybe
+                         * we should ask the student if they are sure they want to submit
+                         */
+                    }
+                }
+
+                if (performSubmit) {
+
+                    /*
+                     * set isSubmit to true so that when the component state is
+                     * created, it will know that is a submit component state
+                     * instead of just a save component state
+                     */
+                    this.isSubmit = true;
+
+                    // increment the submit counter
+                    this.incrementSubmitCounter();
+
+                    // check if the student has used up all of their submits
+                    if (this.componentContent.maxSubmitCount != null && this.submitCounter >= this.componentContent.maxSubmitCount) {
+                        /*
+                         * the student has used up all of their submits so we will
+                         * disable the submit button
+                         */
+                        this.isSubmitButtonDisabled = true;
+                    }
+
+                    if (this.mode === 'authoring') {
+                        /*
+                         * we are in authoring mode so we will set values appropriately
+                         * here because the 'componentSubmitTriggered' event won't
+                         * work in authoring mode
+                         */
+                        this.isDirty = false;
+                        this.isSubmitDirty = false;
+                        this.createComponentState('submit');
+                    }
+
+                    if (submitTriggeredBy == null || submitTriggeredBy === 'componentSubmitButton') {
+                        // tell the parent node that this component wants to submit
+                        this.$scope.$emit('componentSubmitTriggered', { nodeId: this.nodeId, componentId: this.componentId });
+                    } else if (submitTriggeredBy === 'nodeSubmitButton') {
+                        // nothing extra needs to be performed
+                    }
+                } else {
+                    /*
+                     * the student has cancelled the submit so if a component state
+                     * is created, it will just be a regular save and not submit
+                     */
+                    this.isSubmit = false;
+                }
+            }
+        }
+
+        /**
+         * Increment the submit counter
+         */
+
+    }, {
+        key: 'incrementSubmitCounter',
+        value: function incrementSubmitCounter() {
+            this.submitCounter++;
+        }
+    }, {
+        key: 'lockIfNecessary',
+        value: function lockIfNecessary() {
             // check if we need to lock the component after the student submits
             if (this.isLockAfterSubmit()) {
                 this.isDisabled = true;
@@ -784,6 +896,8 @@ var AudioOscillatorController = function () {
          */
         value: function createComponentState(action) {
 
+            var deferred = this.$q.defer();
+
             // create a new component state
             var componentState = this.NodeService.createNewComponentState();
 
@@ -805,23 +919,20 @@ var AudioOscillatorController = function () {
             // set the maximum frequency the student has played
             studentData.maxFrequencyPlayed = this.maxFrequencyPlayed;
 
-            studentData.attachments = angular.copy(this.attachments); // create a copy without reference to original array
+            // set the submit counter
+            studentData.submitCounter = this.submitCounter;
 
-            if (this.isSubmit) {
-                // the student submitted this work
-                componentState.isSubmit = this.isSubmit;
-
-                /*
-                 * reset the isSubmit value so that the next component state
-                 * doesn't maintain the same value
-                 */
-                this.isSubmit = false;
-            }
+            // set the flag for whether the student submitted this work
+            componentState.isSubmit = this.isSubmit;
 
             // set the student data into the component state
             componentState.studentData = studentData;
 
-            var deferred = this.$q.defer();
+            /*
+             * reset the isSubmit value so that the next component state
+             * doesn't maintain the same value
+             */
+            this.isSubmit = false;
 
             /*
              * perform any additional processing that is required before returning
