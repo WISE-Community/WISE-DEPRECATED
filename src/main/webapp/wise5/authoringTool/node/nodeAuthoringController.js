@@ -1509,7 +1509,7 @@ var NodeAuthoringController = function () {
                  * the author is reducing the number of branches so we want to
                  * confirm they want to do so
                  */
-                var answer = confirm(this.$translate('areYouSureYouWantToReduceTheNumberOfBranchesToX', { createBranchNumberOfBranches: createBranchNumberOfBranches }));
+                var answer = confirm(this.$translate('areYouSureYouWantToReduceTheNumberOfBranchesToX', { createBranchNumberOfBranches: this.createBranchNumberOfBranches }));
 
                 if (answer) {
                     // they answered yes
@@ -1548,6 +1548,15 @@ var NodeAuthoringController = function () {
                 }
             } else if (this.createBranchNumberOfBranches > this.createBranchBranches.length) {
                 // the author is increasing the number of branches
+
+                if (this.createBranchCriterion == null) {
+                    /*
+                     * we will default the branching to be based on workgroup id
+                     * since that is what our researchers use most often
+                     */
+                    this.createBranchCriterion = 'workgroupId';
+                    this.createBranchCriterionChanged();
+                }
 
                 // loop for the number of branches and create new branches objects
                 for (var b = 0; b < this.createBranchNumberOfBranches; b++) {
