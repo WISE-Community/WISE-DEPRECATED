@@ -4564,6 +4564,64 @@ class ProjectService {
                                         }
                                     }
                                 }
+                            } else if (this.isBranchPoint(nodeId)) {
+                                // the node we are removing is a branch point
+
+                                /*
+                                 * get all the branches that have the node we
+                                 * are removing as the start point
+                                 */
+                                var branches = this.getBranchesByBranchStartPointNodeId(nodeId);
+
+                                // loop through all branches
+                                for (var b = 0; b < branches.length; b++) {
+                                    var branch = branches[b];
+
+                                    if (branch != null) {
+
+                                        /*
+                                         * get the branch paths. these paths do not
+                                         * contain the start point or merge point.
+                                         */
+                                        var branchPaths = branch.branchPaths;
+
+                                        if (branchPaths != null) {
+
+                                            // loop through all the branch paths
+                                            for (var bp = 0; bp < branchPaths.length; bp++) {
+                                                var branchPath = branchPaths[bp];
+
+                                                if (branchPath != null) {
+
+                                                    // get the start point
+                                                    var currentFromNodeId = nodeId;
+
+                                                    // get the first node in this branch
+                                                    var currentToNodeId = branchPath[0];
+
+                                                    // this will be the new start point
+                                                    var newFromNodeId = node.id;
+
+                                                    // get the first node in this branch
+                                                    var newToNodeId = branchPath[0];
+
+                                                    // loop through all the nodes in the branch path
+                                                    for (var bpn = 0; bpn < branchPath.length; bpn++) {
+
+                                                        // get the node id
+                                                        var branchPathNodeId = branchPath[bpn];
+
+                                                        // get the node
+                                                        var branchPathNode = this.getNodeById(branchPathNodeId);
+
+                                                        // update the constraints related to the branching
+                                                        this.updateBranchPathTakenConstraint(branchPathNode, currentFromNodeId, currentToNodeId, newFromNodeId, newToNodeId);
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
                             }
 
                             // remove the transition to the node we are removing
@@ -4618,8 +4676,20 @@ class ProjectService {
                         }
                     }
 
-                    // set the transitions into the node that transitions to the node we are removing
-                    transitionLogic.transitions = transitions;
+                    if (this.isBranchPoint(nodeId)) {
+                        /*
+                         * the node we are deleting is a branch point so we to
+                         * copy the transition logic to the node that comes
+                         * before it
+                         */
+                        node.transitionLogic = this.UtilService.makeCopyOfJSONObject(nodeToRemoveTransitionLogic);
+
+                        /*
+                         * set the transitions for the node that comes before
+                         * the one we are removing
+                         */
+                        node.transitionLogic.transitions = transitions;
+                    }
                 }
             }
         }
@@ -8454,6 +8524,40 @@ class ProjectService {
         var result = this.isNodeIdInABranch(branches, nodeId);
 
         return result;
+    }
+
+    /**
+     * Get all the branches whose branch start point is the given node id
+     * @param nodeId the branch start point
+     * @return an array of branches that have the given branch start point
+     */
+    getBranchesByBranchStartPointNodeId(nodeId) {
+
+        var branches = [];
+
+        // get all the branches in the project
+        var allBranches = this.getBranches();
+
+        if (allBranches != null) {
+
+            // loop through all the branches in the project
+            for (var b = 0; b < allBranches.length; b++) {
+                var branch = allBranches[b];
+
+                if (branch != null) {
+
+                    if (nodeId == branch.branchStartPoint) {
+                        /*
+                         * the branch start point matches the node id we are
+                         * looking for
+                         */
+                        branches.push(branch);
+                    }
+                }
+            }
+        }
+
+        return branches;
     }
 }
 
