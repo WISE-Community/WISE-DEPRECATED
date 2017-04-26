@@ -26,10 +26,10 @@ class SessionService {
         this.lastMouseEventTimestamp = null;
 
         // the id for the setTimeout of the warning message
-        this.warningId = null;
+        //this.warningId = null;
 
         // the id for the setTimeout of the automatic log out
-        this.logOutId = null;
+        //this.logOutId = null;
 
         /*
          * boolean value used to determine if we need to log out the
@@ -37,6 +37,12 @@ class SessionService {
          * the VLE
          */
         this.performLogOut = false;
+
+        // the active warning ids
+        this.warningIds = [];
+
+        // the active log out ids
+        this.logOutIds = [];
 
         /**
          * Listen for the 'componentDoneUnloading' event. When the user logs
@@ -103,7 +109,7 @@ class SessionService {
             // no session management for previewers
             return;
         }
-        
+
         var minutes = 30;
         var seconds = minutes * 60;
         var milliseconds = seconds * 1000;
@@ -140,16 +146,68 @@ class SessionService {
      * Start the warning timer
      */
     startWarningTimer() {
+
+        // clear all the active warning timers
+        this.clearWarningTimers();
+
         var warningTimeoutInterval = this.sessionTimeoutInterval * 0.9;
-        this.warningId = setTimeout(angular.bind(this, this.showWarning), warningTimeoutInterval);
+        var warningId = setTimeout(angular.bind(this, this.showWarning), warningTimeoutInterval);
+        this.warningIds.push(warningId);
     };
+
+    /**
+     * Clear the warning timers
+     */
+    clearWarningTimers() {
+        // clear all the active warning timeouts
+        for (var w = 0; w < this.warningIds.length; w++) {
+
+            // get a warning id
+            var warningId = this.warningIds[w];
+
+            // clear the timeout for the warning id
+            clearTimeout(warningId);
+
+            // remove the warning id from the array
+            this.warningIds.splice(w, 1);
+
+            // move the counter back now that we have removed a warning id
+            w--;
+        }
+    }
 
     /**
      * Start the auto log out timer
      */
     startLogOutTimer() {
-        this.logOutId = setTimeout(angular.bind(this, this.forceLogOut), this.sessionTimeoutInterval);
+
+        // clear all the active log out timers
+        this.clearLogOutTimers();
+
+        var logOutId = setTimeout(angular.bind(this, this.forceLogOut), this.sessionTimeoutInterval);
+        this.logOutIds.push(logOutId);
     };
+
+    /**
+     * Clear the log out timers
+     */
+    clearLogOutTimers() {
+        // clear all the active log out timeouts
+        for (var l = 0; l < this.logOutIds.length; l++) {
+
+            // get a log out id
+            var logOutId = this.logOutIds[l];
+
+            // clear the timeout for the log out id
+            clearTimeout(logOutId);
+
+            // remove the log out id from the array
+            this.logOutIds.splice(l, 1);
+
+            // move the counter back now that we have removed a log out id
+            l--;
+        }
+    }
 
     /**
      * Start the check mouse event timer
@@ -197,10 +255,10 @@ class SessionService {
      * Delete the existing timers
      */
     clearTimers() {
-        clearTimeout(this.warningId);
-        clearTimeout(this.logOutId);
+        this.clearWarningTimers();
+        this.clearLogOutTimers();
     };
-    
+
     /**
      * Called when the user moves the mouse
      */
@@ -215,14 +273,13 @@ class SessionService {
 
     /**
      * Check if there were any mouse events since the last time we checked.
-     * Currently we check every 1 minute which is based on the value of the 
+     * Currently we check every 1 minute which is based on the value of the
      * checkMouseEventInterval variable.
      * @returns whether there was a mouse event recently
      */
     checkMouseEvent() {
-        
         var eventOccurred = false;
-        
+
         if (this.lastMouseEventTimestamp != null) {
             // there was a mouse event since the last time we checked
 
@@ -231,10 +288,10 @@ class SessionService {
 
             // clear the mouse event timestamp
             this.lastMouseEventTimestamp = null;
-            
+
             eventOccurred = true;
         }
-        
+
         return eventOccurred;
     };
 
@@ -261,7 +318,6 @@ class SessionService {
      * Log out the user
      */
     forceLogOut() {
-        
         /*
          * make a final check to see if there were any mouse events recently
          * before we log out the user
