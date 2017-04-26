@@ -1382,7 +1382,7 @@ var DrawController = function () {
                                         var service = this.$injector.get(serviceName);
 
                                         // create an image from the concept map data
-                                        service.createImage(conceptMapData).then(function (image) {
+                                        service.createImage(conceptMapData, componentContent.width, componentContent.height).then(function (image) {
 
                                             // set the image as the background
                                             _this4.drawingTool.setBackgroundImage(image);

@@ -1134,11 +1134,13 @@ var ConceptMapService = function (_NodeService) {
         /**
          * Create an image from the concept map data
          * @param conceptMapData concept map data from a student
+         * @param width the width of the image we want to create
+         * @param height the height of the image we want to create
          */
 
     }, {
         key: 'createImage',
-        value: function createImage(conceptMapData) {
+        value: function createImage(conceptMapData, width, height) {
             var _this2 = this;
 
             // create a promise that will return an image of the concept map
@@ -1147,9 +1149,19 @@ var ConceptMapService = function (_NodeService) {
             // create a div to draw the SVG in
             var svgElement = document.createElement("div");
 
+            if (width == null || width == '') {
+                // we will default to a width of 800 pixels
+                width = 800;
+            }
+
+            if (height == null || height == '') {
+                // we will default to a height of 600 pixels
+                heigth = 600;
+            }
+
             var draw = SVG(svgElement);
-            draw.width(800);
-            draw.height(600);
+            draw.width(width);
+            draw.height(height);
 
             if (svgElement != null) {
 
