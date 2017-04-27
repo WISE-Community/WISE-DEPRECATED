@@ -50,6 +50,8 @@ var EditNotebookItemController = function () {
         }
 
         this.notebookConfig = this.NotebookService.getNotebookConfig();
+        this.color = this.notebookConfig.itemTypes[this.item.type].label.color;
+
         var label = this.notebookConfig.itemTypes[this.item.type].label.singular;
         if (this.isEditMode) {
             if (this.itemId) {

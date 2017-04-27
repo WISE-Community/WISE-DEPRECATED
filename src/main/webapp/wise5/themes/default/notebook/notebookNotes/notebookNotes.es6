@@ -7,18 +7,14 @@ class NotebookNotesController {
         this.$translate = $filter('translate');
         this.$rootScope = $rootScope;
 
+        this.$onInit = () => {
+            this.color = this.config.itemTypes.note.label.color;
+        }
+
         this.$onChanges = (changes) => {
             if (changes.notebook) {
                 this.notebook = angular.copy(changes.notebook.currentValue);
                 this.hasNotes = Object.keys(this.notebook.items).length ? true : false;
-            }
-
-            if (changes.insertMode) {
-                if (changes.insertMode.currentValue) {
-                    this.color = '';
-                } else {
-                    this.color = this.config.itemTypes.note.label.color;
-                }
             }
         }
     }
@@ -31,14 +27,6 @@ class NotebookNotesController {
             title = this.config.itemTypes.note.label.link;
         }
         return title;
-    }
-
-    getColor() {
-        let color = '';
-        if (!this.isChooseMode) {
-            color = this.config.itemTypes.note.label.color;
-        }
-        return color;
     }
 
     deleteItem($ev, $itemId, doDelete = true) {
@@ -98,9 +86,11 @@ const NotebookNotes = {
                      md-disable-backdrop
                      layout="column"
                      class="md-sidenav-right notebook-sidebar">
-            <md-toolbar md-theme="light" class="md-whiteframe-1dp">
-                <div class="md-toolbar-tools notebook-sidebar__header">
-                    <span style="color: {{$ctrl.color}}">{{$ctrl.getTitle()}}</span>
+            <md-toolbar>
+                <div class="md-toolbar-tools"
+                     ng-class="{'insert-mode': $ctrl.insertMode}"
+                     style="background-color: {{$ctrl.color}};">
+                    {{$ctrl.getTitle()}}
                     <!--<md-button ng-if="$ctrl.insertMode"
                                ng-click="$ctrl.cancelInsertMode($event)"
                                md-theme="default"
