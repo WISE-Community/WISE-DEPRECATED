@@ -8,7 +8,8 @@ exports.config = {
         'previewVLE.spec.js',
         'openResponse.spec.js',
         'notebook.spec.js',
-        'portal.spec.js',
+        'portal/portal.spec.js',
+        'portal/forgotAccount.spec.js',
         'authoringTool.spec.js',
         'setUpRun.spec.js',
         'classroomMonitor.spec.js'
