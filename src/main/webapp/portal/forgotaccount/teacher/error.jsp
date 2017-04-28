@@ -24,9 +24,9 @@
 				<div class="panelHeader"><spring:message code="forgotaccount.teacher.error.lostUsernameOrPassword"/></div>
 				<div class="infoContentBox">
 					<div class="errorMsgNoBg">
-						<p><span style="font-weight:bold;">${email}${username}:</span> <spring:message code="forgotaccount.teacher.error.usernameEmailDoesNotMatch"/></p>
+						<p><spring:message code="forgotaccount.teacher.error.usernameEmailDoesNotMatch"/></p>
 					</div>
-					<div><a href="${contextPath}"><spring:message code="forgotaccount.teacher.error.tryAgain"/></a></div>
+					<div><a href="${contextPath}/forgotaccount/teacher"><spring:message code="forgotaccount.teacher.error.tryAgain"/></a></div>
 				</div>
 				<a href="${contextPath}" title="<spring:message code="wiseHome" />"><spring:message code="returnHome"/></a>
 			</div>

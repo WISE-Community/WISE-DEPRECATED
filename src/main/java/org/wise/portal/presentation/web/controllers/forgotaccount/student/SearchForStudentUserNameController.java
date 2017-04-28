@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2007-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -40,9 +40,11 @@ import org.wise.portal.service.user.UserService;
 
 /**
  * Looks up the project code in student lost password
+ *
+ * @author Anthony Perritano
  */
 @Controller
-@RequestMapping("/forgotaccount/student/searchforstudentusername.html")
+@RequestMapping("/forgotaccount/student/searchforstudentusername")
 public class SearchForStudentUserNameController {
 
 	@Autowired
@@ -51,10 +53,10 @@ public class SearchForStudentUserNameController {
 	@Autowired
 	protected SearchForStudentUserNameValidator searchForStudentUserNameValidator;
 	
-	//the path to this form view
+	// the path to this form view
 	protected String formView = "/forgotaccount/student/searchforstudentusername";
 	
-	//the path to the success view
+	// the path to the success view
 	protected String successView = "/forgotaccount/student/searchforstudentusernameresult";
 	
     /**
@@ -64,7 +66,7 @@ public class SearchForStudentUserNameController {
      */
     @RequestMapping(method = RequestMethod.GET)
     public String initializeForm(ModelMap model) {
-    	//create the parameters object for the page
+    	// create the parameters object for the page
     	PasswordReminderParameters params = new PasswordReminderParameters();
     	model.addAttribute("passwordReminderParameters", params);
     	
@@ -79,47 +81,49 @@ public class SearchForStudentUserNameController {
      * @return the path of the view to display
      */
     @RequestMapping(method = RequestMethod.POST)
-    protected String onSubmit(@ModelAttribute("passwordReminderParameters") PasswordReminderParameters params,
-							  BindingResult bindingResult, Model model)
+    protected String onSubmit(
+    		@ModelAttribute("passwordReminderParameters") PasswordReminderParameters params,
+		    BindingResult bindingResult,
+			Model model)
             throws Exception {
 
         String[] fields = null;
 		String[] values = null;
 		String classVar = "";
 		
-		//validate the values the user entered
+		// validate the values the user entered
 		searchForStudentUserNameValidator.validate(params, bindingResult);
 		
-		//check if there were any errors
-		if(bindingResult.hasErrors()) {
-			//there were errors so we will reload this page and display errors
+		// check if there were any errors
+		if (bindingResult.hasErrors()) {
+			// there were errors so we will reload this page and display errors
 			return formView;
 		}
 		
-		//get the values from the form
+		// get the values from the form
         String firstName = params.getFirstName();
 		String lastName = params.getLastName();
 		String birthMonth = params.getBirthMonth();
 		String birthDay = params.getBirthDay();
 		
-		//populate the array that will be used to search for the User accounts
+		// populate the array that will be used to search for the User accounts
 		fields = new String[4];
 		fields[0] = "firstname";
 		fields[1] = "lastname";
 		fields[2] = "birthmonth";
 		fields[3] = "birthday";
 		
-		//populate the array that will be used to search for the User accounts
+		// populate the array that will be used to search for the User accounts
 		values = new String[4];
 		values[0] = firstName;
 		values[1] = lastName;
 		values[2] = birthMonth;
 		values[3] = birthDay;
 		
-		//the type of object to search
+		// the type of object to search
 		classVar = "studentUserDetails";
 		
-		//find all the accounts with matching values
+		// find all the accounts with matching values
 		List<User> accountsThatMatch = userService.retrieveByFields(fields, values, classVar);
         
 		model.addAttribute("users", accountsThatMatch);

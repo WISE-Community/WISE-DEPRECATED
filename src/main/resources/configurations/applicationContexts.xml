@@ -860,7 +860,7 @@
 				<sec:intercept-url pattern="/config/**" access="ROLE_ANONYMOUS,ROLE_USER" />
 				<sec:intercept-url pattern="/pages/**" access="ROLE_ANONYMOUS,ROLE_USER" />
 				<sec:intercept-url pattern="/contact/*.html" access="ROLE_ANONYMOUS,ROLE_USER" />
-				<sec:intercept-url pattern="/forgotaccount/**/*.html" access="ROLE_ANONYMOUS,ROLE_USER" />
+				<sec:intercept-url pattern="/forgotaccount/**" access="ROLE_ANONYMOUS,ROLE_USER" />
 				<sec:intercept-url pattern="/session/renew" access="ROLE_ANONYMOUS,ROLE_USER" />
 				<sec:intercept-url pattern="/login/impersonate" access="ROLE_ADMINISTRATOR,ROLE_RESEARCHER" />
         		<sec:intercept-url pattern="/logout/impersonate" access="ROLE_ANONYMOUS" />  <!-- this ensures that no-one can switch back to original user -->

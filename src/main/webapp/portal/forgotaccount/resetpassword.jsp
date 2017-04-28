@@ -18,7 +18,7 @@
 
 		<div id="pageContent" style="min-height:400px;">
 			<div id="headerSmall">
-				<a id="name" href="${contextPath}/index.html" title="<spring:message code="wiseHomepage" />"><spring:message code="wise" /></a>
+				<a id="name" href="${contextPath}" title="<spring:message code="wiseHomepage" />"><spring:message code="wise" /></a>
 			</div>
 
 			<div class="infoContent">
@@ -29,14 +29,14 @@
 								<form id="submittedAccountPasswords" method="post" commandName="passwordReminderParameters" autocomplete='off'>
 									<table id="submittedAccountPasswordTable" style="margin:0 auto;">
 									<tr>
-										<td><label id="passwordform" for="send_passwords"><spring:message code="forgotaccount.resetpassword.newPassword" /></label></td>
+										<td><label id="passwordform" for="newPassword"><spring:message code="forgotaccount.resetpassword.newPassword" /></label></td>
 										<td><input type="password" name="newPassword" id="newPassword" size="25" tabindex="1" /></td>
 											<!-- 			Special script pulls focus onto immediately preceding Input field-->
 							 				<script type="text/javascript">document.getElementById('newPassword').focus();
 											</script>
 										</tr>
 									<tr>
-										<td><label id="passwordform2" for="answer"><spring:message code="forgotaccount.resetpassword.verifyPassword" /></label></td>
+										<td><label id="passwordform2" for="verifyPassword"><spring:message code="forgotaccount.resetpassword.verifyPassword" /></label></td>
 										<td><input id="verifyPassword" name="verifyPassword" type="password" size="25" tabindex="2" /></td>
 									</tr>
 									<tr>
@@ -61,7 +61,7 @@
 						</spring:bind>
 					</div>
 					<c:if test="${displayForgotPasswordSelectAccountTypeLink == true}">
-						<a id="forgotPasswordSelectAccountTypeLink" href="./selectaccounttype.html" title=""><spring:message code="forgotaccount.resetpassword.forgotUsernameOrPassword" /></a>
+						<a id="forgotPasswordSelectAccountTypeLink" href="./selectaccounttype" title=""><spring:message code="forgotaccount.resetpassword.forgotUsernameOrPassword" /></a>
 						<br>
 						<br>
 						<br>
@@ -76,7 +76,7 @@
 						<br>
 						<br>
 					</c:if>
-				<a href="${contextPath}/index.html" title="<spring:message code="wiseHome" />"><spring:message code="returnHome"/></a>
+				<a href="${contextPath}" title="<spring:message code="wiseHome" />"><spring:message code="returnHome"/></a>
 			</div>
 		</div>
 	</div>

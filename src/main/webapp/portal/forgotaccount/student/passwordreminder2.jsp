@@ -18,7 +18,7 @@
 
 		<div id="pageContent" style="min-height:400px;">
 			<div id="headerSmall">
-				<a id="name" href="${contextPath}/index.html" title="<spring:message code="wiseHomepage" />"><spring:message code="wiseHome" /></a>
+				<a id="name" href="${contextPath}" title="<spring:message code="wiseHomepage" />"><spring:message code="wiseHome" /></a>
 			</div>
 
 			<div class="infoContent">
@@ -29,7 +29,7 @@
 					<form id="submittedAccountAnswer" method="post" commandName="passwordReminderParameters" autocomplete='off'>
 						<div><spring:message code="forgotaccount.student.passwordreminder2.question"/>: <spring:message code="forgotaccount.student.passwordreminder2.${accountQuestion}"/></div>
 						<div class="forgotPasswordInstructionText3">
-							<label for="send_accountanswer"><spring:message code="forgotaccount.student.passwordreminder2.answer"/>:</label>
+							<label for="submittedAnswer"><spring:message code="forgotaccount.student.passwordreminder2.answer"/>:</label>
 							<input type="text" name="submittedAccountAnswer" id="submittedAnswer"  class="dataBoxStyle"
 						  			style="width: 250px;" tabindex="1" />
 
@@ -50,7 +50,7 @@
 							</spring:bind>
 					</div>
 				</div>
-				<a href="${contextPath}/index.html" title="<spring:message code="wiseHome" />"><spring:message code="returnHome"/></a>
+				<a href="${contextPath}" title="<spring:message code="wiseHome" />"><spring:message code="returnHome"/></a>
 			</div>
 		</div>
 	</div>
