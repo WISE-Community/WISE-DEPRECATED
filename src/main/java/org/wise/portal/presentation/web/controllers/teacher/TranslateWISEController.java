@@ -207,7 +207,7 @@ public class TranslateWISEController {
         if (!translationFile.exists()) {
             translationFile.createNewFile();
         }
-        FileUtils.writeStringToFile(translationFile, translationString);
+        FileUtils.writeStringToFile(translationFile, translationString, "UTF-8");
 
         User user = ControllerUtil.getSignedInUser();
         boolean isComplete = false;
@@ -234,7 +234,7 @@ public class TranslateWISEController {
         if (!translationFile.exists()) {
             translationFile.createNewFile();
         }
-        FileUtils.writeStringToFile(translationFile, translationString);
+        FileUtils.writeStringToFile(translationFile, translationString, "UTF-8");
 
         User user = ControllerUtil.getSignedInUser();
         boolean isComplete = true;

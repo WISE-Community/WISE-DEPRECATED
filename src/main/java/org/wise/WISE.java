@@ -124,7 +124,7 @@ public class WISE {
 
 			wisePropertiesString = "hibernate.hbm2ddl.auto=create\n\n" + wisePropertiesString;	
 
-			FileUtils.writeStringToFile(wisePropertiesFile, wisePropertiesString);
+			FileUtils.writeStringToFile(wisePropertiesFile, wisePropertiesString, "UTF-8");
 
 			try {
 				Thread.sleep(5000);  // give it time to save the file
