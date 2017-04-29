@@ -144,14 +144,11 @@ class HTMLController {
                 // set the component rubric into the summernote rubric
                 this.summernoteRubricHTML = this.componentContent.rubric;
 
-                // the tooltip text for the insert WISE asset button
-                let insertAssetString = this.$translate('INSERT_ASSET');
-
                 /*
                  * create the custom button for inserting WISE assets into
                  * summernote
                  */
-                let InsertAssetButton = this.UtilService.createInsertAssetButton(this, null, this.nodeId, this.componentId, 'rubric', insertAssetString);
+                let InsertAssetButtonRubric = this.UtilService.createInsertAssetButton(this, null, this.nodeId, this.componentId, 'rubric', insertAssetString);
 
                 /*
                  * the options that specifies the tools to display in the
@@ -173,7 +170,7 @@ class HTMLController {
                     height: 300,
                     disableDragAndDrop: true,
                     buttons: {
-                        insertAssetButton: InsertAssetButton
+                        insertAssetButton: InsertAssetButtonRubric
                     }
                 };
 

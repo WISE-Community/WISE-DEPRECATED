@@ -10,6 +10,7 @@ var localeToHumanReadableLanguageMap = {
 		"nl":"Dutch",
 		"fr":"French",
 		"de":"German",
+		"el":"Greek",
 		"he":"Hebrew",
 		"it":"Italian",
 		"ja":"Japanese",

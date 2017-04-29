@@ -134,14 +134,11 @@ var HTMLController = function () {
                 // set the component rubric into the summernote rubric
                 this.summernoteRubricHTML = this.componentContent.rubric;
 
-                // the tooltip text for the insert WISE asset button
-                var insertAssetString = this.$translate('INSERT_ASSET');
-
                 /*
                  * create the custom button for inserting WISE assets into
                  * summernote
                  */
-                var InsertAssetButton = this.UtilService.createInsertAssetButton(this, null, this.nodeId, this.componentId, 'rubric', insertAssetString);
+                var InsertAssetButtonRubric = this.UtilService.createInsertAssetButton(this, null, this.nodeId, this.componentId, 'rubric', insertAssetString);
 
                 /*
                  * the options that specifies the tools to display in the
@@ -152,7 +149,7 @@ var HTMLController = function () {
                     height: 300,
                     disableDragAndDrop: true,
                     buttons: {
-                        insertAssetButton: InsertAssetButton
+                        insertAssetButton: InsertAssetButtonRubric
                     }
                 };
 
@@ -192,13 +189,13 @@ var HTMLController = function () {
                 var imageObjects = _this.getImageObjects();
 
                 if (imageObjects != null) {
-                    var args = {};
-                    args.nodeId = nodeId;
-                    args.componentId = componentId;
-                    args.imageObjects = imageObjects;
+                    var _args = {};
+                    _args.nodeId = nodeId;
+                    _args.componentId = componentId;
+                    _args.imageObjects = imageObjects;
 
                     // fire an event that contains the image objects
-                    _this.$scope.$emit('requestImageCallback', args);
+                    _this.$scope.$emit('requestImageCallback', _args);
                 }
             }
         });

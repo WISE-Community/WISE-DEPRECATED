@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2007-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -109,7 +109,7 @@ public class TeacherAccountController {
 	 * @param modelMap the model object that contains values for the page to use when rendering the view
 	 * @return the path of the view to display
 	 */
-	@RequestMapping(value={"/teacher/management/updatemyaccountinfo.html"},method=RequestMethod.GET)
+	@RequestMapping(value = {"/teacher/management/updatemyaccountinfo.html"}, method = RequestMethod.GET)
 	public String initializeFormExistingTeacher(ModelMap modelMap) throws Exception {
 		//get the signed in user
 		User signedInUser = ControllerUtil.getSignedInUser();
@@ -144,10 +144,11 @@ public class TeacherAccountController {
 	 */
 	protected ModelMap populateModelMap(ModelMap modelMap) {
 		try {
-			//populate the model with objects the form requires 
+			// populate the model with objects the form requires
 			modelMap.put("schoollevels", Schoollevel.values());
 			modelMap.put("curriculumsubjects",Curriculumsubjects.values());
-			modelMap.put("languages", new String[]{"en", "zh_TW", "zh_CN", "nl", "he", "ja", "ko", "es", "pt", "tr"});
+			String supportedLocales = wiseProperties.getProperty("supportedLocales", "en,zh_TW,zh_CN,nl,he,ja,ko,es,pt,tr");
+			modelMap.put("languages", supportedLocales.split(","));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -164,7 +165,7 @@ public class TeacherAccountController {
 	 * @param modelMap the object that contains values to be displayed on the page
 	 * @return the path of the view to display
 	 */
-	@RequestMapping(value={"/teacher/join", "/teacher/management/updatemyaccountinfo.html"}, method=RequestMethod.POST)
+	@RequestMapping(value = {"/teacher/join", "/teacher/management/updatemyaccountinfo.html"}, method = RequestMethod.POST)
 	protected String onSubmit(
 			@ModelAttribute("teacherAccountForm") TeacherAccountForm accountForm, 
 			BindingResult bindingResult, 

@@ -133,7 +133,7 @@ let vleModule = angular.module('vle', [
                     url: '',
                     abstract: true,
                     templateProvider: ['$http', 'ProjectService', function ($http, ProjectService) {
-                        var themePath = ProjectService.getThemePath();
+                        let themePath = ProjectService.getThemePath();
                         return $http.get(themePath + '/vle.html').then(
                             response => {
                                 return response.data;
@@ -250,7 +250,7 @@ let vleModule = angular.module('vle', [
                 urlTemplate: 'wise5/{part}/i18n_{lang}.json'
             })
             .fallbackLanguage(['en'])
-            .registerAvailableLanguageKeys(['en','es','ja','ko','pt','tr','zh_CN'], {
+            .registerAvailableLanguageKeys(['el','en','es','ja','ko','pt','tr','zh_CN','zh_TW'], {
                 'en_US': 'en',
                 'en_UK': 'en'
             })
@@ -311,7 +311,7 @@ let vleModule = angular.module('vle', [
                     'default': 'A700'
                 });
 
-            var lightMap = $mdThemingProvider.extendPalette('grey', {
+            let lightMap = $mdThemingProvider.extendPalette('grey', {
                 'A100': 'ffffff'
             });
             $mdThemingProvider.definePalette('light', lightMap);
