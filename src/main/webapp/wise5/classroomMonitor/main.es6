@@ -234,7 +234,7 @@ let classroomMonitorModule = angular.module('classroomMonitor', [
                     urlTemplate: 'wise5/{part}/i18n_{lang}.json'
             })
             .fallbackLanguage(['en'])
-            .registerAvailableLanguageKeys(['en','es','ja','ko','pt','tr','zh_CN'], {
+            .registerAvailableLanguageKeys(['el','en','es','ja','ko','pt','tr','zh_CN','zh_TW'], {
                 'en_US': 'en',
                 'en_UK': 'en'
             })

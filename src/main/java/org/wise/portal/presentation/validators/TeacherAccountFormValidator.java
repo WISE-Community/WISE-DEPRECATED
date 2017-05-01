@@ -38,7 +38,7 @@ import org.wise.portal.presentation.web.TeacherAccountForm;
 @Component
 public class TeacherAccountFormValidator extends UserAccountFormValidator {
 	
-	private static final String EMAIL_REGEXP =
+	public static final String EMAIL_REGEXP =
 		"^[a-zA-Z0-9]+([_\\.-][a-zA-Z0-9]+)*@" +
 			"([a-zA-Z0-9]+([\\.-][a-zA-Z0-9]+)*)+\\.[a-zA-Z]{2,}$";
 	

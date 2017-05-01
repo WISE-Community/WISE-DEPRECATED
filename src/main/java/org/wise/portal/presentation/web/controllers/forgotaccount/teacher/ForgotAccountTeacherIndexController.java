@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2007-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -27,6 +27,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
+import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -37,11 +38,13 @@ import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
 import org.wise.portal.domain.user.User;
+import org.wise.portal.presentation.validators.TeacherAccountFormValidator;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.mail.MailService;
 import org.wise.portal.service.user.UserService;
@@ -53,7 +56,7 @@ import org.wise.portal.service.user.UserService;
  * @version
  */
 @Controller
-@RequestMapping("/forgotaccount/teacher/index.html")
+@RequestMapping("/forgotaccount/teacher")
 public class ForgotAccountTeacherIndexController {
 
 	@Autowired
@@ -86,7 +89,7 @@ public class ForgotAccountTeacherIndexController {
      * @param model the model object that contains values for the page to use when rendering the view
      * @return the path of the view to display
      */
-    @RequestMapping(method=RequestMethod.GET)
+    @RequestMapping(method = RequestMethod.GET)
     public String initializeForm(ModelMap model) {
     	//create the user details object for the page
     	TeacherUserDetails userDetails = new TeacherUserDetails();
@@ -115,31 +118,35 @@ public class ForgotAccountTeacherIndexController {
 		boolean emailProvided = false;
 		
 		try {
-
 			username = StringUtils.trimToNull(userDetails.getUsername());
 			emailAddress = StringUtils
 					.trimToNull(userDetails.getEmailAddress());
 			User user = null;
 			if (username != null) {
 				userNameProvided = true;
-				
+
+				if (!StringUtils.isAlphanumeric(username)) {
+					return errorView;
+				}
+
 				user = userService.retrieveUserByUsername(userDetails
 						.getUsername());
 				
-				if( user == null ) {
-					model.addAttribute(USERNAME, username);
+				if (user == null) {
 					return errorView;
 				}
 				
 			} else if (emailAddress != null) {
 				emailProvided = true;
-				
+
+				if (!this.isValidEmail(emailAddress)) {
+					return errorView;
+				}
+
 				List<User> users = userService
 						.retrieveUserByEmailAddress(emailAddress);
 
-				
 				if (users.isEmpty()) {
-					model.addAttribute(EMAIL, emailAddress);
 					return errorView;
 				} else {
 					user = users.get(0);
@@ -216,5 +223,12 @@ public class ForgotAccountTeacherIndexController {
 			e.printStackTrace();
 			return formView;
 		}
+	}
+
+	/**
+	 * Validates the email against the email regular expression
+	 */
+	private boolean isValidEmail(String email) {
+		return !StringUtils.isEmpty(email) && Pattern.matches(TeacherAccountFormValidator.EMAIL_REGEXP, email);
 	}
 }

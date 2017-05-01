@@ -168,7 +168,7 @@ public class TranslateWISEController {
             } else {
                 propertiesFilePath = TranslateWISEController.class.getResource("/i18n/i18n_" + locale + ".properties").getFile();
             }
-            System.out.println(propertiesFilePath);
+            //System.out.println(propertiesFilePath);
             File propertiesFile = new File(propertiesFilePath);
             return propertiesFile;
         } else {
@@ -184,7 +184,7 @@ public class TranslateWISEController {
             }
             projectFilePath = wiseBaseDir + projectFilePath;
 
-            System.out.println(projectFilePath);
+            //System.out.println(projectFilePath);
             File projectFile = new File(projectFilePath);
             return projectFile;
         }
@@ -207,7 +207,7 @@ public class TranslateWISEController {
         if (!translationFile.exists()) {
             translationFile.createNewFile();
         }
-        FileUtils.writeStringToFile(translationFile, translationString);
+        FileUtils.writeStringToFile(translationFile, translationString, "UTF-8");
 
         User user = ControllerUtil.getSignedInUser();
         boolean isComplete = false;
@@ -234,7 +234,7 @@ public class TranslateWISEController {
         if (!translationFile.exists()) {
             translationFile.createNewFile();
         }
-        FileUtils.writeStringToFile(translationFile, translationString);
+        FileUtils.writeStringToFile(translationFile, translationString, "UTF-8");
 
         User user = ControllerUtil.getSignedInUser();
         boolean isComplete = true;

@@ -27,6 +27,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -81,6 +82,9 @@ public class StudentAccountController {
 
 	@Autowired
 	protected UserService userService;
+
+	@Autowired
+	protected Properties wiseProperties;
 
 	@Autowired
 	private StudentAccountFormValidator studentAccountFormValidator;
@@ -256,10 +260,12 @@ public class StudentAccountController {
 	}
 
     @RequestMapping(value = "/student/join", method = RequestMethod.GET)
-    public String initializeFormNewStudent(ModelMap model) { 
+    public String initializeFormNewStudent(ModelMap model) {
+
 		model.put("genders", Gender.values());
 		model.put("accountQuestions",AccountQuestion.values());
-		model.put("languages", new String[]{"en", "zh_TW", "zh_CN", "nl", "he", "ja", "ko", "es", "pt", "tr"});
+		String supportedLocales = wiseProperties.getProperty("supportedLocales", "en,zh_TW,zh_CN,nl,he,ja,ko,es,pt,tr");
+		model.put("languages", supportedLocales.split(","));
 		model.addAttribute("studentAccountForm", new StudentAccountForm());
         return "student/join";
     } 
@@ -269,7 +275,8 @@ public class StudentAccountController {
 		User user = ControllerUtil.getSignedInUser();
 		model.put("genders", Gender.values());
 		model.put("accountQuestions",AccountQuestion.values());
-		model.put("languages", new String[]{"en", "zh_TW", "zh_CN", "nl", "he", "ja", "ko", "es", "pt", "tr"});
+		String supportedLocales = wiseProperties.getProperty("supportedLocales", "en,zh_TW,zh_CN,nl,he,ja,ko,es,pt,tr");
+		model.put("languages", supportedLocales.split(","));
 		model.addAttribute("studentAccountForm",  new StudentAccountForm((StudentUserDetails) user.getUserDetails()));
         return "student/updatestudentaccount"; 
     } 

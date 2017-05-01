@@ -677,7 +677,7 @@ public class VLEGetSpecialExport {
 					File newStepContentFile = new File(zipFolder, "stepContent.js");
 					
 					//write the step content to the stepContent.js file
-					FileUtils.writeStringToFile(newStepContentFile, stepContentString);
+					FileUtils.writeStringToFile(newStepContentFile, stepContentString, "UTF-8");
 				}
 			}
 			
@@ -749,7 +749,7 @@ public class VLEGetSpecialExport {
 			String javascriptDataString = getJavascriptText("data", data);
 			
 			//write the data to the data.js file
-			FileUtils.writeStringToFile(dataFile, javascriptDataString);
+			FileUtils.writeStringToFile(dataFile, javascriptDataString, "UTF-8");
 			
 			//get the response output stream
 			ServletOutputStream outputStream = response.getOutputStream();

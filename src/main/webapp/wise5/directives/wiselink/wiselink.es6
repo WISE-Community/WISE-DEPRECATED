@@ -9,28 +9,46 @@ class WiselinkController {
         this.$timeout = $timeout;
     }
 
-    follow() {
-        this.$scope.$on('currentNodeChanged', (event, args) => {
-            let currentNode = this.StudentDataService.getCurrentNode();
+    scrollAndHighlightComponent() {
+        this.$timeout(() => {
+            let componentElement = $("#" + this.componentId);
+            let originalBg = componentElement.css("backgroundColor");  // save the original background image
+            componentElement.css("background-color", "#FFFF9C");  // highlight the background briefly to draw attention to it
 
-            // if componentId is also specified in this wiselink, scroll to it
-            if (this.componentId != null && currentNode != null && currentNode.id === this.nodeId) {
-                this.$timeout(() => {
-                    let componentElement = $("#" + this.componentId);
-                    let originalBg = componentElement.css("backgroundColor");
-                    componentElement.css("background-color", "#FFFF9C");  // also highlight the background briefly to draw attention to it
-                    $('#content').animate({
-                        scrollTop: componentElement.prop("offsetTop")
-                    }, 1000);
-                    // slowly fade back to original background color
-                    componentElement.css({
-                        transition: 'background-color 3s ease-in-out',
-                        "background-color": originalBg
-                    });
-                }, 500);
-            }
-        });
-        this.StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(this.nodeId);
+            // scroll to the component
+            $('#content').animate({
+                scrollTop: componentElement.prop("offsetTop")
+            }, 1000);
+
+            // slowly fade back to original background color
+            componentElement.css({
+                transition: 'background-color 3s ease-in-out',
+                "background-color": originalBg
+            });
+
+            // we need this to remove the transition animation so the highlight works again next time
+            this.$timeout(() => {
+               componentElement.css("transition", "");
+            }, 4000);
+        }, 500);
+    }
+
+    follow() {
+        let currentNode = this.StudentDataService.getCurrentNode();
+        if (currentNode != null && currentNode.id === this.nodeId && this.componentId != null) {
+            // this is a link to the component in this current step
+            this.scrollAndHighlightComponent();
+        } else {
+            this.$scope.$on('currentNodeChanged', (event, args) => {
+                let currentNode = this.StudentDataService.getCurrentNode();
+
+                // if componentId is also specified in this wiselink, scroll to it
+                if (this.componentId != null && currentNode != null && currentNode.id === this.nodeId) {
+                    this.scrollAndHighlightComponent();
+                }
+            });
+            this.StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(this.nodeId);
+        }
     }
 }
 

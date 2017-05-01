@@ -1347,7 +1347,7 @@ public class FileManager {
 								File newHtmlFile = new File(toProjectFolder, newHtmlFileName);
 
 								//write the content to the file in the "to" project
-								FileUtils.writeStringToFile(newHtmlFile, htmlString);
+								FileUtils.writeStringToFile(newHtmlFile, htmlString, "UTF-8");
 
 								/*
 								 * replace all references to the .html file in the new .ht file
@@ -1411,7 +1411,7 @@ public class FileManager {
 						File newFile = new File(toProjectFolder, newFileName);
 
 						//write the contents to the new file
-						FileUtils.writeStringToFile(newFile, fileContent);
+						FileUtils.writeStringToFile(newFile, fileContent, "UTF-8");
 
 						//create the node object that we will put in our "to" project
 						JSONObject newNode = Template.getProjectNodeTemplate(type, newFileName, title, nodeClass);

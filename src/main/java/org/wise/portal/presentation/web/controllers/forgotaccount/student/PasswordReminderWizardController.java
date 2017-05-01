@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2007-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -59,7 +59,7 @@ import org.wise.portal.service.user.UserService;
  * @author Anthony Perritano
  */
 @Controller
-@RequestMapping("/forgotaccount/student/passwordreminder.html")
+@RequestMapping("/forgotaccount/student/passwordreminder")
 @SessionAttributes("passwordReminderParameters")
 public class PasswordReminderWizardController{
 
@@ -99,14 +99,16 @@ public class PasswordReminderWizardController{
 
 			try {
 				String username = passwordReminderParameters.getUsername();
+				username = StringUtils.trimToNull(username);
 
 				if (username == null) {
 					result.rejectValue("username", "presentation.web.controllers.forgotaccount.student.PasswordReminderWizardController.errorNoUsername");
+				} else if (!StringUtils.isAlphanumeric(username)) {
+					result.rejectValue("username", "presentation.web.controllers.forgotaccount.student.PasswordReminderWizardController.errorNoUsername");
 				} else {
-					username = StringUtils.trimToNull(username);
+					// check to see if user exists and ensure that user is a student
 					User user = userService.retrieveUserByUsername(username);
 
-					/* check to see if user exists and ensure that user is a student */
 					if (user == null || !(user.getUserDetails() instanceof StudentUserDetails)) {
 						result.rejectValue("username", "presentation.web.controllers.forgotaccount.student.PasswordReminderWizardController.errorUsernameNotFound");
 					}

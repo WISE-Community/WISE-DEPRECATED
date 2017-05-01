@@ -18,31 +18,52 @@ var WiselinkController = function () {
     }
 
     _createClass(WiselinkController, [{
-        key: 'follow',
-        value: function follow() {
+        key: "scrollAndHighlightComponent",
+        value: function scrollAndHighlightComponent() {
             var _this = this;
 
-            this.$scope.$on('currentNodeChanged', function (event, args) {
-                var currentNode = _this.StudentDataService.getCurrentNode();
+            this.$timeout(function () {
+                var componentElement = $("#" + _this.componentId);
+                var originalBg = componentElement.css("backgroundColor"); // save the original background image
+                componentElement.css("background-color", "#FFFF9C"); // highlight the background briefly to draw attention to it
 
-                // if componentId is also specified in this wiselink, scroll to it
-                if (_this.componentId != null && currentNode != null && currentNode.id === _this.nodeId) {
-                    _this.$timeout(function () {
-                        var componentElement = $("#" + _this.componentId);
-                        var originalBg = componentElement.css("backgroundColor");
-                        componentElement.css("background-color", "#FFFF9C"); // also highlight the background briefly to draw attention to it
-                        $('#content').animate({
-                            scrollTop: componentElement.prop("offsetTop")
-                        }, 1000);
-                        // slowly fade back to original background color
-                        componentElement.css({
-                            transition: 'background-color 3s ease-in-out',
-                            "background-color": originalBg
-                        });
-                    }, 500);
-                }
-            });
-            this.StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(this.nodeId);
+                // scroll to the component
+                $('#content').animate({
+                    scrollTop: componentElement.prop("offsetTop")
+                }, 1000);
+
+                // slowly fade back to original background color
+                componentElement.css({
+                    transition: 'background-color 3s ease-in-out',
+                    "background-color": originalBg
+                });
+
+                // we need this to remove the transition animation so the highlight works again next time
+                _this.$timeout(function () {
+                    componentElement.css("transition", "");
+                }, 4000);
+            }, 500);
+        }
+    }, {
+        key: "follow",
+        value: function follow() {
+            var _this2 = this;
+
+            var currentNode = this.StudentDataService.getCurrentNode();
+            if (currentNode != null && currentNode.id === this.nodeId && this.componentId != null) {
+                // this is a link to the component in this current step
+                this.scrollAndHighlightComponent();
+            } else {
+                this.$scope.$on('currentNodeChanged', function (event, args) {
+                    var currentNode = _this2.StudentDataService.getCurrentNode();
+
+                    // if componentId is also specified in this wiselink, scroll to it
+                    if (_this2.componentId != null && currentNode != null && currentNode.id === _this2.nodeId) {
+                        _this2.scrollAndHighlightComponent();
+                    }
+                });
+                this.StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(this.nodeId);
+            }
         }
     }]);
 

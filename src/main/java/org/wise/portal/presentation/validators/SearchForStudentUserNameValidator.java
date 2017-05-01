@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -23,26 +23,39 @@
  */
 package org.wise.portal.presentation.validators;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 import org.wise.portal.domain.impl.PasswordReminderParameters;
 
+/**
+ * Validates search for student username form
+ *
+ * @author Anthony Perritano
+ */
 @Component
 public class SearchForStudentUserNameValidator implements Validator {
 
-	   @SuppressWarnings("unchecked")
+	    @SuppressWarnings("unchecked")
 	    public boolean supports(Class clazz) {
 	        return PasswordReminderParameters.class.isAssignableFrom(clazz);
 	    }
 
 	    public void validate(Object passwordReminderParameters, Errors errors) {
-	    	//make sure first name field is not empty
+	    	// make sure first name field is not empty and is alphanumeric
 	    	ValidationUtils.rejectIfEmptyOrWhitespace(errors, "firstName","error.firstname-not-specified");
-	    	
-	    	//make sure last name field is not empty
-	    	ValidationUtils.rejectIfEmptyOrWhitespace(errors, "lastName","error.lastname-not-specified");
-	    }
+			if (!StringUtils.isAlphanumeric(((PasswordReminderParameters) passwordReminderParameters).getFirstName())) {
+				errors.rejectValue("username", "error.username-not-found");
+				return;
+			}
 
+			// make sure last name field is not empty and is alphanumeric
+	    	ValidationUtils.rejectIfEmptyOrWhitespace(errors, "lastName","error.lastname-not-specified");
+			if (!StringUtils.isAlphanumeric(((PasswordReminderParameters) passwordReminderParameters).getLastName())) {
+				errors.rejectValue("username", "error.username-not-found");
+				return;
+			}
+	    }
 }

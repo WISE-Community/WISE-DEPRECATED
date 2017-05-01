@@ -25,9 +25,9 @@
 				<div class="panelHeader"><spring:message code="forgotaccount.selectaccounttype.lostUsernameOrPassword"/></div>
 				<div class="infoContentBox">
 					<div id="lostSubHeader"><spring:message code="forgotaccount.selectaccounttype.whatSortofWISEAccount"/></div><br/>
-					<div><a href="student/passwordreminder.html" class="wisebutton"><spring:message code="forgotaccount.selectaccounttype.studentAccount"/></a></div>
+					<div><a href="student/passwordreminder" class="wisebutton"><spring:message code="forgotaccount.selectaccounttype.studentAccount"/></a></div>
 					<div><spring:message code="forgotaccount.selectaccounttype.or"/></div>
-					<div><a href="teacher/index.html" class="wisebutton" style="margin-top:.25em;"><spring:message code="forgotaccount.selectaccounttype.teacherAccount"/></a></div>
+					<div><a href="teacher" class="wisebutton" style="margin-top:.25em;"><spring:message code="forgotaccount.selectaccounttype.teacherAccount"/></a></div>
 				</div>
 				<a href="${contextPath}/" title="<spring:message code="wiseHome" />"><spring:message code="returnHome"/></a>
 			</div>

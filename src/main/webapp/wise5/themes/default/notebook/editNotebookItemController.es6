@@ -53,6 +53,8 @@ class EditNotebookItemController {
         }
 
         this.notebookConfig = this.NotebookService.getNotebookConfig();
+        this.color = this.notebookConfig.itemTypes[this.item.type].label.color;
+
         let label = this.notebookConfig.itemTypes[this.item.type].label.singular;
         if (this.isEditMode) {
             if (this.itemId) {

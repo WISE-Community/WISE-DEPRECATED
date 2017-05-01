@@ -50,7 +50,6 @@ describe('WISE5 Student VLE Preview', function () {
         expect(element(by.model("stepToolsCtrl.toNodeId")).getText()).toBe('1.2: Open Response Step');
         expect(previousButton.getAttribute("disabled")).toBe(null); // the previous button should be enabled on the second step.
 
-
         var nodeContent = element(by.cssContainingText('.node-content', 'This is a step where students enter text.'));
         expect(nodeContent.isPresent()).toBeTruthy();
 
