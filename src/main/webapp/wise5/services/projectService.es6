@@ -24,6 +24,7 @@ class ProjectService {
         this.idToOrder = {};
         this.nodeCount = 0;
         this.componentServices = {};
+        this.nodeIddToNumber = {};
 
         this.$translate = this.$filter('translate');
 
@@ -407,6 +408,14 @@ class ProjectService {
                 pos = this.getBranchNodePositionById(id);
                 this.setIdToPosition(id, pos);
             }
+
+            /*
+             * calculate the node numbers
+             * e.g. if the step is called
+             * 1.5 View the Potential Energy
+             * then the node number is 1.5
+             */
+            this.calculateNodeNumbers();
         }
     };
 
@@ -660,7 +669,8 @@ class ProjectService {
         let position = null;
 
         if (id != null) {
-            position = this.idToPosition[id] ? this.idToPosition[id] : null;
+            //position = this.idToPosition[id] ? this.idToPosition[id] : null;
+            position = this.nodeIdToNumber[id];
         }
 
         return position;
@@ -8527,6 +8537,74 @@ class ProjectService {
     }
 
     /**
+     * Check if a node is a branch start point
+     * @param nodeId look for a branch with this start node id
+     * @return whether the node is a branch start point
+     */
+    isBranchStartPoint(nodeId) {
+
+        /*
+         * Get all the branches. Each branch is represented as an object that
+         * contains the branchStartPoint, branchEndPoint, and branchPaths.
+         */
+        var branches = this.getBranches();
+
+        if (branches != null) {
+
+            // loop through all the branches
+            for (var b = 0; b < branches.length; b++) {
+                var branch = branches[b];
+
+                if (branch != null) {
+                    if (branch.branchStartPoint == nodeId) {
+                        /*
+                         * we have found a branch with the given nodeId as the
+                         * start point
+                         */
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Check if a node is a branch end point
+     * @param nodeId look for a branch with this end node id
+     * @return whether the node is a branch end point
+     */
+    isBranchMergePoint(nodeId) {
+
+        /*
+         * Get all the branches. Each branch is represented as an object that
+         * contains the branchStartPoint, branchEndPoint, and branchPaths.
+         */
+        var branches = this.getBranches();
+
+        if (branches != null) {
+
+            // loop through all the branches
+            for (var b = 0; b < branches.length; b++) {
+                var branch = branches[b];
+
+                if (branch != null) {
+                    if (branch.branchEndPoint == nodeId) {
+                        /*
+                         * we have found a branch with the given nodeId as the
+                         * end point
+                         */
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Get all the branches whose branch start point is the given node id
      * @param nodeId the branch start point
      * @return an array of branches that have the given branch start point
@@ -8558,6 +8636,279 @@ class ProjectService {
         }
 
         return branches;
+    }
+
+    /**
+     * Calculate the node numbers and set them into the nodeIdToNumber map
+     */
+    calculateNodeNumbers() {
+
+        // clear the node id to number mapping
+        this.nodeIdToNumber = {};
+
+        // get the start node id
+        var startNodeId = this.getStartNodeId();
+
+        var currentActivityNumber = 0;
+        var currentStepNumber = 0;
+
+        /*
+         * recursively calculate the node numbers by traversing the project
+         * tree
+         */
+        this.calculateNodeNumbersHelper(startNodeId, currentActivityNumber, currentStepNumber);
+    }
+
+    /**
+     * Recursively calcualte the node numbers by traversing the project tree
+     * using transitions
+     * @param nodeId the current node id we are on
+     * @param currentActivityNumber the current activity number
+     * @param currentStepNumber the current step number
+     * @param branchLetterCode (optional) the character code for the branch
+     * letter e.g. 1=A, 2=B, etc.
+     */
+    calculateNodeNumbersHelper(nodeId, currentActivityNumber, currentStepNumber, branchLetterCode) {
+
+        if (nodeId != null) {
+            if (this.isApplicationNode(nodeId)) {
+                // the node is a step node
+
+                // get the node object
+                var node = this.getNodeById(nodeId);
+
+                // get the parent group of the node
+                var parentGroup = this.getParentGroup(nodeId);
+
+                if (parentGroup != null) {
+
+                    // check if the parent group has previously been assigned a number
+                    if (this.nodeIdToNumber[parentGroup.id] == null) {
+                        /*
+                         * the parent group has not been assigned a number so
+                         * we will assign a number now
+                         */
+
+                        // set the activity number
+                        currentActivityNumber = parseInt(currentActivityNumber) + 1;
+
+                        /*
+                         * set the current step number to 1 now that we have
+                         * entered a new group
+                         */
+                        currentStepNumber = 1;
+
+                        // set the activity number
+                        this.nodeIdToNumber[parentGroup.id] = "" + currentActivityNumber;
+                    } else {
+                        /*
+                         * the parent group has previously been assigned a number so we
+                         * will use it
+                         */
+                        currentActivityNumber = this.nodeIdToNumber[parentGroup.id];
+                    }
+                }
+
+                if (this.isBranchMergePoint(nodeId)) {
+                    /*
+                     * the node is a merge point so we will not use a letter
+                     * anymore now that we are no longer in a branch path
+                     */
+                    branchLetterCode = null;
+                }
+
+                if (this.isBranchStartPoint(nodeId)) {
+                    // the node is a branch start point
+
+                    // get the branch that this node is a start point for
+                    var branchesByBranchStartPointNodeId = this.getBranchesByBranchStartPointNodeId(nodeId);
+
+                    // get the branch object, there should only be one
+                    var branchesObject = branchesByBranchStartPointNodeId[0];
+
+                    /*
+                     * this is used to obtain the max step number that has
+                     * been used in the branch paths so that we know what
+                     * step number to give the merge end point
+                     */
+                    var maxCurrentStepNumber = 0;
+
+                    // set the step number for the branch start point
+                    this.nodeIdToNumber[nodeId] = currentActivityNumber + '.' + currentStepNumber;
+
+                    // increment the step counteer
+                    currentStepNumber++;
+
+                    // get the branch paths
+                    var branchPaths = branchesObject.branchPaths;
+
+                    // loop through all the branch paths
+                    for (var bp = 0; bp < branchPaths.length; bp++) {
+
+                        // get a branch path
+                        var branchPath = branchPaths[bp];
+
+                        // step number counter for this branch path
+                        var branchCurrentStepNumber = currentStepNumber;
+
+                        // get the letter code e.g. 1=A, 2=B, etc.
+                        var branchLetterCode = bp;
+
+                        // loop through all the nodes in the branch path
+                        for (var bpn = 0; bpn < branchPath.length; bpn++) {
+                            if (bpn == 0) {
+
+                                /*
+                                 * Recursively call calculateNodeNumbersHelper on the
+                                 * first step in this branch path. This will recursively
+                                 * calculate the numbers for all the nodes in this
+                                 * branch path.
+                                 */
+                                var branchPathNodeId = branchPath[bpn];
+                                this.calculateNodeNumbersHelper(branchPathNodeId, currentActivityNumber, branchCurrentStepNumber, branchLetterCode);
+                            }
+
+                            // increment the step counter for this branch path
+                            branchCurrentStepNumber++;
+
+                            /*
+                             * update the max current step number if we have found
+                             * a larger number
+                             */
+                            if (branchCurrentStepNumber > maxCurrentStepNumber) {
+                                maxCurrentStepNumber = branchCurrentStepNumber;
+                            }
+                        }
+                    }
+
+                    // get the step number we should use for the end point
+                    currentStepNumber = maxCurrentStepNumber;
+
+                    var branchEndPointNodeId = branchesObject.branchEndPoint;
+
+                    /*
+                     * calculate the node number for the branch end point and
+                     * continue calculating node numbers for the nodes that
+                     * come after it
+                     */
+                    this.calculateNodeNumbersHelper(branchEndPointNodeId, currentActivityNumber, currentStepNumber);
+                } else {
+                    // the node is not a branch start point
+
+                    /*
+                     * check if we have already set the number for this node so
+                     * that we don't need to unnecessarily re-calculate the
+                     * node number
+                     */
+                    if (this.nodeIdToNumber[nodeId] == null) {
+                        // we have not calculated the node number yet
+
+                        var number = null;
+
+                        if (branchLetterCode == null) {
+                            // we do not need to add a branch letter
+
+                            // get the node number e.g. 1.5
+                            number = currentActivityNumber + '.' + currentStepNumber;
+                        } else {
+                            // we need to add a branch letter
+
+                            // get the branch letter
+                            var branchLetter = String.fromCharCode(65 + branchLetterCode);
+
+                            // get the node number e.g. 1.5 A
+                            number = currentActivityNumber + '.' + currentStepNumber + ' ' + branchLetter;
+                        }
+
+                        // set the number for the node
+                        this.nodeIdToNumber[nodeId] = number;
+                    }
+
+                    // increment the step number for the next node to use
+                    currentStepNumber++;
+
+                    var transitions = [];
+
+                    if (node.transitionLogic != null && node.transitionLogic.transitions) {
+                        transitions = node.transitionLogic.transitions;
+                    }
+
+                    if (transitions.length > 0) {
+
+                        /*
+                         * loop through all the transitions, there should only
+                         * be one but we will loop through them just to be complete.
+                         * if there was more than one transition, it would mean
+                         * this node is a branch start point in which case we
+                         * would have gone inside the other block of code where
+                         * this.isBranchStartPoint() is true.
+                         */
+                        for (var t = 0; t < transitions.length; t++) {
+                            var transition = transitions[t];
+
+                            if (transition != null) {
+                                if (this.isBranchMergePoint(transition.to)) {
+
+                                } else {
+                                    this.calculateNodeNumbersHelper(transition.to, currentActivityNumber, currentStepNumber, branchLetterCode);
+                                }
+                            }
+                        }
+                    } else {
+                        // if there are no transitions, check if the parent group has a transition
+
+                        if (parentGroup != null &&
+                            parentGroup.transitionLogic != null &&
+                            parentGroup.transitionLogic.transitions != null &&
+                            parentGroup.transitionLogic.transitions.length > 0) {
+
+                            for (var pg = 0; pg < parentGroup.transitionLogic.transitions.length; pg++) {
+                                var transition = parentGroup.transitionLogic.transitions[pg];
+
+                                if (transition != null) {
+                                    this.calculateNodeNumbersHelper(transition.to, currentActivityNumber, currentStepNumber, branchLetterCode);
+                                }
+                            }
+                        }
+                    }
+                }
+            } else {
+                // the node is a group node
+
+                // get the node object
+                var node = this.getNodeById(nodeId);
+
+                // check if the group has previously been assigned a number
+                if (this.nodeIdToNumber[nodeId] == null) {
+                    /*
+                     * the group has not been assigned a number so
+                     * we will assign a number now
+                     */
+
+                    // set the activity number
+                    currentActivityNumber = parseInt(currentActivityNumber) + 1;
+
+                    /*
+                     * set the current step number to 1 now that we have
+                     * entered a new group
+                     */
+                    currentStepNumber = 1;
+
+                    // set the activity number
+                    this.nodeIdToNumber[nodeId] = "" + currentActivityNumber;
+                } else {
+                    /*
+                     * the group has previously been assigned a number so we
+                     * will use it
+                     */
+                    currentActivityNumber = this.nodeIdToNumber[parentGroup.id];
+                }
+
+                if (node.startId != null) {
+                    this.calculateNodeNumbersHelper(node.startId, currentActivityNumber, currentStepNumber, branchLetterCode);
+                }
+            }
+        }
     }
 }
 

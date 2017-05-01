@@ -2171,6 +2171,14 @@ var NodeAuthoringController = function () {
                 this.ProjectService.addBranchPathTakenConstraints(itemNodeId, fromNodeId, toNodeId);
             }
 
+            /*
+             * update the node numbers now that a step has been added to a branch path
+             * e.g. if this is a branching step that is called
+             * 1.5 B View the Potential Energy
+             * then the node number is 1.5 B
+             */
+            this.ProjectService.calculateNodeNumbers();
+
             // save the project
             this.authoringViewNodeChanged();
         }
@@ -2282,6 +2290,14 @@ var NodeAuthoringController = function () {
                 }
             }
 
+            /*
+             * calculate the node numbers
+             * e.g. if the step is called
+             * 1.5 View the Potential Energy
+             * then the node number is 1.5
+             */
+            this.ProjectService.calculateNodeNumbers();
+
             // save the project
             this.authoringViewNodeChanged();
         }
@@ -2387,6 +2403,14 @@ var NodeAuthoringController = function () {
 
             // add the branch to the array of branches
             this.createBranchBranches.push(branch);
+
+            /*
+             * calculate the node numbers
+             * e.g. if the step is called
+             * 1.5 View the Potential Energy
+             * then the node number is 1.5
+             */
+            this.ProjectService.calculateNodeNumbers();
 
             // save the project
             this.authoringViewNodeChanged();

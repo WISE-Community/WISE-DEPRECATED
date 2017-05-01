@@ -734,7 +734,7 @@ class NodeAuthoringController {
              * for the transition logic parameters if they haven't already been
              * set
              */
-            
+
             if (this.node.transitionLogic.howToChooseAmongAvailablePaths == null) {
                 this.node.transitionLogic.howToChooseAmongAvailablePaths = 'workgroupId';
             }
@@ -2148,6 +2148,14 @@ class NodeAuthoringController {
             this.ProjectService.addBranchPathTakenConstraints(itemNodeId, fromNodeId, toNodeId);
         }
 
+        /*
+         * update the node numbers now that a step has been added to a branch path
+         * e.g. if this is a branching step that is called
+         * 1.5 B View the Potential Energy
+         * then the node number is 1.5 B
+         */
+        this.ProjectService.calculateNodeNumbers();
+
         // save the project
         this.authoringViewNodeChanged();
     }
@@ -2253,6 +2261,14 @@ class NodeAuthoringController {
             }
         }
 
+        /*
+         * calculate the node numbers
+         * e.g. if the step is called
+         * 1.5 View the Potential Energy
+         * then the node number is 1.5
+         */
+        this.ProjectService.calculateNodeNumbers();
+
         // save the project
         this.authoringViewNodeChanged();
     }
@@ -2352,6 +2368,14 @@ class NodeAuthoringController {
 
         // add the branch to the array of branches
         this.createBranchBranches.push(branch);
+
+        /*
+         * calculate the node numbers
+         * e.g. if the step is called
+         * 1.5 View the Potential Energy
+         * then the node number is 1.5
+         */
+        this.ProjectService.calculateNodeNumbers();
 
         // save the project
         this.authoringViewNodeChanged();

@@ -37,7 +37,7 @@ var NavItemController = function () {
         this.item = this.ProjectService.idToNode[this.nodeId];
         this.isGroup = this.ProjectService.isGroupNode(this.nodeId);
 
-        this.nodeTitle = this.showPosition ? this.ProjectService.idToPosition[this.nodeId] + ': ' + this.item.title : this.item.title;
+        this.nodeTitle = this.showPosition ? this.ProjectService.nodeIdToNumber[this.nodeId] + ': ' + this.item.title : this.item.title;
         this.currentNode = this.TeacherDataService.currentNode;
         this.previousNode = null;
         this.isCurrentNode = this.currentNode.id === this.nodeId;

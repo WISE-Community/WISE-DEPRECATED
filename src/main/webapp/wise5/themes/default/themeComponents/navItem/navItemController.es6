@@ -30,7 +30,7 @@ class NavItemController {
         this.nodeStatuses = this.StudentDataService.nodeStatuses;
         this.nodeStatus = this.nodeStatuses[this.nodeId];
 
-        this.nodeTitle = this.showPosition ? (this.ProjectService.idToPosition[this.nodeId] + ': ' + this.item.title) : this.item.title;
+        this.nodeTitle = this.showPosition ? (this.ProjectService.nodeIdToNumber[this.nodeId] + ': ' + this.item.title) : this.item.title;
         this.currentNode = this.StudentDataService.currentNode;
         this.previousNode = null;
         this.isCurrentNode = (this.currentNode.id === this.nodeId);
@@ -85,11 +85,11 @@ class NavItemController {
             this.$scope.$watch(
                 () => {
                     // watch the position of this node
-                    return this.ProjectService.idToPosition[this.nodeId];
+                    return this.ProjectService.nodeIdToNumber[this.nodeId];
                 },
                 (value) => {
                     // the position has changed for this node so we will update it in the UI
-                    this.nodeTitle = this.showPosition ? (this.ProjectService.idToPosition[this.nodeId] + ': ' + this.item.title) : this.item.title;
+                    this.nodeTitle = this.showPosition ? (this.ProjectService.nodeIdToNumber[this.nodeId] + ': ' + this.item.title) : this.item.title;
                 }
             );
         }

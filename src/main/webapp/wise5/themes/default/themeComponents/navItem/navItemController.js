@@ -33,7 +33,7 @@ var NavItemController = function () {
         this.nodeStatuses = this.StudentDataService.nodeStatuses;
         this.nodeStatus = this.nodeStatuses[this.nodeId];
 
-        this.nodeTitle = this.showPosition ? this.ProjectService.idToPosition[this.nodeId] + ': ' + this.item.title : this.item.title;
+        this.nodeTitle = this.showPosition ? this.ProjectService.nodeIdToNumber[this.nodeId] + ': ' + this.item.title : this.item.title;
         this.currentNode = this.StudentDataService.currentNode;
         this.previousNode = null;
         this.isCurrentNode = this.currentNode.id === this.nodeId;
@@ -87,10 +87,10 @@ var NavItemController = function () {
 
             this.$scope.$watch(function () {
                 // watch the position of this node
-                return _this.ProjectService.idToPosition[_this.nodeId];
+                return _this.ProjectService.nodeIdToNumber[_this.nodeId];
             }, function (value) {
                 // the position has changed for this node so we will update it in the UI
-                _this.nodeTitle = _this.showPosition ? _this.ProjectService.idToPosition[_this.nodeId] + ': ' + _this.item.title : _this.item.title;
+                _this.nodeTitle = _this.showPosition ? _this.ProjectService.nodeIdToNumber[_this.nodeId] + ': ' + _this.item.title : _this.item.title;
             });
         }
 
