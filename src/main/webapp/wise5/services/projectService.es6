@@ -2093,7 +2093,7 @@ class ProjectService {
                                                          * group1>node1>node2>group2>node3>node4
                                                          * and the current node was node2 then the first node in the
                                                          * path would be node3 which means we would need to place
-                                                         * group2 on the bath before node3
+                                                         * group2 on the path before node3
                                                          */
                                                         tempPath.unshift(firstParentGroupId);
                                                     }
@@ -2147,6 +2147,43 @@ class ProjectService {
                      * nodes depth first
                      */
                     pathSoFar.pop();
+
+                    if (includeGroups) {
+                        if (pathSoFar.length == 1) {
+
+                            /*
+                             * we are including groups and we have traversed
+                             * back up to the start node id for the project.
+                             * the only node id left in pathSoFar is now the
+                             * parent group of the start node id. we will
+                             * now add this parent group of the start node id
+                             * to all of the paths
+                             */
+
+                            // loop through all the paths
+                            for (var ap = 0; ap < allPaths.length; ap++) {
+
+                                // get a path
+                                var path = allPaths[ap];
+
+                                if (path != null) {
+                                    /*
+                                     * prepend the parent group of the start node id
+                                     * to the path
+                                     */
+                                    path.unshift(pathSoFar[0]);
+                                }
+                            }
+
+                            /*
+                             * remove the parent group of the start node id from
+                             * pathSoFar which leaves us with an empty pathSoFar
+                             * which means we are completely done with
+                             * calculating all the paths
+                             */
+                            pathSoFar.pop();
+                        }
+                    }
                 }
             } else if (this.isGroupNode(nodeId)) {
                 // the node is a group node
@@ -2171,7 +2208,7 @@ class ProjectService {
                         // get the transitions from the group
                         var transitions = this.getTransitionsByFromNodeId(groupNode.id);
 
-                        if (transitions != null) {
+                        if (transitions != null && transitions.length > 0) {
 
                             // loop through all the transitions from the group
                             for (var t = 0; t < transitions.length; t++) {
@@ -2199,6 +2236,19 @@ class ProjectService {
                                     }
                                 }
                             }
+                        } else {
+                            /*
+                             * this activity does not have any transitions so
+                             * we have reached the end of this path
+                             */
+
+                            var tempPath = [];
+
+                            // prepend the current node id to the path
+                            tempPath.unshift(nodeId);
+
+                            // add the path to our collection of paths
+                            allPaths.push(tempPath);
                         }
                     } else {
                         // there is a start id so we will traverse it
