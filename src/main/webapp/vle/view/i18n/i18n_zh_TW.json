@@ -1,70 +1,174 @@
 {
+    "error_msg_with_reason": {
+        "value": "發生錯誤，請聯絡 WISE 人員，原因: {0}",
+        "description": "An error message a reason"
+    },
     "file_button_text": {
         "value": "檔案",
-        "description": "Text on the File Manager button on Top Toolbar"
+        "description": "Text on the File Manager button for Student VLE"
     },
     "ideas_button_text": {
         "value": "想法",
-        "description": "Text on the Idea Manager button on Top Toolbar"
+        "description": "Text on the Idea Manager button for Student VLE"
     },
     "addidea_button_text": {
         "value": "新增想法",
-        "description": "Text on the Add Idea button on Top Toolbar"
+        "description": "Text on Add Idea buttons for Student VLE"
     },
     "mywork_button_text": {
         "value": "我的作業",
-        "description": "Text on the My Work button on Top Toolbar"
+        "description": "Text on the My Work button for Student VLE"
+    },
+    "display_chat_room": {
+        "value": "開啟聊天室",
+        "description": "Text on the Chat Room button for Student VLE"
+    },
+    "mywork_button_title": {
+        "value": "檢視我的作業",
+        "description": "Text for mouse hover title on the My Work button"
+    },
+    "mywork_preview_mode": {
+        "value": "我的作業目前尚未在預覽模式中，在班級課程中，您的作業及分數將會在我的作業中顯示。",
+        "description": "Text to display when user clicks on review work button in preview mode"
     },
     "flagged_button_text": {
         "value": "標記",
-        "description": "Text on the Flagged button on Top Toolbar"
+        "description": "Text on the Flagged button"
+    },
+    "flagged_button_title": {
+        "value": "檢視教師標記的作業",
+        "description": "Text for mouse hover title on the Flagged button"
+    },
+    "flagged_preview_mode": {
+        "value": "在預覽模式下無法顯示標記功能，這是在實施課程時，顯示教師標記步驟所在的項目。",
+        "description": "Text to display when user clicks on flagged work button in preview mode"
     },
     "journal_button_text": {
-        "value": "筆記",
-        "description": "Text on the Journal button on Top Toolbar"
+        "value": "日誌",
+        "description": "Text on the Journal button"
     },
-    "fullscreen_button_text": {
+    "toggle_nav_button_text": {
         "value": "全螢幕",
-        "description": "Text on the Full Screen button on Top Toolbar"
+        "description": "Text on the Toggle Navigation button when navigation UI is on (visible)"
+    },
+    "menu_teacherHome": {
+        "value": "教師首頁",
+        "description": "Text for link teacher home page"
+    },
+    "menu_projectLibrary": {
+        "value": "專題庫",
+        "description": "Text for link to project library"
+    },
+    "menu_signOut": {
+        "value": "登出",
+        "description": "Text for link to sign out"
+    },
+    "toggle_nav_button_title": {
+        "value": "全螢幕模式(隱藏目錄)",
+        "description": "Text for mouse hover title on the Toggle Navigation button when navigation UI is on (visible)"
+    },
+    "toggle_nav_button_text_off": {
+        "value": "顯示目錄",
+        "description": "Text on the Toggle Navigation button when navigation UI is off (hidden)"
+    },
+    "toggle_nav_button_title_off": {
+        "value": "顯示目錄",
+        "description": "Text for mouse hover title on the Toggle Navigation button when navigation UI is on (visible)"
     },
     "signout_button_text": {
         "value": "登出",
-        "description": "Text on the Log out button on Top Toolbar"
+        "description": "Text on the Log out button"
+    },
+    "signout_button_title": {
+        "value": "儲存並登出 WISE",
+        "description": "Text for mouse hover title on the Log out button"
+    },
+    "previous_step_text": {
+        "value": "< 前一個步驟",
+        "description": "Text on button in the project vle that will show the previous step in the project"
+    },
+    "previous_step_title": {
+        "value": "前一個步驟",
+        "description": "Text for mouse hover title on button in the project vle that will show the previous step in the project"
+    },
+    "next_step_text": {
+        "value": "下一個步驟 >",
+        "description": "Text on button in the project vle that will show the next step in the project"
+    },
+    "next_step_title": {
+        "value": "下一個步驟",
+        "description": "Text for mouse hover title on button in the project vle that will show the next step in the project"
     },
     "gohome_button_text": {
         "value": "首頁",
-        "description": "Text on the Home button on Top Toolbar"
+        "description": "Text on the Home button"
     },
-    "hint_button_text": {
-        "value": "提示",
-        "description": "Text that shows up next to the Hint button"
+    "gohome_button_title": {
+        "value": "儲存並返回首頁",
+        "description": "Text for mouse hover title on the Home button"
     },
     "hint_title": {
         "value": "提示",
         "description": "Title of the hint dialog window and the text that shows up next to the Hint button"
     },
+    "hint_button_text": {
+        "value": "提示",
+        "description": "Text that shows up next to the Hint button"
+    },
+    "hint_button_title": {
+        "value": "觀看此步驟提示",
+        "description": "Text for mouse hover title on the Hint button (will be followed by the hint_title, e.g. 'View Hints')"
+    },
+    "hint_num_separator": {
+        "value": "的",
+        "description": "Text to be shown between current Hint number and total (e.g. 1 'of' 2)"
+    },
     "hint_hint": {
         "value": "提示",
-        "description": "will be shown as Hint (1 of 2)"
+        "description": "Default Text label for 'hint'"
+    },
+    "hint_plural": {
+        "value": "提示",
+        "description": "Default Text label for 'hints' (plural)"
     },
     "hint_next": {
         "value": "下一個",
         "description": "next hint"
     },
     "hint_prev": {
-        "value": "上一個",
+        "value": "前一個",
         "description": "previous hint"
     },
+    "node_annotations_title": {
+        "value": "步驟的回饋",
+        "description": "Title of the step feedback dialog window"
+    },
+    "node_annotations_button_text": {
+        "value": "回饋",
+        "description": "Text that shows up next to the Hint button"
+    },
+    "node_annotations_button_title": {
+        "value": "觀看步驟的回饋",
+        "description": "Text for mouse hover title on the Hint button (will be followed by the hint_title, e.g. 'View Hints')"
+    },
+    "node_annotations_instructions": {
+        "value": "您可點選 \"{0}\" 圖示並觀看此步驟的回饋。",
+        "description": "The message at the bottom of the feedback popup to tell the student they can always bring the popup back up"
+    },
+    "show_previous_work_message": {
+        "value": "請記住:, 您在 \"步驟 {0}\" 的作業為 </br>{1}</br></br>",
+        "description": "The message that shows the step number and title and the work from a previous step."
+    },
     "navigation_expand_all": {
-        "value": "全部展開",
-        "description": "Text on a button to expand all navigation items"
+        "value": "全部顯示",
+        "description": "Text on a button to show all navigation items"
     },
     "navigation_collapse_all": {
-        "value": "全部合併",
-        "description": "Text on a button to collapse all navigation items"
+        "value": "全部隱藏",
+        "description": "Text on a button to hide all navigation items"
     },
     "student_assets_upload_new_file": {
-        "value": "上傳新檔案",
+        "value": "上傳新的檔案",
         "description": "Text 'Upload New File' in Student Asset Manager"
     },
     "student_assets_my_files": {
@@ -76,119 +180,435 @@
         "description": "Text in Student Asset Manager when student is not allowed to remove a file"
     },
     "student_assets_import_success_message": {
-        "value": "成功匯入檔案",
+        "value": "匯入檔案成功",
         "description": "Text 'Successfully imported file' in Student Asset Manager"
     },
     "student_assets_import_failure_message": {
-        "value": "匯入失敗。 目前的步驟不接受該檔案，請重新選擇另一個檔案。",
+        "value": "匯入失敗，目前的步驟無法匯入您所選的檔案，請選擇其他檔案。",
         "description": "Text in Student Asset Manager when importing file failed"
     },
     "student_assets_add_selected_file": {
-        "value": "新增檔案至此步驟",
+        "value": "新增圖檔至此步驟",
         "description": "Text on a button in Student Asset Manager to add the selected file to the current step"
     },
+    "student_assets_add_selected_file_to_portfolio": {
+        "value": "新增檔案到檔案夾",
+        "description": "Text on a button in Student Asset Manager to add the selected file to the portfolio"
+    },
     "student_assets_delete_selected_file": {
-        "value": "刪除所選的檔案",
+        "value": "刪除選取的檔案",
         "description": "Text on a button in Student Asset Manager to delete a selected file"
     },
     "student_assets_student_usage_message": {
-        "value": "您目前使用的空間為{0}，您可儲存的空間為 {1}",
+        "value": "您已經使用了 {0} / {1} 的儲存空間。",
         "description": "Text on a button in Student Asset Manager to delete a selected file"
     },
     "student_assets_student_usage_exceeded_message": {
-        "value": "超過最大空間容量! 最大允許量為{0}，伺服器現在總量為{1}。請刪除部份檔案。",
+        "value": "儲存空間不足! 最大儲存空間為 {0}, 伺服器全部儲存空間為{1}，請刪除一些檔案。",
         "description": "Text on a button in Student Asset Manager to delete a selected file"
+    },
+    "student_assets_preview_mode": {
+        "value": "預覽模式中學生無法上傳檔案。必須在課程實施時，學生才能上傳圖檔，並顯示於我的回應中。",
+        "description": "Message to show users when they click on student assets button in preview mode"
+    },
+    "student_aggregate_view_intro_text": {
+        "value": "步驟 {0} 總覽",
+        "description": "Text above where the aggregate view would be displayed"
+    },
+    "student_aggregate_view_preview_mode_default_text": {
+        "value": "當您設定實施課程時，這裡將顯示學生作業 {0} 的總覽視窗。",
+        "description": "Default text to display for aggregate view when in preview mode."
     },
     "cancel": {
         "value": "取消",
-        "description": "Text 'cancel'"
+        "description": "Text 'Cancel'"
     },
     "ok": {
-        "value": "完成",
+        "value": "確認",
         "description": "Text 'OK'"
+    },
+    "on": {
+        "value": "開啟",
+        "description": "Text for the word 'on' (uppercase)"
+    },
+    "off": {
+        "value": "關閉",
+        "description": "Text for the word 'off' (uppercase)"
+    },
+    "ON": {
+        "value": "開啟",
+        "description": "Text for the word 'ON' (uppercase)"
+    },
+    "OFF": {
+        "value": "關閉",
+        "description": "Text for the word 'OFF' (uppercase)"
     },
     "done": {
         "value": "完成",
-        "description": "Text 'done', to mean completed"
+        "description": "Text 'Done', to mean completed"
+    },
+    "stepTerm": {
+        "value": "步驟",
+        "description": "Default term for a 'Step' in a WISE project (singular)"
+    },
+    "stepTermPlural": {
+        "value": "步驟",
+        "description": "Plural form of the default term for a 'Step' in a WISE project"
+    },
+    "activityTerm": {
+        "value": "活動",
+        "description": "Default term for an 'Activity' in a WISE project (singular)"
+    },
+    "activityTermPlural": {
+        "value": "活動",
+        "description": "Plural form of the default term for a 'Activity' in a WISE project"
+    },
+    "promptTerm": {
+        "value": "提示",
+        "description": "Default term for 'Prompt' in a WISE step"
+    },
+    "insertImage": {
+        "value": "插入圖片",
+        "description": "Text 'Insert Image', to use for file upload"
+    },
+    "idea": {
+        "value": "步驟",
+        "description": "The default text for an 'idea' in the Idea Manager tool."
+    },
+    "idea_plural": {
+        "value": "步驟",
+        "description": "The default text for 'ideas' in the Idea Manager tool."
     },
     "idea_basket": {
-        "value": "想法欄",
+        "value": "步驟欄",
         "description": "The text 'Idea Basket' in the Idea Manager"
     },
     "idea_basket_add_an_idea": {
-        "value": "新增想法",
-        "description": "The text 'Add an Idea' in the Idea Manager"
+        "value": "新增步驟+",
+        "description": "The text for buttons to add a new idea in the Idea Manager"
+    },
+    "idea_basket_private": {
+        "value": "個人想法籃",
+        "description": "The text for the private idea basket"
+    },
+    "idea_basket_public": {
+        "value": "共有想法籃",
+        "description": "The text for the public idea basket"
     },
     "idea_basket_retrieval_error": {
-        "value": "錯誤: 無法開啟想法欄，請試著更新，重新載入一次",
+        "value": "錯誤訊息: 無法開啟想法籃，重新整理此專題並再試一次",
         "description": "Error message displayed when retrieving idea basket fails"
     },
+    "ideaBasket_clickToSort": {
+        "value": "點此排序",
+        "description": "Title/tooltip for sortable rows in a table"
+    },
+    "ideaBasket_empty": {
+        "value": "您目前 {0} 是空的，請點選 \"{1}\" 開始新增{2}。",
+        "description": "Text to display when idea basket is empty"
+    },
+    "ideaBasket_deletedTableHeader": {
+        "value": "刪除 {0}",
+        "description": "Header text for the deleted ideas table in the Idea Basket"
+    },
+    "ideaBasket_ideaTableHeader": {
+        "value": "您的 {0}",
+        "description": "Header text for the ideas table in the Idea Basket"
+    },
+    "ideaBasket_deletedEmpty": {
+        "value": "垃圾桶是空的。",
+        "description": "Text to display when the Idea Basket trash is empty"
+    },
+    "ideaBasket_trashLabel": {
+        "value": "垃圾桶",
+        "description": "Label the for deleted ideas table in the Idea Basket"
+    },
+    "ideaBasket_deleteHeader": {
+        "value": "刪除",
+        "description": "Header text for the delete idea column in the Idea Basket"
+    },
+    "ideaBasket_restoreHeader": {
+        "value": "回復",
+        "description": "Header text for the restore idea column in the Idea Basket"
+    },
+    "ideaBasket_showDeleted": {
+        "value": "(點此顯示)",
+        "description": "Text for the link to show the contents of the Deleted Ideas table in the Idea Basket"
+    },
+    "ideaBasket_hideDeleted": {
+        "value": "(點此隱藏)",
+        "description": "Text for the link to hide the contents of the Deleted Ideas table in the Idea Basket"
+    },
+    "ideaBasket_ideaTitle": {
+        "value": "點此拖移排序，點兩下開始編輯。",
+        "description": "Title/tooltip for an idea in the Idea Basket"
+    },
+    "ideaBasket_deletedIdeaTitle": {
+        "value": "點選圖示 + 將 {0} 從垃圾桶中移除",
+        "description": "Title/tooltip for a deleted idea in the Idea Basket"
+    },
+    "ideaBasket_editLinkText": {
+        "value": "編輯",
+        "description": "Text for link to edit an idea in the Idea Basket"
+    },
+    "ideaBasket_editLinkTitle": {
+        "value": "編輯 {0}",
+        "description": "Title/tooltip for link to edit an idea in the Idea Basket"
+    },
+    "ideaBasket_deleteLinkTitle": {
+        "value": "刪除 {0}",
+        "description": "Title/tooltip for link to delete an idea in the Idea Basket"
+    },
+    "ideaBasket_customAttributeLabel": {
+        "value": "其他",
+        "description": "Label text for a student-generated (custom) value for an idea attribute in the Idea Basket"
+    },
+    "ideaBasket_public_copyLinkText": {
+        "value": "複製",
+        "description": "Text for link or button to copy an idea from the Public Idea Basket"
+    },
+    "ideaBasket_public_header": {
+        "value": "共有的 {0}",
+        "description": "Header text for the Public Idea Basket"
+    },
+    "ideaBasket_public_publicLabel": {
+        "value": "共有的",
+        "description": "Label designating a public idea in the Idea Basket"
+    },
+    "ideaBasket_public_empty": {
+        "value": "{0} 是空的。",
+        "description": "Text to display when public Idea Basket is empty"
+    },
+    "ideaBasket_public_publicRowLabel": {
+        "value": "(共有的)",
+        "description": "Label designating a public idea row in the Idea Basket"
+    },
+    "ideaBasket_public_privateLabel": {
+        "value": "個人的",
+        "description": "Label designating a private idea in the Idea Basket"
+    },
+    "ideaBasket_public_origin": {
+        "value": "初始的",
+        "description": "Header text for the column identifying the origin (source) of an idea (public or private) in the Idea Basket"
+    },
+    "ideaBasket_public_timesCopied": {
+        "value": "複製次數",
+        "description": "Header text for the column identifying how many times an idea has been copied from the Public Idea Basket"
+    },
+    "ideaBasket_public_makePublic": {
+        "value": "變成共有的",
+        "description": "Text for button or link to make an idea public (add to the Public Idea Basket)"
+    },
+    "ideaBasket_public_makePrivate": {
+        "value": "變成個人的",
+        "description": "Text for button or link to remove an idea from the Public Idea Basket"
+    },
+    "ideaBasket_public_copiedIdea": {
+        "value": "複製的",
+        "description": "Text identifying an idea that originated as a copy from the Public Idea Basket"
+    },
+    "ideaBasket_public_orignalIdea": {
+        "value": "我",
+        "description": "Text identifying an idea that was did not originate as a copy from the Public Idea Basket"
+    },
+    "ideaBasket_public_copySuccess": {
+        "value": "由 {1} 複製 {0} 成功。",
+        "description": "Message to display when successfully copying an idea from the pubic Idea Basket"
+    },
+    "ideaBasket_public_loadFailure": {
+        "value": "錯誤訊息: 無法讀取{0}。",
+        "description": "Message to display when loading public Idea Basket fails"
+    },
+    "ideaBasket_public_copyOwnIdeaError": {
+        "value": "錯誤訊息: 您沒有複製或分享 {0} 的權限。",
+        "description": "Error text to display when workgroup attempts to copy their own idea from the public Idea Basket."
+    },
+    "ideaBasket_public_alreadyCopiedError": {
+        "value": "錯誤訊息: 您已經複製過{0}了。",
+        "description": "Error text to display when workgroup attempts to copy an idea from the public Idea Basket they have already copied."
+    },
+    "ideaBasket_saveError": {
+        "value": "錯誤訊息: {0} 儲存失敗。",
+        "description": "Error message to display when Idea Basket fails to save on the server"
+    },
+    "ideaBasket_loadError": {
+        "value": "錯誤訊息: 無法讀取 {0} 請重新整理專題網頁，或改到其他步驟再返回此步驟重新載入網頁。",
+        "description": "Error message to display when Idea Basket fails to load"
+    },
+    "ideaManager_attributeSelectMultiple": {
+        "value": "(選擇所有適合的): ",
+        "description": "Instructions text for idea attributes that permit multiple selections in the Idea Basket"
+    },
+    "ideaManager_attributeSelectOne": {
+        "value": "(選擇一個): ",
+        "description": "Instructions text for idea attributes that permit a single selection in the Idea Basket"
+    },
+    "ideaManager_attributeSelectOneLabel": {
+        "value": "選擇一個:",
+        "description": "Label text for idea attribute selectors that permit a single selection in the Idea Basket"
+    },
+    "ideaManager_noIconLabel": {
+        "value": "無",
+        "description": "Label for no icon option of the icon attribute selector in the Idea Manager"
+    },
+    "ideaManager_addIdea_textLabel": {
+        "value": "在此輸入您的{0}*:",
+        "description": "Label for the idea text input field in add or edit idea forms in the Idea Manager tools"
+    },
+    "ideaManager_addIdea_title": {
+        "value": "新增 {0}",
+        "description": "Title text for the add new idea dialog/form in Idea Manager tools"
+    },
+    "ideaManager_addIdea_required": {
+        "value": "請至少選擇一個 (1)。",
+        "description": "Message to display when a field is required in add or edit idea forms in the Idea Manager tools"
+    },
+    "ideaManager_editIdea_title": {
+        "value": "請編輯您的 {0}",
+        "description": "Title text for the edit idea dialog/form in Idea Manager tools"
+    },
+    "ideaManager_editIdea_changeConfirm": {
+        "value": "{0} 目前已經使用在步驟:{1}若您要變更 {2}，同時也會改變這些步驟的答案。",
+        "description": "Text for the warning confirmation dialog that appears when users attempt to edit an idea that is being used in Explanation Builder steps"
+    },
+    "ideaManager_deleteIdea_title": {
+        "value": "移至垃圾桶",
+        "description": "Title text for the delete idea dialog in Idea Manager tools"
+    },
+    "ideaManager_deleteIdea_confirm1": {
+        "value": "您確定要刪除{0} 嗎?",
+        "description": "Text for first part of confirmation delete idea confirmation dialog"
+    },
+    "ideaManager_deleteIdea_confirm2": {
+        "value": "若您改變心意，稍後您仍可從垃圾桶中重新取回。",
+        "description": "Text for second part of confirmation delete idea confirmation dialog"
+    },
+    "portfolio": {
+        "value": "檔案夾",
+        "description": "The text 'Portfolio' in the Portfolio"
+    },
+    "portfolio_retrieval_error": {
+        "value": "錯誤訊息: 無法開啟檔案夾，請重新整理專題網頁。",
+        "description": "Error message displayed when retrieving portfolio fails"
+    },
+    "portfolio_button_text": {
+        "value": "我的檔案夾",
+        "description": "Text on the Portfolio button for Student VLE"
+    },
+    "portfolio_add_item": {
+        "value": "新增至檔案夾",
+        "description": "Text 'Add to portfolio' on the Show My Work and Step pages"
+    },
+    "portfolio_add_item_success": {
+        "value": "新增至檔案夾",
+        "description": "Successful confirmation text 'Added to portfolio' on the Show My Work and Step pages"
+    },
+    "portfolio_delete_item": {
+        "value": "從檔案夾中移除",
+        "description": "Text 'Delete to portfolio' on the Show My Work and Step pages"
+    },
+    "portfolio_delete_item_success": {
+        "value": "從檔案夾中移除成功。",
+        "description": "Portfolio delete item successful confirmation text on the Show My Work and Step pages"
+    },
+    "portfolio_save_success": {
+        "value": "成功新增至檔案夾。",
+        "description": "Portfolio save successful confirmation text on the Show My Work and Step pages"
+    },
+    "explanation_builder": {
+        "value": "建立解釋",
+        "description": "The default text for the 'Explanation Builder' tool."
+    },
+    "chat_room": {
+        "value": "聊天室",
+        "description": "The text 'Chat Room' in the Chat Room popup"
+    },
     "grading_button_grade_by_step": {
-        "value": "按步驟評分",
+        "value": "依步驟評分",
         "description": "GradingTool: Text in the grade-by-step button"
     },
     "grading_button_grade_by_team": {
-        "value": "按組別評分",
+        "value": "依小組評分",
         "description": "GradingTool: Text in the grade-by-team button"
     },
+    "grading_all_revisions": {
+        "value": "全部作業",
+        "description": "GradingTool: Text 'all revisions' to show all student revisions"
+    },
+    "grading_latest_work": {
+        "value": "最新作業",
+        "description": "GradingTool: Text 'latest work' to show only the latest student work"
+    },
     "grading_button_view_student_uploaded_files": {
-        "value": "查看學生上傳的檔案",
+        "value": "觀看學生上傳的檔案",
         "description": "GradingTool: Text in the View Student Uploaded Files button"
     },
     "grading_button_export_latest_student_work": {
-        "value": "匯出最新的學生作業",
+        "value": "匯出學生最新作業",
         "description": "GradingTool: Text in the Export Latest Student Work button"
     },
     "grading_button_export_all_student_work": {
-        "value": "匯出全部的學生作業",
+        "value": "匯出全部學生作業",
         "description": "GradingTool: Text in the Export All Student Work button"
     },
     "grading_button_export_idea_baskets": {
-        "value": "匯出想法欄",
+        "value": "匯出想法籃",
         "description": "GradingTool: Text in the Export Idea Baskets button"
     },
     "grading_button_export_explanation_builder_work": {
-        "value": "匯出說明生成作業",
+        "value": "匯出建立解釋作業",
         "description": "GradingTool: Text in the Export Explanation Builder Work button"
     },
     "grading_button_export_custom_work": {
-        "value": "匯出自訂學生作業",
+        "value": "匯出自訂步驟作業",
         "description": "GradingTool: Text in the Export Custom Student Work button"
     },
     "grading_button_export_student_names": {
-        "value": "匯出學生名稱",
+        "value": "匯出學生姓名",
         "description": "GradingTool: Text in the Export Student Names button"
     },
+    "grading_button_special_export": {
+        "value": "匯出特定步驟作業",
+        "description": "GradingTool: Text in the Special Export button"
+    },
     "grading_button_export_latest_student_work_description": {
-        "value": "(Only export the latest student revision)",
+        "value": "(匯出學生最新作業)",
         "description": "GradingTool: Description next the Export Student Names button"
     },
     "grading_button_export_all_student_work_description": {
-        "value": "(Export all the student work revisions as well as their navigation data)",
+        "value": "(匯出全部學生作業及瀏覽資料)",
         "description": "GradingTool: Description next the Export All Student Work button"
     },
     "grading_button_export_idea_baskets_description": {
-        "value": "(Export all the idea basket revisions)",
+        "value": "(匯出所有想法籃版本)",
         "description": "GradingTool: Description next the Export Idea Baskets button"
     },
     "grading_button_export_explanation_builder_work_description": {
-        "value": "(Export all the explanation builder work revisions)",
+        "value": "(匯出所有建立解釋作業版本)",
         "description": "GradingTool: Description next the Export Explanation Builder Work button"
     },
     "grading_button_export_custom_work_description": {
-        "value": "(Export all work or latest work for specific steps that you choose)",
+        "value": "(匯出您所選擇特定步驟的全部作業或最新作業)",
         "description": "GradingTool: Description next the Export Custom Student Work button"
     },
     "grading_button_export_student_names_description": {
-        "value": "(Export the student names along with their period, workgroup id, wise id, and login)",
+        "value": "(匯出學生的姓名及班級、小組 id、課程 wise id 及登入帳號)",
         "description": "GradingTool: Description next the Export Student Names button"
+    },
+    "grading_button_special_export_description": {
+        "value": "(以壓縮檔匯出特定步驟的作業)",
+        "description": "GradingTool: Description next the Special Export button"
     },
     "grading_button_explanation": {
         "value": "說明",
         "description": "GradingTool: Text in the Explanation button"
     },
+    "grading_button_teacher_run_notes": {
+        "value": "我的筆記",
+        "description": "GradingTool: Text in the My Notes button to bring up teacher run notes"
+    },
     "grading_button_check_for_new_student_work": {
-        "value": "檢查新的學生作業",
+        "value": "檢查新的作業",
         "description": "GradingTool: Text in the Check for New Student Work button"
     },
     "grading_button_save_changes": {
@@ -196,31 +616,31 @@
         "description": "GradingTool: Text in the Save Changes button"
     },
     "grading_grade_by_step_header": {
-        "value": "按步驟評分(選擇下方步驟)",
+        "value": "選擇以下步驟開始評分(可修改分數的數值)",
         "description": "GradingTool: grade by step page header, tell teacher to select a step below"
     },
     "grading_grade_by_step_point_value": {
-        "value": "分數",
+        "value": "分數值",
         "description": "GradingTool: grade by step point value table column"
     },
     "grading_grade_by_step_editable": {
-        "value": "可編輯的",
+        "value": "可修改",
         "description": "GradingTool: grade by step editable table column"
     },
     "grading_grade_by_step_items_to_review": {
-        "value": "要複習的項目",
+        "value": "查閱的步驟項目",
         "description": "GradingTool: grade by step Items to Review table column"
     },
     "grading_grade_by_step_average_class_score": {
-        "value": "班級平均分數",
+        "value": "平均分數",
         "description": "GradingTool: grade by step Avg Class Score table column"
     },
     "grading_grade_by_step_scored_items_only": {
-        "value": "僅列已評分項目",
+        "value": "只限於已評分的項目",
         "description": "GradingTool: grade by step scored items only table column"
     },
     "grading_grade_by_step_percent_completed_step": {
-        "value": "學生完成此步驟之比例(%)",
+        "value": "完成步驟的百分比",
         "description": "GradingTool: grade by step % of Students Who Have Completed This Step table column"
     },
     "grading_grade_by_step_all_periods": {
@@ -228,15 +648,15 @@
         "description": "GradingTool: grade by step All Periods select option when choosing whose work to filter by"
     },
     "grading_grade_by_team_header": {
-        "value": "按組別評分(選擇下方組別)",
+        "value": "選擇一個學生小組進行評分",
         "description": "GradingTool: grade by team page header"
     },
     "grading_grade_by_team_teacher_graded_score": {
-        "value": "教師評分之分數",
+        "value": "教師評分分數",
         "description": "GradingTool: grade by team teacher-graded score"
     },
     "grading_grade_by_team_percentage_project_completed": {
-        "value": "專題完成百分比(%)",
+        "value": "完成專題的百分比",
         "description": "GradingTool: grade by team % of project completed table column"
     },
     "grading_question": {
@@ -244,39 +664,51 @@
         "description": "the text 'question', to be shown next to the question that was presented to the student"
     },
     "grading_hide_show_question": {
-        "value": "隱藏/顯示 問題",
-        "description": "'hide/show question' link that toggles the question's visibility in the gradingtool"
+        "value": "隱藏/顯示問題",
+        "description": "'hide/show question' link that toggles the question's visibility in the grading tool"
+    },
+    "grading_current_step": {
+        "value": "目前的步驟",
+        "description": "'Current Step' label in the grading tool that shows the title of the current step in the project"
     },
     "grading_previous_step": {
-        "value": "上一步",
-        "description": "'Previous Step' button in the gradingtool that will show the previous step in the project"
+        "value": "< 前一個",
+        "description": "'Previous Step' button in the grading tool that will show the previous step in the project"
     },
     "grading_previous_step_not_exist": {
-        "value": "上一步不存在：這是第一個可評分的步驟",
+        "value": "前一個步驟不存在: 這是第一個評分的步驟",
         "description": "Text to show when previous step does not exist because this is the first gradable step in the project"
     },
     "grading_change_step": {
         "value": "變更步驟",
-        "description": "'Change Step' button in the gradingtool that will show the select step page"
+        "description": "'Change Step' button in the grading tool that will show the select step page"
     },
     "grading_next_step": {
-        "value": "下一步",
-        "description": "'Next Step' button in the gradingtool that will show the next step in the project"
+        "value": "下一個 >",
+        "description": "'Next Step' button in the grading tool that will show the next step in the project"
     },
     "grading_next_step_not_exist": {
-        "value": "下一步不存在：這是最後一個可評分的步驟",
-        "description": "Text to show when next step does not exist because this is the last gradable step in teh project"
+        "value": "下一個步驟不存在: 這是最後一個評分的步驟",
+        "description": "Text to show when next step does not exist because this is the last gradable step in the project"
+    },
+    "grading_sort_by": {
+        "value": "排序以",
+        "description": "Label 'Sort By' to let user choose which column to sort the view by"
     },
     "period": {
         "value": "班級",
         "description": "Period"
     },
+    "workgroupId": {
+        "value": "小組 Id",
+        "description": "Workgroup Id"
+    },
     "team": {
-        "value": "組別",
-        "description": "Team"
+        "value": "小組",
+        "description": "The label for the team"
     },
     "team_caps": {
-        "value": "組別",
+        "value": "小組",
         "description": "TEAM"
     },
     "student_work": {
@@ -284,7 +716,7 @@
         "description": "student work column in the grading tool"
     },
     "teacher_comment_and_score": {
-        "value": "教師 評語/給分",
+        "value": "教師評語 / 分數",
         "description": "Teacher comments / score column in the grading tool"
     },
     "tools": {
@@ -293,306 +725,694 @@
     },
     "score": {
         "value": "分數",
-        "description": "Score"
+        "description": "The column header for the score in Show My Work"
     },
     "comment": {
-        "value": "意見",
+        "value": "評語",
         "description": "Comment"
     },
     "flag": {
         "value": "標記",
-        "description": "Flag, for flagging student's work using the flaggingtool"
+        "description": "Flag, for flagging student's work using the flagging tool"
+    },
+    "flag_as_inappropriate": {
+        "value": "標記為不正確",
+        "description": "\"Flag as inappropriate\" text, for flagging inappropriate student's work using the flagging tool"
     },
     "timestamp": {
         "value": "時間戳記",
         "description": "timestamp"
     },
     "last_annotation": {
-        "value": "最新的註解",
+        "value": "上次的評語",
         "description": "the text 'last annotation'"
     },
     "grading_open_premade_comments": {
-        "value": "開啟預設評語",
-        "description": "the text 'open premade comments' that will open the premadecomments window when clicked"
+        "value": "開啟預製評論",
+        "description": "the text 'open premade comments' that will open the premade comments window when clicked"
     },
     "not_available": {
-        "value": "無效",
+        "value": "無",
         "description": "the text 'not available'"
     },
     "grading_no_work_warning": {
-        "value": "學生並未繳交此步驟之作業，您將無法對此項目評分或標記",
+        "value": "學生尚未繳交此步驟作業，因此無評分及回饋。",
         "description": "text to show in grading cells that do not have students' work to display"
     },
     "grading_no_revisions": {
-        "value": "無修訂版本",
+        "value": "(未更新)",
         "description": "text to show in grading cells that do not have any revisions"
     },
     "grading_only_latest_revision_displayed": {
-        "value": "僅顯示最新修訂版本",
+        "value": "(只顯示最新版)",
         "description": "text to show in grading cells where only the latest revision is displayed"
     },
     "grading_hide_personal_info": {
-        "value": "隱藏個人資料",
+        "value": "隱藏個人資訊",
         "description": "text to show next to the 'Hide Personal Info' checkbox in the grading tool"
     },
     "grading_show_flagged_items_only": {
-        "value": "僅顯示標記項目",
+        "value": "只有標記項目",
         "description": "text to show next to the 'Show Flagged Items Only' checkbox in the grading tool"
     },
     "grading_show_smart_filtered_items_only": {
-        "value": "僅顯示自動篩選項目",
+        "value": "只有智慧過濾項目",
         "description": "text to show next to the 'Show Smart-Filtered Items Only' checkbox in the grading tool"
     },
     "grading_enlarge_student_work_text": {
-        "value": "放大學生作業之文字",
+        "value": "展開學生作業",
         "description": "text to show next to the 'Enlarge Student Work Text' checkbox in the grading tool"
     },
+    "grading_only_show_new_student_work": {
+        "value": "只顯示新的作業",
+        "description": "text to show next to the 'Only Show New Work' checkbox in the grading tool"
+    },
     "grading_show_all_revisions": {
-        "value": "顯示全部的修訂版本",
+        "value": "顯示全部作業版本",
         "description": "text to show next to the 'Show All Revisions' checkbox in the grading tool"
     },
     "grading_sort_by_auto_graded_score_checkbox": {
-        "value": "Sort By Auto Graded Score",
+        "value": "以自動評分排序",
         "description": "text to show next to the 'Sort By Auto Graded Score' checkbox in the grading tool"
     },
     "grading_hide_show_revisions": {
-        "value": "顯示/隱藏 修訂版本",
+        "value": "版本",
         "description": "text to show in the 'Hide/Show Revisions' link in the grading tool that toggles revisions visibility"
     },
     "grading_change_team": {
-        "value": "變更組別",
+        "value": "變更小組",
         "description": "text to show in the 'Change Team' button in the grading tool that brings up the grade-by-team page"
-    },
-    "authoring_hint_add": {
-        "value": "增加新提示",
-        "description": "The label for the 'add new hint' button in the step hint authoring panel"
-    },
-    "authoring_hint_options_label": {
-        "value": "選項",
-        "description": "The label for the 'Options' settings in the step hint authoring panel"
-    },
-    "authoring_hint_option_always": {
-        "value": "總是",
-        "description": "The text \\\\"Always\\\\" to display in \\\\"force show:\\\\" drop down in the step hint authoring panel"
-    },
-    "authoring_hint_option_never": {
-        "value": "從不",
-        "description": "The text \\\\"Never\\\\" to display in \\\\"force show:\\\\" drop down in the step hint authoring panel"
-    },
-    "authoring_hint_new": {
-        "value": "新提示",
-        "description": "Default text for a new step hint."
-    },
-    "authoring_hint_delete": {
-        "value": "刪除目前提示",
-        "description": "The label for the 'delete current hint' button in the step hint authoring panel"
-    },
-    "grading_only_show_new_student_work": {
-        "value": "只顯示新工作",
-        "description": "text to show next to the 'Only Show New Work' checkbox in the grading tool"
     },
     "welcome": {
         "value": "歡迎",
         "description": "Text for 'Welcome'"
     },
     "welcome_users_default": {
-        "value": "歡迎測試使用者",
+        "value": "歡迎測試用戶!",
         "description": "Text to display in VLE for user name in preview mode"
     },
     "note_title": {
         "value": "反思筆記",
         "description": "Text to display in the title bar of a note dialog window"
     },
-    "authoring_hint_dialog_title": {
-        "value": "在這個步驟新增/編輯提示",
-        "description": "Text to display as the title of the edit step hints dialog window."
-    },
-    "common_click_here": {
-        "value": "點擊這裡",
-        "description": "the common text 'click here'"
-    },
-    "workgroupId": {
-        "value": "工作群組ID",
-        "description": "Workgroup Id"
-    },
-    "stepTerm": {
-        "value": "步驟",
-        "description": "Default term for a 'step' in a WISE project"
-    },
-    "insertImage": {
-        "value": "插入圖片",
-        "description": "Text 'Insert Image', to use for file upload"
-    },
-    "idea": {
-        "value": "點子",
-        "description": "The default text for an 'idea' in the Idea Manager tool."
-    },
-    "idea_plural": {
-        "value": "點子",
-        "description": "The default text for 'ideas' in the Idea Manager tool."
-    },
-    "display_chat_room": {
-        "value": "開啟聊天室",
-        "description": "Text on the Chat Room button for Student VLE"
-    },
-    "mywork_button_title": {
-        "value": "複習我的工作",
-        "description": "Text for mouse hover title on the My Work button"
-    },
-    "flagged_button_title": {
-        "value": "複習教師標記的工作",
-        "description": "Text for mouse hover title on the Flagged button"
-    },
-    "toggle_nav_button_text": {
-        "value": "全螢幕",
-        "description": "Text on the Toggle Navigation button when navigation UI is on (visible)"
-    },
-    "toggle_nav_button_title": {
-        "value": "全螢幕模式(隱藏導航選單)",
-        "description": "Text for mouse hover title on the Toggle Navigation button when navigation UI is on (visible)"
-    },
-    "toggle_nav_button_text_off": {
-        "value": "顯示選單",
-        "description": "Text on the Toggle Navigation button when navigation UI is off (hidden)"
-    },
-    "toggle_nav_button_title_off": {
-        "value": "顯示導航選單",
-        "description": "Text for mouse hover title on the Toggle Navigation button when navigation UI is on (visible)"
-    },
-    "signout_button_title": {
-        "value": "儲存&登出WISE",
-        "description": "Text for mouse hover title on the Log out button"
-    },
-    "previous_step_text": {
-        "value": "<往前",
-        "description": "Text on button in the project vle that will show the previous step in the project"
-    },
-    "previous_step_title": {
-        "value": "往前一個步驟",
-        "description": "Text for mouse hover title on button in the project vle that will show the previous step in the project"
-    },
-    "next_step_text": {
-        "value": "往後>",
-        "description": "Text on button in the project vle that will show the next step in the project"
-    },
-    "next_step_title": {
-        "value": "往後一個步驟",
-        "description": "Text for mouse hover title on button in the project vle that will show the next step in the project"
-    },
-    "gohome_button_title": {
-        "value": "儲存&離開學生首頁",
-        "description": "Text for mouse hover title on the Home button"
-    },
-    "hint_button_title": {
-        "value": "顯示這個步驟的提示",
-        "description": "Text for mouse hover title on the Hint button (will be followed by the hint_title, e.g. 'View Hints')"
-    },
-    "hint_num_separator": {
-        "value": "之",
-        "description": "Text to be shown between current Hint number and total (e.g. 1 'of' 2)"
-    },
-    "hint_plural": {
-        "value": "提示",
-        "description": "Default Text label for 'hints' (plural)"
-    },
-    "node_annotations_title": {
-        "value": "步驟回饋",
-        "description": "Title of the step feedback dialog window"
-    },
-    "node_annotations_button_text": {
-        "value": "回饋",
-        "description": "Text that shows up next to the Hint button"
-    },
-    "node_annotations_button_title": {
-        "value": "顯示這個步驟的回饋",
-        "description": "Text for mouse hover title on the Hint button (will be followed by the hint_title, e.g. 'View Hints')"
-    },
-    "student_aggregate_view_intro_text": {
-        "value": "總結顯示步驟 {0}",
-        "description": "Text above where the aggregate view would be displayed"
-    },
-    "student_aggregate_view_preview_mode_default_text": {
-        "value": "Aggregate view for {0} will appear when you set up a run with real students.",
-        "description": "Default text to display for aggregate view when in preview mode."
-    },
-    "explanation_builder": {
-        "value": "說明產生器",
-        "description": "The default text for the 'Explanation Builder' tool."
-    },
-    "chat_room": {
-        "value": "聊天室",
-        "description": "The text 'Chat Room' in the Chat Room popup"
-    },
-    "grading_button_special_export": {
-        "value": "特別匯出",
-        "description": "GradingTool: Text in the Special Export button"
-    },
-    "grading_button_special_export_description": {
-        "value": "(Export the work for special steps as a zip file)",
-        "description": "GradingTool: Description next the Special Export button"
-    },
-    "flag_as_inappropriate": {
-        "value": "Flag as inappropriate",
-        "description": "\\\"Flag as inappropriate\\\" text, for flagging inappropriate student's work using the flagging tool"
-    },
     "authoring_confirm_switch_authoring_mode": {
-        "value": "You are about to switch authoring mode but have not saved your changes. If you continue, your changes will be lost. Do you wish to continue?	",
+        "value": "您將切換編輯模式但未儲存，若繼續將遺失所做的變更，您確定要繼續嗎?",
         "description": "Message displayed in the Authoring Tool to authors when trying to switch between simple/advanced modes but their changes have not been saved."
     },
+    "authoring_hint_dialog_title": {
+        "value": "新增/編輯 此步驟之提示",
+        "description": "Text to display as the title of the edit step hints dialog window."
+    },
+    "authoring_hint_new": {
+        "value": "新的提示",
+        "description": "Default text for a new step hint."
+    },
     "authoring_hint_forceShow": {
-        "value": "強制顯示：",
-        "description": "Text to display for the label of the \\"Force Show: \\" drop down in the step hint authoring panel"
+        "value": "強制顯示:",
+        "description": "Text to display for the label of the \"Force Show: \" drop down in the step hint authoring panel"
+    },
+    "authoring_hint_option_never": {
+        "value": "永不",
+        "description": "The text \"Never\" to display in \"force show:\" drop down in the step hint authoring panel"
     },
     "authoring_hint_option_firstTimeOnly": {
-        "value": "僅只第一次",
-        "description": "The text \\\"First Time Only\\\" to display in \\\"force show:\\\" drop down in the step hint authoring panel"
+        "value": "只在第一次",
+        "description": "The text \"First Time Only\" to display in \"force show:\" drop down in the step hint authoring panel"
+    },
+    "authoring_hint_option_always": {
+        "value": "永遠",
+        "description": "The text \"Always\" to display in \"force show:\" drop down in the step hint authoring panel"
     },
     "authoring_hint_modal": {
-        "value": "模型對話",
-        "description": "Text to display for the label of the \\"Modal Dialog\\" checkbox in the step hint authoring panel"
+        "value": "對話視窗",
+        "description": "Text to display for the label of the \"Modal Dialog\" checkbox in the step hint authoring panel"
     },
     "authoring_hint_isMustViewAllPartsBeforeClosing": {
-        "value": "關閉前必須顯示所有部分",
-        "description": "Text to display for the label of the \\"Must View All Parts Before Closing\\" checkbox in the step hint authoring panel"
+        "value": "關閉前必須全部檢視",
+        "description": "Text to display for the label of the \"Must View All Parts Before Closing\" checkbox in the step hint authoring panel"
     },
-    "authoring_imsettings_attribute_help": {
-        "value": "這裡有求助內容",
-        "description": ""
-    },
-    "authoring_imsettings_terminology_help": {
-        "value": "這裡有求助內容",
-        "description": ""
-    },
-    "authoring_imsettings_text_required": {
-        "value": "The text attribute is the basic component of each idea and cannot be deleted.",
-        "description": "The help text in the Idea Manager settings for the lock icon on the 'text' idea attribute."
-    },
-    "project_error_has_no_steps": {
-        "value": "Error: This project does not have any steps.",
-        "description": "The error text to be displayed when the project has no steps in it"
-    },
-    "preview_project_constraint_enabled_message": {
-        "value": "Student navigation constraints are currently enabled. To preview project without any constraints,",
-        "description": "The message shown in preview project mode when student navigation constraints are enabled."
-    },
-    "preview_project_constraint_disabled_message": {
-        "value": "Student navigation constraints are currently disabled. To preview project with all constraints,",
-        "description": "The message shown in preview project mode when student navigation constraints are enabled."
-    },
-    "authoring_hint_term_label": {
-        "value": "提示條件：",
-        "description": "The label for the 'hint' term input field in the step hint authoring panel"
+    "authoring_hint_options_label": {
+        "value": "選項",
+        "description": "The label for the 'Options' settings in the step hint authoring panel"
     },
     "authoring_hint_terminology_label": {
-        "value": "標籤與術語",
+        "value": "標籤/專有名詞",
         "description": "The label for the 'Labels/Terminology' settings in the step hint authoring panel"
     },
     "authoring_hint_terminology_instructions": {
-        "value": "可選: 在步驟中自訂顯示提示名稱",
+        "value": "任意選擇: 自訂此步驟中顯示 \"提示\" 的名稱。",
         "description": "The instructions for the 'Labels/Terminology' settings in the step hint authoring panel"
     },
+    "authoring_hint_term_label": {
+        "value": "名詞 \"提示\": ",
+        "description": "The label for the 'hint' term input field in the step hint authoring panel"
+    },
     "authoring_hint_term_plural_label": {
-        "value": "提示條件(複數):",
+        "value": "名詞 \"提示\"(複數): ",
         "description": "The label for the 'hints' term input field in the step hint authoring panel"
+    },
+    "authoring_hint_add": {
+        "value": "新增提示",
+        "description": "The label for the 'add new hint' button in the step hint authoring panel"
+    },
+    "authoring_hint_delete": {
+        "value": "刪除現有的提示",
+        "description": "The label for the 'delete current hint' button in the step hint authoring panel"
+    },
+    "authoring_imsettings_attribute_help": {
+        "value": "說明內容會在這裡出現",
+        "description": ""
+    },
+    "authoring_imsettings_terminology_help": {
+        "value": "說明內容會在這裡出現",
+        "description": ""
+    },
+    "authoring_imsettings_text_required": {
+        "value": "<span style='font-weight:bold;'>文字</span> 屬性為每個想法的基本元件且無法刪除。",
+        "description": "The help text in the Idea Manager settings for the lock icon on the 'text' idea attribute."
+    },
+    "project_error_has_no_steps": {
+        "value": "錯誤訊息: 此步驟尚無任何步驟。",
+        "description": "The error text to be displayed when the project has no steps in it"
+    },
+    "preview_project_constraint_enabled_message": {
+        "value": "學生目前有瀏覽步驟的限制，若您要任意預覽專題，",
+        "description": "The message shown in preview project mode when student navigation constraints are enabled."
+    },
+    "preview_project_constraint_disabled_message": {
+        "value": "學生目前沒有瀏覽步驟的限制，若您要有限制的預覽專題，",
+        "description": "The message shown in preview project mode when student navigation constraints are enabled."
+    },
+    "common_click_here": {
+        "value": "請按此",
+        "description": "the common text 'click here'"
+    },
+    "teacher_score": {
+        "value": "教師分數",
+        "description": "The column header for the teacher score"
+    },
+    "computer_score": {
+        "value": "電腦分數",
+        "description": "The column header for the computer score"
+    },
+    "total_score": {
+        "value": "總分數",
+        "description": "The column header for the total score"
+    },
+    "percent_project_completed": {
+        "value": "% 專題完成度百分比",
+        "description": "The column header for the project completion percentage"
+    },
+    "my_work_with_teacher_feedback_and_scores": {
+        "value": "我的作業 (附教師回饋及分數)",
+        "description": "The title for the my work dialog popup"
+    },
+    "you_have_new_feedback_from_teacher": {
+        "value": "您有新的教師回饋。",
+        "description": "The message that shows up when the student logs in and has new teacher feedback"
+    },
+    "new_feedback_labeled_as_new": {
+        "value": "新的回饋標示為 [新的]。",
+        "description": "The message that shows up when the student logs in and has new teacher feedback"
+    },
+    "new_feedback": {
+        "value": "新的回饋",
+        "description": "The header for the section that displays the student work that has new feedback"
+    },
+    "my_work": {
+        "value": "我的作業",
+        "description": "The header for the section that displays all of the student work"
+    },
+    "new_text": {
+        "value": "新的",
+        "description": "The text 'New' used to label new feedback"
+    },
+    "teacher_feedback": {
+        "value": "教師回饋",
+        "description": "The label for the teacher feedback"
+    },
+    "your_teacher_hasnt_graded": {
+        "value": "評分: 您的教師尚未對您的作業評分。",
+        "description": "The text to show that there is no feedback from the teacher yet"
+    },
+    "last_visited_on": {
+        "value": "上次到訪網頁於",
+        "description": "The label to show when the student last visited the step"
+    },
+    "latest_work": {
+        "value": "最新的作業",
+        "description": "The label to show the latest work"
+    },
+    "you_havent_visited_this_step": {
+        "value": "您尚未進行此步驟。",
+        "description": "The text to show that the student hasn't visited the step yet"
+    },
+    "you_havent_submitted_work_for_this_step": {
+        "value": "您尚未提交此步驟的作業。",
+        "description": "The text to show that the student hasn't submitted work for the step yet"
+    },
+    "teacher_flagged_work": {
+        "value": "教師標記的作業",
+        "description": "The title for the flagged work window in the student vle"
+    },
+    "there_are_no_flagged_items": {
+        "value": "沒有標記的項目。",
+        "description": "The message that says there are no flagged items"
+    },
+    "choose_a_step": {
+        "value": "選擇步驟",
+        "description": "The label that tells the student to choose a step to view flagged work for in the flagged work window"
+    },
+    "question_instructions": {
+        "value": "問題/說明",
+        "description": "The label for the step prompt when displaying flagged work for a step"
+    },
+    "sample_responses": {
+        "value": "簡易回應",
+        "description": "The label for the student work that has been flagged for a step"
+    },
+    "anonymous": {
+        "value": "匿名的",
+        "description": "The label to specify that the team is anonymous"
+    },
+    "you_got_a_score_of": {
+        "value": "您的分數",
+        "description": "The text to display the score in the feedback popup"
+    },
+    "out_of": {
+        "value": "從",
+        "description": "The text to display the score in the feedback popup"
+    },
+    "comments": {
+        "value": "評語",
+        "description": "The text to display the comments in the feedback popup"
+    },
+    "hints_viewAll": {
+        "value": "關閉前您必須觀看所有 {0} 。",
+        "description": "The message in the hints popup that says the student must view all hints before closing the hints popup"
+    },
+    "constraint_dialog_title": {
+        "value": "步驟已鎖定",
+        "description": "Title text for dialog alerting users about locked steps or activities (unable to visit because of navigation constraints)"
+    },
+    "constraint_allItems": {
+        "value": "(全部項目)",
+        "description": "Text to add after activity name when a constraint requires user to satisfy a requirement for all items in an activity"
+    },
+    "constraint_message_mustCompleteStepBeforeAdvancing": {
+        "value": "您必須完成目前的 {0} 才能繼續進行。",
+        "description": "The message shown to students telling them to complete work on the current step before moving on"
+    },
+    "constraint_message_mustCompleteActivityBeforeAdvancing": {
+        "value": "您必須完成目前 {0} 的所有步驟才能繼續進行。",
+        "description": "The message shown to students telling them to complete work on the current activity before moving on"
+    },
+    "constraint_message_mustCompleteStepBeforeExiting": {
+        "value": "您必須完成目前的 {0} 才能離開。",
+        "description": "The message shown to students telling them to complete work on the current step before exiting"
+    },
+    "constraint_message_mustCompleteActivityBeforeExiting": {
+        "value": "您必須完成目前 {0} 的所有步驟才能離開。",
+        "description": "The message shown to students telling them to complete work on the current activity before exiting"
+    },
+    "constraint_message_mustCompleteXBeforeVisiting": {
+        "value": "您必須先完成以下才能觀看這個項目:",
+        "description": "The message shown to students telling them to complete work on previous items before working on the selected step or activity"
+    },
+    "constraint_message_mustVisitXBeforeVisiting": {
+        "value": "您必須先觀看以下步驟才能觀看這個項目:",
+        "description": "The message shown to students telling them to visit items before working on the selected step or activity"
+    },
+    "constraint_message_mustUnlockXBeforeVisiting": {
+        "value": "您必須先取消以下限制才能觀看此項目:",
+        "description": "The message shown to students telling them to unlock (make visitable) previous items before working on the selected step or activity"
+    },
+    "constraint_message_xMustHaveStatusY": {
+        "value": "您必須先將以下 '{0}' 設為 '{1}' 才能觀看這個項目:",
+        "description": "The message shown to students telling them that the steps shown below must have 'statusType' set to 'statusValue' before they can work on the selected step"
+    },
+    "constraint_message_mustCreateXIdeaBasketIdeasOnThisStepBeforeAdvancingZero": {
+        "value": "您必須至少新增 {0} {1} 到 '{2} {3}' 才能繼續進行，您尚未新增任何的 {4} 到 {5} 中。",
+        "description": "The message shown to students telling them they need to create one idea on the step before they can proceed. They have not created any ideas on the step."
+    },
+    "constraint_message_mustCreateXIdeaBasketIdeasOnThisStepBeforeAdvancing": {
+        "value": "您必須至少新增 {0} {1} 到 '{2} {3}' 才能繼續進行，您只新增了 {4} {5} 到 {6} 中。",
+        "description": "The message shown to students telling them they need to create multiple ideas on the step before they can proceed. They have not created enough ideas on the step."
+    },
+    "session_timeout_warning": {
+        "value": "您已經閒置一段時間，若您不立即更新登入狀態, 您將登出 WISE。",
+        "description": "Warning text to display to users in the session timeout alert."
+    },
+    "session_timeout_confirm": {
+        "value": "維持登入狀態!",
+        "description": "Text to display on button in the session timeout alert that users can press to renew session."
+    },
+    "session_timeout_message": {
+        "value": "您已經閒置一段時間並且登出 WISE，請重新登入以繼續。",
+        "description": "Text to display to display to users when there session timed out and they have been logged out of WISE."
+    },
+    "session_timeout_title": {
+        "value": "登入時間已過",
+        "description": "Title text for the session timeout alert."
+    },
+    "classroomMonitor_title": {
+        "value": "啟動教室監測",
+        "description": "Title for the classroom monitor"
+    },
+    "classroomMonitor_run": {
+        "value": "#{0}",
+        "description": "Text displaying the ID of the current run in the classroom monitor ({0} will be replaced by ID number)"
+    },
+    "classroomMonitor_search": {
+        "value": "搜尋",
+        "description": "Placeholder text for search inputs in the classroom monitor"
+    },
+    "classroomMonitor_save": {
+        "value": "儲存變更",
+        "description": "Text for save button in classroom monitor"
+    },
+    "classroomMonitor_viewProject": {
+        "value": "觀看專題",
+        "description": "Text for link to preview project in classroom monitor"
+    },
+    "classroomMonitor_workgroupsOnline": {
+        "value": "線上的小組: {0}",
+        "description": "Text displaying number of workgroups currently online ({0} will be replaced with actual number)"
+    },
+    "classroomMonitor_progress": {
+        "value": "專題",
+        "description": "Text for step progress link in classroom monitor"
+    },
+    "classroomMonitor_monitor": {
+        "value": "學生",
+        "description": "Text for student progress link in classroom monitor"
+    },
+    "classroomMonitor_studentProgress_title": {
+        "value": "學生觀測",
+        "description": "Title text for student progress link and section in classroom monitor"
+    },
+    "classroomMonitor_stepProgress_title": {
+        "value": "步驟進度",
+        "description": "Title text for step progress link and section in classroom monitor"
+    },
+    "classroomMonitor_gradebook": {
+        "value": "成績單",
+        "description": "Text for grade book link in classroom monitor"
+    },
+    "classroomMonitor_gradebook_title": {
+        "value": "學生成績單",
+        "description": "Title text for grade book link in classroom monitor"
+    },
+    "classroomMonitor_manage": {
+        "value": "管理",
+        "description": "Text for manage students link in classroom monitor"
+    },
+    "classroomMonitor_manage_title": {
+        "value": "管理學生帳號 ",
+        "description": "Title text for manage students link in classroom monitor"
+    },
+    "classroomMonitor_idea_baskets": {
+        "value": "想法籃",
+        "description": "Text for idea baskets link in classroom monitor"
+    },
+    "classroomMonitor_idea_basket_title": {
+        "value": "想法籃",
+        "description": "Text for idea basket title"
+    },
+    "classroomMonitor_idea_baskets_title": {
+        "value": "想法籃",
+        "description": "Text for idea baskets title"
+    },
+    "classroomMonitor_tools": {
+        "value": "工具",
+        "description": "Text for tools button in classroom monitor"
+    },
+    "classroomMonitor_announcements": {
+        "value": "公告",
+        "description": "Text for announcements link in classroom monitor"
+    },
+    "classroomMonitor_notes": {
+        "value": "我的筆記",
+        "description": "Text for run notes link in classroom monitor"
+    },
+    "classroomMonitor_exportWork": {
+        "value": "匯出作業",
+        "description": "Text for export work link in classroom monitor"
+    },
+    "classroomMonitor_runSettings": {
+        "value": "課程設定",
+        "description": "Text for run settings link in classroom monitor"
+    },
+    "classroomMonitor_showClassroom": {
+        "value": "顯示班級",
+        "description": "Text for show classroom link in classroom monitor"
+    },
+    "classroomMonitor_allPeriods": {
+        "value": "全部班級",
+        "description": "Text for select all periods option in a period select dropdown in the classroom monitor"
+    },
+    "classroomMonitor_periodLabel": {
+        "value": "班級 {0}",
+        "description": "Text for period options ({0} will be replaced by period name) in a select dropdown in the classroom monitor"
+    },
+    "classroomMonitor_pause": {
+        "value": "螢幕控制",
+        "description": "Text for pause screens tool button in classroom monitor (will be preceded by 'pause' icon)"
+    },
+    "classroomMonitor_pause_on": {
+        "value": "螢幕控制: ON",
+        "description": "Text for pause screens tool button (when pause is on) in classroom monitor (will be preceded by 'pause' icon)"
+    },
+    "classroomMonitor_pause_off": {
+        "value": "螢幕控制: OFF",
+        "description": "Text for pause screens tool button (when pause is off) in classroom monitor (will be preceded by 'pause' icon)"
+    },
+    "classroomMonitor_pause_title": {
+        "value": "暫停學生螢幕",
+        "description": "Title text for pause screens tool button in classroom monitor"
+    },
+    "classroomMonitor_pause_selectPeriods": {
+        "value": "選擇班級",
+        "description": "Label text for pause screens select period control in classroom monitor"
+    },
+    "classroomMonitor_pause_message_label": {
+        "value": "顯示的訊息:",
+        "description": "Label text for pause screens message to show students input field in classroom monitor"
+    },
+    "classroomMonitor_pause_message_default": {
+        "value": "您的教師已經暫停您的畫面。",
+        "description": "Default message to show students when teacher pauses their screens using the classroom monitor"
+    },
+    "classroomMonitor_pause_noneSelected": {
+        "value": "未選取",
+        "description": "Text to show when no periods are selected in the pause screens tool the classroom monitor"
+    },
+    "classroomMonitor_pause_periods": {
+        "value": "班級",
+        "description": "Plural for the word 'periods' (will be preceded by number of select periods in the pause screens tool in the classroom monitor)"
+    },
+    "classroomMonitor_studentProgress_totalCompletion": {
+        "value": "完成度:",
+        "description": "Label text for the total student completion display in the classroom monitor"
+    },
+    "classroomMonitor_studentProgress_workgroupOnline": {
+        "value": "線上的小組",
+        "description": "Text indicating that workgroup is online in the classroom monitor (only shown to screen readers)"
+    },
+    "classroomMonitor_studentProgress_workgroupOffline": {
+        "value": "離線的小組",
+        "description": "Text indicating that workgroup is offline in the classroom monitor (only shown to screen readers)"
+    },
+    "classroomMonitor_studentProgress_viewStudentWork": {
+        "value": "觀看學生作業",
+        "description": "Title text to show on links to view student work in the classroom monitor"
+    },
+    "classroomMonitor_studentProgress_headers_online": {
+        "value": "線上",
+        "description": "Header text for the table column showing whether workgroup is online in the student progress table of classroom monitor"
+    },
+    "classroomMonitor_studentProgress_headers_period": {
+        "value": "班級",
+        "description": "Header text for the period table column in the student progress table of classroom monitor"
+    },
+    "classroomMonitor_studentProgress_headers_workgroup": {
+        "value": "小組",
+        "description": "Header text for the workgroup column in the student progress table of classroom monitor"
+    },
+    "classroomMonitor_studentProgress_headers_currentStep": {
+        "value": "最新的步驟",
+        "description": "Header text for the column showing current step a workgroup is on in the student progress table of classroom monitor"
+    },
+    "classroomMonitor_studentProgress_headers_timeSpent": {
+        "value": "花費的時間",
+        "description": "Header text for the column showing time spent on the current step in the student progress table of classroom monitor"
+    },
+    "classroomMonitor_studentProgress_headers_projectCompletion": {
+        "value": "專題完成",
+        "description": "Header text for the project completion column in the student progress table of classroom monitor"
+    },
+    "classroomMonitor_stepProgress_headers_nodeTitle": {
+        "value": "步驟名稱",
+        "description": "Header text for the step title column in the step progress table of classroom monitor"
+    },
+    "classroomMonitor_stepProgress_headers_studentsOnStep": {
+        "value": "步驟線上人數",
+        "description": "Header text for the column showing current number of students in the step progress table of classroom monitor"
+    },
+    "classroomMonitor_stepProgress_headers_stepCompletion": {
+        "value": "步驟完成度",
+        "description": "Header text for the step completion column in the step progress table of classroom monitor"
+    },
+    "classroomMonitor_stepProgress_headers_maxScore": {
+        "value": "最高分數",
+        "description": "Header text for the max score column in the step progress table of classroom monitor"
+    },
+    "classroomMonitor_stepProgress_totalCompletion": {
+        "value": "總完成度:",
+        "description": "Label text for the total step completion display in the classroom monitor"
+    },
+    "classroomMonitor_stepProgress_completionUnavaiable": {
+        "value": "<p><b>尚無步驟完成度資訊，可能是因為:</b><ol><li>您的學生尚未開始執行專題; 或</li><li>這只是WISE啟動步驟監控前開始的舊課程。</li></ol>",
+        "description": "Tooltip text to show when step completion percentage is not available for a step that can't be graded in the classroom monitor"
+    },
+    "classroomMonitor_stepProgress_completionUnavaiable_gradable": {
+        "value": "<p><b>尚無步驟完成度資訊，可能是因為:</b><ol><li>您的學生尚未開始執行專題; 或</li><li>這只是WISE啟動步驟監控前開始的舊課程，</li></ol>您仍可透過選取步驟名稱觀看學生作業。",
+        "description": "Tooltip text to show when step completion percentage is not available for a step that can be graded in the classroom monitor"
+    },
+    "classroomMonitor_stepProgress_viewStepWork": {
+        "value": "觀看學生作業",
+        "description": "Title text to show on links to view step work in the classroom monitor"
+    },
+    "classroomMonitor_tableInfoText": {
+        "value": "{0} 項目",
+        "description": "Text for the information display at the bottom of classroom monitor tables ({0} will be replaced with number of items currently being shown)"
+    },
+    "classroomMonitor_grading_search": {
+        "value": "搜尋學生的作業",
+        "description": "Placeholder text for the search input in grade by step and grade by student tables of classroom monitor"
+    },
+    "classroomMonitor_grading_noResponse": {
+        "value": "小組尚未提交此步驟之作業。",
+        "description": "Text to display when workgroup has not submitted any work for a step in the grading view of the classroom monitor"
+    },
+    "classroomMonitor_grading_latestWork": {
+        "value": "最新的回應",
+        "description": "Header text for student work that is the most recent revision in the classroom monitor"
+    },
+    "classroomMonitor_grading_workRevision": {
+        "value": "回應 #{0}",
+        "description": "Header text for student work that is not that most recent revision in the classroom monitor ({0} will be replaced with revision number)"
+    },
+    "classroomMonitor_grading_flag": {
+        "value": "標記:",
+        "description": "Label for flag checkboxes in grading views of classroom monitor"
+    },
+    "classroomMonitor_grading_teacherComment": {
+        "value": "評論:",
+        "description": "Label for teacher comment inputs in grading views of classroom monitor"
+    },
+    "classroomMonitor_grading_teacherScore": {
+        "value": "分數:",
+        "description": "Label for teacher score inputs in grading views of classroom monitor"
+    },
+    "classroomMonitor_grading_addPremadeComments": {
+        "value": "+ 預製評論",
+        "description": "Text for link to add premade comments to teacher feedback inputs in grading views of classroom monitor"
+    },
+    "classroomMonitor_grading_revisionsCount": {
+        "value": "{0} 次修訂版",
+        "description": "Text for the number of revisions in the grade by student and grade by step tables of classroom monitor ({0} will be replaced with number of student work submissions for a step)"
+    },
+    "classroomMonitor_grading_revisionDate": {
+        "value": "提交: {0}",
+        "description": "Text for student work timestamp displays in grading views of classroom monitor ({0} will be replaced by date/time)"
+    },
+    "classroomMonitor_grading_lastAnnotation": {
+        "value": "上次的回饋: {0}",
+        "description": "Text for the latest teacher feedback (grade or comment) timestamp display in grading views of classroom monitor ({0} will be replaced by date/time)"
+    },
+    "classroomMonitor_grading_lastAnnotation_none": {
+        "value": "上次的回饋: N/A",
+        "description": "Text for when there is no feedback (grade or comment) in grading views of classroom monitor"
+    },
+    "classroomMonitor_grading_flagOnly": {
+        "value": "僅有標記項目",
+        "description": "Text for option to only display flagged items in grading views of classroom monitor"
+    },
+    "classroomMonitor_grading_itemsToReview": {
+        "value": "檢視的項目: {0}",
+        "description": "Text for display showing number of new student work items to review in grading views of classroom monitor ({0} will be replaced with number of new items)"
+    },
+    "classroomMonitor_grading_options_select": {
+        "value": "選擇",
+        "description": "Text for grading display options dropdown when no options are selected in classroom monitor"
+    },
+    "classroomMonitor_grading_options_label": {
+        "value": "顯示方式:",
+        "description": "Label text for grading display options dropdown in classroom monitor"
+    },
+    "classroomMonitor_grading_invalidScore": {
+        "value": "{0} 為無效的分數，請再試一次。",
+        "description": "Text to display when user tries to enter an invalid score in grading views of the  classroom monitor ({0} will be replaced with the user's input)"
+    },
+    "classroomMonitor_gradeByStudent_title": {
+        "value": "按照分組評分",
+        "description": "Title text for grade by student section in classroom monitor"
+    },
+    "classroomMonitor_gradeByStudent_headers_studentWork": {
+        "value": "步驟",
+        "description": "Header text for the student work column in the grade by student table of classroom monitor"
+    },
+    "classroomMonitor_gradeByStudent_headers_score": {
+        "value": "分數",
+        "description": "Header text for the score column in the grade by student table of classroom monitor"
+    },
+    "classroomMonitor_gradeByStudent_headers_feedback": {
+        "value": "分數與回饋",
+        "description": "Header text for the teacher feedback column in the grade by student table of classroom monitor"
+    },
+    "classroomMonitor_gradeByStep_title": {
+        "value": "按照步驟評分",
+        "description": "Title text for grade by step section in classroom monitor"
+    },
+    "classroomMonitor_gradeByStep_headers_studentWork": {
+        "value": "小組",
+        "description": "Header text for the student work column in the grade by step table of classroom monitor"
+    },
+    "classroomMonitor_gradeByStep_headers_score": {
+        "value": "分數",
+        "description": "Header text for the score column in the grade by step table of classroom monitor"
+    },
+    "classroomMonitor_gradeByStep_headers_feedback": {
+        "value": "分數與回饋",
+        "description": "Header text for the teacher feedback column in the grade by step table of classroom monitor"
+    },
+    "classroomMonitor_hidePersonalInfo": {
+        "value": "隱藏個人資訊",
+        "description": "Text for option to hide personal info in classroom monitor"
+    },
+    "classroomMonitor_newItemsOnly": {
+        "value": "只限於新的作業",
+        "description": "Text for option to only show new work in classroom monitor"
+    },
+    "classroomMonitor_saveConfirmation": {
+        "value": "變更已儲存!",
+        "description": "Notification to display when teacher changes (scores, feedback, etc.) have been saved in the classroom monitor"
+    },
+    "classroomMonitor_saving": {
+        "value": "儲存變更中...",
+        "description": "Notification to display when saving changes (scores, feedback, etc.) in the classroom monitor"
+    },
+    "classroomMonitor_studentProgress_headers_score": {
+        "value": "分數",
+        "description": "Header text for the total score column in the student progress table of classroom monitor"
+    },
+    "classroomMonitor_summary_report_title": {
+        "value": "彙總報表",
+        "description": "Text for summary report title"
+    },
+    "classroomMonitor_summary_report": {
+        "value": "彙總報表",
+        "description": "Text for summary report"
     }
 }

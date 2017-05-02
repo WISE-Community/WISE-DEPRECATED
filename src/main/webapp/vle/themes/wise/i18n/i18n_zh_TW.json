@@ -1,14 +1,26 @@
 {
-	"toggle_nav_button_text":{
-		"value":"全螢幕",
-		"description":"Text on the Toggle Navigation button when navigation UI is on (visible)"
-	},
-	"navigation_expand_all":{
-		"value":"全部展開",
-		"description":"Text on a button to expand all navigation items"
-	},
-	"navigation_collapse_all":{
-		"value":"全部合併",
-		"description":"Text on a button to collapse all navigation items"
-	}	
+    "toggle_nav_button_text": {
+        "value": "全螢幕",
+        "description": "Text on the Toggle Navigation button when navigation UI is on (visible)"
+    },
+    "navigation_expand_all": {
+        "value": "全部展開",
+        "description": "Text on a button to expand all navigation items"
+    },
+    "navigation_collapse_all": {
+        "value": "全部合併",
+        "description": "Text on a button to collapse all navigation items"
+    },
+    "toggle_nav_button_title": {
+        "value": "全螢幕模式 (隱藏導航選單)",
+        "description": "Text for mouse hover title on the Toggle Navigation button when navigation UI is on (visible)"
+    },
+    "toggle_nav_button_text_off": {
+        "value": "顯示選單",
+        "description": "Text on the Toggle Navigation button when navigation UI is off (hidden)"
+    },
+    "toggle_nav_button_title_off": {
+        "value": "顯示導航選單",
+        "description": "Text for mouse hover title on the Toggle Navigation button when navigation UI is on (visible)"
+    }
 }

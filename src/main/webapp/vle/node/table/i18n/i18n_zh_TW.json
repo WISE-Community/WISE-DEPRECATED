@@ -1,0 +1,126 @@
+{
+    "import_data": {
+        "value": "載入資料",
+        "description": "The label for the import data button"
+    },
+    "reset_table": {
+        "value": "重填表格",
+        "description": "The label for the reset table button"
+    },
+    "add_row": {
+        "value": "新增列",
+        "description": "The label for the add row button"
+    },
+    "delete_row": {
+        "value": "刪除列",
+        "description": "The label for the delete row button"
+    },
+    "add_column": {
+        "value": "新增行",
+        "description": "The label for the add column button"
+    },
+    "delete_column": {
+        "value": "刪除行",
+        "description": "The label for the delete column button"
+    },
+    "make_graph": {
+        "value": "製圖",
+        "description": "The label for the make graph button"
+    },
+    "show_starter_sentence": {
+        "value": "顯示起始句",
+        "description": "The label for the show starter sentence button"
+    },
+    "save": {
+        "value": "儲存",
+        "description": "The label for the save button"
+    },
+    "click_make_graph": {
+        "value": "點選 \"製圖 製作圖表",
+        "description": "The message to tell the student to click the make graph button"
+    },
+    "are_you_sure_you_want_reset": {
+        "value": "您確定要重新填寫表格內容嗎?",
+        "description": "The message to ask the student if they are sure they want to reset the table"
+    },
+    "table_has_changed_click_make_graph": {
+        "value": "表格已經更新, 請點選 \"製圖\" 製作新的圖表",
+        "description": "The message to tell the student that the table has changed so they should click the make graph button"
+    },
+    "x_axis": {
+        "value": "X 軸",
+        "description": "The label for the x axis"
+    },
+    "y_axis": {
+        "value": "Y 軸",
+        "description": "The label for the y axis"
+    },
+    "x_min": {
+        "value": "X 極小值",
+        "description": "The label for the x min"
+    },
+    "x_max": {
+        "value": "X 極大值",
+        "description": "The label for the x max"
+    },
+    "y_min": {
+        "value": "Y 極小值",
+        "description": "The label for the y min"
+    },
+    "y_max": {
+        "value": "Y 極大值",
+        "description": "The label for the y max"
+    },
+    "error_data_in_table_invalid": {
+        "value": "錯誤：表中的資料無效，請修改並重試",
+        "description": "The error message that is displayed when the student tries to make the graph with invalid table data"
+    },
+    "error_unable_to_draw_chart": {
+        "value": "錯誤：無法繪製圖表",
+        "description": "The error message that is displayed when we are unable to draw the chart"
+    },
+    "invalid_x_min": {
+        "value": "無效的 X 極小值",
+        "description": "The error message to show when the x min value is invalid"
+    },
+    "invalid_x_max": {
+        "value": "無效的 X 極大值",
+        "description": "The error message to show when the x max value is invalid"
+    },
+    "invalid_y_min": {
+        "value": "無效的 Y 極小值",
+        "description": "The error message to show when the y min value is invalid"
+    },
+    "invalid_y_max": {
+        "value": "無效的 Y 極大值",
+        "description": "The error message to show when y max value is invalid"
+    },
+    "error_you_must_fix": {
+        "value": "錯誤：您必須先解決下列問題，然後才能製作圖表",
+        "description": "The error message to tell the student they need to fix the problems before they can make the graph"
+    },
+    "are_you_sure_delete_column": {
+        "value": "您確定要刪除右側的列嗎？",
+        "description": "The confirmation message to ask the student if they are sure they want to delete the column"
+    },
+    "error_may_not_delete_original_columns": {
+        "value": "錯誤：您不得刪除任何原始列",
+        "description": "The error message telling the student they can't delete columns that were authored by the teacher"
+    },
+    "are_you_sure_delete_row": {
+        "value": "您確定要刪除底行嗎？",
+        "description": "The confirmation message to ask the student if they are sure they want to delete the row"
+    },
+    "error_may_not_delete_original_rows": {
+        "value": "錯誤：您不能刪除任何原始行",
+        "description": "The error message telling the student they can't delete rows that were authored by the teacher"
+    },
+    "loading": {
+        "value": "載入中...",
+        "description": "The loading message"
+    },
+    "saved_feedback": {
+        "value": "儲存成功!",
+        "description": "Notification that the table data was saved"
+    }
+}
