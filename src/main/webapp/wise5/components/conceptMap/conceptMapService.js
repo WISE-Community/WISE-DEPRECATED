@@ -145,7 +145,7 @@ var ConceptMapService = function (_NodeService) {
                         var state = componentStates[i];
                         if (state.isSubmit && state.studentData) {
                             // component state is a submission
-                            if (state.studentData.response) {
+                            if (state.isSubmit == true || state.studentData.submitCounter != null && state.studentData.submitCounter > 0) {
                                 // there is a response so the component is completed
                                 result = true;
                                 break;
@@ -160,7 +160,7 @@ var ConceptMapService = function (_NodeService) {
                     var studentData = componentState.studentData;
 
                     if (studentData != null) {
-                        if (studentData.response) {
+                        if (studentData.conceptMapData != null) {
                             // there is a response so the component is completed
                             result = true;
                         }
