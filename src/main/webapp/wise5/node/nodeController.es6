@@ -276,6 +276,14 @@ class NodeController {
                 }
             }
         });
+
+        // load script for this node, if any
+        let script = this.nodeContent.script;
+        if (script != null) {
+            this.ProjectService.retrieveScript(script).then((script) => {
+                new Function(script).call(this);
+            });
+        }
     }
 
     /**

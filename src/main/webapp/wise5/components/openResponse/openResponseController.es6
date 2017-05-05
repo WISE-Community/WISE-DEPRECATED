@@ -566,6 +566,14 @@ class OpenResponseController {
             // close the popup
             this.$mdDialog.hide();
         });
+
+        // load script for this component, if any
+        let script = this.componentContent.script;
+        if (script != null) {
+            this.ProjectService.retrieveScript(script).then((script) => {
+                new Function(script).call(this);
+            });
+        }
     }
 
     /**
@@ -788,7 +796,7 @@ class OpenResponseController {
 
         // create a component state populated with the student data
         this.createComponentState(action).then((componentState) => {
-            this.$scope.$emit('componentStudentDataChanged', {componentId: componentId, componentState: componentState});
+            this.$scope.$emit('componentStudentDataChanged', {nodeId: this.nodeId, componentId: componentId, componentState: componentState});
         });
     };
 
@@ -1062,6 +1070,20 @@ class OpenResponseController {
                 this.$mdDialog.hide();
 
                 // resolve the promise now that we are done performing additional processing
+                deferred.resolve(componentState);
+            });
+        } else if (this.ProjectService.hasAdditionalProcessingFunctions(this.nodeId, this.componentId)) {
+            // if there are any additionalProcessingFunctions for this node and component, call all of them
+            let additionalProcessingFunctions = this.ProjectService.getAdditionalProcessingFunctions(this.nodeId, this.componentId);
+            let allPromises = [];
+            for (let i = 0; i < additionalProcessingFunctions.length; i++) {
+                let additionalProcessingFunction = additionalProcessingFunctions[i];
+                let defer = this.$q.defer();
+                let promise = defer.promise;
+                allPromises.push(promise);
+                additionalProcessingFunction(defer, componentState, action);
+            }
+            this.$q.all(allPromises).then(() => {
                 deferred.resolve(componentState);
             });
         } else {
