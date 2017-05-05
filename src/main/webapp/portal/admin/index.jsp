@@ -36,6 +36,7 @@
 			return true;
 		}
 		$(document).ready(function() {
+		    // get latest WISE information
 		    $.ajax("${contextPath}/admin/latestWISEVersion").success(function(response) {
 		        if (response === "null") {
 		            $("#globalWISEVersion").html("Error retrieving global WISE version.");
@@ -52,6 +53,27 @@
 					}
 				}
 			});
+		    // get recent commits to WISE project
+            $.ajax("${contextPath}/admin/recentCommitHistory").success(function(response) {
+                if (response === "null" || response === "error") {
+                    $("#globalWISEVersion").html("Error retrieving recent commits.");
+                } else {
+                    var recentCommitHistoryArray = JSON.parse(response);
+                    if (recentCommitHistoryArray != null) {
+                        var commitsUL = $("<ul>");
+                        for (var i=0; i<recentCommitHistoryArray.length; i++) {
+                            var commitHistory = recentCommitHistoryArray[i];
+                            var commitLI = $("<li>").css("margin","0").css("padding","4px 8px");
+                            var commitA = $("<a>").attr("href",commitHistory.html_url).html(commitHistory.commit.message);
+                            var commitBy = $("<div>").html("by <span style='font-weight:bold'>" + commitHistory.commit.committer.name + "</span> - " + commitHistory.commit.committer.date);
+                            commitLI.append(commitA);
+                            commitLI.append(commitBy);
+                            commitsUL.append(commitLI);
+                        }
+                        $("#recentCommitHistory").html(commitsUL);
+                    }
+                }
+            });
 		})
 	</script>
 </head>
@@ -247,22 +269,5 @@
 
 	<%@ include file="../footer.jsp"%>
 </div>
-
-<script type="text/javascript">
-	var recentCommitHistoryArray = ${recentCommitHistoryJSON};
-	if (recentCommitHistoryArray != null) {
-		var commitsUL = $("<ul>");
-		for (var i=0; i<recentCommitHistoryArray.length; i++) {
-			var commitHistory = recentCommitHistoryArray[i];
-			var commitLI = $("<li>").css("margin","0").css("padding","4px 8px");
-			var commitA = $("<a>").attr("href",commitHistory.html_url).html(commitHistory.commit.message);
-			var commitBy = $("<div>").html("by <span style='font-weight:bold'>" + commitHistory.commit.committer.name + "</span> - " + commitHistory.commit.committer.date);
-			commitLI.append(commitA);
-			commitLI.append(commitBy);
-			commitsUL.append(commitLI);
-		}
-		$("#recentCommitHistory").html(commitsUL);
-	}
-</script>
 </body>
 </html>

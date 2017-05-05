@@ -28,7 +28,8 @@ BranchingNode.prototype.supportedLocales = {
 	"nl_GE":"nl",
 	"nl_DE":"nl",
 	"tr":"tr",
-	"zh_CN":"zh_CN"
+	"zh_CN":"zh_CN",
+    "zh_TW":"zh_TW"
 };
 
 /*

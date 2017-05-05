@@ -1,1 +1,7 @@
-{}
+{
+    "discussion.allowUploadedImagesInPosts": "學生可以在他們的發文中上傳和使用圖片。",
+    "discussion.comments": "評論",
+    "discussion.post": "送出",
+    "discussion.repliedToADiscussionYouWereIn": "{{userNames}} 在您所在的討論中發言了！",
+    "discussion.reply": "回復"
+}

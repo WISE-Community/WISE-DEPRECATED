@@ -63,6 +63,14 @@ var VLEController = function () {
             this.constraintsDisabled = true;
         }
 
+        // load project-level scripts, if any
+        var script = this.ProjectService.getProjectScript();
+        if (script != null) {
+            this.ProjectService.retrieveScript(script).then(function (script) {
+                new Function(script).call(_this);
+            });
+        }
+
         this.$scope.$on('currentNodeChanged', function (event, args) {
             var previousNode = args.previousNode;
             var currentNode = _this.StudentDataService.getCurrentNode();
@@ -733,6 +741,79 @@ var VLEController = function () {
                  */
                 this.StudentDataService.updateNodeStatuses();
             }
+        }
+
+        /**
+         * Returns WISE API
+         */
+
+    }, {
+        key: 'getWISEAPI',
+        value: function getWISEAPI() {
+            var _this2 = this;
+
+            return {
+                /**
+                 * Registers a function that will be invoked before the componentState is saved to the server
+                 * @param nodeId the node id
+                 * @param componentId the component id
+                 * @param additionalProcessingFunction the function to register for the specified node and component
+                 */
+                registerAdditionalProcessingFunction: function registerAdditionalProcessingFunction(nodeId, componentId, additionalProcessingFunction) {
+                    _this2.ProjectService.addAdditionalProcessingFunction(nodeId, componentId, additionalProcessingFunction);
+                },
+                /**
+                 * Create an auto score annotation
+                 * @param runId the run id
+                 * @param periodId the period id
+                 * @param nodeId the node id
+                 * @param componentId the component id
+                 * @param toWorkgroupId the student workgroup id
+                 * @param data the annotation data
+                 * @returns the auto score annotation
+                 */
+                createAutoScoreAnnotation: function createAutoScoreAnnotation(nodeId, componentId, data) {
+
+                    var runId = _this2.ConfigService.getRunId();
+                    var periodId = _this2.ConfigService.getPeriodId();
+                    var toWorkgroupId = _this2.ConfigService.getWorkgroupId();
+
+                    // create the auto score annotation
+                    var annotation = _this2.AnnotationService.createAutoScoreAnnotation(runId, periodId, nodeId, componentId, toWorkgroupId, data);
+
+                    return annotation;
+                },
+                /**
+                 * Create an auto comment annotation
+                 * @param runId the run id
+                 * @param periodId the period id
+                 * @param nodeId the node id
+                 * @param componentId the component id
+                 * @param toWorkgroupId the student workgroup id
+                 * @param data the annotation data
+                 * @returns the auto comment annotation
+                 */
+                createAutoCommentAnnotation: function createAutoCommentAnnotation(nodeId, componentId, data) {
+
+                    var runId = _this2.ConfigService.getRunId();
+                    var periodId = _this2.ConfigService.getPeriodId();
+                    var toWorkgroupId = _this2.ConfigService.getWorkgroupId();
+
+                    // create the auto comment annotation
+                    var annotation = _this2.AnnotationService.createAutoCommentAnnotation(runId, periodId, nodeId, componentId, toWorkgroupId, data);
+
+                    return annotation;
+                },
+                /**
+                 * Returns the maxScore for the specified node and component
+                 * @param nodeId the node id
+                 * @param componentId the component id
+                 * @returns the max score for the component
+                 */
+                getMaxScoreForComponent: function getMaxScoreForComponent(nodeId, componentId) {
+                    return _this2.ProjectService.getMaxScoreForComponent(nodeId, componentId);
+                }
+            };
         }
     }]);
 

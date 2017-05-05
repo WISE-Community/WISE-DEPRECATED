@@ -28,6 +28,9 @@ class ProjectService {
 
         this.$translate = this.$filter('translate');
 
+        // map from nodeId_componentId to array of additionalProcessingFunctions
+        this.additionalProcessingFunctionsMap = {};
+
         // filtering options for navigation displays
         this.filters = [
             {'name': 'all', 'label': 'All'}
@@ -9116,6 +9119,60 @@ class ProjectService {
                 }
             }
         }
+    }
+
+    /**
+     * Get script for this project
+     */
+    getProjectScript() {
+        return this.project.script;
+    }
+
+    /**
+     * Retrieve the script with the provided script filename
+     * @param scriptFilename
+     */
+    retrieveScript(scriptFilename) {
+        let assetDirectoryPath = this.ConfigService.getProjectAssetsDirectoryPath();
+        let scriptPath = assetDirectoryPath + "/" + scriptFilename;
+        return this.$http.get(scriptPath).then((result) => {
+            return result.data;
+        });
+    };
+
+    /**
+     * Registers an additionalProcessingFunction for the specified node and component
+     * @param nodeId the node id
+     * @param componentId the component id
+     * @param additionalProcessingFunction the function to register for the node and component.
+     */
+    addAdditionalProcessingFunction(nodeId, componentId, additionalProcessingFunction) {
+        let key = nodeId + "_" + componentId;
+        if (this.additionalProcessingFunctionsMap[key] == null) {
+            this.additionalProcessingFunctionsMap[key] = [];
+        }
+        this.additionalProcessingFunctionsMap[key].push(additionalProcessingFunction);
+    }
+
+    /**
+     * Returns true iff the specified node and component has any registered additionalProcessingFunctions
+     * @param nodeId the node id
+     * @param componentId the component id
+     * @returns true/false
+     */
+    hasAdditionalProcessingFunctions(nodeId, componentId) {
+        return this.getAdditionalProcessingFunctions(nodeId, componentId) != null;
+    }
+
+    /**
+     * Returns an array of registered additionalProcessingFunctions for the specified node and component
+     * @param nodeId the node id
+     * @param componentId the component id
+     * @returns an array of additionalProcessingFunctions
+     */
+    getAdditionalProcessingFunctions(nodeId, componentId) {
+        let key = nodeId + "_" + componentId;
+        return this.additionalProcessingFunctionsMap[key];
     }
 }
 

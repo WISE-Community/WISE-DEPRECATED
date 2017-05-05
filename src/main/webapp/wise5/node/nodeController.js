@@ -280,6 +280,14 @@ var NodeController = function () {
                 }
             }
         });
+
+        // load script for this node, if any
+        var script = this.nodeContent.script;
+        if (script != null) {
+            this.ProjectService.retrieveScript(script).then(function (script) {
+                new Function(script).call(_this);
+            });
+        }
     }
 
     /**

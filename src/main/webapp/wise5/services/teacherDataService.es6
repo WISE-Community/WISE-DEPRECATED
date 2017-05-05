@@ -216,7 +216,7 @@ class TeacherDataService {
 
         return this.$http(httpParams).then((result) => {
 
-            var savedEvents = null;
+            let savedEvents = null;
 
             if (result != null && result.data != null) {
                 let data = result.data;

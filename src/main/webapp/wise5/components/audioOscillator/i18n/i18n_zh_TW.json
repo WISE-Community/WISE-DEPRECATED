@@ -1,1 +1,23 @@
-{}
+{
+    "audioOscillator.add": "新增",
+    "audioOscillator.addOscillatorType": "新增振蕩器類型",
+    "audioOscillator.errorYouHaveAlreadyAddedOscillatorType": "錯誤：您已經新增{{oscillatorTypeToAdd}}了",
+    "audioOscillator.frequency": "頻率",
+    "audioOscillator.importData": "匯入資料",
+    "audioOscillator.oscillatorGridSize": "示波器網格大小",
+    "audioOscillator.oscillatorType": "振蕩器類型",
+    "audioOscillator.oscillatorTypes": "振蕩器類型",
+    "audioOscillator.oscillatorHeight": "示波器高度",
+    "audioOscillator.oscillatorWidth": "示波器寬度",
+    "audioOscillator.oscilloscopeStopAfterGoodDraw": "示波器在波形完整後停止",
+    "audioOscillator.play": "播放",
+    "audioOscillator.save": "儲存",
+    "audioOscillator.startingFrequency": "起始頻率",
+    "audioOscillator.stop": "停止",
+    "audioOscillator.frequenciesPlayed": "播放頻率",
+    "audioOscillator.frequenciesPlayedSorted": "播放排序頻率",
+    "audioOscillator.hz": "Hz",
+    "audioOscillator.maxFrequencyPlayed": "最大播放頻率",
+    "audioOscillator.minFrequencyPlayed": "最小播放頻率",
+    "audioOscillator.numberOfFrequenciesPlayed": "播放的頻率數"
+}

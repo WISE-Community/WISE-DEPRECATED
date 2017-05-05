@@ -1,0 +1,6 @@
+{
+    "applet_failed_to_load": {
+        "value": "Java Applet無法載入",
+        "description": "Alert message that gets displayed when the applet fails to load"
+    }
+}

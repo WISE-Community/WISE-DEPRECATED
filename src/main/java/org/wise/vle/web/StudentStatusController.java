@@ -177,10 +177,10 @@ public class StudentStatusController {
 	 */
 	@RequestMapping(method = RequestMethod.POST)
 	public ModelAndView doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		//get the signed in user
+		// get the signed in user
 		User signedInUser = ControllerUtil.getSignedInUser();
 		
-		//get the post parameters
+		// get the post parameters
 		String runIdString = request.getParameter("runId");
 		String periodIdString = request.getParameter("periodId");
 		String workgroupIdString = request.getParameter("workgroupId");
@@ -216,30 +216,30 @@ public class StudentStatusController {
 		 */
 		if (SecurityUtils.isStudent(signedInUser) && SecurityUtils.isUserInRun(signedInUser, runId) &&
 				SecurityUtils.isUserInWorkgroup(signedInUser, workgroupId)) {
-			//the student is in the run and the workgroup so we will allow this request
+			// the student is in the run and the workgroup so we will allow this request
 			allowedAccess = true;
 		}
 		
 		if (!allowedAccess) {
-			//the user is not allowed to make this request
+			// the user is not allowed to make this request
 			response.sendError(HttpServletResponse.SC_FORBIDDEN);
 			return null;
 		}
 
-		//get the student status object for the workgroup id if it already exists
+		// get the student status object for the workgroup id if it already exists
 		StudentStatus studentStatus = vleService.getStudentStatusByWorkgroupId(workgroupId);
 		
 		if (studentStatus == null) {
-			//the student status object does not already exist so we will create it
+			// the student status object does not already exist so we will create it
 			studentStatus = new StudentStatus(runId, periodId, workgroupId, status);			
 		} else {
-			//the student status object already exists so we will update the timestamp and status
+			// the student status object already exists so we will update the timestamp and status
 			Calendar now = Calendar.getInstance();
 			studentStatus.setTimestamp(new Timestamp(now.getTimeInMillis()));
 			studentStatus.setStatus(status);
 		}
 		
-		//save the student status to the database
+		// save the student status to the database
 		vleService.saveStudentStatus(studentStatus);
 
 		// Send message to teachers if this is a WISE5 run
@@ -259,9 +259,6 @@ public class StudentStatusController {
 						webSocketMessageJSON.put("messageParticipants", "studentToTeachers");
 						if (studentStatusJSON.has("currentNodeId")) {
 							webSocketMessageJSON.put("currentNodeId", studentStatusJSON.get("currentNodeId"));
-						}
-						if (studentStatusJSON.has("previousComponentState")) {
-							webSocketMessageJSON.put("previousComponentState", studentStatusJSON.get("previousComponentState"));
 						}
 						if (studentStatusJSON.has("nodeStatuses")) {
 							webSocketMessageJSON.put("nodeStatuses", studentStatusJSON.get("nodeStatuses"));

@@ -70,7 +70,7 @@ gulp.task('watch-sass', ['set-watch'], function() {
 // Removes extra keys from foreignLocale
 // -----------------------------------------------------------------------------
 gulp.task('update-i18n', function() {
-    var supportedLocales = ['ar','es','iw','ja','ko','nl','pt','tr','zh_CN','zh_TW'];
+    var supportedLocales = ['ar','es','fr','de','el','iw','ja','ko','nl','pt','tr','zh_CN','zh_TW'];
     // update WISE5 i18n files
     var wise5_i18n_folders = [
         './src/main/webapp/wise5/i18n/',

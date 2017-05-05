@@ -1,0 +1,138 @@
+{
+    "start": {
+        "value": "開始",
+        "description": "The text for the button to start collecting data from the probe"
+    },
+    "stop": {
+        "value": "停止",
+        "description": "The text for the button to stop collecting data from the probe"
+    },
+    "clear_probe_data": {
+        "value": "清除調查資料",
+        "description": "The text for the button to clear the probe data"
+    },
+    "clear_prediction": {
+        "value": "清除預測",
+        "description": "The text for the button to clear the prediction data"
+    },
+    "reset_axis_limits": {
+        "value": "重置限制軸的預設值",
+        "description": "The text for the button to reset the axis limits"
+    },
+    "show_starter_sentence": {
+        "value": "顯示起始句",
+        "description": "The text for the button to show the starter sentence"
+    },
+    "save": {
+        "value": "儲存",
+        "description": "The text for the save button"
+    },
+    "submit": {
+        "value": "送出",
+        "description": "The text for the submit button"
+    },
+    "distance": {
+        "value": "距離",
+        "description": "The label for the distance graph type"
+    },
+    "velocity": {
+        "value": "速度",
+        "description": "The label for the velocity graph type"
+    },
+    "acceleration": {
+        "value": "加速度",
+        "description": "The label for the acceleration graph type"
+    },
+    "temperature": {
+        "value": "溫度",
+        "description": "The label for the temperature graph type"
+    },
+    "distance_prediction": {
+        "value": "預測距離",
+        "description": "The label for the distance prediction graph"
+    },
+    "temperature_prediction": {
+        "value": "預測溫度",
+        "description": "The label for the temperature prediction graph"
+    },
+    "prediction": {
+        "value": "預測",
+        "description": "The word 'prediction' used for labels"
+    },
+    "you_must_make_a_prediction": {
+        "value": "您必須在此步驟中做出預測",
+        "description": "The beginning of the text that says you must make a prediction in a previous step before you can work on this step"
+    },
+    "before_you_can_work": {
+        "value": "在您做這個步驟之前。",
+        "description": "The end of the text that says you must make a prediction in a previous step before you can work on this step"
+    },
+    "are_you_sure": {
+        "value": "你確定要開始收集資料嗎？你一旦開始將無法改變你的預測。",
+        "description": "The text that asks the student if they are sure they want to start collecting data because they won't be able to change their prediction after they start"
+    },
+    "loading": {
+        "value": "載入中...",
+        "description": "The loading message to display when the applet is loading"
+    },
+    "click_allow_run_trust": {
+        "value": "（如果看到跳出窗口，請點擊“允許”、“執行”或“信任”。如果此消息在1分鐘內沒有更改，請關閉你的瀏覽器，在打開重試。）",
+        "description": "Part of the loading message that informs the user to click allow, run, or trust when prompted to allow Java to run"
+    },
+    "error_applets_are_disabled": {
+        "value": "錯誤：您的瀏覽器禁止Java applet。請閱讀說明",
+        "description": "The error message to display when applets are disabled in the browser"
+    },
+    "here": {
+        "value": "在這裡",
+        "description": "The text for the link that will show the user how to enable Java in their browser"
+    },
+    "to_enable_applets": {
+        "value": "在瀏覽器中啟用Java applet。",
+        "description": "The end of the error message to display when applets are disabled in the browser"
+    },
+    "error_x_min_is_not_a_number": {
+        "value": "錯誤：x min不是數字",
+        "description": "The error message to display to the student when they enter a non number into the x min field"
+    },
+    "error_x_max_is_not_a_number": {
+        "value": "錯誤：x max不是數字",
+        "description": "The error message to display to the student when they enter a non number into the x max field"
+    },
+    "error_y_min_is_not_a_number": {
+        "value": "錯誤：y min不是數字",
+        "description": "The error message to display to the student when they enter a non number into the y min field"
+    },
+    "error_y_max_is_not_a_number": {
+        "value": "錯誤：y max不是數字",
+        "description": "The error message to display to the student when they enter a non number into the y max field"
+    },
+    "error_x_min_greater_than_x_max": {
+        "value": "錯誤：x min大於x max",
+        "description": "The error message to display to the student when they enter an x min that is larger than x max"
+    },
+    "error_y_min_greater_than_y_max": {
+        "value": "錯誤：y min大於y max",
+        "description": "The error message to display to the student when they enter an y min that is larger than y max"
+    },
+    "done_loading": {
+        "value": "載入完成",
+        "description": "The done loading message"
+    },
+    "click_start_to_begin": {
+        "value": "（點擊“開始”按鈕開始）",
+        "description": "The instructions included in the done loading message that tells the student to click start"
+    },
+    "your_graph_doesnt_cover_entire_x_axis": {
+        "value": "您的圖形不覆蓋整個x軸。",
+        "description": "The error message that tells the student their graph line does not span the whole x-axis"
+    },
+    "delete": {
+        "value": "刪除",
+        "description": "The label for the delete button for graph point annotations"
+    },
+    "you_must_make_a_prediction_in_steps": {
+        "value": "你必須在下面的步驟中進行預測",
+        "description": "The beginning of the text that says you must make a prediction in the steps below before you can work on this step"
+    }
+}

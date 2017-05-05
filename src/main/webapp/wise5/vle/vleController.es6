@@ -65,6 +65,14 @@ class VLEController {
             this.constraintsDisabled = true;
         }
 
+        // load project-level scripts, if any
+        let script = this.ProjectService.getProjectScript();
+        if (script != null) {
+            this.ProjectService.retrieveScript(script).then((script) => {
+                new Function(script).call(this);
+            });
+        }
+
         this.$scope.$on('currentNodeChanged', (event, args) => {
             var previousNode = args.previousNode;
             var currentNode = this.StudentDataService.getCurrentNode();
@@ -608,6 +616,75 @@ class VLEController {
             this.StudentDataService.updateNodeStatuses();
         }
     }
+
+    /**
+     * Returns WISE API
+     */
+    getWISEAPI() {
+        return {
+            /**
+             * Registers a function that will be invoked before the componentState is saved to the server
+             * @param nodeId the node id
+             * @param componentId the component id
+             * @param additionalProcessingFunction the function to register for the specified node and component
+             */
+            registerAdditionalProcessingFunction: (nodeId, componentId, additionalProcessingFunction) => {
+                this.ProjectService.addAdditionalProcessingFunction(nodeId, componentId, additionalProcessingFunction);
+            },
+            /**
+             * Create an auto score annotation
+             * @param runId the run id
+             * @param periodId the period id
+             * @param nodeId the node id
+             * @param componentId the component id
+             * @param toWorkgroupId the student workgroup id
+             * @param data the annotation data
+             * @returns the auto score annotation
+             */
+            createAutoScoreAnnotation: (nodeId, componentId, data) => {
+
+                let runId = this.ConfigService.getRunId();
+                let periodId = this.ConfigService.getPeriodId();
+                let toWorkgroupId = this.ConfigService.getWorkgroupId();
+
+                // create the auto score annotation
+                let annotation = this.AnnotationService.createAutoScoreAnnotation(runId, periodId, nodeId, componentId, toWorkgroupId, data);
+
+                return annotation;
+            },
+            /**
+             * Create an auto comment annotation
+             * @param runId the run id
+             * @param periodId the period id
+             * @param nodeId the node id
+             * @param componentId the component id
+             * @param toWorkgroupId the student workgroup id
+             * @param data the annotation data
+             * @returns the auto comment annotation
+             */
+            createAutoCommentAnnotation: (nodeId, componentId, data) => {
+
+                let runId = this.ConfigService.getRunId();
+                let periodId = this.ConfigService.getPeriodId();
+                let toWorkgroupId = this.ConfigService.getWorkgroupId();
+
+                // create the auto comment annotation
+                let annotation = this.AnnotationService.createAutoCommentAnnotation(runId, periodId, nodeId, componentId, toWorkgroupId, data);
+
+                return annotation;
+            },
+            /**
+             * Returns the maxScore for the specified node and component
+             * @param nodeId the node id
+             * @param componentId the component id
+             * @returns the max score for the component
+             */
+            getMaxScoreForComponent: (nodeId, componentId) => {
+                return this.ProjectService.getMaxScoreForComponent(nodeId, componentId);
+            }
+        }
+    }
+
 }
 
 VLEController.$inject = [

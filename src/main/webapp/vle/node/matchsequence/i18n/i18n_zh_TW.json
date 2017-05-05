@@ -1,0 +1,78 @@
+{
+    "match_sequence": {
+        "value": "配對問題",
+        "description": "The 'Match & Sequence' title text that is displayed to students"
+    },
+    "choices": {
+        "value": "配對選項",
+        "description": "The 'Choices' text that shows up at the header of the source and target buckets/boxes"
+    },
+    "help": {
+        "value": "說明",
+        "description": "The 'help' link text that is displayed to students"
+    },
+    "check_answer": {
+        "value": "送出答案",
+        "description": "The 'Submit Answer' text on the button for students to submit and check their answer"
+    },
+    "click_ok_to_save": {
+        "value": "按下 'OK' 儲存並鎖定此步驟，您的作業將被儲存且無法再更改。若您仍要繼續這個步驟，請點選'取消'。",
+        "description": "The text to notify the student to click 'OK' to save and lock the step"
+    },
+    "step_completed": {
+        "value": "您已經完成此步驟，請繼續下一個步驟。",
+        "description": "The text to notify the student that they've completed the step and that they should move on"
+    },
+    "correct_feedback": {
+        "value": "您已經從 {1} 選項中成功放置 {0} 個正確的選項。",
+        "description": "Message showing students how many choices they placed correctly"
+    },
+    "please_review": {
+        "value": "請檢查",
+        "description": "'Please review' part of 'Please review Step X before trying again' message asking students to review a step"
+    },
+    "please_review_step": {
+        "value": "你必須先開始 '步驟'",
+        "description": "'Step' part of 'Please review Step X before trying again' message asking students to review a step"
+    },
+    "please_review_before_trying_again": {
+        "value": "再嘗試這個步驟之前。",
+        "description": "'before trying again' part of 'Please review Step X before trying again' message asking students to review a step"
+    },
+    "correct_box_wrong_order": {
+        "value": "選項正確但順序錯誤",
+        "description": "Message to display to student when they got the choice in the right box but in the wrong order"
+    },
+    "no_feedback": {
+        "value": "無回饋",
+        "description": "Message to display to student when there is no feedback to display"
+    },
+    "all_completed_msg": {
+        "value": "恭喜！ 您已經完成這個問題。",
+        "description": "Message to display to student when they've completed the step"
+    },
+    "you_received_x_points": {
+        "value": "您得到 {0} 分。",
+        "description": "Message to display to student how many points they received"
+    },
+    "this_is_attempt_x": {
+        "value": "這是您的第 {0} 次嘗試。",
+        "description": "Message to display to student which attempt they're on"
+    },
+    "this_was_attempt_x": {
+        "value": "這是您的第 {0} 次嘗試。",
+        "description": "Message to display to student which attempt they were on"
+    },
+    "autograded_score": {
+        "value": "自動評分成績: {0}",
+        "description": "Auto graded score that gets displayed in the teacher grading tool."
+    },
+    "current_possible_score": {
+        "value": "目前得分:",
+        "description": "The text 'Current Possible Score:' that shows the score that the student can receive when they answer correctly"
+    },
+    "instructions": {
+        "value": "說明",
+        "description": "Title text for the instructions dialog and link"
+    }
+}

@@ -83,8 +83,8 @@ class StudentProgressController {
         // listen for the studentStatusReceived event
         this.$rootScope.$on('studentStatusReceived', (event, args) => {
             // get the workgroup id
-            var studentStatus = args.studentStatus;
-            var workgroupId = studentStatus.workgroupId;
+            let studentStatus = args.studentStatus;
+            let workgroupId = studentStatus.workgroupId;
 
             // update the time spent for the workgroup
             this.updateTimeSpentForWorkgroupId(workgroupId);

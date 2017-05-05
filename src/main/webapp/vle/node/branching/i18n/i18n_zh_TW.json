@@ -1,0 +1,22 @@
+{
+    "incomplete_paths": {
+        "value": "您尚未完成的路徑",
+        "description": "Paths that have not been completed by students yet"
+    },
+    "completed_paths": {
+        "value": "您已經完成的路徑（點擊查看路徑）",
+        "description": "Paths that have been completed by students"
+    },
+    "no_incomplete_paths": {
+        "value": "你已經完成了所有的路徑。 繼續下一步。",
+        "description": "Paths that have been visited by students"
+    },
+    "no_complete_paths": {
+        "value": "還沒有完成任何路徑。 從上面選擇一個。",
+        "description": "Paths that have been visited by students"
+    },
+    "branch_step_completed_msg": {
+        "value": "你已經完成此步驟。 您可以繼續使用或到下一個步驟。",
+        "description": "Message shown to students telling them that they've completed the branching step"
+    }
+}

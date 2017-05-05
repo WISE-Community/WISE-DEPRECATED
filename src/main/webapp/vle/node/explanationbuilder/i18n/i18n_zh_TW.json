@@ -1,0 +1,118 @@
+{
+    "ok": {
+        "value": "確定",
+        "description": "Text for the word 'OK'"
+    },
+    "cancel": {
+        "value": "取消",
+        "description": "Text for the word 'Cancel'"
+    },
+    "revise": {
+        "value": "修改",
+        "description": "Text for link to revise a changed idea"
+    },
+    "keep": {
+        "value": "保留",
+        "description": "Text for link to keep a changed idea"
+    },
+    "restoreAndRevise": {
+        "value": "復原 & 修改",
+        "description": "Text for link to restore and revise a deleted idea"
+    },
+    "remove": {
+        "value": "刪除",
+        "description": "Text for link to remove a deleted idea from the organizing space"
+    },
+    "readyToExplain": {
+        "value": "準備好解釋!",
+        "description": "Text for the ready to explain button"
+    },
+    "saveResponse": {
+        "value": "儲存回應",
+        "description": "Text for the save explanation response button"
+    },
+    "undoChanges": {
+        "value": "回復變更",
+        "description": "Text for the save explanation response button"
+    },
+    "organizingSpace_instructions": {
+        "value": "這是您的組織空間，請將您的 {0} 拖移到這裡，以幫助您建立問題的回應或說明。",
+        "description": "Instructions to show when the idea organizing space is empty."
+    },
+    "organizingSpace_explainInstructions": {
+        "value": "若您已經組織想法完成 {0}, 請點選 \"{1}\"。",
+        "description": "Text to display in the organizing space when the explanation feature is enabled."
+    },
+    "constraint_mustCompleteExplainWarning": {
+        "value": "您必須完成 {0} {1} 才能繼續進行，請在組織空間中依序排列 {2} ， 請選擇 \"{3}\" 並輸入答案，當您已完成，請選擇 \"{4}\"。",
+        "description": "Text to display when user tries to advance in the project before completing this Explanation Builder step"
+    },
+    "constraint_mustCompleteWarning": {
+        "value": "您必須完成 {0} {1} 才能繼續進行，請在組織空間中依序排列 {2}。",
+        "description": "Text to display when user tries to advance in the project before completing this Explanation Builder step (with explanation feature enabled)"
+    },
+    "ideaBasket_empty": {
+        "value": "您的 {0} 是空的，請點選下方的  \"{1}\" 以新增{2}。",
+        "description": "Text to display when idea basket is empty"
+    },
+    "ideaTableHeader": {
+        "value": "您的 {0}",
+        "description": "Header text for the ideas table"
+    },
+    "addIdea_title": {
+        "value": "新增 {0}",
+        "description": "Title text for the add new idea dialog/form"
+    },
+    "addIdea_textLabel": {
+        "value": "在此輸入您的 {0} *:",
+        "description": "Label for the idea text input field in add or edit idea forms"
+    },
+    "addIdea_required": {
+        "value": "請選擇至少一個 (1)。",
+        "description": "Message to display when a field is required in add or edit idea forms"
+    },
+    "editIdea_title": {
+        "value": "編輯您的 {0}",
+        "description": "Title text for the edit idea dialog/form"
+    },
+    "reviseIdea_title": {
+        "value": "修改您的 {0}",
+        "description": "Title text for the revise idea dialog/form"
+    },
+    "restoreIdea_title": {
+        "value": "復原您的 {0}",
+        "description": "Title text for the revise & restore idea dialog/form"
+    },
+    "saveConfirmation": {
+        "value": "儲存成功! 若您已完成，請繼續下一個 {0}。",
+        "description": "Message to display when student has completed the step"
+    },
+    "unsavedChangesWarning": {
+        "value": "警告: 您尚未儲存變更! 若您要儲存回應，請選擇 {0} 並按下 {1} 按鈕。 您確定不儲存就要離開嗎?",
+        "description": "Warning to display in confirmation dialog when user attempts to leave step without saving response"
+    },
+    "error_failedToRetrieveBasket": {
+        "value": "錯誤訊息: 無法讀取 {0}!  您將無法進行 {1}，請重新整理 {1} 或重新開啟專題。",
+        "description": "Error text to display when system fails to retrieve the Idea Basket from the server"
+    },
+    "idea_title": {
+        "value": "點選拖移並放置到組織空間；點兩下滑鼠開始編輯",
+        "description": "Title/tooltip to display for ideas listed in the Explanation Builder"
+    },
+    "usedIdea_title": {
+        "value": "請點選想法並拖移您的想法組織空間，再次點選可以改變標籤顏色",
+        "description": "Title/tooltip to display for ideas used in the organizing space"
+    },
+    "editIdea_changeConfirm": {
+        "value": "目前 {0} 用於以下的步驟:{1} 若您想變更 {2}, 您也將改變這些步驟的答案。",
+        "description": "Text for the warning confirmation dialog that appears when users attempt to edit an idea that is being used in Explanation Builder steps"
+    },
+    "ideaChangedAlert": {
+        "value": "因您在組織空間中新增{0}，故已 <b>變更</b>，您想如何做呢?",
+        "description": "Text for alert box that appears when an idea being used in this Explanation Builder step has been modified in some way"
+    },
+    "ideaDeletedAlert": {
+        "value": " {0} 已被 <b>刪除</b>，您想如何做呢?",
+        "description": "Text for alert box that appears when an idea being used in this Explanation Builder step has been deleted"
+    }
+}

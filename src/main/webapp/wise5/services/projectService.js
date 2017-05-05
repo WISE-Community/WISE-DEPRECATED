@@ -41,6 +41,9 @@ var ProjectService = function () {
 
         this.$translate = this.$filter('translate');
 
+        // map from nodeId_componentId to array of additionalProcessingFunctions
+        this.additionalProcessingFunctionsMap = {};
+
         // filtering options for navigation displays
         this.filters = [{ 'name': 'all', 'label': 'All' }
         //{'name': 'todo', 'label': 'Todo'},
@@ -9721,6 +9724,75 @@ var ProjectService = function () {
                     }
                 }
             }
+        }
+
+        /**
+         * Get script for this project
+         */
+
+    }, {
+        key: 'getProjectScript',
+        value: function getProjectScript() {
+            return this.project.script;
+        }
+
+        /**
+         * Retrieve the script with the provided script filename
+         * @param scriptFilename
+         */
+
+    }, {
+        key: 'retrieveScript',
+        value: function retrieveScript(scriptFilename) {
+            var assetDirectoryPath = this.ConfigService.getProjectAssetsDirectoryPath();
+            var scriptPath = assetDirectoryPath + "/" + scriptFilename;
+            return this.$http.get(scriptPath).then(function (result) {
+                return result.data;
+            });
+        }
+    }, {
+        key: 'addAdditionalProcessingFunction',
+
+
+        /**
+         * Registers an additionalProcessingFunction for the specified node and component
+         * @param nodeId the node id
+         * @param componentId the component id
+         * @param additionalProcessingFunction the function to register for the node and component.
+         */
+        value: function addAdditionalProcessingFunction(nodeId, componentId, additionalProcessingFunction) {
+            var key = nodeId + "_" + componentId;
+            if (this.additionalProcessingFunctionsMap[key] == null) {
+                this.additionalProcessingFunctionsMap[key] = [];
+            }
+            this.additionalProcessingFunctionsMap[key].push(additionalProcessingFunction);
+        }
+
+        /**
+         * Returns true iff the specified node and component has any registered additionalProcessingFunctions
+         * @param nodeId the node id
+         * @param componentId the component id
+         * @returns true/false
+         */
+
+    }, {
+        key: 'hasAdditionalProcessingFunctions',
+        value: function hasAdditionalProcessingFunctions(nodeId, componentId) {
+            return this.getAdditionalProcessingFunctions(nodeId, componentId) != null;
+        }
+
+        /**
+         * Returns an array of registered additionalProcessingFunctions for the specified node and component
+         * @param nodeId the node id
+         * @param componentId the component id
+         * @returns an array of additionalProcessingFunctions
+         */
+
+    }, {
+        key: 'getAdditionalProcessingFunctions',
+        value: function getAdditionalProcessingFunctions(nodeId, componentId) {
+            var key = nodeId + "_" + componentId;
+            return this.additionalProcessingFunctionsMap[key];
         }
     }]);
 
