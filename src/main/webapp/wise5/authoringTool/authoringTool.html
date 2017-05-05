@@ -1,12 +1,7 @@
-<!-- TODO JB: replace these with appropriate css files -->
 <link rel="stylesheet" href="wise5/themes/default/style/angular-material.css">
-<link rel="stylesheet" href="wise5/themes/default/style/vle.css">
-
+<link rel="stylesheet" href="wise5/themes/default/style/author.css">
 <link rel="stylesheet" href="wise5/lib/bootstrap/css/bootstrap.min.css" />
 <link rel="stylesheet" href="wise5/lib/summernote/dist/summernote.css" />
-<script src="wise5/lib/bootstrap/js/bootstrap.min.js"></script> <!-- TODO: load using jspm -->
-<script src="wise5/lib/summernote/dist/summernote.js"></script> <!-- TODO: load using jspm -->
-<script src="wise5/lib/summernoteExtensions/summernote-ext-addNote.js"></script> <!-- TODO: load using jspm -->
 
 <style>
 .global-message.ng-change {
@@ -15,26 +10,29 @@
 }
 </style>
 
-<div ng-mousemove="authoringToolController.mouseMoved()">
-    <table style="width:100%">
-        <tr>
-            <td style="width:15%">
-                <button id="exitAuthoringToolButton" ng-click="authoringToolController.exit()" translate="backToTeacherHome"></button>
-            </td>
-            <td style="width:15%">
-                <button id="backToMyProjectsAuthoringToolButton"
-                    ng-click="authoringToolController.goToMyProjects()"
-                    ng-show="!authoringToolController.isAuthorOnMyProjectsPage()"
-                    translate="backToMyProjects"></button>
-            </td>
-            <td style="width:70%;text-align:right">
-                <span ng-show="authoringToolController.globalMessage.text"
-                      class="component__actions__info md-caption global-message">
-                      {{authoringToolController.globalMessage.text}} <span class="component__actions__more"><md-tooltip md-direction="top">{{ authoringToolController.globalMessage.time | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip><span am-time-ago="authoringToolController.globalMessage.time"></span></span>
-                </span>
-            </td>
-        </tr>
-    </table>
-<hr/>
-<div ui-view></div>
+<div disable-delete-keypress
+     ng-mousemove='authoringToolController.mouseMoved()'
+     role="main" layout="column" layout-fill>
+    <top-bar logo-path="{{authoringToolController.logoPath}}"
+             project-id="authoringToolController.projectId"
+             project-title="authoringToolController.projectTitle"
+             run-id="authoringToolController.runId"></top-bar>
+    <toolbar ng-if="authoringToolController.showToolbar"
+             number-project="authoringToolController.numberProject"
+             show-step-tools="authoringToolController.showStepTools"
+             view-name="authoringToolController.currentViewName"
+             on-menu-toggle="authoringToolController.toggleMenu()"></toolbar>
+    <md-sidenav md-component-id="monitorSidenav"
+                md-is-open="authoringToolController.menuOpen"
+                md-whiteframe="4">
+        <main-menu state="authoringToolController.$state" views="authoringToolController.views"></main-menu>
+    </md-sidenav>
+    <md-content id="content" flex role="main" layout="column" class="l-main" ng-class="{ 'l-main--with-toolbar': authoringToolController.showToolbar }" flex role="main">
+        <div ui-view></div>
+    </md-content>
+    <side-menu ng-if="authoringToolController.showToolbar" state="authoringToolController.$state" views="authoringToolController.views" on-menu-toggle="authoringToolController.toggleMenu()"></side-menu>
 </div>
+
+<script src="wise5/lib/bootstrap/js/bootstrap.min.js"></script> <!-- TODO: load using jspm -->
+<script src="wise5/lib/summernote/dist/summernote.js"></script> <!-- TODO: load using jspm -->
+<script src="wise5/lib/summernoteExtensions/summernote-ext-addNote.js"></script> <!-- TODO: load using jspm -->

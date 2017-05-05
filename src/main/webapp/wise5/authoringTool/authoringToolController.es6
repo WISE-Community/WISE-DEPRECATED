@@ -6,6 +6,7 @@ class AuthoringToolController {
                 $location,
                 $mdDialog,
                 $scope,
+                $state,
                 $timeout,
                 ConfigService,
                 ProjectService,
@@ -15,17 +16,78 @@ class AuthoringToolController {
         this.$location = $location;
         this.$mdDialog = $mdDialog;
         this.$scope = $scope;
+        this.$state = $state;
         this.$timeout = $timeout;
         this.$translate = this.$filter('translate');
         this.ConfigService = ConfigService;
         this.ProjectService = ProjectService;
         this.SessionService = SessionService;
 
+        this.numberProject = true; // TODO: make dynamic or remove
+
         // the global message that shows up at the top right of the authoring tool
         this.globalMessage = {
             text: '',
             time: ''
         };
+
+        this.menuOpen = false; // boolean to indicate whether authoring sidenav is open
+
+        // ui-views and their corresponding names, labels, and icons
+        this.views = {
+            'root.project': {
+                name: this.$translate('projectStructure'),
+                label: this.$translate('projectStructure'),
+                icon: 'view_list',
+                type: 'primary',
+                showToolbar: true,
+                active: true
+            },
+            'root.project.notebook': {
+                name: this.$translate('notebookSettings'),
+                label: this.$translate('notebookSettings'),
+                icon: 'book',
+                type: 'primary',
+                showToolbar: true,
+                active: true
+            },
+            'root.project.asset': {
+                name: this.$translate('fileManager'),
+                label: this.$translate('fileManager'),
+                icon: 'photo_library',
+                type: 'primary',
+                showToolbar: true,
+                active: true
+            },
+            'root.main': {
+                name: this.$translate('closeProject'),
+                label: this.$translate('closeProject'),
+                icon: 'close',
+                type: 'secondary',
+                showToolbar: false,
+                active: true
+            },
+            'root.project.node': {
+                name: '',
+                label: '',
+                icon: '',
+                type: 'secondary',
+                showToolbar: true,
+                active: false
+            },
+        };
+
+        this.logoPath = this.ProjectService.getThemePath() + '/images/WISE-logo-ffffff.svg';
+
+        this.processUI();
+
+        // listen for state change events
+        this.$scope.$on('$stateChangeSuccess', (event, toState, toParams, fromState, fromParams) => {
+            // close the menu when the state changes
+            this.menuOpen = false;
+
+            this.processUI();
+        });
 
         $scope.$on('showSessionWarning', () => {
 
@@ -141,6 +203,33 @@ class AuthoringToolController {
     }
 
     /**
+     * Update UI items based on state, show or hide relevant menus and toolbars
+     * TODO: remove/rework this and put items in their own ui states?
+     */
+    processUI() {
+        // set current view and whether to show the toolbars and step tools
+        this.showStepTools = (this.$state.$current.name === 'root.project.node');
+        let view = this.views[this.$state.$current.name];
+
+        if (view) {
+            this.currentViewName = view.name;
+            this.showToolbar = view.showToolbar;
+        } else {
+            this.showToolbar = false;
+            this.currentViewName = '';
+        }
+
+        this.projectId = this.ConfigService.getProjectId();
+        this.runId = this.ConfigService.getRunId();
+
+        if (this.projectId) {
+            this.projectTitle = this.ProjectService.getProjectTitle();
+        } else {
+            this.projectTitle = null;
+        }
+    }
+
+    /**
      * Check if the author is on the My Projects page in the Authoring Tool
      * @returns whether the author is on the My Projects page in the Authoring
      * Tool
@@ -165,6 +254,13 @@ class AuthoringToolController {
     goToMyProjects() {
         // send the user to the My Projects page in the Authoring Tool
         this.$location.url('/author');
+    }
+
+    /**
+     * Toggle the authoring tool main menu
+     */
+    toggleMenu() {
+        this.menuOpen = !this.menuOpen;
     }
 
     /**
@@ -204,6 +300,7 @@ AuthoringToolController.$inject = [
     '$location',
     '$mdDialog',
     '$scope',
+    '$state',
     '$timeout',
     'ConfigService',
     'ProjectService',

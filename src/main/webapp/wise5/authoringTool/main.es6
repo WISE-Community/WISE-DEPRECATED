@@ -16,6 +16,7 @@ import angularTranslateLoaderPartial from 'angular-translate-loader-partial';
 import angularWebSocket from 'angular-websocket';
 import AnnotationService from '../services/annotationService';
 import AudioOscillatorComponentModule from '../components/audioOscillator/audioOscillatorComponentModule';
+import AuthoringToolComponents from './authoringToolComponents';
 import AuthoringToolController from './authoringToolController';
 import AuthoringToolMainController from './main/authoringToolMainController';
 import AuthoringToolNewProjectController from './main/authoringToolNewProjectController';
@@ -65,6 +66,7 @@ let authoringModule = angular.module('authoring', [
     'angularMoment',
     'angular-toArrayFilter',
     'audioOscillatorComponentModule',
+    'authoringTool.components',
     'components',
     'conceptMapComponentModule',
     'discussionComponentModule',
