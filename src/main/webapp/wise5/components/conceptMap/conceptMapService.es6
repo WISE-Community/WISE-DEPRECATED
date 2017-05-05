@@ -1043,7 +1043,7 @@ class ConceptMapService extends NodeService {
 
         if (height == null || height == '') {
             // we will default to a height of 600 pixels
-            heigth = 600;
+            height = 600;
         }
 
         var draw = SVG(svgElement);
