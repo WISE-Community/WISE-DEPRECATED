@@ -21,7 +21,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var ConceptMapService = function (_NodeService) {
     _inherits(ConceptMapService, _NodeService);
 
-    function ConceptMapService($filter, $q, $timeout, ConfigService, StudentDataService, UtilService) {
+    function ConceptMapService($filter, $q, $timeout, ConfigService, StudentAssetService, StudentDataService, UtilService) {
         _classCallCheck(this, ConceptMapService);
 
         var _this = _possibleConstructorReturn(this, (ConceptMapService.__proto__ || Object.getPrototypeOf(ConceptMapService)).call(this));
@@ -30,6 +30,7 @@ var ConceptMapService = function (_NodeService) {
         _this.$q = $q;
         _this.$timeout = $timeout;
         _this.ConfigService = ConfigService;
+        _this.StudentAssetService = StudentAssetService;
         _this.StudentDataService = StudentDataService;
         _this.UtilService = UtilService;
         _this.$translate = _this.$filter('translate');
@@ -1238,10 +1239,32 @@ var ConceptMapService = function (_NodeService) {
                         var base64Image = myCanvas.toDataURL('image/png');
 
                         // get the image object
-                        //var imageObject = thisUtilService.getImageObjectFromBase64String(base64Image);
+                        var imageObject = thisUtilService.getImageObjectFromBase64String(base64Image);
 
-                        // resolve the promise with the image
-                        deferred.resolve(base64Image);
+                        // create a student asset image
+                        _this2.StudentAssetService.uploadAsset(imageObject).then(function (unreferencedAsset) {
+
+                            /*
+                             * make a copy of the unreferenced asset so that we
+                             * get a referenced asset
+                             */
+                            _this2.StudentAssetService.copyAssetForReference(unreferencedAsset).then(function (referencedAsset) {
+                                if (referencedAsset != null) {
+                                    /*
+                                     * get the asset url
+                                     * for example
+                                     * /wise/studentuploads/11261/297478/referenced/picture_1494016652542.png
+                                     */
+                                    var referencedAssetUrl = referencedAsset.url;
+
+                                    // remove the unreferenced asset
+                                    _this2.StudentAssetService.deleteAsset(unreferencedAsset);
+
+                                    // resolve the promise with the image url
+                                    deferred.resolve(referencedAssetUrl);
+                                }
+                            });
+                        });
                     };
 
                     // set the src of the image so that the image gets loaded
@@ -3975,7 +3998,7 @@ var ConceptMapLink = function () {
     return ConceptMapLink;
 }();
 
-ConceptMapService.$inject = ['$filter', '$q', '$timeout', 'ConfigService', 'StudentDataService', 'UtilService'];
+ConceptMapService.$inject = ['$filter', '$q', '$timeout', 'ConfigService', 'StudentAssetService', 'StudentDataService', 'UtilService'];
 
 exports.default = ConceptMapService;
 //# sourceMappingURL=conceptMapService.js.map

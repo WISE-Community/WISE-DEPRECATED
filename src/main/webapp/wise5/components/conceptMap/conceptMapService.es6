@@ -5,6 +5,7 @@ class ConceptMapService extends NodeService {
                 $q,
                 $timeout,
                 ConfigService,
+                StudentAssetService,
                 StudentDataService,
                 UtilService) {
         super();
@@ -12,6 +13,7 @@ class ConceptMapService extends NodeService {
         this.$q = $q;
         this.$timeout = $timeout;
         this.ConfigService = ConfigService;
+        this.StudentAssetService = StudentAssetService;
         this.StudentDataService = StudentDataService;
         this.UtilService = UtilService;
         this.$translate = this.$filter('translate');
@@ -1123,10 +1125,32 @@ class ConceptMapService extends NodeService {
                     var base64Image = myCanvas.toDataURL('image/png');
 
                     // get the image object
-                    //var imageObject = thisUtilService.getImageObjectFromBase64String(base64Image);
+                    var imageObject = thisUtilService.getImageObjectFromBase64String(base64Image);
 
-                    // resolve the promise with the image
-                    deferred.resolve(base64Image);
+                    // create a student asset image
+                    this.StudentAssetService.uploadAsset(imageObject).then((unreferencedAsset) => {
+
+                        /*
+                         * make a copy of the unreferenced asset so that we
+                         * get a referenced asset
+                         */
+                        this.StudentAssetService.copyAssetForReference(unreferencedAsset).then((referencedAsset) => {
+                            if (referencedAsset != null) {
+                                /*
+                                 * get the asset url
+                                 * for example
+                                 * /wise/studentuploads/11261/297478/referenced/picture_1494016652542.png
+                                 */
+                                var referencedAssetUrl = referencedAsset.url;
+
+                                // remove the unreferenced asset
+                                this.StudentAssetService.deleteAsset(unreferencedAsset);
+
+                                // resolve the promise with the image url
+                                deferred.resolve(referencedAssetUrl);
+                            }
+                        });
+                    });
                 };
 
                 // set the src of the image so that the image gets loaded
@@ -3581,6 +3605,7 @@ ConceptMapService.$inject = [
     '$q',
     '$timeout',
     'ConfigService',
+    'StudentAssetService',
     'StudentDataService',
     'UtilService'
 ];
