@@ -1726,9 +1726,6 @@ var StudentDataService = function () {
                     // get the node statuses
                     var nodeStatuses = this.getNodeStatuses();
 
-                    // get the latest component state
-                    var latestComponentState = this.getLatestComponentState();
-
                     // get the project completion percentage
                     var projectCompletion = this.getProjectCompletion();
 
@@ -1738,7 +1735,6 @@ var StudentDataService = function () {
                     studentStatusJSON.periodId = periodId;
                     studentStatusJSON.workgroupId = workgroupId;
                     studentStatusJSON.currentNodeId = currentNodeId;
-                    studentStatusJSON.previousComponentState = latestComponentState;
                     studentStatusJSON.nodeStatuses = nodeStatuses;
                     studentStatusJSON.projectCompletion = projectCompletion;
 

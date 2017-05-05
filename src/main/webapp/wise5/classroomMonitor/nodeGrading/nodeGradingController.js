@@ -114,16 +114,6 @@ var NodeGradingController = function () {
             }
         });
 
-        this.$scope.$on('studentStatusReceived', function (event, status) {
-            // new student status received
-            var workgroupId = status.workgroupId;
-            var nodeId = status.previousComponentState.nodeId;
-            if (nodeId === _this.nodeId && _this.workgroupsById[workgroupId]) {
-                // a workgroup has a new componentState for this node
-                _this.updateWorkgroup(workgroupId);
-            }
-        });
-
         this.$scope.$on('annotationReceived', function (event, args) {
             var annotation = args.annotation;
 
