@@ -52,7 +52,7 @@ import org.wise.portal.presentation.web.listeners.WISESessionListener;
 import org.wise.portal.service.portal.PortalService;
 
 /**
- * Controller for Admin Index page
+ * Controller for Admin index page
  * @author Hiroki Terashima
  */
 @Controller
@@ -95,17 +95,6 @@ public class AdminIndexController {
 		// add if this WISE instance allows batch creation of user accounts
 		modelAndView.addObject("isBatchCreateUserAccountsEnabled", Boolean.valueOf(wiseProperties.getProperty("isBatchCreateUserAccountsEnabled", "false")));
 
-		// now fetch recent commits
-		String recentCommitHistoryJSONString = retrieveRecentCommitHistoryJSONString();
-		try {
-			// now parse commit history json and add to ModelAndView.
-			JSONArray recentCommitHistoryJSONArray = new JSONArray(recentCommitHistoryJSONString);
-			modelAndView.addObject("recentCommitHistoryJSON", recentCommitHistoryJSONArray);
-		} catch (Exception e) {
-			modelAndView.addObject("recentCommitHistoryJSON", "error retrieving WISE commit history");
-			e.printStackTrace();
-		}
-		
 		// add number of curently-logged in users to model
 		HashMap<String, User> allLoggedInUsers = 
 			(HashMap<String, User>) request.getSession()
@@ -145,11 +134,9 @@ public class AdminIndexController {
 	 * If there was an error retrieving the latest version, write the error message in the response.
  	 */
 	@RequestMapping(value = "/admin/latestWISEVersion", method = RequestMethod.GET)
-	public void getLatestGlobalWISEVersion(
-			HttpServletResponse response
-	) throws IOException {
+	public void getLatestGlobalWISEVersion(HttpServletResponse response) throws IOException {
 		String latestWISEVersion = null;
-		String globalWISEVersionJSONString = retrieveGlobalWISEVersionJSONString();
+		String globalWISEVersionJSONString = retrieveString(GET_WISE_INFO_URL);
 		try {
 			// now parse global WISE version JSON and add to ModelAndView.
 			JSONObject globalWISEVersionJSON = new JSONObject(globalWISEVersionJSONString);
@@ -162,35 +149,34 @@ public class AdminIndexController {
 		response.getWriter().print(latestWISEVersion);
 	}
 
-	private String retrieveGlobalWISEVersionJSONString() {
-		HttpClient client = HttpClientBuilder.create().build();
-		HttpGet request = new HttpGet(GET_WISE_INFO_URL);
-		
-		byte[] responseBody = null;
-		String responseString = null;
-
+	/**
+	 * Gets the recent commits to WISE project from GitHub and prints the result in the response.
+	 * If there was an error during the GET, print a "error"
+	 * @param response
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "/admin/recentCommitHistory", method = RequestMethod.GET)
+	public void getRecentCommitHistory(HttpServletResponse response) throws IOException {
+		// now fetch recent commits from GitHub
+		String recentCommitHistoryJSONString = retrieveString(WISE_COMMIT_HISTORY_URL);
 		try {
-			HttpResponse response = client.execute(request);
-
-			// Read the response body.
-			InputStream responseBodyAsStream = response.getEntity().getContent();
-			responseBody = IOUtils.toByteArray(responseBodyAsStream);
-		} catch (IOException e) {
-			System.err.println("Fatal transport error: " + e.getMessage());
+			// now parse commit history json and add to ModelAndView.
+			JSONArray recentCommitHistoryJSONArray = new JSONArray(recentCommitHistoryJSONString);
+			response.getWriter().print(recentCommitHistoryJSONArray.toString());
+		} catch (Exception e) {
+			response.getWriter().print("error");
 			e.printStackTrace();
-		} finally {
-			// Release the connection.
-			request.releaseConnection();
 		}
-		if (responseBody != null) {
-			responseString = new String(responseBody);
-		}
-		return responseString;
 	}
-	
-	private String retrieveRecentCommitHistoryJSONString() {
+
+	/**
+	 * GET's the specified url and returns the string
+	 * @param url
+	 * @return
+	 */
+	private String retrieveString(String url) {
 		HttpClient client = HttpClientBuilder.create().build();
-		HttpGet request = new HttpGet(WISE_COMMIT_HISTORY_URL);
+		HttpGet request = new HttpGet(url);
 
 		byte[] responseBody = null;
 		String responseString = null;
@@ -198,14 +184,14 @@ public class AdminIndexController {
 		try {
 			HttpResponse response = client.execute(request);
 			
-			// Read the response body.
+			// read the response body.
 			InputStream responseBodyAsStream = response.getEntity().getContent();
 			responseBody = IOUtils.toByteArray(responseBodyAsStream);
 		} catch (IOException e) {
 			System.err.println("Fatal transport error: " + e.getMessage());
 			e.printStackTrace();
 		} finally {
-			// Release the connection.
+			// release the connection.
 			request.releaseConnection();
 		}
 		if (responseBody != null) {
