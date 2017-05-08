@@ -95,8 +95,8 @@
 					</div>
 					<div class="sectionContent">
 						<h5>
-							<spring:message code='admin.index.list' />
 							<sec:authorize access="hasRole('ROLE_ADMINISTRATOR')">
+								<spring:message code='admin.index.list' />
 								<spring:message code='admin.index.allUsersWhoLoggedIn' />
 								<a href="${contextPath}/admin/account/manageusers.html?onlyShowLoggedInUser=true">
 									<spring:message code='now' /> (${numCurrentlyLoggedInUsers})</a> |
@@ -111,19 +111,19 @@
 							</sec:authorize>
 						</h5>
 						<h5>
+							<spring:message code='admin.index.find' />
+							<a href="${contextPath}/admin/account/lookupuser.html?userType=teacher"><spring:message
+									code='teacher_cap' /></a> | <a
+								href="${contextPath}/admin/account/lookupuser.html?userType=student"><spring:message
+								code='student_cap' /></a>
+						</h5>
+						<h5>
 							<spring:message code='admin.index.list' />
 							<a href="${contextPath}/admin/account/manageusers.html?userType=teacher"><spring:message
 									code='admin.index.allTeachers' /></a> | <a
 								href="${contextPath}/admin/account/manageusers.html?userType=student"><spring:message
 								code='admin.index.allStudents' /></a>
 
-						</h5>
-						<h5>
-							<spring:message code='admin.index.find' />
-							<a href="${contextPath}/admin/account/lookupuser.html?userType=teacher"><spring:message
-									code='teacher_cap' /></a> | <a
-								href="${contextPath}/admin/account/lookupuser.html?userType=student"><spring:message
-								code='student_cap' /></a>
 						</h5>
 						<h5>
 							<a href="${contextPath}/admin/account/enabledisableuser"><spring:message
