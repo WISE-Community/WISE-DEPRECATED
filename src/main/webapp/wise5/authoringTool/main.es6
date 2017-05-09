@@ -309,8 +309,8 @@ let authoringModule = angular.module('authoring', [
             });
 
             $mdThemingProvider.theme('default')
-                .primaryPalette('purple', {
-                    'default': '700'
+                .primaryPalette('pink', {
+                    'default': '900'
                 })
                 .accentPalette('accent',  {
                     'default': '500'
@@ -328,8 +328,8 @@ let authoringModule = angular.module('authoring', [
                 .primaryPalette('light', {
                     'default': 'A100'
                 })
-                .accentPalette('purple', {
-                    'default': '700'
+                .accentPalette('pink', {
+                    'default': '900'
                 });
 
             $mdThemingProvider.setDefaultTheme('default');

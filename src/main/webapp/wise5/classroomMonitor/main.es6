@@ -286,7 +286,7 @@ let classroomMonitorModule = angular.module('classroomMonitor', [
             });
 
             $mdThemingProvider.theme('default')
-                .primaryPalette('light-blue', {
+                .primaryPalette('blue', {
                     'default': '900'
                 })
                 .accentPalette('accent',  {
@@ -305,7 +305,7 @@ let classroomMonitorModule = angular.module('classroomMonitor', [
                 .primaryPalette('light', {
                     'default': 'A100'
                 })
-                .accentPalette('light-blue', {
+                .accentPalette('blue', {
                     'default': '900'
                 });
 

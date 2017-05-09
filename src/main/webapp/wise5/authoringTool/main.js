@@ -398,8 +398,8 @@ var authoringModule = _angular2.default.module('authoring', [(0, _angularDragula
         'contrastLightColors': undefined
     });
 
-    $mdThemingProvider.theme('default').primaryPalette('purple', {
-        'default': '700'
+    $mdThemingProvider.theme('default').primaryPalette('pink', {
+        'default': '900'
     }).accentPalette('accent', {
         'default': '500'
     }).warnPalette('red', {
@@ -413,8 +413,8 @@ var authoringModule = _angular2.default.module('authoring', [(0, _angularDragula
 
     $mdThemingProvider.theme('light').primaryPalette('light', {
         'default': 'A100'
-    }).accentPalette('purple', {
-        'default': '700'
+    }).accentPalette('pink', {
+        'default': '900'
     });
 
     $mdThemingProvider.setDefaultTheme('default');
