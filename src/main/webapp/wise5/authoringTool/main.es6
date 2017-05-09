@@ -265,8 +265,7 @@ let authoringModule = angular.module('authoring', [
             .useSanitizeValueStrategy('sanitizeParameters', 'escape');
 
             // ngMaterial default theme configuration
-            // TODO: make dynamic and support alternate themes; allow projects to specify theme parameters and settings
-            $mdThemingProvider.definePalette('primary', {
+            /*$mdThemingProvider.definePalette('primary', {
                 '50': 'e1f0f4',
                 '100': 'b8dbe4',
                 '200': '8ec6d4',
@@ -286,7 +285,7 @@ let authoringModule = angular.module('authoring', [
                 'contrastDarkColors': ['50', '100', //hues which contrast should be 'dark' by default
                     '200', '300', 'A100'],
                 'contrastLightColors': undefined    // could also specify this if default was 'dark'
-            });
+            });*/
 
             $mdThemingProvider.definePalette('accent', {
                 '50': 'fde9e6',
@@ -310,7 +309,9 @@ let authoringModule = angular.module('authoring', [
             });
 
             $mdThemingProvider.theme('default')
-                .primaryPalette('primary')
+                .primaryPalette('purple', {
+                    'default': '700'
+                })
                 .accentPalette('accent',  {
                     'default': '500'
                 })
@@ -327,7 +328,9 @@ let authoringModule = angular.module('authoring', [
                 .primaryPalette('light', {
                     'default': 'A100'
                 })
-                .accentPalette('primary');
+                .accentPalette('purple', {
+                    'default': '700'
+                });
 
             $mdThemingProvider.setDefaultTheme('default');
     }]);
