@@ -140,7 +140,7 @@ const WorkgroupNodeGrading = {
         onUpdate: '&'
     },
     template:
-        `<div class="nav-item__grading md-whiteframe-1dp">
+        `<div class="nav-item__grading">
             <div id="{{component.id}}_{{$ctrl.workgroupId}}" class="component--grading" ng-repeat='component in $ctrl.components'>
                 <div ng-if="$ctrl.components.length > 1" layout="row" layout-align="end center">
                     <md-button ng-click="$ctrl.toggleComponentVisibility($event, component.id)"
