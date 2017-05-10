@@ -26,11 +26,7 @@ package org.wise.portal.dao.work.impl;
 import org.hibernate.Criteria;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
-import org.hibernate.criterion.Conjunction;
-import org.hibernate.criterion.Disjunction;
-import org.hibernate.criterion.LogicalExpression;
-import org.hibernate.criterion.Restrictions;
-import org.hibernate.criterion.SimpleExpression;
+import org.hibernate.criterion.*;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.stereotype.Repository;
@@ -156,6 +152,9 @@ public class HibernateStudentWorkDao extends AbstractHibernateDao<StudentWork> i
             // add the restriction to the main criteria
             sessionCriteria.add(disjunction);
         }
+
+        // order the student work by server save time from oldest to newest
+        sessionCriteria.addOrder(Order.asc("serverSaveTime"));
 
         return sessionCriteria.list();
     }
