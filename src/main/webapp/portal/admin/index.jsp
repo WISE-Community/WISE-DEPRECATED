@@ -203,6 +203,7 @@
 					<div class="sectionContent">
 						<h5><a href="${contextPath}/translate"><spring:message code='admin.index.translateWISE' /></a></h5>
 						<h5><a href="${contextPath}/admin/run/mergespreadsheets.html"><spring:message code='admin.index.mergeFiles' /></a></h5>
+						<h5><a href="${contextPath}/admin/run/replacebase64withpng.html"><spring:message code='admin.index.replaceBase64WithPNG' /></a></h5>
 					</div>
 
 					<sec:authorize access="hasRole('ROLE_ADMINISTRATOR')">
