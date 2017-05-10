@@ -30,7 +30,7 @@
             <li>{{ 'MAX_SCORE' | translate }} <input ng-model="reportNote.maxScore" ng-model-options='{ debounce: 1000 }' /></li>
             <li>{{ 'description' | translate }} <textarea rows="5" cols="50" ng-model="reportNote.description" ng-model-options='{ debounce: 1000 }' /></li>
             <li>{{ 'prompt' | translate }} <textarea rows="5" cols="50" ng-model="reportNote.prompt" ng-model-options='{ debounce: 1000 }' /></li>
-            <li>{{ 'content' | translate }} <textarea rows="15" cols="50" ng-model="reportNote.content" />
+            <li>{{ 'content' | translate }} <!--<textarea rows="15" cols="50" ng-model="reportNote.content" />-->
                 <summernote id='{{reportNote.summernoteId}}'
                     ng-model='reportNote.summernoteHTML'
                     ng-change='authorNotebookController.summernoteHTMLChanged(reportNote)'

@@ -1,5 +1,6 @@
 // Colors
 $_primary-color: #1C8CA8; // should match the default color of your ng-material default theme's 'primary' palette
+$_selected-bg: lighten($_primary-color, 59%);
 
 $color: (
   'primary': $_primary-color,
@@ -22,19 +23,16 @@ $color: (
   'text-light': rgba(255, 255, 255, 0.87),
   'text-light-secondary': rgba(255, 255, 255, 0.54),
   'text-light-disabled': rgba(255, 255, 255, 0.26),
-  'selected-bg': lighten($_primary-color, 59%),
+  'selected-bg': $_selected-bg,
   'score': #FFC107
 );
-
-//'warn': #F44336, // should match the default color of your ng-material default theme's 'warn' palette
-//'success': #62C766,
 
 $body-color: (
   'body': map-get($color, 'text'),
   'body-bg': map-get($color, 'gray-lighter')
 );
 
-$colors: map-merge($color, $body-color);
+$colors: (map-merge($color, $body-color));
 
 // Typography
 $baseline-grid:            8px;

@@ -65,6 +65,8 @@ class NodeGradingController {
                 this.nodeContent = node;
             }
 
+            this.hiddenComponents = this.getComponentIdsWithoutWork();
+
             this.workgroups = this.ConfigService.getClassmateUserInfos();
             this.workgroupsById = {}; // object that will hold workgroup names, statuses, scores, notifications, etc.
             this.workVisibilityById = {}; // object that specifies whether student work is visible for each workgroup
@@ -352,6 +354,33 @@ class NodeGradingController {
         }
 
         return components;
+    }
+
+    /**
+     * Gets the Ids of comonponents in this node that don't capture student work
+     * @return array of component Ids
+     */
+    getComponentIdsWithoutWork() {
+        let components = [];
+        let componentIds = [];
+
+        if (this.nodeContent) {
+            components = this.nodeContent.components;
+        }
+
+        if (components) {
+            let n = components.length;
+
+            for (let i = 0; i < n; i++) {
+                let component = components[i];
+                let hasWork = this.ProjectService.componentHasWork(component);
+                if (!hasWork) {
+                    componentIds.push(component.id);
+                }
+            }
+        }
+
+        return componentIds;
     }
 
     getComponentById(componentId) {

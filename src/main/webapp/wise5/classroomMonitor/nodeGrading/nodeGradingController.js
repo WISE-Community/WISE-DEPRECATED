@@ -63,6 +63,8 @@ var NodeGradingController = function () {
                 _this.nodeContent = node;
             }
 
+            _this.hiddenComponents = _this.getComponentIdsWithoutWork();
+
             _this.workgroups = _this.ConfigService.getClassmateUserInfos();
             _this.workgroupsById = {}; // object that will hold workgroup names, statuses, scores, notifications, etc.
             _this.workVisibilityById = {}; // object that specifies whether student work is visible for each workgroup
@@ -381,6 +383,36 @@ var NodeGradingController = function () {
             }
 
             return components;
+        }
+
+        /**
+         * Gets the Ids of comonponents in this node that don't capture student work
+         * @return array of component Ids
+         */
+
+    }, {
+        key: 'getComponentIdsWithoutWork',
+        value: function getComponentIdsWithoutWork() {
+            var components = [];
+            var componentIds = [];
+
+            if (this.nodeContent) {
+                components = this.nodeContent.components;
+            }
+
+            if (components) {
+                var n = components.length;
+
+                for (var i = 0; i < n; i++) {
+                    var component = components[i];
+                    var hasWork = this.ProjectService.componentHasWork(component);
+                    if (!hasWork) {
+                        componentIds.push(component.id);
+                    }
+                }
+            }
+
+            return componentIds;
         }
     }, {
         key: 'getComponentById',

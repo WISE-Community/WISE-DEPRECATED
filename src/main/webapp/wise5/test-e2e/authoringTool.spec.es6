@@ -29,7 +29,6 @@ describe('WISE Authoring Tool', () => {
         );
     }
 
-    var exitAuthoringToolButton;
     var createNewProjectButton;
 
     it('should require user to log in to use the authoring tool', () => {
@@ -50,11 +49,9 @@ describe('WISE Authoring Tool', () => {
         browser.refresh();  // needed for this issue https://github.com/angular/protractor/issues/2643
         waitForUrlToChangeTo(new RegExp('http://localhost:8080/wise/author#/', 'gi'));
 
-        // check that the exitAuthoringTool button and create new project buttons are displayed
-        expect(browser.getTitle()).toEqual('WISE Authoring');
+        // check that the create new project button is displayed
+        expect(browser.getTitle()).toEqual('WISE Authoring Tool');
         expect(browser.getCurrentUrl()).toEqual('http://localhost:8080/wise/author#/');
-        exitAuthoringToolButton = $('#exitAuthoringToolButton');
-        expect(exitAuthoringToolButton.isPresent()).toBeTruthy();
         createNewProjectButton = $('#createNewProjectButton');
         expect(createNewProjectButton.isPresent()).toBeTruthy();
     });
@@ -89,12 +86,11 @@ describe('WISE Authoring Tool', () => {
         expect($("#copyButton").isEnabled()).toBe(false);
         expect($("#deleteButton").isEnabled()).toBe(false);
         expect($("#saveProjectButton").isEnabled()).toBe(true);
-        expect($("#closeProjectButton").isEnabled()).toBe(true);
         expect($("#createNewActivityButton").isEnabled()).toBe(true);
         expect($("#createNewStepButton").isEnabled()).toBe(true);
         expect($("#previewProjectButton").isEnabled()).toBe(true);
-        expect($("#manageAssetsButton").isEnabled()).toBe(true);
-        expect($("#editNotebookSettingsButton").isEnabled()).toBe(true);
+        expect(element(by.xpath('//side-menu/div/a[@aria-label="File Manager"]')).isDisplayed()).toBe(true);
+        expect(element(by.xpath('//side-menu/div/a[@aria-label="Notebook Settings"]')).isDisplayed()).toBe(true);
     });
 
     it('should create new steps', () => {
@@ -151,7 +147,7 @@ describe('WISE Authoring Tool', () => {
     });
 
     it('should display my assets', () => {
-        $("#manageAssetsButton").click();
+        element(by.xpath('//side-menu/div/a[@aria-label="File Manager"]')).click();
         expect(browser.getCurrentUrl()).toMatch('http://localhost:8080/wise/author#/project/[0-9]+/asset');
         expect($(".drop-box").isPresent()).toBeTruthy();  // the drop box for uploading assets should exist.
         $("#closeAssetsButton").click();
@@ -159,7 +155,7 @@ describe('WISE Authoring Tool', () => {
     });
 
     it('should allow user to edit notebook settings', () => {
-        $("#editNotebookSettingsButton").click();
+        element(by.xpath('//side-menu/div/a[@aria-label="Notebook Settings"]')).click();
         expect(browser.getCurrentUrl()).toMatch('http://localhost:8080/wise/author#/project/[0-9]+/notebook');
         let enableNotebookCheckbox = $("#enableNotebookCheckbox");
         expect(enableNotebookCheckbox.isPresent()).toBeTruthy();  // the checkbox for enabling/disabling notebook should exist.
@@ -191,6 +187,7 @@ describe('WISE Authoring Tool', () => {
     // TODO: add test for copying a step
 
 
+    /*
     it('should exit the authoring tool and then sign out', () => {
         exitAuthoringToolButton.click();
 
@@ -202,4 +199,5 @@ describe('WISE Authoring Tool', () => {
         expect(browser.getTitle()).toEqual('Web-based Inquiry Science Environment (WISE)');
         expect(browser.getCurrentUrl()).toEqual('http://localhost:8080/wise/');
     });
+    */
 });

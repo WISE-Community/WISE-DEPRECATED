@@ -10,6 +10,7 @@
 // 1. Base
 @import "base/helpers",
         "base/config",
+        "base/colors--monitor",
         "base/presets";
 
 // 2. Layouts
@@ -33,6 +34,7 @@
         "modules/nav--grading",
         "modules/menu",
         "modules/node",
+        "modules/node--grading",
         "modules/notebook",
         "modules/notifications",
         "modules/account-menu",

@@ -28,13 +28,13 @@
     "openResponse.pleaseWaitWeAreScoringYourWork": "正在評分，請稍候。",
     "openResponse.previousScore": "先前的得分",
     "openResponse.previousVersions": "先前的版本",
+    "openResponse.promptTip": "如果您想在提示中使用豐富的視覺效果（圖片，影片，連結，符號等），請使用此處的HTML組件",
     "openResponse.scoreOn": "評分",
     "openResponse.starterSentence": "起始句",
+    "openResponse.tip": "給",
     "openResponse.type": "類型",
     "openResponse.youGotAScoreOf": "您的分數是",
     "openResponse.youHaveNoMoreChances": "您沒有機會收到您的答案的回饋。",
     "openResponse.youHaveOneChance": "您還有{{numberOfSubmitsLeft}}次收到回饋的機會，這將幫助您的作業最佳化。您做好接收回饋的準備了嗎？",
-    "openResponse.youHaveMultipleChances": "您有 {{numberOfSubmitsLeft}}次收到回饋的機會，這將幫助您的作業最佳化。您做好接收回饋的準備了嗎？",
-    "openResponse.promptTip": "如果您想在提示中使用豐富的視覺效果（圖片，影片，連結，符號等），請使用此處的HTML組件",
-    "openResponse.tip": "給"
+    "openResponse.youHaveMultipleChances": "您有 {{numberOfSubmitsLeft}}次收到回饋的機會，這將幫助您的作業最佳化。您做好接收回饋的準備了嗎？"
 }

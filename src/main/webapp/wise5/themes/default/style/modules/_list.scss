@@ -19,6 +19,22 @@
             }
         }
     }
+
+    .md-subheader, &.md-subheader {
+        color: color('text');
+
+        md-icon {
+            vertical-align: middle;
+        }
+
+        .md-subheader-inner {
+            padding: 0;
+        }
+
+        .md-avatar {
+            margin-right: 8px;
+        }
+    }
 }
 
 .list-item--info {
@@ -43,6 +59,16 @@
 
 .list-item--actions {
     padding: 0 8px !important;
+}
+
+.list-item__subheader-button {
+    text-transform: none;
+    width: 100%;
+    padding: 8px 16px;
+    margin: 0;
+    white-space: normal;
+    text-align: left;
+    line-height: 1.4;
 }
 
 .user-list {

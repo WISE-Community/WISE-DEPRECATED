@@ -9,7 +9,7 @@ const TopBar = {
     },
     template:
         `<md-toolbar class="l-header">
-            <div class="md-toolbar-tools gray-darkest-bg">
+            <div class="md-toolbar-tools">
                 <span class="md-button logo-link">
                     <img ng-src="{{ $ctrl.logoPath }}" alt="{{ 'WISE_LOGO' | translate }}" class="logo" />
                 </span>

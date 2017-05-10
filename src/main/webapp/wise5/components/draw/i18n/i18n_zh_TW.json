@@ -3,6 +3,7 @@
     "draw.areYouSureYouWantToClearYourDrawing": "您確定要清除您的繪圖嗎？",
     "draw.areYouSureYouWantToDeleteThisStamp": "您確定要刪除這枚印章嗎？",
     "draw.cloneTool": "複製",
+    "draw.cloneToolTooltip": "複製",
     "draw.deleteStarterDrawing": "刪除起始繪圖",
     "draw.deleteTool": "刪除",
     "draw.deleteToolTooltip": "刪除選擇的物件",
@@ -20,12 +21,14 @@
     "draw.redoTool": "重做",
     "draw.saveStarterDrawing": "儲存起始繪圖",
     "draw.selectTool": "選取功能",
+    "draw.selectToolTooltip": "選取功能",
     "draw.sendBackTool": "回到上一步",
     "draw.sendBackToolTooltip": "選擇物件退回一步",
     "draw.sendForwardTool": "回到下一步",
     "draw.sendForwardToolTooltip": "選擇物件往前一步",
     "draw.shapeTool": "形狀",
     "draw.shapeToolTooltip": "形狀 (點擊並按住以顯示可用的形狀)",
+    "draw.stamps": "印章",
     "draw.stampTool": "印章",
     "draw.stampToolTooltip": "印章 (點擊並按住可顯示可用的類型)",
     "draw.strokeColorTool": "外框顏色",
@@ -36,8 +39,5 @@
     "draw.textToolTooltip": "輸入文字 (點擊並按住以顯示可用的字體大小)",
     "draw.undo": "取消",
     "draw.undoTool": "取消",
-    "draw.versions": "版本",
-    "draw.cloneToolTooltip": "複製",
-    "draw.selectToolTooltip": "選取功能",
-    "draw.stamps": "印章"
+    "draw.versions": "版本"
 }

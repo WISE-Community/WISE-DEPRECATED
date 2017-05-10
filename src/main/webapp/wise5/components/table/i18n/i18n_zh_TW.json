@@ -5,14 +5,14 @@
     "table.areYouSureYouWantToDeleteThisRow": "您真的要刪除這一列嗎？",
     "table.cellSize": "整體格子大小",
     "table.columns": "欄數",
-    "table.importData": "導入資料",
-    "table.rows": "列數",
     "table.deleteColumn": "刪除欄",
     "table.deleteRow": "刪除列",
+    "table.importData": "導入資料",
     "table.insertColumn": "插入欄",
     "table.insertRow": "插入列",
+    "table.rows": "列數",
     "table.size": "尺寸",
     "table.sizeSymbol": "S",
-    "table.uneditableSymbol": "U",
-    "table.uneditable": "不可編輯"
+    "table.uneditable": "不可編輯",
+    "table.uneditableSymbol": "U"
 }

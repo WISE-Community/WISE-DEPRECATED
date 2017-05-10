@@ -33,6 +33,12 @@ blockquote {
     border-width: 0 0 0 3px;
 }
 
+a {
+    &:hover, &:focus { // TODO: remove when bootstrap css dependency is removed
+        color: color('primary');
+    }
+}
+
 .button--small {
     min-width: 0;
 }
@@ -261,10 +267,11 @@ md-icon, .md-button:not([disabled]) {
   }
 }
 
-.md-subheader, md-list .md-subheader, .md-subheader a, md-list .md-subheader a,
-.md-subheader md-icon, md-list .md-subheader md-icon {
-  color: color('accent-2');
-}
+/*.md-subheader, md-list .md-subheader {
+    a, md-icon {
+        color: color('accent-2');
+    }
+}*/
 
 // Drawing tool custom - TODO: move to draw tool module scss
 .dt-container .dt-tools {

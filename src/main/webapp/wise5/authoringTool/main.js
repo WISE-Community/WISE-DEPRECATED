@@ -356,8 +356,7 @@ var authoringModule = _angular2.default.module('authoring', [(0, _angularDragula
     }).determinePreferredLanguage().useSanitizeValueStrategy('sanitizeParameters', 'escape');
 
     // ngMaterial default theme configuration
-    // TODO: make dynamic and support alternate themes; allow projects to specify theme parameters and settings
-    $mdThemingProvider.definePalette('primary', {
+    /*$mdThemingProvider.definePalette('primary', {
         '50': 'e1f0f4',
         '100': 'b8dbe4',
         '200': '8ec6d4',
@@ -372,12 +371,12 @@ var authoringModule = _angular2.default.module('authoring', [(0, _angularDragula
         'A200': '66e2ff',
         'A400': '17bee5',
         'A700': '00A1C6',
-        'contrastDefaultColor': 'light', // whether, by default, text (contrast)
-        // on this palette should be dark or light
+        'contrastDefaultColor': 'light',    // whether, by default, text (contrast)
+                                            // on this palette should be dark or light
         'contrastDarkColors': ['50', '100', //hues which contrast should be 'dark' by default
-        '200', '300', 'A100'],
-        'contrastLightColors': undefined // could also specify this if default was 'dark'
-    });
+            '200', '300', 'A100'],
+        'contrastLightColors': undefined    // could also specify this if default was 'dark'
+    });*/
 
     $mdThemingProvider.definePalette('accent', {
         '50': 'fde9e6',
@@ -399,7 +398,9 @@ var authoringModule = _angular2.default.module('authoring', [(0, _angularDragula
         'contrastLightColors': undefined
     });
 
-    $mdThemingProvider.theme('default').primaryPalette('primary').accentPalette('accent', {
+    $mdThemingProvider.theme('default').primaryPalette('pink', {
+        'default': '900'
+    }).accentPalette('accent', {
         'default': '500'
     }).warnPalette('red', {
         'default': 'A700'
@@ -412,7 +413,9 @@ var authoringModule = _angular2.default.module('authoring', [(0, _angularDragula
 
     $mdThemingProvider.theme('light').primaryPalette('light', {
         'default': 'A100'
-    }).accentPalette('primary');
+    }).accentPalette('pink', {
+        'default': '900'
+    });
 
     $mdThemingProvider.setDefaultTheme('default');
 }]);
