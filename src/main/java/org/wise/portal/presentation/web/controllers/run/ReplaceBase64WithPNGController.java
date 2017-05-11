@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.wise.portal.dao.work.StudentWorkDao;
 import org.wise.portal.domain.workgroup.Workgroup;
+import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.vle.wise5.VLEService;
 import org.wise.vle.domain.work.StudentWork;
 
@@ -40,6 +41,9 @@ public class ReplaceBase64WithPNGController {
     private VLEService vleService;
 
     @Autowired
+    private RunService runService;
+
+    @Autowired
     private StudentWorkDao studentWorkDao;
 
     @RequestMapping(method = RequestMethod.POST)
@@ -52,7 +56,7 @@ public class ReplaceBase64WithPNGController {
 
         Integer id = null;
         Integer periodId = null;
-        Integer workgroupId = null;
+        //Integer workgroupId = null;
         Boolean isAutoSave = null;
         Boolean isSubmit = null;
         String componentType = null;
@@ -93,215 +97,221 @@ public class ReplaceBase64WithPNGController {
         debugOutput(writer, response, "Component ID: " + componentId);
         debugOutput(writer, response, "");
 
-        // get all the student work for the given run id, node id, and component id
-        List<StudentWork> studentWorkList = vleService.getStudentWorkList(id, runId, periodId, workgroupId,
-                isAutoSave, isSubmit, nodeId, componentId, componentType, components);
+        // get all the workgroups for the run
+        Set<Workgroup> workgroups = runService.getWorkgroups(new Long(runId));
 
-        // the number of student work rows we have found
-        debugOutput(writer, response, "Found " + studentWorkList.size() + " Student Work Rows");
+        debugOutput(writer, response, "Found " + workgroups.size() + " Workgroups");
+        debugOutput(writer, response, "");
 
-        // sort the student work by workgroupId, serverSaveTime
-        StudentWorkComparator studentWorkComparator = new StudentWorkComparator();
-        studentWorkList.sort(studentWorkComparator);
+        Iterator<Workgroup> workgroupsIterator = workgroups.iterator();
 
-        /*
-         * Regex to match the base64 string in the student data
-         * The student data we are looking for will contain something like
-         * \"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABEwAAALMCAYAAAD+YSdYAAAgAElEQVR4X\"
-         */
-        Pattern p = Pattern.compile(".*\\\\\"(data:image/png;base64,(.*?))\\\\\".*");
+        // loop through all the workgroups
+        while(workgroupsIterator.hasNext()) {
 
-        // create the base64 decoder
-        Base64.Decoder decoder = Base64.getDecoder();
+            // get a workgroup
+            Workgroup workgroup = workgroupsIterator.next();
 
-        /*
-         * used to remember the previous workgroup id. this is used to determine when we want to clear the
-         * base64ToFilePath hashmap.
-         */
-        Long previousWorkgroupId = null;
+            // get a workgroup id
+            Integer workgroupId = workgroup.getId().intValue();
 
-        // a hashmap for storing mappings of base64 string to image file path
-        HashMap base64ToFilePath = null;
+            debugOutput(writer, response, "Handling Workgroup ID: " + workgroupId);
 
-        Iterator<StudentWork> studentWorkIterator = studentWorkList.iterator();
+            // get the student work for the given run id, node id, component id, and workgroup id
+            List<StudentWork> studentWorkList = vleService.getStudentWorkList(id, runId, periodId, workgroupId,
+                    isAutoSave, isSubmit, nodeId, componentId, componentType, components);
 
-        // loop through all the student work
-        while(studentWorkIterator.hasNext()) {
-
+            // the number of student work rows we have found
+            debugOutput(writer, response, "Found " + studentWorkList.size() + " Student Work Rows");
             debugOutput(writer, response, "");
 
-            // get a student work
-            StudentWork tempStudentWork = studentWorkIterator.next();
+            // sort the student work by workgroupId, serverSaveTime
+            StudentWorkComparator studentWorkComparator = new StudentWorkComparator();
+            studentWorkList.sort(studentWorkComparator);
 
-            // get the workgroup id
-            Long tempWorkgroupId = tempStudentWork.getWorkgroup().getId();
+            /*
+             * Regex to match the base64 string in the student data
+             * The student data we are looking for will contain something like
+             * \"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABEwAAALMCAYAAAD+YSdYAAAgAElEQVR4X\"
+             */
+            Pattern p = Pattern.compile(".*\\\\\"(data:image/png;base64,(.*?))\\\\\".*");
 
-            // get the student work id
-            Integer tempStudentWorkId = tempStudentWork.getId();
+            // create the base64 decoder
+            Base64.Decoder decoder = Base64.getDecoder();
 
-            // get the server save time
-            Long tempServerSaveTime = tempStudentWork.getServerSaveTime().getTime();
+            // a hashmap for storing mappings of base64 string to image file path
+            HashMap base64ToFilePath = new HashMap();
 
-            debugOutput(writer, response, "Workgroup ID: " + tempWorkgroupId + ", Student Work ID: " + tempStudentWorkId + ", Server Save Time: " + new Date(tempServerSaveTime));
+            Iterator<StudentWork> studentWorkIterator = studentWorkList.iterator();
 
-            if (previousWorkgroupId == null || !tempWorkgroupId.equals(previousWorkgroupId)) {
-                // we have started looking at a new workgroup id
+            // loop through all the student work
+            while(studentWorkIterator.hasNext()) {
 
-                // remove all the entries in the hash map
-                base64ToFilePath.clear();
+                // get a student work
+                StudentWork tempStudentWork = studentWorkIterator.next();
 
-                // create a clean hashmap
-                base64ToFilePath = new HashMap();
+                // get the workgroup id
+                Long tempWorkgroupId = tempStudentWork.getWorkgroup().getId();
 
-                // attempt to run the garbage collector
-                System.gc();
-            }
+                // get the student work id
+                Integer tempStudentWorkId = tempStudentWork.getId();
 
-            // get the student data
-            String studentData = tempStudentWork.getStudentData();
+                // get the server save time
+                Long tempServerSaveTime = tempStudentWork.getServerSaveTime().getTime();
 
-            // run the matcher on the student data
-            Matcher m = p.matcher(studentData);
+                debugOutput(writer, response, "Workgroup ID: " + tempWorkgroupId + ", Student Work ID: " + tempStudentWorkId + ", Server Save Time: " + new Date(tempServerSaveTime));
 
-            if (m.matches()) {
-                // we have found a match
-                debugOutput(writer, response, "Found Base64 string");
+                // get the student data
+                String studentData = tempStudentWork.getStudentData();
 
-                String base64StringWithPrefix = m.group(1);
-                debugOutput(writer, response, "base64StringWithPrefix: " + truncateString(base64StringWithPrefix));
+                // run the matcher on the student data
+                Matcher m = p.matcher(studentData);
 
-                // get the base64 string from the group match
-                String base64String = m.group(2);
-                debugOutput(writer, response, "base64String: " + truncateString(base64String));
+                if (m.matches()) {
+                    // we have found a match
+                    debugOutput(writer, response, "Found Base64 string");
 
-                /*
-                 * look for the base64 in our hashmap to see if we have already converted this base64
-                 * string to an image before
-                 */
-                String filePath = (String) base64ToFilePath.get(base64StringWithPrefix);
+                    String base64StringWithPrefix = m.group(1);
+                    debugOutput(writer, response, "base64StringWithPrefix: " + truncateString(base64StringWithPrefix));
 
-                if (filePath == null) {
-                    // we have not previously seen this base64 string from this student
+                    // get the base64 string from the group match
+                    String base64String = m.group(2);
+                    debugOutput(writer, response, "base64String: " + truncateString(base64String));
 
-                    debugOutput(writer, response, "Base64 string found in hash: false");
+                    /*
+                     * look for the base64 in our hashmap to see if we have already converted this base64
+                     * string to an image before
+                     */
+                    String filePath = (String) base64ToFilePath.get(base64StringWithPrefix);
 
-                    // check if the base64 is valid base64
-                    if (org.apache.commons.codec.binary.Base64.isBase64(base64String)) {
-                        // the string is a valid base64 string
+                    if (filePath == null) {
+                        // we have not previously seen this base64 string from this student
 
-                        // create an image from the base64 string
-                        byte[] imageByte = decoder.decode(base64String);
-                        ByteArrayInputStream bis = new ByteArrayInputStream(imageByte);
-                        BufferedImage image = ImageIO.read(bis);
-                        bis.close();
+                        debugOutput(writer, response, "Base64 string found in hash: false");
 
-                        // get the current time in milliseconds from the epoch
-                        currentTimeMillis = System.currentTimeMillis();
+                        // check if the base64 is valid base64
+                        if (org.apache.commons.codec.binary.Base64.isBase64(base64String)) {
+                            // the string is a valid base64 string
 
-                        // create the file name for the new png file we are going to create
-                        String newFileName = "picture_" + currentTimeMillis + ".png";
+                            // create an image from the base64 string
+                            byte[] imageByte = decoder.decode(base64String);
+                            ByteArrayInputStream bis = new ByteArrayInputStream(imageByte);
+                            BufferedImage image = ImageIO.read(bis);
+                            bis.close();
 
-                        /*
-                         * create the path to the file we are going to create
-                         * example
-                         * /src/main/webapp/studentuploads/11258/297450/referenced/
-                         */
-                        String newSystemFilePathFolder = studentUploadsBaseDir + "/" + runId + "/" + tempWorkgroupId + "/referenced";
+                            // get the current time in milliseconds from the epoch
+                            currentTimeMillis = System.currentTimeMillis();
 
-                        /*
-                         * create the path to the file we are going to create
-                         * example
-                         * /src/main/webapp/studentuploads/11258/297450/referenced/picture_1494355244394.png
-                         */
-                        String newSystemFilePath = studentUploadsBaseDir + "/" + runId + "/" + tempWorkgroupId + "/referenced/" + newFileName;
+                            // create the file name for the new png file we are going to create
+                            String newFileName = "picture_" + currentTimeMillis + ".png";
 
-                        /*
-                         * create the path to the file we are going to create
-                         * example
-                         * /wise/studentuploads/11258/297450/referenced/picture_1494355244394.png
-                         */
-                        String newWebFilePath = studentUploadsBaseWWW + "/" + runId + "/" + tempWorkgroupId + "/referenced/" + newFileName;
+                            /*
+                             * create the path to the file we are going to create
+                             * example
+                             * /src/main/webapp/studentuploads/11258/297450/referenced/
+                             */
+                            String newSystemFilePathFolder = studentUploadsBaseDir + "/" + runId + "/" + tempWorkgroupId + "/referenced";
 
-                        // create a handle to the file we want to create
-                        File outputFile = new File(newSystemFilePath);
+                            /*
+                             * create the path to the file we are going to create
+                             * example
+                             * /src/main/webapp/studentuploads/11258/297450/referenced/picture_1494355244394.png
+                             */
+                            String newSystemFilePath = studentUploadsBaseDir + "/" + runId + "/" + tempWorkgroupId + "/referenced/" + newFileName;
 
-                        // create a handle to the folder we want to create an image in
-                        File outputFolder = new File(newSystemFilePathFolder);
+                            /*
+                             * create the path to the file we are going to create
+                             * example
+                             * /wise/studentuploads/11258/297450/referenced/picture_1494355244394.png
+                             */
+                            String newWebFilePath = studentUploadsBaseWWW + "/" + runId + "/" + tempWorkgroupId + "/referenced/" + newFileName;
 
-                        // check if the folder exists
-                        if (!outputFolder.exists()) {
-                            // the folder doesn't exist so we will make it
-                            outputFolder.mkdirs();
-                        }
+                            // create a handle to the file we want to create
+                            File outputFile = new File(newSystemFilePath);
 
-                        debugOutput(writer, response, "Creating new image: " + newSystemFilePath);
+                            // create a handle to the folder we want to create an image in
+                            File outputFolder = new File(newSystemFilePathFolder);
 
-                        // check if the file already exists
-                        if (!outputFile.exists()) {
-                            // the file does not exist
+                            // check if the folder exists
+                            if (!outputFolder.exists()) {
+                                // the folder doesn't exist so we will make it
+                                outputFolder.mkdirs();
+                            }
 
-                            // create the image file
-                            outputFile.createNewFile();
-                            ImageIO.write(image, "png", outputFile);
+                            debugOutput(writer, response, "Creating new image: " + newSystemFilePath);
 
-                            // increment the number of images created
-                            imagesCreatedCounter++;
+                            // check if the file already exists
+                            if (!outputFile.exists()) {
+                                // the file does not exist
 
-                            // add the mapping from base64 string to image file path
-                            base64ToFilePath.put(base64StringWithPrefix, newWebFilePath);
+                                // create the image file
+                                outputFile.createNewFile();
+                                ImageIO.write(image, "png", outputFile);
 
-                            // replace the base64 string with the image file path in the student data
-                            String updatedStudentData = studentData.replace(base64StringWithPrefix, newWebFilePath);
+                                // increment the number of images created
+                                imagesCreatedCounter++;
 
-                            debugOutput(writer, response, "Replacing " + truncateString(base64StringWithPrefix) + " with " + newWebFilePath);
+                                // add the mapping from base64 string to image file path
+                                base64ToFilePath.put(base64StringWithPrefix, newWebFilePath);
 
-                            // set the updated student data back into the student work row
-                            tempStudentWork.setStudentData(updatedStudentData);
+                                // replace the base64 string with the image file path in the student data
+                                String updatedStudentData = studentData.replace(base64StringWithPrefix, newWebFilePath);
 
-                            // save the row back to the database
-                            studentWorkDao.save(tempStudentWork);
+                                debugOutput(writer, response, "Replacing " + truncateString(base64StringWithPrefix) + " with " + newWebFilePath);
 
-                            // increment the number of student data replaced
-                            replaceCounter++;
+                                // set the updated student data back into the student work row
+                                tempStudentWork.setStudentData(updatedStudentData);
+
+                                // save the row back to the database
+                                studentWorkDao.save(tempStudentWork);
+
+                                // increment the number of student data replaced
+                                replaceCounter++;
+                            } else {
+                                // the file already exists, it should never go here
+                                debugOutput(writer, response, "Error: The file we are trying to create already exists");
+                            }
                         } else {
-                            // the file already exists, it should never go here
-                            debugOutput(writer, response, "Error: The file we are trying to create already exists");
+                            debugOutput(writer, response, "Error: Invalid Base64 string");
                         }
                     } else {
-                        debugOutput(writer, response, "Error: Invalid Base64 string");
+                        /*
+                         * we have previously seen this base64 string from this student and created an
+                         * image for it so we will reuse that image file name
+                         */
+
+                        debugOutput(writer, response, "Base64 string found in hash: true");
+                        debugOutput(writer, response, "Reusing image");
+
+                        // increment the number of images found in the hash
+                        imagesFoundInHashCounter++;
+
+                        // replace the base64 string with the image file path in the student data
+                        String updatedStudentData = studentData.replace(base64StringWithPrefix, filePath);
+
+                        debugOutput(writer, response, "Replacing " + truncateString(base64StringWithPrefix) + " with " + filePath);
+
+                        // set the updated student data back into the student work row
+                        tempStudentWork.setStudentData(updatedStudentData);
+
+                        // save the row back to the database
+                        studentWorkDao.save(tempStudentWork);
+
+                        // increment the number of student data replaced
+                        replaceCounter++;
                     }
                 } else {
-                    /*
-                     * we have previously seen this base64 string from this student and created an
-                     * image for it so we will reuse that image file name
-                     */
-
-                    debugOutput(writer, response, "Base64 string found in hash: true");
-                    debugOutput(writer, response, "Reusing image");
-
-                    // increment the number of images found in the hash
-                    imagesFoundInHashCounter++;
-
-                    // replace the base64 string with the image file path in the student data
-                    String updatedStudentData = studentData.replace(base64StringWithPrefix, filePath);
-
-                    debugOutput(writer, response, "Replacing " + truncateString(base64StringWithPrefix) + " with " + filePath);
-
-                    // set the updated student data back into the student work row
-                    tempStudentWork.setStudentData(updatedStudentData);
-
-                    // save the row back to the database
-                    studentWorkDao.save(tempStudentWork);
-
-                    // increment the number of student data replaced
-                    replaceCounter++;
+                    // we did not find any Base64 string
+                    debugOutput(writer, response, "Base64 string not found");
                 }
-            } else {
-                // we did not find any Base64 string
-                debugOutput(writer, response, "Base64 string not found");
+
+                debugOutput(writer, response, "");
             }
 
-            previousWorkgroupId = tempWorkgroupId;
+            // remove all the entries in the hash map
+            base64ToFilePath.clear();
+
+            // attempt to run the garbage collector
+            System.gc();
         }
 
         debugOutput(writer, response, "");
