@@ -58,10 +58,6 @@ public class ReplaceBase64WithPNGController {
         String componentType = null;
         List<JSONObject> components = null;
 
-        // get all the student work for the given run id, node id, and component id
-        List<StudentWork> studentWorkList = vleService.getStudentWorkList(id, runId, periodId, workgroupId,
-                isAutoSave, isSubmit, nodeId, componentId, componentType, components);
-
         // counter for the number of student data we have replaced
         int replaceCounter = 0;
 
@@ -96,6 +92,10 @@ public class ReplaceBase64WithPNGController {
         debugOutput(writer, response, "Node ID: " + nodeId);
         debugOutput(writer, response, "Component ID: " + componentId);
         debugOutput(writer, response, "");
+
+        // get all the student work for the given run id, node id, and component id
+        List<StudentWork> studentWorkList = vleService.getStudentWorkList(id, runId, periodId, workgroupId,
+                isAutoSave, isSubmit, nodeId, componentId, componentType, components);
 
         // the number of student work rows we have found
         debugOutput(writer, response, "Found " + studentWorkList.size() + " Student Work Rows");
@@ -145,8 +145,16 @@ public class ReplaceBase64WithPNGController {
             debugOutput(writer, response, "Workgroup ID: " + tempWorkgroupId + ", Student Work ID: " + tempStudentWorkId + ", Server Save Time: " + new Date(tempServerSaveTime));
 
             if (previousWorkgroupId == null || !tempWorkgroupId.equals(previousWorkgroupId)) {
-                // we have started looking at a new workgroup id so we will create a clean hashmap
+                // we have started looking at a new workgroup id
+
+                // remove all the entries in the hash map
+                base64ToFilePath.clear();
+
+                // create a clean hashmap
                 base64ToFilePath = new HashMap();
+
+                // attempt to run the garbage collector
+                System.gc();
             }
 
             // get the student data
