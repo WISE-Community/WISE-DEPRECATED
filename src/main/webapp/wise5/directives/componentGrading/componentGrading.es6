@@ -97,10 +97,10 @@ class ComponentGradingController {
 
         this.latestTeacherAnnotationTime = this.getLatestTeacherAnnotationTime();
 
-        this.hasNewWork = this.hasNewWork();
+        this.hasNewWork = this.checkHasNewWork();
     }
 
-    hasNewWork() {
+    checkHasNewWork() {
         let result = false;
 
         if (this.latestComponentStateTime) {

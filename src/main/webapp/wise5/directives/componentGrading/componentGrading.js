@@ -102,11 +102,11 @@ var ComponentGradingController = function () {
 
             this.latestTeacherAnnotationTime = this.getLatestTeacherAnnotationTime();
 
-            this.hasNewWork = this.hasNewWork();
+            this.hasNewWork = this.checkHasNewWork();
         }
     }, {
-        key: 'hasNewWork',
-        value: function hasNewWork() {
+        key: 'checkHasNewWork',
+        value: function checkHasNewWork() {
             var result = false;
 
             if (this.latestComponentStateTime) {
