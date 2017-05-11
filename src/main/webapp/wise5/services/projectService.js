@@ -9609,6 +9609,13 @@ var ProjectService = function () {
 
                                 // set the number for the node
                                 this.nodeIdToNumber[nodeId] = number;
+                            } else {
+                                /*
+                                 * We have calculated the node number before so we
+                                 * will return. This will prevent infinite looping
+                                 * within the project.
+                                 */
+                                return;
                             }
 
                             // increment the step number for the next node to use
@@ -9687,10 +9694,11 @@ var ProjectService = function () {
                             }
                         } else {
                             /*
-                             * the group has previously been assigned a number so we
-                             * will use it
+                             * We have calculated the node number before so we
+                             * will return. This will prevent infinite looping
+                             * within the project.
                              */
-                            currentActivityNumber = this.nodeIdToNumber[parentGroup.id];
+                            return;
                         }
 
                         if (node.startId != null && node.startId != '') {
