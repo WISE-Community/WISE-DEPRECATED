@@ -539,7 +539,7 @@ class LabelController {
                  * there is an existing background image so we will ask the
                  * student if they want to change it
                  */
-                var answer = confirm(this.$translate('label.areYouSureYouWantToChangeTheBackgroundImage'));
+                var answer = confirm(this.labelController.$translate('label.areYouSureYouWantToChangeTheBackgroundImage'));
 
                 if (answer) {
                     // the student wants to change the background image
@@ -1138,7 +1138,7 @@ class LabelController {
 
         // set the submit counter
         studentData.submitCounter = this.submitCounter;
-        
+
         // the student submitted this work
         componentState.isSubmit = this.isSubmit;
 
