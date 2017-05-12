@@ -9,15 +9,18 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var ClassResponseController = function () {
-    function ClassResponseController($scope, $element, StudentStatusService, ConfigService) {
+    function ClassResponseController($scope, $element, $filter, StudentStatusService, ConfigService) {
         var _this = this;
 
         _classCallCheck(this, ClassResponseController);
 
         this.$scope = $scope;
         this.$element = $element;
+        this.$filter = $filter;
         this.StudentStatusService = StudentStatusService;
         this.ConfigService = ConfigService;
+
+        this.$translate = this.$filter('translate');
 
         this.$scope.$watch(function () {
             return _this.response.replies.length;
@@ -49,6 +52,44 @@ var ClassResponseController = function () {
             // call the callback function in discussionController
             this.submitbuttonclicked({ r: response });
         }
+
+        /**
+         * The delete button was clicked on a student post
+         * @param componentState the student component state
+         */
+
+    }, {
+        key: 'deleteButtonClicked',
+        value: function deleteButtonClicked(componentState) {
+
+            var answer = confirm(this.$translate("discussion.areYouSureYouWantToDeleteThisPost"));
+
+            if (answer) {
+                // the teacher has answered yes to delete
+
+                // tell the discussionController to delete the post
+                this.deletebuttonclicked({ componentState: componentState });
+            }
+        }
+
+        /**
+         * The undo delete button was clicked on a student post
+         * @param componentState the student component state
+         */
+
+    }, {
+        key: 'undoDeleteButtonClicked',
+        value: function undoDeleteButtonClicked(componentState) {
+
+            var answer = confirm(this.$translate("discussion.areYouSureYouWantToShowThisPost"));
+
+            if (answer) {
+                // the teacher has answered yes to undo the delete
+
+                // tell the discussionController to undo the delete of the post
+                this.undodeletebuttonclicked({ componentState: componentState });
+            }
+        }
     }, {
         key: 'toggleExpanded',
         value: function toggleExpanded(open) {
@@ -75,11 +116,14 @@ var ClassResponseController = function () {
     return ClassResponseController;
 }();
 
-ClassResponseController.$inject = ['$scope', '$element', 'StudentStatusService', 'ConfigService'];
+ClassResponseController.$inject = ['$scope', '$element', '$filter', 'StudentStatusService', 'ConfigService'];
 
 var ClassResponseComponentOptions = {
     bindings: {
         response: '=',
+        mode: '=',
+        deletebuttonclicked: '&',
+        undodeletebuttonclicked: '&',
         submitbuttonclicked: '&',
         studentdatachanged: '&'
     },

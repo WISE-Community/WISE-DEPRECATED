@@ -320,7 +320,7 @@ class AnnotationService {
 
                         // make sure the annotation is for an active component
                         if (this.ProjectService.isActive(nodeId, componentId)) {
-                            
+
                             var scoreFound = nodeId + '-' + componentId;
 
                             // check if we have obtained a score from this component already
@@ -476,6 +476,34 @@ class AnnotationService {
         var localNotebookItemId = null;
         var notebookItemId = null;
         var annotationType = 'autoComment';
+        var clientSaveTime = Date.parse(new Date());
+
+        var annotation = this.createAnnotation(
+            annotationId, runId, periodId, fromWorkgroupId, toWorkgroupId,
+            nodeId, componentId, studentWorkId, localNotebookItemId, notebookItemId,
+            annotationType, data, clientSaveTime
+        );
+
+        return annotation;
+    }
+
+    /**
+     * Create an auto comment annotation
+     * @param runId the run id
+     * @param periodId the period id
+     * @param nodeId the node id
+     * @param componentId the component id
+     * @param fromWorkgroupId the teacher workgroup id
+     * @param toWorkgroupId the student workgroup id
+     * @param studentWorkId the component state id
+     * @param data the annotation data
+     * @returns the inappropriate flag annotation
+     */
+    createInappropriateFlagAnnotation(runId, periodId, nodeId, componentId, fromWorkgroupId, toWorkgroupId, studentWorkId, data) {
+        var annotationId = null;
+        var localNotebookItemId = null;
+        var notebookItemId = null;
+        var annotationType = 'inappropriateFlag';
         var clientSaveTime = Date.parse(new Date());
 
         var annotation = this.createAnnotation(
@@ -941,8 +969,6 @@ class AnnotationService {
 
         return null;
     }
-
-
 }
 
 AnnotationService.$inject = [

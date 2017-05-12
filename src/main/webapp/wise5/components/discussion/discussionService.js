@@ -112,6 +112,7 @@ var DiscussionService = function (_NodeService) {
                     params.nodeId = nodeId;
                     params.componentId = componentId;
                     params.getStudentWork = true;
+                    params.getAnnotations = true;
                     httpParams.params = params;
 
                     this.$http(httpParams).then(angular.bind(this, function (result) {

@@ -527,6 +527,33 @@ var AnnotationService = function () {
         }
 
         /**
+         * Create an auto comment annotation
+         * @param runId the run id
+         * @param periodId the period id
+         * @param nodeId the node id
+         * @param componentId the component id
+         * @param fromWorkgroupId the teacher workgroup id
+         * @param toWorkgroupId the student workgroup id
+         * @param studentWorkId the component state id
+         * @param data the annotation data
+         * @returns the inappropriate flag annotation
+         */
+
+    }, {
+        key: 'createInappropriateFlagAnnotation',
+        value: function createInappropriateFlagAnnotation(runId, periodId, nodeId, componentId, fromWorkgroupId, toWorkgroupId, studentWorkId, data) {
+            var annotationId = null;
+            var localNotebookItemId = null;
+            var notebookItemId = null;
+            var annotationType = 'inappropriateFlag';
+            var clientSaveTime = Date.parse(new Date());
+
+            var annotation = this.createAnnotation(annotationId, runId, periodId, fromWorkgroupId, toWorkgroupId, nodeId, componentId, studentWorkId, localNotebookItemId, notebookItemId, annotationType, data, clientSaveTime);
+
+            return annotation;
+        }
+
+        /**
          * Get the latest annotations for a given component (as an object)
          * @param nodeId the node id
          * @param componentId the component id

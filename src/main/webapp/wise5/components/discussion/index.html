@@ -208,6 +208,9 @@
                     <class-response ng-repeat="componentState in discussionController.topLevelResponses.slice().reverse()"
                                     ng-if="mdScreen ? $odd : true"
                                     response="componentState" submitbuttonclicked="submitbuttonclicked(r)"
+                                    mode="discussionController.mode"
+                                    deletebuttonclicked="discussionController.deletebuttonclicked(componentState)"
+                                    undodeletebuttonclicked="discussionController.undodeletebuttonclicked(componentState)"
                                     studentdatachanged="studentdatachanged()"
                                     class="post animate-repeat"></class-response>
                 </div>
@@ -215,6 +218,9 @@
                     <class-response ng-repeat="componentState in discussionController.topLevelResponses.slice().reverse()"
                                     ng-if="$even"
                                     response="componentState" submitbuttonclicked="submitbuttonclicked(r)"
+                                    mode="discussionController.mode"
+                                    deletebuttonclicked="discussionController.deletebuttonclicked(componentState)"
+                                    undodeletebuttonclicked="discussionController.undodeletebuttonclicked(componentState)"
                                     studentdatachanged="studentdatachanged()"
                                     class="animate-repeat"
                                     style="display: block;"></class-response>

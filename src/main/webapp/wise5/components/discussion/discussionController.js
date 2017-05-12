@@ -196,7 +196,11 @@ var DiscussionController = function () {
                  */
                 var componentStates = this.DiscussionService.getPostsAssociatedWithWorkgroupId(this.componentId, this.workgroupId);
 
-                this.setClassResponses(componentStates);
+                // get the innappropriate flag annotations for the component states
+                var annotations = this.getInappropriateFlagAnnotationsByComponentStates(componentStates);
+
+                // show the posts
+                this.setClassResponses(componentStates, annotations);
 
                 this.isDisabled = true;
 
@@ -661,8 +665,14 @@ var DiscussionController = function () {
                 if (result != null) {
                     var componentStates = result.studentWorkList;
 
+                    /*
+                     * get the annotations in case there are any that have
+                     * inappropriate flags
+                     */
+                    var annotations = result.annotations;
+
                     // set the classmate responses
-                    _this3.setClassResponses(componentStates);
+                    _this3.setClassResponses(componentStates, annotations);
                 }
             });
         }
@@ -1148,8 +1158,9 @@ var DiscussionController = function () {
         /**
          * Set the class responses into the controller
          * @param componentStates the class component states
+         * @param annotations the inappropriate flag annotations
          */
-        value: function setClassResponses(componentStates) {
+        value: function setClassResponses(componentStates, annotations) {
 
             this.classResponses = [];
 
@@ -1174,6 +1185,9 @@ var DiscussionController = function () {
 
                             if (componentState.studentData.isSubmit) {
 
+                                // get the latest inappropriate flag for this compnent state
+                                var latestInappropriateFlagAnnotation = this.getLatestInappropriateFlagAnnotationByStudentWorkId(annotations, componentState.id);
+
                                 // add the user names to the component state so we can display next to the response
                                 var userNames = this.ConfigService.getUserNamesByWorkgroupId(workgroupId);
                                 componentState.userNames = userNames.map(function (obj) {
@@ -1183,8 +1197,31 @@ var DiscussionController = function () {
                                 // add a replies array to the component state that we will fill with component state replies later
                                 componentState.replies = [];
 
-                                // add the component state to our array
-                                this.classResponses.push(componentState);
+                                if (this.mode == 'grading') {
+
+                                    if (latestInappropriateFlagAnnotation != null) {
+                                        /*
+                                         * Set the inappropriate flag annotation into
+                                         * the component state. This is used for the
+                                         * grading tool to determine whether to show
+                                         * the 'Delete' button or the 'Undo Delete'
+                                         * button.
+                                         */
+                                        componentState.latestInappropriateFlagAnnotation = latestInappropriateFlagAnnotation;
+                                    }
+
+                                    // add the component state to our array
+                                    this.classResponses.push(componentState);
+                                } else if (this.mode == 'student') {
+
+                                    if (latestInappropriateFlagAnnotation != null && latestInappropriateFlagAnnotation.data != null && latestInappropriateFlagAnnotation.data.action == 'Delete') {
+
+                                        // do not show this post because the teacher has deleted it
+                                    } else {
+                                        // add the component state to our array
+                                        this.classResponses.push(componentState);
+                                    }
+                                }
                             }
                         }
                     }
@@ -1197,14 +1234,47 @@ var DiscussionController = function () {
             this.retrievedClassmateResponses = true;
         }
     }, {
-        key: 'processResponses',
+        key: 'getLatestInappropriateFlagAnnotationByStudentWorkId',
 
+
+        /**
+         * Get the latest inappropriate flag annotation for a student work id
+         * @param annotations an array of annotations
+         * @param studentWorkId a student work id
+         * @return the latest inappropriate flag annotation for the given student
+         * work id
+         */
+        value: function getLatestInappropriateFlagAnnotationByStudentWorkId(annotations, studentWorkId) {
+
+            if (annotations != null) {
+
+                // loop through all the annotations from newest to oldest
+                for (var a = annotations.length - 1; a >= 0; a--) {
+                    var annotation = annotations[a];
+
+                    if (annotation != null) {
+                        if (studentWorkId == annotation.studentWorkId && annotation.type == 'inappropriateFlag') {
+                            /*
+                             * we have found an inappropriate flag annotation for
+                             * the student work id we are looking for
+                             */
+                            return annotation;
+                        }
+                    }
+                }
+            }
+
+            return null;
+        }
 
         /**
          * Process the class responses. This will put responses into the
          * replies arrays.
          * @param classResponses an array of component states
          */
+
+    }, {
+        key: 'processResponses',
         value: function processResponses(componentStates) {
 
             if (componentStates) {
@@ -1717,6 +1787,161 @@ var DiscussionController = function () {
 
             // the authoring component content has changed so we will save the project
             this.authoringViewComponentChanged();
+        }
+
+        /**
+         * The teacher has clicked the delete button to delete a post. We won't
+         * actually delete the student work, we'll just create an inappropriate
+         * flag annotation which prevents the students in the class from seeing
+         * the post.
+         * @param componentState the student component state the teacher wants to
+         * delete.
+         */
+
+    }, {
+        key: 'deletebuttonclicked',
+        value: function deletebuttonclicked(componentState) {
+            var _this7 = this;
+
+            if (componentState != null) {
+
+                var toWorkgroupId = componentState.workgroupId;
+
+                var userInfo = this.ConfigService.getUserInfoByWorkgroupId(toWorkgroupId);
+
+                var periodId = null;
+
+                if (userInfo != null) {
+                    periodId = userInfo.periodId;
+                }
+
+                var teacherUserInfo = this.ConfigService.getMyUserInfo();
+
+                var fromWorkgroupId = null;
+
+                if (teacherUserInfo != null) {
+                    fromWorkgroupId = teacherUserInfo.workgroupId;
+                }
+
+                var runId = this.ConfigService.getRunId();
+                var nodeId = this.nodeId;
+                var componentId = this.componentId;
+                var studentWorkId = componentState.id;
+                var data = {};
+                data.action = "Delete";
+
+                // create the inappropriate flag 'Delete' annotation
+                var annotation = this.AnnotationService.createInappropriateFlagAnnotation(runId, periodId, nodeId, componentId, fromWorkgroupId, toWorkgroupId, studentWorkId, data);
+
+                // save the annotation to the server
+                this.AnnotationService.saveAnnotation(annotation).then(function () {
+
+                    // get the component states made by the student
+                    var componentStates = _this7.DiscussionService.getPostsAssociatedWithWorkgroupId(_this7.componentId, _this7.workgroupId);
+
+                    // get the annotations for the component states
+                    var annotations = _this7.getInappropriateFlagAnnotationsByComponentStates(componentStates);
+
+                    // refresh the teacher view of the posts
+                    _this7.setClassResponses(componentStates, annotations);
+                });
+            }
+        }
+
+        /**
+         * The teacher has clicked the 'Undo Delete' button to undo a previous
+         * deletion of a post. This function will create an inappropriate flag
+         * annotation with the action set to 'Undo Delete'. This will make the
+         * post visible to the students.
+         * @param componentState the student component state the teacher wants to
+         * show again.
+         */
+
+    }, {
+        key: 'undodeletebuttonclicked',
+        value: function undodeletebuttonclicked(componentState) {
+            var _this8 = this;
+
+            if (componentState != null) {
+
+                var toWorkgroupId = componentState.workgroupId;
+
+                var userInfo = this.ConfigService.getUserInfoByWorkgroupId(toWorkgroupId);
+
+                var periodId = null;
+
+                if (userInfo != null) {
+                    periodId = userInfo.periodId;
+                }
+
+                var teacherUserInfo = this.ConfigService.getMyUserInfo();
+
+                var fromWorkgroupId = null;
+
+                if (teacherUserInfo != null) {
+                    fromWorkgroupId = teacherUserInfo.workgroupId;
+                }
+
+                var runId = this.ConfigService.getRunId();
+                var nodeId = this.nodeId;
+                var componentId = this.componentId;
+                var studentWorkId = componentState.id;
+                var data = {};
+                data.action = "Undo Delete";
+
+                // create the inappropriate flag annotation
+                var annotation = this.AnnotationService.createInappropriateFlagAnnotation(runId, periodId, nodeId, componentId, fromWorkgroupId, toWorkgroupId, studentWorkId, data);
+
+                // save the annotation to the server
+                this.AnnotationService.saveAnnotation(annotation).then(function () {
+
+                    // get the component states made by the student
+                    var componentStates = _this8.DiscussionService.getPostsAssociatedWithWorkgroupId(_this8.componentId, _this8.workgroupId);
+
+                    // get the annotations for the component states
+                    var annotations = _this8.getInappropriateFlagAnnotationsByComponentStates(componentStates);
+
+                    // refresh the teacher view of the posts
+                    _this8.setClassResponses(componentStates, annotations);
+                });
+            }
+        }
+
+        /**
+         * Get the inappropriate flag annotations for these component states
+         * @param componentStates an array of component states
+         * @return an array of inappropriate flag annotations that are associated
+         * with the component states
+         */
+
+    }, {
+        key: 'getInappropriateFlagAnnotationsByComponentStates',
+        value: function getInappropriateFlagAnnotationsByComponentStates(componentStates) {
+            var annotations = [];
+
+            if (componentStates != null) {
+
+                // loop through all the component states
+                for (var c = 0; c < componentStates.length; c++) {
+
+                    var componentState = componentStates[c];
+
+                    if (componentState != null) {
+
+                        /*
+                         * get the latest inappropriate flag annotation for the
+                         * component state
+                         */
+                        var latestInappropriateFlagAnnotation = this.AnnotationService.getLatestAnnotationByStudentWorkIdAndType(componentState.id, 'inappropriateFlag');
+
+                        if (latestInappropriateFlagAnnotation != null) {
+                            annotations.push(latestInappropriateFlagAnnotation);
+                        }
+                    }
+                }
+            }
+
+            return annotations;
         }
     }]);
 
