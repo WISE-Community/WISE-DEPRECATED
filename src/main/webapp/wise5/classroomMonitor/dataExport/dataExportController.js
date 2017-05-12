@@ -101,23 +101,6 @@ var DataExportController = function () {
                 data = { "exportType": exportType };
             this.TeacherDataService.saveEvent(context, nodeId, componentId, componentType, category, event, data);
 
-            /*
-            if ((exportType === "latestStudentWork" || exportType === "allStudentWork" || exportType === "events") && this.exportStepSelectionType !== "exportAllSteps") {
-                // get the nodes that were selected
-                let selectedNodes = this.getSelectedNodesToExport();
-                 if (selectedNodes == null || selectedNodes.length == 0) {
-                    // the user did not select any steps to export
-                    alert('Please select a step to export.');
-                }
-                return;
-            }
-             if (exportType === "events") {
-                // events are handled separately right now
-                this.exportEvents();
-                return;
-            }
-            */
-
             if (exportType === "allStudentWork") {
                 this.exportAllStudentWork();
             } else if (exportType === "latestStudentWork") {
@@ -129,264 +112,6 @@ var DataExportController = function () {
             } else if (exportType === "notifications") {
                 this.exportNotifications();
             }
-
-            /*
-            this.TeacherDataService.getExport0(exportType).then((result) => {
-                if (result == null) {
-                    alert("Error retrieving result");
-                    return;
-                }
-                 if (exportType === "studentAssets") {
-                    return; // no further processing necessary
-                }
-                let onlyExportNodes = null;  // this varioable is used later when looping through all rows
-                if (this.exportStepSelectionType !== "exportAllSteps") {
-                    // get the nodes that were selected
-                    onlyExportNodes = this.getSelectedNodesToExport();
-                }
-                 let runId = this.ConfigService.getRunId();
-                let exportFilename = "";
-                 let csvString = "";  // resulting csv string
-                 if (exportType === "latestStudentWork" || exportType === "allStudentWork") {
-                    let COLUMN_INDEX_ID = 0;
-                    let COLUMN_INDEX_NODE_ID = 1;
-                    let COLUMN_INDEX_COMPONENT_ID = 2;
-                    let COLUMN_INDEX_COMPONENT_TYPE = 3;
-                    let COLUMN_INDEX_STEP_NUMBER = 4;
-                    let COLUMN_INDEX_STEP_TITLE = 5;
-                    let COLUMN_INDEX_COMPONENT_PART_NUMBER = 6;
-                    let COLUMN_INDEX_IS_AUTO_SAVE = 7;
-                    let COLUMN_INDEX_IS_SUBMIT = 8;
-                    let COLUMN_INDEX_CLIENT_SAVE_TIME = 9;
-                    let COLUMN_INDEX_SERVER_SAVE_TIME = 10;
-                    let COLUMN_INDEX_STUDENT_DATA = 11;
-                    let COLUMN_INDEX_PERIOD_ID = 12;
-                    let COLUMN_INDEX_RUN_ID = 13;
-                    let COLUMN_INDEX_WORKGROUP_ID = 14;
-                    let COLUMN_INDEX_PERIOD_NAME = 15;
-                    let COLUMN_INDEX_TEACHER_USERNAME = 16;
-                    let COLUMN_INDEX_PROJECT_ID = 17;
-                    let COLUMN_INDEX_WISE_IDS = 18;
-                    let COLUMN_INDEX_WISE_ID_1 = 18;
-                    let COLUMN_INDEX_WISE_ID_2 = 19;
-                    let COLUMN_INDEX_WISE_ID_3 = 20;
-                    let COLUMN_INDEX_STUDENT_RESPONSE = 21;
-                     if (exportType === "latestStudentWork") {
-                        let hash = {};  // store latestStudentWork. Assume that key = (nodeId, componentId, workgroupId)
-                        result = result.reverse().filter( (studentWorkRow) => {
-                            let hashKey = studentWorkRow[COLUMN_INDEX_NODE_ID] + "_" + studentWorkRow[COLUMN_INDEX_COMPONENT_ID] + "_" + studentWorkRow[COLUMN_INDEX_WORKGROUP_ID];
-                            if (!hash.hasOwnProperty(hashKey)) {
-                                // remember in hash
-                                hash[hashKey] = studentWorkRow;
-                                return true;
-                            } else {
-                                // we already have the latest, so we can disregard this studentWorkRow.
-                                return false;
-                            }
-                        }).reverse();
-                        exportFilename = "latest_work_" + runId + ".csv";
-                    } else if (exportType === "allStudentWork") {
-                        exportFilename = "all_work_" + runId + ".csv";
-                    }
-                     for (let rowIndex = 0; rowIndex < result.length; rowIndex++) {
-                        let row = result[rowIndex];
-                         if (rowIndex === 0) {
-                            // append additional header columns
-                            row[COLUMN_INDEX_WISE_ID_1] = "WISE ID 1";
-                            row[COLUMN_INDEX_WISE_ID_2] = "WISE ID 2";
-                            row[COLUMN_INDEX_WISE_ID_3] = "WISE ID 3";
-                            row[COLUMN_INDEX_STUDENT_RESPONSE] = "Response";
-                        } else {
-                            // for all non-header rows, fill in step numbers, titles, and component part numbers.
-                            let nodeId = row[COLUMN_INDEX_NODE_ID];
-                            let componentId = row[COLUMN_INDEX_COMPONENT_ID];
-                            if (this.exportStepSelectionType !== "exportAllSteps") {
-                                // is user chose certain steps/components to export, see if we need to include this row or not in the export.
-                                // get the nodes that were selected
-                                if (nodeId != null && componentId != null) {
-                                    let searchString = nodeId + "-" + componentId;
-                                    if (onlyExportNodes != null && onlyExportNodes.length > 0) {
-                                        if (onlyExportNodes.indexOf(searchString) == -1) {
-                                            continue;  // user didn't select this node to export, so ignore this row and keep looping
-                                        }
-                                    }
-                                } else if (nodeId != null) {
-                                    // only looking for this specific node, not node+component
-                                    let searchString = nodeId;
-                                    if (onlyExportNodes != null && onlyExportNodes.length > 0) {
-                                        if (onlyExportNodes.indexOf(searchString) == -1) {
-                                            continue;  // user didn't select this node to export, so ignore this row and keep looping
-                                        }
-                                    }
-                                } else if (nodeId == null && componentId == null) {
-                                    continue;  // don't add general work to export
-                                }
-                            }
-                            row[COLUMN_INDEX_STEP_NUMBER] = this.ProjectService.getNodePositionById(nodeId);
-                            row[COLUMN_INDEX_STEP_TITLE] = this.ProjectService.getNodeTitleByNodeId(nodeId);
-                            row[COLUMN_INDEX_COMPONENT_PART_NUMBER] = this.ProjectService.getComponentPositionByNodeIdAndComponentId(nodeId, componentId) + 1; // make it 1-indexed for researchers
-                            let workgroupId = row[COLUMN_INDEX_WORKGROUP_ID];
-                            let wiseIDs = row[COLUMN_INDEX_WISE_IDS];
-                            let wiseIDsArray = wiseIDs.split(",");
-                            row[COLUMN_INDEX_WISE_ID_1] = wiseIDsArray[0];
-                            row[COLUMN_INDEX_WISE_ID_2] = wiseIDsArray[1] || "";
-                            row[COLUMN_INDEX_WISE_ID_3] = wiseIDsArray[2] || "";
-                             // get the student data JSON and extract responses into its own column
-                            let studentDataJSONCell = row[COLUMN_INDEX_STUDENT_DATA];
-                            row[COLUMN_INDEX_STUDENT_RESPONSE] = studentDataJSONCell.response || "";
-                        }
-                         var projectName = this.ProjectService.getProjectTitle();
-                         // append row to csvString
-                        for (let cellIndex = 0; cellIndex < row.length; cellIndex++) {
-                            let cell = row[cellIndex];
-                            if (typeof cell === "object") {
-                                cell = "\"" + JSON.stringify(cell).replace(/"/g, '""') + "\"";
-                            } else if (typeof cell === "string") {
-                                cell = "\"" + cell + "\"";
-                            }
-                            csvString += cell + ",";
-                        }
-                        csvString += "\r\n";
-                    }
-                 } else if (exportType === "latestNotebookItems" || exportType === "allNotebookItems") {
-                    exportFilename = "notebook_" + runId + ".csv";
-                     let COLUMN_INDEX_LOCAL_NOTEBOOK_ITEM_ID = 1;
-                    let COLUMN_INDEX_NODE_ID = 2;
-                    let COLUMN_INDEX_COMPONENT_ID = 3;
-                    let COLUMN_INDEX_STEP_NUMBER = 4;
-                    let COLUMN_INDEX_STEP_TITLE = 5;
-                    let COLUMN_INDEX_COMPONENT_PART_NUMBER = 6;
-                    let COLUMN_INDEX_TYPE = 9;
-                    let COLUMN_INDEX_STUDENT_DATA = 10;
-                    let COLUMN_INDEX_WORKGROUP_ID = 13;
-                    let COLUMN_INDEX_WISE_IDS = 17;
-                    let COLUMN_INDEX_WISE_ID_1 = 17;
-                    let COLUMN_INDEX_WISE_ID_2 = 18;
-                    let COLUMN_INDEX_WISE_ID_3 = 19;
-                    let COLUMN_INDEX_STUDENT_RESPONSE = 20;
-                     if (exportType === "latestNotebookItems") {
-                        let hash = {};  // store latestStudentWork. Assume that key = (localNotebookItemId)
-                        result = result.reverse().filter( (studentWorkRow) => {
-                            let hashKey = studentWorkRow[COLUMN_INDEX_LOCAL_NOTEBOOK_ITEM_ID] + "_" + studentWorkRow[COLUMN_INDEX_WORKGROUP_ID];
-                            if (!hash.hasOwnProperty(hashKey)) {
-                                // remember in hash
-                                hash[hashKey] = studentWorkRow;
-                                return true;
-                            } else {
-                                // we already have the latest, so we can disregard this studentWorkRow.
-                                return false;
-                            }
-                        }).reverse();
-                        exportFilename = "latest_notebook_items_" + runId + ".csv";
-                    } else if (exportType === "allNotebookItems") {
-                        exportFilename = "all_notebook_items_" + runId + ".csv";
-                    }
-                     for (let rowIndex = 0; rowIndex < result.length; rowIndex++) {
-                        let row = result[rowIndex];
-                         if (rowIndex === 0) {
-                            // append additional header columns
-                            row[COLUMN_INDEX_WISE_ID_1] = "WISE ID 1";
-                            row[COLUMN_INDEX_WISE_ID_2] = "WISE ID 2";
-                            row[COLUMN_INDEX_WISE_ID_3] = "WISE ID 3";
-                            row[COLUMN_INDEX_STUDENT_RESPONSE] = "response";
-                        } else {
-                            // for all non-header rows, fill in step numbers, titles, and component part numbers.
-                            let nodeId = row[COLUMN_INDEX_NODE_ID];
-                            let componentId = row[COLUMN_INDEX_COMPONENT_ID];
-                            row[COLUMN_INDEX_STEP_NUMBER] = this.ProjectService.getNodePositionById(nodeId);
-                            row[COLUMN_INDEX_STEP_TITLE] = this.ProjectService.getNodeTitleByNodeId(nodeId);
-                            row[COLUMN_INDEX_COMPONENT_PART_NUMBER] = this.ProjectService.getComponentPositionByNodeIdAndComponentId(nodeId, componentId) + 1; // make it 1-indexed for researchers
-                            let wiseIDs = row[COLUMN_INDEX_WISE_IDS];
-                            let wiseIDsArray = wiseIDs.split(",");
-                            row[COLUMN_INDEX_WISE_ID_1] = wiseIDsArray[0];
-                            row[COLUMN_INDEX_WISE_ID_2] = wiseIDsArray[1] || "";
-                            row[COLUMN_INDEX_WISE_ID_3] = wiseIDsArray[2] || "";
-                             // get the student data JSON and extract responses into its own column
-                            let studentDataJSONCell = row[COLUMN_INDEX_STUDENT_DATA];
-                            if (row[COLUMN_INDEX_TYPE] === "report") {
-                                if (studentDataJSONCell.content != null) {
-                                    row[COLUMN_INDEX_STUDENT_RESPONSE] = this.escapeContent(studentDataJSONCell.content);
-                                } else {
-                                    row[COLUMN_INDEX_STUDENT_RESPONSE] = "";
-                                }
-                            } else if (row[COLUMN_INDEX_TYPE] === "note") {
-                                if (studentDataJSONCell.text != null) {
-                                    row[COLUMN_INDEX_STUDENT_RESPONSE] = this.escapeContent(studentDataJSONCell.text);
-                                } else {
-                                    row[COLUMN_INDEX_STUDENT_RESPONSE] = "";
-                                }
-                            }
-                        }
-                         // append row to csvString
-                        for (let cellIndex = 0; cellIndex < row.length; cellIndex++) {
-                            let cell = row[cellIndex];
-                            if (typeof cell === "object") {
-                                cell = "\"" + JSON.stringify(cell).replace(/"/g, '""') + "\"";
-                            } else if (typeof cell === "string") {
-                                cell = "\"" + cell + "\"";
-                            }
-                            csvString += cell + ",";
-                        }
-                        csvString += "\r\n";
-                    }
-                } else if (exportType === "notifications") {
-                    exportFilename = "notifications_" + runId + ".csv";
-                     let COLUMN_INDEX_NODE_ID = 1;
-                    let COLUMN_INDEX_COMPONENT_ID = 2;
-                    let COLUMN_INDEX_STEP_NUMBER = 4;
-                    let COLUMN_INDEX_STEP_TITLE = 5;
-                    let COLUMN_INDEX_COMPONENT_PART_NUMBER = 6;
-                    let COLUMN_INDEX_TYPE = 10;
-                    let COLUMN_INDEX_WISE_IDS = 21;
-                    let COLUMN_INDEX_WISE_ID_1 = 21;
-                    let COLUMN_INDEX_WISE_ID_2 = 22;
-                    let COLUMN_INDEX_WISE_ID_3 = 23;
-                     for (let rowIndex = 0; rowIndex < result.length; rowIndex++) {
-                        let row = result[rowIndex];
-                         if (rowIndex === 0) {
-                            // append additional header columns
-                            row[COLUMN_INDEX_WISE_ID_1] = "WISE ID 1";
-                            row[COLUMN_INDEX_WISE_ID_2] = "WISE ID 2";
-                            row[COLUMN_INDEX_WISE_ID_3] = "WISE ID 3";
-                        } else {
-                            // for all non-header rows, fill in step numbers, titles, and component part numbers.
-                            let nodeId = row[COLUMN_INDEX_NODE_ID];
-                            let componentId = row[COLUMN_INDEX_COMPONENT_ID];
-                            row[COLUMN_INDEX_STEP_NUMBER] = this.ProjectService.getNodePositionById(nodeId);
-                            row[COLUMN_INDEX_STEP_TITLE] = this.ProjectService.getNodeTitleByNodeId(nodeId);
-                            row[COLUMN_INDEX_COMPONENT_PART_NUMBER] = this.ProjectService.getComponentPositionByNodeIdAndComponentId(nodeId, componentId) + 1; // make it 1-indexed for researchers
-                            let wiseIDs = row[COLUMN_INDEX_WISE_IDS];
-                            let wiseIDsArray = wiseIDs.split(",");
-                            row[COLUMN_INDEX_WISE_ID_1] = wiseIDsArray[0];
-                            row[COLUMN_INDEX_WISE_ID_2] = wiseIDsArray[1] || "";
-                            row[COLUMN_INDEX_WISE_ID_3] = wiseIDsArray[2] || "";
-                        }
-                         // append row to csvString
-                        for (let cellIndex = 0; cellIndex < row.length; cellIndex++) {
-                            let cell = row[cellIndex];
-                            if (typeof cell === "object") {
-                                cell = "\"" + JSON.stringify(cell).replace(/"/g, '""') + "\"";
-                            } else if (typeof cell === "string") {
-                                cell = "\"" + cell + "\"";
-                            }
-                            csvString += cell + ",";
-                        }
-                        csvString += "\r\n";
-                    }
-                }
-                 let csvBlob = new Blob([csvString], {type: 'text/csv'});
-                let csvUrl = URL.createObjectURL(csvBlob);
-                let a = document.createElement("a");
-                document.body.appendChild(a);
-                a.href = csvUrl;
-                a.download = exportFilename;
-                a.click();
-                 // timeout is required for FF.
-                window.setTimeout(() => {
-                    URL.revokeObjectURL(csvUrl);  // tell browser to release URL reference
-                }, 3000);
-            });
-            */
         }
 
         /**
@@ -420,6 +145,7 @@ var DataExportController = function () {
             var _this2 = this;
 
             var selectedNodes = null;
+            var selectedNodesMap = null;
 
             if (this.exportStepSelectionType === "exportSelectSteps") {
                 // we are going to export the work for the steps that were selected
@@ -434,11 +160,17 @@ var DataExportController = function () {
                      */
                     alert('Please select a step to export.');
                     return;
+                } else {
+                    /*
+                     * the user has selected some steps/components so we will
+                     * generate a selected nodes map
+                     */
+                    selectedNodesMap = this.getSelectedNodesMap(selectedNodes);
                 }
             }
 
             // request the student data from the server and then generate the export
-            this.TeacherDataService.getExport("allStudentWork").then(function (result) {
+            this.TeacherDataService.getExport("allStudentWork", selectedNodes).then(function (result) {
 
                 // get the workgroups in the class
                 var workgroups = _this2.ConfigService.getClassmateUserInfosSortedByWorkgroupId();
@@ -529,7 +261,7 @@ var DataExportController = function () {
 
                                         if (_this2.exportStepSelectionType === "exportSelectSteps") {
                                             // we are only exporting selected steps
-                                            if (!_this2.isComponentSelected(selectedNodes, componentState.nodeId, componentState.componentId)) {
+                                            if (!_this2.isComponentSelected(selectedNodesMap, componentState.nodeId, componentState.componentId)) {
                                                 // the component state is for a step that is not selected
                                                 exportRow = false;
                                             }
@@ -939,9 +671,13 @@ var DataExportController = function () {
 
         /**
          * Check if a component is selected
-         * @param selectedNodes an array of node id and component id strings
-         * e.g.
-         * ["node1-38fj20egrj", "node2-c4e5dft0u1"]
+         * @param selectedNodesMap a map of node id and component id strings
+         * to true
+         * example
+         * {
+         *     "node1-38fj20egrj": true,
+         *     "node1-20dbj2e0sf": true
+         * }
          * @param nodeId the node id to check
          * @param componentId the component id to check
          * @return whether the component is selected
@@ -949,19 +685,13 @@ var DataExportController = function () {
 
     }, {
         key: "isComponentSelected",
-        value: function isComponentSelected(selectedNodes, nodeId, componentId) {
+        value: function isComponentSelected(selectedNodesMap, nodeId, componentId) {
             var result = false;
 
-            if (selectedNodes != null && nodeId != null && componentId != null) {
+            if (selectedNodesMap != null) {
 
-                // create the node id and component id string
-                var nodeIdAndComponentId = nodeId + "-" + componentId;
+                if (nodeId != null && componentId != null && selectedNodesMap[nodeId + "-" + componentId] == true) {
 
-                // check if the component is selected
-                if (selectedNodes.indexOf(nodeIdAndComponentId) == -1) {
-                    // the component is not selected
-                    result = false;
-                } else {
                     // the component is selected
                     result = true;
                 }
@@ -971,26 +701,26 @@ var DataExportController = function () {
         }
 
         /**
-         * Check if a node is selected
-         * @param selectedNodes an array of node ids
-         * e.g.
-         * ["node1", "node2"]
+         * Check if a component is selected
+         * @param selectedNodesMap a map of node id to true
+         * example
+         * {
+         *     "node1": true,
+         *     "node2": true
+         * }
          * @param nodeId the node id to check
+         * @param componentId the component id to check
          * @return whether the node is selected
          */
 
     }, {
         key: "isNodeSelected",
-        value: function isNodeSelected(selectedNodes, nodeId) {
+        value: function isNodeSelected(selectedNodesMap, nodeId) {
             var result = false;
 
-            if (selectedNodes != null && nodeId != null) {
+            if (selectedNodesMap != null) {
 
-                // check if the node is selected
-                if (selectedNodes.indexOf(nodeId) == -1) {
-                    // the node is not selected
-                    result = false;
-                } else {
+                if (nodeId != null && selectedNodesMap[nodeId] == true) {
                     // the node is selected
                     result = true;
                 }
@@ -1116,10 +846,11 @@ var DataExportController = function () {
 
     }, {
         key: "exportEvents",
-        value: function exportEvents(exportType) {
+        value: function exportEvents() {
             var _this3 = this;
 
             var selectedNodes = null;
+            var selectedNodesMap = null;
 
             if (this.exportStepSelectionType === "exportSelectSteps") {
                 // we are going to export the work for the steps that were selected
@@ -1134,11 +865,17 @@ var DataExportController = function () {
                      */
                     alert('Please select a step to export.');
                     return;
+                } else {
+                    /*
+                     * the user has selected some steps/components so we will
+                     * generate a selected nodes map
+                     */
+                    selectedNodesMap = this.getSelectedNodesMap(selectedNodes);
                 }
             }
 
             // request the student data from the server and then generate the export
-            this.TeacherDataService.getExport("events").then(function (result) {
+            this.TeacherDataService.getExport("events", selectedNodes).then(function (result) {
 
                 // get the workgroups in the class
                 var workgroups = _this3.ConfigService.getClassmateUserInfosSortedByWorkgroupId();
@@ -1229,14 +966,14 @@ var DataExportController = function () {
                                             if (event.nodeId != null && event.componentId != null) {
                                                 // this is a component event
 
-                                                if (!_this3.isComponentSelected(selectedNodes, event.nodeId, event.componentId)) {
+                                                if (!_this3.isComponentSelected(selectedNodesMap, event.nodeId, event.componentId)) {
                                                     // the event is for a component that is not selected
                                                     exportRow = false;
                                                 }
                                             } else if (event.nodeId != null) {
                                                 // this is a node event
 
-                                                if (!_this3.isNodeSelected(selectedNodes, event.nodeId)) {
+                                                if (!_this3.isNodeSelected(selectedNodesMap, event.nodeId)) {
                                                     // the event is for a node that is not selected
                                                     exportRow = false;
                                                 }
@@ -1429,124 +1166,13 @@ var DataExportController = function () {
 
             return row;
         }
-
-        /**
-         * Export all events for this run in CSV format
-         */
-
-    }, {
-        key: "exportEvents0",
-        value: function exportEvents0() {
-            var _this4 = this;
-
-            this.TeacherDataService.getExport("events").then(function (result) {
-                if (result == null) {
-                    alert("Error retrieving result");
-                    return;
-                }
-                var onlyExportNodes = null; // this varioable is used later when looping through all rows
-                if (_this4.exportStepSelectionType !== "exportAllSteps") {
-                    // get the nodes that were selected
-                    onlyExportNodes = _this4.getSelectedNodesToExport();
-                }
-
-                var COLUMN_INDEX_NODE_ID = 1;
-                var COLUMN_INDEX_COMPONENT_ID = 2;
-                var COLUMN_INDEX_STEP_NUMBER = 4;
-                var COLUMN_INDEX_STEP_TITLE = 5;
-                var COLUMN_INDEX_COMPONENT_PART_NUMBER = 6;
-                var COLUMN_INDEX_DATA = 12;
-                var COLUMN_INDEX_WORKGROUP_ID = 15;
-                var COLUMN_INDEX_WISE_IDS = 19;
-                var COLUMN_INDEX_WISE_ID_1 = 19;
-                var COLUMN_INDEX_WISE_ID_2 = 20;
-                var COLUMN_INDEX_WISE_ID_3 = 21;
-                var runId = _this4.ConfigService.getRunId();
-
-                var exportFilename = "events_" + runId + ".csv";
-
-                var csvString = ""; // resulting csv string
-
-                for (var rowIndex = 0; rowIndex < result.length; rowIndex++) {
-
-                    var row = result[rowIndex];
-
-                    if (rowIndex === 0) {
-                        // append additional header columns
-                        row[COLUMN_INDEX_WISE_ID_1] = "WISE ID 1";
-                        row[COLUMN_INDEX_WISE_ID_2] = "WISE ID 2";
-                        row[COLUMN_INDEX_WISE_ID_3] = "WISE ID 3";
-                    } else {
-                        // for all non-header rows, fill in step numbers, titles, and component part numbers.
-                        var nodeId = row[COLUMN_INDEX_NODE_ID];
-                        var componentId = row[COLUMN_INDEX_COMPONENT_ID];
-                        if (_this4.exportStepSelectionType !== "exportAllSteps") {
-                            // is user chose certain steps/components to export, see if we need to include this row or not in the export.
-                            // get the nodes that were selected
-                            if (nodeId != null && componentId != null) {
-                                var searchString = nodeId + "-" + componentId;
-                                if (onlyExportNodes != null && onlyExportNodes.length > 0) {
-                                    if (onlyExportNodes.indexOf(searchString) == -1) {
-                                        continue; // user didn't select this node to export, so ignore this row and keep looping
-                                    }
-                                }
-                            } else if (nodeId != null) {
-                                // only looking for this specific node, not node+component
-                                var _searchString = nodeId;
-                                if (onlyExportNodes != null && onlyExportNodes.length > 0) {
-                                    if (onlyExportNodes.indexOf(_searchString) == -1) {
-                                        continue; // user didn't select this node to export, so ignore this row and keep looping
-                                    }
-                                }
-                            } else if (nodeId == null && componentId == null) {
-                                continue; // don't add general events to export
-                            }
-                        }
-                        row[COLUMN_INDEX_STEP_NUMBER] = _this4.ProjectService.getNodePositionById(nodeId);
-                        row[COLUMN_INDEX_STEP_TITLE] = _this4.ProjectService.getNodeTitleByNodeId(nodeId);
-                        row[COLUMN_INDEX_COMPONENT_PART_NUMBER] = _this4.ProjectService.getComponentPositionByNodeIdAndComponentId(nodeId, componentId) + 1; // make it 1-indexed for researchers
-                        var workgroupId = row[COLUMN_INDEX_WORKGROUP_ID];
-                        var wiseIDs = row[COLUMN_INDEX_WISE_IDS];
-                        var wiseIDsArray = wiseIDs.split(",");
-                        row[COLUMN_INDEX_WISE_ID_1] = wiseIDsArray[0];
-                        row[COLUMN_INDEX_WISE_ID_2] = wiseIDsArray[1] || "";
-                        row[COLUMN_INDEX_WISE_ID_3] = wiseIDsArray[2] || "";
-                    }
-
-                    // append row to csvString
-                    for (var cellIndex = 0; cellIndex < row.length; cellIndex++) {
-                        var cell = row[cellIndex];
-                        if ((typeof cell === "undefined" ? "undefined" : _typeof(cell)) === "object") {
-                            cell = "\"" + JSON.stringify(cell).replace(/"/g, '""') + "\"";
-                        } else if (typeof cell === "string") {
-                            cell = "\"" + cell + "\"";
-                        }
-                        csvString += cell + ",";
-                    }
-                    csvString += "\r\n";
-                }
-
-                var csvBlob = new Blob([csvString], { type: 'text/csv' });
-                var csvUrl = URL.createObjectURL(csvBlob);
-                var a = document.createElement("a");
-                document.body.appendChild(a);
-                a.href = csvUrl;
-                a.download = exportFilename;
-                a.click();
-
-                // timeout is required for FF.
-                window.setTimeout(function () {
-                    URL.revokeObjectURL(csvUrl); // tell browser to release URL reference
-                }, 3000);
-            });
-        }
     }, {
         key: "exportNotebookItems",
         value: function exportNotebookItems(exportType) {
-            var _this5 = this;
+            var _this4 = this;
 
             this.TeacherDataService.getExport(exportType).then(function (result) {
-                var runId = _this5.ConfigService.getRunId();
+                var runId = _this4.ConfigService.getRunId();
                 var exportFilename = "";
 
                 var csvString = ""; // resulting csv string
@@ -1569,19 +1195,21 @@ var DataExportController = function () {
                 var COLUMN_INDEX_STUDENT_RESPONSE = 20;
 
                 if (exportType === "latestNotebookItems") {
-                    var hash = {}; // store latestStudentWork. Assume that key = (localNotebookItemId)
-                    result = result.reverse().filter(function (studentWorkRow) {
-                        var hashKey = studentWorkRow[COLUMN_INDEX_LOCAL_NOTEBOOK_ITEM_ID] + "_" + studentWorkRow[COLUMN_INDEX_WORKGROUP_ID];
-                        if (!hash.hasOwnProperty(hashKey)) {
-                            // remember in hash
-                            hash[hashKey] = studentWorkRow;
-                            return true;
-                        } else {
-                            // we already have the latest, so we can disregard this studentWorkRow.
-                            return false;
-                        }
-                    }).reverse();
-                    exportFilename = "latest_notebook_items_" + runId + ".csv";
+                    (function () {
+                        var hash = {}; // store latestStudentWork. Assume that key = (localNotebookItemId)
+                        result = result.reverse().filter(function (studentWorkRow) {
+                            var hashKey = studentWorkRow[COLUMN_INDEX_LOCAL_NOTEBOOK_ITEM_ID] + "_" + studentWorkRow[COLUMN_INDEX_WORKGROUP_ID];
+                            if (!hash.hasOwnProperty(hashKey)) {
+                                // remember in hash
+                                hash[hashKey] = studentWorkRow;
+                                return true;
+                            } else {
+                                // we already have the latest, so we can disregard this studentWorkRow.
+                                return false;
+                            }
+                        }).reverse();
+                        exportFilename = "latest_notebook_items_" + runId + ".csv";
+                    })();
                 } else if (exportType === "allNotebookItems") {
                     exportFilename = "all_notebook_items_" + runId + ".csv";
                 }
@@ -1599,9 +1227,9 @@ var DataExportController = function () {
                         // for all non-header rows, fill in step numbers, titles, and component part numbers.
                         var nodeId = row[COLUMN_INDEX_NODE_ID];
                         var componentId = row[COLUMN_INDEX_COMPONENT_ID];
-                        row[COLUMN_INDEX_STEP_NUMBER] = _this5.ProjectService.getNodePositionById(nodeId);
-                        row[COLUMN_INDEX_STEP_TITLE] = _this5.ProjectService.getNodeTitleByNodeId(nodeId);
-                        row[COLUMN_INDEX_COMPONENT_PART_NUMBER] = _this5.ProjectService.getComponentPositionByNodeIdAndComponentId(nodeId, componentId) + 1; // make it 1-indexed for researchers
+                        row[COLUMN_INDEX_STEP_NUMBER] = _this4.ProjectService.getNodePositionById(nodeId);
+                        row[COLUMN_INDEX_STEP_TITLE] = _this4.ProjectService.getNodeTitleByNodeId(nodeId);
+                        row[COLUMN_INDEX_COMPONENT_PART_NUMBER] = _this4.ProjectService.getComponentPositionByNodeIdAndComponentId(nodeId, componentId) + 1; // make it 1-indexed for researchers
                         var wiseIDs = row[COLUMN_INDEX_WISE_IDS];
                         var wiseIDsArray = wiseIDs.split(",");
                         row[COLUMN_INDEX_WISE_ID_1] = wiseIDsArray[0];
@@ -1613,14 +1241,14 @@ var DataExportController = function () {
                         if (row[COLUMN_INDEX_TYPE] === "report") {
                             if (studentDataJSONCell.content != null) {
                                 //row[COLUMN_INDEX_STUDENT_RESPONSE] = this.escapeContent(studentDataJSONCell.content);
-                                row[COLUMN_INDEX_STUDENT_RESPONSE] = _this5.UtilService.removeHTMLTags(studentDataJSONCell.content);
+                                row[COLUMN_INDEX_STUDENT_RESPONSE] = _this4.UtilService.removeHTMLTags(studentDataJSONCell.content);
                             } else {
                                 row[COLUMN_INDEX_STUDENT_RESPONSE] = "";
                             }
                         } else if (row[COLUMN_INDEX_TYPE] === "note") {
                             if (studentDataJSONCell.text != null) {
                                 //row[COLUMN_INDEX_STUDENT_RESPONSE] = this.escapeContent(studentDataJSONCell.text);
-                                row[COLUMN_INDEX_STUDENT_RESPONSE] = _this5.UtilService.removeHTMLTags(studentDataJSONCell.text);
+                                row[COLUMN_INDEX_STUDENT_RESPONSE] = _this4.UtilService.removeHTMLTags(studentDataJSONCell.text);
                             } else {
                                 row[COLUMN_INDEX_STUDENT_RESPONSE] = "";
                             }
@@ -1657,10 +1285,10 @@ var DataExportController = function () {
     }, {
         key: "exportNotifications",
         value: function exportNotifications() {
-            var _this6 = this;
+            var _this5 = this;
 
             this.TeacherDataService.getExport("notifications").then(function (result) {
-                var runId = _this6.ConfigService.getRunId();
+                var runId = _this5.ConfigService.getRunId();
                 var exportFilename = "";
 
                 var csvString = ""; // resulting csv string
@@ -1690,9 +1318,9 @@ var DataExportController = function () {
                         // for all non-header rows, fill in step numbers, titles, and component part numbers.
                         var nodeId = row[COLUMN_INDEX_NODE_ID];
                         var componentId = row[COLUMN_INDEX_COMPONENT_ID];
-                        row[COLUMN_INDEX_STEP_NUMBER] = _this6.ProjectService.getNodePositionById(nodeId);
-                        row[COLUMN_INDEX_STEP_TITLE] = _this6.ProjectService.getNodeTitleByNodeId(nodeId);
-                        row[COLUMN_INDEX_COMPONENT_PART_NUMBER] = _this6.ProjectService.getComponentPositionByNodeIdAndComponentId(nodeId, componentId) + 1; // make it 1-indexed for researchers
+                        row[COLUMN_INDEX_STEP_NUMBER] = _this5.ProjectService.getNodePositionById(nodeId);
+                        row[COLUMN_INDEX_STEP_TITLE] = _this5.ProjectService.getNodeTitleByNodeId(nodeId);
+                        row[COLUMN_INDEX_COMPONENT_PART_NUMBER] = _this5.ProjectService.getComponentPositionByNodeIdAndComponentId(nodeId, componentId) + 1; // make it 1-indexed for researchers
                         var wiseIDs = row[COLUMN_INDEX_WISE_IDS];
                         var wiseIDsArray = wiseIDs.split(",");
                         row[COLUMN_INDEX_WISE_ID_1] = wiseIDsArray[0];
@@ -1730,9 +1358,23 @@ var DataExportController = function () {
 
         /**
          * Get the selected nodes to export
-         * @return an array of selected node and component ids that were selected.
-         * ex: ["node1", "node1-abcde", "node1-fghij", "node2"], where abcde, fghij are components in node1
-         * "node2" means just node2, not components in node2.
+         * @return an array of objects that contain a nodeId field and maybe also
+         * a componentId field
+         * example
+         * [
+         *     {
+         *         nodeId: "node1",
+         *         componentId: "343b8aesf7"
+         *     },
+         *     {
+         *         nodeId: "node2",
+         *         componentId: "b34gaf0ug2"
+         *     },
+         *     {
+         *         nodeId: "node3"
+         *     }
+         * ]
+         * Note: "node3" means just node3, not components in node2.
          */
 
     }, {
@@ -1748,13 +1390,27 @@ var DataExportController = function () {
                         var nodeId = item.node.id;
                         if (item.checked) {
                             // this item is checked so we will add it to the array of nodes that we will export
-                            selectedNodes.push(nodeId);
+
+                            // create the object that contains the nodeId
+                            var selectedStep = {
+                                nodeId: nodeId
+                            };
+
+                            selectedNodes.push(selectedStep);
                         }
                         // also check the components
                         if (item.node.components != null && item.node.components.length > 0) {
                             item.node.components.map(function (component) {
                                 if (component.checked) {
-                                    selectedNodes.push(nodeId + "-" + component.id);
+                                    // this item is checked so we will add it to the array of nodes that we will export
+
+                                    // create the object that contains the nodeId and componentId
+                                    var selectedComponent = {
+                                        nodeId: nodeId,
+                                        componentId: component.id
+                                    };
+
+                                    selectedNodes.push(selectedComponent);
                                 }
                             });
                         }
@@ -1763,6 +1419,72 @@ var DataExportController = function () {
             }
 
             return selectedNodes;
+        }
+
+        /**
+         * Get a mapping of node/component id strings to true.
+         * example if
+         * selectedNodes = [
+         *     {
+         *         nodeId: "node1",
+         *         componentId: "343b8aesf7"
+         *     },
+         *     {
+         *         nodeId: "node2",
+         *         componentId: "b34gaf0ug2"
+         *     },
+         *     {
+         *         nodeId: "node3"
+         *     }
+         * ]
+         *
+         * this function will return
+         * {
+         *     "node1-343b8aesf7": true,
+         *     "node2-b34gaf0ug2": true,
+         *     "node3": true
+         * }
+         *
+         * @param selectedNodes an array of objects that contain a nodeId field and maybe also
+         * a componentId field
+         * @return a mapping of node/component id strings to true
+         */
+
+    }, {
+        key: "getSelectedNodesMap",
+        value: function getSelectedNodesMap(selectedNodes) {
+
+            var selectedNodesMap = {};
+
+            if (selectedNodes != null) {
+
+                // loop through all the selected nodes
+                for (var sn = 0; sn < selectedNodes.length; sn++) {
+                    var selectedNode = selectedNodes[sn];
+
+                    if (selectedNode != null) {
+                        var nodeId = selectedNode.nodeId;
+                        var componentId = selectedNode.componentId;
+
+                        var selectedNodeString = "";
+
+                        if (nodeId != null && componentId != null) {
+                            // create the string like "node1-343b8aesf7"
+                            selectedNodeString = nodeId + "-" + componentId;
+                        } else if (nodeId != null) {
+                            // create the string like "node3"
+                            selectedNodeString = nodeId;
+                        }
+
+                        if (selectedNodeString != null && selectedNodeString != "") {
+                            // add the mapping
+                            selectedNodesMap[selectedNodeString] = true;
+                        }
+                    }
+                }
+            }
+
+            return selectedNodesMap;
         }
 
         /**
@@ -1780,7 +1502,7 @@ var DataExportController = function () {
                     });
                 }
             } else {
-                // if this node item is checked, make sure its components are also unchecked.
+                // if this node item is unchecked, make sure its components are also unchecked.
                 if (nodeItem.node != null && nodeItem.node.components != null && nodeItem.node.components.length > 0) {
                     nodeItem.node.components.map(function (componentItem) {
                         componentItem.checked = false;

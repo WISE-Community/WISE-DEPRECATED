@@ -112,7 +112,7 @@ var TeacherDataService = function () {
 
     }, {
         key: 'getExport',
-        value: function getExport(exportType) {
+        value: function getExport(exportType, selectedNodes) {
             var exportURL = this.ConfigService.getConfigParam('runDataExportURL');
             var runId = this.ConfigService.getRunId();
             exportURL += "/" + runId + "/" + exportType;
@@ -123,6 +123,7 @@ var TeacherDataService = function () {
                 params.getStudentWork = true;
                 params.getAnnotations = true;
                 params.getEvents = false;
+                params.components = selectedNodes;
 
                 return this.retrieveStudentData(params);
             } else if (exportType === "events") {
@@ -131,6 +132,7 @@ var TeacherDataService = function () {
                 _params.getStudentWork = false;
                 _params.getAnnotations = false;
                 _params.getEvents = true;
+                _params.components = selectedNodes;
 
                 return this.retrieveStudentData(_params);
             } else if (exportType === "latestNotebookItems" || exportType === "allNotebookItems") {

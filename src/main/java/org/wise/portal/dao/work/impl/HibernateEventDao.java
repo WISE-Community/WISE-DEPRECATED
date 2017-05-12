@@ -26,7 +26,9 @@ package org.wise.portal.dao.work.impl;
 import org.hibernate.Criteria;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
-import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.*;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.stereotype.Repository;
 import org.wise.portal.dao.impl.AbstractHibernateDao;
 import org.wise.portal.dao.work.EventDao;
@@ -85,7 +87,8 @@ public class HibernateEventDao extends AbstractHibernateDao<Event> implements Ev
     @Override
     public List<Event> getEventsByParams(Integer id, Run run, Group period, WISEWorkgroup workgroup,
                                             String nodeId, String componentId, String componentType,
-                                            String context, String category, String event) {
+                                            String context, String category, String event,
+                                            List<JSONObject> components) {
 
         Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
         Criteria sessionCriteria = session.createCriteria(Event.class);
@@ -120,6 +123,56 @@ public class HibernateEventDao extends AbstractHibernateDao<Event> implements Ev
         if (event != null) {
             sessionCriteria.add(Restrictions.eq("event", event));
         }
+        if (components != null) {
+
+            // create the criteria to accept any of the components by using an 'or' conditional
+            Disjunction disjunction = Restrictions.disjunction();
+
+            // loop through all the components
+            for (int c = 0; c < components.size(); c++) {
+                JSONObject component = components.get(c);
+
+                if (component != null) {
+                    try {
+
+                        Criterion nodeIdRestriction = null;
+                        Criterion componentIdRestriction = null;
+
+                        if (component.has("nodeId")) {
+                            // the node id was provided
+                            String tempNodeId = component.getString("nodeId");
+                            nodeIdRestriction = Restrictions.eq("nodeId", tempNodeId);
+                        } else {
+                            // the node id was not provided so we will require the nodeId to be null
+                            nodeIdRestriction = Restrictions.isNull("nodeId");
+                        }
+
+                        if (component.has("componentId")) {
+                            // the component id was provided
+                            String tempComponentId = component.getString("componentId");
+                            componentIdRestriction = Restrictions.eq("componentId", tempComponentId);
+                        } else {
+                            // the component id was not provided so we will require the componentId to be null
+                            componentIdRestriction = Restrictions.isNull("componentId");
+                        }
+
+                        // require the node id and component id to match by using an 'and' conditional
+                        Conjunction conjunction = Restrictions.conjunction(nodeIdRestriction, componentIdRestriction);
+
+                        // add the restriction to the 'or' conditional
+                        disjunction.add(conjunction);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            // add the restriction to the main criteria
+            sessionCriteria.add(disjunction);
+        }
+
+        // order the student work by server save time from oldest to newest
+        sessionCriteria.addOrder(Order.asc("serverSaveTime"));
 
         return sessionCriteria.list();
     }

@@ -313,7 +313,8 @@ public class VLEServiceImpl implements VLEService {
     @Override
     public List<Event> getEvents(Integer id, Integer runId, Integer periodId, Integer workgroupId,
                                  String nodeId, String componentId, String componentType,
-                                 String context, String category, String event) {
+                                 String context, String category, String event,
+                                 List<JSONObject> components) {
         Run run = null;
         if (runId != null) {
             try {
@@ -341,7 +342,7 @@ public class VLEServiceImpl implements VLEService {
         }
 
         return eventDao.getEventsByParams(id, run, period, workgroup, nodeId, componentId, componentType,
-                context, category, event);
+                context, category, event, components);
     }
 
     @Override
@@ -352,7 +353,7 @@ public class VLEServiceImpl implements VLEService {
         Event event;
         if (id != null) {
             // if the id is passed in, the client is requesting an update, so fetch the Event from data store
-            List<Event> events = getEvents(id, null, null, null, null, null, null, null, null, null);
+            List<Event> events = getEvents(id, null, null, null, null, null, null, null, null, null, null);
             if (events != null && events.size() > 0) {
                 // TODO: maybe we want a getEventById method here?
                 event = events.get(0);

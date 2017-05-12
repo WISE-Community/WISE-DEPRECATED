@@ -103,7 +103,7 @@ class TeacherDataService {
      * Get the data for the export and generate the csv file that will be downloaded
      * @param exportType the type of export
      */
-    getExport(exportType) {
+    getExport(exportType, selectedNodes) {
         let exportURL = this.ConfigService.getConfigParam('runDataExportURL');
         let runId = this.ConfigService.getRunId();
         exportURL += "/" + runId + "/" + exportType;
@@ -114,6 +114,7 @@ class TeacherDataService {
             params.getStudentWork = true;
             params.getAnnotations = true;
             params.getEvents = false;
+            params.components = selectedNodes;
 
             return this.retrieveStudentData(params);
         } else if (exportType === "events") {
@@ -122,6 +123,7 @@ class TeacherDataService {
             params.getStudentWork = false;
             params.getAnnotations = false;
             params.getEvents = true;
+            params.components = selectedNodes;
 
             return this.retrieveStudentData(params);
         } else if (exportType === "latestNotebookItems" || exportType === "allNotebookItems") {

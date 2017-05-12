@@ -116,7 +116,7 @@ public class StudentDataController {
         }
         if (getEvents) {
             List<Event> events = vleService.getEvents(id, runId, periodId, workgroupId,
-                    nodeId, componentId, componentType, context, category, event);
+                    nodeId, componentId, componentType, context, category, event, components);
 
             JSONArray eventsJSONArray = new JSONArray();
 

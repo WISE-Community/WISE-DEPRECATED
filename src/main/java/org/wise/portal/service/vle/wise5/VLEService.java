@@ -79,7 +79,8 @@ public interface VLEService {
     List<Event> getEvents(
             Integer id, Integer runId, Integer periodId, Integer workgroupId,
             String nodeId, String componentId, String componentType,
-            String context, String category, String event);
+            String context, String category, String event,
+            List<JSONObject> components);
 
     /**
      * @return JSONArray of student events for researcher export
