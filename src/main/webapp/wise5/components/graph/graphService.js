@@ -58,7 +58,7 @@ var GraphService = function (_NodeService) {
             component.canDeleteTrials = false;
             component.hideAllTrialsOnNewTrial = false;
             component.canStudentHideSeriesOnLegendClick = false;
-            component.roundValuesTo = null;
+            component.roundValuesTo = "hundredth";
             component.graphType = 'line';
             component.xAxis = {
                 title: {
