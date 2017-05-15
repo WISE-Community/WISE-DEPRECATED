@@ -69,7 +69,7 @@ else
     fi
 
     # start embedded tomcat
-    mvn clean compile tomcat7:run
+    mvn clean tomcat7:run
 
   else
     # make sure db tables are not wiped out
@@ -83,7 +83,7 @@ else
     fi
 
     # start embedded tomcat
-    mvn clean compile tomcat7:run
+    mvn clean tomcat7:run
   fi
 fi
 

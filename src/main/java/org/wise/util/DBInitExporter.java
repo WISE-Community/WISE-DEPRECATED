@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2016 Encore Research Group, University of Toronto
+ * Copyright (c) 2007-2017 Encore Research Group, University of Toronto
  *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
@@ -27,7 +27,10 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.EnumSet;
+
 import org.hibernate.tool.hbm2ddl.SchemaExport;
+import org.hibernate.tool.schema.TargetType;
 import org.springframework.beans.BeanUtils;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -71,12 +74,12 @@ public class DBInitExporter {
                     springConfig.getRootApplicationContextConfigLocations());
 
             final boolean printScriptToConsole = false, exportScriptToDb = false, justDrop = false, justCreate = true;
-            final SchemaExport schemaExport = new SchemaExport(MetadataProvider.getMetadata());
+
+            final SchemaExport schemaExport = new SchemaExport();
             schemaExport
                     .setDelimiter(";").setFormat(true).setHaltOnError(true)
                     .setOutputFile(outputFilename);
-            schemaExport.execute(printScriptToConsole, exportScriptToDb,
-                    justDrop, justCreate);
+            schemaExport.execute(EnumSet.of(TargetType.STDOUT, TargetType.SCRIPT), SchemaExport.Action.BOTH, MetadataProvider.getMetadata());
 
             // now append initial data, which we read in from import.sql
             File initialDataFile = new File("src/main/resources/import.sql");
