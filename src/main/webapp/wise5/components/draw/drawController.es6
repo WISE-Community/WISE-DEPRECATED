@@ -641,6 +641,12 @@ class DrawController {
             }
 
             if (importPreviousWorkNodeId != null && importPreviousWorkComponentId != null) {
+
+                if (this.componentContent.background != null) {
+                    // set the background from the component content
+                    this.drawingTool.setBackgroundImage(this.componentContent.background);
+                }
+
                 // import the work from the other component
                 this.importWork();
             } else if (starterDrawData != null) {
@@ -1021,11 +1027,6 @@ class DrawController {
             if (this.latestConnectedComponentState && this.latestConnectedComponentParams) {
                 // reload the student data from the connected component
                 this.setDrawData(latestConnectedComponentState, latestConnectedComponentParams);
-
-                if (this.componentContent.background != null && this.componentContent.background != '') {
-                    // set the background
-                    this.drawingTool.setBackgroundImage(this.componentContent.background);
-                }
             } else if (this.componentContent.importPreviousWorkNodeId != null &&
                        this.componentContent.importPreviousWorkNodeId != '' &&
                        this.componentContent.importPreviousWorkComponentId != null &&
@@ -1039,14 +1040,15 @@ class DrawController {
                 // import work from another component
                 this.importWork(overwrite);
             } else if (this.componentContent.starterDrawData != null) {
-
-                if (this.componentContent.background != null && this.componentContent.background != '') {
-                    // set the background
-                    this.drawingTool.setBackgroundImage(this.componentContent.background);
-                }
+                // this component has starter draw data
 
                 // there is starter draw data so we will populate it into the draw tool
                 this.drawingTool.load(this.componentContent.starterDrawData);
+            }
+
+            if (this.componentContent.background != null && this.componentContent.background != '') {
+                // set the background
+                this.drawingTool.setBackgroundImage(this.componentContent.background);
             }
         }
     }
