@@ -90,8 +90,8 @@ class EmbeddedController {
         // the latest annotations
         this.latestAnnotations = null;
 
-        // variable to store component states (from application)
-        this.componentState = null;
+        // the latest component state id
+        this.componentStateId = null;
 
         // the id of the embedded application's iframe
         this.embeddedApplicationIFrameId = '';
@@ -124,20 +124,23 @@ class EmbeddedController {
                 this.StudentDataService.saveVLEEvent(nodeId, componentId, componentType, category, event, eventData);
             } else if (messageEventData.messageType === "studentWork") {
                 // save student work to WISE
-                // create a new component state
-                this.componentState = this.NodeService.createNewComponentState();
 
-                // set the student data into the component state
-                this.componentState.studentData = messageEventData.studentData;
-
-                this.componentState.isSubmit = false;
-                if (messageEventData.isSubmit) {
-                    this.componentState.isSubmit = messageEventData.isSubmit;
+                if (messageEventData.id != null) {
+                    /*
+                     * the component state id was provided which means the model
+                     * wants to update/overwrite an existing component state
+                     */
+                    this.componentStateId = messageEventData.id;
+                } else {
+                    /*
+                     * the component state id was not provided which means the
+                     * model wants to create a new component state
+                     */
+                    this.componentStateId = null;
                 }
 
-                this.componentState.isAutoSave = false;
-                if (messageEventData.isAutoSave) {
-                    this.componentState.isAutoSave = messageEventData.isAutoSave;
+                if (messageEventData.isSubmit) {
+                    this.isSubmit = messageEventData.isSubmit;
                 }
 
                 this.isDirty = true;
@@ -396,25 +399,15 @@ class EmbeddedController {
                     } else {
                         this.setSaveMessage(this.$translate('SAVED'), clientSaveTime);
                     }
-
-                    // clear out componentState
-                    this.componentState = {};
                 }
+
+                var message = {};
+                message.messageType = 'componentStateSaved';
+                message.componentState = componentState;
+
+                // send the student work to the embedded application
+                this.sendMessageToApplication(message);
             }
-
-            // the params for getting the student work to be sent to the model
-            var getStudentWorkParams = {};
-            getStudentWorkParams.getLatestStudentWorkFromThisComponent = true;
-            getStudentWorkParams.getLatestStudentWorkFromThisNode = true;
-
-            // get the student work
-            var studentWork = this.getStudentWork(getStudentWorkParams);
-
-            var message = studentWork;
-            message.messageType = 'studentWork';
-
-            // send the student work to the embedded application
-            this.sendMessageToApplication(message);
         });
 
         /**
@@ -567,6 +560,21 @@ class EmbeddedController {
             // close the popup
             this.$mdDialog.hide();
         });
+
+        /*
+         * Listen for the siblingComponentStudentDataChanged event which occurs
+         * when the student data has changed for another component in this step
+         */
+        this.$scope.$on('siblingComponentStudentDataChanged', (event, args) => {
+
+            // create the message
+            var message = {};
+            message.messageType = 'siblingComponentStudentDataChanged';
+            message.componentState = args.componentState;
+
+            // send the student work to the embedded application
+            this.sendMessageToApplication(message);
+        });
     }
 
     /**
@@ -646,7 +654,7 @@ class EmbeddedController {
 
         // create a component state populated with the student data
         this.createComponentState(action).then((componentState) => {
-            this.$scope.$emit('componentStudentDataChanged', {componentId: componentId, componentState: componentState});
+            this.$scope.$emit('componentStudentDataChanged', {nodeId: this.nodeId, componentId: componentId, componentState: componentState});
         });
     };
 
@@ -658,6 +666,11 @@ class EmbeddedController {
 
         // create a new component state
         var componentState = this.NodeService.createNewComponentState();
+
+        if (this.componentStateId != null) {
+            // set the component state id
+            componentState.id = this.componentStateId;
+        }
 
         if (this.isSubmit) {
             // the student submitted this work
@@ -1076,7 +1089,18 @@ class EmbeddedController {
 
     /**
      * Get the student work from the specified components/nodes
-     * @param params the params for getting the student work
+     * @param params The params for getting the student work. The possible
+     * values to request are
+     * getLatestStudentWorkFromThisComponent
+     * getAllStudentWorkFromThisComponent
+     * getLatestStudentWorkFromThisNode
+     * getAllStudentWorkFromThisNode
+     * getLatestStudentWorkFromOtherComponents
+     * getAllStudentWorkFromOtherComponents
+     * If getLatestStudentWorkFromOtherComponents or getAllStudentWorkFromOtherComponents
+     * are requested, the otherComponents param must be provided. otherComponents
+     * should be an array of objects. The objects should contain a nodeId and
+     * componentId.
      * @return an object containing other objects that contain work from the
      * specified components/nodes
      */

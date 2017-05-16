@@ -2170,7 +2170,7 @@ class GraphController {
                 //this.$scope.$apply();
             }
 
-            this.$scope.$emit('componentStudentDataChanged', {componentId: componentId, componentState: componentState});
+            this.$scope.$emit('componentStudentDataChanged', {nodeId: this.nodeId, componentId: componentId, componentState: componentState});
         });
     };
 

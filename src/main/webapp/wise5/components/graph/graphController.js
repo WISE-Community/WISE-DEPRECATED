@@ -2233,7 +2233,7 @@ var GraphController = function () {
                     //this.$scope.$apply();
                 }
 
-                _this2.$scope.$emit('componentStudentDataChanged', { componentId: componentId, componentState: componentState });
+                _this2.$scope.$emit('componentStudentDataChanged', { nodeId: _this2.nodeId, componentId: componentId, componentState: componentState });
             });
         }
     }, {

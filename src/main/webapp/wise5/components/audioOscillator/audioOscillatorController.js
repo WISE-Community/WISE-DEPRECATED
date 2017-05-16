@@ -860,7 +860,7 @@ var AudioOscillatorController = function () {
 
             // create a component state populated with the student data
             this.createComponentState(action).then(function (componentState) {
-                _this3.$scope.$emit('componentStudentDataChanged', { componentId: componentId, componentState: componentState });
+                _this3.$scope.$emit('componentStudentDataChanged', { nodeId: _this3.nodeId, componentId: componentId, componentState: componentState });
             });
         }
     }, {

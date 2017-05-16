@@ -197,6 +197,32 @@ var NodeController = function () {
                      * data has changed
                      */
                     _this.notifyConnectedParts(componentId, componentState);
+
+                    if (componentState.nodeId == null) {
+
+                        if (args.nodeId != null) {
+                            /*
+                             * set the node id into the component state because
+                             * the component state hasn't had it set at this
+                             * point.
+                             */
+                            componentState.nodeId = args.nodeId;
+                        }
+                    }
+
+                    if (componentState.componentId == null) {
+
+                        if (args.componentId != null) {
+                            /*
+                             * set the component id into the component state
+                             * because the component state hasn't had it set at
+                             * this point.
+                             */
+                            componentState.componentId = args.componentId;
+                        }
+                    }
+
+                    _this.$scope.$broadcast('siblingComponentStudentDataChanged', args);
                 }
             }
         });

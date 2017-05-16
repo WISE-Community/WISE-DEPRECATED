@@ -851,7 +851,7 @@ class AudioOscillatorController {
 
         // create a component state populated with the student data
         this.createComponentState(action).then((componentState) => {
-            this.$scope.$emit('componentStudentDataChanged', {componentId: componentId, componentState: componentState});
+            this.$scope.$emit('componentStudentDataChanged', {nodeId: this.nodeId, componentId: componentId, componentState: componentState});
         });
     };
 

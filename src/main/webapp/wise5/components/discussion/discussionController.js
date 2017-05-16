@@ -761,7 +761,7 @@ var DiscussionController = function () {
 
             // create a component state populated with the student data
             this.createComponentState(action).then(function (componentState) {
-                _this4.$scope.$emit('componentStudentDataChanged', { componentId: componentId, componentState: componentState });
+                _this4.$scope.$emit('componentStudentDataChanged', { nodeId: _this4.nodeId, componentId: componentId, componentState: componentState });
             });
         }
     }, {
