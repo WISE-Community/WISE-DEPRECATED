@@ -1388,6 +1388,9 @@ var DrawController = function () {
 
                                             // set the image as the background
                                             _this4.drawingTool.setBackgroundImage(image);
+
+                                            // make the work dirty so that it gets saved
+                                            _this4.studentDataChanged();
                                         });
                                     }
                                 }
@@ -1404,6 +1407,9 @@ var DrawController = function () {
                                 if (this.componentContent.background != null && this.componentContent.background != '') {
                                     // set the background
                                     this.drawingTool.setBackgroundImage(this.componentContent.background);
+
+                                    // make the work dirty so that it gets saved
+                                    this.studentDataChanged();
                                 }
                             }
                         }

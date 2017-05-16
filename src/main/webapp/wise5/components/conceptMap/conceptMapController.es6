@@ -1649,6 +1649,9 @@ class ConceptMapController {
 
                         // populate the component state into this component
                         this.setStudentWork(populatedComponentState);
+
+                        // make the work dirty so that it gets saved
+                        this.studentDataChanged();
                     }
                 }
             }

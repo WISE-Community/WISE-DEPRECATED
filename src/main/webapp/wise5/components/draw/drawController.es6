@@ -1346,6 +1346,9 @@ class DrawController {
 
                                         // set the image as the background
                                         this.drawingTool.setBackgroundImage(image);
+
+                                        // make the work dirty so that it gets saved
+                                        this.studentDataChanged();
                                     });
                                 }
                             }
@@ -1362,6 +1365,9 @@ class DrawController {
                             if (this.componentContent.background != null && this.componentContent.background != '') {
                                 // set the background
                                 this.drawingTool.setBackgroundImage(this.componentContent.background);
+
+                                // make the work dirty so that it gets saved
+                                this.studentDataChanged();
                             }
                         }
                     }

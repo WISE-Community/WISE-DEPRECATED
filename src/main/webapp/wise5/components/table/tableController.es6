@@ -1074,6 +1074,9 @@ class TableController {
 
                     // set the merged component state into this component
                     this.setStudentWork(mergedComponentState);
+
+                    // make the work dirty so that it gets saved
+                    this.studentDataChanged();
                 }
             }
         }
