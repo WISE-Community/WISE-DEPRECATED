@@ -130,27 +130,13 @@ public class HibernateStudentWorkDao extends AbstractHibernateDao<StudentWork> i
 
                 if (component != null) {
                     try {
+                        // get the node id and component id of the component
+                        String tempNodeId = component.getString("nodeId");
+                        String tempComponentId = component.getString("componentId");
 
-                        Criterion nodeIdRestriction = null;
-                        Criterion componentIdRestriction = null;
-
-                        if (component.has("nodeId")) {
-                            // the node id was provided
-                            String tempNodeId = component.getString("nodeId");
-                            nodeIdRestriction = Restrictions.eq("nodeId", tempNodeId);
-                        } else {
-                            // the node id was not provided so we will require the nodeId to be null
-                            nodeIdRestriction = Restrictions.isNull("nodeId");
-                        }
-
-                        if (component.has("componentId")) {
-                            // the component id was provided
-                            String tempComponentId = component.getString("componentId");
-                            componentIdRestriction = Restrictions.eq("componentId", tempComponentId);
-                        } else {
-                            // the component id was not provided so we will require the componentId to be null
-                            componentIdRestriction = Restrictions.isNull("componentId");
-                        }
+                        // create restrictions to match the node id and component id
+                        SimpleExpression nodeIdRestriction = Restrictions.eq("nodeId", tempNodeId);
+                        SimpleExpression componentIdRestriction = Restrictions.eq("componentId", tempComponentId);
 
                         // require the node id and component id to match by using an 'and' conditional
                         Conjunction conjunction = Restrictions.conjunction(nodeIdRestriction, componentIdRestriction);

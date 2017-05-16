@@ -56,5 +56,14 @@
     "UP": "Πάνω",
     "VERSIONS": "Εκδοχές",
     "WIDTH": "Πλάτος",
-    "WORKGROUP_ID": "ID Ομάδας Εργασίας"
+    "WORKGROUP_ID": "ID Ομάδας Εργασίας",
+    "AUTO_SAVED": "Αυτόματη-αποθήκευση",
+    "AUTO_SCORE": "Αυτόματη Βαθμολόγηση",
+    "COMPONENT_ID": "Id Στοιχείου",
+    "COMPONENT_WIDTH": "Πλάτος Στοιχείου",
+    "CONNECTED_COMPONENT": "Συνδεδεμένο Στοιχείο",
+    "ADD_CONNECTED_COMPONENT": "Πρόσθεση Συνδεδεμένου Στοιχείου",
+    "ARE_YOU_SURE_YOU_WANT_TO_CHANGE_THIS_COMPONENT_TYPE": "Είστε σίγουροι ότι θέλετε να αλλάξετε αυτό το είδος στοιχείου;",
+    "ENTER_PROMPT_HERE": "Εισάγετε Εδώ Προτροπή",
+    "FINAL_REPORT": "Τελική Αναφορά"
 }
