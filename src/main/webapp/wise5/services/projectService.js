@@ -4476,7 +4476,7 @@ var ProjectService = function () {
         key: 'moveNodesInside',
         value: function moveNodesInside(nodeIds, nodeId) {
 
-            // loop thorugh all the nodes we are moving
+            // loop through all the nodes we are moving
             for (var n = 0; n < nodeIds.length; n++) {
 
                 // get the node we are moving
@@ -7278,7 +7278,12 @@ var ProjectService = function () {
                     return false;
                 } else if (this.isGroupNode(nodeId)) {
                     // the node is a group node
-                    // TODO: implement this
+
+                    /*
+                     * all group nodes are active since we don't have an inactive
+                     * groups section
+                     */
+                    return true;
                 } else {
                     // the node is a step node
 
@@ -9801,6 +9806,71 @@ var ProjectService = function () {
         value: function getAdditionalProcessingFunctions(nodeId, componentId) {
             var key = nodeId + "_" + componentId;
             return this.additionalProcessingFunctionsMap[key];
+        }
+
+        /**
+         * Get the previous node
+         * @param nodeId get the node id that comes before this one
+         * @return the node id that comes before
+         */
+
+    }, {
+        key: 'getPreviousNodeId',
+        value: function getPreviousNodeId(nodeId) {
+            var previousNodeId = null;
+
+            // get the node ids in the project as a flat array
+            var flattenedNodeIds = this.getFlattenedProjectAsNodeIds();
+
+            if (flattenedNodeIds != null) {
+
+                // get the index of the node id
+                var indexOfNodeId = flattenedNodeIds.indexOf(nodeId);
+
+                if (indexOfNodeId != -1) {
+
+                    // get the index of the previous node id
+                    var indexOfPreviousNodeId = indexOfNodeId - 1;
+
+                    // get the previous node id
+                    previousNodeId = flattenedNodeIds[indexOfPreviousNodeId];
+                }
+            }
+
+            return previousNodeId;
+        }
+
+        /**
+         * Get the next node
+         * @param nodeId get the node id that comes after this one
+         * @return the node id that comes after
+         */
+
+    }, {
+        key: 'getNextNodeId',
+        value: function getNextNodeId(nodeId) {
+
+            var nextNodeId = null;
+
+            // get the node ids in the project as a flat array
+            var flattenedNodeIds = this.getFlattenedProjectAsNodeIds();
+
+            if (flattenedNodeIds != null) {
+
+                // get the index of the node id
+                var indexOfNodeId = flattenedNodeIds.indexOf(nodeId);
+
+                if (indexOfNodeId != -1) {
+
+                    // get the index of the next node id
+                    var indexOfNextNodeId = indexOfNodeId + 1;
+
+                    // get the next node id
+                    nextNodeId = flattenedNodeIds[indexOfNextNodeId];
+                }
+            }
+
+            return nextNodeId;
         }
     }]);
 

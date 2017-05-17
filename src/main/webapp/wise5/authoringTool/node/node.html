@@ -31,7 +31,12 @@
         translate="editStepRubric"></button>
 <button ng-click='nodeAuthoringController.nodeAuthoringViewButtonClicked("createBranch")'
         translate="createBranch"></button>
-
+<div style="display:inline; float:right">
+    <button ng-click='nodeAuthoringController.nodeAuthoringViewButtonClicked("previousNode")'
+            title="{{ 'previousStep' | translate }}"><</button>
+    <button ng-click='nodeAuthoringController.nodeAuthoringViewButtonClicked("nextNode")'
+            title="{{ 'nextStep' | translate }}">></button>
+</div>
 <div ng-show='nodeAuthoringController.showCreateComponent'>
     <select ng-model='nodeAuthoringController.selectedComponent'>
         <option ng-repeat='componentType in nodeAuthoringController.componentTypes' value='{{componentType.componentType}}'>

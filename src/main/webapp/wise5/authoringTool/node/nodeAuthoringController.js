@@ -9,7 +9,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var NodeAuthoringController = function () {
-    function NodeAuthoringController($anchorScroll, $filter, $injector, $location, $mdDialog, $scope, $state, $stateParams, $timeout, ConfigService, ProjectService, UtilService) {
+    function NodeAuthoringController($anchorScroll, $filter, $injector, $location, $mdDialog, $scope, $state, $stateParams, $timeout, ConfigService, NodeService, ProjectService, UtilService) {
         var _this = this;
 
         _classCallCheck(this, NodeAuthoringController);
@@ -25,6 +25,7 @@ var NodeAuthoringController = function () {
         this.$timeout = $timeout;
         this.$translate = this.$filter('translate');
         this.ConfigService = ConfigService;
+        this.NodeService = NodeService;
         this.ProjectService = ProjectService;
         this.UtilService = UtilService;
         this.$translate = this.$filter('translate');
@@ -1487,6 +1488,46 @@ var NodeAuthoringController = function () {
                 this.showEditButtons = false;
                 this.showRubric = false;
                 this.showCreateBranch = !this.showCreateBranch;
+            } else if (view == 'previousNode') {
+                // hide all the other views
+                this.showCreateComponent = false;
+                this.showEditTransitions = false;
+                this.showConstraints = false;
+                this.showEditButtons = false;
+                this.showRubric = false;
+                this.showCreateBranch = false;
+
+                // get the previous node id
+                var prevNodeId = this.ProjectService.getPreviousNodeId(this.nodeId);
+
+                if (prevNodeId != null) {
+                    // there is a previous node id so we will go to it
+                    this.$state.go('root.project.node', { projectId: this.projectId, nodeId: prevNodeId });
+                } else {
+                    // there is no previous node id so we will display a message
+                    var thereIsNoPreviousStep = this.$translate('thereIsNoPreviousStep');
+                    alert(thereIsNoPreviousStep);
+                }
+            } else if (view == 'nextNode') {
+                // hide all the other views
+                this.showCreateComponent = false;
+                this.showEditTransitions = false;
+                this.showConstraints = false;
+                this.showEditButtons = false;
+                this.showRubric = false;
+                this.showCreateBranch = false;
+
+                // get the next node id
+                var nextNodeId = this.ProjectService.getNextNodeId(this.nodeId);
+
+                if (nextNodeId != null) {
+                    // there is a next node id so we will go to it
+                    this.$state.go('root.project.node', { projectId: this.projectId, nodeId: nextNodeId });
+                } else {
+                    // there is no next node id so we will display a message
+                    var thereIsNoNextStep = this.$translate('thereIsNoNextStep');
+                    alert(thereIsNoNextStep);
+                }
             }
         }
 
@@ -2510,7 +2551,7 @@ var NodeAuthoringController = function () {
 
 ;
 
-NodeAuthoringController.$inject = ['$anchorScroll', '$filter', '$injector', '$location', '$mdDialog', '$scope', '$state', '$stateParams', '$timeout', 'ConfigService', 'ProjectService', 'UtilService'];
+NodeAuthoringController.$inject = ['$anchorScroll', '$filter', '$injector', '$location', '$mdDialog', '$scope', '$state', '$stateParams', '$timeout', 'ConfigService', 'NodeService', 'ProjectService', 'UtilService'];
 
 exports.default = NodeAuthoringController;
 //# sourceMappingURL=nodeAuthoringController.js.map
