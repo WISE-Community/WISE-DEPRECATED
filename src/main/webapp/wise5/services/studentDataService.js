@@ -44,6 +44,12 @@ var StudentDataService = function () {
          */
         this.saveToServerRequestCount = 0;
 
+        /*
+         * A dummy student work id that is used in preview mode when we simulate
+         * saving of student data.
+         */
+        this.dummyStudentWorkId = 1;
+
         // listen for node status changes
         this.$rootScope.$on('nodeStatusesChanged', function (event, args) {
             // calculate active global annotations and group them by group name as needed
@@ -1637,6 +1643,20 @@ var StudentDataService = function () {
                             localStudentWork.id = savedStudentWork.id;
                             localStudentWork.serverSaveTime = savedStudentWork.serverSaveTime ? savedStudentWork.serverSaveTime : serverSaveTime;
                             localStudentWork.requestToken = null; // requestToken is no longer needed.
+
+                            if (this.ConfigService.getMode() == "preview" && localStudentWork.id == null) {
+                                /*
+                                 * we are in preview mode so we will set a dummy
+                                 * student work id into the student work
+                                 */
+                                localStudentWork.id = this.dummyStudentWorkId;
+
+                                /*
+                                 * increment the dummy student work id for the next
+                                 * student work
+                                 */
+                                this.dummyStudentWorkId++;
+                            }
 
                             this.$rootScope.$broadcast('studentWorkSavedToServer', { studentWork: localStudentWork });
                             break;
