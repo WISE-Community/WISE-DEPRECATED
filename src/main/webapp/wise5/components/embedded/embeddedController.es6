@@ -399,14 +399,14 @@ class EmbeddedController {
                     } else {
                         this.setSaveMessage(this.$translate('SAVED'), clientSaveTime);
                     }
+
+                    var message = {};
+                    message.messageType = 'componentStateSaved';
+                    message.componentState = componentState;
+
+                    // send the student work to the embedded application
+                    this.sendMessageToApplication(message);
                 }
-
-                var message = {};
-                message.messageType = 'componentStateSaved';
-                message.componentState = componentState;
-
-                // send the student work to the embedded application
-                this.sendMessageToApplication(message);
             }
         });
 
