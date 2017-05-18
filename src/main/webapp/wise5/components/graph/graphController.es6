@@ -2275,11 +2275,32 @@ class GraphController {
      * e.g. 'submit', 'save', 'change'
      */
     createComponentStateAdditionalProcessing(deferred, componentState, action) {
-        /*
-         * we don't need to perform any additional processing so we can resolve
-         * the promise immediately
-         */
-        deferred.resolve(componentState);
+        
+        if (this.ProjectService.hasAdditionalProcessingFunctions(this.nodeId, this.componentId)) {
+            // this component has additional processing functions
+
+            // get the additional processing functions
+            let additionalProcessingFunctions = this.ProjectService.getAdditionalProcessingFunctions(this.nodeId, this.componentId);
+            let allPromises = [];
+
+            // call all the additional processing functions
+            for (let i = 0; i < additionalProcessingFunctions.length; i++) {
+                let additionalProcessingFunction = additionalProcessingFunctions[i];
+                let defer = this.$q.defer();
+                let promise = defer.promise;
+                allPromises.push(promise);
+                additionalProcessingFunction(defer, componentState, action);
+            }
+            this.$q.all(allPromises).then(() => {
+                deferred.resolve(componentState);
+            });
+        } else {
+            /*
+             * we don't need to perform any additional processing so we can resolve
+             * the promise immediately
+             */
+            deferred.resolve(componentState);
+        }
     }
 
     /**
