@@ -92,6 +92,8 @@ class DataExportController {
             this.exportNotebookItems(exportType);
         } else if (exportType === "notifications") {
             this.exportNotifications();
+        } else if (exportType === "studentAssets") {
+            this.exportStudentAssets();
         }
     }
 
@@ -1373,6 +1375,10 @@ class DataExportController {
                 URL.revokeObjectURL(csvUrl);  // tell browser to release URL reference
             }, 3000);
         });
+    }
+
+    exportStudentAssets() {
+        this.TeacherDataService.getExport("studentAssets");
     }
 
     /**
