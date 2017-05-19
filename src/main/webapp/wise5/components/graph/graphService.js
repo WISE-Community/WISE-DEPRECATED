@@ -815,8 +815,11 @@ var GraphService = function (_NodeService) {
                 if (submitRequired) {
                     // completion requires a submission, so check for isSubmit in any component states
                     for (var i = 0, l = componentStates.length; i < l; i++) {
-                        var state = componentStates[i];
-                        if (state.isSubmit && state.studentData) {
+                        var componentState = componentStates[i];
+                        if (componentState.isSubmit && componentState.studentData) {
+
+                            var studentData = componentState.studentData;
+
                             // component state is a submission
                             if (this.hasSeriesData(studentData) || this.hasTrialData(studentData)) {
                                 // there is series data so the component is completed
@@ -828,9 +831,9 @@ var GraphService = function (_NodeService) {
                 } else {
                     // get the last component state
                     var _l = componentStates.length - 1;
-                    var componentState = componentStates[_l];
+                    var _componentState = componentStates[_l];
 
-                    var _studentData = componentState.studentData;
+                    var _studentData = _componentState.studentData;
 
                     if (_studentData) {
                         if (this.hasSeriesData(_studentData) || this.hasTrialData(_studentData)) {

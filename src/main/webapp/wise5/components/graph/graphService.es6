@@ -726,8 +726,11 @@ class GraphService extends NodeService {
             if (submitRequired) {
                 // completion requires a submission, so check for isSubmit in any component states
                 for (let i = 0, l = componentStates.length; i < l; i++) {
-                    let state = componentStates[i];
-                    if (state.isSubmit && state.studentData) {
+                    let componentState = componentStates[i];
+                    if (componentState.isSubmit && componentState.studentData) {
+
+                        let studentData = componentState.studentData;
+
                         // component state is a submission
                         if (this.hasSeriesData(studentData) || this.hasTrialData(studentData)) {
                             // there is series data so the component is completed
