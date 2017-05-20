@@ -1282,13 +1282,22 @@ var ProjectController = function () {
             if (this.editProjectJSONMode) {
                 // updates projectAsText field, which is the string representation of the project that we'll show in the textarea
                 this.projectJSONString = angular.toJson(this.ProjectService.project, 4);
-            } else {
-                // save project
-                var project = angular.fromJson(this.projectJSONString);
-                this.ProjectService.setProject(project);
-                // save and refresh the project
-                this.checkPotentialStartNodeIdChangeThenSaveProject();
             }
+        }
+
+        /**
+         * Save the project JSON string to the server
+         */
+
+    }, {
+        key: 'saveProjectJSONString',
+        value: function saveProjectJSONString() {
+            // create the project object from the project JSON string
+            var project = angular.fromJson(this.projectJSONString);
+            this.ProjectService.setProject(project);
+
+            // save and refresh the project
+            this.checkPotentialStartNodeIdChangeThenSaveProject();
         }
 
         /**
