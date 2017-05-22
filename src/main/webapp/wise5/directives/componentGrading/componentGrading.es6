@@ -86,6 +86,8 @@ class ComponentGradingController {
             let latestComment = this.latestAnnotations.comment;
             if (latestComment.type === 'comment') {
                 this.comment = latestComment.data.value;
+            } else if (latestComment.type === 'autoComment') {
+                this.comment = latestComment.data.value;
             } else {
                 this.comment = null;
             }
