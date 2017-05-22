@@ -80,18 +80,18 @@
             </div>
             <div ng-show='projectController.importMode'>
                 <h4>{{ 'importStepsParens' | translate }}</h4>
-                {{ 'authorableProjects' | translate }}
+                {{ 'myProjects' | translate }}
                 <br/>
-                <select ng-model='projectController.importAuthorableProjectId'
-                        ng-options="project.id as (project.id + ' ' + project.name + (project.runId ? ' (' + ('RUN_ID' | translate) + ': ' + project.runId + ')': '')) for project in projectController.authorableProjectsList"
-                        ng-change='projectController.showAuthorableImportProject(projectController.importAuthorableProjectId)'>
-                        <option value='' translate='selectAuthorableProject'></option>
+                <select ng-model='projectController.importMyProjectId'
+                        ng-options="project.id as (project.id + ' ' + project.name + (project.runId ? ' (' + ('RUN_ID' | translate) + ': ' + project.runId + ')': '')) for project in projectController.myProjectsList"
+                        ng-change='projectController.showMyImportProject(projectController.importMyProjectId)'>
+                        <option value='' translate='selectMyProject'></option>
                 </select>
                 <br/>
                 {{ 'libraryProjects' | translate }}
                 <br/>
                 <select ng-model='projectController.importLibraryProjectId'
-                        ng-options="project.id as (project.id + ' ' + project.title + (project.runId ? ' (' + ('RUN_ID' | translate) + ': ' + project.runId + ')': '')) for project in projectController.libraryProjectsList.reverse()"
+                        ng-options="project.id as (project.id + ' ' + project.title + (project.runId ? ' (' + ('RUN_ID' | translate) + ': ' + project.runId + ')': '')) for project in projectController.libraryProjectsList"
                         ng-change='projectController.showLibraryImportProject(projectController.importLibraryProjectId)'>
                         <option value='' translate='selectLibraryProject'></option>
                 </select>

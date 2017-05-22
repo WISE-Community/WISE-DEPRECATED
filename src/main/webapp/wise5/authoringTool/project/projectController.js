@@ -1004,7 +1004,7 @@ var ProjectController = function () {
         value: function toggleImportView() {
             this.importMode = !this.importMode;
 
-            if (this.authorableProjectsList == null) {
+            if (this.myProjectsList == null) {
                 // populate the authorable projects drop down
                 this.getAuthorableProjects();
             }
@@ -1022,7 +1022,53 @@ var ProjectController = function () {
     }, {
         key: 'getAuthorableProjects',
         value: function getAuthorableProjects() {
-            this.authorableProjectsList = this.ConfigService.getConfigParam('projects');
+
+            // get the projects this teacher owns
+            var projects = this.ConfigService.getConfigParam('projects');
+
+            // get the projects that were shared with the teacher
+            var sharedProjects = this.ConfigService.getConfigParam('sharedProjects');
+
+            var authorableProjects = [];
+
+            if (projects != null) {
+                // add the owned projects
+                authorableProjects = authorableProjects.concat(projects);
+            }
+
+            if (sharedProjects != null) {
+                // add the shared projects
+                authorableProjects = authorableProjects.concat(sharedProjects);
+            }
+
+            // sort the projects by descending id
+            authorableProjects.sort(this.sortByProjectId);
+
+            this.myProjectsList = authorableProjects;
+        }
+
+        /**
+         * Sort the objects by descending id.
+         * @param projectA an object with an id field
+         * @param projectB an object with an id field
+         * @return 1 if projectA comes before projectB
+         * -1 if projectA comes after projectB
+         * 0 if they are the same
+         */
+
+    }, {
+        key: 'sortByProjectId',
+        value: function sortByProjectId(projectA, projectB) {
+            var projectIdA = projectA.id;
+            var projectIdB = projectB.id;
+
+            if (projectIdA < projectIdB) {
+                return 1;
+            } else if (projectIdA > projectIdB) {
+                return -1;
+            } else {
+                return 0;
+            }
         }
 
         /**
@@ -1035,7 +1081,14 @@ var ProjectController = function () {
             var _this5 = this;
 
             this.ConfigService.getLibraryProjects().then(function (libraryProjectsList) {
-                _this5.libraryProjectsList = libraryProjectsList;
+
+                if (libraryProjectsList != null) {
+
+                    // reverse the list so that it is ordered by descending id
+                    libraryProjectsList.reverse();
+
+                    _this5.libraryProjectsList = libraryProjectsList;
+                }
             });
         }
 
@@ -1045,8 +1098,8 @@ var ProjectController = function () {
          */
 
     }, {
-        key: 'showAuthorableImportProject',
-        value: function showAuthorableImportProject(importProjectId) {
+        key: 'showMyImportProject',
+        value: function showMyImportProject(importProjectId) {
 
             // clear the select drop down for the library project
             this.importLibraryProjectId = null;
@@ -1063,7 +1116,7 @@ var ProjectController = function () {
     }, {
         key: 'showLibraryImportProject',
         value: function showLibraryImportProject(importProjectId) {
-            this.importAuthorableProjectId = null;
+            this.importMyProjectId = null;
 
             // show the import project
             this.showImportProject(importProjectId);
@@ -1085,7 +1138,7 @@ var ProjectController = function () {
                 // clear all the import project values
                 this.importProjectIdToOrder = {};
                 this.importProjectItems = [];
-                this.importAuthorableProjectId = null;
+                this.importMyProjectId = null;
                 this.importLibraryProjectId = null;
                 this.importProjectId = null;
                 this.importProject = null;
@@ -1226,7 +1279,7 @@ var ProjectController = function () {
                         // clear the import fields
                         _this7.importProjectIdToOrder = {};
                         _this7.importProjectItems = [];
-                        _this7.importAuthorableProjectId = null;
+                        _this7.importMyProjectId = null;
                         _this7.importLibraryProjectId = null;
                         _this7.importProjectId = null;
                         _this7.importProject = null;

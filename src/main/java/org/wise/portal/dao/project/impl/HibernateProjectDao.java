@@ -1,21 +1,21 @@
 /**
  * Copyright (c) 2008-2015 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
- * 
+ *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
- * 
+ *
  * Permission is hereby granted, without written agreement and without license
  * or royalty fees, to use, copy, modify, and distribute this software and its
  * documentation for any purpose, provided that the above copyright notice and
  * the following two paragraphs appear in all copies of this software.
- * 
+ *
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
  * PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
  * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
  * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
- * 
+ *
  * IN NO EVENT SHALL REGENTS BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT,
  * SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, INCLUDING LOST PROFITS,
  * ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF
@@ -49,7 +49,7 @@ import org.wise.portal.domain.user.User;
 @Repository
 public class HibernateProjectDao extends AbstractHibernateDao<Project> implements
 		ProjectDao<Project> {
-	
+
     	private static final String FIND_ALL_QUERY = "from ProjectImpl";
 
 	/**
@@ -67,7 +67,7 @@ public class HibernateProjectDao extends AbstractHibernateDao<Project> implement
 					.getDataObjectClass());
 		return projects;
 	}
-	
+
 	/**
 	 * @see org.wise.portal.dao.offering.RunDao#retrieveByRunCode(String)
 	 */
@@ -83,7 +83,7 @@ public class HibernateProjectDao extends AbstractHibernateDao<Project> implement
 					.getDataObjectClass());
 		return projects;
 	}
-	
+
 	/**
 	 * @see org.wise.portal.dao.impl.AbstractHibernateDao#getFindAllQuery()
 	 */
@@ -91,7 +91,7 @@ public class HibernateProjectDao extends AbstractHibernateDao<Project> implement
 	protected String getFindAllQuery() {
 		return FIND_ALL_QUERY;
 	}
-	
+
 	/**
 	 * @see org.wise.portal.dao.impl.AbstractHibernateDao#getDataObjectClass()
 	 */
@@ -106,19 +106,20 @@ public class HibernateProjectDao extends AbstractHibernateDao<Project> implement
 
 	public List<Project> retrieveListByInfo(ProjectInfo projectinfo)
 		throws ObjectNotFoundException {
-	    
+
 	    return this.retrieveListByTag(projectinfo.getFamilyTag());
 	}
-	
+
 	/**
 	 * @see org.wise.portal.dao.project.ProjectDao#getProjectListByUAR(net.sf.sail.webapp.domain.User, java.lang.String)
 	 */
 	public List<Project> getProjectListByUAR(User user, String role){
 		String q = "select project from ProjectImpl project inner join project." +
-			role + "s " + role + " where " + role + ".id='" + user.getId() + "'";
+			role + "s " + role + " where " + role + ".id='" + user.getId() + "'" +
+			" order by project.id desc";
 		return (List<Project>) this.getHibernateTemplate().find(q);
 	}
-	
+
 	/**
 	 * @see org.wise.portal.dao.project.ProjectDao#getProjectList(java.lang.String)
 	 */
@@ -134,7 +135,7 @@ public class HibernateProjectDao extends AbstractHibernateDao<Project> implement
 	public List<Project> getList() {
 		return (List<Project>) this.getHibernateTemplate().find(this.getFindAllQuery());
 	}
-	
+
 	/**
 	 * @see org.wise.portal.dao.SimpleDao#getById(java.lang.Integer)
 	 */
@@ -150,7 +151,7 @@ public class HibernateProjectDao extends AbstractHibernateDao<Project> implement
 		}
 		if (object == null)
 			throw new ObjectNotFoundException((Long) id, this.getDataObjectClass());
-		
+
 		return object;
 	}
 
@@ -180,8 +181,8 @@ public class HibernateProjectDao extends AbstractHibernateDao<Project> implement
 			tagString += "'" + name + "',";
 		}
 		tagString = tagString.substring(0, tagString.length() - 1);
-		
-		String q = "select distinct project from ProjectImpl project inner join project.tags tag with tag.name in (" + tagString + ") ";			
+
+		String q = "select distinct project from ProjectImpl project inner join project.tags tag with tag.name in (" + tagString + ") ";
 		List<Project> projects = (List<Project>) this.getHibernateTemplate().find(q);
 		List<Project> result = new ArrayList<Project>();
 		for (Project project : projects) {
@@ -197,7 +198,7 @@ public class HibernateProjectDao extends AbstractHibernateDao<Project> implement
 		}
 		return result;
 	}
-	
+
 	/**
 	 * @see org.wise.portal.dao.project.ProjectDao#getProjectListByAuthorName(java.lang.String)
 	 */
@@ -224,7 +225,7 @@ public class HibernateProjectDao extends AbstractHibernateDao<Project> implement
 		return projects;
 	}
 
-	
+
 	/**
 	 * @see org.wise.portal.dao.project.ProjectDao#getProjectWithoutMetadata(java.lang.Long)
 	 */
