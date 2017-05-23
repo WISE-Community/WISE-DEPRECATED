@@ -1,3 +1,9 @@
+md-dialog > md-toolbar {
+    &.md-light-theme {
+        border-bottom: 1px solid color('divider');
+    }
+}
+
 .md-toolbar-tools {
     font-size: 18px;
 }

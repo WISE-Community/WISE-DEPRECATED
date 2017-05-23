@@ -1,9 +1,3 @@
-<style>
-    md-dialog {
-        display: initial;
-        width: 80%;
-    }
-</style>
 <div class="view-content--with-sidemenu" ng-if="nodeProgressController.isGroupNode(nodeProgressController.nodeId)">
     <div class="l-constrained l-constrained-md md-padding nav">
         <div class="flex md-subhead content-head" layout="row" layout-align="start center" layout-wrap>
@@ -16,10 +10,12 @@
                 </div>
             </div>
             <span flex></span>
-            <div ng-show="nodeProgressController.showRubricButton">
-                <md-button ng-click="nodeProgressController.showRubric()"
-                           ng-class="md-primary">{{ 'showProjectRubric' | translate }}</md-button>
-            </div>
+            <md-button ng-show="nodeProgressController.showRubricButton"
+                       ng-click="nodeProgressController.showRubric($event)"
+                       class="md-primary">
+                <md-icon> info_outline </md-icon>
+                {{ 'teachingTips' | translate }}
+            </md-button>
             <div>
                 <md-switch aria-label="Lock student screens switch"
                            ng-model="nodeProgressController.isPaused"

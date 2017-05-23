@@ -266,7 +266,7 @@ div.projectLink a {
 .tinycarousel .overview { list-style: none; padding: 0; margin: 0;  position: absolute; left: 0; top: 0; }
 .tinycarousel .overview li{ margin: 0; padding: 0; height: 200px; width: 329px; overflow:hidden; position:relative; }
 
-.tinycarousel .pager { overflow: hidden; list-style: none; margin: 2px 0; width: 20px; position: absolute; top: 30px; right: 9px; }
+.tinycarousel .pager { overflow: hidden; list-style: none; margin: 2px 0; width: 20px; position: absolute; top: 30px; bottom: 30px; right: 9px; }
 .tinycarousel .pager li {  }
 .tinycarousel .pagenum { text-decoration: none; text-align: center; padding: 2px 0 2px 1px; font-weight: normal; display: block; border-radius: 10px; -webkit-border-radius: 10px; -moz-border-radius: 10px; margin-bottom: 1px; font-size: .8em; font-family:Arial;}
 .tinycarousel .active { color: #fff !important; background-color: #A8906B; }

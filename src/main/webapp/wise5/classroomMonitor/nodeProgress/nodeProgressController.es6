@@ -2,7 +2,8 @@
 
 class NodeProgressController {
 
-    constructor($mdDialog,
+    constructor($filter,
+                $mdDialog,
                 $scope,
                 $state,
                 ConfigService,
@@ -11,6 +12,7 @@ class NodeProgressController {
                 TeacherDataService,
                 TeacherWebSocketService) {
 
+        this.$filter = $filter;
         this.$mdDialog = $mdDialog;
         this.$scope = $scope;
         this.$state = $state;
@@ -19,6 +21,9 @@ class NodeProgressController {
         this.StudentStatusService = StudentStatusService;
         this.TeacherDataService = TeacherDataService;
         this.TeacherWebSocketService = TeacherWebSocketService;
+
+        this.$translate = this.$filter('translate');
+
         this.currentGroup = null;
 
         // the current workgroup
@@ -220,64 +225,103 @@ class NodeProgressController {
     }
 
     /**
-     * Show the rubric in the grading view. We will show the step rubric and the
-     * component rubrics.
+     * Show the project rubric
      */
-    showRubric() {
+    showRubric($event) {
 
         // get the project title
-        var projectTitle = this.ProjectService.getProjectTitle();
+        let projectTitle = this.ProjectService.getProjectTitle();
+        let rubricTitle = this.$translate('teachingTips');
+
+        // get the node icon; TODO: add node icon once we have a <node-icon> angular component
+        //let nodeIcon = this.ProjectService.getNodeIconByNodeId(this.nodeId);
 
         /*
          * create the header for the popup that contains the project title,
          * 'Open in New Tab' button, and 'Close' button
          */
-        var popupHeader = "<div style='display: flex; margin-left: 30px; margin-right: 30px; margin-top: 30px; margin-bottom: 30px;'><div style='flex: 50%'><h3>" + projectTitle + "</h3></div><div style='flex: 50%; text-align: right'><md-button class='md-primary md-raised' ng-click='openRubricInNewTab()' translate='openInNewTab'></md-button> <md-button class='md-primary md-raised' ng-click='closeRubric()' translate='CLOSE'></md-button></div></div>";
+        let dialogHeader =
+            `<md-toolbar md-theme="light">
+                <div class="md-toolbar-tools">
+                    <h2 class="overflow--ellipsis">` + projectTitle + `</h2>
+                    <span flex>&nbsp;</span>
+                    <span class="accent-2 md-subhead">` + rubricTitle + `</span>
+                </div>
+            </md-toolbar>`;
+
+        let dialogActions =
+            `<md-dialog-actions layout="row" layout-align="end center">
+                <md-button class="md-primary" ng-click="openInNewWindow()" aria-label="{{ 'openInNewWindow' | translate }}">{{ 'openInNewWindow' | translate }}</md-button>
+                <md-button ng-click="close()" aria-label="{{ 'close' | translate }}">{{ 'close' | translate }}</md-button>
+            </md-dialog-actions>`;
 
         /*
-         * create the header for the new tab that contains the project title
+         * create the header for the new window that contains the project title
          */
-        var tabHeader = "<link rel='stylesheet' href='../wise5/lib/bootstrap/css/bootstrap.min.css' /><link rel='stylesheet' href='../wise5/lib/summernote/dist/summernote.css' /><div style='display: flex; margin-left: 30px; margin-right: 30px; margin-top: 30px; margin-bottom: 30px;'><h1>" + projectTitle + "</h1></div>";
+        let windowHeader =
+            `<md-toolbar style="background-color: #ffffff; border-bottom: 1px solid rgba(0,0,0,0.13);" class="layout-row">
+                <div class="md-toolbar-tools">
+                    <h2>` + projectTitle + `</h2>
+                    <span class="flex">&nbsp;</span>
+                    <span class="accent-2 md-subhead">` + rubricTitle + `</span>
+                </div>
+            </md-toolbar>`;
 
-        // create the div that will hold the rubric content
-        var rubricContent = "<div style='margin-left:30px;margin-right:30px;margin-top:30px;margin-bottom:30px;'>";
+        // create the string that will hold the rubric content
+        let rubricContent = '<md-content class="md-whiteframe-1dp md-padding" style="background-color: #ffffff;">';
 
-        // get the rubric content
-        rubricContent += this.ProjectService.replaceAssetPaths(this.ProjectService.getProjectRubric());
+        // get the project rubric
+        let rubric = this.ProjectService.replaceAssetPaths(this.ProjectService.getProjectRubric());
 
-        rubricContent += '</div>';
+        if (rubric != null) {
+            rubricContent += rubric + '</md-content>';
+        }
 
-        // create the popup content
-        var popupContent = popupHeader + rubricContent;
+        let dialogContent =
+            `<md-dialog-content class="gray-lighter-bg">
+                <div class="md-dialog-content">` + rubricContent + `</div>
+            </md-dialog-content>`;
 
-        // create the tab content
-        var tabContent = tabHeader + rubricContent;
+        // create the dialog string
+        let dialogString = `<md-dialog class="dialog--wider" aria-label="` + projectTitle + ` - ` + rubricTitle + `">` + dialogHeader + dialogContent + dialogActions + `</md-dialog>`;
+
+        // create the window string
+        let windowString =
+            `<link rel='stylesheet' href='../wise5/lib/bootstrap/css/bootstrap.min.css' />
+            <link rel='stylesheet' href='../wise5/themes/default/style/monitor.css'>
+            <link rel='stylesheet' href='../wise5/themes/default/style/angular-material.css'>
+            <link rel='stylesheet' href='../wise5/lib/summernote/dist/summernote.css' />
+            <body class="layout-column">
+                <div class="layout-column">` + windowHeader + `<md-content class="md-padding">` + rubricContent + `</div></md-content></div>
+            </body>`;
 
         // display the rubric in a popup
         this.$mdDialog.show({
-            template: popupContent,
+            template : dialogString,
+            fullscreen: true,
             controller: ['$scope', '$mdDialog',
                 function DialogController($scope, $mdDialog) {
 
                     // display the rubric in a new tab
-                    $scope.openRubricInNewTab = function() {
+                    $scope.openInNewWindow = function() {
 
                         // open a new tab
-                        var w = window.open('', '_blank');
+                        let w = window.open('', '_blank');
 
                         // write the rubric content to the new tab
-                        w.document.write(tabContent);
+                        w.document.write(windowString);
 
                         // close the popup
                         $mdDialog.hide();
                     }
 
                     // close the popup
-                    $scope.closeRubric = function() {
+                    $scope.close = () => {
                         $mdDialog.hide();
                     }
                 }
             ],
+            targetEvent: $event,
             clickOutsideToClose: true,
             escapeToClose: true
         });
@@ -360,6 +404,7 @@ class NodeProgressController {
 }
 
 NodeProgressController.$inject = [
+    '$filter',
     '$mdDialog',
     '$scope',
     '$state',

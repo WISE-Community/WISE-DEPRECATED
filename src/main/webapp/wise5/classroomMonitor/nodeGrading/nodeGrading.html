@@ -1,9 +1,9 @@
 <div class="l-constrained node-grading">
-    <div class="flex md-subhead content-head" layout="row" layout-align="start center" layout-wrap>
-        <div layout="row" layout-align="start center" layout-wrap>
-            <div class="accent-2" layout="row" layout-align="start center">
+    <div class="flex md-subhead content-head" layout="row" layout-align="center center" layout-wrap>
+        <div layout="row" layout-align="center center" layout-wrap flex-xs="100">
+            <div class="accent-2" layout="row" layout-align="center center">
                 <h2 class="content-head__item">{{nodeGradingController.getNodeCompletion(nodeGradingController.nodeId)}}%<span class="md-subhead" translate="completion"></span></h2>
-                <h2 class="content-head__item" ng-if="nodeGradingController.showScore" layout="row" layout-align="start center"><md-icon class="score md-48 hide-xs">grade</md-icon> <span>{{nodeGradingController.getNodeAverageScore()}}<span class="md-subhead" translate="meanScore"></span></h2>
+                <h2 class="content-head__item" ng-if="nodeGradingController.nodeHasWork" layout="row" layout-align="start center"><md-icon class="score md-48 hide-xs hide-sm">grade</md-icon> <span>{{nodeGradingController.getNodeAverageScore()}}<span class="md-subhead" translate="meanScore"></span></h2>
             </div>
             <div layout-margin>
                 <period-select></period-select>
@@ -11,23 +11,30 @@
         </div>
         <span flex></span>
         <md-button ng-show="nodeGradingController.showRubricButton"
-                   ng-click="nodeGradingController.showRubric()"
-                   ng-class="md-primary">{{ 'showStepRubric' | translate }}</md-button>
+                   ng-click="nodeGradingController.showRubric($event)"
+                   class="md-primary">
+            <md-icon> info_outline </md-icon>
+            {{ 'stepTips' | translate }}
+        </md-button>
     </div>
 
     <md-list class="user-list">
         <md-list-item class="md-whiteframe-1dp md-with-secondary list-item list-item--actions" layout-wrap>
-            <div flex-xs="100">
+            <div flex-xs="100" flex-sm="100">
                 <workgroup-select></workgroup-select>
             </div>
-            <span flex></span>
-            <div class="md-secondary-container">
+            <span flex hide-xs hide-sm></span>
+            <div class="md-secondary-container" ng-if="nodeGradingController.nodeHasWork"
+                 flex-xs="100" flex-sm="100" layout-column layout-align="center center">
                 <md-button aria-label="{{ 'explandAllTeams' | translate }}"
                            class="button--small md-primary"
                            ng-click="nodeGradingController.expandAll()">{{ 'expandAll' | translate }}</md-button>
                 <md-button aria-label="{{ 'collapseAllTeams' | translate }}"
                            class="button--small md-primary"
                            ng-click="nodeGradingController.collapseAll()">{{ 'collapseAll' | translate }}</md-button>
+            </div>
+            <div ng-if="!nodeGradingController.nodeHasWork" class="center md-padding" flex-xs="100" flex-sm="100">
+                <span class="text-secondary md-caption" translate="stepNoCaptureWork"></span>
             </div>
         </md-list-item>
         <md-list-item class="thead md-whiteframe-z1">
@@ -37,13 +44,13 @@
                     <span translate="team"></span>
                     <md-icon ng-if="nodeGradingController.sort === 'team' || nodeGradingController.sort === '-team'" class="text-light thead__sort" ng-class="{'thead__sort--reverse': nodeGradingController.sort === '-team'}"> arrow_drop_up </md-icon>
                 </md-button>
-                <md-button class="thead__link" flex="30" layout="row" layout-align="center center"
+                <md-button class="thead__link" flex="{{nodeGradingController.nodeHasWork ? 30 : 20}}" layout="row" layout-align="center center"
                    ng-click="nodeGradingController.setSort('status')" title="{{'sortByCompletion' | translate}}">
                     <span translate="status"></span>
                     <md-icon ng-if="nodeGradingController.sort === 'status' || nodeGradingController.sort === '-status'" class="text-light thead__sort" ng-class="{'thead__sort--reverse': nodeGradingController.sort === '-status'}"> arrow_drop_up </md-icon>
                 </md-button>
                 <!--<div flex="20" layout="row" layout-align="center center">Time Spent</div>-->
-                <md-button class="thead__link" ng-if="nodeGradingController.showScore" flex="20" layout="row" layout-align="center center"
+                <md-button class="thead__link" ng-if="nodeGradingController.nodeHasWork" flex="20" layout="row" layout-align="center center"
                    ng-click="nodeGradingController.setSort('score')" title="{{'sortByScore' | translate}}">
                     <span translate="score"></span>
                     <md-icon ng-if="nodeGradingController.sort === 'score' || nodeGradingController.sort === '-score'" class="text-light thead__sort" ng-class="{'thead__sort--reverse': nodeGradingController.sort === '-score'}"> arrow_drop_up </md-icon>
@@ -54,7 +61,7 @@
                         ng-if="nodeGradingController.isWorkgroupShown(workgroup.$key)"
                         expand="nodeGradingController.workVisibilityById[workgroup.$key]"
                         max-score="nodeGradingController.maxScore"
-                        show-score="nodeGradingController.showScore"
+                        show-score="nodeGradingController.nodeHasWork"
                         node-id="nodeGradingController.nodeId"
                         workgroup-id="workgroup.$key"
                         workgroup-data="workgroup"
