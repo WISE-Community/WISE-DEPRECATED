@@ -153,6 +153,9 @@ class OpenResponseService extends NodeService {
                 if (componentContent.cRater != null && !componentContent.cRater.showScore) {
                     // we do not want to show the CRater score
                     result = false;
+                } else if (componentContent.showAutoScore === false) {
+                    // do not show the auto score to the student
+                    result = false;
                 }
             } else if (annotation.type == 'autoComment') {
                 // this is an auto graded comment annotation
@@ -160,7 +163,15 @@ class OpenResponseService extends NodeService {
                 if (componentContent.cRater != null && !componentContent.cRater.showFeedback) {
                     // we do not want to show the CRater comment
                     result = false;
+                } else if (componentContent.showAutoFeedback === false) {
+                    // do not show the auto comment to the student
+                    result = false;
                 }
+            }
+
+            if (annotation.displayToStudent === false) {
+                // do not display the annotation to the studentr
+                result = false;
             }
         }
 
