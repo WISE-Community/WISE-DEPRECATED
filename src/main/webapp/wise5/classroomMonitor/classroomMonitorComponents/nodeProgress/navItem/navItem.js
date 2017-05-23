@@ -36,6 +36,7 @@ var NavItemController = function () {
 
         this.item = this.ProjectService.idToNode[this.nodeId];
         this.isGroup = this.ProjectService.isGroupNode(this.nodeId);
+        this.nodeHasWork = this.ProjectService.nodeHasWork(this.nodeId);
 
         this.nodeTitle = this.showPosition ? this.ProjectService.nodeIdToNumber[this.nodeId] + ': ' + this.item.title : this.item.title;
         this.currentNode = this.TeacherDataService.currentNode;

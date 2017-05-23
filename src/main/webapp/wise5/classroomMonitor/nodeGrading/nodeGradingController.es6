@@ -36,7 +36,7 @@ class NodeGradingController {
 
         // the max score for the node
         this.maxScore = this.ProjectService.getMaxScoreForNode(this.nodeId);
-        this.showScore = this.ProjectService.nodeHasWork(this.nodeId);
+        this.nodeHasWork = this.ProjectService.nodeHasWork(this.nodeId);
 
         let startNodeId = this.ProjectService.getStartNodeId();
         this.rootNode = this.ProjectService.getRootNode(startNodeId);
@@ -629,94 +629,129 @@ class NodeGradingController {
      * Show the rubric in the grading view. We will show the step rubric and the
      * component rubrics.
      */
-    showRubric() {
+    showRubric($event) {
 
         // get the step number and title
-        var stepNumberAndTitle = this.ProjectService.getNodePositionAndTitleByNodeId(this.nodeId);
+        let stepNumberAndTitle = this.ProjectService.getNodePositionAndTitleByNodeId(this.nodeId);
+        let rubricTitle = this.$translate('stepTips');
+
+        // get the node icon; TODO: add node icon once we have a <node-icon> angular component
+        //let nodeIcon = this.ProjectService.getNodeIconByNodeId(this.nodeId);
 
         /*
          * create the header for the popup that contains the project title,
          * 'Open in New Tab' button, and 'Close' button
          */
-        var popupHeader = "<div style='display: flex; margin-left: 30px; margin-right: 30px; margin-top: 30px; margin-bottom: 30px;'><div style='flex: 50%'><h3>" + stepNumberAndTitle + "</h3></div><div style='flex: 50%; text-align: right'><md-button class='md-primary md-raised' ng-click='openRubricInNewTab()' translate='openInNewTab'></md-button> <md-button class='md-primary md-raised' ng-click='closeRubric()' translate='CLOSE'></md-button></div></div>";
+        let dialogHeader =
+            `<md-toolbar md-theme="light">
+                <div class="md-toolbar-tools">
+                    <h2 class="overflow--ellipsis">` + stepNumberAndTitle + `</h2>
+                    <span flex>&nbsp;</span>
+                    <span class="accent-2 md-subhead">` + rubricTitle + `</span>
+                </div>
+            </md-toolbar>`;
+
+        let dialogActions =
+            `<md-dialog-actions layout="row" layout-align="end center">
+                <md-button class="md-primary" ng-click="openInNewWindow()" aria-label="{{ 'openInNewWindow' | translate }}">{{ 'openInNewWindow' | translate }}</md-button>
+                <md-button ng-click="close()" aria-label="{{ 'close' | translate }}">{{ 'close' | translate }}</md-button>
+            </md-dialog-actions>`;
 
         /*
-         * create the header for the new tab that contains the project title
+         * create the header for the new window that contains the project title
          */
-        var tabHeader = "<link rel='stylesheet' href='../wise5/lib/bootstrap/css/bootstrap.min.css' /><link rel='stylesheet' href='../wise5/lib/summernote/dist/summernote.css' /><div style='display: flex; margin-left: 30px; margin-right: 30px; margin-top: 30px; margin-bottom: 30px;'><h1>" + stepNumberAndTitle + "</h1></div>";
+        let windowHeader =
+            `<md-toolbar style="background-color: #ffffff; border-bottom: 1px solid rgba(0,0,0,0.13);" class="layout-row">
+                <div class="md-toolbar-tools">
+                    <h2>` + stepNumberAndTitle + `</h2>
+                    <span class="flex">&nbsp;</span>
+                    <span class="accent-2 md-subhead">` + rubricTitle + `</span>
+                </div>
+            </md-toolbar>`;
 
-        // create the div that will hold the rubric content
-        var rubricContent = "<div style='margin-left:30px;margin-right:30px;margin-top:30px;margin-bottom:30px;'>";
+        // create the string that will hold the rubric content
+        let rubricContent = '<md-list class="md-whiteframe-1dp" style="background-color: #ffffff; padding-top: 8px; padding-bottom: 8px;">';
 
         // get the step rubric
-        var nodeRubric = this.nodeContent.rubric;
+        let nodeRubric = this.nodeContent.rubric;
 
         if (nodeRubric != null) {
-            rubricContent += nodeRubric;
+            rubricContent += '<md-list-item class="md-no-proxy"><div class="md-list-item-text">' + nodeRubric + '</div></md-list-item>';
         }
 
         // get the components
-        var components = this.nodeContent.components;
+        let components = this.nodeContent.components;
 
         if (components != null && components.length != 0) {
 
             // loop through all the components
-            for (var c = 0; c < components.length; c++) {
-                var component = components[c];
+            for (let c = 0; c < components.length; c++) {
+                let component = components[c];
 
                 if (component != null) {
 
                     // get a component rubric
-                    var componentRubric = component.rubric;
+                    let componentRubric = component.rubric;
 
                     if (componentRubric != null && componentRubric != '') {
 
-                        if (rubricContent != '') {
-                            // separate component rubrics with a line break
-                            rubricContent += '<br/>';
-                        }
-
                         // append the component rubric
-                        rubricContent += componentRubric;
+                        rubricContent += '<md-list-item class="md-no-proxy"><div class="md-list-item-text" style="padding-top: 16px; padding-bottom: 16px;">' + componentRubric + '</div></md-list-item>';
                     }
                 }
             }
         }
 
+        rubricContent += '</md-list>';
+
         // inject the asset paths into the rubrics
         rubricContent = this.ProjectService.replaceAssetPaths(rubricContent);
 
-        // create the popup content
-        var popupContent = popupHeader + rubricContent;
+        let dialogContent =
+            `<md-dialog-content class="gray-lighter-bg">
+                <div class="md-dialog-content">` + rubricContent + `</div>
+            </md-dialog-content>`;
 
-        // create the tab content
-        var tabContent = tabHeader + rubricContent;
+        // create the dialog string
+        let dialogString = `<md-dialog class="dialog--wider" aria-label="` + stepNumberAndTitle + ` - ` + rubricTitle + `">` + dialogHeader + dialogContent + dialogActions + `</md-dialog>`;
+
+        // create the window string
+        let windowString =
+            `<link rel='stylesheet' href='../wise5/lib/bootstrap/css/bootstrap.min.css' />
+            <link rel='stylesheet' href='../wise5/themes/default/style/monitor.css'>
+            <link rel='stylesheet' href='../wise5/themes/default/style/angular-material.css'>
+            <link rel='stylesheet' href='../wise5/lib/summernote/dist/summernote.css' />
+            <body class="layout-column">
+                <div class="layout-column">` + windowHeader + `<md-content class="md-padding">` + rubricContent + `</div></md-content></div>
+            </body>`;
 
         // display the rubric in a popup
         this.$mdDialog.show({
-            template: popupContent,
+            template : dialogString,
+            fullscreen: true,
             controller: ['$scope', '$mdDialog',
                 function DialogController($scope, $mdDialog) {
 
                     // display the rubric in a new tab
-                    $scope.openRubricInNewTab = function() {
+                    $scope.openInNewWindow = function() {
 
                         // open a new tab
-                        var w = window.open('', '_blank');
+                        let w = window.open('', '_blank');
 
                         // write the rubric content to the new tab
-                        w.document.write(tabContent);
+                        w.document.write(windowString);
 
                         // close the popup
                         $mdDialog.hide();
                     }
 
                     // close the popup
-                    $scope.closeRubric = function() {
+                    $scope.close = () => {
                         $mdDialog.hide();
                     }
                 }
             ],
+            targetEvent: $event,
             clickOutsideToClose: true,
             escapeToClose: true
         });

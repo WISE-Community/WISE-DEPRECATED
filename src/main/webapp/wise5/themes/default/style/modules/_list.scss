@@ -57,6 +57,10 @@
     border-bottom-width: 0;
 }
 
+.list-item--noclick, .list-item--noclick.md-button {
+    cursor: default;
+}
+
 .list-item--actions {
     padding: 0 8px !important;
 }

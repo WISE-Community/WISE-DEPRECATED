@@ -73,8 +73,10 @@ class WorkgroupItemController {
     }
 
     toggleExpand() {
-        let expand = !this.expand;
-        this.onUpdateExpand({workgroupId: this.workgroupId, value: expand});
+        if (this.showScore) {
+            let expand = !this.expand;
+            this.onUpdateExpand({workgroupId: this.workgroupId, value: expand});
+        }
     }
 }
 
@@ -102,14 +104,14 @@ const WorkgroupItem = {
             <md-subheader class="list-item">
                 <button class="md-button md-ink-ripple list-item__subheader-button"
                                aria-label="{{ toggleTeamWorkDisplay | translate }}"
-                               ng-class="{'list-item--warn': $ctrl.statusClass === 'warn', 'list-item--info': $ctrl.statusClass === 'info', 'list-item--expanded': $ctrl.showWork}"
+                               ng-class="{'list-item--warn': $ctrl.statusClass === 'warn', 'list-item--info': $ctrl.statusClass === 'info', 'list-item--expanded': $ctrl.showWork, 'list-item--noclick': !$ctrl.showScore}"
                                ng-click="$ctrl.toggleExpand()"
                                layout-wrap>
                     <div layout="row" flex>
                         <div flex layout="row" layout-align="start center">
                             <workgroup-info has-alert="$ctrl.hasAlert" has-new-alert="$ctrl.hasNewAlert" has-new-work="$ctrl.hasNewWork" usernames="{{$ctrl.workgroupData.displayNames}}" workgroup-id="$ctrl.workgroupId"></workgroup-info>
                         </div>
-                        <div flex="30" layout="row" layout-align="center center">
+                        <div flex="{{$ctrl.showScore ? 30 : 20}}" layout="row" layout-align="center center">
                             <workgroup-node-status status-text="{{$ctrl.statusText}}" status-class="{{$ctrl.statusClass}}"></workgroup-node-status>
                         </div>
                         <div ng-if="$ctrl.showScore" flex="20" layout="row" layout-align="center center">
