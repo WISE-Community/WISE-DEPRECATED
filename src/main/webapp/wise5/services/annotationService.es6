@@ -3,6 +3,7 @@
 class AnnotationService {
     constructor($filter,
                 $http,
+                $q,
                 $rootScope,
                 ConfigService,
                 ProjectService,
@@ -10,6 +11,7 @@ class AnnotationService {
 
         this.$filter = $filter;
         this.$http = $http;
+        this.$q = $q;
         this.$rootScope = $rootScope;
         this.ConfigService = ConfigService;
         this.ProjectService = ProjectService;
@@ -18,6 +20,12 @@ class AnnotationService {
         this.$translate = this.$filter('translate');
 
         this.annotations = null;
+
+        /*
+         * A dummy annotation id that is used in preview mode when we simulate
+         * saving of annotation.
+         */
+        this.dummyAnnotationId = 1;
     }
 
     /**
@@ -166,74 +174,104 @@ class AnnotationService {
                 annotations = [];
             }
 
-            let params = {
-                runId: this.ConfigService.getRunId(),
-                workgroupId: this.ConfigService.getWorkgroupId(),
-                annotations: angular.toJson(annotations)
-            };
+            if (this.ConfigService.isPreview()) {
+                // if we're in preview, don't make any request to the server but pretend we did
+                let savedAnnotationDataResponse = {
+                    annotations: annotations
+                };
+                let annotation = this.saveToServerSuccess(savedAnnotationDataResponse);
 
-            let httpParams = {
-                method: "POST",
-                url: this.ConfigService.getConfigParam('teacherDataURL'),
-                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-                data: $.param(params)
-            };
+                let deferred = this.$q.defer();
+                deferred.resolve(annotation);
+                return deferred.promise;
+            } else {
+                let params = {
+                    runId: this.ConfigService.getRunId(),
+                    workgroupId: this.ConfigService.getWorkgroupId(),
+                    annotations: angular.toJson(annotations)
+                };
 
-            return this.$http(httpParams).then(angular.bind(this, function(result) {
+                let httpParams = {
+                    method: "POST",
+                    url: this.ConfigService.getConfigParam('teacherDataURL'),
+                    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                    data: $.param(params)
+                };
 
-                let localAnnotation = null;
+                return this.$http(httpParams).then(angular.bind(this, function(result) {
 
-                if (result != null && result.data != null) {
-                    let data = result.data;
+                    let localAnnotation = null;
 
-                    if (data != null) {
+                    if (result != null && result.data != null) {
+                        let savedAnnotationDataResponse = result.data;
+                        localAnnotation = this.saveToServerSuccess(savedAnnotationDataResponse);
+                    }
 
-                        // get the saved annotations
-                        let savedAnnotations = data.annotations;
+                    return localAnnotation;
+                }));
+            }
+        }
+    };
 
-                        // get the local annotations
-                        let localAnnotations = this.annotations;
+    saveToServerSuccess(savedAnnotationDataResponse) {
+        let localAnnotation = null;
+        if (savedAnnotationDataResponse != null) {
 
-                        if (savedAnnotations != null && localAnnotations != null) {
+            // get the saved annotations
+            let savedAnnotations = savedAnnotationDataResponse.annotations;
 
-                            // loop through all the saved annotations
-                            for (let x = 0; x < savedAnnotations.length; x++) {
-                                let savedAnnotation = savedAnnotations[x];
+            // get the local annotations
+            let localAnnotations = this.annotations;
 
-                                // loop through all the local annotations
-                                for (let y = localAnnotations.length - 1; y >= 0; y--) {
-                                    localAnnotation = localAnnotations[y];
+            if (savedAnnotations != null && localAnnotations != null) {
 
-                                    if (localAnnotation.id != null &&
-                                        localAnnotation.id === savedAnnotation.id) {
+                // loop through all the saved annotations
+                for (let x = 0; x < savedAnnotations.length; x++) {
+                    let savedAnnotation = savedAnnotations[x];
 
-                                        // we have found the matching local annotation so we will update it
-                                        localAnnotation.serverSaveTime = savedAnnotation.serverSaveTime;
-                                        //localAnnotation.requestToken = null; // requestToken is no longer needed.
+                    // loop through all the local annotations
+                    for (let y = localAnnotations.length - 1; y >= 0; y--) {
+                        localAnnotation = localAnnotations[y];
 
-                                        this.$rootScope.$broadcast('annotationSavedToServer', {annotation: localAnnotation});
-                                        break;
-                                    } else if (localAnnotation.requestToken != null &&
-                                        localAnnotation.requestToken === savedAnnotation.requestToken) {
+                        if (localAnnotation.id != null &&
+                            localAnnotation.id === savedAnnotation.id) {
 
-                                        // we have found the matching local annotation so we will update it
-                                        localAnnotation.id = savedAnnotation.id;
-                                        localAnnotation.serverSaveTime = savedAnnotation.serverSaveTime;
-                                        localAnnotation.requestToken = null; // requestToken is no longer needed.
+                            // we have found the matching local annotation so we will update it
+                            localAnnotation.serverSaveTime = savedAnnotation.serverSaveTime;
+                            //localAnnotation.requestToken = null; // requestToken is no longer needed.
 
-                                        this.$rootScope.$broadcast('annotationSavedToServer', {annotation: localAnnotation});
-                                        break;
-                                    }
-                                }
+                            this.$rootScope.$broadcast('annotationSavedToServer', {annotation: localAnnotation});
+                            break;
+                        } else if (localAnnotation.requestToken != null &&
+                            localAnnotation.requestToken === savedAnnotation.requestToken) {
+
+                            // we have found the matching local annotation so we will update it
+                            localAnnotation.id = savedAnnotation.id;
+                            localAnnotation.serverSaveTime = savedAnnotation.serverSaveTime;
+                            localAnnotation.requestToken = null; // requestToken is no longer needed.
+
+                            if (this.ConfigService.isPreview() && localAnnotation.id == null) {
+                                /*
+                                 * we are in preview mode so we will set a dummy
+                                 * annotation id into the annotation
+                                 */
+                                localAnnotation.id = this.dummyAnnotationId;
+                                /*
+                                 * increment the dummy annotation id for the next
+                                 * annotation
+                                 */
+                                this.dummyAnnotationId++;
                             }
+
+                            this.$rootScope.$broadcast('annotationSavedToServer', {annotation: localAnnotation});
+                            break;
                         }
                     }
                 }
-
-                return localAnnotation;
-            }));
+            }
         }
-    };
+        return localAnnotation;
+    }
 
     /**
      * Add or update the annotation to our local collection
@@ -974,6 +1012,7 @@ class AnnotationService {
 AnnotationService.$inject = [
     '$filter',
     '$http',
+    '$q',
     '$rootScope',
     'ConfigService',
     'ProjectService',

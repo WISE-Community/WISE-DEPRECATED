@@ -228,11 +228,15 @@ var ComponentAnnotationsController = function () {
                     if (!this.ProjectService.displayAnnotation(this.annotations.score)) {
                         // we do not want to show the score
                         this.showScore = false;
+                    } else {
+                        this.showScore = true;
                     }
 
                     if (!this.ProjectService.displayAnnotation(this.annotations.comment)) {
                         // we do not want to show the comment
                         this.showComment = false;
+                    } else {
+                        this.showComment = true;
                     }
 
                     // set the annotation label and icon
