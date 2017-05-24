@@ -1,23 +1,5 @@
-<div style="float: right">
-    <button ng-click="nodeAuthoringController.previewStep()"
-            ng-show="!projectController.isGroupNode(nodeAuthoringController.node.id)"
-            ng-disabled="nodeAuthoringController.showEditTransitions"
-            translate="previewStep"></button>
-    <button ng-click="nodeAuthoringController.previewStepWithoutConstraints()"
-            ng-show="!projectController.isGroupNode(nodeAuthoringController.node.id)"
-            ng-disabled="nodeAuthoringController.showEditTransitions"
-            translate="previewStepWithoutConstraints"></button>
-    <button ng-click="nodeAuthoringController.undo()"
-            ng-show="!projectController.isGroupNode(nodeAuthoringController.node.id)"
-            ng-disabled="nodeAuthoringController.undoStack.length == 0"
-            translate="undo"></button>
-    <button ng-click="nodeAuthoringController.close()" translate="CLOSE"></button>
-</div>
-<div><span ng-show="!projectController.isGroupNode(nodeAuthoringController.node.id)" translate="stepTitle"></span>
-     <span ng-show="projectController.isGroupNode(nodeAuthoringController.node.id)" translate="activityTitle"></span>
-     {{nodeAuthoringController.nodePosition}}:
-     <input ng-model='nodeAuthoringController.node.title' ng-change='nodeAuthoringController.authoringViewNodeChanged()' ng-model-options='{ debounce: 500 }' size='60' />
-</div>
+<button ng-click='nodeAuthoringController.close()'
+        translate="home"></button>
 <button ng-click='nodeAuthoringController.nodeAuthoringViewButtonClicked("addComponent")'
         ng-show='!projectController.isGroupNode(nodeAuthoringController.node.id)'
         translate="addNewComponent"></button>
@@ -31,11 +13,28 @@
         translate="editStepRubric"></button>
 <button ng-click='nodeAuthoringController.nodeAuthoringViewButtonClicked("createBranch")'
         translate="createBranch"></button>
-<div style="display:inline; float:right">
+<div style="float: right">
+    <button ng-click="nodeAuthoringController.previewStep()"
+            ng-show="!projectController.isGroupNode(nodeAuthoringController.node.id)"
+            ng-disabled="nodeAuthoringController.showEditTransitions"
+            translate="previewStep"></button>
+    <button ng-click="nodeAuthoringController.previewStepWithoutConstraints()"
+            ng-show="!projectController.isGroupNode(nodeAuthoringController.node.id)"
+            ng-disabled="nodeAuthoringController.showEditTransitions"
+            translate="previewStepWithoutConstraints"></button>
+    <button ng-click="nodeAuthoringController.undo()"
+            ng-show="!projectController.isGroupNode(nodeAuthoringController.node.id)"
+            ng-disabled="nodeAuthoringController.undoStack.length == 0"
+            translate="undo"></button>
     <button ng-click='nodeAuthoringController.nodeAuthoringViewButtonClicked("previousNode")'
             title="{{ 'previousStep' | translate }}"><</button>
     <button ng-click='nodeAuthoringController.nodeAuthoringViewButtonClicked("nextNode")'
             title="{{ 'nextStep' | translate }}">></button>
+</div>
+<div><span ng-show="!projectController.isGroupNode(nodeAuthoringController.node.id)" translate="stepTitle"></span>
+     <span ng-show="projectController.isGroupNode(nodeAuthoringController.node.id)" translate="activityTitle"></span>
+     {{nodeAuthoringController.nodePosition}}:
+     <input ng-model='nodeAuthoringController.node.title' ng-change='nodeAuthoringController.authoringViewNodeChanged()' ng-model-options='{ debounce: 500 }' size='60' />
 </div>
 <div ng-show='nodeAuthoringController.showCreateComponent'>
     <select ng-model='nodeAuthoringController.selectedComponent'>

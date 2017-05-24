@@ -45,11 +45,13 @@
                 <input id="commitMessageInput" type="text" size="50" placeholder="Write a small message here explaining this change. (Optional)" />
                 <button id="saveHistoryButton" ng-click='projectController.saveProject()' translate="SAVE"></button>
             </div>
-            <button id="createNewActivityButton" ng-click='projectController.toggleCreateGroup()' translate="createNewActivity"
+            <button id="projectHomeButton" ng-click='projectController.projectHomeClicked()' translate="home"
                     ng-disabled="projectController.insertGroupMode || projectController.insertNodeMode"></button>
-            <button id="createNewStepButton" ng-click='projectController.toggleCreateNode()' translate="createNewStep"
+            <button id="createNewActivityButton" ng-click='projectController.creatNewActivityClicked()' translate="createNewActivity"
                     ng-disabled="projectController.insertGroupMode || projectController.insertNodeMode"></button>
-            <button id="importStepButton" ng-click='projectController.toggleImportView()' translate="importStep"
+            <button id="createNewStepButton" ng-click='projectController.createNewStepClicked()' translate="createNewStep"
+                    ng-disabled="projectController.insertGroupMode || projectController.insertNodeMode"></button>
+            <button id="importStepButton" ng-click='projectController.importStepClicked()' translate="importStep"
                     ng-disabled="projectController.insertGroupMode || projectController.insertNodeMode"></button>
             <button id="moveButton" ng-click='projectController.move()' translate="move"
                     ng-disabled="projectController.getSelectedItems().length == 0 || projectController.insertGroupMode || projectController.insertNodeMode"></button>
@@ -58,9 +60,9 @@
             <button id="deleteButton" ng-click='projectController.delete()' translate="DELETE"
                     ng-disabled="projectController.getSelectedItems().length == 0 || projectController.insertGroupMode || projectController.insertNodeMode"></button>
             <div>
-                <button id="editProjectRubricButton" ng-click='projectController.toggleEditProjectRubricView()' translate="editProjectRubric"
+                <button id="editProjectRubricButton" ng-click='projectController.editProjectRubricClicked()' translate="editProjectRubric"
                         ng-disabled="projectController.insertGroupMode || projectController.insertNodeMode"></button>
-                <button id="editProjectJSONButton" ng-click='projectController.toggleEditProjectJSONView()' translate="editProjectJSON"
+                <button id="advancedProjectAuthoringButton" ng-click='projectController.advancedClicked()' translate="ADVANCED"
                         ng-disabled="projectController.insertGroupMode || projectController.insertNodeMode"></button>
                 <button id="saveProjectButton" ng-click='projectController.saveProject()' translate="SAVE"
                         ng-disabled="projectController.insertGroupMode || projectController.insertNodeMode"></button>
@@ -68,12 +70,12 @@
             <div ng-show='projectController.showCreateGroup'>
                 <label style="display:initial" translate="activityTitle"></label>: <input id="createGroupTitle" ng-model='projectController.createGroupTitle' ng-keyup='$event.keyCode == 13 && projectController.createGroup()' size='50'/>
                 <button ng-click='projectController.createGroup()' translate="create"></button>
-                <button ng-click='projectController.hideCreateGroup()'translate="CANCEL"></button>
+                <button ng-click='projectController.cancelCreateGroupClicked()'translate="CANCEL"></button>
             </div>
             <div ng-show='projectController.showCreateNode'>
                 <label style="display:initial" translate="stepTitle"></label>: <input id="createNodeTitle" ng-model='projectController.createNodeTitle' ng-keyup='$event.keyCode == 13 && projectController.createNode()' size='50'/>
                 <button id="createNodeCreateButton" ng-click='projectController.createNode()' translate="create"></button>
-                <button id="createNodeCancelButton" ng-click='projectController.hideCreateNode()' translate="CANCEL"></button>
+                <button id="createNodeCancelButton" ng-click='projectController.cancelCreateNodeClicked()' translate="CANCEL"></button>
             </div>
             <div ng-show='projectController.insertGroupMode || projectController.insertNodeMode'>
                 <span translate="chooseNewLocation"></span> <button ng-click='projectController.cancelMove()' translate="CANCEL"></button>
@@ -120,8 +122,6 @@
                 <button ng-if='projectController.importProject != null'
                         ng-click='projectController.importSteps()'
                         translate='importStepsParens'></button>
-                <br/><br/>
-                <button ng-click='projectController.importMode = false' translate='CANCEL'></button>
             </div>
             <div ng-show='projectController.editProjectRubricMode'>
                 <h5 translate="editProjectRubric"></h5>
@@ -134,13 +134,21 @@
                             cols='100'>
                 </summernote>
             </div>
-            <div ng-show='projectController.editProjectJSONMode'>
-                <h5 translate="editProjectJSON"></h5>
-                <textarea id="project" rows="40" cols="150" ng-model="projectController.projectJSONString" ng-change="projectController.saveProjectJSONString()" ng-model-options="{updateOn: 'blur'}"></textarea>
+            <div ng-show='projectController.advancedMode'>
+                <br/>
+                <span>{{ 'scriptFilename' | translate }}: </script><input type="text" size='30' ng-model="projectController.projectScriptFilename" ng-model-options="{ debounce: 1000 }" ng-change="projectController.projectScriptFilenameChanged()"/>
+                <button translate='CHOOSE' ng-click='projectController.chooseProjectScriptFilename()'></button>
+                <br/>
+                <br/>
+                <button ng-click='projectController.showJSONClicked()'>{{ 'SHOW_JSON' | translate }}</button>
+                <div ng-show='projectController.showJSONAuthoring'>
+                    <h5 translate="editProjectJSON"></h5>
+                    <textarea id="project" rows="40" cols="150" ng-model="projectController.projectJSONString" ng-change="projectController.saveProjectJSONString()" ng-model-options="{updateOn: 'blur'}"></textarea>
+                </div>
             </div>
             <div ng-repeat='item in projectController.items | toArray | orderBy : "order"'
                  ng-class='{"node-select--group": projectController.isGroupNode(item.$key), "node-select--node": !projectController.isGroupNode(item.$key)}'
-                 ng-show='!projectController.importMode && !projectController.showCreateGroup && !projectController.showCreateNode && !projectController.editProjectRubricMode && !projectController.editProjectJSONMode'>
+                 ng-show='projectController.projectMode'>
                 <input type='checkbox'
                        ng-model='item.checked'
                        ng-if='item.order!==0'
@@ -181,7 +189,7 @@
                     {{projectController.getNodeTitleByNodeId(inactiveGroup.id)}}
                 </h6>
             </div>
-            <div ng-show='!projectController.importMode && !projectController.showCreateGroup && !projectController.showCreateNode && !projectController.editProjectRubricMode && !projectController.editProjectJSONMode'>
+            <div ng-show='projectController.projectMode'>
             <h6 style='display:inline' translate='inactiveSteps'></h6>
                 <button ng-show='projectController.insertNodeMode'
                         ng-click='projectController.insertInside("inactiveNodes")'

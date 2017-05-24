@@ -6,6 +6,7 @@ class ProjectController {
                 $interval,
                 $mdDialog,
                 $q,
+                $rootScope,
                 $scope,
                 $state,
                 $stateParams,
@@ -18,6 +19,7 @@ class ProjectController {
         this.$interval = $interval;
         this.$mdDialog = $mdDialog;
         this.$q = $q;
+        this.$rootScope = $rootScope;
         this.$scope = $scope;
         this.$state = $state;
         this.$stateParams = $stateParams;
@@ -37,7 +39,16 @@ class ProjectController {
         this.projectTitle = this.ProjectService.getProjectTitle();
         this.inactiveGroups = this.ProjectService.getInactiveGroups();
         this.inactiveNodes = this.ProjectService.getInactiveNodes();
+        this.projectScriptFilename = this.ProjectService.getProjectScriptFilename();
         this.currentAuthorsMessage = "";  // show a message when there is more than one author currently authoring this project
+
+        this.projectMode = true;
+        this.showCreateGroup = false;
+        this.showCreateNode = false;
+        this.importMode = false;
+        this.editProjectRubricMode = false;
+        this.advancedMode = false;
+        this.showJSONAuthoring = false;
 
         // notify others that this project is being authored
         this.ProjectService.notifyAuthorProjectBegin(this.projectId);
@@ -129,33 +140,37 @@ class ProjectController {
                             if (args.target == 'rubric') {
                                 // the target is the summernote rubric element
                                 summernoteId = 'summernoteRubric_' + this.projectId;
-                            }
 
-                            if (summernoteId != '') {
-                                if (this.UtilService.isImage(fileName)) {
-                                    /*
-                                     * move the cursor back to its position when the asset chooser
-                                     * popup was clicked
-                                     */
-                                    $('#' + summernoteId).summernote('editor.restoreRange');
-                                    $('#' + summernoteId).summernote('editor.focus');
+                                if (summernoteId != '') {
+                                    if (this.UtilService.isImage(fileName)) {
+                                        /*
+                                         * move the cursor back to its position when the asset chooser
+                                         * popup was clicked
+                                         */
+                                        $('#' + summernoteId).summernote('editor.restoreRange');
+                                        $('#' + summernoteId).summernote('editor.focus');
 
-                                    // add the image html
-                                    $('#' + summernoteId).summernote('insertImage', fullAssetPath, fileName);
-                                } else if (this.UtilService.isVideo(fileName)) {
-                                    /*
-                                     * move the cursor back to its position when the asset chooser
-                                     * popup was clicked
-                                     */
-                                    $('#' + summernoteId).summernote('editor.restoreRange');
-                                    $('#' + summernoteId).summernote('editor.focus');
+                                        // add the image html
+                                        $('#' + summernoteId).summernote('insertImage', fullAssetPath, fileName);
+                                    } else if (this.UtilService.isVideo(fileName)) {
+                                        /*
+                                         * move the cursor back to its position when the asset chooser
+                                         * popup was clicked
+                                         */
+                                        $('#' + summernoteId).summernote('editor.restoreRange');
+                                        $('#' + summernoteId).summernote('editor.focus');
 
-                                    // insert the video element
-                                    var videoElement = document.createElement('video');
-                                    videoElement.controls = 'true';
-                                    videoElement.innerHTML = "<source ng-src='" + fullAssetPath + "' type='video/mp4'>";
-                                    $('#' + summernoteId).summernote('insertNode', videoElement);
+                                        // insert the video element
+                                        var videoElement = document.createElement('video');
+                                        videoElement.controls = 'true';
+                                        videoElement.innerHTML = "<source ng-src='" + fullAssetPath + "' type='video/mp4'>";
+                                        $('#' + summernoteId).summernote('insertNode', videoElement);
+                                    }
                                 }
+                            } else if (args.target == 'scriptFilename') {
+                                // the target is the project script filename
+                                this.projectScriptFilename = fileName;
+                                this.projectScriptFilenameChanged();
                             }
                         }
                     }
@@ -717,12 +732,15 @@ class ProjectController {
     }
 
     /**
-     * Toggle the create group input
+     * Show the create group input
      */
-    toggleCreateGroup() {
-        this.hideCreateNode();
-        this.showCreateGroup = !this.showCreateGroup;
+    creatNewActivityClicked() {
+
+        // clear the create group title
         this.createGroupTitle = '';
+
+        // show the create group view
+        this.toggleView('createGroup');
 
         if (this.showCreateGroup) {
             /*
@@ -740,20 +758,15 @@ class ProjectController {
     }
 
     /**
-     * Hide the create group input
-     */
-    hideCreateGroup() {
-        this.showCreateGroup = false;
-        this.createGroupTitle = '';
-    }
-
-    /**
      * Toggle the create node input
      */
-    toggleCreateNode() {
-        this.hideCreateGroup();
-        this.showCreateNode = !this.showCreateNode;
+    createNewStepClicked() {
+
+        // clear the create node title
         this.createNodeTitle = '';
+
+        // show the create node view
+        this.toggleView('createNode');
 
         if (this.showCreateNode) {
             /*
@@ -768,14 +781,6 @@ class ProjectController {
                 }
             });
         }
-    }
-
-    /**
-     * Hide the create group input
-     */
-    hideCreateNode() {
-        this.showCreateNode = false;
-        this.createNodeTitle = '';
     }
 
     /**
@@ -914,17 +919,21 @@ class ProjectController {
     /**
      * Toggle the import view and load the project drop downs if necessary
      */
-    toggleImportView() {
-        this.importMode = !this.importMode;
+    importStepClicked() {
 
-        if (this.myProjectsList == null) {
-            // populate the authorable projects drop down
-            this.getAuthorableProjects();
-        }
+        // show the import step view
+        this.toggleView('importStep');
 
-        if (this.libraryProjectsList == null) {
-            // populate the library projects drop down
-            this.getLibraryProjects();
+        if (this.importMode) {
+            if (this.myProjectsList == null) {
+                // populate the authorable projects drop down
+                this.getAuthorableProjects();
+            }
+
+            if (this.libraryProjectsList == null) {
+                // populate the library projects drop down
+                this.getLibraryProjects();
+            }
         }
     }
 
@@ -1194,19 +1203,30 @@ class ProjectController {
     }
 
     /**
-     * Toggle the view to edit project rubric
+     * Show the view to edit the project rubric
      */
-    toggleEditProjectRubricView() {
-        this.editProjectRubricMode = !this.editProjectRubricMode;
+    editProjectRubricClicked() {
+
+        // show the edit rubric view
+        this.toggleView('rubric');
     }
 
     /**
-     * Toggle the view to edit project JSON
+     * Show the advanced view
      */
-    toggleEditProjectJSONView() {
-        this.editProjectJSONMode = !this.editProjectJSONMode;
-        if (this.editProjectJSONMode) {
-            // updates projectAsText field, which is the string representation of the project that we'll show in the textarea
+    advancedClicked() {
+
+        // show the advanced authoring view
+        this.toggleView('advanced');
+    }
+
+    /**
+     * The show JSON button was clicked
+     */
+    showJSONClicked() {
+        this.showJSONAuthoring = !this.showJSONAuthoring;
+
+        if (this.showJSONAuthoring) {
             this.projectJSONString = angular.toJson(this.ProjectService.project, 4);
         }
     }
@@ -1260,6 +1280,151 @@ class ProjectController {
     isNodeInAnyBranchPath(nodeId) {
         return this.ProjectService.isNodeInAnyBranchPath(nodeId);
     }
+
+    /**
+     * The project script file name changed
+     */
+    projectScriptFilenameChanged() {
+        // update the project script file name in the project service
+        this.ProjectService.setProjectScriptFilename(this.projectScriptFilename);
+
+        if (this.showJSONAuthoring) {
+            /*
+             * we are showing the project JSON authoring so we need to update
+             * the JSON string that we are showing in the textarea
+             */
+            this.projectJSONString = angular.toJson(this.ProjectService.project, 4);
+        }
+
+        // save the project
+        this.ProjectService.saveProject();
+    }
+
+    /**
+     * Show the asset popup to allow the author to choose an image for the
+     * project script filename
+     */
+    chooseProjectScriptFilename() {
+        // generate the parameters
+        var params = {};
+        params.popup = true;
+        params.projectId = this.projectId;
+        params.target = 'scriptFilename';
+
+        // display the asset chooser
+        this.$rootScope.$broadcast('openAssetChooser', params);
+    }
+
+    /**
+     * Show the appropriate authoring view
+     * @param view the view to show
+     */
+    toggleView(view) {
+
+        // clear the input element for creating a new activity
+        this.createGroupTitle = '';
+
+        // clear the input element for creating a new step
+        this.createNodeTitle = '';
+
+        if (view == 'project') {
+            // we are showing the regular project view
+            this.showCreateGroup = false;
+            this.showCreateNode = false;
+            this.importMode = false;
+            this.editProjectRubricMode = false;
+            this.advancedMode = false;
+            this.showJSONAuthoring = false;
+            this.projectMode = true;
+        } else if (view == 'createGroup') {
+            // toggle the create activity view
+            this.showCreateGroup = !this.showCreateGroup;
+            this.showCreateNode = false;
+            this.importMode = false;
+            this.editProjectRubricMode = false;
+            this.advancedMode = false;
+            this.showJSONAuthoring = false;
+
+            // also show the project view
+            this.projectMode = true;
+        } else if (view == 'createNode') {
+            // toggle the create step view
+            this.showCreateGroup = false;
+            this.showCreateNode = !this.showCreateNode;
+            this.importMode = false;
+            this.editProjectRubricMode = false;
+            this.advancedMode = false;
+            this.showJSONAuthoring = false;
+
+            // also show the project view
+            this.projectMode = true;
+        } else if (view == 'importStep') {
+            // toggle the import step view
+            this.showCreateGroup = false;
+            this.showCreateNode = false;
+            this.importMode = !this.importMode;
+            this.editProjectRubricMode = false;
+            this.advancedMode = false;
+            this.showJSONAuthoring = false;
+
+            // if the import view is shown, do not show the project view
+            this.projectMode = !this.importMode;
+        } else if (view == 'rubric') {
+            // toggle the rubric view
+            this.showCreateGroup = false;
+            this.showCreateNode = false;
+            this.importMode = false;
+            this.editProjectRubricMode = !this.editProjectRubricMode;
+            this.advancedMode = false;
+            this.showJSONAuthoring = false;
+
+            // if the rubric view is shown, do not show the project view
+            this.projectMode = !this.editProjectRubricMode;
+        } else if (view == 'advanced') {
+            // toggle the advanced view
+            this.showCreateGroup = false;
+            this.showCreateNode = false;
+            this.importMode = false;
+            this.editProjectRubricMode = false;
+            this.advancedMode = !this.advancedMode;
+            this.showJSONAuthoring = false;
+
+            // if the advanced view is shown, do not show the project view
+            this.projectMode = !this.advancedMode;
+        }
+    }
+
+    /**
+     * Show the regular project view
+     */
+    projectHomeClicked() {
+        // show the regular project view
+        this.showProjectHome();
+    }
+
+    /**
+     * Show the regular project view
+     */
+    showProjectHome() {
+        // show the regular project view
+        this.toggleView('project');
+    }
+
+    /**
+     * Creating a group was cancelled
+     */
+    cancelCreateGroupClicked() {
+        // show the project regular project view
+        this.toggleView('project');
+    }
+
+    /**
+     * Creating a node was cancelled
+     */
+    cancelCreateNodeClicked() {
+        // show the project regular project view
+        this.toggleView('project');
+    }
 }
 
 ProjectController.$inject = [
@@ -1267,6 +1432,7 @@ ProjectController.$inject = [
     '$interval',
     '$mdDialog',
     '$q',
+    '$rootScope',
     '$scope',
     '$state',
     '$stateParams',

@@ -9,7 +9,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var ProjectController = function () {
-    function ProjectController($filter, $interval, $mdDialog, $q, $scope, $state, $stateParams, $timeout, AuthorWebSocketService, ConfigService, ProjectService, UtilService) {
+    function ProjectController($filter, $interval, $mdDialog, $q, $rootScope, $scope, $state, $stateParams, $timeout, AuthorWebSocketService, ConfigService, ProjectService, UtilService) {
         var _this = this;
 
         _classCallCheck(this, ProjectController);
@@ -18,6 +18,7 @@ var ProjectController = function () {
         this.$interval = $interval;
         this.$mdDialog = $mdDialog;
         this.$q = $q;
+        this.$rootScope = $rootScope;
         this.$scope = $scope;
         this.$state = $state;
         this.$stateParams = $stateParams;
@@ -37,7 +38,16 @@ var ProjectController = function () {
         this.projectTitle = this.ProjectService.getProjectTitle();
         this.inactiveGroups = this.ProjectService.getInactiveGroups();
         this.inactiveNodes = this.ProjectService.getInactiveNodes();
+        this.projectScriptFilename = this.ProjectService.getProjectScriptFilename();
         this.currentAuthorsMessage = ""; // show a message when there is more than one author currently authoring this project
+
+        this.projectMode = true;
+        this.showCreateGroup = false;
+        this.showCreateNode = false;
+        this.importMode = false;
+        this.editProjectRubricMode = false;
+        this.advancedMode = false;
+        this.showJSONAuthoring = false;
 
         // notify others that this project is being authored
         this.ProjectService.notifyAuthorProjectBegin(this.projectId);
@@ -118,33 +128,37 @@ var ProjectController = function () {
                             if (args.target == 'rubric') {
                                 // the target is the summernote rubric element
                                 summernoteId = 'summernoteRubric_' + _this.projectId;
-                            }
 
-                            if (summernoteId != '') {
-                                if (_this.UtilService.isImage(fileName)) {
-                                    /*
-                                     * move the cursor back to its position when the asset chooser
-                                     * popup was clicked
-                                     */
-                                    $('#' + summernoteId).summernote('editor.restoreRange');
-                                    $('#' + summernoteId).summernote('editor.focus');
+                                if (summernoteId != '') {
+                                    if (_this.UtilService.isImage(fileName)) {
+                                        /*
+                                         * move the cursor back to its position when the asset chooser
+                                         * popup was clicked
+                                         */
+                                        $('#' + summernoteId).summernote('editor.restoreRange');
+                                        $('#' + summernoteId).summernote('editor.focus');
 
-                                    // add the image html
-                                    $('#' + summernoteId).summernote('insertImage', fullAssetPath, fileName);
-                                } else if (_this.UtilService.isVideo(fileName)) {
-                                    /*
-                                     * move the cursor back to its position when the asset chooser
-                                     * popup was clicked
-                                     */
-                                    $('#' + summernoteId).summernote('editor.restoreRange');
-                                    $('#' + summernoteId).summernote('editor.focus');
+                                        // add the image html
+                                        $('#' + summernoteId).summernote('insertImage', fullAssetPath, fileName);
+                                    } else if (_this.UtilService.isVideo(fileName)) {
+                                        /*
+                                         * move the cursor back to its position when the asset chooser
+                                         * popup was clicked
+                                         */
+                                        $('#' + summernoteId).summernote('editor.restoreRange');
+                                        $('#' + summernoteId).summernote('editor.focus');
 
-                                    // insert the video element
-                                    var videoElement = document.createElement('video');
-                                    videoElement.controls = 'true';
-                                    videoElement.innerHTML = "<source ng-src='" + fullAssetPath + "' type='video/mp4'>";
-                                    $('#' + summernoteId).summernote('insertNode', videoElement);
+                                        // insert the video element
+                                        var videoElement = document.createElement('video');
+                                        videoElement.controls = 'true';
+                                        videoElement.innerHTML = "<source ng-src='" + fullAssetPath + "' type='video/mp4'>";
+                                        $('#' + summernoteId).summernote('insertNode', videoElement);
+                                    }
                                 }
+                            } else if (args.target == 'scriptFilename') {
+                                // the target is the project script filename
+                                _this.projectScriptFilename = fileName;
+                                _this.projectScriptFilenameChanged();
                             }
                         }
                     }
@@ -770,15 +784,18 @@ var ProjectController = function () {
         }
 
         /**
-         * Toggle the create group input
+         * Show the create group input
          */
 
     }, {
-        key: 'toggleCreateGroup',
-        value: function toggleCreateGroup() {
-            this.hideCreateNode();
-            this.showCreateGroup = !this.showCreateGroup;
+        key: 'creatNewActivityClicked',
+        value: function creatNewActivityClicked() {
+
+            // clear the create group title
             this.createGroupTitle = '';
+
+            // show the create group view
+            this.toggleView('createGroup');
 
             if (this.showCreateGroup) {
                 /*
@@ -796,26 +813,18 @@ var ProjectController = function () {
         }
 
         /**
-         * Hide the create group input
-         */
-
-    }, {
-        key: 'hideCreateGroup',
-        value: function hideCreateGroup() {
-            this.showCreateGroup = false;
-            this.createGroupTitle = '';
-        }
-
-        /**
          * Toggle the create node input
          */
 
     }, {
-        key: 'toggleCreateNode',
-        value: function toggleCreateNode() {
-            this.hideCreateGroup();
-            this.showCreateNode = !this.showCreateNode;
+        key: 'createNewStepClicked',
+        value: function createNewStepClicked() {
+
+            // clear the create node title
             this.createNodeTitle = '';
+
+            // show the create node view
+            this.toggleView('createNode');
 
             if (this.showCreateNode) {
                 /*
@@ -830,17 +839,6 @@ var ProjectController = function () {
                     }
                 });
             }
-        }
-
-        /**
-         * Hide the create group input
-         */
-
-    }, {
-        key: 'hideCreateNode',
-        value: function hideCreateNode() {
-            this.showCreateNode = false;
-            this.createNodeTitle = '';
         }
 
         /**
@@ -1000,18 +998,22 @@ var ProjectController = function () {
          */
 
     }, {
-        key: 'toggleImportView',
-        value: function toggleImportView() {
-            this.importMode = !this.importMode;
+        key: 'importStepClicked',
+        value: function importStepClicked() {
 
-            if (this.myProjectsList == null) {
-                // populate the authorable projects drop down
-                this.getAuthorableProjects();
-            }
+            // show the import step view
+            this.toggleView('importStep');
 
-            if (this.libraryProjectsList == null) {
-                // populate the library projects drop down
-                this.getLibraryProjects();
+            if (this.importMode) {
+                if (this.myProjectsList == null) {
+                    // populate the authorable projects drop down
+                    this.getAuthorableProjects();
+                }
+
+                if (this.libraryProjectsList == null) {
+                    // populate the library projects drop down
+                    this.getLibraryProjects();
+                }
             }
         }
 
@@ -1315,25 +1317,39 @@ var ProjectController = function () {
         }
 
         /**
-         * Toggle the view to edit project rubric
+         * Show the view to edit the project rubric
          */
 
     }, {
-        key: 'toggleEditProjectRubricView',
-        value: function toggleEditProjectRubricView() {
-            this.editProjectRubricMode = !this.editProjectRubricMode;
+        key: 'editProjectRubricClicked',
+        value: function editProjectRubricClicked() {
+
+            // show the edit rubric view
+            this.toggleView('rubric');
         }
 
         /**
-         * Toggle the view to edit project JSON
+         * Show the advanced view
          */
 
     }, {
-        key: 'toggleEditProjectJSONView',
-        value: function toggleEditProjectJSONView() {
-            this.editProjectJSONMode = !this.editProjectJSONMode;
-            if (this.editProjectJSONMode) {
-                // updates projectAsText field, which is the string representation of the project that we'll show in the textarea
+        key: 'advancedClicked',
+        value: function advancedClicked() {
+
+            // show the advanced authoring view
+            this.toggleView('advanced');
+        }
+
+        /**
+         * The show JSON button was clicked
+         */
+
+    }, {
+        key: 'showJSONClicked',
+        value: function showJSONClicked() {
+            this.showJSONAuthoring = !this.showJSONAuthoring;
+
+            if (this.showJSONAuthoring) {
                 this.projectJSONString = angular.toJson(this.ProjectService.project, 4);
             }
         }
@@ -1396,12 +1412,178 @@ var ProjectController = function () {
         value: function isNodeInAnyBranchPath(nodeId) {
             return this.ProjectService.isNodeInAnyBranchPath(nodeId);
         }
+
+        /**
+         * The project script file name changed
+         */
+
+    }, {
+        key: 'projectScriptFilenameChanged',
+        value: function projectScriptFilenameChanged() {
+            // update the project script file name in the project service
+            this.ProjectService.setProjectScriptFilename(this.projectScriptFilename);
+
+            if (this.showJSONAuthoring) {
+                /*
+                 * we are showing the project JSON authoring so we need to update
+                 * the JSON string that we are showing in the textarea
+                 */
+                this.projectJSONString = angular.toJson(this.ProjectService.project, 4);
+            }
+
+            // save the project
+            this.ProjectService.saveProject();
+        }
+
+        /**
+         * Show the asset popup to allow the author to choose an image for the
+         * project script filename
+         */
+
+    }, {
+        key: 'chooseProjectScriptFilename',
+        value: function chooseProjectScriptFilename() {
+            // generate the parameters
+            var params = {};
+            params.popup = true;
+            params.projectId = this.projectId;
+            params.target = 'scriptFilename';
+
+            // display the asset chooser
+            this.$rootScope.$broadcast('openAssetChooser', params);
+        }
+
+        /**
+         * Show the appropriate authoring view
+         * @param view the view to show
+         */
+
+    }, {
+        key: 'toggleView',
+        value: function toggleView(view) {
+
+            // clear the input element for creating a new activity
+            this.createGroupTitle = '';
+
+            // clear the input element for creating a new step
+            this.createNodeTitle = '';
+
+            if (view == 'project') {
+                // we are showing the regular project view
+                this.showCreateGroup = false;
+                this.showCreateNode = false;
+                this.importMode = false;
+                this.editProjectRubricMode = false;
+                this.advancedMode = false;
+                this.showJSONAuthoring = false;
+                this.projectMode = true;
+            } else if (view == 'createGroup') {
+                // toggle the create activity view
+                this.showCreateGroup = !this.showCreateGroup;
+                this.showCreateNode = false;
+                this.importMode = false;
+                this.editProjectRubricMode = false;
+                this.advancedMode = false;
+                this.showJSONAuthoring = false;
+
+                // also show the project view
+                this.projectMode = true;
+            } else if (view == 'createNode') {
+                // toggle the create step view
+                this.showCreateGroup = false;
+                this.showCreateNode = !this.showCreateNode;
+                this.importMode = false;
+                this.editProjectRubricMode = false;
+                this.advancedMode = false;
+                this.showJSONAuthoring = false;
+
+                // also show the project view
+                this.projectMode = true;
+            } else if (view == 'importStep') {
+                // toggle the import step view
+                this.showCreateGroup = false;
+                this.showCreateNode = false;
+                this.importMode = !this.importMode;
+                this.editProjectRubricMode = false;
+                this.advancedMode = false;
+                this.showJSONAuthoring = false;
+
+                // if the import view is shown, do not show the project view
+                this.projectMode = !this.importMode;
+            } else if (view == 'rubric') {
+                // toggle the rubric view
+                this.showCreateGroup = false;
+                this.showCreateNode = false;
+                this.importMode = false;
+                this.editProjectRubricMode = !this.editProjectRubricMode;
+                this.advancedMode = false;
+                this.showJSONAuthoring = false;
+
+                // if the rubric view is shown, do not show the project view
+                this.projectMode = !this.editProjectRubricMode;
+            } else if (view == 'advanced') {
+                // toggle the advanced view
+                this.showCreateGroup = false;
+                this.showCreateNode = false;
+                this.importMode = false;
+                this.editProjectRubricMode = false;
+                this.advancedMode = !this.advancedMode;
+                this.showJSONAuthoring = false;
+
+                // if the advanced view is shown, do not show the project view
+                this.projectMode = !this.advancedMode;
+            }
+        }
+
+        /**
+         * Show the regular project view
+         */
+
+    }, {
+        key: 'projectHomeClicked',
+        value: function projectHomeClicked() {
+            // show the regular project view
+            this.showProjectHome();
+        }
+
+        /**
+         * Show the regular project view
+         */
+
+    }, {
+        key: 'showProjectHome',
+        value: function showProjectHome() {
+            // show the regular project view
+            this.toggleView('project');
+        }
+
+        /**
+         * Creating a group was cancelled
+         */
+
+    }, {
+        key: 'cancelCreateGroupClicked',
+        value: function cancelCreateGroupClicked() {
+            // show the project regular project view
+            this.toggleView('project');
+        }
+
+        /**
+         * Creating a node was cancelled
+         */
+
+    }, {
+        key: 'cancelCreateNodeClicked',
+        value: function cancelCreateNodeClicked() {
+            // show the project regular project view
+            this.toggleView('project');
+        }
     }]);
 
     return ProjectController;
 }();
 
-ProjectController.$inject = ['$filter', '$interval', '$mdDialog', '$q', '$scope', '$state', '$stateParams', '$timeout', 'AuthorWebSocketService', 'ConfigService', 'ProjectService', 'UtilService'];
+ProjectController.$inject = ['$filter', '$interval', '$mdDialog', '$q', '$rootScope', '$scope', '$state', '$stateParams', '$timeout', 'AuthorWebSocketService', 'ConfigService', 'ProjectService', 'UtilService'];
 
 exports.default = ProjectController;
 //# sourceMappingURL=projectController.js.map

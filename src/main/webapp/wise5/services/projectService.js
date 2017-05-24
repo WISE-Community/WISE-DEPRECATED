@@ -37,7 +37,8 @@ var ProjectService = function () {
         this.idToOrder = {};
         this.nodeCount = 0;
         this.componentServices = {};
-        this.nodeIddToNumber = {};
+        this.nodeIdToNumber = {};
+        this.nodeIdToIsInBranchPath = {};
 
         this.$translate = this.$filter('translate');
 
@@ -77,6 +78,7 @@ var ProjectService = function () {
             this.idToPosition = {};
             this.idToOrder = {};
             this.nodeCount = 0;
+            this.nodeIdToIsInBranchPath = {};
         }
     }, {
         key: 'getStyle',
@@ -9304,9 +9306,30 @@ var ProjectService = function () {
     }, {
         key: 'isNodeInAnyBranchPath',
         value: function isNodeInAnyBranchPath(nodeId) {
-            var branches = this.getBranches();
 
-            var result = this.isNodeIdInABranch(branches, nodeId);
+            var result = false;
+
+            if (this.nodeIdToIsInBranchPath[nodeId] == null) {
+                /*
+                 * we have not calculated whether the node id is in a branch path
+                 * before so we will now
+                 */
+
+                // get the branches in the project
+                var branches = this.getBranches();
+
+                // check if the node id is in any of the branches
+                result = this.isNodeIdInABranch(branches, nodeId);
+
+                // remember the result for this node id
+                this.nodeIdToIsInBranchPath[nodeId] = result;
+            } else {
+                /*
+                 * we have calculated whether the node id is in a branch path
+                 * before
+                 */
+                result = this.nodeIdToIsInBranchPath[nodeId];
+            }
 
             return result;
         }
@@ -9871,6 +9894,34 @@ var ProjectService = function () {
             }
 
             return nextNodeId;
+        }
+
+        /**
+         * Set the project script filename
+         * @param script the script filename
+         */
+
+    }, {
+        key: 'setProjectScriptFilename',
+        value: function setProjectScriptFilename(scriptFilename) {
+            this.project.script = scriptFilename;
+        }
+
+        /**
+         * Get the project script filename
+         */
+
+    }, {
+        key: 'getProjectScriptFilename',
+        value: function getProjectScriptFilename() {
+
+            var scriptFilename = null;
+
+            if (this.project != null && this.project.script != null) {
+                scriptFilename = this.project.script;
+            }
+
+            return scriptFilename;
         }
     }]);
 
