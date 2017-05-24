@@ -674,6 +674,29 @@ class VLEController {
                 return annotation;
             },
             /**
+             * Gets the latest annotation for the specified node, component, and type
+             * @param nodeId
+             * @param componentId
+             * @param annotationType
+             * @returns {the|Object}
+             */
+            getLatestAnnotationForComponent: (nodeId, componentId, annotationType) => {
+                let params = {
+                    "nodeId": nodeId,
+                    "componentId": componentId,
+                    "type": annotationType
+                };
+                let annotation = this.AnnotationService.getLatestAnnotation(params);
+                return annotation;
+            },
+            /**
+             * Updates the annotation locally and on the server
+             * @param annotation
+             */
+            updateAnnotation: (annotation) => {
+                this.AnnotationService.saveAnnotation(annotation);
+            },
+            /**
              * Returns the maxScore for the specified node and component
              * @param nodeId the node id
              * @param componentId the component id

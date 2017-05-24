@@ -81,8 +81,8 @@ class NotebookReportController {
                 //['insert', ['link','picture','video','hr']],
                 //['view', ['fullscreen', 'codeview']],
                 //['help', ['help']]
-                ['customButton', ['customButton']]
-                //['print', ['print']]
+                ['customButton', ['customButton']],
+                ['print', ['print']]
             ],
             popover: {
                 image: [

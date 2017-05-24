@@ -84,9 +84,7 @@ var NotebookReportController = function () {
             //['insert', ['link','picture','video','hr']],
             //['view', ['fullscreen', 'codeview']],
             //['help', ['help']]
-            ['customButton', ['customButton']]
-            //['print', ['print']]
-            ],
+            ['customButton', ['customButton']], ['print', ['print']]],
             popover: {
                 image: [['imagesize', ['imageSize100', 'imageSize50', 'imageSize25']],
                 //['float', ['floatLeft', 'floatRight', 'floatNone']],

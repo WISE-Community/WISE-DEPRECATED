@@ -1,3 +1,5 @@
+/** Modified to use material icon for the button */
+
 (function (factory) {
   /* global define */
   if (typeof define === 'function' && define.amd) {
@@ -44,7 +46,7 @@
       context.memo('button.print', function () {
         // create button
         var button = ui.button({
-          contents: '<i class="fa fa-print"/>' + lang.print.print,
+          contents: '<i class="md-icon material-icons"> print </i>',
           tooltip: lang.print.print,
           click: function () {
             self.$printframe.contents().find('body').html(context.invoke('code'));
