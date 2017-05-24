@@ -112,6 +112,10 @@ label {
     font-style: italic;
 }
 
+.divider--withmargin {
+    margin: 16px 0;
+}
+
 // Color
 // Set classes for each named color in the $colors map
 @each $key, $value in $colors {

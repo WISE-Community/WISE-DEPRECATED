@@ -1,7 +1,14 @@
 <div class="notebook-item--report md-padding md-whiteframe-1dp">
     <div class="notebook-item--report__heading">
-        <p class="md-headline"
-            style="color: {{notebookItemReportController.label.color}};">{{notebookItemReportController.reportItem.content.title}}</p>
+        <p class="md-headline" style="color: {{notebookItemReportController.label.color}};">
+            {{notebookItemReportController.reportItem.content.title}}
+            <md-button ng-if="notebookItemReportController.mode === 'classroomMonitor'"
+                       class="md-icon-button text-secondary"
+                       ng-click="notebookItemReportController.print()"
+                       aria-label="{{ 'PRINT' | translate }}">
+                <md-icon class="text-secondary"> print </md-icon>
+            </md-button>
+        </p>
         <p class="text-secondary">{{notebookItemReportController.reportItem.content.prompt}}</p>
     </div>
     <div class="notebook-item--report__container" ui-scrollpoint ui-scrollpoint-action="notebookItemReportController.setEditorPosition">
@@ -17,6 +24,7 @@
         <div ng-if="notebookItemReportController.mode == 'classroomMonitor'"
              class="notebook-item--report__content"><compile data="notebookItemReportController.reportItem.content.content"></compile></div>
     </div>
+    <md-divider class="divider--withmargin" ng-if="notebookItemReportController.mode === 'classroomMonitor'"></md-divider>
     <div class="component__actions">
         <md-button ng-if="notebookItemReportController.mode != 'classroomMonitor'"
                    class="md-primary md-raised" aria-label="Save {{notebookItemReportController.label.link}}"

@@ -52,6 +52,7 @@
     "POINTS": "points",
     "PREVIEW": "Preview",
     "PREVIEW_STUDENT": "Preview Student",
+    "PRINT": "Print",
     "PROJECT_ID": "Project ID",
     "PROJECT_ID_DISPLAY": "ID: {{id}}",
     "PROMPT": "Prompt",

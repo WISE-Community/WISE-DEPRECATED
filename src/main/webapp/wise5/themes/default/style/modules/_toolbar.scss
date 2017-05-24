@@ -67,6 +67,12 @@ md-dialog > md-toolbar {
     }
 }
 
+.layout-tools--step {
+    @media (min-width: $layout-breakpoint-xs) {
+        margin: 0 -16px 0 8px;
+    }
+}
+
 .toolbar-title {
     margin-left: 8px;
     font-size: rem(1.6);
