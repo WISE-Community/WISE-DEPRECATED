@@ -2061,7 +2061,7 @@ class ProjectService {
                                 // get the to node id
                                 var toNodeId = transition.to;
 
-                                if (pathSoFar.indexOf(toNodeId) == -1) {
+                                if (toNodeId != null && pathSoFar.indexOf(toNodeId) == -1) {
                                     // we have not found the to node in the path yet so we can traverse it
 
                                     /*
