@@ -4,7 +4,8 @@
             {{notebookItemReportController.reportItem.content.title}}
             <md-button ng-if="notebookItemReportController.mode === 'classroomMonitor'"
                        class="md-icon-button text-secondary"
-                       ng-click="notebookItemReportController.print()">
+                       ng-click="notebookItemReportController.print()"
+                       aria-label="{{ 'PRINT' | translate }}">
                 <md-icon class="text-secondary"> print </md-icon>
             </md-button>
         </p>
