@@ -39,7 +39,7 @@ class NotebookItemReportController {
         if (this.reportItem) {
             let serverSaveTime = this.reportItem.serverSaveTime;
             let clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
-            this.setSaveMessage(this.$translate('lastSaved'), clientSaveTime);
+            this.setSaveMessage(this.$translate('LAST_SAVED'), clientSaveTime);
         } else {
             // Student doesn't have work for this report yet, so we'll use the template.
             this.reportItem = this.NotebookService.getTemplateReportItemByReportId(this.reportId);
@@ -233,7 +233,7 @@ class NotebookItemReportController {
                     let clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
 
                     // set save message
-                    this.setSaveMessage(this.$translate('saved'), clientSaveTime);
+                    this.setSaveMessage(this.$translate('SAVED'), clientSaveTime);
                 }
             });
     }
@@ -269,6 +269,36 @@ class NotebookItemReportController {
          * <img src='sun.png'/>
          */
         this.reportItem.content.content = this.ConfigService.removeAbsoluteAssetPaths(this.reportItemContent);
+    }
+
+    /**
+     * Print the selected report
+     */
+    print() {
+        // get the report content
+        let content = this.reportItem.content.content;
+
+        // create the window string
+        let windowString =
+            "<html>" +
+                "<head>" +
+                    "<link rel='stylesheet' href='../wise5/lib/bootstrap/css/bootstrap.min.css'>" +
+                    "<link rel='stylesheet' href='../wise5/themes/default/style/monitor.css'>" +
+                    "<link rel='stylesheet' href='../wise5/themes/default/style/angular-material.css'>" +
+                    "<link rel='stylesheet' href='../wise5/lib/summernote/dist/summernote.css'>" +
+                    "<script>window.addEventListener('load', function() { window.print(); window.close(); });</script>" +
+                "</html>" +
+                "<body style='background-color: #ffffff;'>" +
+                    "<div class='md-padding'>" + content + "</div>" +
+                "</body>" +
+            "</html>";
+
+        // open a new window
+        let w = window.open('', '');
+
+        // write the report content to the new window and close
+        w.document.write(windowString);
+        w.document.close();
     }
 }
 
