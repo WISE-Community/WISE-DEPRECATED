@@ -521,6 +521,9 @@ class UtilService {
             } else if (type == 'button') {
                 // create a button that represents the wiselink
                 newElement = "<button wiselink='true' node-id='" + nodeId + "' " + componentHTML + ">" + linkText + "</button>";
+            } else {
+                // default to creating a link that represents the wiselink
+                newElement = "<a wiselink='true' node-id='" + nodeId + "' " + componentHTML + ">" + linkText + "</a>";
             }
 
             if (newElement != null) {
