@@ -30,7 +30,7 @@ View.prototype.convertProjectToWISE5 = function() {
 
     // try to find the project folder name
     var projectFolderNameMatch = projectFolderNameRegEx.exec(this.wise4ProjectBaseURL);
-    
+
     if (projectFolderNameMatch != null) {
         this.projectFolderName = projectFolderNameMatch[2];
     }
@@ -73,7 +73,7 @@ View.prototype.intializeConvertVariables = function() {
 
     // holds the current group we are parsing so we can put child nodes into it
     this.currentGroup = null;
-    
+
     // holds the previous group so we can reference back to it to set transitions
     this.previousGroup = null;
 
@@ -82,7 +82,7 @@ View.prototype.intializeConvertVariables = function() {
 
     // a mapping of WISE4 node ids to WISE5 node ids
     this.wise4IdsToWise5Ids = {};
-    
+
     // a list of WISE4 ids that have been converted
     this.convertedWISE4Ids = [];
 };
@@ -167,7 +167,7 @@ View.prototype.parseWISE4ProjectHelper = function(project, elementId) {
 
         if (sequence != null) {
             // the element is a sequence
-            
+
             if (!this.isConvertedWISE4Id(elementId)) {
                 if (this.isBranchingActivity(sequence)) {
                     // the sequence is a branching activity
@@ -185,10 +185,10 @@ View.prototype.parseWISE4ProjectHelper = function(project, elementId) {
 
                     // remember the previous group
                     this.previousGroup = this.currentGroup;
-                    
+
                     // set the new current group
                     this.currentGroup = wise5Group;
-                    
+
                     if (this.previousGroup != null) {
                         // create the transition from the previous group to the current group
                         this.addTransition(this.previousGroup.id, this.currentGroup.id);
@@ -226,7 +226,7 @@ View.prototype.parseWISE4ProjectHelper = function(project, elementId) {
 
             var identifier = node.identifier;
             var ref = node.ref;
-            
+
             // if (identifier != null && identifier.endsWith('.html')) {
             //     // remove the ml from html
             //     identifier = identifier.substring(0, identifier.length - 2);
@@ -414,7 +414,7 @@ View.prototype.createWISE5NodeFromNodeContent = function(identifier, ref) {
             wise5Node = thisView.convertNode(node, nodeContent);
         }
     });
-    
+
     this.addToConvertedWISE4Ids(identifier);
 
     return wise5Node;
@@ -440,34 +440,34 @@ View.prototype.removeAssetsFromPaths = function(wise4NodeJSONString) {
      * <img src="assets/oxygen.png"/>
      */
     var srcMatcher = new RegExp(/src=\\?["'](([^?"'\\]*).*?)\\?["']/, 'gi');
-    
+
     // run the regex matcher
     var matchResults = srcMatcher.exec(wise4NodeJSONString);
-    
+
     /*
      * run the regex matcher until it no longer finds a match.
      * the matcher maintains search state and exec can be called
      * until no more matches are found
      */
     while (matchResults != null) {
-        
+
         if (matchResults.length > 2) {
             // get the match with the ?. for example assets/oxygen.png?w=50&h=50
             var matchWithQuestionMark = matchResults[1];
-            
+
             // get the match without the ?. for example assets/oxygen.png
             var matchWithoutQuestionMark = matchResults[2];
-            
+
             // check if the matches are different
             if (matchWithQuestionMark != matchWithoutQuestionMark) {
                 /*
-                 * the matches are different so we will remove the ? and 
+                 * the matches are different so we will remove the ? and
                  * everything after it
                  */
                 updated = updated.replace(matchWithQuestionMark, matchWithoutQuestionMark);
             }
         }
-        
+
         // search for a match again
         matchResults = srcMatcher.exec(wise4NodeJSONString);
     }
@@ -493,7 +493,7 @@ View.prototype.removeAssetsFromPaths = function(wise4NodeJSONString) {
     // remove "/curriculum/12345/assets/ and replace it with "
     var curriculumAssetsPathDoubleQuote = '"/curriculum/[0-9]*/assets/';
     updated = updated.replace(new RegExp(curriculumAssetsPathDoubleQuote, 'gi'), '"');
-    
+
     // remove '/curriculum/12345/assets/ and replace it with '
     var curriculumAssetsPathSingleQuote = "'/curriculum/[0-9]*/assets/";
     updated = updated.replace(new RegExp(curriculumAssetsPathSingleQuote, 'gi'), "'");
@@ -609,7 +609,7 @@ View.prototype.createWISE5Group = function(sequence) {
     wise5Group.title = sequence.title;
     wise5Group.startId = '';
     wise5Group.ids = [];
-    
+
     var transitionLogic = {};
     transitionLogic.transitions = [];
     transitionLogic.howToChooseAmongAvailablePaths = null;
@@ -1478,37 +1478,37 @@ View.prototype.convertDraw = function(node, nodeContent) {
 
         component.stamps = wise5Stamps;
     }
-    
+
     if (nodeContent.img_background != null) {
         // get the background image file path
         var imgBackground = nodeContent.img_background;
-        
+
         // remove the assets part of the path
         var backgroundFileName = imgBackground.replace('assets/', '');
-        
+
         // set the background image file name
         component.background = backgroundFileName;
     }
-    
+
     if (true || component.background == null) {
         /*
          * we have not obtained a background yet so we will now check for the
          * svg background
          */
         if (nodeContent.svg_background != null && nodeContent.svg_background != '') {
-            
+
             // get the svg background
             var svgBackground = nodeContent.svg_background;
-            
+
             // regex to match the background file name in the svg
             var backgroundImageRegEx = /xlink:href=["'](assets\/)*(.*?)["']/
-            
+
             // perform the match
             var match = svgBackground.match(backgroundImageRegEx);
-            
+
             // get the second match group
             var backgroundFileName = match[2];
-            
+
             if (backgroundFileName != null) {
                 // set the background image file name
                 component.background = backgroundFileName;
@@ -2075,30 +2075,30 @@ View.prototype.isBranchingActivity = function(sequence) {
  * @param nodeContent the WISE4 step content
  */
 View.prototype.convertBranchNode = function(node, nodeContent) {
-    
+
     if (node != null) {
-        
+
         // get all the paths in the branch
         var paths = nodeContent.paths;
-        
+
         var lastNodeIds = [];
-        
+
         // loop through all the paths
         for (var p = 0; p < paths.length; p++) {
-            
+
             // get a path
             var path = paths[p];
-            
+
             if (path != null) {
-                
+
                 // get the sequence id of the path
                 var sequenceRef = path.sequenceRef;
-                
+
                 // create the branch path
                 this.createBranchPath(nodeContent, sequenceRef, lastNodeIds);
             }
         }
-        
+
         this.previousNodeIds = lastNodeIds;
     }
 };
@@ -2147,9 +2147,9 @@ View.prototype.handleBranchActivity = function(sequence) {
  * @param lastNodeIds we will put the last node id in the path into this array
  */
 View.prototype.createBranchPath = function(branchNode, sequenceRef, lastNodeIds) {
-    
+
     if (sequenceRef != null) {
-        
+
         // create the WISE5 nodes in this branch path
         var branchNodes = this.getWISE5NodesInBranchPath(sequenceRef);
 
@@ -2256,13 +2256,13 @@ View.prototype.createBranchPath = function(branchNode, sequenceRef, lastNodeIds)
             }
         }
     }
-    
+
     /*
      * remember that we have already converted this sequence so we don't
      * convert it again later
      */
     this.addToConvertedWISE4Ids(sequenceRef);
-    
+
     return lastNodeIds;
 }
 
@@ -2291,13 +2291,13 @@ View.prototype.createBranchConstraint = function(constraintAction, fromNodeId, t
         // create the critera that needs to be satisfied in order to remove the constraint
         var criteria = {};
         criteria.name = 'branchPathTaken';
-        
+
         // create the params for the criteria
         var params = {};
         params.fromNodeId = fromNodeId;
         params.toNodeId = toNodeId;
         criteria.params = params;
-        
+
         branchConstraint.removalCriteria.push(criteria);
     }
 
@@ -2362,10 +2362,10 @@ View.prototype.getWISE5NodesInBranchPath = function(sequenceId) {
                 // loop through all the nodes in the sequence
                 for (var r = 0; r < refs.length; r++) {
                     var ref = refs[r];
-                    
+
                     // try to get the node
                     var node = this.getNode(this.wise4Project, ref);
-                    
+
                     if (node == null) {
                         /*
                          * we were unable to get the node most likely because
@@ -2375,15 +2375,15 @@ View.prototype.getWISE5NodesInBranchPath = function(sequenceId) {
                          */
                         node = this.getNode(this.wise4Project, ref + "ml");
                     }
-                    
+
                     // get the identifier
                     var identifier = node.identifier;
                     ref = node.ref;
-                    
+
                     if (!this.isConvertedWISE4Id(identifier)) {
                         // create a WISE5 node
                         var wise5Node = this.createWISE5NodeFromNodeContent(identifier, ref);
-                        
+
                         branchNodes.push(wise5Node);
                     }
                 }
@@ -2448,7 +2448,7 @@ View.prototype.replaceLinkToWithWISELink = function(node, text) {
                     var wise5NodeId = this.getWISE5NodeIdByWISE4NodeId(wise4NodeId);
 
                     // create the WISE5 wiselink
-                    var wise5Link = "<wiselink node-id='" + wise5NodeId + "' link-text='" + linkText + "'/>";
+                    var wise5Link = "<wiselink type='link' node-id='" + wise5NodeId + "' link-text='" + linkText + "'/>";
 
                     // replace the WISE4 linkTo with the WISE5 wiselink
                     text = text.replace(tempResult, wise5Link);
@@ -2521,15 +2521,15 @@ View.prototype.addToConvertedWISE4Ids = function(wise4Id) {
  * @returns whether the WISE4 id has been converted yet
  */
 View.prototype.isConvertedWISE4Id = function(wise4Id) {
-    
+
     var result = false;
-    
+
     if (wise4Id != null) {
         if (this.convertedWISE4Ids.indexOf(wise4Id) != -1) {
             result = true;
         }
     }
-    
+
     return result;
 }
 
