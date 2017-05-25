@@ -45,6 +45,7 @@ class ProjectAssetController {
         this.nodeId = null;
         this.componentId = null;
         this.target = null;
+        this.targetObject = null;
 
         if (this.$stateParams != null) {
             if (this.$stateParams.popup) {
@@ -70,6 +71,11 @@ class ProjectAssetController {
             if (this.$stateParams.target) {
                 // get the target to put the asset in
                 this.target = this.$stateParams.target;
+            }
+
+            if (this.$stateParams.targetObject) {
+                // get the target object to put the asset in
+                this.targetObject = this.$stateParams.targetObject;
             }
         }
 
@@ -204,7 +210,8 @@ class ProjectAssetController {
             projectId: this.projectId,
             nodeId: this.nodeId,
             componentId: this.componentId,
-            target: this.target
+            target: this.target,
+            targetObject: this.targetObject
         };
         this.$rootScope.$broadcast('assetSelected', params);
     }

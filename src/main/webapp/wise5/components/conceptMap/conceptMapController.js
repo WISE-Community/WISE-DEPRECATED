@@ -532,7 +532,7 @@ var ConceptMapController = function () {
                                 }
 
                                 // the authoring component content has changed so we will save the project
-                                _this.authoringViewBackgroundChanged();
+                                _this.authoringViewComponentChanged();
                             }
 
                             if (summernoteId != '') {

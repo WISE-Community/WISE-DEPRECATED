@@ -560,7 +560,7 @@ class ConceptMapController {
                                 }
 
                                 // the authoring component content has changed so we will save the project
-                                this.authoringViewBackgroundChanged();
+                                this.authoringViewComponentChanged();
                             }
 
                             if (summernoteId != '') {

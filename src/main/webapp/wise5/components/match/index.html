@@ -17,7 +17,9 @@
             <input ng-model='choice.value'
                    ng-model-options='{ debounce: 1000 }'
                    ng-change='matchController.authoringViewComponentChanged()'
-                   size='100'/>
+                   size='100'
+                   placeholder='{{ "TYPE_TEXT_OR_CHOOSE_AN_IMAGE" | translate }}'/>
+            <button ng-click='matchController.chooseChoiceAsset(choice)'>{{ 'CHOOSE' | translate }}</button>
             <button ng-click='matchController.authoringDeleteChoice($index)'>{{ 'match.deleteChoice' | translate }}</button>
         </div>
         <button ng-click='matchController.authoringAddChoice()'>{{ 'match.addChoice' | translate }}</button>
@@ -28,7 +30,9 @@
             <input ng-model='bucket.value'
                    ng-model-options='{ debounce: 1000 }'
                    ng-change='matchController.authoringViewComponentChanged()'
-                   size='100'/>
+                   size='100'
+                   placeholder='{{ "TYPE_TEXT_OR_CHOOSE_AN_IMAGE" | translate }}'/>
+            <button ng-click='matchController.chooseBucketAsset(bucket)'>{{ 'CHOOSE' | translate }}</button>
             <button ng-click='matchController.authoringDeleteBucket($index)'>{{ 'match.deleteBucket' | translate }}</button>
         </div>
         <button ng-click='matchController.authoringAddBucket()'>{{ 'match.addBucket' | translate }}</button>

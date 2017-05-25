@@ -165,6 +165,7 @@ class AuthoringToolController {
             stateParams.nodeId = params.nodeId;
             stateParams.componentId = params.componentId;
             stateParams.target = params.target;
+            stateParams.targetObject = params.targetObject;
 
             // open the dialog that will display the assets for the user to choose
             this.$mdDialog.show({

@@ -526,40 +526,83 @@ class MatchController {
                             var assetsDirectoryPath = this.ConfigService.getProjectAssetsDirectoryPath();
                             var fullAssetPath = assetsDirectoryPath + '/' + fileName;
 
-                            var summernoteId = '';
+                            if (args.target == 'prompt' || args.target == 'rubric') {
 
-                            if (args.target == 'prompt') {
-                                // the target is the summernote prompt element
-                                summernoteId = 'summernotePrompt_' + this.nodeId + '_' + this.componentId;
-                            } else if (args.target == 'rubric') {
-                                // the target is the summernote rubric element
-                                summernoteId = 'summernoteRubric_' + this.nodeId + '_' + this.componentId;
-                            }
+                                var summernoteId = '';
 
-                            if (summernoteId != '') {
-                                if (this.UtilService.isImage(fileName)) {
-                                    /*
-                                     * move the cursor back to its position when the asset chooser
-                                     * popup was clicked
-                                     */
-                                    $('#' + summernoteId).summernote('editor.restoreRange');
-                                    $('#' + summernoteId).summernote('editor.focus');
+                                if (args.target == 'prompt') {
+                                    // the target is the summernote prompt element
+                                    summernoteId = 'summernotePrompt_' + this.nodeId + '_' + this.componentId;
+                                } else if (args.target == 'rubric') {
+                                    // the target is the summernote rubric element
+                                    summernoteId = 'summernoteRubric_' + this.nodeId + '_' + this.componentId;
+                                }
 
-                                    // add the image html
-                                    $('#' + summernoteId).summernote('insertImage', fullAssetPath, fileName);
-                                } else if (this.UtilService.isVideo(fileName)) {
-                                    /*
-                                     * move the cursor back to its position when the asset chooser
-                                     * popup was clicked
-                                     */
-                                    $('#' + summernoteId).summernote('editor.restoreRange');
-                                    $('#' + summernoteId).summernote('editor.focus');
+                                if (summernoteId != '') {
+                                    if (this.UtilService.isImage(fileName)) {
+                                        /*
+                                         * move the cursor back to its position when the asset chooser
+                                         * popup was clicked
+                                         */
+                                        $('#' + summernoteId).summernote('editor.restoreRange');
+                                        $('#' + summernoteId).summernote('editor.focus');
 
-                                    // insert the video element
-                                    var videoElement = document.createElement('video');
-                                    videoElement.controls = 'true';
-                                    videoElement.innerHTML = "<source ng-src='" + fullAssetPath + "' type='video/mp4'>";
-                                    $('#' + summernoteId).summernote('insertNode', videoElement);
+                                        // add the image html
+                                        $('#' + summernoteId).summernote('insertImage', fullAssetPath, fileName);
+                                    } else if (this.UtilService.isVideo(fileName)) {
+                                        /*
+                                         * move the cursor back to its position when the asset chooser
+                                         * popup was clicked
+                                         */
+                                        $('#' + summernoteId).summernote('editor.restoreRange');
+                                        $('#' + summernoteId).summernote('editor.focus');
+
+                                        // insert the video element
+                                        var videoElement = document.createElement('video');
+                                        videoElement.controls = 'true';
+                                        videoElement.innerHTML = "<source ng-src='" + fullAssetPath + "' type='video/mp4'>";
+                                        $('#' + summernoteId).summernote('insertNode', videoElement);
+                                    }
+                                }
+                            } else if (args.target == 'choice') {
+                                // the target is a choice
+
+                                /*
+                                 * get the target object which should be a
+                                 * choice object
+                                 */
+                                var targetObject = args.targetObject;
+
+                                if (targetObject != null) {
+
+                                    // create the img html
+                                    var text = "<img src='" + fileName + "'/>";
+
+                                    // set the html into the choice text
+                                    targetObject.value = text;
+
+                                    // save the component
+                                    this.authoringViewComponentChanged();
+                                }
+                            } else if (args.target == 'bucket') {
+                                // the target is a bucket
+
+                                /*
+                                 * get the target object which should be a
+                                 * choice object
+                                 */
+                                var targetObject = args.targetObject;
+
+                                if (targetObject != null) {
+
+                                    // create the img html
+                                    var text = "<img src='" + fileName + "'/>";
+
+                                    // set the html into the choice text
+                                    targetObject.value = text;
+
+                                    // save the component
+                                    this.authoringViewComponentChanged();
                                 }
                             }
                         }
@@ -2802,6 +2845,42 @@ class MatchController {
 
         // the authoring component content has changed so we will save the project
         this.authoringViewComponentChanged();
+    }
+
+    /**
+     * Show the asset popup to allow the author to choose an image for the
+     * choice
+     * @param choice the choice object to set the image into
+     */
+    chooseChoiceAsset(choice) {
+        // generate the parameters
+        var params = {};
+        params.popup = true;
+        params.nodeId = this.nodeId;
+        params.componentId = this.componentId;
+        params.target = 'choice';
+        params.targetObject = choice;
+
+        // display the asset chooser
+        this.$rootScope.$broadcast('openAssetChooser', params);
+    }
+
+    /**
+     * Show the asset popup to allow the author to choose an image for the
+     * bucket
+     * @param bucket the bucket object to set the image into
+     */
+    chooseBucketAsset(bucket) {
+        // generate the parameters
+        var params = {};
+        params.popup = true;
+        params.nodeId = this.nodeId;
+        params.componentId = this.componentId;
+        params.target = 'bucket';
+        params.targetObject = bucket;
+
+        // display the asset chooser
+        this.$rootScope.$broadcast('openAssetChooser', params);
     }
 }
 

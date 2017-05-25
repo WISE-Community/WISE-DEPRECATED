@@ -1174,6 +1174,9 @@ class ProjectController {
                     this.importLibraryProjectId = null;
                     this.importProjectId = null;
                     this.importProject = null;
+
+                    // go back to the project view
+                    this.showProjectHome();
                 });
             }
         }

@@ -1285,6 +1285,9 @@ var ProjectController = function () {
                         _this7.importLibraryProjectId = null;
                         _this7.importProjectId = null;
                         _this7.importProject = null;
+
+                        // go back to the project view
+                        _this7.showProjectHome();
                     });
                 }
             }
