@@ -1,4 +1,4 @@
-<div class="view-content--with-sidemenu" ng-if="nodeProgressController.isGroupNode(nodeProgressController.nodeId)">
+<div class="view-content--with-sidemenu" ng-show="nodeProgressController.isGroupNode(nodeProgressController.nodeId)">
     <div class="l-constrained l-constrained-md md-padding nav">
         <div class="flex md-subhead content-head" layout="row" layout-align="start center" layout-wrap>
             <div layout="row" layout-align="start center">
@@ -70,6 +70,6 @@
     </div>
 </div>
 
-<div ng-if="nodeProgressController.isApplicationNode(nodeProgressController.nodeId)">
+<div class="view-content--with-sidemenu" ng-if="nodeProgressController.isApplicationNode(nodeProgressController.nodeId)">
     <div class="md-padding" ng-cloak ui-view="nodeView"></div>
 </div>

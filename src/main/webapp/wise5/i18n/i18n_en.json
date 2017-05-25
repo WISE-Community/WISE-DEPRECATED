@@ -2,6 +2,7 @@
     "ADD_CONNECTED_COMPONENT": "Add Connected Component",
     "ADD_TO_NOTEBOOK": "Add To Notebook",
     "ADVANCED": "Advanced",
+    "ALERTS": "Alerts",
     "ARE_YOU_SURE_YOU_WANT_TO_CHANGE_THIS_COMPONENT_TYPE": "Are you sure you want to change this component type?",
     "AUTO_COMMENT": "Auto Comment",
     "AUTO_SAVED": "Auto-saved",
@@ -42,6 +43,8 @@
     "MAX_SUBMIT": "Max Submit",
     "MY_NEW_PROJECT": "My New Project",
     "NEW": "New",
+    "NO": "No",
+    "NO_ALERTS": "You have no new alerts at this time.",
     "NODE_ID": "Node Id",
     "NOTE_LOWERCASE": "note",
     "NOTES": "Notes",
@@ -74,6 +77,8 @@
     "SCORE": "Score",
     "SCORE_LABEL_AND_VALUE": "Score: {{score}}",
     "SEND_COMMENT": "Send Comment",
+    "SESSION_TIMEOUT": "Session Timeout",
+    "SESSION_TIMEOUT_MESSAGE": "You have been inactive for a long time. Do you want to stay logged in?",
     "SET_SCORE": "Set Score",
     "SHOW_FEEDBACK": "Show Feedback",
     "SHOW_JSON": "Show JSON",
@@ -104,6 +109,7 @@
     "WIDTH": "Width",
     "WISE_LOGO": "WISE logo",
     "WORKGROUP_ID": "Workgroup ID",
+    "YES": "Yes",
     "YOU_HAVE_USED_X_OF_Y_ATTEMPT": "You have used {{x}} of {{y}} attempt",
     "YOU_HAVE_USED_X_OF_Y_ATTEMPTS": "You have used {{x}} of {{y}} attempts"
 }

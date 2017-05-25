@@ -18,7 +18,6 @@ var StepToolsController = function () {
         this.NodeService = NodeService;
         this.ProjectService = ProjectService;
         this.TeacherDataService = TeacherDataService;
-        //this.$mdSidenav = $mdSidenav;
 
         // service objects and utility functions
         this.idToOrder = this.ProjectService.idToOrder;
@@ -29,10 +28,6 @@ var StepToolsController = function () {
             _this.updateModel();
         });
     }
-
-    /*toggleStepNav() {
-        this.$mdSidenav('stepNav').toggle();
-    }*/
 
     _createClass(StepToolsController, [{
         key: 'toNodeIdChanged',
@@ -111,7 +106,7 @@ var StepTools = {
     bindings: {
         showPosition: '<'
     },
-    templateUrl: 'wise5/classroomMonitor/classroomMonitorComponents/nodeGrading/stepTools/stepTools.html',
+    template: '<div layout="row" layout-align="center center">\n            <img ng-if="$ctrl.icon.type === \'img\'" ng-animate-ref="{{ $ctrl.nodeId }}" class="md-18 avatar node-avatar" ng-src="{{$ctrl.icon.imgSrc}}" alt="{{$ctrl.icon.imgAlt}}" />\n            <div ng-if="$ctrl.icon.type === \'font\'" ng-animate-ref="{{ $ctrl.nodeId }}" style="background-color: {{$ctrl.icon.color}};" class="md-18 avatar avatar--icon node-avatar">\n                <md-icon md-font-set="{{$ctrl.icon.fontSet}}" class="md-18 md-light node-icon" md-theme="default">{{$ctrl.icon.fontName}}</md-icon>\n            </div>\n\n            <md-select id="stepSelectMenu" md-theme="default" class="node-select md-subhead"\n                       aria-label="{{ \'selectAStep\' | translate }}"\n                       ng-model="$ctrl.toNodeId"\n                       ng-change="$ctrl.toNodeIdChanged()"\n                       md-selected-text="$ctrl.getSelectedText()">\n                <md-option ng-repeat="item in $ctrl.idToOrder | toArray | orderBy : \'order\'"\n                           ng-init="icon = $ctrl.getIcon(item.$key)"\n                           ng-if="item.order !== 0"\n                           value="{{ item.$key }}"\n                           ng-class="{\'node-select-option--group\': $ctrl.isGroupNode(item.$key), \'node-select-option--node\': !$ctrl.isGroupNode(item.$key)}">\n                    <div layout="row" layout-align="start center">\n                        <img class="node-select__icon md-18 avatar node-avatar" ng-class="$ctrl.isGroupNode(item.$key) ? \'avatar--square\' : \'\'" ng-if="icon.type === \'img\'" ng-src="{{icon.imgSrc}}" alt="{{icon.imgAlt}}" />\n                        <div class="node-select__icon md-18 avatar avatar--icon node-avatar" ng-class="$ctrl.isGroupNode(item.$key) ? \'avatar--square\' : \'\'" ng-if="icon.type === \'font\'" style="background-color: {{icon.color}};">\n                            <md-icon md-font-set="{{icon.fontSet}}" class="md-18 md-light node-icon" md-theme="default">{{icon.fontName}}</md-icon>&nbsp;\n                        </div>\n                        <span class="node-select__text">{{ $ctrl.showPosition && $ctrl.getNodePositionById(item.$key) ? $ctrl.getNodePositionById(item.$key) + \': \' : \'\' }}{{ $ctrl.getNodeTitleByNodeId(item.$key) }}</span>\n                    </div>\n                </md-option>\n            </md-select>\n            <span flex></span>\n            <md-button aria-label="{{\'previousStep\' | translate }}" class="md-icon-button node-nav"\n                       ng-disabled="!$ctrl.prevId" ng-click="$ctrl.goToPrevNode()">\n                <md-icon> arrow_back </md-icon>\n            </md-button>\n            <md-button aria-label="{{ \'nextStep\' | translate }}" class="md-icon-button node-nav"\n                       ng-disabled="!$ctrl.nextId" ng-click="$ctrl.goToNextNode()">\n                <md-icon> arrow_forward </md-icon>\n            </md-button>\n            <md-button aria-label="{{ \'backToProject\' | translate }}" class="md-icon-button node-nav" ng-click="$ctrl.closeNode()">\n                <md-icon md-theme="default"> view_list </md-icon>\n            </md-button>\n        </div>',
     controller: StepToolsController
 };
 
