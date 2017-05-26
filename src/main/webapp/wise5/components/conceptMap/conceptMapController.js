@@ -267,6 +267,24 @@ var ConceptMapController = function () {
                 this.isSubmitButtonVisible = false;
                 this.isSnipButtonVisible = false;
                 this.isDisabled = true;
+
+                var componentState = this.$scope.componentState;
+
+                if (componentState == null) {
+                    /*
+                     * the student does not have any work for this component so
+                     * we will use the node id, component id, and workgroup id
+                     * for the svg id
+                     */
+                    this.svgId = 'svgOnlyShowWork_' + this.nodeId + '_' + this.componentId + '_' + this.workgroupId;
+                } else {
+                    /*
+                     * the student has work for this component so we will use
+                     * the node id, component id, and component state id
+                     * for the svg id
+                     */
+                    this.svgId = 'svgOnlyShowWork_' + this.nodeId + '_' + this.componentId + '_' + componentState.id;
+                }
             } else if (this.mode === 'showPreviousWork') {
                 this.isPromptVisible = true;
                 this.isSaveButtonVisible = false;
