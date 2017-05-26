@@ -49,6 +49,7 @@
             {{ 'label.color' | translate }}: <input ng-model='label.color'
                           ng-change='labelController.authoringViewComponentChanged()'
                           ng-model-options='{ debounce: 1000 }'/>
+            <button ng-click='labelController.openColorViewer()'>{{ 'label.viewColors' | translate }}</button>
             <br/>
             {{ 'label.xLocation' | translate }}: <input type='number'
                                ng-model='label.pointX'
@@ -68,9 +69,13 @@
                                              ng-change='labelController.authoringViewComponentChanged()'
                                              ng-model-options='{ debounce: 1000 }'/>
             <br/>
-            <button ng-click='labelController.authoringDeleteLabelClicked($index)'>{{ 'label.deleteLabel' | translate }}</button>
+            <button ng-click='labelController.authoringDeleteLabelClicked($index, label)'>{{ 'label.deleteLabel' | translate }}</button>
         </div>
+        <br/>
         <button ng-click='labelController.authoringAddLabelClicked()'>{{ 'label.addLabel' | translate }}</button>
+        <br/>
+        <br/>
+        <button ng-click='labelController.saveStarterLabels()'>{{ 'label.saveStarterLabels' | translate }}</button> <button ng-click='labelController.deleteStarterLabels()'>{{ 'label.deleteStarterLabels' | translate }}</button>
     </div>
     <div ng-if='labelController.mode === "authoring"'>
         <br/>

@@ -7,6 +7,7 @@ class LabelController {
         $rootScope,
         $scope,
         $timeout,
+        $window,
         AnnotationService,
         ConfigService,
         LabelService,
@@ -26,6 +27,7 @@ class LabelController {
         this.$rootScope = $rootScope;
         this.$scope = $scope;
         this.$timeout = $timeout;
+        this.$window = $window;
         this.AnnotationService = AnnotationService;
         this.ConfigService = ConfigService;
         this.LabelService = LabelService;
@@ -1028,33 +1030,31 @@ class LabelController {
     getLabels() {
         var labels = [];
 
-        // get all the objects from the canvas
-        var objects = this.canvas.getObjects();
+        /*
+         * get all the circle objects from the canvas which each correspond to
+         * a label point
+         */
+        var objects = this.canvas.getObjects('circle');
 
         if (objects != null) {
 
-            // loop through all the objects
+            // loop through all the circle objects
             for (var x = 0; x < objects.length; x++) {
+
+                /*
+                 * the object is a circle which contains all the data
+                 * for a label
+                 */
                 var object = objects[x];
 
                 if (object != null) {
 
-                    // get the object type
-                    var type = object.get('type');
+                    // get the simple JSON object that represents the label
+                    var labelJSONObject = this.getLabelJSONObjectFromCircle(object);
 
-                    if (type === 'circle') {
-                        /*
-                         * the object is a circle which contains all the data
-                         * for a label
-                         */
-
-                        // get the simple JSON object that represents the label
-                        var labelJSONObject = this.getLabelJSONObjectFromCircle(object);
-
-                        if (labelJSONObject != null) {
-                            // add the object to our array of labels
-                            labels.push(labelJSONObject);
-                        }
+                    if (labelJSONObject != null) {
+                        // add the object to our array of labels
+                        labels.push(labelJSONObject);
                     }
                 }
             }
@@ -2089,13 +2089,23 @@ class LabelController {
      * Delete a label in the authoring view
      * @param index the index of the label in the labels array
      */
-    authoringDeleteLabelClicked(index) {
+    authoringDeleteLabelClicked(index, label) {
 
-        // delete the label from the array
-        this.authoringComponentContent.labels.splice(index, 1);
+        // get the label text
+        var selectedLabelText = label.text;
 
-        // save the project
-        this.authoringViewComponentChanged();
+        // ask the author if they are sure they want to delete this label
+        var answer = confirm(this.$translate('label.areYouSureYouWantToDeleteThisLabel', { selectedLabelText: selectedLabelText }));
+
+        if (answer) {
+            // the author answered yes to delete the label
+
+            // delete the label from the array
+            this.authoringComponentContent.labels.splice(index, 1);
+
+            // save the project
+            this.authoringViewComponentChanged();
+        }
     }
 
     /**
@@ -2473,6 +2483,133 @@ class LabelController {
         // the authoring component content has changed so we will save the project
         this.authoringViewComponentChanged();
     }
+
+    /**
+     * Save the starter labels from the component authoring preview
+     */
+    saveStarterLabels() {
+
+        // ask the author if they are sure they want to save the starter labels
+        var answer = confirm(this.$translate('label.areYouSureYouWantToSaveTheStarterLabels'));
+
+        if (answer) {
+            // the author answered yes to save the starter labels
+
+            // get the labels in the component authoring preview
+            var labels = this.getLabels();
+
+            /*
+             * make a copy of the labels so we don't run into any referencing issues
+             * later
+             */
+            var starterLabels = this.UtilService.makeCopyOfJSONObject(labels);
+
+            // sort the labels alphabetically by their text
+            starterLabels.sort(this.labelTextComparator);
+
+            // set the labels
+            this.authoringComponentContent.labels = starterLabels;
+
+            // the authoring component content has changed so we will save the project
+            this.authoringViewComponentChanged();
+        }
+    }
+
+    /**
+     * A comparator used to sort labels alphabetically
+     * It should be used like labels.sort(this.labelTextComparator);
+     * @param labelA a label object
+     * @param labelB a label object
+     * @return -1 if labelA comes before labelB
+     * 1 if labelB comes after labelB
+     * 0 of the labels are equal
+     */
+    labelTextComparator(labelA, labelB) {
+
+        if (labelA.text < labelB.text) {
+            // the labelA text comes before the labelB text alphabetically
+            return -1;
+        } else if (labelA.text > labelB.text) {
+            // the labelA text comes after the labelB text alphabetically
+            return 1;
+        } else {
+            /*
+             * the labelA text is the same as the labelB text so we will
+             * try to break the tie by looking at the color
+             */
+
+            if (labelA.color < labelB.color) {
+                // the labelA color text comes before the labelB color text alphabetically
+                return -1;
+            } else if (labelA.color > labelB.color) {
+                // the labelA color text comes after the labelB color text alphabetically
+                return 1;
+            } else {
+                /*
+                 * the labelA color text is the same as the labelB color text so
+                 * we will try to break the tie by looking at the pointX
+                 */
+
+                if (labelA.pointX < labelB.pointX) {
+                    // the labelA pointX is smaller than the labelB pointX
+                    return -1;
+                } else if (labelA.pointX > labelB.pointX) {
+                    // the labelA pointX is larger than the labelB pointX
+                    return 1;
+                } else {
+                    /*
+                     * the labelA pointX is the same as the labelB pointX so
+                     * we will try to break the tie by looking at the pointY
+                     */
+
+                    if (labelA.pointY < labelB.pointY) {
+                        // the labelA pointY is smaller than the labelB pointY
+                        return -1;
+                    } else if (labelA.pointY > labelB.pointY) {
+                        // the labelA pointY is larger than the labelB pointY
+                        return 1;
+                    } else {
+                        /*
+                         * all the label values are the same between labelA
+                         * and labelB
+                         */
+                        return 0;
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Delete all the starter labels
+     */
+    deleteStarterLabels() {
+
+        /*
+         * ask the author if they are sure they want to delete all the starter
+         * labels
+         */
+        var answer = confirm(this.$translate('label.areYouSureYouWantToDeleteAllTheStarterLabels'));
+
+        if (answer) {
+            // the author answered yes to delete
+
+            // clear the labels array
+            this.authoringComponentContent.labels = [];
+
+            // the authoring component content has changed so we will save the project
+            this.authoringViewComponentChanged();
+        }
+    }
+
+    /**
+     * Open a webpage in a new tab that shows a lot of the javascript colors
+     */
+    openColorViewer() {
+
+        // open the webpage in a new tab
+        this.$window.open('http://www.javascripter.net/faq/colornam.htm');
+    }
 }
 
 LabelController.$inject = [
@@ -2483,6 +2620,7 @@ LabelController.$inject = [
     '$rootScope',
     '$scope',
     '$timeout',
+    '$window',
     'AnnotationService',
     'ConfigService',
     'LabelService',
