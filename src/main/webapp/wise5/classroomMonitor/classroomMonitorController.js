@@ -29,15 +29,15 @@ var ClassroomMonitorController = function () {
 
         this.$translate = this.$filter('translate');
 
-        this.projectName = this.ProjectService.getProjectTitle();
+        this.projectTitle = this.ProjectService.getProjectTitle();
         this.runId = this.ConfigService.getRunId();
 
         this.numberProject = true; // TODO: make dynamic or remove
 
         this.menuOpen = false; // boolean to indicate whether monitor nav menu is open
         this.showSideMenu = true; // boolean to indicate whether to show the monitor side menu
-        this.showMonitorToolbar = true; // boolean to indicate whether to show the monitor toolbar
-        this.showStepToolbar = false; // boolean to indicate whether to show the step toolbar
+        this.showToolbar = true; // boolean to indicate whether to show the monitor toolbar
+        this.showStepTools = false; // boolean to indicate whether to show the step toolbar
 
         // ui-views and their corresponding names, labels, and icons
         this.views = {
@@ -85,9 +85,10 @@ var ClassroomMonitorController = function () {
             }
         };
 
+        // alert user when inactive for a long time
         this.$scope.$on('showSessionWarning', function () {
             // Appending dialog to document.body
-            var confirm = $mdDialog.confirm().parent(angular.element(document.body)).title('Session Timeout').content('You have been inactive for a long time. Do you want to stay logged in?').ariaLabel('Session Timeout').ok('YES').cancel('No');
+            var confirm = $mdDialog.confirm().parent(angular.element(document.body)).title(_this.$translate('SESSION_TIMEOUT')).content(_this.$translate('SESSION_TIMEOUT_MESSAGE')).ariaLabel(_this.$translate('SESSION_TIMEOUT')).ok(_this.$translate('YES')).cancel(_this.$translate('NO'));
             $mdDialog.show(confirm).then(function () {
                 _this.SessionService.renewSession();
             }, function () {
@@ -95,7 +96,7 @@ var ClassroomMonitorController = function () {
             });
         });
 
-        // alert user when inactive for a long time
+        // alert user when server is going to be updated
         this.$scope.$on('showRequestLogout', function (ev) {
             var alert = $mdDialog.confirm().parent(angular.element(document.body)).title(translations.serverUpdate).textContent(_this.$translate('serverUpdateRequestLogoutMessage')).ariaLabel(_this.$translate('serverUpdate')).targetEvent(ev).ok(_this.$translate('ok'));
 
@@ -114,19 +115,14 @@ var ClassroomMonitorController = function () {
             _this.processUI();
         });
 
-        // update UI items; TODO: remove eventually
+        // TODO: make dynamic, set somewhere like in config?
+        this.logoPath = this.ProjectService.getThemePath() + '/images/WISE-logo-ffffff.svg';
+
         this.processUI();
 
         this.themePath = this.ProjectService.getThemePath();
 
         this.notifications = this.NotificationService.notifications;
-        // watch for changes in notifications
-        this.$scope.$watch(function () {
-            return _this.NotificationService.notifications.length;
-        }, function (newValue, oldValue) {
-            _this.notifications = _this.NotificationService.notifications;
-            _this.newNotifications = _this.getNewNotifications();
-        });
 
         // save event when classroom monitor session is started
         var context = "ClassroomMonitor",
@@ -141,103 +137,34 @@ var ClassroomMonitorController = function () {
 
     /**
      * Update UI items based on state, show or hide relevant menus and toolbars
-     * TODO: remove/rework this and put items in their own ui states
+     * TODO: remove/rework this and put items in their own ui states?
      */
 
 
     _createClass(ClassroomMonitorController, [{
         key: 'processUI',
         value: function processUI() {
-            if (this.$state.$current.name === 'root.nodeProgress') {
+            var viewName = this.$state.$current.name;
+            this.currentViewName = this.views[viewName].name;
+
+            if (viewName === 'root.nodeProgress') {
                 var nodeId = this.$state.params.nodeId;
-                var showMenu = true;
-                var showMonitorToolbar = true;
-                var showStepToolbar = false;
-                if (nodeId) {
-                    if (this.ProjectService.isApplicationNode(nodeId)) {
-                        showMenu = false;
-                        showMonitorToolbar = false;
-                        showStepToolbar = true;
-                    }
-                }
-                this.showSideMenu = showMenu;
-                this.showMonitorToolbar = showMonitorToolbar;
-                this.showStepToolbar = showStepToolbar;
-            }
-        }
-    }, {
-        key: 'hasNewNotifications',
-
-
-        /**
-         * Returns true iff there are new notifications
-         * TODO: move to TeacherDataService
-         */
-        value: function hasNewNotifications() {
-            return this.newNotifications.length > 0;
-        }
-
-        /**
-         * Returns all teacher notifications that have not been dismissed yet
-         * TODO: move to TeacherDataService, take into account shared teacher users
-         */
-
-    }, {
-        key: 'getNewNotifications',
-        value: function getNewNotifications() {
-            var _this2 = this;
-
-            return this.notifications.filter(function (notification) {
-                return notification.timeDismissed == null && notification.toWorkgroupId === _this2.ConfigService.getWorkgroupId();
-            });
-        }
-
-        /**
-         * Show confirmation dialog before dismissing all notifications
-         */
-
-    }, {
-        key: 'confirmDismissAllNotifications',
-        value: function confirmDismissAllNotifications(ev) {
-            var _this3 = this;
-
-            if (this.getNewNotifications().length > 1) {
-                var confirm = this.$mdDialog.confirm().parent(angular.element($('._md-open-menu-container._md-active'))) // TODO: hack for now (showing md-dialog on top of md-menu)
-                .ariaLabel(this.$translate('dismissNotificationsTitle')).textContent(this.$translate('dismissNotificationsMessage')).targetEvent(ev).ok(this.$translate('yes')).cancel(this.$translate('no'));
-
-                this.$mdDialog.show(confirm).then(function () {
-                    _this3.dismissAllNotifications();
-                });
+                this.showStepTools = this.ProjectService.isApplicationNode(nodeId);
             } else {
-                this.dismissAllNotifications();
+                this.showStepTools = false;
             }
         }
+    }, {
+        key: 'toggleMenu',
+
 
         /**
-         * Dismiss all new notifications
+         * Toggle the classroom monitor main menu
          */
-
-    }, {
-        key: 'dismissAllNotifications',
-        value: function dismissAllNotifications() {
-            var _this4 = this;
-
-            var newNotifications = this.getNewNotifications();
-            newNotifications.map(function (newNotification) {
-                _this4.dismissNotification(newNotification);
-            });
+        value: function toggleMenu() {
+            this.menuOpen = !this.menuOpen;
         }
 
-        /**
-         * Dismiss the specified notification
-         * @param notification
-         */
-
-    }, {
-        key: 'dismissNotification',
-        value: function dismissNotification(notification) {
-            this.NotificationService.dismissNotification(notification);
-        }
         /**
          * The user has moved the mouse so we will notify the Session Service
          * so that it can refresh the session
