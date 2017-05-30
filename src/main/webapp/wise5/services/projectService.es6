@@ -6592,7 +6592,17 @@ class ProjectService {
                     var connectedComponent = connectedComponents[c];
 
                     if (connectedComponent != null) {
-                        if (connectedComponentId === connectedComponent.id) {
+
+                        /*
+                         * check if the connected component id matches the one
+                         * we are looking for. connectedComponent.id is the old
+                         * field we used to store the component id in so we will
+                         * look for that field for the sake of backwards
+                         * compatibility. connectedComponent.componentId is the
+                         * new field we store the component id in.
+                         */
+                        if (connectedComponentId === connectedComponent.id ||
+                            connectedComponentId === connectedComponent.componentId) {
                             // we have found the connected component id we are looking for
                             result = true;
                             break;
@@ -6626,9 +6636,17 @@ class ProjectService {
                     var connectedComponent = connectedComponents[c];
 
                     if (connectedComponent != null) {
-                        var tempComponentId = connectedComponent.id;
 
-                        if (componentId === tempComponentId) {
+                        /*
+                         * check if the connected component id matches the one
+                         * we are looking for. connectedComponent.id is the old
+                         * field we used to store the component id in so we will
+                         * look for that field for the sake of backwards
+                         * compatibility. connectedComponent.componentId is the
+                         * new field we store the component id in.
+                         */
+                        if (componentId === connectedComponent.id ||
+                            componentId === connectedComponent.componentId) {
                             // we have found the connected component we are looking for
                             connectedComponentParams = connectedComponent;
                         }
