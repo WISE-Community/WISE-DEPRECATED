@@ -1,4 +1,27 @@
 {
     "preview": "Προεπισκόπηση",
-    "previewProject": "Προεπισκόπηση έργου"
+    "previewProject": "Προεπισκόπηση έργου",
+    "activityTitle": "Τίτλος Δραστηριότητας",
+    "action": "Ενέργεια",
+    "addConstraint": "Πρόσθεση Περιορισμού",
+    "addNewTransition": "Πρόσθεσε Νέο Μονοπάτι",
+    "areYouSureYouWantToDeleteThisFile": "Θέλετε σίγουρα να διαγράψετε αυτό το αρχείο;",
+    "authoringTool": "Εργαλείο Συγγραφής",
+    "branch": "Κλάδος",
+    "branchPath": "Μονοπάτι Κλάδου",
+    "button": "Κουμπί",
+    "choices": "Επιλογές",
+    "chooseNewLocation": "Διάλεξε τη νέα τοποθεσία",
+    "chooseAStep": "Διάλεξε ένα Βήμα",
+    "chooseStep": "Διάλεξε Βήμα",
+    "chooseStepsInPath": "Διάλεξε Βήματα στο Μονοπάτι",
+    "closeProject": "Κλείσιμο Ενότητας",
+    "content": "Περιεχόμενο",
+    "confirmUndoLastChange": "Θέλετε σίγουρα να αναιρέσετε την τελευταία αλλαγή;",
+    "constraint": "Περιορισμός",
+    "constraints": "Περιορισμοί",
+    "copy": "Αντιγραφή",
+    "create": "Δημιουργία",
+    "createBranch": "Δημιουργία Κλάδου",
+    "createNewActivity": "Δημιουργία Νέας Δραστηριότητας"
 }
