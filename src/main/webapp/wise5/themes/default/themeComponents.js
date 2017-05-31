@@ -8,6 +8,10 @@ var _navItemController = require('./themeComponents/navItem/navItemController');
 
 var _navItemController2 = _interopRequireDefault(_navItemController);
 
+var _nodeIcon = require('./themeComponents/nodeIcon/nodeIcon');
+
+var _nodeIcon2 = _interopRequireDefault(_nodeIcon);
+
 var _stepToolsController = require('./themeComponents/stepTools/stepToolsController');
 
 var _stepToolsController2 = _interopRequireDefault(_stepToolsController);
@@ -47,7 +51,7 @@ var StepTools = {
 
 var ThemeComponents = angular.module('theme.components', []);
 
-ThemeComponents.controller(_navItemController2.default.name, _navItemController2.default).controller(_stepToolsController2.default.name, _stepToolsController2.default).controller(_nodeStatusIconController2.default.name, _nodeStatusIconController2.default).component('navItem', NavItem).component('nodeStatusIcon', NodeStatusIcon).component('stepTools', StepTools);
+ThemeComponents.controller(_navItemController2.default.name, _navItemController2.default).controller(_stepToolsController2.default.name, _stepToolsController2.default).controller(_nodeStatusIconController2.default.name, _nodeStatusIconController2.default).component('navItem', NavItem).component('nodeIcon', _nodeIcon2.default).component('nodeStatusIcon', NodeStatusIcon).component('stepTools', StepTools);
 
 exports.default = ThemeComponents;
 //# sourceMappingURL=themeComponents.js.map

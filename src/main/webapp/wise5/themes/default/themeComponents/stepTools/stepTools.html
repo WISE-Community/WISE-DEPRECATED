@@ -3,10 +3,7 @@
         <!--<md-button aria-label="Project content menu" class="md-icon-button" ng-click="stepToolsCtrl.toggleStepNav()">
             <md-icon> menu </md-icon>
         </md-button>-->
-        <img ng-if="stepToolsCtrl.nodeStatus.icon.type === 'img'" ng-animate-ref="{{ stepToolsCtrl.nodeId }}" class="md-18 avatar node-avatar" ng-src="{{stepToolsCtrl.nodeStatus.icon.imgSrc}}" alt="{{stepToolsCtrl.nodeStatus.icon.imgAlt}}" />
-        <div ng-if="stepToolsCtrl.nodeStatus.icon.type === 'font'" ng-animate-ref="{{ stepToolsCtrl.nodeId }}" style="background-color: {{stepToolsCtrl.nodeStatus.icon.color}};" class="md-18 avatar avatar--icon node-avatar">
-            <md-icon md-font-set="{{stepToolsCtrl.nodeStatus.icon.fontSet}}" class="md-18 md-light node-icon" md-theme="default">{{stepToolsCtrl.nodeStatus.icon.fontName}}</md-icon>
-        </div>
+        <node-icon node-id="stepToolsCtrl.nodeId" size="18" icon="stepToolsCtrl.nodeStatus.icon"></node-icon>
         <!--<span>{{ stepToolsCtrl.showPosition ? stepToolsCtrl.getNodePositionById(stepToolsCtrl.nodeId) + ': ' : '' }}{{ stepToolsCtrl.getNodeTitleByNodeId(stepToolsCtrl.nodeId) }}</span>-->
 
         <md-select id="stepSelectMenu" md-theme="default" class="node-select md-subhead"
@@ -19,10 +16,7 @@
                        value="{{ item.$key }}"
                        ng-class="{'node-select-option--group': stepToolsCtrl.isGroupNode(item.$key), 'node-select-option--node': !stepToolsCtrl.isGroupNode(item.$key)}">
                 <div layout="row" layout-align="start center">
-                    <img class="node-select__icon md-18 avatar node-avatar" ng-class="stepToolsCtrl.isGroupNode(item.$key) ? 'avatar--square' : ''" ng-if="stepToolsCtrl.nodeStatuses[item.$key].icon.type === 'img'" ng-src="{{stepToolsCtrl.nodeStatuses[item.$key].icon.imgSrc}}" alt="{{stepToolsCtrl.nodeStatuses[item.$key].icon.imgAlt}}" />
-                    <div class="node-select__icon md-18 avatar avatar--icon node-avatar" ng-class="stepToolsCtrl.isGroupNode(item.$key) ? 'avatar--square' : ''" ng-if="stepToolsCtrl.nodeStatuses[item.$key].icon.type === 'font'" style="background-color: {{stepToolsCtrl.nodeStatuses[item.$key].icon.color}};">
-                        <md-icon md-font-set="{{stepToolsCtrl.nodeStatuses[item.$key].icon.fontSet}}" class="md-18 md-light node-icon" md-theme="default">{{stepToolsCtrl.nodeStatuses[item.$key].icon.fontName}}</md-icon>&nbsp;
-                    </div>
+                    <node-icon node-id="item.$key" size="18" icon="stepToolsCtrl.nodeStatuses[item.$key].icon" custom-class="'node-select__icon'"></node-icon>
                     <span class="node-select__text">{{ stepToolsCtrl.showPosition ? stepToolsCtrl.getNodePositionById(item.$key) + ': ' : '' }}{{ stepToolsCtrl.getNodeTitleByNodeId(item.$key) }}</span>
                     <node-status-icon node-id="item.$key" custom-class="'node-select__status'"></node-status-icon>
                 </div>

@@ -22,6 +22,10 @@ var _nodeCompletionIcon = require('./nodeCompletionIcon/nodeCompletionIcon');
 
 var _nodeCompletionIcon2 = _interopRequireDefault(_nodeCompletionIcon);
 
+var _nodeIcon = require('./nodeIcon/nodeIcon');
+
+var _nodeIcon2 = _interopRequireDefault(_nodeIcon);
+
 var _notificationsMenu = require('./notificationsMenu/notificationsMenu');
 
 var _notificationsMenu2 = _interopRequireDefault(_notificationsMenu);
@@ -60,6 +64,7 @@ Shared.component('alertStatusIcon', _alertStatusIcon2.default);
 Shared.component('mainMenu', _mainMenu2.default);
 Shared.component('notificationsMenu', _notificationsMenu2.default);
 Shared.component('nodeCompletionIcon', _nodeCompletionIcon2.default);
+Shared.component('nodeIcon', _nodeIcon2.default);
 Shared.component('periodSelect', _periodSelect2.default);
 Shared.component('sideMenu', _sideMenu2.default);
 Shared.component('toolbar', _toolbar2.default);

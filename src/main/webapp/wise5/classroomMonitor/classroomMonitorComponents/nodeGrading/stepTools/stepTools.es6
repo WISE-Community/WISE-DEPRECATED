@@ -31,7 +31,6 @@ class StepToolsController {
         var nodeId = this.TeacherDataService.getCurrentNodeId();
         if (!this.ProjectService.isGroupNode(nodeId)) {
             this.nodeId = nodeId;
-            this.icon = this.getIcon(this.nodeId);
 
             this.prevId = this.NodeService.getPrevNodeId();
             this.nextId = null;
@@ -42,10 +41,6 @@ class StepToolsController {
             // model variable for selected node id
             this.toNodeId = this.nodeId;
         }
-    }
-
-    getIcon(nodeId) {
-        return this.ProjectService.getNodeIconByNodeId(nodeId);
     }
 
     getSelectedText() {
@@ -91,26 +86,18 @@ const StepTools = {
     },
     template:
         `<div layout="row" layout-align="center center">
-            <img ng-if="$ctrl.icon.type === 'img'" ng-animate-ref="{{ $ctrl.nodeId }}" class="md-18 avatar node-avatar" ng-src="{{$ctrl.icon.imgSrc}}" alt="{{$ctrl.icon.imgAlt}}" />
-            <div ng-if="$ctrl.icon.type === 'font'" ng-animate-ref="{{ $ctrl.nodeId }}" style="background-color: {{$ctrl.icon.color}};" class="md-18 avatar avatar--icon node-avatar">
-                <md-icon md-font-set="{{$ctrl.icon.fontSet}}" class="md-18 md-light node-icon" md-theme="default">{{$ctrl.icon.fontName}}</md-icon>
-            </div>
-
+            <node-icon node-id="$ctrl.nodeId" size="18"></node-icon>
             <md-select id="stepSelectMenu" md-theme="default" class="node-select md-subhead"
                        aria-label="{{ 'selectAStep' | translate }}"
                        ng-model="$ctrl.toNodeId"
                        ng-change="$ctrl.toNodeIdChanged()"
                        md-selected-text="$ctrl.getSelectedText()">
                 <md-option ng-repeat="item in $ctrl.idToOrder | toArray | orderBy : 'order'"
-                           ng-init="icon = $ctrl.getIcon(item.$key)"
                            ng-if="item.order !== 0"
                            value="{{ item.$key }}"
                            ng-class="{'node-select-option--group': $ctrl.isGroupNode(item.$key), 'node-select-option--node': !$ctrl.isGroupNode(item.$key)}">
                     <div layout="row" layout-align="start center">
-                        <img class="node-select__icon md-18 avatar node-avatar" ng-class="$ctrl.isGroupNode(item.$key) ? 'avatar--square' : ''" ng-if="icon.type === 'img'" ng-src="{{icon.imgSrc}}" alt="{{icon.imgAlt}}" />
-                        <div class="node-select__icon md-18 avatar avatar--icon node-avatar" ng-class="$ctrl.isGroupNode(item.$key) ? 'avatar--square' : ''" ng-if="icon.type === 'font'" style="background-color: {{icon.color}};">
-                            <md-icon md-font-set="{{icon.fontSet}}" class="md-18 md-light node-icon" md-theme="default">{{icon.fontName}}</md-icon>&nbsp;
-                        </div>
+                        <node-icon node-id="item.$key" size="18" custom-class="'node-select__icon'"></node-icon>
                         <span class="node-select__text">{{ $ctrl.showPosition && $ctrl.getNodePositionById(item.$key) ? $ctrl.getNodePositionById(item.$key) + ': ' : '' }}{{ $ctrl.getNodeTitleByNodeId(item.$key) }}</span>
                     </div>
                 </md-option>

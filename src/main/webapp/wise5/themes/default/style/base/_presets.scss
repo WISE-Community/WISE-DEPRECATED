@@ -215,9 +215,12 @@ a {
 
 // Rules for sizing avatar backgrounds (when using a child md-icon)
 .avatar--icon {
-  padding: $avatar-icon-padding;
   background-color: color('gray-light');
   white-space: normal !important;
+
+  &:not(.md-avatar) {
+      padding: $avatar-icon-padding;
+  }
 
   &.md-18 {
     height: 18px;

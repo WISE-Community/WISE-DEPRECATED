@@ -4,10 +4,7 @@
                  class="nav-item--card"
                  ng-class="{'nav-item--card--group':navitemCtrl.isGroup, 'expanded md-whiteframe-z3':navitemCtrl.expanded}">
             <md-card-content class="nav-item--card__content" ng-click="navitemCtrl.itemClicked($event)" role="button" md-ink-ripple layout="row">
-                <img ng-if="navitemCtrl.nodeStatus.icon.type === 'img'" ng-animate-ref="{{ navitemCtrl.nodeId }}" ng-class="navitemCtrl.isGroup ? 'avatar--square' : ''" class="md-36 avatar nav-item__avatar" ng-src="{{navitemCtrl.nodeStatus.icon.imgSrc}}" alt="{{navitemCtrl.nodeStatus.icon.imgAlt}}" />
-                <div ng-if="navitemCtrl.nodeStatus.icon.type === 'font'" ng-animate-ref="{{ navitemCtrl.nodeId }}" ng-class="navitemCtrl.isGroup ? 'avatar--square' : ''" style="background-color: {{navitemCtrl.nodeStatus.icon.color}};" class="md-36 avatar avatar--icon nav-item__avatar">
-                    <md-icon md-font-set="{{navitemCtrl.nodeStatus.icon.fontSet}}" class="md-36 md-light">{{navitemCtrl.nodeStatus.icon.fontName}}</md-icon>
-                </div>
+                <node-icon node-id="navitemCtrl.nodeId" size="36" icon="navitemCtrl.nodeStatus.icon"></node-icon>
                 <div class="md-title nav-item__title" style="color: {{navitemCtrl.nodeStatus.icon.color}};" flex>
                     <span>{{ navitemCtrl.nodeTitle }}</span>
                 </div>
@@ -62,10 +59,7 @@
                       class="md-long-text noright list-item md-whiteframe-z1"
                       aria-label="{{navitemCtrl.planningMode && navitemCtrl.isPlanningInstance ? 'Move' : 'Go to'}} {{navitemCtrl.nodeTitle}}"
                       ng-class="{'nav-item--list--group':navitemCtrl.isGroup, 'nav-item--planning-mode': navitemCtrl.planningMode && navitemCtrl.isPlanningInstance}">
-            <img ng-if="navitemCtrl.nodeStatus.icon.type === 'img'" ng-class="navitemCtrl.isGroup ? 'avatar--square' : ''" class="md-avatar" ng-src="{{navitemCtrl.nodeStatus.icon.imgSrc}}" alt="{{navitemCtrl.nodeStatus.icon.imgAlt}}" />
-            <div ng-if="navitemCtrl.nodeStatus.icon.type === 'font'" ng-class="navitemCtrl.isGroup ? 'avatar--square' : ''" style="background-color: {{navitemCtrl.nodeStatus.icon.color}};" class="md-avatar">
-                <md-icon md-font-set="{{navitemCtrl.nodeStatus.icon.fontSet}}" class="md-light">{{navitemCtrl.nodeStatus.icon.fontName}}</md-icon>
-            </div>
+            <node-icon node-id="navitemCtrl.nodeId" icon="navitemCtrl.nodeStatus.icon" custom-class="'md-avatar'"></node-icon>
             <p>{{ navitemCtrl.nodeTitle }} <node-status-icon node-id="navitemCtrl.nodeId" class="status-icon"></node-status-icon><md-icon class="status-icon" ng-if="!navitemCtrl.nodeStatus.isVisitable" aria-label="Item is locked"> lock </md-icon></p>
             <md-icon class="md-secondary animate-show" ng-if="navitemCtrl.isParentGroupPlanning"
                      aria-label="Delete Item"
