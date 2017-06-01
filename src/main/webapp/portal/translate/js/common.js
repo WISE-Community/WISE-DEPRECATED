@@ -254,19 +254,18 @@ function buildTable(projectType) {
 function getTranslationString(obj,projectType) {
     var wise5ProjectTypes = ["common5", "vle5", "authoringTool5", "classroomMonitor5"];
     if (wise5ProjectTypes.indexOf(projectType) > -1 || projectType.endsWith("5")) { 
-	// this is a WISE5 project
-	for (key in obj) {
-            if (typeof obj[key] === "object") {
-	      obj[key] = addSlashes(obj[key].value);
-	    }
-	}
-        return FormatJSON(obj);
+		// this is a WISE5 project
+		var newObj = {};
+		for (key in obj) {
+            newObj[key] = addSlashes(obj[key]);
+		}
+		return FormatJSON(newObj);
     } else if ("Properties" == getFileType(projectType)) {
-	return getTranslationString_Properties(obj);
+		return getTranslationString_Properties(obj);
     } else {
-	return getTranslationString_JSON(obj);
-    };
-};
+		return getTranslationString_JSON(obj);
+    }
+}
 
 /**
  * Synchronously retrieves specified locale properties mapping file
