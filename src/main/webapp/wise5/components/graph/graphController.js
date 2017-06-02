@@ -367,7 +367,7 @@ var GraphController = function () {
                     this.isResetSeriesButtonVisible = true;
                     this.isSelectSeriesVisible = true;
                     this.setSeries(this.UtilService.makeCopyOfJSONObject(this.componentContent.series));
-                    this.setActiveSeriesByIndex(0);
+                    this.setDefaultActiveSeries();
                     this.trials = [];
                     this.newTrial();
                     this.setupGraph();
@@ -1001,10 +1001,7 @@ var GraphController = function () {
             // add the event that will remove a point when clicked
             //this.addClickToRemovePointEvent(series);
 
-            if (this.activeSeries == null && series.length > 0) {
-                // the active series has not been set so we will set the active series to the first series
-                this.setActiveSeriesByIndex(0);
-            }
+            this.setDefaultActiveSeries();
 
             // loop through all the series and
             for (var s = 0; s < series.length; s++) {
@@ -1289,6 +1286,12 @@ var GraphController = function () {
 
                                             // notify the controller that the student data has changed
                                             thisGraphController.studentDataChanged();
+                                        } else {
+                                            /*
+                                             * the student is trying to add a point to a series
+                                             * that can't be edited
+                                             */
+                                            alert(thisGraphController.$translate('graph.youCanNotEditThisSeriesPleaseChooseASeriesThatCanBeEdited'));
                                         }
                                     }
                                 }
@@ -3467,6 +3470,12 @@ var GraphController = function () {
             // get the current number of trials
             var trialCount = this.trials.length;
 
+            /*
+             * get the index of the active series so that we can make the series
+             * at the given index active in the new trial
+             */
+            var activeSeriesIndex = this.getSeriesIndex(this.activeSeries);
+
             // make a copy of the original series (most likely blank with no points)
             var series = this.UtilService.makeCopyOfJSONObject(this.componentContent.series);
 
@@ -3544,14 +3553,20 @@ var GraphController = function () {
             // set the series to be displayed
             this.series = series;
 
-            var activeSeriesIndex = 0;
-
-            if (this.activeSeries != null) {
-                // get the index of the active series
-                activeSeriesIndex = this.getSeriesIndex(this.activeSeries);
+            if (this.activeSeries == null) {
+                /*
+                 * there was no previous active series so we will set the active
+                 * series to the first editable series or if there are no editable
+                 * series, set the active series to the first series
+                 */
+                this.setDefaultActiveSeries();
+            } else {
+                /*
+                 * set the active series to the same series at the index that was
+                 * previously active
+                 */
+                this.setActiveSeriesByIndex(activeSeriesIndex);
             }
-
-            this.setActiveSeriesByIndex(activeSeriesIndex);
 
             this.setTrialIdsToShow();
         }
@@ -5108,6 +5123,49 @@ var GraphController = function () {
 
                 // the authoring component content has changed so we will save the project
                 this.authoringViewComponentChanged();
+            }
+        }
+
+        /**
+         * Set the active series to the first series that the student can edit
+         * or if there are no series the student can edit, set the active series
+         * to the first series
+         */
+
+    }, {
+        key: 'setDefaultActiveSeries',
+        value: function setDefaultActiveSeries() {
+            if (this.activeSeries == null && this.series.length > 0) {
+                /*
+                 * the active series has not been set so we will set the active
+                 * series to the first series that the student can edit
+                 */
+
+                // loop through all the series
+                for (var s = 0; s < this.series.length; s++) {
+
+                    var tempSeries = this.series[s];
+
+                    if (tempSeries != null) {
+
+                        if (tempSeries.canEdit) {
+                            /*
+                             * the student can edit this series so we will make it
+                             * the active series
+                             */
+                            this.setActiveSeriesByIndex(s);
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if (this.activeSeries == null && this.series.length > 0) {
+                /*
+                 * we did not find any series that the student can edit so we will
+                 * just set the active series to be the first series
+                 */
+                this.setActiveSeriesByIndex(0);
             }
         }
     }]);

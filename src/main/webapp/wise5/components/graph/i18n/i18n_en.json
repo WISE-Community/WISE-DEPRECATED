@@ -67,5 +67,6 @@
     "graph.yAxisUnits": "Y Axis Units",
     "graph.yColumn": "Y Column",
     "graph.yMax": "Y Max",
-    "graph.yMin": "Y Min"
+    "graph.yMin": "Y Min",
+    "graph.youCanNotEditThisSeriesPleaseChooseASeriesThatCanBeEdited": "You can not edit this series. Please choose a series that can be edited."
 }
