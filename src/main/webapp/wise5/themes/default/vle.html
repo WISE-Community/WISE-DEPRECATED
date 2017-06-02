@@ -13,18 +13,20 @@
 </style>
 
 <disable-delete-keypress>
-    <div ng-controller="ThemeController as themeCtrl" role="main" layout="column" layout-fill
-         ng-mousemove="themeCtrl.mouseMoved()"
-         ng-class="{'notebook-enabled': vleController.notebookEnabled}">
-        <ng-include src="vleController.themePath + '/templates/topbar.html'"></ng-include>
-        <step-tools class="layout-tools" show-position="themeCtrl.numberProject"
-                    ng-show="themeCtrl.layoutState === 'node'"></step-tools>
-        <md-content id="content" flex role="main" ui-scrollpoint-target
-                    ng-class="{'l-nav': themeCtrl.layoutState === 'nav', 'l-node': themeCtrl.layoutState === 'node'}" layout="column">
-            <div id="nav" ng-include="vleController.themePath + '/navigation/navigation.html'" ng-show="themeCtrl.layoutState === 'nav'"></div>
-            <div id="node" ng-cloak ui-view="nodeView" ng-if="themeCtrl.layoutState === 'node'"></div>
-        </md-content>
-        <global-annotations></global-annotations>
-        <notebook></notebook>
-    </div>
+    <listen-for-delete-keypress>
+        <div ng-controller="ThemeController as themeCtrl" role="main" layout="column" layout-fill
+             ng-mousemove="themeCtrl.mouseMoved()"
+             ng-class="{'notebook-enabled': vleController.notebookEnabled}">
+            <ng-include src="vleController.themePath + '/templates/topbar.html'"></ng-include>
+            <step-tools class="layout-tools" show-position="themeCtrl.numberProject"
+                        ng-show="themeCtrl.layoutState === 'node'"></step-tools>
+            <md-content id="content" flex role="main" ui-scrollpoint-target
+                        ng-class="{'l-nav': themeCtrl.layoutState === 'nav', 'l-node': themeCtrl.layoutState === 'node'}" layout="column">
+                <div id="nav" ng-include="vleController.themePath + '/navigation/navigation.html'" ng-show="themeCtrl.layoutState === 'nav'"></div>
+                <div id="node" ng-cloak ui-view="nodeView" ng-if="themeCtrl.layoutState === 'node'"></div>
+            </md-content>
+            <global-annotations></global-annotations>
+            <notebook></notebook>
+        </div>
+    </listen-for-delete-keypress>
 </disable-delete-keypress>

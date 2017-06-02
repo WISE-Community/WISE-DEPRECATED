@@ -648,9 +648,6 @@ var GraphController = function () {
                 } else {
                     this.setSaveMessage(this.$translate('SAVED'), clientSaveTime);
                 }
-
-                // re-draw the graph
-                this.setupGraph();
             }
         }));
 
@@ -748,9 +745,6 @@ var GraphController = function () {
 
                         // remember the file name
                         this.scope.graphController.setUploadedFileName(this.fileName);
-
-                        // redraw the graph
-                        this.scope.graphController.setupGraph();
 
                         /*
                          * notify the controller that the student data has
@@ -865,12 +859,54 @@ var GraphController = function () {
 
     /**
      * Setup the graph
+     * @param useTimeout whether to call the setupGraphHelper() function in
+     * a timeout callback
      */
 
 
     _createClass(GraphController, [{
         key: 'setupGraph',
-        value: function setupGraph() {
+        value: function setupGraph(useTimeout) {
+            var _this2 = this;
+
+            if (useTimeout) {
+                // call the setup graph helper after a timeout
+
+                /*
+                 * clear the chart config so that the graph is completely refreshed.
+                 * we need to do this otherwise all the series will react to
+                 * mouseover but we only want the active series to react to
+                 * mouseover.
+                 */
+                this.chartConfig = {
+                    chart: {
+                        options: {
+                            chart: {}
+                        }
+                    }
+                };
+
+                /*
+                 * call the setup graph helper after a timeout. this is required
+                 * so that the graph is completely refreshed so that only the
+                 * active series will react to mouseover.
+                 */
+                this.$timeout(function () {
+                    _this2.setupGraphHelper();
+                });
+            } else {
+                // call the setup graph helper immediately
+                this.setupGraphHelper();
+            }
+        }
+
+        /**
+         * The helper function for setting up the graph
+         */
+
+    }, {
+        key: 'setupGraphHelper',
+        value: function setupGraphHelper() {
 
             // get the title
             var title = this.componentContent.title;
@@ -997,6 +1033,10 @@ var GraphController = function () {
                         tempSeries.draggableX = false;
                         tempSeries.draggableY = false;
                         tempSeries.allowPointSelect = false;
+                        tempSeries.enableMouseTracking = false;
+                        tempSeries.stickyTracking = false;
+                        tempSeries.shared = false;
+                        tempSeries.allowPointSelect = false;
                     } else if (tempSeries.canEdit && this.isActiveSeries(tempSeries)) {
                         // set the fields to allow points to be draggable
 
@@ -1010,10 +1050,18 @@ var GraphController = function () {
                         tempSeries.draggableY = true;
                         tempSeries.allowPointSelect = true;
                         tempSeries.cursor = 'move';
+                        tempSeries.enableMouseTracking = true;
+                        tempSeries.stickyTracking = false;
+                        tempSeries.shared = false;
+                        tempSeries.allowPointSelect = true;
                     } else {
                         // make the series uneditable
                         tempSeries.draggableX = false;
                         tempSeries.draggableY = false;
+                        tempSeries.allowPointSelect = false;
+                        tempSeries.enableMouseTracking = false;
+                        tempSeries.stickyTracking = false;
+                        tempSeries.shared = false;
                         tempSeries.allowPointSelect = false;
                     }
                 }
@@ -1249,6 +1297,7 @@ var GraphController = function () {
                     },
                     plotOptions: {
                         series: {
+                            dragSensitivity: 10,
                             stickyTracking: false,
                             events: {
                                 legendItemClick: function legendItemClick(event) {
@@ -1985,9 +2034,6 @@ var GraphController = function () {
                                 // set the active trial series to be the series to display
                                 this.series = this.activeTrial.series;
                             }
-
-                            // redraw the graph
-                            this.setupGraph();
                         }
                     }
 
@@ -2160,8 +2206,11 @@ var GraphController = function () {
     }, {
         key: 'activeSeriesChanged',
         value: function activeSeriesChanged() {
+
+            var useTimeoutSetupGraph = true;
+
             // the student data has changed
-            this.studentDataChanged();
+            this.studentDataChanged(useTimeoutSetupGraph);
 
             // tell the parent node that this component wants to save
             //this.$scope.$emit('componentSaveTriggered', {nodeId: this.nodeId, componentId: this.componentId});
@@ -2191,8 +2240,8 @@ var GraphController = function () {
         /**
          * Called when the student changes their work
          */
-        value: function studentDataChanged() {
-            var _this2 = this;
+        value: function studentDataChanged(useTimeoutSetupGraph) {
+            var _this3 = this;
 
             /*
              * set the dirty flags so we will know we need to save or submit the
@@ -2208,7 +2257,7 @@ var GraphController = function () {
             this.setSaveMessage('', null);
 
             // re-draw the graph
-            this.setupGraph();
+            this.setupGraph(useTimeoutSetupGraph);
 
             // get this component id
             var componentId = this.getComponentId();
@@ -2225,7 +2274,7 @@ var GraphController = function () {
             this.createComponentState(action).then(function (componentState) {
 
                 // check if a digest is in progress
-                if (!_this2.$scope.$$phase) {
+                if (!_this3.$scope.$$phase) {
                     // digest is not in progress so we can force a redraw
                     // TODO GK (from HT) this line was causing a lot of js errors ( $digest already in progress ), so I commented it out
                     // and it still seems to work. Do we need this line?
@@ -2233,7 +2282,7 @@ var GraphController = function () {
                     //this.$scope.$apply();
                 }
 
-                _this2.$scope.$emit('componentStudentDataChanged', { nodeId: _this2.nodeId, componentId: componentId, componentState: componentState });
+                _this3.$scope.$emit('componentStudentDataChanged', { nodeId: _this3.nodeId, componentId: componentId, componentState: componentState });
             });
         }
     }, {
@@ -2643,54 +2692,52 @@ var GraphController = function () {
          * @param studentAsset CSV file student asset
          */
         value: function attachStudentAsset(studentAsset) {
-            var _this3 = this;
+            var _this4 = this;
 
             if (studentAsset != null) {
                 this.StudentAssetService.copyAssetForReference(studentAsset).then(function (copiedAsset) {
                     if (copiedAsset != null) {
 
-                        _this3.StudentAssetService.getAssetContent(copiedAsset).then(function (assetContent) {
-                            var rowData = _this3.StudentDataService.CSVToArray(assetContent);
+                        _this4.StudentAssetService.getAssetContent(copiedAsset).then(function (assetContent) {
+                            var rowData = _this4.StudentDataService.CSVToArray(assetContent);
                             var params = {};
                             params.skipFirstRow = true; // first row contains header, so ignore it
                             params.xColumn = 0; // assume (for now) x-axis data is in first column
                             params.yColumn = 1; // assume (for now) y-axis data is in second column
 
-                            var seriesData = _this3.convertRowDataToSeriesData(rowData, params);
+                            var seriesData = _this4.convertRowDataToSeriesData(rowData, params);
 
                             // get the index of the series that we will put the data into
-                            var seriesIndex = _this3.series.length; // we're always appending a new series
+                            var seriesIndex = _this4.series.length; // we're always appending a new series
 
                             if (seriesIndex != null) {
 
                                 // get the series
-                                var series = _this3.series[seriesIndex];
+                                var series = _this4.series[seriesIndex];
 
                                 if (series == null) {
                                     // the series is null so we will create a series
                                     series = {};
                                     series.name = copiedAsset.fileName;
-                                    series.color = _this3.seriesColors[seriesIndex];
+                                    series.color = _this4.seriesColors[seriesIndex];
                                     series.marker = {
-                                        "symbol": _this3.seriesMarkers[seriesIndex]
+                                        "symbol": _this4.seriesMarkers[seriesIndex]
                                     };
                                     series.regression = false;
                                     series.regressionSettings = {};
                                     series.canEdit = false;
-                                    _this3.series[seriesIndex] = series;
+                                    _this4.series[seriesIndex] = series;
                                 }
 
                                 // set the data into the series
                                 series.data = seriesData;
                             }
 
-                            // render the graph
-                            _this3.setupGraph();
-
                             // the graph has changed
-                            _this3.isDirty = true;
+                            _this4.isDirty = true;
+
+                            _this4.studentDataChanged();
                         });
-                        _this3.studentDataChanged();
                     }
                 });
             }
@@ -2921,6 +2968,9 @@ var GraphController = function () {
                     // an array to hold the indexes of the selected points
                     var indexes = [];
 
+                    // get the series data
+                    var data = series.data;
+
                     // loop through all the selected points
                     for (var x = 0; x < selectedPoints.length; x++) {
 
@@ -2930,15 +2980,32 @@ var GraphController = function () {
                         // get the index of the selected point
                         index = selectedPoint.index;
 
-                        // add the index to our array
-                        indexes.push(index);
+                        // get the data point from the series data
+                        var dataPoint = data[index];
+
+                        if (dataPoint != null) {
+
+                            /*
+                             * make sure the x and y values match the selected point
+                             * that we are going to delete
+                             */
+                            if (dataPoint[0] == selectedPoint.x || dataPoint[1] == selectedPoint.y) {
+
+                                // the x and y values match
+
+                                // add the index to our array
+                                indexes.push(index);
+                            }
+                        }
                     }
 
-                    // order the array from largest to smallest
+                    /*
+                     * order the array from largest to smallest. we are doing this
+                     * so that we delete the points from the end first. if we delete
+                     * points starting from lower indexes first, then the indexes
+                     * will shift and we will end up deleting the wrong points.
+                     */
                     indexes.sort().reverse();
-
-                    // get the series data
-                    var data = series.data;
 
                     // loop through all the indexes and remove them from the series data
                     for (var i = 0; i < indexes.length; i++) {
@@ -3372,6 +3439,24 @@ var GraphController = function () {
         }
 
         /**
+         * The New Trial button was clicked by the student
+         */
+
+    }, {
+        key: 'newTrialButtonClicked',
+        value: function newTrialButtonClicked() {
+
+            // create a new trial
+            this.newTrial();
+
+            /*
+             * notify the controller that the student data has
+             * changed so that it will perform any necessary saving
+             */
+            this.studentDataChanged();
+        }
+
+        /**
          * Create a new trial
          */
 
@@ -3469,18 +3554,6 @@ var GraphController = function () {
             this.setActiveSeriesByIndex(activeSeriesIndex);
 
             this.setTrialIdsToShow();
-
-            // redraw the graph
-            this.setupGraph();
-
-            /*
-             * notify the controller that the student data has
-             * changed so that it will perform any necessary saving
-             */
-            this.studentDataChanged();
-
-            // tell the parent node that this component wants to save
-            //this.$scope.$emit('componentSaveTriggered', {nodeId: this.nodeId, componentId: this.componentId});
         }
 
         /**
@@ -3637,18 +3710,12 @@ var GraphController = function () {
                  */
                 this.setActiveSeriesByIndex(seriesIndex);
 
-                // redraw the graph
-                this.setupGraph();
+                /*
+                 * notify the controller that the student data has
+                 * changed so that it will perform any necessary saving
+                 */
+                this.studentDataChanged();
             }
-
-            /*
-             * notify the controller that the student data has
-             * changed so that it will perform any necessary saving
-             */
-            this.studentDataChanged();
-
-            // tell the parent node that this component wants to save
-            //this.$scope.$emit('componentSaveTriggered', {nodeId: this.nodeId, componentId: this.componentId});
         }
 
         /**
@@ -4234,7 +4301,7 @@ var GraphController = function () {
     }, {
         key: 'snipDrawing',
         value: function snipDrawing($event) {
-            var _this4 = this;
+            var _this5 = this;
 
             // get the highcharts div
             var highchartsDiv = angular.element('#' + this.chartId).find('.highcharts-container');
@@ -4249,10 +4316,10 @@ var GraphController = function () {
                     var img_b64 = canvas.toDataURL('image/png');
 
                     // get the image object
-                    var imageObject = _this4.UtilService.getImageObjectFromBase64String(img_b64);
+                    var imageObject = _this5.UtilService.getImageObjectFromBase64String(img_b64);
 
                     // create a notebook item with the image populated into it
-                    _this4.NotebookService.addNewItem($event, imageObject);
+                    _this5.NotebookService.addNewItem($event, imageObject);
                 });
             }
         }

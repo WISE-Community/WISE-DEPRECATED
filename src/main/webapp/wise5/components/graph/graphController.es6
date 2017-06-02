@@ -675,9 +675,6 @@ class GraphController {
                 } else {
                     this.setSaveMessage(this.$translate('SAVED'), clientSaveTime);
                 }
-
-                // re-draw the graph
-                this.setupGraph();
             }
         }));
 
@@ -778,9 +775,6 @@ class GraphController {
 
                         // remember the file name
                         this.scope.graphController.setUploadedFileName(this.fileName);
-
-                        // redraw the graph
-                        this.scope.graphController.setupGraph();
 
                         /*
                          * notify the controller that the student data has
@@ -895,8 +889,46 @@ class GraphController {
 
     /**
      * Setup the graph
+     * @param useTimeout whether to call the setupGraphHelper() function in
+     * a timeout callback
      */
-    setupGraph() {
+    setupGraph(useTimeout) {
+
+        if (useTimeout) {
+            // call the setup graph helper after a timeout
+
+            /*
+             * clear the chart config so that the graph is completely refreshed.
+             * we need to do this otherwise all the series will react to
+             * mouseover but we only want the active series to react to
+             * mouseover.
+             */
+            this.chartConfig = {
+                chart: {
+                    options: {
+                        chart: {}
+                    }
+                }
+            };
+
+            /*
+             * call the setup graph helper after a timeout. this is required
+             * so that the graph is completely refreshed so that only the
+             * active series will react to mouseover.
+             */
+            this.$timeout(() => {
+                this.setupGraphHelper();
+            });
+        } else {
+            // call the setup graph helper immediately
+            this.setupGraphHelper();
+        }
+    }
+
+    /**
+     * The helper function for setting up the graph
+     */
+    setupGraphHelper() {
 
         // get the title
         var title = this.componentContent.title;
@@ -1023,6 +1055,10 @@ class GraphController {
                     tempSeries.draggableX = false;
                     tempSeries.draggableY = false;
                     tempSeries.allowPointSelect = false;
+                    tempSeries.enableMouseTracking = false;
+                    tempSeries.stickyTracking = false;
+                    tempSeries.shared = false;
+                    tempSeries.allowPointSelect = false;
                 } else if (tempSeries.canEdit && this.isActiveSeries(tempSeries)) {
                     // set the fields to allow points to be draggable
 
@@ -1036,10 +1072,18 @@ class GraphController {
                     tempSeries.draggableY = true;
                     tempSeries.allowPointSelect = true;
                     tempSeries.cursor = 'move';
+                    tempSeries.enableMouseTracking = true;
+                    tempSeries.stickyTracking = false;
+                    tempSeries.shared = false;
+                    tempSeries.allowPointSelect = true;
                 } else {
                     // make the series uneditable
                     tempSeries.draggableX = false;
                     tempSeries.draggableY = false;
+                    tempSeries.allowPointSelect = false;
+                    tempSeries.enableMouseTracking = false;
+                    tempSeries.stickyTracking = false;
+                    tempSeries.shared = false;
                     tempSeries.allowPointSelect = false;
                 }
             }
@@ -1280,6 +1324,7 @@ class GraphController {
                 },
                 plotOptions: {
                     series: {
+                        dragSensitivity: 10,
                         stickyTracking: false,
                         events: {
                             legendItemClick: function(event) {
@@ -1945,9 +1990,6 @@ class GraphController {
                             // set the active trial series to be the series to display
                             this.series = this.activeTrial.series;
                         }
-
-                        // redraw the graph
-                        this.setupGraph();
                     }
                 }
 
@@ -2106,8 +2148,11 @@ class GraphController {
      * The active series has changed
      */
     activeSeriesChanged() {
+
+        var useTimeoutSetupGraph = true;
+
         // the student data has changed
-        this.studentDataChanged();
+        this.studentDataChanged(useTimeoutSetupGraph);
 
         // tell the parent node that this component wants to save
         //this.$scope.$emit('componentSaveTriggered', {nodeId: this.nodeId, componentId: this.componentId});
@@ -2130,7 +2175,7 @@ class GraphController {
     /**
      * Called when the student changes their work
      */
-    studentDataChanged() {
+    studentDataChanged(useTimeoutSetupGraph) {
         /*
          * set the dirty flags so we will know we need to save or submit the
          * student work later
@@ -2145,7 +2190,7 @@ class GraphController {
         this.setSaveMessage('', null);
 
         // re-draw the graph
-        this.setupGraph();
+        this.setupGraph(useTimeoutSetupGraph);
 
         // get this component id
         var componentId = this.getComponentId();
@@ -2275,7 +2320,7 @@ class GraphController {
      * e.g. 'submit', 'save', 'change'
      */
     createComponentStateAdditionalProcessing(deferred, componentState, action) {
-        
+
         if (this.ProjectService.hasAdditionalProcessingFunctions(this.nodeId, this.componentId)) {
             // this component has additional processing functions
 
@@ -2584,13 +2629,11 @@ class GraphController {
                             series.data = seriesData;
                         }
 
-                        // render the graph
-                        this.setupGraph();
-
                         // the graph has changed
                         this.isDirty = true;
+
+                        this.studentDataChanged();
                     });
-                    this.studentDataChanged();
                 }
             });
         }
@@ -2812,6 +2855,9 @@ class GraphController {
                 // an array to hold the indexes of the selected points
                 var indexes = [];
 
+                // get the series data
+                var data = series.data;
+
                 // loop through all the selected points
                 for (var x = 0; x < selectedPoints.length; x++) {
 
@@ -2821,15 +2867,33 @@ class GraphController {
                     // get the index of the selected point
                     index = selectedPoint.index;
 
-                    // add the index to our array
-                    indexes.push(index);
+                    // get the data point from the series data
+                    var dataPoint = data[index];
+
+                    if (dataPoint != null) {
+
+                        /*
+                         * make sure the x and y values match the selected point
+                         * that we are going to delete
+                         */
+                        if (dataPoint[0] == selectedPoint.x ||
+                            dataPoint[1] == selectedPoint.y) {
+
+                            // the x and y values match
+
+                            // add the index to our array
+                            indexes.push(index);
+                        }
+                    }
                 }
 
-                // order the array from largest to smallest
+                /*
+                 * order the array from largest to smallest. we are doing this
+                 * so that we delete the points from the end first. if we delete
+                 * points starting from lower indexes first, then the indexes
+                 * will shift and we will end up deleting the wrong points.
+                 */
                 indexes.sort().reverse();
-
-                // get the series data
-                var data = series.data;
 
                 // loop through all the indexes and remove them from the series data
                 for (var i = 0; i < indexes.length; i++) {
@@ -3208,6 +3272,21 @@ class GraphController {
     }
 
     /**
+     * The New Trial button was clicked by the student
+     */
+    newTrialButtonClicked() {
+
+        // create a new trial
+        this.newTrial();
+
+        /*
+         * notify the controller that the student data has
+         * changed so that it will perform any necessary saving
+         */
+        this.studentDataChanged();
+    }
+
+    /**
      * Create a new trial
      */
     newTrial() {
@@ -3302,18 +3381,6 @@ class GraphController {
         this.setActiveSeriesByIndex(activeSeriesIndex);
 
         this.setTrialIdsToShow();
-
-        // redraw the graph
-        this.setupGraph();
-
-        /*
-         * notify the controller that the student data has
-         * changed so that it will perform any necessary saving
-         */
-        this.studentDataChanged();
-
-        // tell the parent node that this component wants to save
-        //this.$scope.$emit('componentSaveTriggered', {nodeId: this.nodeId, componentId: this.componentId});
     }
 
     /**
@@ -3464,18 +3531,12 @@ class GraphController {
              */
             this.setActiveSeriesByIndex(seriesIndex);
 
-            // redraw the graph
-            this.setupGraph();
+            /*
+             * notify the controller that the student data has
+             * changed so that it will perform any necessary saving
+             */
+            this.studentDataChanged();
         }
-
-        /*
-         * notify the controller that the student data has
-         * changed so that it will perform any necessary saving
-         */
-        this.studentDataChanged();
-
-        // tell the parent node that this component wants to save
-        //this.$scope.$emit('componentSaveTriggered', {nodeId: this.nodeId, componentId: this.componentId});
     }
 
     /**
