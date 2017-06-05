@@ -101,7 +101,7 @@ const WorkgroupItem = {
     controller: WorkgroupItemController,
     template:
         `<div class="md-whiteframe-1dp">
-            <md-subheader class="list-item">
+            <md-subheader class="list-item md-whiteframe-1dp">
                 <button class="md-button md-ink-ripple list-item__subheader-button"
                                aria-label="{{ toggleTeamWorkDisplay | translate }}"
                                ng-class="{'list-item--warn': $ctrl.statusClass === 'warn', 'list-item--info': $ctrl.statusClass === 'info', 'list-item--expanded': $ctrl.showWork, 'list-item--noclick': !$ctrl.showScore}"

@@ -34,7 +34,7 @@ class WorkgroupNodeGradingController {
     }
 
     /**
-     * Get the components for this node.
+     * Get the components for this node
      * @return an array that contains the content for the components
      */
     getComponents() {
@@ -42,21 +42,20 @@ class WorkgroupNodeGradingController {
 
         if (this.nodeContent) {
             components = this.nodeContent.components;
-        }
 
-        if (components && this.isDisabled) {
-            for (var c = 0; c < components.length; c++) {
-                var component = components[c];
+            for (let c = 0; c < components.length; c++) {
+                let component = components[c];
 
-                component.isDisabled = true;
-            }
-        }
+                if (this.isDisabled) {
+                    component.isDisabled = true;
+                }
 
-        if (components && this.nodeContent.lockAfterSubmit) {
-            for (c = 0; c < components.length; c++) {
-                component = components[c];
+                if (this.nodeContent.lockAfterSubmit) {
+                    component.lockAfterSubmit = true;
+                }
 
-                component.lockAfterSubmit = true;
+                // set whether component captures student work (for filtering purposes)
+                component.hasWork = this.ProjectService.componentHasWork(component);
             }
         }
 
@@ -141,7 +140,7 @@ const WorkgroupNodeGrading = {
     },
     template:
         `<div class="nav-item__grading">
-            <div id="{{component.id}}_{{$ctrl.workgroupId}}" class="component--grading" ng-repeat='component in $ctrl.components'>
+            <div id="{{component.id}}_{{$ctrl.workgroupId}}" class="component--grading" ng-repeat='component in $ctrl.components | filter:{hasWork: true}'>
                 <div ng-if="$ctrl.components.length > 1" layout="row" layout-align="end center">
                     <md-button ng-click="$ctrl.toggleComponentVisibility($event, component.id)"
                                class="component--grading__toggle transform--none"
