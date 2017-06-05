@@ -1,20 +1,20 @@
-<md-card class="annotations--student"
+<md-card class="annotations"
          ng-if="(componentAnnotationsCtrl.showScore && componentAnnotationsCtrl.annotations.score) || (componentAnnotationsCtrl.showComment && componentAnnotationsCtrl.annotations.comment)">
-    <md-card-title class="annotations--student__header gray-darker-bg">
-        <div class="annotations--student__avatar avatar--icon avatar--square md-36 avatar md-whiteframe-1dp">
-            <md-icon class="annotations--student__icon md-36">{{componentAnnotationsCtrl.icon}}</md-icon>
+    <md-card-title class="annotations__header gray-darker-bg">
+        <div class="annotations__avatar md-avatar avatar--icon avatar--square md-36 avatar md-whiteframe-1dp">
+            <md-icon class="annotations__icon md-36">{{componentAnnotationsCtrl.icon}}</md-icon>
         </div>
-        <div class="annotations--student__title" layout="row" flex>
+        <div class="annotations__title" layout="row" flex>
             <span>{{componentAnnotationsCtrl.label}}</span>
-            <span ng-if="componentAnnotationsCtrl.isNewAnnotation()" class="badge annotations--student__status info-bg animate-fade" translate="new"></span>
+            <span ng-if="componentAnnotationsCtrl.isNewAnnotation()" class="badge annotations__status info-bg animate-fade" translate="new"></span>
         </div>
     </md-card-title>
-    <md-card-content class="annotations--student__body md-body-1">
+    <md-card-content class="annotations__body md-body-1">
         <div ng-if="componentAnnotationsCtrl.showComment && componentAnnotationsCtrl.annotations.comment.data.value"><compile data="componentAnnotationsCtrl.annotations.comment.data.value"></compile></div>
         <hr ng-if="componentAnnotationsCtrl.annotations.comment" />
         <div layout="row" laoyut-align="start center">
             <span ng-if="componentAnnotationsCtrl.showScore && componentAnnotationsCtrl.annotations.score"
-                  class="annotations--student__score"
+                  class="annotations__score"
                   translate="SCORE_LABEL_AND_VALUE"
                   translate-value-score="{{componentAnnotationsCtrl.annotations.score.data.value}}{{componentAnnotationsCtrl.maxScoreDisplay}}"></span>
             <span flex></span>

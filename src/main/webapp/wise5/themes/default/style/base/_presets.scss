@@ -116,6 +116,10 @@ label {
     margin: 16px 0;
 }
 
+.divider--dashed {
+    border-top-style: dashed;
+}
+
 // Color
 // Set classes for each named color in the $colors map
 @each $key, $value in $colors {

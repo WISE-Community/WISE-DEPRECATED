@@ -259,7 +259,7 @@ var NodeProgressController = function () {
 
             // get the project title
             var projectTitle = this.ProjectService.getProjectTitle();
-            var rubricTitle = this.$translate('teachingTips');
+            var rubricTitle = this.$translate('projectInfo');
 
             // get the node icon; TODO: add node icon once we have a <node-icon> angular component
             //let nodeIcon = this.ProjectService.getNodeIconByNodeId(this.nodeId);

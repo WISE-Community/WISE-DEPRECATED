@@ -65,8 +65,6 @@ class NodeGradingController {
                 this.nodeContent = node;
             }
 
-            this.hiddenComponents = this.getComponentIdsWithoutWork();
-
             this.workgroups = this.ConfigService.getClassmateUserInfos();
             this.workgroupsById = {}; // object that will hold workgroup names, statuses, scores, notifications, etc.
             this.workVisibilityById = {}; // object that specifies whether student work is visible for each workgroup
@@ -356,33 +354,6 @@ class NodeGradingController {
         return components;
     }
 
-    /**
-     * Gets the Ids of comonponents in this node that don't capture student work
-     * @return array of component Ids
-     */
-    getComponentIdsWithoutWork() {
-        let components = [];
-        let componentIds = [];
-
-        if (this.nodeContent) {
-            components = this.nodeContent.components;
-        }
-
-        if (components) {
-            let n = components.length;
-
-            for (let i = 0; i < n; i++) {
-                let component = components[i];
-                let hasWork = this.ProjectService.componentHasWork(component);
-                if (!hasWork) {
-                    componentIds.push(component.id);
-                }
-            }
-        }
-
-        return componentIds;
-    }
-
     getComponentById(componentId) {
         var component = null;
 
@@ -633,21 +604,21 @@ class NodeGradingController {
 
         // get the step number and title
         let stepNumberAndTitle = this.ProjectService.getNodePositionAndTitleByNodeId(this.nodeId);
-        let rubricTitle = this.$translate('stepTips');
+        let rubricTitle = this.$translate('stepInfo');
 
-        // get the node icon; TODO: add node icon once we have a <node-icon> angular component
-        //let nodeIcon = this.ProjectService.getNodeIconByNodeId(this.nodeId);
+        // get the node icon
+        let nodeIcon = this.ProjectService.getNodeIconByNodeId(this.nodeId);
 
         /*
          * create the header for the popup that contains the project title,
          * 'Open in New Tab' button, and 'Close' button
          */
         let dialogHeader =
-            `<md-toolbar md-theme="light">
-                <div class="md-toolbar-tools">
-                    <h2 class="overflow--ellipsis">` + stepNumberAndTitle + `</h2>
+            `<md-toolbar>
+                <div class="md-toolbar-tools gray-darkest-bg">
+                    <h2 class="overflow--ellipsis">${ stepNumberAndTitle }</h2>
                     <span flex>&nbsp;</span>
-                    <span class="accent-2 md-subhead">` + rubricTitle + `</span>
+                    <span class="md-subhead">${ rubricTitle }</span>
                 </div>
             </md-toolbar>`;
 
@@ -661,22 +632,22 @@ class NodeGradingController {
          * create the header for the new window that contains the project title
          */
         let windowHeader =
-            `<md-toolbar style="background-color: #ffffff; border-bottom: 1px solid rgba(0,0,0,0.13);" class="layout-row">
-                <div class="md-toolbar-tools">
-                    <h2>` + stepNumberAndTitle + `</h2>
+            `<md-toolbar class="layout-row">
+                <div class="md-toolbar-tools gray-darkest-bg text-light">
+                    <h2>${ stepNumberAndTitle }</h2>
                     <span class="flex">&nbsp;</span>
-                    <span class="accent-2 md-subhead">` + rubricTitle + `</span>
+                    <span class="md-subhead">${ rubricTitle }</span>
                 </div>
             </md-toolbar>`;
 
         // create the string that will hold the rubric content
-        let rubricContent = '<md-list class="md-whiteframe-1dp" style="background-color: #ffffff; padding-top: 8px; padding-bottom: 8px;">';
+        let rubricContent = '<md-list>';
 
         // get the step rubric
         let nodeRubric = this.nodeContent.rubric;
 
         if (nodeRubric != null) {
-            rubricContent += '<md-list-item class="md-no-proxy"><div class="md-list-item-text">' + nodeRubric + '</div></md-list-item>';
+            rubricContent += '<md-list-item class="md-no-proxy list-item md-whiteframe-1dp"><div class="md-list-item-text">' + nodeRubric + '</div></md-list-item>';
         }
 
         // get the components
@@ -696,7 +667,7 @@ class NodeGradingController {
                     if (componentRubric != null && componentRubric != '') {
 
                         // append the component rubric
-                        rubricContent += '<md-list-item class="md-no-proxy"><div class="md-list-item-text" style="padding-top: 16px; padding-bottom: 16px;">' + componentRubric + '</div></md-list-item>';
+                        rubricContent += '<md-list-item class="md-no-proxy list-item md-whiteframe-1dp"><div class="md-list-item-text">' + componentRubric + '</div></md-list-item>';
                     }
                 }
             }
@@ -707,23 +678,20 @@ class NodeGradingController {
         // inject the asset paths into the rubrics
         rubricContent = this.ProjectService.replaceAssetPaths(rubricContent);
 
-        let dialogContent =
+        /*let dialogContent =
             `<md-dialog-content class="gray-lighter-bg">
                 <div class="md-dialog-content">` + rubricContent + `</div>
+            </md-dialog-content>`;*/
+        let dialogContent =
+            `<md-dialog-content class="gray-lighter-bg">
+                <div class="md-dialog-content" id="nodeInfo_${ this.nodeId }">
+                    <node-info node-id="${ this.nodeId }"></node-info>
+                </div>
             </md-dialog-content>`;
 
         // create the dialog string
         let dialogString = `<md-dialog class="dialog--wider" aria-label="` + stepNumberAndTitle + ` - ` + rubricTitle + `">` + dialogHeader + dialogContent + dialogActions + `</md-dialog>`;
-
-        // create the window string
-        let windowString =
-            `<link rel='stylesheet' href='../wise5/lib/bootstrap/css/bootstrap.min.css' />
-            <link rel='stylesheet' href='../wise5/themes/default/style/monitor.css'>
-            <link rel='stylesheet' href='../wise5/themes/default/style/angular-material.css'>
-            <link rel='stylesheet' href='../wise5/lib/summernote/dist/summernote.css' />
-            <body class="layout-column">
-                <div class="layout-column">` + windowHeader + `<md-content class="md-padding">` + rubricContent + `</div></md-content></div>
-            </body>`;
+        let nodeId = this.nodeId;
 
         // display the rubric in a popup
         this.$mdDialog.show({
@@ -737,6 +705,19 @@ class NodeGradingController {
 
                         // open a new tab
                         let w = window.open('', '_blank');
+
+                        let rubricContent = document.getElementById('nodeInfo_' + nodeId).innerHTML;
+
+                        // create the window string
+                        let windowString =
+                            `<link rel='stylesheet' href='../wise5/lib/bootstrap/css/bootstrap.min.css' />
+                            <link rel='stylesheet' href='../wise5/themes/default/style/monitor.css'>
+                            <link rel='stylesheet' href='../wise5/themes/default/style/angular-material.css'>
+                            <link rel='stylesheet' href='../wise5/lib/summernote/dist/summernote.css' />
+                            <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic%7CMaterial+Icons" media="all">
+                            <body class="layout-column">
+                                <div class="layout-column">${ windowHeader }<md-content class="md-padding">${ rubricContent }</div></md-content></div>
+                            </body>`;
 
                         // write the rubric content to the new tab
                         w.document.write(windowString);

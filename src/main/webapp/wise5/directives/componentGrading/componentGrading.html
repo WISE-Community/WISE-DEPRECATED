@@ -44,7 +44,7 @@
                 </label>
                 <div class="input-wrapper">
                     <textarea md-detect-hidden
-                              placeholder="Enter comment here"
+                              placeholder="{{ 'enterCommentHere' | translate }}"
                               ng-model="$ctrl.comment"
                               ng-disabled="!$ctrl.active"
                               ng-change="$ctrl.postAnnotation('comment')"

@@ -193,3 +193,37 @@ $input-action-vertical-offset-richtext: -7px;
         height: $wise-toolbar-height;
     }
 }
+
+.node-info {
+    margin: 0;
+
+    @media only screen and (max-width: $layout-breakpoint-xs - 1) {
+        margin: -16px;
+        border-radius: 0;
+    }
+
+    .divider {
+        margin-left: -16px;
+        margin-right: -16px;
+    }
+
+    .component, .component-wrapper {
+        margin-left: -8px;
+        margin-right: -8px;
+    }
+
+    .component__actions {
+        display: none;
+    }
+}
+
+.node-rubric {
+    border: 2px solid color('primary');
+    margin: 8px 16px 24px;
+    padding: 16px;
+    background-color: #ffffff;
+}
+
+.node-rubric--component {
+
+}

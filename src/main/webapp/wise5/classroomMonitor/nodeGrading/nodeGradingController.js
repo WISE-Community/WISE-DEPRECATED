@@ -63,8 +63,6 @@ var NodeGradingController = function () {
                 _this.nodeContent = node;
             }
 
-            _this.hiddenComponents = _this.getComponentIdsWithoutWork();
-
             _this.workgroups = _this.ConfigService.getClassmateUserInfos();
             _this.workgroupsById = {}; // object that will hold workgroup names, statuses, scores, notifications, etc.
             _this.workVisibilityById = {}; // object that specifies whether student work is visible for each workgroup
@@ -384,36 +382,6 @@ var NodeGradingController = function () {
 
             return components;
         }
-
-        /**
-         * Gets the Ids of comonponents in this node that don't capture student work
-         * @return array of component Ids
-         */
-
-    }, {
-        key: 'getComponentIdsWithoutWork',
-        value: function getComponentIdsWithoutWork() {
-            var components = [];
-            var componentIds = [];
-
-            if (this.nodeContent) {
-                components = this.nodeContent.components;
-            }
-
-            if (components) {
-                var n = components.length;
-
-                for (var i = 0; i < n; i++) {
-                    var component = components[i];
-                    var hasWork = this.ProjectService.componentHasWork(component);
-                    if (!hasWork) {
-                        componentIds.push(component.id);
-                    }
-                }
-            }
-
-            return componentIds;
-        }
     }, {
         key: 'getComponentById',
         value: function getComponentById(componentId) {
@@ -704,32 +672,32 @@ var NodeGradingController = function () {
 
             // get the step number and title
             var stepNumberAndTitle = this.ProjectService.getNodePositionAndTitleByNodeId(this.nodeId);
-            var rubricTitle = this.$translate('stepTips');
+            var rubricTitle = this.$translate('stepInfo');
 
-            // get the node icon; TODO: add node icon once we have a <node-icon> angular component
-            //let nodeIcon = this.ProjectService.getNodeIconByNodeId(this.nodeId);
+            // get the node icon
+            var nodeIcon = this.ProjectService.getNodeIconByNodeId(this.nodeId);
 
             /*
              * create the header for the popup that contains the project title,
              * 'Open in New Tab' button, and 'Close' button
              */
-            var dialogHeader = '<md-toolbar md-theme="light">\n                <div class="md-toolbar-tools">\n                    <h2 class="overflow--ellipsis">' + stepNumberAndTitle + '</h2>\n                    <span flex>&nbsp;</span>\n                    <span class="accent-2 md-subhead">' + rubricTitle + '</span>\n                </div>\n            </md-toolbar>';
+            var dialogHeader = '<md-toolbar>\n                <div class="md-toolbar-tools gray-darkest-bg">\n                    <h2 class="overflow--ellipsis">' + stepNumberAndTitle + '</h2>\n                    <span flex>&nbsp;</span>\n                    <span class="md-subhead">' + rubricTitle + '</span>\n                </div>\n            </md-toolbar>';
 
             var dialogActions = '<md-dialog-actions layout="row" layout-align="end center">\n                <md-button class="md-primary" ng-click="openInNewWindow()" aria-label="{{ \'openInNewWindow\' | translate }}">{{ \'openInNewWindow\' | translate }}</md-button>\n                <md-button ng-click="close()" aria-label="{{ \'close\' | translate }}">{{ \'close\' | translate }}</md-button>\n            </md-dialog-actions>';
 
             /*
              * create the header for the new window that contains the project title
              */
-            var windowHeader = '<md-toolbar style="background-color: #ffffff; border-bottom: 1px solid rgba(0,0,0,0.13);" class="layout-row">\n                <div class="md-toolbar-tools">\n                    <h2>' + stepNumberAndTitle + '</h2>\n                    <span class="flex">&nbsp;</span>\n                    <span class="accent-2 md-subhead">' + rubricTitle + '</span>\n                </div>\n            </md-toolbar>';
+            var windowHeader = '<md-toolbar class="layout-row">\n                <div class="md-toolbar-tools gray-darkest-bg text-light">\n                    <h2>' + stepNumberAndTitle + '</h2>\n                    <span class="flex">&nbsp;</span>\n                    <span class="md-subhead">' + rubricTitle + '</span>\n                </div>\n            </md-toolbar>';
 
             // create the string that will hold the rubric content
-            var rubricContent = '<md-list class="md-whiteframe-1dp" style="background-color: #ffffff; padding-top: 8px; padding-bottom: 8px;">';
+            var rubricContent = '<md-list>';
 
             // get the step rubric
             var nodeRubric = this.nodeContent.rubric;
 
             if (nodeRubric != null) {
-                rubricContent += '<md-list-item class="md-no-proxy"><div class="md-list-item-text">' + nodeRubric + '</div></md-list-item>';
+                rubricContent += '<md-list-item class="md-no-proxy list-item md-whiteframe-1dp"><div class="md-list-item-text">' + nodeRubric + '</div></md-list-item>';
             }
 
             // get the components
@@ -749,7 +717,7 @@ var NodeGradingController = function () {
                         if (componentRubric != null && componentRubric != '') {
 
                             // append the component rubric
-                            rubricContent += '<md-list-item class="md-no-proxy"><div class="md-list-item-text" style="padding-top: 16px; padding-bottom: 16px;">' + componentRubric + '</div></md-list-item>';
+                            rubricContent += '<md-list-item class="md-no-proxy list-item md-whiteframe-1dp"><div class="md-list-item-text">' + componentRubric + '</div></md-list-item>';
                         }
                     }
                 }
@@ -760,13 +728,15 @@ var NodeGradingController = function () {
             // inject the asset paths into the rubrics
             rubricContent = this.ProjectService.replaceAssetPaths(rubricContent);
 
-            var dialogContent = '<md-dialog-content class="gray-lighter-bg">\n                <div class="md-dialog-content">' + rubricContent + '</div>\n            </md-dialog-content>';
+            /*let dialogContent =
+                `<md-dialog-content class="gray-lighter-bg">
+                    <div class="md-dialog-content">` + rubricContent + `</div>
+                </md-dialog-content>`;*/
+            var dialogContent = '<md-dialog-content class="gray-lighter-bg">\n                <div class="md-dialog-content" id="nodeInfo_' + this.nodeId + '">\n                    <node-info node-id="' + this.nodeId + '"></node-info>\n                </div>\n            </md-dialog-content>';
 
             // create the dialog string
             var dialogString = '<md-dialog class="dialog--wider" aria-label="' + stepNumberAndTitle + ' - ' + rubricTitle + '">' + dialogHeader + dialogContent + dialogActions + '</md-dialog>';
-
-            // create the window string
-            var windowString = '<link rel=\'stylesheet\' href=\'../wise5/lib/bootstrap/css/bootstrap.min.css\' />\n            <link rel=\'stylesheet\' href=\'../wise5/themes/default/style/monitor.css\'>\n            <link rel=\'stylesheet\' href=\'../wise5/themes/default/style/angular-material.css\'>\n            <link rel=\'stylesheet\' href=\'../wise5/lib/summernote/dist/summernote.css\' />\n            <body class="layout-column">\n                <div class="layout-column">' + windowHeader + '<md-content class="md-padding">' + rubricContent + '</div></md-content></div>\n            </body>';
+            var nodeId = this.nodeId;
 
             // display the rubric in a popup
             this.$mdDialog.show({
@@ -779,6 +749,11 @@ var NodeGradingController = function () {
 
                         // open a new tab
                         var w = window.open('', '_blank');
+
+                        var rubricContent = document.getElementById('nodeInfo_' + nodeId).innerHTML;
+
+                        // create the window string
+                        var windowString = '<link rel=\'stylesheet\' href=\'../wise5/lib/bootstrap/css/bootstrap.min.css\' />\n                            <link rel=\'stylesheet\' href=\'../wise5/themes/default/style/monitor.css\'>\n                            <link rel=\'stylesheet\' href=\'../wise5/themes/default/style/angular-material.css\'>\n                            <link rel=\'stylesheet\' href=\'../wise5/lib/summernote/dist/summernote.css\' />\n                            <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic%7CMaterial+Icons" media="all">\n                            <body class="layout-column">\n                                <div class="layout-column">' + windowHeader + '<md-content class="md-padding">' + rubricContent + '</div></md-content></div>\n                            </body>';
 
                         // write the rubric content to the new tab
                         w.document.write(windowString);
