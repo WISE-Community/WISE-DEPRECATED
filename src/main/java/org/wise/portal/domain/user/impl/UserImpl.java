@@ -66,35 +66,42 @@ public class UserImpl implements User {
     private MutableUserDetails userDetails;
 
     /**
-     * @see net.sf.sail.webapp.domain.User#getUserDetails()
+     * @see org.wise.portal.domain.user.User#getUserDetails()
      */
     public MutableUserDetails getUserDetails() {
         return userDetails;
     }
 
     /**
-     * @see net.sf.sail.webapp.domain.User#setUserDetails(net.sf.sail.webapp.domain.authentication.MutableUserDetails)
+     * @see org.wise.portal.domain.user.User#setUserDetails(org.wise.portal.domain.authentication.MutableUserDetails)
      */
     public void setUserDetails(MutableUserDetails userDetails) {
         this.userDetails = userDetails;
     }
 
     /**
-     * @see net.sf.sail.webapp.domain.User#isAdmin()
+     * @see org.wise.portal.domain.user.User#isAdmin()
      */
     public boolean isStudent(){
         return this.userDetails.hasGrantedAuthority(UserDetailsService.STUDENT_ROLE);
     }
 
     /**
-     * @see net.sf.sail.webapp.domain.User#isAdmin()
+     * @see org.wise.portal.domain.user.User#isTeacher()
+     */
+    public boolean isTeacher(){
+        return this.userDetails.hasGrantedAuthority(UserDetailsService.TEACHER_ROLE);
+    }
+
+    /**
+     * @see org.wise.portal.domain.user.User#isAdmin()
      */
     public boolean isAdmin(){
     	return this.userDetails.hasGrantedAuthority(UserDetailsService.ADMIN_ROLE);
     }
     
     /**
-     * @see net.sf.sail.webapp.domain.User#isAdmin()
+     * @see org.wise.portal.domain.user.User#isAdmin()
      */
     public boolean isTrustedAuthor(){
     	return this.userDetails.hasGrantedAuthority(UserDetailsService.TRUSTED_AUTHOR_ROLE);

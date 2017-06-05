@@ -119,10 +119,11 @@ var NotificationService = function () {
                 return Promise.resolve(this.notifications);
             } else {
                 // the notification url is not null so we will retrieve the notifications
-                var config = {};
-                config.method = 'GET';
-                config.url = this.ConfigService.getNotificationURL();
-                config.params = {};
+                var config = {
+                    method: "GET",
+                    url: this.ConfigService.getNotificationURL(),
+                    params: {}
+                };
                 if (toWorkgroupId != null) {
                     config.params.toWorkgroupId = toWorkgroupId;
                 } else if (this.ConfigService.getMode() !== 'classroomMonitor') {
@@ -238,10 +239,13 @@ var NotificationService = function () {
                 return deferred.promise;
             } else {
 
-                var config = {};
-                config.method = 'POST';
-                config.url = this.ConfigService.getNotificationURL();
-                config.headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
+                var config = {
+                    method: "POST",
+                    url: this.ConfigService.getNotificationURL(),
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    }
+                };
 
                 var params = {};
                 if (notification.id != null) {
@@ -302,10 +306,13 @@ var NotificationService = function () {
                     return;
                 }
 
-                var config = {};
-                config.method = 'POST';
-                config.url = this.ConfigService.getNotificationURL() + "/dismiss";
-                config.headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
+                var config = {
+                    method: "POST",
+                    url: this.ConfigService.getNotificationURL() + "/dismiss",
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    }
+                };
 
                 var params = {};
                 params.notificationId = notification.id;

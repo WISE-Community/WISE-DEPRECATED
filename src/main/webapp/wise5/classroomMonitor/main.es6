@@ -2,6 +2,7 @@
 
 import '../themes/default/js/webfonts';
 import $ from 'jquery';
+import AchievementService from '../services/achievementService';
 import angular from 'angular';
 import angularDragula from 'angular-dragula';
 import angularInview from 'angular-inview';
@@ -89,6 +90,7 @@ let classroomMonitorModule = angular.module('classroomMonitor', [
         'tableComponentModule',
         'ui.router'
     ])
+    .service(AchievementService.name, AchievementService)
     .service(AnnotationService.name, AnnotationService)
     .service(ConfigService.name, ConfigService)
     .service(CRaterService.name, CRaterService)
@@ -148,6 +150,9 @@ let classroomMonitorModule = angular.module('classroomMonitor', [
                         },
                         studentStatuses: function(StudentStatusService, config) {
                             return StudentStatusService.retrieveStudentStatuses();
+                        },
+                        achievements: function (AchievementService, studentStatuses, config, project) {
+                            return AchievementService.retrieveAchievements();
                         },
                         notifications: function (NotificationService, ConfigService, studentStatuses, config, project) {
                             //return NotificationService.retrieveNotifications(ConfigService.getWorkgroupId());

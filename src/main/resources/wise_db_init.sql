@@ -1,3 +1,14 @@
+    create table achievements (
+        id int unsigned not null auto_increment,
+        runId bigint null,
+        workgroupId bigint null,
+        achievementId varchar(255) not null,
+        achievementData text not null,
+        achievementTime datetime not null,
+        primary key (id),
+        index runIdIndex (runId),
+        index workgroupIdIndex (workgroupId)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
     create table acl_class (
         id bigint not null auto_increment,
@@ -670,6 +681,16 @@
 
     alter table users
         add constraint UK_ol2kbitd35lc87ddawfhiu9ll  unique (user_details_fk);
+
+    alter table achievements
+        add constraint achievements_to_runs_fk
+        foreign key (runId)
+        references runs (id);
+
+    alter table achievements
+        add constraint achievements_to_workgroups_fk
+        foreign key (workgroupId)
+        references wiseworkgroups (id);
 
     alter table acl_entry
         add constraint FK_i6xyfccd4y3wlwhgwpo4a9rm1

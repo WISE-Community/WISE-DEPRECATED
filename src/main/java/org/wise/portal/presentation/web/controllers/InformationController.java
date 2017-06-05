@@ -856,11 +856,11 @@ public class InformationController {
 				config.put("studentStatusURL", studentStatusURL);
 				config.put("runStatusURL", runStatusURL);
 
-				// add userInfo
-				config.put("userInfo", getUserInfo(request, run));
+				config.put("userInfo", getUserInfo(request, run));  // add userInfo
 				config.put("studentDataURL", wiseBaseURL + "/student/data");  // the url to get/post student data
 				config.put("studentAssetsURL", wiseBaseURL + "/student/asset/" + runId);
 				config.put("studentNotebookURL", wiseBaseURL + "/student/notebook/" + runId);
+				config.put("achievementURL", wiseBaseURL + "/achievement/" + runId);
 				config.put("notificationURL", wiseBaseURL + "/notification/" + runId);
 				String openCPUURL = wiseProperties.getProperty("openCPUURL");
 				if (openCPUURL != null) {
