@@ -86,10 +86,6 @@ class ComponentGradingController {
             let latestComment = this.latestAnnotations.comment;
             if (latestComment.type === 'comment') {
                 this.comment = latestComment.data.value;
-            } else if (latestComment.type === 'autoComment') {
-                this.comment = latestComment.data.value;
-            } else {
-                this.comment = null;
             }
         }
 
@@ -217,23 +213,23 @@ class ComponentGradingController {
             targetEvent: $event,
             fullscreen: true,
             template:
-                `<md-dialog aria-label="Revisions for {{userNames}}" class="dialog--wider">
+                `<md-dialog aria-label="{{ 'revisionsForTeam' | translate:{teamNames: userNames} }}" class="dialog--wider">
                     <md-toolbar>
                         <div class="md-toolbar-tools gray-darkest-bg">
-                            <h2 class="overflow--ellipsis">Revisions for {{userNames}}</h2>
+                            <h2 class="overflow--ellipsis">{{ 'revisionsForTeam' | translate:{teamNames: userNames} }}</h2>
                             <span flex></span>
                             <md-button class="md-icon-button" ng-click="close()">
-                                <md-icon aria-label="{{'close' | translate}}"> close </md-icon>
+                                <md-icon aria-label="{{ 'close' | translate }}"> close </md-icon>
                             </md-button>
                         </div>
                     </md-toolbar>
                     <md-dialog-content>
                         <div class="md-dialog-content gray-lighter-bg">
-                            <workgroup-component-revisions workgroup-id="workgroupId" component-id="{{componentId}}" max-score="maxScore"></workgroup-component-revisions>
+                            <workgroup-component-revisions workgroup-id="workgroupId" component-id="{{ componentId }}" max-score="maxScore"></workgroup-component-revisions>
                         </div>
                     </md-dialog-content>
                     <md-dialog-actions layout="row" layout-align="end center">
-                        <md-button ng-click="close()" aria-label="{{'close' | translate}}">{{'close' | translate}}</md-button>
+                        <md-button ng-click="close()" aria-label="{{ 'close' | translate }}">{{ 'close' | translate }}</md-button>
                     </md-dialog-actions>
                 </md-dialog>`,
             locals: {

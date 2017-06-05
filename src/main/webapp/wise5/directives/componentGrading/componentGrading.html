@@ -64,7 +64,7 @@
                        ng-model="$ctrl.score"
                        ng-disabled="!$ctrl.active"
                        ng-change="$ctrl.postAnnotation('score')"
-                       ng-model-options="{ debounce: 5000 }">
+                       ng-model-options="{ debounce: 1000 }">
                 <span class="annotations--grading__score__divider md-subhead text-secondary"> / </span>
             </md-input-container>
             <md-input-container class="md-no-float annotations--grading__score__max">
@@ -75,7 +75,7 @@
                        ng-model="$ctrl.maxScore"
                        ng-disabled="!$ctrl.active"
                        ng-change="$ctrl.updateMaxScore()"
-                       ng-model-options="{ debounce: 5000 }">
+                       ng-model-options="{ debounce: 1000 }">
             </md-input-container>
         </div>
     </div>
