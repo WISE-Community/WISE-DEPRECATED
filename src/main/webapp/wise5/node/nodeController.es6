@@ -63,6 +63,12 @@ class NodeController {
             time: ''
         };
 
+        // the step rubric
+        this.rubric = null;
+
+        // get the mode e.g. 'preview', 'student', 'authoring', 'grading', etc.
+        this.mode = this.ConfigService.getMode();
+
         // perform setup of this node only if the current node is not a group.
         if (this.StudentDataService.getCurrentNode() && this.ProjectService.isApplicationNode(this.StudentDataService.getCurrentNodeId())) {
             // get the current node and node id
@@ -118,6 +124,11 @@ class NodeController {
             var eventData = {};
             eventData.nodeId = nodeId;
             this.StudentDataService.saveVLEEvent(nodeId, componentId, componentType, category, event, eventData);
+
+            if (this.nodeContent != null) {
+                // get the step rubric
+                this.rubric = this.nodeContent.rubric;
+            }
         }
 
         /**

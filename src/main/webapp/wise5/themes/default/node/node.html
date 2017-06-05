@@ -1,5 +1,20 @@
 <div class="l-constrained">
     <md-content class="node-content md-whiteframe-1dp" style="border-color: {{nodeController.nodeStatus.icon.color}}" layout="row" layout-wrap>
+        <div ng-if="nodeController.rubric" style="margin: 20">
+            <md-card class="annotations annotations--node-info">
+                <md-card-title class="annotations__header gray-darker-bg">
+                    <div class="annotations__avatar md-avatar avatar--icon md-36 avatar md-whiteframe-1dp">
+                        <md-icon class="annotations__icon md-36">info</md-icon>
+                    </div>
+                    <div class="annotations__title" layout="row" flex>
+                        <span>{{ 'TEACHER_RUBRIC' | translate }}</span>
+                    </div>
+                </md-card-title>
+                <md-card-content class="annotations__body md-body-1">
+                    <div ng-bind-html="nodeController.rubric"></div>
+                </md-card-content>
+            </md-card>
+        </div>
         <div id="{{component.id}}" class="component-section"
              ng-repeat='component in nodeController.getComponents()'
              flex="100" flex-gt-sm="{{component.componentWidth ? component.componentWidth : 100}}">
@@ -19,6 +34,21 @@
                        workgroup-id='{{nodeController.workgroupId}}'
                        teacher-workgroup-id='{{nodeController.teacherWorkgroupId}}'
                        mode='student'></component>
+            <div ng-if="component.rubric" style="margin: 20">
+                <md-card class="annotations annotations--node-info">
+                    <md-card-title class="annotations__header gray-darker-bg">
+                        <div class="annotations__avatar md-avatar avatar--icon md-36 avatar md-whiteframe-1dp">
+                            <md-icon class="annotations__icon md-36">info</md-icon>
+                        </div>
+                        <div class="annotations__title" layout="row" flex>
+                            <span>{{ 'TEACHER_RUBRIC' | translate }}</span>
+                        </div>
+                    </md-card-title>
+                    <md-card-content class="annotations__body md-body-1">
+                        <div ng-bind-html="component.rubric"></div>
+                    </md-card-content>
+                </md-card>
+            </div>
         </div>
         <div class="node-content__actions" layout="row" layout-align="start center" flex="100">
             <md-button class="md-raised md-primary"
