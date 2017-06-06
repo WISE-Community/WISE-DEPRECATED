@@ -40,7 +40,7 @@
     "closeProject": "Close Project",
     "content": "Content",
     "confirmDeleteComponent": "Are you sure you want to delete this component?",
-    "confirmUpdateStartStep": "Would you like to update the project start step to '{{startStepTitle}}'?",
+    "confirmUpdateStartStep": "Would you like to update the project start step to \"{{startStepTitle}}\"?",
     "confirmUndo": "Are you sure you want to undo all the recent changes?",
     "confirmUndoLastChange": "Are you sure you want to undo the last change?",
     "componentID": "Component ID",
