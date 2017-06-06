@@ -1,6 +1,6 @@
 <div class="l-constrained">
     <md-content class="node-content md-whiteframe-1dp" style="border-color: {{nodeController.nodeStatus.icon.color}}" layout="row" layout-wrap>
-        <div ng-if="nodeController.rubric" style="margin: 20">
+        <div ng-if="nodeController.mode == 'preview' && vleController.rubricsViewable && nodeController.rubric" style="margin: 20">
             <md-card class="annotations annotations--node-info">
                 <md-card-title class="annotations__header gray-darker-bg">
                     <div class="annotations__avatar md-avatar avatar--icon md-36 avatar md-whiteframe-1dp">
@@ -34,7 +34,7 @@
                        workgroup-id='{{nodeController.workgroupId}}'
                        teacher-workgroup-id='{{nodeController.teacherWorkgroupId}}'
                        mode='student'></component>
-            <div ng-if="component.rubric" style="margin: 20">
+            <div ng-if="nodeController.mode == 'preview' && vleController.rubricsViewable && component.rubric" style="margin: 20">
                 <md-card class="annotations annotations--node-info">
                     <md-card-title class="annotations__header gray-darker-bg">
                         <div class="annotations__avatar md-avatar avatar--icon md-36 avatar md-whiteframe-1dp">

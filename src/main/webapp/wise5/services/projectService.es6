@@ -26,6 +26,7 @@ class ProjectService {
         this.componentServices = {};
         this.nodeIdToNumber = {};
         this.nodeIdToIsInBranchPath = {};
+        this.achievements = [];
 
         this.$translate = this.$filter('translate');
 
@@ -62,6 +63,7 @@ class ProjectService {
         this.idToOrder = {};
         this.nodeCount = 0;
         this.nodeIdToIsInBranchPath = {};
+        this.achievements = [];
     };
 
     getStyle() {
@@ -421,6 +423,11 @@ class ProjectService {
              * then the node number is 1.5
              */
             this.calculateNodeNumbers();
+
+            if (this.project.achievements != null) {
+                // get the project achievements
+                this.achievements = this.project.achievements;
+            }
         }
     };
 
@@ -9308,6 +9315,64 @@ class ProjectService {
         }
 
         return scriptFilename;
+    }
+
+    /**
+     * Get all the achievements in the project
+     * @return all the achievements in the project
+     */
+    getAchievements() {
+        var achievements = null;
+
+        if (this.project != null) {
+            achievements = this.project.achievements;
+        }
+
+        return achievements;
+    }
+
+    /**
+     * Check if there are any rubrics in the project. There can potentially be
+     * a project rubric, node rubrics, and component rubrics.
+     * @return whether there are any rubrics in the project
+     */
+    hasRubrics() {
+
+        if (this.project != null) {
+
+            if (this.project.rubric != null && this.project.rubric != "") {
+                // there is a project rubric
+                return true;
+            }
+
+            // loop through all the nodes
+            for (var n = 0; n < this.project.nodes.length; n++) {
+                var node = this.project.nodes[n];
+
+                if (node != null) {
+                    if (node.rubric != null && node.rubric != "") {
+                        // there is a node rubric
+                        return true;
+                    }
+
+                    if (node.components != null) {
+                        // loop through all the components
+                        for (var c = 0; c < node.components.length; c++) {
+                            var component = node.components[c];
+
+                            if (component != null) {
+                                if (component.rubric != null && component.rubric != "") {
+                                    // there is a component rubric
+                                    return true;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return false;
     }
 }
 

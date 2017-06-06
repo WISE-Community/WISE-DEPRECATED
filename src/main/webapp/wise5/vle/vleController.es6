@@ -60,6 +60,17 @@ class VLEController {
         // whether constraints have been disabled
         this.constraintsDisabled = false;
 
+        // whether to show the rubrics
+        this.rubricsViewable = false;
+
+        if (this.isPreview()) {
+            /*
+             * we are in preview mode so we will show the rubrics if there are
+             * any
+             */
+            this.rubricsViewable = true;
+        }
+
         if (this.ConfigService.getConfigParam('constraints') == false) {
             // constraints are disabled
             this.constraintsDisabled = true;
@@ -708,6 +719,28 @@ class VLEController {
         }
     }
 
+    /**
+     * Check if there are any rubrics in the project. There can potentially be
+     * a project rubric, node rubrics, and component rubrics.
+     * @return whether there are any rubrics in the project
+     */
+    hasRubrics() {
+        return this.ProjectService.hasRubrics();
+    }
+
+    /**
+     * Hide the rubrics
+     */
+    hideRubrics() {
+        this.rubricsViewable = false;
+    }
+
+    /**
+     * Show the rubrics
+     */
+    showRubrics() {
+        this.rubricsViewable = true;
+    }
 }
 
 VLEController.$inject = [

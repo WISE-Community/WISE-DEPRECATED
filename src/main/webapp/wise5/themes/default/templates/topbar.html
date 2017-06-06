@@ -10,6 +10,8 @@
             <span>{{vleController.projectName}}</span>
         </h3>
         <span flex></span>
+        <md-button class="md-raised md-primary" ng-if="vleController.isPreview() && vleController.hasRubrics()" ng-show="vleController.rubricsViewable == true" ng-click="vleController.hideRubrics()" title="{{ 'onlyAvailableInPreviewMode' | translate }}">{{ 'hideRubrics' | translate }}</md-button>
+        <md-button class="md-raised md-primary" ng-if="vleController.isPreview() && vleController.hasRubrics()" ng-show="vleController.rubricsViewable == false" ng-click="vleController.showRubrics()" title="{{ 'onlyAvailableInPreviewMode' | translate }}">{{ 'showRubrics' | translate }}</md-button>
         <md-button class="md-raised md-primary" ng-if="vleController.isPreview() && vleController.hasConstraints()" ng-click="vleController.disableConstraints()" title="{{ 'onlyAvailableInPreviewMode' | translate }}">{{ 'turnOffConstraints' | translate }}</md-button>
         <span ng-show="vleController.isPreview() && vleController.constraintsDisabled">Constraints Are Off</span>
         <md-menu md-position-mode="target-right target" md-offset="40 26">
