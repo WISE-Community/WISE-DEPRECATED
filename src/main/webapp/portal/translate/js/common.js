@@ -58,13 +58,13 @@ function updateMissingTranslationsCount() {
 			numMissingTranslations += 1;
 		}
 	});
-	var numTotalTranslations = $("tr textarea").length;	
+	var numTotalTranslations = $("tr textarea.foreignText").length;
 	var numCompletedTranslations = numTotalTranslations - numMissingTranslations;
 	var completionPercentage = Math.floor(numCompletedTranslations/numTotalTranslations*100);
 	var cheerfulText = "";
 	if (numTotalTranslations == numCompletedTranslations) {
 	    cheerfulText = "Congratulations. You're done!";
-        } else if (completionPercentage <= 25) {
+	} else if (completionPercentage <= 25) {
 	    cheerfulText = "Take it one step at a time! A journey of a thousand miles begins with a single step.";
 	} else if (completionPercentage <= 50) {
 	    cheerfulText = "Life is a journey, not a destination. Enjoy the journey of translation!";
