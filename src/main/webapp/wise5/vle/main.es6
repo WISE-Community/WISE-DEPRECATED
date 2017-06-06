@@ -1,6 +1,7 @@
 'use strict';
 
 import $ from 'jquery';
+import AchievementService from '../services/achievementService';
 import angular from 'angular';
 import angularDragula from 'angular-dragula';
 import angularFileUpload from 'ng-file-upload';
@@ -88,6 +89,7 @@ let vleModule = angular.module('vle', [
     'ui.router',
     'ui.scrollpoint'
     ])
+    .service(AchievementService.name, AchievementService)
     .service(AnnotationService.name, AnnotationService)
     .service(ConfigService.name, ConfigService)
     .service(CRaterService.name, CRaterService)
@@ -169,6 +171,9 @@ let vleModule = angular.module('vle', [
                                 return NotebookService.notebook;
                             }
                             */
+                        },
+                        achievements: function (AchievementService, studentData, config, project) {
+                            return AchievementService.retrieveAchievements();
                         },
                         notifications: function (NotificationService, studentData, config, project) {
                             return NotificationService.retrieveNotifications();

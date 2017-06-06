@@ -26,6 +26,7 @@ package org.wise.portal.service.vle.wise5;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.wise.portal.dao.ObjectNotFoundException;
+import org.wise.vle.domain.achievement.Achievement;
 import org.wise.vle.domain.annotation.wise5.Annotation;
 import org.wise.vle.domain.notification.Notification;
 import org.wise.vle.domain.work.Event;
@@ -95,6 +96,19 @@ public interface VLEService {
             String nodeId, String componentId, String componentType,
             String context, String category, String event, String data,
             String clientSaveTime) throws ObjectNotFoundException;
+
+    /**
+     * @return List of Achievements with specified fields. If none matches,
+     * return an empty list
+     */
+    List<Achievement> getAchievements(Integer id, Integer runId, Integer workgroupId,
+                                      String achievementId, String type);
+
+    /**
+     * Saves the specified achievements with specified fields and returns the saved result
+     */
+    Achievement saveAchievement(Integer id, Integer runId, Integer workgroupId,
+                                      String achievementId, String type, String data);
 
     /**
      * @return List of Annotation objects with the specified fields. If none matches,

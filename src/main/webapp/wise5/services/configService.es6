@@ -98,6 +98,10 @@ class ConfigService {
         }
     };
 
+    getAchievementsURL() {
+        return this.getConfigParam('achievementURL');
+    };
+
     getCRaterRequestURL() {
         return this.getConfigParam('cRaterRequestURL');
     };

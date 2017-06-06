@@ -21,9 +21,9 @@ class NotificationService {
                     notification.nodePosition = this.ProjectService.getNodePositionById(notification.nodeId);
                     notification.nodePositionAndTitle = this.ProjectService.getNodePositionAndTitleByNodeId(notification.nodeId);
                     // check if this notification is new or is an update
-                    var isNotificationNew = true;
-                    for (var n = 0; n < this.notifications.length; n++) {
-                        var currentNotification = this.notifications[n];
+                    let isNotificationNew = true;
+                    for (let n = 0; n < this.notifications.length; n++) {
+                        let currentNotification = this.notifications[n];
                         if (currentNotification.id == notification.id) {
                             // existing notification (with same id) found, so it's an update
                             this.notifications[n] = notification;
@@ -54,7 +54,7 @@ class NotificationService {
      * @param groupId id that groups multiple notifications together
      * @returns newly created notification object
      */
-    createNewNotification(notificationType, nodeId, componentId, fromWorkgroupId, toWorkgroupId, message, data=null, groupId=null) {
+    createNewNotification(notificationType, nodeId, componentId, fromWorkgroupId, toWorkgroupId, message, data = null, groupId = null) {
         let nodePosition = this.ProjectService.getNodePositionById(nodeId);
         let nodePositionAndTitle = this.ProjectService.getNodePositionAndTitleByNodeId(nodeId);
         let component = this.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
@@ -85,17 +85,18 @@ class NotificationService {
      */
     retrieveNotifications(toWorkgroupId = null) {
 
-        var notificationURL = this.ConfigService.getNotificationURL();
+        let notificationURL = this.ConfigService.getNotificationURL();
 
         if (notificationURL == null) {
             // the notification url is null most likely because we are in preview mode
             return Promise.resolve(this.notifications);
         } else {
             // the notification url is not null so we will retrieve the notifications
-            let config = {};
-            config.method = 'GET';
-            config.url = this.ConfigService.getNotificationURL();
-            config.params = {};
+            let config = {
+                method: "GET",
+                url: this.ConfigService.getNotificationURL(),
+                params: {}
+            };
             if (toWorkgroupId != null) {
                 config.params.toWorkgroupId = toWorkgroupId;
             } else if (this.ConfigService.getMode() !== 'classroomMonitor') {
@@ -203,10 +204,13 @@ class NotificationService {
 
         } else {
 
-            let config = {};
-            config.method = 'POST';
-            config.url = this.ConfigService.getNotificationURL();
-            config.headers = {'Content-Type': 'application/x-www-form-urlencoded'};
+            let config = {
+                method: "POST",
+                url: this.ConfigService.getNotificationURL(),
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            };
 
             let params = {};
             if (notification.id != null) {
@@ -264,10 +268,13 @@ class NotificationService {
                 return;
             }
 
-            let config = {};
-            config.method = 'POST';
-            config.url = this.ConfigService.getNotificationURL() + "/dismiss";
-            config.headers = {'Content-Type': 'application/x-www-form-urlencoded'};
+            let config = {
+                method: "POST",
+                url: this.ConfigService.getNotificationURL() + "/dismiss",
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            };
 
             let params = {};
             params.notificationId = notification.id;

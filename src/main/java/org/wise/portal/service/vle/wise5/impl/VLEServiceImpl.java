@@ -30,6 +30,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.wise.portal.dao.ObjectNotFoundException;
+import org.wise.portal.dao.achievement.AchievementDao;
 import org.wise.portal.dao.annotation.wise5.AnnotationDao;
 import org.wise.portal.dao.notification.NotificationDao;
 import org.wise.portal.dao.work.NotebookItemDao;
@@ -43,6 +44,7 @@ import org.wise.portal.service.group.GroupService;
 import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.vle.wise5.VLEService;
 import org.wise.portal.service.workgroup.WorkgroupService;
+import org.wise.vle.domain.achievement.Achievement;
 import org.wise.vle.domain.annotation.wise5.Annotation;
 import org.wise.vle.domain.notification.Notification;
 import org.wise.vle.domain.work.Event;
@@ -68,6 +70,9 @@ public class VLEServiceImpl implements VLEService {
 
     @Autowired
     private EventDao eventDao;
+
+    @Autowired
+    private AchievementDao achievementDao;
 
     @Autowired @Qualifier("wise5AnnotationDao")
     private AnnotationDao annotationDao;
@@ -418,6 +423,77 @@ public class VLEServiceImpl implements VLEService {
 
         eventDao.save(event);
         return event;
+    }
+
+    public List<Achievement> getAchievements(Integer id, Integer runId, Integer workgroupId,
+                                      String achievementId, String type) {
+        Run run = null;
+        if (runId != null) {
+            try {
+                boolean doEagerFetch = false;
+                run = runService.retrieveById(new Long(runId), doEagerFetch);
+            } catch (ObjectNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+        WISEWorkgroup workgroup = null;
+        if (workgroupId != null) {
+            try {
+                workgroup = (WISEWorkgroup) workgroupService.retrieveById(new Long(workgroupId));
+            } catch (ObjectNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return achievementDao.getAchievementsByParams(id, run, workgroup, achievementId, type);
+    }
+
+    public Achievement saveAchievement(Integer id, Integer runId, Integer workgroupId,
+                                String achievementId, String type, String data) {
+        Achievement achievement;
+        if (id != null) {
+            // if the id is passed in, the client is requesting an update, so fetch the Achievement from data store
+            try {
+                achievement = (Achievement) achievementDao.getById(id);
+            } catch (ObjectNotFoundException e) {
+                e.printStackTrace();
+                achievement = new Achievement();  // couldn't find the achievement with the id, so create one from scratch
+            }
+        } else {
+            // the id was not passed in, so we're creating a new Achievement from scratch
+            achievement = new Achievement();
+        }
+        if (runId != null) {
+            try {
+                boolean doEagerFetch = false;
+                achievement.setRun(runService.retrieveById(new Long(runId), doEagerFetch));
+            } catch (ObjectNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+        if (workgroupId != null) {
+            try {
+                achievement.setWorkgroup((WISEWorkgroup) workgroupService.retrieveById(new Long(workgroupId)));
+            } catch (ObjectNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+        if (achievementId != null) {
+            achievement.setAchievementId(achievementId);
+        }
+        if (type != null) {
+            achievement.setType(type);
+        }
+        if (data != null) {
+            achievement.setData(data);
+        }
+        // set postTime
+        Calendar now = Calendar.getInstance();
+        Timestamp serverSaveTimestamp = new Timestamp(now.getTimeInMillis());
+        achievement.setAchievementTime(serverSaveTimestamp);
+
+        achievementDao.save(achievement);
+        return achievement;
     }
 
     @Override

@@ -115,6 +115,11 @@ var ConfigService = function () {
             }
         }
     }, {
+        key: 'getAchievementsURL',
+        value: function getAchievementsURL() {
+            return this.getConfigParam('achievementURL');
+        }
+    }, {
         key: 'getCRaterRequestURL',
         value: function getCRaterRequestURL() {
             return this.getConfigParam('cRaterRequestURL');
