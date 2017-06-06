@@ -1,1 +1,7 @@
-{}
+{
+  "discussion.allowUploadedImagesInPosts": "Οι μαθητές μπορούν στην αλληλογραφία τους να φορτώσουν και να χρησιμοποιήσουν εικόνες",
+  "discussion.comments": "Σχόλια",
+  "discussion.reply": "Απάντηση",
+  "discussion.post": "Αλληλογραφία",
+  "discussion.repliedToADiscussionYouWereIn": "{{userNames}} απάντησαν σε μια συνομιλία στην οποία συμμετείχατε!"
+}
