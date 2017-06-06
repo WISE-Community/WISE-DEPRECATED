@@ -46,7 +46,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.wise.portal.dao.ObjectNotFoundException;
-import org.wise.portal.domain.module.impl.CurnitGetCurnitUrlVisitor;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.service.project.ProjectService;
 
@@ -966,7 +965,7 @@ public class AnalyzeProjectController {
 	 */
 	private String getProjectFileLocalPath(Project project) {
 		String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
-		String projectUrl = (String) project.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
+		String projectUrl = project.getModulePath();
 		String projectFilePath = curriculumBaseDir + projectUrl;
 		return projectFilePath;
 	}
@@ -980,7 +979,7 @@ public class AnalyzeProjectController {
 	 */
 	private String getProjectFileWebPath(Project project) {
 		String curriculumBaseWebDir = wiseProperties.getProperty("curriculum_base_www");
-		String projectUrl = (String) project.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
+		String projectUrl = project.getModulePath();
 		String projectFilePath = curriculumBaseWebDir + projectUrl;
 		return projectFilePath;
 	}

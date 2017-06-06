@@ -33,8 +33,6 @@ import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.dao.module.CurnitDao;
 import org.wise.portal.domain.module.Curnit;
 import org.wise.portal.domain.module.impl.CurnitImpl;
-import org.wise.portal.domain.module.impl.CurnitParameters;
-import org.wise.portal.service.module.impl.CurnitServiceImpl;
 
 /**
  * @author Laurel Williams
@@ -84,20 +82,6 @@ public class CurnitServiceImplTest extends TestCase {
         expect(mockCurnitDao.getList()).andReturn(expectedList);
         replay(mockCurnitDao);
         assertEquals(expectedList, curnitServiceImpl.getCurnitList());
-        verify(mockCurnitDao);
-    }
-
-    public void testCreateCurnit() throws Exception {   
-        CurnitParameters curnitParameters = new CurnitParameters();
-        curnitParameters.setName(CURNIT_NAME);
-        curnitParameters.setUrl(CURNIT_URL);
-
-        expectLastCall();
-        mockCurnitDao.save(this.curnit);
-        expectLastCall();
-        replay(mockCurnitDao);
-        Curnit curnit = this.curnitServiceImpl.createCurnit(curnitParameters);
-
         verify(mockCurnitDao);
     }
 

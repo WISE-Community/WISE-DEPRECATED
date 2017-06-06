@@ -51,9 +51,6 @@ import javax.persistence.Version;
 
 import org.hibernate.annotations.Cascade;
 import org.wise.portal.domain.authentication.MutableUserDetails;
-import org.wise.portal.domain.module.Curnit;
-import org.wise.portal.domain.module.Module;
-import org.wise.portal.domain.module.impl.CurnitImpl;
 import org.wise.portal.domain.project.FamilyTag;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.project.ProjectInfo;
@@ -62,8 +59,6 @@ import org.wise.portal.domain.project.ProjectVisitor;
 import org.wise.portal.domain.project.Tag;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.user.impl.UserImpl;
-import org.wise.portal.service.module.ModuleService;
-import org.wise.portal.service.module.impl.ModuleServiceImpl;
 
 /**
  * @author Hiroki Terashima
@@ -90,9 +85,6 @@ public class ProjectImpl implements Project {
 	
 	@Transient
 	public static final String DATA_STORE_NAME = "projects";
-	
-	@Transient
-	public static final String COLUMN_NAME_CURNIT_FK = "curnit_fk";
 
 	@Transient
 	public static final String COLUMN_NAME_PARENT_PROJECT_ID = "parentprojectid";
@@ -153,10 +145,8 @@ public class ProjectImpl implements Project {
     @JoinColumn(name = COLUMN_NAME_METADATA_FK, nullable = true, unique = true)
     protected ProjectMetadata metadata = null;
 
-	@ManyToOne(cascade = CascadeType.ALL, targetEntity = CurnitImpl.class, fetch = FetchType.LAZY)
-    @Cascade( { org.hibernate.annotations.CascadeType.SAVE_UPDATE })
-	@JoinColumn(name = COLUMN_NAME_CURNIT_FK, nullable = true, unique = false)
-	protected Curnit curnit;
+	@Column(name = "modulePath", nullable = false)
+	protected String modulePath;
 
 	@ManyToOne(targetEntity = UserImpl.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "owner_fk", nullable = false, unique = false)
@@ -217,24 +207,7 @@ public class ProjectImpl implements Project {
 
     @Column(name = ProjectImpl.COLUMN_NAME_WISE_VERSION, nullable = true)
     protected Integer wiseVersion;
-    
-	/**
-	 * @see org.wise.portal.domain.project.Project#getCurnit()
-	 */
-	public Curnit getCurnit() {
-		return curnit;
-	}
 
-	/**
-	 * @see org.wise.portal.domain.project.Project#setCurnit(net.sf.sail.webapp.domain.Curnit)
-	 */
-	public void setCurnit(Curnit curnit) {
-		this.curnit = curnit;
-	}
-
-    /**
-     * @see net.sf.sail.webapp.domain.Curnit#getId()
-     */
     public Long getId() {
         return this.id;
     }
@@ -261,7 +234,7 @@ public class ProjectImpl implements Project {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((curnit == null) ? 0 : curnit.hashCode());
+		result = prime * result + ((modulePath == null) ? 0 : modulePath.hashCode());
 		return result;
 	}
 
@@ -277,10 +250,10 @@ public class ProjectImpl implements Project {
 		if (getClass() != obj.getClass())
 			return false;
 		final ProjectImpl other = (ProjectImpl) obj;
-		if (curnit == null) {
-			if (other.curnit != null)
+		if (modulePath == null) {
+			if (other.modulePath != null)
 				return false;
-		} else if (!curnit.equals(other.curnit))
+		} else if (!modulePath.equals(other.modulePath))
 			return false;
 		return true;
 	}
@@ -399,6 +372,16 @@ public class ProjectImpl implements Project {
 		this.name = name;
 	}
 
+	@Override
+	public String getModulePath() {
+		return this.modulePath;
+	}
+
+	@Override
+	public void setModulePath(String modulePath) {
+		this.modulePath = modulePath;
+	}
+
 	/**
 	 * @return the bookmarkers
 	 */
@@ -417,19 +400,8 @@ public class ProjectImpl implements Project {
 	 * @see org.wise.portal.domain.project.Project#populateProjectInfo()
 	 */
 	public void populateProjectInfo(){
-		ModuleService moduleService = new ModuleServiceImpl();
 		this.projectinfo = new ProjectInfoImpl();
 		this.projectinfo.setName(this.getName());
-		
-		try{
-			Module mod = (Module) moduleService.getById(this.getCurnit().getId());
-			this.projectinfo.setSubject(mod.getTopicKeywords());
-			this.projectinfo.setGradeLevel(mod.getGrades());
-			this.projectinfo.setComment("NONE");
-			this.projectinfo.setAuthor(mod.getAuthors());
-		} catch(Exception e){
-			
-		}
 	}
 	
 	/**

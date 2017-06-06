@@ -1,3 +1,26 @@
+/**
+ * Copyright (c) 2008-2017 Regents of the University of California (Regents).
+ * Created by WISE, Graduate School of Education, University of California, Berkeley.
+ *
+ * This software is distributed under the GNU General Public License, v3,
+ * or (at your option) any later version.
+ *
+ * Permission is hereby granted, without written agreement and without license
+ * or royalty fees, to use, copy, modify, and distribute this software and its
+ * documentation for any purpose, provided that the above copyright notice and
+ * the following two paragraphs appear in all copies of this software.
+ *
+ * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+ * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
+ * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
+ * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
+ *
+ * IN NO EVENT SHALL REGENTS BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT,
+ * SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, INCLUDING LOST PROFITS,
+ * ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF
+ * REGENTS HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
 package org.wise.portal.presentation.web.controllers.author.project;
 
 import org.apache.commons.io.FileUtils;
@@ -20,9 +43,6 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 import org.springframework.web.socket.WebSocketHandler;
 import org.wise.portal.dao.ObjectNotFoundException;
-import org.wise.portal.domain.module.Curnit;
-import org.wise.portal.domain.module.impl.CurnitGetCurnitUrlVisitor;
-import org.wise.portal.domain.module.impl.ModuleParameters;
 import org.wise.portal.domain.portal.Portal;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.project.ProjectMetadata;
@@ -33,15 +53,11 @@ import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.presentation.web.exception.NotAuthorizedException;
-import org.wise.portal.presentation.web.filters.WISEAuthenticationProcessingFilter;
-import org.wise.portal.presentation.web.listeners.WISESessionListener;
 import org.wise.portal.service.authentication.UserDetailsService;
-import org.wise.portal.service.module.CurnitService;
 import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.portal.PortalService;
 import org.wise.portal.service.project.ProjectService;
 import org.wise.portal.service.websocket.WISEWebSocketHandler;
-import org.wise.vle.domain.notification.Notification;
 import org.wise.vle.utils.FileManager;
 
 import javax.servlet.ServletContext;
@@ -69,9 +85,6 @@ public class WISE5AuthorProjectController {
 
     @Autowired
     RunService runService;
-
-    @Autowired
-    CurnitService curnitService;
 
     @Autowired
     Properties wiseProperties;
@@ -164,12 +177,8 @@ public class WISE5AuthorProjectController {
             // get the relative path to the project from curriculumBaseDir (e.g. /510/project.json)
             String projectPathRelativeToCurriculumBaseDir = "/" + projectFolderName + "/" + projectJSONFilename;
 
-            ModuleParameters mParams = new ModuleParameters();
-            mParams.setUrl(projectPathRelativeToCurriculumBaseDir);
-            Curnit curnit = curnitService.createCurnit(mParams);
-
             ProjectParameters pParams = new ProjectParameters();
-            pParams.setCurnitId(curnit.getId());
+            pParams.setModulePath(projectPathRelativeToCurriculumBaseDir);
             pParams.setOwner(user);
             pParams.setProjectname(projectName);
             pParams.setProjectType(ProjectType.LD);
@@ -245,17 +254,15 @@ public class WISE5AuthorProjectController {
                 if (parentProject != null && (this.projectService.canAuthorProject(parentProject, user) || parentProject.hasTags(tagNames))) {
                     // upload the zipfile to curriculum_base_dir
                     String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
-                    String parentProjectJSONAbsolutePath = curriculumBaseDir + (String) parentProject.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
+                    String parentProjectJSONAbsolutePath = curriculumBaseDir + parentProject.getModulePath();
                     File parentProjectJSONFile = new File(parentProjectJSONAbsolutePath);
                     File parentProjectDir = parentProjectJSONFile.getParentFile();
 
                     String newProjectDirectoryPath = copyProjectDirectory(parentProjectDir);
-                    ModuleParameters mParams = new ModuleParameters();
-                    mParams.setUrl("/" + newProjectDirectoryPath + "/project.json");
-                    Curnit curnit = curnitService.createCurnit(mParams);
+                    String modulePath = "/" + newProjectDirectoryPath + "/project.json";
 
                     ProjectParameters pParams = new ProjectParameters();
-                    pParams.setCurnitId(curnit.getId());
+                    pParams.setModulePath(modulePath);
                     pParams.setOwner(user);
                     pParams.setProjectname(parentProject.getName());
                     pParams.setProjectType(ProjectType.LD);
@@ -317,7 +324,7 @@ public class WISE5AuthorProjectController {
         }
 
         String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
-        String rawProjectUrl = (String) project.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
+        String rawProjectUrl = project.getModulePath();
         String fullProjectPath = curriculumBaseDir + rawProjectUrl;    // e.g. /path/to/project/project.json
         String fullProjectDir = fullProjectPath.substring(0, fullProjectPath.lastIndexOf("/"));   // e.g. /path/to/project/
 
@@ -439,7 +446,7 @@ public class WISE5AuthorProjectController {
         try {
             String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
             String curriculumBaseWWW = wiseProperties.getProperty("curriculum_base_www");
-            String rawProjectUrl = (String) project.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
+            String rawProjectUrl = project.getModulePath();
             String projectURL = curriculumBaseWWW + rawProjectUrl;
             String projectBaseURL = projectURL.substring(0, projectURL.indexOf("project.json"));
             String projectAssetURL = wiseBaseURL + "/project/asset/" + projectId;
@@ -633,7 +640,7 @@ public class WISE5AuthorProjectController {
         }
 
         String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
-        String rawProjectUrl = (String) project.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
+        String rawProjectUrl = project.getModulePath();
         String fullProjectPath = curriculumBaseDir + rawProjectUrl;    // e.g. /path/to/project/project.json
         String fullProjectDir = fullProjectPath.substring(0, fullProjectPath.lastIndexOf("/"));   // e.g. /path/to/project/
 
@@ -664,7 +671,7 @@ public class WISE5AuthorProjectController {
      */
     private String getProjectAssetsDirectoryPath(Project project) {
         String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
-        String rawProjectUrl = (String) project.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
+        String rawProjectUrl = project.getModulePath();
         String projectURL = curriculumBaseDir + rawProjectUrl;
         String projectBaseDir = projectURL.substring(0, projectURL.indexOf("project.json"));
         return projectBaseDir + "/assets";
@@ -1157,13 +1164,13 @@ public class WISE5AuthorProjectController {
         Project fromProject = projectService.getById(fromProjectId);
 
         //get the from project url e.g. /171/project.json
-        String fromProjectUrl = (String) fromProject.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
+        String fromProjectUrl = fromProject.getModulePath();
 
         //get the to project
         Project toProject = projectService.getById(toProjectId);
 
         //get the to project url e.g. /172/project.json
-        String toProjectUrl = (String) toProject.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
+        String toProjectUrl = toProject.getModulePath();
 
         //get the curriculum base directory e.g. /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum
         String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");

@@ -181,7 +181,7 @@ public interface WorkgroupService {
 	 * @param run
 	 * @param period
 	 * @return the created <code>WISEWorkgroup</code>
-	 * @throws ObjectNotFoundException when the curnitmap could not be
+	 * @throws ObjectNotFoundException when the curnit could not be
 	 *     retrieved for the <code>Run</code>
 	 */
 	WISEWorkgroup createWISEWorkgroup(String name, Set<User> members, Run run, Group period) throws ObjectNotFoundException;

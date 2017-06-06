@@ -27,8 +27,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.dao.module.CurnitDao;
 import org.wise.portal.domain.module.Curnit;
-import org.wise.portal.domain.module.impl.CurnitImpl;
-import org.wise.portal.domain.module.impl.CurnitParameters;
 import org.wise.portal.service.module.CurnitService;
 
 /**
@@ -46,18 +44,6 @@ public class CurnitServiceImpl implements CurnitService {
     public List<? extends Curnit> getCurnitList() {
         return this.curnitDao.getList();
     }
-
-	/**
-	 * @throws Exception 
-	 * @see net.sf.sail.webapp.service.curnit.CurnitService#createCurnit(net.sf.sail.webapp.domain.impl.CurnitParameters)
-	 */
-    @Transactional()
-	public Curnit createCurnit(CurnitParameters curnitParameters) {
-		
-		Curnit curnit = new CurnitImpl();
-        this.curnitDao.save(curnit);
-        return curnit;
-	}
 
     /**
      * @throws org.wise.portal.dao.ObjectNotFoundException 

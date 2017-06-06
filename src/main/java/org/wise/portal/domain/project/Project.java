@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2015 Regents of the University of California (Regents). 
+ * Copyright (c) 2008-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -28,19 +28,11 @@ import java.util.Date;
 import java.util.Set;
 
 import org.wise.portal.domain.Persistable;
-import org.wise.portal.domain.module.Curnit;
 import org.wise.portal.domain.project.impl.ProjectType;
-import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
 
 /**
  * A WISE Project domain object
- * 
- * A Project has all of the data needed to set up an <code>Offering</code>, 
- * or in WISE terms, <code>Run</code>.
- * 
- * A Project can be launched, which means that the <code>Curnit</code>
- * can be rendered to the user using <code>Jnlp</code>.
  * 
  * To launch a project as a student, you need
  * -- to have set up a run (a teacher would do this)
@@ -50,18 +42,6 @@ import org.wise.portal.domain.user.User;
  * @author Hiroki Terashima
  */
 public interface Project extends Persistable {
-	
-	/**
-	 * Set the <code>Curnit</code> of this project
-	 * @param Curnit
-	 */
-	void setCurnit(Curnit curnit);
-
-	/**
-	 * Get the <code>Curnit</code> of this project
-	 * @return Curnit
-	 */
-	Curnit getCurnit();
 
 	/**
 	 * @return The id of the project in the persistent data store
@@ -121,7 +101,7 @@ public interface Project extends Persistable {
 	void setProjectType(ProjectType projectType);
 	
 	/**
-	 * @return the name
+	 * @return the name of the project
 	 */
 	String getName();
 
@@ -129,6 +109,16 @@ public interface Project extends Persistable {
 	 * @param name the name to set
 	 */
 	void setName(String name);
+
+	/**
+	 * @return the modulePath of this project
+	 */
+	String getModulePath();
+
+	/**
+	 * @param modulePath the modulePath to set
+	 */
+	void setModulePath(String modulePath);
 
 	/**
 	 * Populates the projectInfo for this project.

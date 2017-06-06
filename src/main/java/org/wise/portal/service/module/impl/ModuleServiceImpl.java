@@ -33,9 +33,6 @@ import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.dao.module.ModuleDao;
 import org.wise.portal.domain.module.Curnit;
 import org.wise.portal.domain.module.Module;
-import org.wise.portal.domain.module.impl.CurnitParameters;
-import org.wise.portal.domain.module.impl.ModuleImpl;
-import org.wise.portal.domain.module.impl.ModuleParameters;
 import org.wise.portal.service.module.ModuleService;
 
 /**
@@ -49,26 +46,6 @@ public class ModuleServiceImpl extends CurnitServiceImpl implements
 	
 	@Autowired
 	private ModuleDao<Module> moduleDao;
-	
-	/**
-	 * @throws Exception 
-	 * @see org.wise.portal.service.module.impl.CurnitServiceImpl#createCurnit(org.wise.portal.domain.module.impl.CurnitParameters)
-	 */
-	 @Override
-	 @Transactional()	
-	 public Module createCurnit(CurnitParameters curnitParameters) {
-
-		if (curnitParameters instanceof ModuleParameters) {
-			ModuleImpl module = new ModuleImpl();
-			module.setName(curnitParameters.getName());
-			module.setModuleUrl(curnitParameters.getUrl());
-			this.moduleDao.save(module);
-			return module;
-		} else {
-			System.err.println("Creating this type of Curnit is not currently supported. Please talk to WISE staff.");
-		}
-    	return null;
-	}
 
 	 /**
 	  * @see org.wise.portal.service.module.CurnitService#getCurnitList()

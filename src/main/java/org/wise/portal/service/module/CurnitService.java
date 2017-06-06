@@ -25,7 +25,6 @@ import java.util.List;
 
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.module.Curnit;
-import org.wise.portal.domain.module.impl.CurnitParameters;
 
 /**
  * A service for working with Curnits.
@@ -41,13 +40,6 @@ public interface CurnitService {
 	 */
 	List<? extends Curnit> getCurnitList();
 
-	/**
-	 * @param <code>curnitParameters</code>
-	 *            The curnit parameters (name and url)
-	 * @return the curnit
-	 */
-	Curnit createCurnit(CurnitParameters curnitParameters);
-	
 	/**
 	 * Updates the specified curnit
 	 * 

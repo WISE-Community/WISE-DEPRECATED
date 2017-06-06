@@ -104,13 +104,6 @@
         primary key (id)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-    create table curnits (
-        id bigint not null auto_increment,
-        name varchar(255),
-        OPTLOCK integer,
-        primary key (id)
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
     create table events (
         id integer not null auto_increment,
         category varchar(255) not null,
@@ -162,19 +155,6 @@
         projectId bigint,
         runId bigint,
         workgroupId bigint,
-        primary key (id)
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-    create table modules (
-        authors varchar(255),
-        computer_time bigint,
-        description varchar(255),
-        grades varchar(255),
-        moduleUrl varchar(255) not null,
-        tech_reqs varchar(255),
-        topic_keywords varchar(255),
-        total_time bigint,
-        id bigint not null,
         primary key (id)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -365,11 +345,11 @@
         ispublic bit,
         maxTotalAssetsSize bigint,
         name varchar(255) not null,
+        modulePath varchar(255) not null,
         parentprojectid bigint,
         projecttype integer,
         OPTLOCK integer,
         wiseVersion integer,
-        curnit_fk bigint,
         metadata_fk bigint,
         owner_fk bigint not null,
         primary key (id)
@@ -797,11 +777,6 @@
         foreign key (group_fk)
         references groups (id);
 
-    alter table modules
-        add constraint FK_9qido677ahgt2n9yiftoj65r3
-        foreign key (id)
-        references curnits (id);
-
     alter table newsitem
         add constraint FK_iekdwpu7jkpuwafy4uvocjg3s
         foreign key (owner)
@@ -901,11 +876,6 @@
         add constraint FK_3u4rbdp8k8fywqwxobmlexoj
         foreign key (premadecommentslist_fk)
         references premadecommentlists (id);
-
-    alter table projects
-        add constraint FK_89hfo2jpmi5bd7a73w8cy7h4t
-        foreign key (curnit_fk)
-        references curnits (id);
 
     alter table projects
         add constraint FK_t592fa1q3xyjf1qsx8t4qkrt5

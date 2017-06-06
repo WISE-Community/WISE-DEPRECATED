@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2007-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -35,7 +35,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.wise.portal.domain.module.impl.CurnitGetCurnitUrlVisitor;
 import org.wise.portal.domain.newsitem.NewsItem;
 import org.wise.portal.domain.newsitem.impl.NewsItemImpl;
 import org.wise.portal.domain.project.Project;
@@ -143,7 +142,7 @@ public class IndexController {
 		String curriculumBaseWWW = this.wiseProperties.getProperty("curriculum_base_www");
 		for (Project p : libraryProjectsList) {
 			if (p.isCurrent()) {
-				String url = (String) p.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
+				String url = (String) p.getModulePath();
 
 				if (url != null && url != "") {
 					

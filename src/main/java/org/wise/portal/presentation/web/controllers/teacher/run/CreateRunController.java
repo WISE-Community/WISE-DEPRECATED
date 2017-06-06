@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2016 Regents of the University of California (Regents).
+ * Copyright (c) 2007-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -56,9 +56,6 @@ import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
 import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.impl.DefaultPeriodNames;
-import org.wise.portal.domain.module.Curnit;
-import org.wise.portal.domain.module.impl.CurnitGetCurnitUrlVisitor;
-import org.wise.portal.domain.module.impl.ModuleParameters;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.project.ProjectMetadata;
 import org.wise.portal.domain.project.impl.ProjectMetadataImpl;
@@ -70,7 +67,6 @@ import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.presentation.web.controllers.CredentialManager;
 import org.wise.portal.service.mail.IMailFacade;
-import org.wise.portal.service.module.CurnitService;
 import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.project.ProjectService;
 import org.wise.portal.service.workgroup.WorkgroupService;
@@ -107,9 +103,6 @@ public class CreateRunController {
 
 	@Autowired
 	private ProjectService projectService = null;
-
-    @Autowired
-    private CurnitService curnitService;
 
 	private static final String COMPLETE_VIEW_NAME = "teacher/run/create/createrunfinish";
 
@@ -351,7 +344,7 @@ public class CreateRunController {
         if (projectWiseVersion == null) {
             projectWiseVersion = 4;
         }
-        String relativeProjectFilePath = (String) project.getCurnit().accept(new CurnitGetCurnitUrlVisitor());  // looks like this: "/109/new.project.json"
+        String relativeProjectFilePath = project.getModulePath();  // looks like this: "/109/new.project.json"
 		int ndx = relativeProjectFilePath.lastIndexOf("/");
 		String projectJSONFilename = relativeProjectFilePath.substring(ndx + 1, relativeProjectFilePath.length());  // looks like this: "new.project.json"
 
@@ -432,11 +425,8 @@ public class CreateRunController {
                 String newProjectPath = "/" + newProjectDirname + "/project.json";
                 String newProjectName = project.getName();
                 Long parentProjectId = (Long) project.getId();
-                ModuleParameters mParams = new ModuleParameters();
-                mParams.setUrl(newProjectPath);
-                Curnit curnit = curnitService.createCurnit(mParams);
                 ProjectParameters pParams = new ProjectParameters();
-                pParams.setCurnitId(curnit.getId());
+                pParams.setModulePath(newProjectPath);
                 pParams.setOwner(user);
                 pParams.setProjectname(newProjectName);
                 pParams.setProjectType(ProjectType.LD);

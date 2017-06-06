@@ -196,16 +196,6 @@
 						</div>
 					</sec:authorize>
 
-					<!-- "Misc." section -->
-					<div class="sectionHead">
-						<spring:message code='misc' />
-					</div>
-					<div class="sectionContent">
-						<h5><a href="${contextPath}/translate"><spring:message code='admin.index.translateWISE' /></a></h5>
-						<h5><a href="${contextPath}/admin/run/mergespreadsheets.html"><spring:message code='admin.index.mergeFiles' /></a></h5>
-						<h5><a href="${contextPath}/admin/run/replacebase64withpng.html"><spring:message code='admin.index.replaceBase64WithPNG' /></a></h5>
-					</div>
-
 					<sec:authorize access="hasRole('ROLE_ADMINISTRATOR')">
 						<div class="sectionHead">
 							<spring:message code='admin.index.newsManagement' />
@@ -215,6 +205,14 @@
 								<a href="${contextPath}/admin/news/managenewsitems.html"><spring:message
 										code='admin.index.workWithNewsItems' /></a>
 							</h5>
+						</div>
+
+						<!-- "Misc." section -->
+						<div class="sectionHead">
+							<spring:message code='misc' />
+						</div>
+						<div class="sectionContent">
+							<h5><a href="${contextPath}/admin/run/mergespreadsheets.html"><spring:message code='admin.index.mergeFiles' /></a> | <a href="${contextPath}/translate"><spring:message code='admin.index.translateWISE' /></a> | <a href="${contextPath}/admin/run/replacebase64withpng.html"><spring:message code='admin.index.replaceBase64WithPNG' /></a></h5>
 						</div>
 
 						<div class="sectionHead">

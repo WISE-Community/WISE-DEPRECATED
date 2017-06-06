@@ -104,7 +104,7 @@ public class ProjectServiceImpl implements ProjectService {
 	private PremadeCommentService premadeCommentService;
 
 	/**
-	 * @see org.wise.portal.service.project.ProjectService#addBookmarkerToProject(org.wise.portal.domain.project.Project, net.sf.sail.webapp.domain.User)
+	 * @see org.wise.portal.service.project.ProjectService#addBookmarkerToProject(org.wise.portal.domain.project.Project, org.wise.portal.domain.user.User)
 	 */
 	public void addBookmarkerToProject(Project project, User bookmarker) {
 		project.getBookmarkers().add(bookmarker);
@@ -157,16 +157,15 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 	/**
-	 * @see org.wise.portal.service.project.ProjectService#createProject(org.wise.portal.domain.impl.ProjectParameters)
+	 * @see org.wise.portal.service.project.ProjectService#createProject(org.wise.portal.domain.project.impl.ProjectParameters)
 	 */
 	@Transactional(rollbackFor = { AlreadyExistsException.class,
 			NotFoundException.class, DataIntegrityViolationException.class
 	})
 	public Project createProject(ProjectParameters projectParameters)
 			throws ObjectNotFoundException {
-		Curnit curnit = this.moduleService.getById(projectParameters.getCurnitId());
 		Project project = this.projectDao.createEmptyProject();
-		project.setCurnit(curnit);
+		project.setModulePath(projectParameters.getModulePath());
 		project.setName(projectParameters.getProjectname());
 		project.setOwner(projectParameters.getOwner());
 		project.setProjectType(projectParameters.getProjectType());
@@ -248,7 +247,7 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 	/**
-	 * @see org.wise.portal.service.project.ProjectService#getBookmarkerProjectList(net.sf.sail.webapp.domain.User)
+	 * @see org.wise.portal.service.project.ProjectService#getBookmarkerProjectList(org.wise.portal.domain.user.User)
 	 */
 	public List<Project> getBookmarkerProjectList(User bookmarker)
 			throws ObjectNotFoundException {
@@ -267,7 +266,7 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 	/**
-	 * @see org.wise.portal.service.project.ProjectService#getProjectList(net.sf.sail.webapp.domain.User)
+	 * @see org.wise.portal.service.project.ProjectService#getProjectList(org.wise.portal.domain.user.User)
 	 */
 	@Secured( { "ROLE_USER", "AFTER_ACL_COLLECTION_READ" })
 	public List<Project> getProjectList(User user) {
@@ -275,14 +274,14 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 	/**
-	 * @see org.wise.portal.service.project.ProjectService#getSharedProjectList(net.sf.sail.webapp.domain.User)
+	 * @see org.wise.portal.service.project.ProjectService#getSharedProjectList(org.wise.portal.domain.user.User)
 	 */
 	public List<Project> getSharedProjectList(User user) {
 		return this.projectDao.getProjectListByUAR(user, "sharedowner");
 	}
 
 	/**
-	 * @see org.wise.portal.service.project.ProjectService#getSharedTeacherRole(org.wise.portal.domain.project.Project, net.sf.sail.webapp.domain.User)
+	 * @see org.wise.portal.service.project.ProjectService#getSharedTeacherRole(org.wise.portal.domain.project.Project, org.wise.portal.domain.user.User)
 	 */
 	public String getSharedTeacherRole(Project project, User user) {
 		List<Permission> permissions = this.aclService.getPermissions(project, user);
@@ -370,7 +369,7 @@ public class ProjectServiceImpl implements ProjectService {
 
 				//get the path to the project json file
 				String curriculumBaseWWW = wiseProperties.getProperty("curriculum_base_www");
-				String rawProjectUrl = (String) project.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
+				String rawProjectUrl = project.getModulePath();
 				String contentUrl = curriculumBaseWWW + rawProjectUrl;
 
 
@@ -389,7 +388,7 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 	/**
-	 * @see org.wise.portal.service.project.ProjectService#removeBookmarkerFromProject(org.wise.portal.domain.project.Project, net.sf.sail.webapp.domain.User)
+	 * @see org.wise.portal.service.project.ProjectService#removeBookmarkerFromProject(org.wise.portal.domain.project.Project, org.wise.portal.domain.user.User)
 	 */
 	@Transactional()
 	public void removeBookmarkerFromProject(Project project, User bookmarker) {
@@ -445,7 +444,7 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 	/**
-	 * @see org.wise.portal.service.project.ProjectService#canCreateRun(org.wise.portal.domain.project.Project, net.sf.sail.webapp.domain.User)
+	 * @see org.wise.portal.service.project.ProjectService#canCreateRun(org.wise.portal.domain.project.Project, org.wise.portal.domain.user.User)
 	 * Project cannot have a "review" tag to it.
 	 */
 	public boolean canCreateRun(Project project, User user) {
@@ -459,7 +458,7 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 	/**
-	 * @see org.wise.portal.service.project.ProjectService#canAuthorProject(org.wise.portal.domain.project.Project, net.sf.sail.webapp.domain.User)
+	 * @see org.wise.portal.service.project.ProjectService#canAuthorProject(org.wise.portal.domain.project.Project, org.wise.portal.domain.user.User)
 	 */
 	public boolean canAuthorProject(Project project, User user) {
 		return user.isAdmin() || this.aclService.hasPermission(project, BasePermission.ADMINISTRATION, user) ||
@@ -467,7 +466,7 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 	/**
-	 * @see org.wise.portal.service.project.ProjectService#canReadProject(org.wise.portal.domain.project.Project, net.sf.sail.webapp.domain.User)
+	 * @see org.wise.portal.service.project.ProjectService#canReadProject(org.wise.portal.domain.project.Project, org.wise.portal.domain.user.User)
 	 */
 	public boolean canReadProject(Project project, User user) {
 		return user.isAdmin() || this.aclService.hasPermission(project, BasePermission.ADMINISTRATION, user) ||
@@ -548,7 +547,7 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 	/**
-	 * @see org.wise.portal.service.project.ProjectService#isAuthorizedToCreateTag(net.sf.sail.webapp.domain.User, java.lang.String)
+	 * @see org.wise.portal.service.project.ProjectService#isAuthorizedToCreateTag(org.wise.portal.domain.user.User, java.lang.String)
 	 */
 	public boolean isAuthorizedToCreateTag(User user, String name) {
 		if (name.toLowerCase().equals("library") && !user.getUserDetails().hasGrantedAuthority(UserDetailsService.ADMIN_ROLE)) {
