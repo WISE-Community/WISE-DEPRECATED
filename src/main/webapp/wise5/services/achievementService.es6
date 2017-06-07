@@ -131,15 +131,7 @@ class AchievementService {
                 // get an achievement the workgroup has compeleted
                 let a = achievements[w];
 
-                if (a.id != null && a.id === achievement.id) {
-                    /*
-                     * the achievement auto increment integer id matches so we
-                     * will update it
-                     */
-                    achievements[w] = achievement;
-                    found = true;  // remember this so we don't insert later.
-                    break;
-                } else if (a.achievementId != null && a.achievementId === achievement.achievementId &&
+                if (a.achievementId != null && a.achievementId === achievement.achievementId &&
                             a.workgroupId != null && a.workgroupId === achievement.workgroupId) {
                     /*
                      * the achievement 10 character alphanumeric id matches and
