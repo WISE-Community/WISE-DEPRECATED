@@ -398,12 +398,12 @@ var authoringModule = _angular2.default.module('authoring', [(0, _angularDragula
         'contrastLightColors': undefined
     });
 
-    $mdThemingProvider.theme('default').primaryPalette('pink', {
-        'default': '900'
+    $mdThemingProvider.theme('default').primaryPalette('deep-purple', {
+        'default': '400'
     }).accentPalette('accent', {
         'default': '500'
     }).warnPalette('red', {
-        'default': 'A700'
+        'default': '800'
     });
 
     var lightMap = $mdThemingProvider.extendPalette('grey', {

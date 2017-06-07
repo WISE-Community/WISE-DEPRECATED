@@ -394,7 +394,7 @@ var vleModule = _angular2.default.module('vle', [(0, _angularDragula2.default)(_
     $mdThemingProvider.theme('default').primaryPalette('primary').accentPalette('accent', {
         'default': '500'
     }).warnPalette('red', {
-        'default': 'A700'
+        'default': '800'
     });
 
     var lightMap = $mdThemingProvider.extendPalette('grey', {

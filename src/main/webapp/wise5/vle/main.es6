@@ -313,7 +313,7 @@ let vleModule = angular.module('vle', [
                     'default': '500'
                 })
                 .warnPalette('red', {
-                    'default': 'A700'
+                    'default': '800'
                 });
 
             let lightMap = $mdThemingProvider.extendPalette('grey', {
