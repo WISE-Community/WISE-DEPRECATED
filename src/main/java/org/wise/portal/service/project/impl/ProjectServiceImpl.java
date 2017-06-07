@@ -52,8 +52,6 @@ import org.wise.portal.dao.project.ProjectDao;
 import org.wise.portal.domain.Persistable;
 import org.wise.portal.domain.authentication.MutableUserDetails;
 import org.wise.portal.domain.impl.AddSharedTeacherParameters;
-import org.wise.portal.domain.module.Curnit;
-import org.wise.portal.domain.module.impl.CurnitGetCurnitUrlVisitor;
 import org.wise.portal.domain.project.FamilyTag;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.project.ProjectMetadata;
@@ -68,7 +66,6 @@ import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.presentation.web.exception.NotAuthorizedException;
 import org.wise.portal.service.acl.AclService;
 import org.wise.portal.service.authentication.UserDetailsService;
-import org.wise.portal.service.module.ModuleService;
 import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.premadecomment.PremadeCommentService;
 import org.wise.portal.service.project.ProjectService;
@@ -82,9 +79,6 @@ public class ProjectServiceImpl implements ProjectService {
 
 	@Autowired
 	private Properties wiseProperties;
-
-	@Autowired
-	private ModuleService moduleService;
 
 	@Autowired
 	private ProjectDao<Project> projectDao;

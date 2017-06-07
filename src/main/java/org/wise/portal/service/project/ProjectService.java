@@ -122,18 +122,12 @@ public interface ProjectService {
 	
 	/**
 	 * Creates a new <code>Project</code>
-	 * 
-	 * Also, this creates a "Preview run"- that is, a run that is used
-	 * just for the purpose of previewing this project. This is not the ideal
-	 * solution to Previewing a Project, but the other solution is too much work
-	 * (making a new JNLP project that takes in curniturl and jnlpurl). The author
-	 * can also always use the authoring tool to preview the project
-	 * 
+	 *
 	 * @param <code>ProjectParameters</code>
 	 *     the project parameters object
 	 * @return the <code>Project</code> that was created
 	 * @throws ObjectNotFoundException when projectparameters references
-	 *     curnitId and jnlpId that do not exist
+	 *     objects that do not exist in the datastore
 	 */
 	Project createProject(ProjectParameters projectParameters)
 	    throws ObjectNotFoundException;

@@ -119,17 +119,16 @@ public class CreateRunController {
 
 	private Map<Long,String> postLevelTextMap;
 
-	/* change this to true if you are testing and do not want to send mail to
-	   the actual groups */
+	// change this to true if you are testing and do not want to send mail to the actual groups
 	private static final Boolean DEBUG = false;
 
-	//set this to your email
+	// set this to your email
 	private static final String DEBUG_EMAIL = "youremail@email.com";
 
 	private static final Long[] IMPLEMENTED_POST_LEVELS = {5l,1l};
 
 	/**
-	 * The default handler (page=0)
+	 * The default handler (page = 0)
 	 */
 	@RequestMapping
 	public String getInitialPage(
@@ -173,13 +172,13 @@ public class CreateRunController {
 		boolean isAllowedToClean = (project.getOwner().equals(user) || project.getSharedowners().contains(user));
 		ProjectMetadata metadata = project.getMetadata();
 
-		if(metadata != null){
+		if (metadata != null) {
 			Date lastCleaned = metadata.getLastCleaned();
 			//Long lcTime = lastCleaned.getLong("timestamp");
 			Date lastEdited = metadata.getLastEdited();
 
 			/* if it has been edited since it was last cleaned, we need to force cleaning */
-			if(lastCleaned != null && lastEdited != null && lastCleaned.before(lastEdited)) {
+			if (lastCleaned != null && lastEdited != null && lastCleaned.before(lastEdited)) {
 				forceCleaning = true;
 			}
 		}
@@ -192,7 +191,6 @@ public class CreateRunController {
 		modelMap.put("isAllowedToClean", isAllowedToClean);
 
 		modelMap.addAttribute("runParameters", runParameters);
-		// populate the model Map as needed
 		return "teacher/run/create/createrunconfirm";
 	}
 
@@ -283,9 +281,9 @@ public class CreateRunController {
 					Set<String> parsedAndTrimmed = new TreeSet<String>();
 					for(String current : parsed){
 						String trimmed = StringUtils.trim(current);
-						if(trimmed.length() == 0 || StringUtils.contains(trimmed, " ") 
+						if (trimmed.length() == 0 || StringUtils.contains(trimmed, " ")
 								|| !StringUtils.isAlphanumeric(trimmed)
-								|| trimmed.equals(",")){
+								|| trimmed.equals(",")) {
 							result.rejectValue("periodNames", "setuprun.error.whitespaceornonalphanumeric", "Manually entered" +
 									" periods cannot contain whitespace or non-alphanumeric characters.");
 							break;
@@ -376,7 +374,7 @@ public class CreateRunController {
 
 		ProjectMetadata metadata = project.getMetadata();
 
-		if(metadata != null && metadata.getPostLevel() != null) {
+		if (metadata != null && metadata.getPostLevel() != null) {
 			level = metadata.getPostLevel();
 		}
 
@@ -468,15 +466,12 @@ public class CreateRunController {
 			workgroupService.createWISEWorkgroup("teacher", members, run, null);
 
 		} catch (ObjectNotFoundException e) {
-			result.rejectValue("curnitId", "error.curnit-not_found",
-					new Object[] { runParameters.getCurnitId() }, 
-					"Project Not Found.");
 			return null;
 		}
 		ModelAndView modelAndView = new ModelAndView(COMPLETE_VIEW_NAME);
 		modelAndView.addObject(RUN_KEY, run);
 		Set<String> runIdsToArchive = runParameters.getRunIdsToArchive();
-		if(runIdsToArchive != null) {
+		if (runIdsToArchive != null) {
 			for(String runIdStr : runIdsToArchive) {
 				Long runId = Long.valueOf(runIdStr);
 				Run runToArchive = runService.retrieveById(runId);
@@ -627,7 +622,7 @@ public class CreateRunController {
 			String fromEmail = wiseProperties.getProperty("portalemailaddress");
 
 			//for testing out the email functionality without spamming the groups
-			if(DEBUG) {
+			if (DEBUG) {
 				recipients[0] = DEBUG_EMAIL;
 			}
 

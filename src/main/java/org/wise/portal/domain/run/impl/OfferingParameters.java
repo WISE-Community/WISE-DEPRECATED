@@ -30,10 +30,6 @@ public class OfferingParameters {
 	
 	private String name;
 
-	private Long curnitId;
-	
-	private Long jnlpId;
-
 	/**
 	 * @return the name
 	 */
@@ -48,34 +44,4 @@ public class OfferingParameters {
 	public void setName(String name) {
 		this.name = name;
 	}
-
-	/**
-	 * @return the curnitId
-	 */
-	public Long getCurnitId() {
-		return curnitId;
-	}
-
-	/**
-	 * @param curnitId
-	 *            the curnitId to set
-	 */
-	public void setCurnitId(Long curnitId) {
-		this.curnitId = curnitId;
-	}
-
-	/**
-	 * @return the jnlpId
-	 */
-	public Long getJnlpId() {
-		return jnlpId;
-	}
-
-	/**
-	 * @param jnlpId the jnlpId to set
-	 */
-	public void setJnlpId(Long jnlpId) {
-		this.jnlpId = jnlpId;
-	}
-
 }

@@ -62,8 +62,6 @@ public interface OfferingService {
 	 *            information needed to create an offering.
 	 * @return the offering created.
 	 * @throws ObjectNotFoundException
-	 *             If the curnit specified to create this offering does not
-	 *             exist in the data store.
 	 */
 	Offering createOffering(OfferingParameters offeringParameters)
 	    throws ObjectNotFoundException;

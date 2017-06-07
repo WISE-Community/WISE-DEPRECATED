@@ -47,7 +47,7 @@ public interface RunService extends OfferingService {
     /**
      * Creates a new <code>Run</code> object in the local data store. 
      * 
-     * @param offeringParameters
+     * @param runParameters
      *            The object that encapsulate parameters for creating a run
      * @return the run created.
      */
@@ -180,10 +180,13 @@ public interface RunService extends OfferingService {
     @Secured( {"ROLE_TEACHER"} )
     @Transactional()
 	void updateSharedTeacherForRun(AddSharedTeacherParameters addSharedTeacherParameters) throws ObjectNotFoundException;
-    
+
     /**
      * Removes specified teacher user from specified run. If user or run does not exist, ignore.
-     * @param addSharedTeacherParameters
+
+     * @param username
+     * @param runId
+     * @throws ObjectNotFoundException
      */
     @Secured( {"ROLE_TEACHER"} )
     @Transactional()
@@ -252,18 +255,16 @@ public interface RunService extends OfferingService {
      * @return set of Workgroups for that are in this run
      * @throws ObjectNotFoundException when runId cannot be used 
      *     to find an existing run 
-     * @param runId
-     * 			<code>Long</code> runId to use for lookup
-     * @param groupId
-     *         <code>Long</code> periodId to which all returned workgroups belong
+     * @param runId runId to use for lookup
+     * @param groupId periodId to which all returned workgroups belong
      */
     Set<Workgroup> getWorkgroups(Long runId, Long periodId) throws ObjectNotFoundException;
     
     /**
      * Adds an Announcement to this run
      * 
-     * @param <code>Long</code> runId
-     * @param <code>Announcement</code> announcement
+     * @param runId
+     * @param announcement
      * @throws <code>Exception</code>
      */
     void addAnnouncementToRun(Long runId, Announcement announcement) throws Exception;
@@ -271,8 +272,8 @@ public interface RunService extends OfferingService {
     /**
      * Removes an Announcement from this run
      * 
-     * @param <code>Long</code> runId
-     * @param <code>Announcement</code> announcement
+     * @param runId
+     * @param announcement
      * @throws <code>Exception</code>
      */
     void removeAnnouncementFromRun(Long runId, Announcement announcement) throws Exception;
@@ -337,7 +338,7 @@ public interface RunService extends OfferingService {
      * Given a <code>Long</code> runId, changes the archiveReminderTime to be 30 days
      * from today.
      * 
-     * @param <code>Long</code> runId
+     * @param runId
      * @throws <code>ObjectNotFoundException</code>
      */
     void extendArchiveReminderTime(Long runId) throws ObjectNotFoundException;
@@ -346,7 +347,7 @@ public interface RunService extends OfferingService {
      * Given a <code>Long</code> projectId, returns the <code>Integer</code> number of
      * runs associated with that id.
      * 
-     * @param <code>Long</code> id
+     * @param id
      * @return <code>Integer</code>
      */
     Integer getProjectUsage(Long id);
@@ -355,16 +356,16 @@ public interface RunService extends OfferingService {
      * Given a <code>Long</code> projectId, returns a <code>List<Run></code> list of
      * runs associated with that id.
      * 
-     * @param <code>Long</code> id
+     * @param projectId
      * @return <code>Integer</code>
      */
-    List<Run> getProjectRuns(Long id);
-    
+    List<Run> getProjectRuns(Long projectId);
+
     /**
-     * 
+     * Sets run extras
      * @param run
-     * @param nodeId
-     * @param maxScoreValue
+     * @param extras
+     * @throws Exception
      */
     void setExtras(Run run, String extras) throws Exception;
     
@@ -384,7 +385,7 @@ public interface RunService extends OfferingService {
      * Returns a <code>List<Run></code> list of runs that were run within the
      * given <code>String</code> period. Valid periods are "today","week" and "month".
      * 
-     * @param String - period
+     * @param period
      * @return List<Run> - run list
      */
     List<Run> getRunsRunWithinPeriod(String period);
@@ -410,7 +411,7 @@ public interface RunService extends OfferingService {
      * Updates the given <code>Run</code> run's statistics which are currently
      * the last time run and the number of times run.
      * 
-     * @param Run - the run whose statistics should be updated.
+     * @param runId - the id of the run whose statistics should be updated.
      */
     void updateRunStatistics(Long runId);
     
@@ -418,8 +419,8 @@ public interface RunService extends OfferingService {
      * Update the name of the run with the given <code>Long</code> to that of
      * the given <code>String</code> name.
      * 
-     * @param Long - runId
-     * @param String - name
+     * @param runId id of the run
+     * @param name new name of the run
      */
     void updateRunName(Long runId, String name);
     
@@ -427,8 +428,8 @@ public interface RunService extends OfferingService {
      * Creates and adds a period with the given <code>String</code> name to
      * the run with the given <code>Long</code> runId.
      * 
-     * @param Long - runId
-     * @param String - name
+     * @param runId id of the run
+     * @param name name of the new period to add to the run
      */
     void addPeriodToRun(Long runId, String name);
 }
