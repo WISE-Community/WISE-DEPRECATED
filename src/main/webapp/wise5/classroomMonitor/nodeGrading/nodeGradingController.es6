@@ -606,9 +606,6 @@ class NodeGradingController {
         let stepNumberAndTitle = this.ProjectService.getNodePositionAndTitleByNodeId(this.nodeId);
         let rubricTitle = this.$translate('stepInfo');
 
-        // get the node icon
-        let nodeIcon = this.ProjectService.getNodeIconByNodeId(this.nodeId);
-
         /*
          * create the header for the popup that contains the project title,
          * 'Open in New Tab' button, and 'Close' button
@@ -616,72 +613,16 @@ class NodeGradingController {
         let dialogHeader =
             `<md-toolbar>
                 <div class="md-toolbar-tools gray-darkest-bg">
-                    <h2 class="overflow--ellipsis">${ stepNumberAndTitle }</h2>
-                    <span flex>&nbsp;</span>
-                    <span class="md-subhead">${ rubricTitle }</span>
+                    <h2>${ stepNumberAndTitle }</h2>
                 </div>
             </md-toolbar>`;
 
         let dialogActions =
             `<md-dialog-actions layout="row" layout-align="end center">
                 <md-button class="md-primary" ng-click="openInNewWindow()" aria-label="{{ 'openInNewWindow' | translate }}">{{ 'openInNewWindow' | translate }}</md-button>
-                <md-button ng-click="close()" aria-label="{{ 'close' | translate }}">{{ 'close' | translate }}</md-button>
+                <md-button class="md-primary" ng-click="close()" aria-label="{{ 'close' | translate }}">{{ 'close' | translate }}</md-button>
             </md-dialog-actions>`;
 
-        /*
-         * create the header for the new window that contains the project title
-         */
-        let windowHeader =
-            `<md-toolbar class="layout-row">
-                <div class="md-toolbar-tools gray-darkest-bg text-light">
-                    <h2>${ stepNumberAndTitle }</h2>
-                    <span class="flex">&nbsp;</span>
-                    <span class="md-subhead">${ rubricTitle }</span>
-                </div>
-            </md-toolbar>`;
-
-        // create the string that will hold the rubric content
-        let rubricContent = '<md-list>';
-
-        // get the step rubric
-        let nodeRubric = this.nodeContent.rubric;
-
-        if (nodeRubric != null) {
-            rubricContent += '<md-list-item class="md-no-proxy list-item md-whiteframe-1dp"><div class="md-list-item-text">' + nodeRubric + '</div></md-list-item>';
-        }
-
-        // get the components
-        let components = this.nodeContent.components;
-
-        if (components != null && components.length != 0) {
-
-            // loop through all the components
-            for (let c = 0; c < components.length; c++) {
-                let component = components[c];
-
-                if (component != null) {
-
-                    // get a component rubric
-                    let componentRubric = component.rubric;
-
-                    if (componentRubric != null && componentRubric != '') {
-
-                        // append the component rubric
-                        rubricContent += '<md-list-item class="md-no-proxy list-item md-whiteframe-1dp"><div class="md-list-item-text">' + componentRubric + '</div></md-list-item>';
-                    }
-                }
-            }
-        }
-
-        rubricContent += '</md-list>';
-
-        // inject the asset paths into the rubrics
-        rubricContent = this.ProjectService.replaceAssetPaths(rubricContent);
-
-        /*let dialogContent =
-            `<md-dialog-content class="gray-lighter-bg">
-                <div class="md-dialog-content">` + rubricContent + `</div>
-            </md-dialog-content>`;*/
         let dialogContent =
             `<md-dialog-content class="gray-lighter-bg">
                 <div class="md-dialog-content" id="nodeInfo_${ this.nodeId }">
@@ -690,7 +631,7 @@ class NodeGradingController {
             </md-dialog-content>`;
 
         // create the dialog string
-        let dialogString = `<md-dialog class="dialog--wider" aria-label="` + stepNumberAndTitle + ` - ` + rubricTitle + `">` + dialogHeader + dialogContent + dialogActions + `</md-dialog>`;
+        let dialogString = `<md-dialog class="dialog--wider" aria-label="${ stepNumberAndTitle } - ${ rubricTitle }">${ dialogHeader }${  dialogContent }${ dialogActions }</md-dialog>`;
         let nodeId = this.nodeId;
 
         // display the rubric in a popup
@@ -705,6 +646,16 @@ class NodeGradingController {
 
                         // open a new tab
                         let w = window.open('', '_blank');
+
+                        /*
+                         * create the header for the new window that contains the project title
+                         */
+                        let windowHeader =
+                            `<md-toolbar class="layout-row">
+                                <div class="md-toolbar-tools gray-darkest-bg" style="color: #ffffff;">
+                                    <h2>${ stepNumberAndTitle }</h2>
+                                </div>
+                            </md-toolbar>`;
 
                         let rubricContent = document.getElementById('nodeInfo_' + nodeId).innerHTML;
 

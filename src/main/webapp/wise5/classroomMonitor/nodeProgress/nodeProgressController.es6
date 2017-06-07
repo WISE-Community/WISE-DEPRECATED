@@ -233,37 +233,34 @@ class NodeProgressController {
         let projectTitle = this.ProjectService.getProjectTitle();
         let rubricTitle = this.$translate('projectInfo');
 
-        // get the node icon; TODO: add node icon once we have a <node-icon> angular component
-        //let nodeIcon = this.ProjectService.getNodeIconByNodeId(this.nodeId);
-
         /*
          * create the header for the popup that contains the project title,
          * 'Open in New Tab' button, and 'Close' button
          */
         let dialogHeader =
-            `<md-toolbar md-theme="light">
-                <div class="md-toolbar-tools">
-                    <h2 class="overflow--ellipsis">` + projectTitle + `</h2>
+            `<md-toolbar>
+                <div class="md-toolbar-tools gray-darkest-bg">
+                    <h2 class="overflow--ellipsis">${ projectTitle }</h2>
                     <span flex>&nbsp;</span>
-                    <span class="accent-2 md-subhead">` + rubricTitle + `</span>
+                    <span class="md-subhead">${ rubricTitle }</span>
                 </div>
             </md-toolbar>`;
 
         let dialogActions =
             `<md-dialog-actions layout="row" layout-align="end center">
                 <md-button class="md-primary" ng-click="openInNewWindow()" aria-label="{{ 'openInNewWindow' | translate }}">{{ 'openInNewWindow' | translate }}</md-button>
-                <md-button ng-click="close()" aria-label="{{ 'close' | translate }}">{{ 'close' | translate }}</md-button>
+                <md-button class="md-primary" ng-click="close()" aria-label="{{ 'close' | translate }}">{{ 'close' | translate }}</md-button>
             </md-dialog-actions>`;
 
         /*
          * create the header for the new window that contains the project title
          */
         let windowHeader =
-            `<md-toolbar style="background-color: #ffffff; border-bottom: 1px solid rgba(0,0,0,0.13);" class="layout-row">
-                <div class="md-toolbar-tools">
-                    <h2>` + projectTitle + `</h2>
+            `<md-toolbar class="layout-row">
+                <div class="md-toolbar-tools gray-darkest-bg" style="color: #ffffff;">
+                    <h2>${ projectTitle }</h2>
                     <span class="flex">&nbsp;</span>
-                    <span class="accent-2 md-subhead">` + rubricTitle + `</span>
+                    <span class="md-subhead">${ rubricTitle }</span>
                 </div>
             </md-toolbar>`;
 
@@ -279,11 +276,11 @@ class NodeProgressController {
 
         let dialogContent =
             `<md-dialog-content class="gray-lighter-bg">
-                <div class="md-dialog-content">` + rubricContent + `</div>
+                <div class="md-dialog-content">${ rubricContent }</div>
             </md-dialog-content>`;
 
         // create the dialog string
-        let dialogString = `<md-dialog class="dialog--wider" aria-label="` + projectTitle + ` - ` + rubricTitle + `">` + dialogHeader + dialogContent + dialogActions + `</md-dialog>`;
+        let dialogString = `<md-dialog class="dialog--wider" aria-label="${ projectTitle } - ${ rubricTitle }">${ dialogHeader }${ dialogContent }${ dialogActions }</md-dialog>`;
 
         // create the window string
         let windowString =
@@ -292,7 +289,7 @@ class NodeProgressController {
             <link rel='stylesheet' href='../wise5/themes/default/style/angular-material.css'>
             <link rel='stylesheet' href='../wise5/lib/summernote/dist/summernote.css' />
             <body class="layout-column">
-                <div class="layout-column">` + windowHeader + `<md-content class="md-padding">` + rubricContent + `</div></md-content></div>
+                <div class="layout-column">${ windowHeader }<md-content class="md-padding">${ rubricContent }</div></md-content></div>
             </body>`;
 
         // display the rubric in a popup

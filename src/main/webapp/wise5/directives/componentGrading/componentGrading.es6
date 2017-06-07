@@ -217,10 +217,6 @@ class ComponentGradingController {
                     <md-toolbar>
                         <div class="md-toolbar-tools gray-darkest-bg">
                             <h2 class="overflow--ellipsis">{{ 'revisionsForTeam' | translate:{teamNames: userNames} }}</h2>
-                            <span flex></span>
-                            <md-button class="md-icon-button" ng-click="close()">
-                                <md-icon aria-label="{{ 'close' | translate }}"> close </md-icon>
-                            </md-button>
                         </div>
                     </md-toolbar>
                     <md-dialog-content>
@@ -229,7 +225,7 @@ class ComponentGradingController {
                         </div>
                     </md-dialog-content>
                     <md-dialog-actions layout="row" layout-align="end center">
-                        <md-button ng-click="close()" aria-label="{{ 'close' | translate }}">{{ 'close' | translate }}</md-button>
+                        <md-button class="md-primary" ng-click="close()" aria-label="{{ 'close' | translate }}">{{ 'close' | translate }}</md-button>
                     </md-dialog-actions>
                 </md-dialog>`,
             locals: {

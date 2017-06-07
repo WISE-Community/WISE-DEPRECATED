@@ -1,12 +1,13 @@
 <md-card class="annotations"
          ng-if="(componentAnnotationsCtrl.showScore && componentAnnotationsCtrl.annotations.score) || (componentAnnotationsCtrl.showComment && componentAnnotationsCtrl.annotations.comment)">
-    <md-card-title class="annotations__header gray-darker-bg">
+    <md-card-title class="annotations__header">
         <div class="annotations__avatar md-avatar avatar--icon avatar--square md-36 avatar md-whiteframe-1dp">
             <md-icon class="annotations__icon md-36">{{componentAnnotationsCtrl.icon}}</md-icon>
         </div>
         <div class="annotations__title" layout="row" flex>
             <span>{{componentAnnotationsCtrl.label}}</span>
-            <span ng-if="componentAnnotationsCtrl.isNewAnnotation()" class="badge annotations__status info-bg animate-fade" translate="new"></span>
+            <span flex></span>
+            <span ng-if="componentAnnotationsCtrl.isNewAnnotation()" class="badge annotations__status animate-fade" translate="new"></span>
         </div>
     </md-card-title>
     <md-card-content class="annotations__body md-body-1">

@@ -135,22 +135,23 @@ const NotebookReportAnnotations = {
     },
     template:
         `<div class="md-padding gray-lightest-bg annotations-container--student--report" ng-if="$ctrl.show">
-            <md-card class="annotations--student annotations--student--report">
-                <md-card-title class="annotations--student__header gray-darker-bg">
-                    <div class="annotations--student__avatar avatar--icon avatar--square md-36 avatar md-whiteframe-1dp">
-                        <md-icon class="annotations--student__icon md-36">{{$ctrl.icon}}</md-icon>
+            <md-card class="annotations annotations--report">
+                <md-card-title class="annotations__header">
+                    <div class="annotations__avatar avatar--icon avatar--square md-36 avatar md-whiteframe-1dp">
+                        <md-icon class="annotations__icon md-36">{{$ctrl.icon}}</md-icon>
                     </div>
-                    <div class="annotations--student__title" layout="row" flex>
+                    <div class="annotations__title" layout="row" flex>
                         <span>{{$ctrl.label}}</span>
-                        <span ng-if="$ctrl.hasNew" class="badge annotations--student__status info-bg animate-fade" translate="new"></span>
+                        <span flex></span>
+                        <span ng-if="$ctrl.hasNew" class="badge annotations__status animate-fade" translate="new"></span>
                     </div>
                 </md-card-title>
-                <md-card-content class="annotations--student__body md-body-1">
+                <md-card-content class="annotations__body md-body-1">
                     <div ng-if="$ctrl.showComment && $ctrl.annotations.comment.data.value"><compile data="$ctrl.annotations.comment.data.value"></compile></div>
                     <hr ng-if="$ctrl.annotations.comment" />
                     <div layout="row" laoyut-align="start center">
                         <span ng-if="$ctrl.showScore && $ctrl.annotations.score"
-                              class="annotations--student__score"
+                              class="annotations__score"
                               translate="SCORE_LABEL_AND_VALUE"
                               translate-value-score="{{$ctrl.annotations.score.data.value}}{{$ctrl.maxScoreDisplay}}"></span>
                         <span flex></span>
