@@ -9965,6 +9965,49 @@ var ProjectService = function () {
         }
 
         /**
+         * Get an achievement by the 10 character alphanumeric achievement id
+         * @param achievementId the 10 character alphanumeric achievement id
+         * @return the achievement with the given achievement id
+         */
+
+    }, {
+        key: 'getAchievementByAchievementId',
+        value: function getAchievementByAchievementId(achievementId) {
+
+            if (achievementId != null) {
+
+                // get the achievements object
+                var achievements = this.getAchievements();
+
+                if (achievements != null) {
+
+                    // get the achievement items
+                    var achievementItems = achievements.items;
+
+                    if (achievementItems != null) {
+
+                        // loop through the achievement items
+                        for (var a = 0; a < achievementItems.length; a++) {
+
+                            // get an achievement
+                            var achievement = achievementItems[a];
+
+                            if (achievement != null && achievement.id == achievementId) {
+                                /*
+                                 * the achievement id matches so we have found the
+                                 * achievement we are looking for
+                                 */
+                                return achievement;
+                            }
+                        }
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        /**
          * Check if there are any rubrics in the project. There can potentially be
          * a project rubric, node rubrics, and component rubrics.
          * @return whether there are any rubrics in the project

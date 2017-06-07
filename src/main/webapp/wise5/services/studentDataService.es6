@@ -416,10 +416,26 @@ class StudentDataService {
             if (nodeStatus == null) {
                 this.setNodeStatusByNodeId(nodeId, tempNodeStatus);
             } else {
+
+                /*
+                 * get the previous isCompleted value so that we can later check
+                 * if it has changed
+                 */
+                var previousIsCompletedValue = this.nodeStatuses[nodeId].isCompleted;
+
                 this.nodeStatuses[nodeId].isVisited = tempNodeStatus.isVisited;
                 this.nodeStatuses[nodeId].isVisible = tempNodeStatus.isVisible;
                 this.nodeStatuses[nodeId].isVisitable = tempNodeStatus.isVisitable;
                 this.nodeStatuses[nodeId].isCompleted = tempNodeStatus.isCompleted;
+
+                if (previousIsCompletedValue == false && tempNodeStatus.isCompleted) {
+                    /*
+                     * the node status just changed from false to true so we
+                     * will fire an event
+                     */
+
+                    this.$rootScope.$broadcast('nodeCompleted', { nodeId: nodeId });
+                }
             }
 
             this.nodeStatuses[nodeId].progress = this.getNodeProgressById(nodeId);
