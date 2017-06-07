@@ -4,7 +4,7 @@
     "graph.areYouSureYouWantToChangeTheGraphType": "Are you sure you want to change the graph type?",
     "graph.areYouSureYouWantToOverwriteTheCurrentLineData": "Are you sure you want to overwrite the current line data?",
     "graph.areYouSureYouWantToResetTheSeries": "Are you sure you want to reset the series?",
-    "graph.areYouSureYouWantToResetTheNamedSeries": "Are you sure you want to reset the '{{seriesName}}' series?",
+    "graph.areYouSureYouWantToResetTheNamedSeries": "Are you sure you want to reset the \"{{seriesName}}\" series?",
     "graph.canStudentCreateTrials": "Can Student Create Trials",
     "graph.canStudentDeleteTrials": "Can Student Delete Trials",
     "graph.canStudentEdit": "Can Student Edit",

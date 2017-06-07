@@ -43,7 +43,7 @@
     "SAVE": "Αποθήκευση",
     "SAVED": "Αποθηκευμένο",
     "SCORE": "βαθμολογία",
-    "SCORE_LABEL_AND_VALUE": "Βαθμολογία: {{βαθμολογία}}",
+    "SCORE_LABEL_AND_VALUE": "Βαθμολογία: {{score}}",
     "SEND_COMMENT": "Κατάθεση Σχολίου",
     "SHOW_FEEDBACK": "Δείξε Ανατροφοδότηση",
     "SHOW_PREVIOUS_WORK": "Δείξε Προηγούμενη Εργασία",

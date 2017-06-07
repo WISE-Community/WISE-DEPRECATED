@@ -28,12 +28,12 @@ function buildTable5() {
 	// build the rest of the table
 	if (currentLanguage != "") {        
 		for (key in View.prototype.i18n[View.prototype.i18n.defaultLocale]) {
-			var value = View.prototype.i18n[View.prototype.i18n.defaultLocale][key];
-			translationTable += "<tr class='translationRow'>\n<td class='cell_key'>"+key+"</td>\n<td><textarea style='border:none;width:100%;height:100%' readonly='true'>"+value+"</textarea></td>\n";
+			var value = View.prototype.i18n[View.prototype.i18n.defaultLocale][key].replace(/[\n]/g, "\\n");
+			translationTable += "<tr class='translationRow'>\n<td class='cell_key'>"+key+"</td>\n<td><textarea style='border:none;width:100%;height:100%' class='englishText' readonly='true'>"+value+"</textarea></td>\n";
 			if (View.prototype.i18n[currentLanguage][key]) {
-				translationTable += "<td class='cell_currentLanguage'><textarea style='height:100%;width:100%' id='"+key+"'>"+View.prototype.i18n[currentLanguage][key]+"</textarea></td>\n";
+				translationTable += "<td class='cell_currentLanguage'><textarea style='height:100%;width:100%' class='foreignText' id='"+key+"'>"+View.prototype.i18n[currentLanguage][key]+"</textarea></td>\n";
 			} else {
-				translationTable += "<td class='cell_currentLanguage'><textarea style='height:100%;width:100%' id='"+key+"'></textarea></td>\n";
+				translationTable += "<td class='cell_currentLanguage'><textarea style='height:100%;width:100%' class='foreignText' id='"+key+"'></textarea></td>\n";
 			}
 			translationTable += "</tr>\n\n";                      
 		}
@@ -77,12 +77,12 @@ function buildTable_JSON() {
 	if (currentLanguage != "") {        
 		for (key in View.prototype.i18n[View.prototype.i18n.defaultLocale]) {
 			var obj = View.prototype.i18n[View.prototype.i18n.defaultLocale][key];
-			var value = addSlashes(obj.value);
-			translationTable += "<tr class='translationRow'>\n<td class='cell_key'>"+key+"</td>\n<td>"+obj.description+"</td>\n<td><textarea style='border:none;width:100%;height:100%' readonly='true'>"+value+"</textarea></td>\n";
+			var value = obj.value.replace(/[\n]/g, "\\n");
+			translationTable += "<tr class='translationRow'>\n<td class='cell_key'>"+key+"</td>\n<td>"+obj.description+"</td>\n<td><textarea style='border:none;width:100%;height:100%' class='englishText' readonly='true'>"+value+"</textarea></td>\n";
 			if (View.prototype.i18n[currentLanguage][key]) {
-				translationTable += "<td class='cell_currentLanguage'><textarea style='height:100%;width:100%' id='"+key+"'>"+View.prototype.i18n[currentLanguage][key].value+"</textarea></td>\n";
+				translationTable += "<td class='cell_currentLanguage'><textarea style='height:100%;width:100%' class='foreignText' id='"+key+"'>"+View.prototype.i18n[currentLanguage][key].value+"</textarea></td>\n";
 			} else {
-				translationTable += "<td class='cell_currentLanguage'><textarea style='height:100%;width:100%' id='"+key+"'></textarea></td>\n";
+				translationTable += "<td class='cell_currentLanguage'><textarea style='height:100%;width:100%' class='foreignText' id='"+key+"'></textarea></td>\n";
 			}
 			translationTable += "</tr>\n\n";                      
 		}

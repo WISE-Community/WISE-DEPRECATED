@@ -1,1 +1,23 @@
-{}
+{
+  "audioOscillator.add": "Πρόσθεση",
+  "audioOscillator.addOscillatorType": "Πρόσθεση Τύπου Ταλαντωτή",
+  "audioOscillator.errorYouHaveAlreadyAddedOscillatorType": "Σφάλμα: Έχετε ήδη προσθέσει {{oscillatorTypeToAdd}}",
+  "audioOscillator.frequenciesPlayed": "Συχνότητες που έχουν παιχτεί",
+  "audioOscillator.frequenciesPlayedSorted": "Ταξινόμηση Συχνοτήτων που έχουν παιχτεί",
+  "audioOscillator.frequency": "Συχνότητα",
+  "audioOscillator.hz": "Hz",
+  "audioOscillator.importData": "Εισαγωγή Δεδομένων",
+  "audioOscillator.maxFrequencyPlayed": "Μέγιστη Συχνότητα που έχει παιχτεί",
+  "audioOscillator.minFrequencyPlayed": "Ελάχιστη Συχνότητα που έχει παιχτεί",
+  "audioOscillator.numberOfFrequenciesPlayed": "Αριθμός Συχνοτήτων που έχουν παιχτεί",
+  "audioOscillator.oscillatorGridSize": "Μέγεθος Πλέγματος Παλμογράφου",
+  "audioOscillator.oscillatorType": "Τύπος Ταλαντωτή",
+  "audioOscillator.oscillatorTypes": "Τύποι Ταλαντωτή",
+  "audioOscillator.oscillatorHeight": "Ύψος Παλμογράφου",
+  "audioOscillator.oscillatorWidth": "Πλάτος Παλμογράφου",
+  "audioOscillator.oscilloscopeStopAfterGoodDraw": "Παύση Παλμογράφου Ύστερα από Καλό Σχέδιο",
+  "audioOscillator.play": "Παίξε",
+  "audioOscillator.save": "Αποθήκευση",
+  "audioOscillator.stop": "Παύση",
+  "audioOscillator.startingFrequency": "Συχνότητα Έναρξης"
+}
