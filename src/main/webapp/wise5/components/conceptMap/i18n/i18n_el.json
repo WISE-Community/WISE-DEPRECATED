@@ -1,5 +1,5 @@
 {
-    "conceptMap.areYouSureYouWantToDeleteTheCategory": "Θέλετε σίγουρα να διαγράψετε την κατηγορία από αυτό τον κανόνα; Όνομα Κανόνα: {{ruleName}}\nCategory Name: {{categoryName}}",
+    "conceptMap.areYouSureYouWantToDeleteTheCategory": "Θέλετε σίγουρα να διαγράψετε την κατηγορία από αυτό τον κανόνα; Όνομα Κανόνα: {{ruleName}}\nΌνομα Κατηγορίας: {{categoryName}}",
     "conceptMap.areYouSureYouWantToDeleteThisLink": "Θέλετε σίγουρα να διαγράψετε αυτό το σύνδεσμο; Ετικέτα: {{linkLabel}}",
     "conceptMap.areYouSureYouWantToDeleteThisNode": "Θέλετε σίγουρα να διαγράψετε αυτό τον κόμβο; Όνομα Αρχείου: {{nodeFileName}}\nLabel: {{nodeLabel}}",
     "conceptMap.areYouSureYouWantToDeleteThisRule": "Θέλετε σίγουρα να διαγράψετε αυτό τον κανόνα; Όνομα Κανόνα: {{ruleName}}",

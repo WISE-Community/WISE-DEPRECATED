@@ -297,5 +297,5 @@ function addSlashes( str ) {
     if (str == null) {
 	return "";
     }
-    return str.replace(/\"/g, "\\\"");
+    return str.replace(/\"/g, "\\\"").replace(/[\n]/g, "\\n");
 };

@@ -20,6 +20,7 @@ View.prototype.i18n.defaultLocale = "en";
 View.prototype.i18n.supportedLocales = {
 		main: {
 			"en":"en",
+            "el":"el",
 			"es":"es",
 			"fr":"fr",
 			"iw":"he",
@@ -36,6 +37,7 @@ View.prototype.i18n.supportedLocales = {
 		},
 		theme: {
 			"en":"en",
+            "el":"el",
 			"es":"es",
 			"it":"it",
 			"iw":"he",

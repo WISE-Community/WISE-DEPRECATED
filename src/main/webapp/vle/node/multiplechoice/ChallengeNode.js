@@ -10,7 +10,8 @@ ChallengeNode.prototype.i18nEnabled = true;
 ChallengeNode.prototype.i18nPath = "vle/node/multiplechoice/i18n/";
 ChallengeNode.prototype.supportedLocales = {
 	"en":"en",
-	"es":"es",
+    "el":"el",
+    "es":"es",
 	"nl":"nl",
 	"nl_GE":"nl",
 	"nl_DE":"nl",

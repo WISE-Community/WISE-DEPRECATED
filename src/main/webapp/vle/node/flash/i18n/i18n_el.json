@@ -1,0 +1,14 @@
+{
+    "enlarge": {
+        "value": "μεγέθυνση",
+        "description": "'enlarge' link text in the grading tool for viewing flash in a bigger window"
+    },
+    "error_student_data_not_found": {
+        "value": "Σφάλμα: Τα δεδομένα του μαθητή δεν βρέθηκαν. Ελέγξτε το αρχείο Flash για να διασφαλίσετε ότι το φορμάτ εξόδου είναι σωστό. ",
+        "description": "Error message to display in the grading tool when student data is not found"
+    },
+    "error_custom_content_not_found": {
+        "value": "Σφάλμα: Το περιεχόμενο της βαθμολόγησης δεν βρέθηκε. Ελέγξτε το αρχείο Flash για να διασφαλίσετε ότι το format εξόδου είναι σωστό.",
+        "description": "Error message to display in the grading tool when the custom grading content is not found"
+    }
+}

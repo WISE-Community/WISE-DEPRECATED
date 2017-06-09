@@ -21,6 +21,7 @@ BranchingNode.prototype.i18nEnabled = true;
 BranchingNode.prototype.i18nPath = "vle/node/branching/i18n/";
 BranchingNode.prototype.supportedLocales = {
 	"en":"en",
+    "el":"el",
 	"es":"es",
 	"iw":"he",
 	"ko":"ko",

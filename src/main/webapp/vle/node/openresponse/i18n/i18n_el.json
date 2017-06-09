@@ -1,0 +1,258 @@
+{
+    "open_response": {
+        "description": "The text 'open response' in the page title",
+        "value": "Ανοικτή Απάντηση"
+    },
+    "question": {
+        "description": "The text 'question' in the step header, right above where the prompt/question is shown",
+        "value": "Ερώτηση"
+    },
+    "your_response": {
+        "description": "The text 'Your Response' right above the textbox where the student types in their response",
+        "value": "Η Απάντησή σας"
+    },
+    "save_changes": {
+        "description": "The text 'SAVE CHANGES' on the button shown at the bottom of the step",
+        "value": "ΑΠΟΘΗΚΕΥΣΗ ΑΛΛΑΓΩΝ"
+    },
+    "save_and_close": {
+        "description": "The text 'SAVE & CLOSE' on the button shown at the bottom of the step",
+        "value": "ΑΠΟΘΗΚΕΥΣΗ & ΚΛΕΙΣΙΜΟ"
+    },
+    "help": {
+        "description": "The word 'help'",
+        "value": "βοήθεια"
+    },
+    "tall": {
+        "description": "The text 'tall' on the button shown at the top of the note step to change the note to be tall",
+        "value": "ψηλός"
+    },
+    "wide": {
+        "description": "The text 'wide' on the button shown at the top of the note step to change the note to be wide",
+        "value": "πλατύς"
+    },
+    "basic": {
+        "description": "The text 'basic' on the button shown at the top of the note step to change the note to be the default basic size",
+        "value": "βασικό"
+    },
+    "large": {
+        "description": "The text 'large' on the button shown at the top of the note step to change the note to be large",
+        "value": "μεγάλο"
+    },
+    "show_hide": {
+        "description": "The text for the button that shows and hides text",
+        "value": "προβολή/απόκρυψη"
+    },
+    "original_question": {
+        "description": "The text 'Original Question' to show above the original question for the step in peer-review mode",
+        "value": "Αρχική Ερώτηση"
+    },
+    "annotation": {
+        "description": "The annotation label",
+        "value": "σχόλιο"
+    },
+    "associated_work": {
+        "description": "The text 'Associated Work' to show above the associated work for the step in peer-review mode",
+        "value": "Σχετική Εργασία"
+    },
+    "question_is_hidden": {
+        "description": "The text to show when the question is hidden",
+        "value": "Η Ερώτηση είναι κρυμμένη"
+    },
+    "text_is_hidden": {
+        "description": "The text to show when the text is hidden",
+        "value": "το κείμενο είναι κρυμμένο"
+    },
+    "your_previous_response": {
+        "description": "The label for the student's previous response",
+        "value": "η προηγούμενη απάντησή σας"
+    },
+    "show_starter_sentence": {
+        "description": "The text for the show starter sentence button",
+        "value": "Προβολή Αρχικής Ερώτησης"
+    },
+    "submit_and_lock": {
+        "description": "The text for the submit and lock button",
+        "value": "ΥΠΟΒΟΛΗ (και κλείδωμα)"
+    },
+    "check_answer": {
+        "description": "The label for the check answer in the grading view",
+        "value": "Έλεγχος Απάντησης"
+    },
+    "you_have": {
+        "description": "The beginning of the popup message when the student is submitting their work to the auto grader",
+        "value": "Έχετε"
+    },
+    "chances": {
+        "description": "The text to show the student has x chances left to submit",
+        "value": "ευκαιρίες"
+    },
+    "chance": {
+        "description": "The text to show the student has 1 chance left to submit",
+        "value": "ευκαιρία"
+    },
+    "to_receive_feedback": {
+        "description": "The end of the popup message when the student is submitting their work to the auto grader",
+        "value": "να λάβετε ανατροφοδότηση στην απάντησή σας οπότε αυτή πρέπει να είναι η καλύτερη δουλειά σας!"
+    },
+    "are_you_ready_to_receive_feedback": {
+        "description": "The text for the popup message when the student is submitting their work to the auto grader",
+        "value": "Είστε έτοιμοι να λάβετε ανατροφοδότηση για αυτή την απάντηση;"
+    },
+    "if_you_are_ready": {
+        "description": "The reminder to the student that they should click the check answer button if they are ready to check their work",
+        "value": "Αν είστε έτοιμοι να ελέγξετε την απάντησή σας, πατήστε το εικονίδια 'Έλεγχος Απάντησης'/"
+    },
+    "you_will_not_be_able_to_make_edits_after": {
+        "description": "The message to ask the student if they are sure they want to submit",
+        "value": "Δεν θα μπορείτε να κάνετε περαιτέρω επεξεργασία αφού υποβάλετε την απάντησή σας. Είστε έτοιμοι για υποβολή;"
+    },
+    "please_wait_we_are_checking_your_work": {
+        "description": "The message to display while the auto grader analyzes their work",
+        "value": "Παρακαλώ περιμένετε, ελέγχουμε τη δουλειά σας. Αυτή η οθόνη αναμονής θα εξαφανιστεί σε"
+    },
+    "seconds": {
+        "description": "The end of the message to display while the auto grader analyzes their work",
+        "value": "δευτερόλεπτα"
+    },
+    "you_have_successfully_reviewed": {
+        "description": "The message to tell the student they have reviewed the work submitted by a classmate",
+        "value": "Έχετε εξετάσει με επιτυχία την εργασία που υποβλήθηκη από "
+    },
+    "team_anonymous": {
+        "description": "The label to show the work is from an anonymous classmate",
+        "value": "Ομάδα Ανώνυμη"
+    },
+    "well_done": {
+        "description": "The well done message to display after the student has submitted work",
+        "value": "Εξαιρετική δουλειά!"
+    },
+    "instructions": {
+        "description": "The label for the instructions",
+        "value": "οδηγίες"
+    },
+    "your_feedback_for": {
+        "description": "The label to show that the student is writing feedback for another group",
+        "value": "η ανατροφοδότησή σας για"
+    },
+    "prompt_from_the_first_peer_review_step": {
+        "description": "The place holder text to show that the prompt from the first peer review step will display here",
+        "value": "Ειδοποίηση από το πρώτο βήμα αξιολόγησης θα προβληθεί εδώ"
+    },
+    "work_submitted_by": {
+        "description": "The label to show that the work was submitted by another group",
+        "value": "εργασία που υποβλήθηκε από"
+    },
+    "work_from_a_random_classmate_will_display": {
+        "description": "The place holder text to show that the work from another group will display here",
+        "value": "Η Εργασία ενός τυχαίου συμμαθητή θα προβληθεί εδώ"
+    },
+    "your_second_draft": {
+        "description": "The label for the second draft",
+        "value": "το δεύτερο σας προσχέδιο"
+    },
+    "your_original_response": {
+        "description": "The label to show the original answer the student submitted",
+        "value": "η αρχική σας απάντηση"
+    },
+    "show_hide_text": {
+        "description": "The label for the show/hide text button",
+        "value": "προβολή/απόκρυψη κειμένου"
+    },
+    "students_work_from_first_peer_review_step": {
+        "description": "The place holder for where the student work from the first peer review step will display",
+        "value": "Η εργασία των μαθητών από το πρώτο βήμα αξιολόγησης θα προβληθεί εδώ"
+    },
+    "has_given_you_the_following_feedback": {
+        "description": "The label for the feedback that another group has given them",
+        "value": "σας έχει δώσει την παρακάτω ανατροφοδότηση"
+    },
+    "feedback_from_classmate_or_teacher": {
+        "description": "The place holder for where the feedback will display",
+        "value": "Ανατροφοδότηση από κάποιο συμμαθητή ή τον εκπαιδευτικό θα προβληθεί εδώ"
+    },
+    "to_start_this_step": {
+        "description": "The message to display when the student hasn't submitted a response in a previous step in a peer review sequence",
+        "value": "Για να ξεκινήσετε αυτό το βήμα πρέπει πρώτα να υποβάλετε μια απάντηση στο βήμα"
+    },
+    "link": {
+        "description": "The text to specify something is a link",
+        "value": "σύνδεσμος"
+    },
+    "your_teacher_has_not_yet": {
+        "description": "The message to display when the teacher has not given the student feedback yet in a teacher review sequence",
+        "value": "Ο εκπαιδευτικός σας δεν έχει ακόμα εξετάσει την απάντηση που υποβάλατε στο βήμα"
+    },
+    "yet": {
+        "description": "The end of the message to display when the teacher has not given the student feedback yet in a teacher review sequence",
+        "value": "ακόμα."
+    },
+    "please_return_later": {
+        "description": "The message to tell the student to come back later",
+        "value": "Παρακαλώ επιστρέψτε σε αυτό το βήμα αργότερα."
+    },
+    "your_first_response": {
+        "description": "The label for the first response the student submitted",
+        "value": "η πρώτη σας απάντηση στην ερώτηση"
+    },
+    "teacher_feedback": {
+        "description": "The label for the teacher feedback",
+        "value": "ανατροφοδότηση εκπαιδευτικού"
+    },
+    "this_is_revision_x": {
+        "description": "Message to display to student which revision they're on",
+        "value": "Αυτή είναι η αναθεώρηση #{0}"
+    },
+    "this_step_not_available_yet": {
+        "description": "The message that tells the student that the step is not available yet",
+        "value": "Αυτό το βήμα δεν είναι ακόμα διαθέσιμο"
+    },
+    "more_of_your_peers_need_to_submit": {
+        "description": "The message that says more of their classmates need to submit a response in order for this step to open",
+        "value": "Περισσότεροι συμμαθητές σας χρειάζεται να υποβάλουν μια απάντηση για το βήμα"
+    },
+    "you_will_then_be_assigned": {
+        "description": "The message that says they will be assigned to a response to review",
+        "value": "Στη συνέχεια θα σας ανατεθεί μια απάντηση για να την εξετάσετε"
+    },
+    "please_return_in_a_few_minutes": {
+        "description": "The message to tell the student to come back to the step later",
+        "value": "Παρακαλώ επιστρέψτε σε αυτό το βήμα σε λίγα λεπτά"
+    },
+    "please_return_to_step": {
+        "description": "The beginning of the message that tells the student to return to step x in a few minutes",
+        "value": "Παρακαλώ επιστρέψτε στο βήμα"
+    },
+    "in_a_few_minutes": {
+        "description": "The end of the message that tells the student to return to step x in a few minutes",
+        "value": "σε λίγα λεπτά"
+    },
+    "your_response_in_step": {
+        "description": "The beginning of the message that says their response in step x has not been reviewed yet",
+        "value": "Η απάντησή σας στο βήμα"
+    },
+    "has_not_been_reviewed": {
+        "description": "The end of the message that says their response in step x has not been reviewed yet",
+        "value": "δεν έχει εξεταστεί ακόμα από κάποιον συμμαθητή."
+    },
+    "there_is_no_starter_sentence": {
+        "description": "The message that says there is no starter sentence",
+        "value": "Δεν υπάρχει καθορισμένη αρχική ερώτηση για αυτό το βήμα"
+    },
+    "responses_from_peers_not_available": {
+        "description": "The message that says responses from the classmates are not available yet",
+        "value": "Οι απαντήσεις από τους συμμαθητές σας δεν είναι ακόμα διαθέσιμες."
+    },
+    "save_answer": {
+        "description": "The label for the save answer in the grading view",
+        "value": "Αποθήκευση Απάντηση"
+    },
+    "auto_score": {
+        "description": "The label for the auto score in the grading view",
+        "value": "Αυτο-Βαθμολόγηση"
+    },
+    "auto_feedback": {
+        "description": "The label for the auto feedback in the grading view",
+        "value": "Αυτο-Ανατροφοδότηση"
+    }
+}

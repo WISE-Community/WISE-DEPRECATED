@@ -1,0 +1,366 @@
+{
+    "snapshots_dialog_tooMany_warning": {
+        "description": "Warning for alerting users when they attempt to add a snapshot but have reached the maximum number allowed",
+        "value": "Λυπάμαι! Σας επιτρέπονται μόνο <span id='maxSnaps'>{0}</span> πλαίσια."
+    },
+    "autoGrade_complete": {
+        "description": "Confirmation message alerting users that they have used all of their auto score submissions",
+        "value": "Καλή Δουλειά!\n\nΈχετε χρησιμοποιήσει όλες τις ευκαιρίες για υποβολή.\n\nΜπορείτε να συνεχίσετε να επεξεργάζεστε τη δουλειά σας αν το επιθυμείτε."
+    },
+    "OK": {
+        "description": "Text for the word 'OK'",
+        "value": "ΟΚ"
+    },
+    "Yes": {
+        "description": "Text for the word 'Yes'",
+        "value": "Ναι"
+    },
+    "Cancel": {
+        "description": "Text for the word 'Cancel'",
+        "value": "Άκυρο"
+    },
+    "Submit": {
+        "description": "Text for the word 'Submit'",
+        "value": "Υποβολή"
+    },
+    "Save": {
+        "description": "Text for the word 'Save'",
+        "value": "Αποθήκευση"
+    },
+    "loading": {
+        "description": "Message to display when draw tool is loading",
+        "value": "Προβολή Σχεδίου WISE"
+    },
+    "stamps_title": {
+        "description": "Title for the choose a stamp tool",
+        "value": "Επιλογή μιας σφραγίδας:"
+    },
+    "stamps_button": {
+        "description": "Title text for the stamp tool button",
+        "value": "Εργαλείο Σφραγίδας"
+    },
+    "eraseDrawing_button": {
+        "description": "Title for the erase drawing tool button",
+        "value": "Σβήσιμο Τρέχοντος Σχεδίου"
+    },
+    "eraseDrawing_dialog_title": {
+        "description": "Title for the erase drawing dialog",
+        "value": "Σβήσιμο Σχεδίου"
+    },
+    "eraseDrawing_dialog_warning": {
+        "description": "Warning text for the erase drawing dialog",
+        "value": "Προειδοποίηση! Αυτό θα σβήση το τρέχον σχέδιο και θα το αντικαταστήσει με την κατάσταση προεπιλογής."
+    },
+    "eraseDrawing_dialog_instructions": {
+        "description": "Instructions text for the erase drawing dialog",
+        "value": "Αν επιθυμείτε να συνεχίσετε, πατήστε 'ΟΚ'."
+    },
+    "description_header_add": {
+        "description": "Link text for the header of the description input block",
+        "value": "(Πατήστε για προσθήκη)"
+    },
+    "description_header_title": {
+        "description": "Title text for the header of the description input block",
+        "value": "Πατήστε για επεξεργασία"
+    },
+    "description_header_label": {
+        "description": "Label text for the header of the description input block",
+        "value": "Περιγραφή:"
+    },
+    "description_header_labelSnapshot": {
+        "description": "Label text for the header of the description input block when snapshots (frames) are enabled",
+        "value": "Περιγραφή Πλαισίου:"
+    },
+    "description_header_maximized": {
+        "description": "Instructions text for the header of the description input block",
+        "value": "(Εισάγετε το κείμενό σας μέσα στο παρακάτω κουτί)"
+    },
+    "description_edit_link": {
+        "description": "Text for the edit description link/button",
+        "value": "Επεξεργασία"
+    },
+    "description_edit_title": {
+        "description": "Title text for the edit description link/button",
+        "value": "Επεξεργασία Περιγραφής"
+    },
+    "importStudentAsset_button": {
+        "description": "Title for the import student asset tool button",
+        "value": "Εισαγωγή Αρχείου"
+    },
+    "prompt_link": {
+        "description": "Text for the prompt (instructions) link/button",
+        "value": "Οδηγίες"
+    },
+    "prompt_title": {
+        "description": "Title text for the prompt (instructions) link/button",
+        "value": "Εξέταση Οδηγιών"
+    },
+    "autoGrade_confirm": {
+        "description": "Confirmation message to show users when they are submitting an answer for auto grading and feedback",
+        "value": "Έχετε {0} ευκαιρία (-ες) για να λάβετε ανατροφοδότηση στην απάντησή σας, οπότε αυτή πρέπει να είναι η καλύτερη σας δουλειά!\n\nΕίστε έτοιμοι να λάβετε ανατροφοδότηση σε αυτή την απάντηση:"
+    },
+    "autoGrade_result": {
+        "description": "Feedback showing users the auto score resulting from their submission",
+        "value": "Το σύστημα αυτο βαθμολόγησης έδωσε {0} από {1}"
+    },
+    "autoGrade_submissionComplete": {
+        "description": "Confirmation message to display when users submit an auto scored answer",
+        "value": "Ευχαριστούμε που υποβάλατε τη δουλειά σας."
+    },
+    "autoGrade_noWork": {
+        "description": "Message to display when students have not added any work to an auto scored step but press the submit button",
+        "value": "Παρακαλώ προσθέστε μερικά στοιχεία στην απάντησή σας πριν υποβάλετε τη δουλειά σας."
+    },
+    "sizeLimit_title": {
+        "description": "Title text for dialog alerting users that the drawing has exceeded the allowed file size",
+        "value": "Το Σχέδιο είναι πολύ μεγάλο"
+    },
+    "sizeLimit_warning": {
+        "description": "Warning text for dialog alerting users that the drawing has exceeded the allowed file size",
+        "value": "Προειδοποίηση! Το παρόν σχέδιο είναι πολύ μεγάλο."
+    },
+    "sizeLimit_instructions": {
+        "description": "Instructions text for dialog alerting users that the drawing has exceeded the allowed file size",
+        "value": "Αν επιθυμείτα να αποθηκεύσετε αυτό το σχέδιο, παρακαλώ διαγράψτε μερικά από τα αντικείμενα στην εικόνα. Ευχαριστώ!"
+    },
+    "snapshots_header": {
+        "description": "Header text for the snapshots (frames) panel",
+        "value": "Πλαίσια"
+    },
+    "snapshots_closeTitle": {
+        "description": "Title/tooltip text for the link to close (hide) the snapshots panel",
+        "value": "Κλείσιμο"
+    },
+    "snapshots_playback_playOnce": {
+        "description": "Title/tooltip text for the button to play through the snapshots like a flipbook animation one time",
+        "value": "Παίξε (Μία φορά)"
+    },
+    "snapshots_playback_playLoop": {
+        "description": "Title/tooltip text for the button to play through the snapshots like a flipbook animation on a loop",
+        "value": "Παίξε (Βρόχος)"
+    },
+    "snapshots_playback_pause": {
+        "description": "Title/tooltip text for the button to pause snapshot playback",
+        "value": "Παύση"
+    },
+    "snapshots_playback_speed": {
+        "description": "Title/tooltip text for the slider control to edit the speed at which snapshots are played back",
+        "value": "Ταχύτητα Αναπαραγωγής"
+    },
+    "snapshots_playback_units": {
+        "description": "Text for the unit measurement (per second) of the speed at which snapshots are played back",
+        "value": "/sec"
+    },
+    "snapshots_addNew_title": {
+        "description": "Title/tooltip text for add new snapshot (frame) link",
+        "value": "Προσθήκη Νέου Πλαισίου"
+    },
+    "snapshots_addNew_link": {
+        "description": "Text for add new snapshot (frame) link",
+        "value": "Νέο Πλαίσιο +"
+    },
+    "snapshots_toggle_title": {
+        "description": "Title/tooltip text for the link to toggle snapshots (frames) panel opened and closed",
+        "value": "Προβολή/Απόκρυψη Πλαισίων"
+    },
+    "snapshots_toggle_link": {
+        "description": "Text for the link to toggle snapshots (frames) panel opened and closed",
+        "value": "Πλαίσια (Στιγμιότυπα)"
+    },
+    "snapshots_dialog_delete_title": {
+        "description": "Title for the delete snapshot (frame) dialog",
+        "value": "Διαγραφή Πλαισίου"
+    },
+    "snapshots_dialog_delete_warning": {
+        "description": "Warning users will see when they attempt to delete a snapshot",
+        "value": "Προειδοποίηση! Αυτή η πράξη είναι μόνιμη."
+    },
+    "snapshots_dialog_delete_confirm": {
+        "description": "Confirmation text users will see when they attempt to delete a snapshot",
+        "value": "Θέλετε σίγουρα να διαγράψετε εντελώς αυτό το πλαίσιο;"
+    },
+    "snapshots_dialog_tooMany_title": {
+        "description": "Title for the dialog alerting users when they attempt to add a snapshot but have reached the maximum number allowed",
+        "value": "Πάρα Πολλά Πλαίσια"
+    },
+    "snapshots_dialog_tooMany_instructions": {
+        "description": "Instructions for users when they attempt to add a snapshot but have reached the maximum number allowed",
+        "value": "Αν θέλετε να δημιουργήσετε ένα άλλο, παρακαλώ διαγράψτε ένα από τα υπάρχοντα πλαίσια πατώντας 'Χ' στην πάνω δεξιά γωνία του πλαισίου που θέλετε να διαγράψετε."
+    },
+    "snapshots_snapHover": {
+        "description": "Mouseover/tooltip text for a snapshot thumbnail",
+        "value": "Πατήστε για Άνοιγμα. Πατήστε και Τραβήξτε για επαναρρύθμιση"
+    },
+    "snapshots_snapDelete_title": {
+        "description": "Title/tooltip text for delete snapshot links",
+        "value": "Διαγραφή Πλαισίου"
+    },
+    "annotator_loading": {
+        "description": "Message to display when annotator is loading",
+        "value": "Φόρτωση Σχολιαστή WISE"
+    },
+    "annotator_newLabel": {
+        "description": "Text for button to add a new label",
+        "value": "Νέα Ετικέτα"
+    },
+    "annotator_newLabel_instructions": {
+        "description": "Instructions text for how to create new label",
+        "value": "Επίλεξε τοποθεσία στην εικόνα ή"
+    },
+    "annotator_editLabel_instructions": {
+        "description": "Instructions text for how to create new label (for non-touch screens)",
+        "value": "Πατήστε μια υπάρχουσα ετικέτα για επεξεργασία ή διαγραφή"
+    },
+    "annotator_editLabel_instructions_touch": {
+        "description": "Instructions text for how to create new label (for touch screens)",
+        "value": "Ακουμπήστε μια υπάρχουσα ετικέτα για επεξεργασία ή διαγραφή"
+    },
+    "annotator_deleteLabel": {
+        "description": "Text for button to delete a label",
+        "value": "Διαγραφή"
+    },
+    "annotator_deleteConfirm": {
+        "description": "Confirmation warning text for deleting a label",
+        "value": "Θέλετε σίγουρα να διαγράψετε μόνιμα αυτή την ετικέτα;"
+    },
+    "annotator_save": {
+        "description": "Text for save button",
+        "value": "Αποθήκευση"
+    },
+    "annotator_explain": {
+        "description": "Default text for button to add explanation",
+        "value": "Σε ετοιμότητα για εξήγηση"
+    },
+    "annotator_explain_instructions": {
+        "description": "Default instructions for the explanation text input area",
+        "value": "Εξηγήστε τις Ετικέτες σας"
+    },
+    "annotator_explain_placeholder": {
+        "description": "Placeholder text for the explanation text input area",
+        "value": "Εισάγετε την απάντησή σας"
+    },
+    "annotator_maxWarning": {
+        "description": "Alert text to show when user has reached maximum number of allowed labels.",
+        "value": "Λυπάμαι, έχετε φτάσει στον μέγιστο αριθμό ετικετών ({0}). Αν επιθυμείτε να προσθέσετε περισσότερες, παρακαλώ διαγράψτε μερικές και προσπαθήστε ξανά."
+    },
+    "annotator_minWarning": {
+        "description": "Alert text to show when user tries to go below minimum number of allowed labels.",
+        "value": "Λυπάμαι, δεν μπορείτε να διαγράψετε αυτή την ετικέτα. Πρέπει να έχετε τουλάχιστον {0} ενεργές ετικέτες."
+    },
+    "annotator_editLabelText": {
+        "description": "Label for the edit label text input field",
+        "value": "Κείμενο Ετικέτας:"
+    },
+    "annotator_edit_title": {
+        "description": "Title for the edit label dialog",
+        "value": "Επεξεργασία Ετικέτας"
+    },
+    "annotator_authoring_require": {
+        "description": "",
+        "value": "Απαιτείστε από τους μαθητές να ολοκληρώσουν αυτό το βήμα πριν προχωρήσουν στο:"
+    },
+    "annotator_authoring_imageLabel": {
+        "description": "Label for control in authoring to select the image file to annotate in annotator step authoring",
+        "value": "Αρχείο εικόνας για σχολιασμό:"
+    },
+    "annotator_authoring_imageBrowse": {
+        "description": "Label for button in authoring to select image file to annotate in annotator step authoring",
+        "value": "Περιήγηση"
+    },
+    "annotator_authoring_importLabel": {
+        "description": "Label for control in authoring to import their own image file to annotate in annotator step authoring",
+        "value": "Επιτρέψτε στους μαθητές να εισάγουν τη δική τους εικόνα:"
+    },
+    "annotator_authoring_importText": {
+        "description": "Helper text for control in authoring to import their own image file to annotate in annotator step authoring",
+        "value": "(Σημείωση: Οι εισαγωγές των μαθητών θα αναιρέσουν κάθε προεπιλεγμένη εικόνα που έχει τεθεί παραπάνω.)"
+    },
+    "annotator_authoring_maxLabel": {
+        "description": "Label for maximum number of allowed labels input in annotator step authoring",
+        "value": "Μέγιστον αριθμός επιτρεπόμενων ετικετών (0 σημαίνει χωρίς όριο):"
+    },
+    "annotator_authoring_minLabel": {
+        "description": "Label for minimum number of required labels input in annotator step authoring",
+        "value": "Ελάχιστος αριθμός απαιτούμενων ετικετών:"
+    },
+    "annotator_authoring_promptLabel": {
+        "description": "Label for the prompt input in annotator step authoring",
+        "value": "Γενικές οδηγίες (προαιρετικό):"
+    },
+    "annotator_authoring_defaultColor_label": {
+        "description": "Label for the default label color select in annotator step authoring",
+        "value": "Προεπιλεγμένο χρώμα ετικέτας:"
+    },
+    "annotator_authoring_responseLabel": {
+        "description": "Label for the enable student response box checkbox in annotator step authoring",
+        "value": "Ενεργοποίηση κουτιού απάντησης μαθητή:"
+    },
+    "annotator_authoring_responseInstructionsLabel": {
+        "description": "Label for the student response instructions input in annotator step authoring",
+        "value": "Οδηγίες για κουτί απάντησης μαθητή:"
+    },
+    "annotator_authoring_responseInstructions": {
+        "description": "Default instructions for the student response box in an annotator step",
+        "value": "Εξηγήστε τη δουλειά σας:"
+    },
+    "annotator_authoring_responseButtonLabel": {
+        "description": "Label for the text input for the student response button text in an annotator step",
+        "value": "Κείμενο για κουμπί απάντησης μαθητή:"
+    },
+    "annotator_colors_black": {
+        "description": "Text for the color 'Black')",
+        "value": "Μαύρο"
+    },
+    "annotator_colors_blue": {
+        "description": "Text for the color 'Blue')",
+        "value": "Μπλε"
+    },
+    "annotator_colors_green": {
+        "description": "Text for the color 'Green')",
+        "value": "Πράσινο"
+    },
+    "annotator_colors_maroon": {
+        "description": "Text for the color 'Maroon')",
+        "value": "Μπορντό"
+    },
+    "annotator_colors_navy": {
+        "description": "Text for the color 'Navy Blue')",
+        "value": "Μπλε Navy"
+    },
+    "annotator_colors_orange": {
+        "description": "Text for the color 'Orange')",
+        "value": "Πορτοκαλί"
+    },
+    "annotator_colors_purple": {
+        "description": "Text for the color 'Purple')",
+        "value": "Μωβ"
+    },
+    "annotator_colors_red": {
+        "description": "Text for the color 'Red')",
+        "value": "Κόκκινο"
+    },
+    "annotator_colors_yellow": {
+        "description": "Text for the color 'Yellow')",
+        "value": "Κίτρινο"
+    },
+    "annotator_colors_teal": {
+        "description": "Text for the color 'Teal')",
+        "value": "Γαλαζοπράσινο"
+    },
+    "annotator_grading_header": {
+        "description": "Header text for the annotator grading view",
+        "value": "Εργασία Μαθητή για Βήμα {0}:"
+    },
+    "annotator_import": {
+        "description": "Text for the import file button in an annotator step",
+        "value": "Εισαγωγή Αρχείου"
+    },
+    "annotator_importFailed": {
+        "description": "Error message to display when importing a file failed in an annotator step",
+        "value": "Η Εισαγωγή αρχείου απέτυχε. Προσπαθήστε να επιλέξετε ένα διαφορετικό αρχείο εικόνας."
+    },
+    "annotator_loadFailed": {
+        "description": "Error message to display when loading content failed in an annotator step",
+        "value": "Η φόρτωση απέτυχε. Παρακαλώ ρωτήστε τον εκπαιδετικό σας ή έναν διαχειριστή να ελέγξει το περιεχόμενο αυτού του βήματος."
+    }
+}

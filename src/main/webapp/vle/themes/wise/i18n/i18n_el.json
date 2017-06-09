@@ -1,0 +1,26 @@
+{
+  "toggle_nav_button_text": {
+    "value": "Πλήρης Οθόνη",
+    "description": "Text on the Toggle Navigation button when navigation UI is on (visible)"
+  },
+  "toggle_nav_button_title": {
+    "value": "Λειτουργία Πλήρους Οθόνης (Απόκρυψη Μενού Πλοήγησης)",
+    "description": "Text for mouse hover title on the Toggle Navigation button when navigation UI is on (visible)"
+  },
+  "toggle_nav_button_text_off": {
+    "value": "Προβολή Μενού",
+    "description": "Text on the Toggle Navigation button when navigation UI is off (hidden)"
+  },
+  "toggle_nav_button_title_off": {
+    "value": "Προβολή Μενού Πλοήγησης",
+    "description": "Text for mouse hover title on the Toggle Navigation button when navigation UI is on (visible)"
+  },
+  "navigation_expand_all": {
+    "value": "Επέκταση Όλων",
+    "description": "Text on a button to show all navigation items"
+  },
+  "navigation_collapse_all": {
+    "value": "Κατάρρευση",
+    "description": "Text on a button to hide all navigation items"
+  }
+}

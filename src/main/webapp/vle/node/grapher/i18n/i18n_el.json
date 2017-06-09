@@ -1,0 +1,134 @@
+{
+    "start": {
+        "description": "The text for the button to start collecting data from the probe",
+        "value": "Έναρξη"
+    },
+    "stop": {
+        "description": "The text for the button to stop collecting data from the probe",
+        "value": "Λήξη"
+    },
+    "clear_probe_data": {
+        "description": "The text for the button to clear the probe data",
+        "value": "Καθαρισμός Δεδομένων Ανιχνευτή"
+    },
+    "clear_prediction": {
+        "description": "The text for the button to clear the prediction data",
+        "value": "Καθαρισμός Πρόβλεψης"
+    },
+    "reset_axis_limits": {
+        "description": "The text for the button to reset the axis limits",
+        "value": "Επαναφορά Αξόνων στα προεπιλεγμένα όρια"
+    },
+    "show_starter_sentence": {
+        "description": "The text for the button to show the starter sentence",
+        "value": "Προβολή Αρχικής Πρότασης"
+    },
+    "save": {
+        "description": "The text for the save button",
+        "value": "Αποθήκευση"
+    },
+    "submit": {
+        "description": "The text for the submit button",
+        "value": "ΥΠΟΒΟΛΗ ΔΟΥΛΕΙΑΣ"
+    },
+    "distance": {
+        "description": "The label for the distance graph type",
+        "value": "μετατόπιση"
+    },
+    "velocity": {
+        "description": "The label for the velocity graph type",
+        "value": "ταχύτητα"
+    },
+    "acceleration": {
+        "description": "The label for the acceleration graph type",
+        "value": "επιτάχυνση"
+    },
+    "temperature": {
+        "description": "The label for the temperature graph type",
+        "value": "θερμοκρασία"
+    },
+    "distance_prediction": {
+        "description": "The label for the distance prediction graph",
+        "value": "πρόβλεψη μετατόπισης"
+    },
+    "temperature_prediction": {
+        "description": "The label for the temperature prediction graph",
+        "value": "πρόβλεψη θερμοκρασίας"
+    },
+    "prediction": {
+        "description": "The word 'prediction' used for labels",
+        "value": "πρόβλεψη"
+    },
+    "you_must_make_a_prediction": {
+        "description": "The beginning of the text that says you must make a prediction in a previous step before you can work on this step",
+        "value": "Πρέπει να κάνετε μια πρόβλεψη στο βήμα"
+    },
+    "before_you_can_work": {
+        "description": "The end of the text that says you must make a prediction in a previous step before you can work on this step",
+        "value": "προτού να μπορείτε να εργαστείτε σε αυτό το βήμα"
+    },
+    "are_you_sure": {
+        "description": "The text that asks the student if they are sure they want to start collecting data because they won't be able to change their prediction after they start",
+        "value": "Θέλετε σίγουρα να ξεκινήσετε τη συλλογή δεδομένων; Όταν ξεκινήσετε, δεν θα είστε σε θέση να αλλάξετε την πρόβλεψή σας."
+    },
+    "loading": {
+        "description": "The loading message to display when the applet is loading",
+        "value": "Γίνεται φόρτωση..."
+    },
+    "click_allow_run_trust": {
+        "description": "Part of the loading message that informs the user to click allow, run, or trust when prompted to allow Java to run",
+        "value": "(Πατήστε \"Επίτρεψε\", \"Εκτέλεση\", ή \"Εμπιστέψου\" αν εμφανιστεί κάποιο αναδυόμενο παράθυρο. Αν αυτό το μήνυμα δεν αλλάξει σε 1 λεπτό, κλείστε τον περιηγητή, ανοίξτε τον πάλι και ξαναπροσπαθήστε.)"
+    },
+    "error_applets_are_disabled": {
+        "description": "The error message to display when applets are disabled in the browser",
+        "value": "Σφάλμα: Τα applets είναι απενεργοποιημένα στον περιηγητή σας. Παρακαλώ διαβάστε τις οδηγίες."
+    },
+    "here": {
+        "description": "The text for the link that will show the user how to enable Java in their browser",
+        "value": "εδώ"
+    },
+    "to_enable_applets": {
+        "description": "The end of the error message to display when applets are disabled in the browser",
+        "value": "για να ενεργοποιήσετε τα applets στον περιηγητή σας."
+    },
+    "error_x_min_is_not_a_number": {
+        "description": "The error message to display to the student when they enter a non number into the x min field",
+        "value": "Σφάλμα: η ελάχιστη τιμή του x δεν είναι αριθμός"
+    },
+    "error_x_max_is_not_a_number": {
+        "description": "The error message to display to the student when they enter a non number into the x max field",
+        "value": "Σφάλμα: η μέγιστη τιμή του x δεν είναι αριθμός"
+    },
+    "error_y_min_is_not_a_number": {
+        "description": "The error message to display to the student when they enter a non number into the y min field",
+        "value": "Σφάλμα: η ελάχιστη τιμή του y δεν είναι αριθμός"
+    },
+    "error_y_max_is_not_a_number": {
+        "description": "The error message to display to the student when they enter a non number into the y max field",
+        "value": "Σφάλμα: η μέγιστη τιμή του y δεν είναι αριθμός"
+    },
+    "error_x_min_greater_than_x_max": {
+        "description": "The error message to display to the student when they enter an x min that is larger than x max",
+        "value": "Σφάλμα: η ελάχιστη τιμή του x είναι μεγαλύτερη από τη μέγιστη"
+    },
+    "error_y_min_greater_than_y_max": {
+        "description": "The error message to display to the student when they enter an y min that is larger than y max",
+        "value": "Σφάλμα: η ελάχιστη τιμή του y είναι μεγαλύτερη από τη μέγιστη"
+    },
+    "done_loading": {
+        "description": "The done loading message",
+        "value": "Η φόρτωση ολοκληρώθηκε"
+    },
+    "click_start_to_begin": {
+        "description": "The instructions included in the done loading message that tells the student to click start",
+        "value": "(Πατήστε το εικονίδια \"Έναρξη\" για να ξεκινήσετε)"
+    },
+    "your_graph_doesnt_cover_entire_x_axis": {
+        "description": "The error message that tells the student their graph line does not span the whole x-axis",
+        "value": "Το γράφημά σας δεν καλύπτει όλο τον άξονα x."
+    },
+    "delete": {
+        "description": "The label for the delete button for graph point annotations",
+        "value": "Διαγραφή"
+    }
+}
