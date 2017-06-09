@@ -307,34 +307,6 @@
         primary key (premadecommentslist_fk, premadecomments_fk)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-    create table project_metadata (
-        id bigint not null auto_increment,
-        author varchar(255),
-        comp_time varchar(255),
-        contact varchar(255),
-        grade_range varchar(255),
-        keywords varchar(255),
-        language varchar(255),
-        last_cleaned datetime,
-        last_edited datetime,
-        last_minified datetime,
-        lesson_plan mediumtext,
-        max_scores mediumtext,
-        nav_mode varchar(255),
-        post_level bigint,
-        project_fk bigint,
-        standards mediumtext,
-        subject varchar(255),
-        summary varchar(255),
-        tech_reqs varchar(255),
-        theme varchar(255),
-        title varchar(255),
-        tools text,
-        total_time varchar(255),
-        version_id varchar(255),
-        primary key (id)
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
     create table projects (
         id bigint not null auto_increment,
         datecreated datetime not null,
@@ -351,6 +323,7 @@
         OPTLOCK integer,
         wiseVersion integer,
         metadata_fk bigint,
+        metadata mediumtext,
         owner_fk bigint not null,
         primary key (id)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -625,9 +598,6 @@
 
     create index runIdAndWorkgroupIdIndex on portfolio (runId, workgroupId);
 
-    alter table projects
-        add constraint UK_t592fa1q3xyjf1qsx8t4qkrt5  unique (metadata_fk);
-
     alter table runs
         add constraint UK_dxea1ifhea203qe2ie4lsd8vb  unique (run_code);
 
@@ -876,11 +846,6 @@
         add constraint FK_3u4rbdp8k8fywqwxobmlexoj
         foreign key (premadecommentslist_fk)
         references premadecommentlists (id);
-
-    alter table projects
-        add constraint FK_t592fa1q3xyjf1qsx8t4qkrt5
-        foreign key (metadata_fk)
-        references project_metadata (id);
 
     alter table projects
         add constraint FK_lglinci94nt1chg4acxpds1nh

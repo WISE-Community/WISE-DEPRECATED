@@ -128,7 +128,7 @@ public class AuthorProjectController {
 			Portal portal = portalService.getById(new Integer(1));
 			if (!portal.isLoginAllowed()) {
 				Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-				if (auth != null){
+				if (auth != null) {
 					new SecurityContextLogoutHandler().logout(request, response, auth);
 				}
 				SecurityContextHolder.getContext().setAuthentication(null);
@@ -157,10 +157,10 @@ public class AuthorProjectController {
 			project = null;
 		}
 
-		/* catch forwarding requests, authenticate and forward request upon successful authentication */
+		// catch forwarding requests, authenticate and forward request upon successful authentication
 		if (forward != null && !forward.equals("")) {
-			//get the command
-			String command = request.getParameter("command");
+
+			String command = request.getParameter("command"); // get the command
 
 			if (forward.equals("filemanager") || forward.equals("assetmanager")) {
 
@@ -181,7 +181,7 @@ public class AuthorProjectController {
 					CredentialManager.setRequestCredentials(request, user);
 
 					if (forward.equals("filemanager")) {
-						if (command!=null) {
+						if (command != null) {
 							String pathAllowedToAccess = CredentialManager.getAllowedPathAccess(request);
 
 							if (command.equals("createProject")) {
@@ -206,11 +206,10 @@ public class AuthorProjectController {
 
 								response.getWriter().write(result);
 							} else if (command.equals("retrieveFile")) {
-								//get the file name
-								String fileName = request.getParameter("fileName");
 
-								//get the full file path
-								String filePath = FileManager.getFilePath(project, fileName);
+								String fileName = request.getParameter("fileName"); // get the file name
+
+								String filePath = FileManager.getFilePath(project, fileName); // get the full file path
 
 								String result = "";
 
@@ -230,11 +229,9 @@ public class AuthorProjectController {
 								 */
 								String projectFolderPath = FileManager.getProjectFolderPath(project);
 
-								//get the file name
-								String fileName = request.getParameter("fileName");
+								String fileName = request.getParameter("fileName"); // get the file name
 
-								//get the content to save to the file
-								String data = request.getParameter("data");
+								String data = request.getParameter("data"); // get the content to save to the file
 
 								String result = "";
 
@@ -257,7 +254,7 @@ public class AuthorProjectController {
 								String title = request.getParameter("title");
 								String type = request.getParameter("type");
 
-								//get the string that contains an array of node template params
+								// get the string that contains an array of node template params
 								String nodeTemplateParams = request.getParameter("nodeTemplateParams");
 
 								String result = "";
@@ -322,7 +319,7 @@ public class AuthorProjectController {
 
 								response.getWriter().write(result);
 							} else if (command.equals("copyNode")) {
-								//get the parameters for the node
+								// get the parameters for the node
 								String data = request.getParameter("data");
 								String type = request.getParameter("type");
 								String title = request.getParameter("title");
@@ -360,7 +357,7 @@ public class AuthorProjectController {
 								 */
 								String projectFileName = request.getParameter("projectFileName");
 
-								//get the json for the new sequence we are going to add to the project
+								// get the json for the new sequence we are going to add to the project
 								String data = request.getParameter("data");
 
 								/*
@@ -1282,7 +1279,7 @@ public class AuthorProjectController {
 		Project project = this.projectService.getById(projectId);
 		User user = ControllerUtil.getSignedInUser();
 
-		/* set the fields in the ProjectMetadata where appropriate */
+		// set the fields in the ProjectMetadata where appropriate
 		if (metadata != null) {
 			ProjectMetadata pMeta = project.getMetadata();
 
@@ -1365,18 +1362,18 @@ public class AuthorProjectController {
 				pMeta.setLanguage((String) language);
 			}
 
-			/* save the project */
-			try{
+			// save the project
+			try {
 				this.projectService.updateProject(project, user);
 			} catch (NotAuthorizedException e) {
 				e.printStackTrace();
 				response.getWriter().write(e.getMessage());
 			}
 
-			/* write success message */
+			// write success message
 			response.getWriter().write("Project metadata was successfully published to the portal.");
 		} else {
-			/* write error message that portal could not access metadata file */
+			// write error message that portal could not access metadata file
 			response.getWriter().write("The portal was unable to access the data in the metadata file. The metadata may be out of sync.");
 		}
 
@@ -1394,7 +1391,7 @@ public class AuthorProjectController {
 	 * @return
 	 */
 	private Object getJSONFieldValue(JSONObject obj, String fieldName) {
-		try{
+		try {
 			return obj.get(fieldName);
 		} catch(JSONException e) {
 			e.printStackTrace();
@@ -1454,11 +1451,10 @@ public class AuthorProjectController {
 	 * @throws IOException
 	 */
 	private ModelAndView handleGetCurriculumBaseUrl(HttpServletRequest request, HttpServletResponse response) throws IOException{
-		//get the curriculum_base_www variable from the wise.properties file
+		// get the curriculum_base_www variable from the wise.properties file
 		String curriculumBaseUrl = wiseProperties.getProperty("curriculum_base_www");
 
-		//write the curriculum base url to the response
-		response.getWriter().write(curriculumBaseUrl);
+		response.getWriter().write(curriculumBaseUrl); // write the curriculum base url to the response
 
 		return null;
 	}
@@ -1632,11 +1628,9 @@ public class AuthorProjectController {
 	 * @throws IOException
 	 */
 	private ModelAndView handleProjectEdited(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		//get the user
-		User user = ControllerUtil.getSignedInUser();
 
-		//get the project
-		Project project = (Project) request.getAttribute("project");
+		User user = ControllerUtil.getSignedInUser(); // get the user
+		Project project = (Project) request.getAttribute("project"); // get the project from the request
 
 		if (project != null) {
 			//get the project metadata

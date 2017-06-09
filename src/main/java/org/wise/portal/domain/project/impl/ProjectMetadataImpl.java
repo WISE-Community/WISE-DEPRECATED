@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -42,158 +42,87 @@ import org.wise.portal.domain.project.ProjectMetadata;
  * @author Patrick Lawler
  */
 @Entity
-@Table(name = ProjectMetadataImpl.DATA_STORE_NAME)
+@Table(name = "project_metadata")
 public class ProjectMetadataImpl implements ProjectMetadata, Serializable {
-	
-	public final static String DATA_STORE_NAME = "project_metadata";
-	
-	@Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id = null;
-	
-	@Transient
-	public final static String COLUMN_NAME_TITLE = "title";
-	
-	@Transient
-	public final static String COLUMN_NAME_AUTHOR = "author";
-	
-	@Transient
-	public final static String COLUMN_NAME_SUBJECT = "subject";
-	
-	@Transient
-	public final static String COLUMN_NAME_SUMMARY = "summary";
-
-	@Transient
-	public final static String COLUMN_NAME_GRADE_RANGE = "grade_range";
-	
-	@Transient
-	public final static String COLUMN_NAME_TOTAL_TIME = "total_time";
-	
-	@Transient
-	public final static String COLUMN_NAME_COMP_TIME = "comp_time";
-	
-	@Transient
-	public final static String COLUMN_NAME_CONTACT = "contact";
-	
-	@Transient
-	public final static String COLUMN_NAME_TECH_REQS = "tech_reqs";
-
-	@Transient
-	public final static String COLUMN_NAME_TOOLS = "tools";
-
-	@Transient
-	public final static String COLUMN_NAME_LESSON_PLAN = "lesson_plan";
-	
-	@Transient
-	public final static String COLUMN_NAME_STANDARDS = "standards";
-
-	@Transient
-	public final static String COLUMN_NAME_KEYWORDS = "keywords";
-	
-	@Transient
-	public final static String COLUMN_NAME_LANGUAGE = "language";
 
 	@Transient
 	private static final long serialVersionUID = 1L;
-	
-	@Transient
-	public final static String COLUMN_NAME_PROJECT_FK = "project_fk";
-	
-	@Transient
-	public final static String COLUMN_NAME_VERSION_ID = "version_id";
-	
-	@Transient
-	public final static String COLUMN_NAME_LAST_CLEANED = "last_cleaned";
-	
-	@Transient
-	public final static String COLUMN_NAME_LAST_EDITED = "last_edited";
 
-	@Transient
-	public final static String COLUMN_NAME_LAST_MINIFIED = "last_minified";
-	
-	@Transient
-	public final static String COLUMN_NAME_POST_LEVEL = "post_level";
-	
-	@Transient
-	public final static String COLUMN_NAME_MAX_SCORES = "max_scores";
-	
-	@Transient
-	public final static String COLUMN_NAME_THEME = "theme";
-	
-	@Transient
-	public final static String COLUMN_NAME_NAV_MODE = "nav_mode";
-	
-	@Column(name = COLUMN_NAME_TITLE)
+	@Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id = null;
+
+	@Column(name = "title")
 	private String title;
 
-	@Column(name = COLUMN_NAME_AUTHOR)
+	@Column(name = "author")
 	private String author;
 	
-	@Column(name = COLUMN_NAME_SUBJECT)
+	@Column(name = "subject")
 	private String subject;
 	
-	@Column(name = COLUMN_NAME_SUMMARY)
+	@Column(name = "summary")
 	private String summary;
 	
-	@Column(name = COLUMN_NAME_GRADE_RANGE)
+	@Column(name = "grade_range")
 	private String gradeRange;
 	
-	@Column(name = COLUMN_NAME_TOTAL_TIME)
+	@Column(name = "total_time")
 	private String totalTime;
 	
-	@Column(name = COLUMN_NAME_COMP_TIME)
+	@Column(name = "comp_time")
 	private String compTime;
 	
-	@Column(name = COLUMN_NAME_CONTACT)
+	@Column(name = "contact")
 	private String contact;
 	
-	@Column(name = COLUMN_NAME_TECH_REQS)
+	@Column(name = "tech_reqs")
 	private String techReqs;
 
-	@Column(name = COLUMN_NAME_TOOLS, length = 32768, columnDefinition = "text")
+	@Column(name = "tools", length = 32768, columnDefinition = "text")
 	private String tools;   // text (blob) 2^15
 
-	@Column(name = COLUMN_NAME_LESSON_PLAN, length = 5120000, columnDefinition = "mediumtext")
+	@Column(name = "lesson_plan", length = 5120000, columnDefinition = "mediumtext")
 	private String lessonPlan;
 
-	@Column(name = COLUMN_NAME_STANDARDS, length = 5120000, columnDefinition = "mediumtext")
+	@Column(name = "standards", length = 5120000, columnDefinition = "mediumtext")
 	private String standards;
 
-	@Column(name = COLUMN_NAME_KEYWORDS)
+	@Column(name = "keywords")
 	private String keywords;
 	
-	@Column(name = COLUMN_NAME_LANGUAGE)
+	@Column(name = "language")
 	private String language;
 
-	@Column(name = COLUMN_NAME_PROJECT_FK)
+	@Column(name = "project_fk")
 	private Long projectId;
 	
-	@Column(name = COLUMN_NAME_VERSION_ID)
+	@Column(name = "version_id")
 	private String versionId;
 	
-	@Column(name = COLUMN_NAME_LAST_CLEANED)
+	@Column(name = "last_cleaned")
 	private Date lastCleaned;
 	
-	@Column(name = COLUMN_NAME_LAST_EDITED)
+	@Column(name = "last_edited")
 	private Date lastEdited;
 	
-	@Column(name = COLUMN_NAME_LAST_MINIFIED)
+	@Column(name = "last_minified")
 	private Date lastMinified;
 
-	@Column(name = COLUMN_NAME_POST_LEVEL)
+	@Column(name = "post_level")
 	private Long postLevel;
 	
-	@Column(name = COLUMN_NAME_MAX_SCORES, length = 5120000, columnDefinition = "mediumtext")
+	@Column(name = "max_scores", length = 5120000, columnDefinition = "mediumtext")
 	private String maxScores;
 	
-	@Column(name = COLUMN_NAME_THEME)
+	@Column(name = "theme")
 	private String theme;
 	
-	@Column(name = COLUMN_NAME_NAV_MODE)
+	@Column(name = "nav_mode")
 	private String navMode;
 	
 	public ProjectMetadataImpl() {
-		
+
 	}
 
 	public ProjectMetadataImpl(JSONObject metadataJSON) {
@@ -434,11 +363,11 @@ public class ProjectMetadataImpl implements ProjectMetadata, Serializable {
 	
 	public void populateFromJSON(JSONObject metadataJSON) {
 		//check that the title exists and is not null
-		if(metadataJSON.has("title") && !metadataJSON.isNull("title")) {
+		if (metadataJSON.has("title") && !metadataJSON.isNull("title")) {
 			
 			try {
 				String title = metadataJSON.getString("title");
-				if(title.equals("null")) {
+				if (title.equals("null")) {
 					title = "";
 				}
 				setTitle(title);
@@ -448,10 +377,10 @@ public class ProjectMetadataImpl implements ProjectMetadata, Serializable {
 		}
 		
 		//check that the author exists and is not null
-		if(metadataJSON.has("author") && !metadataJSON.isNull("author")) {
+		if (metadataJSON.has("author") && !metadataJSON.isNull("author")) {
 			try {
 				String author = metadataJSON.getString("author");
-				if(author.equals("null")) {
+				if (author.equals("null")) {
 					author = "";
 				}
 				setAuthor(author);
@@ -461,10 +390,10 @@ public class ProjectMetadataImpl implements ProjectMetadata, Serializable {
 		}
 		
 		//check that the subject exists and is not null
-		if(metadataJSON.has("subject") && !metadataJSON.isNull("subject")) {
+		if (metadataJSON.has("subject") && !metadataJSON.isNull("subject")) {
 			try {
 				String subject = metadataJSON.getString("subject");
-				if(subject.equals("null")) {
+				if (subject.equals("null")) {
 					subject = "";
 				}
 				setSubject(subject);	
@@ -474,10 +403,10 @@ public class ProjectMetadataImpl implements ProjectMetadata, Serializable {
 		}
 		
 		//check that the summary exists and is not null
-		if(metadataJSON.has("summary") && !metadataJSON.isNull("summary")) {
+		if (metadataJSON.has("summary") && !metadataJSON.isNull("summary")) {
 			try {
 				String summary = metadataJSON.getString("summary");
-				if(summary.equals("null")) {
+				if (summary.equals("null")) {
 					summary = "";
 				}
 				setSummary(summary);
@@ -487,10 +416,10 @@ public class ProjectMetadataImpl implements ProjectMetadata, Serializable {
 		}
 		
 		//check that the grade range exists and is not null
-		if(metadataJSON.has("gradeRange") && !metadataJSON.isNull("gradeRange")) {
+		if (metadataJSON.has("gradeRange") && !metadataJSON.isNull("gradeRange")) {
 			try {
 				String gradeRange = metadataJSON.getString("gradeRange");
-				if(gradeRange.equals("null")) {
+				if (gradeRange.equals("null")) {
 					gradeRange = "";
 				}
 				setGradeRange(gradeRange);		
@@ -500,11 +429,11 @@ public class ProjectMetadataImpl implements ProjectMetadata, Serializable {
 		}
 		
 		//check that the total time exists and is not null
-		if(metadataJSON.has("totalTime")  && !metadataJSON.isNull("totalTime")) {
+		if (metadataJSON.has("totalTime")  && !metadataJSON.isNull("totalTime")) {
 			try {
 				String totalTime = metadataJSON.getString("totalTime");
 				
-				if(totalTime.equals("null")) {
+				if (totalTime.equals("null")) {
 					totalTime = "";
 				}
 				setTotalTime(totalTime);
@@ -514,11 +443,11 @@ public class ProjectMetadataImpl implements ProjectMetadata, Serializable {
 		}
 		
 		//check that the comp time exists and is not null
-		if(metadataJSON.has("compTime") && !metadataJSON.isNull("compTime")) {
+		if (metadataJSON.has("compTime") && !metadataJSON.isNull("compTime")) {
 			try {
 				String compTime = metadataJSON.getString("compTime");
 				
-				if(compTime.equals("null")) {
+				if (compTime.equals("null")) {
 					compTime = "";
 				}
 				setCompTime(compTime);
@@ -528,10 +457,10 @@ public class ProjectMetadataImpl implements ProjectMetadata, Serializable {
 		}
 		
 		//check that the contact exists and is not null
-		if(metadataJSON.has("contact") && !metadataJSON.isNull("contact")) {
+		if (metadataJSON.has("contact") && !metadataJSON.isNull("contact")) {
 			try {
 				String contact = metadataJSON.getString("contact");
-				if(contact.equals("null")) {
+				if (contact.equals("null")) {
 					contact = "";
 				}
 				setContact(contact);
@@ -541,10 +470,10 @@ public class ProjectMetadataImpl implements ProjectMetadata, Serializable {
 		}
 		
 		//check that the tech reqs exists and is not null
-		if(metadataJSON.has("techReqs") && !metadataJSON.isNull("techReqs")) {
+		if (metadataJSON.has("techReqs") && !metadataJSON.isNull("techReqs")) {
 			try {
 				JSONObject techReqs = metadataJSON.getJSONObject("techReqs");
-				if(techReqs.equals("null")) {
+				if (techReqs.equals("null")) {
 					techReqs = new JSONObject();
 				}
 				setTechReqs(techReqs.toString());
@@ -554,10 +483,10 @@ public class ProjectMetadataImpl implements ProjectMetadata, Serializable {
 		}
 		
 		//check that the tools exists and is not null
-		if(metadataJSON.has("tools") && !metadataJSON.isNull("tools")) {
+		if (metadataJSON.has("tools") && !metadataJSON.isNull("tools")) {
 			try {
 				JSONObject tools = metadataJSON.getJSONObject("tools");
-				if(tools.equals("null")) {
+				if (tools.equals("null")) {
 					tools = new JSONObject();
 				}
 				setTools(tools.toString());
@@ -567,10 +496,10 @@ public class ProjectMetadataImpl implements ProjectMetadata, Serializable {
 		}		
 		
 		//check that the lesson plan exists and is not null
-		if(metadataJSON.has("lessonPlan") && !metadataJSON.isNull("lessonPlan")) {
+		if (metadataJSON.has("lessonPlan") && !metadataJSON.isNull("lessonPlan")) {
 			try {
 				String lessonPlan = metadataJSON.getString("lessonPlan");
-				if(lessonPlan.equals("null")) {
+				if (lessonPlan.equals("null")) {
 					lessonPlan = "";
 				}
 				setLessonPlan(lessonPlan);		
@@ -580,10 +509,10 @@ public class ProjectMetadataImpl implements ProjectMetadata, Serializable {
 		}
 
 		//check that the standards exists and is not null
-		if(metadataJSON.has("standards") && !metadataJSON.isNull("standards")) {
+		if (metadataJSON.has("standards") && !metadataJSON.isNull("standards")) {
 			try {
 				String standards = metadataJSON.getString("standards");
-				if(standards.equals("null")) {
+				if (standards.equals("null")) {
 					standards = "";
 				}
 				setStandards(standards);		
@@ -593,10 +522,10 @@ public class ProjectMetadataImpl implements ProjectMetadata, Serializable {
 		}
 		
 		//check that the keywords exists and is not null
-		if(metadataJSON.has("keywords") && !metadataJSON.isNull("keywords")) {
+		if (metadataJSON.has("keywords") && !metadataJSON.isNull("keywords")) {
 			try {
 				String keywords = metadataJSON.getString("keywords");
-				if(keywords.equals("null")) {
+				if (keywords.equals("null")) {
 					keywords = "";
 				}
 				setKeywords(keywords);	
@@ -606,10 +535,10 @@ public class ProjectMetadataImpl implements ProjectMetadata, Serializable {
 		}
 
 		//check that the language exists and is not null
-		if(metadataJSON.has("language") && !metadataJSON.isNull("language")) {
+		if (metadataJSON.has("language") && !metadataJSON.isNull("language")) {
 			try {
 				String language = metadataJSON.getString("language");
-				if(language.equals("null")) {
+				if (language.equals("null")) {
 					language = "";
 				}
 				setLanguage(language);
@@ -619,10 +548,10 @@ public class ProjectMetadataImpl implements ProjectMetadata, Serializable {
 		}
 		
 		//check that the max scores exists and is not null
-		if(metadataJSON.has("maxScores") && !metadataJSON.isNull("maxScores")) {
+		if (metadataJSON.has("maxScores") && !metadataJSON.isNull("maxScores")) {
 			try {
 				String maxScores = metadataJSON.getString("maxScores");
-				if(maxScores.equals("null")) {
+				if (maxScores.equals("null")) {
 					maxScores = "";
 				}
 				setMaxScores(maxScores);
@@ -632,10 +561,10 @@ public class ProjectMetadataImpl implements ProjectMetadata, Serializable {
 		}
 		
 		//check that the theme exists and is not null
-		if(metadataJSON.has("theme") && !metadataJSON.isNull("theme")) {
+		if (metadataJSON.has("theme") && !metadataJSON.isNull("theme")) {
 			try {
 				String theme = metadataJSON.getString("theme");
-				if(theme.equals("null")) {
+				if (theme.equals("null")) {
 					theme = "";
 				}
 				setTheme(theme);
@@ -645,10 +574,10 @@ public class ProjectMetadataImpl implements ProjectMetadata, Serializable {
 		}
 		
 		//check that the navigation mode exists and is not null
-		if(metadataJSON.has("navMode") && !metadataJSON.isNull("navMode")) {
+		if (metadataJSON.has("navMode") && !metadataJSON.isNull("navMode")) {
 			try {
 				String navMode = metadataJSON.getString("navMode");
-				if(navMode.equals("null")) {
+				if (navMode.equals("null")) {
 					navMode = "";
 				}
 				setNavMode(navMode);
@@ -658,11 +587,11 @@ public class ProjectMetadataImpl implements ProjectMetadata, Serializable {
 		}
 		
 		//check that the post level exists and is not null
-		if(metadataJSON.has("postLevel") && !metadataJSON.isNull("postLevel")) {
+		if (metadataJSON.has("postLevel") && !metadataJSON.isNull("postLevel")) {
 			
 			try {
 				Long postLevel = metadataJSON.getLong("postLevel");
-				if(postLevel.equals("null")) {
+				if (postLevel.equals("null")) {
 					postLevel = (long) 5;
 				}
 				setPostLevel(postLevel);
@@ -671,7 +600,7 @@ public class ProjectMetadataImpl implements ProjectMetadata, Serializable {
 			}
 		}
 	}
-	
+
 	/**
 	 * Returns a human readable string that lists the tech requirements
 	 * as well as the tech details. This is used in the portal when we
@@ -681,46 +610,46 @@ public class ProjectMetadataImpl implements ProjectMetadata, Serializable {
 	public String getTechDetailsString() {
 		StringBuffer techReqsAndDetailsStringBuf = new StringBuffer();
 		String techReqs = getTechReqs();
-		
-		//check that the tech reqs is not null
+
+		// check that the tech reqs is not null
 		if (techReqs != null && !techReqs.equals("") && !techReqs.equals("null")) {
-			
+
 			try {
-				//get the JSON object for the tech reqs
+				// get the JSON object for the tech reqs
 				JSONObject techReqsJSON = new JSONObject(techReqs);
-				
-				if (techReqsJSON.has("java") && techReqsJSON.getString("java").equals("checked")) {
-					//java is required
+
+				if (techReqsJSON.has("java") && (techReqsJSON.getString("java").equals("checked") || techReqsJSON.getString("java").equals("true"))) {
+					// java is required
 					techReqsAndDetailsStringBuf.append("Java");
 				}
-				
+
 				if (techReqsJSON.has("flash") && techReqsJSON.getString("flash").equals("checked")) {
-					if(techReqsAndDetailsStringBuf.length() != 0) {
-						//add a comma to separate the previous text
+					if (techReqsAndDetailsStringBuf.length() != 0) {
+						// add a comma to separate the previous text
 						techReqsAndDetailsStringBuf.append(", ");
 					}
-					
-					//flash is required
+
+					// flash is required
 					techReqsAndDetailsStringBuf.append("Flash");
 				}
-				
-				if (techReqsJSON.has("quickTime") && techReqsJSON.getString("quickTime").equals("checked")) {
-					if(techReqsAndDetailsStringBuf.length() != 0) {
-						//add a comma to separate the previous text
+
+				if (techReqsJSON.has("quickTime") && (techReqsJSON.getString("quickTime").equals("checked") || techReqsJSON.getString("quickTime").equals("true"))) {
+					if (techReqsAndDetailsStringBuf.length() != 0) {
+						// add a comma to separate the previous text
 						techReqsAndDetailsStringBuf.append(", ");
 					}
-					
-					//quicktime is required
+
+					// quicktime is required
 					techReqsAndDetailsStringBuf.append("QuickTime");
 				}
-				
+
 				if (techReqsJSON.has("techDetails") && techReqsJSON.getString("techDetails") != null && !techReqsJSON.getString("techDetails").equals("")) {
-					if(techReqsAndDetailsStringBuf.length() != 0) {
-						//add a comma to separate the previous text
+					if (techReqsAndDetailsStringBuf.length() != 0) {
+						// add a comma to separate the previous text
 						techReqsAndDetailsStringBuf.append(", ");
 					}
-					
-					//add the tech details
+
+					// add the tech details
 					techReqsAndDetailsStringBuf.append(techReqsJSON.getString("techDetails"));
 				}
 			} catch (JSONException e) {
@@ -745,15 +674,15 @@ public class ProjectMetadataImpl implements ProjectMetadata, Serializable {
 			 */
 			String techReqsString = metadata.getString("techReqs");
 			
-			//check if the field is null or "null"
-			if(techReqsString != null && techReqsString != "null") {
-				//create the JSON object
+			// check if the field is null or "null"
+			if (techReqsString != null && techReqsString != "null") {
+				// create the JSON object
 				JSONObject techReqsJSON = new JSONObject(techReqsString);
 				
-				//override the existing techReqs string with this JSON object
+				// override the existing techReqs string with this JSON object
 				metadata.put("techReqs", techReqsJSON);	
 			} else {
-				//override the existing techReqs string with this empty JSON object
+				// override the existing techReqs string with this empty JSON object
 				metadata.put("techReqs", new JSONObject());
 			}
 			/*
@@ -762,15 +691,15 @@ public class ProjectMetadataImpl implements ProjectMetadata, Serializable {
 			 */
 			String toolsString = metadata.getString("tools");
 			
-			//check if the field is null or "null"
-			if(toolsString != null && toolsString != "null") {
-				//create the JSON object
+			// check if the field is null or "null"
+			if (toolsString != null && toolsString != "null") {
+				// create the JSON object
 				JSONObject toolsJSON = new JSONObject(toolsString);
 				
-				//override the existing techReqs string with this JSON object
+				// override the existing techReqs string with this JSON object
 				metadata.put("tools", toolsJSON);	
 			} else {
-				//override the existing techReqs string with this empty JSON object
+				// override the existing techReqs string with this empty JSON object
 				metadata.put("tools", new JSONObject());
 			}
 			

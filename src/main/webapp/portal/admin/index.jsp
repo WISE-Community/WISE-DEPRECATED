@@ -35,6 +35,14 @@
 			}
 			return true;
 		}
+		// confirm with user before proceeding, as this will take some time
+		function mergeProjectMetadata() {
+		    var result = confirm("This will take some time, depending on the number of projects in your database (~1 second per project). Continue?");
+		    if (result) {
+		        window.location.href="${contextPath}/admin/mergeProjectMetadata";
+			}
+		}
+
 		$(document).ready(function() {
 		    // get latest WISE information
 		    $.ajax("${contextPath}/admin/latestWISEVersion").success(function(response) {
@@ -212,7 +220,11 @@
 							<spring:message code='misc' />
 						</div>
 						<div class="sectionContent">
-							<h5><a href="${contextPath}/admin/run/mergespreadsheets.html"><spring:message code='admin.index.mergeFiles' /></a> | <a href="${contextPath}/translate"><spring:message code='admin.index.translateWISE' /></a> | <a href="${contextPath}/admin/run/replacebase64withpng.html"><spring:message code='admin.index.replaceBase64WithPNG' /></a></h5>
+							<h5><a href="${contextPath}/admin/run/mergespreadsheets.html"><spring:message code='admin.index.mergeFiles' /></a>
+								| <a href="${contextPath}/translate"><spring:message code='admin.index.translateWISE' /></a>
+								| <a href="${contextPath}/admin/run/replacebase64withpng.html"><spring:message code='admin.index.replaceBase64WithPNG' /></a>
+								| <a onclick="mergeProjectMetadata()"><spring:message code='admin.index.mergeProjectMetadata' /></a>
+							</h5>
 						</div>
 
 						<div class="sectionHead">

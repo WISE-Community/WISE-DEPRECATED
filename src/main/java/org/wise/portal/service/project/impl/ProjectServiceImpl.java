@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3,
@@ -30,8 +30,6 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 import java.util.TreeSet;
-
-import javax.servlet.http.HttpServletRequest;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -166,12 +164,12 @@ public class ProjectServiceImpl implements ProjectService {
         project.setWISEVersion(projectParameters.getWiseVersion());
 		ProjectMetadata metadata = projectParameters.getMetadata();
 
-		//get the parent project id if any
+		// get the parent project id, if any
 		Long parentProjectId = projectParameters.getParentProjectId();
 		Project parentProject = null;
 
 		if (parentProjectId != null) {
-			//get the parent project
+			// get the parent project
 			parentProject = getById(parentProjectId);
 			project.setMaxTotalAssetsSize(parentProject.getMaxTotalAssetsSize());
 		}
@@ -350,7 +348,7 @@ public class ProjectServiceImpl implements ProjectService {
 					vleConfigUrl += "&isConstraintsDisabled=true";
 				}
 
-				/* if preview request is coming from the run, we want to pass along the version id when we make a request to get the config */
+				// if preview request is coming from the run, pass along the version id when we make a request to get the config
 				String versionId = params.getVersionId();
 				if (versionId != null && !versionId.equals("")) {
 					vleConfigUrl += "&versionId=" + versionId;
@@ -361,7 +359,7 @@ public class ProjectServiceImpl implements ProjectService {
 					vleConfigUrl += "&workgroupId=" + workgroupId;
 				}
 
-				//get the path to the project json file
+				// get the path to the project json file
 				String curriculumBaseWWW = wiseProperties.getProperty("curriculum_base_www");
 				String rawProjectUrl = project.getModulePath();
 				String contentUrl = curriculumBaseWWW + rawProjectUrl;
@@ -391,10 +389,9 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 	/**
-	 * @see org.wise.portal.service.project.ProjectService#updateProject(org.wise.portal.domain.project.Project)
+	 * @see org.wise.portal.service.project.ProjectService#updateProject(Project, User)
 	 */
-	@Transactional()
-	public void updateProject(Project project, User user) throws NotAuthorizedException{
+	public void updateProject(Project project, User user) throws NotAuthorizedException {
 		// check to see if user can author project or the run that it's in
 		List<Run> runList = this.runService.getProjectRuns((Long) project.getId());
 		Run run = null;
@@ -469,7 +466,7 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 	/**
-	 * @see org.wise.portal.service.project.ProjectService#addTagToProject(java.lang.String, org.wise.portal.domain.project.Project)
+	 * @see org.wise.portal.service.project.ProjectService#addTagToProject(String, Long)
 	 */
 	@CacheEvict(value = "project", allEntries = true)
 	public Integer addTagToProject(String tagString, Long projectId) {
@@ -478,7 +475,7 @@ public class ProjectServiceImpl implements ProjectService {
 
 		Project project = null;
 
-		/* retrieve the project */
+		// retrieve the project
 		try {
 			project = this.projectDao.getById(projectId);
 		} catch(ObjectNotFoundException e) {
@@ -499,7 +496,7 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 	/**
-	 * @see org.wise.portal.service.project.ProjectService#removeTagFromProject(java.lang.String, org.wise.portal.domain.project.Project)
+	 * @see org.wise.portal.service.project.ProjectService#removeTagFromProject(Integer, Long)
 	 */
 	@CacheEvict(value = "project", allEntries = true)
 	@Transactional
@@ -521,7 +518,7 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 	/**
-	 * @see org.wise.portal.service.project.ProjectService#updateTag(java.lang.Long, java.lang.Long, java.lang.String)
+	 * @see org.wise.portal.service.project.ProjectService#updateTag(Integer, Long, String)
 	 */
 	@Transactional
 	public Integer updateTag(Integer tagId, Long projectId, String name) {
@@ -552,7 +549,7 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 	/**
-	 * @see org.wise.portal.service.project.ProjectService#projectContainsTag(java.lang.Long, java.lang.String)
+	 * @see org.wise.portal.service.project.ProjectService#projectContainsTag(Project, String)
 	 */
 	public boolean projectContainsTag(Project project, String name) {
 
@@ -596,7 +593,7 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 	/**
-	 * @see org.wise.portal.service.project.ProjectService#getProjectListByAuthor(java.lang.String)
+	 * @see org.wise.portal.service.project.ProjectService#getProjectListByAuthorName(String)
 	 */
 	public List<Project> getProjectListByAuthorName(String authorName) {
 		return this.projectDao.getProjectListByAuthorName(authorName);
@@ -617,7 +614,7 @@ public class ProjectServiceImpl implements ProjectService {
 
 	/**
 	 * @throws ObjectNotFoundException
-	 * @see org.wise.portal.service.project.ProjectService#identifyRootProjectId(java.lang.Long)
+	 * @see org.wise.portal.service.project.ProjectService#identifyRootProjectId(Project)
 	 */
 	public Long identifyRootProjectId(Project project) throws ObjectNotFoundException {
 		if (project == null) {

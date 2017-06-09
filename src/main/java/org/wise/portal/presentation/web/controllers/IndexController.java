@@ -42,8 +42,7 @@ import org.wise.portal.service.newsitem.NewsItemService;
 import org.wise.portal.service.project.ProjectService;
 
 /**
- * Controller for WISE's main index page
- *
+ * Controller for WISE main index page
  * @author Hiroki Terashima
  */
 @Controller
@@ -59,8 +58,7 @@ public class IndexController {
 	@Autowired
 	private Properties wiseProperties;
 
-	// path to project thumb image relative to project folder
-	private static final String PROJECT_THUMB_PATH = "/assets/project_thumb.png";
+	private static final String PROJECT_THUMB_PATH = "/assets/project_thumb.png"; // path to project thumb image relative to project folder
 
 	/** 
 	 * @see org.springframework.web.servlet.mvc.AbstractController#handleRequestInternal(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
@@ -79,20 +77,18 @@ public class IndexController {
 					"administrator or other helpful WISE personnel.");
 			newsItems.add(newsItem);
 		}
-		
-		Map<Long,String> projectThumbMap = new TreeMap<Long,String>();  // maps projectId to url where its thumbnail can be found
-		
-		// get library projects
-		List<Project> libraryProjectsList = this.projectService.getPublicLibraryProjectList();
-		
-		// divide library projects by subject area
+
+		// a list of projects for each different subject areas.
+		// TODO: allow each WISE instance to specify these
 		List<Project> esProjects = new ArrayList<Project>();
 		List<Project> lsProjects = new ArrayList<Project>();
 		List<Project> psProjects = new ArrayList<Project>();
 		List<Project> bioProjects = new ArrayList<Project>();
 		List<Project> chemProjects = new ArrayList<Project>();
 		List<Project> physProjects = new ArrayList<Project>();
-		
+
+		// get library projects and divide by subject area
+		List<Project> libraryProjectsList = this.projectService.getPublicLibraryProjectList();
 		for (Project p: libraryProjectsList) {
 			String subject = p.getMetadata().getSubject();
 			if (subject != null) {
@@ -111,38 +107,12 @@ public class IndexController {
 			    }
 			}
 		}
-		
-		
-		// TODO: remove hard-coded subjects in future - automate
-		//List<String> subjects = new ArrayList<String>();
-		//List<ArrayList> libProjects = new ArrayList<ArrayList>();
-		
-		/*for (Project p: libraryProjectsList) {
-			String subject = p.getMetadata().getSubject();
-			if(!subjects.contains(subject)) {
-				subjects.add(subject);
-			}
-		}
-		
-		for (int i = 0; i < subjects.size(); i++) {
-			libProjects.add(new ArrayList<Project>());
-		}
-		
-		for (Project p: libraryProjectsList) {
-			String subject = p.getMetadata().getSubject();
-			for (String s: subjects) {
-				if (subject.equals(s)) {
-					int index = subjects.indexOf(s);
-					libProjects.get(index).add(p);
-				}
-			}
-			
-		}*/
-		
+
+		Map<Long,String> projectThumbMap = new TreeMap<Long,String>();  // map of projectId to project thumbnail url
 		String curriculumBaseWWW = this.wiseProperties.getProperty("curriculum_base_www");
 		for (Project p : libraryProjectsList) {
 			if (p.isCurrent()) {
-				String url = (String) p.getModulePath();
+				String url = p.getModulePath();
 
 				if (url != null && url != "") {
 					
@@ -167,8 +137,6 @@ public class IndexController {
         modelMap.put("bioProjects", bioProjects);
         modelMap.put("chemProjects", chemProjects);
         modelMap.put("physProjects", physProjects);
-        //modelMap.put("subjects", subjects);
-        //modelMap.put("libProjects", libProjects);
         modelMap.put("projectThumbMap", projectThumbMap);
         return "index";
 	}

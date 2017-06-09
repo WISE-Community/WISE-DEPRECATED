@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -33,6 +33,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.impl.AddSharedTeacherParameters;
 import org.wise.portal.domain.project.Project;
+import org.wise.portal.domain.project.ProjectMetadata;
 import org.wise.portal.domain.project.impl.LaunchProjectParameters;
 import org.wise.portal.domain.project.impl.PreviewProjectParameters;
 import org.wise.portal.domain.project.impl.ProjectParameters;
@@ -69,7 +70,7 @@ public interface ProjectService {
 	 * Retrieves a <code>List</code> of <code>Project</code> that
 	 * has been bookmarked by the given <code>User</code>
 	 * 
-	 * @param <code>User</code> bookmarker
+	 * @param bookmarker User who we're looking up
 	 * @return <code>List<Project></code>
 	 * @throws ObjectNotFoundException
 	 */
@@ -79,8 +80,8 @@ public interface ProjectService {
 	/**
 	 * Adds the given <code>User</code> bookmarker to the <code>Project</code> project
 	 * 
-	 * @param <code>Project</code> project
-	 * @param <code>User</code> bookmarker
+	 * @param project the project to bookmark
+	 * @param bookmarker User that wants to bookmark the project
 	 */
 	@Transactional
 	void addBookmarkerToProject(Project project, User bookmarker) throws ObjectNotFoundException;
@@ -88,8 +89,8 @@ public interface ProjectService {
 	/**
 	 * Removes the given <code>User</code> bookmarker from the <code>Project</code> project
 	 * 
-	 * @param <code>Project</code> project
-	 * @param <code>User</code> bookmarker
+	 * @param project <code>Project</code>
+	 * @param bookmarker <code>User</code>
 	 */
 	@Transactional
 	void removeBookmarkerFromProject(Project project, User bookmarker) throws ObjectNotFoundException;
@@ -123,7 +124,7 @@ public interface ProjectService {
 	/**
 	 * Creates a new <code>Project</code>
 	 *
-	 * @param <code>ProjectParameters</code>
+	 * @param projectParameters <code>ProjectParameters</code>
 	 *     the project parameters object
 	 * @return the <code>Project</code> that was created
 	 * @throws ObjectNotFoundException when projectparameters references
@@ -137,6 +138,7 @@ public interface ProjectService {
 	 * 
 	 * @param project <code>Project</code> contains updated Project.
 	 */
+	@Transactional()
 	void updateProject(Project project, User user) throws NotAuthorizedException;
 	
 	/**
@@ -149,8 +151,7 @@ public interface ProjectService {
 	/**
 	 * Launches a Preview of the Project
 	 * 
-	 * @param projectId
-	 *     the id of the project
+	 * @param previewProjectParameters parameters required to preview the project
 	 * @throws ObjectNotFoundException when the specified projectId
 	 *     does not exist
 	 * @throws IOException when the url cannot be loaded
@@ -232,7 +233,7 @@ public interface ProjectService {
 	 * Given a <code>Set<String></code> set of tag names, returns a
 	 * <code>List<Project></code> list of projects with all of the tag names.
 	 * 
-	 * @param Set<String> - set of tagNames
+	 * @param tagNames Set<String> - set of tagNames
 	 * @return List<Project> - list of projects
 	 */
 	List<Project> getProjectListByTagNames(Set<String> tagNames);
@@ -248,7 +249,7 @@ public interface ProjectService {
 	/**
 	 * Given a partial title (e.g. "Global", "Global Climate"), returns a list of projects
 	 * that match that title
-	 * @param projectLookupValue <String> partial or full project title
+	 * @param title <String> partial or full project title
 	 * @return List<Project> - list of projects
 	 */
 	List<Project> getProjectListByTitle(String title);
@@ -257,8 +258,8 @@ public interface ProjectService {
 	 * Given a <code>String</code> and a <code>Project</code> adds the
 	 * tag to the project.
 	 * 
-	 * @param String - tag
-	 * @param String - project
+	 * @param tag
+	 * @param projectId
 	 */
 	@Transactional
 	Integer addTagToProject(String tag, Long projectId);
@@ -268,7 +269,7 @@ public interface ProjectService {
 	 * tag from the project.
 	 * 
 	 * @param tagId - Integer id of tag
-	 * @param Project - project
+	 * @param projectId - id of project
 	 */
 	@Transactional
 	void removeTagFromProject(Integer tagId, Long projectId);
@@ -279,8 +280,8 @@ public interface ProjectService {
 	 * the resulting <code>Long</code> tag Id.
 	 * 
 	 * @param tagId - Integer id of tag
-	 * @param Long - projectId
-	 * @param String - name
+	 * @param projectId id of project
+	 * @param name name of tag
 	 * @return Integer - tag id
 	 */
 	Integer updateTag(Integer tagId, Long projectId, String name);
@@ -290,8 +291,8 @@ public interface ProjectService {
 	 * name, returns <code>boolean</code> true if the project contains a 
 	 * tag with that name, false otherwise.
 	 * 
-	 * @param Project - project
-	 * @param String - name
+	 * @param project
+	 * @param name name of tag
 	 * @return boolean
 	 */
 	boolean projectContainsTag(Project project, String name);
@@ -301,8 +302,8 @@ public interface ProjectService {
 	 * returns true if that user is authorized to create a tag with that
 	 * name, returns false otherwise.
 	 * 
-	 * @param User - user
-	 * @param String - name
+	 * @param user
+	 * @param name
 	 * @return boolean
 	 */
 	boolean isAuthorizedToCreateTag(User user, String name);
@@ -321,4 +322,5 @@ public interface ProjectService {
 	 * @throws ObjectNotFoundException 
 	 */
 	Long identifyRootProjectId(Project project) throws ObjectNotFoundException;
+
 }

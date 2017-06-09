@@ -54,7 +54,7 @@ public interface Project extends Persistable {
 	FamilyTag getFamilytag();
 
 	/**
-	 * @param familyTag the familyTag to set
+	 * @param familytag the familyTag to set
 	 */
 	void setFamilytag(FamilyTag familytag);
 
@@ -64,7 +64,7 @@ public interface Project extends Persistable {
 	ProjectInfo getProjectInfo();
 
 	/**
-	 * @param projectInfoTag the projectInfoTag to set
+	 * @param projectInfo the projectInfo to set
 	 */
 	void setProjectInfo(ProjectInfo projectInfo);
 	
@@ -130,16 +130,23 @@ public interface Project extends Persistable {
 	 * @param visitor
 	 */
 	Object accept(ProjectVisitor visitor);
-	
+
+	ProjectMetadata getMetadataObj();
+
 	/**
 	 * @return <code>ProjectMetadata</code>
 	 */
 	ProjectMetadata getMetadata();
 	
 	/**
-	 * @param <code>ProjectMetadata</code> data
+	 * @param metadata
 	 */
-	void setMetadata(ProjectMetadata data);
+	void setMetadata(ProjectMetadata metadata);
+
+	/**
+	 * @param metadataJSONString
+	 */
+	void setMetadata(String metadataJSONString);
 	
 	/**
 	 * @return <code>boolean</code> is public
@@ -147,7 +154,7 @@ public interface Project extends Persistable {
 	boolean isPublic();
 	
 	/**
-	 * @param <code>boolean</code> isPublic
+	 * @param isPublic
 	 */
 	void setPublic(boolean isPublic);
 	
@@ -157,7 +164,7 @@ public interface Project extends Persistable {
 	Date getDateCreated();
 	
 	/**
-	 * @param <code>Date</code> date created
+	 * @param datecreated
 	 */
 	void setDateCreated(Date datecreated);
 	
@@ -195,13 +202,11 @@ public interface Project extends Persistable {
 	Long getParentProjectId();
 	
 	/**
-	 * 
 	 * @param rootProjectId
 	 */
 	void setRootProjectId(Long rootProjectId);
 	
 	/**
-	 * 
 	 * @return
 	 */
 	Long getRootProjectId();

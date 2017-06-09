@@ -207,7 +207,7 @@ public class HibernateProjectDao extends AbstractHibernateDao<Project> implement
 		List<Project> projects = (List<Project>) this
 				.getHibernateTemplate()
 				.findByNamedParam(
-						"from ProjectImpl as project where project.metadata.author like :authorName",
+						"from ProjectImpl as project where project.metadataObj.author like :authorName",
 						"authorName", "%"+authorName+"%");
 		return projects;
 	}

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2016 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -31,25 +31,11 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-import javax.persistence.Transient;
-import javax.persistence.Version;
+import javax.persistence.*;
 
 import org.hibernate.annotations.Cascade;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.wise.portal.domain.authentication.MutableUserDetails;
 import org.wise.portal.domain.project.FamilyTag;
 import org.wise.portal.domain.project.Project;
@@ -67,15 +53,15 @@ import org.wise.portal.domain.user.impl.UserImpl;
 @Table(name = ProjectImpl.DATA_STORE_NAME)
 @Inheritance(strategy = InheritanceType.JOINED)
 public class ProjectImpl implements Project {
-	
-    @Transient
+
+	@Transient
+	private static final long serialVersionUID = 1L;
+
+	@Transient
     public static final String SHARED_OWNERS_JOIN_COLUMN_NAME = "shared_owners_fk";
     
     @Transient
     public static final String SHARED_OWNERS_JOIN_TABLE_NAME = "projects_related_to_shared_owners";
-
-	@Transient
-	private static final long serialVersionUID = 1L;
 
 	@Transient
 	public static final String COLUMN_NAME_FAMILYTAG = "familytag";
@@ -120,9 +106,6 @@ public class ProjectImpl implements Project {
     private static final String PROJECT_JOIN_COLUMN_NAME = "project_fk";
 
     @Transient
-    private static final String COLUMN_NAME_METADATA_FK = "metadata_fk";
-    
-    @Transient
     private static final String COLUMN_NAME_IS_DELETED = "isDeleted";
     
     @Transient
@@ -139,11 +122,14 @@ public class ProjectImpl implements Project {
 	
 	@Column(name = COLUMN_NAME_PROJECT_NAME, nullable = false)
 	protected String name;
-	
+
 	@OneToOne(targetEntity = ProjectMetadataImpl.class, fetch = FetchType.LAZY)
 	@Cascade( { org.hibernate.annotations.CascadeType.SAVE_UPDATE })
-    @JoinColumn(name = COLUMN_NAME_METADATA_FK, nullable = true, unique = true)
-    protected ProjectMetadata metadata = null;
+    @JoinColumn(name = "metadata_fk", nullable = true, unique = true)
+    protected ProjectMetadata metadataObj = null;
+
+	@Column(name = "metadata", nullable = true)
+	protected String metadata;
 
 	@Column(name = "modulePath", nullable = false)
 	protected String modulePath;
@@ -266,7 +252,7 @@ public class ProjectImpl implements Project {
 	}
 
 	/**
-	 * @param familyTag the familyTag to set
+	 * @param familytag the familyTag to set
 	 */
 	public void setFamilytag(FamilyTag familytag) {
 		this.familytag = familytag;
@@ -288,7 +274,6 @@ public class ProjectImpl implements Project {
 		this.projectinfo.setCurrent(isCurrent);
 	}
 
-
 	/**
 	 * @return the projectInfo
 	 */
@@ -297,7 +282,7 @@ public class ProjectImpl implements Project {
 	}
 
 	/**
-	 * @param projectInfoTag the projectInfoTag to set
+	 * @param projectInfo the projectInfo to set
 	 */
 	public void setProjectInfo(ProjectInfo projectInfo) {
 		this.projectinfo = projectInfo;
@@ -314,15 +299,16 @@ public class ProjectImpl implements Project {
 	 * @return the shared owners list in alphabetical order
 	 */
 	public List<User> getSharedOwnersOrderedAlphabetically() {
+
 		List<User> sharedOwnersList = new ArrayList<User>();
-		
-		//get the shared owners in a list
+
+		// add the shared owners for this project
 		sharedOwnersList.addAll(sharedowners);
 		
-		//get the comparator that will order the list alphabetically
+		// get the comparator that will order the list alphabetically
 		UserAlphabeticalComparator userAlphabeticalComparator = new UserAlphabeticalComparator();
-		
-		//sort the list alphabetically
+
+		// sort the list alphabetically
 		Collections.sort(sharedOwnersList, userAlphabeticalComparator);
 		
 		return sharedOwnersList;
@@ -353,8 +339,7 @@ public class ProjectImpl implements Project {
 	public void setProjectType(ProjectType projectType) {
 		this.projectType = projectType;
 	}
-	
-	
+
 	/**
 	 * @return the name
 	 */
@@ -403,19 +388,43 @@ public class ProjectImpl implements Project {
 		this.projectinfo = new ProjectInfoImpl();
 		this.projectinfo.setName(this.getName());
 	}
-	
+
+	public ProjectMetadata getMetadataObj() {
+		return metadataObj;
+	}
+
 	/**
 	 * @see org.wise.portal.domain.project.Project#getMetadata()
 	 */
 	public ProjectMetadata getMetadata() {
+		ProjectMetadata metadata = new ProjectMetadataImpl();
+		if (this.metadata != null) {
+			try {
+				JSONObject metadataJSONObject = new JSONObject(this.metadata);
+				metadata.populateFromJSON(metadataJSONObject);
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+		}
 		return metadata;
 	}
 
 	/**
-	 * @see org.wise.portal.domain.project.Project#setMetadata(java.lang.String)
+	 * @see org.wise.portal.domain.project.Project#setMetadata(ProjectMetadata)
 	 */
-	public void setMetadata(ProjectMetadata data) {
-		this.metadata = data;
+	public void setMetadata(ProjectMetadata metadata) {
+		if (metadata != null) {
+			this.metadata = metadata.toJSONString();
+		}
+	}
+
+	/**
+	 * @see org.wise.portal.domain.project.Project#setMetadata(String)
+	 */
+	public void setMetadata(String metadataJSONString) {
+		if (metadataJSONString != null) {
+			this.metadata = metadataJSONString;
+		}
 	}
 	
 	/**
@@ -462,7 +471,7 @@ public class ProjectImpl implements Project {
 	}
 
 	/**
-	 * @see org.wise.portal.domain.project.Project#setTags(java.lang.String)
+	 * @see org.wise.portal.domain.project.Project#setTags(Set)
 	 */
 	public void setTags(Set<Tag> tags) {
 		this.tags = tags;
@@ -555,7 +564,15 @@ public class ProjectImpl implements Project {
 	public void setMaxTotalAssetsSize(Long maxTotalAssetsSize) {
 		this.maxTotalAssetsSize = maxTotalAssetsSize;
 	}
-	
+
+	public Integer getWiseVersion() {
+		return this.wiseVersion;
+	}
+
+	public void setWISEVersion(Integer wiseVersion) {
+		this.wiseVersion = wiseVersion;
+	}
+
 	/**
 	 * Comparator used to order user names alphabetically
 	 */
@@ -574,22 +591,22 @@ public class ProjectImpl implements Project {
 		public int compare(User user1, User user2) {
 			int result = 0;
 			
-			if(user1 != null && user2 != null) {
-				//get the user details
+			if (user1 != null && user2 != null) {
+				// get the user details
 				MutableUserDetails userDetails1 = user1.getUserDetails();
 				MutableUserDetails userDetails2 = user2.getUserDetails();
 				
-				if(userDetails1 != null && userDetails2 != null) {
-					//get the user names
+				if (userDetails1 != null && userDetails2 != null) {
+					// get the user names
 					String userName1 = userDetails1.getUsername();
 					String userName2 = userDetails2.getUsername();
 					
-					if(userName1 != null && userName2 != null) {
-						//get the user names in lower case
+					if (userName1 != null && userName2 != null) {
+						// get the user names in lower case
 						String userName1LowerCase = userName1.toLowerCase();
 						String userName2LowerCase = userName2.toLowerCase();
 						
-						//compare the user names
+						// compare the user names
 						result = userName1LowerCase.compareTo(userName2LowerCase);
 					}
 				}
@@ -598,14 +615,4 @@ public class ProjectImpl implements Project {
 			return result;
 		}
 	}
-
-    @Override
-    public Integer getWiseVersion() {
-        return this.wiseVersion;
-    }
-
-    @Override
-    public void setWISEVersion(Integer wiseVersion) {
-        this.wiseVersion = wiseVersion;
-    }
 }

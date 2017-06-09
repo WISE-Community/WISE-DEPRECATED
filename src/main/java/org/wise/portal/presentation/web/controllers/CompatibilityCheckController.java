@@ -50,24 +50,22 @@ public class CompatibilityCheckController {
 	 * @see org.springframework.web.servlet.mvc.AbstractController#handleRequestInternal(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
 	 */
 	@RequestMapping(method = RequestMethod.GET)
-	protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	protected ModelAndView handleRequestInternal(HttpServletRequest request) throws Exception {
 		ModelAndView modelAndView = new ModelAndView();
-    	
-		//get the projectId and versionId
-		String projectId = request.getParameter("projectId");
+
+		String projectId = request.getParameter("projectId"); // get the projectId
 		
-		if(projectId != null) {
-			//get the metadata for the project/version
-			Project project = projectService.getById(projectId);
+		if (projectId != null) {
+
+			Project project = projectService.getById(projectId); // get the metadata for the project
 			ProjectMetadata metadata = project.getMetadata();
  
-			if(metadata != null) {
-				String projectTechReqs = null;
-				
-				//get the tech requirements from the metadata, this should be a JSON string
-				projectTechReqs = metadata.getTechReqs();
+			if (metadata != null) {
 
-				//set the JSON string into the model so the jsp can access it
+				// get the tech requirements from the metadata, this should be a JSON string
+				String projectTechReqs = metadata.getTechReqs();
+
+				// set the JSON string into the model so the jsp can access it
 				modelAndView.addObject("specificRequirements", projectTechReqs);
 			}
 		}

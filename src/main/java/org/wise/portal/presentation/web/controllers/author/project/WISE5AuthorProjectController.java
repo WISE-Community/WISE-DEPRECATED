@@ -105,7 +105,7 @@ public class WISE5AuthorProjectController {
             HttpServletResponse response,
             ModelMap modelMap) {
 
-        // if login is disallowed, log out user and redirect them to the home page
+        // if login is not allowed, log out user and redirect them to the home page
         try {
             Portal portal = portalService.getById(new Integer(1));
             if (!portal.isLoginAllowed()) {
@@ -161,8 +161,7 @@ public class WISE5AuthorProjectController {
 
             String projectJSONFilename = "project.json";
 
-            // File where we'll be writing the new project JSON
-            File newProjectJSONFile = new File(newProjectPath, projectJSONFilename);
+            File newProjectJSONFile = new File(newProjectPath, projectJSONFilename);  // where we'll be writing the new project JSON
 
             if (!newProjectJSONFile.exists()) {
                 newProjectJSONFile.createNewFile();
@@ -184,7 +183,7 @@ public class WISE5AuthorProjectController {
             pParams.setProjectType(ProjectType.LD);
             pParams.setWiseVersion(new Integer(5));
 
-            // if this is new original project, set a new fresh metadata object
+            // since this is new original project, set a new fresh metadata object
             ProjectMetadata metadata = new ProjectMetadataImpl();
             metadata.setTitle(projectName);
             pParams.setMetadata(metadata);
@@ -267,22 +266,22 @@ public class WISE5AuthorProjectController {
                     pParams.setProjectname(parentProject.getName());
                     pParams.setProjectType(ProjectType.LD);
                     pParams.setWiseVersion(new Integer(5));
-
-                    // if this is new original project, set a new fresh metadata object
-                    ProjectMetadata metadata = new ProjectMetadataImpl();
-                    metadata.setTitle(parentProject.getName());
-                    pParams.setMetadata(metadata);
                     pParams.setParentProjectId(Long.valueOf(projectId));
-                    // get the project's metadata from the parent
-                    ProjectMetadata parentProjectMetadata = parentProject.getMetadata();
+
+                    ProjectMetadata parentProjectMetadata = parentProject.getMetadata(); // get the parent project's metadata
                     if (parentProjectMetadata != null) {
-                        // copy into new metadata object
+                        // copy parent's metadata into new metadata object
                         ProjectMetadata newProjectMetadata = new ProjectMetadataImpl(parentProjectMetadata.toJSONString());
                         pParams.setMetadata(newProjectMetadata);
+                    } else {
+                        // create a new metadata if parent project doesn't have one
+                        ProjectMetadata metadata = new ProjectMetadataImpl();
+                        metadata.setTitle(parentProject.getName());
+                        pParams.setMetadata(metadata);
                     }
+
                     Project project = projectService.createProject(pParams);
                     response.getWriter().write(project.getId().toString());
-
                 }
             } catch (ObjectNotFoundException onfe) {
                 onfe.printStackTrace();
@@ -337,31 +336,30 @@ public class WISE5AuthorProjectController {
             writer.write(projectJSONString.toString());
             writer.close();
 
-            // check if we need to update the project name in the project table in the db
+            // check if we need to update the project name or metadata in the project table in the db
             try {
                 // convert the project JSON string into a JSON object
                 JSONObject projectJSONObject = new JSONObject(projectJSONString);
 
                 // get the metadata object from the project
-                JSONObject projectMetadata = projectJSONObject.getJSONObject("metadata");
+                JSONObject projectMetadataJSON = projectJSONObject.getJSONObject("metadata");
 
-                if (projectMetadata != null) {
+                if (projectMetadataJSON != null) {
+                    project.setMetadata(projectMetadataJSON.toString()); // update the project.metadata field with the metadata in project.json content
+
                     // get the project title from the metadata
-                    String projectTitle = projectMetadata.getString("title");
-
+                    String projectTitle = projectMetadataJSON.getString("title");
                     if (projectTitle != null) {
 
                         // check if the project title has changed
                         if (!projectTitle.equals(project.getName())) {
-                            // the project title has changed
-
-                            // set the project title in the db table
+                            // the project title has changed, so also set the project title in the projects table
                             project.setName(projectTitle);
-
-                            // update the project
-                            this.projectService.updateProject(project, user);
                         }
                     }
+
+                    // update the project
+                    this.projectService.updateProject(project, user);
                 }
             } catch(JSONException e) {
                 e.printStackTrace();

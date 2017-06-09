@@ -104,10 +104,6 @@ public class CreateRunController {
 	@Autowired
 	private ProjectService projectService = null;
 
-	private static final String COMPLETE_VIEW_NAME = "teacher/run/create/createrunfinish";
-
-	private static final String RUN_KEY = "run";
-
 	@Autowired
 	private IMailFacade mailService = null;
 
@@ -138,7 +134,7 @@ public class CreateRunController {
 
 		Project project = null;
 		try {
-			project = (Project) this.projectService.getById(projectId);
+			project = this.projectService.getById(projectId);
 			if (!projectService.canCreateRun(project, user)) {
 				return "errors/accessdenied";
 			}
@@ -159,35 +155,16 @@ public class CreateRunController {
 		allOwners.add(project.getOwner());
 		allOwners.addAll(project.getSharedowners());
 
-		for (User currentOwner : allOwners){
+		for (User currentOwner : allOwners) {
 			ownerUsernames += currentOwner.getUserDetails().getUsername() + ",";
 		}
 
 		modelMap.put("projectOwners", ownerUsernames.substring(0, ownerUsernames.length() - 1));
 
-		/* determine if the project has been cleaned since last edited
-		 * and that the results indicate that all critical problems
-		 * have been resolved. Add relevant data to the model. */
-		boolean forceCleaning = false;
 		boolean isAllowedToClean = (project.getOwner().equals(user) || project.getSharedowners().contains(user));
-		ProjectMetadata metadata = project.getMetadata();
-
-		if (metadata != null) {
-			Date lastCleaned = metadata.getLastCleaned();
-			//Long lcTime = lastCleaned.getLong("timestamp");
-			Date lastEdited = metadata.getLastEdited();
-
-			/* if it has been edited since it was last cleaned, we need to force cleaning */
-			if (lastCleaned != null && lastEdited != null && lastCleaned.before(lastEdited)) {
-				forceCleaning = true;
-			}
-		}
-
-		forceCleaning = false;  //TODO: Jon remove when cleaning is stable
 
 		modelMap.put("user", user);
 		modelMap.put("currentUsername", user.getUserDetails().getUsername());
-		modelMap.put("forceCleaning", forceCleaning);
 		modelMap.put("isAllowedToClean", isAllowedToClean);
 
 		modelMap.addAttribute("runParameters", runParameters);
@@ -261,7 +238,7 @@ public class CreateRunController {
 		
 		if (runParameters.getPeriodNames() == null || 
 		runParameters.getPeriodNames().size() == 0) {
-			if (runParameters.getManuallyEnteredPeriods() == ""){
+			if (runParameters.getManuallyEnteredPeriods() == "") {
 				result.rejectValue("periodNames", "setuprun.error.selectperiods", "You must select one or more periods or manually" +
 						" create your period names.");
 			} else {
@@ -279,7 +256,7 @@ public class CreateRunController {
 						return "teacher/run/create/createrunperiods";
 					}
 					Set<String> parsedAndTrimmed = new TreeSet<String>();
-					for(String current : parsed){
+					for(String current : parsed) {
 						String trimmed = StringUtils.trim(current);
 						if (trimmed.length() == 0 || StringUtils.contains(trimmed, " ")
 								|| !StringUtils.isAlphanumeric(trimmed)
@@ -346,10 +323,10 @@ public class CreateRunController {
 		int ndx = relativeProjectFilePath.lastIndexOf("/");
 		String projectJSONFilename = relativeProjectFilePath.substring(ndx + 1, relativeProjectFilePath.length());  // looks like this: "new.project.json"
 
-		//get the project name
+		// get the project name
 		String projectName = project.getName();
 
-		//replace ' with \' so when the project name is displayed on the jsp page, it won't short circuit the string
+		// replace ' with \' so when the project name is displayed on the jsp page, it won't short circuit the string
 		projectName = projectName.replaceAll("\\'", "\\\\'");
 
 		modelMap.put("projectId", project.getId());
@@ -361,7 +338,6 @@ public class CreateRunController {
 		return "teacher/run/create/createrunreview";
 	}
 
-
 	/**
 	 * Retrieves the post level from the project metadata if it exists and determines
 	 * the minimum post level that the user can set for the run.
@@ -369,7 +345,7 @@ public class CreateRunController {
 	 * @param project
 	 * @return
 	 */
-	private Long getMinPostLevel(Project project){
+	private Long getMinPostLevel(Project project) {
 		Long level = 1l;
 
 		ProjectMetadata metadata = project.getMetadata();
@@ -468,8 +444,8 @@ public class CreateRunController {
 		} catch (ObjectNotFoundException e) {
 			return null;
 		}
-		ModelAndView modelAndView = new ModelAndView(COMPLETE_VIEW_NAME);
-		modelAndView.addObject(RUN_KEY, run);
+		ModelAndView modelAndView = new ModelAndView("teacher/run/create/createrunfinish");
+		modelAndView.addObject("run", run);
 		Set<String> runIdsToArchive = runParameters.getRunIdsToArchive();
 		if (runIdsToArchive != null) {
 			for(String runIdStr : runIdsToArchive) {
@@ -480,7 +456,7 @@ public class CreateRunController {
 		}
 
 		// send email to the recipients in new thread
-		//tries to retrieve the user from the session
+		// tries to retrieve the user from the session
 		User user = ControllerUtil.getSignedInUser();
 		Locale locale = request.getLocale();
 		String fullWiseContextPath = ControllerUtil.getPortalUrlString(request);  // e.g. http://localhost:8080/wise
