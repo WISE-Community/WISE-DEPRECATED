@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2016 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3,
@@ -51,7 +51,6 @@ import org.wise.portal.domain.authentication.MutableUserDetails;
 import org.wise.portal.domain.authentication.impl.StudentUserDetails;
 import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
 import org.wise.portal.domain.group.Group;
-import org.wise.portal.domain.module.impl.CurnitGetCurnitUrlVisitor;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
@@ -465,7 +464,7 @@ public class InformationController {
 
 			parentProjectId = project.getParentProjectId(); // get the parent project id as a string
 
-			rawProjectUrl = (String) project.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
+			rawProjectUrl = project.getModulePath();
 
 			try {
 				config.put("runId", "");
@@ -477,7 +476,7 @@ public class InformationController {
 			/* if no projectId String provided, try getting project url from run also add gradework
 			 * specific config to the config */
 			Run run = this.runService.retrieveById(Long.parseLong(runId));
-			rawProjectUrl = (String) run.getProject().getCurnit().accept(new CurnitGetCurnitUrlVisitor());
+			rawProjectUrl = run.getProject().getModulePath();
 
 			// get the run name
 			runName = run.getName();
@@ -788,7 +787,7 @@ public class InformationController {
 				} else {
 					Long projectId = Long.parseLong(id);
 					project = projectService.getById(projectId);
-					rawProjectUrl = (String) project.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
+					rawProjectUrl = project.getModulePath();
 				}
 				addDummyUserInfoToConfig(config);  // add a dummy user info
 				String isConstraintsDisabledStr = request.getParameter("isConstraintsDisabled");
@@ -806,7 +805,7 @@ public class InformationController {
 				Run run = this.runService.retrieveById(runId);
 				config.put("runName", run.getName());  // set the run name
 				project = run.getProject();  // get the project
-				rawProjectUrl = (String) project.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
+				rawProjectUrl = project.getModulePath();
 
 				Workgroup workgroup = getWorkgroup(request, run);
 				if (workgroup == null) {

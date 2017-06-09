@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007 Regents of the University of California (Regents). Created
+ * Copyright (c) 2007-2017 Regents of the University of California (Regents). Created
  * by TELS, Graduate School of Education, University of California at Berkeley.
  *
  * This software is distributed under the GNU Lesser General Public License, v2.
@@ -50,7 +50,6 @@ import org.junit.runners.Suite;
 	   org.wise.portal.presentation.web.controllers.AllTests.class,
 	   org.wise.portal.service.impl.AllTests.class,
 	   org.wise.portal.service.offering.impl.AllTests.class,
-	   org.wise.portal.service.module.impl.AllTests.class,
 	   org.wise.portal.service.student.impl.AllTests.class,
 	   org.wise.portal.service.project.impl.AllTests.class,
 	   org.wise.portal.domain.premadecomment.impl.AllTests.class,

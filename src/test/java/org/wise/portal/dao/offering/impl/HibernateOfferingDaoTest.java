@@ -86,22 +86,6 @@ public class HibernateOfferingDaoTest extends
 		Session session = this.sessionFactory.getCurrentSession();
 	}
 
-	public void testSave_NonExistentCurnit() {
-		try {
-			this.dao.save(this.dataObject);
-			fail("DataIntegrityViolationException expected");
-		} catch (DataIntegrityViolationException expected) {
-		}
-	}
-
-	public void testSave_NonExistentJnlp() {
-		try {
-			this.dao.save(this.dataObject);
-			fail("DataIntegrityViolationException expected");
-		} catch (DataIntegrityViolationException expected) {
-		}
-	}
-
 	public void testSave() {
 		verifyDataStoreIsEmpty();
 

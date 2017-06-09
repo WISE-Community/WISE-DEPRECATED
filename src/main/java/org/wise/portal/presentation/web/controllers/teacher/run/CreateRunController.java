@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2016 Regents of the University of California (Regents).
+ * Copyright (c) 2007-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -56,9 +56,6 @@ import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
 import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.impl.DefaultPeriodNames;
-import org.wise.portal.domain.module.Curnit;
-import org.wise.portal.domain.module.impl.CurnitGetCurnitUrlVisitor;
-import org.wise.portal.domain.module.impl.ModuleParameters;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.project.ProjectMetadata;
 import org.wise.portal.domain.project.impl.ProjectMetadataImpl;
@@ -70,7 +67,6 @@ import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.presentation.web.controllers.CredentialManager;
 import org.wise.portal.service.mail.IMailFacade;
-import org.wise.portal.service.module.CurnitService;
 import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.project.ProjectService;
 import org.wise.portal.service.workgroup.WorkgroupService;
@@ -108,13 +104,6 @@ public class CreateRunController {
 	@Autowired
 	private ProjectService projectService = null;
 
-    @Autowired
-    private CurnitService curnitService;
-
-	private static final String COMPLETE_VIEW_NAME = "teacher/run/create/createrunfinish";
-
-	private static final String RUN_KEY = "run";
-
 	@Autowired
 	private IMailFacade mailService = null;
 
@@ -126,17 +115,16 @@ public class CreateRunController {
 
 	private Map<Long,String> postLevelTextMap;
 
-	/* change this to true if you are testing and do not want to send mail to
-	   the actual groups */
+	// change this to true if you are testing and do not want to send mail to the actual groups
 	private static final Boolean DEBUG = false;
 
-	//set this to your email
+	// set this to your email
 	private static final String DEBUG_EMAIL = "youremail@email.com";
 
 	private static final Long[] IMPLEMENTED_POST_LEVELS = {5l,1l};
 
 	/**
-	 * The default handler (page=0)
+	 * The default handler (page = 0)
 	 */
 	@RequestMapping
 	public String getInitialPage(
@@ -146,7 +134,7 @@ public class CreateRunController {
 
 		Project project = null;
 		try {
-			project = (Project) this.projectService.getById(projectId);
+			project = this.projectService.getById(projectId);
 			if (!projectService.canCreateRun(project, user)) {
 				return "errors/accessdenied";
 			}
@@ -167,39 +155,19 @@ public class CreateRunController {
 		allOwners.add(project.getOwner());
 		allOwners.addAll(project.getSharedowners());
 
-		for (User currentOwner : allOwners){
+		for (User currentOwner : allOwners) {
 			ownerUsernames += currentOwner.getUserDetails().getUsername() + ",";
 		}
 
 		modelMap.put("projectOwners", ownerUsernames.substring(0, ownerUsernames.length() - 1));
 
-		/* determine if the project has been cleaned since last edited
-		 * and that the results indicate that all critical problems
-		 * have been resolved. Add relevant data to the model. */
-		boolean forceCleaning = false;
 		boolean isAllowedToClean = (project.getOwner().equals(user) || project.getSharedowners().contains(user));
-		ProjectMetadata metadata = project.getMetadata();
-
-		if(metadata != null){
-			Date lastCleaned = metadata.getLastCleaned();
-			//Long lcTime = lastCleaned.getLong("timestamp");
-			Date lastEdited = metadata.getLastEdited();
-
-			/* if it has been edited since it was last cleaned, we need to force cleaning */
-			if(lastCleaned != null && lastEdited != null && lastCleaned.before(lastEdited)) {
-				forceCleaning = true;
-			}
-		}
-
-		forceCleaning = false;  //TODO: Jon remove when cleaning is stable
 
 		modelMap.put("user", user);
 		modelMap.put("currentUsername", user.getUserDetails().getUsername());
-		modelMap.put("forceCleaning", forceCleaning);
 		modelMap.put("isAllowedToClean", isAllowedToClean);
 
 		modelMap.addAttribute("runParameters", runParameters);
-		// populate the model Map as needed
 		return "teacher/run/create/createrunconfirm";
 	}
 
@@ -270,7 +238,7 @@ public class CreateRunController {
 		
 		if (runParameters.getPeriodNames() == null || 
 		runParameters.getPeriodNames().size() == 0) {
-			if (runParameters.getManuallyEnteredPeriods() == ""){
+			if (runParameters.getManuallyEnteredPeriods() == "") {
 				result.rejectValue("periodNames", "setuprun.error.selectperiods", "You must select one or more periods or manually" +
 						" create your period names.");
 			} else {
@@ -288,11 +256,11 @@ public class CreateRunController {
 						return "teacher/run/create/createrunperiods";
 					}
 					Set<String> parsedAndTrimmed = new TreeSet<String>();
-					for(String current : parsed){
+					for(String current : parsed) {
 						String trimmed = StringUtils.trim(current);
-						if(trimmed.length() == 0 || StringUtils.contains(trimmed, " ") 
+						if (trimmed.length() == 0 || StringUtils.contains(trimmed, " ")
 								|| !StringUtils.isAlphanumeric(trimmed)
-								|| trimmed.equals(",")){
+								|| trimmed.equals(",")) {
 							result.rejectValue("periodNames", "setuprun.error.whitespaceornonalphanumeric", "Manually entered" +
 									" periods cannot contain whitespace or non-alphanumeric characters.");
 							break;
@@ -351,14 +319,14 @@ public class CreateRunController {
         if (projectWiseVersion == null) {
             projectWiseVersion = 4;
         }
-        String relativeProjectFilePath = (String) project.getCurnit().accept(new CurnitGetCurnitUrlVisitor());  // looks like this: "/109/new.project.json"
+        String relativeProjectFilePath = project.getModulePath();  // looks like this: "/109/new.project.json"
 		int ndx = relativeProjectFilePath.lastIndexOf("/");
 		String projectJSONFilename = relativeProjectFilePath.substring(ndx + 1, relativeProjectFilePath.length());  // looks like this: "new.project.json"
 
-		//get the project name
+		// get the project name
 		String projectName = project.getName();
 
-		//replace ' with \' so when the project name is displayed on the jsp page, it won't short circuit the string
+		// replace ' with \' so when the project name is displayed on the jsp page, it won't short circuit the string
 		projectName = projectName.replaceAll("\\'", "\\\\'");
 
 		modelMap.put("projectId", project.getId());
@@ -370,7 +338,6 @@ public class CreateRunController {
 		return "teacher/run/create/createrunreview";
 	}
 
-
 	/**
 	 * Retrieves the post level from the project metadata if it exists and determines
 	 * the minimum post level that the user can set for the run.
@@ -378,12 +345,12 @@ public class CreateRunController {
 	 * @param project
 	 * @return
 	 */
-	private Long getMinPostLevel(Project project){
+	private Long getMinPostLevel(Project project) {
 		Long level = 1l;
 
 		ProjectMetadata metadata = project.getMetadata();
 
-		if(metadata != null && metadata.getPostLevel() != null) {
+		if (metadata != null && metadata.getPostLevel() != null) {
 			level = metadata.getPostLevel();
 		}
 
@@ -432,11 +399,8 @@ public class CreateRunController {
                 String newProjectPath = "/" + newProjectDirname + "/project.json";
                 String newProjectName = project.getName();
                 Long parentProjectId = (Long) project.getId();
-                ModuleParameters mParams = new ModuleParameters();
-                mParams.setUrl(newProjectPath);
-                Curnit curnit = curnitService.createCurnit(mParams);
                 ProjectParameters pParams = new ProjectParameters();
-                pParams.setCurnitId(curnit.getId());
+                pParams.setModulePath(newProjectPath);
                 pParams.setOwner(user);
                 pParams.setProjectname(newProjectName);
                 pParams.setProjectType(ProjectType.LD);
@@ -478,15 +442,12 @@ public class CreateRunController {
 			workgroupService.createWISEWorkgroup("teacher", members, run, null);
 
 		} catch (ObjectNotFoundException e) {
-			result.rejectValue("curnitId", "error.curnit-not_found",
-					new Object[] { runParameters.getCurnitId() }, 
-					"Project Not Found.");
 			return null;
 		}
-		ModelAndView modelAndView = new ModelAndView(COMPLETE_VIEW_NAME);
-		modelAndView.addObject(RUN_KEY, run);
+		ModelAndView modelAndView = new ModelAndView("teacher/run/create/createrunfinish");
+		modelAndView.addObject("run", run);
 		Set<String> runIdsToArchive = runParameters.getRunIdsToArchive();
-		if(runIdsToArchive != null) {
+		if (runIdsToArchive != null) {
 			for(String runIdStr : runIdsToArchive) {
 				Long runId = Long.valueOf(runIdStr);
 				Run runToArchive = runService.retrieveById(runId);
@@ -495,7 +456,7 @@ public class CreateRunController {
 		}
 
 		// send email to the recipients in new thread
-		//tries to retrieve the user from the session
+		// tries to retrieve the user from the session
 		User user = ControllerUtil.getSignedInUser();
 		Locale locale = request.getLocale();
 		String fullWiseContextPath = ControllerUtil.getPortalUrlString(request);  // e.g. http://localhost:8080/wise
@@ -637,7 +598,7 @@ public class CreateRunController {
 			String fromEmail = wiseProperties.getProperty("portalemailaddress");
 
 			//for testing out the email functionality without spamming the groups
-			if(DEBUG) {
+			if (DEBUG) {
 				recipients[0] = DEBUG_EMAIL;
 			}
 

@@ -163,8 +163,6 @@ public class ProjectServiceImplTest extends TestCase {
 		replay(mockProjectDao);
 		
 		ProjectParameters projectParameters = new ProjectParameters();
-		projectParameters.setCurnitId(EXISTING_CURNIT_ID);
-		projectParameters.setJnlpId(EXISTING_JNLP_ID);
 		Project createdProject = projectServiceImpl.createProject(projectParameters);
 
 		assertEquals(createdProject.getPreviewRun(), expectedPreviewRun);

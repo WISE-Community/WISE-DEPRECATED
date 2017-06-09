@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -42,11 +42,11 @@ public class WISEHttpSessionHandshakeInterceptor extends HttpSessionHandshakeInt
 	 * @param attributes the session attributes
 	 */
 	@Override
-	public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler, Map<String, Object> attributes) throws Exception {
-		//get the signed in user
-		User signedInUser = ControllerUtil.getSignedInUser();
+	public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response,
+								   WebSocketHandler wsHandler, Map<String, Object> attributes) throws Exception {
 		
-		//add the signed in user to the attributes so we can access it in the websocket handler
+		// add the signed in user to the attributes so we can access it in the websocket handler
+		User signedInUser = ControllerUtil.getSignedInUser();
 		attributes.put("signedInUser", signedInUser);
 		
 		return super.beforeHandshake(request, response, wsHandler, attributes);
@@ -59,7 +59,8 @@ public class WISEHttpSessionHandshakeInterceptor extends HttpSessionHandshakeInt
 	 * @param wsHandler the websocket handler
 	 */
 	@Override
-	public void afterHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler, Exception e) {
+	public void afterHandshake(ServerHttpRequest request, ServerHttpResponse response,
+							   WebSocketHandler wsHandler, Exception e) {
 		super.afterHandshake(request, response, wsHandler, e);
 	}
 }

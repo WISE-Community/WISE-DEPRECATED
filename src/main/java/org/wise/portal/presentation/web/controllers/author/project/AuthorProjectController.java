@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3,
@@ -28,7 +28,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -51,15 +50,10 @@ import org.springframework.security.web.authentication.logout.SecurityContextLog
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.springframework.web.multipart.commons.CommonsFileUploadSupport;
 import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 import org.wise.portal.dao.ObjectNotFoundException;
-import org.wise.portal.domain.module.Curnit;
-import org.wise.portal.domain.module.impl.CurnitGetCurnitUrlVisitor;
-import org.wise.portal.domain.module.impl.ModuleParameters;
 import org.wise.portal.domain.portal.Portal;
 import org.wise.portal.domain.project.FamilyTag;
 import org.wise.portal.domain.project.Project;
@@ -77,7 +71,6 @@ import org.wise.portal.presentation.web.filters.WISEAuthenticationProcessingFilt
 import org.wise.portal.presentation.web.listeners.WISESessionListener;
 import org.wise.portal.service.acl.AclService;
 import org.wise.portal.service.authentication.UserDetailsService;
-import org.wise.portal.service.module.CurnitService;
 import org.wise.portal.service.portal.PortalService;
 import org.wise.portal.service.project.ProjectService;
 import org.wise.vle.utils.FileManager;
@@ -110,9 +103,6 @@ public class AuthorProjectController {
 	private Properties wiseProperties = null;
 
 	@Autowired
-	private CurnitService curnitService;
-
-	@Autowired
 	private TaggerController taggerController;
 
 	@Autowired
@@ -138,7 +128,7 @@ public class AuthorProjectController {
 			Portal portal = portalService.getById(new Integer(1));
 			if (!portal.isLoginAllowed()) {
 				Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-				if (auth != null){
+				if (auth != null) {
 					new SecurityContextLogoutHandler().logout(request, response, auth);
 				}
 				SecurityContextHolder.getContext().setAuthentication(null);
@@ -167,10 +157,10 @@ public class AuthorProjectController {
 			project = null;
 		}
 
-		/* catch forwarding requests, authenticate and forward request upon successful authentication */
+		// catch forwarding requests, authenticate and forward request upon successful authentication
 		if (forward != null && !forward.equals("")) {
-			//get the command
-			String command = request.getParameter("command");
+
+			String command = request.getParameter("command"); // get the command
 
 			if (forward.equals("filemanager") || forward.equals("assetmanager")) {
 
@@ -191,7 +181,7 @@ public class AuthorProjectController {
 					CredentialManager.setRequestCredentials(request, user);
 
 					if (forward.equals("filemanager")) {
-						if (command!=null) {
+						if (command != null) {
 							String pathAllowedToAccess = CredentialManager.getAllowedPathAccess(request);
 
 							if (command.equals("createProject")) {
@@ -216,11 +206,10 @@ public class AuthorProjectController {
 
 								response.getWriter().write(result);
 							} else if (command.equals("retrieveFile")) {
-								//get the file name
-								String fileName = request.getParameter("fileName");
 
-								//get the full file path
-								String filePath = FileManager.getFilePath(project, fileName);
+								String fileName = request.getParameter("fileName"); // get the file name
+
+								String filePath = FileManager.getFilePath(project, fileName); // get the full file path
 
 								String result = "";
 
@@ -240,11 +229,9 @@ public class AuthorProjectController {
 								 */
 								String projectFolderPath = FileManager.getProjectFolderPath(project);
 
-								//get the file name
-								String fileName = request.getParameter("fileName");
+								String fileName = request.getParameter("fileName"); // get the file name
 
-								//get the content to save to the file
-								String data = request.getParameter("data");
+								String data = request.getParameter("data"); // get the content to save to the file
 
 								String result = "";
 
@@ -267,7 +254,7 @@ public class AuthorProjectController {
 								String title = request.getParameter("title");
 								String type = request.getParameter("type");
 
-								//get the string that contains an array of node template params
+								// get the string that contains an array of node template params
 								String nodeTemplateParams = request.getParameter("nodeTemplateParams");
 
 								String result = "";
@@ -332,7 +319,7 @@ public class AuthorProjectController {
 
 								response.getWriter().write(result);
 							} else if (command.equals("copyNode")) {
-								//get the parameters for the node
+								// get the parameters for the node
 								String data = request.getParameter("data");
 								String type = request.getParameter("type");
 								String title = request.getParameter("title");
@@ -370,7 +357,7 @@ public class AuthorProjectController {
 								 */
 								String projectFileName = request.getParameter("projectFileName");
 
-								//get the json for the new sequence we are going to add to the project
+								// get the json for the new sequence we are going to add to the project
 								String data = request.getParameter("data");
 
 								/*
@@ -450,7 +437,7 @@ public class AuthorProjectController {
 								String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
 
 								//get the relative child project url e.g. /236/wise4.project.json
-								String projectUrl = (String) project.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
+								String projectUrl = project.getModulePath();
 
 								//get the parent project id
 								Long parentProjectId = project.getParentProjectId();
@@ -459,7 +446,7 @@ public class AuthorProjectController {
 								Project parentProject = projectService.getById(parentProjectId);
 
 								//get the relative parent project url e.g. /235/wise4.project.json
-								String parentProjectUrl = (String) parentProject.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
+								String parentProjectUrl = parentProject.getModulePath();
 
 								String result = FileManager.reviewUpdateProject(curriculumBaseDir, parentProjectUrl, projectUrl);
 
@@ -469,7 +456,7 @@ public class AuthorProjectController {
 								String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
 
 								//get the relative child project url e.g. /236/wise4.project.json
-								String childProjectUrl = (String) project.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
+								String childProjectUrl = project.getModulePath();
 
 								//get the child project folder path
 								String childProjectFolderPath = FileManager.getProjectFolderPath(project);
@@ -481,7 +468,7 @@ public class AuthorProjectController {
 								Project parentProject = projectService.getById(parentProjectId);
 
 								//get the relative parent project url e.g. /235/wise4.project.json
-								String parentProjectUrl = (String) parentProject.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
+								String parentProjectUrl = parentProject.getModulePath();
 
 								String result = "";
 
@@ -512,14 +499,14 @@ public class AuthorProjectController {
 										Project fromProject = projectService.getById(fromProjectId);
 
 										//get the from project url e.g. /172/wise4.project.json
-										fromProjectUrl = (String) fromProject.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
+										fromProjectUrl = fromProject.getModulePath();
 									} catch(Exception e) {
 										e.printStackTrace();
 									}
 								}
 
 								//get the relative child project url e.g. /236/wise4.project.json
-								String toProjectUrl = (String) project.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
+								String toProjectUrl = project.getModulePath();
 
 								//get the child project folder path
 								String toProjectFolderPath = FileManager.getProjectFolderPath(project);
@@ -788,14 +775,9 @@ public class AuthorProjectController {
 			File wise5AssetsFolder = new File(wise5AssetsFolderPath);
 			FileManager.copy(wise4AssetsFolder, wise5AssetsFolder);
 
-			// set the module parameters
-			ModuleParameters mParams = new ModuleParameters();
-			mParams.setUrl(relativeWISE5ProjectFilePath);
-			Curnit curnit = curnitService.createCurnit(mParams);
-
 			// set the project parameters
 			ProjectParameters pParams = new ProjectParameters();
-			pParams.setCurnitId(curnit.getId());
+			pParams.setModulePath(relativeWISE5ProjectFilePath);
 			pParams.setOwner(user);
 			pParams.setProjectname(wise5ProjectName);
 			pParams.setProjectType(ProjectType.LD);
@@ -892,7 +874,7 @@ public class AuthorProjectController {
 					mav.addObject("command", "editProject");
 				}
 
-				String rawProjectUrl = (String) project.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
+				String rawProjectUrl = project.getModulePath();
 				String polishedProjectUrl = null;
 				polishedProjectUrl = rawProjectUrl;
 
@@ -935,12 +917,8 @@ public class AuthorProjectController {
 
 			String parentProjectId = request.getParameter("parentProjectId");
 
-			ModuleParameters mParams = new ModuleParameters();
-			mParams.setUrl(path);
-			Curnit curnit = curnitService.createCurnit(mParams);
-
 			ProjectParameters pParams = new ProjectParameters();
-			pParams.setCurnitId(curnit.getId());
+			pParams.setModulePath(path);
 			pParams.setOwner(user);
 			pParams.setProjectname(name);
 			pParams.setProjectType(ProjectType.LD);
@@ -1190,7 +1168,7 @@ public class AuthorProjectController {
 				 * e.g.
 				 * /235/wise4.project.json
 				 */
-				String rawProjectUrl = (String) project.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
+				String rawProjectUrl = project.getModulePath();
 
 				//get the title of the project
 				String title = project.getName();
@@ -1246,7 +1224,7 @@ public class AuthorProjectController {
 				 * e.g.
 				 * /235/wise4.project.json
 				 */
-				String rawProjectUrl = (String) libraryProject.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
+				String rawProjectUrl = libraryProject.getModulePath();
 
 				//get the title of the project
 				String title = libraryProject.getName();
@@ -1301,7 +1279,7 @@ public class AuthorProjectController {
 		Project project = this.projectService.getById(projectId);
 		User user = ControllerUtil.getSignedInUser();
 
-		/* set the fields in the ProjectMetadata where appropriate */
+		// set the fields in the ProjectMetadata where appropriate
 		if (metadata != null) {
 			ProjectMetadata pMeta = project.getMetadata();
 
@@ -1384,18 +1362,18 @@ public class AuthorProjectController {
 				pMeta.setLanguage((String) language);
 			}
 
-			/* save the project */
-			try{
+			// save the project
+			try {
 				this.projectService.updateProject(project, user);
 			} catch (NotAuthorizedException e) {
 				e.printStackTrace();
 				response.getWriter().write(e.getMessage());
 			}
 
-			/* write success message */
+			// write success message
 			response.getWriter().write("Project metadata was successfully published to the portal.");
 		} else {
-			/* write error message that portal could not access metadata file */
+			// write error message that portal could not access metadata file
 			response.getWriter().write("The portal was unable to access the data in the metadata file. The metadata may be out of sync.");
 		}
 
@@ -1413,7 +1391,7 @@ public class AuthorProjectController {
 	 * @return
 	 */
 	private Object getJSONFieldValue(JSONObject obj, String fieldName) {
-		try{
+		try {
 			return obj.get(fieldName);
 		} catch(JSONException e) {
 			e.printStackTrace();
@@ -1473,11 +1451,10 @@ public class AuthorProjectController {
 	 * @throws IOException
 	 */
 	private ModelAndView handleGetCurriculumBaseUrl(HttpServletRequest request, HttpServletResponse response) throws IOException{
-		//get the curriculum_base_www variable from the wise.properties file
+		// get the curriculum_base_www variable from the wise.properties file
 		String curriculumBaseUrl = wiseProperties.getProperty("curriculum_base_www");
 
-		//write the curriculum base url to the response
-		response.getWriter().write(curriculumBaseUrl);
+		response.getWriter().write(curriculumBaseUrl); // write the curriculum base url to the response
 
 		return null;
 	}
@@ -1556,7 +1533,7 @@ public class AuthorProjectController {
 			if (projectIdStr != null) {
 				Project project = projectService.getById(projectIdStr);
 				String curriculumBaseWWW = wiseProperties.getProperty("curriculum_base_www");
-				String rawProjectUrl = (String) project.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
+				String rawProjectUrl = project.getModulePath();
 				// set the content url
 				String projectURL = curriculumBaseWWW + rawProjectUrl;
 
@@ -1651,11 +1628,9 @@ public class AuthorProjectController {
 	 * @throws IOException
 	 */
 	private ModelAndView handleProjectEdited(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		//get the user
-		User user = ControllerUtil.getSignedInUser();
 
-		//get the project
-		Project project = (Project) request.getAttribute("project");
+		User user = ControllerUtil.getSignedInUser(); // get the user
+		Project project = (Project) request.getAttribute("project"); // get the project from the request
 
 		if (project != null) {
 			//get the project metadata

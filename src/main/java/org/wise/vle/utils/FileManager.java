@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3,
@@ -55,7 +55,6 @@ import org.apache.commons.io.FileUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.wise.portal.domain.module.impl.CurnitGetCurnitUrlVisitor;
 import org.wise.portal.domain.project.Project;
 
 /**
@@ -2676,7 +2675,7 @@ public class FileManager {
 
 		if(project != null) {
 			String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
-			String projectUrl = (String) project.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
+			String projectUrl = (String) project.getModulePath();
 			projectFilePath = curriculumBaseDir + projectUrl;
 		}
 

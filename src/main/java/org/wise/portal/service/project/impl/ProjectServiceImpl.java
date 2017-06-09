@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3,
@@ -31,8 +31,6 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.TreeSet;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,8 +50,6 @@ import org.wise.portal.dao.project.ProjectDao;
 import org.wise.portal.domain.Persistable;
 import org.wise.portal.domain.authentication.MutableUserDetails;
 import org.wise.portal.domain.impl.AddSharedTeacherParameters;
-import org.wise.portal.domain.module.Curnit;
-import org.wise.portal.domain.module.impl.CurnitGetCurnitUrlVisitor;
 import org.wise.portal.domain.project.FamilyTag;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.project.ProjectMetadata;
@@ -68,7 +64,6 @@ import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.presentation.web.exception.NotAuthorizedException;
 import org.wise.portal.service.acl.AclService;
 import org.wise.portal.service.authentication.UserDetailsService;
-import org.wise.portal.service.module.ModuleService;
 import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.premadecomment.PremadeCommentService;
 import org.wise.portal.service.project.ProjectService;
@@ -82,9 +77,6 @@ public class ProjectServiceImpl implements ProjectService {
 
 	@Autowired
 	private Properties wiseProperties;
-
-	@Autowired
-	private ModuleService moduleService;
 
 	@Autowired
 	private ProjectDao<Project> projectDao;
@@ -104,7 +96,7 @@ public class ProjectServiceImpl implements ProjectService {
 	private PremadeCommentService premadeCommentService;
 
 	/**
-	 * @see org.wise.portal.service.project.ProjectService#addBookmarkerToProject(org.wise.portal.domain.project.Project, net.sf.sail.webapp.domain.User)
+	 * @see org.wise.portal.service.project.ProjectService#addBookmarkerToProject(org.wise.portal.domain.project.Project, org.wise.portal.domain.user.User)
 	 */
 	public void addBookmarkerToProject(Project project, User bookmarker) {
 		project.getBookmarkers().add(bookmarker);
@@ -157,28 +149,27 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 	/**
-	 * @see org.wise.portal.service.project.ProjectService#createProject(org.wise.portal.domain.impl.ProjectParameters)
+	 * @see org.wise.portal.service.project.ProjectService#createProject(org.wise.portal.domain.project.impl.ProjectParameters)
 	 */
 	@Transactional(rollbackFor = { AlreadyExistsException.class,
 			NotFoundException.class, DataIntegrityViolationException.class
 	})
 	public Project createProject(ProjectParameters projectParameters)
 			throws ObjectNotFoundException {
-		Curnit curnit = this.moduleService.getById(projectParameters.getCurnitId());
 		Project project = this.projectDao.createEmptyProject();
-		project.setCurnit(curnit);
+		project.setModulePath(projectParameters.getModulePath());
 		project.setName(projectParameters.getProjectname());
 		project.setOwner(projectParameters.getOwner());
 		project.setProjectType(projectParameters.getProjectType());
         project.setWISEVersion(projectParameters.getWiseVersion());
 		ProjectMetadata metadata = projectParameters.getMetadata();
 
-		//get the parent project id if any
+		// get the parent project id, if any
 		Long parentProjectId = projectParameters.getParentProjectId();
 		Project parentProject = null;
 
 		if (parentProjectId != null) {
-			//get the parent project
+			// get the parent project
 			parentProject = getById(parentProjectId);
 			project.setMaxTotalAssetsSize(parentProject.getMaxTotalAssetsSize());
 		}
@@ -248,7 +239,7 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 	/**
-	 * @see org.wise.portal.service.project.ProjectService#getBookmarkerProjectList(net.sf.sail.webapp.domain.User)
+	 * @see org.wise.portal.service.project.ProjectService#getBookmarkerProjectList(org.wise.portal.domain.user.User)
 	 */
 	public List<Project> getBookmarkerProjectList(User bookmarker)
 			throws ObjectNotFoundException {
@@ -267,7 +258,7 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 	/**
-	 * @see org.wise.portal.service.project.ProjectService#getProjectList(net.sf.sail.webapp.domain.User)
+	 * @see org.wise.portal.service.project.ProjectService#getProjectList(org.wise.portal.domain.user.User)
 	 */
 	@Secured( { "ROLE_USER", "AFTER_ACL_COLLECTION_READ" })
 	public List<Project> getProjectList(User user) {
@@ -275,14 +266,14 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 	/**
-	 * @see org.wise.portal.service.project.ProjectService#getSharedProjectList(net.sf.sail.webapp.domain.User)
+	 * @see org.wise.portal.service.project.ProjectService#getSharedProjectList(org.wise.portal.domain.user.User)
 	 */
 	public List<Project> getSharedProjectList(User user) {
 		return this.projectDao.getProjectListByUAR(user, "sharedowner");
 	}
 
 	/**
-	 * @see org.wise.portal.service.project.ProjectService#getSharedTeacherRole(org.wise.portal.domain.project.Project, net.sf.sail.webapp.domain.User)
+	 * @see org.wise.portal.service.project.ProjectService#getSharedTeacherRole(org.wise.portal.domain.project.Project, org.wise.portal.domain.user.User)
 	 */
 	public String getSharedTeacherRole(Project project, User user) {
 		List<Permission> permissions = this.aclService.getPermissions(project, user);
@@ -357,7 +348,7 @@ public class ProjectServiceImpl implements ProjectService {
 					vleConfigUrl += "&isConstraintsDisabled=true";
 				}
 
-				/* if preview request is coming from the run, we want to pass along the version id when we make a request to get the config */
+				// if preview request is coming from the run, pass along the version id when we make a request to get the config
 				String versionId = params.getVersionId();
 				if (versionId != null && !versionId.equals("")) {
 					vleConfigUrl += "&versionId=" + versionId;
@@ -368,9 +359,9 @@ public class ProjectServiceImpl implements ProjectService {
 					vleConfigUrl += "&workgroupId=" + workgroupId;
 				}
 
-				//get the path to the project json file
+				// get the path to the project json file
 				String curriculumBaseWWW = wiseProperties.getProperty("curriculum_base_www");
-				String rawProjectUrl = (String) project.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
+				String rawProjectUrl = project.getModulePath();
 				String contentUrl = curriculumBaseWWW + rawProjectUrl;
 
 
@@ -389,7 +380,7 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 	/**
-	 * @see org.wise.portal.service.project.ProjectService#removeBookmarkerFromProject(org.wise.portal.domain.project.Project, net.sf.sail.webapp.domain.User)
+	 * @see org.wise.portal.service.project.ProjectService#removeBookmarkerFromProject(org.wise.portal.domain.project.Project, org.wise.portal.domain.user.User)
 	 */
 	@Transactional()
 	public void removeBookmarkerFromProject(Project project, User bookmarker) {
@@ -398,10 +389,9 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 	/**
-	 * @see org.wise.portal.service.project.ProjectService#updateProject(org.wise.portal.domain.project.Project)
+	 * @see org.wise.portal.service.project.ProjectService#updateProject(Project, User)
 	 */
-	@Transactional()
-	public void updateProject(Project project, User user) throws NotAuthorizedException{
+	public void updateProject(Project project, User user) throws NotAuthorizedException {
 		// check to see if user can author project or the run that it's in
 		List<Run> runList = this.runService.getProjectRuns((Long) project.getId());
 		Run run = null;
@@ -445,7 +435,7 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 	/**
-	 * @see org.wise.portal.service.project.ProjectService#canCreateRun(org.wise.portal.domain.project.Project, net.sf.sail.webapp.domain.User)
+	 * @see org.wise.portal.service.project.ProjectService#canCreateRun(org.wise.portal.domain.project.Project, org.wise.portal.domain.user.User)
 	 * Project cannot have a "review" tag to it.
 	 */
 	public boolean canCreateRun(Project project, User user) {
@@ -459,7 +449,7 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 	/**
-	 * @see org.wise.portal.service.project.ProjectService#canAuthorProject(org.wise.portal.domain.project.Project, net.sf.sail.webapp.domain.User)
+	 * @see org.wise.portal.service.project.ProjectService#canAuthorProject(org.wise.portal.domain.project.Project, org.wise.portal.domain.user.User)
 	 */
 	public boolean canAuthorProject(Project project, User user) {
 		return user.isAdmin() || this.aclService.hasPermission(project, BasePermission.ADMINISTRATION, user) ||
@@ -467,7 +457,7 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 	/**
-	 * @see org.wise.portal.service.project.ProjectService#canReadProject(org.wise.portal.domain.project.Project, net.sf.sail.webapp.domain.User)
+	 * @see org.wise.portal.service.project.ProjectService#canReadProject(org.wise.portal.domain.project.Project, org.wise.portal.domain.user.User)
 	 */
 	public boolean canReadProject(Project project, User user) {
 		return user.isAdmin() || this.aclService.hasPermission(project, BasePermission.ADMINISTRATION, user) ||
@@ -476,7 +466,7 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 	/**
-	 * @see org.wise.portal.service.project.ProjectService#addTagToProject(java.lang.String, org.wise.portal.domain.project.Project)
+	 * @see org.wise.portal.service.project.ProjectService#addTagToProject(String, Long)
 	 */
 	@CacheEvict(value = "project", allEntries = true)
 	public Integer addTagToProject(String tagString, Long projectId) {
@@ -485,7 +475,7 @@ public class ProjectServiceImpl implements ProjectService {
 
 		Project project = null;
 
-		/* retrieve the project */
+		// retrieve the project
 		try {
 			project = this.projectDao.getById(projectId);
 		} catch(ObjectNotFoundException e) {
@@ -506,7 +496,7 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 	/**
-	 * @see org.wise.portal.service.project.ProjectService#removeTagFromProject(java.lang.String, org.wise.portal.domain.project.Project)
+	 * @see org.wise.portal.service.project.ProjectService#removeTagFromProject(Integer, Long)
 	 */
 	@CacheEvict(value = "project", allEntries = true)
 	@Transactional
@@ -528,7 +518,7 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 	/**
-	 * @see org.wise.portal.service.project.ProjectService#updateTag(java.lang.Long, java.lang.Long, java.lang.String)
+	 * @see org.wise.portal.service.project.ProjectService#updateTag(Integer, Long, String)
 	 */
 	@Transactional
 	public Integer updateTag(Integer tagId, Long projectId, String name) {
@@ -548,7 +538,7 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 	/**
-	 * @see org.wise.portal.service.project.ProjectService#isAuthorizedToCreateTag(net.sf.sail.webapp.domain.User, java.lang.String)
+	 * @see org.wise.portal.service.project.ProjectService#isAuthorizedToCreateTag(org.wise.portal.domain.user.User, java.lang.String)
 	 */
 	public boolean isAuthorizedToCreateTag(User user, String name) {
 		if (name.toLowerCase().equals("library") && !user.getUserDetails().hasGrantedAuthority(UserDetailsService.ADMIN_ROLE)) {
@@ -559,7 +549,7 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 	/**
-	 * @see org.wise.portal.service.project.ProjectService#projectContainsTag(java.lang.Long, java.lang.String)
+	 * @see org.wise.portal.service.project.ProjectService#projectContainsTag(Project, String)
 	 */
 	public boolean projectContainsTag(Project project, String name) {
 
@@ -603,7 +593,7 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 	/**
-	 * @see org.wise.portal.service.project.ProjectService#getProjectListByAuthor(java.lang.String)
+	 * @see org.wise.portal.service.project.ProjectService#getProjectListByAuthorName(String)
 	 */
 	public List<Project> getProjectListByAuthorName(String authorName) {
 		return this.projectDao.getProjectListByAuthorName(authorName);
@@ -624,7 +614,7 @@ public class ProjectServiceImpl implements ProjectService {
 
 	/**
 	 * @throws ObjectNotFoundException
-	 * @see org.wise.portal.service.project.ProjectService#identifyRootProjectId(java.lang.Long)
+	 * @see org.wise.portal.service.project.ProjectService#identifyRootProjectId(Project)
 	 */
 	public Long identifyRootProjectId(Project project) throws ObjectNotFoundException {
 		if (project == null) {

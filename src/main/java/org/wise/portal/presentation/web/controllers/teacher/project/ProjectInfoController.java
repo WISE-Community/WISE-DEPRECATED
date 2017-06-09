@@ -33,7 +33,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-import org.wise.portal.domain.module.impl.CurnitGetCurnitUrlVisitor;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.service.offering.RunService;
 import org.wise.portal.service.project.ProjectService;
@@ -81,7 +80,7 @@ public class ProjectInfoController {
 				}
 				
 				String curriculumBaseWWW = this.wiseProperties.getProperty("curriculum_base_www");
-				String url = (String) project.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
+				String url = project.getModulePath();
 				if (url != null && url != "") {
 					int ndx = url.lastIndexOf("/");
 					if (ndx != -1) {

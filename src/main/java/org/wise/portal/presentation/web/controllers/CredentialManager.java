@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -39,7 +39,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.support.DefaultMultipartHttpServletRequest;
 import org.wise.portal.dao.ObjectNotFoundException;
-import org.wise.portal.domain.module.impl.CurnitGetCurnitUrlVisitor;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.util.KeyGenerator;
@@ -131,7 +130,7 @@ public final class CredentialManager {
 		if (idStr != null && !idStr.equals("") && !idStr.equals("none")){
 			try{
 				Project project = projectService.getById(Long.parseLong(idStr));
-				String projectPath = (String) project.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
+				String projectPath = project.getModulePath();
 				if(projectPath != null){
 					File accessFile = new File(accessPath + projectPath);
 					accessPath = accessFile.getParentFile().getCanonicalPath();

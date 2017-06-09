@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2015 Encore Research Group, University of Toronto
+ * Copyright (c) 2007-2017 Encore Research Group, University of Toronto
  *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
@@ -159,19 +159,12 @@ public interface WorkgroupService {
 
     /**
      * Updates the Workgroups by modifying its members
-     * 
-     * @param student
-     * 		the student to move from one workgroup to another
-     * @param workgroupFrom
-     * 		the workgroup that loses the student
-     * @param workgroupTo
-     * 		the workgroup that receives the student
-     * 		if workgroupTo does not exist, workgroupTo is null, and
-     * 		a new workgroup is created
-     * @throws <code>Exception</code> when update fails
-     * 
+     *
+     * @param params contains info needed to change workgroup membership
+     * @return updated workgroup
+     * @throws Exception when update fails
      */
-    Workgroup updateWorkgroupMembership(ChangeWorkgroupParameters params)throws Exception;
+    Workgroup updateWorkgroupMembership(ChangeWorkgroupParameters params) throws Exception;
     
 	/**
 	 * Creates a <code>WISEWorkgroup</code> with given parameters
@@ -181,8 +174,7 @@ public interface WorkgroupService {
 	 * @param run
 	 * @param period
 	 * @return the created <code>WISEWorkgroup</code>
-	 * @throws ObjectNotFoundException when the curnitmap could not be
-	 *     retrieved for the <code>Run</code>
+	 * @throws ObjectNotFoundException
 	 */
 	WISEWorkgroup createWISEWorkgroup(String name, Set<User> members, Run run, Group period) throws ObjectNotFoundException;
 	

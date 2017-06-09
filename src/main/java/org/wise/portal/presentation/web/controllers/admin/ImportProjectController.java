@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2016 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -49,8 +49,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
-import org.wise.portal.domain.module.Curnit;
-import org.wise.portal.domain.module.impl.ModuleParameters;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.project.ProjectMetadata;
 import org.wise.portal.domain.project.ProjectUpload;
@@ -59,7 +57,6 @@ import org.wise.portal.domain.project.impl.ProjectParameters;
 import org.wise.portal.domain.project.impl.ProjectType;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
-import org.wise.portal.service.module.CurnitService;
 import org.wise.portal.service.project.ProjectService;
 
 import javax.servlet.http.HttpServletResponse;
@@ -76,9 +73,6 @@ public class ImportProjectController {
 	@Autowired
 	private ProjectService projectService;
 	
-	@Autowired
-	private CurnitService curnitService;
-
 	@Autowired
 	private Properties wiseProperties;
 
@@ -264,12 +258,8 @@ public class ImportProjectController {
 
 		User signedInUser = ControllerUtil.getSignedInUser();
 
-		ModuleParameters mParams = new ModuleParameters();
-		mParams.setUrl(path);
-		Curnit curnit = curnitService.createCurnit(mParams);
-
 		ProjectParameters pParams = new ProjectParameters();
-		pParams.setCurnitId(curnit.getId());
+		pParams.setModulePath(path);
 		pParams.setOwner(signedInUser);
 		pParams.setProjectname(name);
 		pParams.setProjectType(ProjectType.LD);
