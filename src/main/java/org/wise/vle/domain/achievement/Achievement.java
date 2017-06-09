@@ -56,13 +56,13 @@ public class Achievement extends PersistableDomain {
 	private Run run;   // which run this achievement is for
 
 	@ManyToOne(targetEntity = WISEWorkgroupImpl.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
-	@JoinColumn(name = "workgroupId")
+	@JoinColumn(name = "workgroupId", nullable = false)
 	private WISEWorkgroup workgroup;  // who this achievement is for
 
-	@Column(name = "achievementId", length = 32)
+	@Column(name = "achievementId", length = 32, nullable = false)
 	private String achievementId;  // id of this achievement like "xyzwbc" or "achievementX", defined in project content
 
-	@Column(name = "type", length = 64)
+	@Column(name = "type", length = 64, nullable = false)
 	private String type;  // type of this achievement like "completion" or "milestone", defined in project content
 
 	@Column(name = "achievementTime", nullable = false)
