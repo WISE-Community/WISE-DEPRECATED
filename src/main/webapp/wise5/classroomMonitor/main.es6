@@ -8,7 +8,9 @@ import angularDragula from 'angular-dragula';
 import angularInview from 'angular-inview';
 import angularMoment from 'angular-moment';
 import angularToArrayFilter from 'lib/angular-toArrayFilter/toArrayFilter';
+import angularUIBootstrap from 'angular-ui-bootstrap';
 import angularUIRouter from 'angular-ui-router';
+import bootstrapUIDatetimePicker from 'bootstrap-ui-datetime-picker';
 import ngFileUpload from 'ng-file-upload';
 import ngMaterial from 'angular-material';
 import angularSanitize from 'angular-sanitize';
@@ -34,6 +36,7 @@ import highchartsng from 'highcharts-ng';
 import HTMLComponentModule from '../components/html/htmlComponentModule';
 import LabelComponentModule from '../components/label/labelComponentModule';
 import MatchComponentModule from '../components/match/matchComponentModule';
+import MilestonesController from './milestones/milestonesController';
 import MultipleChoiceComponentModule from '../components/multipleChoice/multipleChoiceComponentModule';
 import NodeGradingController from './nodeGrading/nodeGradingController';
 import NodeProgressController from './nodeProgress/nodeProgressController';
@@ -88,6 +91,8 @@ let classroomMonitorModule = angular.module('classroomMonitor', [
         'outsideURLComponentModule',
         'pascalprecht.translate',
         'tableComponentModule',
+        'ui.bootstrap',
+        'ui.bootstrap.datetimepicker',
         'ui.router'
     ])
     .service(AchievementService.name, AchievementService)
@@ -108,6 +113,7 @@ let classroomMonitorModule = angular.module('classroomMonitor', [
     .service(UtilService.name, UtilService)
     .controller(ClassroomMonitorController.name, ClassroomMonitorController)
     .controller(DataExportController.name, DataExportController)
+    .controller(MilestonesController.name, MilestonesController)
     .controller(NodeGradingController.name, NodeGradingController)
     .controller(NodeProgressController.name, NodeProgressController)
     .controller(NotebookGradingController.name, NotebookGradingController)
@@ -211,6 +217,12 @@ let classroomMonitorModule = angular.module('classroomMonitor', [
                     templateUrl: 'wise5/classroomMonitor/dataExport/dataExport.html',
                     controller: 'DataExportController',
                     controllerAs: 'dataExportController'
+                })
+                .state('root.milestones', {
+                    url: '/milestones',
+                    templateUrl: 'wise5/classroomMonitor/milestones/milestones.html',
+                    controller: 'MilestonesController',
+                    controllerAs: 'milestonesController'
                 })
                 .state('root.notebooks', {
                     url: '/notebook',

@@ -84,6 +84,13 @@ class ClassroomMonitorController {
                 icon: 'speaker_notes',
                 type: 'secondary',
                 active: false
+            },
+            'root.milestones': {
+                name: this.$translate('milestonesView'),
+                label: this.$translate('milestonesViewLabel'),
+                icon: 'flag',
+                type: 'primary',
+                active: true
             }
         };
 

@@ -70,25 +70,28 @@ class AchievementService {
                         // add the student achievement to our local data structure
                         this.addOrUpdateAchievement(achievement);
 
-                        // get the project achievement object
-                        var projectAchievement = this.ProjectService.getAchievementByAchievementId(achievement.achievementId);
+                        if (this.ConfigService.getMode() == 'studentRun') {
 
-                        if (projectAchievement != null) {
+                            // get the project achievement object
+                            var projectAchievement = this.ProjectService.getAchievementByAchievementId(achievement.achievementId);
 
-                            /*
-                             * set the completed field to true in case we ever
-                             * need to easily see which achievements the student
-                             * has completed
-                             */
-                            projectAchievement.completed = true;
+                            if (projectAchievement != null) {
 
-                            if (projectAchievement.deregisterFunction != null) {
                                 /*
-                                 * the student has completed this achievement
-                                 * so we no longer need to listen for it
+                                 * set the completed field to true in case we ever
+                                 * need to easily see which achievements the student
+                                 * has completed
                                  */
-                                projectAchievement.deregisterFunction();
-                                this.debugOutput('deregistering ' + projectAchievement.id);
+                                projectAchievement.completed = true;
+
+                                if (projectAchievement.deregisterFunction != null) {
+                                    /*
+                                     * the student has completed this achievement
+                                     * so we no longer need to listen for it
+                                     */
+                                    projectAchievement.deregisterFunction();
+                                    this.debugOutput('deregistering ' + projectAchievement.id);
+                                }
                             }
                         }
                     }
@@ -540,6 +543,130 @@ class AchievementService {
         }
 
         return achievements;
+    }
+
+    /**
+     * Get an array of student achievements for a given achievement id
+     * @param achievementId a 10 character achievement id
+     * @return an array of student achievements. student achievements are
+     * created when a workgroup completes an achievement.
+     */
+    getAchievementsByAchievementId(achievementId) {
+
+        var achievementsByAchievementId = [];
+
+        if (achievementId != null) {
+
+            // get all the workgroup ids
+            var workgroupIds = this.ConfigService.getClassmateWorkgroupIds();
+
+            if (workgroupIds != null) {
+
+                // loop through all the workgroup ids
+                for (var w = 0; w < workgroupIds.length; w++) {
+
+                    var workgroupId = workgroupIds[w];
+
+                    if (workgroupId != null) {
+
+                        // get all the achievements this workgroup has completed
+                        var achievementsForWorkgroup = this.achievementsByWorkgroupId[workgroupId];
+
+                        if (achievementsForWorkgroup != null) {
+
+                            // loop through all the achievements this workgroup has completed
+                            for (var a = achievementsForWorkgroup.length - 1; a >= 0; a--) {
+                                var achievement = achievementsForWorkgroup[a];
+
+                                if (achievement != null && achievement.data != null) {
+                                    if (achievementId == achievement.data.id) {
+                                        /*
+                                         * the workgroup has completed the achievement we are
+                                         * looking for
+                                         */
+                                        achievementsByAchievementId.push(achievement);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return achievementsByAchievementId;
+    }
+
+    /**
+     * Get a mapping from achievement id to array of student achievements
+     * @param achievementId the achievement id
+     * @return a mapping from achievement id to array of student achievements
+     * student achievements are created when a workgroup completes an achievement.
+     */
+    getAchievementIdToAchievementsMappings(achievementId) {
+        var achievementIdToAchievements = {};
+
+        // get all the project achievements
+        var projectAchievements = this.ProjectService.getAchievementItems();
+
+        // get the workgroup ids
+        var workgroupIds = this.ConfigService.getClassmateWorkgroupIds();
+
+        if (projectAchievements != null) {
+
+            // loop through all the project achievements
+            for (var a = 0; a < projectAchievements.length; a++) {
+                var projectAchievement = projectAchievements[a];
+
+                if (projectAchievement != null) {
+
+                    // get an array of student achievements for the given achievement id
+                    var studentAchievements = this.getAchievementsByAchievementId(projectAchievement.id);
+
+                    // add the array to the mapping
+                    achievementIdToAchievements[projectAchievement.id] = studentAchievements;
+                }
+            }
+        }
+
+        return achievementIdToAchievements;
+    }
+
+    /**
+     * Get an available achievement id
+     * @return an achievement id that isn't being used
+     */
+    getAvailableAchievementId() {
+
+        var id = null;
+
+        while (id == null) {
+
+            // generate a 10 character id
+            var id = this.UtilService.generateKey(10);
+
+            // check to make sure the id isn't already being used
+
+            var achievements = this.ProjectService.getAchievementItems();
+
+            // loop through all the achievements
+            for (var a = 0; a < achievements.length; a++) {
+                var achievement = achievements[a];
+
+                if (achievement != null) {
+                    if (id == achievement.id) {
+                        /*
+                         * the id is already being used so we need to find
+                         * a different one
+                         */
+                        id = null;
+                        break;
+                    }
+                }
+            }
+        }
+
+        return id;
     }
 }
 

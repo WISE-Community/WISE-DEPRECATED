@@ -9318,17 +9318,46 @@ class ProjectService {
     }
 
     /**
-     * Get all the achievements in the project
-     * @return all the achievements in the project
+     * Get all the achievements object in the project. The achievements object
+     * contains the isEnabled field and an array of items.
+     * @return the achievement object
      */
     getAchievements() {
         var achievements = null;
 
         if (this.project != null) {
+            if (this.project.achievements == null) {
+                this.project.achievements = {
+                    isEnabled: true,
+                    items: []
+                };
+            }
             achievements = this.project.achievements;
         }
 
         return achievements;
+    }
+
+    /**
+     * Get the achievement items in the project
+     * @return the achievement items
+     */
+    getAchievementItems() {
+        var achievementItems = null;
+
+        // get the achievements object
+        var achievements = this.getAchievements();
+
+        if (achievements != null) {
+            if (achievements.items == null) {
+                achievements.items = [];
+            }
+            
+            // get the achievement items
+            achievementItems = achievements.items;
+        }
+
+        return achievementItems;
     }
 
     /**

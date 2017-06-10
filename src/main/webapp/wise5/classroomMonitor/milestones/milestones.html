@@ -1,0 +1,90 @@
+<head>
+    <link rel="stylesheet" href="https://rawgit.com/Gillardo/bootstrap-ui-datetime-picker/master/example/style.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/1.2.0/ui-bootstrap-tpls.js"></script>
+    <style>
+        .stepHeader {
+            margin-left: 20px;
+        }
+        .showStudentsTable table, .showStudentsTable td, .showStudentsTable th {
+            border: 1px solid black;
+        }
+        .completed {
+            background-color: forestgreen
+        }
+        .notCompleted {
+            background-color: red
+        }
+    </style>
+</head>
+
+<div class="view-content view-content--with-sidemenu">
+    <div class="l-constrained" layout="column">
+        <h4>{{ 'milestones' | translate }}</h4>
+        <div style="float:right">
+            <hr style="background-color: black; height: 1px"/>
+            <div ng-repeat="milestone in milestonesController.achievements">
+                <span>{{ 'name' | translate }}: </span><span ng-show="!milestone.edit">{{ milestone.name }}</span><input ng-show="milestone.edit" ng-model="milestone.name" class="form-control" style="display:inline; width: 40%" size="80" placeholder="{{ 'milestoneNamePlaceholder' | translate }}"/>
+                <br/>
+                <span>{{ 'description' | translate }}: </span><span ng-show="!milestone.edit">{{ milestone.description }}</span><input ng-show="milestone.edit" ng-model="milestone.description" class="form-control" style="display:inline; width: 80%" size="120" placeholder="{{ 'milestoneDescriptionPlaceholder' | translate }}"/>
+                <br/>
+                <span ng-show="!milestone.edit">{{ 'dueDate' | translate }}: </span><span ng-show="!milestone.edit">{{ milestone.params.targetDateTemp | date: "MMM d, yyyy h:mma" }}</span> <span ng-show="!milestone.edit">({{ milestone.timeDiff }})</span><br ng-show="!milestone.edit"/>
+                <form class="form-horizontal" style="margin-bottom: 0" ng-show="milestone.edit">
+                    <div class="form-group" style="width: 700; margin-bottom: 0">
+                        <label class="col-sm-2 control-label" style="text-align: left; padding-right: 0; width: 80; font-weight: 0">{{ 'dueDate' | translate }}: </label>
+                        <div class="col-sm-10" style="text-align: left; margin-bottom: 0">
+                            <p class="input-group" style="margin-bottom: 0">
+                                <input type="text" class="form-control" datetime-picker="MMM d, yyyy h:mma" ng-model="milestone.params.targetDateTemp" ng-change="milestonesController.milestoneDateChanged(milestone)" is-open="milestone.calendarIsOpen" when-closed="milestonesController.closeCalendar(milestone)" />
+                                <span class="input-group-btn">
+                                    <button type="button" style="padding: 9px 12px" class="btn btn-default" ng-click="milestonesController.openCalendar(milestone)"><i class="fa fa-calendar"></i></button>
+                                </span>
+                            </p>
+                        </div>
+                    </div>
+                </form>
+
+                <span>{{ 'completion' | translate }}: {{ milestone.percentageCompleted }}%</span><span> ({{ milestone.numberOfStudentsCompleted }} </span><span> / {{ milestonesController.numberOfStudentsInRun }})</span> <button ng-show="!milestone.showStudents" ng-click="milestonesController.showStudents(milestone)">{{ 'showStudents' | translate }}</button><button ng-show="milestone.showStudents" ng-click="milestonesController.hideStudents(milestone)">{{ 'hideStudents' | translate }}</button>
+                <div class="showStudentsDiv" ng-show="milestone.showStudents">
+                    <table class="showStudentsTable">
+                        <tr>
+                            <th style="width:500">{{ 'workgroups' | translate }}</th>
+                            <th>{{ 'completed' | translate }}</th>
+                        </tr>
+                        <tr ng-repeat="workgroup in milestone.workgroups" ng-class="{'completed': workgroup.completed, 'notCompleted': !workgroup.completed}">
+                            <td style="width:500">{{ milestonesController.getDisplayUserNamesByWorkgroupId(workgroup.workgroupId) }}</td>
+                            <td ng-if="workgroup.achievementTime != null">{{ workgroup.achievementTime | date: "MMM d, yyyy h:ma" }}</td>
+                            <td ng-if="workgroup.achievementTime == null">{{ 'notCompleted' | translate }}</td>
+                        </tr>
+                    </table>
+                </div>
+                <br/>
+                <button ng-show="!milestone.edit" ng-click="milestonesController.editMilestoneClicked(milestone)">{{ 'edit' | translate }}</button>
+                <br/>
+                <div ng-show='milestone.edit'>
+                    <div ng-repeat='item in milestone.items | toArray | orderBy : "order"'
+                         ng-class='{"node-select--group": milestonesController.isGroupNode(item.$key), "node-select--node": !milestonesController.isGroupNode(item.$key)}'
+                         ng-show='milestonesController.isGroupNode(item.$key) || item.show'>
+                        <input type='checkbox'
+                               ng-model='item.checked'
+                               ng-if='item.order!==0'
+                               ng-click='milestonesController.itemClicked(milestone, item)'/>
+                        <h6 ng-click='item.checked = !item.checked; nodeAuthoringController.createBranchStepClicked(branch, item)'
+                            style='display:inline; cursor:pointer'
+                            ng-class='{"groupHeader": milestonesController.isGroupNode(item.$key), "stepHeader": !milestonesController.isGroupNode(item.$key)}'
+                            ng-if='item.order!==0'>
+                            {{milestonesController.getNodePositionById(item.$key)}} {{milestonesController.getNodeTitleByNodeId(item.$key)}}
+                        </h6>
+                        <button ng-if='item.order!==0 && milestonesController.isGroupNode(item.$key)' ng-show='!milestone.items[item.$key].showSteps' ng-click='milestonesController.showStepsClicked(item.$key, milestone)'>{{ 'showSteps' | translate }}</button>
+                        <button ng-if='item.order!==0 && milestonesController.isGroupNode(item.$key)' ng-show='milestone.items[item.$key].showSteps' ng-click='milestonesController.hideStepsClicked(item.$key, milestone)'>{{ 'hideSteps' | translate }}</button>
+                    </div>
+                </div>
+                <button ng-show="milestone.edit" ng-click="milestonesController.saveMilestoneClicked(milestone)">{{ 'save' | translate }}</button>
+                <button ng-show="milestone.edit" ng-click="milestonesController.deleteMilestone($index, milestone)" style="background-color: red; float: right">{{ 'delete' | translate }}</button>
+                <hr style="background-color: black; height: 1px"/>
+            </div>
+        </div>
+        <button ng-click="milestonesController.createMilestone()">{{ 'createMilestone' | translate }}</button>
+    </div>
+</div>
