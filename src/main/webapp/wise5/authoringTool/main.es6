@@ -309,14 +309,14 @@ let authoringModule = angular.module('authoring', [
             });
 
             $mdThemingProvider.theme('default')
-                .primaryPalette('pink', {
-                    'default': '900'
+                .primaryPalette('deep-purple', {
+                    'default': '400'
                 })
                 .accentPalette('accent',  {
                     'default': '500'
                 })
                 .warnPalette('red', {
-                    'default': 'A700'
+                    'default': '800'
                 });
 
             var lightMap = $mdThemingProvider.extendPalette('grey', {

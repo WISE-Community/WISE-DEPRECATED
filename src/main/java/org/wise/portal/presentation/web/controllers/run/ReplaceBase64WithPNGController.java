@@ -407,7 +407,7 @@ public class ReplaceBase64WithPNGController {
     }
 
     /**
-     * Write a line to the debug output log file
+     * Write a line to the debug output log file or response or both
      * @param writer the file to write to
      * @param response the HttpServletResponse to write to
      * @param line a string to write to the file

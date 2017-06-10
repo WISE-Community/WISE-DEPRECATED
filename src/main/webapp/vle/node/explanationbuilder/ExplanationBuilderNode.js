@@ -32,6 +32,7 @@ ExplanationBuilderNode.prototype.i18nEnabled = true;
 ExplanationBuilderNode.prototype.i18nPath = "vle/node/explanationbuilder/i18n/";
 ExplanationBuilderNode.prototype.supportedLocales = {
 	"en":"en",
+	"el":"el",
 	"es":"es",
 	"iw":"he",
 	"ko":"ko",

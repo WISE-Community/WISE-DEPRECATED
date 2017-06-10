@@ -63,24 +63,21 @@ const NodeInfo = {
     },
     controller: NodeInfoController,
     template:
-        `<md-card class="node-info node-content" style="border-color: {{ $ctrl.color }};">
-            <md-card-content>
-                <div ng-if="$ctrl.nodeContent.rubric">
-                    <md-card class="annotations annotations--node-info">
-                        <md-card-title class="annotations__header gray-darker-bg">
-                            <div class="annotations__avatar md-avatar avatar--icon md-36 avatar md-whiteframe-1dp">
-                                <md-icon class="annotations__icon md-36">check</md-icon>
-                            </div>
-                            <div class="annotations__title" layout="row" flex>
-                                <span>{{ 'teachingTips' | translate }}</span>
-                            </div>
-                        </md-card-title>
-                        <md-card-content class="annotations__body md-body-1">
-                            <div ng-bind-html="$ctrl.nodeContent.rubric"></div>
-                        </md-card-content>
-                    </md-card>
-                    <md-divider class="divider divider--dashed"></md-divider>
+        `<md-card ng-if="$ctrl.nodeContent.rubric" class="annotations annotations--node-info">
+            <md-card-title class="annotations__header">
+                <div class="annotations__avatar md-avatar avatar--icon md-36 avatar md-whiteframe-1dp">
+                    <md-icon class="annotations__icon md-36">info</md-icon>
                 </div>
+                <div class="annotations__title" layout="row" flex>
+                    <span>{{ 'stepInfo' | translate }}</span>
+                </div>
+            </md-card-title>
+            <md-card-content class="annotations__body md-body-1">
+                <div ng-bind-html="$ctrl.nodeContent.rubric"></div>
+            </md-card-content>
+        </md-card>
+        <md-card class="node-info node-content" style="border-color: {{ $ctrl.color }};">
+            <md-card-content>
                 <div id="{{component.id}}"
                      class="component-section"
                      ng-repeat='component in $ctrl.components'>
@@ -96,12 +93,12 @@ const NodeInfo = {
                                component-id='{{component.id}}'
                                mode='student'></component>
                     <md-card class="annotations annotations--node-info" ng-if="component.rubric">
-                       <md-card-title class="annotations__header gray-darker-bg">
+                       <md-card-title class="annotations__header">
                            <div class="annotations__avatar md-avatar avatar--icon md-36 avatar md-whiteframe-1dp">
-                               <md-icon class="annotations__icon md-36">check</md-icon>
+                               <md-icon class="annotations__icon md-36">info</md-icon>
                            </div>
                            <div class="annotations__title" layout="row" flex>
-                               <span>{{ 'itemInfo' | translate }}</span>
+                               <span>{{ 'teachingTip' | translate }}</span>
                            </div>
                        </md-card-title>
                        <md-card-content class="annotations__body md-body-1">

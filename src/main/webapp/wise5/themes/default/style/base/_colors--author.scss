@@ -1,14 +1,14 @@
-// Monitor Colors
-$_primary-color: #880e4f; // should match the default color of your ng-material default theme's 'primary' palette
-$_selected-bg: lighten($_primary-color, 64%);
+// Authoring Tool Colors
+$_primary-color: #7e57c2; // should match the default color of your ng-material default theme's 'primary' palette
+$_selected-bg: lighten($_primary-color, 56%);
 
 $color: (
   'primary': $_primary-color,
   'accent-1': #F05843, // should match the default color of your ng-material default theme's 'accent' palette
   'accent-2': #795C3A,
   'accent-3': #CAD266,
-  'warn': #D50000, // should match the default color of your ng-material default theme's 'warn' palette
-  'info': #FFA000,
+  'warn': #c62828, // should match the default color of your ng-material default theme's 'warn' palette
+  'info': #ef7000,
   'success': #00C853,
   'divider': rgba(0, 0, 0, 0.12),
   'gray-lightest': #f7f7f7,
@@ -16,14 +16,14 @@ $color: (
   'gray-light': #dddddd,
   'gray': #cccccc,
   'gray-dark': #aaaaaa,
-  'gray-darker': #777777,
+  'gray-darker': #757575,
   'gray-darkest': #333333,
   'text': rgba(0, 0, 0, 0.87),
   'text-secondary': rgba(0, 0, 0, 0.54),
   'text-disabled': rgba(0, 0, 0, 0.26),
-  'text-light': rgba(255, 255, 255, 0.87),
-  'text-light-secondary': rgba(255, 255, 255, 0.54),
-  'text-light-disabled': rgba(255, 255, 255, 0.26),
+  'text-light': rgba(255, 255, 255, 1),
+  'text-light-secondary': rgba(255, 255, 255, 0.70),
+  'text-light-disabled': rgba(255, 255, 255, 0.50),
   'selected-bg': $_selected-bg,
   'score': #FFC107
 );

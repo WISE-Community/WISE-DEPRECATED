@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3,
@@ -207,7 +207,7 @@ public class HibernateProjectDao extends AbstractHibernateDao<Project> implement
 		List<Project> projects = (List<Project>) this
 				.getHibernateTemplate()
 				.findByNamedParam(
-						"from ProjectImpl as project where project.metadata.author like :authorName",
+						"from ProjectImpl as project where project.metadataObj.author like :authorName",
 						"authorName", "%"+authorName+"%");
 		return projects;
 	}
@@ -224,7 +224,6 @@ public class HibernateProjectDao extends AbstractHibernateDao<Project> implement
 						"title", "%"+title+"%");
 		return projects;
 	}
-
 
 	/**
 	 * @see org.wise.portal.dao.project.ProjectDao#getProjectWithoutMetadata(java.lang.Long)

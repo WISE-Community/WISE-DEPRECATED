@@ -1,0 +1,22 @@
+{
+    "incomplete_paths": {
+        "value": "Μονοπάτια που ακόμα δεν έχετε ολοκληρώσει",
+        "description": "Paths that have not been completed by students yet"
+    },
+    "completed_paths": {
+        "value": "Μονοπάτια που έχετε ήδη ολοκληρώσει (πατήστε για αξιολόγηση ενός μονοπατιού)",
+        "description": "Paths that have been completed by students"
+    },
+    "no_incomplete_paths": {
+        "value": "Έχετε ολοκληρώσει όλα τα μονοπάτια. Προχωρήστε στο επόμενο βήμα.",
+        "description": "Paths that have been visited by students"
+    },
+    "no_complete_paths": {
+        "value": "Δεν έχετε ολοκληρώσει κανένα μονοπάτι ακόμα. Επιλέξτε ένα από τα παραπάνω.",
+        "description": "Paths that have been visited by students"
+    },
+    "branch_step_completed_msg": {
+        "value": "'Εχετε ολοκληρώσει αυτό το βήμα. Μπορείτε να συνεχίσετε να εργάζεστε ή να πάτε στο επόμενο βήμα.",
+        "description": "Message shown to students telling them that they've completed the branching step"
+    }
+}

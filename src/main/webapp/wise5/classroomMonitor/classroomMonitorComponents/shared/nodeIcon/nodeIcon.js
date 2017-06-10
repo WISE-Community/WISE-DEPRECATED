@@ -13,7 +13,7 @@ var NodeIconController = function NodeIconController(ProjectService) {
 
     this.ProjectService = ProjectService;
 
-    this.$onInit = function () {
+    this.$onChanges = function () {
         // get whether the current node is a group
         _this.isGroup = _this.ProjectService.isGroupNode(_this.nodeId);
         // get the node icon

@@ -9,6 +9,7 @@ SVGDrawNode.prototype.i18nType = "SVGDrawNode";
 SVGDrawNode.prototype.i18nPath = "vle/node/draw/i18n/";
 SVGDrawNode.prototype.supportedLocales = {
 	"en":"en",
+    "el":"el",
 	"es":"es",
 	"iw":"he",
 	"ko":"ko",

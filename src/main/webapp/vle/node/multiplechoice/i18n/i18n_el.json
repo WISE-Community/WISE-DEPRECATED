@@ -1,0 +1,106 @@
+{
+    "help": {
+        "value": "βοήθεια",
+        "description": "The word 'help'"
+    },
+    "multiple_choice": {
+        "value": "Πολλαπλή Επιλογή",
+        "description": "The text 'Multiple Choice'"
+    },
+    "question": {
+        "value": "ερώτηση",
+        "description": "The word 'question'"
+    },
+    "answers": {
+        "value": "απαντήσεις",
+        "description": "The word 'answers'"
+    },
+    "challenge_question": {
+        "value": "Ερώτηση Πρόκληση",
+        "description": "The text 'Challenge Question'"
+    },
+    "you_have_completed_this_step": {
+        "value": "Έχετε ολοκληρώσει αυτό το βήμα.",
+        "description": "The text that notifies the student that they have completed the step"
+    },
+    "current_possible_score": {
+        "value": "Τρέχουσα Πιθανή Βαθμολογία:",
+        "description": "The text 'Current Possible Score:' that shows the score that the student can receive when they answer correctly"
+    },
+    "check_answer": {
+        "value": "Έλεγχος Απάντησης",
+        "description": "The text for the button to check the answer"
+    },
+    "try_again": {
+        "value": "Προσπαθήστε Ξανά",
+        "description": "The text for the button to try again when the student answered incorrectly"
+    },
+    "save_answer": {
+        "value": "Αποθήκευση Απάντησης",
+        "description": "The text for the button to save the answer if there is no correct answer"
+    },
+    "edit_answer": {
+        "value": "Επεξεργασία Απάντησης",
+        "description": "The text for the button to edit the answer if there is no correct answer"
+    },
+    "this_is_attempt_x": {
+        "value": "Αυτή είναι η προσπάθεια #{0}",
+        "description": "Message to display to student which attempt they're on"
+    },
+    "you_received": {
+        "value": "Λάβατε",
+        "description": "The text 'You received' to show you received x points"
+    },
+    "points": {
+        "value": "πόντο (πόντους)",
+        "description": "The text 'point(s).' to show you received x points"
+    },
+    "you_have_selected_too_many_please_select": {
+        "value": "Έχετε επιλέξει πάρα πολλά. Παρακαλώ επιλέξτε μόνο",
+        "description": "The text that tells the student they have selected too many checkboxes"
+    },
+    "you_have_not_selected_enough_please_select": {
+        "value": "Δεν έχετε επιλέξει αρκετά. Παρακαλώ επιλέξτε",
+        "description": "The text that tells the student they have not selected enough items"
+    },
+    "choices": {
+        "value": "επιλογές.",
+        "description": "The text 'choices.' to tell the student they have "
+    },
+    "you_have_completed_this_question": {
+        "value": "Έχετε ολοληρώσει με επιτυχία αυτή την ερώτηση.",
+        "description": "The text that tells the student they have completed this question"
+    },
+    "please_review": {
+        "value": "Παρακαλώ εξετάστε",
+        "description": "The beginning of the text that tells the student to please review a previous step before trying again"
+    },
+    "step": {
+        "value": "Βήμα",
+        "description": "The text 'Step'"
+    },
+    "before_trying_again": {
+        "value": "πριν προσπαθήσετε αυτό το βήμα πάλι.",
+        "description": "The end of the text that tells the student to please visit a previous step before trying again"
+    },
+    "you_must_visit": {
+        "value": "Πρέπει να επισκεφθείτε",
+        "description": "The beginning of the text that tells the student to please visit a previous step before trying again"
+    },
+    "auto_graded_score": {
+        "value": "Αποτέλεσμα αυτο-βαθμολόγησης",
+        "description": "The label for the auto graded score in the grading view"
+    },
+    "take_me_there": {
+        "value": "Πήγαινέ με εκεί!",
+        "description": "The button text 'take me there' to show students when they answer the Challenge Question incorrectly."
+    },
+    "close_dialog": {
+        "value": "Κλείσιμο",
+        "description": "The button text 'close' to close the dialog."
+    },
+    "back_to_cq": {
+        "value": "Πίσω στην Ερώτηση Πρόκληση",
+        "description": "The button text 'Back to Challenge Question' to bring student back to the Challenge Question step."
+    }
+}

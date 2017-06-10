@@ -59,15 +59,9 @@ public class HibernateProjectDaoTest extends org.wise.portal.dao.AbstractTransac
 	private static final Date END_TIME = Calendar.getInstance().getTime();
 	
 	private static final String RUNCODE = "abcde-123";
-	
-	private ModuleImpl moduleImpl;
-	
+
     private Run run;
 		
-	public void setModuleImpl(ModuleImpl moduleImpl) {
-		this.moduleImpl = moduleImpl;
-	}
-
 	public void setRun(Run run) {
 		this.run = run;
 	}
@@ -83,14 +77,7 @@ public class HibernateProjectDaoTest extends org.wise.portal.dao.AbstractTransac
     	this.dataObject = (ProjectImpl) this.applicationContext
     			.getBean("project");
     	
-    	MODULE_OWNERS.add(new UserImpl());
-    	this.moduleImpl.setDescription(MODULE_DESCRIPTION);
-    	this.moduleImpl.setComputerTime(MODULE_COMPUTER_TIME);
-    	this.moduleImpl.setOwners(MODULE_OWNERS);
-    	this.moduleImpl.setTechReqs(MODULE_TECH_REQS);
-    	this.moduleImpl.setTotalTime(MODULE_TOTAL_TIME);
-    	this.dataObject.setCurnit(this.moduleImpl);
-    	this.run.setOwners(null);
+    	this.run.setOwner(null);
 		this.run.setPeriods(null);
 		this.run.setRuncode(RUNCODE);
     	this.run.setStarttime(START_TIME);
@@ -105,7 +92,6 @@ public class HibernateProjectDaoTest extends org.wise.portal.dao.AbstractTransac
     @Override
     protected void onTearDownAfterTransaction() throws Exception {
     	super.onTearDownAfterTransaction();
-    	this.moduleImpl = null;
     }
     
 	/**

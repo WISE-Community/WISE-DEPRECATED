@@ -21,6 +21,7 @@ TableNode.prototype.i18nEnabled = true;
 TableNode.prototype.i18nPath = "vle/node/table/i18n/";
 TableNode.prototype.supportedLocales = {
 	"en":"en",
+    "el":"el",
 	"es":"es",
 	"iw":"he",
 	"nl":"nl",

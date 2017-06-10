@@ -1,0 +1,126 @@
+{
+    "import_data": {
+        "description": "The label for the import data button",
+        "value": "Εισαγωγή Δεδομένων"
+    },
+    "reset_table": {
+        "description": "The label for the reset table button",
+        "value": "Επαναφορά Πίνακα"
+    },
+    "add_row": {
+        "description": "The label for the add row button",
+        "value": "Προσθήκη Σειράς"
+    },
+    "delete_row": {
+        "description": "The label for the delete row button",
+        "value": "Διαγραφή Σειράς"
+    },
+    "add_column": {
+        "description": "The label for the add column button",
+        "value": "Προσθήκη Στήλης"
+    },
+    "delete_column": {
+        "description": "The label for the delete column button",
+        "value": "Διαγραφή Στήλης"
+    },
+    "make_graph": {
+        "description": "The label for the make graph button",
+        "value": "Δημιουργία Γραφήματος"
+    },
+    "show_starter_sentence": {
+        "description": "The label for the show starter sentence button",
+        "value": "Προβολή Αρχικής Πρότασης"
+    },
+    "save": {
+        "description": "The label for the save button",
+        "value": "Αποθήκευση"
+    },
+    "click_make_graph": {
+        "description": "The message to tell the student to click the make graph button",
+        "value": "Πατήστε \"Δημουργία Γραφήματος\" για να σχεδιάσετε τα δεδομένα"
+    },
+    "are_you_sure_you_want_reset": {
+        "description": "The message to ask the student if they are sure they want to reset the table",
+        "value": "Θέλετε σίγουρα να επαναφέρετε τον πίνακα;"
+    },
+    "table_has_changed_click_make_graph": {
+        "description": "The message to tell the student that the table has changed so they should click the make graph button",
+        "value": "Ο Πίνακας έχει αλλάξει, πατήστε \"Δημιουργία Γραφήματος\" για να σχεδιάσετε τα νέα δεδομένα"
+    },
+    "x_axis": {
+        "description": "The label for the x axis",
+        "value": "Άξονας Χ"
+    },
+    "y_axis": {
+        "description": "The label for the y axis",
+        "value": "Άξονας Y"
+    },
+    "x_min": {
+        "description": "The label for the x min",
+        "value": "Ελάχιστο Χ"
+    },
+    "x_max": {
+        "description": "The label for the x max",
+        "value": "Μέγιστο Χ"
+    },
+    "y_min": {
+        "description": "The label for the y min",
+        "value": "Ελάχιστο Y"
+    },
+    "y_max": {
+        "description": "The label for the y max",
+        "value": "Μέγιστο Y"
+    },
+    "error_data_in_table_invalid": {
+        "description": "The error message that is displayed when the student tries to make the graph with invalid table data",
+        "value": "Σφάλμα: Τα δεδομένα στον πίνακα δεν είναι έγκυρα, παρακαλώ διορθώστε τα και προσπαθήστε ξανά"
+    },
+    "error_unable_to_draw_chart": {
+        "description": "The error message that is displayed when we are unable to draw the chart",
+        "value": "Σφάλμα: Αποτυχία σχεδίασης διαγράμματος"
+    },
+    "invalid_x_min": {
+        "description": "The error message to show when the x min value is invalid",
+        "value": "Μη έγκυρη ελάχιστη τιμή του Χ"
+    },
+    "invalid_x_max": {
+        "description": "The error message to show when the x max value is invalid",
+        "value": "Μη έγκυρη μέγιστη τιμή του Χ"
+    },
+    "invalid_y_min": {
+        "description": "The error message to show when the y min value is invalid",
+        "value": "Μη έγκυρη ελάχιστη τιμή του Υ"
+    },
+    "invalid_y_max": {
+        "description": "The error message to show when y max value is invalid",
+        "value": "Μη έγκυρη μέγιστη τιμή του Y"
+    },
+    "error_you_must_fix": {
+        "description": "The error message to tell the student they need to fix the problems before they can make the graph",
+        "value": "Σφάλμα: πρέπει να διορθώσετε τα παρακάτω προβλήματα προκειμένου να παραχθεί το γράφημα"
+    },
+    "are_you_sure_delete_column": {
+        "description": "The confirmation message to ask the student if they are sure they want to delete the column",
+        "value": "Θέλετε σίγουρα να διαγράψετε τη στήλη στα δεξιά;"
+    },
+    "error_may_not_delete_original_columns": {
+        "description": "The error message telling the student they can't delete columns that were authored by the teacher",
+        "value": "Σφάλμα: δεν μπορείτε να διαγράψετε καμμια από τις αρχικές στήλες"
+    },
+    "are_you_sure_delete_row": {
+        "description": "The confirmation message to ask the student if they are sure they want to delete the row",
+        "value": "Θέλετε σίγουρα να διαγράψετε την κάτω σειρά;"
+    },
+    "error_may_not_delete_original_rows": {
+        "description": "The error message telling the student they can't delete rows that were authored by the teacher",
+        "value": "Σφάλμα: δεν μπορείτε να διαγράψετε καμμια από τις αρχικές σειρές"
+    },
+    "loading": {
+        "description": "The loading message",
+        "value": "Γίνεται φόρτωση..."
+    },
+    "saved_feedback": {
+        "description": "Notification that the table data was saved",
+        "value": "Αποθηκεύτηκε!"
+    }
+}

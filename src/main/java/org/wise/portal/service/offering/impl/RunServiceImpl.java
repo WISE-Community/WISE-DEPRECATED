@@ -89,7 +89,7 @@ public class RunServiceImpl extends OfferingServiceImpl implements RunService {
 	private Properties wiseProperties;
 
 	/**
-	 * @see net.sf.sail.webapp.service.offering.OfferingService#getOfferingList()
+	 * @see org.wise.portal.service.offering.RunService#getOfferingList()
 	 */
 	@Transactional()
 	public List<Run> getRunList() {
@@ -99,7 +99,7 @@ public class RunServiceImpl extends OfferingServiceImpl implements RunService {
 	}
 	
 	/**
-	 * @see net.sf.sail.webapp.service.offering.OfferingService#getRunListByOwner()
+	 * @see org.wise.portal.service.offering.RunService#getRunListByOwner(User)
 	 */
 	@Transactional()
 	public List<Run> getRunListByOwner(User owner) {
@@ -109,7 +109,7 @@ public class RunServiceImpl extends OfferingServiceImpl implements RunService {
 	}
 	
 	/**
-	 * @see net.sf.sail.webapp.service.offering.OfferingService#getRunListByOwner()
+	 * @see org.wise.portal.service.offering.RunService#getRunListBySharedOwner(User)
 	 */
 	@Transactional()
 	public List<Run> getRunListBySharedOwner(User owner) {
@@ -127,7 +127,7 @@ public class RunServiceImpl extends OfferingServiceImpl implements RunService {
 	}
 
 	/**
-	 * @see org.wise.portal.service.offering.RunService#getRunList(net.sf.sail.webapp.domain.User)
+	 * @see org.wise.portal.service.offering.RunService#getRunList(User)
 	 */
 	public List<Run> getRunList(User user) {
 		return this.runDao.getRunListByUserInPeriod(user);
@@ -167,8 +167,7 @@ public class RunServiceImpl extends OfferingServiceImpl implements RunService {
 	 * 
 	 * @param runParameters
 	 * @return The run created.
-	 * @throws CurnitNotFoundException
-	 * 
+	 * @throws ObjectNotFoundException
 	 */
 	@Transactional()
 	public Run createRun(RunParameters runParameters)
@@ -266,7 +265,7 @@ public class RunServiceImpl extends OfferingServiceImpl implements RunService {
 		User user = userDao.retrieveByUsername(sharedOwnerUsername);
 		
 		//make sure the user is already a shared owner of the run
-		if(run.getSharedowners().contains(user)) {
+		if (run.getSharedowners().contains(user)) {
 			//the user is already a shared owner of the run
 			
 			//get the new permissions
@@ -310,7 +309,7 @@ public class RunServiceImpl extends OfferingServiceImpl implements RunService {
 	}
 	
 	/**
-	 * @see org.wise.portal.service.offering.RunService#getSharedTeacherRole(org.wise.portal.domain.Run, net.sf.sail.webapp.domain.User)
+	 * @see org.wise.portal.service.offering.RunService#getSharedTeacherRole(Run, User)
 	 */
 	public String getSharedTeacherRole(Run run, User user) {
 		List<Permission> permissions = this.aclService.getPermissions(run, user);
@@ -498,9 +497,9 @@ public class RunServiceImpl extends OfferingServiceImpl implements RunService {
 	}
 	
 	@Transactional()
-	public Integer getProjectUsage(Long id){
+	public Integer getProjectUsage(Long id) {
 		List<Run> runList = this.runDao.getRunsOfProject(id);
-		if(runList == null){
+		if (runList == null) {
 			return 0;
 		} else {
 			return runList.size();
@@ -508,8 +507,8 @@ public class RunServiceImpl extends OfferingServiceImpl implements RunService {
 	}
 	
 	@Transactional()
-	public List<Run> getProjectRuns(Long id){
-		return this.runDao.getRunsOfProject(id);
+	public List<Run> getProjectRuns(Long projectId) {
+		return this.runDao.getRunsOfProject(projectId);
 	}
 	
 	@Transactional()
@@ -519,23 +518,23 @@ public class RunServiceImpl extends OfferingServiceImpl implements RunService {
 	}
 	
 	/**
-	 * @see org.wise.portal.service.offering.RunService#hasRunPermission(org.wise.portal.domain.Run, net.sf.sail.webapp.domain.User, org.springframework.security.acls.Permission)
+	 * @see org.wise.portal.service.offering.RunService#hasRunPermission(Run, User, Permission)
 	 */
-	public boolean hasRunPermission(Run run, User user, Permission permission){
+	public boolean hasRunPermission(Run run, User user, Permission permission) {
 		return this.aclService.hasPermission(run, permission, user);
 	}
 	
 	/**
 	 * @see org.wise.portal.service.offering.RunService#getRunsRunWithinPeriod(java.lang.String)
 	 */
-	public List<Run> getRunsRunWithinPeriod(String period){
+	public List<Run> getRunsRunWithinPeriod(String period) {
 		return this.runDao.getRunsRunWithinPeriod(period);
 	}
 	
 	/**
 	 * @see org.wise.portal.service.offering.RunService#getRunsByActivity()
 	 */
-	public List<Run> getRunsByActivity(){
+	public List<Run> getRunsByActivity() {
 		return this.runDao.getRunsByActivity();
 	}
 	
@@ -547,10 +546,10 @@ public class RunServiceImpl extends OfferingServiceImpl implements RunService {
     }
 	
 	/**
-	 * @see org.wise.portal.service.offering.RunService#updateRunStatistics(org.wise.portal.domain.Run)
+	 * @see org.wise.portal.service.offering.RunService#updateRunStatistics(Long)
 	 */
 	@Transactional()
-	public void updateRunStatistics(Long runId){
+	public void updateRunStatistics(Long runId) {
 		
 		try {
 			Run run = retrieveById(runId);
@@ -560,7 +559,7 @@ public class RunServiceImpl extends OfferingServiceImpl implements RunService {
 			
 			/* increment the number of times this run has been run, if 
 			 * the run has not yet been run, the times run will be null */
-			if(run.getTimesRun()==null){
+			if (run.getTimesRun()==null) {
 				run.setTimesRun(1);
 			} else {
 				run.setTimesRun(run.getTimesRun() + 1);
@@ -577,19 +576,19 @@ public class RunServiceImpl extends OfferingServiceImpl implements RunService {
 	 * @see org.wise.portal.service.offering.RunService#updateRunName(java.lang.Long, java.lang.String)
 	 */
 	@Transactional()
-	public void updateRunName(Long runId, String name){
-		try{
+	public void updateRunName(Long runId, String name) {
+		try {
 			Run run = this.retrieveById(runId);
 			run.setName(name);
 			this.runDao.save(run);
-		} catch(ObjectNotFoundException e){
+		} catch(ObjectNotFoundException e) {
 			e.printStackTrace();
 		}
 	}
 	
 	@Transactional()
-	public void addPeriodToRun(Long runId, String name){
-		try{
+	public void addPeriodToRun(Long runId, String name) {
+		try {
 			Run run = this.retrieveById(runId);
 			Set<Group> periods = run.getPeriods();
 			Group group = new PersistentGroup();
@@ -597,7 +596,7 @@ public class RunServiceImpl extends OfferingServiceImpl implements RunService {
 			this.groupDao.save(group);
 			periods.add(group);
 			this.runDao.save(run);
-		} catch(ObjectNotFoundException e){
+		} catch(ObjectNotFoundException e) {
 			e.printStackTrace();
 		}
 	}
@@ -648,7 +647,7 @@ public class RunServiceImpl extends OfferingServiceImpl implements RunService {
 	
 	/**
 	 * @throws ObjectNotFoundException 
-	 * @see org.wise.portal.service.offering.RunService#updateNotes(java.lang.Long, String, String)
+	 * @see org.wise.portal.service.offering.RunService#updateNotes(Long, String)
 	 */
 	@Transactional
     public void updateNotes(Long runId, String privateNotes) throws ObjectNotFoundException {
@@ -659,7 +658,7 @@ public class RunServiceImpl extends OfferingServiceImpl implements RunService {
 	
 	/**
 	 * @throws ObjectNotFoundException 
-	 * @see org.wise.portal.service.offering.RunService#updateNotes(java.lang.Long, String, String)
+	 * @see org.wise.portal.service.offering.RunService#updateSurvey(Long, String)
 	 */
 	@Transactional
     public void updateSurvey(Long runId, String survey) throws ObjectNotFoundException {

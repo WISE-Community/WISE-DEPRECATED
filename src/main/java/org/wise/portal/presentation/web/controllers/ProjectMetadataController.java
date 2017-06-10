@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -39,7 +39,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.wise.portal.dao.ObjectNotFoundException;
-import org.wise.portal.domain.module.impl.CurnitGetCurnitUrlVisitor;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.project.ProjectMetadata;
 import org.wise.portal.domain.project.impl.ProjectMetadataImpl;
@@ -62,40 +61,36 @@ public class ProjectMetadataController {
 	protected ModelAndView handleRequestInternal(
 			HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
+
+		String command = request.getParameter("command");  // get the command
+		String projectId = request.getParameter("projectId");  // get the project id
 		
-		//get the command
-		String command = request.getParameter("command");
-		
-		//get the project id
-		String projectId = request.getParameter("projectId");
-		
-		if(projectId != null) {
-			//get the project
-			Project project = projectService.getById(Long.parseLong(projectId));
+		if (projectId != null) {
+
+			Project project = projectService.getById(Long.parseLong(projectId));  // get the project
 			
-			if(project != null) {
-				//get the metadata
-				ProjectMetadata metadata = project.getMetadata();
+			if (project != null) {
+
+				ProjectMetadata metadata = project.getMetadata();  // get the metadata
+				User user = ControllerUtil.getSignedInUser();  // get the signed in user
 				
-				//get the signed in user
-				User user = ControllerUtil.getSignedInUser();
-				
-				if(command.equals("getProjectMetaData")) {
-					if(metadata != null) {
-						//metadata exists so we will get the metadata as a JSON string
+				if (command.equals("getProjectMetaData")) {
+
+					if (metadata != null) {
+						// metadata exists so we will get the metadata as a JSON string
 						String metadataJSON = metadata.toJSONString();
 						
-						//get the JSONObject for the metadata so we can add to it
+						// get the JSONObject for the metadata so we can add to it
 						JSONObject metadataJSONObj = new JSONObject(metadataJSON);
 						
-						//get the parent project id
+						// get the parent project id
 						Long parentProjectId = project.getParentProjectId();
 						
-						//add the project id and parent project id
+						// add the project id and parent project id
 						metadataJSONObj.put("projectId", Long.parseLong(projectId));
 						
-						if(parentProjectId == null) {
-							//there is no parent project id so we will set it to null
+						if (parentProjectId == null) {
+							// there is no parent project id so we will set it to null
 							metadataJSONObj.put("parentProjectId", JSONObject.NULL);	
 						} else {
 							metadataJSONObj.put("parentProjectId", parentProjectId);							
@@ -106,9 +101,9 @@ public class ProjectMetadataController {
 						 * e.g.
 						 * /135/wise4.project.json
 						 */
-						String projectUrl = (String) project.getCurnit().accept(new CurnitGetCurnitUrlVisitor());
+						String projectUrl = project.getModulePath();
 						
-						if(projectUrl != null) {
+						if (projectUrl != null) {
 							/*
 							 * get the project folder
 							 * e.g.
@@ -116,18 +111,18 @@ public class ProjectMetadataController {
 							 */
 							String projectFolder = projectUrl.substring(0, projectUrl.lastIndexOf("/"));
 							
-							//put the project folder into the meta data JSON
+							// put the project folder into the meta data JSON
 							metadataJSONObj.put("projectFolder", projectFolder);
 						}
 						
 						response.getWriter().write(metadataJSONObj.toString());
 					} else {
-						//metadata does not exist so we will just return an empty JSON object string
+						// metadata does not exist so we will just return an empty JSON object string
 						response.getWriter().write("{}");
 					}
 				} else {
-					if(user == null) {
-						//the user is not logged in
+					if (user == null) {
+						// the user is not logged in
 						response.getWriter().print("ERROR:LoginRequired");
 					} else {
 						// check to see if user can author project or the run that it's in
@@ -137,17 +132,14 @@ public class ProjectMetadataController {
 							// since a project can now only be run once, just use the first run in the list
 							run = runList.get(0);
 						}
-						if(this.projectService.canAuthorProject(project, user) ||
+						if (this.projectService.canAuthorProject(project, user) ||
 								(run != null && runService.hasRunPermission(run, user, BasePermission.WRITE))) {	
-							if(command.equals("postMaxScore")) {
-								//request is to post a max score
+							if (command.equals("postMaxScore")) {
+								// request is to post a max score
 								handlePostMaxScore(request, response);
-							} else if(command.equals("postLastMinified")) {
-								//request is to post last minified time
-								handlePostLastMinified(request, response);
 							}
 						} else {
-							//the user does not have write access to the proejct
+							// the user does not have write access to the proejct
 							response.getWriter().print("ERROR:NotAuthorized");						
 						}
 					}			
@@ -168,33 +160,31 @@ public class ProjectMetadataController {
 	 */
 	private ModelAndView handlePostMaxScore(HttpServletRequest request, HttpServletResponse response) {
 		try {
-			//get the project id
-			String projectIdStr = request.getParameter("projectId");
+
+			String projectIdStr = request.getParameter("projectId");  // get the project id
 			
 			Project project = null;
 			
-			if(projectIdStr != null) {
-				//get the project
-				project = projectService.getById(new Long(projectIdStr));
+			if (projectIdStr != null) {
+
+				project = projectService.getById(new Long(projectIdStr));  // get the project
 				
-				if(project != null) {
-					//get the signed in user
-					User user = ControllerUtil.getSignedInUser();
+				if (project != null) {
+
+					User user = ControllerUtil.getSignedInUser();  // get the signed in user
 					
-					if(user != null) {
+					if (user != null) {
+
+						String nodeId = request.getParameter("nodeId");  // get the nodeId
 						
-						//get the nodeId
-						String nodeId = request.getParameter("nodeId");
-						
-						//get the new max score value
+						// get the new max score value
 						String maxScoreValue = request.getParameter("maxScoreValue");
 						
 						int maxScore = 0;
 						
-						//check if a max score value was provided
-						if(maxScoreValue != null && !maxScoreValue.equals("")) {
-							//parse the new max score value
-							maxScore = Integer.parseInt(maxScoreValue);	
+						// check if a max score value was provided
+						if (maxScoreValue != null && !maxScoreValue.equals("")) {
+							maxScore = Integer.parseInt(maxScoreValue);	 // parse the new max score value
 						}
 						
 						/*
@@ -205,14 +195,14 @@ public class ProjectMetadataController {
 						 */
 						String maxScoreReturnJSON = "";
 						
-						if(project != null) {
+						if (project != null) {
 							ProjectMetadata projectMetadata = project.getMetadata();
 							
-							if(projectMetadata != null) {
+							if (projectMetadata != null) {
 								String maxScoresString = projectMetadata.getMaxScores();
 								JSONArray maxScoresJSONArray = null;
 								
-								if(maxScoresString == null || maxScoresString.equals("")) {
+								if (maxScoresString == null || maxScoresString.equals("")) {
 									maxScoresJSONArray = new JSONArray();
 								} else {
 									maxScoresJSONArray = new JSONArray(maxScoresString);
@@ -220,16 +210,16 @@ public class ProjectMetadataController {
 								
 								boolean maxScoreUpdated = false;
 								
-								for(int x=0; x<maxScoresJSONArray.length(); x++) {
-									//get a max score entry
+								for (int x = 0; x < maxScoresJSONArray.length(); x++) {
+									// get a max score entry
 									JSONObject maxScoreObj = (JSONObject) maxScoresJSONArray.get(x);
 									
-									//get the node id
+									// get the node id
 									String maxScoreObjNodeId = (String) maxScoreObj.get("nodeId");
 									
-									//check if the node id matches the one new one we need to save
-									if(nodeId.equals(maxScoreObjNodeId)) {
-										//it matches so we will update the score
+									// check if the node id matches the one new one we need to save
+									if (nodeId.equals(maxScoreObjNodeId)) {
+										// it matches so we will update the score
 										maxScoreObj.put("maxScoreValue", maxScore);
 										
 										/*
@@ -237,24 +227,20 @@ public class ProjectMetadataController {
 										 * so we can send it back in the response
 										 */
 										maxScoreReturnJSON = maxScoreObj.toString();
-										
 										maxScoreUpdated = true;
 									}
 								}
 								
-								//check if we were able to find an existing entry to update it
-								if(!maxScoreUpdated) {
+								// check if we were able to find an existing entry to update it
+								if (!maxScoreUpdated) {
 									/*
 									 * we did not find an existing entry to update so we will
 									 * create a new entry
 									 */
 									JSONObject newMaxScore = new JSONObject();
 									
-									//set the values
-									newMaxScore.put("nodeId", nodeId);
-									
-									//set the max score
-									newMaxScore.put("maxScoreValue", maxScore);	
+									newMaxScore.put("nodeId", nodeId); // set the nodeId
+									newMaxScore.put("maxScoreValue", maxScore);	 // set the max score
 									
 									/*
 									 * generate the json string for the updated max score entry
@@ -262,12 +248,10 @@ public class ProjectMetadataController {
 									 */
 									maxScoreReturnJSON = newMaxScore.toString();
 									
-									//put the new entry back into the maxScores JSON object
+									// put the new entry back into the maxScores JSON object
 									maxScoresJSONArray.put(newMaxScore);
 								}
 
-								//save the run extras back
-								//runService.setExtras(run, jsonExtras.toString());
 								projectMetadata.setMaxScores(maxScoresJSONArray.toString());
 								projectService.updateProject(project, user);
 								
@@ -285,77 +269,6 @@ public class ProjectMetadataController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-		return null;
-	}
-	
-	/**
-	 * Handles the saving of the lastMinified timestamp
-	 * @param request
-	 * @param response
-	 * @return
-	 */
-	private ModelAndView handlePostLastMinified(HttpServletRequest request, HttpServletResponse response) {
-		try {
-			//get the signed in user
-			User user = ControllerUtil.getSignedInUser();
-			
-			//get the project id
-			String projectId = request.getParameter("projectId");
-			
-			//get the last minified timestamp in milliseconds
-			String lastMinifiedStr = request.getParameter("lastMinified");
-			
-			//convert the string to a long
-			long lastMinifiedMilliseconds = Long.parseLong(lastMinifiedStr);
-			
-			//create a Date object from the milliseconds
-			Date lastMinified = new Date(lastMinifiedMilliseconds);
-			
-			Project project = null;
-			
-			if(projectId != null) {
-				//get the project
-				project = projectService.getById(new Long(projectId));
-
-				if(project != null) {
-					//get the project metadata
-					ProjectMetadata metadata = project.getMetadata();
-					
-					if(metadata == null) {
-						//create a metadata object for the project if it does not have any
-						metadata = new ProjectMetadataImpl();
-						project.setMetadata(metadata);
-					}
-					
-					//set the last minified value
-					metadata.setLastMinified(lastMinified);
-					
-					//check if last edited is null
-					if(metadata.getLastEdited() == null) {
-						/*
-						 * last edited is null so we will set it to 1 second before
-						 * we last minified. this is for time comparison purposes
-						 * when we compare the lastEdited to the lastMinified timestamp
-						 * in the future to determine if we need to minify it again
-						 * to keep the -min version of the project up to date.
-						 */
-						Date lastEdited = new Date(lastMinified.getTime() - 1000); 
-						metadata.setLastEdited(lastEdited);
-					}
-					
-					//push the changes back to the db table
-					projectService.updateProject(project, user);
-				}
-			}
-		} catch (NumberFormatException e) {
-			e.printStackTrace();
-		} catch (ObjectNotFoundException e) {
-			e.printStackTrace();
-		} catch (NotAuthorizedException e) {
-			e.printStackTrace();
-		}
-
 		return null;
 	}
 }

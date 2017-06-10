@@ -1,0 +1,118 @@
+{
+    "ideaBasket_empty": {
+        "description": "Text to display when idea basket is empty",
+        "value": "Ο {0} σας είναι άδειος. Πατήστε \"{1}\" για να αρχίσετε να προσθέτετε {2}."
+    },
+    "ideaChangedAlert": {
+        "description": "Text for alert box that appears when an idea being used in this Explanation Builder step has been modified in some way",
+        "value": "Αυτή η {0} έχει αλλάξει από τότε που την προσθέσατε στον χώρο οργάνωσης. Τι θέλετε να κάνετε?"
+    },
+    "ideaDeletedAlert": {
+        "description": "Text for alert box that appears when an idea being used in this Explanation Builder step has been deleted",
+        "value": "Αυτή η {0} έχει διαγραφεί. Τι θέλετε να κάνετε;"
+    },
+    "editIdea_changeConfirm": {
+        "description": "Text for the warning confirmation dialog that appears when users attempt to edit an idea that is being used in Explanation Builder steps",
+        "value": "Αυτή η {0} χρησιμοποιείται αυτή τη στιγμή στα παρακάτω βήματα: {1} Αν αλλάξετε αυτή τη {2}, θα αλλάξετε επίσης και την απάντησή σας σε εκείνα τα βήματα"
+    },
+    "usedIdea_title": {
+        "description": "Title/tooltip to display for ideas used in the organizing space",
+        "value": "Πατήστε και τραβήξτε για να μετακινηθείτε. Πατήστε για να αλλάξετε χρώμα"
+    },
+    "idea_title": {
+        "description": "Title/tooltip to display for ideas listed in the Explanation Builder",
+        "value": "Πατήστε και τραβήξτε για να προσθέσετε στο χώρο οργάνωσης. Πατήστε δύο φορές για επεξεργασία"
+    },
+    "ok": {
+        "description": "Text for the word 'OK'",
+        "value": "OK"
+    },
+    "cancel": {
+        "description": "Text for the word 'Cancel'",
+        "value": "Άκυρο"
+    },
+    "revise": {
+        "description": "Text for link to revise a changed idea",
+        "value": "Αναθεώρηση"
+    },
+    "keep": {
+        "description": "Text for link to keep a changed idea",
+        "value": "Διατήρηση"
+    },
+    "restoreAndRevise": {
+        "description": "Text for link to restore and revise a deleted idea",
+        "value": "Επαναφορά και Αναθεώρηση"
+    },
+    "remove": {
+        "description": "Text for link to remove a deleted idea from the organizing space",
+        "value": "Απομάκρυνση"
+    },
+    "readyToExplain": {
+        "description": "Text for the ready to explain button",
+        "value": "Έτοιμοι για Εξήγηση!"
+    },
+    "saveResponse": {
+        "description": "Text for the save explanation response button",
+        "value": "ΑΠΟΘΗΚΕΥΣΗ ΑΠΑΝΤΗΣΗΣ"
+    },
+    "undoChanges": {
+        "description": "Text for the save explanation response button",
+        "value": "Αναίρεση Αλλαγών"
+    },
+    "organizingSpace_instructions": {
+        "description": "Instructions to show when the idea organizing space is empty.",
+        "value": "Αυτός είναι ο Χώρος Οργάνωσης των Ιδεών σας. Φέρτε {0} εδώ για να βοηθηθείτε να ετοιμάσετε μια απάντηση ή οδηγίες παραπάνω."
+    },
+    "organizingSpace_explainInstructions": {
+        "description": "Text to display in the organizing space when the explanation feature is enabled.",
+        "value": "Όταν τελειώσετε την οργάνωση των {0} σας, πατήστε \"{1}\"."
+    },
+    "constraint_mustCompleteExplainWarning": {
+        "description": "Text to display when user tries to advance in the project before completing this Explanation Builder step",
+        "value": "Πρέπει να ολοκλρώσετε την εργασία σας για {0} {1} πριν προχωρήσετε παρακάτων. Τακτοποιήστε μερικές {2} στο Χώρο Οργάνωσης. Κατόπιν επιλέξτε \"{3}\" και δακτυλογραφήστε την απάντησή σας. Όταν τελειώσετε, επιλέξτε \"{4}\"."
+    },
+    "constraint_mustCompleteWarning": {
+        "description": "Text to display when user tries to advance in the project before completing this Explanation Builder step (with explanation feature enabled)",
+        "value": "Πρέπει να ολοκλρώσετε την εργασία σας για {0} {1} πριν προχωρήσετε παρακάτω. Τακτοποιήστε μερικές {2} στο Χώρο Οργάνωσης."
+    },
+    "ideaTableHeader": {
+        "description": "Header text for the ideas table",
+        "value": "Οι {0} σας"
+    },
+    "addIdea_title": {
+        "description": "Title text for the add new idea dialog/form",
+        "value": "Προσθήκη Νέας {0}"
+    },
+    "addIdea_textLabel": {
+        "description": "Label for the idea text input field in add or edit idea forms",
+        "value": "Δακτυλογραφήστε εδώ την {0} σας*:"
+    },
+    "addIdea_required": {
+        "description": "Message to display when a field is required in add or edit idea forms",
+        "value": "Παρακαλώ επιλέξτε τουλάχιστον μία (1)"
+    },
+    "editIdea_title": {
+        "description": "Title text for the edit idea dialog/form",
+        "value": "Επεξεργαστείτε την {0} σας"
+    },
+    "reviseIdea_title": {
+        "description": "Title text for the revise idea dialog/form",
+        "value": "Αναθεωρήστε την {0} σας"
+    },
+    "restoreIdea_title": {
+        "description": "Title text for the revise & restore idea dialog/form",
+        "value": "Επαναφέρετε την {0} σας"
+    },
+    "saveConfirmation": {
+        "description": "Message to display when student has completed the step",
+        "value": "Αποθηκεύτηκε! Αν τελειώσατε, πηγαίνεται στην επόμενη {0}."
+    },
+    "unsavedChangesWarning": {
+        "description": "Warning to display in confirmation dialog when user attempts to leave step without saving response",
+        "value": "Προειδοποίηση, έχετε μη αποθηκευμένες αλλαγές! Αν θέλετε να αποθηκεύσετε την απάντησή σας, επιλέξτε {0} και πατήστε το {1} κουμπί. θέλετε σίγουρα να κλείσετε χωρίς να αποθηκεύσετε;"
+    },
+    "error_failedToRetrieveBasket": {
+        "description": "Error text to display when system fails to retrieve the Idea Basket from the server",
+        "value": "Σφάλμα: Αποτυχία ανάκτησης της {0}! Δεν θα μπορέσετε να εργαστείτε σε αυτή την {1}. Παρακαλώ φορτώστε ξανά αυτή την {1} ή ανανεώστε την ενότητα για να προσπαθήσετε πάλι."
+    }
+}

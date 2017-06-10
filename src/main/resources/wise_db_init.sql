@@ -104,13 +104,6 @@
         primary key (id)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-    create table curnits (
-        id bigint not null auto_increment,
-        name varchar(255),
-        OPTLOCK integer,
-        primary key (id)
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
     create table events (
         id integer not null auto_increment,
         category varchar(255) not null,
@@ -162,19 +155,6 @@
         projectId bigint,
         runId bigint,
         workgroupId bigint,
-        primary key (id)
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-    create table modules (
-        authors varchar(255),
-        computer_time bigint,
-        description varchar(255),
-        grades varchar(255),
-        moduleUrl varchar(255) not null,
-        tech_reqs varchar(255),
-        topic_keywords varchar(255),
-        total_time bigint,
-        id bigint not null,
         primary key (id)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -327,34 +307,6 @@
         primary key (premadecommentslist_fk, premadecomments_fk)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-    create table project_metadata (
-        id bigint not null auto_increment,
-        author varchar(255),
-        comp_time varchar(255),
-        contact varchar(255),
-        grade_range varchar(255),
-        keywords varchar(255),
-        language varchar(255),
-        last_cleaned datetime,
-        last_edited datetime,
-        last_minified datetime,
-        lesson_plan mediumtext,
-        max_scores mediumtext,
-        nav_mode varchar(255),
-        post_level bigint,
-        project_fk bigint,
-        standards mediumtext,
-        subject varchar(255),
-        summary varchar(255),
-        tech_reqs varchar(255),
-        theme varchar(255),
-        title varchar(255),
-        tools text,
-        total_time varchar(255),
-        version_id varchar(255),
-        primary key (id)
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
     create table projects (
         id bigint not null auto_increment,
         datecreated datetime not null,
@@ -365,12 +317,13 @@
         ispublic bit,
         maxTotalAssetsSize bigint,
         name varchar(255) not null,
+        modulePath varchar(255) not null,
         parentprojectid bigint,
         projecttype integer,
         OPTLOCK integer,
         wiseVersion integer,
-        curnit_fk bigint,
         metadata_fk bigint,
+        metadata mediumtext,
         owner_fk bigint not null,
         primary key (id)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -645,9 +598,6 @@
 
     create index runIdAndWorkgroupIdIndex on portfolio (runId, workgroupId);
 
-    alter table projects
-        add constraint UK_t592fa1q3xyjf1qsx8t4qkrt5  unique (metadata_fk);
-
     alter table runs
         add constraint UK_dxea1ifhea203qe2ie4lsd8vb  unique (run_code);
 
@@ -797,11 +747,6 @@
         foreign key (group_fk)
         references groups (id);
 
-    alter table modules
-        add constraint FK_9qido677ahgt2n9yiftoj65r3
-        foreign key (id)
-        references curnits (id);
-
     alter table newsitem
         add constraint FK_iekdwpu7jkpuwafy4uvocjg3s
         foreign key (owner)
@@ -901,16 +846,6 @@
         add constraint FK_3u4rbdp8k8fywqwxobmlexoj
         foreign key (premadecommentslist_fk)
         references premadecommentlists (id);
-
-    alter table projects
-        add constraint FK_89hfo2jpmi5bd7a73w8cy7h4t
-        foreign key (curnit_fk)
-        references curnits (id);
-
-    alter table projects
-        add constraint FK_t592fa1q3xyjf1qsx8t4qkrt5
-        foreign key (metadata_fk)
-        references project_metadata (id);
 
     alter table projects
         add constraint FK_lglinci94nt1chg4acxpds1nh

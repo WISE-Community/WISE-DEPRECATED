@@ -12,6 +12,7 @@ MultipleChoiceNode.prototype.i18nEnabled = true;
 MultipleChoiceNode.prototype.i18nPath = "vle/node/multiplechoice/i18n/";
 MultipleChoiceNode.prototype.supportedLocales = {
 	"en":"en",
+    "el":"el",
 	"es":"es",
 	"de":"de",
 	"fr":"fr",

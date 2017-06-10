@@ -1,0 +1,78 @@
+{
+    "match_sequence": {
+        "value": "Αντιστοίχησε και Βάλε σε Σειρά",
+        "description": "The 'Match & Sequence' title text that is displayed to students"
+    },
+    "choices": {
+        "value": "Επιλογές",
+        "description": "The 'Choices' text that shows up at the header of the source and target buckets/boxes"
+    },
+    "help": {
+        "value": "βοήθεια",
+        "description": "The 'help' link text that is displayed to students"
+    },
+    "check_answer": {
+        "value": "Υποβολή Απάντησης",
+        "description": "The 'Submit Answer' text on the button for students to submit and check their answer"
+    },
+    "click_ok_to_save": {
+        "value": "Πατήστε 'ΟΚ' για να αποθηκεύσετε και να κλειδώσετε αυτό το βήμα. Η εργασία σας θα αποθηκευτεί και δεν θα μπορείτε να κάνετε άλλες αλλαγές. Αν θέλετε να συνεχίσετε να εργάζεστε σε αυτό το βήμα, πατήστε 'Άκυρο'.",
+        "description": "The text to notify the student to click 'OK' to save and lock the step"
+    },
+    "please_review": {
+        "value": "Παρακαλώ εξετάστε",
+        "description": "'Please review' part of 'Please review Step X before trying again' message asking students to review a step"
+    },
+    "please_review_step": {
+        "value": "Βήμα",
+        "description": "'Step' part of 'Please review Step X before trying again' message asking students to review a step"
+    },
+    "please_review_before_trying_again": {
+        "value": "πριν προσπαθήσετε ξανά",
+        "description": "'before trying again' part of 'Please review Step X before trying again' message asking students to review a step"
+    },
+    "step_completed": {
+        "value": "Έχετε συμπληρώσει αυτό το βήμα. Παρακαλώ προχωρήστε στο επόμενο.",
+        "description": "The text to notify the student that they've completed the step and that they should move on"
+    },
+    "correct_feedback": {
+        "value": "Έχετε τοποθετήσει σωστά {0} από σύνολο {1} επιλογών.",
+        "description": "Message showing students how many choices they placed correctly"
+    },
+    "correct_box_wrong_order": {
+        "value": "Σωστό κουτί αλλά λάθος σειρά.",
+        "description": "Message to display to student when they got the choice in the right box but in the wrong order"
+    },
+    "no_feedback": {
+        "value": "ΚΑΜΜΙΑ ΑΝΑΤΡΟΦΟΔΟΤΗΣΗ",
+        "description": "Message to display to student when there is no feedback to display"
+    },
+    "instructions": {
+        "value": "Οδηγίες",
+        "description": "Title text for the instructions dialog and link"
+    },
+    "current_possible_score": {
+        "value": "Πιθανή Βαθμολογία:",
+        "description": "The text 'Current Possible Score:' that shows the score that the student can receive when they answer correctly"
+    },
+    "autograded_score": {
+        "value": "Αποτέλεσμα αυτο-βαθμολόγησης: {0}",
+        "description": "Auto graded score that gets displayed in the teacher grading tool."
+    },
+    "this_is_attempt_x": {
+        "value": "Προσπάθειες: {0}",
+        "description": "Message to display to student which attempt they're on"
+    },
+    "this_was_attempt_x": {
+        "value": "Προσπάθειες: {0}",
+        "description": "Message to display to student which attempt they were on"
+    },
+    "you_received_x_points": {
+        "value": "Λάβατε {0} πόντο (πόντους)",
+        "description": "Message to display to student how many points they received"
+    },
+    "all_completed_msg": {
+        "value": "Συγχαρητήρια! Ολοκληρώσατε αυτή την ερώτηση.",
+        "description": "Message to display to student when they've completed the step"
+    }
+}

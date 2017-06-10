@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2015 Regents of the University of California (Regents). 
+ * Copyright (c) 2008-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -49,7 +49,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.socket.WebSocketHandler;
 import org.wise.portal.dao.ObjectNotFoundException;
-import org.wise.portal.domain.module.impl.CurnitGetCurnitUrlVisitor;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.workgroup.Workgroup;
@@ -351,7 +350,7 @@ public class StudentDataController {
 
 			//get the path to the project on the server
 			String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
-			String rawProjectUrl = (String) run.getProject().getCurnit().accept(new CurnitGetCurnitUrlVisitor());
+			String rawProjectUrl = run.getProject().getModulePath();
 			String projectPath = curriculumBaseDir + rawProjectUrl;
 
 			File projectFile = new File(projectPath); // create a file handle to the project file

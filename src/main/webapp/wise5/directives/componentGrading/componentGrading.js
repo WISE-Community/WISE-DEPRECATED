@@ -231,7 +231,7 @@ var ComponentGradingController = function () {
                 parent: angular.element(document.body),
                 targetEvent: $event,
                 fullscreen: true,
-                template: '<md-dialog aria-label="{{ \'revisionsForTeam\' | translate:{teamNames: userNames} }}" class="dialog--wider">\n                    <md-toolbar>\n                        <div class="md-toolbar-tools gray-darkest-bg">\n                            <h2 class="overflow--ellipsis">{{ \'revisionsForTeam\' | translate:{teamNames: userNames} }}</h2>\n                            <span flex></span>\n                            <md-button class="md-icon-button" ng-click="close()">\n                                <md-icon aria-label="{{ \'close\' | translate }}"> close </md-icon>\n                            </md-button>\n                        </div>\n                    </md-toolbar>\n                    <md-dialog-content>\n                        <div class="md-dialog-content gray-lighter-bg">\n                            <workgroup-component-revisions workgroup-id="workgroupId" component-id="{{ componentId }}" max-score="maxScore"></workgroup-component-revisions>\n                        </div>\n                    </md-dialog-content>\n                    <md-dialog-actions layout="row" layout-align="end center">\n                        <md-button ng-click="close()" aria-label="{{ \'close\' | translate }}">{{ \'close\' | translate }}</md-button>\n                    </md-dialog-actions>\n                </md-dialog>',
+                template: '<md-dialog aria-label="{{ \'revisionsForTeam\' | translate:{teamNames: userNames} }}" class="dialog--wider">\n                    <md-toolbar>\n                        <div class="md-toolbar-tools gray-darkest-bg">\n                            <h2 class="overflow--ellipsis">{{ \'revisionsForTeam\' | translate:{teamNames: userNames} }}</h2>\n                        </div>\n                    </md-toolbar>\n                    <md-dialog-content>\n                        <div class="md-dialog-content gray-lighter-bg">\n                            <workgroup-component-revisions workgroup-id="workgroupId" component-id="{{ componentId }}" max-score="maxScore"></workgroup-component-revisions>\n                        </div>\n                    </md-dialog-content>\n                    <md-dialog-actions layout="row" layout-align="end center">\n                        <md-button class="md-primary" ng-click="close()" aria-label="{{ \'close\' | translate }}">{{ \'close\' | translate }}</md-button>\n                    </md-dialog-actions>\n                </md-dialog>',
                 locals: {
                     workgroupId: workgroupId,
                     componentId: componentId,
@@ -291,12 +291,12 @@ var ComponentGradingController = function () {
                     // save the annotation to the server
                     this.AnnotationService.saveAnnotation(annotation).then(function (result) {
                         /*let localAnnotation = result;
-                         if (localAnnotation != null) {
+                          if (localAnnotation != null) {
                             if (this.annotationId == null) {
                                 // set the annotation id if there was no annotation id
                                 this.annotationId = localAnnotation.id;
                             }
-                             this.processAnnotations();
+                              this.processAnnotations();
                         }*/
                     });
                 }

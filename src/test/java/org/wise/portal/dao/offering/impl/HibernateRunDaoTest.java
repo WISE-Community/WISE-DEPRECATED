@@ -38,8 +38,6 @@ import org.wise.portal.domain.authentication.MutableUserDetails;
 import org.wise.portal.domain.authentication.impl.PersistentUserDetails;
 import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.group.impl.PersistentGroup;
-import org.wise.portal.domain.module.Curnit;
-import org.wise.portal.domain.module.impl.CurnitImpl;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.project.impl.ProjectImpl;
 import org.wise.portal.domain.run.Run;
@@ -68,8 +66,6 @@ public class HibernateRunDaoTest extends AbstractTransactionalDbTests {
 	private static User DEFAULT_OWNER = new UserImpl();
 
 	private static Project DEFAULT_PROJECT = new ProjectImpl();
-
-	private static final Curnit DEFAULT_CURNIT = new CurnitImpl();
 
     private Group DEFAULT_GROUP_1, DEFAULT_GROUP_2, DEFAULT_GROUP_3;
 
@@ -135,8 +131,6 @@ public class HibernateRunDaoTest extends AbstractTransactionalDbTests {
 
         DEFAULT_OWNERS = new HashSet<User>();
         DEFAULT_OWNERS.add(DEFAULT_OWNER);
-        
-        DEFAULT_PROJECT.setCurnit(DEFAULT_CURNIT);
     }
 
     /**
@@ -148,7 +142,6 @@ public class HibernateRunDaoTest extends AbstractTransactionalDbTests {
         Session session = this.sessionFactory.getCurrentSession();
         session.save(DEFAULT_USER_DETAILS);
         session.save(DEFAULT_OWNER);  // save owner
-        session.save(DEFAULT_CURNIT);  // save curnit
         session.save(DEFAULT_PROJECT);  // save project
 
         this.defaultRun.setOwners(DEFAULT_OWNERS);

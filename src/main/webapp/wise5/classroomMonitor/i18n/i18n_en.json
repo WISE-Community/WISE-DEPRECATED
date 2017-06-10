@@ -129,7 +129,7 @@
     "studentView": "Student Summary",
     "studentViewLabel": "View Student Summary",
     "teacherComment": "Teacher Comment",
-    "teachingTips": "Teaching Tips",
+    "teachingTip": "Teaching Tip",
     "team": "Team",
     "teamId": "Team {{id}}",
     "teamsOnItem": "Teams currently on this item: {{total}} ({{online}} online)",

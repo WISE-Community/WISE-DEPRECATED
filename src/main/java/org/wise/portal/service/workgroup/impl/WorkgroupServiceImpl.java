@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2015 Encore Research Group, University of Toronto
+ * Copyright (c) 2007-2017 Encore Research Group, University of Toronto
  *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
@@ -77,7 +77,7 @@ public class WorkgroupServiceImpl implements WorkgroupService {
 	}
 
     /**
-     * @see net.sf.sail.webapp.service.workgroup.WorkgroupService#createWorkgroup(net.sf.sail.webapp.domain.Workgroup, net.sf.sail.webapp.domain.Offering)
+     * @see org.wise.portal.service.workgroup.WorkgroupService#createWorkgroup(String, Set, Offering)
      */
     @Transactional()
 	public Workgroup createWorkgroup(String name, Set<User> members, Offering offering) {
@@ -108,7 +108,7 @@ public class WorkgroupServiceImpl implements WorkgroupService {
 	}
 	
 	/**
-	 * @see org.wise.portal.service.workgroup.WorkgroupService#createWISEWorkgroup(java.lang.String, java.util.Set, org.wise.portal.domain.Run, net.sf.sail.webapp.domain.group.Group)
+	 * @see org.wise.portal.service.workgroup.WorkgroupService#createWISEWorkgroup(String, Set, Run, Group)
 	 */
 	@Transactional()
 	public WISEWorkgroup createWISEWorkgroup(String name, Set<User> members,
@@ -154,8 +154,7 @@ public class WorkgroupServiceImpl implements WorkgroupService {
 	}
 	
     /**
-     * @see net.sf.sail.webapp.service.workgroup.WorkgroupService#getWorkgroupListByOfferingAndUser(net.sf.sail.webapp.domain.Offering,
-     *      net.sf.sail.webapp.domain.User)
+     * @see org.wise.portal.service.workgroup.WorkgroupService#getWorkgroupListByOfferingAndUser(Offering, User)
      */
     @Transactional(readOnly = true)
     public List<Workgroup> getWorkgroupListByOfferingAndUser(Offering offering,
@@ -164,7 +163,7 @@ public class WorkgroupServiceImpl implements WorkgroupService {
     }
     
 	/**
-	 * @see net.sf.sail.webapp.service.workgroup.WorkgroupService#getWorkgroupsForUser(net.sf.sail.webapp.domain.User)
+	 * @see org.wise.portal.service.workgroup.WorkgroupService#getWorkgroupsForUser(User)
 	 */
     @Transactional(readOnly = true)
 	public List<Workgroup> getWorkgroupsForUser(User user) {
@@ -173,8 +172,7 @@ public class WorkgroupServiceImpl implements WorkgroupService {
 	}
 
     /**
-     * @see net.sf.sail.webapp.service.workgroup.WorkgroupService#createPreviewWorkgroupForOfferingIfNecessary(net.sf.sail.webapp.domain.Offering,
-     *      java.util.List, net.sf.sail.webapp.domain.User)
+     * @see org.wise.portal.service.workgroup.WorkgroupService#createPreviewWorkgroupForOfferingIfNecessary(Offering, List, User, String)
      */
     @Transactional()
     public List<Workgroup> createPreviewWorkgroupForOfferingIfNecessary(
@@ -196,7 +194,7 @@ public class WorkgroupServiceImpl implements WorkgroupService {
     }
     
     /**
-     * @see net.sf.sail.webapp.service.workgroup.WorkgroupService#getWorkgroupForPreviewOffering(net.sf.sail.webapp.domain.Offering)
+     * @see org.wise.portal.service.workgroup.WorkgroupService#getWorkgroupForPreviewOffering(Offering, User)
      */
     @Transactional()
 	public Workgroup getWorkgroupForPreviewOffering(Offering previewOffering, User previewUser) {
@@ -217,7 +215,7 @@ public class WorkgroupServiceImpl implements WorkgroupService {
 	}
 
     /**
-     * @see net.sf.sail.webapp.service.workgroup.WorkgroupService#addMembers(net.sf.sail.webapp.domain.Workgroup, java.util.Set)
+     * @see org.wise.portal.service.workgroup.WorkgroupService#addMembers(Workgroup, Set)
      */
     @Transactional()
 	public void addMembers(Workgroup workgroup, Set<User> membersToAdd) {
@@ -229,7 +227,7 @@ public class WorkgroupServiceImpl implements WorkgroupService {
 	}
     
     /**
-     * @see net.sf.sail.webapp.service.workgroup.WorkgroupService#removeMembers(Workgroup, Set)
+     * @see org.wise.portal.service.workgroup.WorkgroupService#removeMembers(Workgroup, Set)
      */
     @Transactional()
 	public void removeMembers(Workgroup workgroup, Set<User> membersToRemove) {
@@ -242,7 +240,7 @@ public class WorkgroupServiceImpl implements WorkgroupService {
 	}
     
     /**
-	 * @see net.sf.sail.webapp.service.workgroup.WorkgroupService#updateWorkgroupMembership(net.sf.sail.webapp.domain.User, net.sf.sail.webapp.domain.Workgroup, net.sf.sail.webapp.domain.Workgroup)
+	 * @see org.wise.portal.service.workgroup.WorkgroupService#updateWorkgroupMembership(ChangeWorkgroupParameters)
 	 */
 	@Transactional()
 	public Workgroup updateWorkgroupMembership(ChangeWorkgroupParameters params) throws Exception {
@@ -275,7 +273,7 @@ public class WorkgroupServiceImpl implements WorkgroupService {
 	}
 
 	/**
-	 * @see net.sf.sail.webapp.service.workgroup.WorkgroupService#retrieveById(Long)
+	 * @see org.wise.portal.service.workgroup.WorkgroupService#retrieveById(Long)
 	 */
     public Workgroup retrieveById(Long workgroupId) throws ObjectNotFoundException {
 		return workgroupDao.getById(workgroupId);

@@ -765,7 +765,6 @@
 				<value>org.wise.portal.domain.authentication.impl.PersistentAclTargetObjectIdentity</value>
 				<value>org.wise.portal.domain.authentication.impl.PersistentGrantedAuthority</value>
 				<value>org.wise.portal.domain.authentication.impl.PersistentUserDetails</value>
-				<value>org.wise.portal.domain.module.impl.CurnitImpl</value>
 				<value>org.wise.portal.domain.run.impl.OfferingImpl</value>
 				<value>org.wise.portal.domain.workgroup.impl.WorkgroupImpl</value>
 				<value>org.wise.portal.domain.user.impl.UserImpl</value>
@@ -774,7 +773,6 @@
 				<value>org.wise.portal.domain.authentication.impl.TeacherUserDetails</value>
 				<value>org.wise.portal.domain.run.impl.RunImpl</value>
 				<value>org.wise.portal.domain.workgroup.impl.WISEWorkgroupImpl</value>
-				<value>org.wise.portal.domain.module.impl.ModuleImpl</value>
 				<value>org.wise.portal.domain.project.impl.ProjectImpl</value>
 				<value>org.wise.portal.domain.portal.impl.PortalImpl</value>
 				<value>org.wise.portal.domain.premadecomment.impl.PremadeCommentImpl</value>

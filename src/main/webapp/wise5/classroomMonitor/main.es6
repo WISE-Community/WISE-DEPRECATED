@@ -304,13 +304,13 @@ let classroomMonitorModule = angular.module('classroomMonitor', [
 
             $mdThemingProvider.theme('default')
                 .primaryPalette('blue', {
-                    'default': '900'
+                    'default': '800'
                 })
                 .accentPalette('accent',  {
                     'default': '500'
                 })
                 .warnPalette('red', {
-                    'default': 'A700'
+                    'default': '800'
                 });
 
             var lightMap = $mdThemingProvider.extendPalette('grey', {

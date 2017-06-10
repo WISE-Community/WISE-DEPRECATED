@@ -1,0 +1,70 @@
+{
+    "my_response": {
+        "value": "Η Απάντησή μου",
+        "description": "The text 'My Response' right above the textbox where the student types in their response"
+    },
+    "save": {
+        "value": "Αποθήκευση",
+        "description": "The text 'Save' on the button to save and post a brainstorm response"
+    },
+    "showStarterSentence": {
+        "value": "Προβολή Αρχικής Πρότασης",
+        "description": "Text for link to show the starter sentence for the step"
+    },
+    "save_noContent": {
+        "value": "Δεν υπάρχει τίποτα για Αποθήκευση",
+        "description": "Text to display when user tries to save an empty post or replay"
+    },
+    "save_success": {
+        "value": "Η Ανάρτηση αποθηκεύτηκε!",
+        "description": "Save success confirmation message"
+    },
+    "other_student_responses": {
+        "value": "Απαντήσεις Άλλων Μαθητών",
+        "description": "The text 'Other Student Responses' that is displayed above the list of other students' responses"
+    },
+    "check_for_new_responses": {
+        "value": "Έλεγχος για Άλλες Απαντήσεις",
+        "description": "The text 'Check for New Responses' that is displayed on a button that triggers the loading of other students' responses"
+    },
+    "postedByLabel": {
+        "value": "Αναρτήθηκε από:",
+        "description": "Label text indicating user that posted a message"
+    },
+    "importAssetButtonTitle": {
+        "value": "Χρήση της Χρήσιμης Ιδέας μου",
+        "description": "Text to display on the button to import asset and use in a brainstorm post"
+    },
+    "post_reply": {
+        "value": "Απάντηση στην Ανάρτηση",
+        "description": "Text for button/link to add a new reply to a brainstorm post"
+    },
+    "title": {
+        "value": "Καταιγισμός Ιδεών Μαθητών",
+        "description": "The title for a brainstorm step"
+    },
+    "save_fail": {
+        "value": "Σφάλμα: Αποτυχία στην αποθήκευση ανάρτησης.",
+        "description": "Error text to display when server fails to save user's post or reply"
+    },
+    "instructions": {
+        "value": "Διαβάστε παρακάτω το θέμα για καταιγισμό ιδέων, στη συνέχεια γράψτε την απάντησή σας στο κενό κουτί. Πατήστε {0} για να αποθηκεύσετε τη δουλειά σας και για να εξετάσετε τις απαντήσεις των άλλων μαθητών",
+        "description": "The instructions for the brainstorm step"
+    },
+    "save_preview_mode": {
+        "value": "Μπορείτε να αποθηκεύσετε την απάντησή σας και να δείτε τις απαντήσεις των άλλων μαθητών όταν αυτή η ενότητα στηθεί για εκτέλεση μέσα στην τάξη",
+        "description": "The text to show when user clicks on the Save button in preview mode."
+    },
+    "check_for_new_responses_preview_mode": {
+        "value": "Μπορείτε να δείτε τις απαντήσεις των άλλων μαθητών όταν αυτή η ενότητα στηθεί για εκτέλεση μέσα στην τάξη.",
+        "description": "The text to show when user clicks on the Check for New Responses button in preview mode."
+    },
+    "flag_inappropriate": {
+        "value": "Αυτό το σχόλιο έχει σηματοδοτηθεί ως ακατάλληλο.",
+        "description": "Text to display when a comment has been removed"
+    },
+    "noStarter": {
+        "value": "Δεν υπάρχει συγκεκριμένη αρχική πρόταση για αυτό το {0}.",
+        "description": "Text to display when user requests to display starter sentence but step does not have one set"
+    }
+}

@@ -4,7 +4,7 @@ class NodeIconController {
     constructor(ProjectService) {
         this.ProjectService = ProjectService;
 
-        this.$onInit = () => {
+        this.$onChanges = () => {
             // get whether the current node is a group
             this.isGroup = this.ProjectService.isGroupNode(this.nodeId);
             // get the node icon

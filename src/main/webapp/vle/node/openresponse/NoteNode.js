@@ -11,6 +11,7 @@ NoteNode.prototype.i18nEnabled = true;
 NoteNode.prototype.i18nPath = "vle/node/openresponse/i18n/";
 NoteNode.prototype.supportedLocales = {
 			"en":"en",
+		    "el":"el",
 			"iw":"he",
 			"ja":"ja",
 			"es":"es",
