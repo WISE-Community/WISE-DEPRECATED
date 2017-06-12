@@ -40,7 +40,8 @@ class GraphService extends NodeService {
             },
             min: 0,
             max: 10,
-            units: this.$translate('graph.secondsUnit')
+            units: this.$translate('graph.secondsUnit'),
+            locked: true
         };
         component.yAxis = {
             title: {
@@ -48,7 +49,8 @@ class GraphService extends NodeService {
             },
             min: 0,
             max: 10,
-            units: this.$translate('graph.metersUnit')
+            units: this.$translate('graph.metersUnit'),
+            locked: true
         };
         component.series = [
             {

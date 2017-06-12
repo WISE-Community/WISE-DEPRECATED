@@ -66,7 +66,8 @@ var GraphService = function (_NodeService) {
                 },
                 min: 0,
                 max: 10,
-                units: this.$translate('graph.secondsUnit')
+                units: this.$translate('graph.secondsUnit'),
+                locked: true
             };
             component.yAxis = {
                 title: {
@@ -74,7 +75,8 @@ var GraphService = function (_NodeService) {
                 },
                 min: 0,
                 max: 10,
-                units: this.$translate('graph.metersUnit')
+                units: this.$translate('graph.metersUnit'),
+                locked: true
             };
             component.series = [{
                 name: this.$translate('graph.prediction'),
