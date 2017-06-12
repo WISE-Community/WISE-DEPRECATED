@@ -223,7 +223,16 @@ var StudentStatusService = function () {
                                         numCompleted += progress.completedItems;
                                     }
                                 } else {
-                                    numTotal++;
+                                    if (nodeStatus.isVisible) {
+                                        /*
+                                         * the student can see the step. we need this check
+                                         * for cases when a project has branching. this way
+                                         * we only calculate the step completion percentage
+                                         * based on the students that can actually go to
+                                         * the step.
+                                         */
+                                        numTotal++;
+                                    }
 
                                     if (nodeStatus.isCompleted) {
                                         // the student has completed the node
