@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2015 Encore Research Group, University of Toronto
+ * Copyright (c) 2007-2017 Encore Research Group, University of Toronto
  *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
@@ -27,8 +27,8 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-import org.springframework.web.servlet.ModelAndView;
 import org.wise.portal.domain.user.User;
+import org.wise.portal.service.portal.PortalService;
 import org.wise.portal.service.user.UserService;
 
 /**
@@ -41,9 +41,16 @@ public class ControllerUtil {
 
 	private static UserService userService;
 
+	private static PortalService portalService;
+
 	@Autowired
 	public void setUserService(UserService userService){
 		ControllerUtil.userService = userService;
+	}
+
+	@Autowired
+	public void setPortalService(PortalService portalService){
+		ControllerUtil.portalService = portalService;
 	}
 
 	/**
@@ -63,7 +70,8 @@ public class ControllerUtil {
 		}
 	}
 	
-	/*
+	/**
+	 * Returns the base url of the specified request
 	 * ex: http://128.32.xxx.11:8080
 	 * or, http://wise3.telscenter.org if request.header is wise.telscenter.org
 	 */
@@ -79,12 +87,28 @@ public class ControllerUtil {
 		return portalUrl;
 	}
 
-	/*
+	/**
+	 * Returns the portal url
 	 * ex: http://128.32.xxx.11:8080/webapp
 	 */
 	public static String getPortalUrlString(HttpServletRequest request) {
-		String portalUrl = ControllerUtil.getBaseUrlString(request) + request.getContextPath();
-		
-		return portalUrl;
+		return ControllerUtil.getBaseUrlString(request) + request.getContextPath();
+	}
+
+	/**
+	 * Returns the version of this WISE instance
+	 * @return wise instance version, or empty string if it cannot be found
+	 */
+	public static String getWISEVersion() {
+		String wiseVersion = "";
+
+		// also show WISEVersion
+		try {
+			wiseVersion = ControllerUtil.portalService.getWISEVersion();
+		} catch (Exception e) {
+			// do nothing
+		}
+
+		return wiseVersion;
 	}
 }

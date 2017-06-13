@@ -25,6 +25,7 @@ package org.wise.portal.presentation.web.controllers.admin;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URLEncoder;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -48,6 +49,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.wise.portal.domain.admin.DailyAdminJob;
 import org.wise.portal.domain.user.User;
+import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.presentation.web.listeners.WISESessionListener;
 import org.wise.portal.service.portal.PortalService;
 
@@ -136,7 +138,10 @@ public class AdminIndexController {
 	@RequestMapping(value = "/admin/latestWISEVersion", method = RequestMethod.GET)
 	public void getLatestGlobalWISEVersion(HttpServletResponse response) throws IOException {
 		String latestWISEVersion = null;
-		String globalWISEVersionJSONString = retrieveString(GET_WISE_INFO_URL);
+		String wiseInstanceName = wiseProperties.getProperty("wise.name", "noName");
+		String wiseInstanceVersion = ControllerUtil.getWISEVersion();
+		String wiseInfoUrl = GET_WISE_INFO_URL + "?wiseInstanceName=" +  URLEncoder.encode(wiseInstanceName, "UTF-8") + "&wiseInstanceVersion=" + URLEncoder.encode(wiseInstanceVersion, "UTF-8");
+		String globalWISEVersionJSONString = retrieveString(wiseInfoUrl);
 		try {
 			// now parse global WISE version JSON and add to ModelAndView.
 			JSONObject globalWISEVersionJSON = new JSONObject(globalWISEVersionJSONString);

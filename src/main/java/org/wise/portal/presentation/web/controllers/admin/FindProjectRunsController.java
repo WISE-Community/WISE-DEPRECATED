@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2007-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -100,7 +100,7 @@ public class FindProjectRunsController {
      * Returns a <code>List<Run></code> list of any runs that are
      * associated with the given <code>Long</code> project id.
      * 
-     * @param Long - projectId
+     * @param projectId
      * @return List<Run> - list of runs associated with the projectId
      */
     private List<Run> getRunListByProjectId(Long projectId) {
@@ -125,7 +125,7 @@ public class FindProjectRunsController {
      * Returns a <code>List<Run></code> list of runs that are associated
      * with the given <code>String</code> username using the LIKE operator
      * 
-     * @param String - username
+     * @param username
      * @return List<Run> - list of runs associated with username using the LIKE operator
      */
     private List<Run> getRunListByUsername(String username) {
@@ -142,13 +142,13 @@ public class FindProjectRunsController {
      * Returns a <code>List<Run></code> list of runs that are associated
      * with the given <code>Long</code> run id.
      * 
-     * @param Long - runId
+     * @param  runId
      * @return List<Run> - list of runs associated with the runId
      */
     private List<Run> getRunListByRunId(Long runId) {
     	List<Run> runList = new ArrayList<Run>();
     	
-    	try{
+    	try {
     		Run run = this.runService.retrieveById(runId);
     		
     		if (run != null) {
@@ -165,7 +165,7 @@ public class FindProjectRunsController {
      * Returns a <code>List<Run></code> list of runs that have
      * the given run title using the LIKE operator
      * 
-     * @param String runTitle
+     * @param runTitle
      * @return List<Run> - list of runs associated with the runTitle
      */
     private List<Run> getRunListByRunTitle(String runTitle) {
