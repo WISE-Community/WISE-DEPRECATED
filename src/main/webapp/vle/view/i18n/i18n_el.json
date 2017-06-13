@@ -755,12 +755,664 @@
         "description": "the text 'not available'",
         "value": "μη διαθέσιμο"
     },
+    "welcome": {
+        "description": "Text for 'Welcome'",
+        "value": "Καλωσορίσατε"
+    },
+    "note_title": {
+        "description": "Text to display in the title bar of a note dialog window",
+        "value": "Σημείωση Σκέψης"
+    },
+    "welcome_users_default": {
+        "description": "Text to display in VLE for user name in preview mode",
+        "value": "Καλωσόρισες Δοκιμαστικέ Χρήστη!"
+    },
+    "grading_change_team": {
+        "description": "text to show in the 'Change Team' button in the grading tool that brings up the grade-by-team page",
+        "value": "Αλλαγή Ομάδας"
+    },
+    "grading_hide_show_revisions": {
+        "description": "text to show in the 'Hide/Show Revisions' link in the grading tool that toggles revisions visibility",
+        "value": "Αναθεώρηση (-εις)"
+    },
+    "grading_hide_personal_info": {
+        "description": "text to show next to the 'Hide Personal Info' checkbox in the grading tool",
+        "value": "Απόκρυψη Προσωπικών Πληροφοριών"
+    },
+    "grading_show_flagged_items_only": {
+        "description": "text to show next to the 'Show Flagged Items Only' checkbox in the grading tool",
+        "value": "Μαρκαριμένα Αντικείμενα Μόνο"
+    },
+    "grading_show_smart_filtered_items_only": {
+        "description": "text to show next to the 'Show Smart-Filtered Items Only' checkbox in the grading tool",
+        "value": "Έξυπνα-Φιλτραρισμένα Αντικείμενα Μόνο"
+    },
+    "grading_enlarge_student_work_text": {
+        "description": "text to show next to the 'Enlarge Student Work Text' checkbox in the grading tool",
+        "value": "Επέκταση Εργασίας Μαθητών"
+    },
+    "grading_only_show_new_student_work": {
+        "description": "text to show next to the 'Only Show New Work' checkbox in the grading tool",
+        "value": "Προβολή Μόνο Νέας Εργασίας"
+    },
+    "grading_show_all_revisions": {
+        "description": "text to show next to the 'Show All Revisions' checkbox in the grading tool",
+        "value": "Προβολή όλων των Αναθεωρήσεων"
+    },
     "grading_no_revisions": {
         "description": "text to show in grading cells that do not have any revisions",
-        "value": ""
+        "value": "(Καμμία Αναθεώρηση)"
     },
     "grading_only_latest_revision_displayed": {
         "description": "text to show in grading cells where only the latest revision is displayed",
-        "value": ""
+        "value": "(Εμφάνιση μόνο της τελευταίας αναθεώρησης)"
+    },
+    "grading_sort_by_auto_graded_score_checkbox": {
+        "description": "text to show next to the 'Sort By Auto Graded Score' checkbox in the grading tool",
+        "value": "Ταξινόμηση ανά αυτο-βαθμολογία"
+    },
+    "grading_no_work_warning": {
+        "description": "text to show in grading cells that do not have students' work to display",
+        "value": "Ο μαθητής δεν έχει υποβάλλει δουλειά για αυτό το βήμα, έτσι η βαθμολόγηση και η ανατροφοδότηση είναι απενεργοποιημένα."
+    },
+    "authoring_confirm_switch_authoring_mode": {
+        "description": "Message displayed in the Authoring Tool to authors when trying to switch between simple/advanced modes but their changes have not been saved.",
+        "value": "Πρόκειται να αλλάξετε σε λειτουργία συγγραφής αλλά δεν έχετε αποθηκεύσει τις αλλαγές σας. Αν συνεχίσετε, οι αλλαγές σας θα χαθούν. θέλετε να συνεχίσετε;"
+    },
+    "authoring_hint_dialog_title": {
+        "description": "Text to display as the title of the edit step hints dialog window.",
+        "value": "Προσθήκη/Επεξεργασία Βοηθητικών Στοιχείων για αυτό το Βήμα"
+    },
+    "authoring_hint_new": {
+        "description": "Default text for a new step hint.",
+        "value": "Νέο Βοηθητικό Στοιχείο"
+    },
+    "authoring_hint_option_never": {
+        "description": "The text \"Never\" to display in \"force show:\" drop down in the step hint authoring panel",
+        "value": "Ποτέ"
+    },
+    "authoring_hint_option_firstTimeOnly": {
+        "description": "The text \"First Time Only\" to display in \"force show:\" drop down in the step hint authoring panel",
+        "value": "Μόνο την πρώτη φορά"
+    },
+    "authoring_hint_forceShow": {
+        "description": "Text to display for the label of the \"Force Show: \" drop down in the step hint authoring panel",
+        "value": "Υποχρεωτική Προβολή:"
+    },
+    "authoring_hint_option_always": {
+        "description": "The text \"Always\" to display in \"force show:\" drop down in the step hint authoring panel",
+        "value": "Πάντοτε"
+    },
+    "authoring_hint_modal": {
+        "description": "Text to display for the label of the \"Modal Dialog\" checkbox in the step hint authoring panel",
+        "value": "Βοηθητικός Διάλογος"
+    },
+    "classroomMonitor_saving": {
+        "description": "Notification to display when saving changes (scores, feedback, etc.) in the classroom monitor",
+        "value": "Οι αλλαγές αποθηκεύονται..."
+    },
+    "classroomMonitor_newItemsOnly": {
+        "description": "Text for option to only show new work in classroom monitor",
+        "value": "Μόνο Νέα Εργασία"
+    },
+    "classroomMonitor_hidePersonalInfo": {
+        "description": "Text for option to hide personal info in classroom monitor",
+        "value": "Απόκρυψη Προσωπικών Πληροφοριών"
+    },
+    "classroomMonitor_saveConfirmation": {
+        "description": "Notification to display when teacher changes (scores, feedback, etc.) have been saved in the classroom monitor",
+        "value": "Οι αλλαγές αποθηκεύτηκαν!"
+    },
+    "classroomMonitor_gradeByStep_headers_feedback": {
+        "description": "Header text for the teacher feedback column in the grade by step table of classroom monitor",
+        "value": "Βαθμολόγηση & Ανατροφοδότηση"
+    },
+    "classroomMonitor_gradeByStep_headers_studentWork": {
+        "description": "Header text for the student work column in the grade by step table of classroom monitor",
+        "value": "Ομάδα"
+    },
+    "classroomMonitor_gradeByStep_headers_score": {
+        "description": "Header text for the score column in the grade by step table of classroom monitor",
+        "value": "Βαθμολόγηση"
+    },
+    "classroomMonitor_gradeByStudent_headers_studentWork": {
+        "description": "Header text for the student work column in the grade by student table of classroom monitor",
+        "value": "Βήμα"
+    },
+    "classroomMonitor_gradeByStudent_headers_score": {
+        "description": "Header text for the score column in the grade by student table of classroom monitor",
+        "value": "Βαθμολόγηση"
+    },
+    "classroomMonitor_gradeByStudent_headers_feedback": {
+        "description": "Header text for the teacher feedback column in the grade by student table of classroom monitor",
+        "value": "Βαθμολόγηση & Ανατροφοδότηση"
+    },
+    "classroomMonitor_gradeByStep_title": {
+        "description": "Title text for grade by step section in classroom monitor",
+        "value": "Βαθμολογία ανά Βήμα"
+    },
+    "classroomMonitor_gradeByStudent_title": {
+        "description": "Title text for grade by student section in classroom monitor",
+        "value": "Βαθμολογία ανά Ομάδα"
+    },
+    "classroomMonitor_grading_invalidScore": {
+        "description": "Text to display when user tries to enter an invalid score in grading views of the  classroom monitor ({0} will be replaced with the user's input)",
+        "value": "{0} είναι μη έγκυρη βαθμολογία. Παρακαλώ προσπαθήστε ξανά."
+    },
+    "classroomMonitor_grading_options_label": {
+        "description": "Label text for grading display options dropdown in classroom monitor",
+        "value": "Προβολή Επιλογών:"
+    },
+    "classroomMonitor_grading_options_select": {
+        "description": "Text for grading display options dropdown when no options are selected in classroom monitor",
+        "value": "Επιλογή"
+    },
+    "classroomMonitor_grading_itemsToReview": {
+        "description": "Text for display showing number of new student work items to review in grading views of classroom monitor ({0} will be replaced with number of new items)",
+        "value": "Αντικείμενα για εξέταση: {0}"
+    },
+    "classroomMonitor_grading_flagOnly": {
+        "description": "Text for option to only display flagged items in grading views of classroom monitor",
+        "value": "Μόνο Μαρκαρισμένα Αντικείμενα"
+    },
+    "classroomMonitor_grading_flag": {
+        "description": "Label for flag checkboxes in grading views of classroom monitor",
+        "value": "Μαρκάρισμα:"
+    },
+    "classroomMonitor_grading_teacherComment": {
+        "description": "Label for teacher comment inputs in grading views of classroom monitor",
+        "value": "Σχόλιο:"
+    },
+    "classroomMonitor_grading_teacherScore": {
+        "description": "Label for teacher score inputs in grading views of classroom monitor",
+        "value": "Βαθμολογία:"
+    },
+    "classroomMonitor_grading_addPremadeComments": {
+        "description": "Text for link to add premade comments to teacher feedback inputs in grading views of classroom monitor",
+        "value": "+ Προκατασκευασμένα Σχόλια"
+    },
+    "classroomMonitor_grading_revisionsCount": {
+        "description": "Text for the number of revisions in the grade by student and grade by step tables of classroom monitor ({0} will be replaced with number of student work submissions for a step)",
+        "value": "{0} αναθεώρηση (-εις)"
+    },
+    "classroomMonitor_grading_revisionDate": {
+        "description": "Text for student work timestamp displays in grading views of classroom monitor ({0} will be replaced by date/time)",
+        "value": "Έχουν υποβληθεί: {0}"
+    },
+    "classroomMonitor_grading_lastAnnotation": {
+        "description": "Text for the latest teacher feedback (grade or comment) timestamp display in grading views of classroom monitor ({0} will be replaced by date/time)",
+        "value": "Τελευταία Ανατροφοδότηση: {0}"
+    },
+    "classroomMonitor_grading_lastAnnotation_none": {
+        "description": "Text for when there is no feedback (grade or comment) in grading views of classroom monitor",
+        "value": "Τελευταία Ανατροφοδότηση: Δεν Υπάρχει"
+    },
+    "authoring_hint_isMustViewAllPartsBeforeClosing": {
+        "description": "Text to display for the label of the \"Must View All Parts Before Closing\" checkbox in the step hint authoring panel",
+        "value": "Πρέπει να θεαθούν όλα τα τμήματα πριν το κλείσιμο"
+    },
+    "authoring_hint_options_label": {
+        "description": "The label for the 'Options' settings in the step hint authoring panel",
+        "value": "Επιλογές"
+    },
+    "authoring_hint_terminology_label": {
+        "description": "The label for the 'Labels/Terminology' settings in the step hint authoring panel",
+        "value": "Ετικέτες/Ορολογία"
+    },
+    "authoring_hint_terminology_instructions": {
+        "description": "The instructions for the 'Labels/Terminology' settings in the step hint authoring panel",
+        "value": "Προαιρετικό: Προσαρμογή του εμφανιζόμενου ονόματα για το \"βοηθητικό στοιχείο (α)\" σε αυτό το βήμα."
+    },
+    "authoring_hint_term_label": {
+        "description": "The label for the 'hint' term input field in the step hint authoring panel",
+        "value": "Όρος για \"βοηθητικό στοιχείο\":"
+    },
+    "authoring_hint_term_plural_label": {
+        "description": "The label for the 'hints' term input field in the step hint authoring panel",
+        "value": "Όρος για \"βοηθητικά στοιχεία\" (πληθυντικός):"
+    },
+    "authoring_hint_add": {
+        "description": "The label for the 'add new hint' button in the step hint authoring panel",
+        "value": "Προσθήκη Νέου Βοηθητικού στοιχείου"
+    },
+    "authoring_hint_delete": {
+        "description": "The label for the 'delete current hint' button in the step hint authoring panel",
+        "value": "Διαγραφή Τρέχοντος Βοηθητικού στοιχείου"
+    },
+    "authoring_imsettings_attribute_help": {
+        "description": "",
+        "value": "Το περιεχόμενο της Βοήθειας θα μπει εδώ"
+    },
+    "authoring_imsettings_terminology_help": {
+        "description": "",
+        "value": "Το περιεχόμενο της Βοήθειας θα μπει εδώ"
+    },
+    "teacher_score": {
+        "description": "The column header for the teacher score",
+        "value": "Βαθμολογία Εκπαιδευτικού"
+    },
+    "computer_score": {
+        "description": "The column header for the computer score",
+        "value": "Βαθμολογία Υπολογιστή"
+    },
+    "total_score": {
+        "description": "The column header for the total score",
+        "value": "Συνολική Βαθμολογία"
+    },
+    "percent_project_completed": {
+        "description": "The column header for the project completion percentage",
+        "value": "% Ενότητας Ολοκληρωμένη"
+    },
+    "my_work_with_teacher_feedback_and_scores": {
+        "description": "The title for the my work dialog popup",
+        "value": "Η Δουλειά μου (με την ανατροφοδότηση του Εκπαιδευτικού και τις Βαθμολογίες)"
+    },
+    "you_have_new_feedback_from_teacher": {
+        "description": "The message that shows up when the student logs in and has new teacher feedback",
+        "value": "Έχετε νέα ανατροφοδότηση από τον εκπαιδευτικό σας"
+    },
+    "new_feedback_labeled_as_new": {
+        "description": "The message that shows up when the student logs in and has new teacher feedback",
+        "value": "Η νέα ανατροφοδότηση υποδεκνύεται ως [Νέα]."
+    },
+    "new_feedback": {
+        "description": "The header for the section that displays the student work that has new feedback",
+        "value": "Νέα Ανατροφοδότηση"
+    },
+    "my_work": {
+        "description": "The header for the section that displays all of the student work",
+        "value": "Η Δουλειά μου"
+    },
+    "new_text": {
+        "description": "The text 'New' used to label new feedback",
+        "value": "Νέα"
+    },
+    "teacher_feedback": {
+        "description": "The label for the teacher feedback",
+        "value": "Ανατροφοδότηση Εκπαιδευτικού"
+    },
+    "your_teacher_hasnt_graded": {
+        "description": "The text to show that there is no feedback from the teacher yet",
+        "value": "Βαθμολόγηση: Ο εκπαιδευτικός σας δεν έχει ακόμα βαθμολογήσει τη δουλειά σας."
+    },
+    "last_visited_on": {
+        "description": "The label to show when the student last visited the step",
+        "value": "Τελευταία επίσκεψη την"
+    },
+    "latest_work": {
+        "description": "The label to show the latest work",
+        "value": "Τελευταία Δουλειά"
+    },
+    "you_havent_visited_this_step": {
+        "description": "The text to show that the student hasn't visited the step yet",
+        "value": "Δεν έχετε επισκεφτεί αυτό το βήμα."
+    },
+    "you_havent_submitted_work_for_this_step": {
+        "description": "The text to show that the student hasn't submitted work for the step yet",
+        "value": "Δεν έχετε υποβάλει δουλειά για αυτό το βήμα."
+    },
+    "teacher_flagged_work": {
+        "description": "The title for the flagged work window in the student vle",
+        "value": "Δουλειά Μαρκαρισμένη από τον Εκπαιδευτικό"
+    },
+    "there_are_no_flagged_items": {
+        "description": "The message that says there are no flagged items",
+        "value": "Δεν υπάρχουν μαρκαρισμένα αντικείμενα."
+    },
+    "choose_a_step": {
+        "description": "The label that tells the student to choose a step to view flagged work for in the flagged work window",
+        "value": "Επιλογή ενός βήματος"
+    },
+    "project_error_has_no_steps": {
+        "description": "The error text to be displayed when the project has no steps in it",
+        "value": "Σφάλμα: Αυτή η ενότητα δεν έχει καθόλου βήματα"
+    },
+    "preview_project_constraint_enabled_message": {
+        "description": "The message shown in preview project mode when student navigation constraints are enabled.",
+        "value": "Οι περιορισμοί πλοήγησης για τους μαθητές είναι ενεργοποιημένοι. Για προεπισκόπηση της ενότητας χωρίς κανένα περιορισμό,"
+    },
+    "common_click_here": {
+        "description": "the common text 'click here'",
+        "value": "πατήστε εδώ"
+    },
+    "preview_project_constraint_disabled_message": {
+        "description": "The message shown in preview project mode when student navigation constraints are enabled.",
+        "value": "Οι περιορισμοί πλοήγησης για τους μαθητές είναι απενεργοποιημένοι. Για προεπισκόπηση της ενότητας με όλους τους περιορισμούς,"
+    },
+    "question_instructions": {
+        "description": "The label for the step prompt when displaying flagged work for a step",
+        "value": "Ερώτηση/Οδηγίες"
+    },
+    "sample_responses": {
+        "description": "The label for the student work that has been flagged for a step",
+        "value": "Δειγματοληπτικές Απαντήσεις"
+    },
+    "anonymous": {
+        "description": "The label to specify that the team is anonymous",
+        "value": "Ανώνυμη"
+    },
+    "you_got_a_score_of": {
+        "description": "The text to display the score in the feedback popup",
+        "value": "Λάβατε βαθμολογία ίση με"
+    },
+    "out_of": {
+        "description": "The text to display the score in the feedback popup",
+        "value": "από"
+    },
+    "comments": {
+        "description": "The text to display the comments in the feedback popup",
+        "value": "Σχόλια"
+    },
+    "hints_viewAll": {
+        "description": "The message in the hints popup that says the student must view all hints before closing the hints popup",
+        "value": "Πρέπει να δείτε όλα τα {0} πριν κλείσετε."
+    },
+    "constraint_dialog_title": {
+        "description": "Title text for dialog alerting users about locked steps or activities (unable to visit because of navigation constraints)",
+        "value": "Το αντικείμενο είναι κλειδωμένο"
+    },
+    "constraint_allItems": {
+        "description": "Text to add after activity name when a constraint requires user to satisfy a requirement for all items in an activity",
+        "value": "(όλα τα αντικείμενα)"
+    },
+    "session_timeout_confirm": {
+        "description": "Text to display on button in the session timeout alert that users can press to renew session.",
+        "value": "ΜΕΙΝΕΤΕ ΣΥΝΔΕΔΕΜΕΝΟΙ!"
+    },
+    "constraint_message_mustCompleteStepBeforeAdvancing": {
+        "description": "The message shown to students telling them to complete work on the current step before moving on",
+        "value": "Πρέπει να ολοκληρώσετε το τρέχον {0} προτού συνεχίσετε."
+    },
+    "constraint_message_mustCompleteActivityBeforeAdvancing": {
+        "description": "The message shown to students telling them to complete work on the current activity before moving on",
+        "value": "Πρέπει να ολοκληρώσετε όλα τα αντικείμενα στην τρέχουσα {0} προτού συνεχίσετε."
+    },
+    "constraint_message_mustCompleteStepBeforeExiting": {
+        "description": "The message shown to students telling them to complete work on the current step before exiting",
+        "value": "Πρέπει να ολοκληρώστε την εργασία στο τρέχον {0} προτού φύγετε."
+    },
+    "constraint_message_mustCompleteActivityBeforeExiting": {
+        "description": "The message shown to students telling them to complete work on the current activity before exiting",
+        "value": "Πρέπει να ολοκληρώσετε όλα τα αντικείμενα στην τρέχουσα {0} προτού φύγετε."
+    },
+    "constraint_message_mustCompleteXBeforeVisiting": {
+        "description": "The message shown to students telling them to complete work on previous items before working on the selected step or activity",
+        "value": "Πρέπει να ολοκληρώσετε τα παρακάτω προτού δείτε αυτό το αντικείμενο:"
+    },
+    "constraint_message_mustVisitXBeforeVisiting": {
+        "description": "The message shown to students telling them to visit items before working on the selected step or activity",
+        "value": "Πρέπει να επισκεφτείτε τα παρακάτω προτού δείτε αυτό το αντικείμενο:"
+    },
+    "constraint_message_mustUnlockXBeforeVisiting": {
+        "description": "The message shown to students telling them to unlock (make visitable) previous items before working on the selected step or activity",
+        "value": "Πρέπει να ξεκλειδώσετε τα παρακάτω προτού δείτε αυτό το αντικείμενο:"
+    },
+    "classroomMonitor_title": {
+        "description": "Title for the classroom monitor",
+        "value": "Διαχειριστής τάξης"
+    },
+    "classroomMonitor_save": {
+        "description": "Text for save button in classroom monitor",
+        "value": "Αποθήκευση Αλλαγών"
+    },
+    "classroomMonitor_viewProject": {
+        "description": "Text for link to preview project in classroom monitor",
+        "value": "Εμφάνιση Ενότητας"
+    },
+    "classroomMonitor_progress": {
+        "description": "Text for step progress link in classroom monitor",
+        "value": "Ενότητα"
+    },
+    "classroomMonitor_monitor": {
+        "description": "Text for student progress link in classroom monitor",
+        "value": "Μαθητές"
+    },
+    "classroomMonitor_studentProgress_title": {
+        "description": "Title text for student progress link and section in classroom monitor",
+        "value": "Παρακολούθηση Μαθητών"
+    },
+    "classroomMonitor_search": {
+        "description": "Placeholder text for search inputs in the classroom monitor",
+        "value": "Αναζήτηση"
+    },
+    "classroomMonitor_workgroupsOnline": {
+        "description": "Text displaying number of workgroups currently online ({0} will be replaced with actual number)",
+        "value": "Ομάδες Εργασίες σε Σύνδεση: {0}"
+    },
+    "classroomMonitor_gradebook": {
+        "description": "Text for grade book link in classroom monitor",
+        "value": "Βιβλίο Βαθμολογίας"
+    },
+    "classroomMonitor_stepProgress_title": {
+        "description": "Title text for step progress link and section in classroom monitor",
+        "value": "Πρόοδος Βήματος"
+    },
+    "classroomMonitor_tools": {
+        "description": "Text for tools button in classroom monitor",
+        "value": "Εργαλεία"
+    },
+    "classroomMonitor_announcements": {
+        "description": "Text for announcements link in classroom monitor",
+        "value": "Ανακοινώσεις"
+    },
+    "classroomMonitor_notes": {
+        "description": "Text for run notes link in classroom monitor",
+        "value": "Οι Σημειώσεις μου"
+    },
+    "classroomMonitor_manage": {
+        "description": "Text for manage students link in classroom monitor",
+        "value": "Διαχείριση"
+    },
+    "classroomMonitor_manage_title": {
+        "description": "Title text for manage students link in classroom monitor",
+        "value": "Διαχείριση Μαθητών"
+    },
+    "classroomMonitor_idea_baskets": {
+        "description": "Text for idea baskets link in classroom monitor",
+        "value": "Καλάθια Ιδεών"
+    },
+    "classroomMonitor_gradebook_title": {
+        "description": "Title text for grade book link in classroom monitor",
+        "value": "Βιβλίο Βαθμολογίας Μαθητών"
+    },
+    "classroomMonitor_idea_basket_title": {
+        "description": "Text for idea basket title",
+        "value": "Καλάθι Ιδεών"
+    },
+    "classroomMonitor_idea_baskets_title": {
+        "description": "Text for idea baskets title",
+        "value": "Καλάθια Ιδεών"
+    },
+    "classroomMonitor_summary_report_title": {
+        "description": "Text for summary report title",
+        "value": "Περιληπτική Αναφορά"
+    },
+    "classroomMonitor_summary_report": {
+        "description": "Text for summary report",
+        "value": "Περιληπτική Αναφορά"
+    },
+    "classroomMonitor_exportWork": {
+        "description": "Text for export work link in classroom monitor",
+        "value": "Εξαγωγή Δουλειάς"
+    },
+    "classroomMonitor_allPeriods": {
+        "description": "Text for select all periods option in a period select dropdown in the classroom monitor",
+        "value": "Όλες οι Περίοδοι"
+    },
+    "classroomMonitor_periodLabel": {
+        "description": "Text for period options ({0} will be replaced by period name) in a select dropdown in the classroom monitor",
+        "value": "Περίοδος {0}"
+    },
+    "classroomMonitor_pause": {
+        "description": "Text for pause screens tool button in classroom monitor (will be preceded by 'pause' icon)",
+        "value": "Οθόνες"
+    },
+    "classroomMonitor_pause_on": {
+        "description": "Text for pause screens tool button (when pause is on) in classroom monitor (will be preceded by 'pause' icon)",
+        "value": "Οθόνες: ON"
+    },
+    "classroomMonitor_pause_off": {
+        "description": "Text for pause screens tool button (when pause is off) in classroom monitor (will be preceded by 'pause' icon)",
+        "value": "Οθόνες: OFF"
+    },
+    "classroomMonitor_pause_periods": {
+        "description": "Plural for the word 'periods' (will be preceded by number of select periods in the pause screens tool in the classroom monitor)",
+        "value": "περίοδοι"
+    },
+    "classroomMonitor_studentProgress_headers_projectCompletion": {
+        "description": "Header text for the project completion column in the student progress table of classroom monitor",
+        "value": "Ολοκλήρωση Ενότητας"
+    },
+    "classroomMonitor_stepProgress_headers_nodeTitle": {
+        "description": "Header text for the step title column in the step progress table of classroom monitor",
+        "value": "Τίτλος"
+    },
+    "classroomMonitor_stepProgress_headers_stepCompletion": {
+        "description": "Header text for the step completion column in the step progress table of classroom monitor",
+        "value": "Ολοκλήρωση Βήματος"
+    },
+    "classroomMonitor_stepProgress_headers_studentsOnStep": {
+        "description": "Header text for the column column showing current number of students in the step progress table of classroom monitor",
+        "value": "Στο Βήμσ"
+    },
+    "classroomMonitor_stepProgress_headers_maxScore": {
+        "description": "Header text for the max score column in the step progress table of classroom monitor",
+        "value": "Μέγιστη Βαθμολογία"
+    },
+    "classroomMonitor_stepProgress_totalCompletion": {
+        "description": "Label text for the total step completion display in the classroom monitor",
+        "value": "Συνολική Ολοκλήρωση:"
+    },
+    "classroomMonitor_studentProgress_headers_workgroup": {
+        "description": "Header text for the workgroup column in the student progress table of classroom monitor",
+        "value": "Ομάδα"
+    },
+    "classroomMonitor_studentProgress_headers_score": {
+        "description": "Header text for the total score column in the student progress table of classroom monitor",
+        "value": "Βαθμολογία"
+    },
+    "classroomMonitor_grading_search": {
+        "description": "Placeholder text for the search input in grade by step and grade by student tables of classroom monitor",
+        "value": "Αναζήτηση Εργασίας Μαθητών"
+    },
+    "classroomMonitor_stepProgress_viewStepWork": {
+        "description": "Title text to show on links to view step work in the classroom monitor",
+        "value": "Εμφάνιση Εργασίας Βήματος"
+    },
+    "classroomMonitor_grading_latestWork": {
+        "description": "Header text for student work that is the most recent revision in the classroom monitor",
+        "value": "Τελευταία Απάντηση"
+    },
+    "authoring_imsettings_text_required": {
+        "description": "The help text in the Idea Manager settings for the lock icon on the 'text' idea attribute.",
+        "value": "To <span style='font-weight:bold;'>κείμενο</span> χαρακτηριστικό είναι το βασικό στοιχείο κάθε ιδέας και δεν μπορεί να διαγραφεί."
+    },
+    "constraint_message_xMustHaveStatusY": {
+        "description": "The message shown to students telling them that the steps shown below must have 'statusType' set to 'statusValue' before they can work on the selected step",
+        "value": "Τα παρακάτω πρέπει να έχουν '{0}' ίσο με '{1}' ώστε να είστε σε θέση να δείτε το αντικείμενο:"
+    },
+    "constraint_message_mustCreateXIdeaBasketIdeasOnThisStepBeforeAdvancingZero": {
+        "description": "The message shown to students telling them they need to create one idea on the step before they can proceed. They have not created any ideas on the step.",
+        "value": "Πρέπει να δημιουργήσετε τουλάχιστον {0} {1} στο '{2} {3}' προκειμένου να συνεχίσετε. Δεν έχετε δημιουργήσει καμμία {4} σε αυτό το {5}"
+    },
+    "constraint_message_mustCreateXIdeaBasketIdeasOnThisStepBeforeAdvancing": {
+        "description": "The message shown to students telling them they need to create multiple ideas on the step before they can proceed. They have not created enough ideas on the step.",
+        "value": "Πρέπει να δημιουργήσετε τουλάχιστον {0} {1} στο '{2} {3}' προκειμένου να συνεχίσετε. Έχετε δημιουργήσει μόνο {4} {5} σε αυτό το {6}."
+    },
+    "session_timeout_warning": {
+        "description": "Warning text to display to users in the session timeout alert.",
+        "value": "Έχετε μείνει αδρανής για πολύ ώρα. Αν δεν ανανεώσετε την συνεδρίασή σας τώρα, θα αποσυνδεθείτε από το WISE."
+    },
+    "session_timeout_message": {
+        "description": "Text to display to display to users when there session timed out and they have been logged out of WISE.",
+        "value": "Έχετε μείνει αδρανής για πολύ ώρα και αποσυνδεθήκατε. Παρακαλώ συνδεθείτε ξανά για να συνεχίσετε."
+    },
+    "session_timeout_title": {
+        "description": "Title text for the session timeout alert.",
+        "value": "Λήξη χρονικού ορίου συνεδρίας"
+    },
+    "classroomMonitor_run": {
+        "description": "Text displaying the ID of the current run in the classroom monitor ({0} will be replaced by ID number)",
+        "value": "#{0}"
+    },
+    "classroomMonitor_showClassroom": {
+        "description": "Text for show classroom link in classroom monitor",
+        "value": "Προβολή στην τάξη"
+    },
+    "classroomMonitor_runSettings": {
+        "description": "Text for run settings link in classroom monitor",
+        "value": "Εκτέλεση των ρυθμίσεων"
+    },
+    "classroomMonitor_pause_title": {
+        "description": "Title text for pause screens tool button in classroom monitor",
+        "value": "Πάγωμα στις Οθόνες των Μαθητών"
+    },
+    "classroomMonitor_pause_selectPeriods": {
+        "description": "Label text for pause screens select period control in classroom monitor",
+        "value": "Επιλογή Περιόδου (-ων)"
+    },
+    "classroomMonitor_pause_message_label": {
+        "description": "Label text for pause screens message to show students input field in classroom monitor",
+        "value": "Μήνυμα για εμφάνιση:"
+    },
+    "classroomMonitor_pause_message_default": {
+        "description": "Default message to show students when teacher pauses their screens using the classroom monitor",
+        "value": "Ο Εκπαιδευτικός έχει παγώσει την οθόνη σας"
+    },
+    "classroomMonitor_pause_noneSelected": {
+        "description": "Text to show when no periods are selected in the pause screens tool the classroom monitor",
+        "value": "Δεν έχει γίνει καμμια επιλογή"
+    },
+    "classroomMonitor_studentProgress_viewStudentWork": {
+        "description": "Title text to show on links to view student work in the classroom monitor",
+        "value": "Εμφάνιση Εργασίας Μαθητών"
+    },
+    "classroomMonitor_studentProgress_headers_online": {
+        "description": "Header text for the table column showing whether workgroup is online in the student progress table of classroom monitor",
+        "value": "Σε σύνδεση"
+    },
+    "classroomMonitor_studentProgress_headers_period": {
+        "description": "Header text for the period table column in the student progress table of classroom monitor",
+        "value": "Περίοδος"
+    },
+    "classroomMonitor_studentProgress_workgroupOnline": {
+        "description": "Text indicating that workgroup is online in the classroom monitor (only shown to screen readers)",
+        "value": "Η Ομάδα είναι συνδεδεμένη"
+    },
+    "classroomMonitor_studentProgress_workgroupOffline": {
+        "description": "Text indicating that workgroup is offline in the classroom monitor (only shown to screen readers)",
+        "value": "Η Ομάδα είναι αποσυνδεδεμένη"
+    },
+    "classroomMonitor_studentProgress_totalCompletion": {
+        "description": "Label text for the total student completion display in the classroom monitor",
+        "value": "Συνολική Ολοκλήρωση:"
+    },
+    "classroomMonitor_studentProgress_headers_currentStep": {
+        "description": "Header text for the column showing current step a workgroup is on in the student progress table of classroom monitor",
+        "value": "Τελευταίο Βήμα"
+    },
+    "classroomMonitor_studentProgress_headers_timeSpent": {
+        "description": "Header text for the column showing time spent on the current step in the student progress table of classroom monitor",
+        "value": "Χρόνος που ξοδεύτηκε"
+    },
+    "classroomMonitor_grading_workRevision": {
+        "description": "Header text for student work that is not that most recent revision in the classroom monitor ({0} will be replaced with revision number)",
+        "value": "Απάντηση #{0}"
+    },
+    "classroomMonitor_tableInfoText": {
+        "description": "Text for the information display at the bottom of classroom monitor tables ({0} will be replaced with number of items currently being shown)",
+        "value": "{0} καταχωρήσεις"
+    },
+    "classroomMonitor_grading_noResponse": {
+        "description": "Text to display when workgroup has not submitted any work for a step in the grading view of the classroom monitor",
+        "value": "Η ομάδα δεν έχει υποβάλλει καθόλου δουλειά για αυτό το βήμα."
+    },
+    "classroomMonitor_stepProgress_completionUnavaiable": {
+        "description": "Tooltip text to show when step completion percentage is not available for a step that can't be graded in the classroom monitor",
+        "value": "<p><b>Η ολοκλήρωση του βήματος δεν είναι διάθεσιμη γιατί:</b><ol><li> Είτε κανένας από τους μαθητές σας δεν έχει τρέξει την ενότητα ή</li><li>αΑυτή είναι μια παλαιότερη εκτέλεση η οποία άρχισε πριν το WISE ενεργοποιήσει την παρακολούθηση της προόδου των βημάτων<li><ol>"
+    },
+    "classroomMonitor_stepProgress_completionUnavaiable_gradable": {
+        "description": "Tooltip text to show when step completion percentage is not available for a step that can be graded in the classroom monitor",
+        "value": "<p><b>Η ολοκλήρωση του βήματος δεν είναι διάθεσιμη γιατί:</b><ol><li> Είτε κανένας από τους μαθητές σας δεν έχει τρέξει την ενότητα ή</li><li>αΑυτή είναι μια παλαιότερη εκτέλεση η οποία άρχισε πριν το WISE ενεργοποιήσει την παρακολούθηση της προόδου των βημάτων<li><ol>Μπορείτε να δείτε την εργασία των μαθητών επιλέγοντας τον τίτλο του βήματος."
     }
 }
