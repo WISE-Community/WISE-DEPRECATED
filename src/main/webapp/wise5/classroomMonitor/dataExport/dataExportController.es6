@@ -919,7 +919,8 @@ class DataExportController {
                 "Context",
                 "Category",
                 "Event",
-                "Event Data"
+                "Event Data",
+                "Response"
             ];
 
             var headerRow = [];
@@ -1190,7 +1191,44 @@ class DataExportController {
         // set the event data JSON
         row[columnNameToNumber["Event Data"]] = event;
 
+        // get the pretty printed representation of the event
+        var response = this.getEventResponse(event);
+
+        // set the response
+        row[columnNameToNumber["Response"]] = response;
+
         return row;
+    }
+
+    /**
+     * Get the pretty printed representation of the event
+     * @param event the event JSON object
+     * @return the pretty printed representation of the event
+     */
+    getEventResponse(event) {
+        
+        var response = " ";
+
+        if (event != null) {
+            if (event.event == "branchPathTaken") {
+                /*
+                 * this is a branch path taken event so we will show the title
+                 * of the first step in the branch path that was taken
+                 */
+                if (event.data != null && event.data.toNodeId != null) {
+
+                    // get the toNodeId
+                    var toNodeId = event.data.toNodeId;
+
+                    // get the step number and title of the toNodeId
+                    var stepTitle = this.ProjectService.getNodePositionAndTitleByNodeId(toNodeId);
+
+                    response = stepTitle;
+                }
+            }
+        }
+
+        return response;
     }
 
     exportNotebookItems(exportType) {

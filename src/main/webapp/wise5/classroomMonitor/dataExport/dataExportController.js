@@ -895,7 +895,7 @@ var DataExportController = function () {
                 var columnNameToNumber = {};
 
                 // an array of column names
-                var columnNames = ["#", "Workgroup ID", "WISE ID 1", "WISE ID 2", "WISE ID 3", "Class Period", "Project ID", "Project Name", "Run ID", "Start Date", "End Date", "Event ID", "Server Timestamp", "Client Timestamp", "Node ID", "Component ID", "Component Part Number", "Step Title", "Component Type", "Component Prompt", "Group Event Counter", "Context", "Category", "Event", "Event Data"];
+                var columnNames = ["#", "Workgroup ID", "WISE ID 1", "WISE ID 2", "WISE ID 3", "Class Period", "Project ID", "Project Name", "Run ID", "Start Date", "End Date", "Event ID", "Server Timestamp", "Client Timestamp", "Node ID", "Component ID", "Component Part Number", "Step Title", "Component Type", "Component Prompt", "Group Event Counter", "Context", "Category", "Event", "Event Data", "Response"];
 
                 var headerRow = [];
 
@@ -1166,7 +1166,47 @@ var DataExportController = function () {
             // set the event data JSON
             row[columnNameToNumber["Event Data"]] = event;
 
+            // get the pretty printed representation of the event
+            var response = this.getEventResponse(event);
+
+            // set the response
+            row[columnNameToNumber["Response"]] = response;
+
             return row;
+        }
+
+        /**
+         * Get the pretty printed representation of the event
+         * @param event the event JSON object
+         * @return the pretty printed representation of the event
+         */
+
+    }, {
+        key: "getEventResponse",
+        value: function getEventResponse(event) {
+
+            var response = " ";
+
+            if (event != null) {
+                if (event.event == "branchPathTaken") {
+                    /*
+                     * this is a branch path taken event so we will show the title
+                     * of the first step in the branch path that was taken
+                     */
+                    if (event.data != null && event.data.toNodeId != null) {
+
+                        // get the toNodeId
+                        var toNodeId = event.data.toNodeId;
+
+                        // get the step number and title of the toNodeId
+                        var stepTitle = this.ProjectService.getNodePositionAndTitleByNodeId(toNodeId);
+
+                        response = stepTitle;
+                    }
+                }
+            }
+
+            return response;
         }
     }, {
         key: "exportNotebookItems",
