@@ -41,9 +41,9 @@ function buildTable_Properties() {
 				var description = View.prototype.i18n[View.prototype.i18n.defaultLocale][key+".description"];
 				translationTable += "<tr class='translationRow'>\n<td class='cell_key'>"+key+"</td>\n<td>"+description+"</td>\n<td><script type=\"text/plain\" style=\"display:block\">"+value+"</script></td>\n";
 				if (View.prototype.i18n[currentLanguage][key]) {
-					translationTable += "<td class='cell_currentLanguage'><textarea style='height:100%;width:100%' id='"+key+"'>"+View.prototype.i18n[currentLanguage][key]+"</textarea></td>\n";
+					translationTable += "<td class='cell_currentLanguage'><textarea style='height:100%;width:100%' id='"+key+"' class='foreignText'>"+View.prototype.i18n[currentLanguage][key]+"</textarea></td>\n";
 				} else {
-					translationTable += "<td class='cell_currentLanguage'><textarea style='height:100%;width:100%' id='"+key+"'></textarea></td>\n";
+					translationTable += "<td class='cell_currentLanguage'><textarea style='height:100%;width:100%' id='"+key+"' class='foreignText'></textarea></td>\n";
 				}		
 			}
 			translationTable += "</tr>\n\n";                      
@@ -120,7 +120,7 @@ View.prototype.parseData_Properties = function(data) {
    }
    eval(parsed);
    return map;
-}
+};
 
 /**
  * Synchronously retrieves specified locale properties mapping file
@@ -138,45 +138,3 @@ View.prototype.retrieveLocale_Properties = function(locale,projectType) {
 			error:function(){}
 	});	
 };
-
-/*
-$(document).ready(function() {
-
-  View.prototype.i18n[View.prototype.i18n.defaultLocale] = {};
-  View.prototype.retrieveLocale(View.prototype.i18n.defaultLocale);
-
-  View.prototype.i18n[currentLanguage] = {};
-  View.prototype.retrieveLocale(currentLanguage);
-
-  buildTable();
-  $("#heading").append(" ").append(projectType);
-});
-*/
-/*
-$(document).ready(function() {  
-	// add supported locales to selectable drop-down list
-	for (var i=0; i<View.prototype.i18n.supportedLocales.length; i++) { 
-		var supportedLocale = View.prototype.i18n.supportedLocales[i];
-		if (supportedLocale != "en") {
-			$("#currentLanguageSelect").append("<option id='"+supportedLocale+"' value='"+supportedLocale+"'>"+localeToHumanReadableLanguage(supportedLocale)+" ("+supportedLocale+") "+"</option");
-		}
-	}
-
-	// print default and supported locales
-	$("#defaultLocale").append(View.prototype.i18n.defaultLocale + " (" + localeToHumanReadableLanguage(View.prototype.i18n.defaultLocale) + ")");
-	// fetch translation files for all supported locales and set them to View.prototype.i18n[locale] array
-	for (var i=0; i < View.prototype.i18n.supportedLocales.length; i++) {
-		var locale = View.prototype.i18n.supportedLocales[i];
-		View.prototype.i18n[locale] = {};
-		View.prototype.retrieveLocale(locale);
-	};
-
-	$("#currentLanguageSelect").change(function() {
-		// user changed currentLanguage, so we need to build and display the table
-		currentLanguage = $(this).find(":selected").val()
-		buildTable();
-	});
-
-	$("#heading").append(" ").append(projectType);
-});
-*/

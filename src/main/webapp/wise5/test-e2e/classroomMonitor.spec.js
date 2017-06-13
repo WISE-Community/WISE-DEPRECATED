@@ -54,12 +54,12 @@ describe('WISE Classroom Monitor', function () {
                 expect(browser.getTitle()).toEqual('WISE Classroom Monitor');
 
                 // check for elements on the page
-                expect(element(by.xpath('//button[@aria-label="Classroom Monitor menu"]')).isPresent()).toBeTruthy();
+                expect(element(by.xpath('//button[@aria-label="Main Menu"]')).isPresent()).toBeTruthy();
                 expect(element(by.xpath('//a[@aria-label="Grading & Feedback"]')).isPresent()).toBeTruthy();
                 expect(element(by.xpath('//a[@aria-label="Student Summary"]')).isPresent()).toBeTruthy();
                 expect(element(by.xpath('//md-switch[@aria-label="Lock student screens switch"]')).isPresent()).toBeTruthy();
 
-                var notificationButton = element(by.xpath('//button[@aria-label="View notifications"]'));
+                var notificationButton = element(by.xpath('//button[@aria-label="Alerts"]'));
                 var notificationMenu = element(by.cssContainingText('.md-open-menu-container', 'Alerts'));
                 expect(notificationMenu.getAttribute('aria-hidden')).toEqual("true"); // Notification menu should be hidden
 
@@ -69,7 +69,7 @@ describe('WISE Classroom Monitor', function () {
                 element(by.xpath('//body')).click();
                 expect(notificationMenu.getAttribute('aria-hidden')).toEqual("true"); // Notification menu should be hidden
 
-                var accountButton = element(by.xpath('//button[@aria-label="Open user menu"]'));
+                var accountButton = element(by.xpath('//button[@aria-label="User Menu"]'));
                 expect(accountButton.isPresent()).toBeTruthy();
 
                 var filterByWorkgroup = element(by.xpath('//workgroup-select'));
