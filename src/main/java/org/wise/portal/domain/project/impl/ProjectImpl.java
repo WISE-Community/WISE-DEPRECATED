@@ -128,7 +128,7 @@ public class ProjectImpl implements Project {
     @JoinColumn(name = "metadata_fk", nullable = true, unique = true)
     protected ProjectMetadata metadataObj = null;
 
-	@Column(name = "metadata", nullable = true)
+	@Column(name = "metadata", length = 5120000, columnDefinition = "mediumtext")
 	protected String metadata;
 
 	@Column(name = "modulePath", nullable = false)
