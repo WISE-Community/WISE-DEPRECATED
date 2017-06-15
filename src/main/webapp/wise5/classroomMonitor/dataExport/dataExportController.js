@@ -29,6 +29,10 @@ var DataExportController = function () {
         this.UtilService = UtilService;
         this.exportStepSelectionType = "exportAllSteps";
         this.exportType = null; // type of export: [latestWork, allWork, events]
+        this.componentTypeToComponentService = {};
+
+        this.exportScores = false;
+        this.exportComments = false;
 
         // get the project
         // create the mapping of node id to order for the import project
@@ -113,6 +117,8 @@ var DataExportController = function () {
                 this.exportNotifications();
             } else if (exportType === "studentAssets") {
                 this.exportStudentAssets();
+            } else if (exportType === "oneWorkgroupPerRow") {
+                this.exportOneWorkgroupPerRow();
             }
         }
 
@@ -291,9 +297,9 @@ var DataExportController = function () {
 
                 // make the file name
                 if (exportType === "allStudentWork") {
-                    fileName = "all_work_" + runId + ".csv";
+                    fileName = runId + "_all_work.csv";
                 } else if (exportType === "latestStudentWork") {
-                    fileName = "latest_work_" + runId + ".csv";
+                    fileName = runId + "_latest_work.csv";
                 }
 
                 // generate the csv file and have the client download it
@@ -361,13 +367,12 @@ var DataExportController = function () {
 
             if (componentState.serverSaveTime != null) {
                 // get the server save time
-                var serverSaveTime = new Date(componentState.serverSaveTime);
 
-                if (serverSaveTime != null) {
-                    // get the time stamp string e.g. Wed Apr 06 2016 9:05:38 AM
-                    var serverSaveTimeString = serverSaveTime.toDateString() + " " + serverSaveTime.toLocaleTimeString();
-                    row[columnNameToNumber["Server Timestamp"]] = serverSaveTimeString;
-                }
+                // get the time stamp as a pretty printed date time string
+                var formattedDateTime = this.UtilService.convertMillisecondsToFormattedDateTime(componentState.serverSaveTime);
+
+                // set the time stamp string e.g. Wed Apr 06 2016 9:05:38 AM
+                row[columnNameToNumber["Server Timestamp"]] = formattedDateTime;
             }
 
             if (componentState.clientSaveTime != null) {
@@ -1003,7 +1008,7 @@ var DataExportController = function () {
                     }
                 }
 
-                var fileName = "events_" + runId;
+                var fileName = runId + "_events.csv";
 
                 // generate the csv file and have the client download it
                 _this3.generateCSVFile(rows, fileName);
@@ -1219,7 +1224,7 @@ var DataExportController = function () {
 
                 var csvString = ""; // resulting csv string
 
-                exportFilename = "notebook_" + runId + ".csv";
+                exportFilename = runId + "_notebook.csv";
 
                 var COLUMN_INDEX_LOCAL_NOTEBOOK_ITEM_ID = 1;
                 var COLUMN_INDEX_NODE_ID = 2;
@@ -1249,9 +1254,9 @@ var DataExportController = function () {
                             return false;
                         }
                     }).reverse();
-                    exportFilename = "latest_notebook_items_" + runId + ".csv";
+                    exportFilename = runId + "_latest_notebook_items.csv";
                 } else if (exportType === "allNotebookItems") {
-                    exportFilename = "all_notebook_items_" + runId + ".csv";
+                    exportFilename = runId + "_all_notebook_items.csv";
                 }
 
                 for (var rowIndex = 0; rowIndex < result.length; rowIndex++) {
@@ -1333,7 +1338,7 @@ var DataExportController = function () {
 
                 var csvString = ""; // resulting csv string
 
-                exportFilename = "notifications_" + runId + ".csv";
+                exportFilename = runId + "_notifications.csv";
 
                 var COLUMN_INDEX_NODE_ID = 1;
                 var COLUMN_INDEX_COMPONENT_ID = 2;
@@ -1626,6 +1631,805 @@ var DataExportController = function () {
                 // open the preview step in a new tab
                 window.open(previewStepURL);
             }
+        }
+
+        /**
+         * Create a csv export file with one workgroup per row
+         */
+
+    }, {
+        key: "exportOneWorkgroupPerRow",
+        value: function exportOneWorkgroupPerRow() {
+            var _this6 = this;
+
+            // get the steps that were selected
+            var selectedNodes = this.getSelectedNodesToExport();
+
+            /*
+             * holds the mappings from nodeid or nodeid-componentid to a boolean
+             * value of whether the node was selected
+             * example
+             * selectedNodesMap["node3"] = true
+             * selectedNodesMap["node4-wt38sdf1d3"] = true
+             */
+            var selectedNodesMap = null;
+
+            if (this.exportStepSelectionType === "exportSelectSteps") {
+                if (selectedNodes == null || selectedNodes.length == 0) {
+                    /*
+                     * the user did not select any steps to export so we will not
+                     * generate the export
+                     */
+                    alert('Please select a step to export.');
+                    return;
+                } else {
+                    /*
+                     * the user has selected some steps/components so we will
+                     * generate a selected nodes map
+                     */
+                    selectedNodesMap = this.getSelectedNodesMap(selectedNodes);
+                }
+            }
+
+            // request the student data from the server and then generate the export
+            this.TeacherDataService.getExport("oneWorkgroupPerRow", selectedNodes).then(function (result) {
+
+                // the rows in the export
+                var rows = [];
+
+                // get the project id
+                var projectId = _this6.ConfigService.getProjectId();
+
+                // get the project title
+                var projectTitle = _this6.ProjectService.getProjectTitle();
+
+                // get the run id
+                var runId = _this6.ConfigService.getRunId();
+
+                var startDate = "";
+
+                var endDate = "";
+
+                // get the column ids that we will use for this export
+                var columnIds = _this6.getColumnIdsForOneWorkgroupPerRow(selectedNodesMap);
+
+                // get all the step node ids
+                var nodeIds = _this6.ProjectService.getFlattenedProjectAsNodeIds();
+
+                // the headers for the description row
+                var descriptionRowHeaders = ["Workgroup ID", "WISE ID 1", "WISE ID 2", "WISE ID 3", "Class Period", "Project ID", "Project Name", "Run ID", "Start Date", "End Date"];
+
+                // generate the mapping from column id to column index
+                var columnIdToColumnIndex = _this6.getColumnIdToColumnIndex(columnIds, descriptionRowHeaders);
+
+                // generate the top rows that contain the header cells
+                var topRows = _this6.getOneWorkgroupPerRowTopRows(columnIds, columnIdToColumnIndex, descriptionRowHeaders);
+
+                // add the top rows
+                rows = rows.concat(topRows);
+
+                // get the workgroups in the class
+                var workgroups = _this6.ConfigService.getClassmateUserInfosSortedByWorkgroupId();
+
+                // loop through all the workgroups
+                for (var w = 0; w < workgroups.length; w++) {
+
+                    // get a workgroup
+                    var workgroup = workgroups[w];
+
+                    if (workgroup != null) {
+
+                        /*
+                         * Create the row for the workgroup and fill each cell with
+                         * a space " ".
+                         * The array length will be equal to the number of
+                         * description header columns plus a column for the vertical
+                         * headers plus all the columns for the steps/components.
+                         */
+                        var workgroupRow = new Array(descriptionRowHeaders.length + 1 + columnIds.length);
+                        workgroupRow.fill(" ");
+
+                        // get the workgroup information
+                        var workgroupId = workgroup.workgroupId;
+                        var periodName = workgroup.periodName;
+                        var userInfo = _this6.ConfigService.getUserInfoByWorkgroupId(workgroupId);
+
+                        // get the WISE IDs
+                        var wiseIds = _this6.ConfigService.getWISEIds(workgroupId);
+                        var wiseId1 = wiseIds[0];
+                        var wiseId2 = wiseIds[1];
+                        var wiseId3 = wiseIds[2];
+
+                        workgroupRow[columnIdToColumnIndex["Workgroup ID"]] = workgroupId;
+
+                        if (wiseId1 != null) {
+                            workgroupRow[columnIdToColumnIndex["WISE ID 1"]] = wiseId1;
+                        }
+
+                        if (wiseId2 != null) {
+                            workgroupRow[columnIdToColumnIndex["WISE ID 2"]] = wiseId2;
+                        }
+
+                        if (wiseId3 != null) {
+                            workgroupRow[columnIdToColumnIndex["WISE ID 3"]] = wiseId3;
+                        }
+
+                        workgroupRow[columnIdToColumnIndex["Class Period"]] = periodName;
+                        workgroupRow[columnIdToColumnIndex["Project ID"]] = projectId;
+                        workgroupRow[columnIdToColumnIndex["Project Name"]] = projectTitle;
+                        workgroupRow[columnIdToColumnIndex["Run ID"]] = runId;
+                        workgroupRow[columnIdToColumnIndex["Start Date"]] = startDate;
+                        workgroupRow[columnIdToColumnIndex["End Date"]] = endDate;
+
+                        // loop through all the steps
+                        for (var n = 0; n < nodeIds.length; n++) {
+                            var nodeId = nodeIds[n];
+
+                            // get all the components in the step
+                            var components = _this6.ProjectService.getComponentsByNodeId(nodeId);
+
+                            if (components != null) {
+
+                                // loop through all the components
+                                for (var c = 0; c < components.length; c++) {
+                                    var component = components[c];
+
+                                    if (component != null) {
+                                        var componentId = component.id;
+
+                                        if (_this6.exportComponent(selectedNodesMap, nodeId, componentId)) {
+                                            // the researcher wants to export this component
+
+                                            // get the column prefix
+                                            var columnIdPrefix = nodeId + "-" + componentId;
+
+                                            // get the latest component state
+                                            var componentState = _this6.TeacherDataService.getLatestComponentStateByWorkgroupIdNodeIdAndComponentId(workgroupId, nodeId, componentId);
+
+                                            if (componentState != null) {
+
+                                                // get the component service for the given component type
+                                                var componentService = _this6.getComponentService(componentState.componentType);
+
+                                                var studentDataString = " ";
+
+                                                if (componentService != null && componentService.getStudentDataString != null) {
+                                                    // there is a getStudentDataString function for this component type
+
+                                                    // get the student data string
+                                                    studentDataString = componentService.getStudentDataString(componentState);
+
+                                                    // get the student data string with the html tags removed
+                                                    studentDataString = _this6.UtilService.removeHTMLTags(studentDataString);
+
+                                                    // replace " with ""
+                                                    studentDataString = studentDataString.replace(/"/g, '""');
+                                                } else {
+                                                    /*
+                                                     * there is a getStudentDataString function for this component type
+                                                     * so we will just show the JSON string
+                                                     */
+                                                    studentDataString = componentState.studentData;
+                                                }
+
+                                                if (_this6.exportStudentWorkIds) {
+                                                    // we are exporting student work ids
+                                                    workgroupRow[columnIdToColumnIndex[columnIdPrefix + "-studentWorkId"]] = componentState.id;
+                                                }
+
+                                                if (_this6.exportStudentWorkTimestamps) {
+                                                    // we are exporting student work timestamps
+
+                                                    if (componentState.serverSaveTime != null) {
+                                                        // get the time stamp as a pretty printed date time string
+                                                        var formattedDateTime = _this6.UtilService.convertMillisecondsToFormattedDateTime(componentState.serverSaveTime);
+
+                                                        // set the time stamp string e.g. Wed Apr 06 2016 9:05:38 AM
+                                                        workgroupRow[columnIdToColumnIndex[columnIdPrefix + "-studentWorkTimestamp"]] = formattedDateTime;
+                                                    }
+                                                }
+
+                                                // set the student data string
+                                                workgroupRow[columnIdToColumnIndex[columnIdPrefix + "-studentWork"]] = studentDataString;
+
+                                                if (_this6.exportScores || _this6.exportComments) {
+                                                    // we are exporting scores or comments
+
+                                                    // get the latest score and comment annotation
+                                                    var latestComponentAnnotations = _this6.AnnotationService.getLatestComponentAnnotations(nodeId, componentId, workgroupId);
+
+                                                    if (latestComponentAnnotations != null) {
+                                                        var scoreAnnotation = latestComponentAnnotations.score;
+                                                        var commentAnnotation = latestComponentAnnotations.comment;
+
+                                                        if (scoreAnnotation != null) {
+
+                                                            if (_this6.exportScoreTimestamps) {
+                                                                // we are exporting score timestamps
+
+                                                                // get the score timestamp as a pretty printed date time
+                                                                var scoreTimestamp = _this6.UtilService.convertMillisecondsToFormattedDateTime(scoreAnnotation.serverSaveTime);
+
+                                                                // set the score timestamp
+                                                                workgroupRow[columnIdToColumnIndex[columnIdPrefix + "-scoreTimestamp"]] = scoreTimestamp;
+                                                            }
+
+                                                            if (_this6.exportScores) {
+                                                                // we are exporting scores
+
+                                                                if (scoreAnnotation.data != null && scoreAnnotation.data.value != null) {
+
+                                                                    var scoreValue = scoreAnnotation.data.value;
+
+                                                                    // set the score
+                                                                    workgroupRow[columnIdToColumnIndex[columnIdPrefix + "-score"]] = scoreValue;
+                                                                }
+                                                            }
+                                                        }
+
+                                                        if (commentAnnotation != null) {
+
+                                                            if (_this6.exportCommentTimestamps) {
+                                                                // we are exporting comment timestamps
+
+                                                                // get the comment timestamp as a pretty printed date time
+                                                                var commentTimestamp = _this6.UtilService.convertMillisecondsToFormattedDateTime(commentAnnotation.serverSaveTime);
+
+                                                                // set the comment timestamp
+                                                                workgroupRow[columnIdToColumnIndex[columnIdPrefix + "-commentTimestamp"]] = commentTimestamp;
+                                                            }
+
+                                                            if (_this6.exportComments) {
+                                                                // we are exporting comments
+
+                                                                if (commentAnnotation.data != null && commentAnnotation.data.value != null) {
+                                                                    var commentValue = commentAnnotation.data.value;
+
+                                                                    // set the comment
+                                                                    workgroupRow[columnIdToColumnIndex[columnIdPrefix + "-comment"]] = commentValue;
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
+                            if (_this6.exportNode(selectedNodesMap, nodeId)) {
+                                // the researcher wants to export this step
+
+                                if (_this6.ProjectService.isBranchPoint(nodeId)) {
+                                    /*
+                                     * this step is a branch point so we will
+                                     * display which path the student went to
+                                     */
+
+                                    var eventType = 'branchPathTaken';
+
+                                    /*
+                                     * get the latest branchPathTaken event for this
+                                     * step
+                                     */
+                                    var latestBranchPathTakenEvent = _this6.TeacherDataService.getLatestEventByWorkgroupIdAndNodeIdAndType(workgroupId, nodeId, eventType);
+
+                                    if (latestBranchPathTakenEvent != null && latestBranchPathTakenEvent.data != null && latestBranchPathTakenEvent.data.toNodeId != null) {
+
+                                        // get the step that the student branched to
+                                        var toNodeId = latestBranchPathTakenEvent.data.toNodeId;
+
+                                        // get the title of the step
+                                        var stepTitle = _this6.ProjectService.getNodePositionAndTitleByNodeId(toNodeId);
+
+                                        workgroupRow[columnIdToColumnIndex[nodeId + "-branchPath"]] = stepTitle;
+                                    } else {
+                                        workgroupRow[columnIdToColumnIndex[nodeId + "-branchPath"]] = " ";
+                                    }
+                                }
+                            }
+                        }
+
+                        // add this workgroup's row to the array of all rows
+                        rows.push(workgroupRow);
+                    }
+                }
+
+                // create the file name
+                var fileName = runId + "_one_workgroup_per_row.csv";
+
+                // generate the csv file and have the client download it
+                _this6.generateCSVFile(rows, fileName);
+            });
+        }
+
+        /**
+         * Get the column ids for the One Workgroup Per Row export
+         * @param selectedNodesMap the nodes that were selected
+         * @return an array of column ids. the column ids will be in the format
+         * nodeId-componentId-studentWork
+         * nodeId-componentId-score
+         * nodeId-componentId-comment
+         */
+
+    }, {
+        key: "getColumnIdsForOneWorkgroupPerRow",
+        value: function getColumnIdsForOneWorkgroupPerRow(selectedNodesMap) {
+            var columnIds = [];
+
+            // get all the step node ids in order
+            var nodeIds = this.ProjectService.getFlattenedProjectAsNodeIds();
+
+            if (nodeIds != null) {
+
+                // loop through all the step node ids
+                for (var n = 0; n < nodeIds.length; n++) {
+                    var nodeId = nodeIds[n];
+
+                    // get the components in the step
+                    var components = this.ProjectService.getComponentsByNodeId(nodeId);
+
+                    if (components != null) {
+
+                        // loop through all the components in the step
+                        for (var c = 0; c < components.length; c++) {
+                            var component = components[c];
+
+                            if (component != null) {
+                                var componentId = component.id;
+
+                                if (this.exportComponent(selectedNodesMap, nodeId, componentId)) {
+                                    /*
+                                     * the component was selected so we will create column
+                                     * ids for it
+                                     */
+
+                                    var columnIdPrefix = nodeId + "-" + componentId;
+
+                                    if (this.exportStudentWorkIds) {
+                                        /*
+                                         * we are exporting student work ids so we
+                                         * will create the column id for the student
+                                         * work id
+                                         */
+                                        columnIds.push(columnIdPrefix + "-studentWorkId");
+                                    }
+
+                                    if (this.exportStudentWorkTimestamps) {
+                                        /*
+                                         * we are exporting timestamps so we will
+                                         * create the column id for the timestamp
+                                         */
+                                        columnIds.push(columnIdPrefix + "-studentWorkTimestamp");
+                                    }
+
+                                    // create the column id for the studentWork
+                                    columnIds.push(columnIdPrefix + "-studentWork");
+
+                                    if (this.exportScoreTimestamps) {
+                                        /*
+                                         * we are exporting score timestamps so we
+                                         * will create the column id for the score
+                                         * timestamp
+                                         */
+                                        columnIds.push(columnIdPrefix + "-scoreTimestamp");
+                                    }
+
+                                    if (this.exportScores) {
+                                        // we are exporting scores so we will create the column id for the score
+                                        columnIds.push(columnIdPrefix + "-score");
+                                    }
+
+                                    if (this.exportCommentTimestamps) {
+                                        /*
+                                         * we are exporting comment timestamps so we
+                                         * will create the column id for the comment
+                                         * timestamp
+                                         */
+                                        columnIds.push(columnIdPrefix + "-commentTimestamp");
+                                    }
+
+                                    if (this.exportComments) {
+                                        // we are exporting comments so we will create the column id for the comment
+                                        columnIds.push(columnIdPrefix + "-comment");
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    if (this.exportNode(selectedNodesMap, nodeId)) {
+                        // the step was selected
+
+                        if (this.ProjectService.isBranchPoint(nodeId)) {
+                            /*
+                             * the step is a branch point so we will create a column
+                             * for it
+                             */
+                            columnIds.push(nodeId + "-branchPath");
+                        }
+                    }
+                }
+            }
+
+            return columnIds;
+        }
+
+        /**
+         * Create mappings from column id to column index so that we can easily
+         * insert cell values into the correct column when we fill in the row
+         * for a workgroup
+         * @param columnIds an array of column ids in the order that the
+         * associated columns will appear in the export
+         * @param descriptionRowHeaders an array of headers in the description row
+         * @return an object that contains mappings from column id to column index
+         */
+
+    }, {
+        key: "getColumnIdToColumnIndex",
+        value: function getColumnIdToColumnIndex(columnIds, descriptionRowHeaders) {
+
+            /*
+             * the student work columns will start after the description header
+             * columns and vertical headers column
+             */
+            var numberOfColumnsToShift = descriptionRowHeaders.length + 1;
+
+            var columnIdToColumnIndex = {};
+
+            /*
+             * loop through all the description columns
+             * Workgroup ID
+             * WISE ID 1
+             * WISE ID 2
+             * WISE ID 3
+             * Class Period
+             * Project ID
+             * Project Name
+             * Run ID
+             * Start Date
+             * End Date
+             */
+            for (var d = 0; d < descriptionRowHeaders.length; d++) {
+                // get the description column
+                var descriptionRowHeader = descriptionRowHeaders[d];
+
+                // set the column index for the description column
+                columnIdToColumnIndex[descriptionRowHeader] = d;
+            }
+
+            // generate the header row by looping through all the column names
+            for (var c = 0; c < columnIds.length; c++) {
+
+                // get a column name
+                var columnId = columnIds[c];
+
+                if (columnId != null) {
+                    /*
+                     * Add a mapping from column name to column index. The columns
+                     * for the components will start after the blank columns and
+                     * after the column that contains the vertical headers for the
+                     * top rows. We need to add +1 for the vertical headers column
+                     * which contains the values Step Title, Component Part Number,
+                     * Component Type, Prompt, Node ID, Component ID, Description.
+                     */
+                    columnIdToColumnIndex[columnId] = numberOfColumnsToShift + c;
+                }
+            }
+
+            return columnIdToColumnIndex;
+        }
+
+        /**
+         * Get the top rows in the One Workgroup Per Row export
+         * @param columnIds an array of column ids
+         * @param columnIdToColumnIndex an object containing mappings from column id
+         * to column index
+         * @param descriptionRowHeaders an array containing the description row
+         * headers
+         * @return an array of of the top rows. each top row is also an array
+         */
+
+    }, {
+        key: "getOneWorkgroupPerRowTopRows",
+        value: function getOneWorkgroupPerRowTopRows(columnIds, columnIdToColumnIndex, descriptionRowHeaders) {
+
+            // get the total number of columns in a row
+            var numColumns = descriptionRowHeaders.length + 1 + columnIds.length;
+
+            // create the top rows
+            var stepTitleRow = new Array(numColumns);
+            var componentPartNumberRow = new Array(numColumns);
+            var componentTypeRow = new Array(numColumns);
+            var componentPromptRow = new Array(numColumns);
+            var nodeIdRow = new Array(numColumns);
+            var componentIdRow = new Array(numColumns);
+            var columnIdRow = new Array(numColumns);
+            var descriptionRow = new Array(numColumns);
+
+            /*
+             * populate the top rows with a space. we do this so that it makes it
+             * easier to view in the export. for example if there is a cell with
+             * text in it and a blank cell to the right of it, excel will display
+             * the text overflow into the blank cell. if we have cells with " "
+             * instead of "", this overflow will not occur.
+             */
+            stepTitleRow.fill(" ");
+            componentPartNumberRow.fill(" ");
+            componentTypeRow.fill(" ");
+            componentPromptRow.fill(" ");
+            nodeIdRow.fill(" ");
+            componentIdRow.fill(" ");
+            columnIdRow.fill(" ");
+            descriptionRow.fill(" ");
+
+            //  set the cell values for the vertical header column
+            stepTitleRow[descriptionRowHeaders.length] = "Step Title";
+            componentPartNumberRow[descriptionRowHeaders.length] = "Component Part Number";
+            componentTypeRow[descriptionRowHeaders.length] = "Component Type";
+            componentPromptRow[descriptionRowHeaders.length] = "Prompt";
+            nodeIdRow[descriptionRowHeaders.length] = "Node ID";
+            componentIdRow[descriptionRowHeaders.length] = "Component ID";
+            columnIdRow[descriptionRowHeaders.length] = "Column ID";
+            descriptionRow[descriptionRowHeaders.length] = "Description";
+
+            // fill in the headers in the description row
+            for (var d = 0; d < descriptionRowHeaders.length; d++) {
+                descriptionRow[d] = descriptionRowHeaders[d];
+            }
+
+            // get all the step node ids in the order that they appear in the project
+            var nodeIds = this.ProjectService.getFlattenedProjectAsNodeIds();
+
+            if (nodeIds != null) {
+
+                // loop through all the step node ids
+                for (var n = 0; n < nodeIds.length; n++) {
+                    var nodeId = nodeIds[n];
+
+                    // get a step title
+                    var stepTitle = this.ProjectService.getNodePositionAndTitleByNodeId(nodeId);
+
+                    // get the components in the step
+                    var components = this.ProjectService.getComponentsByNodeId(nodeId);
+
+                    if (components != null) {
+
+                        // loop through all the components in the step
+                        for (var c = 0; c < components.length; c++) {
+                            var component = components[c];
+
+                            if (component != null) {
+                                var componentId = component.id;
+
+                                // get the column prefix
+                                var columnIdPrefix = nodeId + "-" + componentId;
+
+                                // get the prompt with the html tags removed
+                                var prompt = this.UtilService.removeHTMLTags(component.prompt);
+
+                                // replace " with ""
+                                prompt = prompt.replace(/"/g, '""');
+
+                                if (prompt == "") {
+                                    prompt = " ";
+                                }
+
+                                if (this.exportStudentWorkIds) {
+                                    // we are exporting student work ids
+
+                                    // fill in the top 7 cells in the column for this component score
+                                    stepTitleRow[columnIdToColumnIndex[columnIdPrefix + "-studentWorkId"]] = stepTitle;
+                                    componentPartNumberRow[columnIdToColumnIndex[columnIdPrefix + "-studentWorkId"]] = c + 1;
+                                    componentTypeRow[columnIdToColumnIndex[columnIdPrefix + "-studentWorkId"]] = component.type;
+                                    componentPromptRow[columnIdToColumnIndex[columnIdPrefix + "-studentWorkId"]] = prompt;
+                                    nodeIdRow[columnIdToColumnIndex[columnIdPrefix + "-studentWorkId"]] = nodeId;
+                                    componentIdRow[columnIdToColumnIndex[columnIdPrefix + "-studentWorkId"]] = componentId;
+                                    columnIdRow[columnIdToColumnIndex[columnIdPrefix + "-studentWorkId"]] = columnIdPrefix + "-studentWorkId";
+                                    descriptionRow[columnIdToColumnIndex[columnIdPrefix + "-studentWorkId"]] = "Student Work ID";
+                                }
+
+                                if (this.exportStudentWorkTimestamps) {
+                                    // we are exporting timestamps
+
+                                    // fill in the top 7 cells in the column for this component score
+                                    stepTitleRow[columnIdToColumnIndex[columnIdPrefix + "-studentWorkTimestamp"]] = stepTitle;
+                                    componentPartNumberRow[columnIdToColumnIndex[columnIdPrefix + "-studentWorkTimestamp"]] = c + 1;
+                                    componentTypeRow[columnIdToColumnIndex[columnIdPrefix + "-studentWorkTimestamp"]] = component.type;
+                                    componentPromptRow[columnIdToColumnIndex[columnIdPrefix + "-studentWorkTimestamp"]] = prompt;
+                                    nodeIdRow[columnIdToColumnIndex[columnIdPrefix + "-studentWorkTimestamp"]] = nodeId;
+                                    componentIdRow[columnIdToColumnIndex[columnIdPrefix + "-studentWorkTimestamp"]] = componentId;
+                                    columnIdRow[columnIdToColumnIndex[columnIdPrefix + "-studentWorkTimestamp"]] = columnIdPrefix + "-studentWorkTimestamp";
+                                    descriptionRow[columnIdToColumnIndex[columnIdPrefix + "-studentWorkTimestamp"]] = "Student Work Timestamp";
+                                }
+
+                                // fill in the top 7 cells in the column for this component student work
+                                stepTitleRow[columnIdToColumnIndex[columnIdPrefix + "-studentWork"]] = stepTitle;
+                                componentPartNumberRow[columnIdToColumnIndex[columnIdPrefix + "-studentWork"]] = c + 1;
+                                componentTypeRow[columnIdToColumnIndex[columnIdPrefix + "-studentWork"]] = component.type;
+                                componentPromptRow[columnIdToColumnIndex[columnIdPrefix + "-studentWork"]] = prompt;
+                                nodeIdRow[columnIdToColumnIndex[columnIdPrefix + "-studentWork"]] = nodeId;
+                                componentIdRow[columnIdToColumnIndex[columnIdPrefix + "-studentWork"]] = componentId;
+                                columnIdRow[columnIdToColumnIndex[columnIdPrefix + "-studentWork"]] = columnIdPrefix + "-studentWork";
+                                descriptionRow[columnIdToColumnIndex[columnIdPrefix + "-studentWork"]] = "Student Work";
+
+                                if (this.exportScoreTimestamps) {
+                                    // we are exporting score timestamps
+
+                                    // fill in the top 7 cells in the column for this component score timestamp
+                                    stepTitleRow[columnIdToColumnIndex[columnIdPrefix + "-scoreTimestamp"]] = stepTitle;
+                                    componentPartNumberRow[columnIdToColumnIndex[columnIdPrefix + "-scoreTimestamp"]] = c + 1;
+                                    componentTypeRow[columnIdToColumnIndex[columnIdPrefix + "-scoreTimestamp"]] = component.type;
+                                    componentPromptRow[columnIdToColumnIndex[columnIdPrefix + "-scoreTimestamp"]] = prompt;
+                                    nodeIdRow[columnIdToColumnIndex[columnIdPrefix + "-scoreTimestamp"]] = nodeId;
+                                    componentIdRow[columnIdToColumnIndex[columnIdPrefix + "-scoreTimestamp"]] = componentId;
+                                    columnIdRow[columnIdToColumnIndex[columnIdPrefix + "-scoreTimestamp"]] = columnIdPrefix + "-scoreTimestamp";
+                                    descriptionRow[columnIdToColumnIndex[columnIdPrefix + "-scoreTimestamp"]] = "Score Timestamp";
+                                }
+
+                                if (this.exportScores) {
+                                    // we are exporting scores
+
+                                    // fill in the top 7 cells in the column for this component score
+                                    stepTitleRow[columnIdToColumnIndex[columnIdPrefix + "-score"]] = stepTitle;
+                                    componentPartNumberRow[columnIdToColumnIndex[columnIdPrefix + "-score"]] = c + 1;
+                                    componentTypeRow[columnIdToColumnIndex[columnIdPrefix + "-score"]] = component.type;
+                                    componentPromptRow[columnIdToColumnIndex[columnIdPrefix + "-score"]] = prompt;
+                                    nodeIdRow[columnIdToColumnIndex[columnIdPrefix + "-score"]] = nodeId;
+                                    componentIdRow[columnIdToColumnIndex[columnIdPrefix + "-score"]] = componentId;
+                                    columnIdRow[columnIdToColumnIndex[columnIdPrefix + "-score"]] = columnIdPrefix + "-score";
+                                    descriptionRow[columnIdToColumnIndex[columnIdPrefix + "-score"]] = "Score";
+                                }
+
+                                if (this.exportCommentTimestamps) {
+                                    // we are exporting comment timestamps
+
+                                    // fill in the top 7 cells in the column for this component comment timestamp
+                                    stepTitleRow[columnIdToColumnIndex[columnIdPrefix + "-commentTimestamp"]] = stepTitle;
+                                    componentPartNumberRow[columnIdToColumnIndex[columnIdPrefix + "-commentTimestamp"]] = c + 1;
+                                    componentTypeRow[columnIdToColumnIndex[columnIdPrefix + "-commentTimestamp"]] = component.type;
+                                    componentPromptRow[columnIdToColumnIndex[columnIdPrefix + "-commentTimestamp"]] = prompt;
+                                    nodeIdRow[columnIdToColumnIndex[columnIdPrefix + "-commentTimestamp"]] = nodeId;
+                                    componentIdRow[columnIdToColumnIndex[columnIdPrefix + "-commentTimestamp"]] = componentId;
+                                    columnIdRow[columnIdToColumnIndex[columnIdPrefix + "-commentTimestamp"]] = columnIdPrefix + "-commentTimestamp";
+                                    descriptionRow[columnIdToColumnIndex[columnIdPrefix + "-commentTimestamp"]] = "Comment Timestamp";
+                                }
+
+                                if (this.exportComments) {
+                                    // we are exporting comments
+
+                                    // fill in the top 7 cells in the column for this component comment
+                                    stepTitleRow[columnIdToColumnIndex[columnIdPrefix + "-comment"]] = stepTitle;
+                                    componentPartNumberRow[columnIdToColumnIndex[columnIdPrefix + "-comment"]] = c + 1;
+                                    componentTypeRow[columnIdToColumnIndex[columnIdPrefix + "-comment"]] = component.type;
+                                    componentPromptRow[columnIdToColumnIndex[columnIdPrefix + "-comment"]] = prompt;
+                                    nodeIdRow[columnIdToColumnIndex[columnIdPrefix + "-comment"]] = nodeId;
+                                    componentIdRow[columnIdToColumnIndex[columnIdPrefix + "-comment"]] = componentId;
+                                    columnIdRow[columnIdToColumnIndex[columnIdPrefix + "-comment"]] = columnIdPrefix + "-comment";
+                                    descriptionRow[columnIdToColumnIndex[columnIdPrefix + "-comment"]] = "Comment";
+                                }
+                            }
+                        }
+                    }
+
+                    if (this.ProjectService.isBranchPoint(nodeId)) {
+                        // this step is a branch point
+
+                        // fill in the top 7 cells in the column for this step branch path taken
+                        stepTitleRow[columnIdToColumnIndex[nodeId + "-branchPath"]] = stepTitle;
+                        componentPartNumberRow[columnIdToColumnIndex[nodeId + "-branchPath"]] = " ";
+                        componentTypeRow[columnIdToColumnIndex[nodeId + "-branchPath"]] = " ";
+                        componentPromptRow[columnIdToColumnIndex[nodeId + "-branchPath"]] = " ";
+                        nodeIdRow[columnIdToColumnIndex[nodeId + "-branchPath"]] = nodeId;
+                        componentIdRow[columnIdToColumnIndex[nodeId + "-branchPath"]] = " ";
+                        columnIdRow[columnIdToColumnIndex[nodeId + "-branchPath"]] = nodeId + "-branchPath";
+                        descriptionRow[columnIdToColumnIndex[nodeId + "-branchPath"]] = "Branch Path";
+                    }
+                }
+            }
+
+            var topRows = [];
+
+            // add all the top rows
+            topRows.push(stepTitleRow);
+            topRows.push(componentPartNumberRow);
+            topRows.push(componentTypeRow);
+            topRows.push(componentPromptRow);
+            topRows.push(nodeIdRow);
+            topRows.push(componentIdRow);
+            topRows.push(columnIdRow);
+            topRows.push(descriptionRow);
+
+            return topRows;
+        }
+
+        /**
+         * Get the component service for a component type
+         * @param componentType the component type
+         * @return the component service or null if it doesn't exist
+         */
+
+    }, {
+        key: "getComponentService",
+        value: function getComponentService(componentType) {
+
+            var componentService = null;
+
+            if (componentType != null) {
+
+                /*
+                 * check our mapping of component type to component service to see
+                 * if we have already retrieved the component service before
+                 */
+                componentService = this.componentTypeToComponentService[componentType];
+
+                if (componentService == null) {
+                    /*
+                     * we have not retrieved this component service before so we
+                     * will get it
+                     */
+                    var componentService = this.$injector.get(componentType + 'Service');
+
+                    /*
+                     * save the component service to our mapping for easy retrieval
+                     * in the future
+                     */
+                    this.componentTypeToComponentService[componentType] = componentService;
+                }
+            }
+
+            return componentService;
+        }
+
+        /**
+         * Check if we want to export this node
+         * @param selectedNodesMap a mapping of node id to boolean value of whether
+         * the researcher has checked the node
+         * @param nodeId the node id
+         * @return whether the node was checked
+         */
+
+    }, {
+        key: "exportNode",
+        value: function exportNode(selectedNodesMap, nodeId) {
+            if (selectedNodesMap == null || this.isNodeSelected(selectedNodesMap, nodeId)) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        /**
+         * Check if we want to export this component
+         * @param selectedNodesMap a mapping of node id to boolean value of whether
+         * the researcher has checked the node
+         * @param nodeId the node id
+         * @param componentId the component id
+         * @return whether the component was checked
+         */
+
+    }, {
+        key: "exportComponent",
+        value: function exportComponent(selectedNodesMap, nodeId, componentId) {
+            if (selectedNodesMap == null || this.isComponentSelected(selectedNodesMap, nodeId, componentId)) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        /**
+         * The "One Workgroup Per Row" button was clicked so we will display the
+         * view for it
+         */
+
+    }, {
+        key: "oneWorkgroupPerRowClicked",
+        value: function oneWorkgroupPerRowClicked() {
+
+            // set the export type
+            this.exportType = 'oneWorkgroupPerRow';
         }
     }]);
 

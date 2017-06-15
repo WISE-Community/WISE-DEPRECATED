@@ -107,7 +107,7 @@ public class TeacherDataController {
                     String studentUploadsBaseDir = wiseProperties.getProperty("studentuploads_base_dir");
                     String sep = System.getProperty("file.separator");
                     String runStudentAssetsDir = studentUploadsBaseDir + sep + runId.toString() + sep;
-                    String zipFileName = "student_uploads_" + runId.toString() + ".zip";
+                    String zipFileName = runId.toString() + "_student_uploads.zip";
                     response.setContentType("application/zip");
                     response.addHeader("Content-Disposition", "attachment;filename=\"" + zipFileName + "\"");
 

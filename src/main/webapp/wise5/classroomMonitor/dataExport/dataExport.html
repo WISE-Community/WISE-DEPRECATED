@@ -2,6 +2,8 @@
     <div class="l-constrained" layout="column">
         <div style="float:right">
             <div ng-show="dataExportController.exportType == null">
+
+                <md-button class="md-raised" ng-click="dataExportController.oneWorkgroupPerRowClicked()" translate="exportOneWorkgroupPerRow" id="downloadOneWorkgroupPerRowButton"></md-button><br/>
                 <md-button class="md-raised" ng-click="dataExportController.exportType = 'latestStudentWork'" translate="exportLatestStudentWork" id="downloadLatestStudentWorkButton"></md-button><br/>
                 <md-button class="md-raised" ng-click="dataExportController.exportType = 'allStudentWork'" translate="exportAllStudentWork" id="downloadStudentWorkButton"></md-button><br/>
                 <md-button class="md-raised" ng-click="dataExportController.exportType = 'events'" translate="exportEvents" id="downloadStudentEventsButton"></md-button><br/>
@@ -10,10 +12,23 @@
                 <md-button class="md-raised" ng-click="dataExportController.export('notifications')" translate="exportNotifications" id="downloadNotificationsButton"></md-button><br/>
                 <md-button class="md-raised" ng-click="dataExportController.export('studentAssets')" translate="exportStudentAssets" id="downloadStudentAssetsButton"></md-button>
             </div>
-
-            <div ng-show="dataExportController.exportType == 'latestStudentWork' || dataExportController.exportType == 'allStudentWork' || dataExportController.exportType == 'events'">
+            <div ng-show="dataExportController.exportType == 'latestStudentWork' || dataExportController.exportType == 'allStudentWork' || dataExportController.exportType == 'events' || dataExportController.exportType == 'oneWorkgroupPerRow' ">
                 <h4>{{ dataExportController.exportType | translate }}</h4>
-                <md-radio-group ng-show="dataExportController.exportType == 'latestStudentWork' || dataExportController.exportType == 'allStudentWork' || dataExportController.exportType == 'events'"
+                <div ng-show="dataExportController.exportType == 'oneWorkgroupPerRow'">
+                    <br/>
+                    <md-checkbox ng-model="dataExportController.exportStudentWorkIds">{{ 'includeStudentWorkIDs' | translate }}</md-checkbox>
+                    <br/>
+                    <md-checkbox ng-model="dataExportController.exportStudentWorkTimestamps">{{ 'includeStudentWorkTimestamps' | translate }}</md-checkbox>
+                    <br/>
+                    <md-checkbox ng-model="dataExportController.exportScores">{{ 'includeScores' | translate }}</md-checkbox>
+                    <br/>
+                    <md-checkbox ng-model="dataExportController.exportScoreTimestamps">{{ 'includeScoreTimestamps' | translate }}</md-checkbox>
+                    <br/>
+                    <md-checkbox ng-model="dataExportController.exportComments">{{ 'includeComments' | translate }}</md-checkbox>
+                    <br/>
+                    <md-checkbox ng-model="dataExportController.exportCommentTimestamps">{{ 'includeCommentTimestamps' | translate }}</md-checkbox>
+                </div>
+                <md-radio-group ng-show="dataExportController.exportType == 'latestStudentWork' || dataExportController.exportType == 'allStudentWork' || dataExportController.exportType == 'events' ||  dataExportController.exportType == 'oneWorkgroupPerRow'"
                                 ng-model="dataExportController.exportStepSelectionType">
                     <md-radio-button value="exportAllSteps" class="md-primary">{{ 'exportAllSteps' | translate }}</md-radio-button>
                     <md-radio-button value="exportSelectSteps" class="md-primary">{{ 'exportSelectSteps' | translate }}</md-radio-button>

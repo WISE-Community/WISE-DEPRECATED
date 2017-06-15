@@ -763,6 +763,53 @@ var UtilService = function () {
             var lastIndex = subjectString.lastIndexOf(searchString, position);
             return lastIndex !== -1 && lastIndex === position;
         }
+
+        /**
+         * Sort the objects by server save time
+         * @param object1 an object
+         * @param object2 an object
+         * @return -1 if object1 server save time comes before object2 server save time
+         * 1 if object1 server save time comes after object2 server save time
+         * 0 if object1 server save time is equal to object2 server save time
+         */
+
+    }, {
+        key: "sortByServerSaveTime",
+        value: function sortByServerSaveTime(object1, object2) {
+
+            if (object1.serverSaveTime < object2.serverSaveTime) {
+                return -1;
+            } else if (object1.serverSaveTime > object2.serverSaveTime) {
+                return 1;
+            } else {
+                return 0;
+            }
+        }
+
+        /**
+         * Convert milliseconds since the epoch to a pretty printed date time
+         * @param milliseconds the milliseconds since the epoch
+         * @return a string containing the pretty printed date time
+         * example
+         * Wed Apr 06 2016 9:05:38 AM
+         */
+
+    }, {
+        key: "convertMillisecondsToFormattedDateTime",
+        value: function convertMillisecondsToFormattedDateTime(milliseconds) {
+
+            var dateTimeString = "";
+
+            // create a Date object with the milliseconds
+            var date = new Date(milliseconds);
+
+            if (date != null) {
+                // get the date time string e.g. Wed Apr 06 2016 9:05:38 AM
+                dateTimeString = date.toDateString() + " " + date.toLocaleTimeString();
+            }
+
+            return dateTimeString;
+        }
     }]);
 
     return UtilService;

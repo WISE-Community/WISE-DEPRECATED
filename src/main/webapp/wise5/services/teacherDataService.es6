@@ -9,7 +9,8 @@ class TeacherDataService {
                 ConfigService,
                 NotificationService,
                 ProjectService,
-                TeacherWebSocketService) {
+                TeacherWebSocketService,
+                UtilService) {
         this.$http = $http;
         this.$q = $q;
         this.$rootScope = $rootScope;
@@ -18,6 +19,7 @@ class TeacherDataService {
         this.NotificationService = NotificationService;
         this.ProjectService = ProjectService;
         this.TeacherWebSocketService = TeacherWebSocketService;
+        this.UtilService = UtilService;
 
         this.studentData = {
             componentStatesByWorkgroupId: {},
@@ -152,6 +154,15 @@ class TeacherDataService {
             let promise = deferred.promise;
             deferred.resolve([]);
             return promise;
+        } else if (exportType === "oneWorkgroupPerRow") {
+            let params = {};
+            params.runId = this.ConfigService.getRunId();
+            params.getStudentWork = true;
+            params.getAnnotations = true;
+            params.getEvents = true;
+            params.components = selectedNodes;
+
+            return this.retrieveStudentData(params);
         }
     }
 
@@ -344,6 +355,10 @@ class TeacherDataService {
 
                 if (resultData.events != null) {
                     // populate allEvents, eventsByWorkgroupId, and eventsByNodeId arrays
+
+                    // sort the events by server save time
+                    resultData.events.sort(this.UtilService.sortByServerSaveTime);
+
                     this.studentData.allEvents = resultData.events;
                     this.studentData.eventsByWorkgroupId = {};
                     this.studentData.eventsByNodeId = {};
@@ -726,6 +741,45 @@ class TeacherDataService {
             return eventsByNodeId.indexOf(n) != -1;
         });
     };
+
+    /**
+     * Get the latest event by workgroup id, node id, and event type
+     * @param workgroupId the workgroup id
+     * @param nodeId the node id
+     * @param eventType the event type
+     * @return the latest event with the matching parameters or null if
+     * no event is found with the matching parameters
+     */
+    getLatestEventByWorkgroupIdAndNodeIdAndType(workgroupId, nodeId, eventType) {
+
+        // get all the events for a workgroup id
+        var eventsByWorkgroupId = this.getEventsByWorkgroupId(workgroupId);
+
+        if (eventsByWorkgroupId != null) {
+
+            /*
+             * loop through all the events for the workgroup from newest to
+             * oldest
+             */
+            for (var e = eventsByWorkgroupId.length - 1; e >= 0; e--) {
+
+                // get an event
+                var event = eventsByWorkgroupId[e];
+
+                if (event != null) {
+                    if (event.nodeId == nodeId && event.event == eventType) {
+                        /*
+                         * the event parameters match the ones we are looking
+                         * for
+                         */
+                        return event;
+                    }
+                }
+            }
+        }
+
+        return null;
+    }
 
     getAnnotationsToWorkgroupId(workgroupId) {
         var annotationsToWorkgroupId = this.studentData.annotationsToWorkgroupId[workgroupId];
@@ -1114,7 +1168,8 @@ TeacherDataService.$inject = [
     'ConfigService',
     'NotificationService',
     'ProjectService',
-    'TeacherWebSocketService'
+    'TeacherWebSocketService',
+    'UtilService'
 ];
 
 export default TeacherDataService;
