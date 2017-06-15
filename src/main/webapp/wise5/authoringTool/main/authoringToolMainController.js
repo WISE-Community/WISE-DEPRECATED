@@ -61,6 +61,14 @@ var AuthoringToolMainController = function () {
             var previewProjectURL = this.ConfigService.getWISEBaseURL() + "/project/" + projectId;
             window.open(previewProjectURL);
         }
+    }, {
+        key: "goHome",
+        value: function goHome() {
+            // send the user to the teacher home page
+            var wiseBaseURL = this.ConfigService.getWISEBaseURL();
+            var teacherHomePageURL = wiseBaseURL + '/teacher';
+            window.location = teacherHomePageURL;
+        }
     }]);
 
     return AuthoringToolMainController;

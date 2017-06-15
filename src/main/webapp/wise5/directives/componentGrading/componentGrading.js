@@ -291,12 +291,12 @@ var ComponentGradingController = function () {
                     // save the annotation to the server
                     this.AnnotationService.saveAnnotation(annotation).then(function (result) {
                         /*let localAnnotation = result;
-                          if (localAnnotation != null) {
+                         if (localAnnotation != null) {
                             if (this.annotationId == null) {
                                 // set the annotation id if there was no annotation id
                                 this.annotationId = localAnnotation.id;
                             }
-                              this.processAnnotations();
+                             this.processAnnotations();
                         }*/
                     });
                 }

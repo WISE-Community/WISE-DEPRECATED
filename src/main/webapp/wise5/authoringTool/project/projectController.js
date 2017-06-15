@@ -49,6 +49,9 @@ var ProjectController = function () {
         this.advancedMode = false;
         this.showJSONAuthoring = false;
 
+        // process metadata
+        this.metadata = this.ProjectService.getProjectMetadata();
+
         // notify others that this project is being authored
         this.ProjectService.notifyAuthorProjectBegin(this.projectId);
 

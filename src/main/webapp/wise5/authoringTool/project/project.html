@@ -135,7 +135,6 @@
                 </summernote>
             </div>
             <div ng-show='projectController.advancedMode'>
-                <br/>
                 <span>{{ 'scriptFilename' | translate }}: </script><input type="text" size='30' ng-model="projectController.projectScriptFilename" ng-model-options="{ debounce: 1000 }" ng-change="projectController.projectScriptFilenameChanged()"/>
                 <button translate='CHOOSE' ng-click='projectController.chooseProjectScriptFilename()'></button>
                 <br/>
@@ -160,6 +159,7 @@
                     ng-if='item.order!==0'>
                     {{projectController.getNodePositionById(item.$key)}} {{projectController.getNodeTitleByNodeId(item.$key)}}
                 </h6>
+                    <!--
                 <h6 ng-if='item.order==0'
                     style='display:inline'>
                     <label translate="projectTitle"></label>: <input id="projectTitle" size='100' ng-model='projectController.projectTitle' ng-model-options='{ debounce: 500 }' ng-change='projectController.projectTitleChanged()'/>
@@ -167,6 +167,7 @@
                     <label ng-if='projectController.runId == null'>({{ 'RUN_ID' | translate }}: {{ 'none' | translate }})</label>
                     <label ng-if='projectController.runId != null'>({{ 'RUN_ID' | translate }}: {{projectController.runId}})</label>
                 </h6>
+                    -->
                 <button ng-show='(projectController.insertNodeMode && item.order!==0) || (projectController.insertGroupMode && item.order==0)'
                         ng-if='projectController.isGroupNode(item.$key)'
                         ng-click='projectController.insertInside(item.$key)' translate="insertInside"></button>

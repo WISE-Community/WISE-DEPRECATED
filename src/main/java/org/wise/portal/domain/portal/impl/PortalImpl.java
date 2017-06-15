@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -39,69 +39,49 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
- * TELS Portal implementation.
+ * WISE Portal settings
  * 
  * @author Hiroki Terashima
  */
 @Entity
-@Table(name = PortalImpl.DATA_STORE_NAME)
+@Table(name = "portal")
 public class PortalImpl implements Portal {
 
 	@Transient
 	private static final long serialVersionUID = 1L;
 
-	@Transient
-	public static final String DATA_STORE_NAME = "portal";
-
-	@Transient
-	private static final String COLUMN_NAME_SENDMAIL_PROPERTIES = "sendmail_properties";
-
-	@Transient
-	private static final String COLUMN_NAME_PORTAL_NAME = "portalname";
-
-	@Transient
-	private static final String COLUMN_NAME_SENDMAIL_ON_EXCEPTION = "sendmail_on_exception";
-	
-	@Transient
-	private static final String COLUMN_NAME_ADDRESS = "address";
-
-	@Transient
-	private static final String COLUMN_NAME_COMMENTS = "comments";
-
-	@Transient
-	private static final String COLUMN_NAME_SETTINGS = "settings";
-
-	@Transient
-	private static final String COLUMN_NAME_RUN_SURVEY_TEMPLATE = "run_survey_template";
-
-	@Transient
-	private static final String COLUMN_NAME_GOOGLE_MAP_KEY = "google_map_key";
-
-	@Column(name = COLUMN_NAME_PORTAL_NAME)
+	@Column(name = "portalname")
 	private String portalName;
 	
-	@Column(name = COLUMN_NAME_ADDRESS)
+	@Column(name = "address")
 	protected String address;
 	
-	@Column(name = COLUMN_NAME_SENDMAIL_ON_EXCEPTION)
+	@Column(name = "sendmail_on_exception")
 	private boolean isSendMailOnException;
 	
-	@Column(name = COLUMN_NAME_GOOGLE_MAP_KEY)
+	@Column(name = "google_map_key")
 	private String googleMapKey;
 	
-	@Column(name = COLUMN_NAME_SENDMAIL_PROPERTIES)
+	@Column(name = "sendmail_properties")
 	private Properties sendmailProperties;
 	
-	@Column(name = COLUMN_NAME_COMMENTS)
+	@Column(name = "comments")
 	private String comments;
 	
-	@Column(name = COLUMN_NAME_SETTINGS, length = 32768, columnDefinition = "text")
+	@Column(name = "settings", length = 32768, columnDefinition = "text")
 	private String settings;  // text (blob) 2^15
 
-	@Column(name = COLUMN_NAME_RUN_SURVEY_TEMPLATE, length = 32768, columnDefinition = "text")
+	@Column(name = "run_survey_template", length = 32768, columnDefinition = "text")
 	private String runSurveyTemplate;  // text (blob) 2^15
 
-    @Id
+	@Column(name = "projectMetadataSettings", length = 32768, columnDefinition = "text")
+	private String projectMetadataSettings;  // text (blob) 2^15
+
+	// default project metadata fields
+	@Transient
+	private String defaultProjectMetadataSettings = "{\"fields\":[{\"name\":\"Summary\",\"key\":\"summary\",\"type\":\"textarea\"},{\"name\":\"Language\",\"key\":\"language\",\"type\":\"radio\",\"choices\":[\"English\",\"Chinese (Simplified)\",\"Chinese (Traditional)\",\"Dutch\",\"German\",\"Greek\",\"Hebrew\",\"Japanese\",\"Korean\",\"Portuguese\",\"Spanish\",\"Thai\",\"Turkish\"]},{\"name\":\"Subject\",\"key\":\"subject\",\"type\":\"radio\",\"choices\":[\"Life Science\",\"Physical Science\",\"Earth Science\",\"General Science\",\"Biology\",\"Chemistry\",\"Physics\",\"Other\"]},{\"name\":\"Time Required to Complete Project\",\"key\":\"time\",\"type\":\"input\"},{\"name\":\"Supported Devices\",\"key\":\"supportedDevices\",\"type\":\"checkbox\",\"choices\":[\"PC\",\"Tablet\"]}],\"i18n\":{\"lifeScience\":{\"en\":\"Life Science\",\"ja\":\"ライフサイエンス\"},\"earthScience\":{\"en\":\"Earth Science\",\"ja\":\"地球科学\"},\"physicalScience\":{\"en\":\"Physical Science\",\"ja\":\"物理科学\",\"es\":\"ciencia física\"}}}";
+
+	@Id
     @GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "id", columnDefinition = "tinyint")
 	public Integer id = null;
@@ -111,14 +91,14 @@ public class PortalImpl implements Portal {
     protected Integer version = null;
 
 	/**
-	 * @return the sendEmailOnException
+	 * @return the sendEmailOnException value
 	 */
 	public boolean isSendMailOnException() {
 		return isSendMailOnException;
 	}
 
 	/**
-	 * @param sendEmailOnException the sendEmailOnException to set
+	 * @param isSendMailOnException the sendEmailOnException to set
 	 */
 	public void setSendMailOnException(boolean isSendMailOnException) {
 		this.isSendMailOnException = isSendMailOnException;
@@ -283,5 +263,31 @@ public class PortalImpl implements Portal {
 	@Override
 	public void setRunSurveyTemplate(String runSurveyTemplate) {
 		this.runSurveyTemplate = runSurveyTemplate;
+	}
+
+	/**
+	 * Get the project metadata string
+	 *
+	 * @return project metadata string
+	 */
+	public String getProjectMetadataSettings() {
+		return this.projectMetadataSettings;
+	}
+
+	/**
+	 * Set the project metadata string
+	 *
+	 * @param projectMetadataSettings project metadata setting string
+	 */
+	public void setProjectMetadataSettings (String projectMetadataSettings) {
+		this.projectMetadataSettings = projectMetadataSettings;
+	}
+
+	/**
+	 * Get the default project metadata settings
+	 * @return the default project metadata settings
+	 */
+	public String getDefaultProjectMetadataSettings() {
+		return this.defaultProjectMetadataSettings;
 	}
 }

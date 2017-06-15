@@ -503,6 +503,15 @@ public class WISE5AuthorProjectController {
             config.put("notifyProjectBeginURL", wiseBaseURL + "/project/notifyAuthorBegin/");
             config.put("notifyProjectEndURL", wiseBaseURL + "/project/notifyAuthorEnd/");
             config.put("getLibraryProjectsURL", wiseBaseURL + "/author/authorproject.html?command=projectList&projectPaths=&projectTag=library&wiseVersion=5");
+            // if login is not allowed, log out user and redirect them to the home page
+            try {
+                Portal portal = portalService.getById(new Integer(1));
+                String projectMetadataSettings = portal.getProjectMetadataSettings();
+                config.put("projectMetadataSettings", new JSONObject(projectMetadataSettings));
+            } catch (ObjectNotFoundException e) {
+                // if this fails, get the default project metadafields from wiseProperties
+                config.put("projectMetadataSettings", new JSONObject(wiseProperties.getProperty("defaultProjectMetadataSettings", "")));
+            }
 
             // add this teachers's info in config.userInfo.myUserInfo object
             JSONObject myUserInfo = new JSONObject();

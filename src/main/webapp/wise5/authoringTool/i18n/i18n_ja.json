@@ -34,7 +34,7 @@
     "fileSizeSmallToLarge": "ファイルサイズ 小->大",
     "fileSizeLargeToSmall": "ファイルサイズ 大->小",
     "howToChooseAmongAvailablePaths": "目標ステップ選択ロジック",
-    "inactiveSteps": "不使用のステップ",
+    "inactiveSteps": "使われていないステップ",
     "insertAfter": "この後に置く",
     "insertInside": "この中に置く",
     "manageAssets": "アセットをマネージ",

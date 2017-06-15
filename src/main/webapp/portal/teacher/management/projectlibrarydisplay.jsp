@@ -146,7 +146,9 @@
 														<div class="projectThumb" thumbUrl="${projectThumbMap[project.id]}"><img src='${contextPath}/<spring:theme code="project_thumb"/>' alt='thumb'></div>
 														<div class="summaryInfo">
 															<div class="basicInfo">
-																<c:if test="${project.metadata.subject != null && project.metadata.subject != ''}">${project.metadata.subject} | </c:if>
+																<c:if test="${project.metadata.subject != null && project.metadata.subject != ''}">
+																	<span class="subject">${project.metadata.subject}</span> |
+																</c:if>
 																<c:if test="${project.metadata.gradeRange != null && project.metadata.gradeRange != ''}"><spring:message code="teacher.projects.projectinfo.meta_grades" /> ${project.metadata.gradeRange} | </c:if>
 																<c:if test="${project.metadata.totalTime != null && project.metadata.totalTime != ''}">${project.metadata.totalTime} | </c:if>
 																<c:if test="${project.metadata.language != null && project.metadata.language != ''}">${project.metadata.language}</c:if>
@@ -1348,6 +1350,8 @@
 		</c:choose>
 	</div>
 </div>
+<span id="userLocale" style="display:none">${user.userDetails.language}</span>
+<span id="projectMetadataSettings" style="display:none">${projectMetadataSettings}</span>
 
 <div id="projectDetailDialog" style="overflow:hidden;" class="dialog"></div>
 <div id="shareDialog" class="dialog"></div>
@@ -1577,7 +1581,36 @@
 		totalActiveProjects = $('#activeProjects div.projectBox').length;
 		totalArchivedProjects = $('#archivedProjects div.projectBox').length;
 
-		$('.runBox').each(function(){
+		/*
+		// append subject locale translations so they can be filtered even when subject is in a different language.
+        var userLocale = $("#userLocale").html();
+        try {
+            var projectMetadataSettings = $("#projectMetadataSettings").html();  // get projectMetadataSettings
+            projectMetadataSettingsJSON = JSON.parse(projectMetadataSettings);
+            if (projectMetadataSettingsJSON != null && projectMetadataSettingsJSON.i18n != null) {
+                var i18nMapping = projectMetadataSettingsJSON.i18n;
+                $(".subject").each(function() {
+                    var subject = this.innerHTML;
+                    var i18nMappingContainingSubjectTextArray = Object.values(i18nMapping).filter(function(onei18nMapping) { return Object.values(onei18nMapping).indexOf(subject) != -1;});
+                    if (i18nMappingContainingSubjectTextArray != null && i18nMappingContainingSubjectTextArray.length > 0) {
+                        var i18nMappingContainingSubjectText = i18nMappingContainingSubjectTextArray[0]; // shouldn't be more than one, but if so, use the first one we find
+                        // now append this to the subject field as hidden span so it can be found when user tries to filter for this subject in other languages
+                        if (Object.values(i18nMappingContainingSubjectText) != null && Object.values(i18nMappingContainingSubjectText).length > 0) {
+                            // $(this).append(" <span>" + Object.values(i18nMappingContainingSubjectText).join(" ") + "</span>");
+                            // for some reason appending all the languages using above line
+							if (i18nMappingContainingSubjectText.en != null) {
+                                $(this).html(i18nMappingContainingSubjectText.en);
+							}
+                        }
+                    }
+                });
+            }
+        } catch (exception) {
+            // do nothing
+        }
+        */
+
+        $('.runBox').each(function(){
 			var target = $(this).parent(),
 				context = target.attr('id') == 'activeProjects' ? 'active' : 'archived',
 				rootIds = context == 'active' ? activeRootProjectIds : archivedRootProjectIds,
@@ -2445,4 +2478,5 @@
 			]
 		});
 	};
+
 </script>
