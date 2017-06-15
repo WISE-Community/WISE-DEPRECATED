@@ -2431,6 +2431,30 @@ var DataExportController = function () {
             // set the export type
             this.exportType = 'oneWorkgroupPerRow';
         }
+
+        /**
+         * Get the node position
+         * @param nodeId the node id
+         * @returns the node position
+         */
+
+    }, {
+        key: "getNodePositionById",
+        value: function getNodePositionById(nodeId) {
+            return this.ProjectService.getNodePositionById(nodeId);
+        }
+    }, {
+        key: "getNodeTitleByNodeId",
+
+
+        /**
+         * Get the node title for a node
+         * @param nodeId the node id
+         * @returns the node title
+         */
+        value: function getNodeTitleByNodeId(nodeId) {
+            return this.ProjectService.getNodeTitleByNodeId(nodeId);
+        }
     }]);
 
     return DataExportController;

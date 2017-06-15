@@ -2408,6 +2408,24 @@ class DataExportController {
         // set the export type
         this.exportType = 'oneWorkgroupPerRow';
     }
+
+    /**
+     * Get the node position
+     * @param nodeId the node id
+     * @returns the node position
+     */
+    getNodePositionById(nodeId) {
+        return this.ProjectService.getNodePositionById(nodeId);
+    };
+
+    /**
+     * Get the node title for a node
+     * @param nodeId the node id
+     * @returns the node title
+     */
+    getNodeTitleByNodeId(nodeId) {
+        return this.ProjectService.getNodeTitleByNodeId(nodeId);
+    };
 }
 
 DataExportController.$inject = [

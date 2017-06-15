@@ -49,7 +49,7 @@
                                     ng-model='projectItem.checked'
                                     ng-if='projectItem.order != 0 && projectItem.node.type != "group"' />
                         <h6 style='display: inline; cursor: pointer' ng-if='projectItem.order != 0'>
-                            {{projectItem.stepNumber}}: {{projectItem.node.title}}
+                            {{dataExportController.getNodePositionById(projectItem.node.id)}} {{dataExportController.getNodeTitleByNodeId(projectItem.node.id)}}
                         </h6>
                         <span style="cursor:pointer" ng-if='projectItem.node.type != "group"'
                                 ng-click='dataExportController.previewNode(projectItem.node)'>
