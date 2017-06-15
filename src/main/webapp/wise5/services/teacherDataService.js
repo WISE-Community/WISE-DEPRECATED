@@ -9,7 +9,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var TeacherDataService = function () {
-    function TeacherDataService($http, $q, $rootScope, AnnotationService, ConfigService, NotificationService, ProjectService, TeacherWebSocketService) {
+    function TeacherDataService($http, $q, $rootScope, AnnotationService, ConfigService, NotificationService, ProjectService, TeacherWebSocketService, UtilService) {
         var _this = this;
 
         _classCallCheck(this, TeacherDataService);
@@ -22,6 +22,7 @@ var TeacherDataService = function () {
         this.NotificationService = NotificationService;
         this.ProjectService = ProjectService;
         this.TeacherWebSocketService = TeacherWebSocketService;
+        this.UtilService = UtilService;
 
         this.studentData = {
             componentStatesByWorkgroupId: {},
@@ -161,6 +162,15 @@ var TeacherDataService = function () {
                 var promise = deferred.promise;
                 deferred.resolve([]);
                 return promise;
+            } else if (exportType === "oneWorkgroupPerRow") {
+                var _params2 = {};
+                _params2.runId = this.ConfigService.getRunId();
+                _params2.getStudentWork = true;
+                _params2.getAnnotations = true;
+                _params2.getEvents = true;
+                _params2.components = selectedNodes;
+
+                return this.retrieveStudentData(_params2);
             }
         }
 
@@ -373,6 +383,10 @@ var TeacherDataService = function () {
 
                     if (resultData.events != null) {
                         // populate allEvents, eventsByWorkgroupId, and eventsByNodeId arrays
+
+                        // sort the events by server save time
+                        resultData.events.sort(_this2.UtilService.sortByServerSaveTime);
+
                         _this2.studentData.allEvents = resultData.events;
                         _this2.studentData.eventsByWorkgroupId = {};
                         _this2.studentData.eventsByNodeId = {};
@@ -778,6 +792,48 @@ var TeacherDataService = function () {
             return eventsByWorkgroupId.filter(function (n) {
                 return eventsByNodeId.indexOf(n) != -1;
             });
+        }
+    }, {
+        key: 'getLatestEventByWorkgroupIdAndNodeIdAndType',
+
+
+        /**
+         * Get the latest event by workgroup id, node id, and event type
+         * @param workgroupId the workgroup id
+         * @param nodeId the node id
+         * @param eventType the event type
+         * @return the latest event with the matching parameters or null if
+         * no event is found with the matching parameters
+         */
+        value: function getLatestEventByWorkgroupIdAndNodeIdAndType(workgroupId, nodeId, eventType) {
+
+            // get all the events for a workgroup id
+            var eventsByWorkgroupId = this.getEventsByWorkgroupId(workgroupId);
+
+            if (eventsByWorkgroupId != null) {
+
+                /*
+                 * loop through all the events for the workgroup from newest to
+                 * oldest
+                 */
+                for (var e = eventsByWorkgroupId.length - 1; e >= 0; e--) {
+
+                    // get an event
+                    var event = eventsByWorkgroupId[e];
+
+                    if (event != null) {
+                        if (event.nodeId == nodeId && event.event == eventType) {
+                            /*
+                             * the event parameters match the ones we are looking
+                             * for
+                             */
+                            return event;
+                        }
+                    }
+                }
+            }
+
+            return null;
         }
     }, {
         key: 'getAnnotationsToWorkgroupId',
@@ -1216,7 +1272,7 @@ var TeacherDataService = function () {
     return TeacherDataService;
 }();
 
-TeacherDataService.$inject = ['$http', '$q', '$rootScope', 'AnnotationService', 'ConfigService', 'NotificationService', 'ProjectService', 'TeacherWebSocketService'];
+TeacherDataService.$inject = ['$http', '$q', '$rootScope', 'AnnotationService', 'ConfigService', 'NotificationService', 'ProjectService', 'TeacherWebSocketService', 'UtilService'];
 
 exports.default = TeacherDataService;
 //# sourceMappingURL=teacherDataService.js.map
