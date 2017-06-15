@@ -50,6 +50,9 @@ class ProjectController {
         this.advancedMode = false;
         this.showJSONAuthoring = false;
 
+        // process metadata
+        this.metadata = this.ProjectService.getProjectMetadata();
+
         // notify others that this project is being authored
         this.ProjectService.notifyAuthorProjectBegin(this.projectId);
 
@@ -457,11 +460,11 @@ class ProjectController {
                  * the user is trying to insert the selected node ids after
                  * itself so we will not allow that
                  */
-                 if (selectedNodeIds.length == 1) {
+                if (selectedNodeIds.length == 1) {
                     alert('You are not allowed to insert the selected item after itself.');
-                 } else if (selectedNodeIds.length > 1) {
+                } else if (selectedNodeIds.length > 1) {
                     alert('You are not allowed to insert the selected items after itself.');
-                 }
+                }
             } else {
                 // move the nodes after the node id
                 this.ProjectService.moveNodesAfter(selectedNodeIds, nodeId);

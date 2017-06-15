@@ -25,16 +25,20 @@ package org.wise.portal.presentation.web.controllers.teacher.management;
 
 import java.util.*;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.wise.portal.dao.ObjectNotFoundException;
+import org.wise.portal.domain.portal.Portal;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.offering.RunService;
+import org.wise.portal.service.portal.PortalService;
 import org.wise.portal.service.project.ProjectService;
 
 /**
@@ -51,6 +55,9 @@ public class LibraryController {
 	
 	@Autowired
 	private ProjectService projectService;
+
+	@Autowired
+	private PortalService portalService;
 
 	@Autowired
 	private RunService runService;
@@ -216,6 +223,14 @@ public class LibraryController {
 		modelMap.put("projectRunDateMap", projectRunDateMap);
 		modelMap.put("projectRunIdMap", projectRunIdMap);
 		modelMap.put("user", user);
+		try {
+			Portal portal = portalService.getById(new Integer(1));
+			String projectMetadataSettings = portal.getProjectMetadataSettings();
+			modelMap.put("projectMetadataSettings", projectMetadataSettings);
+		} catch (ObjectNotFoundException e) {
+			// if this fails, get the default project metada settings from wiseProperties
+			modelMap.put("projectMetadataSettings", wiseProperties.getProperty("defaultProjectMetadataSettings", ""));
+		}
 		return "teacher/management/library";
 	}
 

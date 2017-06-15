@@ -1,0 +1,18 @@
+<div ng-repeat='metadataField in projectInfoController.metadataAuthoring.fields'>
+    <span style="font-weight:bold">{{ metadataField.name }}: </span>
+    <textarea ng-if='metadataField.type == "textarea"' rows='3', cols='100' ng-model='projectInfoController.metadata[metadataField.key]' ng-model-options='{ debounce: 1000 }' ng-change='projectInfoController.save()' />
+    <input ng-if='metadataField.type == "input"' size='50' ng-model='projectInfoController.metadata[metadataField.key]' ng-model-options='{ debounce: 1000 }' ng-change='projectInfoController.save()' />
+    <div ng-if='metadataField.type == "radio"' ng-repeat='choice in metadataField.choices'>
+        <input type="radio"
+                class="md-primary"
+                ng-value='choice'
+                ng-checked='projectInfoController.metadataChoiceIsChecked(metadataField, choice)'
+                ng-click='projectInfoController.metadataRadioClicked(metadataField, choice)' /> {{ projectInfoController.getMetadataChoiceText(choice) }}
+    </div>
+    <div ng-if='metadataField.type == "checkbox"' ng-repeat='choice in metadataField.choices'>
+        <label>
+            <input type='checkbox' ng-model='metadataField.choicesMapping[choice]' ng-click='projectInfoController.metadataCheckboxClicked(metadataField, choice)' /> {{ projectInfoController.getMetadataChoiceText(choice) }}
+        </label>
+    </div>
+    <br/>
+</div>

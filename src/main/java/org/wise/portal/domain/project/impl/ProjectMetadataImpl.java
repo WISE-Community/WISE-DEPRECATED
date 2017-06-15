@@ -198,7 +198,7 @@ public class ProjectMetadataImpl implements ProjectMetadata, Serializable {
 	}
 
 	public String getSubject() {
-		return subject;
+		return this.subject;
 	}
 
 	public void setSubject(String subject) {

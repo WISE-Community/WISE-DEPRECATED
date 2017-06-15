@@ -59,6 +59,7 @@
     "PRINT": "Print",
     "PROJECT_ID": "Project ID",
     "PROJECT_ID_DISPLAY": "ID: {{id}}",
+    "PROJECT_INFO": "Project Info",
     "PROMPT": "Prompt",
     "QUESTION_LOWERCASE": "question",
     "QUESTIONS": "Questions",

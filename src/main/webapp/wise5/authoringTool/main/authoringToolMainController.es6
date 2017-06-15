@@ -41,7 +41,14 @@ class AuthoringToolMainController {
     previewProject(projectId) {
         let previewProjectURL = this.ConfigService.getWISEBaseURL() + "/project/" + projectId;
         window.open(previewProjectURL);
-    };
+    }
+
+    goHome() {
+        // send the user to the teacher home page
+        let wiseBaseURL = this.ConfigService.getWISEBaseURL();
+        let teacherHomePageURL = wiseBaseURL + '/teacher';
+        window.location = teacherHomePageURL;
+    }
 };
 
 AuthoringToolMainController.$inject = ['$state', 'ConfigService', 'ProjectService'];

@@ -47,6 +47,7 @@ import ProjectAssetController from './asset/projectAssetController';
 import ProjectAssetService from '../services/projectAssetService';
 import ProjectController from './project/projectController';
 import ProjectHistoryController from './history/projectHistoryController';
+import ProjectInfoController from './info/projectInfoController';
 import ProjectService from '../services/projectService';
 import SessionService from '../services/sessionService';
 import StudentAssetService from '../services/studentAssetService';
@@ -118,6 +119,7 @@ let authoringModule = angular.module('authoring', [
     .controller(ProjectAssetController.name, ProjectAssetController)
     .controller(ProjectController.name, ProjectController)
     .controller(ProjectHistoryController.name, ProjectHistoryController)
+    .controller(ProjectInfoController.name, ProjectInfoController)
     .controller(WISELinkAuthoringController.name, WISELinkAuthoringController)
     .config([
         '$urlRouterProvider',
@@ -230,6 +232,14 @@ let authoringModule = angular.module('authoring', [
                     templateUrl: 'wise5/authoringTool/asset/asset.html',
                     controller: 'ProjectAssetController',
                     controllerAs: 'projectAssetController',
+                    resolve: {
+                    }
+                })
+                .state('root.project.info', {
+                    url: '/info',
+                    templateUrl: 'wise5/authoringTool/info/info.html',
+                    controller: 'ProjectInfoController',
+                    controllerAs: 'projectInfoController',
                     resolve: {
                     }
                 })

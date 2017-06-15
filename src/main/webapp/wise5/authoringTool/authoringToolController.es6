@@ -59,6 +59,14 @@ class AuthoringToolController {
                 showToolbar: true,
                 active: true
             },
+            'root.project.info': {
+                name: this.$translate('PROJECT_INFO'),
+                label: this.$translate('PROJECT_INFO'),
+                icon: 'info',
+                type: 'primary',
+                showToolbar: true,
+                active: true
+            },
             'root.main': {
                 name: this.$translate('closeProject'),
                 label: this.$translate('closeProject'),

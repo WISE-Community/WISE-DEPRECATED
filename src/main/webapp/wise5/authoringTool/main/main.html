@@ -8,6 +8,7 @@
     <div class="l-constrained" layout="column">
         <div>
             <button id="createNewProjectButton" style="font-weight: bold; padding: 10px; display: inline-block;" ng-click="authoringToolMainController.createNewProject()" translate="createNewProject"></button>
+            <button id="goHomeButton" style="font-weight: bold; padding: 10px; display: inline-block;" ng-click="authoringToolMainController.goHome()" translate="backToTeacherHome"></button>
 
             <h3 translate="myProjectsHeading"></h3>
             <div class="projectItem" style="padding:2px" ng-repeat='project in authoringToolMainController.projects'>
