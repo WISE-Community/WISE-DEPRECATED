@@ -491,7 +491,7 @@ public class WISE5AuthorProjectController {
         JSONObject config = new JSONObject();
         User user = ControllerUtil.getSignedInUser();
         try {
-            String contextPath = request.getContextPath(); //get the context path e.g. /wise
+            String contextPath = request.getContextPath(); // get the context path e.g. /wise
             String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
             config.put("contextPath", contextPath);
             config.put("copyProjectURL", wiseBaseURL + "/project/copy");
@@ -503,15 +503,25 @@ public class WISE5AuthorProjectController {
             config.put("notifyProjectBeginURL", wiseBaseURL + "/project/notifyAuthorBegin/");
             config.put("notifyProjectEndURL", wiseBaseURL + "/project/notifyAuthorEnd/");
             config.put("getLibraryProjectsURL", wiseBaseURL + "/author/authorproject.html?command=projectList&projectPaths=&projectTag=library&wiseVersion=5");
-            // if login is not allowed, log out user and redirect them to the home page
+
+            // get project metadata settings
+            String projectMetadataSettings = null;
             try {
                 Portal portal = portalService.getById(new Integer(1));
-                String projectMetadataSettings = portal.getProjectMetadataSettings();
-                config.put("projectMetadataSettings", new JSONObject(projectMetadataSettings));
+                projectMetadataSettings = portal.getProjectMetadataSettings();
             } catch (ObjectNotFoundException e) {
-                // if this fails, get the default project metadafields from wiseProperties
-                config.put("projectMetadataSettings", new JSONObject(wiseProperties.getProperty("defaultProjectMetadataSettings", "")));
+                // do nothing
             }
+            System.out.println("1: " + projectMetadataSettings);
+
+            if (projectMetadataSettings == null) {
+                // get default project metadata settings from Portal.
+                projectMetadataSettings = portalService.getDefaultProjectMetadataSettings();
+                System.out.println("2: " + projectMetadataSettings);
+            }
+            System.out.println("3: " + projectMetadataSettings);
+
+            config.put("projectMetadataSettings", new JSONObject(projectMetadataSettings));
 
             // add this teachers's info in config.userInfo.myUserInfo object
             JSONObject myUserInfo = new JSONObject();
