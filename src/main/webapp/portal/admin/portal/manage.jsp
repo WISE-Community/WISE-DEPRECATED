@@ -30,7 +30,7 @@
                 });
             $("#revertToDefaultProjectMetadataSettings").on("click", function() {
                 if (confirm("You will lose any changes to your project metadata settings. Continue?")) {
-                    var defaultProjectMetadataSettings = ${portal.defaultProjectMetadataSettings};
+                    var defaultProjectMetadataSettings = ${defaultProjectMetadataSettings};
                     $("#projectMetadataSettings").val(JSON.stringify(defaultProjectMetadataSettings, null, 4));
 				}
 			});

@@ -1,5 +1,6 @@
 'use strict';
 
+import HelpIcon from './themeComponents/helpIcon/helpIcon';
 import NavItemController from './themeComponents/navItem/navItemController';
 import NodeIcon from './themeComponents/nodeIcon/nodeIcon';
 import StepToolsCtrl from './themeComponents/stepTools/stepToolsController';
@@ -37,6 +38,7 @@ let ThemeComponents = angular.module('theme.components', []);
 ThemeComponents.controller(NavItemController.name, NavItemController)
                .controller(StepToolsCtrl.name, StepToolsCtrl)
                .controller(NodeStatusIconCtrl.name, NodeStatusIconCtrl)
+               .component('helpIcon', HelpIcon)
                .component('navItem', NavItem)
                .component('nodeIcon', NodeIcon)
                .component('nodeStatusIcon', NodeStatusIcon)

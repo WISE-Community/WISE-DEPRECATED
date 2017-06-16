@@ -48,4 +48,11 @@ public interface PortalService {
 	 * @throws Exception 
 	 */
 	String getWISEVersion() throws Exception;
+
+
+	/**
+	 * Get the default project metadata settings
+	 * @return the default project metadata settings
+	 */
+	String getDefaultProjectMetadataSettings();
 }

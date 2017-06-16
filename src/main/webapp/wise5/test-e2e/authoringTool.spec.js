@@ -75,7 +75,7 @@ describe('WISE Authoring Tool', function () {
     });
 
     it('should have elements on the page in project view', function () {
-        expect($("#projectTitle").getAttribute('value')).toEqual("My Science Project");
+        expect(element(by.cssContainingText('top-bar', "My Science Project")).isDisplayed()).toBeTruthy();
 
         element.all(by.repeater("item in projectController.items")).then(function (nodeItem) {
             expect(nodeItem[1].getText()).toBe("1 First Activity"); // should have one default activity
@@ -89,8 +89,11 @@ describe('WISE Authoring Tool', function () {
         expect($("#createNewActivityButton").isEnabled()).toBe(true);
         expect($("#createNewStepButton").isEnabled()).toBe(true);
         expect($("#previewProjectButton").isEnabled()).toBe(true);
-        expect(element(by.xpath('//side-menu/div/a[@aria-label="File Manager"]')).isDisplayed()).toBe(true);
+        // look for side-menu items
+        expect(element(by.xpath('//side-menu/div/a[@aria-label="Project Structure"]')).isDisplayed()).toBe(true);
         expect(element(by.xpath('//side-menu/div/a[@aria-label="Notebook Settings"]')).isDisplayed()).toBe(true);
+        expect(element(by.xpath('//side-menu/div/a[@aria-label="File Manager"]')).isDisplayed()).toBe(true);
+        expect(element(by.xpath('//side-menu/div/a[@aria-label="Project Info"]')).isDisplayed()).toBe(true);
     });
 
     it('should create new steps', function () {
@@ -160,6 +163,14 @@ describe('WISE Authoring Tool', function () {
         expect(enableNotebookCheckbox.isPresent()).toBeTruthy(); // the checkbox for enabling/disabling notebook should exist.
         // TODO: the checkbox should be unchecked by default.
         $("#closeNotebookSettingsButton").click();
+        expect(browser.getCurrentUrl()).toMatch('http://localhost:8080/wise/author#/project/[0-9]+'); // should go back to the project editing view.
+    });
+
+    it('should allow user to edit project info', function () {
+        // TODO add more tests here
+        element(by.xpath('//side-menu/div/a[@aria-label="Project Info"]')).click();
+        expect(browser.getCurrentUrl()).toMatch('http://localhost:8080/wise/author#/project/[0-9]+/info');
+        element(by.xpath('//side-menu/div/a[@aria-label="Project Structure"]')).click();
         expect(browser.getCurrentUrl()).toMatch('http://localhost:8080/wise/author#/project/[0-9]+'); // should go back to the project editing view.
     });
 

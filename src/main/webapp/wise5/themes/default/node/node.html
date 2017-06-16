@@ -1,23 +1,24 @@
 <div class="l-constrained">
-    <md-content class="node-content md-whiteframe-1dp" style="border-color: {{nodeController.nodeStatus.icon.color}}" layout="row" layout-wrap>
-        <div ng-if="nodeController.mode == 'preview' && vleController.rubricsViewable && nodeController.rubric" style="margin: 20">
-            <md-card class="annotations annotations--node-info">
-                <md-card-title class="annotations__header gray-darker-bg">
-                    <div class="annotations__avatar md-avatar avatar--icon md-36 avatar md-whiteframe-1dp">
-                        <md-icon class="annotations__icon md-36">info</md-icon>
-                    </div>
-                    <div class="annotations__title" layout="row" flex>
-                        <span>{{ 'TEACHER_RUBRIC' | translate }}</span>
-                    </div>
-                </md-card-title>
-                <md-card-content class="annotations__body md-body-1">
-                    <div ng-bind-html="nodeController.rubric"></div>
-                </md-card-content>
-            </md-card>
+    <md-content class="node-content md-whiteframe-1dp" style="border-color: {{nodeController.nodeStatus.icon.color}}; position: relative;" layout="row" layout-wrap>
+        <div ng-if="nodeController.rubric && nodeController.mode === 'preview'" class="node-content__rubric" layout="row" layout-align="center center">
+            <help-icon id="nodeRubric_{{nodeController.nodeId}}"
+                       pulse="!nodeController.rubricTour.steps[0].viewed"
+                       label="{{ 'STEP_INFO' | translate}}"
+                       on-click="nodeController.showRubric(nodeController.nodeId)"
+                       icon="'info'"
+                       icon-class="'info'"></help-icon>
         </div>
-        <div id="{{component.id}}" class="component-section"
+        <div id="component_{{component.id}}" class="component-section"
              ng-repeat='component in nodeController.getComponents()'
              flex="100" flex-gt-sm="{{component.componentWidth ? component.componentWidth : 100}}">
+            <div ng-if="component.rubric && nodeController.mode === 'preview'" class="component__rubric">
+                <help-icon id="rubric_{{component.id}}"
+                           pulse="!nodeController.rubricTour.steps[$index+1].viewed"
+                           label="{{ 'TEACHING_TIPS' | translate }}"
+                           on-click="nodeController.showRubric(component.id)"
+                           icon="'info'"
+                           icon-class="'info'"></help-icon>
+            </div>
             <component ng-if='component.showPreviousWorkNodeId != null && component.showPreviousWorkComponentId != null && component.showPreviousWorkNodeId != "" && component.showPreviousWorkComponentId != ""'
                        node-id='{{component.showPreviousWorkNodeId}}'
                        component-id='{{component.showPreviousWorkComponentId}}'
@@ -34,34 +35,19 @@
                        workgroup-id='{{nodeController.workgroupId}}'
                        teacher-workgroup-id='{{nodeController.teacherWorkgroupId}}'
                        mode='student'></component>
-            <div ng-if="nodeController.mode == 'preview' && vleController.rubricsViewable && component.rubric" style="margin: 20">
-                <md-card class="annotations annotations--node-info">
-                    <md-card-title class="annotations__header gray-darker-bg">
-                        <div class="annotations__avatar md-avatar avatar--icon md-36 avatar md-whiteframe-1dp">
-                            <md-icon class="annotations__icon md-36">info</md-icon>
-                        </div>
-                        <div class="annotations__title" layout="row" flex>
-                            <span>{{ 'TEACHER_RUBRIC' | translate }}</span>
-                        </div>
-                    </md-card-title>
-                    <md-card-content class="annotations__body md-body-1">
-                        <div ng-bind-html="component.rubric"></div>
-                    </md-card-content>
-                </md-card>
-            </div>
         </div>
         <div class="node-content__actions" layout="row" layout-align="start center" flex="100">
             <md-button class="md-raised md-primary"
                    ng-click='nodeController.saveButtonClicked()'
                    ng-disabled='nodeController.isDisabled || !nodeController.dirtyComponentIds.length'
                    ng-if='nodeController.showSaveButton()'
-                   aria-label="Save"
+                   aria-label="{{ 'save' | translate }}"
                    translate="save"></md-button>
              <md-button class="md-raised md-primary"
                   ng-click='nodeController.submitButtonClicked()'
                   ng-disabled='nodeController.isDisabled || !nodeController.dirtySubmitComponentIds.length'
                   ng-if='nodeController.showSubmitButton()'
-                  aria-label="Submit"
+                  aria-label="{{ 'submit' | translate }}"
                   translate="submit"></md-button>
             <span ng-if="nodeController.showSaveButton() || nodeController.showSubmitButton()"
                   ng-show="nodeController.saveMessage.text"

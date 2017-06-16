@@ -120,21 +120,6 @@ label {
     border-top-style: dashed;
 }
 
-// Color
-// Set classes for each named color in the $colors map
-@each $key, $value in $colors {
-    .#{$key} {
-      color: $value;
-    }
-}
-
-// Set classes for each named color in the $colors map
-@each $key, $value in $colors {
-    .#{$key}-bg {
-      background-color: $value;
-    }
-}
-
 // Set classes for common font weights
 .light {
     font-weight: 300;
@@ -361,4 +346,35 @@ md-select-menu.md-default-theme md-option[selected], md-select-menu md-option[se
 
 .transition-all {
     transition: 0.25s linear all;
+}
+
+.pulse {
+    animation: pulse 4s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 color('info');
+  }
+  50% {
+      box-shadow: 0 0 0 10px rgba(0,0,0,0);
+  }
+  100% {
+      box-shadow: 0 0 0 0 rgba(0,0,0,0);
+  }
+}
+
+// Color
+// Set classes for each named color in the $colors map
+@each $key, $value in $colors {
+    .#{$key} {
+      color: $value;
+    }
+}
+
+// Set classes for each named color in the $colors map
+@each $key, $value in $colors {
+    .#{$key}-bg {
+      background-color: $value;
+    }
 }

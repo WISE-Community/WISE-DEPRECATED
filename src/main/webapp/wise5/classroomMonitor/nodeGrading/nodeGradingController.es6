@@ -604,7 +604,7 @@ class NodeGradingController {
 
         // get the step number and title
         let stepNumberAndTitle = this.ProjectService.getNodePositionAndTitleByNodeId(this.nodeId);
-        let rubricTitle = this.$translate('stepInfo');
+        let rubricTitle = this.$translate('STEP_INFO');
 
         /*
          * create the header for the popup that contains the project title,

@@ -6,6 +6,7 @@ $input-action-vertical-offset-richtext: -7px;
 // Base
 #node {
     margin: 0 auto;
+    padding: 8px;
     position: absolute;
     left: 0;
     right: 0;
@@ -33,6 +34,7 @@ $input-action-vertical-offset-richtext: -7px;
     padding: 0 0 48px;
     background-color: #ffffff;
     border-radius: $button-border-radius;
+    overflow: visible;
 
     @media only screen and (max-width: $layout-breakpoint-xs - 1) {
         box-shadow: none;
@@ -42,6 +44,22 @@ $input-action-vertical-offset-richtext: -7px;
         padding: 0;
         border-top: 2px solid;
         border-bottom: 2px solid;
+    }
+}
+
+.node-content__rubric {
+    position: absolute;
+    top: -22px;
+    left: 0;
+    right: 0;
+    z-index: 1;
+
+    .avatar--icon {
+        transform: scale(0.94);
+
+        @media only screen and (max-width: $layout-breakpoint-xs - 1) {
+            transform: scale(0.8);
+        }
     }
 }
 

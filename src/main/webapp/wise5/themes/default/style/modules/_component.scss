@@ -3,6 +3,10 @@
     margin: 24px 0;
 }
 
+.component-section {
+    position: relative;
+}
+
 .component {
     overflow-x: auto;
     font-size: rem(1.5);
@@ -11,6 +15,12 @@
     @media only screen and (min-width: $layout-breakpoint-xs) {
         padding: 0 8px;
     }
+}
+
+.component__rubric {
+    position: absolute;
+    left: -20px;
+    top: 12px;
 }
 
 .notebook-enabled {

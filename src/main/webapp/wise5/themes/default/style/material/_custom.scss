@@ -188,8 +188,10 @@ md-input-container {
         }
     }
 
-    > md-icon {
-        margin-top: -2px;
+    &:not(.md-icon-button) {
+        > md-icon {
+            margin-top: -2px;
+        }
     }
 }
 

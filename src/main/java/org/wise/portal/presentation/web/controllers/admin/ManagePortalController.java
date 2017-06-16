@@ -51,6 +51,7 @@ public class ManagePortalController {
 
 		Portal portal = portalService.getById(portalId);
 		modelMap.put("portal", portal);
+		modelMap.put("defaultProjectMetadataSettings", portalService.getDefaultProjectMetadataSettings());
 		return "admin/portal/manage";
 	}
 

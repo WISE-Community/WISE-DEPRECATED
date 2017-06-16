@@ -165,9 +165,4 @@ public interface Portal extends Persistable {
 	 */
 	void setProjectMetadataSettings(String projectMetadataSettings);
 
-	/**
-	 * Get the default project metadata settings
-	 * @return the default project metadata settings
-	 */
-	String getDefaultProjectMetadataSettings();
 }

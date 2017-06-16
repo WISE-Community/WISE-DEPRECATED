@@ -58,17 +58,6 @@ var VLEController = function () {
         // whether constraints have been disabled
         this.constraintsDisabled = false;
 
-        // whether to show the rubrics
-        this.rubricsViewable = false;
-
-        if (this.isPreview()) {
-            /*
-             * we are in preview mode so we will show the rubrics if there are
-             * any
-             */
-            this.rubricsViewable = true;
-        }
-
         if (this.ConfigService.getConfigParam('constraints') == false) {
             // constraints are disabled
             this.constraintsDisabled = true;
@@ -658,7 +647,7 @@ var VLEController = function () {
 
                 /*let notebookItem = this.NotebookService.getNotebookItemByNotebookItemId(notebookItemId, this.workgroupId);
                 if (notebookItem != null) {
-                      if (notebookItem.type === "note") {
+                        if (notebookItem.type === "note") {
                         // open note view
                         this.$rootScope.$broadcast('setNotebookFilter', {filter: "note", ev: event});
                         this.$rootScope.$broadcast('toggleNotebook', {ev: event, open: true});
@@ -848,38 +837,6 @@ var VLEController = function () {
                     return _this2.ProjectService.getMaxScoreForComponent(nodeId, componentId);
                 }
             };
-        }
-
-        /**
-         * Check if there are any rubrics in the project. There can potentially be
-         * a project rubric, node rubrics, and component rubrics.
-         * @return whether there are any rubrics in the project
-         */
-
-    }, {
-        key: 'hasRubrics',
-        value: function hasRubrics() {
-            return this.ProjectService.hasRubrics();
-        }
-
-        /**
-         * Hide the rubrics
-         */
-
-    }, {
-        key: 'hideRubrics',
-        value: function hideRubrics() {
-            this.rubricsViewable = false;
-        }
-
-        /**
-         * Show the rubrics
-         */
-
-    }, {
-        key: 'showRubrics',
-        value: function showRubrics() {
-            this.rubricsViewable = true;
         }
     }]);
 

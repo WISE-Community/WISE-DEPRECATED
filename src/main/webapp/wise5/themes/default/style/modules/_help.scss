@@ -1,0 +1,159 @@
+.help-icon {
+    border-radius: 50%;
+    background-color: #ffffff;
+}
+
+.help-icon__button {
+    min-height: 0;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.help-icon__icon {
+    //margin-top: 0;
+}
+
+.help-bubble {
+    border-radius: $card-border-radius;
+    max-width: 320px;
+
+    @media (min-width: $layout-breakpoint-xs) {
+        max-width: ($layout-breakpoint-xs - 48);
+    }
+
+    @media (min-width: $layout-breakpoint-sm) {
+        max-width: ($layout-breakpoint-sm - 48);
+    }
+
+    @media (min-width: $layout-breakpoint-md) {
+        max-width: ($layout-breakpoint-md - 48);
+    }
+}
+
+.help-bubble__title {
+    border-top-left-radius: $card-border-radius;
+    border-top-right-radius: $card-border-radius;
+}
+
+.help-bubble___title__content {
+    border-top-left-radius: $card-border-radius;
+    border-top-right-radius: $card-border-radius;
+    padding: 0px 0 0 12px;
+    background-color: color('info');
+
+    .md-icon-button {
+        margin-right: 0;
+        padding-top: 0;
+        padding-bottom: 0;
+    }
+}
+
+.help-bubble__content {
+    overflow: auto;
+    padding: 8px 12px;
+    max-height: 480px;
+}
+
+.help-bubble__actions {
+    border-bottom-left-radius: $card-border-radius;
+    border-bottom-right-radius: $card-border-radius;
+}
+
+div.hopscotch-bubble {
+    border-radius: $card-border-radius;
+    //border: 2px solid color('gray-darker');
+    border: 0 none;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+    font-size: rem(1.4);
+    z-index: 6;
+
+    .hopscotch-bubble-arrow-container {
+        position: absolute;
+        width: 20px;
+        height: 20px;
+    }
+
+    .hopscotch-bubble-arrow-container {
+        &.up {
+            top: 0;
+            left: 12px;
+
+            .hopscotch-bubble-arrow {
+                border-bottom: 10px solid color('info');
+                border-left: 10px solid transparent;
+                border-right: 10px solid transparent;
+                position: relative;
+                top: -10px;
+            }
+
+            .hopscotch-bubble-arrow-border {
+                border: 0 none;
+                /*border-bottom: 12px solid color('gray-darker');
+                border-left: 12px solid transparent;
+                border-right: 12px solid transparent;*/
+            }
+        }
+
+        &.down {
+            bottom: -34px;
+            left: 12px;
+
+            .hopscotch-bubble-arrow {
+                border-top: 10px solid color('info');
+                border-left: 10px solid transparent;
+                border-right: 10px solid transparent;
+                position: relative;
+                top: -10px;
+            }
+
+            .hopscotch-bubble-arrow-border {
+                border: 0 none;
+                /*border-top: 12px solid color('gray-darker');
+                border-left: 12px solid transparent;
+                border-right: 12px solid transparent;*/
+            }
+        }
+
+        &.left {
+            top: 12px;
+            left: -10px;
+
+            .hopscotch-bubble-arrow {
+                border-right: 10px solid color('info');
+                border-bottom: 10px solid transparent;
+                border-top: 10px solid transparent;
+                position: relative;
+                left: 0;
+                top: -10px;
+            }
+
+            .hopscotch-bubble-arrow-border {
+                border: 0 none;
+                /*border-right: 12px solid color('gray-darker');
+                border-bottom: 12px solid transparent;
+                border-top: 12px solid transparent;*/
+            }
+        }
+
+        &.right {
+            top: 12px;
+            right: -30px;
+
+            .hopscotch-bubble-arrow {
+                border-left: 10px solid color('info');
+                border-bottom: 10px solid transparent;
+                border-top: 10px solid transparent;
+                position: relative;
+                right: 0;
+                top: -10px;
+            }
+
+            .hopscotch-bubble-arrow-border {
+                border: 0 none;
+                /*border-right: 12px solid color('gray-darker');
+                border-bottom: 12px solid transparent;
+                border-top: 12px solid transparent;*/
+            }
+        }
+    }
+}
