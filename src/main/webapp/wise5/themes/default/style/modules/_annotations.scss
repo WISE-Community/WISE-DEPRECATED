@@ -32,34 +32,6 @@
     margin-bottom: 0;
 }
 
-.annotations--node-info {
-    @media only screen and (min-width: ($layout-breakpoint-xs)) {
-        margin: 16px 12px 32px 70px;
-    }
-
-    &:after {
-        border-right: 16px solid color('info');
-    }
-
-    .annotations__avatar, .annotations__header {
-        background-color: color('info');
-    }
-}
-
-/*.component-section.flex-gt-sm-100 {
-    .annotations {
-        @media only screen and (min-width: ($layout-breakpoint-xs)) {
-            margin-left: 16px;
-            margin-right: 16px;
-        }
-
-        @media only screen and (min-width: ($layout-breakpoint-sm)) {
-            margin-left: 24px;
-            margin-right: 24px;
-        }
-    }
-}*/
-
 .annotations__header {
     position: relative;
     //border-top-left-radius: 4px;
@@ -84,39 +56,12 @@
     color: #ffffff;
 }
 
-//.annotations__title {
-    //margin-left: 64px;
-    //color: #ffffff;
-
-    //padding: 8px 12px;
-    //border-radius: 4px;
-    //z-index: 1;
-
-    //background-color: #ffffff;
-    //transition: 250ms;
-//}
-
 .annotations__body {
-    //margin-top: -6px;
-    //padding: 12px 16px;
-    //border-top: 1px solid color('gray-light');
     padding: 12px;
     background-color: #ffffff;
     border-bottom-left-radius: $card-border-radius;
     border-bottom-right-radius: $card-border-radius;
     overflow: auto;
-
-    //position: relative;
-
-    /*&::after {
-        content: '';
-        position: absolute;
-        top: 0;
-        right: 0;
-        border-style: solid;
-        border-width: 0 36px 36px 0;
-        border-color: transparent color('info') transparent transparent;
-    }*/
 }
 
 .annotations__status {
@@ -153,15 +98,21 @@
 .annotations--inside {
     .annotations {
         margin-left: 72px;
+    }
+}
 
-        /*@media only screen and (min-width: ($layout-breakpoint-xs)) {
-            margin-left: 16px;
-            margin-right: 16px;
-        }
+.annotations--info {
+    margin-bottom: 32px;
 
-        @media only screen and (min-width: ($layout-breakpoint-sm)) {
-            margin-left: 24px;
-            margin-right: 24px;
-        }*/
+    @media only screen and (min-width: ($layout-breakpoint-xs)) {
+        margin: 16px 12px 32px 70px;
+    }
+
+    &:after {
+        border-right: 16px solid color('info');
+    }
+
+    .annotations__avatar, .annotations__header {
+        background-color: color('info');
     }
 }

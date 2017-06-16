@@ -1,0 +1,10 @@
+node_modules
+tmp
+.idea
+*.iml
+_SpecRunner.amd.html
+_SpecRunner.html
+.grunt
+.vscode
+jsconfig.json
+npm-debug.log

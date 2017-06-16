@@ -63,13 +63,13 @@ const NodeInfo = {
     },
     controller: NodeInfoController,
     template:
-        `<md-card ng-if="$ctrl.nodeContent.rubric" class="annotations annotations--node-info">
+        `<md-card ng-if="$ctrl.nodeContent.rubric" class="annotations annotations--info">
             <md-card-title class="annotations__header">
                 <div class="annotations__avatar md-avatar avatar--icon md-36 avatar md-whiteframe-1dp">
                     <md-icon class="annotations__icon md-36">info</md-icon>
                 </div>
                 <div class="annotations__title" layout="row" flex>
-                    <span>{{ 'stepInfo' | translate }}</span>
+                    <span>{{ 'STEP_INFO' | translate }}</span>
                 </div>
             </md-card-title>
             <md-card-content class="annotations__body md-body-1">
@@ -92,13 +92,13 @@ const NodeInfo = {
                                node-id='{{$ctrl.nodeId}}'
                                component-id='{{component.id}}'
                                mode='student'></component>
-                    <md-card class="annotations annotations--node-info" ng-if="component.rubric">
+                    <md-card class="annotations annotations--info" ng-if="component.rubric">
                        <md-card-title class="annotations__header">
                            <div class="annotations__avatar md-avatar avatar--icon md-36 avatar md-whiteframe-1dp">
                                <md-icon class="annotations__icon md-36">info</md-icon>
                            </div>
                            <div class="annotations__title" layout="row" flex>
-                               <span>{{ 'teachingTip' | translate }}</span>
+                               <span>{{ 'TEACHING_TIPS' | translate }}</span>
                            </div>
                        </md-card-title>
                        <md-card-content class="annotations__body md-body-1">

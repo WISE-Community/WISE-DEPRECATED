@@ -1,5 +1,6 @@
 class NodeController {
-    constructor($filter,
+    constructor($compile,
+                $filter,
                 $q,
                 $rootScope,
                 $scope,
@@ -10,6 +11,7 @@ class NodeController {
                 ProjectService,
                 StudentDataService) {
 
+        this.$compile = $compile;
         this.$filter = $filter;
         this.$q = $q;
         this.$rootScope = $rootScope;
@@ -128,6 +130,9 @@ class NodeController {
             if (this.nodeContent != null) {
                 // get the step rubric
                 this.rubric = this.nodeContent.rubric;
+
+                // create the rubric tour bubbles
+                this.createRubricTour();
             }
         }
 
@@ -321,6 +326,160 @@ class NodeController {
                 new Function(script).call(this);
             });
         }
+    }
+
+    /**
+     * Create the tour bubbles for all of the rubrics for this node
+     */
+    createRubricTour() {
+        this.rubricTour = {
+            id: 'rubricTour',
+            arrowWidth: 12,
+            bubblePadding: 0,
+            bubbleWidth: 800,
+            container: '#content',
+            steps: [],
+            showPrevButton: true,
+            showNextButton: true,
+            scrollDuration: 400,
+            customRenderer: this.getRubricTemplate,
+            customData: {
+                $ctrl: this
+            },
+            i18n: {
+                nextBtn: this.$translate('NEXT'),
+                prevBtn: this.$translate('PREVIOUS'),
+                doneBtn: this.$translate('DONE'),
+                closeTooltip: this.$translate('CLOSE')
+            }
+        };
+
+        // add a tour bubble for the node rubric
+        let thisTarget = '#nodeRubric_' + this.nodeId;
+        this.rubricTour.steps.push(
+            {
+                target: thisTarget,
+                placement: 'bottom',
+                title: this.$translate('STEP_INFO'),
+                content: this.rubric,
+                xOffset: 'center',
+                arrowOffset: 'center',
+                onShow: this.onShowRubric,
+                viewed: false
+            }
+        );
+
+        // add tour bubbles for each of the component rubrics
+        let components = this.getComponents();
+        let l = components.length, i = 0;
+        for (; i < l; i++) {
+            let component = components[i];
+            let thisTarget = '#rubric_' + component.id;
+            this.rubricTour.steps.push(
+                {
+                    target: thisTarget,
+                    arrowOffset: 21,
+                    placement: 'right',
+                    yOffset: 1,
+                    title: this.$translate('TEACHING_TIPS'),
+                    content: component.rubric,
+                    onShow: this.onShowRubric,
+                    viewed: false
+                }
+            );
+        }
+    }
+
+    /**
+     * Show the tour bubble for the rubric with the given componentId or nodeId
+     * @param id componentId or nodeId of rubric to show
+     */
+    showRubric(id) {
+        if (this.rubricTour) {
+            let step = -1;
+            let index = 0;
+
+            let thisTarget = '#nodeRubric_' + this.nodeId;
+            if (this.nodeId === id) {
+                // the given id matches this nodeId
+                step = index;
+            }
+
+            if (step < 0) {
+                index++;
+
+                let components = this.getComponents();
+                let l = components.length, i = 0;
+                for (; i < l; i++) {
+                    let component = components[i];
+                    thisTarget = '#rubric_' + component.id;
+                    if (component.id === id) {
+                        // the given id matches the current componentId
+                        step = index;
+                        break;
+                    }
+                    index++;
+                }
+            }
+
+            // end any currently running rubric tour
+            hopscotch.endTour(this.rubricTour);
+            // show the rubric tour starting with the step for the matched index
+            hopscotch.startTour(this.rubricTour, step);
+        }
+    }
+
+    /**
+     * Create and return the custom template for the rubric tour bubbles
+     * @param details Object with the tour details
+     * @return HTML string
+     */
+    getRubricTemplate(details) {
+        let i18n = details.i18n;
+        let buttons = details.buttons;
+        let step = details.step;
+        let tour = details.tour;
+        let $ctrl = tour.customData.$ctrl;
+        let template =
+            `<div class="hopscotch-bubble-container help-bubble md-whiteframe-4dp" style="width: ${ step.width }px; padding: ${ step.padding }px;">
+                <md-toolbar class="md-subhead help-bubble__title md-toolbar--wise">
+                    <div class="help-bubble___title__content" layout="row" layout-align="start center" flex>
+                        <span>${ tour.isTour ? `${ i18n.stepNum } | ` : '' }${ step.title !== '' ? `${ step.title }` : '' }</span>
+                        <span flex></span>
+                        ${ buttons.showClose ? `<md-button class="md-icon-button hopscotch-close">
+                            <md-icon aria-label="${ i18n.closeTooltip }"> close </md-icon>
+                        </md-button>` : ''}
+                    </div>
+                </md-toolbar>
+                <div class="help-bubble__content">
+                    ${ step.content  !== '' ? `${ step.content }` : '' }
+                    ${ buttons.showCTA ? `<md-button class="hopscotch-cta md-primary md-raised">${ i18n.ctaLabel }</md-button>` : ''}
+                </div>
+                <md-divider></md-divider>
+                <div class="help-bubble__actions gray-lightest-bg" layout="row" layout-align="start center">
+                    ${ buttons.showClose ? `<md-button class="button--small hopscotch-close">${ i18n.closeTooltip }</md-button>` : ''}
+                    <span flex></span>
+                    ${ buttons.showPrev ? `<md-button class="button--small info hopscotch-prev">${ i18n.prevBtn }</md-button>` : ''}
+                    ${ buttons.showNext ? `<md-button class="button--small info hopscotch-next">${ i18n.nextBtn }</md-button>` : ''}
+                </md-card-actions>
+            </div>`;
+
+        // need to compile the template here because Hopscotch inserts raw html
+        let templateHTML = $ctrl.$compile(template)($ctrl.$scope)[0].outerHTML +
+            `<div class="hopscotch-bubble-arrow-container hopscotch-arrow">
+                <div class="hopscotch-bubble-arrow-border"></div>
+                <div class="hopscotch-bubble-arrow"></div>
+            </div>`;
+        return templateHTML;
+    }
+
+    /**
+     * Callback for when a rubric tour bubble is shown
+     */
+    onShowRubric() {
+        // stop the pulsing animation on the info button for the rubric being shown
+        let index = hopscotch.getCurrStepNum();
+        hopscotch.getCurrTour().customData.$ctrl.rubricTour.steps[index].viewed = true;
     }
 
     /**
@@ -1096,6 +1255,8 @@ class NodeController {
     };
 
     nodeUnloaded(nodeId) {
+        hopscotch.endTour(this.rubricTour);
+
         var isAutoSave = true;
 
         this.createAndSaveComponentData(isAutoSave);
@@ -1166,6 +1327,7 @@ class NodeController {
 }
 
 NodeController.$inject = [
+    '$compile',
     '$filter',
     '$q',
     '$rootScope',
