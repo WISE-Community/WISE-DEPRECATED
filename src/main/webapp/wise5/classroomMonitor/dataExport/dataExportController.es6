@@ -1549,17 +1549,61 @@ class DataExportController {
 
     /**
      * Handle node item clicked
+     * @param nodeItem the item object for a given activity or step
      */
     nodeItemClicked(nodeItem) {
-        if (nodeItem.checked) {
-            // if this node item is checked, make sure its components are also checked.
-            if (nodeItem.node != null && nodeItem.node.components != null && nodeItem.node.components.length > 0) {
-                nodeItem.node.components.map((componentItem) => { componentItem.checked = true; });
-            }
-        } else {
-            // if this node item is unchecked, make sure its components are also unchecked.
-            if (nodeItem.node != null && nodeItem.node.components != null && nodeItem.node.components.length > 0) {
-                nodeItem.node.components.map((componentItem) => { componentItem.checked = false; });
+
+        if (nodeItem != null) {
+
+            if (nodeItem.node != null) {
+                // the node item is a group or step
+
+                // get the node
+                var node = nodeItem.node;
+
+                if (node.ids != null) {
+                    // this is a group node
+
+                    // loop through all the child node ids
+                    for (var n = 0; n < node.ids.length; n++) {
+
+                        // get a child step id
+                        var nodeId = node.ids[n];
+
+                        // get a child step item
+                        var childNodeItem = this.projectIdToOrder[nodeId];
+
+                        // set the checked value for the step item
+                        childNodeItem.checked = nodeItem.checked;
+
+                        // get all the components in the step
+                        var components = childNodeItem.node.components;
+
+                        if (components != null) {
+
+                            // loop through all the components in the step
+                            for (var c = 0; c < components.length; c++) {
+                                
+                                // set the checked value for the component item
+                                components[c].checked = nodeItem.checked;
+                            }
+                        }
+                    }
+                } else if (node.components != null) {
+                    // this is a step node
+
+                    if (nodeItem.checked) {
+                        // if this node item is checked, make sure its components are also checked.
+                        if (nodeItem.node != null && nodeItem.node.components != null && nodeItem.node.components.length > 0) {
+                            nodeItem.node.components.map((componentItem) => { componentItem.checked = true; });
+                        }
+                    } else {
+                        // if this node item is unchecked, make sure its components are also unchecked.
+                        if (nodeItem.node != null && nodeItem.node.components != null && nodeItem.node.components.length > 0) {
+                            nodeItem.node.components.map((componentItem) => { componentItem.checked = false; });
+                        }
+                    }
+                }
             }
         }
     }
@@ -1569,13 +1613,21 @@ class DataExportController {
      */
     selectAll(doSelect = true) {
         if (this.projectIdToOrder != null) {
+
+            // loop through all the group nodes and step nodes
             for (let nodeId in this.projectIdToOrder) {
                 let projectItem = this.projectIdToOrder[nodeId];
-                if (projectItem.order != 0 && projectItem.node.type != "group") {
+                if (projectItem.order != 0) {
+
                     projectItem.checked = doSelect;
-                    // also check its components
-                    if (projectItem.node != null && projectItem.node.components != null && projectItem.node.components.length > 0) {
-                        projectItem.node.components.map((componentItem) => { componentItem.checked = doSelect; });
+
+                    if (projectItem.node.type != "group") {
+                        // the project item is a step
+
+                        // also check its components
+                        if (projectItem.node != null && projectItem.node.components != null && projectItem.node.components.length > 0) {
+                            projectItem.node.components.map((componentItem) => { componentItem.checked = doSelect; });
+                        }
                     }
                 }
             }
@@ -2426,6 +2478,24 @@ class DataExportController {
     getNodeTitleByNodeId(nodeId) {
         return this.ProjectService.getNodeTitleByNodeId(nodeId);
     };
+
+    /**
+     * Check if a node id is for a group
+     * @param nodeId
+     * @returns whether the node is a group node
+     */
+    isGroupNode(nodeId) {
+        return this.ProjectService.isGroupNode(nodeId);
+    };
+
+    /**
+     * Check if the node is in any branch path
+     * @param nodeId the node id of the node
+     * @return whether the node is in any branch path
+     */
+    isNodeInAnyBranchPath(nodeId) {
+        return this.ProjectService.isNodeInAnyBranchPath(nodeId);
+    }
 }
 
 DataExportController.$inject = [

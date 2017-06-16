@@ -1,3 +1,15 @@
+<style>
+    .stepHeader {
+        margin-left: 20px !important;
+    }
+    .branchPathStepHeader {
+        margin-left: 20px !important;
+    }
+    .componentHeader {
+        margin-left: 40px !important;
+    }
+</style>
+
 <div class="view-content view-content--with-sidemenu">
     <div class="l-constrained" layout="column">
         <div style="float:right">
@@ -47,7 +59,8 @@
                         <input type='checkbox'
                                     ng-click="dataExportController.nodeItemClicked(projectItem)"
                                     ng-model='projectItem.checked'
-                                    ng-if='projectItem.order != 0 && projectItem.node.type != "group"' />
+                                    ng-if='projectItem.order != 0'
+                                    ng-class='{"groupHeader": dataExportController.isGroupNode(projectItem.node.id), "stepHeader": !dataExportController.isGroupNode(projectItem.node.id), "branchPathStepHeader": dataExportController.isNodeInAnyBranchPath(projectItem.node.id) && !dataExportController.isGroupNode(projectItem.node.id)}'/>
                         <h6 style='display: inline; cursor: pointer' ng-if='projectItem.order != 0'>
                             {{dataExportController.getNodePositionById(projectItem.node.id)}} {{dataExportController.getNodeTitleByNodeId(projectItem.node.id)}}
                         </h6>
@@ -56,9 +69,9 @@
                             <md-tooltip md-direction="right"><span translate="preview"></span></md-tooltip>
                             <md-icon>pageview</md-icon>
                         </span>
-                        <div style="margin-left:20px" ng-if='projectItem.order != 0 && projectItem.node.type != "group" && projectItem.node.components.length > 0'
-                             ng-repeat='componentItem in projectItem.node.components'>
-                            <input type='checkbox' ng-model='componentItem.checked' /> {{componentItem.type}}
+                        <div ng-if='projectItem.order != 0 && projectItem.node.type != "group" && projectItem.node.components.length > 0'
+                             ng-repeat='componentItem in projectItem.node.components track by $index'>
+                            <input type='checkbox' ng-model='componentItem.checked' class='componentHeader'"/> {{($index + 1)}} {{componentItem.type}}
                         </div>
                     </div>
                     <md-button class="md-raised" ng-click="dataExportController.export()" translate="export" id="doExportButton2"></md-button>
