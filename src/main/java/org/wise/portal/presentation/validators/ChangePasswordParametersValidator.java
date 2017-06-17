@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2007-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -68,18 +68,21 @@ public class ChangePasswordParametersValidator implements Validator {
 
 		validatePasswd0(errors,params);
 		
-		if( errors.getErrorCount() != 0 )
+		if (errors.getErrorCount() != 0) {
 			return;
+		}
 		
 		validatePasswd1(errors,params);
 		
-		if( errors.getErrorCount() != 0 )
+		if (errors.getErrorCount() != 0) {
 			return;
+		}
 		
 		validatePasswd2(errors,params);
 		
-		if( errors.getErrorCount() != 0 )
+		if (errors.getErrorCount() != 0) {
 			return;
+		}
 		
 		validatePasswordsMatch(errors, params.getPasswd1(), params.getPasswd2(), params);
 	}
@@ -92,7 +95,7 @@ public class ChangePasswordParametersValidator implements Validator {
 	public void validatePasswd0(Errors errors, ChangePasswordParameters params) {
 		User userToCheckPasswordFor = null;
 		
-		if(params.getTeacherUser() != null) {
+		if (params.getTeacherUser() != null) {
 			/*
 			 * the teacher is changing the password for a student so we need
 			 * to check that the teacher has typed in their current password 
@@ -108,7 +111,7 @@ public class ChangePasswordParametersValidator implements Validator {
 		}
 
 		//if the user is not an admin we need to make sure they typed in the current teacher password
-		if(!userToCheckPasswordFor.isAdmin()) {
+		if (!userToCheckPasswordFor.isAdmin()) {
 			//the user is not an admin
 
 			Md5PasswordEncoder encoder = new Md5PasswordEncoder();
@@ -116,14 +119,14 @@ public class ChangePasswordParametersValidator implements Validator {
 			//get the typed in current password the user has entered
 			String typedInCurrentPassword = params.getPasswd0();
 			
-			if(typedInCurrentPassword != null) {
+			if (typedInCurrentPassword != null) {
 				//get the hashed typed in current password
 				String hashedTypedInCurrentPassword = encoder.encodePassword(typedInCurrentPassword, systemSaltSource.getSystemWideSalt());
 				
 				//get the hashed actual current password
 				String hashedActualCurrentPassword = userToCheckPasswordFor.getUserDetails().getPassword();
 				
-				if(hashedTypedInCurrentPassword != null && hashedActualCurrentPassword != null &&
+				if (hashedTypedInCurrentPassword != null && hashedActualCurrentPassword != null &&
 						hashedTypedInCurrentPassword.equals(hashedActualCurrentPassword)) {
 					//the user has typed in the correct current password
 				} else {
@@ -141,8 +144,9 @@ public class ChangePasswordParametersValidator implements Validator {
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "passwd1",
 		"presentation.validators.ChangePasswordParametersValidator.errorNewPasswordMissing");
 		
-		if( errors.getErrorCount() != 0 )
+		if (errors.getErrorCount() != 0) {
 			return;
+		}
 		this.validatePasswordAlphaNumeric(errors, params.getPasswd1());
 	}
 	
@@ -150,15 +154,15 @@ public class ChangePasswordParametersValidator implements Validator {
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "passwd2",
 		"presentation.validators.ChangePasswordParametersValidator.errorNewPasswordMissing");
 		
-		if( errors.getErrorCount() != 0 )
+		if (errors.getErrorCount() != 0) {
 			return;
-		
+		}
 		this.validatePasswordAlphaNumeric(errors, params.getPasswd2());
 	}
 
 	private void validatePasswordsMatch(Errors errors, String password1, String password2, ChangePasswordParameters params) {
 		
-		//lengths match
+		// lengths match
 		validatePasswordLength(errors, params);
 		
 		if (!password1.equals(password2)) {

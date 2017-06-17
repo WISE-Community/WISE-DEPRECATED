@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -95,7 +95,7 @@ public class ChangePasswordParameters implements Serializable {
 	}
 	
 	/**
-	 * @param sets the user
+	 * @param user User whose password to change
 	 */
 	public void setUser(User user){
 		this.user = user;

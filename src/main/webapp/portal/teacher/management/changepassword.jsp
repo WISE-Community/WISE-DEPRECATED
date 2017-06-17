@@ -30,16 +30,36 @@
 						<table style="margin:0 auto;">
 							<sec:authorize access="!hasAnyRole('ROLE_ADMINISTRATOR')">
 								<tr>
-									<td><label for="changestudentpassword"><spring:message code="changePassword_current" /></label></td>
+									<td><label for="changestudentpassword">
+										<c:choose>
+											<c:when test="${changeStudentPasswordParameters.teacherUser != null}">
+												<!-- teacher is changing the password for another user -->
+												(${changeStudentPasswordParameters.teacherUser.userDetails.username})
+											</c:when>
+											<c:otherwise>
+												<!-- user is changing their own password, don't show who should be typing their password -->
+											</c:otherwise>
+										</c:choose>
+										<spring:message code="changePassword_current" /></label></td>
 					      			<td><form:password path="passwd0" /></td>
 								</tr>
 							</sec:authorize>
 							<tr>
-							<td><label for="changestudentpassword"><spring:message code="changePassword_new" /></label></td>
+							<td><label for="changestudentpassword">
+								<c:if test="${changeStudentPasswordParameters.teacherUser != null}">
+									<!-- another user is trying to change this user's password, so show should be typing this password -->
+									(${changeStudentPasswordParameters.user.userDetails.username})
+								</c:if>
+								<spring:message code="changePassword_new" /></label></td>
 					      	<td><form:password path="passwd1" /></td>
 							</tr>
 							<tr>
-							<td><label for="changestudentpassword"><spring:message code="changePassword_confirm" /></label></td>
+							<td><label for="changestudentpassword">
+								<c:if test="${changeStudentPasswordParameters.teacherUser != null}">
+									<!-- another user is trying to change this user's password, so show should be typing this password -->
+									(${changeStudentPasswordParameters.user.userDetails.username})
+								</c:if>
+								<spring:message code="changePassword_confirm" /></label></td>
 							<td><form:password path="passwd2" /></td>
 							</tr>
 						</table>
