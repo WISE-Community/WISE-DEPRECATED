@@ -26,6 +26,12 @@ var NodeInfoController = function () {
 
     _createClass(NodeInfoController, [{
         key: 'getNodeContent',
+
+
+        /**
+         * Get the content for this node
+         * @return object with the node content
+         */
         value: function getNodeContent() {
             var result = null;
 
@@ -40,7 +46,7 @@ var NodeInfoController = function () {
 
         /**
          * Get the components for this node with student work.
-         * @return an array that contains the content for the components
+         * @return array that contains the content for the components
          */
 
     }, {
@@ -68,6 +74,18 @@ var NodeInfoController = function () {
 
             return components;
         }
+
+        /**
+         * Get a rubric with the wise asset paths replaced
+         * @param rubric string
+         * @return string containing rubric html content
+         */
+
+    }, {
+        key: 'getRubricWithAssetPaths',
+        value: function getRubricWithAssetPaths(rubric) {
+            return this.ProjectService.replaceAssetPaths(rubric);
+        }
     }]);
 
     return NodeInfoController;
@@ -80,7 +98,7 @@ var NodeInfo = {
         nodeId: '@'
     },
     controller: NodeInfoController,
-    template: '<md-card ng-if="$ctrl.nodeContent.rubric" class="annotations annotations--info">\n            <md-card-title class="annotations__header">\n                <div class="annotations__avatar md-avatar avatar--icon md-36 avatar md-whiteframe-1dp">\n                    <md-icon class="annotations__icon md-36">info</md-icon>\n                </div>\n                <div class="annotations__title" layout="row" flex>\n                    <span>{{ \'STEP_INFO\' | translate }}</span>\n                </div>\n            </md-card-title>\n            <md-card-content class="annotations__body md-body-1">\n                <div ng-bind-html="$ctrl.nodeContent.rubric"></div>\n            </md-card-content>\n        </md-card>\n        <md-card class="node-info node-content" style="border-color: {{ $ctrl.color }};">\n            <md-card-content>\n                <div id="{{component.id}}"\n                     class="component-section"\n                     ng-repeat=\'component in $ctrl.components\'>\n                    <md-divider class="divider divider--dashed" ng-if="!$first"></md-divider>\n                    <component ng-if=\'component.showPreviousWorkNodeId != null && component.showPreviousWorkComponentId != null && component.showPreviousWorkNodeId != "" && component.showPreviousWorkComponentId != ""\'\n                               node-id=\'{{component.showPreviousWorkNodeId}}\'\n                               component-id=\'{{component.showPreviousWorkComponentId}}\'\n                               original-node-id={{$ctrl.nodeId}}\n                               original-component-id={{component.id}}\n                               mode=\'student\'></component>\n                    <component ng-if=\'component.showPreviousWorkNodeId == null || component.showPreviousWorkComponentId == null || component.showPreviousWorkNodeId == "" || component.showPreviousWorkComponentId == ""\'\n                               node-id=\'{{$ctrl.nodeId}}\'\n                               component-id=\'{{component.id}}\'\n                               mode=\'student\'></component>\n                    <md-card class="annotations annotations--info" ng-if="component.rubric">\n                       <md-card-title class="annotations__header">\n                           <div class="annotations__avatar md-avatar avatar--icon md-36 avatar md-whiteframe-1dp">\n                               <md-icon class="annotations__icon md-36">info</md-icon>\n                           </div>\n                           <div class="annotations__title" layout="row" flex>\n                               <span>{{ \'TEACHING_TIPS\' | translate }}</span>\n                           </div>\n                       </md-card-title>\n                       <md-card-content class="annotations__body md-body-1">\n                           <div ng-bind-html="component.rubric"></div>\n                       </md-card-content>\n                    </md-card>\n                </div>\n            </md-card-content>\n        </md-card>'
+    template: '<md-card ng-if="$ctrl.nodeContent.rubric" class="annotations annotations--info">\n            <md-card-title class="annotations__header">\n                <div class="annotations__avatar md-avatar avatar--icon md-36 avatar md-whiteframe-1dp">\n                    <md-icon class="annotations__icon md-36">info</md-icon>\n                </div>\n                <div class="annotations__title" layout="row" flex>\n                    <span>{{ \'STEP_INFO\' | translate }}</span>\n                </div>\n            </md-card-title>\n            <md-card-content class="annotations__body md-body-1">\n                <div ng-bind-html="$ctrl.getRubricWithAssetPaths($ctrl.nodeContent.rubric)"></div>\n            </md-card-content>\n        </md-card>\n        <md-card class="node-info node-content" style="border-color: {{ $ctrl.color }};">\n            <md-card-content>\n                <div id="{{component.id}}"\n                     class="component-section"\n                     ng-repeat=\'component in $ctrl.components\'>\n                    <md-divider class="divider divider--dashed" ng-if="!$first"></md-divider>\n                    <component ng-if=\'component.showPreviousWorkNodeId != null && component.showPreviousWorkComponentId != null && component.showPreviousWorkNodeId != "" && component.showPreviousWorkComponentId != ""\'\n                               node-id=\'{{component.showPreviousWorkNodeId}}\'\n                               component-id=\'{{component.showPreviousWorkComponentId}}\'\n                               original-node-id={{$ctrl.nodeId}}\n                               original-component-id={{component.id}}\n                               mode=\'student\'></component>\n                    <component ng-if=\'component.showPreviousWorkNodeId == null || component.showPreviousWorkComponentId == null || component.showPreviousWorkNodeId == "" || component.showPreviousWorkComponentId == ""\'\n                               node-id=\'{{$ctrl.nodeId}}\'\n                               component-id=\'{{component.id}}\'\n                               mode=\'student\'></component>\n                    <md-card class="annotations annotations--info" ng-if="component.rubric">\n                       <md-card-title class="annotations__header">\n                           <div class="annotations__avatar md-avatar avatar--icon md-36 avatar md-whiteframe-1dp">\n                               <md-icon class="annotations__icon md-36">info</md-icon>\n                           </div>\n                           <div class="annotations__title" layout="row" flex>\n                               <span>{{ \'TEACHING_TIPS\' | translate }}</span>\n                           </div>\n                       </md-card-title>\n                       <md-card-content class="annotations__body md-body-1">\n                           <div ng-bind-html="$ctrl.getRubricWithAssetPaths(component.rubric)"></div>\n                       </md-card-content>\n                    </md-card>\n                </div>\n            </md-card-content>\n        </md-card>'
 };
 
 exports.default = NodeInfo;

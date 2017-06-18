@@ -12,6 +12,10 @@ class NodeInfoController {
         };
     };
 
+    /**
+     * Get the content for this node
+     * @return object with the node content
+     */
     getNodeContent() {
         let result = null;
 
@@ -26,7 +30,7 @@ class NodeInfoController {
 
     /**
      * Get the components for this node with student work.
-     * @return an array that contains the content for the components
+     * @return array that contains the content for the components
      */
     getComponents() {
         let components = null;
@@ -51,6 +55,15 @@ class NodeInfoController {
 
         return components;
     }
+
+    /**
+     * Get a rubric with the wise asset paths replaced
+     * @param rubric string
+     * @return string containing rubric html content
+     */
+    getRubricWithAssetPaths(rubric) {
+        return this.ProjectService.replaceAssetPaths(rubric);
+    }
 }
 
 NodeInfoController.$inject = [
@@ -73,7 +86,7 @@ const NodeInfo = {
                 </div>
             </md-card-title>
             <md-card-content class="annotations__body md-body-1">
-                <div ng-bind-html="$ctrl.nodeContent.rubric"></div>
+                <div ng-bind-html="$ctrl.getRubricWithAssetPaths($ctrl.nodeContent.rubric)"></div>
             </md-card-content>
         </md-card>
         <md-card class="node-info node-content" style="border-color: {{ $ctrl.color }};">
@@ -102,7 +115,7 @@ const NodeInfo = {
                            </div>
                        </md-card-title>
                        <md-card-content class="annotations__body md-body-1">
-                           <div ng-bind-html="component.rubric"></div>
+                           <div ng-bind-html="$ctrl.getRubricWithAssetPaths(component.rubric)"></div>
                        </md-card-content>
                     </md-card>
                 </div>
