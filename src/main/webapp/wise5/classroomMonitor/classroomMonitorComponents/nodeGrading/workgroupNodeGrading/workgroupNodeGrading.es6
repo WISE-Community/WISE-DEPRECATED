@@ -111,17 +111,6 @@ class WorkgroupNodeGradingController {
 
         return result;
     }
-
-    toggleComponentVisibility($event, componentId) {
-        let index = this.hiddenComponents.indexOf(componentId);
-        if (index > -1) {
-            this.hiddenComponents.splice(index, 1);
-        } else {
-            this.hiddenComponents.push(componentId);
-        }
-
-        this.onUpdate({value: this.hiddenComponents, event: $event});
-    }
 }
 
 WorkgroupNodeGradingController.$inject = [
@@ -134,24 +123,11 @@ const WorkgroupNodeGrading = {
     bindings: {
         workgroupId: '<',
         nodeId: '@',
-        visibleComponents: '<',
-        hiddenComponents: '<',
-        onUpdate: '&'
+        hiddenComponents: '<'
     },
     template:
         `<div class="nav-item__grading">
             <div id="{{component.id}}_{{$ctrl.workgroupId}}" class="component--grading" ng-repeat='component in $ctrl.components | filter:{hasWork: true}'>
-                <div ng-if="$ctrl.components.length > 1" layout="row" layout-align="end center">
-                    <md-button ng-click="$ctrl.toggleComponentVisibility($event, component.id)"
-                               class="component--grading__toggle transform--none"
-                               flex="100"
-                               ng-class="{'component--grading__toggle--hidden':!$ctrl.isComponentVisible(component.id)}"
-                               aria-label="{{$ctrl.isComponentVisible(component.id) ? ('hideSection'|translate) : ('showSection'|translate)}}"
-                               title="{{$ctrl.isComponentVisible(component.id) ? ('hideSection'|translate) : ('showSection'|translate)}}">
-                        <md-icon ng-if="$ctrl.isComponentVisible(component.id)">expand_less</md-icon>
-                        <md-icon ng-if="!$ctrl.isComponentVisible(component.id)">expand_more</md-icon>
-                    </md-button>
-                </div>
                 <component ng-if='component.showPreviousWorkNodeId != null && component.showPreviousWorkComponentId != null && component.showPreviousWorkNodeId != "" && component.showPreviousWorkComponentId != ""'
                            ng-show="$ctrl.isComponentVisible(component.id)"
                            class="component-container"

@@ -199,6 +199,11 @@ md-select-menu md-option[selected] {
     font-weight: 500;
 }
 
+md-optgroup label {
+    padding: 8px 12px;
+    text-transform: none;
+}
+
 md-dialog {
     max-width: 90%;
     display: flex !important; // TODO: not sure why this is necessary for some dialogs (compenent revision display for example get 'display: initial' added automatically)

@@ -675,8 +675,7 @@ var NodeGradingController = function () {
             var rubricTitle = this.$translate('STEP_INFO');
 
             /*
-             * create the header for the popup that contains the project title,
-             * 'Open in New Tab' button, and 'Close' button
+             * create the dialog header, actions, and content elements
              */
             var dialogHeader = '<md-toolbar>\n                <div class="md-toolbar-tools gray-darkest-bg">\n                    <h2>' + stepNumberAndTitle + '</h2>\n                </div>\n            </md-toolbar>';
 
@@ -842,18 +841,8 @@ var NodeGradingController = function () {
         }
     }, {
         key: 'onUpdateHiddenComponents',
-        value: function onUpdateHiddenComponents(value, event) {
-            var _this2 = this;
-
-            var target = event.target;
-            var viewportOffsetTop = target.getBoundingClientRect().top;
-
-            this.hiddenComponents = value;
-            this.hiddenComponents = angular.copy(this.hiddenComponents);
-
-            this.$timeout(function () {
-                _this2.updateScroll(target, viewportOffsetTop);
-            }, 200);
+        value: function onUpdateHiddenComponents(value) {
+            this.hiddenComponents = angular.copy(value);
         }
 
         /**
