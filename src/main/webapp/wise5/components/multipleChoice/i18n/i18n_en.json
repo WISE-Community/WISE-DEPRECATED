@@ -1,4 +1,5 @@
 {
+    "MultipleChoice.componentTypeLabel": "Multiple Choice",
     "multipleChoice.addChoice": "Add Choice",
     "multipleChoice.checkbox": "Checkbox",
     "multipleChoice.radio": "Radio",

@@ -1,4 +1,5 @@
 {
+    "AudioOscillator.componentTypeLabel": "Audio Oscillator",
     "audioOscillator.add": "Add",
     "audioOscillator.addOscillatorType": "Add Oscillator Type",
     "audioOscillator.errorYouHaveAlreadyAddedOscillatorType": "Error: You have already added {{oscillatorTypeToAdd}}",

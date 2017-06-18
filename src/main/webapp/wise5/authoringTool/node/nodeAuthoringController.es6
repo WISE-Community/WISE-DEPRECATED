@@ -281,20 +281,21 @@ class NodeAuthoringController {
         ];
 
         // the array of component types that can be created
+        // TODO: automate by looping through active component types for this WISE instance
         this.componentTypes = [
-            {componentType: 'AudioOscillator', componentName: 'Audio Oscillator'},
-            {componentType: 'ConceptMap', componentName: 'Concept Map'},
-            {componentType: 'Discussion', componentName: 'Discussion'},
-            {componentType: 'Draw', componentName: 'Draw'},
-            {componentType: 'Embedded', componentName: 'Embedded'},
-            {componentType: 'Graph', componentName: 'Graph'},
-            {componentType: 'HTML', componentName: 'HTML'},
-            {componentType: 'Label', componentName: 'Label'},
-            {componentType: 'Match', componentName: 'Match'},
-            {componentType: 'MultipleChoice', componentName: 'Multiple Choice'},
-            {componentType: 'OpenResponse', componentName: 'Open Response'},
-            {componentType: 'OutsideURL', componentName: 'Outside URL'},
-            {componentType: 'Table', componentName: 'Table'}
+            {componentType: 'AudioOscillator', componentName: this.UtilService.getComponentTypeLabel('AudioOscillator')},
+            {componentType: 'ConceptMap', componentName: this.UtilService.getComponentTypeLabel('ConceptMap')},
+            {componentType: 'Discussion', componentName: this.UtilService.getComponentTypeLabel('Discussion')},
+            {componentType: 'Draw', componentName: this.UtilService.getComponentTypeLabel('Draw')},
+            {componentType: 'Embedded', componentName: this.UtilService.getComponentTypeLabel('Embedded')},
+            {componentType: 'Graph', componentName: this.UtilService.getComponentTypeLabel('Graph')},
+            {componentType: 'HTML', componentName: this.UtilService.getComponentTypeLabel('HTML')},
+            {componentType: 'Label', componentName: this.UtilService.getComponentTypeLabel('Label')},
+            {componentType: 'Match', componentName: this.UtilService.getComponentTypeLabel('Match')},
+            {componentType: 'MultipleChoice', componentName: this.UtilService.getComponentTypeLabel('MultipleChoice')},
+            {componentType: 'OpenResponse', componentName: this.UtilService.getComponentTypeLabel('OpenResponse')},
+            {componentType: 'OutsideURL', componentName: this.UtilService.getComponentTypeLabel('OutsideURL')},
+            {componentType: 'Table', componentName: this.UtilService.getComponentTypeLabel('Table')}
         ];
 
         // set the drop down to the first item

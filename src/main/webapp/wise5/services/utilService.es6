@@ -2,8 +2,12 @@
 
 class UtilService {
 
-    constructor($rootScope) {
+    constructor($filter,
+                $rootScope) {
+        this.$filter = $filter;
         this.$rootScope = $rootScope;
+
+        this.$translate = this.$filter('translate');
     }
 
     /**
@@ -730,6 +734,17 @@ class UtilService {
 
         return dateTimeString;
     }
+
+    /**
+     * Get the label for the given component type
+     * @param componentType string
+     * @return string label for the component type
+     */
+    getComponentTypeLabel(componentType) {
+        let label = this.$translate(componentType + '.componentTypeLabel');
+
+        return label ? label : componentType;
+    }
 }
 
 // Get the last element of the array
@@ -740,6 +755,7 @@ if (!Array.prototype.last) {
 };
 
 UtilService.$inject = [
+    '$filter',
     '$rootScope'
 ];
 
