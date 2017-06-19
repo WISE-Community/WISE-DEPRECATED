@@ -41,7 +41,7 @@
     },
     "restoreAndRevise": {
         "description": "Text for link to restore and revise a deleted idea",
-        "value": "Επαναφορά και Αναθεώρηση"
+        "value": "Επαναφορά & Αναθεώρηση"
     },
     "remove": {
         "description": "Text for link to remove a deleted idea from the organizing space",
@@ -69,11 +69,11 @@
     },
     "constraint_mustCompleteExplainWarning": {
         "description": "Text to display when user tries to advance in the project before completing this Explanation Builder step",
-        "value": "Πρέπει να ολοκλρώσετε την εργασία σας για {0} {1} πριν προχωρήσετε παρακάτων. Τακτοποιήστε μερικές {2} στο Χώρο Οργάνωσης. Κατόπιν επιλέξτε \"{3}\" και δακτυλογραφήστε την απάντησή σας. Όταν τελειώσετε, επιλέξτε \"{4}\"."
+        "value": "Πρέπει να ολοκλρώσετε την δουλειά για {0} {1} πριν προχωρήσετε παρακάτω. Τακτοποιήστε μερικές {2} στο Χώρο Οργάνωσης. Κατόπιν επιλέξτε \"{3}\" και δακτυλογραφήστε την απάντησή σας. Όταν τελειώσετε, επιλέξτε \"{4}\"."
     },
     "constraint_mustCompleteWarning": {
         "description": "Text to display when user tries to advance in the project before completing this Explanation Builder step (with explanation feature enabled)",
-        "value": "Πρέπει να ολοκλρώσετε την εργασία σας για {0} {1} πριν προχωρήσετε παρακάτω. Τακτοποιήστε μερικές {2} στο Χώρο Οργάνωσης."
+        "value": "Πρέπει να ολοκλρώσετε τη δουλειά για {0} {1} πριν προχωρήσετε παρακάτω. Τακτοποιήστε μερικές {2} στο Χώρο Οργάνωσης."
     },
     "ideaTableHeader": {
         "description": "Header text for the ideas table",

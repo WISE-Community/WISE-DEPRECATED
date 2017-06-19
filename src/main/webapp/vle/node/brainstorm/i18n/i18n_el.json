@@ -1,70 +1,70 @@
 {
     "my_response": {
-        "value": "Η Απάντησή μου",
-        "description": "The text 'My Response' right above the textbox where the student types in their response"
+        "description": "The text 'My Response' right above the textbox where the student types in their response",
+        "value": "Η Απάντησή μου"
     },
     "save": {
-        "value": "Αποθήκευση",
-        "description": "The text 'Save' on the button to save and post a brainstorm response"
+        "description": "The text 'Save' on the button to save and post a brainstorm response",
+        "value": "Αποθήκευση"
     },
     "showStarterSentence": {
-        "value": "Προβολή Αρχικής Πρότασης",
-        "description": "Text for link to show the starter sentence for the step"
+        "description": "Text for link to show the starter sentence for the step",
+        "value": "Προβολή Αρχικής Πρότασης"
     },
     "save_noContent": {
-        "value": "Δεν υπάρχει τίποτα για Αποθήκευση",
-        "description": "Text to display when user tries to save an empty post or replay"
+        "description": "Text to display when user tries to save an empty post or replay",
+        "value": "Δεν υπάρχει τίποτα για Αποθήκευση"
     },
     "save_success": {
-        "value": "Η Ανάρτηση αποθηκεύτηκε!",
-        "description": "Save success confirmation message"
+        "description": "Save success confirmation message",
+        "value": "Η Ανάρτηση αποθηκεύτηκε!"
     },
     "other_student_responses": {
-        "value": "Απαντήσεις Άλλων Μαθητών",
-        "description": "The text 'Other Student Responses' that is displayed above the list of other students' responses"
+        "description": "The text 'Other Student Responses' that is displayed above the list of other students' responses",
+        "value": "Απαντήσεις Άλλων Μαθητών"
     },
     "check_for_new_responses": {
-        "value": "Έλεγχος για Άλλες Απαντήσεις",
-        "description": "The text 'Check for New Responses' that is displayed on a button that triggers the loading of other students' responses"
+        "description": "The text 'Check for New Responses' that is displayed on a button that triggers the loading of other students' responses",
+        "value": "Έλεγχος για Άλλες Απαντήσεις"
     },
     "postedByLabel": {
-        "value": "Αναρτήθηκε από:",
-        "description": "Label text indicating user that posted a message"
+        "description": "Label text indicating user that posted a message",
+        "value": "Αναρτήθηκε από:"
     },
     "importAssetButtonTitle": {
-        "value": "Χρήση της Χρήσιμης Ιδέας μου",
-        "description": "Text to display on the button to import asset and use in a brainstorm post"
+        "description": "Text to display on the button to import asset and use in a brainstorm post",
+        "value": "Χρήση του Χρήσιμου Στοιχείου μου"
     },
     "post_reply": {
-        "value": "Απάντηση στην Ανάρτηση",
-        "description": "Text for button/link to add a new reply to a brainstorm post"
+        "description": "Text for button/link to add a new reply to a brainstorm post",
+        "value": "Απάντηση στην Ανάρτηση"
     },
     "title": {
-        "value": "Καταιγισμός Ιδεών Μαθητών",
-        "description": "The title for a brainstorm step"
+        "description": "The title for a brainstorm step",
+        "value": "Καταιγισμός Ιδεών Μαθητών"
     },
     "save_fail": {
-        "value": "Σφάλμα: Αποτυχία στην αποθήκευση ανάρτησης.",
-        "description": "Error text to display when server fails to save user's post or reply"
+        "description": "Error text to display when server fails to save user's post or reply",
+        "value": "Σφάλμα: Αποτυχία στην αποθήκευση ανάρτησης."
     },
     "instructions": {
-        "value": "Διαβάστε παρακάτω το θέμα για καταιγισμό ιδέων, στη συνέχεια γράψτε την απάντησή σας στο κενό κουτί. Πατήστε {0} για να αποθηκεύσετε τη δουλειά σας και για να εξετάσετε τις απαντήσεις των άλλων μαθητών",
-        "description": "The instructions for the brainstorm step"
+        "description": "The instructions for the brainstorm step",
+        "value": "Διαβάστε παρακάτω το θέμα για καταιγισμό ιδέων, στη συνέχεια γράψτε την απάντησή σας στο κενό κουτί. Πατήστε {0} για να αποθηκεύσετε τη δουλειά σας και για να εξετάσετε τις απαντήσεις των άλλων μαθητών"
     },
     "save_preview_mode": {
-        "value": "Μπορείτε να αποθηκεύσετε την απάντησή σας και να δείτε τις απαντήσεις των άλλων μαθητών όταν αυτή η ενότητα στηθεί για εκτέλεση μέσα στην τάξη",
-        "description": "The text to show when user clicks on the Save button in preview mode."
+        "description": "The text to show when user clicks on the Save button in preview mode.",
+        "value": "Μπορείτε να αποθηκεύσετε την απάντησή σας και να δείτε τις απαντήσεις των άλλων μαθητών όταν αυτή η ενότητα στηθεί για εκτέλεση μέσα στην τάξη"
     },
     "check_for_new_responses_preview_mode": {
-        "value": "Μπορείτε να δείτε τις απαντήσεις των άλλων μαθητών όταν αυτή η ενότητα στηθεί για εκτέλεση μέσα στην τάξη.",
-        "description": "The text to show when user clicks on the Check for New Responses button in preview mode."
+        "description": "The text to show when user clicks on the Check for New Responses button in preview mode.",
+        "value": "Μπορείτε να δείτε τις απαντήσεις των άλλων μαθητών όταν αυτή η ενότητα στηθεί για εκτέλεση μέσα στην τάξη."
     },
     "flag_inappropriate": {
-        "value": "Αυτό το σχόλιο έχει σηματοδοτηθεί ως ακατάλληλο.",
-        "description": "Text to display when a comment has been removed"
+        "description": "Text to display when a comment has been removed",
+        "value": "Αυτό το σχόλιο έχει σηματοδοτηθεί ως ακατάλληλο."
     },
     "noStarter": {
-        "value": "Δεν υπάρχει συγκεκριμένη αρχική πρόταση για αυτό το {0}.",
-        "description": "Text to display when user requests to display starter sentence but step does not have one set"
+        "description": "Text to display when user requests to display starter sentence but step does not have one set",
+        "value": "Δεν υπάρχει συγκεκριμένη αρχική πρόταση για αυτό το {0}."
     }
 }

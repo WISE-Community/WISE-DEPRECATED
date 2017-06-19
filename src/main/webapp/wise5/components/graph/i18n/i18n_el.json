@@ -47,7 +47,7 @@
   "graph.seriesNumbers": "Αριθμοί Σειρών",
   "graph.skipFirstRow": "Παράκαμψη Πρώτης Σειράς",
   "graph.square": "Τετράγωνο",
-  "graph.studentAddingPointToHiddenSeriesMessage": "Η σειρά στην οποία προσπαθείτε να προσθέσεστε σημείο είναι κρυμμένη. Παρακαλώ προβάλετε τη σειρά πατώντας το όνομα της σειράς στη λεζάντα και προσπαθήστε ξανά.",
+  "graph.studentAddingPointToHiddenSeriesMessage": "Η σειρά στην οποία προσπαθείτε να προσθέσεστε σημείο είναι κρυμμένη. Παρακαλώ προβάλετε τη σειρά πατώντας το όνομα της σειράς στη λεζάντα και προσπαθήστε ξανά να προσθέσετε το σημείο.",
   "graph.symbol": "Σύμβολο",
   "graph.timeSeconds": "Χρόνος (seconds)",
   "graph.trial": "Δοκιμή",
@@ -68,5 +68,5 @@
   "graph.yColumn": "Στήλη Υ",
   "graph.yMax": "Μέγιστο Υ",
   "graph.yMin": "Ελάχιστο Υ",
-  "graph.youCanNotEditThisSeriesPleaseChooseASeriesThatCanBeEdited": "Δεν μπορείτε να επεξεργαστείτε αυτή τη σειρά. Παρακαλώ επιλέξετε μια σειρά η οποία μπορεί να υποστεί επεξεργασίας"
+  "graph.youCanNotEditThisSeriesPleaseChooseASeriesThatCanBeEdited": "Δεν μπορείτε να επεξεργαστείτε αυτή τη σειρά. Παρακαλώ επιλέξετε μια σειρά η οποία μπορεί να υποστεί επεξεργασία."
 }

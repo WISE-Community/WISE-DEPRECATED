@@ -101,7 +101,7 @@
     },
     "if_you_are_ready": {
         "description": "The reminder to the student that they should click the check answer button if they are ready to check their work",
-        "value": "Αν είστε έτοιμοι να ελέγξετε την απάντησή σας, πατήστε το εικονίδια 'Έλεγχος Απάντησης'/"
+        "value": "Αν είστε έτοιμοι να ελέγξετε την απάντησή σας, πατήστε το εικονίδιο 'Έλεγχος Απάντησης'/"
     },
     "you_will_not_be_able_to_make_edits_after": {
         "description": "The message to ask the student if they are sure they want to submit",
@@ -117,7 +117,7 @@
     },
     "you_have_successfully_reviewed": {
         "description": "The message to tell the student they have reviewed the work submitted by a classmate",
-        "value": "Έχετε εξετάσει με επιτυχία την εργασία που υποβλήθηκη από "
+        "value": "Έχετε εξετάσει με επιτυχία την εργασία που υποβλήθηκε από "
     },
     "team_anonymous": {
         "description": "The label to show the work is from an anonymous classmate",
@@ -161,7 +161,7 @@
     },
     "students_work_from_first_peer_review_step": {
         "description": "The place holder for where the student work from the first peer review step will display",
-        "value": "Η εργασία των μαθητών από το πρώτο βήμα αξιολόγησης θα προβληθεί εδώ"
+        "value": "Η δουλειά των μαθητών από το πρώτο βήμα αξιολόγησης θα προβληθεί εδώ"
     },
     "has_given_you_the_following_feedback": {
         "description": "The label for the feedback that another group has given them",
@@ -245,7 +245,7 @@
     },
     "save_answer": {
         "description": "The label for the save answer in the grading view",
-        "value": "Αποθήκευση Απάντηση"
+        "value": "Αποθήκευση Απάντησης"
     },
     "auto_score": {
         "description": "The label for the auto score in the grading view",

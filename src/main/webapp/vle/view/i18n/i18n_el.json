@@ -153,7 +153,7 @@
     },
     "node_annotations_instructions": {
         "description": "The message at the bottom of the feedback popup to tell the student they can always bring the popup back up",
-        "value": "Μπορείτε πάντα να δείτε αυτή την ανατροφοδότηση πατώντασ στην εικόνα \"{0}\"."
+        "value": "Μπορείτε πάντα να δείτε αυτή την ανατροφοδότηση πατώντας στην εικόνα \"{0}\"."
     },
     "show_previous_work_message": {
         "description": "The message that shows the step number and title and the work from a previous step.",
@@ -345,7 +345,7 @@
     },
     "ideaBasket_deletedIdeaTitle": {
         "description": "Title/tooltip for a deleted idea in the Idea Basket",
-        "value": "Πατηστε στην εικόνα + για να βγάλετε αυτή την {0} έξω από τον κάδο απορριμάτων"
+        "value": "Πατήστε στην εικόνα + για να βγάλετε αυτή την {0} έξω από τον κάδο απορριμάτων"
     },
     "ideaBasket_editLinkText": {
         "description": "Text for link to edit an idea in the Idea Basket",
@@ -453,7 +453,7 @@
     },
     "ideaManager_addIdea_textLabel": {
         "description": "Label for the idea text input field in add or edit idea forms in the Idea Manager tools",
-        "value": "Δακτυλογαφήστε την {0} σας εδώ*:"
+        "value": "Δακτυλογραφήστε την {0} σας εδώ*:"
     },
     "ideaManager_addIdea_title": {
         "description": "Title text for the add new idea dialog/form in Idea Manager tools",
@@ -765,7 +765,7 @@
     },
     "welcome_users_default": {
         "description": "Text to display in VLE for user name in preview mode",
-        "value": "Καλωσόρισες Δοκιμαστικέ Χρήστη!"
+        "value": "Καλωσόρισατε Δοκιμαστικέ Χρήστη!"
     },
     "grading_change_team": {
         "description": "text to show in the 'Change Team' button in the grading tool that brings up the grade-by-team page",
@@ -1273,7 +1273,7 @@
     },
     "classroomMonitor_stepProgress_headers_studentsOnStep": {
         "description": "Header text for the column column showing current number of students in the step progress table of classroom monitor",
-        "value": "Στο Βήμσ"
+        "value": "Στο Βήμα"
     },
     "classroomMonitor_stepProgress_headers_maxScore": {
         "description": "Header text for the max score column in the step progress table of classroom monitor",
@@ -1321,11 +1321,11 @@
     },
     "session_timeout_warning": {
         "description": "Warning text to display to users in the session timeout alert.",
-        "value": "Έχετε μείνει αδρανής για πολύ ώρα. Αν δεν ανανεώσετε την συνεδρίασή σας τώρα, θα αποσυνδεθείτε από το WISE."
+        "value": "Έχετε μείνει αδρανείς για πολύ ώρα. Αν δεν ανανεώσετε την συνεδρίασή σας τώρα, θα αποσυνδεθείτε από το WISE."
     },
     "session_timeout_message": {
         "description": "Text to display to display to users when there session timed out and they have been logged out of WISE.",
-        "value": "Έχετε μείνει αδρανής για πολύ ώρα και αποσυνδεθήκατε. Παρακαλώ συνδεθείτε ξανά για να συνεχίσετε."
+        "value": "Έχετε μείνει αδρανείς για πολύ ώρα και αποσυνδεθήκατε. Παρακαλώ συνδεθείτε ξανά για να συνεχίσετε."
     },
     "session_timeout_title": {
         "description": "Title text for the session timeout alert.",

@@ -105,7 +105,7 @@
     },
     "error_applets_are_disabled": {
         "description": "The error message to display when applets are disabled in the browser",
-        "value": "Σφάλμα: Τα applets είναι απενεργοποιημένα στον περιηγήτή σας. Παρακαλώ διαβάστε τις οδηγίες."
+        "value": "Σφάλμα: Τα applets είναι απενεργοποιημένα στον περιηγητή σας. Παρακαλώ διαβάστε τις οδηγίες."
     },
     "error_x_min_is_not_a_number": {
         "description": "The error message to display to the student when they enter a non number into the x min field",

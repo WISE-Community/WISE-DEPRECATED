@@ -49,7 +49,7 @@
     },
     "eraseDrawing_dialog_warning": {
         "description": "Warning text for the erase drawing dialog",
-        "value": "Προειδοποίηση! Αυτό θα σβήση το τρέχον σχέδιο και θα το αντικαταστήσει με την κατάσταση προεπιλογής."
+        "value": "Προειδοποίηση! Αυτό θα σβήσει το τρέχον σχέδιο και θα το αντικαταστήσει με την κατάσταση προεπιλογής."
     },
     "eraseDrawing_dialog_instructions": {
         "description": "Instructions text for the erase drawing dialog",
@@ -201,7 +201,7 @@
     },
     "annotator_newLabel": {
         "description": "Text for button to add a new label",
-        "value": "Νέα Ετικέτα"
+        "value": "Νέα Επισήμανση"
     },
     "annotator_newLabel_instructions": {
         "description": "Instructions text for how to create new label",
@@ -209,11 +209,11 @@
     },
     "annotator_editLabel_instructions": {
         "description": "Instructions text for how to create new label (for non-touch screens)",
-        "value": "Πατήστε μια υπάρχουσα ετικέτα για επεξεργασία ή διαγραφή"
+        "value": "Πατήστε μια υπάρχουσα επισήμανση για επεξεργασία ή διαγραφή"
     },
     "annotator_editLabel_instructions_touch": {
         "description": "Instructions text for how to create new label (for touch screens)",
-        "value": "Ακουμπήστε μια υπάρχουσα ετικέτα για επεξεργασία ή διαγραφή"
+        "value": "Ακουμπήστε μια υπάρχουσα επισήμανση για επεξεργασία ή διαγραφή"
     },
     "annotator_deleteLabel": {
         "description": "Text for button to delete a label",
@@ -221,7 +221,7 @@
     },
     "annotator_deleteConfirm": {
         "description": "Confirmation warning text for deleting a label",
-        "value": "Θέλετε σίγουρα να διαγράψετε μόνιμα αυτή την ετικέτα;"
+        "value": "Θέλετε σίγουρα να διαγράψετε μόνιμα αυτή την επισήμανση;"
     },
     "annotator_save": {
         "description": "Text for save button",
@@ -233,7 +233,7 @@
     },
     "annotator_explain_instructions": {
         "description": "Default instructions for the explanation text input area",
-        "value": "Εξηγήστε τις Ετικέτες σας"
+        "value": "Εξηγήστε τις Επισημάνσεις σας"
     },
     "annotator_explain_placeholder": {
         "description": "Placeholder text for the explanation text input area",
@@ -241,19 +241,19 @@
     },
     "annotator_maxWarning": {
         "description": "Alert text to show when user has reached maximum number of allowed labels.",
-        "value": "Λυπάμαι, έχετε φτάσει στον μέγιστο αριθμό ετικετών ({0}). Αν επιθυμείτε να προσθέσετε περισσότερες, παρακαλώ διαγράψτε μερικές και προσπαθήστε ξανά."
+        "value": "Λυπάμαι, έχετε φτάσει στον μέγιστο αριθμό επισημάνσεων ({0}). Αν επιθυμείτε να προσθέσετε περισσότερες, παρακαλώ διαγράψτε μερικές και προσπαθήστε ξανά."
     },
     "annotator_minWarning": {
         "description": "Alert text to show when user tries to go below minimum number of allowed labels.",
-        "value": "Λυπάμαι, δεν μπορείτε να διαγράψετε αυτή την ετικέτα. Πρέπει να έχετε τουλάχιστον {0} ενεργές ετικέτες."
+        "value": "Λυπάμαι, δεν μπορείτε να διαγράψετε αυτή την επισήμανση. Πρέπει να έχετε τουλάχιστον {0} ενεργές επισημάνσεις."
     },
     "annotator_editLabelText": {
         "description": "Label for the edit label text input field",
-        "value": "Κείμενο Ετικέτας:"
+        "value": "Κείμενο Επισήμανσης:"
     },
     "annotator_edit_title": {
         "description": "Title for the edit label dialog",
-        "value": "Επεξεργασία Ετικέτας"
+        "value": "Επεξεργασία Επισήμανσης"
     },
     "annotator_authoring_require": {
         "description": "",
@@ -277,11 +277,11 @@
     },
     "annotator_authoring_maxLabel": {
         "description": "Label for maximum number of allowed labels input in annotator step authoring",
-        "value": "Μέγιστον αριθμός επιτρεπόμενων ετικετών (0 σημαίνει χωρίς όριο):"
+        "value": "Μέγιστον αριθμός επιτρεπόμενων επισημάνσεων (0 σημαίνει χωρίς όριο):"
     },
     "annotator_authoring_minLabel": {
         "description": "Label for minimum number of required labels input in annotator step authoring",
-        "value": "Ελάχιστος αριθμός απαιτούμενων ετικετών:"
+        "value": "Ελάχιστος αριθμός απαιτούμενων επισημάνσεων:"
     },
     "annotator_authoring_promptLabel": {
         "description": "Label for the prompt input in annotator step authoring",
@@ -289,7 +289,7 @@
     },
     "annotator_authoring_defaultColor_label": {
         "description": "Label for the default label color select in annotator step authoring",
-        "value": "Προεπιλεγμένο χρώμα ετικέτας:"
+        "value": "Προεπιλεγμένο χρώμα επισήμανσης:"
     },
     "annotator_authoring_responseLabel": {
         "description": "Label for the enable student response box checkbox in annotator step authoring",

@@ -1,106 +1,106 @@
 {
     "help": {
-        "value": "βοήθεια",
-        "description": "The word 'help'"
+        "description": "The word 'help'",
+        "value": "βοήθεια"
     },
     "multiple_choice": {
-        "value": "Πολλαπλή Επιλογή",
-        "description": "The text 'Multiple Choice'"
+        "description": "The text 'Multiple Choice'",
+        "value": "Πολλαπλή Επιλογή"
     },
     "question": {
-        "value": "ερώτηση",
-        "description": "The word 'question'"
+        "description": "The word 'question'",
+        "value": "ερώτηση"
     },
     "answers": {
-        "value": "απαντήσεις",
-        "description": "The word 'answers'"
+        "description": "The word 'answers'",
+        "value": "απαντήσεις"
     },
     "challenge_question": {
-        "value": "Ερώτηση Πρόκληση",
-        "description": "The text 'Challenge Question'"
+        "description": "The text 'Challenge Question'",
+        "value": "Ερώτηση Πρόκληση"
     },
     "you_have_completed_this_step": {
-        "value": "Έχετε ολοκληρώσει αυτό το βήμα.",
-        "description": "The text that notifies the student that they have completed the step"
+        "description": "The text that notifies the student that they have completed the step",
+        "value": "Έχετε ολοκληρώσει αυτό το βήμα."
     },
     "current_possible_score": {
-        "value": "Τρέχουσα Πιθανή Βαθμολογία:",
-        "description": "The text 'Current Possible Score:' that shows the score that the student can receive when they answer correctly"
+        "description": "The text 'Current Possible Score:' that shows the score that the student can receive when they answer correctly",
+        "value": "Τρέχουσα Πιθανή Βαθμολογία:"
     },
     "check_answer": {
-        "value": "Έλεγχος Απάντησης",
-        "description": "The text for the button to check the answer"
+        "description": "The text for the button to check the answer",
+        "value": "Έλεγχος Απάντησης"
     },
     "try_again": {
-        "value": "Προσπαθήστε Ξανά",
-        "description": "The text for the button to try again when the student answered incorrectly"
+        "description": "The text for the button to try again when the student answered incorrectly",
+        "value": "Προσπαθήστε Ξανά"
     },
     "save_answer": {
-        "value": "Αποθήκευση Απάντησης",
-        "description": "The text for the button to save the answer if there is no correct answer"
+        "description": "The text for the button to save the answer if there is no correct answer",
+        "value": "Αποθήκευση Απάντησης"
     },
     "edit_answer": {
-        "value": "Επεξεργασία Απάντησης",
-        "description": "The text for the button to edit the answer if there is no correct answer"
+        "description": "The text for the button to edit the answer if there is no correct answer",
+        "value": "Επεξεργασία Απάντησης"
     },
     "this_is_attempt_x": {
-        "value": "Αυτή είναι η προσπάθεια #{0}",
-        "description": "Message to display to student which attempt they're on"
+        "description": "Message to display to student which attempt they're on",
+        "value": "Αυτή είναι η προσπάθεια #{0}"
     },
     "you_received": {
-        "value": "Λάβατε",
-        "description": "The text 'You received' to show you received x points"
+        "description": "The text 'You received' to show you received x points",
+        "value": "Λάβατε"
     },
     "points": {
-        "value": "πόντο (πόντους)",
-        "description": "The text 'point(s).' to show you received x points"
+        "description": "The text 'point(s).' to show you received x points",
+        "value": "πόντο (πόντους)"
     },
     "you_have_selected_too_many_please_select": {
-        "value": "Έχετε επιλέξει πάρα πολλά. Παρακαλώ επιλέξτε μόνο",
-        "description": "The text that tells the student they have selected too many checkboxes"
+        "description": "The text that tells the student they have selected too many checkboxes",
+        "value": "Έχετε επιλέξει πάρα πολλά. Παρακαλώ επιλέξτε μόνο"
     },
     "you_have_not_selected_enough_please_select": {
-        "value": "Δεν έχετε επιλέξει αρκετά. Παρακαλώ επιλέξτε",
-        "description": "The text that tells the student they have not selected enough items"
+        "description": "The text that tells the student they have not selected enough items",
+        "value": "Δεν έχετε επιλέξει αρκετά. Παρακαλώ επιλέξτε"
     },
     "choices": {
-        "value": "επιλογές.",
-        "description": "The text 'choices.' to tell the student they have "
+        "description": "The text 'choices.' to tell the student they have ",
+        "value": "επιλογές."
     },
     "you_have_completed_this_question": {
-        "value": "Έχετε ολοληρώσει με επιτυχία αυτή την ερώτηση.",
-        "description": "The text that tells the student they have completed this question"
+        "description": "The text that tells the student they have completed this question",
+        "value": "Έχετε ολοληρώσει με επιτυχία αυτή την ερώτηση."
     },
     "please_review": {
-        "value": "Παρακαλώ εξετάστε",
-        "description": "The beginning of the text that tells the student to please review a previous step before trying again"
+        "description": "The beginning of the text that tells the student to please review a previous step before trying again",
+        "value": "Παρακαλώ εξετάστε"
     },
     "step": {
-        "value": "Βήμα",
-        "description": "The text 'Step'"
+        "description": "The text 'Step'",
+        "value": "Βήμα"
     },
     "before_trying_again": {
-        "value": "πριν προσπαθήσετε αυτό το βήμα πάλι.",
-        "description": "The end of the text that tells the student to please visit a previous step before trying again"
+        "description": "The end of the text that tells the student to please visit a previous step before trying again",
+        "value": "πριν προσπαθήσετε αυτό το βήμα πάλι."
     },
     "you_must_visit": {
-        "value": "Πρέπει να επισκεφθείτε",
-        "description": "The beginning of the text that tells the student to please visit a previous step before trying again"
+        "description": "The beginning of the text that tells the student to please visit a previous step before trying again",
+        "value": "Πρέπει να επισκεφθείτε"
     },
     "auto_graded_score": {
-        "value": "Αποτέλεσμα αυτο-βαθμολόγησης",
-        "description": "The label for the auto graded score in the grading view"
+        "description": "The label for the auto graded score in the grading view",
+        "value": "Αποτέλεσμα αυτο-βαθμολόγησης"
     },
     "take_me_there": {
-        "value": "Πήγαινέ με εκεί!",
-        "description": "The button text 'take me there' to show students when they answer the Challenge Question incorrectly."
+        "description": "The button text 'take me there' to show students when they answer the Challenge Question incorrectly.",
+        "value": "Πήγαινέ με εκεί!"
     },
     "close_dialog": {
-        "value": "Κλείσιμο",
-        "description": "The button text 'close' to close the dialog."
+        "description": "The button text 'close' to close the dialog.",
+        "value": "Κλείσιμο"
     },
     "back_to_cq": {
-        "value": "Πίσω στην Ερώτηση Πρόκληση",
-        "description": "The button text 'Back to Challenge Question' to bring student back to the Challenge Question step."
+        "description": "The button text 'Back to Challenge Question' to bring student back to the Challenge Question step.",
+        "value": "Πίσω στην Ερώτηση Πρόκληση"
     }
 }

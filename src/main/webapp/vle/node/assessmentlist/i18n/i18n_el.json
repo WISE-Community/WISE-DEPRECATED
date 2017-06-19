@@ -1,122 +1,122 @@
 {
     "questionnaire": {
-        "value": "Ερωτηματολόγιο",
-        "description": "The text 'questionnaire' in the page title"
+        "description": "The text 'questionnaire' in the page title",
+        "value": "Ερωτηματολόγιο"
     },
     "question": {
-        "value": "Ερώτηση",
-        "description": "The text 'question' in the step header, right above where the prompt/question is shown"
+        "description": "The text 'question' in the step header, right above where the prompt/question is shown",
+        "value": "Ερώτηση"
     },
     "submit": {
-        "value": "Υποβολή Ερωτηματολογίου",
-        "description": "The text 'Submit the Questionnaire' on the button shown at the bottom of the questionnaire"
+        "description": "The text 'Submit the Questionnaire' on the button shown at the bottom of the questionnaire",
+        "value": "Υποβολή Ερωτηματολογίου"
     },
     "save_draft": {
-        "value": "ΑΠΟΘΗΚΕΥΣΗ ΠΡΟΣΧΕΔΙΟΥ",
-        "description": "The text 'SAVE DRAFT' on the button shown at the bottom of the questionnaire"
+        "description": "The text 'SAVE DRAFT' on the button shown at the bottom of the questionnaire",
+        "value": "ΑΠΟΘΗΚΕΥΣΗ ΠΡΟΣΧΕΔΙΟΥ"
     },
     "original_question": {
-        "value": "αρχική ερώτηση",
-        "description": "The text 'original question' used in peer review steps"
+        "description": "The text 'original question' used in peer review steps",
+        "value": "αρχική ερώτηση"
     },
     "show_hide_text": {
-        "value": "προβολή/απόκρυψη κειμένου",
-        "description": "The text 'show/hide text' for the button used in peer review steps"
+        "description": "The text 'show/hide text' for the button used in peer review steps",
+        "value": "προβολή/απόκρυψη κειμένου"
     },
     "text_is_hidden": {
-        "value": "το κείμενο είναι κρυμμένο",
-        "description": "The text 'text is hidden' used in peer review steps"
+        "description": "The text 'text is hidden' used in peer review steps",
+        "value": "το κείμενο είναι κρυμμένο"
     },
     "your_original_response...": {
-        "value": "η αρχική σας απάντηση...αυτό το κείμενο επανεγγράφεται από το javascript",
-        "description": "The text used as a place holder to show the original response in peer review steps"
+        "description": "The text used as a place holder to show the original response in peer review steps",
+        "value": "η αρχική σας απάντηση...αυτό το κείμενο επανεγγράφεται από το javascript"
     },
     "annotation": {
-        "value": "επεξήγηση",
-        "description": "The text 'annotation' used in peer review steps"
+        "description": "The text 'annotation' used in peer review steps",
+        "value": "επεξήγηση"
     },
     "link": {
-        "value": "σύνδεσμος",
-        "description": "The word 'link' used to notify the user that the text is a link"
+        "description": "The word 'link' used to notify the user that the text is a link",
+        "value": "σύνδεσμος"
     },
     "to_start_this_step_you_must": {
-        "value": "Για να αρχίσετε αυτό το βήμα πρέπει πρώτα να υποβάλλετε μια απάντηση στο βήμα",
-        "description": "The message to tell the student they must submit a response in another step before they can work on this step"
+        "description": "The message to tell the student they must submit a response in another step before they can work on this step",
+        "value": "Για να αρχίσετε αυτό το βήμα πρέπει πρώτα να υποβάλλετε μια απάντηση στο βήμα"
     },
     "this_step_is_not_available_yet": {
-        "value": "Αυτό το βήμα δεν είναι ακόμα διαθέσιμο",
-        "description": "The text to notify the student that they can't work on this step yet because it is part of a peer review sequence"
+        "description": "The text to notify the student that they can't work on this step yet because it is part of a peer review sequence",
+        "value": "Αυτό το βήμα δεν είναι ακόμα διαθέσιμο"
     },
     "more_of_your_peers_need_to_submit": {
-        "value": "Περισσότεροι συμμαθητές σας χρειάζεται να υποβάλλουν μια απάντηση για το βήμα",
-        "description": "The text to notify the student that more of their classmates need to submit work to this peer review sequence step"
+        "description": "The text to notify the student that more of their classmates need to submit work to this peer review sequence step",
+        "value": "Περισσότεροι συμμαθητές σας χρειάζεται να υποβάλλουν μια απάντηση για το βήμα"
     },
     "you_will_then_be_assigned_a_response": {
-        "value": "Κατόπιν θα σας ανατεθεί μια απάντηση για να την αξιολογήσετε",
-        "description": "The text to notify the student that they will be assigned to review one of their classmate's work"
+        "description": "The text to notify the student that they will be assigned to review one of their classmate's work",
+        "value": "Κατόπιν θα σας ανατεθεί μια απάντηση για να την αξιολογήσετε"
     },
     "please_return_to_this_step_again": {
-        "value": "Παρακαλώ επιστρέψτε πάλι σε αυτό το βήμα σε λίγα λεπτά",
-        "description": "The text to notify the student to try coming back to this step later"
+        "description": "The text to notify the student to try coming back to this step later",
+        "value": "Παρακαλώ επιστρέψτε πάλι σε αυτό το βήμα σε λίγα λεπτά"
     },
     "instructions": {
-        "value": "οδηγίες",
-        "description": "The text 'instructions'"
+        "description": "The text 'instructions'",
+        "value": "οδηγίες"
     },
     "your_feedback_for": {
-        "value": "η ανατροφοδότησή σας για",
-        "description": "The text 'your feedback for'"
+        "description": "The text 'your feedback for'",
+        "value": "η ανατροφοδότησή σας για"
     },
     "work_submitted_by": {
-        "value": "εργασία που υποβλήθηκε από ",
-        "description": "The label to show who submitted the work"
+        "description": "The label to show who submitted the work",
+        "value": "εργασία που υποβλήθηκε από "
     },
     "team_anonymous": {
-        "value": "Ομάδα Ανώνυμη",
-        "description": "The label to show student work is from an anonymous team"
+        "description": "The label to show student work is from an anonymous team",
+        "value": "Ομάδα Ανώνυμη"
     },
     "well_done": {
-        "value": "Εξαιρετική δουλειά!",
-        "description": "The text 'Well done!'"
+        "description": "The text 'Well done!'",
+        "value": "Εξαιρετική δουλειά!"
     },
     "you_have_successfully_reviewed": {
-        "value": "Έχετε αξιολογήσει με επιτυχία την εργασία που υποβλήθηκε από",
-        "description": "The text to notify the student that they have reviewed their classmate's work"
+        "description": "The text to notify the student that they have reviewed their classmate's work",
+        "value": "Έχετε αξιολογήσει με επιτυχία την εργασία που υποβλήθηκε από"
     },
     "your_work_has_been_saved": {
-        "value": "Η εργασία σας έχει αποθηκευτεί.",
-        "description": "The text that notifies the user that their work has been saved"
+        "description": "The text that notifies the user that their work has been saved",
+        "value": "Η δουλειά  σας έχει αποθηκευτεί."
     },
     "your_work_has_been_submitted": {
-        "value": "Η εργασία σας έχει υποβληθεί.",
-        "description": "The text that notifies the user that their work has been submitted"
+        "description": "The text that notifies the user that their work has been submitted",
+        "value": "Η δουλειά σας έχει υποβληθεί."
     },
     "you_have_completed_this_step": {
-        "value": "Έχετε ολοκληρώσει αυτό το βήμα.",
-        "description": "The text that notifies the user that they have completed this step"
+        "description": "The text that notifies the user that they have completed this step",
+        "value": "Έχετε ολοκληρώσει αυτό το βήμα."
     },
     "please_answer_all_the_questions": {
-        "value": "Παρακαλώ απαντήστε όλες τις ερωτήσεις πριν υποβάλλετε αυτό το ερωτηματολόγιο.",
-        "description": "The text to notify the user that they should answer all the questions before submitting"
+        "description": "The text to notify the user that they should answer all the questions before submitting",
+        "value": "Παρακαλώ απαντήστε όλες τις ερωτήσεις πριν υποβάλλετε αυτό το ερωτηματολόγιο."
     },
     "grading_item_part_number": {
-        "value": "Τμήμα {0}:",
-        "description": "'Part X:' to show in the grading view for each item part"
+        "description": "'Part X:' to show in the grading view for each item part",
+        "value": "Τμήμα {0}:"
     },
     "show_starter_sentence": {
-        "value": "Προβολή Αρχικής Πρότασης",
-        "description": "The text for the show starter sentence button"
+        "description": "The text for the show starter sentence button",
+        "value": "Προβολή Αρχικής Πρότασης"
     },
     "click_ok_to_save": {
-        "value": "Πατήστε 'ΟΚ' για αποθήκευση και κλείδωμα αυτού του βήματος. Η εργασία σας θα αποθηκευτεί και δεν θα είναι δυνατόν να κάνετε άλλες αλλαγές. Αν θέλετε να συνεχίσετε να εργάζεστε σε αυτό το βήμα, πατήστε 'Άκυρο'",
-        "description": "The text to notify the student to click 'OK' to save and lock the step"
+        "description": "The text to notify the student to click 'OK' to save and lock the step",
+        "value": "Πατήστε 'ΟΚ' για αποθήκευση και κλείδωμα αυτού του βήματος. Η εργασία σας θα αποθηκευτεί και δεν θα είναι δυνατόν να κάνετε άλλες αλλαγές. Αν θέλετε να συνεχίσετε να εργάζεστε σε αυτό το βήμα, πατήστε 'Άκυρο'"
     },
     "work_from_a_random_classmate": {
-        "value": "Η εργασία από έναν τυχαίο συμμαθητή θα εμφανιστεί εδώ",
-        "description": "The text to notify the user that the work from a random classmate will display here"
+        "description": "The text to notify the user that the work from a random classmate will display here",
+        "value": "Η εργασία από έναν τυχαίο συμμαθητή θα εμφανιστεί εδώ"
     },
     "prompt_from_first_peer_review": {
-        "value": "Υπόδειξη από το πρώτο βήμα αξιολόγησης θα εμφανιστεί εδώ",
-        "description": "The text to notify the user that the prompt from the first step in the peer review sequence will appear here"
+        "description": "The text to notify the user that the prompt from the first step in the peer review sequence will appear here",
+        "value": "Υπόδειξη από το πρώτο βήμα αξιολόγησης θα εμφανιστεί εδώ"
     }
 }

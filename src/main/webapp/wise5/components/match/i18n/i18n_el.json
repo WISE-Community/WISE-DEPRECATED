@@ -9,7 +9,7 @@
   "match.deleteBucket": "Διαγραφή Κάδου",
   "match.deleteChoice": "Διαγραφή Επιλογής",
   "match.incorrectPositionFeedback": "Λάθος Θέση Ανατροφοδότησης",
-  "match.labelForChoicesBucket": "Ετικέτα για κάδο επιλογών",
+  "match.labelForChoicesBucket": "Επισήμανση για κάδο επιλογών",
   "match.ordered": "Παραγγέλθηκε",
   "match.position": "Θέση"
 }
