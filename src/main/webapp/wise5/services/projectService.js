@@ -10085,6 +10085,46 @@ var ProjectService = function () {
 
             return false;
         }
+
+        /**
+         * Get the branch letter in the node position string if the node is in a
+         * branch path
+         * @param nodeId the node id we want the branch letter for
+         * @return the branch letter in the node position if the node is in a branch
+         * path
+         */
+
+    }, {
+        key: 'getBranchLetter',
+        value: function getBranchLetter(nodeId) {
+
+            var branchLetter = null;
+
+            if (nodeId != null) {
+
+                // get the node position e.g. "1.8" or "1.9 A"
+                var nodePosition = this.getNodePositionById(nodeId);
+
+                if (nodePosition != null) {
+
+                    // regex for extracting the branch letter
+                    var branchLetterRegex = /.*([A-Z])/;
+
+                    // run the regex on the node position string
+                    var match = branchLetterRegex.exec(nodePosition);
+
+                    if (match != null) {
+                        /*
+                         * the node position has a branch letter so we will get it
+                         * from the matched group
+                         */
+                        branchLetter = match[1];
+                    }
+                }
+            }
+
+            return branchLetter;
+        }
     }]);
 
     return ProjectService;

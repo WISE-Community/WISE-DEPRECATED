@@ -32,6 +32,8 @@ class DataExportController {
         this.exportScores = false;
         this.exportComments = false;
 
+        this.setDefaultExportSettings();
+
         // get the project
         // create the mapping of node id to order for the import project
         this.ProjectService.retrieveProject().then((projectJSON) => {
@@ -1583,7 +1585,7 @@ class DataExportController {
 
                             // loop through all the components in the step
                             for (var c = 0; c < components.length; c++) {
-                                
+
                                 // set the checked value for the component item
                                 components[c].checked = nodeItem.checked;
                             }
@@ -1950,10 +1952,10 @@ class DataExportController {
                             // the researcher wants to export this step
 
                             if (this.ProjectService.isBranchPoint(nodeId)) {
-                                /*
-                                 * this step is a branch point so we will
-                                 * display which path the student went to
-                                 */
+                                // this step is a branch point
+
+                                var toNodeId = null;
+                                var stepTitle = null;
 
                                 var eventType = 'branchPathTaken';
 
@@ -1968,14 +1970,42 @@ class DataExportController {
                                     latestBranchPathTakenEvent.data.toNodeId != null) {
 
                                     // get the step that the student branched to
-                                    var toNodeId = latestBranchPathTakenEvent.data.toNodeId;
+                                    toNodeId = latestBranchPathTakenEvent.data.toNodeId;
 
                                     // get the title of the step
-                                    var stepTitle = this.ProjectService.getNodePositionAndTitleByNodeId(toNodeId);
+                                    stepTitle = this.ProjectService.getNodePositionAndTitleByNodeId(toNodeId);
+                                }
 
-                                    workgroupRow[columnIdToColumnIndex[nodeId + "-branchPath"]] = stepTitle;
-                                } else {
-                                    workgroupRow[columnIdToColumnIndex[nodeId + "-branchPath"]] = " ";
+                                if (this.exportBranchPathTakenNodeId) {
+                                    // we are exporting the branch path taken node ids
+
+                                    if (toNodeId != null) {
+                                        workgroupRow[columnIdToColumnIndex[nodeId + "-branchPathTakenNodeId"]] = toNodeId;
+                                    } else {
+                                        workgroupRow[columnIdToColumnIndex[nodeId + "-branchPathTakenNodeId"]] = " ";
+                                    }
+                                }
+
+                                if (this.exportBranchPathTaken) {
+                                    // we are exporting branch path taken
+
+                                    var branchLetter = this.ProjectService.getBranchLetter(toNodeId);
+
+                                    if (stepTitle != null) {
+                                        workgroupRow[columnIdToColumnIndex[nodeId + "-branchPathTaken"]] = branchLetter;
+                                    } else {
+                                        workgroupRow[columnIdToColumnIndex[nodeId + "-branchPathTaken"]] = " ";
+                                    }
+                                }
+
+                                if (this.exportBranchPathTakenStepTitle) {
+                                    // we are exporting branch path taken step titles
+
+                                    if (stepTitle != null) {
+                                        workgroupRow[columnIdToColumnIndex[nodeId + "-branchPathTakenStepTitle"]] = stepTitle;
+                                    } else {
+                                        workgroupRow[columnIdToColumnIndex[nodeId + "-branchPathTakenStepTitle"]] = " ";
+                                    }
                                 }
                             }
                         }
@@ -2051,8 +2081,10 @@ class DataExportController {
                                     columnIds.push(columnIdPrefix + "-studentWorkTimestamp");
                                 }
 
-                                // create the column id for the studentWork
-                                columnIds.push(columnIdPrefix + "-studentWork");
+                                if (this.exportStudentWork) {
+                                    // create the column id for the studentWork
+                                    columnIds.push(columnIdPrefix + "-studentWork");
+                                }
 
                                 if (this.exportScoreTimestamps) {
                                     /*
@@ -2090,11 +2122,22 @@ class DataExportController {
                     // the step was selected
 
                     if (this.ProjectService.isBranchPoint(nodeId)) {
-                        /*
-                         * the step is a branch point so we will create a column
-                         * for it
-                         */
-                        columnIds.push(nodeId + "-branchPath");
+                        // the step is a branch point
+
+                        if (this.exportBranchPathTakenNodeId) {
+                            // we are exporting branch path taken node ids
+                            columnIds.push(nodeId + "-branchPathTakenNodeId");
+                        }
+
+                        if (this.exportBranchPathTaken) {
+                            // we are exporting branch path taken
+                            columnIds.push(nodeId + "-branchPathTaken");
+                        }
+
+                        if (this.exportBranchPathTakenStepTitle) {
+                            // we are exporting branch path taken step titles
+                            columnIds.push(nodeId + "-branchPathTakenStepTitle");
+                        }
                     }
                 }
             }
@@ -2285,15 +2328,19 @@ class DataExportController {
                                 descriptionRow[columnIdToColumnIndex[columnIdPrefix + "-studentWorkTimestamp"]] = "Student Work Timestamp";
                             }
 
-                            // fill in the top 7 cells in the column for this component student work
-                            stepTitleRow[columnIdToColumnIndex[columnIdPrefix + "-studentWork"]] = stepTitle;
-                            componentPartNumberRow[columnIdToColumnIndex[columnIdPrefix + "-studentWork"]] = (c + 1);
-                            componentTypeRow[columnIdToColumnIndex[columnIdPrefix + "-studentWork"]] = component.type;
-                            componentPromptRow[columnIdToColumnIndex[columnIdPrefix + "-studentWork"]] = prompt;
-                            nodeIdRow[columnIdToColumnIndex[columnIdPrefix + "-studentWork"]] = nodeId;
-                            componentIdRow[columnIdToColumnIndex[columnIdPrefix + "-studentWork"]] = componentId;
-                            columnIdRow[columnIdToColumnIndex[columnIdPrefix + "-studentWork"]] = columnIdPrefix + "-studentWork";
-                            descriptionRow[columnIdToColumnIndex[columnIdPrefix + "-studentWork"]] = "Student Work";
+                            if (this.exportStudentWork) {
+                                // we are exporting student work
+
+                                // fill in the top 7 cells in the column for this component student work
+                                stepTitleRow[columnIdToColumnIndex[columnIdPrefix + "-studentWork"]] = stepTitle;
+                                componentPartNumberRow[columnIdToColumnIndex[columnIdPrefix + "-studentWork"]] = (c + 1);
+                                componentTypeRow[columnIdToColumnIndex[columnIdPrefix + "-studentWork"]] = component.type;
+                                componentPromptRow[columnIdToColumnIndex[columnIdPrefix + "-studentWork"]] = prompt;
+                                nodeIdRow[columnIdToColumnIndex[columnIdPrefix + "-studentWork"]] = nodeId;
+                                componentIdRow[columnIdToColumnIndex[columnIdPrefix + "-studentWork"]] = componentId;
+                                columnIdRow[columnIdToColumnIndex[columnIdPrefix + "-studentWork"]] = columnIdPrefix + "-studentWork";
+                                descriptionRow[columnIdToColumnIndex[columnIdPrefix + "-studentWork"]] = "Student Work";
+                            }
 
                             if (this.exportScoreTimestamps) {
                                 // we are exporting score timestamps
@@ -2354,18 +2401,58 @@ class DataExportController {
                     }
                 }
 
-                if (this.ProjectService.isBranchPoint(nodeId)) {
-                    // this step is a branch point
+                if (this.exportBranchPathTakenNodeId) {
+                    // we are exporting branch path taken node ids
 
-                    // fill in the top 7 cells in the column for this step branch path taken
-                    stepTitleRow[columnIdToColumnIndex[nodeId + "-branchPath"]] = stepTitle;
-                    componentPartNumberRow[columnIdToColumnIndex[nodeId + "-branchPath"]] = " ";
-                    componentTypeRow[columnIdToColumnIndex[nodeId + "-branchPath"]] = " ";
-                    componentPromptRow[columnIdToColumnIndex[nodeId + "-branchPath"]] = " ";
-                    nodeIdRow[columnIdToColumnIndex[nodeId + "-branchPath"]] = nodeId;
-                    componentIdRow[columnIdToColumnIndex[nodeId + "-branchPath"]] = " ";
-                    columnIdRow[columnIdToColumnIndex[nodeId + "-branchPath"]] = nodeId + "-branchPath";
-                    descriptionRow[columnIdToColumnIndex[nodeId + "-branchPath"]] = "Branch Path";
+                    if (this.ProjectService.isBranchPoint(nodeId)) {
+                        // this step is a branch point
+
+                        // fill in the top 7 cells in the column for this step branch path taken node id
+                        stepTitleRow[columnIdToColumnIndex[nodeId + "-branchPathTakenNodeId"]] = stepTitle;
+                        componentPartNumberRow[columnIdToColumnIndex[nodeId + "-branchPathTakenNodeId"]] = " ";
+                        componentTypeRow[columnIdToColumnIndex[nodeId + "-branchPathTakenNodeId"]] = " ";
+                        componentPromptRow[columnIdToColumnIndex[nodeId + "-branchPathTakenNodeId"]] = " ";
+                        nodeIdRow[columnIdToColumnIndex[nodeId + "-branchPathTakenNodeId"]] = nodeId;
+                        componentIdRow[columnIdToColumnIndex[nodeId + "-branchPathTakenNodeId"]] = " ";
+                        columnIdRow[columnIdToColumnIndex[nodeId + "-branchPathTakenNodeId"]] = nodeId + "-branchPathTakenNodeId";
+                        descriptionRow[columnIdToColumnIndex[nodeId + "-branchPathTakenNodeId"]] = "Branch Path Taken Node ID";
+                    }
+                }
+
+                if (this.exportBranchPathTaken) {
+                    // we are exporting the branch path taken
+
+                    if (this.ProjectService.isBranchPoint(nodeId)) {
+                        // this step is a branch point
+
+                        // fill in the top 7 cells in the column for this step branch path taken
+                        stepTitleRow[columnIdToColumnIndex[nodeId + "-branchPathTaken"]] = stepTitle;
+                        componentPartNumberRow[columnIdToColumnIndex[nodeId + "-branchPathTaken"]] = " ";
+                        componentTypeRow[columnIdToColumnIndex[nodeId + "-branchPathTaken"]] = " ";
+                        componentPromptRow[columnIdToColumnIndex[nodeId + "-branchPathTaken"]] = " ";
+                        nodeIdRow[columnIdToColumnIndex[nodeId + "-branchPathTaken"]] = nodeId;
+                        componentIdRow[columnIdToColumnIndex[nodeId + "-branchPathTaken"]] = " ";
+                        columnIdRow[columnIdToColumnIndex[nodeId + "-branchPathTaken"]] = nodeId + "-branchPathTaken";
+                        descriptionRow[columnIdToColumnIndex[nodeId + "-branchPathTaken"]] = "Branch Path Taken";
+                    }
+                }
+
+                if (this.exportBranchPathTakenStepTitle) {
+                    // we are exporting branch path taken step titles
+
+                    if (this.ProjectService.isBranchPoint(nodeId)) {
+                        // this step is a branch point
+
+                        // fill in the top 7 cells in the column for this step branch path taken step title
+                        stepTitleRow[columnIdToColumnIndex[nodeId + "-branchPathTakenStepTitle"]] = stepTitle;
+                        componentPartNumberRow[columnIdToColumnIndex[nodeId + "-branchPathTakenStepTitle"]] = " ";
+                        componentTypeRow[columnIdToColumnIndex[nodeId + "-branchPathTakenStepTitle"]] = " ";
+                        componentPromptRow[columnIdToColumnIndex[nodeId + "-branchPathTakenStepTitle"]] = " ";
+                        nodeIdRow[columnIdToColumnIndex[nodeId + "-branchPathTakenStepTitle"]] = nodeId;
+                        componentIdRow[columnIdToColumnIndex[nodeId + "-branchPathTakenStepTitle"]] = " ";
+                        columnIdRow[columnIdToColumnIndex[nodeId + "-branchPathTakenStepTitle"]] = nodeId + "-branchPathTakenStepTitle";
+                        descriptionRow[columnIdToColumnIndex[nodeId + "-branchPathTakenStepTitle"]] = "Branch Path Taken Step Title";
+                    }
                 }
             }
         }
@@ -2495,6 +2582,49 @@ class DataExportController {
      */
     isNodeInAnyBranchPath(nodeId) {
         return this.ProjectService.isNodeInAnyBranchPath(nodeId);
+    }
+
+    /**
+     * The default button was clicked
+     */
+    defaultClicked() {
+        // set the default export settings
+        this.setDefaultExportSettings();
+    }
+
+    /**
+     * The everything button was clicked
+     */
+    everythingClicked() {
+        // enable all the settings
+        this.exportStudentWork = true;
+        this.exportStudentWorkIds = true;
+        this.exportStudentWorkTimestamps = true;
+        this.exportBranchPathTaken = true;
+        this.exportBranchPathTakenStepTitle = true;
+        this.exportBranchPathTakenNodeId = true;
+        this.exportScores = true;
+        this.exportScoreTimestamps = true;
+        this.exportComments = true;
+        this.exportCommentTimestamps = true;
+        this.exportStepSelectionType == 'exportAllSteps';
+    }
+
+    /**
+     * Set the default export settings
+     */
+    setDefaultExportSettings() {
+        this.exportStudentWork = true;
+        this.exportStudentWorkIds = false;
+        this.exportStudentWorkTimestamps = false;
+        this.exportBranchPathTaken = true;
+        this.exportBranchPathTakenStepTitle = false;
+        this.exportBranchPathTakenNodeId = false;
+        this.exportScores = false;
+        this.exportScoreTimestamps = false;
+        this.exportComments = false;
+        this.exportCommentTimestamps = false;
+        this.exportStepSelectionType == 'exportAllSteps';
     }
 }
 

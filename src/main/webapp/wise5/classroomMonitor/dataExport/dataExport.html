@@ -11,13 +11,15 @@
     .md-button {
         text-transform: none;
     }
+    md-checkbox.md-checked .md-icon {
+        background-color: rgba(21,101,192,0.87);
+    }
 </style>
 
 <div class="view-content view-content--with-sidemenu">
     <div class="l-constrained" layout="column">
         <div style="float:right">
             <div ng-show="dataExportController.exportType == null">
-
                 <md-button class="md-raised" ng-click="dataExportController.oneWorkgroupPerRowClicked()" translate="exportOneWorkgroupPerRow" id="downloadOneWorkgroupPerRowButton"></md-button><br/>
                 <md-button class="md-raised" ng-click="dataExportController.exportType = 'latestStudentWork'" translate="exportLatestStudentWork" id="downloadLatestStudentWorkButton"></md-button><br/>
                 <md-button class="md-raised" ng-click="dataExportController.exportType = 'allStudentWork'" translate="exportAllStudentWork" id="downloadStudentWorkButton"></md-button><br/>
@@ -29,11 +31,21 @@
             </div>
             <div ng-show="dataExportController.exportType == 'latestStudentWork' || dataExportController.exportType == 'allStudentWork' || dataExportController.exportType == 'events' || dataExportController.exportType == 'oneWorkgroupPerRow' ">
                 <h4>{{ dataExportController.exportType | translate }}</h4>
+                <md-button class="md-raised" ng-click="dataExportController.defaultClicked()">{{ 'default' | translate }}</md-button>
+                <md-button class="md-raised" ng-click="dataExportController.everythingClicked()">{{ 'everything' | translate }}</md-button>
                 <div ng-show="dataExportController.exportType == 'oneWorkgroupPerRow'">
+                    <br/>
+                    <md-checkbox ng-model="dataExportController.exportStudentWork">{{ 'includeStudentWork' | translate }}</md-checkbox>
                     <br/>
                     <md-checkbox ng-model="dataExportController.exportStudentWorkIds">{{ 'includeStudentWorkIDs' | translate }}</md-checkbox>
                     <br/>
                     <md-checkbox ng-model="dataExportController.exportStudentWorkTimestamps">{{ 'includeStudentWorkTimestamps' | translate }}</md-checkbox>
+                    <br/>
+                    <md-checkbox ng-model="dataExportController.exportBranchPathTaken">{{ 'includeBranchPathTaken' | translate }}</md-checkbox>
+                    <br/>
+                    <md-checkbox ng-model="dataExportController.exportBranchPathTakenNodeId">{{ 'includeBranchPathTakenNodeId' | translate }}</md-checkbox>
+                    <br/>
+                    <md-checkbox ng-model="dataExportController.exportBranchPathTakenStepTitle">{{ 'includeBranchPathTakenStepTitle' | translate }}</md-checkbox>
                     <br/>
                     <md-checkbox ng-model="dataExportController.exportScores">{{ 'includeScores' | translate }}</md-checkbox>
                     <br/>
