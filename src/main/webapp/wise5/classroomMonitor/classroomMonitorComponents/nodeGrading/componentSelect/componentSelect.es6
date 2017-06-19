@@ -106,7 +106,7 @@ const ComponentSelect = {
     },
     template:
         `<md-select class="md-no-underline md-button md-raised"
-                    ng-if="$ctrl.components.length > 1"
+                    ng-if="($ctrl.components | filter:{hasWork: true}).length > 1"
                     ng-model="$ctrl.selectedComponents"
                     ng-change="$ctrl.selectedComponentsChange()"
                     md-selected-html="$ctrl.getSelectedText()"
@@ -117,7 +117,15 @@ const ComponentSelect = {
                     {{ $index+1 }}: {{ $ctrl.getComponentTypeLabel(component.type) }}
                 </md-option>
             </md-optgroup>
-        </md-select>`,
+        </md-select>
+        <md-button class="md-body-1 md-raised" aria-label="{{ 'assessmentItemsToShow' | translate }" disabled
+                   ng-if="($ctrl.components | filter:{hasWork: true}).length === 0">
+            {{ 'numberOfAssessmentItems_0' | translate }}
+        </md-button>
+        <md-button class="md-body-1 md-raised" aria-label="{{ 'assessmentItemsToShow' | translate }" disabled
+                   ng-if="($ctrl.components | filter:{hasWork: true}).length === 1">
+            {{ 'numberOfAssessmentItems_1' | translate }}
+        </md-button>`,
     controller: ComponentSelectController
 };
 

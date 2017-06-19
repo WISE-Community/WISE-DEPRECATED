@@ -43,8 +43,6 @@ var NodeGradingController = function () {
 
         this.hiddenComponents = [];
 
-        this.showRubricButton = false;
-
         // TODO: add loading indicator
         this.TeacherDataService.retrieveStudentDataByNodeId(this.nodeId).then(function (result) {
 
@@ -80,8 +78,6 @@ var NodeGradingController = function () {
             _this.componentStateHistory = [];
 
             _this.setWorkgroupsById();
-
-            _this.showRubricButton = _this.nodeHasRubric();
 
             // scroll to the top of the page when the page loads
             document.body.scrollTop = document.documentElement.scrollTop = 0;
@@ -616,52 +612,6 @@ var NodeGradingController = function () {
         }
 
         /**
-         * Check if the step has a rubric or if any of the components in the step
-         * have a rubric
-         * @return whether the step or any of its components have a rubric
-         */
-
-    }, {
-        key: 'nodeHasRubric',
-        value: function nodeHasRubric() {
-
-            if (this.nodeContent != null) {
-
-                // get the step rubric if any
-                var nodeRubric = this.nodeContent.rubric;
-
-                if (nodeRubric != null && nodeRubric != '') {
-                    // the step has a rubric
-                    return true;
-                }
-
-                // get the components
-                var components = this.nodeContent.components;
-
-                if (components != null && components.length != 0) {
-
-                    // loop through all the components
-                    for (var c = 0; c < components.length; c++) {
-                        var component = components[c];
-
-                        if (component != null) {
-
-                            // get a component rubric
-                            var componentRubric = component.rubric;
-
-                            if (componentRubric != null && componentRubric != '') {
-                                // a component has a rubric
-                                return true;
-                            }
-                        }
-                    }
-                }
-            }
-
-            return false;
-        }
-
-        /**
          * Show the rubric in the grading view. We will show the step rubric and the
          * component rubrics.
          */
@@ -677,7 +627,7 @@ var NodeGradingController = function () {
             /*
              * create the dialog header, actions, and content elements
              */
-            var dialogHeader = '<md-toolbar>\n                <div class="md-toolbar-tools gray-darkest-bg">\n                    <h2>' + stepNumberAndTitle + '</h2>\n                </div>\n            </md-toolbar>';
+            var dialogHeader = '<md-toolbar>\n                <div class="md-toolbar-tools">\n                    <h2>' + stepNumberAndTitle + '</h2>\n                </div>\n            </md-toolbar>';
 
             var dialogActions = '<md-dialog-actions layout="row" layout-align="end center">\n                <md-button class="md-primary" ng-click="openInNewWindow()" aria-label="{{ \'openInNewWindow\' | translate }}">{{ \'openInNewWindow\' | translate }}</md-button>\n                <md-button class="md-primary" ng-click="close()" aria-label="{{ \'close\' | translate }}">{{ \'close\' | translate }}</md-button>\n            </md-dialog-actions>';
 
@@ -702,7 +652,7 @@ var NodeGradingController = function () {
                         /*
                          * create the header for the new window that contains the project title
                          */
-                        var windowHeader = '<md-toolbar class="layout-row">\n                                <div class="md-toolbar-tools gray-darkest-bg" style="color: #ffffff;">\n                                    <h2>' + stepNumberAndTitle + '</h2>\n                                </div>\n                            </md-toolbar>';
+                        var windowHeader = '<md-toolbar class="layout-row">\n                                <div class="md-toolbar-tools primary-bg" style="color: #ffffff;">\n                                    <h2>' + stepNumberAndTitle + '</h2>\n                                </div>\n                            </md-toolbar>';
 
                         var rubricContent = document.getElementById('nodeInfo_' + nodeId).innerHTML;
 

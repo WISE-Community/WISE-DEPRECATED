@@ -215,7 +215,7 @@ class ComponentGradingController {
             template:
                 `<md-dialog aria-label="{{ 'revisionsForTeam' | translate:{teamNames: userNames} }}" class="dialog--wider">
                     <md-toolbar>
-                        <div class="md-toolbar-tools gray-darkest-bg">
+                        <div class="md-toolbar-tools">
                             <h2 class="overflow--ellipsis">{{ 'revisionsForTeam' | translate:{teamNames: userNames} }}</h2>
                         </div>
                     </md-toolbar>

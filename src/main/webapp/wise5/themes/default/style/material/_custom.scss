@@ -195,6 +195,15 @@ md-input-container {
     }
 }
 
+md-select {
+    &.md-button.md-no-underline {
+        .md-select-value {
+            padding: 0px 2px 0px;
+            border-bottom-width: 0px;
+        }
+    }
+}
+
 md-select-menu md-option[selected] {
     font-weight: 500;
 }

@@ -9,7 +9,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var WorkgroupNodeGradingController = function () {
-    function WorkgroupNodeGradingController(ConfigService, ProjectService, TeacherDataService) {
+    function WorkgroupNodeGradingController(ConfigService, ProjectService, TeacherDataService, UtilService) {
         var _this = this;
 
         _classCallCheck(this, WorkgroupNodeGradingController);
@@ -17,6 +17,7 @@ var WorkgroupNodeGradingController = function () {
         this.ConfigService = ConfigService;
         this.ProjectService = ProjectService;
         this.TeacherDataService = TeacherDataService;
+        this.UtilService = UtilService;
 
         this.$onInit = function () {
             _this.nodeContent = _this.getNodeContent();
@@ -134,12 +135,24 @@ var WorkgroupNodeGradingController = function () {
 
             return result;
         }
+
+        /**
+         * Get the component type label for the given component type
+         * @param componentType string
+         * @return string of the component type label
+         */
+
+    }, {
+        key: 'getComponentTypeLabel',
+        value: function getComponentTypeLabel(componentType) {
+            return this.UtilService.getComponentTypeLabel(componentType);
+        }
     }]);
 
     return WorkgroupNodeGradingController;
 }();
 
-WorkgroupNodeGradingController.$inject = ['ConfigService', 'ProjectService', 'TeacherDataService'];
+WorkgroupNodeGradingController.$inject = ['ConfigService', 'ProjectService', 'TeacherDataService', 'UtilService'];
 
 var WorkgroupNodeGrading = {
     bindings: {
@@ -147,7 +160,7 @@ var WorkgroupNodeGrading = {
         nodeId: '@',
         hiddenComponents: '<'
     },
-    template: '<div class="nav-item__grading">\n            <div id="{{component.id}}_{{$ctrl.workgroupId}}" class="component--grading" ng-repeat=\'component in $ctrl.components | filter:{hasWork: true}\'>\n                <component ng-if=\'component.showPreviousWorkNodeId != null && component.showPreviousWorkComponentId != null && component.showPreviousWorkNodeId != "" && component.showPreviousWorkComponentId != ""\'\n                           ng-show="$ctrl.isComponentVisible(component.id)"\n                           class="component-container"\n                           node-id=\'{{component.showPreviousWorkNodeId}}\'\n                           component-id=\'{{component.showPreviousWorkComponentId}}\'\n                           component-state=\'{{$ctrl.getLatestComponentStateByWorkgroupIdAndNodeIdAndComponentId($ctrl.workgroupId, component.showPreviousWorkNodeId, component.showPreviousWorkComponentId)}}\'\n                           workgroup-id=\'{{$ctrl.workgroupId}}\'\n                           teacher-workgroup-id=\'{{$ctrl.teacherWorkgroupId}}\'\n                           mode=\'grading\'></component>\n                <component ng-if=\'component.showPreviousWorkNodeId == null || component.showPreviousWorkComponentId == null || component.showPreviousWorkNodeId == "" || component.showPreviousWorkComponentId == ""\'\n                           ng-show="$ctrl.isComponentVisible(component.id)"\n                           class="component-container"\n                           node-id=\'{{$ctrl.nodeId}}\'\n                           component-id=\'{{component.id}}\'\n                           component-state=\'{{$ctrl.getLatestComponentStateByWorkgroupIdAndComponentId($ctrl.workgroupId, component.id)}}\'\n                           workgroup-id=\'{{$ctrl.workgroupId}}\'\n                           teacher-workgroup-id=\'{{$ctrl.teacherWorkgroupId}}\'\n                           mode=\'grading\'></component>\n\n            </div>\n        </div>',
+    template: '<div class="nav-item__grading">\n            <div id="{{component.id}}_{{$ctrl.workgroupId}}" class="component--grading" ng-repeat=\'component in $ctrl.components | filter:{hasWork: true}\'>\n                <div ng-show="$ctrl.isComponentVisible(component.id)">\n                    <div class="accent-2 md-body-2 component-header">{{ $index+1 + \'. \' + $ctrl.getComponentTypeLabel(component.type) }}</div>\n                    <component ng-if=\'component.showPreviousWorkNodeId != null && component.showPreviousWorkComponentId != null && component.showPreviousWorkNodeId != "" && component.showPreviousWorkComponentId != ""\'\n                               class="component-container"\n                               node-id=\'{{component.showPreviousWorkNodeId}}\'\n                               component-id=\'{{component.showPreviousWorkComponentId}}\'\n                               component-state=\'{{$ctrl.getLatestComponentStateByWorkgroupIdAndNodeIdAndComponentId($ctrl.workgroupId, component.showPreviousWorkNodeId, component.showPreviousWorkComponentId)}}\'\n                               workgroup-id=\'{{$ctrl.workgroupId}}\'\n                               teacher-workgroup-id=\'{{$ctrl.teacherWorkgroupId}}\'\n                               mode=\'grading\'></component>\n                    <component ng-if=\'component.showPreviousWorkNodeId == null || component.showPreviousWorkComponentId == null || component.showPreviousWorkNodeId == "" || component.showPreviousWorkComponentId == ""\'\n                               class="component-container"\n                               node-id=\'{{$ctrl.nodeId}}\'\n                               component-id=\'{{component.id}}\'\n                               component-state=\'{{$ctrl.getLatestComponentStateByWorkgroupIdAndComponentId($ctrl.workgroupId, component.id)}}\'\n                               workgroup-id=\'{{$ctrl.workgroupId}}\'\n                               teacher-workgroup-id=\'{{$ctrl.teacherWorkgroupId}}\'\n                               mode=\'grading\'></component>\n                </div>\n            </div>\n        </div>',
     controller: WorkgroupNodeGradingController
 };
 

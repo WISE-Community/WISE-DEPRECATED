@@ -239,7 +239,7 @@ class NodeProgressController {
          */
         let dialogHeader =
             `<md-toolbar>
-                <div class="md-toolbar-tools gray-darkest-bg">
+                <div class="md-toolbar-tools">
                     <h2 class="overflow--ellipsis">${ projectTitle }</h2>
                     <span flex>&nbsp;</span>
                     <span class="md-subhead">${ rubricTitle }</span>
@@ -257,7 +257,7 @@ class NodeProgressController {
          */
         let windowHeader =
             `<md-toolbar class="layout-row">
-                <div class="md-toolbar-tools gray-darkest-bg" style="color: #ffffff;">
+                <div class="md-toolbar-tools" style="color: #ffffff;">
                     <h2>${ projectTitle }</h2>
                     <span class="flex">&nbsp;</span>
                     <span class="md-subhead">${ rubricTitle }</span>

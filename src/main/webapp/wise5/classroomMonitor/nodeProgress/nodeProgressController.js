@@ -265,14 +265,14 @@ var NodeProgressController = function () {
              * create the header for the popup that contains the project title,
              * 'Open in New Tab' button, and 'Close' button
              */
-            var dialogHeader = '<md-toolbar>\n                <div class="md-toolbar-tools gray-darkest-bg">\n                    <h2 class="overflow--ellipsis">' + projectTitle + '</h2>\n                    <span flex>&nbsp;</span>\n                    <span class="md-subhead">' + rubricTitle + '</span>\n                </div>\n            </md-toolbar>';
+            var dialogHeader = '<md-toolbar>\n                <div class="md-toolbar-tools">\n                    <h2 class="overflow--ellipsis">' + projectTitle + '</h2>\n                    <span flex>&nbsp;</span>\n                    <span class="md-subhead">' + rubricTitle + '</span>\n                </div>\n            </md-toolbar>';
 
             var dialogActions = '<md-dialog-actions layout="row" layout-align="end center">\n                <md-button class="md-primary" ng-click="openInNewWindow()" aria-label="{{ \'openInNewWindow\' | translate }}">{{ \'openInNewWindow\' | translate }}</md-button>\n                <md-button class="md-primary" ng-click="close()" aria-label="{{ \'close\' | translate }}">{{ \'close\' | translate }}</md-button>\n            </md-dialog-actions>';
 
             /*
              * create the header for the new window that contains the project title
              */
-            var windowHeader = '<md-toolbar class="layout-row">\n                <div class="md-toolbar-tools gray-darkest-bg" style="color: #ffffff;">\n                    <h2>' + projectTitle + '</h2>\n                    <span class="flex">&nbsp;</span>\n                    <span class="md-subhead">' + rubricTitle + '</span>\n                </div>\n            </md-toolbar>';
+            var windowHeader = '<md-toolbar class="layout-row">\n                <div class="md-toolbar-tools" style="color: #ffffff;">\n                    <h2>' + projectTitle + '</h2>\n                    <span class="flex">&nbsp;</span>\n                    <span class="md-subhead">' + rubricTitle + '</span>\n                </div>\n            </md-toolbar>';
 
             // create the string that will hold the rubric content
             var rubricContent = '<md-content class="md-whiteframe-1dp md-padding" style="background-color: #ffffff;">';

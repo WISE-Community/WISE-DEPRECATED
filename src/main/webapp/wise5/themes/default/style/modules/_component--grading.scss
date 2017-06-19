@@ -1,10 +1,11 @@
 .component--grading {
     position: relative;
 
-    &:not(:first-child) {
-        border-top: 1px dashed color('gray-dark');
+    &:not(:last-child) {
+        > div {
+            border-bottom: 1px dashed color('gray-dark');
+        }
     }
-    //padding-top: 16px;
 
     .component-container {
         display: block;
@@ -22,33 +23,4 @@
     .component__actions__info {
         margin: 0 4px;
     }
-}
-
-.component--grading__toggle {
-    margin: 0 !important;
-    border-radius: 0;
-    //right: -20px;
-
-    &::first-child {
-        margin-top: 1px !important;
-    }
-    //position: absolute;
-    //background-color: #ffffff;
-    //top: 0;
-    //box-shadow: 1.5px 0px 2px color('text-disabled');
-    //md-icon {
-        //color: color('primary');
-    //}
-
-    //&:hover, &:focus {
-        //background-color: color('gray-lighter') !important;
-    //}
-}
-
-.component--grading__toggle--hidden {
-    position: relative;
-
-    //md-icon {
-        //color: color('text-secondary');
-    //}
 }

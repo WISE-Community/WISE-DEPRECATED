@@ -3,10 +3,12 @@
 class WorkgroupNodeGradingController {
     constructor(ConfigService,
                 ProjectService,
-                TeacherDataService) {
+                TeacherDataService,
+                UtilService) {
         this.ConfigService = ConfigService;
         this.ProjectService = ProjectService;
         this.TeacherDataService = TeacherDataService;
+        this.UtilService = UtilService;
 
         this.$onInit = () => {
             this.nodeContent = this.getNodeContent();
@@ -111,12 +113,22 @@ class WorkgroupNodeGradingController {
 
         return result;
     }
+
+    /**
+     * Get the component type label for the given component type
+     * @param componentType string
+     * @return string of the component type label
+     */
+    getComponentTypeLabel(componentType) {
+        return this.UtilService.getComponentTypeLabel(componentType);
+    }
 }
 
 WorkgroupNodeGradingController.$inject = [
     'ConfigService',
     'ProjectService',
-    'TeacherDataService'
+    'TeacherDataService',
+    'UtilService'
 ];
 
 const WorkgroupNodeGrading = {
@@ -128,25 +140,25 @@ const WorkgroupNodeGrading = {
     template:
         `<div class="nav-item__grading">
             <div id="{{component.id}}_{{$ctrl.workgroupId}}" class="component--grading" ng-repeat='component in $ctrl.components | filter:{hasWork: true}'>
-                <component ng-if='component.showPreviousWorkNodeId != null && component.showPreviousWorkComponentId != null && component.showPreviousWorkNodeId != "" && component.showPreviousWorkComponentId != ""'
-                           ng-show="$ctrl.isComponentVisible(component.id)"
-                           class="component-container"
-                           node-id='{{component.showPreviousWorkNodeId}}'
-                           component-id='{{component.showPreviousWorkComponentId}}'
-                           component-state='{{$ctrl.getLatestComponentStateByWorkgroupIdAndNodeIdAndComponentId($ctrl.workgroupId, component.showPreviousWorkNodeId, component.showPreviousWorkComponentId)}}'
-                           workgroup-id='{{$ctrl.workgroupId}}'
-                           teacher-workgroup-id='{{$ctrl.teacherWorkgroupId}}'
-                           mode='grading'></component>
-                <component ng-if='component.showPreviousWorkNodeId == null || component.showPreviousWorkComponentId == null || component.showPreviousWorkNodeId == "" || component.showPreviousWorkComponentId == ""'
-                           ng-show="$ctrl.isComponentVisible(component.id)"
-                           class="component-container"
-                           node-id='{{$ctrl.nodeId}}'
-                           component-id='{{component.id}}'
-                           component-state='{{$ctrl.getLatestComponentStateByWorkgroupIdAndComponentId($ctrl.workgroupId, component.id)}}'
-                           workgroup-id='{{$ctrl.workgroupId}}'
-                           teacher-workgroup-id='{{$ctrl.teacherWorkgroupId}}'
-                           mode='grading'></component>
-
+                <div ng-show="$ctrl.isComponentVisible(component.id)">
+                    <div class="accent-2 md-body-2 component-header">{{ $index+1 + '. ' + $ctrl.getComponentTypeLabel(component.type) }}</div>
+                    <component ng-if='component.showPreviousWorkNodeId != null && component.showPreviousWorkComponentId != null && component.showPreviousWorkNodeId != "" && component.showPreviousWorkComponentId != ""'
+                               class="component-container"
+                               node-id='{{component.showPreviousWorkNodeId}}'
+                               component-id='{{component.showPreviousWorkComponentId}}'
+                               component-state='{{$ctrl.getLatestComponentStateByWorkgroupIdAndNodeIdAndComponentId($ctrl.workgroupId, component.showPreviousWorkNodeId, component.showPreviousWorkComponentId)}}'
+                               workgroup-id='{{$ctrl.workgroupId}}'
+                               teacher-workgroup-id='{{$ctrl.teacherWorkgroupId}}'
+                               mode='grading'></component>
+                    <component ng-if='component.showPreviousWorkNodeId == null || component.showPreviousWorkComponentId == null || component.showPreviousWorkNodeId == "" || component.showPreviousWorkComponentId == ""'
+                               class="component-container"
+                               node-id='{{$ctrl.nodeId}}'
+                               component-id='{{component.id}}'
+                               component-state='{{$ctrl.getLatestComponentStateByWorkgroupIdAndComponentId($ctrl.workgroupId, component.id)}}'
+                               workgroup-id='{{$ctrl.workgroupId}}'
+                               teacher-workgroup-id='{{$ctrl.teacherWorkgroupId}}'
+                               mode='grading'></component>
+                </div>
             </div>
         </div>`,
     controller: WorkgroupNodeGradingController

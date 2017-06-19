@@ -61,11 +61,18 @@
         font-weight: 300;
         margin-top: 0;
         margin-bottom: 0;
+        font-size: rem(3.6);
 
         @media only screen and (max-width: $layout-breakpoint-sm - 1) {
             font-size: rem(3.2);
             text-align: center;
         }
+    }
+}
+
+.content-head__more {
+    @media only screen and (max-width: $layout-breakpoint-sm - 1) {
+        margin-top: 8px;
     }
 }
 

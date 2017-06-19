@@ -45,8 +45,6 @@ class NodeGradingController {
 
         this.hiddenComponents = [];
 
-        this.showRubricButton = false;
-
         // TODO: add loading indicator
         this.TeacherDataService.retrieveStudentDataByNodeId(this.nodeId).then(result => {
 
@@ -82,8 +80,6 @@ class NodeGradingController {
             this.componentStateHistory = [];
 
             this.setWorkgroupsById();
-
-            this.showRubricButton = this.nodeHasRubric();
 
             // scroll to the top of the page when the page loads
             document.body.scrollTop = document.documentElement.scrollTop = 0;
@@ -554,49 +550,6 @@ class NodeGradingController {
     }
 
     /**
-     * Check if the step has a rubric or if any of the components in the step
-     * have a rubric
-     * @return whether the step or any of its components have a rubric
-     */
-    nodeHasRubric() {
-
-        if (this.nodeContent != null) {
-
-            // get the step rubric if any
-            var nodeRubric = this.nodeContent.rubric;
-
-            if (nodeRubric != null && nodeRubric != '') {
-                // the step has a rubric
-                return true;
-            }
-
-            // get the components
-            var components = this.nodeContent.components;
-
-            if (components != null && components.length != 0) {
-
-                // loop through all the components
-                for (var c = 0; c < components.length; c++) {
-                    var component = components[c];
-
-                    if (component != null) {
-
-                        // get a component rubric
-                        var componentRubric = component.rubric;
-
-                        if (componentRubric != null && componentRubric != '') {
-                            // a component has a rubric
-                            return true;
-                        }
-                    }
-                }
-            }
-        }
-
-        return false;
-    }
-
-    /**
      * Show the rubric in the grading view. We will show the step rubric and the
      * component rubrics.
      */
@@ -611,7 +564,7 @@ class NodeGradingController {
          */
         let dialogHeader =
             `<md-toolbar>
-                <div class="md-toolbar-tools gray-darkest-bg">
+                <div class="md-toolbar-tools">
                     <h2>${ stepNumberAndTitle }</h2>
                 </div>
             </md-toolbar>`;
@@ -651,7 +604,7 @@ class NodeGradingController {
                          */
                         let windowHeader =
                             `<md-toolbar class="layout-row">
-                                <div class="md-toolbar-tools gray-darkest-bg" style="color: #ffffff;">
+                                <div class="md-toolbar-tools primary-bg" style="color: #ffffff;">
                                     <h2>${ stepNumberAndTitle }</h2>
                                 </div>
                             </md-toolbar>`;
