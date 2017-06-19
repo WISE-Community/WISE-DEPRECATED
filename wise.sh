@@ -5,6 +5,7 @@
 # if arg1="reset", wipes out any existing data in database/curriculum/studentupload
 
 PWD=`pwd`
+TODAY=`/bin/date +\%Y\%m\%d`
 PROPERTIES_FILE="src/main/resources/wise.properties"
 SAMPLE_PROPERTIES_FILE="src/main/resources/wise_sample_embedded_tomcat.properties"
 
@@ -30,9 +31,10 @@ echo    # (optional) move to a new line
 if [[ $REPLY =~ ^[Yy]$ ]]
 then
   # clear out curriculum and student uploads directories and any existing properties file
-  find src/main/webapp/curriculum/ ! \( -name README -o -name .gitignore \) -type d \( -path demo \) -delete
-  find src/main/webapp/studentuploads/ ! \( -name README -o -name .gitignore \) -delete
-  rm $PROPERTIES_FILE
+  find $PWD/src/main/webapp/curriculum/ ! \( -name README -o -name .gitignore \) -type d \( -path demo \) -delete
+  find $PWD/src/main/webapp/studentuploads/ ! \( -name README -o -name .gitignore \) -delete
+  rm $PWD/$PROPERTIES_FILE
+  mv $PWD/hsqldb $PWD/hsqldb-bak-$TODAY
 fi
 
 else
@@ -59,8 +61,8 @@ else
     echo "studentuploads_base_dir=src/main/webapp/studentuploads" >> $PROPERTIES_FILE
 
     # prepare to recreate db tables
-    sed -i.bak '/hibernate.hbm2ddl.auto=[none|create]/d' $PROPERTIES_FILE
-    echo "hibernate.hbm2ddl.auto=create" >> $PROPERTIES_FILE
+    sed -i.bak '/hibernate.hbm2ddl.auto=[none|create|update]/d' $PROPERTIES_FILE
+    echo "hibernate.hbm2ddl.auto=create-only" >> $PROPERTIES_FILE
 
     if [ $1 = "dev" ]
     then
@@ -73,7 +75,7 @@ else
 
   else
     # make sure db tables are not wiped out
-    sed -i.bak '/hibernate.hbm2ddl.auto=[none|create]/d' $PROPERTIES_FILE
+    sed -i.bak '/hibernate.hbm2ddl.auto=[none|create|update]/d' $PROPERTIES_FILE
     echo "hibernate.hbm2ddl.auto=none" >> $PROPERTIES_FILE
 
     if [ $1 = "dev" ]
