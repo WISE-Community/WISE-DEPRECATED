@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -44,8 +44,8 @@ import org.wise.vle.domain.PersistableDomain;
  */
 @Entity
 @Table(name = "studentWork",  indexes = {
-        @Index(columnList = "runId", name = "runIdIndex"),
-        @Index(columnList = "workgroupId", name = "workgroupIdIndex")})
+        @Index(columnList = "runId", name = "studentWorkRunIdIndex"),
+        @Index(columnList = "workgroupId", name = "studentWorkWorkgroupIdIndex")})
 public class StudentWork extends PersistableDomain {
 
 	@Id

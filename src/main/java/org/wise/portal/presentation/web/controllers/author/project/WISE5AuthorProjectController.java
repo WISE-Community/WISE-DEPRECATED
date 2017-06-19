@@ -512,14 +512,11 @@ public class WISE5AuthorProjectController {
             } catch (ObjectNotFoundException e) {
                 // do nothing
             }
-            System.out.println("1: " + projectMetadataSettings);
 
             if (projectMetadataSettings == null) {
                 // get default project metadata settings from Portal.
                 projectMetadataSettings = portalService.getDefaultProjectMetadataSettings();
-                System.out.println("2: " + projectMetadataSettings);
             }
-            System.out.println("3: " + projectMetadataSettings);
 
             config.put("projectMetadataSettings", new JSONObject(projectMetadataSettings));
 

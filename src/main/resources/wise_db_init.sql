@@ -572,32 +572,32 @@
     alter table acl_sid
         add constraint UK_meabypi3cnm8604op6qvd517v  unique (sid, principal);
 
-    create index runIdIndex on annotations (runId);
+    create index annotationsRunIdIndex on annotations (runId);
 
-    create index toWorkgroupIdIndex on annotations (toWorkgroupId);
+    create index annotationsToWorkgroupIdIndex on annotations (toWorkgroupId);
 
-    create index runIdIndex on events (runId);
+    create index eventsRunIdIndex on events (runId);
 
-    create index workgroupIdIndex on events (workgroupId);
+    create index eventsWorkgroupIdIndex on events (workgroupId);
 
     alter table granted_authorities
         add constraint UK_cgffgw24ojv4o1oe9cpgdy60k  unique (authority);
 
-    create index runIdAndWorkgroupIdIndex on ideabasket (runId, workgroupId);
+    create index ideabasketRunIdAndWorkgroupIdIndex on ideabasket (runId, workgroupId);
 
-    create index runIdIndex on node (runId);
+    create index nodeRunIdIndex on node (runId);
 
-    create index runIdIndex on notebookItems (runId);
+    create index notebookItemsRunIdIndex on notebookItems (runId);
 
-    create index workgroupIdIndex on notebookItems (workgroupId);
+    create index notebookItemsWorkgroupIdIndex on notebookItems (workgroupId);
 
-    create index runIdIndex on notification (runId);
+    create index notificationRunIdIndex on notification (runId);
 
-    create index toWorkgroupIdIndex on notification (toWorkgroupId);
+    create index notificationToWorkgroupIdIndex on notification (toWorkgroupId);
 
-    create index fromWorkgroupIdIndex on notification (fromWorkgroupId);
+    create index notificationFromWorkgroupIdIndex on notification (fromWorkgroupId);
 
-    create index runIdAndWorkgroupIdIndex on portfolio (runId, workgroupId);
+    create index portfolioRunIdAndWorkgroupIdIndex on portfolio (runId, workgroupId);
 
     alter table runs
         add constraint UK_dxea1ifhea203qe2ie4lsd8vb  unique (run_code);
@@ -608,19 +608,19 @@
     alter table runs_related_to_groups
         add constraint UK_kcgmq40wsaa12f22mebooiyfv  unique (groups_fk);
 
-    create index runIdIndex on runstatus (runId);
+    create index runstatusRunIdIndex on runstatus (runId);
 
-    create index runIdIndex on studentAssets (runId);
+    create index studentAssetsRunIdIndex on studentAssets (runId);
 
-    create index workgroupIdIndex on studentAssets (workgroupId);
+    create index studentAssetsWorkgroupIdIndex on studentAssets (workgroupId);
 
-    create index runIdIndex on studentWork (runId);
+    create index studentWorkRunIdIndex on studentWork (runId);
 
-    create index workgroupIdIndex on studentWork (workgroupId);
+    create index studentWorkWorkgroupIdIndex on studentWork (workgroupId);
 
-    create index runIdIndex on studentstatus (runId);
+    create index studentstatusRunIdIndex on studentstatus (runId);
 
-    create index workgroupIdIndex on studentstatus (workgroupId);
+    create index studentstatusWorkgroupIdIndex on studentstatus (workgroupId);
 
     alter table user_details
         add constraint UK_qqadnciq8gixe1qmxd0rj9cyk  unique (username);
@@ -628,7 +628,7 @@
     alter table userinfo
         add constraint UK_dp78k1tuh3whhutek48hts0wy  unique (workgroupId);
 
-    create index workgroupIdIndex on userinfo (workgroupId);
+    create index userinfoWorkgroupIdIndex on userinfo (workgroupId);
 
     alter table users
         add constraint UK_ol2kbitd35lc87ddawfhiu9ll  unique (user_details_fk);

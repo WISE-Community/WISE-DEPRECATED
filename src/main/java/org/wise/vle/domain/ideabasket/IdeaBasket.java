@@ -37,7 +37,7 @@ import org.wise.vle.domain.PersistableDomain;
  * @author Geoffrey Kwan
  */
 @Entity
-@Table(name = "ideabasket", indexes = { @Index(columnList = "runId,workgroupId", name = "runIdAndWorkgroupIdIndex") } )
+@Table(name = "ideabasket", indexes = { @Index(columnList = "runId,workgroupId", name = "ideabasketRunIdAndWorkgroupIdIndex") } )
 public class IdeaBasket extends PersistableDomain implements Serializable {
 
 	private static final long serialVersionUID = 1L;

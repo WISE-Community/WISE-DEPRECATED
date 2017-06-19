@@ -38,7 +38,7 @@ import org.wise.vle.domain.PersistableDomain;
  * @author Eddie Pan
  */
 @Entity
-@Table(name = "portfolio", indexes = { @Index(columnList = "runId,workgroupId", name = "runIdAndWorkgroupIdIndex") } )
+@Table(name = "portfolio", indexes = { @Index(columnList = "runId,workgroupId", name = "portfolioRunIdAndWorkgroupIdIndex") } )
 public class Portfolio extends PersistableDomain implements Serializable {
 
 	private static final long serialVersionUID = 1L;

@@ -49,8 +49,8 @@ import java.sql.Timestamp;
  */
 @Entity
 @Table(name = "events",  indexes = {
-		@Index(columnList = "runId", name = "runIdIndex"),
-		@Index(columnList = "workgroupId", name = "workgroupIdIndex")})
+		@Index(columnList = "runId", name = "eventsRunIdIndex"),
+		@Index(columnList = "workgroupId", name = "eventsWorkgroupIdIndex")})
 public class Event extends PersistableDomain {
 
 	@Id

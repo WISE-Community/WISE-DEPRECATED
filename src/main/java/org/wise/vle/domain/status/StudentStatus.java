@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -35,7 +35,7 @@ import org.wise.vle.domain.PersistableDomain;
  */
 @Entity
 @Table(name = "studentstatus",
-		indexes = { @Index(columnList = "runId", name = "runIdIndex"), @Index(columnList = "workgroupId", name = "workgroupIdIndex")} )
+		indexes = { @Index(columnList = "runId", name = "studentstatusRunIdIndex"), @Index(columnList = "workgroupId", name = "studentstatusWorkgroupIdIndex")} )
 public class StudentStatus extends PersistableDomain {
 
 	@Id
@@ -72,13 +72,13 @@ public class StudentStatus extends PersistableDomain {
 	 * @param status a JSON string containing the student status
 	 */
 	public StudentStatus(Long runId, Long periodId, Long workgroupId, String status) {
-		//set the fields
+		// set the fields
 		setRunId(runId);
 		setPeriodId(periodId);
 		setWorkgroupId(workgroupId);
 		setStatus(status);
 		
-		//set the timestamp
+		// set the timestamp
 		Calendar now = Calendar.getInstance();
 		setTimestamp(new Timestamp(now.getTimeInMillis()));
 	}

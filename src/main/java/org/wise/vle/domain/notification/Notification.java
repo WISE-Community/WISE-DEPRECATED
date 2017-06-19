@@ -42,9 +42,9 @@ import java.sql.Timestamp;
  */
 @Entity
 @Table(name = "notification",  indexes = {
-        @Index(columnList = "runId", name = "runIdIndex"),
-        @Index(columnList = "toWorkgroupId", name = "toWorkgroupIdIndex"),
-        @Index(columnList = "fromWorkgroupId", name = "fromWorkgroupIdIndex")
+        @Index(columnList = "runId", name = "notificationRunIdIndex"),
+        @Index(columnList = "toWorkgroupId", name = "notificationToWorkgroupIdIndex"),
+        @Index(columnList = "fromWorkgroupId", name = "notificationFromWorkgroupIdIndex")
 })
 public class Notification extends PersistableDomain {
 

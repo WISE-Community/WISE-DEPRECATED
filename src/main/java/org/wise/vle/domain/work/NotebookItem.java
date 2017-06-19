@@ -43,8 +43,8 @@ import java.sql.Timestamp;
  */
 @Entity
 @Table(name = "notebookItems",  indexes = {
-        @Index(columnList = "runId", name = "runIdIndex"),
-        @Index(columnList = "workgroupId", name = "workgroupIdIndex")})
+        @Index(columnList = "runId", name = "notebookItemsRunIdIndex"),
+        @Index(columnList = "workgroupId", name = "notebookItemsWorkgroupIdIndex")})
 public class NotebookItem extends PersistableDomain {
 
 	@Id
