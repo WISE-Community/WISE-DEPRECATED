@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2016 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -78,7 +78,7 @@ public class ChangeUserPasswordController {
     	// get the user name whose password we want to change
     	String userName = request.getParameter(USER_NAME);
     	
-    	User userToChange = null;
+    	User userToChange;
     	User teacherUser = null;
     	
     	String view = "";

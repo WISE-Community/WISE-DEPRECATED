@@ -68,10 +68,6 @@ class WorkgroupItemController {
         }
     }
 
-    updateHiddenComponents(value, event) {
-        this.onUpdateHidden({value: value, event: event});
-    }
-
     toggleExpand() {
         if (this.showScore) {
             let expand = !this.expand;
@@ -95,7 +91,6 @@ const WorkgroupItem = {
         workgroupId: '<',
         workgroupData: '<',
         hiddenComponents: '<',
-        onUpdateHidden: '&',
         onUpdateExpand: '&'
     },
     controller: WorkgroupItemController,
@@ -124,7 +119,6 @@ const WorkgroupItem = {
                 <workgroup-node-grading workgroup-id="$ctrl.workgroupId"
                                         node-id="{{$ctrl.nodeId}}"
                                         hidden-components="$ctrl.hiddenComponents"
-                                        on-update="$ctrl.updateHiddenComponents(value, event)"
                                         flex></workgroup-node-grading>
             </md-list-item>
         </div>`

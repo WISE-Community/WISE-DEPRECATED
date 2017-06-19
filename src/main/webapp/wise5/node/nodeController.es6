@@ -361,7 +361,7 @@ class NodeController {
                 target: thisTarget,
                 placement: 'bottom',
                 title: this.$translate('STEP_INFO'),
-                content: this.rubric,
+                content: this.ProjectService.replaceAssetPaths(this.rubric),
                 xOffset: 'center',
                 arrowOffset: 'center',
                 onShow: this.onShowRubric,
@@ -382,7 +382,7 @@ class NodeController {
                     placement: 'right',
                     yOffset: 1,
                     title: this.$translate('TEACHING_TIPS'),
-                    content: component.rubric,
+                    content: this.ProjectService.replaceAssetPaths(component.rubric),
                     onShow: this.onShowRubric,
                     viewed: false
                 }

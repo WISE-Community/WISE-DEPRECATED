@@ -9,10 +9,13 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var UtilService = function () {
-    function UtilService($rootScope) {
+    function UtilService($filter, $rootScope) {
         _classCallCheck(this, UtilService);
 
+        this.$filter = $filter;
         this.$rootScope = $rootScope;
+
+        this.$translate = this.$filter('translate');
     }
 
     /**
@@ -23,7 +26,7 @@ var UtilService = function () {
 
 
     _createClass(UtilService, [{
-        key: "generateKey",
+        key: 'generateKey',
         value: function generateKey(length) {
             this.CHARS = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
 
@@ -43,7 +46,7 @@ var UtilService = function () {
             return key;
         }
     }, {
-        key: "convertStringToNumber",
+        key: 'convertStringToNumber',
 
 
         /**
@@ -62,7 +65,7 @@ var UtilService = function () {
             return result;
         }
     }, {
-        key: "makeCopyOfJSONObject",
+        key: 'makeCopyOfJSONObject',
 
 
         /**
@@ -84,7 +87,7 @@ var UtilService = function () {
             return copyOfJSONObject;
         }
     }, {
-        key: "getImageObjectFromBase64String",
+        key: 'getImageObjectFromBase64String',
 
 
         /**
@@ -114,7 +117,7 @@ var UtilService = function () {
          */
 
     }, {
-        key: "dataURItoBlob",
+        key: 'dataURItoBlob',
         value: function dataURItoBlob(dataURI) {
 
             var byteString;
@@ -132,7 +135,7 @@ var UtilService = function () {
             return new Blob([ia], { type: mimeString });
         }
     }, {
-        key: "getImageObjectFromImageElement",
+        key: 'getImageObjectFromImageElement',
 
 
         /**
@@ -174,7 +177,7 @@ var UtilService = function () {
          */
 
     }, {
-        key: "hideIFrames",
+        key: 'hideIFrames',
         value: function hideIFrames() {
 
             // get all the iframes
@@ -199,7 +202,7 @@ var UtilService = function () {
          */
 
     }, {
-        key: "showIFrames",
+        key: 'showIFrames',
         value: function showIFrames() {
 
             // get all the iframes
@@ -223,7 +226,7 @@ var UtilService = function () {
          */
 
     }, {
-        key: "isImage",
+        key: 'isImage',
         value: function isImage(fileName) {
             var result = false;
 
@@ -251,7 +254,7 @@ var UtilService = function () {
          */
 
     }, {
-        key: "isVideo",
+        key: 'isVideo',
         value: function isVideo(fileName) {
             var result = false;
 
@@ -280,7 +283,7 @@ var UtilService = function () {
          */
 
     }, {
-        key: "insertWISELinks",
+        key: 'insertWISELinks',
         value: function insertWISELinks(html) {
 
             // replace <a> elements with <wiselink> elements
@@ -301,7 +304,7 @@ var UtilService = function () {
          */
 
     }, {
-        key: "insertWISELinkAnchors",
+        key: 'insertWISELinkAnchors',
         value: function insertWISELinkAnchors(html) {
 
             // find <a> elements with the parameter wiselink=true
@@ -354,7 +357,7 @@ var UtilService = function () {
          */
 
     }, {
-        key: "insertWISELinkButtons",
+        key: 'insertWISELinkButtons',
         value: function insertWISELinkButtons(html) {
 
             // find <button> elements with the parameter wiselink=true
@@ -408,7 +411,7 @@ var UtilService = function () {
          */
 
     }, {
-        key: "getWISELinkNodeId",
+        key: 'getWISELinkNodeId',
         value: function getWISELinkNodeId(html) {
 
             var nodeId = null;
@@ -439,7 +442,7 @@ var UtilService = function () {
          */
 
     }, {
-        key: "getWISELinkComponentId",
+        key: 'getWISELinkComponentId',
         value: function getWISELinkComponentId(html) {
 
             var componentId = null;
@@ -470,7 +473,7 @@ var UtilService = function () {
          */
 
     }, {
-        key: "getWISELinkType",
+        key: 'getWISELinkType',
         value: function getWISELinkType(html) {
             var type = null;
 
@@ -499,7 +502,7 @@ var UtilService = function () {
          */
 
     }, {
-        key: "getWISELinkLinkText",
+        key: 'getWISELinkLinkText',
         value: function getWISELinkLinkText(html) {
             var linkText = null;
 
@@ -526,7 +529,7 @@ var UtilService = function () {
          */
 
     }, {
-        key: "replaceWISELinks",
+        key: 'replaceWISELinks',
         value: function replaceWISELinks(html) {
 
             // replace wiselinks that look like <wiselink/>
@@ -547,7 +550,7 @@ var UtilService = function () {
          */
 
     }, {
-        key: "replaceWISELinksHelper",
+        key: 'replaceWISELinksHelper',
         value: function replaceWISELinksHelper(html, regex) {
 
             // create the regex
@@ -614,7 +617,7 @@ var UtilService = function () {
          */
 
     }, {
-        key: "createInsertAssetButton",
+        key: 'createInsertAssetButton',
         value: function createInsertAssetButton(controller, projectId, nodeId, componentId, target, tooltip) {
 
             var thisRootScope = this.$rootScope;
@@ -674,7 +677,7 @@ var UtilService = function () {
          */
 
     }, {
-        key: "createInsertWISELinkButton",
+        key: 'createInsertWISELinkButton',
         value: function createInsertWISELinkButton(controller, projectId, nodeId, componentId, target, tooltip) {
 
             var thisRootScope = this.$rootScope;
@@ -726,7 +729,7 @@ var UtilService = function () {
          */
 
     }, {
-        key: "removeHTMLTags",
+        key: 'removeHTMLTags',
         value: function removeHTMLTags(html) {
 
             var text = '';
@@ -754,7 +757,7 @@ var UtilService = function () {
          */
 
     }, {
-        key: "endsWith",
+        key: 'endsWith',
         value: function endsWith(subjectString, searchString, position) {
             if (typeof position !== 'number' || !isFinite(position) || Math.floor(position) !== position || position > subjectString.length) {
                 position = subjectString.length;
@@ -774,7 +777,7 @@ var UtilService = function () {
          */
 
     }, {
-        key: "sortByServerSaveTime",
+        key: 'sortByServerSaveTime',
         value: function sortByServerSaveTime(object1, object2) {
 
             if (object1.serverSaveTime < object2.serverSaveTime) {
@@ -795,7 +798,7 @@ var UtilService = function () {
          */
 
     }, {
-        key: "convertMillisecondsToFormattedDateTime",
+        key: 'convertMillisecondsToFormattedDateTime',
         value: function convertMillisecondsToFormattedDateTime(milliseconds) {
 
             var dateTimeString = "";
@@ -809,6 +812,20 @@ var UtilService = function () {
             }
 
             return dateTimeString;
+        }
+
+        /**
+         * Get the label for the given component type
+         * @param componentType string
+         * @return string label for the component type
+         */
+
+    }, {
+        key: 'getComponentTypeLabel',
+        value: function getComponentTypeLabel(componentType) {
+            var label = this.$translate(componentType + '.componentTypeLabel');
+
+            return label ? label : componentType;
         }
     }]);
 
@@ -824,7 +841,7 @@ if (!Array.prototype.last) {
     };
 };
 
-UtilService.$inject = ['$rootScope'];
+UtilService.$inject = ['$filter', '$rootScope'];
 
 exports.default = UtilService;
 //# sourceMappingURL=utilService.js.map

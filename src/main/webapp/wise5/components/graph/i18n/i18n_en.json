@@ -1,4 +1,5 @@
 {
+    "Graph.componentTypeLabel": "Graph",
     "graph.addSeries": "Add Series",
     "graph.addSeriesNumber": "Add Series Number",
     "graph.areYouSureYouWantToChangeTheGraphType": "Are you sure you want to change the graph type?",
