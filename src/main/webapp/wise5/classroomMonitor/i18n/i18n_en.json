@@ -61,6 +61,7 @@
     "hideSection": "Hide Section",
     "hideSteps": "Hide Steps",
     "hideStudents": "Hide Students",
+    "infoTipsLabel": "Info + Tips ({{ numberOfTips }})",
     "includeBranchPathTaken": "Include Branch Path Taken",
     "includeBranchPathTakenNodeId": "Include Branch Path Taken Node ID",
     "includeBranchPathTakenStepTitle": "Include Branch Path Taken Step Title",

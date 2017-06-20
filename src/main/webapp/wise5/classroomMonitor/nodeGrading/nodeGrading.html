@@ -15,7 +15,8 @@
             <md-button ng-click="nodeGradingController.showRubric($event)"
                        class="md-raised primary">
                 <md-icon class="primary"> info_outline </md-icon>
-                {{ 'STEP_INFO' | translate }}
+                <span ng-if="!nodeGradingController.nRubrics">{{ 'STEP_INFO' | translate }}</span>
+                <span ng-if="nodeGradingController.nRubrics">{{ 'infoTipsLabel' | translate:{numberOfTips: nodeGradingController.nRubrics} }}</span>
             </md-button>
         </div>
     </div>

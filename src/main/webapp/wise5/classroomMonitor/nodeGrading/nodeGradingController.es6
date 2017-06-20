@@ -81,6 +81,8 @@ class NodeGradingController {
 
             this.setWorkgroupsById();
 
+            this.nRubrics = this.getNumberOfRubrics();
+
             // scroll to the top of the page when the page loads
             document.body.scrollTop = document.documentElement.scrollTop = 0;
         });
@@ -547,6 +549,49 @@ class NodeGradingController {
         let delta = viewportOffsetTop - newViewportOffsetTop;
         let scrollTop = content.scrollTop;
         content.scrollTop = scrollTop - delta;
+    }
+
+    /**
+     * Get the total number of rubrics (step + components) for this node
+     * @return Number of rubrics for this node
+     */
+    getNumberOfRubrics() {
+        let n = 0;
+
+        if (this.nodeContent != null) {
+
+            // get the step rubric if any
+            var nodeRubric = this.nodeContent.rubric;
+
+            if (nodeRubric != null && nodeRubric != '') {
+                // the step has a rubric
+                n++;
+            }
+
+            // get the components
+            var components = this.nodeContent.components;
+
+            if (components != null && components.length != 0) {
+
+                // loop through all the components
+                for (var c = 0; c < components.length; c++) {
+                    var component = components[c];
+
+                    if (component != null) {
+
+                        // get a component rubric
+                        var componentRubric = component.rubric;
+
+                        if (componentRubric != null && componentRubric != '') {
+                            // a component has a rubric
+                            n++;
+                        }
+                    }
+                }
+            }
+        }
+
+        return n;
     }
 
     /**
