@@ -54,7 +54,7 @@
                         </tr>
                         <tr ng-repeat="workgroup in milestone.workgroups" ng-class="{'completed': workgroup.completed, 'notCompleted': !workgroup.completed}">
                             <td style="width:500">{{ milestonesController.getDisplayUserNamesByWorkgroupId(workgroup.workgroupId) }}</td>
-                            <td ng-if="workgroup.achievementTime != null">{{ workgroup.achievementTime | date: "MMM d, yyyy h:ma" }}</td>
+                            <td ng-if="workgroup.achievementTime != null">{{ workgroup.achievementTime | date: "MMM d, yyyy h:mma" }}</td>
                             <td ng-if="workgroup.achievementTime == null">{{ 'notCompleted' | translate }}</td>
                         </tr>
                     </table>
