@@ -64,7 +64,11 @@ class AchievementService {
                 let achievements = response.data;
 
                 if (achievements != null) {
+
+                    // loop through all the student achievements
                     for (let i = 0; i < achievements.length; i++) {
+
+                        // get a student achievement
                         let achievement = achievements[i];
 
                         // add the student achievement to our local data structure
@@ -91,6 +95,51 @@ class AchievementService {
                                      */
                                     projectAchievement.deregisterFunction();
                                     this.debugOutput('deregistering ' + projectAchievement.id);
+                                }
+                            }
+                        }
+                    }
+
+                    if (this.ConfigService.getMode() == 'studentRun') {
+
+                        /*
+                         * Loop through all the project achievements and
+                         * re-evaluate whether the student has completed each.
+                         * This is to make sure students never get stuck in a
+                         * state where they did everything required to complete
+                         * a certain achievement but some error or bug occurred
+                         * which prevented their student achievement from being
+                         * saved and then they end up never being able to
+                         * complete that achievement. We will avoid this
+                         * situation by re-evaluating all the project
+                         * achievements each time the student loads the VLE.
+                         */
+
+                        // get all the project achievements
+                        var projectAchievements = this.ProjectService.getAchievementItems();
+
+                        if (projectAchievements != null) {
+
+                            // loop through all the project achievements
+                            for (var p = 0; p < projectAchievements.length; p++) {
+                                var projectAchievement = projectAchievements[p];
+
+                                if (projectAchievement != null) {
+
+                                    if (!this.isAchievementCompleted(projectAchievement.id)) {
+                                        /*
+                                         * the student has not completed this project achievement
+                                         * yet
+                                         */
+
+                                        if (this.checkAchievement(projectAchievement)) {
+                                            /*
+                                             * the student has satisfied everything that is
+                                             * required of the achievement
+                                             */
+                                            this.studentCompletedAchievement(projectAchievement);
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -397,47 +446,87 @@ class AchievementService {
 
                 if (!this.isAchievementCompleted(id)) {
                     /*
-                     * the student has not completed this achievement yet
+                     * the student has not completed this achievement before
                      * so we will now check if they have completed it
                      */
-                    var params = achievement.params;
 
-                    if (params != null) {
+                    // check if the student has completed this node completed achievement
+                    var completed = this.checkNodeCompletedAchievement(achievement);
 
-                        // get the node ids that need to be completed
-                        var nodeIds = params.nodeIds;
-
-                        var completed = false;
-
-                        /*
-                         * loop through all the node ids that need to be completed
-                         * for the achievement
-                         */
-                        for (var n = 0; n < nodeIds.length; n++) {
-                            var nodeId = nodeIds[n];
-
-                            if (n == 0) {
-                                // this is the first node id
-                                completed = this.StudentDataService.isCompleted(nodeId);
-                            } else {
-                                /*
-                                 * this is a node id after the first node id so
-                                 * we will use an and conditional
-                                 */
-                                completed = completed && this.StudentDataService.isCompleted(nodeId);
-                            }
-                        }
-
-                        if (completed) {
-                            // the student has just completed the achievement
-                            thisAchievementService.studentCompletedAchievement(achievement);
-                        }
+                    if (completed) {
+                        // the student has just completed the achievement
+                        thisAchievementService.studentCompletedAchievement(achievement);
                     }
                 }
             }
         });
 
         return deregisterFunction;
+    }
+
+    /**
+     * Check if the student completed a specific achievement
+     * @param achievement an achievement
+     * @return whether the student completed the achievement
+     */
+    checkAchievement(achievement) {
+
+        var completed = false;
+
+        if (achievement != null) {
+            if (achievement.type == 'milestone' || achievement.type == 'completion') {
+                // this is a milestone or completion achievement
+                completed = this.checkNodeCompletedAchievement(achievement);
+            } else if (achievement.type == 'aggregate') {
+                // this is an aggregate achievement
+                completed = this.checkAggregateAchievement(achievement);
+            }
+        }
+
+        return completed;
+    }
+
+    /**
+     * Check if the student completed a node completed achievement
+     * @param achievement a node completed achievement
+     * @return whether the student completed the node completed achievement
+     */
+    checkNodeCompletedAchievement(achievement) {
+
+        var completed = false;
+
+        if (achievement != null) {
+
+            // get the achievement params
+            var params = achievement.params;
+
+            if (params != null) {
+
+                // get the node ids that need to be completed
+                var nodeIds = params.nodeIds;
+
+                /*
+                 * loop through all the node ids that need to be completed
+                 * for the achievement
+                 */
+                for (var n = 0; n < nodeIds.length; n++) {
+                    var nodeId = nodeIds[n];
+
+                    if (n == 0) {
+                        // this is the first node id
+                        completed = this.StudentDataService.isCompleted(nodeId);
+                    } else {
+                        /*
+                         * this is a node id after the first node id so
+                         * we will use an and conditional
+                         */
+                        completed = completed && this.StudentDataService.isCompleted(nodeId);
+                    }
+                }
+            }
+        }
+
+        return completed;
     }
 
     /**
@@ -472,48 +561,67 @@ class AchievementService {
 
                 if (!this.isAchievementCompleted(id)) {
                     /*
-                     * the student has not completed this achievement yet
+                     * the student has not completed this achievement before
                      * so we will now check if they have completed it
                      */
 
-                    var params = achievement.params;
+                    // check if the student has completed this aggregate achievement
+                    var completed = this.checkAggregateAchievement(achievement);
 
-                    if (params != null) {
-
-                        // get the achievement ids that need to be completed
-                        var achievementIds = params.achievementIds;
-
-                        var completed = false;
-
-                        /*
-                         * loop through all the achievement ids that need to be
-                         * compeleted
-                         */
-                        for (var a = 0; a < achievementIds.length; a++) {
-                            var tempAchievementId = achievementIds[a];
-
-                            if (a == 0) {
-                                // this is the first node id
-                                completed = thisAchievementService.isAchievementCompleted(tempAchievementId);
-                            } else {
-                                /*
-                                 * this is a node id after the first node id so
-                                 * we will use an and conditional
-                                 */
-                                completed = completed && thisAchievementService.isAchievementCompleted(tempAchievementId);
-                            }
-                        }
-
-                        if (completed) {
-                            // the student has just completed the achievement
-                            thisAchievementService.studentCompletedAchievement(achievement);
-                        }
+                    if (completed) {
+                        // the student has just completed the achievement
+                        thisAchievementService.studentCompletedAchievement(achievement);
                     }
                 }
             }
         });
 
         return deregisterFunction;
+    }
+
+    /**
+     * Check if the student completed a aggregate achievement
+     * @param achievement an aggregate achievement
+     * @return whether the student completed the aggregate achievement
+     */
+    checkAggregateAchievement(achievement) {
+
+        var completed = false;
+
+        if (achievement != null) {
+
+            // get the achievement params
+            var params = achievement.params;
+
+            if (params != null) {
+
+                // get the achievement ids that need to be completed
+                var achievementIds = params.achievementIds;
+
+                var completed = false;
+
+                /*
+                 * loop through all the achievement ids that need to be
+                 * completed
+                 */
+                for (var a = 0; a < achievementIds.length; a++) {
+                    var tempAchievementId = achievementIds[a];
+
+                    if (a == 0) {
+                        // this is the first node id
+                        completed = this.isAchievementCompleted(tempAchievementId);
+                    } else {
+                        /*
+                         * this is a node id after the first node id so
+                         * we will use an and conditional
+                         */
+                        completed = completed && this.isAchievementCompleted(tempAchievementId);
+                    }
+                }
+            }
+        }
+
+        return completed;
     }
 
     /**
