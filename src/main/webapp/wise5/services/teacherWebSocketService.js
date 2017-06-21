@@ -54,6 +54,8 @@ var TeacherWebSocketService = function () {
                 this.$rootScope.$broadcast('newAnnotationReceived', { annotation: data.annotation });
             } else if (messageType === 'newStudentWork') {
                 this.$rootScope.$broadcast('newStudentWorkReceived', { studentWork: data.studentWork });
+            } else if (messageType === 'newStudentAchievement') {
+                this.$rootScope.$broadcast('newStudentAchievement', { studentAchievement: data.studentAchievement });
             }
         }
     }, {

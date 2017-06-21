@@ -10,6 +10,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var MilestonesController = function () {
     function MilestonesController($injector, $rootScope, $scope, $state, AchievementService, ConfigService, ProjectService, StudentStatusService, TeacherDataService, TeacherWebSocketService, UtilService, moment) {
+        var _this = this;
+
         _classCallCheck(this, MilestonesController);
 
         this.$injector = $injector;
@@ -44,6 +46,26 @@ var MilestonesController = function () {
 
         // load the achievements and perform additional calculations
         this.loadAchievements();
+
+        // listen for the newStudentAchievement event
+        this.$rootScope.$on('newStudentAchievement', function (event, args) {
+
+            if (args) {
+                // get the student achievement that was saved to the server
+                var studentAchievement = args.studentAchievement;
+
+                if (studentAchievement != null) {
+
+                    // add the student achievement to our local copy of the student achievements
+                    _this.AchievementService.addOrUpdateAchievement(studentAchievement);
+
+                    if (studentAchievement.data != null && studentAchievement.data.id != null) {
+                        // update the milestone in the UI with the new student achievement information
+                        _this.updateMilestoneCompletion(studentAchievement.data.id);
+                    }
+                }
+            }
+        });
     }
 
     /**
@@ -52,14 +74,11 @@ var MilestonesController = function () {
 
 
     _createClass(MilestonesController, [{
-        key: "loadAchievements",
+        key: 'loadAchievements',
         value: function loadAchievements() {
 
             // get the project achievements object
             var achievementsObject = this.ProjectService.getAchievements();
-
-            // get the student achievements
-            var achievementIdToAchievements = this.AchievementService.getAchievementIdToAchievementsMappings();
 
             // get the workgroup ids
             var workgroupIds = this.ConfigService.getClassmateWorkgroupIds();
@@ -95,9 +114,6 @@ var MilestonesController = function () {
 
                                 projectAchievement.timeDiff = timeDiff;
 
-                                // get the student achievements for this achievement id
-                                var studentAchievementsForAchievementId = achievementIdToAchievements[projectAchievement.id];
-
                                 if (projectAchievement.edit === null || projectAchievement.edit === undefined) {
                                     // initialize the edit field
                                     projectAchievement.edit = false;
@@ -108,102 +124,8 @@ var MilestonesController = function () {
                                     projectAchievement.calendarIsOpen = false;
                                 }
 
-                                var workgroupIdsCompleted = [];
-                                var achievementTimes = [];
-                                var workgroupIdsNotCompleted = [];
-
-                                /*
-                                 * loop through all the student achievements for
-                                 * this achievement id
-                                 */
-                                for (var s = 0; s < studentAchievementsForAchievementId.length; s++) {
-                                    var studentAchievement = studentAchievementsForAchievementId[s];
-
-                                    if (studentAchievement != null) {
-                                        /*
-                                         * add the workgroup id to the array of workgroup ids that
-                                         * have completed the achievement
-                                         */
-                                        workgroupIdsCompleted.push(studentAchievement.workgroupId);
-
-                                        // add the achievement time to the achievement times array
-                                        achievementTimes.push(studentAchievement.achievementTime);
-                                    }
-                                }
-
-                                /*
-                                 * loop through all the workgroup ids to find the
-                                 * workgroup ids that have not completed the
-                                 * achievement
-                                 */
-                                for (var w = 0; w < workgroupIds.length; w++) {
-                                    var workgroupId = workgroupIds[w];
-
-                                    if (workgroupIdsCompleted.indexOf(workgroupId) == -1) {
-                                        // this workgroup has not completed the achievement
-
-                                        /*
-                                         * add the workgroup id to the array of workgroup ids that
-                                         * have not completed the achievement
-                                         */
-                                        workgroupIdsNotCompleted.push(workgroupId);
-                                    }
-                                }
-
-                                projectAchievement.workgroups = [];
-
-                                /*
-                                 * loop through all the workgroups that have
-                                 * completed the achievement
-                                 */
-                                for (var c = 0; c < workgroupIdsCompleted.length; c++) {
-                                    var workgroupId = workgroupIdsCompleted[c];
-                                    var achievementTime = achievementTimes[c];
-
-                                    /*
-                                     * create an object used for displaying
-                                     * information about the workgroup
-                                     */
-                                    var workgroupObject = {
-                                        workgroupId: workgroupId,
-                                        achievementTime: achievementTime,
-                                        completed: true
-                                    };
-
-                                    projectAchievement.workgroups.push(workgroupObject);
-                                }
-
-                                /*
-                                 * loop through all the workgroups that have not
-                                 * completed the achievement
-                                 */
-                                for (var n = 0; n < workgroupIdsNotCompleted.length; n++) {
-                                    var workgroupId = workgroupIdsNotCompleted[n];
-
-                                    /*
-                                     * create an object used for displaying
-                                     * information about the workgroup
-                                     */
-                                    var workgroupObject = {
-                                        workgroupId: workgroupId,
-                                        achievementTime: null,
-                                        completed: false
-                                    };
-
-                                    projectAchievement.workgroups.push(workgroupObject);
-                                }
-
-                                /*
-                                 * calculate the number of workgroups that completed
-                                 * the achievement
-                                 */
-                                projectAchievement.numberOfStudentsCompleted = studentAchievementsForAchievementId.length;
-
-                                /*
-                                 * calculate the percentage of workgroups that have
-                                 * completed the achievement
-                                 */
-                                projectAchievement.percentageCompleted = parseInt(100 * projectAchievement.numberOfStudentsCompleted / this.numberOfStudentsInRun);
+                                // update the student completion information for this milestone
+                                this.updateMilestoneCompletion(projectAchievement.id);
 
                                 // get all the activities and steps in the project
                                 projectAchievement.items = this.UtilService.makeCopyOfJSONObject(this.ProjectService.idToOrder);
@@ -238,7 +160,7 @@ var MilestonesController = function () {
          */
 
     }, {
-        key: "calculateTimeDiff",
+        key: 'calculateTimeDiff',
         value: function calculateTimeDiff(date) {
 
             // get the time difference from now
@@ -262,7 +184,7 @@ var MilestonesController = function () {
          */
 
     }, {
-        key: "createMilestone",
+        key: 'createMilestone',
         value: function createMilestone() {
 
             // get the project achievements
@@ -307,7 +229,7 @@ var MilestonesController = function () {
          */
 
     }, {
-        key: "editMilestoneClicked",
+        key: 'editMilestoneClicked',
         value: function editMilestoneClicked(milestone) {
             milestone.edit = true;
         }
@@ -319,7 +241,7 @@ var MilestonesController = function () {
          */
 
     }, {
-        key: "itemClicked",
+        key: 'itemClicked',
         value: function itemClicked(milestone, item) {
 
             if (milestone != null && milestone.params != null && milestone.params.nodeIds != null) {
@@ -358,7 +280,7 @@ var MilestonesController = function () {
          */
 
     }, {
-        key: "showStepsClicked",
+        key: 'showStepsClicked',
         value: function showStepsClicked(groupId, milestone) {
 
             if (groupId != null && milestone != null) {
@@ -391,7 +313,7 @@ var MilestonesController = function () {
          */
 
     }, {
-        key: "hideStepsClicked",
+        key: 'hideStepsClicked',
         value: function hideStepsClicked(groupId, milestone) {
 
             if (groupId != null && milestone != null) {
@@ -424,7 +346,7 @@ var MilestonesController = function () {
          */
 
     }, {
-        key: "deleteMilestone",
+        key: 'deleteMilestone',
         value: function deleteMilestone(index, milestone) {
 
             var name = "";
@@ -452,7 +374,7 @@ var MilestonesController = function () {
          */
 
     }, {
-        key: "saveMilestoneClicked",
+        key: 'saveMilestoneClicked',
         value: function saveMilestoneClicked(milestone) {
 
             // do not show the edit view for the milestone anymore
@@ -468,7 +390,7 @@ var MilestonesController = function () {
          */
 
     }, {
-        key: "milestoneDateChanged",
+        key: 'milestoneDateChanged',
         value: function milestoneDateChanged(milestone) {
 
             // get the due date
@@ -488,7 +410,7 @@ var MilestonesController = function () {
          */
 
     }, {
-        key: "clearTempFields",
+        key: 'clearTempFields',
         value: function clearTempFields() {
 
             /*
@@ -541,7 +463,7 @@ var MilestonesController = function () {
          */
 
     }, {
-        key: "restoreTempFields",
+        key: 'restoreTempFields',
         value: function restoreTempFields() {
 
             // loop through all the achievements
@@ -581,14 +503,14 @@ var MilestonesController = function () {
          */
 
     }, {
-        key: "openCalendar",
+        key: 'openCalendar',
         value: function openCalendar(milestone) {
 
             // open the calendar for the milestone
             milestone.calendarIsOpen = true;
         }
     }, {
-        key: "closeCalendar",
+        key: 'closeCalendar',
 
 
         /**
@@ -606,7 +528,7 @@ var MilestonesController = function () {
          */
 
     }, {
-        key: "saveProject",
+        key: 'saveProject',
         value: function saveProject() {
 
             // clear the temp fields and remember them
@@ -626,12 +548,12 @@ var MilestonesController = function () {
          */
 
     }, {
-        key: "isGroupNode",
+        key: 'isGroupNode',
         value: function isGroupNode(nodeId) {
             return this.ProjectService.isGroupNode(nodeId);
         }
     }, {
-        key: "getNodePositionById",
+        key: 'getNodePositionById',
 
 
         /**
@@ -643,7 +565,7 @@ var MilestonesController = function () {
             return this.ProjectService.getNodePositionById(nodeId);
         }
     }, {
-        key: "getNodeTitleByNodeId",
+        key: 'getNodeTitleByNodeId',
 
 
         /**
@@ -655,7 +577,7 @@ var MilestonesController = function () {
             return this.ProjectService.getNodeTitleByNodeId(nodeId);
         }
     }, {
-        key: "getDisplayUserNamesByWorkgroupId",
+        key: 'getDisplayUserNamesByWorkgroupId',
 
 
         /**
@@ -673,7 +595,7 @@ var MilestonesController = function () {
          */
 
     }, {
-        key: "showStudents",
+        key: 'showStudents',
         value: function showStudents(milestone) {
             milestone.showStudents = true;
         }
@@ -684,9 +606,137 @@ var MilestonesController = function () {
          */
 
     }, {
-        key: "hideStudents",
+        key: 'hideStudents',
         value: function hideStudents(milestone) {
             milestone.showStudents = false;
+        }
+
+        /**
+         * Update the student completion information for this milestone
+         * @param achievementId the achievement id to update
+         */
+
+    }, {
+        key: 'updateMilestoneCompletion',
+        value: function updateMilestoneCompletion(achievementId) {
+
+            if (achievementId != null) {
+
+                // loop through all the project achievements
+                for (var a = 0; a < this.achievements.length; a++) {
+                    var projectAchievement = this.achievements[a];
+
+                    if (achievementId == projectAchievement.id) {
+                        // we have found the milestone we want to update
+
+                        // get the workgroup ids
+                        var workgroupIds = this.ConfigService.getClassmateWorkgroupIds();
+
+                        // get the student achievements
+                        var achievementIdToAchievements = this.AchievementService.getAchievementIdToAchievementsMappings();
+
+                        // get the student achievements for this achievement id
+                        var studentAchievementsForAchievementId = achievementIdToAchievements[projectAchievement.id];
+
+                        var workgroupIdsCompleted = [];
+                        var achievementTimes = [];
+                        var workgroupIdsNotCompleted = [];
+
+                        /*
+                         * loop through all the student achievements for
+                         * this achievement id
+                         */
+                        for (var s = 0; s < studentAchievementsForAchievementId.length; s++) {
+                            var studentAchievement = studentAchievementsForAchievementId[s];
+
+                            if (studentAchievement != null) {
+                                /*
+                                 * add the workgroup id to the array of workgroup ids that
+                                 * have completed the achievement
+                                 */
+                                workgroupIdsCompleted.push(studentAchievement.workgroupId);
+
+                                // add the achievement time to the achievement times array
+                                achievementTimes.push(studentAchievement.achievementTime);
+                            }
+                        }
+
+                        /*
+                         * loop through all the workgroup ids to find the
+                         * workgroup ids that have not completed the
+                         * achievement
+                         */
+                        for (var w = 0; w < workgroupIds.length; w++) {
+                            var workgroupId = workgroupIds[w];
+
+                            if (workgroupIdsCompleted.indexOf(workgroupId) == -1) {
+                                // this workgroup has not completed the achievement
+
+                                /*
+                                 * add the workgroup id to the array of workgroup ids that
+                                 * have not completed the achievement
+                                 */
+                                workgroupIdsNotCompleted.push(workgroupId);
+                            }
+                        }
+
+                        projectAchievement.workgroups = [];
+
+                        /*
+                         * loop through all the workgroups that have
+                         * completed the achievement
+                         */
+                        for (var c = 0; c < workgroupIdsCompleted.length; c++) {
+                            var workgroupId = workgroupIdsCompleted[c];
+                            var achievementTime = achievementTimes[c];
+
+                            /*
+                             * create an object used for displaying
+                             * information about the workgroup
+                             */
+                            var workgroupObject = {
+                                workgroupId: workgroupId,
+                                achievementTime: achievementTime,
+                                completed: true
+                            };
+
+                            projectAchievement.workgroups.push(workgroupObject);
+                        }
+
+                        /*
+                         * loop through all the workgroups that have not
+                         * completed the achievement
+                         */
+                        for (var n = 0; n < workgroupIdsNotCompleted.length; n++) {
+                            var workgroupId = workgroupIdsNotCompleted[n];
+
+                            /*
+                             * create an object used for displaying
+                             * information about the workgroup
+                             */
+                            var workgroupObject = {
+                                workgroupId: workgroupId,
+                                achievementTime: null,
+                                completed: false
+                            };
+
+                            projectAchievement.workgroups.push(workgroupObject);
+                        }
+
+                        /*
+                         * calculate the number of workgroups that completed
+                         * the achievement
+                         */
+                        projectAchievement.numberOfStudentsCompleted = studentAchievementsForAchievementId.length;
+
+                        /*
+                         * calculate the percentage of workgroups that have
+                         * completed the achievement
+                         */
+                        projectAchievement.percentageCompleted = parseInt(100 * projectAchievement.numberOfStudentsCompleted / this.numberOfStudentsInRun);
+                    }
+                }
+            }
         }
     }]);
 

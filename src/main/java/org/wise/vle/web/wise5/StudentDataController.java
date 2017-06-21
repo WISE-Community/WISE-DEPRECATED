@@ -296,6 +296,26 @@ public class StudentDataController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        // send this achievement immediately to the teacher so the Classroom Monitor can be updated
+        try {
+            if (webSocketHandler != null && achievement != null) {
+                WISEWebSocketHandler wiseWebSocketHandler = (WISEWebSocketHandler) webSocketHandler;
+
+                if (wiseWebSocketHandler != null) {
+                    // send this message to websockets
+                    JSONObject webSocketMessageJSON = new JSONObject();
+                    webSocketMessageJSON.put("messageType", "newStudentAchievement");
+                    webSocketMessageJSON.put("messageParticipants", "studentToTeachers");
+                    webSocketMessageJSON.put("studentAchievement", achievement.toJSON());
+                    wiseWebSocketHandler.handleMessage(user, webSocketMessageJSON.toString());
+                }
+            }
+        } catch (Exception e) {
+            // if something fails during creating annotation and sending to websocket,
+            // allow the rest to continue
+            e.printStackTrace();
+        }
     }
 
     /**
