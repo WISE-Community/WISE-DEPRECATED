@@ -11,7 +11,7 @@
     </div>
     <span flex></span>
     <a class="md-body-2"
-       ng-if="$ctrl.componentStates.length > 1"
+       ng-if="$ctrl.componentStates.length > 0"
        ng-click="$ctrl.showRevisions($event)">
        {{ 'VERSIONS' | translate }}: {{($ctrl.componentStates.length)}}
    </a>
