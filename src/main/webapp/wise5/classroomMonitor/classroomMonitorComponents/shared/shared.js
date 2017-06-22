@@ -30,6 +30,10 @@ var _notificationsMenu = require('./notificationsMenu/notificationsMenu');
 
 var _notificationsMenu2 = _interopRequireDefault(_notificationsMenu);
 
+var _pauseScreensMenu = require('./pauseScreensMenu/pauseScreensMenu');
+
+var _pauseScreensMenu2 = _interopRequireDefault(_pauseScreensMenu);
+
 var _periodSelect = require('./periodSelect/periodSelect');
 
 var _periodSelect2 = _interopRequireDefault(_periodSelect);
@@ -65,6 +69,7 @@ Shared.component('mainMenu', _mainMenu2.default);
 Shared.component('notificationsMenu', _notificationsMenu2.default);
 Shared.component('nodeCompletionIcon', _nodeCompletionIcon2.default);
 Shared.component('nodeIcon', _nodeIcon2.default);
+Shared.component('pauseScreensMenu', _pauseScreensMenu2.default);
 Shared.component('periodSelect', _periodSelect2.default);
 Shared.component('sideMenu', _sideMenu2.default);
 Shared.component('toolbar', _toolbar2.default);

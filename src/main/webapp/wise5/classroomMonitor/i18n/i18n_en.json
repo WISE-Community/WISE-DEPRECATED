@@ -75,6 +75,8 @@
     "itemInfo": "Item Info",
     "latestWork": "Latest Work:",
     "latestStudentWork": "Latest Student Work",
+    "lockPeriodLabel": "Lock student screens (Period: {{ periodName }})",
+    "lockStudentScreens": "Lock Student Screens",
     "mainMenu": "Main Menu",
     "meanScore": "mean score",
     "milestoneDescriptionPlaceholder": "example \"Finish the first activity\"",

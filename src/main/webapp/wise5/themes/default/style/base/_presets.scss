@@ -39,10 +39,6 @@ a {
     }
 }
 
-.button--small {
-    min-width: 0;
-}
-
 .overflow--ellipsis {
     overflow: hidden;
     text-overflow: ellipsis;
@@ -61,6 +57,58 @@ label {
     text-transform: none;
 }
 
+.center {
+    text-align: center;
+}
+
+.block {
+    display: block;
+}
+
+.light {
+    font-weight: 300;
+}
+
+.normal {
+    font-weight: 400;
+}
+
+.heavy {
+    font-weight: 500;
+}
+
+.bold {
+    font-weight: 700;
+}
+
+.more-info {
+    border-bottom: 1px dotted;
+    font-style: italic;
+}
+
+// Buttons
+.button--small {
+    min-width: 0;
+}
+
+.has-indicator {
+    &:after {
+        content: '';
+        position: absolute;
+        border-radius: 50%;
+        padding: 5px;
+        background-color: color('accent-1');
+    }
+}
+
+.has-indicator--icon-button {
+    &:after {
+        top: 25px;
+        left: 5px;
+    }
+}
+
+// Badges
 .badge {
     border-radius: $card-border-radius;
     padding: 2px 6px;
@@ -99,42 +147,13 @@ label {
     color: #ffffff;
 }
 
-.center {
-    text-align: center;
-}
-
-.block {
-    display: block;
-}
-
-.more-info {
-    border-bottom: 1px dotted;
-    font-style: italic;
-}
-
+// Dividers
 .divider--withmargin {
     margin: 16px 0;
 }
 
 .divider--dashed {
     border-top-style: dashed;
-}
-
-// Set classes for common font weights
-.light {
-    font-weight: 300;
-}
-
-.normal {
-    font-weight: 400;
-}
-
-.heavy {
-    font-weight: 500;
-}
-
-.bold {
-    font-weight: 700;
 }
 
 // Links
@@ -157,20 +176,6 @@ a {
     background-color: rgba(158,158,158,0.2);
     color: color('text');
 }
-
-/*.breadcrumb {
-  .ng-enter, .ng-leave {
-    transition: 300ms cubic-bezier(0.250, 0.250, 0.750, 0.750 opacity;
-  }
-
-  .ng-leave.ng-leave-active, .ng-enter {
-    opacity: 0;
-  }
-
-  .ng-enter.ng-enter-active, .ng-leave {
-    opacity: 1;
-  }
-}*/
 
 // Images & Icons
 .avatar {
@@ -262,12 +267,6 @@ md-icon, .md-button:not([disabled]) {
     color: color('accent-3') !important;
   }
 }
-
-/*.md-subheader, md-list .md-subheader {
-    a, md-icon {
-        color: color('accent-2');
-    }
-}*/
 
 // Drawing tool custom - TODO: move to draw tool module scss
 .dt-container .dt-tools {
