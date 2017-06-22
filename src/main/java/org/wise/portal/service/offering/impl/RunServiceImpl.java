@@ -38,6 +38,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.dao.group.GroupDao;
 import org.wise.portal.dao.offering.RunDao;
+import org.wise.portal.dao.project.ProjectDao;
 import org.wise.portal.dao.user.UserDao;
 import org.wise.portal.domain.announcement.Announcement;
 import org.wise.portal.domain.group.Group;
@@ -78,6 +79,9 @@ public class RunServiceImpl extends OfferingServiceImpl implements RunService {
 
 	@Autowired
 	private RunDao<Run> runDao;
+
+	@Autowired
+	private ProjectDao<Project> projectDao;
 
 	@Autowired
 	private GroupDao<Group> groupDao;
@@ -218,22 +222,9 @@ public class RunServiceImpl extends OfferingServiceImpl implements RunService {
 		this.aclService.addPermission(run, BasePermission.ADMINISTRATION);
 		return run;
 	}
-	
-	/**
-	 * @see org.wise.portal.service.offering.RunService#addRolesToSharedTeacher(java.lang.Long, java.lang.Long, java.util.Set)
-	 */
-	public void addRolesToSharedTeacher(Long runId, Long userId,
-			Set<String> roles) throws ObjectNotFoundException {
-		// TODO Auto-generated method stub
-		
-		Run run = runDao.getById(runId);
-		User user = userDao.getById(userId);
-		//user.getUserDetails().
-		//aclService.addPermission(run, permission)
-	}
 
 	/**
-	 * @override @see org.wise.portal.service.offering.RunService#addSharedTeacherToRun(org.wise.portal.domain.impl.AddSharedTeacherParameters)
+	 * @see org.wise.portal.service.offering.RunService#addSharedTeacherToRun(org.wise.portal.domain.impl.AddSharedTeacherParameters)
 	 */
 	public void addSharedTeacherToRun(
 			AddSharedTeacherParameters addSharedTeacherParameters) {
@@ -243,18 +234,29 @@ public class RunServiceImpl extends OfferingServiceImpl implements RunService {
 		run.getSharedowners().add(user);
 		this.runDao.save(run);
 
+		// get the project
+		Project project = run.getProject();
+		project.getSharedowners().add(user);
+		this.projectDao.save(project);
+
+		// get the new permissions
 		String permission = addSharedTeacherParameters.getPermission();
+
 		if (permission.equals(UserDetailsService.RUN_GRADE_ROLE)) {
 			this.aclService.removePermission(run, BasePermission.READ, user);
-			this.aclService.addPermission(run, BasePermission.WRITE, user);	
+			this.aclService.removePermission(project, BasePermission.READ, user);
+			this.aclService.addPermission(run, BasePermission.WRITE, user);
+			this.aclService.addPermission(project, BasePermission.WRITE, user);
 		} else if (permission.equals(UserDetailsService.RUN_READ_ROLE)) {
 			this.aclService.removePermission(run, BasePermission.WRITE, user);
+			this.aclService.removePermission(project, BasePermission.WRITE, user);
 			this.aclService.addPermission(run, BasePermission.READ, user);
+			this.aclService.addPermission(project, BasePermission.READ, user);
 		}
 	}
 	
 	/**
-	 * Update the permissions for a shared teacher for a run
+	 * Update the permissions for a shared teacher for a run. Also updates the shared permission for the project
 	 * @param updateSharedTeacherParameters the parameters that specify how to 
 	 * change the permissions for the teacher for the run
 	 */
@@ -264,20 +266,27 @@ public class RunServiceImpl extends OfferingServiceImpl implements RunService {
 		String sharedOwnerUsername = updateSharedTeacherParameters.getSharedOwnerUsername();
 		User user = userDao.retrieveByUsername(sharedOwnerUsername);
 		
-		//make sure the user is already a shared owner of the run
+		// make sure the user is already a shared owner of the run
 		if (run.getSharedowners().contains(user)) {
-			//the user is already a shared owner of the run
-			
-			//get the new permissions
+			// the user is already a shared owner of the run
+
+			// get the project
+			Project project = run.getProject();
+
+			// get the new permissions
 			String permission = updateSharedTeacherParameters.getPermission();
-			
-			//update the permissions
+
+			// update the permissions
 			if (permission.equals(UserDetailsService.RUN_GRADE_ROLE)) {
 				this.aclService.removePermission(run, BasePermission.READ, user);
-				this.aclService.addPermission(run, BasePermission.WRITE, user);	
+				this.aclService.removePermission(project, BasePermission.READ, user);
+				this.aclService.addPermission(run, BasePermission.WRITE, user);
+				this.aclService.addPermission(project, BasePermission.WRITE, user);
 			} else if (permission.equals(UserDetailsService.RUN_READ_ROLE)) {
 				this.aclService.removePermission(run, BasePermission.WRITE, user);
+				this.aclService.removePermission(project, BasePermission.WRITE, user);
 				this.aclService.addPermission(run, BasePermission.READ, user);
+				this.aclService.addPermission(project, BasePermission.READ, user);
 			}
 		}
 	}
@@ -323,19 +332,6 @@ public class RunServiceImpl extends OfferingServiceImpl implements RunService {
 			}
 		}
 		return null;
-	}
-
-	
-	/**
-	 * @see org.wise.portal.service.offering.RunService#addSharedTeacherToRun(java.lang.Long, java.lang.Long)
-	 */
-	@Transactional()
-	public void addSharedTeacherToRun(Long runId, Long userId)
-			throws ObjectNotFoundException {
-		Set<String> roles = new TreeSet<String>();
-		roles.add(UserDetailsService.RUN_READ_ROLE);
-		
-		addRolesToSharedTeacher(runId, userId, roles);
 	}
 
 	private String generateUniqueRunCode(Locale locale) {

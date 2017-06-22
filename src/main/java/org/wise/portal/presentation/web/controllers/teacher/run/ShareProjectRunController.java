@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -127,17 +127,18 @@ public class ShareProjectRunController {
 	 * Adds the AddSharedTeacherParameters object as a form-backing
 	 * object. This object will be filled out and submitted for adding
 	 * new teachers to the shared teachers list.
-     * @param model the model object that contains values for the page to use when rendering the view
+     * @param modelMap the model object that contains values for the page to use when rendering the view
      * @param request the http request object
      * @return the path of the view to display
      */
-    @RequestMapping(method=RequestMethod.GET)
+    @RequestMapping(method = RequestMethod.GET)
     public String initializeForm(ModelMap modelMap, HttpServletRequest request) throws Exception {
     	//get the signed in user
 		User user = ControllerUtil.getSignedInUser();
 		
 		//get the run
-		Run run = runService.retrieveById(Long.parseLong(request.getParameter(RUNID_PARAM_NAME)));
+		boolean doEagerFetch = true;
+		Run run = runService.retrieveById(Long.parseLong(request.getParameter(RUNID_PARAM_NAME)), doEagerFetch);
 		
 		//get the message if any
 		String message = request.getParameter("message");
@@ -228,7 +229,7 @@ public class ShareProjectRunController {
      * @param sessionStatus the session status object
      * @return the path of the view to display
      */
-	@RequestMapping(method=RequestMethod.POST)
+	@RequestMapping(method = RequestMethod.POST)
 	protected String onSubmit(
 			@ModelAttribute("addSharedTeacherParameters") AddSharedTeacherParameters params, 
 			BindingResult bindingResult, 
@@ -248,7 +249,8 @@ public class ShareProjectRunController {
 		
 		try {
 			//get the run
-			run = runService.retrieveById(runId);
+			boolean doEagerFetch = true;
+			run = runService.retrieveById(runId, doEagerFetch);
 			params.setRun(run);
 		} catch (ObjectNotFoundException e1) {
 			e1.printStackTrace();

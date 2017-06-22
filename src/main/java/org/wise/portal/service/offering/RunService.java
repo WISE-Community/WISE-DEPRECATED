@@ -114,68 +114,44 @@ public interface RunService extends OfferingService {
      * @return list of <code>Run</code> that the user is associated with
      */
     List<Run> getRunList(User user);
-    
-    /**
-     * Allows a user to add another user as a shared teacher of a run.
-     * 
-     * The user specified by the userId must exist and must have a 
-     * ROLE_TEACHER.
-     * 
-     * The invoker of this method must either:
-     * 1) have a ROLE_TEACHER authority and be the owner of the run specified
-     * by runId
-     * 2) have a ROLE_ADMINISTRATOR
-     * 
-     * The shared teacher will have the default ROLE_RUN_READ permission
-     * 
-     * If the user specified by the userId is already a shared teacher of
-     * the specified run, nothing happens.
-     * 
-     * @param runId
-     * @param userId
-     * @throws <code>RunNotFoundException</code> when runId cannot be used 
-     *          to find an existing run   
-     */
-    @Secured( {"ROLE_TEACHER"} )
-    void addSharedTeacherToRun(Long runId, Long userId)
-        throws ObjectNotFoundException;
-
-    
-    /**
-     * Allows a user to add another user as a shared teacher of a run.
-     * 
-     * The user specified by the userId must exist and must have a 
-     * ROLE_TEACHER.
-     * 
-     * The invoker of this method must either:
-     * 1) have a ROLE_TEACHER authority and be the owner of the run specified
-     * by runId
-     * 2) have a ROLE_ADMINISTRATOR
-     * 
-     * The shared teacher will have the ROLES defined in the roles parameter.
-     * 
-     * If the user specified is already a shared teacher of the specified run,
-     * her permissions on the specified run will be updated with the roles in
-     * the roles parameter.
-     * 
-     * @param runId
-     * @param userId
-     * @param roles Set of ROLES that the shared teacher will have on the run
-     * @throws <code>RunNotFoundException</code> when runId cannot be used 
-     *          to find an existing run   
-     */
-    @Secured( {"ROLE_TEACHER"} )
-    void addRolesToSharedTeacher(Long runId, Long userId, Set<String> roles) throws ObjectNotFoundException;
 
     /**
+     * Allows a user to add another user as a shared teacher of a run.
+     *
+     * The shared user must exist and must have a ROLE_TEACHER.
+     *
+     * The invoker of this method must either:
+     * 1) have a ROLE_TEACHER authority and be the owner of the run
+     * 2) have a ROLE_ADMINISTRATOR
+     *
+     * The shared teacher will have the role specified in the parameters
+     *
      * @param addSharedTeacherParameters
+     * @throws <code>RunNotFoundException</code> when runId cannot be used
+     *          to find an existing run
      */
     @Secured( {"ROLE_TEACHER"} )
     @Transactional()
 	void addSharedTeacherToRun(AddSharedTeacherParameters addSharedTeacherParameters) throws ObjectNotFoundException;
 
     /**
+     * Allows a user to updated shared teacher's permissions on a run
+     *
+     * The user specified must exist, must have a ROLE_TEACHER, and must already be a shared owner of the run
+     *
+     * The invoker of this method must either:
+     * 1) have a ROLE_TEACHER authority and be the owner of the run
+     * 2) have a ROLE_ADMINISTRATOR
+     *
+     * The shared teacher will have the ROLES defined in the roles parameter.
+     *
+     * If the user specified is already a shared teacher of the specified run,
+     * her permissions on the specified run will be updated with the roles in
+     * the roles parameter.
+     *
      * @param addSharedTeacherParameters
+     * @throws <code>RunNotFoundException</code> when runId cannot be used
+     *          to find an existing run
      */
     @Secured( {"ROLE_TEACHER"} )
     @Transactional()
@@ -183,7 +159,7 @@ public interface RunService extends OfferingService {
 
     /**
      * Removes specified teacher user from specified run. If user or run does not exist, ignore.
-
+     *
      * @param username
      * @param runId
      * @throws ObjectNotFoundException
