@@ -1,12 +1,12 @@
-<md-dialog aria-label="{{'teamsOnItem' | translate}}">
-    <md-toolbar md-theme="light">
+<md-dialog class="dialog--wide">
+    <md-toolbar>
         <div class="md-toolbar-tools">
             <h2>{{$ctrl.data.nodeTitle}}</h2>
         </div>
     </md-toolbar>
     <md-dialog-content class="md-dialog-content gray-light-bg md-body-2">
-        <p ng-if="!$ctrl.data.workgroups.length" class="center" translate="teamsOnItemNone"></p>
-        <p ng-if="$ctrl.data.workgroups.length" class="center" translate="teamsOnItem" translate-value-total="{{$ctrl.data.workgroups.length}}" translate-value-online="{{($ctrl.data.workgroups | filter:onlineFilter).length}}"></p>
+        <p ng-if="!$ctrl.data.workgroups.length" class="center" translate="teamsOnItemNone" translate-value-type="{{$ctrl.data.type}}"></p>
+        <p ng-if="$ctrl.data.workgroups.length" class="center" translate="teamsOnItem" translate-value-type="{{$ctrl.data.type}}" translate-value-total="{{$ctrl.data.workgroups.length}}" translate-value-online="{{($ctrl.data.workgroups | filter:onlineFilter).length}}"></p>
         <md-list class="user-list">
             <md-list-item class="list-item md-whiteframe-1dp" ng-repeat="group in $ctrl.data.workgroups | orderBy:'-online'">
                 <div class="md-avatar">

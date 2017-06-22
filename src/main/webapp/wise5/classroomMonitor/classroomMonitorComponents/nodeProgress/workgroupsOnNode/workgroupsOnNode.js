@@ -9,10 +9,19 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var WorkgroupsOnNodeController = function () {
-    function WorkgroupsOnNodeController($mdDialog) {
+    function WorkgroupsOnNodeController($filter, $mdDialog) {
+        var _this = this;
+
         _classCallCheck(this, WorkgroupsOnNodeController);
 
+        this.$filter = $filter;
         this.$mdDialog = $mdDialog;
+
+        this.$translate = this.$filter('translate');
+
+        this.$onChanges = function () {
+            _this.type = _this.isGroup ? _this.$translate('activity') : _this.$translate('step');
+        };
 
         this.parent = this;
     }
@@ -21,6 +30,7 @@ var WorkgroupsOnNodeController = function () {
         key: 'showWorkgroupsOnNode',
         value: function showWorkgroupsOnNode(ev) {
             this.$mdDialog.show({
+                ariaLabel: this.$translate('teamsOnItem'),
                 parent: angular.element(document.body),
                 targetEvent: ev,
                 templateUrl: 'wise5/classroomMonitor/classroomMonitorComponents/nodeProgress/workgroupsOnNode/workgroupsOnNodeDialog.html',
@@ -47,10 +57,11 @@ var WorkgroupsOnNodeController = function () {
     return WorkgroupsOnNodeController;
 }();
 
-WorkgroupsOnNodeController.$inject = ['$mdDialog'];
+WorkgroupsOnNodeController.$inject = ['$filter', '$mdDialog'];
 
 var WorkgroupsOnNode = {
     bindings: {
+        isGroup: '<',
         nodeTitle: '<',
         workgroups: '<',
         online: '<'

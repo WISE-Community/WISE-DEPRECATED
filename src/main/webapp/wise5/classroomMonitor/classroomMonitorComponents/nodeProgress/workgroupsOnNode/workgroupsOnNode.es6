@@ -1,14 +1,23 @@
 "use strict";
 
 class WorkgroupsOnNodeController {
-    constructor($mdDialog) {
+    constructor($filter,
+                $mdDialog) {
+        this.$filter = $filter;
         this.$mdDialog = $mdDialog;
+
+        this.$translate = this.$filter('translate');
+
+        this.$onChanges = () => {
+            this.type = this.isGroup ? this.$translate('activity') : this.$translate('step');
+        }
 
         this.parent = this;
     };
 
     showWorkgroupsOnNode(ev) {
         this.$mdDialog.show({
+            ariaLabel: this.$translate('teamsOnItem'),
             parent: angular.element(document.body),
             targetEvent: ev,
             templateUrl: 'wise5/classroomMonitor/classroomMonitorComponents/nodeProgress/workgroupsOnNode/workgroupsOnNodeDialog.html',
@@ -33,11 +42,13 @@ class WorkgroupsOnNodeController {
 }
 
 WorkgroupsOnNodeController.$inject = [
+    '$filter',
     '$mdDialog'
 ];
 
 const WorkgroupsOnNode = {
     bindings: {
+        isGroup: '<',
         nodeTitle: '<',
         workgroups: '<',
         online: '<'
