@@ -43,6 +43,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 import org.springframework.web.socket.WebSocketHandler;
 import org.wise.portal.dao.ObjectNotFoundException;
+import org.wise.portal.domain.authentication.MutableUserDetails;
 import org.wise.portal.domain.portal.Portal;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.project.ProjectMetadata;
@@ -520,9 +521,22 @@ public class WISE5AuthorProjectController {
 
             config.put("projectMetadataSettings", new JSONObject(projectMetadataSettings));
 
+            MutableUserDetails userDetails = (org.wise.portal.domain.authentication.MutableUserDetails) user.getUserDetails();
+
+            String userName = userDetails.getUsername();
+            String firstName = userDetails.getFirstname();
+            String lastName = userDetails.getLastname();
+            String fullName = firstName + " " + lastName;
+
+            // get the full name and user name
+            userName = fullName + " (" + userName + ")";
+
             // add this teachers's info in config.userInfo.myUserInfo object
             JSONObject myUserInfo = new JSONObject();
-            myUserInfo.put("userName", user.getUserDetails().getUsername());
+            myUserInfo.put("userName", userName);
+            myUserInfo.put("firstName", firstName);
+            myUserInfo.put("lastName", lastName);
+            myUserInfo.put("fullName", fullName);
             JSONObject userInfo = new JSONObject();
             userInfo.put("myUserInfo", myUserInfo);
             config.put("userInfo", userInfo);

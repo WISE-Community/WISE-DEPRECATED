@@ -1,16 +1,39 @@
 "use strict";
 
 class TopBarController {
-    constructor(ConfigService) {
+    constructor($rootScope,
+                ConfigService,
+                ProjectService,
+                TeacherDataService) {
+        this.$rootScope = $rootScope;
         this.ConfigService = ConfigService;
+        this.ProjectService = ProjectService;
+        this.TeacherDataService = TeacherDataService;
 
+        // get the teacher workgroup id
         this.workgroupId = this.ConfigService.getWorkgroupId();
+
+        if (this.workgroupId == null) {
+            /*
+             * the teacher doesn't have a workgroup id so we will use a random
+             * number
+             */
+            this.workgroupId = parseInt(100 * Math.random());
+        }
+
+        // get the avatar color for the teacher
+        this.avatarColor = this.ConfigService.getAvatarColorForWorkgroupId(this.workgroupId);
+
+        // get the teacher name and user name
+        this.userName = this.ConfigService.getMyUserName();
 
         this.$onChanges = (changesObj) => {
             if (changesObj.notifications) {
                 this.setNotifications();
             }
         }
+
+        this.themePath = this.ProjectService.getThemePath();
     }
 
     /**
@@ -38,10 +61,49 @@ class TopBarController {
             }
         );
     }
+
+    /**
+     * Navigate the teacher to the teacher home page
+     */
+    goHome() {
+        // save goHome event
+        var context = "ClassroomMonitor";
+        var nodeId = null;
+        var componentId = null;
+        var componentType = null;
+        var category = "Navigation";
+        var event = "goHomeButtonClicked";
+        var eventData = {};
+        this.TeacherDataService.saveEvent(context, nodeId, componentId, componentType, category, event, eventData);
+
+        // fire the goHome event
+        this.$rootScope.$broadcast('goHome');
+    };
+
+    /**
+     * Log the teacher out of WISE
+     */
+    logOut() {
+        // save logOut event
+        var context = "ClassroomMonitor";
+        var nodeId = null;
+        var componentId = null;
+        var componentType = null;
+        var category = "Navigation";
+        var event = "logOutButtonClicked";
+        var eventData = {};
+        this.TeacherDataService.saveEvent(context, nodeId, componentId, componentType, category, event, eventData);
+
+        // fire the logOut event
+        this.$rootScope.$broadcast('logOut');
+    };
 }
 
 TopBarController.$inject = [
-    'ConfigService'
+    '$rootScope',
+    'ConfigService',
+    'ProjectService',
+    'TeacherDataService'
 ];
 
 const TopBar = {
@@ -75,7 +137,7 @@ const TopBar = {
                         <md-icon md-menu-origin> account_box </md-icon>
                     </md-button>
                     <md-menu-content width="5" class="account-menu">
-                        <account-menu></account-menu>
+                        <ng-include src="$ctrl.themePath + '/templates/teacherAccountMenu.html'"></ng-include>
                     </md-menu-content>
                 </md-menu>
             </div>

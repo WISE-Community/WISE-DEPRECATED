@@ -1,5 +1,59 @@
 "use strict";
 
+class TopBarController {
+    constructor($rootScope,
+                ConfigService,
+                ProjectService,
+                TeacherDataService) {
+        this.$rootScope = $rootScope;
+        this.ConfigService = ConfigService;
+        this.ProjectService = ProjectService;
+        this.TeacherDataService = TeacherDataService;
+
+        // get the teacher workgroup id
+        this.workgroupId = this.ConfigService.getWorkgroupId();
+
+        if (this.workgroupId == null) {
+            /*
+             * the teacher doesn't have a workgroup id so we will use a random
+             * number
+             */
+            this.workgroupId = parseInt(100 * Math.random());
+        }
+
+        // get the avatar color for the teacher
+        this.avatarColor = this.ConfigService.getAvatarColorForWorkgroupId(this.workgroupId);
+
+        // get the teacher name and user name
+        this.userName = this.ConfigService.getMyUserName();
+
+        this.themePath = this.ProjectService.getThemePath();
+    }
+
+    /**
+     * Navigate the teacher to the teacher home page
+     */
+    goHome() {
+        // fire the goHome event
+        this.$rootScope.$broadcast('goHome');
+    };
+
+    /**
+     * Log the teacher out of WISE
+     */
+    logOut() {
+        // fire the logOut event
+        this.$rootScope.$broadcast('logOut');
+    };
+}
+
+TopBarController.$inject = [
+    '$rootScope',
+    'ConfigService',
+    'ProjectService',
+    'TeacherDataService'
+];
+
 const TopBar = {
     bindings: {
         logoPath: '@',
@@ -7,6 +61,7 @@ const TopBar = {
         projectTitle: '<',
         runId: '<'
     },
+    controller: TopBarController,
     template:
         `<md-toolbar class="l-header">
             <div class="md-toolbar-tools">
@@ -26,7 +81,7 @@ const TopBar = {
                         <md-icon md-menu-origin> account_box </md-icon>
                     </md-button>
                     <md-menu-content width="5" class="account-menu">
-                        <account-menu></account-menu>
+                        <ng-include src="$ctrl.themePath + '/templates/teacherAccountMenu.html'"></ng-include>
                     </md-menu-content>
                 </md-menu>
             </div>
