@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2015 Encore Research Group, University of Toronto
+ * Copyright (c) 2007-2017 Encore Research Group, University of Toronto
  *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
@@ -64,7 +64,7 @@ public class AclServiceImpl<T extends Persistable> implements AclService<T> {
 	}
 
 	/**
-	 * @see net.sf.sail.webapp.service.AclService#addPermission(java.lang.Object)
+	 * @see org.wise.portal.service.acl.AclService#addPermission(Object, Permission)
 	 */
 	public void addPermission(T object, Permission permission) {
 		if (object != null) {	
@@ -88,7 +88,7 @@ public class AclServiceImpl<T extends Persistable> implements AclService<T> {
 	}
 
 	/**
-	 * @see net.sf.sail.webapp.service.AclService#addPermission(java.lang.Object, org.acegisecurity.acls.Permission, org.acegisecurity.Authentication)
+	 * @see org.wise.portal.service.acl.AclService#addPermission(Object, Permission, User)
 	 */
 	public void addPermission(T object, Permission permission, User user) {
 		if (object != null) {	
@@ -112,7 +112,7 @@ public class AclServiceImpl<T extends Persistable> implements AclService<T> {
 	}
 
 	/**
-	 * @see net.sf.sail.webapp.service.AclService#removePermission(java.lang.Object, org.acegisecurity.acls.Permission, net.sf.sail.webapp.domain.User)
+	 * @see org.wise.portal.service.acl.AclService#removePermission(Object, Permission, User)
 	 */
 	public void removePermission(T object, Permission permission, User user) {
 		if (object != null) {	
@@ -201,7 +201,7 @@ public class AclServiceImpl<T extends Persistable> implements AclService<T> {
 	}
 	
 	/**
-	 * @see net.sf.sail.webapp.service.AclService#hasPermission(java.lang.Object, org.springframework.security.acls.Permission, net.sf.sail.webapp.domain.User)
+	 * @see  org.wise.portal.service.acl.AclService#hasPermission(Object, Permission, User)
 	 */
 	public boolean hasPermission(T object, Permission permission, User user){
 		
@@ -218,7 +218,7 @@ public class AclServiceImpl<T extends Persistable> implements AclService<T> {
 	}
 
 	/**
-	 * @see net.sf.sail.webapp.service.AclService#hasPermission(java.lang.Object, org.springframework.security.acls.Permission, net.sf.sail.webapp.domain.User)
+	 * @see org.wise.portal.service.acl.AclService#hasPermission(Authentication, Object, Object)
 	 */
 	public boolean hasPermission(T object, Permission permission, UserDetails userDetails){
 		

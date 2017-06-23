@@ -3,6 +3,7 @@
 class TeacherDataService {
 
     constructor($http,
+                $filter,
                 $q,
                 $rootScope,
                 AnnotationService,
@@ -12,6 +13,7 @@ class TeacherDataService {
                 TeacherWebSocketService,
                 UtilService) {
         this.$http = $http;
+        this.$filter = $filter;
         this.$q = $q;
         this.$rootScope = $rootScope;
         this.AnnotationService = AnnotationService;
@@ -20,6 +22,8 @@ class TeacherDataService {
         this.ProjectService = ProjectService;
         this.TeacherWebSocketService = TeacherWebSocketService;
         this.UtilService = UtilService;
+
+        this.$translate = this.$filter('translate');
 
         this.studentData = {
             componentStatesByWorkgroupId: {},
@@ -34,8 +38,6 @@ class TeacherDataService {
         this.runStatus = null;
         this.periods = [];
         this.nodeGradingSort = 'team';
-
-        this.initializePeriods();
 
         /**
          * Listen for the 'annotationSavedToServer' event which is fired when
@@ -489,6 +491,7 @@ class TeacherDataService {
                 if (data != null) {
                     // save the run status
                     this.runStatus = data;
+                    this.initializePeriods();
                 }
             }
         });
@@ -820,7 +823,7 @@ class TeacherDataService {
             // create an option for all periods
             let allPeriodsOption = {
                 periodId: -1,
-                periodName: 'All'
+                periodName: this.$translate('allPeriods')
             };
 
             periods.unshift(allPeriodsOption);
@@ -830,6 +833,9 @@ class TeacherDataService {
         }
 
         this.periods = periods;
+        if (!this.runStatus.periods) {
+            this.runStatus.periods = this.periods;
+        }
 
         // set the current period
         if (currentPeriod) {
@@ -854,6 +860,10 @@ class TeacherDataService {
 
     getPeriods() {
         return this.periods;
+    }
+
+    getRunStatus() {
+        return this.runStatus;
     }
 
     setCurrentWorkgroup(workgroup) {
@@ -981,8 +991,40 @@ class TeacherDataService {
     }
 
     /**
-     * Check if a period is paused
-     * @returns whether the period is paused or not
+     * Check if any period in the run is paused
+     * @returns Boolean whether any periods are paused
+     */
+    isAnyPeriodPaused(periodId) {
+        let isPaused = false;
+
+        // get the run status
+        let runStatus = this.runStatus;
+
+        if (runStatus && runStatus.periods) {
+            let periods = runStatus.periods;
+            let nPeriods = periods.length;
+            let nPeriodsPaused = 0;
+
+            // loop through all the periods
+            for (let p = 0; p < periods.length; p++) {
+                let period = periods[p];
+
+                if (period != null) {
+                    if (period.paused) {
+                        isPaused = true;
+                        break;
+                    }
+                }
+            }
+        }
+
+        return isPaused;
+    }
+
+    /**
+     * Check if the given period is paused
+     * @param periodId the id for a period
+     * @returns Boolean whether the period is paused or not
      */
     isPeriodPaused(periodId) {
 
@@ -1024,35 +1066,37 @@ class TeacherDataService {
     }
 
     /**
-     * The pause screen status was changed. update period(s) accordingly.
+     * The pause screen status was changed for the given periodId. Update period accordingly.
+     * @param periodId the id of the period to toggle
+     * @param isPaused Boolean whether the period should be paused or not
      */
-    pauseScreensChanged(isPaused) {
+    pauseScreensChanged(periodId, isPaused) {
+        if (periodId) {
+            // update the run status
+            this.updatePausedRunStatusValue(periodId, isPaused);
 
-        // get the currently selected period Id
-        let periodId = this.currentPeriod.periodId;
+            if (isPaused) {
+                // pause the student screens
+                this.TeacherWebSocketService.pauseScreens(periodId);
+            } else {
+                // unpause the student screens
+                this.TeacherWebSocketService.unPauseScreens(periodId);
+            }
 
-        // update the run status
-        this.updatePausedRunStatusValue(periodId, isPaused);
+            // save the run status to the server
+            this.sendRunStatus();
 
-        if (isPaused) {
-            // pause the student screens
-            this.TeacherWebSocketService.pauseScreens(periodId);
-        } else {
-            // unpause the student screens
-            this.TeacherWebSocketService.unPauseScreens(periodId);
+            // save pause/unpause screen event
+            let context = "ClassroomMonitor", nodeId = null, componentId = null, componentType = null,
+                category = "TeacherAction", data = { periodId: periodId };
+            let event = "pauseScreen";
+            if (!isPaused) {
+                event = "unPauseScreen";
+            }
+            this.saveEvent(context, nodeId, componentId, componentType, category, event, data);
+
+            this.$rootScope.$broadcast('pauseScreensChanged', {periods: this.runStatus.periods});
         }
-
-        // save the run status to the server
-        this.sendRunStatus();
-
-        // save pause/unpause screen event
-        let context = "ClassroomMonitor", nodeId = null, componentId = null, componentType = null,
-            category = "TeacherAction", data = {};
-        let event = "pauseScreen";
-        if (!isPaused) {
-            event = "unPauseScreen";
-        }
-        this.saveEvent(context, nodeId, componentId, componentType, category, event, data);
     }
 
     /**
@@ -1099,12 +1143,14 @@ class TeacherDataService {
 
         //get the local run status object
         let runStatus = this.runStatus;
-
         let periods = runStatus.periods;
 
+        let allPeriodsPaused = true;
+
         if (periods) {
+            let l = periods.length, x = l - 1;
             //loop through all the periods
-            for (let x = 0; x < periods.length; x++) {
+            for (; x > -1; x--) {
                 //get a period
                 let tempPeriod = periods[x];
 
@@ -1116,7 +1162,16 @@ class TeacherDataService {
                     //we have found the period we want to update
                     tempPeriod.paused = value;
                 }
-            }
+
+                if (tempPeriodId !== -1 && !tempPeriod.paused) {
+                    allPeriodsPaused = false;
+                }
+
+                if (tempPeriodId === -1) {
+                    // set the paused status for the all periods option
+                    tempPeriod.paused = allPeriodsPaused;
+                }
+             }
         }
     }
 
@@ -1162,6 +1217,7 @@ class TeacherDataService {
 
 TeacherDataService.$inject = [
     '$http',
+    '$filter',
     '$q',
     '$rootScope',
     'AnnotationService',

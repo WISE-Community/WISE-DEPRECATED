@@ -16,23 +16,10 @@
                 <md-icon class="primary"> info_outline </md-icon>
                 {{ 'projectInfo' | translate }}
             </md-button>
-            <div>
-                <md-switch aria-label="Lock student screens switch"
-                           ng-model="nodeProgressController.isPaused"
-                           ng-change="nodeProgressController.pauseScreensChanged(nodeProgressController.isPaused)">
-                    <md-icon ng-class="{'accent-1': nodeProgressController.isPaused}"> lock </md-icon>
-                    <md-tooltip ng-if="!nodeProgressController.isPaused" md-direction="top">
-                        <span translate="pauseStudentScreens"></span>
-                    </md-tooltip>
-                    <md-tooltip ng-if="nodeProgressController.isPaused" md-direction="top">
-                        <span translate="unpauseStudentScreens"></span>
-                    </md-tooltip>
-                </md-switch>
-            </div>
         </div>
 
-        <div class="md-whiteframe-1dp gray-bg">
-            <md-list class="user-list student-select">
+        <div class="gray-bg">
+            <md-list class="user-list student-select md-whiteframe-1dp">
                 <md-list-item class="list-item list-item--actions" layout-wrap>
                     <div flex-sm="100" flex-xs="100">
                         <workgroup-select></workgroup-select>

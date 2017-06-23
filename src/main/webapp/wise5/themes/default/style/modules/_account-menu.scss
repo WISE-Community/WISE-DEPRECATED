@@ -50,6 +50,10 @@
     right: 80px;
 }
 
+.account-menu__caret--pause {
+    right: 152px;
+}
+
 .account-menu__info {
     padding: 8px 12px;
 }
@@ -84,9 +88,6 @@
     }
 }
 
-.account-menu__score {
-}
-
 .account-menu__grade {
     position: relative;
     margin-right: 4px;
@@ -105,4 +106,8 @@
 
 .account-menu__actions {
     background-color: color('gray-lightest');
+}
+
+.account-menu__control {
+    padding: 16px;
 }

@@ -72,10 +72,6 @@ class NodeProgressController {
 
         let currentPeriod = this.getCurrentPeriod();
 
-        if (currentPeriod) {
-            this.isPaused = this.TeacherDataService.isPeriodPaused(currentPeriod.periodId);
-        }
-
         this.showRubricButton = false;
 
         if (this.projectHasRubric()) {
@@ -108,14 +104,6 @@ class NodeProgressController {
             }
 
             this.$state.go('root.nodeProgress', {nodeId: this.nodeId});
-        });
-
-        /**
-         * Listen for current period changed event
-         */
-        this.$scope.$on('currentPeriodChanged', (event, args) => {
-            let currentPeriod = args.currentPeriod;
-            this.isPaused = this.TeacherDataService.isPeriodPaused(currentPeriod.periodId);
         });
 
         // listen for the currentWorkgroupChanged event
@@ -198,13 +186,6 @@ class NodeProgressController {
         var completionPercentage = this.StudentStatusService.getNodeCompletion(nodeId, periodId);
 
         return completionPercentage;
-    }
-
-    /**
-     * The pause screen status was changed. Update period(s) accordingly.
-     */
-    pauseScreensChanged(isPaused) {
-        this.TeacherDataService.pauseScreensChanged(isPaused);
     }
 
     /**

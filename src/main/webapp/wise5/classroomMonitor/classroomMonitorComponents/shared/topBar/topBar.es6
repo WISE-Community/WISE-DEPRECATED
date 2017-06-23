@@ -63,6 +63,14 @@ class TopBarController {
     }
 
     /**
+     * Check whether any period in the run is paused
+     * @return Boolean whether any of the periods are paused
+     */
+    isAnyPeriodPaused() {
+        return this.TeacherDataService.isAnyPeriodPaused();
+    }
+
+    /**
      * Navigate the teacher to the teacher home page
      */
     goHome() {
@@ -123,6 +131,18 @@ const TopBar = {
                 </span>
                 <h3>{{ $ctrl.projectTitle }} <span class="md-caption">({{ 'RUN_ID_DISPLAY' | translate:{id: $ctrl.runId} }})</span></h3>
                 <span flex></span>
+                <md-menu md-position-mode="target-right target" md-offset="52 26">
+                    <md-button aria-label="{{ 'USER_MENU' | translate }}"
+                               class="md-icon-button"
+                               ng-class="{ 'has-indicator has-indicator--icon-button': $ctrl.isAnyPeriodPaused() }"
+                               ng-click="$mdMenu.open($event)">
+                        <md-icon md-menu-origin ng-if="$ctrl.isAnyPeriodPaused()"> lock_outline </md-icon>
+                        <md-icon md-menu-origin ng-if="!$ctrl.isAnyPeriodPaused()"> lock_open </md-icon>
+                    </md-button>
+                    <md-menu-content width="5" class="account-menu">
+                        <pause-screens-menu></pause-screens-menu>
+                    </md-menu-content>
+                </md-menu>
                 <md-menu md-position-mode="target-right target" md-offset="40 26">
                     <md-button aria-label="{{ 'ALERTS' | translate }}" class="md-icon-button notification-btn" ng-click="$mdMenu.open($event)">
                         <span ng-show="$ctrl.newNotifications.length" class="notification-count">{{$ctrl.newNotifications.length}}</span>

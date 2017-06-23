@@ -9,12 +9,13 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var TeacherDataService = function () {
-    function TeacherDataService($http, $q, $rootScope, AnnotationService, ConfigService, NotificationService, ProjectService, TeacherWebSocketService, UtilService) {
+    function TeacherDataService($http, $filter, $q, $rootScope, AnnotationService, ConfigService, NotificationService, ProjectService, TeacherWebSocketService, UtilService) {
         var _this = this;
 
         _classCallCheck(this, TeacherDataService);
 
         this.$http = $http;
+        this.$filter = $filter;
         this.$q = $q;
         this.$rootScope = $rootScope;
         this.AnnotationService = AnnotationService;
@@ -23,6 +24,8 @@ var TeacherDataService = function () {
         this.ProjectService = ProjectService;
         this.TeacherWebSocketService = TeacherWebSocketService;
         this.UtilService = UtilService;
+
+        this.$translate = this.$filter('translate');
 
         this.studentData = {
             componentStatesByWorkgroupId: {},
@@ -37,8 +40,6 @@ var TeacherDataService = function () {
         this.runStatus = null;
         this.periods = [];
         this.nodeGradingSort = 'team';
-
-        this.initializePeriods();
 
         /**
          * Listen for the 'annotationSavedToServer' event which is fired when
@@ -525,6 +526,7 @@ var TeacherDataService = function () {
                     if (data != null) {
                         // save the run status
                         _this3.runStatus = data;
+                        _this3.initializePeriods();
                     }
                 }
             });
@@ -881,7 +883,7 @@ var TeacherDataService = function () {
                 // create an option for all periods
                 var allPeriodsOption = {
                     periodId: -1,
-                    periodName: 'All'
+                    periodName: this.$translate('allPeriods')
                 };
 
                 periods.unshift(allPeriodsOption);
@@ -891,6 +893,9 @@ var TeacherDataService = function () {
             }
 
             this.periods = periods;
+            if (!this.runStatus.periods) {
+                this.runStatus.periods = this.periods;
+            }
 
             // set the current period
             if (currentPeriod) {
@@ -918,6 +923,11 @@ var TeacherDataService = function () {
         key: 'getPeriods',
         value: function getPeriods() {
             return this.periods;
+        }
+    }, {
+        key: 'getRunStatus',
+        value: function getRunStatus() {
+            return this.runStatus;
         }
     }, {
         key: 'setCurrentWorkgroup',
@@ -1071,8 +1081,43 @@ var TeacherDataService = function () {
         }
 
         /**
-         * Check if a period is paused
-         * @returns whether the period is paused or not
+         * Check if any period in the run is paused
+         * @returns Boolean whether any periods are paused
+         */
+
+    }, {
+        key: 'isAnyPeriodPaused',
+        value: function isAnyPeriodPaused(periodId) {
+            var isPaused = false;
+
+            // get the run status
+            var runStatus = this.runStatus;
+
+            if (runStatus && runStatus.periods) {
+                var periods = runStatus.periods;
+                var nPeriods = periods.length;
+                var nPeriodsPaused = 0;
+
+                // loop through all the periods
+                for (var p = 0; p < periods.length; p++) {
+                    var period = periods[p];
+
+                    if (period != null) {
+                        if (period.paused) {
+                            isPaused = true;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            return isPaused;
+        }
+
+        /**
+         * Check if the given period is paused
+         * @param periodId the id for a period
+         * @returns Boolean whether the period is paused or not
          */
 
     }, {
@@ -1117,42 +1162,44 @@ var TeacherDataService = function () {
         }
 
         /**
-         * The pause screen status was changed. update period(s) accordingly.
+         * The pause screen status was changed for the given periodId. Update period accordingly.
+         * @param periodId the id of the period to toggle
+         * @param isPaused Boolean whether the period should be paused or not
          */
 
     }, {
         key: 'pauseScreensChanged',
-        value: function pauseScreensChanged(isPaused) {
+        value: function pauseScreensChanged(periodId, isPaused) {
+            if (periodId) {
+                // update the run status
+                this.updatePausedRunStatusValue(periodId, isPaused);
 
-            // get the currently selected period Id
-            var periodId = this.currentPeriod.periodId;
+                if (isPaused) {
+                    // pause the student screens
+                    this.TeacherWebSocketService.pauseScreens(periodId);
+                } else {
+                    // unpause the student screens
+                    this.TeacherWebSocketService.unPauseScreens(periodId);
+                }
 
-            // update the run status
-            this.updatePausedRunStatusValue(periodId, isPaused);
+                // save the run status to the server
+                this.sendRunStatus();
 
-            if (isPaused) {
-                // pause the student screens
-                this.TeacherWebSocketService.pauseScreens(periodId);
-            } else {
-                // unpause the student screens
-                this.TeacherWebSocketService.unPauseScreens(periodId);
+                // save pause/unpause screen event
+                var context = "ClassroomMonitor",
+                    nodeId = null,
+                    componentId = null,
+                    componentType = null,
+                    category = "TeacherAction",
+                    data = { periodId: periodId };
+                var event = "pauseScreen";
+                if (!isPaused) {
+                    event = "unPauseScreen";
+                }
+                this.saveEvent(context, nodeId, componentId, componentType, category, event, data);
+
+                this.$rootScope.$broadcast('pauseScreensChanged', { periods: this.runStatus.periods });
             }
-
-            // save the run status to the server
-            this.sendRunStatus();
-
-            // save pause/unpause screen event
-            var context = "ClassroomMonitor",
-                nodeId = null,
-                componentId = null,
-                componentType = null,
-                category = "TeacherAction",
-                data = {};
-            var event = "pauseScreen";
-            if (!isPaused) {
-                event = "unPauseScreen";
-            }
-            this.saveEvent(context, nodeId, componentId, componentType, category, event, data);
         }
 
         /**
@@ -1205,12 +1252,15 @@ var TeacherDataService = function () {
 
             //get the local run status object
             var runStatus = this.runStatus;
-
             var periods = runStatus.periods;
 
+            var allPeriodsPaused = true;
+
             if (periods) {
+                var l = periods.length,
+                    x = l - 1;
                 //loop through all the periods
-                for (var x = 0; x < periods.length; x++) {
+                for (; x > -1; x--) {
                     //get a period
                     var tempPeriod = periods[x];
 
@@ -1221,6 +1271,15 @@ var TeacherDataService = function () {
                     if (periodId === tempPeriodId || periodId === -1) {
                         //we have found the period we want to update
                         tempPeriod.paused = value;
+                    }
+
+                    if (tempPeriodId !== -1 && !tempPeriod.paused) {
+                        allPeriodsPaused = false;
+                    }
+
+                    if (tempPeriodId === -1) {
+                        // set the paused status for the all periods option
+                        tempPeriod.paused = allPeriodsPaused;
                     }
                 }
             }
@@ -1272,7 +1331,7 @@ var TeacherDataService = function () {
     return TeacherDataService;
 }();
 
-TeacherDataService.$inject = ['$http', '$q', '$rootScope', 'AnnotationService', 'ConfigService', 'NotificationService', 'ProjectService', 'TeacherWebSocketService', 'UtilService'];
+TeacherDataService.$inject = ['$http', '$filter', '$q', '$rootScope', 'AnnotationService', 'ConfigService', 'NotificationService', 'ProjectService', 'TeacherWebSocketService', 'UtilService'];
 
 exports.default = TeacherDataService;
 //# sourceMappingURL=teacherDataService.js.map
