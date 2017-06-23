@@ -1872,7 +1872,7 @@ var TableController = function () {
             var _this3 = this;
 
             // get the table element. this will obtain an array.
-            var tableElement = angular.element('#component_' + this.componentId + ' table');
+            var tableElement = angular.element('#table_' + this.nodeId + '_' + this.componentId);
 
             if (tableElement != null && tableElement.length > 0) {
 

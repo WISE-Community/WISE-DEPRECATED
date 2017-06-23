@@ -1,7 +1,7 @@
 // E2E test for working with the notebook in preview mode
 describe('WISE5 Notebook in Preview Mode', () => {
 
-    var hasClass = (element, cls) => {
+    let hasClass = (element, cls) => {
         return element.getAttribute('class').then((classes) => {
             return classes.split(' ').indexOf(cls) !== -1;
         });
@@ -16,13 +16,6 @@ describe('WISE5 Notebook in Preview Mode', () => {
     let insertNoteButton = element(by.css('.notebook-item--report__add-note'));  // insert note button inside report dialog
     let fullScreenButton = element(by.css('[ng-click="$ctrl.fullscreen()"]'));
     let collapseButton = element(by.css('[ng-click="$event.stopPropagation(); $ctrl.collapse()"]'));
-
-    /*
-    let notebookButton = element(by.xpath('//md-toolbar/button[@aria-label="View Notes"]'));
-    let reportButton = element(by.xpath('//md-toolbar/button[@aria-label="View Report"]'));
-    let addNoteButton = element(by.xpath('//md-toolbar/button[@aria-label="Add Notebook item"]'));
-    let addNoteDialog = element(by.xpath('//md-dialog[@aria-label="Add note"]'));
-    */
 
     it('should load the vle and go to node 1 and show notebook buttons', () => {
         browser.get('http://localhost:8080/wise/project/demo#/vle/node1');

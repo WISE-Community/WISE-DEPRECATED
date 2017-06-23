@@ -1,6 +1,6 @@
 'use strict';
 
-// E2E test for VLE running preview mode
+// E2E test for VLE running in preview mode
 describe('WISE5 Student VLE Preview', function () {
 
     var hasClass = function hasClass(element, cls) {

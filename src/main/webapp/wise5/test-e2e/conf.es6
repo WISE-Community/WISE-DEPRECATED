@@ -6,7 +6,8 @@ exports.config = {
 
     specs: [
         'previewVLE.spec.js',
-        'openResponse.spec.js',
+        'components/multipleChoice.spec.js',
+        'components/openResponse.spec.js',
         'notebook.spec.js',
         'portal/portal.spec.js',
         'portal/forgotAccount.spec.js',
