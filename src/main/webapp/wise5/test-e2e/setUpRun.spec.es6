@@ -34,7 +34,7 @@ describe('WISE Setting Up a Run', () => {
         // search for the newly created project
         let keywordFilterInput = $("#activeProjects input[type=text]");
         expect(keywordFilterInput.isPresent()).toBeTruthy();
-        keywordFilterInput.sendKeys("My Science Project");
+        keywordFilterInput.sendKeys("My Awesome Science Project");
         keywordFilterInput.sendKeys(protractor.Key.ENTER);
 
         // filter by owned project

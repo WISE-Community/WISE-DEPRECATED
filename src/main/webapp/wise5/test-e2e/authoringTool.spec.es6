@@ -5,7 +5,7 @@ describe('WISE Authoring Tool', () => {
         return element.getAttribute('class').then((classes) => {
             return classes.split(' ').indexOf(cls) !== -1;
         });
-    };
+    }
 
     /**
      * @name waitForUrlToChangeTo
@@ -14,7 +14,7 @@ describe('WISE Authoring Tool', () => {
      * @returns {!webdriver.promise.Promise} Promise
      */
     function waitForUrlToChangeTo(urlRegex) {
-        var currentUrl;
+        let currentUrl;
 
         return browser.getCurrentUrl().then(function storeCurrentUrl(url) {
                 currentUrl = url;
@@ -29,7 +29,9 @@ describe('WISE Authoring Tool', () => {
         );
     }
 
-    var createNewProjectButton;
+    let projectStructureButton = element(by.xpath('//side-menu/div/a[@aria-label="Project Structure"]'));
+    let createNewStepButton = $("#createNewStepButton");
+    let createNewProjectButton = $('#createNewProjectButton');
 
     it('should require user to log in to use the authoring tool', () => {
         browser.ignoreSynchronization = true;  // doesn't use Angular
@@ -52,7 +54,6 @@ describe('WISE Authoring Tool', () => {
         // check that the create new project button is displayed
         expect(browser.getTitle()).toEqual('WISE Authoring Tool');
         expect(browser.getCurrentUrl()).toEqual('http://localhost:8080/wise/author#/');
-        createNewProjectButton = $('#createNewProjectButton');
         expect(createNewProjectButton.isPresent()).toBeTruthy();
     });
 
@@ -87,10 +88,10 @@ describe('WISE Authoring Tool', () => {
         expect($("#deleteButton").isEnabled()).toBe(false);
         expect($("#saveProjectButton").isEnabled()).toBe(true);
         expect($("#createNewActivityButton").isEnabled()).toBe(true);
-        expect($("#createNewStepButton").isEnabled()).toBe(true);
+        expect(createNewStepButton.isEnabled()).toBe(true);
         expect($("#previewProjectButton").isEnabled()).toBe(true);
         // look for side-menu items
-        expect(element(by.xpath('//side-menu/div/a[@aria-label="Project Structure"]')).isDisplayed()).toBe(true);
+        expect(projectStructureButton.isDisplayed()).toBe(true);
         expect(element(by.xpath('//side-menu/div/a[@aria-label="Notebook Settings"]')).isDisplayed()).toBe(true);
         expect(element(by.xpath('//side-menu/div/a[@aria-label="File Manager"]')).isDisplayed()).toBe(true);
         expect(element(by.xpath('//side-menu/div/a[@aria-label="Project Info"]')).isDisplayed()).toBe(true);
@@ -98,7 +99,7 @@ describe('WISE Authoring Tool', () => {
 
     it('should create new steps', () => {
         // test adding a new step to an empty project
-        $("#createNewStepButton").click();
+        createNewStepButton.click();
         expect($("#createNodeTitle").isDisplayed()).toBeTruthy();
         expect($("#createNodeCreateButton").isDisplayed()).toBeTruthy();
         expect($("#createNodeCancelButton").isDisplayed()).toBeTruthy();
@@ -108,7 +109,7 @@ describe('WISE Authoring Tool', () => {
         expect($("#createNodeCreateButton").isDisplayed()).toBeFalsy();
         expect($("#createNodeCancelButton").isDisplayed()).toBeFalsy();
 
-        $("#createNewStepButton").click();
+        createNewStepButton.click();
         $('#createNodeTitle').clear();  // clear out what's there.
         $('#createNodeTitle').sendKeys('Step 1');
         $("#createNodeCreateButton").click();
@@ -130,7 +131,7 @@ describe('WISE Authoring Tool', () => {
 
         // now test adding another step after the first step. This time the alert should not show.
 
-        $("#createNewStepButton").click();
+        createNewStepButton.click();
         $('#createNodeTitle').clear();  // clear out what's there.
         $('#createNodeTitle').sendKeys('Step 2');
         $("#createNodeCreateButton").click();
@@ -146,14 +147,13 @@ describe('WISE Authoring Tool', () => {
             expect(nodeItem[2].element(by.className('stepHeader')).getText()).toBe("1.1 Step 1");  // should have step 1
             expect(nodeItem[3].element(by.className('stepHeader')).getText()).toBe("1.2 Step 2");  // should now have the newly added step
         });
-
     });
 
     it('should display my assets', () => {
         element(by.xpath('//side-menu/div/a[@aria-label="File Manager"]')).click();
         expect(browser.getCurrentUrl()).toMatch('http://localhost:8080/wise/author#/project/[0-9]+/asset');
         expect($(".drop-box").isPresent()).toBeTruthy();  // the drop box for uploading assets should exist.
-        $("#closeAssetsButton").click();
+        projectStructureButton.click();
         expect(browser.getCurrentUrl()).toMatch('http://localhost:8080/wise/author#/project/[0-9]+');  // should go back to the project editing view.
     });
 
@@ -171,8 +171,22 @@ describe('WISE Authoring Tool', () => {
         // TODO add more tests here
         element(by.xpath('//side-menu/div/a[@aria-label="Project Info"]')).click();
         expect(browser.getCurrentUrl()).toMatch('http://localhost:8080/wise/author#/project/[0-9]+/info');
-        element(by.xpath('//side-menu/div/a[@aria-label="Project Structure"]')).click();
+
+        // check that there are inputs for metadata items
+        element.all(by.repeater("metadataField in projectInfoController.metadataAuthoring.fields")).then((metadataField) => {
+            let titleInput = metadataField[0].element(by.model('projectInfoController.metadata[metadataField.key]'));
+            expect(titleInput.getAttribute('value')).toBe("My Science Project");  // should show the title of the project
+            titleInput.clear();  // clear out what's there.
+            titleInput.sendKeys('My Awesome Science Project');  // change the title to "My Awesome Science Project"
+            let summaryTextarea = metadataField[1].element(by.model('projectInfoController.metadata[metadataField.key]'));
+            expect(summaryTextarea.getAttribute('value')).toBe("");  // should show the summary of the project, which is empty to start with
+            summaryTextarea.sendKeys('This is my science project summary.');
+        });
+
+        projectStructureButton.click();
         expect(browser.getCurrentUrl()).toMatch('http://localhost:8080/wise/author#/project/[0-9]+');  // should go back to the project editing view.
+        let projectTitle = element(by.css('[ng-if="$ctrl.projectTitle"]'));
+        expect(element(by.cssContainingText('top-bar',"My Awesome Science Project")).isDisplayed()).toBeTruthy();  // check that the title has been updated
     });
 
     it('should allow user to preview the project', () => {
@@ -204,7 +218,7 @@ describe('WISE Authoring Tool', () => {
 
         browser.ignoreSynchronization = true;  // doesn't use Angular
         expect(browser.getTitle()).toEqual('WISE Teacher Dashboard');
-        var signOutButton = $("#signOut");
+        let signOutButton = $("#signOut");
         expect(signOutButton.isPresent()).toBeTruthy();
         signOutButton.click();
         expect(browser.getTitle()).toEqual('Web-based Inquiry Science Environment (WISE)');

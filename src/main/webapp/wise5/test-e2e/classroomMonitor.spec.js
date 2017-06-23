@@ -7,7 +7,7 @@ describe('WISE Classroom Monitor', function () {
         return element.getAttribute('class').then(function (classes) {
             return classes.split(' ').indexOf(cls) !== -1;
         });
-    };
+    }
 
     /**
      * @name waitForUrlToChangeTo
@@ -16,7 +16,7 @@ describe('WISE Classroom Monitor', function () {
      * @returns {!webdriver.promise.Promise} Promise
      */
     function waitForUrlToChangeTo(urlRegex) {
-        var currentUrl;
+        var currentUrl = void 0;
 
         return browser.getCurrentUrl().then(function storeCurrentUrl(url) {
             currentUrl = url;
@@ -57,7 +57,7 @@ describe('WISE Classroom Monitor', function () {
                 expect(element(by.xpath('//button[@aria-label="Main Menu"]')).isPresent()).toBeTruthy();
                 expect(element(by.xpath('//a[@aria-label="Grading & Feedback"]')).isPresent()).toBeTruthy();
                 expect(element(by.xpath('//a[@aria-label="Student Summary"]')).isPresent()).toBeTruthy();
-                expect(element(by.xpath('//md-switch[@aria-label="Lock student screens switch"]')).isPresent()).toBeTruthy();
+                expect(element(by.xpath('//a[@aria-label="Milestones"]')).isPresent()).toBeTruthy();
 
                 var notificationButton = element(by.xpath('//button[@aria-label="Alerts"]'));
                 var notificationMenu = element(by.cssContainingText('.md-open-menu-container', 'Alerts'));
@@ -81,7 +81,6 @@ describe('WISE Classroom Monitor', function () {
                 // test that the project map is displayed
                 element.all(by.repeater('id in nodeProgressController.rootNode.ids')).then(function (groupNavItems) {
                     var activity1 = groupNavItems[0];
-
                     expect(activity1.element(by.className('md-title')).getText()).toEqual('1: First Activity');
 
                     // Activity 1 should not be expanded yet, so expand it
