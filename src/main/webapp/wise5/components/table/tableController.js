@@ -157,6 +157,8 @@ var TableController = function () {
                 this.isSaveButtonVisible = this.componentContent.showSaveButton;
                 this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
 
+                this.tableId = 'table_' + this.nodeId + "_" + this.componentId;
+
                 // get the latest annotations
                 this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
                 this.isResetTableButtonVisible = true;
@@ -1870,7 +1872,7 @@ var TableController = function () {
             var _this3 = this;
 
             // get the table element. this will obtain an array.
-            var tableElement = angular.element('#' + this.componentId + ' table');
+            var tableElement = angular.element('#component_' + this.componentId + ' table');
 
             if (tableElement != null && tableElement.length > 0) {
 

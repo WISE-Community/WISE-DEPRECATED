@@ -158,6 +158,8 @@ class TableController {
                 this.isSaveButtonVisible = this.componentContent.showSaveButton;
                 this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
 
+                this.tableId = 'table_' + this.nodeId + "_" + this.componentId;
+
                 // get the latest annotations
                 this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
                 this.isResetTableButtonVisible = true;
@@ -1746,7 +1748,7 @@ class TableController {
     snipTable($event) {
 
         // get the table element. this will obtain an array.
-        var tableElement = angular.element('#' + this.componentId + ' table');
+        var tableElement = angular.element('#table_' + this.nodeId + '_' + this.componentId;);
 
         if (tableElement != null && tableElement.length > 0) {
 
