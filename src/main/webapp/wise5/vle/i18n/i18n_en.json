@@ -82,7 +82,6 @@
     "scoreLabel": "Score:",
     "selectItemToInsert": "Select item to insert",
     "serverError": "Server error: ",
-    "serverErrorCheckYourInternetConnection": "Server error. Check your internet connection.",
     "serverUpdate": "WISE Server Update",
     "serverUpdateRequestLogoutMessage": "WISE will be undergoing server maintenance soon. Please save your work and log out in the next few minutes.",
     "sessionTimeout": "Session Timeout",

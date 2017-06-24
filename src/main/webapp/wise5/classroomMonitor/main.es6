@@ -34,6 +34,7 @@ import GraphComponentModule from '../components/graph/graphComponentModule';
 import Highcharts from '../lib/highcharts@4.2.1';
 import highchartsng from 'highcharts-ng';
 import HTMLComponentModule from '../components/html/htmlComponentModule';
+import HttpInterceptor from '../services/httpInterceptor';
 import LabelComponentModule from '../components/label/labelComponentModule';
 import MatchComponentModule from '../components/match/matchComponentModule';
 import MilestonesController from './milestones/milestonesController';
@@ -99,6 +100,7 @@ let classroomMonitorModule = angular.module('classroomMonitor', [
     .service(AnnotationService.name, AnnotationService)
     .service(ConfigService.name, ConfigService)
     .service(CRaterService.name, CRaterService)
+    .service(HttpInterceptor.name, HttpInterceptor)
     .service(NodeService.name, NodeService)
     .service(NotebookService.name, NotebookService)
     .service(NotificationService.name, NotificationService)
@@ -126,12 +128,14 @@ let classroomMonitorModule = angular.module('classroomMonitor', [
         '$translatePartialLoaderProvider',
         '$controllerProvider',
         '$mdThemingProvider',
+        '$httpProvider',
         ($urlRouterProvider,
          $stateProvider,
          $translateProvider,
          $translatePartialLoaderProvider,
          $controllerProvider,
-         $mdThemingProvider) => {
+         $mdThemingProvider,
+         $httpProvider) => {
 
             $urlRouterProvider.otherwise('/project/');
 
@@ -243,6 +247,8 @@ let classroomMonitorModule = angular.module('classroomMonitor', [
                         }
                     }
                 });
+
+            $httpProvider.interceptors.push('HttpInterceptor');
 
             // Set up Translations
             $translatePartialLoaderProvider.addPart('i18n');

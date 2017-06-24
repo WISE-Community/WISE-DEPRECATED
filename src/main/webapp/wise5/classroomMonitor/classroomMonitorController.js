@@ -9,12 +9,13 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var ClassroomMonitorController = function () {
-    function ClassroomMonitorController($filter, $mdDialog, $rootScope, $scope, $state, $stateParams, ConfigService, NotebookService, NotificationService, ProjectService, SessionService, TeacherDataService, TeacherWebSocketService) {
+    function ClassroomMonitorController($filter, $mdDialog, $mdToast, $rootScope, $scope, $state, $stateParams, ConfigService, NotebookService, NotificationService, ProjectService, SessionService, TeacherDataService, TeacherWebSocketService) {
         var _this = this;
 
         _classCallCheck(this, ClassroomMonitorController);
 
         this.$filter = $filter;
+        this.$mdToast = $mdToast;
         this.$rootScope = $rootScope;
         this.$scope = $scope;
         this.$state = $state;
@@ -92,6 +93,13 @@ var ClassroomMonitorController = function () {
             }
         };
 
+        // build server disconnect display
+        this.connectionLostDisplay = this.$mdToast.build({
+            template: '<md-toast>\n                        <span>{{ \'ERROR_CHECK_YOUR_INTERNET_CONNECTION\' | translate }}</span>\n                      </md-toast>',
+            hideDelay: 0
+        });
+        this.connectionLostShown = false;
+
         // alert user when inactive for a long time
         this.$scope.$on('showSessionWarning', function () {
             // Appending dialog to document.body
@@ -120,6 +128,16 @@ var ClassroomMonitorController = function () {
             _this.menuOpen = false;
 
             _this.processUI();
+        });
+
+        // alert user when server loses connection
+        this.$scope.$on('serverDisconnected', function () {
+            _this.handleServerDisconnect();
+        });
+
+        // remove alert when server regains connection
+        this.$scope.$on('serverConnected', function () {
+            _this.handleServerReconnect();
         });
 
         // TODO: make dynamic, set somewhere like in config?
@@ -186,12 +204,32 @@ var ClassroomMonitorController = function () {
              */
             this.SessionService.mouseMoved();
         }
+
+        // show server error alert when connection is lost
+
+    }, {
+        key: 'handleServerDisconnect',
+        value: function handleServerDisconnect() {
+            if (!this.connectionLostShown) {
+                this.$mdToast.show(this.connectionLostDisplay);
+                this.connectionLostShown = true;
+            }
+        }
+
+        // hide server error alert when connection is restored
+
+    }, {
+        key: 'handleServerReconnect',
+        value: function handleServerReconnect() {
+            this.$mdToast.hide(this.connectionLostDisplay);
+            this.connectionLostShown = false;
+        }
     }]);
 
     return ClassroomMonitorController;
 }();
 
-ClassroomMonitorController.$inject = ['$filter', '$mdDialog', '$rootScope', '$scope', '$state', '$stateParams', 'ConfigService', 'NotebookService', 'NotificationService', 'ProjectService', 'SessionService', 'TeacherDataService', 'TeacherWebSocketService'];
+ClassroomMonitorController.$inject = ['$filter', '$mdDialog', '$mdToast', '$rootScope', '$scope', '$state', '$stateParams', 'ConfigService', 'NotebookService', 'NotificationService', 'ProjectService', 'SessionService', 'TeacherDataService', 'TeacherWebSocketService'];
 
 exports.default = ClassroomMonitorController;
 //# sourceMappingURL=classroomMonitorController.js.map

@@ -71,7 +71,7 @@ var ThemeController = function () {
         // build server disconnect display
         this.connectionLostDisplay = $mdToast.build({
             template: "<md-toast>\
-                      <span>{{ 'serverErrorCheckYourInternetConnection' | translate }}</span>\
+                      <span>{{ 'ERROR_CHECK_YOUR_INTERNET_CONNECTION' | translate }}</span>\
                       </md-toast>",
             hideDelay: 0
         });
@@ -218,21 +218,19 @@ var ThemeController = function () {
         });
 
         // toggle notebook opened or closed on 'toggleNotebook' event
-        this.$scope.$on('toggleNotebook', function (event, args) {
-            var ev = args.ev;
-            var open = args.open;
-            _this.toggleNotebook(ev, open);
+        /*this.$scope.$on('toggleNotebook', (event, args) => {
+            let ev = args.ev;
+            let open = args.open;
+            this.toggleNotebook(ev, open);
         });
-
-        // toggle notebook nav opened or closed on 'toggleNotebookNav' event
-        this.$scope.$on('toggleNotebookNav', function () {
-            _this.toggleNotebookNav();
+          // toggle notebook nav opened or closed on 'toggleNotebookNav' event
+        this.$scope.$on('toggleNotebookNav', () => {
+            this.toggleNotebookNav();
         });
-
-        // update notebook filter on 'setNotebookFilter' event
-        this.$scope.$on('setNotebookFilter', function (event, args) {
-            _this.notebookFilter = args.filter;
-        });
+          // update notebook filter on 'setNotebookFilter' event
+        this.$scope.$on('setNotebookFilter', (event, args) => {
+            this.notebookFilter = args.filter;
+        });*/
 
         // show edit note dialog on 'editNote' event
         /*this.$scope.$on('editNote', (event, args) => {
@@ -358,16 +356,16 @@ var ThemeController = function () {
         });
 
         // capture notebook open/close events
-        this.$mdComponentRegistry.when('notebook').then(function (it) {
-            _this.$scope.$watch(function () {
+        /*this.$mdComponentRegistry.when('notebook').then(it => {
+            this.$scope.$watch(() => {
                 return it.isOpen();
-            }, function (isOpenNewValue, isOpenOldValue) {
+            }, (isOpenNewValue, isOpenOldValue) => {
                 if (isOpenNewValue !== isOpenOldValue) {
-                    var currentNode = _this.StudentDataService.getCurrentNode();
-                    _this.NotebookService.saveNotebookToggleEvent(isOpenNewValue, currentNode);
+                    let currentNode = this.StudentDataService.getCurrentNode();
+                    this.NotebookService.saveNotebookToggleEvent(isOpenNewValue, currentNode);
                 }
             });
-        });
+        });*/
     }
 
     /**
@@ -458,7 +456,7 @@ var ThemeController = function () {
          */
         /*deleteNote(itemId, ev, doDelete = true) {
             let confirm = null;
-             if (doDelete) {
+              if (doDelete) {
                 confirm = this.$mdDialog.confirm()
                     .title(this.$translate('deleteNoteConfirmMessage'))
                     .ariaLabel('delete note confirmation')
@@ -473,7 +471,7 @@ var ThemeController = function () {
                     .ok(this.$translate('revive'))
                     .cancel(this.$translate('cancel'));
             }
-             this.$mdDialog.show(confirm).then(() => {
+              this.$mdDialog.show(confirm).then(() => {
                 let noteCopy = angular.copy(this.NotebookService.getLatestNotebookItemByLocalNotebookItemId(itemId));
                 noteCopy.id = null; // set to null so we're creating a new notebook item. An edit to a notebook item results in a new entry in the db.
                 noteCopy.content.clientSaveTime = Date.parse(new Date());  // set save timestamp
@@ -487,9 +485,9 @@ var ThemeController = function () {
                 // they chose not to delete. Do nothing, the dialog will close.
             });
         }
-         editNote(itemId, isEditMode, file, ev) {
+          editNote(itemId, isEditMode, file, ev) {
             let notebookItemTemplate = this.themePath + '/notebook/editNotebookItem.html';
-             // Display a dialog where students can view/add/edit a notebook item
+              // Display a dialog where students can view/add/edit a notebook item
             this.$mdDialog.show({
                 parent: angular.element(document.body),
                 targetEvent: ev,
