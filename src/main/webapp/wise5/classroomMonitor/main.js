@@ -42,10 +42,6 @@ var _angularUiRouter = require('angular-ui-router');
 
 var _angularUiRouter2 = _interopRequireDefault(_angularUiRouter);
 
-var _bootstrapUiDatetimePicker = require('bootstrap-ui-datetime-picker');
-
-var _bootstrapUiDatetimePicker2 = _interopRequireDefault(_bootstrapUiDatetimePicker);
-
 var _ngFileUpload = require('ng-file-upload');
 
 var _ngFileUpload2 = _interopRequireDefault(_ngFileUpload);
@@ -248,7 +244,7 @@ var _moment2 = _interopRequireDefault(_moment);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var classroomMonitorModule = _angular2.default.module('classroomMonitor', [(0, _angularDragula2.default)(_angular2.default), 'angularMoment', 'angular-inview', 'angular-toArrayFilter', 'audioOscillatorComponentModule', 'components', 'conceptMapComponentModule', 'classroomMonitor.components', 'discussionComponentModule', 'drawComponentModule', 'embeddedComponentModule', 'graphComponentModule', 'highcharts-ng', 'htmlComponentModule', 'labelComponentModule', 'matchComponentModule', 'multipleChoiceComponentModule', 'ngAnimate', 'ngAria', 'ngFileUpload', 'ngMaterial', 'ngSanitize', 'ngWebSocket', 'notebook', 'openResponseComponentModule', 'outsideURLComponentModule', 'pascalprecht.translate', 'tableComponentModule', 'ui.bootstrap', 'ui.bootstrap.datetimepicker', 'ui.router']).service(_achievementService2.default.name, _achievementService2.default).service(_annotationService2.default.name, _annotationService2.default).service(_configService2.default.name, _configService2.default).service(_cRaterService2.default.name, _cRaterService2.default).service(_httpInterceptor2.default.name, _httpInterceptor2.default).service(_nodeService2.default.name, _nodeService2.default).service(_notebookService2.default.name, _notebookService2.default).service(_notificationService2.default.name, _notificationService2.default).service(_projectService2.default.name, _projectService2.default).service(_sessionService2.default.name, _sessionService2.default).service(_studentAssetService2.default.name, _studentAssetService2.default).service(_studentDataService2.default.name, _studentDataService2.default).service(_studentStatusService2.default.name, _studentStatusService2.default).service(_studentWebSocketService2.default.name, _studentWebSocketService2.default).service(_teacherDataService2.default.name, _teacherDataService2.default).service(_teacherWebSocketService2.default.name, _teacherWebSocketService2.default).service(_utilService2.default.name, _utilService2.default).controller(_classroomMonitorController2.default.name, _classroomMonitorController2.default).controller(_dataExportController2.default.name, _dataExportController2.default).controller(_milestonesController2.default.name, _milestonesController2.default).controller(_nodeGradingController2.default.name, _nodeGradingController2.default).controller(_nodeProgressController2.default.name, _nodeProgressController2.default).controller(_notebookGradingController2.default.name, _notebookGradingController2.default).controller(_studentGradingController2.default.name, _studentGradingController2.default).controller(_studentProgressController2.default.name, _studentProgressController2.default).config(['$urlRouterProvider', '$stateProvider', '$translateProvider', '$translatePartialLoaderProvider', '$controllerProvider', '$mdThemingProvider', '$httpProvider', function ($urlRouterProvider, $stateProvider, $translateProvider, $translatePartialLoaderProvider, $controllerProvider, $mdThemingProvider, $httpProvider) {
+var classroomMonitorModule = _angular2.default.module('classroomMonitor', [(0, _angularDragula2.default)(_angular2.default), 'angularMoment', 'angular-inview', 'angular-toArrayFilter', 'audioOscillatorComponentModule', 'components', 'conceptMapComponentModule', 'classroomMonitor.components', 'discussionComponentModule', 'drawComponentModule', 'embeddedComponentModule', 'graphComponentModule', 'highcharts-ng', 'htmlComponentModule', 'labelComponentModule', 'matchComponentModule', 'multipleChoiceComponentModule', 'ngAnimate', 'ngAria', 'ngFileUpload', 'ngMaterial', 'ngSanitize', 'ngWebSocket', 'notebook', 'openResponseComponentModule', 'outsideURLComponentModule', 'pascalprecht.translate', 'tableComponentModule', 'ui.bootstrap', 'ui.router']).service(_achievementService2.default.name, _achievementService2.default).service(_annotationService2.default.name, _annotationService2.default).service(_configService2.default.name, _configService2.default).service(_cRaterService2.default.name, _cRaterService2.default).service(_httpInterceptor2.default.name, _httpInterceptor2.default).service(_nodeService2.default.name, _nodeService2.default).service(_notebookService2.default.name, _notebookService2.default).service(_notificationService2.default.name, _notificationService2.default).service(_projectService2.default.name, _projectService2.default).service(_sessionService2.default.name, _sessionService2.default).service(_studentAssetService2.default.name, _studentAssetService2.default).service(_studentDataService2.default.name, _studentDataService2.default).service(_studentStatusService2.default.name, _studentStatusService2.default).service(_studentWebSocketService2.default.name, _studentWebSocketService2.default).service(_teacherDataService2.default.name, _teacherDataService2.default).service(_teacherWebSocketService2.default.name, _teacherWebSocketService2.default).service(_utilService2.default.name, _utilService2.default).controller(_classroomMonitorController2.default.name, _classroomMonitorController2.default).controller(_dataExportController2.default.name, _dataExportController2.default).controller(_milestonesController2.default.name, _milestonesController2.default).controller(_nodeGradingController2.default.name, _nodeGradingController2.default).controller(_nodeProgressController2.default.name, _nodeProgressController2.default).controller(_notebookGradingController2.default.name, _notebookGradingController2.default).controller(_studentGradingController2.default.name, _studentGradingController2.default).controller(_studentProgressController2.default.name, _studentProgressController2.default).config(['$urlRouterProvider', '$stateProvider', '$translateProvider', '$translatePartialLoaderProvider', '$controllerProvider', '$mdThemingProvider', '$httpProvider', function ($urlRouterProvider, $stateProvider, $translateProvider, $translatePartialLoaderProvider, $controllerProvider, $mdThemingProvider, $httpProvider) {
 
     $urlRouterProvider.otherwise('/project/');
 
@@ -430,29 +426,15 @@ var classroomMonitorModule = _angular2.default.module('classroomMonitor', [(0, _
     $mdThemingProvider.setDefaultTheme('default');
 
     // moment.js default overrides
-    _moment2.default.locale('en', {
+    // TODO: add i18n support
+    _moment2.default.updateLocale('en', {
         calendar: {
-            lastDay: '[Yesterday at] LT',
-            sameDay: '[Today at] LT',
-            nextDay: '[Tomorrow at] LT',
-            lastWeek: '[Last] dddd [at] LT',
-            nextWeek: 'dddd [at] LT',
-            sameElse: 'MMM D, YYYY [at] LT'
-        },
-        relativeTime: {
-            future: "in %s",
-            past: "%s",
-            s: "seconds ago",
-            m: "1 minute ago",
-            mm: "%d minutes ago",
-            h: "1 hour ago",
-            hh: "%d hours ago",
-            d: "1 day ago",
-            dd: "%d days ago",
-            M: "1 month ago",
-            MM: "%d months ago",
-            y: "1 year ago",
-            yy: "%d years ago"
+            lastDay: '[Yesterday]',
+            sameDay: '[Today]',
+            nextDay: '[Tomorrow]',
+            lastWeek: '[Last] dddd',
+            nextWeek: 'dddd',
+            sameElse: 'ddd MMM D'
         }
     });
 }]);

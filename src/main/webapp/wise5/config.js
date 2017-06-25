@@ -23,7 +23,6 @@ System.config({
     "angular-ui-router": "npm:angular-ui-router@0.3.2",
     "angular-ui-scrollpoint": "npm:angular-ui-scrollpoint@2.1.1",
     "angular-websocket": "npm:angular-websocket@1.0.14",
-    "bootstrap-ui-datetime-picker": "npm:bootstrap-ui-datetime-picker@2.5.4",
     "core-js": "npm:core-js@1.2.7",
     "dom-autoscroller": "npm:dom-autoscroller@1.4.1",
     "highcharts-ng": "npm:highcharts-ng@0.0.11",

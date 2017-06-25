@@ -10,7 +10,6 @@ import angularMoment from 'angular-moment';
 import angularToArrayFilter from 'lib/angular-toArrayFilter/toArrayFilter';
 import angularUIBootstrap from 'angular-ui-bootstrap';
 import angularUIRouter from 'angular-ui-router';
-import bootstrapUIDatetimePicker from 'bootstrap-ui-datetime-picker';
 import ngFileUpload from 'ng-file-upload';
 import ngMaterial from 'angular-material';
 import angularSanitize from 'angular-sanitize';
@@ -93,7 +92,6 @@ let classroomMonitorModule = angular.module('classroomMonitor', [
         'pascalprecht.translate',
         'tableComponentModule',
         'ui.bootstrap',
-        'ui.bootstrap.datetimepicker',
         'ui.router'
     ])
     .service(AchievementService.name, AchievementService)
@@ -335,29 +333,15 @@ let classroomMonitorModule = angular.module('classroomMonitor', [
             $mdThemingProvider.setDefaultTheme('default');
 
             // moment.js default overrides
-            moment.locale('en', {
-                calendar : {
-                    lastDay : '[Yesterday at] LT',
-                    sameDay : '[Today at] LT',
-                    nextDay : '[Tomorrow at] LT',
-                    lastWeek : '[Last] dddd [at] LT',
-                    nextWeek : 'dddd [at] LT',
-                    sameElse : 'MMM D, YYYY [at] LT'
-                },
-                relativeTime : {
-                    future: "in %s",
-                    past:   "%s",
-                    s:  "seconds ago",
-                    m:  "1 minute ago",
-                    mm: "%d minutes ago",
-                    h:  "1 hour ago",
-                    hh: "%d hours ago",
-                    d:  "1 day ago",
-                    dd: "%d days ago",
-                    M:  "1 month ago",
-                    MM: "%d months ago",
-                    y:  "1 year ago",
-                    yy: "%d years ago"
+            // TODO: add i18n support
+            moment.updateLocale('en', {
+                calendar: {
+                    lastDay: '[Yesterday]',
+                    sameDay: '[Today]',
+                    nextDay: '[Tomorrow]',
+                    lastWeek: '[Last] dddd',
+                    nextWeek: 'dddd',
+                    sameElse: 'ddd MMM D'
                 }
             });
         }]);
