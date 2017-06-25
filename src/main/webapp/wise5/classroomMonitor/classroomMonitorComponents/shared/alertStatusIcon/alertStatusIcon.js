@@ -1,16 +1,16 @@
 "use strict";
+// TODO: aria-label
 
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
 var AlertStatusIcon = {
     bindings: {
-        hasAlert: '<',
         hasNewAlert: '<',
         message: '@',
         onClick: '&'
     },
-    template: '<md-icon ng-if="$ctrl.hasAlert"\n                  class="status-icon text-disabled"\n                  ng-class="{\'warn\': $ctrl.hasNewAlert}"\n                  ng-click="$ctrl.onClick()">\n            error\n            <md-tooltip md-direction="top" ng-if=\'$ctrl.message\'>{{$ctrl.message}}</md-tooltip>\n        </md-icon>'
+    template: '<div class="md-avatar avatar avatar--icon avatar--icon--alert"\n              ng-click="$ctrl.onClick()"\n              aria-label="$ctrl.message">\n            <md-icon class="node-icon avatar--icon--alert__icon"\n                     ng-class="{\'warn\': $ctrl.hasNewAlert, \'text-disabled\': !$ctrl.hasNewAlert}">\n                error\n            </md-icon>\n            <md-tooltip md-direction="top" ng-if=\'$ctrl.message\'>{{$ctrl.message}}</md-tooltip>\n        </div>'
 };
 
 exports.default = AlertStatusIcon;

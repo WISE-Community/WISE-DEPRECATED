@@ -1,20 +1,22 @@
 "use strict";
+// TODO: aria-label
 
 const AlertStatusIcon = {
     bindings: {
-        hasAlert: '<',
         hasNewAlert: '<',
         message: '@',
         onClick: '&'
     },
     template:
-        `<md-icon ng-if="$ctrl.hasAlert"
-                  class="status-icon text-disabled"
-                  ng-class="{'warn': $ctrl.hasNewAlert}"
-                  ng-click="$ctrl.onClick()">
-            error
+        `<div class="md-avatar avatar avatar--icon avatar--icon--alert"
+              ng-click="$ctrl.onClick()"
+              aria-label="$ctrl.message">
+            <md-icon class="node-icon avatar--icon--alert__icon"
+                     ng-class="{'warn': $ctrl.hasNewAlert, 'text-disabled': !$ctrl.hasNewAlert}">
+                error
+            </md-icon>
             <md-tooltip md-direction="top" ng-if='$ctrl.message'>{{$ctrl.message}}</md-tooltip>
-        </md-icon>`
+        </div>`
 };
 
 export default AlertStatusIcon;

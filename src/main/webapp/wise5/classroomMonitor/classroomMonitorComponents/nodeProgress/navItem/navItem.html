@@ -55,15 +55,20 @@
 
     <md-list-item ng-switch-when="list" ng-click="$ctrl.itemClicked($event)"
                   class="md-long-text noright list-item md-whiteframe-z1"
-                  aria-label="View {{$ctrl.nodeTitle}}"
+                  aria-label="{{$ctrl.nodeTitle}}"
                   ng-class="{'nav-item--list--group': $ctrl.isGroup,
                       'nav-item--planning-mode': $ctrl.planningMode && $ctrl.isPlanningInstance,
                       'list-item--warn': $ctrl.newAlert,
                       'text-secondary': !$ctrl.nodeHasWork}">
-        <node-icon node-id="$ctrl.nodeId" custom-class="'md-avatar'"></node-icon>
+        <node-icon ng-if="!$ctrl.newAlert" node-id="$ctrl.nodeId" custom-class="'md-avatar'"></node-icon>
+        <alert-status-icon ng-if="$ctrl.newAlert" has-new-alert="$ctrl.newAlert"></alert-status-icon>
         <p flex layout="row" layout-align="start center">
             <span>{{ $ctrl.nodeTitle }}</span>&nbsp;
-            <alert-status-icon has-alert="$ctrl.newAlert" has-new-alert="$ctrl.newAlert"></alert-status-icon>
+            <status-icon ng-show="$ctrl.hasRubrics"
+                         icon-class="$ctrl.rubricIconClass"
+                         icon-name="$ctrl.rubricIconName"
+                         icon-label="$ctrl.rubricIconLabel"
+                         icon-tooltip="$ctrl.rubricIconLabel"></status-icon>
             <span flex></span>
             <nav-item-score class="nav-item--list__info-item"
                             max-score="$ctrl.maxScore"

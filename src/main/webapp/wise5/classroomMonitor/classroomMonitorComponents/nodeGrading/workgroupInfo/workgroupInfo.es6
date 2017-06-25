@@ -2,10 +2,12 @@
 
 class WorkgroupInfoController {
     constructor(ConfigService) {
-        this.ConfigService = ConfigService;				
- 	
-        this.$onInit = () => {		
+        this.ConfigService = ConfigService;
+
+        this.$onInit = () => {
             this.avatarColor = this.ConfigService.getAvatarColorForWorkgroupId(this.workgroupId);
+            this.alertIconClass = this.hasNewAlert ? 'warn' : 'text-disabled';
+            this.alertIconName = 'error';
         }
     };
 }
@@ -29,7 +31,12 @@ const WorkgroupInfo = {
             </div>
             <div class="heavy">
                 {{$ctrl.usernames}}
-                <alert-status-icon message="{{$ctrl.alertMsg}}" has-alert="$ctrl.hasAlert" has-new-alert="$ctrl.hasNewAlert"></alert-status-icon>
+                <status-icon ng-if="$ctrl.hasAlert"
+                             icon-label="$ctrl.alertMsg"
+                             tooltip="$ctrl.alertMsg"
+                             icon-name="$ctrl.alertIconName"
+                             icon-class="$ctrl.alertIconClass"></status-icon>
+                <span ng-if="$ctrl.hasNewWork" class="badge badge--info animate-fade">New</span>
             </div>
         </div>`,
     controller: WorkgroupInfoController

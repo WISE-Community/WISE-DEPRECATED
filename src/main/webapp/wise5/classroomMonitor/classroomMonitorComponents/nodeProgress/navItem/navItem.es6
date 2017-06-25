@@ -3,7 +3,6 @@
 class NavItemController {
     constructor($element,
                 $filter,
-                $mdDialog,
                 $rootScope,
                 $scope,
                 $state,
@@ -19,7 +18,6 @@ class NavItemController {
 
         this.$element = $element;
         this.$filter = $filter;
-        this.$mdDialog = $mdDialog;
         this.$rootScope = $rootScope;
         this.$scope = $scope;
         this.$state = $state;
@@ -98,6 +96,11 @@ class NavItemController {
             this.alertNotifications = [];
 
             this.getAlertNotifications();
+
+            this.hasRubrics = this.ProjectService.getNumberOfRubricsByNodeId(this.nodeId) > 0;
+            this.rubricIconLabel = this.$translate('STEP_HAS_INFO_TEACHING_TIPS');
+            this.rubricIconClass = 'info';
+            this.rubricIconName = 'info';
         };
 
         this.$scope.$watch(
@@ -420,7 +423,6 @@ class NavItemController {
 NavItemController.$inject = [
     '$element',
     '$filter',
-    '$mdDialog',
     '$rootScope',
     '$scope',
     '$state',

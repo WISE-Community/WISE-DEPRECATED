@@ -10125,6 +10125,54 @@ var ProjectService = function () {
 
             return branchLetter;
         }
+
+        /**
+         * Get the total number of rubrics (step + components) for the given nodeId
+         * @param nodeId the node id
+         * @return Number of rubrics for the node
+         */
+
+    }, {
+        key: 'getNumberOfRubricsByNodeId',
+        value: function getNumberOfRubricsByNodeId(nodeId) {
+            var n = 0;
+            var nodeContent = this.getNodeContentByNodeId(nodeId);
+
+            if (nodeContent) {
+
+                // get the step rubric if any
+                var nodeRubric = nodeContent.rubric;
+
+                if (nodeRubric != null && nodeRubric != '') {
+                    // the step has a rubric
+                    n++;
+                }
+
+                // get the components
+                var components = nodeContent.components;
+
+                if (components && components.length) {
+
+                    // loop through all the components
+                    for (var c = 0; c < components.length; c++) {
+                        var component = components[c];
+
+                        if (component) {
+
+                            // get a component rubric
+                            var componentRubric = component.rubric;
+
+                            if (componentRubric != null && componentRubric != '') {
+                                // a component has a rubric
+                                n++;
+                            }
+                        }
+                    }
+                }
+            }
+
+            return n;
+        }
     }]);
 
     return ProjectService;
