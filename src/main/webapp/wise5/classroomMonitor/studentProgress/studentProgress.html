@@ -1,50 +1,101 @@
-<style type='text/css'>
-    table {
-        border-collapse: collapse;
-        border: 1px solid black;
-    }
-    table td, table th {
-        border: 1px solid black;
-    }
-
-    .online {
-        background-color: lightgreen;
-    }
-
-    .active {
-        background-color: yellow;
-    }
-</style>
-
 <div class="view-content view-content--with-sidemenu">
     <div class="l-constrained" layout="column">
-        <div>
-            <button ng-repeat='period in studentProgressController.periods'
-                    ng-click='studentProgressController.setCurrentPeriod(period)'
-                    ng-class="{'active': period.periodName == studentProgressController.getCurrentPeriod().periodName}">
-                {{period.periodName}}
-            </button>
+        <div class="flex md-subhead content-head" layout="row" layout-align="start center" layout-wrap>
+            <div layout="row" layout-align="start center">
+                <period-select layout-margin></period-select>
+            </div>
         </div>
 
-        <table>
-            <tr>
-                <th translate="team" />
-                <th translate="currentLocation" />
-                <th translate="timeSpent" />
-                <th translate="projectCompletion" />
-                <th translate="score" ng-if='studentProgressController.maxScore !== null' />
-            </tr>
-            <tr ng-class="{online: studentProgressController.isWorkgroupOnline(workgroup.workgroupId)}"
-                ng-repeat="workgroup in studentProgressController.workgroups"
-                ng-show="studentProgressController.getCurrentPeriod().periodName == 'All Periods' || workgroup.periodId == studentProgressController.getCurrentPeriod().periodId">
-                <td ng-if="studentProgressController.canViewStudentNames"><a ng-click="studentProgressController.showWorkgroupProjectView(workgroup)">{{workgroup.userName}} ({{workgroup.workgroupId}})</a></td>
-                <td ng-if="!studentProgressController.canViewStudentNames">{{workgroup.workgroupId}}</td>
-                <td>{{studentProgressController.getCurrentNodeForWorkgroupId(workgroup.workgroupId)}}</td>
-                <td align='right'><div ng-show='studentProgressController.isWorkgroupOnline(workgroup.workgroupId)'>{{studentProgressController.getStudentTimeSpent(workgroup.workgroupId)}}</div></td>
-                <td align='right'><div ng-if='studentProgressController.getStudentProjectCompletion(workgroup.workgroupId)'>{{studentProgressController.getStudentProjectCompletion(workgroup.workgroupId)}}%</div></td>
-                <td align='right' ng-if='studentProgressController.maxScore !== null'><div>{{studentProgressController.getStudentTotalScore(workgroup.workgroupId)}}/{{studentProgressController.maxScore}}</div></td>
-            </tr>
-        </table>
+        <md-list class="user-list student-select md-whiteframe-1dp">
+            <md-list-item class="list-item list-item--actions" layout-wrap>
+                <div flex-sm="100" flex-xs="100">
+                    <workgroup-select></workgroup-select>
+                </div>
+            </md-list-item>
+            <div class="table-wise--with-sticky-header">
+                <table class="table--wise md-whiteframe-1dp" layout-fill>
+                    <thead>
+                        <tr>
+                            <th class="thead" sticky>
+                                <md-button class="thead__link thead__link--center"
+                                           ng-click="studentProgressController.setSort('online')" title="{{'sortByOnline' | translate}}">
+                                    <span translate="onlineLabel"></span>
+                                    <md-icon ng-if="studentProgressController.sort === 'online' || studentProgressController.sort === '-online'" class="text-light thead__sort" ng-class="{'thead__sort--reverse': studentProgressController.sort === '-online'}"> arrow_drop_up </md-icon>
+                                </md-button>
+                            </th>
+                            <th class="thead" sticky>
+                                <md-button class="thead__link thead__link--center"
+                                           ng-click="studentProgressController.setSort('team')" title="{{'sortByTeam' | translate}}">
+                                    <span translate="teamIdTitle"></span>
+                                    <md-icon ng-if="studentProgressController.sort === 'team' || studentProgressController.sort === '-team'" class="text-light thead__sort" ng-class="{'thead__sort--reverse': studentProgressController.sort === '-team'}"> arrow_drop_up </md-icon>
+                                </md-button>
+                            </th>
+                            <th class="thead" sticky>
+                                <md-button class="thead__link thead__link--left"
+                                           ng-click="studentProgressController.setSort('student')" title="{{'sortByStudent' | translate}}">
+                                    <span translate="student"></span>
+                                    <md-icon ng-if="studentProgressController.sort === 'student' || studentProgressController.sort === '-student'" class="text-light thead__sort" ng-class="{'thead__sort--reverse': studentProgressController.sort === '-student'}"> arrow_drop_up </md-icon>
+                                </md-button>
+                            </th>
+                            <th class="thead" sticky>
+                                <md-button class="thead__link thead__link--center td--max-width"
+                                           ng-click="studentProgressController.setSort('location')" title="{{'sortByLocation' | translate}}">
+                                    <span translate="currentLocation"></span>
+                                    <md-icon ng-if="studentProgressController.sort === 'location' || studentProgressController.sort === '-location'" class="text-light thead__sort" ng-class="{'thead__sort--reverse': studentProgressController.sort === '-location'}"> arrow_drop_up </md-icon>
+                                </md-button>
+                            </th>
+                            <th class="thead" sticky>
+                                <md-button class="thead__link thead__link--center"
+                                           ng-click="studentProgressController.setSort('time')" title="{{'sortByTimeSpent' | translate}}">
+                                    <span translate="timeSpent"></span>
+                                    <md-icon ng-if="studentProgressController.sort === 'time' || studentProgressController.sort === '-time'" class="text-light thead__sort" ng-class="{'thead__sort--reverse': studentProgressController.sort === '-time'}"> arrow_drop_up </md-icon>
+                                </md-button>
+                            </th>
+                            <th class="thead" sticky>
+                                <md-button class="thead__link thead__link--center"
+                                           ng-click="studentProgressController.setSort('completion')" title="{{'sortByCompletion' | translate}}">
+                                    <span translate="projectCompletion"></span>
+                                    <md-icon ng-if="studentProgressController.sort === 'completion' || studentProgressController.sort === '-completion'" class="text-light thead__sort" ng-class="{'thead__sort--reverse': studentProgressController.sort === '-completion'}"> arrow_drop_up </md-icon>
+                                </md-button>
+                            </th>
+                            <th class="thead" sticky>
+                                <md-button class="thead__link thead__link--center"
+                                           ng-click="studentProgressController.setSort('score')" title="{{'sortByScore' | translate}}">
+                                    <span translate="score"></span>
+                                    <md-icon ng-if="studentProgressController.sort === 'score' || studentProgressController.sort === '-score'" class="text-light thead__sort" ng-class="{'thead__sort--reverse': studentProgressController.sort === '-score'}"> arrow_drop_up </md-icon>
+                                </md-button>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="list-item md-button"
+                            ng-repeat="workgroup in studentProgressController.students | orderBy:studentProgressController.getOrderBy()"
+                            ng-show="studentProgressController.isWorkgroupShown(workgroup)"
+                            ng-click="studentProgressController.showWorkgroupProjectView(workgroup)">
+                            <td class="center">
+                                <md-icon ng-if="workgroup.online" class="success" aria-label="{{ online |translate }}"> fiber_manual_record </md-icon>
+                                <md-icon ng-if="!workgroup.online" aria-label="{{ offline | translate }}"> fiber_manual_record </md-icon>
+                            </td>
+                            <td class="center">{{workgroup.workgroupId}}</td>
+                            <td class="heavy">{{workgroup.userName}}</td>
+                            <td class="center">
+                                <div class="td--max-width">{{workgroup.location}}</div>
+                            </td>
+                            <td class="center">{{workgroup.timeSpent}}</td>
+                            <td layout="row" layout-align="center center">
+                                <project-progress completion="workgroup.completion"</project-progress>
+                                </td>
+                            <td class="center">
+                                <div layout="row" layout-align="center center" class="layout-align-center-center layout-row">
+                                    <span class="md-display-1">{{workgroup.score}}</span>&nbsp;
+                                    <span class="md-title text-secondary normal ng-binding">/{{studentProgressController.maxScore}}</span>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </md-list>
 
             <!-- TODO: get this working again -->
         <!--<div translate="newWorkCounter"

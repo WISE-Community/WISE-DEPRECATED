@@ -25,13 +25,11 @@ var StudentProgressController = function () {
 
         this.teacherWorkgroupId = this.ConfigService.getWorkgroupId();
 
-        this.studentsOnline = this.TeacherWebSocketService.getStudentsOnline();
+        // get the current sort order
+        this.sort = this.TeacherDataService.studentProgressSort;
 
-        this.workgroups = this.sortWorkgroupsByOnline();
-
-        this.studentStatuses = this.StudentStatusService.getStudentStatuses();
-
-        this.maxScore = this.ProjectService.getMaxScore();
+        // initialize the current workgroup
+        this.TeacherDataService.setCurrentWorkgroup(null);
 
         this.canViewStudentNames = true;
         this.canGradeStudentWork = true;
@@ -51,6 +49,18 @@ var StudentProgressController = function () {
             // the teacher is a shared teacher that can only view the student work
             this.canViewStudentNames = false;
             this.canGradeStudentWork = false;
+        }
+
+        this.studentsOnline = this.TeacherWebSocketService.getStudentsOnline();
+
+        this.students = [];
+        this.initializeStudents();
+
+        this.studentStatuses = this.StudentStatusService.getStudentStatuses();
+
+        this.maxScore = this.ProjectService.getMaxScore();
+        if (this.maxScore === null) {
+            this.maxScore = 0;
         }
 
         this.periods = [];
@@ -77,8 +87,8 @@ var StudentProgressController = function () {
         this.$rootScope.$on('studentsOnlineReceived', function (event, args) {
             _this.studentsOnline = args.studentsOnline;
 
-            // update the workgroup order
-            _this.workgroups = _this.sortWorkgroupsByOnline();
+            // update the students
+            _this.initializeStudents();
 
             // refresh the view
             _this.$scope.$apply();
@@ -92,6 +102,9 @@ var StudentProgressController = function () {
 
             // update the time spent for the workgroup
             _this.updateTimeSpentForWorkgroupId(workgroupId);
+
+            // update the students
+            _this.initializeStudents();
 
             // refresh the view
             _this.$scope.$apply();
@@ -110,12 +123,17 @@ var StudentProgressController = function () {
                 // remove the workgroup from the students online list
                 studentsOnline.splice(indexOfWorkgroupId, 1);
 
-                // update the workgroup order
-                _this.workgroups = _this.sortWorkgroupsByOnline();
+                // update the students
+                _this.initializeStudents();
 
                 // refresh the view
                 _this.$scope.$apply();
             }
+        });
+
+        // listen for the currentWorkgroupChanged event
+        this.$scope.$on('currentWorkgroupChanged', function (event, args) {
+            _this.currentWorkgroup = args.currentWorkgroup;
         });
 
         // how often to update the time spent values in the view
@@ -158,25 +176,37 @@ var StudentProgressController = function () {
             return this.StudentStatusService.getStudentProjectCompletion(workgroupId);
         }
     }, {
-        key: 'studentRowClicked',
-        value: function studentRowClicked(workgroup) {
-            var workgroupId = workgroup.workgroupId;
-
-            this.$state.go('root.studentGrading', { workgroupId: workgroupId });
-        }
-    }, {
         key: 'isWorkgroupOnline',
         value: function isWorkgroupOnline(workgroupId) {
             return this.studentsOnline.indexOf(workgroupId) != -1;
         }
     }, {
-        key: 'setCurrentPeriod',
+        key: 'isWorkgroupShown',
+        value: function isWorkgroupShown(workgroup) {
+            var show = false;
 
+            var currentPeriod = this.getCurrentPeriod().periodId;
+
+            if (currentPeriod === -1 || workgroup.periodId === studentProgressController.getCurrentPeriod().periodId) {
+                if (this.currentWorkgroup) {
+                    if (workgroup.displayNames === this.currentWorkgroup.displayNames) {
+                        show = true;
+                    }
+                } else {
+                    show = true;
+                }
+            }
+
+            return show;
+        }
 
         /**
          * Set the current period
          * @param period the period object
          */
+
+    }, {
+        key: 'setCurrentPeriod',
         value: function setCurrentPeriod(period) {
             this.TeacherDataService.setCurrentPeriod(period);
             this.$rootScope.$broadcast('periodChanged', { period: period });
@@ -204,7 +234,12 @@ var StudentProgressController = function () {
     }, {
         key: 'getStudentTimeSpent',
         value: function getStudentTimeSpent(workgroupId) {
-            var timeSpent = this.studentTimeSpent[workgroupId];
+            var timeSpent = null;
+
+            if (this.studentTimeSpent) {
+                timeSpent = this.studentTimeSpent[workgroupId];
+            }
+
             return timeSpent;
         }
 
@@ -317,26 +352,32 @@ var StudentProgressController = function () {
                     }
 
                     // update the mapping of workgroup id to time spent
-                    this.studentTimeSpent[workgroupId] = timeSpentText;
+                    //this.studentTimeSpent[workgroupId] = timeSpentText;
+
+                    // update the timeSpent for the students with the matching workgroupID
+                    for (var i = 0; i < this.students.length; i++) {
+                        var student = this.students[i];
+                        var id = student.workgroupId;
+
+                        if (workgroupId === id) {
+                            student.timeSpent = timeSpentText;
+                        }
+                    }
                 }
             }
         }
 
         /**
-         * Sort the workgroups. Place the online workgroups sorted alphabetically at
-         * the top and the offline workgroups sorted alphabetically at the bottom.
-         * @returns a list of workgroup objects with the online workgroups first
-         * and the offline workgroups after
+         * Set up the array of students in the run. Split workgroups into
+         * individual student objects.
          */
 
     }, {
-        key: 'sortWorkgroupsByOnline',
-        value: function sortWorkgroupsByOnline() {
+        key: 'initializeStudents',
+        value: function initializeStudents() {
+            var students = [];
 
-            var workgroupsOnline = [];
-            var workgroupsOffline = [];
-
-            // get the workgroups sorted alphabetically
+            // get the workgroups
             var workgroups = this.ConfigService.getClassmateUserInfos();
 
             // loop through all the workgroups
@@ -344,26 +385,114 @@ var StudentProgressController = function () {
                 var workgroup = workgroups[x];
 
                 if (workgroup != null) {
-                    if (this.isWorkgroupOnline(workgroup.workgroupId)) {
-                        // the workroup is online
-                        workgroupsOnline.push(workgroup);
-                    } else {
-                        // the workgroup is offline
-                        workgroupsOffline.push(workgroup);
+                    var workgroupId = workgroup.workgroupId;
+                    var isOnline = this.isWorkgroupOnline(workgroupId);
+
+                    var userName = workgroup.userName;
+                    var displayNames = this.ConfigService.getDisplayUserNamesByWorkgroupId(workgroupId).split(', ');
+                    var userIds = workgroup.userIds;
+
+                    for (var i = 0; i < userIds.length; i++) {
+                        var id = userIds[i];
+                        var displayName = '';
+
+                        if (this.canViewStudentNames) {
+                            // put user display name in 'lastName, firstName' order
+                            var names = displayNames[i].split(' ');
+                            displayName = names[1] + ', ' + names[0];
+                        } else {
+                            displayName = 'Student ' + id;
+                        }
+
+                        var user = {
+                            userId: id,
+                            periodId: workgroup.periodId,
+                            periodName: workgroup.periodName,
+                            workgroupId: workgroup.workgroupId,
+                            displayNames: displayName,
+                            userName: displayName,
+                            online: isOnline,
+                            location: this.getCurrentNodeForWorkgroupId(workgroup.workgroupId),
+                            timeSpent: this.getStudentTimeSpent(workgroup.workgroupId),
+                            completion: this.getStudentProjectCompletion(workgroup.workgroupId),
+                            score: this.getStudentTotalScore(workgroup.workgroupId)
+                        };
+                        students.push(user);
                     }
                 }
             }
 
-            // join the workgroup arrays together
-            var workgroupsSorted = workgroupsOnline.concat(workgroupsOffline);
-
-            return workgroupsSorted;
+            this.students = students;
         }
     }, {
         key: 'showWorkgroupProjectView',
         value: function showWorkgroupProjectView(workgroup) {
             this.TeacherDataService.setCurrentWorkgroup(workgroup);
             this.$state.go('root.nodeProgress');
+        }
+    }, {
+        key: 'setSort',
+        value: function setSort(value) {
+            if (this.sort === value) {
+                this.sort = '-' + value;
+            } else {
+                this.sort = value;
+            }
+
+            // update value in the teacher data service so we can persist across views
+            this.TeacherDataService.nodeGradingSort = this.sort;
+        }
+    }, {
+        key: 'getOrderBy',
+        value: function getOrderBy() {
+            var orderBy = [];
+
+            switch (this.sort) {
+                case 'team':
+                    orderBy = ['workgroupId', 'userName'];
+                    break;
+                case '-team':
+                    orderBy = ['-workgroupId', 'userName'];
+                    break;
+                case 'student':
+                    orderBy = ['userName', 'workgroupId'];
+                    break;
+                case '-student':
+                    orderBy = ['-userName', 'workgroupId'];
+                    break;
+                case 'score':
+                    orderBy = ['score', 'userName'];
+                    break;
+                case '-score':
+                    orderBy = ['-score', 'userName'];
+                    break;
+                case 'completion':
+                    orderBy = ['completion', 'userName'];
+                    break;
+                case '-completion':
+                    orderBy = ['-completion', 'userName'];
+                    break;
+                case 'location':
+                    orderBy = ['location', 'userName'];
+                    break;
+                case '-location':
+                    orderBy = ['-location', 'userName'];
+                    break;
+                case 'time':
+                    orderBy = ['-online', '-timeSpent', 'userName'];
+                    break;
+                case '-time':
+                    orderBy = ['-online', 'timeSpent', 'userName'];
+                    break;
+                case 'online':
+                    orderBy = ['online', 'userName'];
+                    break;
+                case '-online':
+                    orderBy = ['-online', 'userName'];
+                    break;
+            }
+
+            return orderBy;
         }
     }]);
 

@@ -1,3 +1,35 @@
+.table--wise {
+    border: 0 none;
+    background-color: #ffffff;
+
+    th, td {
+        padding: 8px 2px;
+        border: 0 none;
+    }
+
+    td {
+        min-height: 56px;
+        height: 56px;
+    }
+
+    tr {
+        &.md-button {
+            display: table-row;
+            text-align: left;
+            width: auto;
+            text-transform: none;
+            font-size: inherit;
+            font-weight: normal;
+        }
+    }
+}
+
+.table-wise--with-sticky-header {
+    @media only screen and (max-width: $layout-breakpoint-sm - 1) {
+        overflow-x: auto;
+    }
+}
+
 .thead {
     background-color: color('gray-darker');
     color: color('text-light');
@@ -10,26 +42,25 @@
 .thead__row {
     height: 100%;
     margin: 0;
-
-    //@media only screen and (min-width: $layout-breakpoint-xs) {
-        //margin: 0 16px;
-    //}
 }
 
 .thead__link {
     color: #ffffff;
     text-transform: none;
     margin: 0;
+    min-width: 0;
+    white-space: normal;
+    line-height: 1.4;
+}
 
-    /*&:hover {
-        margin-top: 0;
-        border-bottom: 0 none !important;
-    }
+.thead__link--center {
+    width: 100%;
+    margin: 0 auto;
+}
 
-    &:focus {
-        margin-top: 0;
-        border: 1px dotted color('gray-light') !important;
-    }*/
+.thead__link--left {
+    width: 100%;
+    text-align: left;
 }
 
 .thead__sort {
@@ -38,4 +69,13 @@
 
 .thead__sort--reverse {
     transform: rotate(180deg);
+}
+
+.td--max-width {
+    @media only screen and (max-width: $layout-breakpoint-sm - 1) {
+        max-width: 180px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
 }
