@@ -132,24 +132,24 @@ const TopBar = {
                 <h3>{{ $ctrl.projectTitle }} <span class="md-caption">({{ 'RUN_ID_DISPLAY' | translate:{id: $ctrl.runId} }})</span></h3>
                 <span flex></span>
                 <md-menu md-position-mode="target-right target" md-offset="52 26">
-                    <md-button aria-label="{{ 'USER_MENU' | translate }}"
-                               class="md-icon-button"
-                               ng-class="{ 'has-indicator has-indicator--icon-button': $ctrl.isAnyPeriodPaused() }"
-                               ng-click="$mdMenu.open($event)">
-                        <md-icon md-menu-origin ng-if="$ctrl.isAnyPeriodPaused()"> lock_outline </md-icon>
-                        <md-icon md-menu-origin ng-if="!$ctrl.isAnyPeriodPaused()"> lock_open </md-icon>
-                    </md-button>
-                    <md-menu-content width="5" class="account-menu">
-                        <pause-screens-menu></pause-screens-menu>
-                    </md-menu-content>
-                </md-menu>
-                <md-menu md-position-mode="target-right target" md-offset="40 26">
                     <md-button aria-label="{{ 'ALERTS' | translate }}" class="md-icon-button notification-btn" ng-click="$mdMenu.open($event)">
                         <span ng-show="$ctrl.newNotifications.length" class="notification-count">{{$ctrl.newNotifications.length}}</span>
                         <md-icon md-menu-origin> notifications </md-icon>
                     </md-button>
                     <md-menu-content width="5" class="account-menu">
                         <notifications-menu new-notifications="$ctrl.newNotifications" dismissed-notifications="$ctrl.dismissedNotifications"></notifications-menu>
+                    </md-menu-content>
+                </md-menu>
+                <md-menu md-position-mode="target-right target" md-offset="40 26">
+                    <md-button aria-label="{{ 'USER_MENU' | translate }}"
+                               class="md-icon-button"
+                               ng-class="{ 'has-indicator has-indicator--icon-button': $ctrl.isAnyPeriodPaused() }"
+                               ng-click="$mdMenu.open($event)">
+                        <md-icon md-menu-origin ng-if="$ctrl.isAnyPeriodPaused()"> lock </md-icon>
+                        <md-icon md-menu-origin ng-if="!$ctrl.isAnyPeriodPaused()"> lock_open </md-icon>
+                    </md-button>
+                    <md-menu-content width="5" class="account-menu">
+                        <pause-screens-menu></pause-screens-menu>
                     </md-menu-content>
                 </md-menu>
                 <md-menu id='accountMenu' md-position-mode="target-right target" md-offset="8 26">
