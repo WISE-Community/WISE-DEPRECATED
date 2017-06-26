@@ -383,7 +383,8 @@ var NavItemController = function () {
             var n = workgroupIdsOnNode.length;
             for (var i = 0; i < n; i++) {
                 var id = workgroupIdsOnNode[i];
-                var usernames = this.ConfigService.getUserNamesByWorkgroupId(id);
+
+                var usernames = this.ConfigService.getDisplayUserNamesByWorkgroupId(id);
                 var avatarColor = this.ConfigService.getAvatarColorForWorkgroupId(id);
                 var online = this.TeacherWebSocketService.isStudentOnline(id);
                 if (online) {

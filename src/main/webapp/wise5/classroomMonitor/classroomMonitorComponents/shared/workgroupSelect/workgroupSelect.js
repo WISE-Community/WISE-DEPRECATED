@@ -9,14 +9,18 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var WorkgroupSelectController = function () {
-    function WorkgroupSelectController($scope, ConfigService, TeacherDataService) {
+    function WorkgroupSelectController($filter, $scope, orderBy, ConfigService, TeacherDataService) {
         var _this = this;
 
         _classCallCheck(this, WorkgroupSelectController);
 
+        this.$filter = $filter;
         this.$scope = $scope;
+        this.orderBy = orderBy;
         this.ConfigService = ConfigService;
         this.TeacherDataService = TeacherDataService;
+
+        this.$translate = this.$filter('translate');
 
         this.$onInit = function () {
             _this.canViewStudentNames = _this.ConfigService.getPermissions().canViewStudentNames;
@@ -68,6 +72,7 @@ var WorkgroupSelectController = function () {
         value: function querySearch(query) {
             var items = [];
             var n = this.workgroups.length;
+            var sortByStudentId = false;
 
             for (var i = 0; i < n; i++) {
                 var workgroup = this.workgroups[i];
@@ -75,32 +80,51 @@ var WorkgroupSelectController = function () {
                 if (this.periodId === -1 || periodId === this.periodId) {
                     var displayNames = workgroup.displayNames;
 
-                    if (!this.byTeam && this.canViewStudentNames) {
-                        var names = displayNames.split(',');
-                        var l = names.length;
-                        for (var x = 0; x < l; x++) {
-                            var name = names[x].trim();
-                            // get the index of the first empty space
-                            var indexOfSpace = name.indexOf(' ');
-                            // get the student first name e.g. "Spongebob"
-                            var firstName = name.substring(0, indexOfSpace);
-                            var lastName = name.substring(indexOfSpace + 1);
-
-                            var current = angular.copy(workgroup);
-                            current.displayNames = lastName + ', ' + firstName;
-                            if (current.displayNames.search(new RegExp(query, 'i')) > -1 || !query) {
-                                items.push(current);
-                            }
-                        }
-                    } else {
+                    if (this.byTeam) {
                         if (displayNames.search(new RegExp(query, 'i')) > -1 || !query) {
                             items.push(workgroup);
+                        }
+                    } else {
+                        if (this.canViewStudentNames) {
+                            var names = displayNames.split(',');
+                            var l = names.length;
+                            for (var x = 0; x < l; x++) {
+                                var name = names[x].trim();
+                                // get the index of the first empty space
+                                var indexOfSpace = name.indexOf(' ');
+                                // get the student first name e.g. "Spongebob"
+                                var firstName = name.substring(0, indexOfSpace);
+                                var lastName = name.substring(indexOfSpace + 1);
+
+                                var current = angular.copy(workgroup);
+                                current.displayNames = lastName + ', ' + firstName;
+                                if (current.displayNames.search(new RegExp(query, 'i')) > -1 || !query) {
+                                    items.push(current);
+                                }
+                            }
+                        } else {
+                            sortByStudentId = true;
+                            var ids = workgroup.userIds;
+                            var _l = ids.length;
+                            for (var _x = 0; _x < _l; _x++) {
+                                var id = ids[_x];
+                                var _name = this.$translate('studentId', { id: id });
+
+                                var _current = angular.copy(workgroup);
+                                _current.displayNames = _name;
+                                _current.userId = id;
+                                if (_current.displayNames.search(new RegExp(query, 'i')) > -1 || !query) {
+                                    items.push(_current);
+                                }
+                            }
                         }
                     }
                 }
             }
 
-            return items;
+            var orderedItems = sortByStudentId ? this.orderBy(items, 'userId') : this.orderBy(items, 'displayNames');
+
+            return orderedItems;
         }
     }, {
         key: 'selectedItemChange',
@@ -112,13 +136,13 @@ var WorkgroupSelectController = function () {
     return WorkgroupSelectController;
 }();
 
-WorkgroupSelectController.$inject = ['$scope', 'ConfigService', 'TeacherDataService'];
+WorkgroupSelectController.$inject = ['$filter', '$scope', 'orderByFilter', 'ConfigService', 'TeacherDataService'];
 
 var WorkgroupSelect = {
     bindings: {
         byTeam: '<'
     },
-    template: '<md-autocomplete class="autocomplete"\n                          md-no-cache="true"\n                          md-selected-item="$ctrl.selectedItem"\n                          md-search-text="$ctrl.searchText"\n                          md-selected-item-change="$ctrl.selectedItemChange()"\n                          md-items="workgroup in $ctrl.querySearch($ctrl.searchText) | orderBy: \'displayNames\'"\n                          md-item-text="workgroup.displayNames"\n                          md-min-length="0"\n                          ng-init="$ctrl.searchText=$ctrl.selectedItem.displayNames"\n                          placeholder="{{\'findAStudent\' | translate}}"\n                          title="{{\'findAStudent\' | translate}}">\n            <md-item-template>\n                <span md-highlight-text="$ctrl.searchText" md-highlight-flags="ig">{{workgroup.displayNames}}</span>\n            </md-item-template>\n            <md-not-found>\n                {{\'noMatchesFound\' | translate}}\n            </md-not-found>\n        </md-autocomplete>',
+    template: '<md-autocomplete class="autocomplete"\n                          md-no-cache="true"\n                          md-selected-item="$ctrl.selectedItem"\n                          md-search-text="$ctrl.searchText"\n                          md-selected-item-change="$ctrl.selectedItemChange()"\n                          md-items="workgroup in $ctrl.querySearch($ctrl.searchText)"\n                          md-item-text="workgroup.displayNames"\n                          md-min-length="0"\n                          ng-init="$ctrl.searchText=$ctrl.selectedItem.displayNames"\n                          placeholder="{{\'findAStudent\' | translate}}"\n                          title="{{\'findAStudent\' | translate}}">\n            <md-item-template>\n                <span md-highlight-text="$ctrl.searchText" md-highlight-flags="ig">{{workgroup.displayNames}}</span>\n            </md-item-template>\n            <md-not-found>\n                {{\'noMatchesFound\' | translate}}\n            </md-not-found>\n        </md-autocomplete>',
     controller: WorkgroupSelectController
 };
 

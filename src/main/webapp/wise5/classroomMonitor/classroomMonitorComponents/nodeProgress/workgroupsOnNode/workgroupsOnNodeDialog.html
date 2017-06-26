@@ -13,7 +13,7 @@
                     <md-icon class="md-36" style="color: {{group.avatarColor}};"> account_circle </md-icon>
                 </div>
                 <p>
-                    <span ng-repeat="userName in group.usernames">{{userName.name}}<span ng-if="!$last">,&nbsp;</span></span>
+                    <span>{{group.usernames}}</span>
                 </p>
                 <md-icon ng-class="{'success': group.online, 'gray-dark': !group.online}" class="md-secondary" title="{{group.online ? ('online' | translate) : ('offline' | translate)}}">fiber_manual_record</md-icon>
             </md-list-item>

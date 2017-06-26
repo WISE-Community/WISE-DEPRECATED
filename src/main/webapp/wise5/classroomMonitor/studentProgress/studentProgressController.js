@@ -187,7 +187,7 @@ var StudentProgressController = function () {
 
             var currentPeriod = this.getCurrentPeriod().periodId;
 
-            if (currentPeriod === -1 || workgroup.periodId === studentProgressController.getCurrentPeriod().periodId) {
+            if (currentPeriod === -1 || workgroup.periodId === this.getCurrentPeriod().periodId) {
                 if (this.currentWorkgroup) {
                     if (workgroup.displayNames === this.currentWorkgroup.displayNames) {
                         show = true;

@@ -360,7 +360,8 @@ class NavItemController {
         let n = workgroupIdsOnNode.length;
         for (let i = 0; i < n; i++) {
             let id = workgroupIdsOnNode[i];
-            let usernames = this.ConfigService.getUserNamesByWorkgroupId(id);
+
+            let usernames = this.ConfigService.getDisplayUserNamesByWorkgroupId(id);
             let avatarColor = this.ConfigService.getAvatarColorForWorkgroupId(id);
             let online = this.TeacherWebSocketService.isStudentOnline(id);
             if (online) {
