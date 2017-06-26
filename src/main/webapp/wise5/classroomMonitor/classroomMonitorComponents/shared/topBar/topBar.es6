@@ -137,7 +137,7 @@ const TopBar = {
                         <md-icon md-menu-origin> notifications </md-icon>
                     </md-button>
                     <md-menu-content width="5" class="account-menu">
-                        <notifications-menu new-notifications="$ctrl.newNotifications" dismissed-notifications="$ctrl.dismissedNotifications"></notifications-menu>
+                        <notifications-menu new-notifications="$ctrl.newNotifications" dismissed-notifications="$ctrl.dismissedNotifications" with-pause="true"></notifications-menu>
                     </md-menu-content>
                 </md-menu>
                 <md-menu md-position-mode="target-right target" md-offset="40 26">
