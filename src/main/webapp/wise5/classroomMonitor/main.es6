@@ -11,6 +11,7 @@ import angularToArrayFilter from 'lib/angular-toArrayFilter/toArrayFilter';
 import angularUIBootstrap from 'angular-ui-bootstrap';
 import angularUIRouter from 'angular-ui-router';
 import bootstrapUIDatetimePicker from 'bootstrap-ui-datetime-picker';
+import angularFileSaver from 'angular-file-saver';
 import ngFileUpload from 'ng-file-upload';
 import ngMaterial from 'angular-material';
 import angularSanitize from 'angular-sanitize';
@@ -82,6 +83,7 @@ let classroomMonitorModule = angular.module('classroomMonitor', [
         'multipleChoiceComponentModule',
         'ngAnimate',
         'ngAria',
+        'ngFileSaver',
         'ngFileUpload',
         'ngMaterial',
         'ngSanitize',

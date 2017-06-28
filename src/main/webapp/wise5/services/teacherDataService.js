@@ -172,6 +172,15 @@ var TeacherDataService = function () {
                 _params2.components = selectedNodes;
 
                 return this.retrieveStudentData(_params2);
+            } else if (exportType === "rawData") {
+                var _params3 = {};
+                _params3.runId = this.ConfigService.getRunId();
+                _params3.getStudentWork = true;
+                _params3.getAnnotations = true;
+                _params3.getEvents = true;
+                _params3.components = selectedNodes;
+
+                return this.retrieveStudentData(_params3);
             }
         }
 

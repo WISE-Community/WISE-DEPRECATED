@@ -11,7 +11,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var DataExportController = function () {
-    function DataExportController($injector, $rootScope, $scope, $state, AnnotationService, ConfigService, ProjectService, StudentStatusService, TeacherDataService, TeacherWebSocketService, UtilService) {
+    function DataExportController($injector, $rootScope, $scope, $state, AnnotationService, ConfigService, FileSaver, ProjectService, StudentStatusService, TeacherDataService, TeacherWebSocketService, UtilService) {
         var _this = this;
 
         _classCallCheck(this, DataExportController);
@@ -22,6 +22,7 @@ var DataExportController = function () {
         this.$state = $state;
         this.AnnotationService = AnnotationService;
         this.ConfigService = ConfigService;
+        this.FileSaver = FileSaver;
         this.ProjectService = ProjectService;
         this.StudentStatusService = StudentStatusService;
         this.TeacherDataService = TeacherDataService;
@@ -121,6 +122,8 @@ var DataExportController = function () {
                 this.exportStudentAssets();
             } else if (exportType === "oneWorkgroupPerRow") {
                 this.exportOneWorkgroupPerRow();
+            } else if (exportType === "rawData") {
+                this.exportRawData();
             }
         }
 
@@ -820,28 +823,8 @@ var DataExportController = function () {
             // generate the blob that will be written to the file
             var csvBlob = new Blob([csvString], { type: 'text/csv' });
 
-            // create a url to the blob object
-            var csvUrl = URL.createObjectURL(csvBlob);
-
-            // create an <a> element
-            var a = document.createElement("a");
-
-            // add the <a> element to the body
-            document.body.appendChild(a);
-
-            // set the url of the <a> element
-            a.href = csvUrl;
-
-            // set the file name
-            a.download = fileName;
-
-            // click the <a> element to download the file
-            a.click();
-
-            // timeout is required for FF.
-            window.setTimeout(function () {
-                URL.revokeObjectURL(csvUrl); // tell browser to release URL reference
-            }, 3000);
+            // generate a file and download it to the user's computer
+            this.FileSaver.saveAs(csvBlob, fileName);
         }
     }, {
         key: "escapeContent",
@@ -2559,13 +2542,13 @@ var DataExportController = function () {
         }
 
         /**
-         * The "One Workgroup Per Row" button was clicked so we will display the
+         * The "Export One Workgroup Per Row" button was clicked so we will display the
          * view for it
          */
 
     }, {
-        key: "oneWorkgroupPerRowClicked",
-        value: function oneWorkgroupPerRowClicked() {
+        key: "exportOneWorkgroupPerRowClicked",
+        value: function exportOneWorkgroupPerRowClicked() {
 
             // set the export type
             this.exportType = 'oneWorkgroupPerRow';
@@ -2638,6 +2621,8 @@ var DataExportController = function () {
         key: "everythingClicked",
         value: function everythingClicked() {
             // enable all the settings
+
+            // settings for one workgroup per row export
             this.exportStudentWork = true;
             this.exportStudentWorkIds = true;
             this.exportStudentWorkTimestamps = true;
@@ -2648,7 +2633,12 @@ var DataExportController = function () {
             this.exportScoreTimestamps = true;
             this.exportComments = true;
             this.exportCommentTimestamps = true;
-            this.exportStepSelectionType == 'exportAllSteps';
+            this.exportStepSelectionType = 'exportAllSteps';
+
+            // settings for raw data export
+            this.exportStudentWork = true;
+            this.exportAnnotations = true;
+            this.exportEvents = true;
         }
 
         /**
@@ -2658,6 +2648,9 @@ var DataExportController = function () {
     }, {
         key: "setDefaultExportSettings",
         value: function setDefaultExportSettings() {
+            // enable the default settings
+
+            // settings for one workgroup per row export
             this.exportStudentWork = true;
             this.exportStudentWorkIds = false;
             this.exportStudentWorkTimestamps = false;
@@ -2668,14 +2661,230 @@ var DataExportController = function () {
             this.exportScoreTimestamps = false;
             this.exportComments = false;
             this.exportCommentTimestamps = false;
-            this.exportStepSelectionType == 'exportAllSteps';
+            this.exportStepSelectionType = 'exportAllSteps';
+
+            // settings for raw data export
+            this.exportStudentWork = true;
+            this.exportAnnotations = false;
+            this.exportEvents = false;
+        }
+
+        /**
+         * The "Export Raw Data" button was clicked
+         */
+
+    }, {
+        key: "rawDataExportClicked",
+        value: function rawDataExportClicked() {
+            // set the export type
+            this.exportType = 'rawData';
+        }
+
+        /**
+         * Export the raw data
+         */
+
+    }, {
+        key: "exportRawData",
+        value: function exportRawData() {
+            var _this7 = this;
+
+            // get the steps that were selected
+            var selectedNodes = this.getSelectedNodesToExport();
+
+            /*
+             * holds the mappings from nodeid or nodeid-componentid to a boolean
+             * value of whether the node was selected
+             * example
+             * selectedNodesMap["node3"] = true
+             * selectedNodesMap["node4-wt38sdf1d3"] = true
+             */
+            var selectedNodesMap = null;
+
+            if (this.exportStepSelectionType === "exportSelectSteps") {
+                if (selectedNodes == null || selectedNodes.length == 0) {
+                    /*
+                     * the user did not select any steps to export so we will not
+                     * generate the export
+                     */
+                    alert('Please select a step to export.');
+                    return;
+                } else {
+                    /*
+                     * the user has selected some steps/components so we will
+                     * generate a selected nodes map
+                     */
+                    selectedNodesMap = this.getSelectedNodesMap(selectedNodes);
+                }
+            }
+
+            // request the student data from the server and then generate the export
+            this.TeacherDataService.getExport("rawData", selectedNodes).then(function (result) {
+
+                // get the run id
+                var runId = _this7.ConfigService.getRunId();
+
+                var data = {};
+
+                // get the workgroups in the class
+                var workgroups = _this7.ConfigService.getClassmateUserInfosSortedByWorkgroupId();
+
+                // make a copy of the workgroups array to prevent referencing issues
+                workgroups = _this7.UtilService.makeCopyOfJSONObject(workgroups);
+
+                // loop through all the workgroups
+                for (var w = 0; w < workgroups.length; w++) {
+                    var workgroup = workgroups[w];
+
+                    if (workgroup != null) {
+
+                        // remove the user name and display name fields
+                        delete workgroup.userName;
+                        delete workgroup.displayNames;
+
+                        // get the workgroup id
+                        var workgroupId = workgroup.workgroupId;
+
+                        if (_this7.exportStudentWork) {
+                            // the user wants to export the student work
+                            workgroup.studentWork = [];
+
+                            // get all the component states for the workgroup
+                            var componentStates = _this7.TeacherDataService.getComponentStatesByWorkgroupId(workgroupId);
+
+                            if (componentStates != null) {
+
+                                // loop through all the component states
+                                for (var c = 0; c < componentStates.length; c++) {
+                                    var componentState = componentStates[c];
+
+                                    if (componentState != null) {
+
+                                        // get the composite id. example 'node2-b34gaf0ug2'
+                                        var compositeId = _this7.getCompositeId(componentState);
+
+                                        if (selectedNodesMap == null || compositeId != null && selectedNodesMap[compositeId] == true) {
+                                            /*
+                                             * we are exporting all steps or the step was selected
+                                             * so we will add the component state
+                                             */
+                                            workgroup.studentWork.push(componentState);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        if (_this7.exportAnnotations) {
+                            // the user wants to export the annotations
+                            workgroup.annotations = [];
+
+                            // get all the annotations for the workgroup
+                            var annotations = _this7.TeacherDataService.getAnnotationsToWorkgroupId(workgroupId);
+
+                            if (annotations != null) {
+
+                                // loop through all the annotations for the workgroup
+                                for (var a = 0; a < annotations.length; a++) {
+                                    var annotation = annotations[a];
+
+                                    if (annotation != null) {
+
+                                        // get the composite id. example 'node2-b34gaf0ug2'
+                                        var compositeId = _this7.getCompositeId(annotation);
+
+                                        if (selectedNodesMap == null || compositeId != null && selectedNodesMap[compositeId] == true) {
+                                            /*
+                                             * we are exporting all steps or the step was selected
+                                             * so we will add the annotation
+                                             */
+                                            workgroup.annotations.push(annotation);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        if (_this7.exportEvents) {
+                            // the user wants to export the events
+                            workgroup.events = [];
+
+                            var events = [];
+
+                            // get all the events for the workgroup
+                            var events = _this7.TeacherDataService.getEventsByWorkgroupId(workgroupId);
+
+                            if (events != null) {
+
+                                // loop through all the events for the workgroup
+                                for (var e = 0; e < events.length; e++) {
+                                    var event = events[e];
+
+                                    if (event != null) {
+
+                                        // get the composite id. example 'node2-b34gaf0ug2'
+                                        var compositeId = _this7.getCompositeId(event);
+
+                                        if (selectedNodesMap == null || compositeId != null && selectedNodesMap[compositeId] == true) {
+                                            /*
+                                             * we are exporting all steps or the step was selected
+                                             * so we will add the event
+                                             */
+                                            workgroup.events.push(event);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // add the workgroups to the data
+                data.workgroups = workgroups;
+
+                // get the data as a JSON string
+                var dataJSONString = angular.toJson(data, 4);
+
+                // get the data JSON string as a blob
+                var blob = new Blob([dataJSONString]);
+
+                // generate a file and download it to the user's computer
+                _this7.FileSaver.saveAs(blob, runId + "_raw_data.json");
+            });
+        }
+
+        /**
+         * Get the composite id for a given object
+         * @param object a component state, annotation, or event
+         * @return the composite id for the object
+         * example
+         * 'node3'
+         * 'node4-wt38sdf1d3'
+         */
+
+    }, {
+        key: "getCompositeId",
+        value: function getCompositeId(object) {
+            var compositeId = null;
+
+            if (object.nodeId != null) {
+                // the object has a node id
+                compositeId = object.nodeId;
+            }
+
+            if (object.componentId != null) {
+                // the object has a component id
+                compositeId += '-' + object.componentId;
+            }
+
+            return compositeId;
         }
     }]);
 
     return DataExportController;
 }();
 
-DataExportController.$inject = ['$injector', '$rootScope', '$scope', '$state', 'AnnotationService', 'ConfigService', 'ProjectService', 'StudentStatusService', 'TeacherDataService', 'TeacherWebSocketService', 'UtilService'];
+DataExportController.$inject = ['$injector', '$rootScope', '$scope', '$state', 'AnnotationService', 'ConfigService', 'FileSaver', 'ProjectService', 'StudentStatusService', 'TeacherDataService', 'TeacherWebSocketService', 'UtilService'];
 
 exports.default = DataExportController;
 //# sourceMappingURL=dataExportController.js.map

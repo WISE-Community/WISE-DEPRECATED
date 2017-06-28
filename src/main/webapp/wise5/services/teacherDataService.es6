@@ -165,6 +165,15 @@ class TeacherDataService {
             params.components = selectedNodes;
 
             return this.retrieveStudentData(params);
+        } else if (exportType === "rawData") {
+            let params = {};
+            params.runId = this.ConfigService.getRunId();
+            params.getStudentWork = true;
+            params.getAnnotations = true;
+            params.getEvents = true;
+            params.components = selectedNodes;
+
+            return this.retrieveStudentData(params);
         }
     }
 
