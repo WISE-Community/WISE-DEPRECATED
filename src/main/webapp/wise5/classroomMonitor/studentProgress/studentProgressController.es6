@@ -21,13 +21,11 @@ class StudentProgressController {
 
         this.teacherWorkgroupId = this.ConfigService.getWorkgroupId();
 
-        this.studentsOnline = this.TeacherWebSocketService.getStudentsOnline();
+        // get the current sort order
+        this.sort = this.TeacherDataService.studentProgressSort;
 
-        this.workgroups = this.sortWorkgroupsByOnline();
-
-        this.studentStatuses = this.StudentStatusService.getStudentStatuses();
-
-        this.maxScore = this.ProjectService.getMaxScore();
+        // initialize the current workgroup
+        this.TeacherDataService.setCurrentWorkgroup(null);
 
         this.canViewStudentNames = true;
         this.canGradeStudentWork = true;
@@ -47,6 +45,18 @@ class StudentProgressController {
             // the teacher is a shared teacher that can only view the student work
             this.canViewStudentNames = false;
             this.canGradeStudentWork = false;
+        }
+
+        this.studentsOnline = this.TeacherWebSocketService.getStudentsOnline();
+
+        this.students = [];
+        this.initializeStudents();
+
+        this.studentStatuses = this.StudentStatusService.getStudentStatuses();
+
+        this.maxScore = this.ProjectService.getMaxScore();
+        if (this.maxScore === null) {
+            this.maxScore = 0;
         }
 
         this.periods = [];
@@ -73,8 +83,8 @@ class StudentProgressController {
         this.$rootScope.$on('studentsOnlineReceived', (event, args) => {
             this.studentsOnline = args.studentsOnline;
 
-            // update the workgroup order
-            this.workgroups = this.sortWorkgroupsByOnline();
+            // update the students
+            this.initializeStudents();
 
             // refresh the view
             this.$scope.$apply();
@@ -88,6 +98,9 @@ class StudentProgressController {
 
             // update the time spent for the workgroup
             this.updateTimeSpentForWorkgroupId(workgroupId);
+
+            // update the students
+            this.initializeStudents();
 
             // refresh the view
             this.$scope.$apply();
@@ -106,12 +119,17 @@ class StudentProgressController {
                 // remove the workgroup from the students online list
                 studentsOnline.splice(indexOfWorkgroupId, 1);
 
-                // update the workgroup order
-                this.workgroups = this.sortWorkgroupsByOnline();
+                // update the students
+                this.initializeStudents();
 
                 // refresh the view
                 this.$scope.$apply();
             }
+        });
+
+        // listen for the currentWorkgroupChanged event
+        this.$scope.$on('currentWorkgroupChanged', (event, args) => {
+            this.currentWorkgroup = args.currentWorkgroup;
         });
 
         // how often to update the time spent values in the view
@@ -146,15 +164,27 @@ class StudentProgressController {
         return this.StudentStatusService.getStudentProjectCompletion(workgroupId);
     };
 
-    studentRowClicked(workgroup) {
-        var workgroupId = workgroup.workgroupId;
-
-        this.$state.go('root.studentGrading', {workgroupId: workgroupId});
-    };
-
     isWorkgroupOnline(workgroupId) {
         return this.studentsOnline.indexOf(workgroupId) != -1;
     };
+
+    isWorkgroupShown(workgroup) {
+        let show = false;
+
+        let currentPeriod = this.getCurrentPeriod().periodId;
+
+        if (currentPeriod === -1 || workgroup.periodId === this.getCurrentPeriod().periodId) {
+            if (this.currentWorkgroup) {
+                if (workgroup.displayNames === this.currentWorkgroup.displayNames) {
+                    show = true;
+                }
+            } else {
+                show = true;
+            }
+        }
+
+        return show;
+    }
 
     /**
      * Set the current period
@@ -180,7 +210,12 @@ class StudentProgressController {
      * Get the time spent for a workgroup
      */
     getStudentTimeSpent(workgroupId) {
-        var timeSpent = this.studentTimeSpent[workgroupId];
+        let timeSpent = null;
+
+        if (this.studentTimeSpent) {
+            timeSpent = this.studentTimeSpent[workgroupId];
+        }
+
         return timeSpent;
     }
 
@@ -287,49 +322,142 @@ class StudentProgressController {
                 }
 
                 // update the mapping of workgroup id to time spent
-                this.studentTimeSpent[workgroupId] = timeSpentText;
+                //this.studentTimeSpent[workgroupId] = timeSpentText;
+
+                // update the timeSpent for the students with the matching workgroupID
+                for (let i = 0; i < this.students.length; i++) {
+                    let student = this.students[i];
+                    let id = student.workgroupId;
+
+                    if (workgroupId === id) {
+                        student.timeSpent = timeSpentText;
+                    }
+                }
             }
         }
     }
 
     /**
-     * Sort the workgroups. Place the online workgroups sorted alphabetically at
-     * the top and the offline workgroups sorted alphabetically at the bottom.
-     * @returns a list of workgroup objects with the online workgroups first
-     * and the offline workgroups after
+     * Set up the array of students in the run. Split workgroups into
+     * individual student objects.
      */
-    sortWorkgroupsByOnline() {
+    initializeStudents() {
+        let students = [];
 
-        var workgroupsOnline = [];
-        var workgroupsOffline = [];
-
-        // get the workgroups sorted alphabetically
-        var workgroups = this.ConfigService.getClassmateUserInfos();
+        // get the workgroups
+        let workgroups = this.ConfigService.getClassmateUserInfos();
 
         // loop through all the workgroups
-        for (var x = 0; x < workgroups.length; x++) {
-            var workgroup = workgroups[x];
+        for (let x = 0; x < workgroups.length; x++) {
+            let workgroup = workgroups[x];
 
             if (workgroup != null) {
-                if (this.isWorkgroupOnline(workgroup.workgroupId)) {
-                    // the workroup is online
-                    workgroupsOnline.push(workgroup);
-                } else {
-                    // the workgroup is offline
-                    workgroupsOffline.push(workgroup);
+                let workgroupId = workgroup.workgroupId;
+                let isOnline = this.isWorkgroupOnline(workgroupId);
+
+                let userName = workgroup.userName;
+                let displayNames = this.ConfigService.getDisplayUserNamesByWorkgroupId(workgroupId).split(', ');
+                let userIds = workgroup.userIds;
+
+                for (let i = 0; i < userIds.length; i++) {
+                    let id = userIds[i];
+                    let displayName = '';
+
+                    if (this.canViewStudentNames) {
+                        // put user display name in 'lastName, firstName' order
+                        let names = displayNames[i].split(' ');
+                        displayName = names[1] + ', ' + names[0];
+                    } else {
+                        displayName = 'Student ' + id;
+                    }
+
+                    let user = {
+                        userId: id,
+                        periodId: workgroup.periodId,
+                        periodName: workgroup.periodName,
+                        workgroupId: workgroup.workgroupId,
+                        displayNames: displayName,
+                        userName: displayName,
+                        online: isOnline,
+                        location: this.getCurrentNodeForWorkgroupId(workgroup.workgroupId),
+                        timeSpent: this.getStudentTimeSpent(workgroup.workgroupId),
+                        completion: this.getStudentProjectCompletion(workgroup.workgroupId),
+                        score: this.getStudentTotalScore(workgroup.workgroupId)
+                    };
+                    students.push(user);
                 }
+
             }
         }
 
-        // join the workgroup arrays together
-        var workgroupsSorted = workgroupsOnline.concat(workgroupsOffline);
-
-        return workgroupsSorted;
+        this.students = students;
     }
 
     showWorkgroupProjectView(workgroup) {
         this.TeacherDataService.setCurrentWorkgroup(workgroup);
         this.$state.go('root.nodeProgress');
+    }
+
+    setSort(value) {
+        if (this.sort === value) {
+            this.sort = '-' + value;
+        } else {
+            this.sort = value;
+        }
+
+        // update value in the teacher data service so we can persist across views
+        this.TeacherDataService.nodeGradingSort = this.sort;
+    }
+
+    getOrderBy() {
+        let orderBy = [];
+
+        switch (this.sort) {
+            case 'team':
+                orderBy = ['workgroupId', 'userName'];
+                break;
+            case '-team':
+                orderBy = ['-workgroupId', 'userName'];
+                break;
+            case 'student':
+                orderBy = ['userName', 'workgroupId'];
+                break;
+            case '-student':
+                orderBy = ['-userName', 'workgroupId'];
+                break;
+            case 'score':
+                orderBy = ['score', 'userName'];
+                break;
+            case '-score':
+                orderBy = ['-score', 'userName'];
+                break;
+            case 'completion':
+                orderBy = ['completion', 'userName'];
+                break;
+            case '-completion':
+                orderBy = ['-completion', 'userName'];
+                break;
+            case 'location':
+                orderBy = ['location', 'userName'];
+                break;
+            case '-location':
+                orderBy = ['-location', 'userName'];
+                break;
+            case 'time':
+                orderBy = ['-online', '-timeSpent', 'userName'];
+                break;
+            case '-time':
+                orderBy = ['-online', 'timeSpent', 'userName'];
+                break;
+            case 'online':
+                orderBy = ['online', 'userName'];
+                break;
+            case '-online':
+                orderBy = ['-online', 'userName'];
+                break;
+        }
+
+        return orderBy;
     }
 }
 

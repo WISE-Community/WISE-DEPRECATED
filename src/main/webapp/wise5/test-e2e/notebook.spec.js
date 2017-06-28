@@ -19,13 +19,6 @@ describe('WISE5 Notebook in Preview Mode', function () {
     var fullScreenButton = element(by.css('[ng-click="$ctrl.fullscreen()"]'));
     var collapseButton = element(by.css('[ng-click="$event.stopPropagation(); $ctrl.collapse()"]'));
 
-    /*
-    let notebookButton = element(by.xpath('//md-toolbar/button[@aria-label="View Notes"]'));
-    let reportButton = element(by.xpath('//md-toolbar/button[@aria-label="View Report"]'));
-    let addNoteButton = element(by.xpath('//md-toolbar/button[@aria-label="Add Notebook item"]'));
-    let addNoteDialog = element(by.xpath('//md-dialog[@aria-label="Add note"]'));
-    */
-
     it('should load the vle and go to node 1 and show notebook buttons', function () {
         browser.get('http://localhost:8080/wise/project/demo#/vle/node1');
         var nodeDropDownMenu = element(by.model("stepToolsCtrl.toNodeId"));

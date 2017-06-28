@@ -3,7 +3,6 @@
 class NavItemController {
     constructor($element,
                 $filter,
-                $mdDialog,
                 $rootScope,
                 $scope,
                 $state,
@@ -19,7 +18,6 @@ class NavItemController {
 
         this.$element = $element;
         this.$filter = $filter;
-        this.$mdDialog = $mdDialog;
         this.$rootScope = $rootScope;
         this.$scope = $scope;
         this.$state = $state;
@@ -98,6 +96,11 @@ class NavItemController {
             this.alertNotifications = [];
 
             this.getAlertNotifications();
+
+            this.hasRubrics = this.ProjectService.getNumberOfRubricsByNodeId(this.nodeId) > 0;
+            this.rubricIconLabel = this.$translate('STEP_HAS_INFO_TEACHING_TIPS');
+            this.rubricIconClass = 'info';
+            this.rubricIconName = 'info';
         };
 
         this.$scope.$watch(
@@ -357,7 +360,8 @@ class NavItemController {
         let n = workgroupIdsOnNode.length;
         for (let i = 0; i < n; i++) {
             let id = workgroupIdsOnNode[i];
-            let usernames = this.ConfigService.getUserNamesByWorkgroupId(id);
+
+            let usernames = this.ConfigService.getDisplayUserNamesByWorkgroupId(id);
             let avatarColor = this.ConfigService.getAvatarColorForWorkgroupId(id);
             let online = this.TeacherWebSocketService.isStudentOnline(id);
             if (online) {
@@ -420,7 +424,6 @@ class NavItemController {
 NavItemController.$inject = [
     '$element',
     '$filter',
-    '$mdDialog',
     '$rootScope',
     '$scope',
     '$state',

@@ -15,6 +15,7 @@ import ListenForDeleteKeypress from './listenForDeleteKeypress/listenForDeleteKe
 import NotebookItemGrading from './notebookItemGrading/notebookItemGrading';
 import PossibleScore from './possibleScore/possibleScore';
 import Wiselink from './wiselink/wiselink';
+import Sticky from './sticky/sticky';
 
 let Components = angular.module('components', [/*'notebook'*/]);
 
@@ -32,5 +33,6 @@ Components.component('listenForDeleteKeypress', ListenForDeleteKeypress);
 Components.component('notebookItemGrading', NotebookItemGrading);
 Components.component('possibleScore', PossibleScore);
 Components.component('wiselink', Wiselink);
+Components.directive('sticky', Sticky);
 
 export default Components;

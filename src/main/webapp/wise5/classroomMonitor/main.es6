@@ -5,13 +5,12 @@ import $ from 'jquery';
 import AchievementService from '../services/achievementService';
 import angular from 'angular';
 import angularDragula from 'angular-dragula';
+import angularFileSaver from 'angular-file-saver';
 import angularInview from 'angular-inview';
 import angularMoment from 'angular-moment';
 import angularToArrayFilter from 'lib/angular-toArrayFilter/toArrayFilter';
 import angularUIBootstrap from 'angular-ui-bootstrap';
 import angularUIRouter from 'angular-ui-router';
-import bootstrapUIDatetimePicker from 'bootstrap-ui-datetime-picker';
-import angularFileSaver from 'angular-file-saver';
 import ngFileUpload from 'ng-file-upload';
 import ngMaterial from 'angular-material';
 import angularSanitize from 'angular-sanitize';
@@ -35,6 +34,7 @@ import GraphComponentModule from '../components/graph/graphComponentModule';
 import Highcharts from '../lib/highcharts@4.2.1';
 import highchartsng from 'highcharts-ng';
 import HTMLComponentModule from '../components/html/htmlComponentModule';
+import HttpInterceptor from '../services/httpInterceptor';
 import LabelComponentModule from '../components/label/labelComponentModule';
 import MatchComponentModule from '../components/match/matchComponentModule';
 import MilestonesController from './milestones/milestonesController';
@@ -94,13 +94,13 @@ let classroomMonitorModule = angular.module('classroomMonitor', [
         'pascalprecht.translate',
         'tableComponentModule',
         'ui.bootstrap',
-        'ui.bootstrap.datetimepicker',
         'ui.router'
     ])
     .service(AchievementService.name, AchievementService)
     .service(AnnotationService.name, AnnotationService)
     .service(ConfigService.name, ConfigService)
     .service(CRaterService.name, CRaterService)
+    .service(HttpInterceptor.name, HttpInterceptor)
     .service(NodeService.name, NodeService)
     .service(NotebookService.name, NotebookService)
     .service(NotificationService.name, NotificationService)
@@ -128,12 +128,14 @@ let classroomMonitorModule = angular.module('classroomMonitor', [
         '$translatePartialLoaderProvider',
         '$controllerProvider',
         '$mdThemingProvider',
+        '$httpProvider',
         ($urlRouterProvider,
          $stateProvider,
          $translateProvider,
          $translatePartialLoaderProvider,
          $controllerProvider,
-         $mdThemingProvider) => {
+         $mdThemingProvider,
+         $httpProvider) => {
 
             $urlRouterProvider.otherwise('/project/');
 
@@ -246,6 +248,8 @@ let classroomMonitorModule = angular.module('classroomMonitor', [
                     }
                 });
 
+            $httpProvider.interceptors.push('HttpInterceptor');
+
             // Set up Translations
             $translatePartialLoaderProvider.addPart('i18n');
             $translatePartialLoaderProvider.addPart('classroomMonitor/i18n');
@@ -331,29 +335,15 @@ let classroomMonitorModule = angular.module('classroomMonitor', [
             $mdThemingProvider.setDefaultTheme('default');
 
             // moment.js default overrides
-            moment.locale('en', {
-                calendar : {
-                    lastDay : '[Yesterday at] LT',
-                    sameDay : '[Today at] LT',
-                    nextDay : '[Tomorrow at] LT',
-                    lastWeek : '[Last] dddd [at] LT',
-                    nextWeek : 'dddd [at] LT',
-                    sameElse : 'MMM D, YYYY [at] LT'
-                },
-                relativeTime : {
-                    future: "in %s",
-                    past:   "%s",
-                    s:  "seconds ago",
-                    m:  "1 minute ago",
-                    mm: "%d minutes ago",
-                    h:  "1 hour ago",
-                    hh: "%d hours ago",
-                    d:  "1 day ago",
-                    dd: "%d days ago",
-                    M:  "1 month ago",
-                    MM: "%d months ago",
-                    y:  "1 year ago",
-                    yy: "%d years ago"
+            // TODO: add i18n support
+            moment.updateLocale('en', {
+                calendar: {
+                    lastDay: '[Yesterday]',
+                    sameDay: '[Today]',
+                    nextDay: '[Tomorrow]',
+                    lastWeek: '[Last] dddd',
+                    nextWeek: 'dddd',
+                    sameElse: 'ddd MMM D'
                 }
             });
         }]);

@@ -9480,6 +9480,51 @@ class ProjectService {
 
         return branchLetter;
     }
+
+    /**
+     * Get the total number of rubrics (step + components) for the given nodeId
+     * @param nodeId the node id
+     * @return Number of rubrics for the node
+     */
+    getNumberOfRubricsByNodeId(nodeId) {
+        let n = 0;
+        let nodeContent = this.getNodeContentByNodeId(nodeId);
+
+        if (nodeContent) {
+
+            // get the step rubric if any
+            let nodeRubric = nodeContent.rubric;
+
+            if (nodeRubric != null && nodeRubric != '') {
+                // the step has a rubric
+                n++;
+            }
+
+            // get the components
+            let components = nodeContent.components;
+
+            if (components && components.length) {
+
+                // loop through all the components
+                for (let c = 0; c < components.length; c++) {
+                    var component = components[c];
+
+                    if (component) {
+
+                        // get a component rubric
+                        var componentRubric = component.rubric;
+
+                        if (componentRubric != null && componentRubric != '') {
+                            // a component has a rubric
+                            n++;
+                        }
+                    }
+                }
+            }
+        }
+
+        return n;
+    }
 }
 
 ProjectService.$inject = [

@@ -72,7 +72,7 @@ class ThemeController {
         // build server disconnect display
         this.connectionLostDisplay = $mdToast.build({
             template: "<md-toast>\
-                      <span>{{ 'serverErrorCheckYourInternetConnection' | translate }}</span>\
+                      <span>{{ 'ERROR_CHECK_YOUR_INTERNET_CONNECTION' | translate }}</span>\
                       </md-toast>",
             hideDelay: 0
         });
@@ -240,7 +240,7 @@ class ThemeController {
         });
 
         // toggle notebook opened or closed on 'toggleNotebook' event
-        this.$scope.$on('toggleNotebook', (event, args) => {
+        /*this.$scope.$on('toggleNotebook', (event, args) => {
             let ev = args.ev;
             let open = args.open;
             this.toggleNotebook(ev, open);
@@ -254,7 +254,7 @@ class ThemeController {
         // update notebook filter on 'setNotebookFilter' event
         this.$scope.$on('setNotebookFilter', (event, args) => {
             this.notebookFilter = args.filter;
-        });
+        });*/
 
         // show edit note dialog on 'editNote' event
         /*this.$scope.$on('editNote', (event, args) => {
@@ -380,7 +380,7 @@ class ThemeController {
         });
 
         // capture notebook open/close events
-        this.$mdComponentRegistry.when('notebook').then(it => {
+        /*this.$mdComponentRegistry.when('notebook').then(it => {
             this.$scope.$watch(() => {
                 return it.isOpen();
             }, (isOpenNewValue, isOpenOldValue) => {
@@ -389,7 +389,7 @@ class ThemeController {
                     this.NotebookService.saveNotebookToggleEvent(isOpenNewValue, currentNode);
                 }
             });
-        });
+        });*/
     }
 
     /**

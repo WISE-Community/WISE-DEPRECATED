@@ -444,7 +444,7 @@ class NodeController {
             `<div class="hopscotch-bubble-container help-bubble md-whiteframe-4dp" style="width: ${ step.width }px; padding: ${ step.padding }px;">
                 <md-toolbar class="md-subhead help-bubble__title md-toolbar--wise">
                     <div class="help-bubble___title__content" layout="row" layout-align="start center" flex>
-                        <span>${ tour.isTour ? `${ i18n.stepNum } | ` : '' }${ step.title !== '' ? `${ step.title }` : '' }</span>
+                        <span>${ step.title !== '' ? `${ step.title }` : '' }</span>
                         <span flex></span>
                         ${ buttons.showClose ? `<md-button class="md-icon-button hopscotch-close">
                             <md-icon aria-label="${ i18n.closeTooltip }"> close </md-icon>

@@ -1,8 +1,9 @@
 {
-  "multipleChoice.addChoice": "Προσθήκη Επιλογής",
-  "multipleChoice.radio": "Ράδιο",
-  "multipleChoice.checkbox": "Κουτί Επιλογής",
-  "multipleChoice.userChose": "Ο χρήστης επέλεξε '{{choiceText}}' (Id Επιλογής: {{choiceId}} σε αυτό το στοιχείο",
-  "multipleChoice.youHaveUsedXofYAttempt": "Έχετε χηρησιμοποιήσει {{x}} από {{y}} προσπάθεια",
-  "multipleChoice.youHaveUsedXofYAttempts": "Έχετε χηρησιμοποιήσει {{x}} από {{y}} προσπάθειες"
+    "multipleChoice.addChoice": "Προσθήκη Επιλογής",
+    "multipleChoice.radio": "Ράδιο",
+    "multipleChoice.checkbox": "Κουτί Επιλογής",
+    "multipleChoice.userChose": "Ο χρήστης επέλεξε '{{choiceText}}' (Id Επιλογής: {{choiceId}} σε αυτό το στοιχείο",
+    "multipleChoice.youHaveUsedXofYAttempt": "Έχετε χηρησιμοποιήσει {{x}} από {{y}} προσπάθεια",
+    "multipleChoice.youHaveUsedXofYAttempts": "Έχετε χηρησιμοποιήσει {{x}} από {{y}} προσπάθειες",
+    "MultipleChoice.componentTypeLabel": "Πολλαπλή Επιλογή"
 }

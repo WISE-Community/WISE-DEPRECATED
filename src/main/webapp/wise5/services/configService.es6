@@ -531,6 +531,20 @@ class ConfigService {
         return studentNames;
     };
 
+    getUserIdsByWorkgroupId(workgroupId) {
+        var userIds = null;
+
+        if (workgroupId != null) {
+            var userInfo = this.getUserInfoByWorkgroupId(workgroupId);
+
+            if (userInfo != null) {
+                userIds = userInfo.userIds;
+            }
+        }
+
+        return userIds;
+    };
+
     getUserNameByWorkgroupId(workgroupId) {
         var userName = null;
 
@@ -604,8 +618,18 @@ class ConfigService {
                     }
                 }
             } else {
-                // current user is not allowed to view student names, so return string with workgroupId
-                usernames = this.$translate('teamId', {id: workgroupId});
+                // current user is not allowed to view student names, so return string with workgroupId and student ids
+                usernames = this.$translate('teamId', {id: workgroupId}) + ' (';
+
+                let userIds = this.getUserIdsByWorkgroupId(workgroupId);
+                for (let i = 0; i < userIds.length; i++) {
+                    let id = userIds[i];
+                    if (i !== 0) {
+                        usernames += ', ';
+                    }
+                    usernames += this.$translate('studentId', {id: id});
+                }
+                usernames += ')';
             }
         }
 

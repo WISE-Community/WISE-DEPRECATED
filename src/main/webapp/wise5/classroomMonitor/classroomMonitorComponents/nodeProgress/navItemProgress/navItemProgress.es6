@@ -11,7 +11,6 @@ const NavItemProgress = {
         `<span layout="row" layout-align="start center">
             <span class="progress-wrapper" tabindex="0">
                 <md-progress-linear class="nav-item__progress" md-mode="determinate" value="{{$ctrl.nodeCompletion}}"></md-progress-linear>
-                <md-progress-linear class="nav-item__progress" md-mode="determinate" value="{{$ctrl.nodeCompletion}}"></md-progress-linear>
                 <md-tooltip ng-if="!$ctrl.workgroup" ng-switch on="$ctrl.periodId" md-direction="top">
                     <span ng-switch-when="-1" translate="percentCompletedPeriodAll" translate-value-percent="{{$ctrl.nodeCompletion}}" />
                     <span ng-switch-default translate="percentCompletedPeriod" translate-values="{period: {{$ctrl.periodName}}, percent: {{$ctrl.nodeCompletion}}}" />

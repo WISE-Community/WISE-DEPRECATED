@@ -7,7 +7,7 @@ const NodeCompletionIcon = {
     template:
         `<md-icon ng-if="$ctrl.nodeStatus.isCompleted"
                   ng-class="[$ctrl.customClass, {'success': $ctrl.nodeStatus.isSuccess}]"
-                  aria-label="{{completed | translate}}">
+                  aria-label="{{'completed' | translate}}">
                   {{'check_circle'}}
         </md-icon>
         <md-icon ng-if="!$ctrl.nodeStatus.isCompleted"></md-icon>`

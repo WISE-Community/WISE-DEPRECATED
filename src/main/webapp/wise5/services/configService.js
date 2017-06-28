@@ -602,6 +602,21 @@ var ConfigService = function () {
             return studentNames;
         }
     }, {
+        key: 'getUserIdsByWorkgroupId',
+        value: function getUserIdsByWorkgroupId(workgroupId) {
+            var userIds = null;
+
+            if (workgroupId != null) {
+                var userInfo = this.getUserInfoByWorkgroupId(workgroupId);
+
+                if (userInfo != null) {
+                    userIds = userInfo.userIds;
+                }
+            }
+
+            return userIds;
+        }
+    }, {
         key: 'getUserNameByWorkgroupId',
         value: function getUserNameByWorkgroupId(workgroupId) {
             var userName = null;
@@ -679,8 +694,18 @@ var ConfigService = function () {
                         }
                     }
                 } else {
-                    // current user is not allowed to view student names, so return string with workgroupId
-                    usernames = this.$translate('teamId', { id: workgroupId });
+                    // current user is not allowed to view student names, so return string with workgroupId and student ids
+                    usernames = this.$translate('teamId', { id: workgroupId }) + ' (';
+
+                    var userIds = this.getUserIdsByWorkgroupId(workgroupId);
+                    for (var _i = 0; _i < userIds.length; _i++) {
+                        var id = userIds[_i];
+                        if (_i !== 0) {
+                            usernames += ', ';
+                        }
+                        usernames += this.$translate('studentId', { id: id });
+                    }
+                    usernames += ')';
                 }
             }
 

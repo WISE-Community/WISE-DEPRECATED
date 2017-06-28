@@ -10,6 +10,7 @@ import NotificationsMenu from './notificationsMenu/notificationsMenu';
 import PauseScreensMenu from './pauseScreensMenu/pauseScreensMenu'
 import PeriodSelect from './periodSelect/periodSelect';
 import SideMenu from './sideMenu/sideMenu';
+import StatusIcon from './statusIcon/statusIcon';
 import Toolbar from './toolbar/toolbar';
 import TopBar from './topBar/topBar';
 import WorkgroupComponentRevisions from './workgroupComponentRevisions/workgroupComponentRevisions';
@@ -27,6 +28,7 @@ Shared.component('nodeIcon', NodeIcon);
 Shared.component('pauseScreensMenu', PauseScreensMenu);
 Shared.component('periodSelect', PeriodSelect);
 Shared.component('sideMenu', SideMenu);
+Shared.component('statusIcon', StatusIcon);
 Shared.component('toolbar', Toolbar);
 Shared.component('topBar', TopBar);
 Shared.component('workgroupComponentRevisions', WorkgroupComponentRevisions);

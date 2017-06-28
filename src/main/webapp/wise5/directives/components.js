@@ -56,12 +56,15 @@ var _wiselink = require('./wiselink/wiselink');
 
 var _wiselink2 = _interopRequireDefault(_wiselink);
 
+var _sticky = require('./sticky/sticky');
+
+var _sticky2 = _interopRequireDefault(_sticky);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var Components = angular.module('components', [/*'notebook'*/]);
 //import Notebook from './notebook/notebook';
 //import NotebookItemAnnotations from './notebookItemAnnotations/notebookItemAnnotations';
-
+var Components = angular.module('components', [/*'notebook'*/]);
 
 Components.component('annotation', _annotation2.default);
 Components.component('compile', _compile2.default);
@@ -77,6 +80,7 @@ Components.component('listenForDeleteKeypress', _listenForDeleteKeypress2.defaul
 Components.component('notebookItemGrading', _notebookItemGrading2.default);
 Components.component('possibleScore', _possibleScore2.default);
 Components.component('wiselink', _wiselink2.default);
+Components.directive('sticky', _sticky2.default);
 
 exports.default = Components;
 //# sourceMappingURL=components.js.map

@@ -4,6 +4,7 @@ class ClassroomMonitorController {
 
     constructor($filter,
                 $mdDialog,
+                $mdToast,
                 $rootScope,
                 $scope,
                 $state,
@@ -17,6 +18,7 @@ class ClassroomMonitorController {
                 TeacherWebSocketService) {
 
         this.$filter = $filter;
+        this.$mdToast = $mdToast;
         this.$rootScope = $rootScope;
         this.$scope = $scope;
         this.$state = $state;
@@ -94,6 +96,15 @@ class ClassroomMonitorController {
             }
         };
 
+        // build server disconnect display
+        this.connectionLostDisplay = this.$mdToast.build({
+            template: `<md-toast>
+                        <span>{{ 'ERROR_CHECK_YOUR_INTERNET_CONNECTION' | translate }}</span>
+                      </md-toast>`,
+            hideDelay: 0
+        });
+        this.connectionLostShown = false;
+
         // alert user when inactive for a long time
         this.$scope.$on('showSessionWarning', () => {
             // Appending dialog to document.body
@@ -134,6 +145,16 @@ class ClassroomMonitorController {
             this.menuOpen = false;
 
             this.processUI();
+        });
+
+        // alert user when server loses connection
+        this.$scope.$on('serverDisconnected', () => {
+            this.handleServerDisconnect();
+        });
+
+        // remove alert when server regains connection
+        this.$scope.$on('serverConnected', () => {
+            this.handleServerReconnect();
         });
 
         // TODO: make dynamic, set somewhere like in config?
@@ -185,11 +206,26 @@ class ClassroomMonitorController {
          */
         this.SessionService.mouseMoved();
     }
+
+    // show server error alert when connection is lost
+    handleServerDisconnect() {
+        if (!this.connectionLostShown) {
+          this.$mdToast.show(this.connectionLostDisplay);
+          this.connectionLostShown = true;
+        }
+    }
+
+    // hide server error alert when connection is restored
+    handleServerReconnect() {
+        this.$mdToast.hide(this.connectionLostDisplay);
+        this.connectionLostShown = false;
+    }
 }
 
 ClassroomMonitorController.$inject = [
     '$filter',
     '$mdDialog',
+    '$mdToast',
     '$rootScope',
     '$scope',
     '$state',

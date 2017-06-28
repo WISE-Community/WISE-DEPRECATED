@@ -146,6 +146,18 @@ md-list-item {
     }
 }
 
+md-progress-linear {
+    height: 14px;
+
+    .md-container {
+        height: 14px;
+
+        .md-bar {
+            height: 14px;
+        }
+    }
+}
+
 md-input-container {
     &.md-no-float {
         margin-top: 0;

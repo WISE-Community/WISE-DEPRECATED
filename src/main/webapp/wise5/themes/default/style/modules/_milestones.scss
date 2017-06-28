@@ -1,0 +1,56 @@
+.milestone {
+    min-width: 196px;
+    width: 196px;
+    height: 242px;
+    background-color: #ffffff;
+    padding: 0;
+
+    &.md-button {
+        text-transform: none;
+    }
+}
+
+.milestone__progress {
+    background-color: color('gray-lighter');
+    border-radius: 50%;
+    position: relative;
+    margin-bottom: 12px;
+}
+
+.milestone__progress__percent {
+    position: absolute;
+    top: 8px;
+    bottom: 8px;
+    left: 8px;
+    right: 8px;
+    border-radius: 50%;
+    background-color: #ffffff;
+    color: color('primary');
+    font-size: rem(3.4);
+    font-weight: 500;
+}
+
+.milestone__title {
+    font-weight: 700;
+    font-size: $body-font-size-base;
+    margin-bottom: 12px;
+}
+
+.milestone-details {
+    background-color: #ffffff;
+    margin-bottom: 8px;
+}
+
+.milestone--add {
+    
+    &.md-button {
+        text-transform: uppercase;
+    }
+}
+
+.milestone--add__icon {
+    height: 96px;
+    width: 96px;
+    background-color: color('gray-lighter');
+    border-radius: 50%;
+}

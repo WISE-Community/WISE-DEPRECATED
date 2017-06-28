@@ -3,6 +3,8 @@
 class MilestonesController {
 
     constructor($injector,
+                $filter,
+                $mdDialog,
                 $rootScope,
                 $scope,
                 $state,
@@ -16,6 +18,8 @@ class MilestonesController {
                 moment) {
 
         this.$injector = $injector;
+        this.$filter = $filter;
+        this.$mdDialog = $mdDialog;
         this.$rootScope = $rootScope;
         this.$scope = $scope;
         this.$state = $state;
@@ -27,6 +31,8 @@ class MilestonesController {
         this.TeacherWebSocketService = TeacherWebSocketService;
         this.UtilService = UtilService;
         this.moment = moment;
+
+        this.$translate = this.$filter('translate');
 
         /*
          * Arrays used to temporarily store milestone display values. We add
@@ -44,6 +50,9 @@ class MilestonesController {
         this.percentageCompletedStorage = [];
         this.showStudentsStorage = [];
         this.timeDiffStorage = [];
+
+        this.periodId = this.TeacherDataService.getCurrentPeriod().periodId;
+        this.setWorkgroupsInCurrentPeriod();
 
         // load the achievements and perform additional calculations
         this.loadAchievements();
@@ -67,6 +76,19 @@ class MilestonesController {
                 }
             }
         });
+
+        /**
+         * Listen for current period changed event
+         */
+        this.$scope.$on('currentPeriodChanged', (event, args) => {
+            this.periodId = args.currentPeriod.periodId;
+
+            // update the completion status for all the project achievements
+            for (let i = 0; i < this.achievements.length; i++) {
+                this.setWorkgroupsInCurrentPeriod();
+                this.updateMilestoneCompletion(this.achievements[i].id);
+            }
+        });
     }
 
     /**
@@ -76,12 +98,6 @@ class MilestonesController {
 
         // get the project achievements object
         var achievementsObject = this.ProjectService.getAchievements();
-
-        // get the workgroup ids
-        var workgroupIds = this.ConfigService.getClassmateWorkgroupIds();
-
-        // the number of students in the run
-        this.numberOfStudentsInRun = workgroupIds.length;
 
         if (achievementsObject != null) {
 
@@ -99,27 +115,6 @@ class MilestonesController {
                         var projectAchievement = this.achievements[a];
 
                         if (projectAchievement != null) {
-
-                            // calculate the target date as a Date() object
-                            projectAchievement.params.targetDateTemp = new Date(projectAchievement.params.targetDate);
-
-                            /*
-                             * calculate the time difference between now and the
-                             * target date
-                             */
-                            var timeDiff = this.calculateTimeDiff(projectAchievement.params.targetDate);
-
-                            projectAchievement.timeDiff = timeDiff;
-
-                            if (projectAchievement.edit === null || projectAchievement.edit === undefined) {
-                                // initialize the edit field
-                                projectAchievement.edit = false;
-                            }
-
-                            if (projectAchievement.calendarIsOpen === null || projectAchievement.calendarIsOpen === undefined) {
-                                // initialize the calendarIsOpen field
-                                projectAchievement.calendarIsOpen = false;
-                            }
 
                             // update the student completion information for this milestone
                             this.updateMilestoneCompletion(projectAchievement.id);
@@ -150,44 +145,56 @@ class MilestonesController {
     }
 
     /**
-     * Calculate the time difference between now and the date
-     * @param date a date in milliseconds since the epoch
-     * @return a string that contains a human readable time difference
-     * example "2 days ago", or "in 3 days"
+     * Check if the given milestone date is before the current day (and
+     * milestone completion is less than 100%)
+     * @param date a date string or object
+     * @param percentageCompleted Number percent completed
+     * @return Boolean whether given date is before today
      */
-    calculateTimeDiff(date) {
+    isBeforeDay(date, percentageCompleted) {
+        let result = false;
 
-        // get the time difference from now
-        var timeDiff = this.moment(date).fromNow();
-
-        /*
-         * there seems to be a bug in moment where if the date is in the future
-         * the timeDiff will be something like "in 3 days ago" when it should
-         * only be "in 3 days". if the timeDiff string starts with "in", we will
-         * remove the " ago" from the end of the string
-         */
-        if (timeDiff.indexOf("in") != -1) {
-            timeDiff = timeDiff.replace(" ago", "");
+        if (date && percentageCompleted < 100) {
+            result = this.moment(date).isBefore(this.moment(), 'day');
         }
 
-        return timeDiff
+        return result;
+    }
+
+    /**
+     * Check if the given milestone date is the same as the current day (and
+     * milestone completion is less than 100%)
+     * @param date a date string or object
+     * @param percentageCompleted Number percent completed
+     * @return Boolean whether given date is before today
+     */
+    isSameDay(date, percentageCompleted) {
+        let result = false;
+
+        if (date && percentageCompleted < 100) {
+            result = this.moment(date).isSame(this.moment(), 'day');
+        }
+
+        return result;
     }
 
     /**
      * Create a new milestone
+     * @return a milestone object
      */
     createMilestone() {
+        let milestone = null;
 
         // get the project achievements
-        var projectAchievements = this.ProjectService.getAchievementItems();
+        let projectAchievements = this.ProjectService.getAchievementItems();
 
         if (projectAchievements != null) {
 
             // get the time of tomorrow at 3pm
-            var tomorrow = this.moment().add('days', 1).hours(15).minutes(0).seconds(0);
+            let tomorrow = this.moment().add('days', 1).hours(23).minutes(11).seconds(59);
 
             // create a new milestone object
-            var newMilestone = {
+            milestone = {
                 id: this.AchievementService.getAvailableAchievementId(),
                 name: '',
                 description: '',
@@ -199,180 +206,88 @@ class MilestonesController {
                 icon: {
                     image: ""
                 },
-                isVisible: true,
-                edit: true
+                items: this.UtilService.makeCopyOfJSONObject(this.ProjectService.idToOrder),
+                isVisible: true
             };
-
-            // add the milestone object to the array of achievements
-            projectAchievements.push(newMilestone);
-
-            // reload the achievements
-            this.loadAchievements();
-
-            // save the project to the server
-            this.saveProject();
-        }
-    }
-
-    /**
-     * The edit button for a milestone was clicked
-     * @param milestone the milestone to edit
-     */
-    editMilestoneClicked(milestone) {
-        milestone.edit = true;
-    }
-
-    /**
-     * The checkbox for an activity or step was clicked
-     * @param milestone the milestone that is being edited
-     * @param item the activity or step that was clicked
-     */
-    itemClicked(milestone, item) {
-
-        if (milestone != null &&
-            milestone.params != null &&
-            milestone.params.nodeIds != null) {
-
-            // get the node ids that are currently required for the milestone
-            var nodeIds = milestone.params.nodeIds;
-
-            // get the node id of the item that was clicked
-            var nodeId = item.$key;
-
-            if (item.checked) {
-                if (nodeIds.indexOf(nodeId) == -1) {
-                    // add the node id
-                    milestone.params.nodeIds.push(nodeId);
-                }
-            } else {
-                // remove the node id
-
-                // loop through all the node ids and remove the node id
-                for (var n = nodeIds.length - 1; n >= 0; n--) {
-                    if (nodeId == nodeIds[n]) {
-                        nodeIds.splice(n, 1);
-                    }
-                }
-            }
         }
 
-        // save the project to the server
-        this.saveProject();
-    }
-
-    /**
-     * Show the steps for an activity
-     * @param groupId the node id for the activity
-     * @param milestone the milestone object that is being edited
-     */
-    showStepsClicked(groupId, milestone) {
-
-        if (groupId != null && milestone != null) {
-
-            /*
-             * set the showSteps field to true so that we will now see the
-             * "Hide Steps" button
-             */
-            milestone.items[groupId].showSteps = true;
-
-            // get all the child ids of the group
-            var childIds = this.ProjectService.getChildNodeIdsById(groupId);
-
-            // loop through all the child ids
-            for (var c = 0; c < childIds.length; c++) {
-                var childId = childIds[c];
-
-                if (milestone.items[childId] != null) {
-                    // show the step
-                    milestone.items[childId].show = true;
-                }
-            }
-        }
-    }
-
-    /**
-     * Hide the steps for an activity
-     * @param groupId the node id for the activity
-     * @param milestone the milestone object that is being edited
-     */
-    hideStepsClicked(groupId, milestone) {
-
-        if (groupId != null && milestone != null) {
-
-            /*
-             * set the showSteps field to false so that we will now see the
-             * "Show Steps" button
-             */
-            milestone.items[groupId].showSteps = false;
-
-            // get all the child ids of the group
-            var childIds = this.ProjectService.getChildNodeIdsById(groupId);
-
-            // loop through all the child ids
-            for (var c = 0; c < childIds.length; c++) {
-                var childId = childIds[c];
-
-                if (milestone.items[childId] != null) {
-                    // hide the step
-                    milestone.items[childId].show = false;
-                }
-            }
-        }
+        return milestone;
     }
 
     /**
      * Delete a milestone
-     * @param index the index of the milestone to delete
      * @param milestone the milestone to delete
      */
-    deleteMilestone(index, milestone) {
+    deleteMilestone(milestone, $event) {
 
-        var name = "";
+        if (milestone) {
+            let title = milestone.name;
+            let label = this.$translate('DELETE_MILESTONE');
+            let msg = this.$translate('DELETE_MILESTONE_CONFIRM', { name: milestone.name });
+            let yes = this.$translate('YES');
+            let cancel = this.$translate('CANCEL')
 
-        if (milestone != null) {
-            // get the name of the milestone
-            name = milestone.name;
-        }
+            let confirm = this.$mdDialog.confirm()
+                .title(title)
+                .textContent(msg)
+                .ariaLabel(label)
+                .targetEvent($event)
+                .ok(yes)
+                .cancel(cancel);
 
-        // ask to make sure the author wants to delete the milestone
-        var answer = confirm("Are you sure you want to delete this milestone?\n\n" + name);
+            this.$mdDialog.show(confirm).then(() => {
+                let achievements = this.achievements;
+                let index = -1;
 
-        if (answer) {
-            // remove the milestone
-            this.achievements.splice(index, 1);
+                // find the matching achievement index
+                for (let i = 0; i < achievements.length; i++) {
+                    if (achievements[i].id === milestone.id) {
+                        index = i;
+                        break;
+                    }
+                }
 
-            // save the project to the server
-            this.saveProject();
+                if (index > -1) {
+                    // remove the milestone
+                    this.achievements.splice(index, 1);
+
+                    // save the project to the server
+                    this.saveProject();
+                }
+            }, () => {
+            });
         }
     }
 
-    /**
-     * The save button for a milestone was clicked
-     * @param milestone the milestone to save
-     */
-    saveMilestoneClicked(milestone) {
+    saveMilestone(milestone) {
+        let index = -1;
 
-        // do not show the edit view for the milestone anymore
-        milestone.edit = false;
+        for (let i = 0; i < this.achievements.length; i++) {
+            let achievementId = this.achievements[i].id;
 
-        // save the project to the server
+            if (milestone.id === achievementId) {
+                index = i;
+                this.achievements[i] = milestone;
+                break;
+            }
+        }
+
+        if (index < 0) {
+            // get the project achievements
+            let projectAchievements = this.ProjectService.getAchievementItems();
+
+            if (projectAchievements && milestone) {
+
+                // add the milestone object to the array of achievements
+                projectAchievements.push(milestone);
+            }
+        }
+
+        // save the project
         this.saveProject();
-    }
 
-    /**
-     * The milestone due date changed
-     * @param milestone the milestone that has changed
-     */
-    milestoneDateChanged(milestone) {
-
-        // get the due date
-        milestone.params.targetDate = milestone.params.targetDateTemp.getTime();
-
-        // calculate the time difference from now to the due date
-        milestone.timeDiff = this.calculateTimeDiff(milestone.params.targetDate);
-
-        // save the project to the server
-        this.saveProject();
+        // reload the achievements
+        this.loadAchievements();
     }
 
     /**
@@ -384,19 +299,15 @@ class MilestonesController {
 
         /*
          * these array will store the temporary fields. the index of the arrays
-         * corresponds to the index of the achievement. for example the calendarIsOpen
+         * corresponds to the index of the achievement. for example the percentageCompletedStorage
          * value for the first achievement will be stored in
-         * this.calendarIsOpenTemporaryStorage[0]. the calendarIsOpen value for the second
-         * achievement will be stored in this.calendarIsOpenTemporaryStorage[1].
+         * this.percentageCompletedStorage[0]. the percentageCompletedStorage value for the second
+         * achievement will be stored in this.percentageCompletedStorage[1].
          */
-        this.calendarIsOpenTemporaryStorage = [];
         this.itemsTemporaryStorage = [];
         this.workgroupsStorage = [];
-        this.editStorage = [];
         this.numberOfStudentsCompletedStorage = [];
         this.percentageCompletedStorage = [];
-        this.showStudentsStorage = [];
-        this.timeDiffStorage = [];
 
         // loop through all the achievements
         for (var a = 0; a < this.achievements.length; a++) {
@@ -405,25 +316,15 @@ class MilestonesController {
             var achievement = this.achievements[a];
 
             // save the field values in the temprary storage arrays
-            this.calendarIsOpenTemporaryStorage.push(achievement.calendarIsOpen);
-            this.itemsTemporaryStorage.push(achievement.items);
             this.workgroupsStorage.push(achievement.workgroups);
-            this.editStorage.push(achievement.edit);
             this.numberOfStudentsCompletedStorage.push(achievement.numberOfStudentsCompleted);
             this.percentageCompletedStorage.push(achievement.percentageCompleted);
-            this.showStudentsStorage.push(achievement.showStudents);
-            this.timeDiffStorage.push(achievement.timeDiff);
 
             // delete the field from the achievement
-            delete achievement.params.targetDateTemp;
-            delete achievement.calendarIsOpen;
             delete achievement.items;
             delete achievement.workgroups;
-            delete achievement.edit;
             delete achievement.numberOfStudentsCompleted;
             delete achievement.percentageCompleted;
-            delete achievement.showStudents;
-            delete achievement.timeDiff;
         }
     }
 
@@ -438,49 +339,18 @@ class MilestonesController {
             // get an achievement
             var achievement = this.achievements[a];
 
-            // recalculate the target date object
-            achievement.params.targetDateTemp = new Date(achievement.params.targetDate);
-
             // set the fields back into the achievement object
-            achievement.calendarIsOpen = this.calendarIsOpenTemporaryStorage[a];
             achievement.items = this.itemsTemporaryStorage[a];
             achievement.workgroups = this.workgroupsStorage[a];
-            achievement.edit = this.editStorage[a];
             achievement.numberOfStudentsCompleted = this.numberOfStudentsCompletedStorage[a];
             achievement.percentageCompleted = this.percentageCompletedStorage[a];
-            achievement.showStudents = this.showStudentsStorage[a];
-            achievement.timeDiff = this.timeDiffStorage[a];
         }
 
         // clear the temporary storage arrays
-        this.calendarIsOpenTemporaryStorage = [];
         this.itemsTemporaryStorage = [];
         this.workgroupsStorage = [];
-        this.editStorage = [];
         this.numberOfStudentsCompletedStorage = [];
         this.percentageCompletedStorage = [];
-        this.showStudentsStorage = [];
-        this.timeDiffStorage = [];
-    }
-
-    /**
-     * The open calendar button was clicked
-     * @param milestone the milestone that we will edit the due date for
-     */
-    openCalendar(milestone) {
-
-        // open the calendar for the milestone
-        milestone.calendarIsOpen = true;
-    };
-
-    /**
-     * The close calendar button was clicked
-     * @param milestone the milestone that we were editing
-     */
-    closeCalendar(milestone) {
-
-        // close the calendar for the milestone
-        milestone.calendarIsOpen = false;
     }
 
     /**
@@ -499,33 +369,6 @@ class MilestonesController {
     }
 
     /**
-     * Check if a node id is for a group
-     * @param nodeId
-     * @returns whether the node is a group node
-     */
-    isGroupNode(nodeId) {
-        return this.ProjectService.isGroupNode(nodeId);
-    };
-
-    /**
-     * Get the node position
-     * @param nodeId the node id
-     * @returns the node position
-     */
-    getNodePositionById(nodeId) {
-        return this.ProjectService.getNodePositionById(nodeId);
-    };
-
-    /**
-     * Get the node title for a node
-     * @param nodeId the node id
-     * @returns the node title
-     */
-    getNodeTitleByNodeId(nodeId) {
-        return this.ProjectService.getNodeTitleByNodeId(nodeId);
-    };
-
-    /**
      * Get the user names for a workgroup id
      * @param workgroupId the workgroup id
      * @return the user names in the workgroup
@@ -534,20 +377,23 @@ class MilestonesController {
         return this.ConfigService.getDisplayUserNamesByWorkgroupId(workgroupId);
     }
 
-    /**
-     * Show which students have completed the milestone
-     * @param milestone the milestone
-     */
-    showStudents(milestone) {
-        milestone.showStudents = true;
-    }
+    setWorkgroupsInCurrentPeriod() {
+        // get the workgroup ids
+        let workgroupIdsInRun = this.ConfigService.getClassmateWorkgroupIds();
+        this.workgroupIds = [];
 
-    /**
-     * Hide which students have completed the milestone
-     * @parma milestone the milestone
-     */
-    hideStudents(milestone) {
-        milestone.showStudents = false;
+        // filter out workgroups not in the current period
+        for (let i = 0; i < workgroupIdsInRun.length; i++) {
+            let currentId = workgroupIdsInRun[i];
+            let currentPeriodId = this.ConfigService.getPeriodIdByWorkgroupId(currentId);
+
+            if (this.periodId === -1 || currentPeriodId === this.periodId) {
+                this.workgroupIds.push(currentId);
+            }
+        }
+
+        // the number of students in the run
+        this.numberOfStudentsInRun = this.workgroupIds.length;
     }
 
     /**
@@ -555,7 +401,6 @@ class MilestonesController {
      * @param achievementId the achievement id to update
      */
     updateMilestoneCompletion(achievementId) {
-
         if (achievementId != null) {
 
             // loop through all the project achievements
@@ -564,9 +409,6 @@ class MilestonesController {
 
                 if (achievementId == projectAchievement.id) {
                     // we have found the milestone we want to update
-
-                    // get the workgroup ids
-                    var workgroupIds = this.ConfigService.getClassmateWorkgroupIds();
 
                     // get the student achievements
                     var achievementIdToAchievements = this.AchievementService.getAchievementIdToAchievementsMappings();
@@ -586,14 +428,19 @@ class MilestonesController {
                         var studentAchievement = studentAchievementsForAchievementId[s];
 
                         if (studentAchievement != null) {
-                            /*
-                             * add the workgroup id to the array of workgroup ids that
-                             * have completed the achievement
-                             */
-                            workgroupIdsCompleted.push(studentAchievement.workgroupId);
+                            let currentWorkgroupId = studentAchievement.workgroupId;
 
-                            // add the achievement time to the achievement times array
-                            achievementTimes.push(studentAchievement.achievementTime);
+                            // check if workgroup is in current period
+                            if (this.workgroupIds.indexOf(currentWorkgroupId) > -1) {
+                                /*
+                                 * add the workgroup id to the array of workgroup ids that
+                                 * have completed the achievement
+                                 */
+                                workgroupIdsCompleted.push(currentWorkgroupId);
+
+                                // add the achievement time to the achievement times array
+                                achievementTimes.push(studentAchievement.achievementTime);
+                            }
                         }
                     }
 
@@ -602,9 +449,8 @@ class MilestonesController {
                      * workgroup ids that have not completed the
                      * achievement
                      */
-                    for (var w = 0; w < workgroupIds.length; w++) {
-                        var workgroupId = workgroupIds[w];
-
+                     for (var w = 0; w < this.workgroupIds.length; w++) {
+                        var workgroupId = this.workgroupIds[w];
                         if (workgroupIdsCompleted.indexOf(workgroupId) == -1) {
                             // this workgroup has not completed the achievement
 
@@ -632,6 +478,7 @@ class MilestonesController {
                          */
                         var workgroupObject = {
                             workgroupId: workgroupId,
+                            displayNames: this.getDisplayUserNamesByWorkgroupId(workgroupId),
                             achievementTime: achievementTime,
                             completed: true
                         };
@@ -652,6 +499,7 @@ class MilestonesController {
                          */
                         var workgroupObject = {
                             workgroupId: workgroupId,
+                            displayNames: this.getDisplayUserNamesByWorkgroupId(workgroupId),
                             achievementTime: null,
                             completed: false
                         };
@@ -663,7 +511,7 @@ class MilestonesController {
                      * calculate the number of workgroups that completed
                      * the achievement
                      */
-                    projectAchievement.numberOfStudentsCompleted = studentAchievementsForAchievementId.length;
+                    projectAchievement.numberOfStudentsCompleted = workgroupIdsCompleted.length;
 
                     /*
                      * calculate the percentage of workgroups that have
@@ -674,10 +522,190 @@ class MilestonesController {
             }
         }
     }
+
+    /**
+     * Open a dialog with the milestone details (list with workgroups statuses
+     * for the given milestone)
+     * @param milestone the milestone object to show
+     * @param $event the event that triggered the function call
+     */
+    showMilestoneDetails(milestone, $event) {
+        let title = this.$translate('MILESTONE_DETAILS_TITLE', { name: milestone.name });
+        let template =
+            `<md-dialog class="dialog--wide">
+                <md-toolbar>
+                    <div class="md-toolbar-tools">
+                        <h2>${ title }</h2>
+                    </div>
+                </md-toolbar>
+                <md-dialog-content class="gray-lighter-bg md-dialog-content">
+                    <milestone-details milestone="milestone" on-show-workgroup="onShowWorkgroup(value)"></milestone-details>
+                </md-dialog-content>
+                <md-dialog-actions layout="row" layout-align="start center">
+                    <md-button class="warn"
+                               ng-click="delete()"
+                               aria-label="{{ 'DELETE' | translate }}">
+                        {{ 'DELETE' | translate }}
+                    </md-button>
+                    <span flex></span>
+                    <md-button class="md-primary"
+                               ng-click="edit()"
+                               aria-label="{{ 'EDIT' | translate }}">
+                        {{ 'EDIT' | translate }}
+                    </md-button>
+                    <md-button class="md-primary"
+                               ng-click="close()"
+                               aria-label="{{ 'CLOSE' | translate }}">
+                            {{ 'CLOSE' | translate }}
+                        </md-button>
+                    </md-dialog-actions>
+            </md-dialog>`;
+
+        // display the milestone details in a dialog
+        this.$mdDialog.show({
+            parent: angular.element(document.body),
+            template: template,
+            ariaLabel: title,
+            fullscreen: true,
+            targetEvent: $event,
+            clickOutsideToClose: true,
+            escapeToClose: true,
+            locals: {
+                $event, $event,
+                milestone: milestone
+            },
+            controller: ['$scope', '$state', '$mdDialog', 'milestone', '$event', 'TeacherDataService',
+                function DialogController($scope, $state, $mdDialog, milestone, $event, TeacherDataService) {
+                    $scope.milestone = milestone;
+                    $scope.event = $event;
+
+                    // close the popup
+                    $scope.close = function() {
+                        $mdDialog.hide();
+                    }
+
+                    // edit the milestone
+                    $scope.edit = function() {
+                        $mdDialog.hide({ milestone: $scope.milestone, action: 'edit', $event: $event });
+                    }
+
+                    // delete the milestone
+                    $scope.delete = function() {
+                        $mdDialog.hide({ milestone: $scope.milestone, action: 'delete' });
+                    }
+
+                    $scope.onShowWorkgroup = function(workgroup) {
+                        $mdDialog.hide();
+                        TeacherDataService.setCurrentWorkgroup(workgroup);
+                        $state.go('root.nodeProgress');
+                    }
+                }
+            ]
+        }).then((data) => {
+            if (data && data.action && data.milestone) {
+                if (data.action === 'edit') {
+                    let milestone = angular.copy(data.milestone);
+                    this.editMilestone(milestone, data.$event);
+                } else if (data.action === 'delete') {
+                    this.deleteMilestone(data.milestone);
+                }
+            }
+        }, () => {});;
+    }
+
+    /**
+     * Open a dialog to edit milestone details (or create a new one)
+     * @param milestone the milestone object to show
+     * @param $event the event that triggered the function call
+     */
+    editMilestone(milestone, $event) {
+        let editMode = milestone ? true : false;
+        let title = editMode ? this.$translate('EDIT_MILESTONE') : this.$translate('ADD_MILESTONE');
+
+        if (!editMode) {
+            milestone = this.createMilestone();
+        }
+
+        let template =
+            `<md-dialog class="dialog--wide">
+                <md-toolbar>
+                    <div class="md-toolbar-tools">
+                        <h2>${ title }</h2>
+                    </div>
+                </md-toolbar>
+                <md-dialog-content class="gray-lighter-bg md-dialog-content">
+                    <milestone-edit milestone="milestone" on-change="onChange(milestone, valid)"></milestone-edit>
+                </md-dialog-content>
+                <md-dialog-actions layout="row" layout-align="end center">
+                    <md-button ng-click="close()"
+                               aria-label="{{ 'CANCEL' | translate }}">
+                        {{ 'CANCEL' | translate }}
+                    </md-button>
+                    <md-button class="md-primary"
+                               ng-click="save()"
+                               aria-label="{{ 'SAVE' | translate }}">
+                            {{ 'SAVE' | translate }}
+                        </md-button>
+                    </md-dialog-actions>
+            </md-dialog>`;
+
+        // display the milestone edit form in a dialog
+        this.$mdDialog.show({
+            parent: angular.element(document.body),
+            template: template,
+            ariaLabel: title,
+            fullscreen: true,
+            targetEvent: $event,
+            clickOutsideToClose: true,
+            escapeToClose: true,
+            locals: {
+                editMode: editMode,
+                $event, $event,
+                milestone: milestone
+            },
+            controller: ['$scope', '$mdDialog', '$filter', 'milestone', 'editMode', '$event',
+                function DialogController($scope, $mdDialog, $filter, milestone, editMode, $event) {
+                    $scope.editMode = editMode;
+                    $scope.milestone = milestone;
+                    $scope.$event = $event;
+                    $scope.valid = editMode;
+
+                    $scope.$translate = $filter('translate');
+
+                    // close the popup
+                    $scope.close = function() {
+                        $mdDialog.hide({ milestone: $scope.milestone, $event: $scope.$event });
+                    }
+
+                    // save the milestone
+                    $scope.save = function() {
+                        if ($scope.valid) {
+                            $mdDialog.hide({ milestone: $scope.milestone, save: true, $event: $scope.$event });
+                        } else {
+                            alert($scope.$translate('MILESTONE_EDIT_INVALID_ALERT'));
+                        }
+                    }
+
+                    $scope.onChange = function(milestone, valid) {
+                        $scope.milestone = milestone;
+                        $scope.valid = valid;
+                    }
+                }
+            ]
+        }).then((data) => {
+            if (data) {
+                if (data.milestone && data.save) {
+                    this.saveMilestone(data.milestone);
+                }
+            }
+        }, () => {});
+    }
 }
 
 MilestonesController.$inject = [
     '$injector',
+    '$filter',
+    '$mdDialog',
     '$rootScope',
     '$scope',
     '$state',

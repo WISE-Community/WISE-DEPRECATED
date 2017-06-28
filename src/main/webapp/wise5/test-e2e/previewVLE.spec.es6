@@ -1,20 +1,20 @@
-// E2E test for VLE running preview mode
+// E2E test for VLE running in preview mode
 describe('WISE5 Student VLE Preview', () => {
 
-    var hasClass = (element, cls) => {
+    let hasClass = (element, cls) => {
         return element.getAttribute('class').then((classes) => {
             return classes.split(' ').indexOf(cls) !== -1;
         });
     };
 
     browser.get('http://localhost:8080/wise/project/demo#/vle/node1');
-    var previousButton = element(by.xpath('//button[@aria-label="Previous Item"]'));
-    var nextButton = element(by.xpath('//button[@aria-label="Next Item"]'));
-    var closeButton = element(by.xpath('//button[@aria-label="Project Plan"]'));
-    var accountButton = element(by.xpath('//button[@aria-label="Open account menu"]'));
-    var accountMenu = element(by.cssContainingText('.md-open-menu-container','Preview Team'));
-    var notificationButton = element(by.xpath('//button[@aria-label="View notifications"]'));
-    var notificationMenu = element(by.cssContainingText('.md-open-menu-container','Alerts'));
+    let previousButton = element(by.xpath('//button[@aria-label="Previous Item"]'));
+    let nextButton = element(by.xpath('//button[@aria-label="Next Item"]'));
+    let closeButton = element(by.xpath('//button[@aria-label="Project Plan"]'));
+    let accountButton = element(by.xpath('//button[@aria-label="Open account menu"]'));
+    let accountMenu = element(by.cssContainingText('.md-open-menu-container','Preview Team'));
+    let notificationButton = element(by.xpath('//button[@aria-label="View notifications"]'));
+    let notificationMenu = element(by.cssContainingText('.md-open-menu-container','Alerts'));
 
     it('should load the vle and go to node 1', () => {
         let nodeDropDownMenu = element(by.model("stepToolsCtrl.toNodeId"));

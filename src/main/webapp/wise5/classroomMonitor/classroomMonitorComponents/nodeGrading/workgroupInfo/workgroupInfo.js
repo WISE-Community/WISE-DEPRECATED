@@ -15,6 +15,8 @@ var WorkgroupInfoController = function WorkgroupInfoController(ConfigService) {
 
     this.$onInit = function () {
         _this.avatarColor = _this.ConfigService.getAvatarColorForWorkgroupId(_this.workgroupId);
+        _this.alertIconClass = _this.hasNewAlert ? 'warn' : 'text-disabled';
+        _this.alertIconName = 'error';
     };
 };
 
@@ -28,7 +30,7 @@ var WorkgroupInfo = {
         workgroupId: '<',
         usernames: '@'
     },
-    template: '<div layout="row" layout-align="start center">\n            <div class="md-avatar" hide-xs>\n                <md-icon class="md-36" style="color: {{$ctrl.avatarColor}};"> account_circle </md-icon>\n            </div>\n            <div class="heavy">\n                {{$ctrl.usernames}}\n                <alert-status-icon message="{{$ctrl.alertMsg}}" has-alert="$ctrl.hasAlert" has-new-alert="$ctrl.hasNewAlert"></alert-status-icon>\n            </div>\n        </div>',
+    template: '<div layout="row" layout-align="start center">\n            <div class="md-avatar" hide-xs>\n                <md-icon class="md-36" style="color: {{$ctrl.avatarColor}};"> account_circle </md-icon>\n            </div>\n            <div class="heavy">\n                {{$ctrl.usernames}}\n                <status-icon ng-if="$ctrl.hasAlert"\n                             icon-label="$ctrl.alertMsg"\n                             tooltip="$ctrl.alertMsg"\n                             icon-name="$ctrl.alertIconName"\n                             icon-class="$ctrl.alertIconClass"></status-icon>\n                <span ng-if="$ctrl.hasNewWork" class="badge badge--info animate-fade">New</span>\n            </div>\n        </div>',
     controller: WorkgroupInfoController
 };
 

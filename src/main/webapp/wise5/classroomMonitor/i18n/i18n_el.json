@@ -35,7 +35,7 @@
     "dashboardViewLabel": "Προβολή Πίνακα",
     "dismiss": "Απόρριψη",
     "dismissNotificationDismissCode": "Κώδικας απόρριψης",
-    "dismissNotificationsMessage": "Θέλετε σίγουρα να καθαρίσετε όλες τις προειδοποιήσεις;",
+    "dismissNotificationsMessage": "Θέλετε σίγουρα να καθαρίσετε όλες τις ειδοποιήσεις;",
     "dismissNotificationDismissCodeMessage": "Προς τον εκπαιδευτικό: Δώστε κωδικό για απόρριψη αυτής της προειδοποίησης:",
     "dismissNotificationInvalidDismissCode": "Λανθασμένος κωδικός απόρριψης. Παρακαλώ προσπαθήστε ξανά.",
     "downloadEvents": "Συμβάντα Φόρτωσης",
@@ -152,5 +152,16 @@
     "selectStep": "Επιλογή ενός Βήματος",
     "showStudents": "Προβολή Μαθητών",
     "stepNoCaptureWork": "Αυτό το βήμα δεν απαιτεί δουλειά από τους μαθητές",
-    "workgroups": "Ομάδες Εργασίας"
+    "workgroups": "Ομάδες Εργασίας",
+    "assessmentItemsToShow": "Αντικείμενα αξιολόγησης για εμφάνιση",
+    "default": "Προεπιλογή",
+    "everything": "Όλα",
+    "infoTipsLabel": "Πληροφορίες +Συμβουλές ({{ numberOfTips }})",
+    "includeBranchPathTaken": "Συμπερίληψη κλάδου μονοπατιού που επιλέχθηκε",
+    "includeBranchPathTakenStepTitle": "Συμπερίληψη κλάδου μονοπατιού που επιλέχθηκε Τίτλος Βήματος",
+    "includeBranchPathTakenNodeId": "Συμπερίληψη κλάδου μονοπατιού που επιλέχθηκε ID Κόμβου",
+    "includeStudentWork": "Συμπερίληψη της δουλειάς των μαθητών",
+    "numberOfAssessmentItems_0": "0 αντικείμενα αξιολόγησης",
+    "numberOfAssessmentItems_1": "1 αντικείμενο αξιολόγησης",
+    "selectedComponentsLabel": "Γίνεται προβολή {{selected}}/{{total}} αντικειμένων"
 }

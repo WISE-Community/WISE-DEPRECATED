@@ -1748,7 +1748,7 @@ class TableController {
     snipTable($event) {
 
         // get the table element. this will obtain an array.
-        var tableElement = angular.element('#table_' + this.nodeId + '_' + this.componentId;);
+        var tableElement = angular.element('#table_' + this.nodeId + '_' + this.componentId);
 
         if (tableElement != null && tableElement.length > 0) {
 

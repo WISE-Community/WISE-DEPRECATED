@@ -1,12 +1,18 @@
 "use strict";
 
 class WorkgroupSelectController {
-    constructor($scope,
+    constructor($filter,
+                $scope,
+                orderBy,
                 ConfigService,
                 TeacherDataService) {
+        this.$filter = $filter;
         this.$scope = $scope;
+        this.orderBy = orderBy;
         this.ConfigService = ConfigService;
         this.TeacherDataService = TeacherDataService;
+
+        this.$translate = this.$filter('translate');
 
         this.$onInit = () => {
             this.canViewStudentNames = this.ConfigService.getPermissions().canViewStudentNames;
@@ -48,6 +54,7 @@ class WorkgroupSelectController {
     querySearch(query) {
         let items = [];
         let n = this.workgroups.length;
+        let sortByStudentId = false;
 
         for (let i = 0; i < n; i++) {
             let workgroup = this.workgroups[i];
@@ -55,32 +62,51 @@ class WorkgroupSelectController {
             if (this.periodId === -1 || periodId === this.periodId) {
                 let displayNames = workgroup.displayNames;
 
-                if (!this.byTeam && this.canViewStudentNames) {
-                    let names = displayNames.split(',');
-                    let l = names.length;
-                    for (let x = 0; x < l; x++) {
-                        let name = names[x].trim();
-                        // get the index of the first empty space
-                        let indexOfSpace = name.indexOf(' ');
-                        // get the student first name e.g. "Spongebob"
-                        let firstName = name.substring(0, indexOfSpace);
-                        let lastName = name.substring(indexOfSpace+1);
-
-                        let current = angular.copy(workgroup);
-                        current.displayNames = lastName + ', ' + firstName;
-                        if (current.displayNames.search(new RegExp(query, 'i')) > -1 || !query) {
-                            items.push(current);
-                        }
-                    }
-                } else {
+                if (this.byTeam) {
                     if (displayNames.search(new RegExp(query, 'i')) > -1 || !query) {
                         items.push(workgroup);
+                    }
+                } else {
+                    if (this.canViewStudentNames) {
+                        let names = displayNames.split(',');
+                        let l = names.length;
+                        for (let x = 0; x < l; x++) {
+                            let name = names[x].trim();
+                            // get the index of the first empty space
+                            let indexOfSpace = name.indexOf(' ');
+                            // get the student first name e.g. "Spongebob"
+                            let firstName = name.substring(0, indexOfSpace);
+                            let lastName = name.substring(indexOfSpace+1);
+
+                            let current = angular.copy(workgroup);
+                            current.displayNames = lastName + ', ' + firstName;
+                            if (current.displayNames.search(new RegExp(query, 'i')) > -1 || !query) {
+                                items.push(current);
+                            }
+                        }
+                    } else {
+                        sortByStudentId = true;
+                        let ids = workgroup.userIds;
+                        let l = ids.length;
+                        for (let x = 0; x < l; x++) {
+                            let id = ids[x];
+                            let name = this.$translate('studentId', { id: id });
+
+                            let current = angular.copy(workgroup);
+                            current.displayNames = name;
+                            current.userId = id;
+                            if (current.displayNames.search(new RegExp(query, 'i')) > -1 || !query) {
+                                items.push(current);
+                            }
+                        }
                     }
                 }
             }
         }
 
-        return items;
+        let orderedItems = sortByStudentId ? this.orderBy(items, 'userId') : this.orderBy(items, 'displayNames');
+
+        return orderedItems;
     }
 
     selectedItemChange() {
@@ -89,7 +115,9 @@ class WorkgroupSelectController {
 }
 
 WorkgroupSelectController.$inject = [
+    '$filter',
     '$scope',
+    'orderByFilter',
     'ConfigService',
     'TeacherDataService'
 ];
@@ -104,7 +132,7 @@ const WorkgroupSelect = {
                           md-selected-item="$ctrl.selectedItem"
                           md-search-text="$ctrl.searchText"
                           md-selected-item-change="$ctrl.selectedItemChange()"
-                          md-items="workgroup in $ctrl.querySearch($ctrl.searchText) | orderBy: 'displayNames'"
+                          md-items="workgroup in $ctrl.querySearch($ctrl.searchText)"
                           md-item-text="workgroup.displayNames"
                           md-min-length="0"
                           ng-init="$ctrl.searchText=$ctrl.selectedItem.displayNames"

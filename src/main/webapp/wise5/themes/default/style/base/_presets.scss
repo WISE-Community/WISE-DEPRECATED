@@ -50,7 +50,7 @@ label {
     font-weight: 500 !important;
     display: inherit;
     max-width: none;
-    margin-bottom: none;
+    margin-bottom: 0;
 }
 
 .transform--none {
@@ -375,5 +375,14 @@ md-select-menu.md-default-theme md-option[selected], md-select-menu md-option[se
 @each $key, $value in $colors {
     .#{$key}-bg {
       background-color: $value;
+    }
+}
+
+// Set theme colors for angular-ui elements
+@each $key, $value in $colors {
+    md-progress-circular.#{$key} {
+        path {
+            stroke: $value;
+        }
     }
 }

@@ -42,6 +42,10 @@ var _sideMenu = require('./sideMenu/sideMenu');
 
 var _sideMenu2 = _interopRequireDefault(_sideMenu);
 
+var _statusIcon = require('./statusIcon/statusIcon');
+
+var _statusIcon2 = _interopRequireDefault(_statusIcon);
+
 var _toolbar = require('./toolbar/toolbar');
 
 var _toolbar2 = _interopRequireDefault(_toolbar);
@@ -72,6 +76,7 @@ Shared.component('nodeIcon', _nodeIcon2.default);
 Shared.component('pauseScreensMenu', _pauseScreensMenu2.default);
 Shared.component('periodSelect', _periodSelect2.default);
 Shared.component('sideMenu', _sideMenu2.default);
+Shared.component('statusIcon', _statusIcon2.default);
 Shared.component('toolbar', _toolbar2.default);
 Shared.component('topBar', _topBar2.default);
 Shared.component('workgroupComponentRevisions', _workgroupComponentRevisions2.default);

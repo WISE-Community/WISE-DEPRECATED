@@ -9,14 +9,13 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var NavItemController = function () {
-    function NavItemController($element, $filter, $mdDialog, $rootScope, $scope, $state, AnnotationService, ConfigService, NodeService, NotificationService, ProjectService, StudentDataService, StudentStatusService, TeacherDataService, TeacherWebSocketService) {
+    function NavItemController($element, $filter, $rootScope, $scope, $state, AnnotationService, ConfigService, NodeService, NotificationService, ProjectService, StudentDataService, StudentStatusService, TeacherDataService, TeacherWebSocketService) {
         var _this = this;
 
         _classCallCheck(this, NavItemController);
 
         this.$element = $element;
         this.$filter = $filter;
-        this.$mdDialog = $mdDialog;
         this.$rootScope = $rootScope;
         this.$scope = $scope;
         this.$state = $state;
@@ -95,6 +94,11 @@ var NavItemController = function () {
             _this.alertNotifications = [];
 
             _this.getAlertNotifications();
+
+            _this.hasRubrics = _this.ProjectService.getNumberOfRubricsByNodeId(_this.nodeId) > 0;
+            _this.rubricIconLabel = _this.$translate('STEP_HAS_INFO_TEACHING_TIPS');
+            _this.rubricIconClass = 'info';
+            _this.rubricIconName = 'info';
         };
 
         this.$scope.$watch(function () {
@@ -379,7 +383,8 @@ var NavItemController = function () {
             var n = workgroupIdsOnNode.length;
             for (var i = 0; i < n; i++) {
                 var id = workgroupIdsOnNode[i];
-                var usernames = this.ConfigService.getUserNamesByWorkgroupId(id);
+
+                var usernames = this.ConfigService.getDisplayUserNamesByWorkgroupId(id);
                 var avatarColor = this.ConfigService.getAvatarColorForWorkgroupId(id);
                 var online = this.TeacherWebSocketService.isStudentOnline(id);
                 if (online) {
@@ -445,7 +450,7 @@ var NavItemController = function () {
     return NavItemController;
 }();
 
-NavItemController.$inject = ['$element', '$filter', '$mdDialog', '$rootScope', '$scope', '$state', 'AnnotationService', 'ConfigService', 'NodeService', 'NotificationService', 'ProjectService', 'StudentDataService', 'StudentStatusService', 'TeacherDataService', 'TeacherWebSocketService'];
+NavItemController.$inject = ['$element', '$filter', '$rootScope', '$scope', '$state', 'AnnotationService', 'ConfigService', 'NodeService', 'NotificationService', 'ProjectService', 'StudentDataService', 'StudentStatusService', 'TeacherDataService', 'TeacherWebSocketService'];
 
 var NavItem = {
     bindings: {
