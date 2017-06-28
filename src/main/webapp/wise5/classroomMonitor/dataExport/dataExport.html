@@ -69,9 +69,9 @@
                     <br/>
                     <md-checkbox ng-model="dataExportController.exportStudentWork">{{ 'includeStudentWork' | translate }}</md-checkbox>
                     <br/>
-                    <md-checkbox ng-model="dataExportController.exportAnnotations">{{ 'annotations' | translate }}</md-checkbox>
+                    <md-checkbox ng-model="dataExportController.exportAnnotations">{{ 'includeAnnotations' | translate }}</md-checkbox>
                     <br/>
-                    <md-checkbox ng-model="dataExportController.exportEvents">{{ 'events' | translate }}</md-checkbox>
+                    <md-checkbox ng-model="dataExportController.exportEvents">{{ 'includeEvents' | translate }}</md-checkbox>
                     <br/>
                 </div>
                 <md-radio-group ng-show="dataExportController.exportType == 'latestStudentWork' || dataExportController.exportType == 'allStudentWork' || dataExportController.exportType == 'events' || dataExportController.exportType == 'oneWorkgroupPerRow' || dataExportController.exportType == 'rawData'"
