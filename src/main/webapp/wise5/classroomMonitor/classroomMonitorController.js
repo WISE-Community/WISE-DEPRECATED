@@ -9,7 +9,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var ClassroomMonitorController = function () {
-    function ClassroomMonitorController($filter, $mdDialog, $mdToast, $rootScope, $scope, $state, $stateParams, ConfigService, NotebookService, NotificationService, ProjectService, SessionService, TeacherDataService, TeacherWebSocketService) {
+    function ClassroomMonitorController($filter, $mdDialog, $mdToast, $rootScope, $scope, $state, $stateParams, $window, ConfigService, NotebookService, NotificationService, ProjectService, SessionService, TeacherDataService, TeacherWebSocketService) {
         var _this = this;
 
         _classCallCheck(this, ClassroomMonitorController);
@@ -20,6 +20,7 @@ var ClassroomMonitorController = function () {
         this.$scope = $scope;
         this.$state = $state;
         this.$stateParams = $stateParams;
+        this.$window = $window;
         this.ConfigService = ConfigService;
         this.NotebookService = NotebookService;
         this.NotificationService = NotificationService;
@@ -158,6 +159,28 @@ var ClassroomMonitorController = function () {
             event = "sessionStarted",
             data = {};
         this.TeacherDataService.saveEvent(context, nodeId, componentId, componentType, category, event, data);
+
+        // perform cleanup before the clasroom monitor tab closes
+        this.$window.onbeforeunload = function () {
+
+            // unpause all the periods that are currently paused
+
+            // get all the periods
+            var periods = _this.TeacherDataService.getRunStatus().periods;
+
+            if (periods != null) {
+
+                // loop through all the periods
+                for (var p = 0; p < periods.length; p++) {
+                    var period = periods[p];
+
+                    if (period != null && period.paused) {
+                        // the period is paused so we will unpause it
+                        _this.TeacherDataService.pauseScreensChanged(period.periodId, false);
+                    }
+                }
+            }
+        };
     }
 
     /**
@@ -229,7 +252,7 @@ var ClassroomMonitorController = function () {
     return ClassroomMonitorController;
 }();
 
-ClassroomMonitorController.$inject = ['$filter', '$mdDialog', '$mdToast', '$rootScope', '$scope', '$state', '$stateParams', 'ConfigService', 'NotebookService', 'NotificationService', 'ProjectService', 'SessionService', 'TeacherDataService', 'TeacherWebSocketService'];
+ClassroomMonitorController.$inject = ['$filter', '$mdDialog', '$mdToast', '$rootScope', '$scope', '$state', '$stateParams', '$window', 'ConfigService', 'NotebookService', 'NotificationService', 'ProjectService', 'SessionService', 'TeacherDataService', 'TeacherWebSocketService'];
 
 exports.default = ClassroomMonitorController;
 //# sourceMappingURL=classroomMonitorController.js.map

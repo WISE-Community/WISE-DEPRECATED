@@ -9,6 +9,7 @@ class ClassroomMonitorController {
                 $scope,
                 $state,
                 $stateParams,
+                $window,
                 ConfigService,
                 NotebookService,
                 NotificationService,
@@ -23,6 +24,7 @@ class ClassroomMonitorController {
         this.$scope = $scope;
         this.$state = $state;
         this.$stateParams = $stateParams;
+        this.$window = $window;
         this.ConfigService = ConfigService;
         this.NotebookService = NotebookService;
         this.NotificationService = NotificationService;
@@ -170,6 +172,28 @@ class ClassroomMonitorController {
         let context = "ClassroomMonitor", nodeId = null, componentId = null, componentType = null,
             category = "Navigation", event = "sessionStarted", data = {};
         this.TeacherDataService.saveEvent(context, nodeId, componentId, componentType, category, event, data);
+
+        // perform cleanup before the clasroom monitor tab closes
+        this.$window.onbeforeunload = () => {
+
+            // unpause all the periods that are currently paused
+
+            // get all the periods
+            var periods = this.TeacherDataService.getRunStatus().periods;
+
+            if (periods != null) {
+
+                // loop through all the periods
+                for (var p = 0; p < periods.length; p++) {
+                    var period = periods[p];
+
+                    if (period != null && period.paused) {
+                        // the period is paused so we will unpause it
+                        this.TeacherDataService.pauseScreensChanged(period.periodId, false);
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -230,6 +254,7 @@ ClassroomMonitorController.$inject = [
     '$scope',
     '$state',
     '$stateParams',
+    '$window',
     'ConfigService',
     'NotebookService',
     'NotificationService',
