@@ -115,7 +115,7 @@ class EmbeddedService extends NodeService {
      * @return whether this component generates student work
      */
     componentHasWork(component) {
-        return true;
+        return false;
     }
 
     /**
