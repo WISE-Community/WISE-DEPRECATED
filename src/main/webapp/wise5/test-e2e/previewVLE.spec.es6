@@ -8,6 +8,7 @@ describe('WISE5 Student VLE Preview', () => {
     };
 
     browser.get('http://localhost:8080/wise/project/demo#/vle/node1');
+    browser.waitForAngular();   // wait for Angular to load
     let previousButton = element(by.xpath('//button[@aria-label="Previous Item"]'));
     let nextButton = element(by.xpath('//button[@aria-label="Next Item"]'));
     let closeButton = element(by.xpath('//button[@aria-label="Project Plan"]'));
@@ -24,12 +25,11 @@ describe('WISE5 Student VLE Preview', () => {
     });
 
     it('should have UI elements on the page', () => {
-        // Check that previous, next, close, and account buttons are on the page and have the right md-icons
-        expect(previousButton.getText()).toBe('arrow_back');
-        expect(nextButton.getText()).toBe('arrow_forward');
-        expect(nextButton.getText()).toBe('arrow_forward');
-        expect(closeButton.getText()).toBe('view_list');
-        expect(accountButton.getText()).toBe('account_circle');
+        // Check that previous, next, close, and account buttons are on the page
+        expect(previousButton.isPresent()).toBeTruthy();
+        expect(nextButton.isPresent()).toBeTruthy();
+        expect(closeButton.isPresent()).toBeTruthy();
+        expect(accountButton.isPresent()).toBeTruthy();
         expect(accountMenu.getAttribute('aria-hidden')).toEqual("true");  // Account menu should be hidden
     });
 
