@@ -2773,6 +2773,9 @@ var ConceptMapController = function () {
 
             // hide the link type chooser
             this.hideLinkTypeChooser();
+
+            // make the link not highlighted
+            this.clearHighlightedElement();
         }
 
         /**
@@ -3083,6 +3086,9 @@ var ConceptMapController = function () {
 
             // hide the link chooser
             this.hideLinkTypeChooser();
+
+            // make the link not highlighted
+            this.clearHighlightedElement();
         }
 
         /**

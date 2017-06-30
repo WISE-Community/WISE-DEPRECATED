@@ -2628,6 +2628,9 @@ class ConceptMapController {
 
         // hide the link type chooser
         this.hideLinkTypeChooser();
+
+        // make the link not highlighted
+        this.clearHighlightedElement();
     }
 
     /**
@@ -2909,6 +2912,9 @@ class ConceptMapController {
 
         // hide the link chooser
         this.hideLinkTypeChooser();
+
+        // make the link not highlighted
+        this.clearHighlightedElement();
     }
 
     /**
