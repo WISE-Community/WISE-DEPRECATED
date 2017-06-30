@@ -152,7 +152,7 @@ var EmbeddedService = function (_NodeService) {
          * @return whether this component generates student work
          */
         value: function componentHasWork(component) {
-            return true;
+            return false;
         }
 
         /**
