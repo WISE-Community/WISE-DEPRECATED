@@ -826,6 +826,8 @@ class TeacherDataService {
      * Initialize the periods
      */
     initializePeriods() {
+
+        // get the periods from the config
         let periods = this.ConfigService.getPeriods();
         let currentPeriod = null;
 
@@ -842,10 +844,54 @@ class TeacherDataService {
             currentPeriod = periods[0];
         }
 
-        this.periods = periods;
-        if (!this.runStatus.periods) {
-            this.runStatus.periods = this.periods;
+        // an array to gather all the periods
+        let mergedPeriods = [];
+
+        /*
+         * Get the periods from the run status. These periods may not be up to
+         * date so we need to compare them with the periods from the config.
+         */
+        let runStatusPeriods = this.runStatus.periods;
+
+        // loop through all the periods in the config
+        for (let p = 0; p < periods.length; p++) {
+            let period = periods[p];
+
+            if (period != null) {
+                // check if the period object is in the run status periods
+
+                let runStatusPeriod = null;
+
+                // loop through all the periods in the run status
+                for (let r = 0; r < runStatusPeriods.length; r++) {
+                    var tempRunStatusPeriod = runStatusPeriods[r];
+
+                    if (tempRunStatusPeriod != null) {
+                        if (period.periodId == tempRunStatusPeriod.periodId) {
+                            /*
+                             * We have found a period that is in the config and
+                             * the run status.
+                             */
+                            runStatusPeriod = tempRunStatusPeriod;
+                        }
+                    }
+                }
+
+                if (runStatusPeriod == null) {
+                    /*
+                     * we did not find the period object in the run status so
+                     * we will use the period object from the config
+                     */
+                    mergedPeriods.push(period);
+                } else {
+                    // we found the period object in the run status so we will use it
+                    mergedPeriods.push(runStatusPeriod);
+                }
+            }
         }
+
+        this.periods = mergedPeriods;
+        this.runStatus.periods = mergedPeriods;
 
         // set the current period
         if (currentPeriod) {
