@@ -3016,9 +3016,18 @@ class ConceptMapLink {
         var rectMinX = this.destinationNode.getImageX();
         var rectMinY = this.destinationNode.getImageY();
 
+        /*
+         * add padding of 25 pixels to resolve the problem of the arrow head
+         * being placed behind the destination image
+         */
+        rectMinY = rectMinY - 25;
+
         // get the width and height of the image
         var width = this.destinationNode.getImageWidth();
         var height = this.destinationNode.getImageHeight();
+
+        // compensate for the 25 pixel padding that we added above
+        height = height + 25;
 
         /*
         var destinationNodeGroup = this.destinationNode.getGroup();
