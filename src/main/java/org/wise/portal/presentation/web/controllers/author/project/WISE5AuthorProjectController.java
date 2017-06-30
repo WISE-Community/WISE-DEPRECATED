@@ -561,6 +561,10 @@ public class WISE5AuthorProjectController {
                         projectJSONObject.put("runId", runId);
                     }
 
+                    if (project.isDeleted()) {
+                        projectJSONObject.put("isDeleted", true);
+                    }
+
                     wise5ProjectsOwnedByUser.add(projectJSONObject);
                 }
             }
@@ -589,6 +593,10 @@ public class WISE5AuthorProjectController {
 
                     if (projectService.canAuthorProject(project, user)) {
                         projectJSONObject.put("canEdit", true);
+                    }
+
+                    if (project.isDeleted()) {
+                        projectJSONObject.put("isDeleted", true);
                     }
 
                     wise5SharedProjects.add(projectJSONObject);

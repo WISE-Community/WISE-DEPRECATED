@@ -11,7 +11,7 @@
             <button id="goHomeButton" style="font-weight: bold; padding: 10px; display: inline-block;" ng-click="authoringToolMainController.goHome()" translate="backToTeacherHome"></button>
 
             <h3 translate="myProjectsHeading"></h3>
-            <div class="projectItem" style="padding:2px" ng-repeat='project in authoringToolMainController.projects'>
+            <div class="projectItem" style="padding:2px" ng-repeat='project in authoringToolMainController.projects' ng-if='!project.isDeleted'>
                 <span ng-click="authoringToolMainController.openProject(project.id)">
                     {{project.id}}
                     {{project.name}}
@@ -37,7 +37,7 @@
 
             <h3 translate="sharedProjectsHeading"></h3>
             <div ng-show="authoringToolMainController.sharedProjects.length == 0" translate="noSharedProjectsMessage"></div>
-            <div class="projectItem" style="padding:2px" ng-repeat='project in authoringToolMainController.sharedProjects'>
+            <div class="projectItem" style="padding:2px" ng-repeat='project in authoringToolMainController.sharedProjects' ng-if='!project.isDeleted'>
                 <span ng-click="authoringToolMainController.openProject(project.id)">
                     {{project.id}}
                     {{project.name}}
