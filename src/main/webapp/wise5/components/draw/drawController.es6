@@ -1962,14 +1962,18 @@ class DrawController {
      */
     authoringSaveStarterDrawData() {
 
-        // get the draw data
-        var drawData = this.getDrawData();
+        let answer = confirm(this.$translate('draw.areYouSureYouWantToSaveTheStarterDrawing'));
 
-        // set the starter draw data
-        this.authoringComponentContent.starterDrawData = drawData;
+        if (answer) {
+            // get the draw data
+            var drawData = this.getDrawData();
 
-        // the authoring component content has changed so we will save the project
-        this.authoringViewComponentChanged();
+            // set the starter draw data
+            this.authoringComponentContent.starterDrawData = drawData;
+
+            // the authoring component content has changed so we will save the project
+            this.authoringViewComponentChanged();
+        }
     }
 
     /**
@@ -1977,17 +1981,21 @@ class DrawController {
      */
     authoringDeleteStarterDrawData() {
 
-        // remove the starter draw data
-        this.authoringComponentContent.starterDrawData = null;
+        let answer = confirm(this.$translate('draw.areYouSureYouWantToDeleteTheStarterDrawing'));
 
-        // clear the drawing
-        this.drawingTool.clear();
+        if (answer) {
+            // remove the starter draw data
+            this.authoringComponentContent.starterDrawData = null;
 
-        /*
-         * the author has made changes so we will save the component
-         * content
-         */
-        this.authoringViewComponentChanged();
+            // clear the drawing
+            this.drawingTool.clear();
+
+            /*
+             * the author has made changes so we will save the component
+             * content
+             */
+            this.authoringViewComponentChanged();
+        }
     }
 
     /**
