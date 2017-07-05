@@ -4415,17 +4415,21 @@ class ConceptMapController {
      */
     saveStarterConceptMap() {
 
-        // get the concept map data
-        var conceptMapData = this.getConceptMapData();
+        let answer = confirm(this.$translate('conceptMap.areYouSureYouWantToSaveTheStarterConceptMap'));
 
-        // set the starter concept map data
-        this.authoringComponentContent.starterConceptMap = conceptMapData;
+        if (answer) {
+            // get the concept map data
+            var conceptMapData = this.getConceptMapData();
 
-        /*
-         * the author has made changes so we will save the component
-         * content
-         */
-        this.authoringViewComponentChanged();
+            // set the starter concept map data
+            this.authoringComponentContent.starterConceptMap = conceptMapData;
+
+            /*
+             * the author has made changes so we will save the component
+             * content
+             */
+            this.authoringViewComponentChanged();
+        }
     }
 
     /**
@@ -4433,17 +4437,21 @@ class ConceptMapController {
      */
     deleteStarterConceptMap() {
 
-        // set the starter concept map data
-        this.authoringComponentContent.starterConceptMap = null;
+        let answer = confirm(this.$translate('conceptMap.areYouSureYouWantToDeleteTheStarterConceptMap'));
 
-        // clear the concept map
-        this.clearConceptMap();
+        if (answer) {
+            // set the starter concept map data
+            this.authoringComponentContent.starterConceptMap = null;
 
-        /*
-         * the author has made changes so we will save the component
-         * content
-         */
-        this.authoringViewComponentChanged();
+            // clear the concept map
+            this.clearConceptMap();
+
+            /*
+             * the author has made changes so we will save the component
+             * content
+             */
+            this.authoringViewComponentChanged();
+        }
     }
 
     /**
