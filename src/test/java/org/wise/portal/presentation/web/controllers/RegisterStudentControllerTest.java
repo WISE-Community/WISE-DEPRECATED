@@ -41,7 +41,6 @@ import org.springframework.test.web.AbstractModelAndViewTests;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.support.SessionStatus;
-import org.springframework.web.servlet.ModelAndView;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.authentication.Gender;
 import org.wise.portal.domain.authentication.impl.StudentUserDetails;
@@ -53,7 +52,7 @@ import org.wise.portal.presentation.web.StudentAccountForm;
 import org.wise.portal.presentation.web.controllers.student.StudentAccountController;
 import org.wise.portal.service.acl.AclService;
 import org.wise.portal.service.authentication.DuplicateUsernameException;
-import org.wise.portal.service.offering.RunService;
+import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.student.StudentService;
 import org.wise.portal.service.user.UserService;
 

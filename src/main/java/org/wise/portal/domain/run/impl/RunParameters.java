@@ -31,9 +31,11 @@ import org.wise.portal.domain.user.User;
 /**
  * @author Laurel Williams
  */
-public class RunParameters extends OfferingParameters implements Serializable {
+public class RunParameters implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+
+	private String name;  // name of the run
 
 	private Set<String> periodNames = new TreeSet<String>();
 	
@@ -54,16 +56,30 @@ public class RunParameters extends OfferingParameters implements Serializable {
 	private Locale locale;
 	
 	private Boolean enableRealTime = false;
+
+	/**
+	 * @return the name of this run
+	 */
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * @param name the name of this run
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
 	
 	/**
-	 * @return <code>Integer</code> the maximum size of workgroup
+	 * @return the maximum size of workgroup
 	 */
 	public Integer getMaxWorkgroupSize() {
 		return maxWorkgroupSize;
 	}
 
 	/**
-	 * @param <code>Integer</code> maxWorkgroupSize
+	 * @param maxWorkgroupSize the maximum size of workgroup
 	 */
 	public void setMaxWorkgroupSize(Integer maxWorkgroupSize) {
 		this.maxWorkgroupSize = maxWorkgroupSize;
@@ -98,7 +114,7 @@ public class RunParameters extends OfferingParameters implements Serializable {
 	}
 	
 	/**
-	 * @param manuallyEnteredPeriods the manuallyEnteredPerios to set
+	 * @param text the manuallyEnteredPerios to set
 	 */
 	public void setManuallyEnteredPeriods(String text){
 		this.manuallyEnteredPeriods = text;

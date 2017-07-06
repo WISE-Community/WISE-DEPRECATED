@@ -21,12 +21,13 @@
  * ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF
  * REGENTS HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.wise.portal.dao.offering;
+package org.wise.portal.dao.run;
 
 import java.util.List;
 import java.util.Set;
 
 import org.wise.portal.dao.ObjectNotFoundException;
+import org.wise.portal.dao.SimpleDao;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.workgroup.Workgroup;
@@ -34,7 +35,7 @@ import org.wise.portal.domain.workgroup.Workgroup;
 /**
  * @author Hiroki Terashima
  */
-public interface RunDao<T extends Run> extends OfferingDao<Run> {
+public interface RunDao<T extends Run> extends SimpleDao<T> {
 
     /**
 	 * Given an input string retrieve a corresponding record from data store.
@@ -88,17 +89,17 @@ public interface RunDao<T extends Run> extends OfferingDao<Run> {
      * Retrieves a <code>List<WISEWorkgroup></code> given a <code>Long</code> runId and
      * <code>Long</code> periodId
      * 
-     * @param <code>Long</code> offeringId
-     * @param <code>Long</code> periodId
+     * @param runId id of the run
+     * @param periodId id of the period
      * @return <code>List<WISEWorkgroup></code>
      */
-    Set<Workgroup> getWorkgroupsForOfferingAndPeriod(Long offeringId, Long periodId);
+    Set<Workgroup> getWorkgroupsForRunAndPeriod(Long runId, Long periodId);
     
     /**
      * Retrieves a <code>List</code> of <code>Run</code> that are associated with the
      * given <code>Long</code> project id.
      * 
-     * @param <code>Long</code> id
+     * @param id
      * @return <code>List<Run></code>
      */
     List<Run> getRunsOfProject(Long id);
@@ -107,7 +108,7 @@ public interface RunDao<T extends Run> extends OfferingDao<Run> {
      * Returns a <code>List<Run></code> list of runs that were run within the
      * given <code>String</code> period. Valid periods are "today","week" and "month".
      * 
-     * @param String - period
+     * @param period
      * @return List<Run> - run list
      */
     List<Run> getRunsRunWithinPeriod(String period);
@@ -127,4 +128,12 @@ public interface RunDao<T extends Run> extends OfferingDao<Run> {
      * @return
      */
 	Run getById(Long runId, boolean doEagerFetch);
+
+    /**
+     * Returns a set of workgroups for the run with provided runId.
+     *
+     * @param runId key to the <code>Run</code> to look up
+     * @return a Set of Workgroups that belong in the <code>Run</code>
+     */
+    Set<Workgroup> getWorkgroupsForRun(Long runId);
 }

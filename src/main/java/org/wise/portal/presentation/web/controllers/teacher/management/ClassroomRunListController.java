@@ -40,7 +40,7 @@ import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
-import org.wise.portal.service.offering.RunService;
+import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.workgroup.WorkgroupService;
 
 /**
@@ -82,7 +82,7 @@ public class ClassroomRunListController {
 		Map<Run, List<Workgroup>> workgroupMap = new HashMap<Run, List<Workgroup>>();
 		for (Run run : runList) {
 			List<Workgroup> workgroupList = workgroupService
-					.getWorkgroupListByOfferingAndUser(run, user);
+					.getWorkgroupListByRunAndUser(run, user);
 
 			workgroupMap.put(run, workgroupList);
 			if (run.isEnded()) {

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -41,8 +41,8 @@ import javax.persistence.Version;
 
 import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.group.impl.PersistentGroup;
-import org.wise.portal.domain.run.Offering;
-import org.wise.portal.domain.run.impl.OfferingImpl;
+import org.wise.portal.domain.run.Run;
+import org.wise.portal.domain.run.impl.RunImpl;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.workgroup.Workgroup;
 
@@ -57,12 +57,6 @@ public class WorkgroupImpl implements Workgroup {
     @Transient
     public static final String DATA_STORE_NAME = "workgroups";
 
-    @Transient
-    public static final String COLUMN_NAME_OFFERING_FK = "offering_fk";
-
-    @Transient
-    public static final String COLUMN_NAME_GROUP_FK = "group_fk";
-    
     @Transient
     public static final String USERS_JOIN_COLUMN_NAME = "user_fk";
 
@@ -80,23 +74,23 @@ public class WorkgroupImpl implements Workgroup {
     @Column(name = "OPTLOCK")
     private Integer version = null;
 
-    @OneToOne(targetEntity = OfferingImpl.class, fetch = FetchType.LAZY)
-    @JoinColumn(name = COLUMN_NAME_OFFERING_FK, nullable = false)
-    private Offering offering;
+    @OneToOne(targetEntity = RunImpl.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "run_fk", nullable = false)
+    private Run run;
 
     @OneToOne(targetEntity = PersistentGroup.class, fetch = FetchType.LAZY)
-    @JoinColumn(name = COLUMN_NAME_GROUP_FK, nullable = false)
+    @JoinColumn(name = "group_fk", nullable = false)
     private Group group = new PersistentGroup();
 
     /**
-     * @see net.sf.sail.webapp.domain.Workgroup#getMembers()
+     * @see Workgroup#getMembers()
      */
     public Set<User> getMembers() {
         return this.group.getMembers();
     }
 
     /**
-     * @see net.sf.sail.webapp.domain.Workgroup#addMember(net.sf.sail.webapp.domain.User)
+     * @see Workgroup#addMember(User)
      */
     public void addMember(User member) {
         this.group.addMember(member);
@@ -104,14 +98,14 @@ public class WorkgroupImpl implements Workgroup {
     }
     
     /**
-     * @see net.sf.sail.webapp.domain.Workgroup#removeMember(net.sf.sail.webapp.domain.User)
+     * @see Workgroup#removeMember(User)
      */
     public void removeMember(User member) {
     	this.group.getMembers().remove(member);
     }
 
     /**
-     * @see net.sf.sail.webapp.domain.Workgroup#setMembers(java.util.Set)
+     * @see Workgroup#setMembers(java.util.Set)
      */
     public void setMembers(Set<User> members) {
         this.group.setMembers(members);
@@ -132,17 +126,17 @@ public class WorkgroupImpl implements Workgroup {
 	}
 
     /**
-     * @see net.sf.sail.webapp.domain.Workgroup#getOffering()
+     * @see Workgroup#getRun()
      */
-    public Offering getOffering() {
-        return offering;
+    public Run getRun() {
+        return run;
     }
 
     /**
-     * @see net.sf.sail.webapp.domain.Workgroup#setOffering(net.sf.sail.webapp.domain.Offering)
+     * @see Workgroup#setRun(Run)
      */
-    public void setOffering(Offering offering) {
-        this.offering = offering;
+    public void setRun(Run run) {
+        this.run = run;
     }
 
     /**
@@ -153,8 +147,7 @@ public class WorkgroupImpl implements Workgroup {
     }
 
     /**
-     * @param id
-     *            the id to set
+     * @param id the id to set
      */
     @SuppressWarnings("unused")
     private void setId(Long id) {
@@ -162,7 +155,7 @@ public class WorkgroupImpl implements Workgroup {
     }
     
     /**
-     * @see net.sf.sail.webapp.domain.Workgroup#generateWorkgroupName()
+     * @see Workgroup#generateWorkgroupName()
      */
 	public String generateWorkgroupName() {
 		String workgroupName = "";
@@ -171,7 +164,6 @@ public class WorkgroupImpl implements Workgroup {
 		}
 		return workgroupName;
 	}
-
 
     /**
      * @return the version
@@ -199,7 +191,7 @@ public class WorkgroupImpl implements Workgroup {
 		int result = 1;
 		result = prime * result + ((group == null) ? 0 : group.hashCode());
 		result = prime * result
-				+ ((offering == null) ? 0 : offering.hashCode());
+				+ ((run == null) ? 0 : run.hashCode());
 		return result;
 	}
 
@@ -220,10 +212,10 @@ public class WorkgroupImpl implements Workgroup {
 				return false;
 		} else if (!group.equals(other.group))
 			return false;
-		if (offering == null) {
-			if (other.offering != null)
+		if (run == null) {
+			if (other.run != null)
 				return false;
-		} else if (!offering.equals(other.offering))
+		} else if (!run.equals(other.run))
 			return false;
 		return true;
 	}

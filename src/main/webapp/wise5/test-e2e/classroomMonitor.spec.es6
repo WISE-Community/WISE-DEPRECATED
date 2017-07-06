@@ -29,7 +29,7 @@ describe('WISE Classroom Monitor', () => {
         );
     }
 
-    it('should log in using preview username and password and open the classroom monitor tool', () => {
+    it('should open the classroom monitor tool even without any students', () => {
         browser.ignoreSynchronization = true;  // doesn't use Angular
         browser.get('http://localhost:8080/wise/login');
         expect(browser.getTitle()).toEqual('Sign In');

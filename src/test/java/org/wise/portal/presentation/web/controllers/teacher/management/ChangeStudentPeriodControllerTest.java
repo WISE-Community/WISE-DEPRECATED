@@ -36,15 +36,13 @@ import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.AbstractModelAndViewTests;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.support.SessionStatus;
-import org.springframework.web.servlet.ModelAndView;
 import org.wise.portal.domain.impl.ChangePeriodParameters;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.run.impl.RunImpl;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.user.impl.UserImpl;
-import org.wise.portal.service.offering.RunService;
+import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.student.StudentService;
 import org.wise.portal.service.user.UserService;
 

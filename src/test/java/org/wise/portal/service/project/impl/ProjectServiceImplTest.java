@@ -47,7 +47,7 @@ import org.wise.portal.domain.run.impl.RunImpl;
 import org.wise.portal.domain.run.impl.RunParameters;
 import org.wise.portal.service.acl.AclService;
 import org.wise.portal.service.module.CurnitService;
-import org.wise.portal.service.offering.RunService;
+import org.wise.portal.service.run.RunService;
 
 
 /**

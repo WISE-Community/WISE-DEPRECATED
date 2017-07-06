@@ -26,7 +26,6 @@ import java.util.Set;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.impl.ChangeWorkgroupParameters;
-import org.wise.portal.domain.run.Offering;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.workgroup.WISEWorkgroup;
@@ -36,29 +35,6 @@ import org.wise.portal.domain.workgroup.Workgroup;
  * @author Cynick Young
  */
 public interface WorkgroupService {
-
-    /**
-     * Given a list of workgroups for a particular offering, if the list is
-     * empty (i.e. there are no workgroups), then create a default "preview"
-     * workgroup with just the user in it. If there exists workgroups already,
-     * then do nothing.
-     * 
-     * @param offering
-     *            the given offering associated with the workgroups
-     * @param workgroupList
-     *            <code>List</code> of workgroups belonging to the given
-     *            offering
-     * @param user
-     *            the <code>User</code> that should be put into the preview
-     *            workgroup
-     * @param previewWorkgroupName
-     *            <code>String</code> that specifies the default preview
-     *            workgroup name
-     * @return
-     */
-    List<Workgroup> createPreviewWorkgroupForOfferingIfNecessary(
-            Offering offering, List<Workgroup> workgroupList, User user,
-            String previewWorkgroupName);
     
     /**
      * Given a User, returns all of the workgroups that the user is in
@@ -68,45 +44,17 @@ public interface WorkgroupService {
      * @return a list of workgroups that the specified user is in.
      */
     List<Workgroup> getWorkgroupsForUser(User user);
-    
-    /**
-     * Given a PreviewOffering, returns a workgroup that is used to preview it
-     * If a workgroup has not been created yet, a new workgroup is created
-     * with a default preview user
-     * @param previewOffering
-     * @param previewUser
-     * @return workgroup
-     */
-    Workgroup getWorkgroupForPreviewOffering(Offering previewOffering, User previewUser);
 
     /**
-     * Gets a <code>List</code> of workgroups for a given offering with the
+     * Gets a <code>List</code> of workgroups for a given run with the
      * specified user as a member of that workgroup.
      * 
-     * @param offering
-     *            for the workgroup
-     * @param user
-     *            that is a member of the workgroup
+     * @param run for the workgroup
+     * @param user that is a member of the workgroup
      * @return
      */
-    List<Workgroup> getWorkgroupListByOfferingAndUser(Offering offering,
-            User user);
+    List<Workgroup> getWorkgroupListByRunAndUser(Run run, User user);
 
-    /**
-     * Creates a new <code>Workgroup</code> object in the local data store, and then associates
-     * that workgroup to an offering. 
-     * 
-     * @param name
-     *            <code>String</code> name of the workgroup you want to create
-     * @parm members
-     *            <code>Set</code> of <code>User</code> objects that belong in
-     *            the workgroup
-     * @param offering
-     *            The offering to associate the workgroup to
-     * @return a <code>Workgroup</code> that is created.
-     */
-    Workgroup createWorkgroup(String name, Set<User> members, Offering offering);
-    
     /**
      * Adds members to an already-existing workgroup. If a member is
      * already in the group, do not add again. Also update the workgroup name.

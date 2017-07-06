@@ -21,7 +21,7 @@
  * ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF
  * REGENTS HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.wise.portal.dao.offering.impl;
+package org.wise.portal.dao.run.impl;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -38,14 +38,14 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.dao.impl.AbstractHibernateDao;
-import org.wise.portal.dao.offering.RunDao;
+import org.wise.portal.dao.run.RunDao;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.run.impl.RunImpl;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.workgroup.Workgroup;
 
 /**
- * DAO for WISE run, which extends offering
+ * DAO for WISE run, which extends run
  * 
  * @author Hiroki Terashima
  */
@@ -64,7 +64,7 @@ public class HibernateRunDao extends AbstractHibernateDao<Run> implements
 	}
 
 	/**
-	 * @see org.wise.portal.dao.offering.RunDao#retrieveByRunCode(String)
+	 * @see org.wise.portal.dao.run.RunDao#retrieveByRunCode(String)
 	 */
 	public Run retrieveByRunCode(String runcode) throws ObjectNotFoundException {
 		Run run = (Run) DataAccessUtils
@@ -92,11 +92,11 @@ public class HibernateRunDao extends AbstractHibernateDao<Run> implements
 	 * TODO HT comment and test this method
 	 */
 	@SuppressWarnings("unchecked")
-	public Set<Workgroup> getWorkgroupsForOffering(Long offeringId) {
+	public Set<Workgroup> getWorkgroupsForRun(Long runId) {
 		List<Workgroup> workgroupList =  (List<Workgroup>) this.getHibernateTemplate()
 	    .findByNamedParam(
-	    		"from WISEWorkgroupImpl as workgroup where workgroup.offering.id = :offeringId",
-	    		"offeringId", offeringId);
+	    		"from WISEWorkgroupImpl as workgroup where workgroup.run.id = :runId",
+	    		"runId", runId);
 
 		Set<Workgroup> workgroupSet = new TreeSet<Workgroup>();
 		workgroupSet.addAll(workgroupList);
@@ -104,18 +104,18 @@ public class HibernateRunDao extends AbstractHibernateDao<Run> implements
 	}
 	
 	/**
-	 * @see org.wise.portal.dao.offering.RunDao#getWorkgroupsForOfferingAndPeriod(java.lang.Long, java.lang.Long)
+	 * @see org.wise.portal.dao.run.RunDao#getWorkgroupsForRunAndPeriod(java.lang.Long, java.lang.Long)
 	 */
 	@SuppressWarnings("unchecked")
-	public Set<Workgroup> getWorkgroupsForOfferingAndPeriod(Long offeringId, Long periodId){
-		String q = "select workgroup from WISEWorkgroupImpl workgroup where workgroup.offering.id = '" + offeringId + "' and " +
+	public Set<Workgroup> getWorkgroupsForRunAndPeriod(Long runId, Long periodId) {
+		String q = "select workgroup from WISEWorkgroupImpl workgroup where workgroup.run.id = '" + runId + "' and " +
 		"workgroup.period.id = '" + periodId + "' and workgroup.teacherWorkgroup = false";
 		List<Workgroup> workgroupList = (List<Workgroup>) this.getHibernateTemplate().find(q);
 		return new TreeSet<Workgroup>(workgroupList);
 	}
 
 	/**
-	 * @see org.wise.portal.dao.offering.RunDao#retrieveByField(java.lang.String, java.lang.String, java.lang.Object, java.lang.String)
+	 * @see org.wise.portal.dao.run.RunDao#retrieveByField(String, String, Object)
 	 */
 	@SuppressWarnings("unchecked")
     public List<Run> retrieveByField(String field, String type, Object term){
@@ -124,7 +124,7 @@ public class HibernateRunDao extends AbstractHibernateDao<Run> implements
     }
     
     /**
-     * @see org.wise.portal.dao.offering.RunDao#getRunListByUserInPeriod(User)
+     * @see org.wise.portal.dao.run.RunDao#getRunListByUserInPeriod(User)
      */
     @SuppressWarnings("unchecked")
 	public List<Run> getRunListByUserInPeriod(User user){
@@ -134,7 +134,7 @@ public class HibernateRunDao extends AbstractHibernateDao<Run> implements
     }
     
     /**
-     * @see org.wise.portal.dao.offering.RunDao#getRunsOfProject(java.lang.Long)
+     * @see org.wise.portal.dao.run.RunDao#getRunsOfProject(java.lang.Long)
      */
     @SuppressWarnings("unchecked")
 	public List<Run> getRunsOfProject(Long id){
@@ -164,7 +164,7 @@ public class HibernateRunDao extends AbstractHibernateDao<Run> implements
 	}
 
 	/**
-	 * @see org.wise.portal.dao.offering.RunDao#getRunsRunWithinPeriod(java.lang.String)
+	 * @see org.wise.portal.dao.run.RunDao#getRunsRunWithinPeriod(java.lang.String)
 	 */
 	@SuppressWarnings("unchecked")
 	public List<Run> getRunsRunWithinPeriod(String period){
@@ -185,7 +185,7 @@ public class HibernateRunDao extends AbstractHibernateDao<Run> implements
 	}
 	
 	/**
-	 * @see org.wise.portal.dao.offering.RunDao#getRunsByActivity()
+	 * @see org.wise.portal.dao.run.RunDao#getRunsByActivity()
 	 */
 	@SuppressWarnings("unchecked")
 	public List<Run> getRunsByActivity(){

@@ -31,16 +31,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import javax.persistence.*;
 
 import org.hibernate.annotations.SortNatural;
 import org.json.JSONException;
@@ -54,20 +45,19 @@ import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.group.impl.PersistentGroup;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.project.impl.ProjectImpl;
-import org.wise.portal.domain.run.OfferingVisitor;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.user.impl.UserImpl;
 
 /**
- * WISE "run" domain object A WISE run is an offering with more information,
+ * WISE "run" domain object A WISE run is an run with more information,
  * such as starttime, stoptime, runcode
  * 
  * @author Hiroki Terashima
  */
 @Entity
 @Table(name = RunImpl.DATA_STORE_NAME)
-public class RunImpl extends OfferingImpl implements Run {
+public class RunImpl implements Run {
 
     @Transient
     public static final String DATA_STORE_NAME = "runs";
@@ -147,6 +137,10 @@ public class RunImpl extends OfferingImpl implements Run {
     @Transient
     private static final String COLUMN_NAME_SURVEY = "survey";
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private Long id = null;
+
     @Column(name = RunImpl.COLUMN_NAME_LAST_RUN)
     private Date lastRun;
     
@@ -217,7 +211,22 @@ public class RunImpl extends OfferingImpl implements Run {
 	@Column(name = COLUMN_NAME_SURVEY, length = 32768, columnDefinition = "text")
 	private String survey;   // text (blob) 2^15
 
-    /**
+	/**
+	 * @return the id of this run
+	 */
+	public Long getId() {
+		return id;
+	}
+
+	/**
+	 * @param id the id of this run
+	 */
+	@SuppressWarnings("unused")
+	private void setId(Long id) {
+		this.id = id;
+	}
+
+	/**
      * @return the endtime
      */
     public Date getEndtime() {
@@ -319,21 +328,21 @@ public class RunImpl extends OfferingImpl implements Run {
 	}
 
 	/**
-	 * @see org.wise.portal.domain.Run#isEnded()
+	 * @see Run#isEnded()
 	 */
 	public boolean isEnded() {
 		return this.endtime != null;
 	}
 
 	/**
-	 * @see org.wise.portal.domain.Run#isStudentAssociatedToThisRun(User)
+	 * @see Run#isStudentAssociatedToThisRun(User)
 	 */
 	public boolean isStudentAssociatedToThisRun(User studentUser) {
 		return getPeriodOfStudent(studentUser) != null;
 	}
 
 	/**
-	 * @see org.wise.portal.domain.Run#getPeriodOfStudent(User)
+	 * @see Run#getPeriodOfStudent(User)
 	 */
 	public Group getPeriodOfStudent(User studentUser) {
 		Set<Group> periods = getPeriods();
@@ -346,7 +355,7 @@ public class RunImpl extends OfferingImpl implements Run {
 	}
 
 	/**
-	 * @see org.wise.portal.domain.Run#getSharedowners()
+	 * @see Run#getSharedowners()
 	 */
 	public Set<User> getSharedowners() {
 		return sharedowners;
@@ -372,7 +381,7 @@ public class RunImpl extends OfferingImpl implements Run {
 	}
 
 	/**
-	 * @see org.wise.portal.domain.Run#setSharedOwners(Set<User>)
+	 * @see Run#setSharedowners(Set)
 	 */
 	public void setSharedowners(Set<User> sharedOwners) {
 		this.sharedowners = sharedOwners;		
@@ -444,28 +453,21 @@ public class RunImpl extends OfferingImpl implements Run {
 	}
 
 	/**
-	 * @param <code>Integer</code> maxWorkgroupSize
+	 * @param maxWorkgroupSize max membership size of workgroup
 	 */
 	public void setMaxWorkgroupSize(Integer maxWorkgroupSize) {
 		this.maxWorkgroupSize = maxWorkgroupSize;
 	}
 	
-    /**
-     * @see net.sf.sail.webapp.domain.Offering#accept(net.sf.sail.webapp.domain.OfferingVisitor)
-     */
-	public Object accept(OfferingVisitor visitor) {
-		return visitor.visit(this);
-	}
-	
 	/**
-	 * @see org.wise.portal.domain.Run#getArchiveReminderTime()
+	 * @see Run#getArchiveReminderTime()
 	 */
 	public Date getArchiveReminderTime() {
 		return archiveReminderTime;
 	}
 
 	/**
-	 * @see org.wise.portal.domain.Run#setArchiveReminderTime(java.util.Date)
+	 * @see Run#setArchiveReminderTime(java.util.Date)
 	 */
 	public void setArchiveReminderTime(Date archiveReminderTime) {
 		this.archiveReminderTime = archiveReminderTime;

@@ -215,12 +215,6 @@
         primary key (id)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-    create table offerings (
-        id bigint not null auto_increment,
-        OPTLOCK integer,
-        primary key (id)
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
     create table peerreviewgate (
         id bigint not null auto_increment,
         open bit,
@@ -363,7 +357,7 @@
         survey text,
         timesRun integer,
         versionId varchar(255),
-        id bigint not null,
+        id bigint not null auto_increment,
         owner_fk bigint not null,
         project_fk bigint not null,
         primary key (id)
@@ -556,7 +550,7 @@
         id bigint not null auto_increment,
         OPTLOCK integer,
         group_fk bigint not null,
-        offering_fk bigint not null,
+        run_fk bigint not null,
         primary key (id)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -893,11 +887,6 @@
         foreign key (project_fk)
         references projects (id);
 
-    alter table runs
-        add constraint FK_99toogxqkbwxwc6o7ah5sv5st
-        foreign key (id)
-        references offerings (id);
-
     alter table runs_related_to_announcements
         add constraint FK_5wvxgfc1e0xwlprdhcycju191
         foreign key (announcements_fk)
@@ -1009,9 +998,9 @@
         references groups (id);
 
     alter table workgroups
-        add constraint FK_sy995385kq0w6liidq3fidpvx
-        foreign key (offering_fk)
-        references offerings (id);
+        add constraint workgroupsRunIndex
+        foreign key (run_fk)
+        references runs (id);
 
 -- initial data for wise below
 

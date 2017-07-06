@@ -41,7 +41,7 @@ import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.workgroup.WISEWorkgroup;
 import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.service.group.GroupService;
-import org.wise.portal.service.offering.RunService;
+import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.student.StudentService;
 import org.wise.portal.service.workgroup.WorkgroupService;
 
@@ -145,7 +145,7 @@ public class StudentServiceImpl implements StudentService {
 		studentRunInfo.setGroup(run.getPeriodOfStudent(studentUser));
 		
 		List<Workgroup> workgroupsForThisRun = 
-			workgroupService.getWorkgroupListByOfferingAndUser(run, studentUser);
+			workgroupService.getWorkgroupListByRunAndUser(run, studentUser);
 		if (workgroupsForThisRun.size() > 0) {
 			WISEWorkgroup workgroupForThisRun = (WISEWorkgroup) workgroupsForThisRun.get(0);			
 			studentRunInfo.setWorkgroup(workgroupForThisRun);

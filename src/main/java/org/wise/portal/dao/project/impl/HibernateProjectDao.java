@@ -53,7 +53,7 @@ public class HibernateProjectDao extends AbstractHibernateDao<Project> implement
     	private static final String FIND_ALL_QUERY = "from ProjectImpl";
 
 	/**
-	 * @see org.wise.portal.dao.offering.RunDao#retrieveByRunCode(String)
+	 * @see org.wise.portal.dao.run.RunDao#retrieveByRunCode(String)
 	 */
 	@SuppressWarnings("unchecked")
 	public List<Project> retrieveListByTag(FamilyTag familytag) throws ObjectNotFoundException {
@@ -69,7 +69,7 @@ public class HibernateProjectDao extends AbstractHibernateDao<Project> implement
 	}
 
 	/**
-	 * @see org.wise.portal.dao.offering.RunDao#retrieveByRunCode(String)
+	 * @see org.wise.portal.dao.run.RunDao#retrieveByRunCode(String)
 	 */
 	@SuppressWarnings("unchecked")
 	public List<Project> retrieveListByTag(String projectinfotag) throws ObjectNotFoundException {

@@ -39,7 +39,7 @@ import org.springframework.validation.BindException;
 import org.springframework.web.servlet.ModelAndView;
 import org.wise.portal.domain.project.impl.FindProjectParameters;
 import org.wise.portal.domain.run.Run;
-import org.wise.portal.service.offering.RunService;
+import org.wise.portal.service.run.RunService;
 
 /**
  * @author patrick lawler

@@ -42,7 +42,7 @@ import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.workgroup.WISEWorkgroup;
 import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
-import org.wise.portal.service.offering.RunService;
+import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.workgroup.WorkgroupService;
 
 public class RunUtil {
@@ -60,12 +60,12 @@ public class RunUtil {
 		User signedInUser = ControllerUtil.getSignedInUser();
 
 		//get the workgroup
-		List<Workgroup> workgroupListByOfferingAndUser = workgroupService.getWorkgroupListByOfferingAndUser(run, signedInUser);
-		if (workgroupListByOfferingAndUser.size()==0 && signedInUser.isAdmin()) {
+		List<Workgroup> workgroupListByRunAndUser = workgroupService.getWorkgroupListByRunAndUser(run, signedInUser);
+		if (workgroupListByRunAndUser.size()==0 && signedInUser.isAdmin()) {
 			// an admin user is trying to run or view grades for a run
 			
 		} else {
-			Workgroup workgroup = workgroupListByOfferingAndUser.get(0);
+			Workgroup workgroup = workgroupListByRunAndUser.get(0);
 
 			//get the workgroup id
 			Long workgroupId = workgroup.getId();
@@ -200,7 +200,7 @@ public class RunUtil {
 			User owner = run.getOwner();
 
 			// get the workgroups of the owner
-			List<Workgroup> teacherWorkgroups = workgroupService.getWorkgroupListByOfferingAndUser(run, owner);
+			List<Workgroup> teacherWorkgroups = workgroupService.getWorkgroupListByRunAndUser(run, owner);
 
 			// there should only be one workgroup for the owner
 			Workgroup teacherWorkgroup = teacherWorkgroups.get(0);
@@ -238,7 +238,7 @@ public class RunUtil {
 				User sharedOwner = sharedOwnersIterator.next();
 				
 				//get the workgroups
-				List<Workgroup> sharedTeacherWorkgroups = workgroupService.getWorkgroupListByOfferingAndUser(run, sharedOwner);
+				List<Workgroup> sharedTeacherWorkgroups = workgroupService.getWorkgroupListByRunAndUser(run, sharedOwner);
 				
 				//there should only be one workgroup for the shared owner
 				if (sharedTeacherWorkgroups.size() > 0) {

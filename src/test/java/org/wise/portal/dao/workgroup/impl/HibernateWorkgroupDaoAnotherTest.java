@@ -81,7 +81,7 @@ public class HibernateWorkgroupDaoAnotherTest extends
     @Override
     protected void onSetUpInTransaction() throws Exception {
         super.onSetUpInTransaction();
-        // an offering needs to exist already before a workgroup can be created
+        // an run needs to exist already before a workgroup can be created
         Session session = this.sessionFactory.getCurrentSession();
     }
 
@@ -103,7 +103,7 @@ public class HibernateWorkgroupDaoAnotherTest extends
                 members);
 
         User user = createNewUser(USERNAME, session);
-        List<?> actual = workgroupDao.getListByOfferingAndUser(offering, user);
+        List<?> actual = workgroupDao.getListByRunAndUser(offering, user);
         assertTrue(actual.isEmpty());
     }
 
@@ -117,7 +117,7 @@ public class HibernateWorkgroupDaoAnotherTest extends
                 members);
         this.toilet.flush();
 
-        List<Workgroup> actualList = workgroupDao.getListByOfferingAndUser(
+        List<Workgroup> actualList = workgroupDao.getListByRunAndUser(
                 offering, user);
         assertEquals(1, actualList.size());
         Workgroup actualWorkgroup = actualList.get(0);
@@ -125,7 +125,7 @@ public class HibernateWorkgroupDaoAnotherTest extends
         assertEquals(1, actualMembers.size());
         assertEquals(members, actualMembers);
         assertTrue(actualMembers.contains(user));
-        assertEquals(offering, actualWorkgroup.getOffering());
+        assertEquals(offering, actualWorkgroup.getRun());
         assertEquals(workgroup, actualWorkgroup);
     }
 
@@ -155,21 +155,21 @@ public class HibernateWorkgroupDaoAnotherTest extends
         this.toilet.flush();
 
         List<Workgroup> actualWorkgroupList = workgroupDao
-                .getListByOfferingAndUser(offeringA, userA);
+                .getListByRunAndUser(offeringA, userA);
         assertEquals(1, actualWorkgroupList.size());
         assertEquals(workgroup1, actualWorkgroupList.get(0));
 
-        actualWorkgroupList = workgroupDao.getListByOfferingAndUser(offeringA,
+        actualWorkgroupList = workgroupDao.getListByRunAndUser(offeringA,
                 userB);
         assertEquals(1, actualWorkgroupList.size());
         assertEquals(workgroup2, actualWorkgroupList.get(0));
 
-        actualWorkgroupList = workgroupDao.getListByOfferingAndUser(offeringB,
+        actualWorkgroupList = workgroupDao.getListByRunAndUser(offeringB,
                 userA);
         assertEquals(1, actualWorkgroupList.size());
         assertEquals(workgroup3, actualWorkgroupList.get(0));
 
-        actualWorkgroupList = workgroupDao.getListByOfferingAndUser(offeringB,
+        actualWorkgroupList = workgroupDao.getListByRunAndUser(offeringB,
                 userB);
         assertEquals(1, actualWorkgroupList.size());
         assertEquals(workgroup4, actualWorkgroupList.get(0));
@@ -194,7 +194,7 @@ public class HibernateWorkgroupDaoAnotherTest extends
 
     private Offering createNewOffering(Session session) {
         Offering offering = (Offering) this.applicationContext
-                .getBean("offering");
+                .getBean("run");
         session.save(offering);
         return offering;
     }

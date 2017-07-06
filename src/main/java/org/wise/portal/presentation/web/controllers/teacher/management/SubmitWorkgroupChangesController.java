@@ -42,7 +42,7 @@ import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.workgroup.WISEWorkgroup;
 import org.wise.portal.service.group.GroupService;
-import org.wise.portal.service.offering.RunService;
+import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.user.UserService;
 import org.wise.portal.service.workgroup.WorkgroupService;
 
@@ -92,7 +92,7 @@ public class SubmitWorkgroupChangesController {
 				continue;
 			}
 			ChangeWorkgroupParameters params = new ChangeWorkgroupParameters();
-			params.setOfferingId(Long.valueOf(runId));
+			params.setRunId(Long.valueOf(runId));
 			params.setPeriodId(Long.valueOf(periodId));
 			params.setStudent(userService.retrieveById(Long.valueOf(userId)));
 			if (!workgroupFromId.equals("groupless")) {
@@ -129,7 +129,7 @@ public class SubmitWorkgroupChangesController {
 			Set<User> members = new HashSet<User>();
 			members.add(params.getStudent());
 			String name = "newWorkgroup";
-			Run run = runService.retrieveById(params.getOfferingId());
+			Run run = runService.retrieveById(params.getRunId());
 			Group period = groupService.retrieveById(params.getPeriodId());
 			params.setWorkgroupToId(new Long(-1));  // to indicate that we want to create a new workgroup
 			WISEWorkgroup newWorkgroup = (WISEWorkgroup) 

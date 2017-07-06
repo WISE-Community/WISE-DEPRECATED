@@ -49,7 +49,7 @@ import org.wise.portal.domain.workgroup.WISEWorkgroup;
 import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.attendance.StudentAttendanceService;
-import org.wise.portal.service.offering.RunService;
+import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.project.ProjectService;
 import org.wise.portal.service.workgroup.WorkgroupService;
 
@@ -126,7 +126,7 @@ public class StartProjectController {
 
 		Group period = run.getPeriodOfStudent(user);
 		
-		List<Workgroup> workgroups = workgroupService.getWorkgroupListByOfferingAndUser(run, user);
+		List<Workgroup> workgroups = workgroupService.getWorkgroupListByRunAndUser(run, user);
 		assert(workgroups.size() <= 1);
 		
 		WISEWorkgroup workgroup = null;
