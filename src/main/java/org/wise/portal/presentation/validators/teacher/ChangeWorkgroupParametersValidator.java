@@ -56,7 +56,7 @@ public class ChangeWorkgroupParametersValidator implements Validator {
 			return;
 		}
 		
-		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "offeringId", "error.no-student");		
+		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "runId", "error.no-student");
 
 		if (errors.getErrorCount() != 0) {
 			return;

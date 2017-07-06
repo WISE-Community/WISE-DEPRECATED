@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2007-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -21,7 +21,7 @@
  * ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF
  * REGENTS HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.wise.portal.service.offering.impl;
+package org.wise.portal.service.run.impl;
 
 import java.util.Calendar;
 import java.util.List;
@@ -32,14 +32,16 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Required;
 import org.springframework.security.acls.domain.BasePermission;
 import org.springframework.security.acls.model.Permission;
 import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.dao.group.GroupDao;
-import org.wise.portal.dao.offering.RunDao;
+import org.wise.portal.dao.run.RunDao;
 import org.wise.portal.dao.project.ProjectDao;
 import org.wise.portal.dao.user.UserDao;
+import org.wise.portal.domain.Persistable;
 import org.wise.portal.domain.announcement.Announcement;
 import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.group.impl.PersistentGroup;
@@ -51,9 +53,10 @@ import org.wise.portal.domain.run.impl.RunImpl;
 import org.wise.portal.domain.run.impl.RunParameters;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.workgroup.Workgroup;
+import org.wise.portal.service.acl.AclService;
 import org.wise.portal.service.authentication.UserDetailsService;
-import org.wise.portal.service.offering.DuplicateRunCodeException;
-import org.wise.portal.service.offering.RunService;
+import org.wise.portal.service.run.DuplicateRunCodeException;
+import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.portal.PortalService;
 
 /**
@@ -61,7 +64,7 @@ import org.wise.portal.service.portal.PortalService;
  * 
  * @author Hiroki Terashima
  */
-public class RunServiceImpl extends OfferingServiceImpl implements RunService {
+public class RunServiceImpl implements RunService {
 
 	private String DEFAULT_RUNCODE_PREFIXES = "Tiger,Lion,Fox,Owl,Panda,Hawk,Mole,"+
 			"Falcon,Orca,Eagle,Manta,Otter,Cat,Zebra,Flea,Wolf,Dragon,Seal,Cobra,"+
@@ -92,8 +95,10 @@ public class RunServiceImpl extends OfferingServiceImpl implements RunService {
 	@Autowired
 	private Properties wiseProperties;
 
+	protected AclService<Persistable> aclService;
+
 	/**
-	 * @see org.wise.portal.service.offering.RunService#getOfferingList()
+	 * @see RunService#getRunList()
 	 */
 	@Transactional()
 	public List<Run> getRunList() {
@@ -103,7 +108,7 @@ public class RunServiceImpl extends OfferingServiceImpl implements RunService {
 	}
 	
 	/**
-	 * @see org.wise.portal.service.offering.RunService#getRunListByOwner(User)
+	 * @see org.wise.portal.service.run.RunService#getRunListByOwner(User)
 	 */
 	@Transactional()
 	public List<Run> getRunListByOwner(User owner) {
@@ -113,7 +118,7 @@ public class RunServiceImpl extends OfferingServiceImpl implements RunService {
 	}
 	
 	/**
-	 * @see org.wise.portal.service.offering.RunService#getRunListBySharedOwner(User)
+	 * @see org.wise.portal.service.run.RunService#getRunListBySharedOwner(User)
 	 */
 	@Transactional()
 	public List<Run> getRunListBySharedOwner(User owner) {
@@ -123,7 +128,7 @@ public class RunServiceImpl extends OfferingServiceImpl implements RunService {
 	}
 	
 	/**
-	 * @see org.wise.portal.service.offering.RunService#getAllRunList()
+	 * @see org.wise.portal.service.run.RunService#getAllRunList()
 	 */
 	@Transactional()
 	public List<Run> getAllRunList() {
@@ -131,7 +136,7 @@ public class RunServiceImpl extends OfferingServiceImpl implements RunService {
 	}
 
 	/**
-	 * @see org.wise.portal.service.offering.RunService#getRunList(User)
+	 * @see org.wise.portal.service.run.RunService#getRunList(User)
 	 */
 	public List<Run> getRunList(User user) {
 		return this.runDao.getRunListByUserInPeriod(user);
@@ -224,7 +229,7 @@ public class RunServiceImpl extends OfferingServiceImpl implements RunService {
 	}
 
 	/**
-	 * @see org.wise.portal.service.offering.RunService#addSharedTeacherToRun(org.wise.portal.domain.impl.AddSharedTeacherParameters)
+	 * @see org.wise.portal.service.run.RunService#addSharedTeacherToRun(org.wise.portal.domain.impl.AddSharedTeacherParameters)
 	 */
 	public void addSharedTeacherToRun(
 			AddSharedTeacherParameters addSharedTeacherParameters) {
@@ -293,7 +298,7 @@ public class RunServiceImpl extends OfferingServiceImpl implements RunService {
 	
 	/**
 	 * @throws ObjectNotFoundException 
-	 * @see org.wise.portal.service.offering.RunService#removeSharedTeacherFromRun(java.lang.String, java.lang.Long)
+	 * @see org.wise.portal.service.run.RunService#removeSharedTeacherFromRun(java.lang.String, java.lang.Long)
 	 */
 	public void removeSharedTeacherFromRun(String username, Long runId) throws ObjectNotFoundException {
 		Run run = this.retrieveById(runId);
@@ -318,7 +323,7 @@ public class RunServiceImpl extends OfferingServiceImpl implements RunService {
 	}
 	
 	/**
-	 * @see org.wise.portal.service.offering.RunService#getSharedTeacherRole(Run, User)
+	 * @see org.wise.portal.service.run.RunService#getSharedTeacherRole(Run, User)
 	 */
 	public String getSharedTeacherRole(Run run, User user) {
 		List<Permission> permissions = this.aclService.getPermissions(run, user);
@@ -370,14 +375,14 @@ public class RunServiceImpl extends OfferingServiceImpl implements RunService {
 
 	// /**
 	// * @see
-	// org.wise.portal.service.offering.RunService#isRunCodeInDB(java.lang.String)
+	// org.wise.portal.service.run.RunService#isRunCodeInDB(java.lang.String)
 	// */
 	// public boolean isRunCodeInDB(String runcode) {
 	// return runDao.hasRuncode(runcode);
 	// }
 
 	/**
-	 * @see org.wise.portal.service.offering.RunService#retrieveRunByRuncode(java.lang.String)
+	 * @see org.wise.portal.service.run.RunService#retrieveRunByRuncode(java.lang.String)
 	 */
 	public Run retrieveRunByRuncode(String runcode)
 			throws ObjectNotFoundException {
@@ -385,21 +390,21 @@ public class RunServiceImpl extends OfferingServiceImpl implements RunService {
 	}
 
 	/**
-	 * @see org.wise.portal.service.offering.RunService#retrieveById(java.lang.Long)
+	 * @see org.wise.portal.service.run.RunService#retrieveById(java.lang.Long)
 	 */
 	public Run retrieveById(Long runId) throws ObjectNotFoundException {
 		return runDao.getById(runId);
 	}
 	
 	/**
-	 * @see org.wise.portal.service.offering.RunService#retrieveById(java.lang.Long)
+	 * @see org.wise.portal.service.run.RunService#retrieveById(java.lang.Long)
 	 */
 	public Run retrieveById(Long runId, boolean doEagerFetch) throws ObjectNotFoundException {
 		return runDao.getById(runId, doEagerFetch);
 	}
 
 	/**
-	 * @see org.wise.portal.service.offering.RunService#endRun(Run)
+	 * @see org.wise.portal.service.run.RunService#endRun(Run)
 	 */
 	@Transactional()
 	public void endRun(Run run) {
@@ -410,7 +415,7 @@ public class RunServiceImpl extends OfferingServiceImpl implements RunService {
 	}
 	
 	/**
-	 * @see org.wise.portal.service.offering.RunService#startRun(Run)
+	 * @see org.wise.portal.service.run.RunService#startRun(Run)
 	 */
 	@Transactional()
 	public void startRun(Run run) {
@@ -424,23 +429,23 @@ public class RunServiceImpl extends OfferingServiceImpl implements RunService {
 	}
 
 	/**
-	 * @see org.wise.portal.service.offering.RunService#getWorkgroups(Long)
+	 * @see org.wise.portal.service.run.RunService#getWorkgroups(Long)
 	 */
 	public Set<Workgroup> getWorkgroups(Long runId) 
 	     throws ObjectNotFoundException {
-		return this.runDao.getWorkgroupsForOffering(runId);
+		return this.runDao.getWorkgroupsForRun(runId);
 	}
 
 	/**
-	 * @override @see org.wise.portal.service.offering.RunService#getWorkgroups(java.lang.Long, net.sf.sail.webapp.domain.group.Group)
+	 * @override @see org.wise.portal.service.run.RunService#getWorkgroups(java.lang.Long, net.sf.sail.webapp.domain.group.Group)
 	 */
 	public Set<Workgroup> getWorkgroups(Long runId, Long periodId)
 			throws ObjectNotFoundException {
-		return this.runDao.getWorkgroupsForOfferingAndPeriod(runId, periodId);
+		return this.runDao.getWorkgroupsForRunAndPeriod(runId, periodId);
 	}
 
 	/**
-	 * @see org.wise.portal.service.offering.RunService#addAnnouncementToRun(java.lang.Long, org.wise.portal.domain.announcement.Announcement)
+	 * @see org.wise.portal.service.run.RunService#addAnnouncementToRun(java.lang.Long, org.wise.portal.domain.announcement.Announcement)
 	 */
 	@Transactional()
 	public void addAnnouncementToRun(Long runId, Announcement announcement) throws Exception{
@@ -451,7 +456,7 @@ public class RunServiceImpl extends OfferingServiceImpl implements RunService {
 	
 
 	/**
-	 * @see org.wise.portal.service.offering.RunService#removeAnnouncementFromRun(java.lang.Long, org.wise.portal.domain.announcement.Announcement)
+	 * @see org.wise.portal.service.run.RunService#removeAnnouncementFromRun(java.lang.Long, org.wise.portal.domain.announcement.Announcement)
 	 */
 	@Transactional()
 	public void removeAnnouncementFromRun(Long runId, Announcement announcement) throws Exception{
@@ -479,7 +484,7 @@ public class RunServiceImpl extends OfferingServiceImpl implements RunService {
 	}
 	
 	/**
-	 * @see org.wise.portal.service.offering.RunService#extendArchiveReminderTime(java.lang.Long)
+	 * @see org.wise.portal.service.run.RunService#extendArchiveReminderTime(java.lang.Long)
 	 */
 	@Transactional()
 	public void extendArchiveReminderTime(Long runId) throws ObjectNotFoundException{
@@ -514,35 +519,35 @@ public class RunServiceImpl extends OfferingServiceImpl implements RunService {
 	}
 	
 	/**
-	 * @see org.wise.portal.service.offering.RunService#hasRunPermission(Run, User, Permission)
+	 * @see org.wise.portal.service.run.RunService#hasRunPermission(Run, User, Permission)
 	 */
 	public boolean hasRunPermission(Run run, User user, Permission permission) {
 		return this.aclService.hasPermission(run, permission, user);
 	}
 	
 	/**
-	 * @see org.wise.portal.service.offering.RunService#getRunsRunWithinPeriod(java.lang.String)
+	 * @see org.wise.portal.service.run.RunService#getRunsRunWithinPeriod(java.lang.String)
 	 */
 	public List<Run> getRunsRunWithinPeriod(String period) {
 		return this.runDao.getRunsRunWithinPeriod(period);
 	}
 	
 	/**
-	 * @see org.wise.portal.service.offering.RunService#getRunsByActivity()
+	 * @see org.wise.portal.service.run.RunService#getRunsByActivity()
 	 */
 	public List<Run> getRunsByActivity() {
 		return this.runDao.getRunsByActivity();
 	}
 	
 	/**
-	 * @see org.wise.portal.service.offering.RunService#getRunsByTitle(java.lang.String)
+	 * @see org.wise.portal.service.run.RunService#getRunsByTitle(java.lang.String)
 	 */
     public List<Run> getRunsByTitle(String runTitle) {
         return this.runDao.retrieveByField("name", "like", "%" + runTitle + "%");
     }
 	
 	/**
-	 * @see org.wise.portal.service.offering.RunService#updateRunStatistics(Long)
+	 * @see org.wise.portal.service.run.RunService#updateRunStatistics(Long)
 	 */
 	@Transactional()
 	public void updateRunStatistics(Long runId) {
@@ -569,7 +574,7 @@ public class RunServiceImpl extends OfferingServiceImpl implements RunService {
 	}
 
 	/**
-	 * @see org.wise.portal.service.offering.RunService#updateRunName(java.lang.Long, java.lang.String)
+	 * @see org.wise.portal.service.run.RunService#updateRunName(java.lang.Long, java.lang.String)
 	 */
 	@Transactional()
 	public void updateRunName(Long runId, String name) {
@@ -599,7 +604,7 @@ public class RunServiceImpl extends OfferingServiceImpl implements RunService {
 	
 	/**
 	 * @throws ObjectNotFoundException 
-	 * @see org.wise.portal.service.offering.RunService#setIdeaManagerEnabled(java.lang.Long, boolean)
+	 * @see org.wise.portal.service.run.RunService#setIdeaManagerEnabled(java.lang.Long, boolean)
 	 */
 	@Transactional
 	public void setIdeaManagerEnabled(Long runId, boolean isEnabled) throws ObjectNotFoundException {
@@ -610,7 +615,7 @@ public class RunServiceImpl extends OfferingServiceImpl implements RunService {
 
 	/**
 	 * @throws ObjectNotFoundException 
-	 * @see org.wise.portal.service.offering.RunService#setPortfolioEnabled(java.lang.Long, boolean)
+	 * @see org.wise.portal.service.run.RunService#setPortfolioEnabled(java.lang.Long, boolean)
 	 */
 	@Transactional
 	public void setPortfolioEnabled(Long runId, boolean isEnabled) throws ObjectNotFoundException {
@@ -621,7 +626,7 @@ public class RunServiceImpl extends OfferingServiceImpl implements RunService {
 
 	/**
 	 * @throws ObjectNotFoundException 
-	 * @see org.wise.portal.service.offering.RunService#setStudentAssetUploaderEnabled(java.lang.Long, boolean)
+	 * @see org.wise.portal.service.run.RunService#setStudentAssetUploaderEnabled(java.lang.Long, boolean)
 	 */
 	@Transactional
 	public void setStudentAssetUploaderEnabled(Long runId, boolean isEnabled) throws ObjectNotFoundException {
@@ -632,7 +637,7 @@ public class RunServiceImpl extends OfferingServiceImpl implements RunService {
 	
 	/**
 	 * @throws ObjectNotFoundException 
-	 * @see org.wise.portal.service.offering.RunService#setRealTimeEnabled(java.lang.Long, boolean)
+	 * @see org.wise.portal.service.run.RunService#setRealTimeEnabled(java.lang.Long, boolean)
 	 */
 	@Transactional
 	public void setRealTimeEnabled(Long runId, boolean isEnabled) throws ObjectNotFoundException {
@@ -643,7 +648,7 @@ public class RunServiceImpl extends OfferingServiceImpl implements RunService {
 	
 	/**
 	 * @throws ObjectNotFoundException 
-	 * @see org.wise.portal.service.offering.RunService#updateNotes(Long, String)
+	 * @see org.wise.portal.service.run.RunService#updateNotes(Long, String)
 	 */
 	@Transactional
     public void updateNotes(Long runId, String privateNotes) throws ObjectNotFoundException {
@@ -654,7 +659,7 @@ public class RunServiceImpl extends OfferingServiceImpl implements RunService {
 	
 	/**
 	 * @throws ObjectNotFoundException 
-	 * @see org.wise.portal.service.offering.RunService#updateSurvey(Long, String)
+	 * @see org.wise.portal.service.run.RunService#updateSurvey(Long, String)
 	 */
 	@Transactional
     public void updateSurvey(Long runId, String survey) throws ObjectNotFoundException {
@@ -662,4 +667,13 @@ public class RunServiceImpl extends OfferingServiceImpl implements RunService {
 		run.setSurvey(survey);
 		this.runDao.save(run);
 	}
+
+	/**
+	 * @param aclService the aclService to set
+	 */
+	@Required
+	public void setAclService(AclService<Persistable> aclService) {
+		this.aclService = aclService;
+	}
+
 }

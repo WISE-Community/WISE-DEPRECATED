@@ -49,7 +49,7 @@ import org.wise.portal.domain.user.impl.UserImpl;
 import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.service.acl.AclService;
 import org.wise.portal.service.group.GroupService;
-import org.wise.portal.service.offering.RunService;
+import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.workgroup.WorkgroupService;
 
 /**
@@ -234,7 +234,7 @@ public class StudentServiceImplTest extends TestCase {
 		expectLastCall();
 		replay(mockGroupService);
 		
-		expect(mockWorkgroupService.getWorkgroupListByOfferingAndUser(run, studentUser))
+		expect(mockWorkgroupService.getWorkgroupListByRunAndUser(run, studentUser))
 		    .andReturn(new ArrayList<Workgroup>());
 		replay(mockWorkgroupService);
 

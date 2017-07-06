@@ -38,7 +38,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
-import org.wise.portal.service.offering.RunService;
+import org.wise.portal.service.run.RunService;
 
 /**
  * @author Patrick Lawler

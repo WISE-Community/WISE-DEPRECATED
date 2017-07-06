@@ -51,7 +51,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.dao.crater.CRaterRequestDao;
-import org.wise.portal.dao.offering.RunDao;
+import org.wise.portal.dao.run.RunDao;
 import org.wise.portal.dao.portal.PortalStatisticsDao;
 import org.wise.portal.dao.project.ProjectDao;
 import org.wise.portal.dao.user.UserDao;

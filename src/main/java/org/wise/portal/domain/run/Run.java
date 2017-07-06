@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2007-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.wise.portal.domain.PeriodNotFoundException;
+import org.wise.portal.domain.Persistable;
 import org.wise.portal.domain.announcement.Announcement;
 import org.wise.portal.domain.attendance.StudentAttendance;
 import org.wise.portal.domain.group.Group;
@@ -36,11 +37,16 @@ import org.wise.portal.domain.user.User;
 
 /**
  * WISE representation for a length of time in which the
- * offering becomes available for the students
+ * project becomes available for the students
  *
  * @author Hiroki Terashima
  */
-public interface Run extends Offering {
+public interface Run extends Persistable {
+
+	/**
+	 * @return the id of this run
+	 */
+	Long getId();
 
 	/**
 	 * @return the endtime
@@ -171,7 +177,7 @@ public interface Run extends Offering {
 	/**
 	 * Sets name of the run.
 	 * 
-	 * @param <cod>String</code> name of the run to save
+	 * @param name of the run to save
 	 */
 	void setName(String name);
 	
@@ -183,7 +189,7 @@ public interface Run extends Offering {
 	/**
 	 * Sets all announcements for this run
 	 * 
-	 * @param <code>Set<Announcement></code> announcements
+	 * @param announcements to set
 	 */
 	void setAnnouncements(Set<Announcement> announcements);
 
@@ -198,7 +204,7 @@ public interface Run extends Offering {
 	String getInfo();
 	
 	/**
-	 * @param isPaused the isPaused to set
+	 * @param info the isPaused to set
 	 */
 	void setInfo(String info);
 
@@ -244,7 +250,7 @@ public interface Run extends Offering {
 	Integer getMaxWorkgroupSize();
 	
 	/**
-	 * @param <code>Integer</code> maxWorkgroupSize
+	 * @param maxWorkgroupSize
 	 */
 	void setMaxWorkgroupSize(Integer maxWorkgroupSize);
 	
@@ -254,7 +260,7 @@ public interface Run extends Offering {
 	Date getArchiveReminderTime();
 
 	/**
-	 * @param <code>Date</code> the archiveReminderTime to set
+	 * @param archiveReminderTime to set
 	 */
 	void setArchiveReminderTime(Date archiveReminderTime);
 	
@@ -294,7 +300,7 @@ public interface Run extends Offering {
 	Date getLastRun();
 
 	/**
-	 * @param Date - that this run was last run
+	 * @param lastRun - when this run was last run
 	 */
 	void setLastRun(Date lastRun);
 
@@ -304,7 +310,7 @@ public interface Run extends Offering {
 	Integer getTimesRun();
 
 	/**
-	 * @param Integer - number of times this run was run
+	 * @param timesRun - number of times this run was run
 	 */
 	void setTimesRun(Integer timesRun);
 	
@@ -332,14 +338,13 @@ public interface Run extends Offering {
 
 	/**
 	 * sets student attendance for this run
-	 * @param studentAttendanceByRunIdAndPeriod
+	 * @param studentAttendance
 	 */
 	void setStudentAttendance(
 			List<StudentAttendance> studentAttendance);
 
 	/**
-	 * sets student attendance for this run
-	 * @param studentAttendanceByRunIdAndPeriod
+	 * gets student attendance for this run
 	 */
 	List<StudentAttendance> getStudentAttendance();
 	
@@ -351,7 +356,7 @@ public interface Run extends Offering {
 
 	/**
 	 * Sets private notes for this run
-	 * @param String private notes for this run
+	 * @param privateNotes private notes for this run
 	 */
 	void setPrivateNotes(String privateNotes);
 	

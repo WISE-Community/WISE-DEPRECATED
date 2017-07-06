@@ -38,7 +38,7 @@ import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.project.impl.Projectcode;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.presentation.web.StudentAccountForm;
-import org.wise.portal.service.offering.RunService;
+import org.wise.portal.service.run.RunService;
 
 /**
  * @author Patrick Lawler

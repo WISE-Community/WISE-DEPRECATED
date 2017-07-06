@@ -63,7 +63,7 @@ import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
-import org.wise.portal.service.offering.RunService;
+import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.workgroup.WorkgroupService;
 
 /**
@@ -160,8 +160,8 @@ public class AssetManager {
 	                }
 				} else {
 				    // this is a request from the student of the run who wants to see their assets
-				    List<Workgroup> workgroupListByOfferingAndUser = workgroupService.getWorkgroupListByOfferingAndUser(run, user);
-				    Workgroup workgroup = workgroupListByOfferingAndUser.get(0);
+				    List<Workgroup> workgroupListByRunAndUser = workgroupService.getWorkgroupListByRunAndUser(run, user);
+				    Workgroup workgroup = workgroupListByRunAndUser.get(0);
 				    Long workgroupId = workgroup.getId();
 
 				    //get the directory name for the workgroup for this run
@@ -189,8 +189,8 @@ public class AssetManager {
 				}
 
 				// get the workgroup id
-				List<Workgroup> workgroupListByOfferingAndUser = workgroupService.getWorkgroupListByOfferingAndUser(run, user);
-				Workgroup workgroup = workgroupListByOfferingAndUser.get(0);
+				List<Workgroup> workgroupListByRunAndUser = workgroupService.getWorkgroupListByRunAndUser(run, user);
+				Workgroup workgroup = workgroupListByRunAndUser.get(0);
 				Long workgroupId = workgroup.getId();
 
 				// get the directory name for the workgroup for this run
@@ -237,8 +237,8 @@ public class AssetManager {
 				}
 
 				// get the workgroup id
-				List<Workgroup> workgroupListByOfferingAndUser = workgroupService.getWorkgroupListByOfferingAndUser(run, user);
-				Workgroup workgroup = workgroupListByOfferingAndUser.get(0);
+				List<Workgroup> workgroupListByRunAndUser = workgroupService.getWorkgroupListByRunAndUser(run, user);
+				Workgroup workgroup = workgroupListByRunAndUser.get(0);
 				Long workgroupId = workgroup.getId();
 
 				// get the directory name for the workgroup for this run
@@ -269,8 +269,8 @@ public class AssetManager {
 				}
 
 				// get the workgroup id
-				List<Workgroup> workgroupListByOfferingAndUser = workgroupService.getWorkgroupListByOfferingAndUser(run, user);
-				Workgroup workgroup = workgroupListByOfferingAndUser.get(0);
+				List<Workgroup> workgroupListByRunAndUser = workgroupService.getWorkgroupListByRunAndUser(run, user);
+				Workgroup workgroup = workgroupListByRunAndUser.get(0);
 				Long workgroupId = workgroup.getId();
 
 				// looks like /studentuploads/[runId]/[workgroupId]/unreferenced
@@ -306,8 +306,8 @@ public class AssetManager {
 				}
 
 				// get the workgroup id
-				List<Workgroup> workgroupListByOfferingAndUser = workgroupService.getWorkgroupListByOfferingAndUser(run, user);
-				Workgroup workgroup = workgroupListByOfferingAndUser.get(0);
+				List<Workgroup> workgroupListByRunAndUser = workgroupService.getWorkgroupListByRunAndUser(run, user);
+				Workgroup workgroup = workgroupListByRunAndUser.get(0);
 				Long workgroupId = workgroup.getId();
 
 				// get the directory name for the workgroup for this run

@@ -38,7 +38,6 @@ import org.wise.portal.domain.user.impl.UserImpl;
 import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.domain.workgroup.impl.WorkgroupImpl;
 import org.wise.portal.service.acl.AclService;
-import org.wise.portal.service.workgroup.impl.WorkgroupServiceImpl;
 import org.wise.vle.domain.webservice.HttpStatusCodeException;
 
 /**
@@ -121,7 +120,7 @@ public class WorkgroupServiceImplTest extends TestCase {
                         inputList, expectedUser, null);
         assertEquals(1, actualList.size());
         Workgroup actualWorkgroup = actualList.get(0);
-        assertEquals(expectedOffering, actualWorkgroup.getOffering());
+        assertEquals(expectedOffering, actualWorkgroup.getRun());
         assertEquals(1, actualWorkgroup.getMembers().size());
         assertTrue(actualWorkgroup.getMembers().contains(expectedUser));
     }
@@ -144,11 +143,11 @@ public class WorkgroupServiceImplTest extends TestCase {
         expectedList.add(this.workgroup);
 
         EasyMock.expect(
-                this.mockWorkgroupDao.getListByOfferingAndUser(null, null))
+                this.mockWorkgroupDao.getListByRunAndUser(null, null))
                 .andReturn(expectedList);
         EasyMock.replay(this.mockWorkgroupDao);
         assertEquals(expectedList, workgroupServiceImpl
-                .getWorkgroupListByOfferingAndUser(null, null));
+                .getWorkgroupListByRunAndUser(null, null));
         EasyMock.verify(this.mockWorkgroupDao);
     }
 

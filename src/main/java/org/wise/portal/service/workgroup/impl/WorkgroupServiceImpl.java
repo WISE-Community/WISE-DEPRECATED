@@ -34,22 +34,20 @@ import org.wise.portal.dao.workgroup.WorkgroupDao;
 import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.impl.ChangeWorkgroupParameters;
 import org.wise.portal.domain.project.impl.ProjectTypeVisitor;
-import org.wise.portal.domain.run.Offering;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.workgroup.WISEWorkgroup;
 import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.domain.workgroup.impl.WISEWorkgroupImpl;
-import org.wise.portal.domain.workgroup.impl.WorkgroupImpl;
 import org.wise.portal.service.acl.AclService;
 import org.wise.portal.service.group.GroupService;
-import org.wise.portal.service.offering.OfferingService;
-import org.wise.portal.service.offering.RunService;
+import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.user.UserService;
 import org.wise.portal.service.workgroup.WorkgroupService;
 
 /**
  * @author Cynick Young
+ * @author Hiroki Terashima
  */
 public class WorkgroupServiceImpl implements WorkgroupService {
 
@@ -61,7 +59,7 @@ public class WorkgroupServiceImpl implements WorkgroupService {
     
 	private GroupService groupService;
     
-    protected OfferingService offeringService;
+    protected RunService runService;
     
     protected AclService<Workgroup> aclService;
     
@@ -74,37 +72,6 @@ public class WorkgroupServiceImpl implements WorkgroupService {
     @Required
 	public void setAclService(AclService<Workgroup> aclService) {
 		this.aclService = aclService;
-	}
-
-    /**
-     * @see org.wise.portal.service.workgroup.WorkgroupService#createWorkgroup(String, Set, Offering)
-     */
-    @Transactional()
-	public Workgroup createWorkgroup(String name, Set<User> members, Offering offering) {
-    	Workgroup workgroup = createWorkgroup(members, offering);
-
-    	this.groupDao.save(workgroup.getGroup());
-        this.workgroupDao.save(workgroup);
-        
-        this.aclService.addPermission(workgroup, BasePermission.ADMINISTRATION);
-
-        return workgroup;
-    }
-
-	/**
-	 * Creates and returns a <code>Workgroup</code> given parameters
-	 * 
-	 * @param members Set of users in this Workgroup
-	 * @param offering which <code>Offering</code> this workgroup belongs in
-	 * @return created <code>Workgroup</code>
-	 */
-	protected Workgroup createWorkgroup(Set<User> members, Offering offering) {
-		Workgroup workgroup = new WorkgroupImpl();
-        for (User member : members) {
-        	workgroup.addMember(member);
-        }
-        workgroup.setOffering(offering);
-		return workgroup;
 	}
 	
 	/**
@@ -144,7 +111,7 @@ public class WorkgroupServiceImpl implements WorkgroupService {
 		for (User member : members) {
 			workgroup.addMember(member);
 		}
-		workgroup.setOffering(run);
+		workgroup.setRun(run);
 		workgroup.setPeriod(period);
 		if ((run.getOwner() != null && members.size() == 1 && run.getOwner().equals(members.iterator().next())) ||
 				(run.getSharedowners() != null && run.getSharedowners().containsAll(members))) {
@@ -154,12 +121,12 @@ public class WorkgroupServiceImpl implements WorkgroupService {
 	}
 	
     /**
-     * @see org.wise.portal.service.workgroup.WorkgroupService#getWorkgroupListByOfferingAndUser(Offering, User)
+     * @see org.wise.portal.service.workgroup.WorkgroupService#getWorkgroupListByRunAndUser(Run, User)
      */
     @Transactional(readOnly = true)
-    public List<Workgroup> getWorkgroupListByOfferingAndUser(Offering offering,
-            User user) {
-        return this.workgroupDao.getListByOfferingAndUser(offering, user);
+    public List<Workgroup> getWorkgroupListByRunAndUser(Run run,
+														User user) {
+        return this.workgroupDao.getListByRunAndUser(run, user);
     }
     
 	/**
@@ -169,49 +136,6 @@ public class WorkgroupServiceImpl implements WorkgroupService {
 	public List<Workgroup> getWorkgroupsForUser(User user) {
 		// first find all of the runs that user is in.
         return this.workgroupDao.getListByUser(user);
-	}
-
-    /**
-     * @see org.wise.portal.service.workgroup.WorkgroupService#createPreviewWorkgroupForOfferingIfNecessary(Offering, List, User, String)
-     */
-    @Transactional()
-    public List<Workgroup> createPreviewWorkgroupForOfferingIfNecessary(
-            Offering offering, List<Workgroup> workgroupList, User user,
-            String previewWorkgroupName) {
-        if (workgroupList.isEmpty()) {
-
-            Workgroup workgroup = new WorkgroupImpl();
-            workgroup.addMember(user);
-            workgroup.setOffering(offering);
-            this.groupDao.save(workgroup.getGroup());
-            this.workgroupDao.save(workgroup);
-            
-            this.aclService.addPermission(workgroup, BasePermission.ADMINISTRATION);
-
-            workgroupList.add(workgroup);
-        }
-        return workgroupList;
-    }
-    
-    /**
-     * @see org.wise.portal.service.workgroup.WorkgroupService#getWorkgroupForPreviewOffering(Offering, User)
-     */
-    @Transactional()
-	public Workgroup getWorkgroupForPreviewOffering(Offering previewOffering, User previewUser) {
-		List<Workgroup> listByOfferingAndUser = this.workgroupDao.getListByOfferingAndUser(previewOffering, previewUser);
-		if (listByOfferingAndUser.isEmpty()) {
-			Workgroup workgroup = new WorkgroupImpl();
-			workgroup.addMember(previewUser);
-			workgroup.setOffering(previewOffering);
-			
-			this.groupDao.save(workgroup.getGroup());
-			this.workgroupDao.save(workgroup);
-
-			this.aclService.addPermission(workgroup, BasePermission.ADMINISTRATION);
-			return workgroup;
-		} else {
-			return listByOfferingAndUser.get(0);
-		}
 	}
 
     /**
@@ -248,7 +172,7 @@ public class WorkgroupServiceImpl implements WorkgroupService {
 		Workgroup toGroup;
 		Workgroup fromGroup;
 		User user = params.getStudent();
-		Run offering = (Run) ((RunService) offeringService).retrieveById(params.getOfferingId());
+		Run run = (Run) runService.retrieveById(params.getRunId());
 		Group period = groupService.retrieveById(params.getPeriodId());
 
 		fromGroup = params.getWorkgroupFrom();
@@ -257,7 +181,7 @@ public class WorkgroupServiceImpl implements WorkgroupService {
 		if (params.getWorkgroupTo() == null) {
 			if ((params.getWorkgroupToId() != null) && 
 					(params.getWorkgroupToId().intValue() == -1)) {   		
-				workgroupCreated = createWISEWorkgroup("workgroup " + user.getUserDetails().getUsername(), addMemberSet, offering, period);
+				workgroupCreated = createWISEWorkgroup("workgroup " + user.getUserDetails().getUsername(), addMemberSet, run, period);
 			}
 		} else {
 			toGroup = params.getWorkgroupTo();
@@ -284,12 +208,11 @@ public class WorkgroupServiceImpl implements WorkgroupService {
 		return workgroupDao.getById(workgroupId, doEagerFetch);
 	}
 
-
 	/**
-	 * @param offeringService the offeringService to set
+	 * @param runService the runService to set
 	 */
-	public void setOfferingService(OfferingService offeringService) {
-		this.offeringService = offeringService;
+	public void setRunService(RunService runService) {
+		this.runService = runService;
 	}
 
 	/**
@@ -309,7 +232,7 @@ public class WorkgroupServiceImpl implements WorkgroupService {
 	    
 	    boolean result = false;
 	    
-	    List<Workgroup> workgroupsForUser = getWorkgroupListByOfferingAndUser(run, user);
+	    List<Workgroup> workgroupsForUser = getWorkgroupListByRunAndUser(run, user);
 	    
 	    if (workgroupsForUser.size() > 0) {
 	        result = true;
@@ -332,7 +255,7 @@ public class WorkgroupServiceImpl implements WorkgroupService {
 	    if (user != null && workgroup != null) {
 	        
 	        // get all the workgroups the user is in
-	        List<Workgroup> workgroupsForUser = getWorkgroupListByOfferingAndUser(run, user);
+	        List<Workgroup> workgroupsForUser = getWorkgroupListByRunAndUser(run, user);
 	        
 	        // loop through all the workgroups the user is in
 	        for (Workgroup tempWorkgroup : workgroupsForUser) {
@@ -363,7 +286,7 @@ public class WorkgroupServiceImpl implements WorkgroupService {
         if (user != null && workgroup != null) {
             
             // get all the workgroups the user is in
-            List<Workgroup> workgroupsForUser = getWorkgroupListByOfferingAndUser(run, user);
+            List<Workgroup> workgroupsForUser = getWorkgroupListByRunAndUser(run, user);
             
             // loop through all the workgroups the user is in
             for (Workgroup tempWorkgroup : workgroupsForUser) {

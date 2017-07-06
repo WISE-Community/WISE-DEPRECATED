@@ -42,10 +42,9 @@ import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.validators.teacher.management.RemoveStudentFromRunParametersValidator;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.authentication.UserDetailsService;
-import org.wise.portal.service.offering.RunService;
+import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.student.StudentService;
 import org.wise.portal.service.user.UserService;
-import org.wise.portal.service.workgroup.WorkgroupService;
 
 /**
  * Controller for removing students from <code>Run</code>, thereby

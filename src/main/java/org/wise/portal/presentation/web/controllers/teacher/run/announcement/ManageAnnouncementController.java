@@ -41,7 +41,7 @@ import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.acl.AclService;
 import org.wise.portal.service.announcement.AnnouncementService;
-import org.wise.portal.service.offering.RunService;
+import org.wise.portal.service.run.RunService;
 
 /**
  * Controller for handling Classroom announcements

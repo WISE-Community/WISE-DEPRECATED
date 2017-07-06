@@ -38,7 +38,7 @@ import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
-import org.wise.portal.service.offering.RunService;
+import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.project.ProjectService;
 import org.wise.portal.service.user.UserService;
 

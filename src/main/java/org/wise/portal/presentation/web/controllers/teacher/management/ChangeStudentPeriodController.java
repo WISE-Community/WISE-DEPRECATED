@@ -40,7 +40,7 @@ import org.wise.portal.domain.project.impl.Projectcode;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.validators.teacher.ChangePeriodParametersValidator;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
-import org.wise.portal.service.offering.RunService;
+import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.student.StudentService;
 import org.wise.portal.service.user.UserService;
 /**

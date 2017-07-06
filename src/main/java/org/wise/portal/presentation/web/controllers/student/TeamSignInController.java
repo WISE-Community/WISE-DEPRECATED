@@ -50,7 +50,6 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
-import org.wise.portal.domain.StudentUserAlreadyAssociatedWithRunException;
 import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.project.impl.LaunchProjectParameters;
 import org.wise.portal.domain.project.impl.Projectcode;
@@ -64,7 +63,7 @@ import org.wise.portal.presentation.web.TeamSignInForm;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.attendance.StudentAttendanceService;
 import org.wise.portal.service.group.GroupService;
-import org.wise.portal.service.offering.RunService;
+import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.project.ProjectService;
 import org.wise.portal.service.student.StudentService;
 import org.wise.portal.service.user.UserService;
@@ -188,7 +187,7 @@ public class TeamSignInController {
 		 * get the workgroups for the signed in user for this run there should
 		 * only be one workgroup
 		 */
-		List<Workgroup> workgroups = workgroupService.getWorkgroupListByOfferingAndUser(run, signedInUser);
+		List<Workgroup> workgroups = workgroupService.getWorkgroupListByRunAndUser(run, signedInUser);
 
 		Workgroup workgroup = null;
 		
@@ -212,13 +211,13 @@ public class TeamSignInController {
 			if (user != null && !isAbsent) {
 			    
 			    // get the workgroups this user is in for this run
-			    List<Workgroup> workgroupListByOfferingAndUser = workgroupService.getWorkgroupListByOfferingAndUser(run, user);
+			    List<Workgroup> workgroupListByRunAndUser = workgroupService.getWorkgroupListByRunAndUser(run, user);
 			    
 			    boolean userIsInThisWorkgroup = false;
 			    boolean userIsInAnotherWorkgroup = false;
 			    
 			    // loop through all the workgroups the user is in for this run
-			    for (Workgroup tempWorkgroup : workgroupListByOfferingAndUser) {
+			    for (Workgroup tempWorkgroup : workgroupListByRunAndUser) {
 			        
 			        if (workgroup.equals(tempWorkgroup)) {
 			            // the user is in this workgroup
@@ -283,7 +282,7 @@ public class TeamSignInController {
 			        
 			        // update the workgroup name
 			        workgroupname += user.getUserDetails().getUsername();
-			        workgroups.addAll(workgroupService.getWorkgroupListByOfferingAndUser(run, user));
+			        workgroups.addAll(workgroupService.getWorkgroupListByRunAndUser(run, user));
 
 			        // add the user to the users that are present
 			        presentUserIds.put(user.getId());
@@ -421,7 +420,7 @@ public class TeamSignInController {
 			form.setRunId(runId);
 			
 			// get the run
-			Run run = (Run) runService.getOffering(runId);
+			Run run = (Run) runService.retrieveById(runId);
 			
 			// get the members in the workgroup
 			StudentRunInfo studentRunInfo = studentService.getStudentRunInfo(user, run);

@@ -40,7 +40,7 @@ import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.impl.ChangeWorkgroupParameters;
 import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.presentation.validators.teacher.ChangeWorkgroupParametersValidator;
-import org.wise.portal.service.offering.RunService;
+import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.user.UserService;
 import org.wise.portal.service.workgroup.WorkgroupService;
 
@@ -70,7 +70,7 @@ public class ChangeWorkgroupController {
 	
 	private static final String WORKGROUPS_TO = "workgroupsTo";
 
-	private static final String RUN_ID = "offeringId";
+	private static final String RUN_ID = "runId";
 
 	private static final String PERIOD_ID = "periodId";
 	
@@ -91,7 +91,7 @@ public class ChangeWorkgroupController {
     public String initializeForm(ModelMap model, HttpServletRequest request) throws Exception {
 		ChangeWorkgroupParameters params = new ChangeWorkgroupParameters();
 		params.setStudent(userService.retrieveUserByUsername(request.getParameter(STUDENT_PARAM_NAME)));
-		params.setOfferingId(Long.parseLong(request.getParameter(RUN_ID)));
+		params.setRunId(Long.parseLong(request.getParameter(RUN_ID)));
 		params.setPeriodId(Long.parseLong(request.getParameter(PERIOD_ID)));
 		String workgroupFromId = request.getParameter(WORKGROUPFROM_PARAM_NAME);
 		if (workgroupFromId == null) {

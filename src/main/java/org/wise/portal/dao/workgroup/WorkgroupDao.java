@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -26,7 +26,7 @@ package org.wise.portal.dao.workgroup;
 import java.util.List;
 
 import org.wise.portal.dao.SimpleDao;
-import org.wise.portal.domain.run.Offering;
+import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.workgroup.Workgroup;
 
@@ -36,11 +36,11 @@ import org.wise.portal.domain.workgroup.Workgroup;
 public interface WorkgroupDao<T extends Workgroup> extends SimpleDao<T> {
 
     /**
-     * Gets a list of workgroups for the specified user in for the specified offering
+     * Gets a list of workgroups for the specified user in for the specified run
      * 
      * @return a <code>Workgroup</code> <code>List</code>
      */
-    List<T> getListByOfferingAndUser(Offering offering, User user);
+    List<T> getListByRunAndUser(Run run, User user);
     
     /**
      * Gets a list of workgroups for the specified user

@@ -46,7 +46,7 @@ import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.workgroup.Workgroup;
-import org.wise.portal.service.offering.RunService;
+import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.workgroup.WorkgroupService;
 
 @Controller
@@ -76,7 +76,7 @@ public class ListStudentNamesController {
 		User owner = run.getOwner();
 
 		//get the workgroups
-		List<Workgroup> teacherWorkgroups = workgroupService.getWorkgroupListByOfferingAndUser(run, owner);
+		List<Workgroup> teacherWorkgroups = workgroupService.getWorkgroupListByRunAndUser(run, owner);
 
 		//there should only be one workgroup for the owner
 		Workgroup teacherWorkgroup = teacherWorkgroups.get(0);
@@ -175,11 +175,11 @@ public class ListStudentNamesController {
 				User user = periodMembersIterator.next();
 				
 				//get the workgroup the student is in
-				List<Workgroup> workgroupListByOfferingAndUser = workgroupService.getWorkgroupListByOfferingAndUser(run, user);
+				List<Workgroup> workgroupListByRunAndUser = workgroupService.getWorkgroupListByRunAndUser(run, user);
 				//get the workgroup id and wise id
 				Long workgroupId = null;
-				if (workgroupListByOfferingAndUser.size() > 0) {
-					Workgroup workgroup = workgroupListByOfferingAndUser.get(0);
+				if (workgroupListByRunAndUser.size() > 0) {
+					Workgroup workgroup = workgroupListByRunAndUser.get(0);
 					workgroupId = workgroup.getId();
 				}
 				

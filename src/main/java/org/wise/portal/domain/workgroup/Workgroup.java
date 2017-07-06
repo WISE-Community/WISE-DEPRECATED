@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -27,11 +27,11 @@ import java.util.Set;
 
 import org.wise.portal.domain.Persistable;
 import org.wise.portal.domain.group.Group;
-import org.wise.portal.domain.run.Offering;
+import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
 
 /**
- * Workgroup is an aggregation of users that work on the same offering. It is
+ * Workgroup is an aggregation of users that work on the same run. It is
  * made up of one or more users.
  * 
  * @author Hiroki Terashima
@@ -44,42 +44,37 @@ public interface Workgroup extends Persistable {
     Set<User> getMembers();
 
     /**
-     * @param members
-     *            the members to set
+     * @param members the members in this workgroup
      */
     void setMembers(Set<User> members);
 
     /**
-     * @param member
-     *            the member to add
+     * @param member the member to add in this workgroup
      */
     void addMember(User member);
     
     /**
-     * @param member
-     *            the member to remove
+     * @param member the member to remove in this workgroup
      */
     void removeMember(User member);
 
     /**
-     * @return the offering
+     * @return the run this workgroup is in
      */
-    Offering getOffering();
+    Run getRun();
 
     /**
-     * @param offering
-     *            the offering to set
+     * @param run the run this workgroup is in
      */
-    void setOffering(Offering offering);
+    void setRun(Run run);
     
     /**
-     * @return the group
+     * @return the group containing members
      */
     Group getGroup();
     
     /**
-     * @param group
-     *           the group to set
+     * @param group the group containing members
      */
     void setGroup(Group group);
 

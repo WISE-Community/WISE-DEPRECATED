@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -33,7 +33,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.impl.AbstractHibernateDao;
 import org.wise.portal.dao.workgroup.WorkgroupDao;
-import org.wise.portal.domain.run.Offering;
+import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.domain.workgroup.impl.WISEWorkgroupImpl;
@@ -56,12 +56,12 @@ public class HibernateWorkgroupDao extends AbstractHibernateDao<Workgroup>
     }
 
 	/**
-	 * @param offering
+	 * @param run
 	 * @param user
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public List<Workgroup> getListByOfferingAndUser(Offering offering, User user) {
+	public List<Workgroup> getListByRunAndUser(Run run, User user) {
 		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
 		SQLQuery sqlQuery = session
 				.createSQLQuery("SELECT w.*, g.*, ww.* FROM workgroups as w, groups as g, "
@@ -69,11 +69,11 @@ public class HibernateWorkgroupDao extends AbstractHibernateDao<Workgroup>
 						+ "WHERE w.group_fk = g.id "
 						+ "AND g_r_u.group_fk = w.group_fk "
 						+ "AND g_r_u.user_fk = :user_param "
-						+ "AND w.offering_fk = :offering_param "
+						+ "AND w.run_fk = :run_param "
 						+ "AND w.id = ww.id");
 
 		sqlQuery.addEntity("wiseworkgroup", WISEWorkgroupImpl.class);
-		sqlQuery.setParameter("offering_param", offering.getId());
+		sqlQuery.setParameter("run_param", run.getId());
 		sqlQuery.setParameter("user_param", user.getId());
 		return sqlQuery.list();
 	}
@@ -114,7 +114,7 @@ public class HibernateWorkgroupDao extends AbstractHibernateDao<Workgroup>
 		if (doEagerFetch) {
 			result = (WISEWorkgroupImpl) session.createCriteria(WISEWorkgroupImpl.class)
 					.add( Restrictions.eq("id", workgroupId))
-					.setFetchMode("offering", FetchMode.JOIN)
+					.setFetchMode("run", FetchMode.JOIN)
 					.setFetchMode("group", FetchMode.JOIN)
 					.setFetchMode("period", FetchMode.JOIN)
 					.uniqueResult();

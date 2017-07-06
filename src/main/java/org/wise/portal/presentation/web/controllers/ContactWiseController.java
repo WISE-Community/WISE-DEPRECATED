@@ -65,7 +65,7 @@ import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.validators.general.contactwise.ContactWISEValidator;
 import org.wise.portal.presentation.web.filters.WISEAuthenticationProcessingFilter;
 import org.wise.portal.service.mail.IMailFacade;
-import org.wise.portal.service.offering.RunService;
+import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.portal.PortalService;
 import org.wise.portal.service.project.ProjectService;
 import org.wise.portal.service.user.UserService;

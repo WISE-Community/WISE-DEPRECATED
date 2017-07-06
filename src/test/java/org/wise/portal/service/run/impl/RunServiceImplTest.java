@@ -20,7 +20,7 @@
  * ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF
  * REGENTS HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.wise.portal.service.offering.impl;
+package org.wise.portal.service.run.impl;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -35,7 +35,7 @@ import org.easymock.EasyMock;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.dao.group.GroupDao;
 import org.wise.portal.dao.module.CurnitDao;
-import org.wise.portal.dao.offering.RunDao;
+import org.wise.portal.dao.run.RunDao;
 import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.group.impl.PersistentGroup;
 import org.wise.portal.domain.module.Curnit;
