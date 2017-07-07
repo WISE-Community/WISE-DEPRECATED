@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 Object.defineProperty(exports, "__esModule", {
     value: true
@@ -20,7 +20,7 @@ var NodeService = function () {
         this.ProjectService = ProjectService;
         this.StudentDataService = StudentDataService;
 
-        if (this.ConfigService != null && this.ConfigService.getMode() == "classroomMonitor") {
+        if (this.ConfigService != null && (this.ConfigService.getMode() == "classroomMonitor" || this.ConfigService.getMode() == "author")) {
             // in the classroom monitor, we need access to the TeacherDataService
             this.TeacherDataService = this.$injector.get('TeacherDataService');
         }
@@ -36,7 +36,7 @@ var NodeService = function () {
 
 
     _createClass(NodeService, [{
-        key: 'createNewComponentState',
+        key: "createNewComponentState",
         value: function createNewComponentState() {
             var componentState = {};
 
@@ -46,7 +46,7 @@ var NodeService = function () {
             return componentState;
         }
     }, {
-        key: 'createNewNodeState',
+        key: "createNewNodeState",
 
 
         /**
@@ -65,7 +65,7 @@ var NodeService = function () {
             return nodeState;
         }
     }, {
-        key: 'toCamelCase',
+        key: "toCamelCase",
 
 
         /**
@@ -102,7 +102,7 @@ var NodeService = function () {
             return nodeTypeCamelCased;
         }
     }, {
-        key: 'isStringUpperCase',
+        key: "isStringUpperCase",
 
 
         /**
@@ -123,7 +123,7 @@ var NodeService = function () {
             return result;
         }
     }, {
-        key: 'getComponentTemplatePath',
+        key: "getComponentTemplatePath",
 
 
         /**
@@ -149,7 +149,7 @@ var NodeService = function () {
             return wiseBaseURL + '/wise5/components/' + componentType + '/index.html';
         }
     }, {
-        key: 'getComponentContentById',
+        key: "getComponentContentById",
 
 
         /**
@@ -188,7 +188,7 @@ var NodeService = function () {
             return componentContent;
         }
     }, {
-        key: 'isWorkSubmitted',
+        key: "isWorkSubmitted",
 
 
         /**
@@ -218,7 +218,7 @@ var NodeService = function () {
             return result;
         }
     }, {
-        key: 'isCompleted',
+        key: "isCompleted",
 
 
         /**
@@ -241,27 +241,33 @@ var NodeService = function () {
             return result;
         }
     }, {
-        key: 'goToNextNode',
+        key: "goToNextNode",
 
 
         /**
          * Go to the next node
+         * @return a promise that will return the next node id
          */
         value: function goToNextNode() {
             var _this = this;
 
-            this.getNextNodeId().then(function (nextNodeId) {
+            // get the next node id
+            return this.getNextNodeId().then(function (nextNodeId) {
+
                 if (nextNodeId != null) {
-                    if (_this.ConfigService.getMode() === 'classroomMonitor') {
+                    var mode = _this.ConfigService.getMode();
+                    if (mode === 'classroomMonitor' || mode === 'author') {
                         _this.TeacherDataService.endCurrentNodeAndSetCurrentNodeByNodeId(nextNodeId);
                     } else {
                         _this.StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(nextNodeId);
                     }
                 }
+
+                return nextNodeId;
             });
         }
     }, {
-        key: 'getNextNodeId',
+        key: "getNextNodeId",
 
 
         /**
@@ -289,7 +295,7 @@ var NodeService = function () {
                 // no current id was passed in, so get current node
                 var currentNode = null;
 
-                if (mode === 'classroomMonitor') {
+                if (mode === 'classroomMonitor' || mode === 'author') {
                     currentNode = this.TeacherDataService.getCurrentNode();
                 } else {
                     currentNode = this.StudentDataService.getCurrentNode();
@@ -300,7 +306,7 @@ var NodeService = function () {
             }
 
             if (currentNodeId) {
-                if (mode === 'classroomMonitor') {
+                if (mode === 'classroomMonitor' || mode === 'author') {
                     var currentNodeOrder = this.ProjectService.getNodeOrderById(currentNodeId);
 
                     if (currentNodeOrder) {
@@ -435,7 +441,7 @@ var NodeService = function () {
             return promise;
         }
     }, {
-        key: 'goToPrevNode',
+        key: "goToPrevNode",
 
 
         /**
@@ -444,14 +450,15 @@ var NodeService = function () {
         value: function goToPrevNode() {
 
             var prevNodeId = this.getPrevNodeId();
-            if (this.ConfigService.getMode() === 'classroomMonitor') {
+            var mode = this.ConfigService.getMode();
+            if (mode === 'classroomMonitor' || mode === 'author') {
                 this.TeacherDataService.endCurrentNodeAndSetCurrentNodeByNodeId(prevNodeId);
             } else {
                 this.StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(prevNodeId);
             }
         }
     }, {
-        key: 'getPrevNodeId',
+        key: "getPrevNodeId",
 
 
         /**
@@ -470,7 +477,7 @@ var NodeService = function () {
                 // no current id was passed in, so get current node
                 var currentNode = null;
 
-                if (mode === 'classroomMonitor') {
+                if (mode === 'classroomMonitor' || mode === 'author') {
                     currentNode = this.TeacherDataService.getCurrentNode();
                 } else {
                     currentNode = this.StudentDataService.getCurrentNode();
@@ -481,7 +488,7 @@ var NodeService = function () {
             }
 
             if (currentNodeId) {
-                if (mode === 'classroomMonitor') {
+                if (mode === 'classroomMonitor' || mode === 'author') {
                     var currentNodeOrder = this.ProjectService.getNodeOrderById(currentNodeId);
 
                     if (currentNodeOrder) {
@@ -528,7 +535,7 @@ var NodeService = function () {
             return prevNodeId;
         }
     }, {
-        key: 'closeNode',
+        key: "closeNode",
 
 
         /**
@@ -562,7 +569,7 @@ var NodeService = function () {
             }
         }
     }, {
-        key: 'chooseTransition',
+        key: "chooseTransition",
 
 
         /**
@@ -804,7 +811,7 @@ var NodeService = function () {
             return promise;
         }
     }, {
-        key: 'hasTransitionLogic',
+        key: "hasTransitionLogic",
         value: function hasTransitionLogic() {
             var result = false;
 
@@ -821,7 +828,7 @@ var NodeService = function () {
             return result;
         }
     }, {
-        key: 'evaluateTransitionLogic',
+        key: "evaluateTransitionLogic",
 
 
         /**
@@ -896,7 +903,7 @@ var NodeService = function () {
             }
         }
     }, {
-        key: 'createBranchPathTakenEvent',
+        key: "createBranchPathTakenEvent",
 
 
         /**
@@ -916,7 +923,7 @@ var NodeService = function () {
             this.StudentDataService.saveVLEEvent(nodeId, componentId, componentType, category, event, eventData);
         }
     }, {
-        key: 'evaluateTransitionLogicOn',
+        key: "evaluateTransitionLogicOn",
         value: function evaluateTransitionLogicOn(event) {
             var result = false;
 
@@ -936,7 +943,7 @@ var NodeService = function () {
             return result;
         }
     }, {
-        key: 'getTransitionResultByNodeId',
+        key: "getTransitionResultByNodeId",
 
 
         /**
@@ -955,7 +962,7 @@ var NodeService = function () {
          */
 
     }, {
-        key: 'setTransitionResult',
+        key: "setTransitionResult",
         value: function setTransitionResult(nodeId, transitionResult) {
             if (nodeId != null) {
                 this.transitionResults[nodeId] = transitionResult;
@@ -972,7 +979,7 @@ var NodeService = function () {
          */
 
     }, {
-        key: 'getChooseTransitionPromise',
+        key: "getChooseTransitionPromise",
         value: function getChooseTransitionPromise(nodeId) {
             return this.chooseTransitionPromises[nodeId];
         }
@@ -986,7 +993,7 @@ var NodeService = function () {
          */
 
     }, {
-        key: 'setChooseTransitionPromise',
+        key: "setChooseTransitionPromise",
         value: function setChooseTransitionPromise(nodeId, promise) {
             if (nodeId != null) {
                 this.chooseTransitionPromises[nodeId] = promise;

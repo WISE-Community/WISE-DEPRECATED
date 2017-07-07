@@ -1,7 +1,7 @@
-<div class="view-content view-content--with-sidemenu">
+<div id="top" class="view-content view-content--with-sidemenu">
     <div class="l-constrained" layout="column">
         <md-content class="node-content md-whiteframe-1dp" style="border-color: {{nodeController.nodeStatus.icon.color}}; position: relative;" layout="row" layout-wrap>
-            <div class="component-wrapper" style="margin: 10px 0px; width: 100%">
+            <div class="component-wrapper" style="margin-top: 0px; margin-bottom: 20px; width: 100%">
                 <div align="right">
                     <div style="color:red">{{projectController.currentAuthorsMessage}}</div>
                     <div>
@@ -57,8 +57,11 @@
                         .createButton {
                             height: 20px;
                         }
+                        body md-select-menu, body md-select-menu md-content {
+                            max-height: 500px;
+                        }
                     </style>
-                    <div style="margin-bottom: 10px">
+                    <div style="background-color: white; margin-bottom: 15px; position: sticky; top: 0px; z-index: 2;">
                         <md-button id="projectHomeButton" class='topButton md-raised md-primary' ng-click='projectController.projectHomeClicked()'
                                 ng-disabled="projectController.insertGroupMode || projectController.insertNodeMode">
                             <md-icon>home</md-icon>

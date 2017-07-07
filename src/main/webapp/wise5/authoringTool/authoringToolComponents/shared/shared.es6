@@ -3,6 +3,7 @@
 //import AccountMenu from './accountMenu/accountMenu';
 import MainMenu from './mainMenu/mainMenu';
 import SideMenu from './sideMenu/sideMenu';
+import StepTools from './stepTools/stepTools';
 import Toolbar from './toolbar/toolbar';
 import TopBar from './topBar/topBar';
 
@@ -11,6 +12,7 @@ let Shared = angular.module('shared', []);
 //Shared.component('accountMenu', AccountMenu);
 Shared.component('mainMenu', MainMenu);
 Shared.component('sideMenu', SideMenu);
+Shared.component('stepTools', StepTools);
 Shared.component('toolbar', Toolbar);
 Shared.component('topBar', TopBar);
 

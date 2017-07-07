@@ -9,11 +9,12 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var ProjectController = function () {
-    function ProjectController($filter, $interval, $mdDialog, $q, $rootScope, $scope, $state, $stateParams, $timeout, AuthorWebSocketService, ConfigService, ProjectService, UtilService) {
+    function ProjectController($anchorScroll, $filter, $interval, $mdDialog, $q, $rootScope, $scope, $state, $stateParams, $timeout, AuthorWebSocketService, ConfigService, ProjectService, TeacherDataService, UtilService) {
         var _this = this;
 
         _classCallCheck(this, ProjectController);
 
+        this.$anchorScroll = $anchorScroll;
         this.$filter = $filter;
         this.$interval = $interval;
         this.$mdDialog = $mdDialog;
@@ -27,6 +28,7 @@ var ProjectController = function () {
         this.AuthorWebSocketService = AuthorWebSocketService;
         this.ConfigService = ConfigService;
         this.ProjectService = ProjectService;
+        this.TeacherDataService = TeacherDataService;
         this.UtilService = UtilService;
 
         this.projectId = this.$stateParams.projectId;
@@ -311,6 +313,7 @@ var ProjectController = function () {
          * @param nodeId
          */
         value: function nodeClicked(nodeId) {
+            this.TeacherDataService.endCurrentNodeAndSetCurrentNodeByNodeId(this.nodeId);
             this.$state.go('root.project.node', { projectId: this.projectId, nodeId: nodeId });
         }
     }, {
@@ -1559,8 +1562,14 @@ var ProjectController = function () {
     }, {
         key: 'showProjectHome',
         value: function showProjectHome() {
+            // we are going to the project view so we will set the current node to null
+            this.TeacherDataService.setCurrentNode(null);
+
             // show the regular project view
             this.toggleView('project');
+
+            // scroll to the top of the page
+            this.$anchorScroll('top');
         }
 
         /**
@@ -1589,7 +1598,7 @@ var ProjectController = function () {
     return ProjectController;
 }();
 
-ProjectController.$inject = ['$filter', '$interval', '$mdDialog', '$q', '$rootScope', '$scope', '$state', '$stateParams', '$timeout', 'AuthorWebSocketService', 'ConfigService', 'ProjectService', 'UtilService'];
+ProjectController.$inject = ['$anchorScroll', '$filter', '$interval', '$mdDialog', '$q', '$rootScope', '$scope', '$state', '$stateParams', '$timeout', 'AuthorWebSocketService', 'ConfigService', 'ProjectService', 'TeacherDataService', 'UtilService'];
 
 exports.default = ProjectController;
 //# sourceMappingURL=projectController.js.map

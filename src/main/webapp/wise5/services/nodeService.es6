@@ -15,7 +15,9 @@ class NodeService {
         this.ProjectService = ProjectService;
         this.StudentDataService = StudentDataService;
 
-        if (this.ConfigService != null && this.ConfigService.getMode() == "classroomMonitor") {
+        if (this.ConfigService != null &&
+            (this.ConfigService.getMode() == "classroomMonitor" ||
+             this.ConfigService.getMode() == "author")) {
             // in the classroom monitor, we need access to the TeacherDataService
             this.TeacherDataService = this.$injector.get('TeacherDataService');
         }
@@ -213,17 +215,23 @@ class NodeService {
 
     /**
      * Go to the next node
+     * @return a promise that will return the next node id
      */
     goToNextNode() {
 
-        this.getNextNodeId().then((nextNodeId) => {
+        // get the next node id
+        return this.getNextNodeId().then((nextNodeId) => {
+
             if (nextNodeId != null) {
-                if (this.ConfigService.getMode() === 'classroomMonitor') {
+                var mode = this.ConfigService.getMode();
+                if (mode === 'classroomMonitor' || mode === 'author') {
                     this.TeacherDataService.endCurrentNodeAndSetCurrentNodeByNodeId(nextNodeId);
                 } else {
                     this.StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(nextNodeId);
                 }
             }
+
+            return nextNodeId;
         });
     };
 
@@ -250,7 +258,7 @@ class NodeService {
             // no current id was passed in, so get current node
             let currentNode = null;
 
-            if (mode === 'classroomMonitor') {
+            if (mode === 'classroomMonitor' || mode === 'author') {
                 currentNode = this.TeacherDataService.getCurrentNode();
             } else {
                 currentNode = this.StudentDataService.getCurrentNode();
@@ -261,7 +269,7 @@ class NodeService {
         }
 
         if (currentNodeId) {
-            if (mode === 'classroomMonitor') {
+            if (mode === 'classroomMonitor' || mode === 'author') {
                 let currentNodeOrder = this.ProjectService.getNodeOrderById(currentNodeId);
 
                 if (currentNodeOrder) {
@@ -403,7 +411,8 @@ class NodeService {
     goToPrevNode() {
 
         var prevNodeId = this.getPrevNodeId();
-        if (this.ConfigService.getMode() === 'classroomMonitor') {
+        var mode = this.ConfigService.getMode();
+        if (mode === 'classroomMonitor' || mode === 'author') {
             this.TeacherDataService.endCurrentNodeAndSetCurrentNodeByNodeId(prevNodeId);
         } else {
             this.StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(prevNodeId);
@@ -426,7 +435,7 @@ class NodeService {
             // no current id was passed in, so get current node
             let currentNode = null;
 
-            if (mode === 'classroomMonitor') {
+            if (mode === 'classroomMonitor' || mode === 'author') {
                 currentNode = this.TeacherDataService.getCurrentNode();
             } else {
                 currentNode = this.StudentDataService.getCurrentNode();
@@ -437,7 +446,7 @@ class NodeService {
         }
 
         if (currentNodeId) {
-            if (mode === 'classroomMonitor') {
+            if (mode === 'classroomMonitor' || mode === 'author') {
                 let currentNodeOrder = this.ProjectService.getNodeOrderById(currentNodeId);
 
                 if (currentNodeOrder) {

@@ -26,7 +26,7 @@ const Toolbar = {
                     <md-icon> menu </md-icon>
                 </md-button>
                 <span class="toolbar-title" ng-if="!$ctrl.showStepTools">{{ $ctrl.viewName }}</span>
-                <step-tools ng-if="$ctrl.showStepTools" class="layout-tools" show-position="$ctrl.numberProject"></step-tools>
+                <step-tools ng-if="$ctrl.showStepTools" class="layout-tools layout-tools--step" show-position="$ctrl.numberProject" layout-fill></step-tools>
             </div>
         </md-toolbar>`
 };

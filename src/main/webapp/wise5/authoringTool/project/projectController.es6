@@ -2,7 +2,8 @@
 
 class ProjectController {
 
-    constructor($filter,
+    constructor($anchorScroll,
+                $filter,
                 $interval,
                 $mdDialog,
                 $q,
@@ -14,7 +15,9 @@ class ProjectController {
                 AuthorWebSocketService,
                 ConfigService,
                 ProjectService,
+                TeacherDataService,
                 UtilService) {
+        this.$anchorScroll = $anchorScroll;
         this.$filter = $filter;
         this.$interval = $interval;
         this.$mdDialog = $mdDialog;
@@ -28,6 +31,7 @@ class ProjectController {
         this.AuthorWebSocketService = AuthorWebSocketService;
         this.ConfigService = ConfigService;
         this.ProjectService = ProjectService;
+        this.TeacherDataService = TeacherDataService;
         this.UtilService = UtilService;
 
         this.projectId = this.$stateParams.projectId;
@@ -289,6 +293,7 @@ class ProjectController {
      * @param nodeId
      */
     nodeClicked(nodeId) {
+        this.TeacherDataService.endCurrentNodeAndSetCurrentNodeByNodeId(this.nodeId);
         this.$state.go('root.project.node', {projectId: this.projectId, nodeId:nodeId});
     };
 
@@ -1412,8 +1417,14 @@ class ProjectController {
      * Show the regular project view
      */
     showProjectHome() {
+        // we are going to the project view so we will set the current node to null
+        this.TeacherDataService.setCurrentNode(null);
+
         // show the regular project view
         this.toggleView('project');
+
+        // scroll to the top of the page
+        this.$anchorScroll('top');
     }
 
     /**
@@ -1434,6 +1445,7 @@ class ProjectController {
 }
 
 ProjectController.$inject = [
+    '$anchorScroll',
     '$filter',
     '$interval',
     '$mdDialog',
@@ -1446,6 +1458,7 @@ ProjectController.$inject = [
     'AuthorWebSocketService',
     'ConfigService',
     'ProjectService',
+    'TeacherDataService',
     'UtilService'
 ];
 

@@ -211,7 +211,7 @@ var AuthoringToolController = function () {
         key: 'processUI',
         value: function processUI() {
             // set current view and whether to show the toolbars and step tools
-            this.showStepTools = this.$state.$current.name === 'root.project.node';
+            this.showStepTools = this.$state.$current.name === 'root.project' || this.$state.$current.name === 'root.project.node';
             var view = this.views[this.$state.$current.name];
 
             if (view) {

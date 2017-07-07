@@ -14,6 +14,7 @@ class NodeAuthoringController {
                 ConfigService,
                 NodeService,
                 ProjectService,
+                TeacherDataService,
                 UtilService) {
 
         this.$anchorScroll = $anchorScroll;
@@ -29,6 +30,7 @@ class NodeAuthoringController {
         this.ConfigService = ConfigService;
         this.NodeService = NodeService;
         this.ProjectService = ProjectService;
+        this.TeacherDataService = TeacherDataService;
         this.UtilService = UtilService;
         this.$translate = this.$filter('translate');
         this.projectId = $stateParams.projectId;
@@ -42,6 +44,8 @@ class NodeAuthoringController {
         this.whenToChoosePathOptions = [null, "enterNode", "exitNode", "scoreChanged", "studentDataChanged"];
         this.canChangePathOptions = [null, true, false];
         this.createBranchBranches = [];
+
+        this.TeacherDataService.setCurrentNodeByNodeId(this.nodeId);
 
         // the available constraint actions
         this.constraintActions = [
@@ -482,6 +486,9 @@ class NodeAuthoringController {
             // save changes
             this.authoringViewNodeChanged();
         });
+
+        // scroll to the top of the page
+        this.$anchorScroll('top');
     }
 
     /**
@@ -667,7 +674,12 @@ class NodeAuthoringController {
 
         this.$scope.$broadcast('exitNode', {nodeToExit: this.node});
 
+        this.TeacherDataService.setCurrentNode(null);
+
         this.$state.go('root.project', {projectId: this.projectId});
+
+        // scroll to the top of the page
+        this.$anchorScroll('top');
     };
 
     /**
@@ -2520,6 +2532,7 @@ NodeAuthoringController.$inject = [
     'ConfigService',
     'NodeService',
     'ProjectService',
+    'TeacherDataService',
     'UtilService'
 ];
 

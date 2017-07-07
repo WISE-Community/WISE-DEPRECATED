@@ -9,7 +9,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var NodeAuthoringController = function () {
-    function NodeAuthoringController($anchorScroll, $filter, $injector, $location, $mdDialog, $scope, $state, $stateParams, $timeout, ConfigService, NodeService, ProjectService, UtilService) {
+    function NodeAuthoringController($anchorScroll, $filter, $injector, $location, $mdDialog, $scope, $state, $stateParams, $timeout, ConfigService, NodeService, ProjectService, TeacherDataService, UtilService) {
         var _this = this;
 
         _classCallCheck(this, NodeAuthoringController);
@@ -27,6 +27,7 @@ var NodeAuthoringController = function () {
         this.ConfigService = ConfigService;
         this.NodeService = NodeService;
         this.ProjectService = ProjectService;
+        this.TeacherDataService = TeacherDataService;
         this.UtilService = UtilService;
         this.$translate = this.$filter('translate');
         this.projectId = $stateParams.projectId;
@@ -40,6 +41,8 @@ var NodeAuthoringController = function () {
         this.whenToChoosePathOptions = [null, "enterNode", "exitNode", "scoreChanged", "studentDataChanged"];
         this.canChangePathOptions = [null, true, false];
         this.createBranchBranches = [];
+
+        this.TeacherDataService.setCurrentNodeByNodeId(this.nodeId);
 
         // the available constraint actions
         this.constraintActions = [{
@@ -390,6 +393,9 @@ var NodeAuthoringController = function () {
             // save changes
             _this.authoringViewNodeChanged();
         });
+
+        // scroll to the top of the page
+        this.$anchorScroll('top');
     }
 
     /**
@@ -588,7 +594,12 @@ var NodeAuthoringController = function () {
 
             this.$scope.$broadcast('exitNode', { nodeToExit: this.node });
 
+            this.TeacherDataService.setCurrentNode(null);
+
             this.$state.go('root.project', { projectId: this.projectId });
+
+            // scroll to the top of the page
+            this.$anchorScroll('top');
         }
     }, {
         key: 'showSaveErrorAdvancedAuthoring',
@@ -2552,7 +2563,7 @@ var NodeAuthoringController = function () {
 
 ;
 
-NodeAuthoringController.$inject = ['$anchorScroll', '$filter', '$injector', '$location', '$mdDialog', '$scope', '$state', '$stateParams', '$timeout', 'ConfigService', 'NodeService', 'ProjectService', 'UtilService'];
+NodeAuthoringController.$inject = ['$anchorScroll', '$filter', '$injector', '$location', '$mdDialog', '$scope', '$state', '$stateParams', '$timeout', 'ConfigService', 'NodeService', 'ProjectService', 'TeacherDataService', 'UtilService'];
 
 exports.default = NodeAuthoringController;
 //# sourceMappingURL=nodeAuthoringController.js.map

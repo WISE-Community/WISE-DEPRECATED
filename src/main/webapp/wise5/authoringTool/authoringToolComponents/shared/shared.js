@@ -14,6 +14,10 @@ var _sideMenu = require('./sideMenu/sideMenu');
 
 var _sideMenu2 = _interopRequireDefault(_sideMenu);
 
+var _stepTools = require('./stepTools/stepTools');
+
+var _stepTools2 = _interopRequireDefault(_stepTools);
+
 var _toolbar = require('./toolbar/toolbar');
 
 var _toolbar2 = _interopRequireDefault(_toolbar);
@@ -29,6 +33,7 @@ var Shared = angular.module('shared', []);
 //Shared.component('accountMenu', AccountMenu);
 Shared.component('mainMenu', _mainMenu2.default);
 Shared.component('sideMenu', _sideMenu2.default);
+Shared.component('stepTools', _stepTools2.default);
 Shared.component('toolbar', _toolbar2.default);
 Shared.component('topBar', _topBar2.default);
 
