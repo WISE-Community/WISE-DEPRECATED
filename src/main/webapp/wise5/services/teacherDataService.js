@@ -922,17 +922,19 @@ var TeacherDataService = function () {
 
                     var runStatusPeriod = null;
 
-                    // loop through all the periods in the run status
-                    for (var r = 0; r < runStatusPeriods.length; r++) {
-                        var tempRunStatusPeriod = runStatusPeriods[r];
+                    if (runStatusPeriods != null) {
+                        // loop through all the periods in the run status
+                        for (var r = 0; r < runStatusPeriods.length; r++) {
+                            var tempRunStatusPeriod = runStatusPeriods[r];
 
-                        if (tempRunStatusPeriod != null) {
-                            if (period.periodId == tempRunStatusPeriod.periodId) {
-                                /*
-                                 * We have found a period that is in the config and
-                                 * the run status.
-                                 */
-                                runStatusPeriod = tempRunStatusPeriod;
+                            if (tempRunStatusPeriod != null) {
+                                if (period.periodId == tempRunStatusPeriod.periodId) {
+                                    /*
+                                     * We have found a period that is in the config and
+                                     * the run status.
+                                     */
+                                    runStatusPeriod = tempRunStatusPeriod;
+                                }
                             }
                         }
                     }

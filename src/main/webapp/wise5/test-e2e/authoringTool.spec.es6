@@ -86,7 +86,6 @@ describe('WISE Authoring Tool', () => {
         expect($("#moveButton").isEnabled()).toBe(false);
         expect($("#copyButton").isEnabled()).toBe(false);
         expect($("#deleteButton").isEnabled()).toBe(false);
-        expect($("#saveProjectButton").isEnabled()).toBe(true);
         expect($("#createNewActivityButton").isEnabled()).toBe(true);
         expect(createNewStepButton.isEnabled()).toBe(true);
         expect($("#previewProjectButton").isEnabled()).toBe(true);
@@ -100,23 +99,24 @@ describe('WISE Authoring Tool', () => {
     it('should create new steps', () => {
         // test adding a new step to an empty project
         createNewStepButton.click();
-        expect($("#createNodeTitle").isDisplayed()).toBeTruthy();
+        let createNodeTitle = element(by.model('projectController.createNodeTitle'));
+        expect(createNodeTitle.isDisplayed()).toBeTruthy();
         expect($("#createNodeCreateButton").isDisplayed()).toBeTruthy();
         expect($("#createNodeCancelButton").isDisplayed()).toBeTruthy();
         // clicking on cancel should hide the create node input and buttons
         $("#createNodeCancelButton").click();
-        expect($("#createNodeTitle").isDisplayed()).toBeFalsy();
+        expect(createNodeTitle.isDisplayed()).toBeFalsy();
         expect($("#createNodeCreateButton").isDisplayed()).toBeFalsy();
         expect($("#createNodeCancelButton").isDisplayed()).toBeFalsy();
 
         createNewStepButton.click();
-        $('#createNodeTitle').clear();  // clear out what's there.
-        $('#createNodeTitle').sendKeys('Step 1');
+        createNodeTitle.clear();  // clear out what's there.
+        createNodeTitle.sendKeys('Step 1');
         $("#createNodeCreateButton").click();
 
         element.all(by.repeater("item in projectController.items")).then((nodeItem) => {
-            expect(nodeItem[1].element(by.className('groupHeader')).getText()).toBe("1 First Activity");
-            let insertInsideAct1Button = nodeItem[1].element(by.cssContainingText('button','Insert Inside'));
+            expect(nodeItem[1].element(by.css('.groupHeader h6')).getText()).toBe("1 First Activity");
+            let insertInsideAct1Button = nodeItem[1].element(by.css('button.insertButton'));
             expect(insertInsideAct1Button.isDisplayed()).toBeTruthy();
             insertInsideAct1Button.click();
             let EC = protractor.ExpectedConditions;
@@ -125,27 +125,27 @@ describe('WISE Authoring Tool', () => {
         });
 
         element.all(by.repeater("item in projectController.items")).then((nodeItem) => {
-            expect(nodeItem[1].element(by.className('groupHeader')).getText()).toBe("1 First Activity");  // should have one default activity
-            expect(nodeItem[2].element(by.className('stepHeader')).getText()).toBe("1.1 Step 1");  // should now have the newly added step
+            expect(nodeItem[1].element(by.css('.groupHeader h6')).getText()).toBe("1 First Activity");  // should have one default activity
+            expect(nodeItem[2].element(by.css('.stepHeader h6')).getText()).toBe("1.1 Step 1");  // should now have the newly added step
         });
 
         // now test adding another step after the first step. This time the alert should not show.
 
         createNewStepButton.click();
-        $('#createNodeTitle').clear();  // clear out what's there.
-        $('#createNodeTitle').sendKeys('Step 2');
+        createNodeTitle.clear();  // clear out what's there.
+        createNodeTitle.sendKeys('Step 2');
         $("#createNodeCreateButton").click();
 
         element.all(by.repeater("item in projectController.items")).then((nodeItem) => {
-            let insertAfterStep1Button = nodeItem[2].element(by.cssContainingText('button','Insert After'));
+            let insertAfterStep1Button = nodeItem[2].element(by.css('button.insertButton'));
             expect(insertAfterStep1Button.isDisplayed()).toBeTruthy();
             insertAfterStep1Button.click();
         });
 
         element.all(by.repeater("item in projectController.items")).then((nodeItem) => {
-            expect(nodeItem[1].element(by.className('groupHeader')).getText()).toBe("1 First Activity");  // should have one default activity
-            expect(nodeItem[2].element(by.className('stepHeader')).getText()).toBe("1.1 Step 1");  // should have step 1
-            expect(nodeItem[3].element(by.className('stepHeader')).getText()).toBe("1.2 Step 2");  // should now have the newly added step
+            expect(nodeItem[1].element(by.css('.groupHeader h6')).getText()).toBe("1 First Activity");  // should have one default activity
+            expect(nodeItem[2].element(by.css('.stepHeader h6')).getText()).toBe("1.1 Step 1");  // should have step 1
+            expect(nodeItem[3].element(by.css('.stepHeader h6')).getText()).toBe("1.2 Step 2");  // should now have the newly added step
         });
     });
 

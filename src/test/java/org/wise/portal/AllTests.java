@@ -39,7 +39,7 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
 	   org.wise.portal.dao.authentication.impl.AllTests.class,
-	   org.wise.portal.dao.offering.impl.AllTests.class,
+	   org.wise.portal.dao.run.impl.AllTests.class,
 	   org.wise.portal.dao.project.impl.AllTests.class,
 	   org.wise.portal.dao.premadecomment.impl.AllTests.class,
 	   org.wise.portal.domain.impl.AllTests.class,
@@ -49,7 +49,7 @@ import org.junit.runners.Suite;
        org.wise.portal.presentation.validators.AllTests.class,
 	   org.wise.portal.presentation.web.controllers.AllTests.class,
 	   org.wise.portal.service.impl.AllTests.class,
-	   org.wise.portal.service.offering.impl.AllTests.class,
+	   org.wise.portal.service.run.impl.AllTests.class,
 	   org.wise.portal.service.student.impl.AllTests.class,
 	   org.wise.portal.service.project.impl.AllTests.class,
 	   org.wise.portal.domain.premadecomment.impl.AllTests.class,

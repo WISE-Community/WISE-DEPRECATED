@@ -20,19 +20,19 @@
  * ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF
  * REGENTS HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.wise.portal.dao.offering.impl;
+package org.wise.portal.service.run.impl;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
 /**
  * @author Hiroki Terashima
- * @version $Id$
+ * @version $Id: $
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses({
-	org.wise.portal.dao.offering.impl.HibernateOfferingDaoTest.class,
-	org.wise.portal.dao.offering.impl.HibernateRunDaoTest.class
+@Suite.SuiteClasses( {
+	OfferingServiceImplTest.class,
+	RunServiceImplTest.class
 })
 
 public class AllTests {

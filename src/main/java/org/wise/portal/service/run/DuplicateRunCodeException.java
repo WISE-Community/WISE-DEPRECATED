@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2007-2015 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -21,13 +21,27 @@
  * ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF
  * REGENTS HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.wise.portal.domain.run;
+package org.wise.portal.service.run;
 
 /**
- * Visitor Pattern Interface for Offering
+ * A checked exception thrown when trying to create a run with
+ * with a runcode that already exists in the data store
+ *
  * @author Hiroki Terashima
  */
-public interface OfferingVisitor {
-	Object visit(Offering offering);
-	Object visit(Run run);
+public class DuplicateRunCodeException extends Exception {
+
+	private static final long serialVersionUID = 1L;
+
+	public DuplicateRunCodeException(String message) {
+		super(message);
+	}
+	
+	public DuplicateRunCodeException(Throwable cause) {
+		super(cause);
+	}
+	
+	public DuplicateRunCodeException(String message, Throwable cause) {
+		super(message, cause);
+	}
 }

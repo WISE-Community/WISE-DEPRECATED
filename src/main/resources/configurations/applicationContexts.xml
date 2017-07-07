@@ -181,16 +181,16 @@
 	</bean>
 
 	<!-- An access decision manager used by the business objects -->
-	<bean id="offeringAccessDecisionManager" class="org.springframework.security.access.vote.ConsensusBased">
+	<bean id="runAccessDecisionManager" class="org.springframework.security.access.vote.ConsensusBased">
 		<property name="allowIfAllAbstainDecisions" value="false" />
 		<constructor-arg>
 			<list>
 				<ref bean="roleVoter" />
-				<ref bean="aclOfferingAdminVoter" />
-				<ref bean="aclOfferingReadVoter" />
-				<ref bean="aclOfferingWriteVoter" />
-				<ref bean="aclOfferingCreateVoter" />
-				<ref bean="aclOfferingDeleteVoter" />
+				<ref bean="aclRunAdminVoter" />
+				<ref bean="aclRunReadVoter" />
+				<ref bean="aclRunWriteVoter" />
+				<ref bean="aclRunCreateVoter" />
+				<ref bean="aclRunDeleteVoter" />
 			</list>
 		</constructor-arg>
 	</bean>
@@ -252,15 +252,15 @@
 		<property name="processDomainObjectClass" value="org.wise.portal.domain.group.Group" />
 	</bean>
 
-	<bean id="aclOfferingAdminVoter" class="org.springframework.security.acls.AclEntryVoter">
+	<bean id="aclRunAdminVoter" class="org.springframework.security.acls.AclEntryVoter">
 		<constructor-arg ref="aclService" />
-		<constructor-arg value="VOTE_ACL_OFFERING_ADMIN" />
+		<constructor-arg value="VOTE_ACL_RUN_ADMIN" />
 		<constructor-arg>
 			<list>
 				<ref bean="org.springframework.security.acls.domain.BasePermission.ADMINISTRATION" />
 			</list>
 		</constructor-arg>
-		<property name="processDomainObjectClass" value="org.wise.portal.domain.run.Offering" />
+		<property name="processDomainObjectClass" value="org.wise.portal.domain.run.Run" />
 	</bean>
 
 	<bean id="aclProjectAdminVoter" class="org.springframework.security.acls.AclEntryVoter">
@@ -298,16 +298,16 @@
 		<property name="processDomainObjectClass" value="org.wise.portal.domain.group.Group" />
 	</bean>
 
-	<bean id="aclOfferingReadVoter" class="org.springframework.security.acls.AclEntryVoter">
+	<bean id="aclRunReadVoter" class="org.springframework.security.acls.AclEntryVoter">
 		<constructor-arg ref="aclService" />
-		<constructor-arg value="VOTE_ACL_OFFERING_READ" />
+		<constructor-arg value="VOTE_ACL_RUN_READ" />
 		<constructor-arg>
 			<list>
 				<ref bean="org.springframework.security.acls.domain.BasePermission.ADMINISTRATION" />
 				<ref bean="org.springframework.security.acls.domain.BasePermission.READ" />
 			</list>
 		</constructor-arg>
-		<property name="processDomainObjectClass" value="org.wise.portal.domain.run.Offering" />
+		<property name="processDomainObjectClass" value="org.wise.portal.domain.run.Run" />
 	</bean>
 
 	<bean id="aclProjectReadVoter" class="org.springframework.security.acls.AclEntryVoter">
@@ -359,16 +359,16 @@
 		<property name="processDomainObjectClass" value="org.wise.portal.domain.project.Project" />
 	</bean>
 
-	<bean id="aclOfferingWriteVoter" class="org.springframework.security.acls.AclEntryVoter">
+	<bean id="aclRunWriteVoter" class="org.springframework.security.acls.AclEntryVoter">
 		<constructor-arg ref="aclService" />
-		<constructor-arg value="VOTE_ACL_OFFERING_WRITE" />
+		<constructor-arg value="VOTE_ACL_RUN_WRITE" />
 		<constructor-arg>
 			<list>
 				<ref bean="org.springframework.security.acls.domain.BasePermission.ADMINISTRATION" />
 				<ref bean="org.springframework.security.acls.domain.BasePermission.WRITE" />
 			</list>
 		</constructor-arg>
-		<property name="processDomainObjectClass" value="org.wise.portal.domain.run.Offering" />
+		<property name="processDomainObjectClass" value="org.wise.portal.domain.run.Run" />
 	</bean>
 
 	<bean id="aclWorkgroupWriteVoter" class="org.springframework.security.acls.AclEntryVoter">
@@ -396,16 +396,16 @@
 		<property name="processDomainObjectClass" value="org.wise.portal.domain.group.Group" />
 	</bean>
 
-	<bean id="aclOfferingCreateVoter" class="org.springframework.security.acls.AclEntryVoter">
+	<bean id="aclRunCreateVoter" class="org.springframework.security.acls.AclEntryVoter">
 		<constructor-arg ref="aclService" />
-		<constructor-arg value="VOTE_ACL_OFFERING_CREATE" />
+		<constructor-arg value="VOTE_ACL_RUN_CREATE" />
 		<constructor-arg>
 			<list>
 				<ref bean="org.springframework.security.acls.domain.BasePermission.ADMINISTRATION" />
 				<ref bean="org.springframework.security.acls.domain.BasePermission.CREATE" />
 			</list>
 		</constructor-arg>
-		<property name="processDomainObjectClass" value="org.wise.portal.domain.run.Offering" />
+		<property name="processDomainObjectClass" value="org.wise.portal.domain.run.Run" />
 	</bean>
 
 	<bean id="aclProjectCreateVoter" class="org.springframework.security.acls.AclEntryVoter">
@@ -445,16 +445,16 @@
 		<property name="processDomainObjectClass" value="org.wise.portal.domain.group.Group" />
 	</bean>
 
-	<bean id="aclOfferingDeleteVoter" class="org.springframework.security.acls.AclEntryVoter">
+	<bean id="aclRunDeleteVoter" class="org.springframework.security.acls.AclEntryVoter">
 		<constructor-arg ref="aclService" />
-		<constructor-arg value="VOTE_ACL_OFFERING_DELETE" />
+		<constructor-arg value="VOTE_ACL_RUN_DELETE" />
 		<constructor-arg>
 			<list>
 				<ref bean="org.springframework.security.acls.domain.BasePermission.ADMINISTRATION" />
 				<ref bean="org.springframework.security.acls.domain.BasePermission.DELETE" />
 			</list>
 		</constructor-arg>
-		<property name="processDomainObjectClass" value="org.wise.portal.domain.run.Offering" />
+		<property name="processDomainObjectClass" value="org.wise.portal.domain.run.Run" />
 	</bean>
 
 	<bean id="aclProjectDeleteVoter" class="org.springframework.security.acls.AclEntryVoter">
@@ -657,7 +657,7 @@
 	<bean id="userDetailsService" scope="prototype" class="org.wise.portal.service.authentication.impl.UserDetailsServiceImpl" />
 
 	<bean id="runService" class="org.springframework.aop.framework.ProxyFactoryBean">
-		<property name="proxyInterfaces" value="org.wise.portal.service.offering.RunService" />
+		<property name="proxyInterfaces" value="org.wise.portal.service.run.RunService" />
 		<property name="interceptorNames">
 			<list>
 				<idref bean="runServiceSecurity" />
@@ -669,12 +669,12 @@
 	<bean id="runServiceSecurity" class="org.springframework.security.access.intercept.aopalliance.MethodSecurityInterceptor">
 		<property name="validateConfigAttributes" value="true" />
 		<property name="authenticationManager" ref="authenticationManager" />
-		<property name="accessDecisionManager" ref="offeringAccessDecisionManager" />
+		<property name="accessDecisionManager" ref="runAccessDecisionManager" />
 		<property name="afterInvocationManager" ref="afterInvocationManager" />
 		<property name="securityMetadataSource" ref="securityMetadataSource" />
 	</bean>
 
-	<bean id="runServiceTarget" class="org.wise.portal.service.offering.impl.RunServiceImpl">
+	<bean id="runServiceTarget" class="org.wise.portal.service.run.impl.RunServiceImpl">
 		<property name="aclService" ref="aclServiceImpl" />
 	</bean>
 
@@ -691,7 +691,7 @@
 	<bean id="projectServiceSecurity" class="org.springframework.security.access.intercept.aopalliance.MethodSecurityInterceptor">
 		<property name="validateConfigAttributes" value="true" />
 		<property name="authenticationManager" ref="authenticationManager" />
-		<property name="accessDecisionManager" ref="offeringAccessDecisionManager" />
+		<property name="accessDecisionManager" ref="runAccessDecisionManager" />
 		<property name="afterInvocationManager" ref="afterInvocationManager" />
 		<property name="securityMetadataSource" ref="securityMetadataSource" />
 	</bean>
@@ -720,7 +720,7 @@
 
 	<bean id="workgroupServiceTarget" class="org.wise.portal.service.workgroup.impl.WorkgroupServiceImpl">
 		<property name="aclService" ref="aclServiceImpl" />
-		<property name="offeringService" ref="runService" />
+		<property name="runService" ref="runService" />
 		<property name="groupService" ref="groupService" />
 	</bean>
 
@@ -766,7 +766,6 @@
 				<value>org.wise.portal.domain.authentication.impl.PersistentAclTargetObjectIdentity</value>
 				<value>org.wise.portal.domain.authentication.impl.PersistentGrantedAuthority</value>
 				<value>org.wise.portal.domain.authentication.impl.PersistentUserDetails</value>
-				<value>org.wise.portal.domain.run.impl.OfferingImpl</value>
 				<value>org.wise.portal.domain.workgroup.impl.WorkgroupImpl</value>
 				<value>org.wise.portal.domain.user.impl.UserImpl</value>
 				<value>org.wise.portal.domain.group.impl.PersistentGroup</value>

@@ -42,7 +42,7 @@ import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.presentation.web.TeamSignInForm;
-import org.wise.portal.service.offering.RunService;
+import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.user.UserService;
 import org.wise.portal.service.workgroup.WorkgroupService;
 
@@ -105,7 +105,7 @@ public class TeamSignInFormValidator implements Validator {
         }
 		
 		// get the workgroups the signed in user is in for this run
-		List<Workgroup> workgroups = workgroupService.getWorkgroupListByOfferingAndUser(run, signedInUser);
+		List<Workgroup> workgroups = workgroupService.getWorkgroupListByRunAndUser(run, signedInUser);
 
 		Workgroup workgroup = null;
 

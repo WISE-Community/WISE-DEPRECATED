@@ -21,7 +21,7 @@
  * ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF
  * REGENTS HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.wise.portal.service.offering;
+package org.wise.portal.service.run;
 
 import java.util.List;
 import java.util.Set;
@@ -40,9 +40,10 @@ import org.wise.portal.domain.workgroup.Workgroup;
 /**
  * A service for working with <code>Run</code> objects
  *
+ * @author Laurel Williams
  * @author Hiroki Terashima
  */
-public interface RunService extends OfferingService {
+public interface RunService {
 
     /**
      * Creates a new <code>Run</code> object in the local data store. 
@@ -232,7 +233,7 @@ public interface RunService extends OfferingService {
      * @throws ObjectNotFoundException when runId cannot be used 
      *     to find an existing run 
      * @param runId runId to use for lookup
-     * @param groupId periodId to which all returned workgroups belong
+     * @param periodId periodId to which all returned workgroups belong
      */
     Set<Workgroup> getWorkgroups(Long runId, Long periodId) throws ObjectNotFoundException;
     

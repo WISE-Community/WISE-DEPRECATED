@@ -15,7 +15,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package org.wise.portal.service.offering.impl;
+package org.wise.portal.service.run.impl;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -25,14 +25,14 @@ import junit.framework.TestCase;
 import org.easymock.EasyMock;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.dao.module.CurnitDao;
-import org.wise.portal.dao.offering.OfferingDao;
+import org.wise.portal.dao.run.OfferingDao;
 import org.wise.portal.domain.module.Curnit;
 import org.wise.portal.domain.module.impl.CurnitImpl;
 import org.wise.portal.domain.run.Offering;
 import org.wise.portal.domain.run.impl.OfferingImpl;
 import org.wise.portal.domain.run.impl.OfferingParameters;
 import org.wise.portal.service.acl.AclService;
-import org.wise.portal.service.offering.impl.OfferingServiceImpl;
+import org.wise.portal.service.run.impl.OfferingServiceImpl;
 
 /**
  * @author Laurel Williams

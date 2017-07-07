@@ -99,9 +99,9 @@ public class HibernateWorkgroupDaoTest extends AbstractTransactionalDaoTests<Hib
     @Override
     protected void onSetUpInTransaction() throws Exception {
         super.onSetUpInTransaction();
-        // an offering needs to exist already before a workgroup can be created
+        // an run needs to exist already before a workgroup can be created
         Session session = this.sessionFactory.getCurrentSession();
-        session.save(this.defaultOffering); // save offering
+        session.save(this.defaultOffering); // save run
         this.dataObject.setOffering(this.defaultOffering);
         session.save(this.group);
         this.dataObject.setGroup(group);
@@ -120,7 +120,7 @@ public class HibernateWorkgroupDaoTest extends AbstractTransactionalDaoTests<Hib
 
     public void testSave_NonExistentOffering() {
         Offering nonExistentOffering = (Offering) this.applicationContext
-                .getBean("offering");
+                .getBean("run");
         this.dataObject.setOffering(nonExistentOffering);
         try {
             this.dao.save(this.dataObject);

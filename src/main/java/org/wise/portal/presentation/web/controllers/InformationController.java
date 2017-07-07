@@ -58,7 +58,7 @@ import org.wise.portal.domain.workgroup.WISEWorkgroup;
 import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.presentation.web.filters.WISEAuthenticationProcessingFilter;
 import org.wise.portal.service.authentication.UserDetailsService;
-import org.wise.portal.service.offering.RunService;
+import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.project.ProjectService;
 import org.wise.portal.service.user.UserService;
 import org.wise.portal.service.workgroup.WorkgroupService;
@@ -161,7 +161,7 @@ public class InformationController {
 		if (workgroupIdStr != null && workgroupIdStr != "") {
 			workgroup = workgroupService.retrieveById(new Long(workgroupIdStr));
 			// if a workgroup was specified that was not for this run, return BAD_REQUEST
-			if (workgroup.getOffering().getId() != run.getId()) {
+			if (workgroup.getRun().getId() != run.getId()) {
 				return null;
 			}
 		} else {
@@ -338,7 +338,7 @@ public class InformationController {
 
 		try {
 			//get the workgroup for the owner in the run
-			List<Workgroup> workgroupsForRunOwner = workgroupService.getWorkgroupListByOfferingAndUser(run, runOwner);
+			List<Workgroup> workgroupsForRunOwner = workgroupService.getWorkgroupListByRunAndUser(run, runOwner);
 
 			//get the workgroup since the owner should only have one workgroup in the run
 			Workgroup runOwnerWorkgroup = workgroupsForRunOwner.get(0);
@@ -362,7 +362,7 @@ public class InformationController {
 			User sharedOwner = sharedOwnersIterator.next();
 
 			//get the workgroups
-			List<Workgroup> sharedTeacherWorkgroups = workgroupService.getWorkgroupListByOfferingAndUser(run, sharedOwner);
+			List<Workgroup> sharedTeacherWorkgroups = workgroupService.getWorkgroupListByRunAndUser(run, sharedOwner);
 
 			/*
 			 * loop through all the shared teacher workgroups in case a shared
@@ -1025,15 +1025,15 @@ public class InformationController {
 			UserDetails userDetails = (UserDetails) context.getAuthentication().getPrincipal();
 			User user = userService.retrieveUser(userDetails);
 
-			List<Workgroup> workgroupListByOfferingAndUser
-				= workgroupService.getWorkgroupListByOfferingAndUser(run, user);
+			List<Workgroup> workgroupListByRunAndUser
+				= workgroupService.getWorkgroupListByRunAndUser(run, user);
 
-			if (workgroupListByOfferingAndUser.size() == 1) {
+			if (workgroupListByRunAndUser.size() == 1) {
 				// this user is in one workgroup
-				workgroup = workgroupListByOfferingAndUser.get(0);
-			} else if (workgroupListByOfferingAndUser.size() > 1) {
+				workgroup = workgroupListByRunAndUser.get(0);
+			} else if (workgroupListByRunAndUser.size() > 1) {
 				// this user is in more than one workgroup so we will just get the last one
-				workgroup = workgroupListByOfferingAndUser.get(workgroupListByOfferingAndUser.size() - 1);
+				workgroup = workgroupListByRunAndUser.get(workgroupListByRunAndUser.size() - 1);
 			} else {
 				// this user is not in any workgroups
 				String previewRequest = request.getParameter("preview");

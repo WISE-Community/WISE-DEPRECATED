@@ -20,14 +20,13 @@
  * ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF
  * REGENTS HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.wise.portal.dao.offering.impl;
+package org.wise.portal.dao.run.impl;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.hibernate.Session;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.wise.portal.dao.AbstractTransactionalDaoTests;
 import org.wise.portal.domain.run.Offering;
 import org.wise.portal.domain.run.impl.OfferingImpl;
@@ -70,7 +69,7 @@ public class HibernateOfferingDaoTest extends
         this.dao = (HibernateOfferingDao) this.applicationContext
                 .getBean("offeringDao");
         this.dataObject = (OfferingImpl) this.applicationContext
-                .getBean("offering");
+                .getBean("run");
         
 		this.workgroup = (WorkgroupImpl) this.applicationContext
 		    .getBean("workgroup");
@@ -89,7 +88,7 @@ public class HibernateOfferingDaoTest extends
 	public void testSave() {
 		verifyDataStoreIsEmpty();
 
-		// save the default offering object using dao
+		// save the default run object using dao
 		this.dao.save(this.dataObject);
 
 		// verify data store contains saved data using direct jdbc retrieval
@@ -104,7 +103,7 @@ public class HibernateOfferingDaoTest extends
 		// TODO HT: test this more, like check to see if workgroups has one workgroup, etc.
 		verifyDataStoreIsEmpty();
 
-		// save the default offering object using dao
+		// save the default run object using dao
 		this.dao.save(this.dataObject);
 		
 		Set<Workgroup> workgroups = this.dao.getWorkgroupsForOffering(this.dataObject.getId());
