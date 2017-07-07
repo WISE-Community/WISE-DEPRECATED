@@ -1460,6 +1460,7 @@ class NodeAuthoringController {
             this.showEditButtons = false;
             this.showRubric = false;
             this.showCreateBranch = false;
+            this.showAdvanced = false;
         } else if (view == 'editTransitions') {
             // toggle the edit transitions view and hide all the other views
             this.showCreateComponent = false;
@@ -1468,6 +1469,7 @@ class NodeAuthoringController {
             this.showEditButtons = false;
             this.showRubricButton = false;
             this.showCreateBranch = false;
+            this.showAdvanced = false;
         } else if (view == 'editConstraints') {
             // toggle the edit constraints view and hide all the other views
             this.showCreateComponent = false;
@@ -1476,6 +1478,7 @@ class NodeAuthoringController {
             this.showEditButtons = false;
             this.showRubric = false;
             this.showCreateBranch = false;
+            this.showAdvanced = false;
         } else if (view == 'editButtons') {
             // toggle the edit buttons view and hide all the other views
             this.showCreateComponent = false;
@@ -1484,6 +1487,7 @@ class NodeAuthoringController {
             this.showEditButtons = !this.showEditButtons;
             this.showRubric = false;
             this.showCreateBranch = false;
+            this.showAdvanced = false;
         } else if (view == 'editRubric') {
             // toggle the edit buttons view and hide all the other views
             this.showCreateComponent = false;
@@ -1492,6 +1496,7 @@ class NodeAuthoringController {
             this.showEditButtons = false;
             this.showRubric = !this.showRubric;
             this.showCreateBranch = false;
+            this.showAdvanced = false;
         } else if (view == 'createBranch') {
             // toggle the edit buttons view and hide all the other views
             this.showCreateComponent = false;
@@ -1500,6 +1505,7 @@ class NodeAuthoringController {
             this.showEditButtons = false;
             this.showRubric = false;
             this.showCreateBranch = !this.showCreateBranch;
+            this.showAdvanced = false;
         } else if (view == 'previousNode') {
             // hide all the other views
             this.showCreateComponent = false;
@@ -1508,6 +1514,7 @@ class NodeAuthoringController {
             this.showEditButtons = false;
             this.showRubric = false;
             this.showCreateBranch = false;
+            this.showAdvanced = false;
 
             // get the previous node id
             var prevNodeId = this.ProjectService.getPreviousNodeId(this.nodeId);
@@ -1528,6 +1535,7 @@ class NodeAuthoringController {
             this.showEditButtons = false;
             this.showRubric = false;
             this.showCreateBranch = false;
+            this.showAdvanced = false;
 
             // get the next node id
             var nextNodeId = this.ProjectService.getNextNodeId(this.nodeId);
@@ -1540,6 +1548,15 @@ class NodeAuthoringController {
                 var thereIsNoNextStep = this.$translate('thereIsNoNextStep');
                 alert(thereIsNoNextStep);
             }
+        } else if (view == 'advanced') {
+            // toggle the advanced view and hide all the other views
+            this.showCreateComponent = false;
+            this.showEditTransitions = false;
+            this.showConstraints = false;
+            this.showEditButtons = false;
+            this.showRubric = false;
+            this.showCreateBranch = false;
+            this.showAdvanced = !this.showAdvanced;
         }
     }
 

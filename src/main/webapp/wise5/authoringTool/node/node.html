@@ -16,8 +16,6 @@
         <md-icon>block</md-icon>
         <md-tooltip md-direction="top" class="projectButtonTooltip">{{ "editConstraints" | translate }}</md-tooltip>
     </md-button>
-    <md-button class='topButton md-raised md-primary' ng-click='nodeAuthoringController.nodeAuthoringViewButtonClicked("editButtons")'
-            translate="editButtons"></md-button>
     <md-button class='topButton md-raised md-primary' ng-click='nodeAuthoringController.nodeAuthoringViewButtonClicked("editRubric")'>
         <md-icon>message</md-icon>
         <md-tooltip md-direction="top" class="projectButtonTooltip">{{ "editStepRubric" | translate }}</md-tooltip>
@@ -413,7 +411,7 @@
     <button ng-click='nodeAuthoringController.addConstraint()' translate='addConstraint'></button>
 </div>
 
-<div ng-show='nodeAuthoringController.showEditButtons'>
+<div ng-show='nodeAuthoringController.showAdvanced'>
     <br/>
     {{ 'SHOW_SAVE_BUTTON' | translate }}:
     <input type='checkbox'
