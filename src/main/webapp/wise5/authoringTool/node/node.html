@@ -21,7 +21,7 @@
         <md-tooltip md-direction="top" class="projectButtonTooltip">{{ "editStepRubric" | translate }}</md-tooltip>
     </md-button>
     <md-button class='topButton md-raised md-primary' ng-click='nodeAuthoringController.nodeAuthoringViewButtonClicked("advanced")'>
-        <md-icon>tune</md-icon>
+        <md-icon>build</md-icon>
         <md-tooltip md-direction="top" class="projectButtonTooltip">{{ "ADVANCED" | translate }}</md-tooltip>
     </md-button>
     <md-button class='topButton md-raised md-primary' ng-click='nodeAuthoringController.nodeAuthoringViewButtonClicked("createBranch")'>
@@ -62,14 +62,29 @@
         </div>
     </div>
 </div>
-<div ng-show='nodeAuthoringController.showCreateComponent'>
-    <select ng-model='nodeAuthoringController.selectedComponent'>
-        <option ng-repeat='componentType in nodeAuthoringController.componentTypes' value='{{componentType.componentType}}'>
-            {{componentType.componentName}}
-        </option>
-    </select>
-    <button ng-click='nodeAuthoringController.createComponent()' translate="add"></button>
-    <button ng-click='nodeAuthoringController.showCreateComponent = false' translate="CANCEL"></button>
+<div ng-show='nodeAuthoringController.showCreateComponent' layout='row' style='margin-left: 10px;'>
+    <div layout='row'>
+        <h6>{{ 'chooseNewComponentType' | translate }}: </h6>
+    </div>
+    <div layout='row' style='margin-left: 20px; width: 180px;'>
+        <md-input-container style='margin-top: 0px; margin-bottom: 0px;'>
+            <md-select ng-model='nodeAuthoringController.selectedComponent'>
+                <md-option ng-repeat='componentType in nodeAuthoringController.componentTypes' value='{{componentType.componentType}}'>
+                    {{componentType.componentName}}
+                </md-option>
+            </md-select>
+        </md-input-container>
+    </div>
+    <div layout='row'>
+        <md-button class='moveComponentButton md-raised md-primary' ng-click='nodeAuthoringController.createComponent()'>
+            <md-icon>check</md-icon>
+            <md-tooltip md-direction="top" class="projectButtonTooltip">{{ "add" | translate }}</md-tooltip>
+        </md-button>
+        <md-button class='moveComponentButton md-raised md-primary' ng-click='nodeAuthoringController.showCreateComponent = false'>
+            <md-icon>close</md-icon>
+            <md-tooltip md-direction="top" class="projectButtonTooltip">{{ "CANCEL" | translate }}</md-tooltip>
+        </md-button>
+    </div>
 </div>
 
 
@@ -573,11 +588,33 @@
 </div>
 
 <div ng-repeat='(componentIndex, component) in nodeAuthoringController.components' class="md-padding">
-    <div>
-        <span style='font-weight:bold; margin-right:10px'>{{componentIndex + 1}}. {{component.type}}</span>
-        <button ng-click='nodeAuthoringController.moveComponentUp(component.id)' ng-disabled='nodeAuthoringController.components.length <= 1' translate="moveUp"></button>
-        <button ng-click='nodeAuthoringController.moveComponentDown(component.id)' ng-disabled='nodeAuthoringController.components.length <= 1' translate="moveDown"></button>
-        <button ng-click='nodeAuthoringController.deleteComponent(component.id)' translate="DELETE"></button>
+    <div layout='row'>
+        <div layout='row' style='margin-top: 10px;'>
+            <span style='font-weight:bold; margin-right:10px'>{{componentIndex + 1}}. {{component.type}}</span>
+        </div>
+        <div layout='row'>
+            <md-button class='moveComponentButton md-raised md-primary'
+                    ng-click='nodeAuthoringController.moveComponentUp(component.id)'
+                    ng-disabled='nodeAuthoringController.components.length <= 1'>
+                <md-icon>arrow_upward</md-icon>
+                <md-tooltip md-direction="top" class="projectButtonTooltip">{{ "moveUp" | translate }}</md-tooltip>
+            </md-button>
+        </div>
+        <div layout='row'>
+            <md-button class='moveComponentButton md-raised md-primary'
+                    ng-click='nodeAuthoringController.moveComponentDown(component.id)'
+                    ng-disabled='nodeAuthoringController.components.length <= 1'>
+                <md-icon>arrow_downward</md-icon>
+                <md-tooltip md-direction="top" class="projectButtonTooltip">{{ "moveDown" | translate }}</md-tooltip>
+            </md-button>
+        </div>
+        <div layout='row'>
+            <md-button class='moveComponentButton md-raised md-primary'
+                    ng-click='nodeAuthoringController.deleteComponent(component.id)'>
+                <md-icon>delete</md-icon>
+                <md-tooltip md-direction="top" class="projectButtonTooltip">{{ "DELETE" | translate }}</md-tooltip>
+            </md-button>
+        </div>
     </div>
     <component node-id='{{nodeAuthoringController.nodeId}}' component-id='{{component.id}}' mode='authoring'></component>
     <md-divider ng-if="!$last"></md-divider>
