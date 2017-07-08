@@ -4,20 +4,23 @@
     </style>
 
     <div ng-if='openResponseController.mode === "authoring" && !openResponseController.authoringComponentContent.showPreviousWork'>
-        <span>{{ 'PROMPT' | translate }}</span><span> <md-icon>announcement</md-icon><md-tooltip>{{ 'openResponse.promptTip' | translate }}</md-tooltip></span>:
-        <br/>
-        <textarea ng-model='openResponseController.authoringComponentContent.prompt'
-                  ng-change='openResponseController.authoringViewComponentChanged()'
-                  ng-model-options='{ debounce: 1000 }'
-                  rows='3'
-                  cols='100'></textarea>
-        <br/>
-        <br/>
+        <md-input-container style='width:100%'>
+            <label>{{ 'PROMPT' | translate }}</label><span ng-style="openResponseController.promptHasFocus || openResponseController.authoringComponentContent.prompt != '' ? { 'margin-left': '0px' } : { 'margin-left': '60px' }"><md-icon>announcement</md-icon><md-tooltip md-direction="right">{{ 'openResponse.promptTip' | translate }}</md-tooltip></span>
+            <textarea rows='3'
+                    type="textarea"
+                    ng-model='openResponseController.authoringComponentContent.prompt'
+                    ng-change='openResponseController.authoringViewComponentChanged()'
+                    ng-model-options='{ debounce: 1000 }'
+                    ng-focus='openResponseController.promptHasFocus = true'
+                    ng-blur='openResponseController.promptHasFocus = false'>
+            </textarea>
+        </md-input-container>
     </div>
     <div ng-if='openResponseController.mode === "authoring"'>
-        <br/>
-        <button ng-click='openResponseController.showAdvancedAuthoring = !openResponseController.showAdvancedAuthoring'>{{ 'ADVANCED' | translate }}</button>
-        <br/>
+        <md-button class='topButton md-raised md-primary' ng-click='openResponseController.showAdvancedAuthoring = !openResponseController.showAdvancedAuthoring'>
+            <md-icon>build</md-icon>
+            <md-tooltip md-direction="top" class="projectButtonTooltip">{{ "ADVANCED" | translate }}</md-tooltip>
+        </md-button>
         <div ng-show='openResponseController.showAdvancedAuthoring'>
             <span>{{ 'openResponse.starterSentence' | translate }} ({{ 'openResponse.optional' | translate }}):</span>
             <br/>
