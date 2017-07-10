@@ -8,7 +8,7 @@ import org.wise.portal.dao.annotation.wise5.AnnotationDao;
 import org.wise.portal.dao.impl.AbstractHibernateDao;
 import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.run.Run;
-import org.wise.portal.domain.workgroup.WISEWorkgroup;
+import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.vle.domain.annotation.wise5.Annotation;
 import org.wise.vle.domain.work.NotebookItem;
 import org.wise.vle.domain.work.StudentWork;
@@ -33,7 +33,7 @@ public class HibernateAnnotationDao extends AbstractHibernateDao<Annotation> imp
 
     @Override
     public List<Annotation> getAnnotationsByParams(
-            Integer id, Run run, Group period, WISEWorkgroup fromWorkgroup, WISEWorkgroup toWorkgroup,
+            Integer id, Run run, Group period, Workgroup fromWorkgroup, Workgroup toWorkgroup,
             String nodeId, String componentId, StudentWork studentWork, String localNotebookItemId, NotebookItem notebookItem, String type) {
 
         Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();

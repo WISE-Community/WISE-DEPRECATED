@@ -40,7 +40,7 @@ import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.impl.ChangeWorkgroupParameters;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
-import org.wise.portal.domain.workgroup.WISEWorkgroup;
+import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.service.group.GroupService;
 import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.user.UserService;
@@ -132,8 +132,7 @@ public class SubmitWorkgroupChangesController {
 			Run run = runService.retrieveById(params.getRunId());
 			Group period = groupService.retrieveById(params.getPeriodId());
 			params.setWorkgroupToId(new Long(-1));  // to indicate that we want to create a new workgroup
-			WISEWorkgroup newWorkgroup = (WISEWorkgroup) 
-				workgroupService.updateWorkgroupMembership(params);
+			Workgroup newWorkgroup = workgroupService.updateWorkgroupMembership(params);
 			for (int j=1; j<newWGList.size();j++) {
 				params = newWGList.get(j);
 				params.setWorkgroupTo(newWorkgroup);

@@ -6,8 +6,8 @@
         achievementData text not null,
         achievementTime datetime not null,
         primary key (id),
-        index runIdIndex (runId),
-        index workgroupIdIndex (workgroupId)
+        index achievementsRunIdIndex (runId),
+        index achievementsWorkgroupIdIndex (workgroupId)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
     create table acl_class (
@@ -79,6 +79,8 @@
         localNotebookItemId varchar(30),
         notebookItemId integer,
         toWorkgroupId bigint not null,
+        index annotationsRunIdIndex (runId),
+        index annotationsToWorkgroupIdIndex (toWorkgroupId),
         primary key (id)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -118,6 +120,8 @@
         periodId bigint,
         runId bigint not null,
         workgroupId bigint not null,
+        index eventsRunIdIndex (runId),
+        index eventsWorkgroupIdIndex (workgroupId),
         primary key (id)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -155,6 +159,7 @@
         projectId bigint,
         runId bigint,
         workgroupId bigint,
+        index ideabasketRunIdAndWorkgroupIdIndex (runId, workgroupId),
         primary key (id)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -173,6 +178,7 @@
         nodeId varchar(255),
         nodeType varchar(255),
         runId varchar(255),
+        index nodeRunIdIndex (runId),
         primary key (id)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -193,6 +199,8 @@
         studentAssetId integer,
         studentWorkId integer,
         workgroupId bigint not null,
+        index notebookItemsRunIdIndex (runId),
+        index notebookItemsWorkgroupIdIndex (workgroupId),
         primary key (id)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -212,6 +220,9 @@
         periodId bigint not null,
         runId bigint not null,
         toWorkgroupId bigint,
+        index notificationRunIdIndex (runId),
+        index notificationToWorkgroupIdIndex (toWorkgroupId),
+        index notificationFromWorkgroupIdIndex (fromWorkgroupId),
         primary key (id)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -248,6 +259,7 @@
         sendmail_properties tinyblob,
         settings text,
         OPTLOCK integer,
+        index portfolioRunIdAndWorkgroupIdIndex (runId, workgroupId),
         primary key (id)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -386,6 +398,7 @@
         runId bigint,
         status mediumtext,
         timestamp datetime,
+        index runstatusRunIdIndex (runId),
         primary key (id)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -416,6 +429,8 @@
         periodId bigint not null,
         runId bigint not null,
         workgroupId bigint not null,
+        index studentAssetsRunIdIndex (runId),
+        index studentAssetsWorkgroupIdIndex (workgroupId),
         primary key (id)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -432,6 +447,8 @@
         periodId bigint not null,
         runId bigint not null,
         workgroupId bigint not null,
+        index studentWorkRunIdIndex (runId),
+        index studentWorkWorkgroupIdIndex (workgroupId),
         primary key (id)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -466,6 +483,8 @@
         status mediumtext,
         timestamp datetime,
         workgroupId bigint,
+        index studentstatusRunIdIndex (runId),
+        index studentstatusWorkgroupIdIndex (workgroupId),
         primary key (id)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -521,6 +540,7 @@
     create table userinfo (
         id bigint not null auto_increment,
         workgroupId bigint,
+        index userinfoWorkgroupIdIndex (workgroupId),
         primary key (id)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -535,14 +555,6 @@
         id bigint not null auto_increment,
         data text,
         timestamp datetime,
-        primary key (id)
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-    create table wiseworkgroups (
-        externalId bigint,
-        is_teacher_workgroup bit,
-        id bigint not null,
-        period bigint,
         primary key (id)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -566,32 +578,8 @@
     alter table acl_sid
         add constraint UK_meabypi3cnm8604op6qvd517v  unique (sid, principal);
 
-    create index annotationsRunIdIndex on annotations (runId);
-
-    create index annotationsToWorkgroupIdIndex on annotations (toWorkgroupId);
-
-    create index eventsRunIdIndex on events (runId);
-
-    create index eventsWorkgroupIdIndex on events (workgroupId);
-
     alter table granted_authorities
         add constraint UK_cgffgw24ojv4o1oe9cpgdy60k  unique (authority);
-
-    create index ideabasketRunIdAndWorkgroupIdIndex on ideabasket (runId, workgroupId);
-
-    create index nodeRunIdIndex on node (runId);
-
-    create index notebookItemsRunIdIndex on notebookItems (runId);
-
-    create index notebookItemsWorkgroupIdIndex on notebookItems (workgroupId);
-
-    create index notificationRunIdIndex on notification (runId);
-
-    create index notificationToWorkgroupIdIndex on notification (toWorkgroupId);
-
-    create index notificationFromWorkgroupIdIndex on notification (fromWorkgroupId);
-
-    create index portfolioRunIdAndWorkgroupIdIndex on portfolio (runId, workgroupId);
 
     alter table runs
         add constraint UK_dxea1ifhea203qe2ie4lsd8vb  unique (run_code);
@@ -602,40 +590,24 @@
     alter table runs_related_to_groups
         add constraint UK_kcgmq40wsaa12f22mebooiyfv  unique (groups_fk);
 
-    create index runstatusRunIdIndex on runstatus (runId);
-
-    create index studentAssetsRunIdIndex on studentAssets (runId);
-
-    create index studentAssetsWorkgroupIdIndex on studentAssets (workgroupId);
-
-    create index studentWorkRunIdIndex on studentWork (runId);
-
-    create index studentWorkWorkgroupIdIndex on studentWork (workgroupId);
-
-    create index studentstatusRunIdIndex on studentstatus (runId);
-
-    create index studentstatusWorkgroupIdIndex on studentstatus (workgroupId);
-
     alter table user_details
         add constraint UK_qqadnciq8gixe1qmxd0rj9cyk  unique (username);
 
     alter table userinfo
         add constraint UK_dp78k1tuh3whhutek48hts0wy  unique (workgroupId);
 
-    create index userinfoWorkgroupIdIndex on userinfo (workgroupId);
-
     alter table users
         add constraint UK_ol2kbitd35lc87ddawfhiu9ll  unique (user_details_fk);
 
     alter table achievements
-        add constraint achievements_to_runs_fk
+        add constraint achievementsRunIdFkConstraint
         foreign key (runId)
         references runs (id);
 
     alter table achievements
-        add constraint achievements_to_workgroups_fk
+        add constraint achievementsWorkgroupIdFkConstraint
         foreign key (workgroupId)
-        references wiseworkgroups (id);
+        references workgroups (id);
 
     alter table acl_entry
         add constraint FK_i6xyfccd4y3wlwhgwpo4a9rm1
@@ -678,9 +650,9 @@
         references userinfo (id);
 
     alter table annotations
-        add constraint FK_3uwsbpxbqpqynfwt7oym6p59g
+        add constraint annotationsFromWorkgroupIdFkConstraint
         foreign key (fromWorkgroupId)
-        references wiseworkgroups (id);
+        references workgroups (id);
 
     alter table annotations
         add constraint FK_k3bkb9frmuj637vfehvmnrdqo
@@ -698,9 +670,9 @@
         references studentWork (id);
 
     alter table annotations
-        add constraint FK_ss22rostrwvgvh4x7n5mmq173
+        add constraint annotationsToWorkgroupIdFkConstraint
         foreign key (toWorkgroupId)
-        references wiseworkgroups (id);
+        references workgroups (id);
 
     alter table annotations
         add constraint FK_lklpu3fwsovjhx5wqsjlah0ov
@@ -713,19 +685,19 @@
         references stepwork (id);
 
     alter table events
-        add constraint FK_hvs65ix9oss3abisglg7r502r
+        add constraint eventsPeriodIdFkConstraint
         foreign key (periodId)
         references groups (id);
 
     alter table events
-        add constraint FK_18ony502dcyxdrgjriir0u8bm
+        add constraint eventsRunIdFkConstraint
         foreign key (runId)
         references runs (id);
 
     alter table events
-        add constraint FK_jh9ptmwgfdnyq9flj9mly66qd
+        add constraint eventsWorkgroupIdFkConstraint
         foreign key (workgroupId)
-        references wiseworkgroups (id);
+        references workgroups (id);
 
     alter table groups
         add constraint FK_x1sf5l9k6d5g1t7kemday5ib
@@ -748,49 +720,49 @@
         references users (id);
 
     alter table notebookItems
-        add constraint FK_ise5npapdk8l8oboed1cwdpvy
+        add constraint notebookItemsPeriodIdFkConstraint
         foreign key (periodId)
         references groups (id);
 
     alter table notebookItems
-        add constraint FK_ovww8da6he3tajdqcv5kjnkyc
+        add constraint notebookItemsRunIdFkConstraint
         foreign key (runId)
         references runs (id);
 
     alter table notebookItems
-        add constraint FK_qhj21osipe081frv53u06gsf7
+        add constraint notebookItemsStudentIdFkConstraint
         foreign key (studentAssetId)
         references studentAssets (id);
 
     alter table notebookItems
-        add constraint FK_o7cl4ipb1r8i5golyna3hd3iq
+        add constraint notebookItemsStudentWorkIdFkConstraint
         foreign key (studentWorkId)
         references studentWork (id);
 
     alter table notebookItems
-        add constraint FK_1kysecht20yj67y65kh1n1agw
+        add constraint notebookItemsWorkgroupIdFkConstraint
         foreign key (workgroupId)
-        references wiseworkgroups (id);
+        references workgroups (id);
 
     alter table notification
-        add constraint FK_s2r02d5cb8fx4p7yeoljc4dhp
+        add constraint notificationFromWorkgroupIdFkConstraint
         foreign key (fromWorkgroupId)
-        references wiseworkgroups (id);
+        references workgroups (id);
 
     alter table notification
-        add constraint FK_ohnbl97r0jjlh6rv4or01ngqu
+        add constraint notificationPeriodIdFkConstraint
         foreign key (periodId)
         references groups (id);
 
     alter table notification
-        add constraint FK_7s5o7rba23e06qag9479ohq5w
+        add constraint notificationRunIdFkConstraint
         foreign key (runId)
         references runs (id);
 
     alter table notification
-        add constraint FK_7opq58yb9g6d4ggs8rg45cdti
+        add constraint notificationToWorkgroupIdFkConstraint
         foreign key (toWorkgroupId)
-        references wiseworkgroups (id);
+        references workgroups (id);
 
     alter table peerreviewgate
         add constraint FK_bulp6tbwu3b9o6eagiq95i2r9
@@ -928,34 +900,34 @@
         references userinfo (id);
 
     alter table studentAssets
-        add constraint FK_gkc4jns85mcoslbxsmv4ie439
+        add constraint studentAssetsPeriodIdFkConstraint
         foreign key (periodId)
         references groups (id);
 
     alter table studentAssets
-        add constraint FK_rp03jp240sd652ufbuagpk8yr
+        add constraint studentAssetsRunIdFkConstraint
         foreign key (runId)
         references runs (id);
 
     alter table studentAssets
-        add constraint FK_ek7vyrj5s18xxq7376c4ml182
+        add constraint studentAssetsWorkgroupIdFkConstraint
         foreign key (workgroupId)
-        references wiseworkgroups (id);
+        references workgroups (id);
 
     alter table studentWork
-        add constraint FK_5a5bt8rjamjme0re6qlf7hs1y
+        add constraint studentWorkPeriodIdFkConstraint
         foreign key (periodId)
         references groups (id);
 
     alter table studentWork
-        add constraint FK_hf57jgwp7plk8p935k9engx6v
+        add constraint studentWorkRunIdFkConstraint
         foreign key (runId)
         references runs (id);
 
     alter table studentWork
-        add constraint FK_5ojijtumnugj5h36q4g9fi0en
+        add constraint studentWorkWorkgroupIdFkConstraint
         foreign key (workgroupId)
-        references wiseworkgroups (id);
+        references workgroups (id);
 
     alter table student_user_details
         add constraint FK_qgv3p8ouoryypy2eacb5ma8xc
@@ -981,16 +953,6 @@
         add constraint FK_ol2kbitd35lc87ddawfhiu9ll
         foreign key (user_details_fk)
         references user_details (id);
-
-    alter table wiseworkgroups
-        add constraint FK_6uylikvjy2shywbjils4pw5uc
-        foreign key (period)
-        references groups (id);
-
-    alter table wiseworkgroups
-        add constraint FK_f24mfvwckptrwk3kk37q6bnay
-        foreign key (id)
-        references workgroups (id);
 
     alter table workgroups
         add constraint FK_l3p60cdyaxu6nxi2wgurypey9

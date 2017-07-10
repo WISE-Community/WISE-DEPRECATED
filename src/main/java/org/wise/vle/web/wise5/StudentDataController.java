@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3,
@@ -36,7 +36,7 @@ import org.springframework.web.socket.WebSocketHandler;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
-import org.wise.portal.domain.workgroup.WISEWorkgroup;
+import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.vle.wise5.VLEService;
@@ -196,11 +196,11 @@ public class StudentDataController {
         // test for permissions
         User user = ControllerUtil.getSignedInUser();
         Run run = null;
-        WISEWorkgroup workgroup = null;
+        Workgroup workgroup = null;
         try {
             run = runService.retrieveById(new Long(runId));
             if (workgroupId != null) {
-                workgroup = (WISEWorkgroup) workgroupService.retrieveById(new Long(workgroupId));
+                workgroup = workgroupService.retrieveById(new Long(workgroupId));
             }
         } catch (ObjectNotFoundException e) {
             e.printStackTrace();
@@ -264,11 +264,11 @@ public class StudentDataController {
         // test for permissions
         User user = ControllerUtil.getSignedInUser();
         Run run = null;
-        WISEWorkgroup workgroup = null;
+        Workgroup workgroup = null;
         try {
             run = runService.retrieveById(new Long(runId));
             if (workgroupId != null) {
-                workgroup = (WISEWorkgroup) workgroupService.retrieveById(new Long(workgroupId));
+                workgroup = workgroupService.retrieveById(new Long(workgroupId));
             }
         } catch (ObjectNotFoundException e) {
             e.printStackTrace();

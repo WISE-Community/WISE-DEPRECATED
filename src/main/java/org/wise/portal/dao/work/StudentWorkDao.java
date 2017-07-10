@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2016 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3,
@@ -27,7 +27,7 @@ import org.json.JSONObject;
 import org.wise.portal.dao.SimpleDao;
 import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.run.Run;
-import org.wise.portal.domain.workgroup.WISEWorkgroup;
+import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.vle.domain.work.StudentWork;
 
 import java.util.List;
@@ -38,7 +38,7 @@ import java.util.List;
  */
 public interface StudentWorkDao<T extends StudentWork> extends SimpleDao<T> {
 
-    List<StudentWork> getStudentWorkListByParams(Integer id, Run run, Group period, WISEWorkgroup workgroup,
+    List<StudentWork> getStudentWorkListByParams(Integer id, Run run, Group period, Workgroup workgroup,
                                                     Boolean isAutoSave, Boolean isSubmit,
                                                     String nodeId, String componentId, String componentType,
                                                     List<JSONObject> components);

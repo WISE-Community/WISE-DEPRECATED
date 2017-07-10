@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2016 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3,
@@ -29,8 +29,8 @@ import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.group.impl.PersistentGroup;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.run.impl.RunImpl;
-import org.wise.portal.domain.workgroup.WISEWorkgroup;
-import org.wise.portal.domain.workgroup.impl.WISEWorkgroupImpl;
+import org.wise.portal.domain.workgroup.Workgroup;
+import org.wise.portal.domain.workgroup.impl.WorkgroupImpl;
 import org.wise.vle.domain.PersistableDomain;
 
 import javax.persistence.*;
@@ -60,13 +60,13 @@ public class Notification extends PersistableDomain {
     @JoinColumn(name = "periodId", nullable = false)
     private Group period;   // which period this notification is for
 
-    @ManyToOne(targetEntity = WISEWorkgroupImpl.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
+    @ManyToOne(targetEntity = WorkgroupImpl.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
     @JoinColumn(name = "toWorkgroupId")
-    private WISEWorkgroup toWorkgroup;  // who this notification is for
+    private Workgroup toWorkgroup;  // who this notification is for
 
-    @ManyToOne(targetEntity = WISEWorkgroupImpl.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
+    @ManyToOne(targetEntity = WorkgroupImpl.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
     @JoinColumn(name = "fromWorkgroupId")
-    private WISEWorkgroup fromWorkgroup;  // who this notification is from
+    private Workgroup fromWorkgroup;  // who this notification is from
 
     @Column(name = "groupId", length = 30)
     private String groupId;  // id of the group of notifications this notification belongs to, if any.
@@ -111,7 +111,6 @@ public class Notification extends PersistableDomain {
         this.id = id;
     }
 
-
     public Run getRun() {
         return run;
     }
@@ -128,19 +127,19 @@ public class Notification extends PersistableDomain {
         this.period = period;
     }
 
-    public WISEWorkgroup getToWorkgroup() {
+    public Workgroup getToWorkgroup() {
         return toWorkgroup;
     }
 
-    public void setToWorkgroup(WISEWorkgroup toWorkgroup) {
+    public void setToWorkgroup(Workgroup toWorkgroup) {
         this.toWorkgroup = toWorkgroup;
     }
 
-    public WISEWorkgroup getFromWorkgroup() {
+    public Workgroup getFromWorkgroup() {
         return fromWorkgroup;
     }
 
-    public void setFromWorkgroup(WISEWorkgroup fromWorkgroup) {
+    public void setFromWorkgroup(Workgroup fromWorkgroup) {
         this.fromWorkgroup = fromWorkgroup;
     }
 

@@ -25,7 +25,7 @@ package org.wise.portal.dao.achievement;
 
 import org.wise.portal.dao.SimpleDao;
 import org.wise.portal.domain.run.Run;
-import org.wise.portal.domain.workgroup.WISEWorkgroup;
+import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.vle.domain.achievement.Achievement;
 
 import java.util.List;
@@ -45,5 +45,5 @@ public interface AchievementDao<T extends Achievement> extends SimpleDao<T> {
      * @param type type of achievement (e.g. "completion", "milestone")
      * @return a list of achievements that match the specified params
      */
-    List<Achievement> getAchievementsByParams(Integer id, Run run, WISEWorkgroup workgroup, String achievementId, String type);
+    List<Achievement> getAchievementsByParams(Integer id, Run run, Workgroup workgroup, String achievementId, String type);
 }

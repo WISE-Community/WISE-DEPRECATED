@@ -80,18 +80,18 @@ public interface RunDao<T extends Run> extends SimpleDao<T> {
      * Retrieves a <code>List<Run></code> list of runs from the data store given a
      * <code>User</code> who is attached to a period that is attached to the run.
      * 
-     * @param <code>User</code> user
+     * @param user
      * @return <code>List<Run></code>
      */
     List<Run> getRunListByUserInPeriod(User user);
     
     /**
-     * Retrieves a <code>List<WISEWorkgroup></code> given a <code>Long</code> runId and
+     * Retrieves a <code>List<Workgroup></code> given a <code>Long</code> runId and
      * <code>Long</code> periodId
      * 
      * @param runId id of the run
      * @param periodId id of the period
-     * @return <code>List<WISEWorkgroup></code>
+     * @return <code>List<Workgroup></code>
      */
     Set<Workgroup> getWorkgroupsForRunAndPeriod(Long runId, Long periodId);
     

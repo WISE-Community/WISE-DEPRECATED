@@ -29,8 +29,8 @@ import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.group.impl.PersistentGroup;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.run.impl.RunImpl;
-import org.wise.portal.domain.workgroup.WISEWorkgroup;
-import org.wise.portal.domain.workgroup.impl.WISEWorkgroupImpl;
+import org.wise.portal.domain.workgroup.Workgroup;
+import org.wise.portal.domain.workgroup.impl.WorkgroupImpl;
 import org.wise.vle.domain.PersistableDomain;
 import org.wise.vle.domain.work.NotebookItem;
 import org.wise.vle.domain.work.StudentWork;
@@ -63,13 +63,13 @@ public class Annotation extends PersistableDomain {
     @JoinColumn(name = "periodId", nullable = false)
     private Group period;
 
-    @ManyToOne(targetEntity = WISEWorkgroupImpl.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
+    @ManyToOne(targetEntity = WorkgroupImpl.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
     @JoinColumn(name = "fromWorkgroupId", nullable = true)
-    private WISEWorkgroup fromWorkgroup;
+    private Workgroup fromWorkgroup;
 
-    @ManyToOne(targetEntity = WISEWorkgroupImpl.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
+    @ManyToOne(targetEntity = WorkgroupImpl.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
     @JoinColumn(name = "toWorkgroupId", nullable = false)
-    private WISEWorkgroup toWorkgroup;
+    private Workgroup toWorkgroup;
 
     @Column(name = "nodeId", length = 30, nullable = true)
     private String nodeId;
@@ -132,19 +132,19 @@ public class Annotation extends PersistableDomain {
         this.period = period;
     }
 
-    public WISEWorkgroup getFromWorkgroup() {
+    public Workgroup getFromWorkgroup() {
         return fromWorkgroup;
     }
 
-    public void setFromWorkgroup(WISEWorkgroup fromWorkgroup) {
+    public void setFromWorkgroup(Workgroup fromWorkgroup) {
         this.fromWorkgroup = fromWorkgroup;
     }
 
-    public WISEWorkgroup getToWorkgroup() {
+    public Workgroup getToWorkgroup() {
         return toWorkgroup;
     }
 
-    public void setToWorkgroup(WISEWorkgroup toWorkgroup) {
+    public void setToWorkgroup(Workgroup toWorkgroup) {
         this.toWorkgroup = toWorkgroup;
     }
 

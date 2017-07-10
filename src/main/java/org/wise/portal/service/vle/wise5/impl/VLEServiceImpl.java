@@ -39,7 +39,7 @@ import org.wise.portal.dao.work.StudentWorkDao;
 import org.wise.portal.dao.work.EventDao;
 import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.run.Run;
-import org.wise.portal.domain.workgroup.WISEWorkgroup;
+import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.service.group.GroupService;
 import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.vle.wise5.VLEService;
@@ -116,10 +116,10 @@ public class VLEServiceImpl implements VLEService {
                 e.printStackTrace();
             }
         }
-        WISEWorkgroup workgroup = null;
+        Workgroup workgroup = null;
         if (workgroupId != null) {
             try {
-                workgroup = (WISEWorkgroup) workgroupService.retrieveById(new Long(workgroupId));
+                workgroup = workgroupService.retrieveById(new Long(workgroupId));
             } catch (ObjectNotFoundException e) {
                 e.printStackTrace();
             }
@@ -269,7 +269,7 @@ public class VLEServiceImpl implements VLEService {
         }
         if (workgroupId != null) {
             try {
-                studentWork.setWorkgroup((WISEWorkgroup) workgroupService.retrieveById(new Long(workgroupId)));
+                studentWork.setWorkgroup(workgroupService.retrieveById(new Long(workgroupId)));
             } catch (ObjectNotFoundException e) {
                 e.printStackTrace();
             }
@@ -336,10 +336,10 @@ public class VLEServiceImpl implements VLEService {
                 e.printStackTrace();
             }
         }
-        WISEWorkgroup workgroup = null;
+        Workgroup workgroup = null;
         if (workgroupId != null) {
             try {
-                workgroup = (WISEWorkgroup) workgroupService.retrieveById(new Long(workgroupId));
+                workgroup = workgroupService.retrieveById(new Long(workgroupId));
             } catch (ObjectNotFoundException e) {
                 e.printStackTrace();
             }
@@ -385,7 +385,7 @@ public class VLEServiceImpl implements VLEService {
         }
         if (workgroupId != null) {
             try {
-                event.setWorkgroup((WISEWorkgroup) workgroupService.retrieveById(new Long(workgroupId)));
+                event.setWorkgroup(workgroupService.retrieveById(new Long(workgroupId)));
             } catch (ObjectNotFoundException e) {
                 e.printStackTrace();
             }
@@ -435,10 +435,10 @@ public class VLEServiceImpl implements VLEService {
                 e.printStackTrace();
             }
         }
-        WISEWorkgroup workgroup = null;
+        Workgroup workgroup = null;
         if (workgroupId != null) {
             try {
-                workgroup = (WISEWorkgroup) workgroupService.retrieveById(new Long(workgroupId));
+                workgroup = workgroupService.retrieveById(new Long(workgroupId));
             } catch (ObjectNotFoundException e) {
                 e.printStackTrace();
             }
@@ -472,7 +472,7 @@ public class VLEServiceImpl implements VLEService {
         }
         if (workgroupId != null) {
             try {
-                achievement.setWorkgroup((WISEWorkgroup) workgroupService.retrieveById(new Long(workgroupId)));
+                achievement.setWorkgroup(workgroupService.retrieveById(new Long(workgroupId)));
             } catch (ObjectNotFoundException e) {
                 e.printStackTrace();
             }
@@ -516,18 +516,18 @@ public class VLEServiceImpl implements VLEService {
                 e.printStackTrace();
             }
         }
-        WISEWorkgroup fromWorkgroup = null;
+        Workgroup fromWorkgroup = null;
         if (fromWorkgroupId != null) {
             try {
-                fromWorkgroup = (WISEWorkgroup) workgroupService.retrieveById(new Long(fromWorkgroupId));
+                fromWorkgroup = workgroupService.retrieveById(new Long(fromWorkgroupId));
             } catch (ObjectNotFoundException e) {
                 e.printStackTrace();
             }
         }
-        WISEWorkgroup toWorkgroup = null;
+        Workgroup toWorkgroup = null;
         if (toWorkgroupId != null) {
             try {
-                toWorkgroup = (WISEWorkgroup) workgroupService.retrieveById(new Long(toWorkgroupId));
+                toWorkgroup = workgroupService.retrieveById(new Long(toWorkgroupId));
             } catch (ObjectNotFoundException e) {
                 e.printStackTrace();
             }
@@ -601,14 +601,14 @@ public class VLEServiceImpl implements VLEService {
         }
         if (fromWorkgroupId != null) {
             try {
-                annotation.setFromWorkgroup((WISEWorkgroup) workgroupService.retrieveById(new Long(fromWorkgroupId)));
+                annotation.setFromWorkgroup(workgroupService.retrieveById(new Long(fromWorkgroupId)));
             } catch (ObjectNotFoundException e) {
                 e.printStackTrace();
             }
         }
         if (toWorkgroupId != null) {
             try {
-                annotation.setToWorkgroup((WISEWorkgroup) workgroupService.retrieveById(new Long(toWorkgroupId)));
+                annotation.setToWorkgroup(workgroupService.retrieveById(new Long(toWorkgroupId)));
             } catch (ObjectNotFoundException e) {
                 e.printStackTrace();
             }
@@ -678,10 +678,10 @@ public class VLEServiceImpl implements VLEService {
                 e.printStackTrace();
             }
         }
-        WISEWorkgroup workgroup = null;
+        Workgroup workgroup = null;
         if (workgroupId != null) {
             try {
-                workgroup = (WISEWorkgroup) workgroupService.retrieveById(new Long(workgroupId));
+                workgroup = workgroupService.retrieveById(new Long(workgroupId));
             } catch (ObjectNotFoundException e) {
                 e.printStackTrace();
             }
@@ -729,7 +729,7 @@ public class VLEServiceImpl implements VLEService {
         }
         if (workgroupId != null) {
             try {
-                studentAsset.setWorkgroup((WISEWorkgroup) workgroupService.retrieveById(new Long(workgroupId)));
+                studentAsset.setWorkgroup(workgroupService.retrieveById(new Long(workgroupId)));
             } catch (ObjectNotFoundException e) {
                 e.printStackTrace();
             }
@@ -824,10 +824,10 @@ public class VLEServiceImpl implements VLEService {
                 e.printStackTrace();
             }
         }
-        WISEWorkgroup workgroup = null;
+        Workgroup workgroup = null;
         if (workgroupId != null) {
             try {
-                workgroup = (WISEWorkgroup) workgroupService.retrieveById(new Long(workgroupId));
+                workgroup = workgroupService.retrieveById(new Long(workgroupId));
             } catch (ObjectNotFoundException e) {
                 e.printStackTrace();
             }
@@ -874,7 +874,7 @@ public class VLEServiceImpl implements VLEService {
         }
         if (workgroupId != null) {
             try {
-                notebookItem.setWorkgroup((WISEWorkgroup) workgroupService.retrieveById(new Long(workgroupId)));
+                notebookItem.setWorkgroup(workgroupService.retrieveById(new Long(workgroupId)));
             } catch (ObjectNotFoundException e) {
                 e.printStackTrace();
             }
@@ -971,10 +971,10 @@ public class VLEServiceImpl implements VLEService {
                 e.printStackTrace();
             }
         }
-        WISEWorkgroup workgroup = null;
+        Workgroup workgroup = null;
         if (toWorkgroupId != null) {
             try {
-                workgroup = (WISEWorkgroup) workgroupService.retrieveById(new Long(toWorkgroupId));
+                workgroup = workgroupService.retrieveById(new Long(toWorkgroupId));
             } catch (ObjectNotFoundException e) {
                 e.printStackTrace();
             }
@@ -1022,14 +1022,14 @@ public class VLEServiceImpl implements VLEService {
         }
         if (fromWorkgroupId != null) {
             try {
-                notification.setFromWorkgroup((WISEWorkgroup) workgroupService.retrieveById(new Long(fromWorkgroupId)));
+                notification.setFromWorkgroup(workgroupService.retrieveById(new Long(fromWorkgroupId)));
             } catch (ObjectNotFoundException e) {
                 e.printStackTrace();
             }
         }
         if (toWorkgroupId != null) {
             try {
-                notification.setToWorkgroup((WISEWorkgroup) workgroupService.retrieveById(new Long(toWorkgroupId)));
+                notification.setToWorkgroup(workgroupService.retrieveById(new Long(toWorkgroupId)));
             } catch (ObjectNotFoundException e) {
                 e.printStackTrace();
             }
