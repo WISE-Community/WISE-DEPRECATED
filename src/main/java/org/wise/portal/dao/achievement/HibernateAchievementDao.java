@@ -30,7 +30,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 import org.wise.portal.dao.impl.AbstractHibernateDao;
 import org.wise.portal.domain.run.Run;
-import org.wise.portal.domain.workgroup.WISEWorkgroup;
+import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.vle.domain.achievement.Achievement;
 
 import java.util.List;
@@ -45,7 +45,7 @@ public class HibernateAchievementDao
         implements AchievementDao<Achievement> {
 
     @Override
-    public List<Achievement> getAchievementsByParams(Integer id, Run run, WISEWorkgroup workgroup, String achievementId, String type) {
+    public List<Achievement> getAchievementsByParams(Integer id, Run run, Workgroup workgroup, String achievementId, String type) {
 
         Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
         Criteria sessionCriteria = session.createCriteria(Achievement.class);

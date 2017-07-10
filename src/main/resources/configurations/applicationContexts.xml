@@ -772,7 +772,6 @@
 				<value>org.wise.portal.domain.authentication.impl.StudentUserDetails</value>
 				<value>org.wise.portal.domain.authentication.impl.TeacherUserDetails</value>
 				<value>org.wise.portal.domain.run.impl.RunImpl</value>
-				<value>org.wise.portal.domain.workgroup.impl.WISEWorkgroupImpl</value>
 				<value>org.wise.portal.domain.project.impl.ProjectImpl</value>
 				<value>org.wise.portal.domain.portal.impl.PortalImpl</value>
 				<value>org.wise.portal.domain.premadecomment.impl.PremadeCommentImpl</value>

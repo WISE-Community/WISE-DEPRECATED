@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2007-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -38,7 +38,6 @@ import org.wise.portal.domain.project.impl.Projectcode;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.run.StudentRunInfo;
 import org.wise.portal.domain.user.User;
-import org.wise.portal.domain.workgroup.WISEWorkgroup;
 import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.service.group.GroupService;
 import org.wise.portal.service.run.RunService;
@@ -61,7 +60,7 @@ public class StudentServiceImpl implements StudentService {
 	private WorkgroupService workgroupService;
 	
 	/**
-	 * @see org.wise.portal.service.student.StudentService#addStudentToRun(net.sf.sail.webapp.domain.User, org.wise.portal.domain.impl.Projectcode)
+	 * @see org.wise.portal.service.student.StudentService#addStudentToRun(User, Projectcode)
 	 */
 	public synchronized void addStudentToRun(User studentUser, Projectcode projectcode) 
 	    throws ObjectNotFoundException, PeriodNotFoundException, StudentUserAlreadyAssociatedWithRunException {
@@ -82,7 +81,7 @@ public class StudentServiceImpl implements StudentService {
 				String name = "Workgroup for user: " + studentUser.getUserDetails().getUsername();
 				Set<User> members = new HashSet<User>();
 				members.add(studentUser);
-				workgroupService.createWISEWorkgroup(name, members, run, period);
+				workgroupService.createWorkgroup(name, members, run, period);
 			}
 		} else {
 			throw new StudentUserAlreadyAssociatedWithRunException(studentUser, run);
@@ -90,7 +89,7 @@ public class StudentServiceImpl implements StudentService {
 	}
 
 	/**
-	 * @see org.wise.portal.service.student.StudentService#getTeachersOfStudent(net.sf.sail.webapp.domain.User)
+	 * @see org.wise.portal.service.student.StudentService#getTeachersOfStudent(User)
 	 */
 	public List<User> getTeachersOfStudent(User studentUser) {
 		// get all runs that this student is associated with.
@@ -136,7 +135,7 @@ public class StudentServiceImpl implements StudentService {
 	}
 
 	/**
-	 * @see org.wise.portal.service.student.StudentService#getStudentRunInfo(net.sf.sail.webapp.domain.User, org.wise.portal.domain.Run)
+	 * @see org.wise.portal.service.student.StudentService#getStudentRunInfo(User, Run)
 	 */
 	public StudentRunInfo getStudentRunInfo(User studentUser, Run run) {
 		StudentRunInfo studentRunInfo = new StudentRunInfo();
@@ -147,7 +146,7 @@ public class StudentServiceImpl implements StudentService {
 		List<Workgroup> workgroupsForThisRun = 
 			workgroupService.getWorkgroupListByRunAndUser(run, studentUser);
 		if (workgroupsForThisRun.size() > 0) {
-			WISEWorkgroup workgroupForThisRun = (WISEWorkgroup) workgroupsForThisRun.get(0);			
+			Workgroup workgroupForThisRun = workgroupsForThisRun.get(0);
 			studentRunInfo.setWorkgroup(workgroupForThisRun);
 		} 
 		

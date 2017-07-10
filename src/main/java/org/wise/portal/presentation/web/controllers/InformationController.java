@@ -54,7 +54,6 @@ import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
-import org.wise.portal.domain.workgroup.WISEWorkgroup;
 import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.presentation.web.filters.WISEAuthenticationProcessingFilter;
 import org.wise.portal.service.authentication.UserDetailsService;
@@ -168,13 +167,11 @@ public class InformationController {
             workgroup = getWorkgroup(request, run);
         }
 
-		/*
-		 * the group id of the period, this is the id in the db which is not
-		 * the same as the period number
-		 */
+		// the group id of the period, this is the id in the db which is not
+		// the same as the period number
 		String periodId = "";
 
-		//the period number that you would regularly think o157f as a period
+		// the period name that you would regularly think of as a period
 		String periodName = "";
 
 		User loggedInUser = ControllerUtil.getSignedInUser();
@@ -183,17 +180,17 @@ public class InformationController {
 		Long workgroupId = null;
 
 		// get the period
-		if (workgroup instanceof WISEWorkgroup && !((WISEWorkgroup) workgroup).isTeacherWorkgroup()) {
+		if (!workgroup.isTeacherWorkgroup()) {
 			// the logged in user is a student
-			Group periodGroup = ((WISEWorkgroup) workgroup).getPeriod();
+			Group periodGroup = workgroup.getPeriod();
 			periodName = periodGroup.getName();
 			periodId = periodGroup.getId().toString();
 			workgroupId = workgroup.getId();
-		} else if ((workgroup != null && ((WISEWorkgroup) workgroup).isTeacherWorkgroup())
+		} else if ((workgroup != null && workgroup.isTeacherWorkgroup())
 				|| (workgroup == null && loggedInUser.isAdmin())) {
 
 			// the logged in user is a teacher or is of admin-role
-			if (workgroup != null && ((WISEWorkgroup) workgroup).isTeacherWorkgroup()) {
+			if (workgroup != null && workgroup.isTeacherWorkgroup()) {
 				// if teacher, include workgroupId
 				workgroupId = workgroup.getId();
 			}
@@ -307,8 +304,8 @@ public class InformationController {
 			for (Workgroup classmateWorkgroup : workgroups) {
 				if (classmateWorkgroup.getMembers().size() > 0 &&
 						classmateWorkgroup.getId() != workgroup.getId()
-						&& !((WISEWorkgroup) classmateWorkgroup).isTeacherWorkgroup()
-						&& ((WISEWorkgroup) classmateWorkgroup).getPeriod() != null) {
+						&& !classmateWorkgroup.isTeacherWorkgroup()
+						&& classmateWorkgroup.getPeriod() != null) {
 					// only include non-teacher, non-detached classmates, excluding yourself.
 					for (String requestedWorkgroupId : requestedWorkgroupIds) {
 						if (requestedWorkgroupId.equals(classmateWorkgroup.getId().toString())) {
@@ -323,8 +320,8 @@ public class InformationController {
 			for (Workgroup classmateWorkgroup : workgroups) {
 				if (classmateWorkgroup.getMembers().size() > 0
 						&& (workgroup == null || classmateWorkgroup.getId() != workgroup.getId())  // workgroup==null check is in case the logged in user is an admin, then the admin would not be in a workgroup for this run.
-						&& !((WISEWorkgroup) classmateWorkgroup).isTeacherWorkgroup()
-						&& ((WISEWorkgroup) classmateWorkgroup).getPeriod() != null) {   // only include classmates, not yourself.
+						&& !classmateWorkgroup.isTeacherWorkgroup()
+						&& classmateWorkgroup.getPeriod() != null) {   // only include classmates, not yourself.
 					//get the classmate info and append it
 					classmateUserInfos.put(getClassmateUserInfoJSON(classmateWorkgroup));
 				}
@@ -503,13 +500,13 @@ public class InformationController {
 					//user is not signed in or is not admin so we will not let them proceed
 					return;
 				}
-			} else if (((WISEWorkgroup) workgroup).isTeacherWorkgroup()) {
+			} else if (workgroup.isTeacherWorkgroup()) {
 				//workgroup is a teacher
 				workgroupId = workgroup.getId();
 
 			} else {
 				//workgroup is a student so we will get the period
-				Group periodGroup = ((WISEWorkgroup) workgroup).getPeriod(); //geoff
+				Group periodGroup = workgroup.getPeriod(); //geoff
 				periodId = periodGroup.getId();
 				workgroupId = workgroup.getId();
 			}
@@ -1148,17 +1145,14 @@ public class InformationController {
 
 			classmateUserInfo.put("userName", userNames);
 
-			//get user name
-			if (classmateWorkgroup instanceof WISEWorkgroup) {
-				//check that there is a period
-				if (((WISEWorkgroup) classmateWorkgroup).getPeriod() != null) {
-					classmateUserInfo.put("periodId", ((WISEWorkgroup) classmateWorkgroup).getPeriod().getId());
-					classmateUserInfo.put("periodName", ((WISEWorkgroup) classmateWorkgroup).getPeriod().getName());
+			//check that there is a period
+			if (classmateWorkgroup.getPeriod() != null) {
+				classmateUserInfo.put("periodId", classmateWorkgroup.getPeriod().getId());
+				classmateUserInfo.put("periodName", classmateWorkgroup.getPeriod().getName());
 
-					//add the student ids into the classmateUserInfo JSONObject
-					JSONArray studentIds = getStudentIdsFromWorkgroup(classmateWorkgroup);
-					classmateUserInfo.put("userIds", studentIds);
-				}
+				//add the student ids into the classmateUserInfo JSONObject
+				JSONArray studentIds = getStudentIdsFromWorkgroup(classmateWorkgroup);
+				classmateUserInfo.put("userIds", studentIds);
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();

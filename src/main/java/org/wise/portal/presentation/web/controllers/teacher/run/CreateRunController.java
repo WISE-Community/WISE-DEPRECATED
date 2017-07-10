@@ -439,7 +439,7 @@ public class CreateRunController {
 			members.add(owner);
 
 			// create a workgroup for the owners of the run (teacher)
-			workgroupService.createWISEWorkgroup("teacher", members, run, null);
+			workgroupService.createWorkgroup("teacher", members, run, null);
 
 		} catch (ObjectNotFoundException e) {
 			return null;

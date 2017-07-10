@@ -95,7 +95,7 @@ public class HibernateRunDao extends AbstractHibernateDao<Run> implements
 	public Set<Workgroup> getWorkgroupsForRun(Long runId) {
 		List<Workgroup> workgroupList =  (List<Workgroup>) this.getHibernateTemplate()
 	    .findByNamedParam(
-	    		"from WISEWorkgroupImpl as workgroup where workgroup.run.id = :runId",
+	    		"from WorkgroupImpl as workgroup where workgroup.run.id = :runId",
 	    		"runId", runId);
 
 		Set<Workgroup> workgroupSet = new TreeSet<Workgroup>();
@@ -108,7 +108,7 @@ public class HibernateRunDao extends AbstractHibernateDao<Run> implements
 	 */
 	@SuppressWarnings("unchecked")
 	public Set<Workgroup> getWorkgroupsForRunAndPeriod(Long runId, Long periodId) {
-		String q = "select workgroup from WISEWorkgroupImpl workgroup where workgroup.run.id = '" + runId + "' and " +
+		String q = "select workgroup from WorkgroupImpl workgroup where workgroup.run.id = '" + runId + "' and " +
 		"workgroup.period.id = '" + periodId + "' and workgroup.teacherWorkgroup = false";
 		List<Workgroup> workgroupList = (List<Workgroup>) this.getHibernateTemplate().find(q);
 		return new TreeSet<Workgroup>(workgroupList);

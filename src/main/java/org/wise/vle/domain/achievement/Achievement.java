@@ -27,8 +27,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.run.impl.RunImpl;
-import org.wise.portal.domain.workgroup.WISEWorkgroup;
-import org.wise.portal.domain.workgroup.impl.WISEWorkgroupImpl;
+import org.wise.portal.domain.workgroup.Workgroup;
+import org.wise.portal.domain.workgroup.impl.WorkgroupImpl;
 import org.wise.vle.domain.PersistableDomain;
 
 import javax.persistence.*;
@@ -41,8 +41,8 @@ import java.sql.Timestamp;
  */
 @Entity
 @Table(name = "achievements", indexes = {
-		@Index(columnList = "runId", name = "runIdIndex"),
-		@Index(columnList = "workgroupId", name = "workgroupIdIndex")
+		@Index(columnList = "runId", name = "achievementsRunIdIndex"),
+		@Index(columnList = "workgroupId", name = "achievementsWorkgroupIdIndex")
 })
 @Inheritance(strategy = InheritanceType.JOINED)
 public class Achievement extends PersistableDomain {
@@ -55,9 +55,9 @@ public class Achievement extends PersistableDomain {
 	@JoinColumn(name = "runId", nullable = false)
 	private Run run;   // which run this achievement is for
 
-	@ManyToOne(targetEntity = WISEWorkgroupImpl.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
+	@ManyToOne(targetEntity = WorkgroupImpl.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
 	@JoinColumn(name = "workgroupId", nullable = false)
-	private WISEWorkgroup workgroup;  // who this achievement is for
+	private Workgroup workgroup;  // who this achievement is for
 
 	@Column(name = "achievementId", length = 32, nullable = false)
 	private String achievementId;  // id of this achievement like "xyzwbc" or "achievementX", defined in project content
@@ -92,11 +92,11 @@ public class Achievement extends PersistableDomain {
 		this.run = run;
 	}
 
-	public WISEWorkgroup getWorkgroup() {
+	public Workgroup getWorkgroup() {
 		return workgroup;
 	}
 
-	public void setWorkgroup(WISEWorkgroup workgroup) {
+	public void setWorkgroup(Workgroup workgroup) {
 		this.workgroup = workgroup;
 	}
 

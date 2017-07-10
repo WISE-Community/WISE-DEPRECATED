@@ -9,7 +9,7 @@ import org.wise.portal.dao.impl.AbstractHibernateDao;
 import org.wise.portal.dao.work.NotebookItemDao;
 import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.run.Run;
-import org.wise.portal.domain.workgroup.WISEWorkgroup;
+import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.vle.domain.work.NotebookItem;
 
 import java.util.ArrayList;
@@ -35,7 +35,7 @@ public class HibernateNotebookItemDao
 
     @Override
     public List<NotebookItem> getNotebookItemListByParams(
-            Integer id, Run run, Group period, WISEWorkgroup workgroup,
+            Integer id, Run run, Group period, Workgroup workgroup,
             String nodeId, String componentId) {
 
         Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();

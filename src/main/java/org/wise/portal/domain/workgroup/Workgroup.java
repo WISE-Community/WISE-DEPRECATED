@@ -31,15 +31,15 @@ import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
 
 /**
- * Workgroup is an aggregation of users that work on the same run. It is
- * made up of one or more users.
+ * Workgroup is a group of users that work on the same run, like a team of users.
+ * It is made up of one or more users and the work is stored for the workgroup, not for the user.
  * 
  * @author Hiroki Terashima
  */
 public interface Workgroup extends Persistable {
 
     /**
-     * @return the members
+     * @return the members in this workgroup
      */
     Set<User> getMembers();
 
@@ -90,4 +90,27 @@ public interface Workgroup extends Persistable {
 	 */
 	String generateWorkgroupName();
 
+    /**
+     * Gets the period that this workgroup belongs in
+     *
+     * @return <code>Group</code> (Period) that this workgroup belongs in
+     */
+    Group getPeriod();
+
+    /**
+     * Sets the periods that this workgroup belongs in
+     *
+     * @param period the <code>Group</code> to set
+     */
+    void setPeriod(Group period);
+
+    /**
+     * @return the teacherWorkgroup if this workgroup is a teacher's workgroup
+     */
+    boolean isTeacherWorkgroup();
+
+    /**
+     * @param teacherWorkgroup the teacherWorkgroup to set
+     */
+    void setTeacherWorkgroup(boolean teacherWorkgroup);
 }

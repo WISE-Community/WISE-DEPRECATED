@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3,
@@ -44,7 +44,7 @@ import org.wise.portal.service.project.ProjectService;
 
 /**
  * Controller for previewing a specific project
- * Parameters can be projectId, runId, and externalId.
+ * Parameters can be projectId and runId
  *
  * @author Matt Fishbach
  * @author Hiroki Terashima

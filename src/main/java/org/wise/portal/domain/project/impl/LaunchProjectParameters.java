@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -26,7 +26,7 @@ package org.wise.portal.domain.project.impl;
 import javax.servlet.http.HttpServletRequest;
 
 import org.wise.portal.domain.run.Run;
-import org.wise.portal.domain.workgroup.WISEWorkgroup;
+import org.wise.portal.domain.workgroup.Workgroup;
 
 /**
  * Parameters required to launch a project
@@ -37,7 +37,7 @@ public class LaunchProjectParameters {
 	
 	private Run run;
 	
-	private WISEWorkgroup workgroup;
+	private Workgroup workgroup;
 	
 	private HttpServletRequest httpServletRequest;
 
@@ -58,14 +58,14 @@ public class LaunchProjectParameters {
 	/**
 	 * @return the workgroup
 	 */
-	public WISEWorkgroup getWorkgroup() {
+	public Workgroup getWorkgroup() {
 		return workgroup;
 	}
 
 	/**
 	 * @param workgroup the workgroup to set
 	 */
-	public void setWorkgroup(WISEWorkgroup workgroup) {
+	public void setWorkgroup(Workgroup workgroup) {
 		this.workgroup = workgroup;
 	}
 
