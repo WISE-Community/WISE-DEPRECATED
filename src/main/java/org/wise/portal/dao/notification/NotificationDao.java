@@ -26,7 +26,7 @@ package org.wise.portal.dao.notification;
 import org.wise.portal.dao.SimpleDao;
 import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.run.Run;
-import org.wise.portal.domain.workgroup.WISEWorkgroup;
+import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.vle.domain.notification.Notification;
 
 import java.util.List;
@@ -49,7 +49,7 @@ public interface NotificationDao<T extends Notification> extends SimpleDao<T> {
      * @return a list of notifications that match the specified params
      */
     List<Notification> getNotificationListByParams(
-            Integer id, Run run, Group period, WISEWorkgroup toWorkgroup,
+            Integer id, Run run, Group period, Workgroup toWorkgroup,
             String groupId, String nodeId, String componentId);
 
     /**

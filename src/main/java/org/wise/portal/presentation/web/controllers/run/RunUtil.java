@@ -39,7 +39,6 @@ import org.wise.portal.domain.authentication.MutableUserDetails;
 import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
-import org.wise.portal.domain.workgroup.WISEWorkgroup;
 import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.run.RunService;
@@ -82,10 +81,10 @@ public class RunUtil {
 			}
 
 			//get the period the user is in
-			Group periodGroup = ((WISEWorkgroup) workgroup).getPeriod();
+			Group periodGroup = workgroup.getPeriod();
 
 			//check if the workgroup has a period (teacher's do not have a period)
-			if(periodGroup != null) {
+			if (periodGroup != null) {
 				//get the period name and id
 				String periodName = periodGroup.getName();
 				String periodId = periodGroup.getId().toString();
@@ -121,18 +120,18 @@ public class RunUtil {
 			e1.printStackTrace();
 		}
 		
-		if(workgroups != null) {
+		if (workgroups != null) {
 			//loop through all the workgroups in the run and add all the classmate workgroups
 			for(Workgroup workgroup : workgroups) {
 				try {
 					JSONObject classmateJSONObject = new JSONObject();
 					
-					if(!((WISEWorkgroup) workgroup).isTeacherWorkgroup()) {
+					if (!workgroup.isTeacherWorkgroup()) {
 						//the workgroup is a student workgroup
-						classmateJSONObject.put("workgroupId", ((WISEWorkgroup) workgroup).getId());
+						classmateJSONObject.put("workgroupId", workgroup.getId());
 						
 						//get the members of the workgroup
-						Set<User> members = ((WISEWorkgroup) workgroup).getMembers();
+						Set<User> members = workgroup.getMembers();
 						
 						//array list to hold all the wise ids for this workgroup
 						ArrayList<Long> wiseIdsArrayList = new ArrayList<Long>();
@@ -159,9 +158,9 @@ public class RunUtil {
 						//put the wise ids array into the classmate object
 						classmateJSONObject.put("wiseIds", wiseIdsJSONArray);
 						
-						if(((WISEWorkgroup) workgroup).getPeriod() != null) {
-							classmateJSONObject.put("periodId", ((WISEWorkgroup) workgroup).getPeriod().getId());
-							classmateJSONObject.put("periodName", ((WISEWorkgroup) workgroup).getPeriod().getName());
+						if (workgroup.getPeriod() != null) {
+							classmateJSONObject.put("periodId", workgroup.getPeriod().getId());
+							classmateJSONObject.put("periodName", workgroup.getPeriod().getName());
 						} else {
 							classmateJSONObject.put("periodId", JSONObject.NULL);
 						}
@@ -195,7 +194,7 @@ public class RunUtil {
 		// the JSONObject that will hold the owner teacher user info
 		JSONObject teacherUserInfo = new JSONObject();
 		
-		if(run != null) {
+		if (run != null) {
 			// get the owners of the run (there should only be one)
 			User owner = run.getOwner();
 
@@ -228,7 +227,7 @@ public class RunUtil {
 		//the JSONArray that will hold the shared teacher user infos
 		JSONArray sharedTeacherUserInfos = new JSONArray();
 		
-		if(run != null) {
+		if (run != null) {
 			//get the shared owners
 			Iterator<User> sharedOwnersIterator = run.getSharedowners().iterator();
 			
@@ -283,7 +282,7 @@ public class RunUtil {
 			//get the date the run was created
 			Date startTime = run.getStarttime();
 			
-			if(startTime != null) {
+			if (startTime != null) {
 				runInfo.put("startTime", startTime.getTime());	
 			} else {
 				runInfo.put("startTime", JSONObject.NULL);
@@ -296,7 +295,7 @@ public class RunUtil {
 			//get the date the run was archived or null if never archived
 			Date endTime = run.getEndtime();
 			
-			if(endTime != null) {
+			if (endTime != null) {
 				runInfo.put("endTime", endTime.getTime());
 			} else {
 				runInfo.put("endTime", JSONObject.NULL);
@@ -323,7 +322,7 @@ public class RunUtil {
 		MutableUserDetails userDetails = (org.wise.portal.domain.authentication.MutableUserDetails) user.getUserDetails();
 
 		//get the first name, last name, and login
-		if(userDetails != null) {
+		if (userDetails != null) {
 			userName = userDetails.getUsername();
 			firstName = userDetails.getFirstname();
 			lastName = userDetails.getLastname();
@@ -353,7 +352,7 @@ public class RunUtil {
 			String firstNameLastNameLogin = getFirstNameLastNameLogin(user);
 			
 			//separate the names with a :
-			if(userNames.length() != 0) {
+			if (userNames.length() != 0) {
 				userNames.append(":");
 			}
 			
@@ -387,7 +386,7 @@ public class RunUtil {
 			Long userId = user.getId();
 			
 			//separate the names with a :
-			if(userIds.length() != 0) {
+			if (userIds.length() != 0) {
 				userIds.append(":");
 			}
 			

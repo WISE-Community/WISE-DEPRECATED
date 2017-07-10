@@ -36,7 +36,7 @@ import org.wise.portal.dao.workgroup.WorkgroupDao;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.workgroup.Workgroup;
-import org.wise.portal.domain.workgroup.impl.WISEWorkgroupImpl;
+import org.wise.portal.domain.workgroup.impl.WorkgroupImpl;
 
 /**
  * @author Hiroki Terashima
@@ -45,7 +45,7 @@ import org.wise.portal.domain.workgroup.impl.WISEWorkgroupImpl;
 public class HibernateWorkgroupDao extends AbstractHibernateDao<Workgroup>
         implements WorkgroupDao<Workgroup> {
 
-	private static final String FIND_ALL_QUERY = "from WISEWorkgroupImpl";
+	private static final String FIND_ALL_QUERY = "from WorkgroupImpl";
 
     /**
      * @see org.wise.portal.dao.impl.AbstractHibernateDao#getFindAllQuery()
@@ -64,15 +64,14 @@ public class HibernateWorkgroupDao extends AbstractHibernateDao<Workgroup>
 	public List<Workgroup> getListByRunAndUser(Run run, User user) {
 		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
 		SQLQuery sqlQuery = session
-				.createSQLQuery("SELECT w.*, g.*, ww.* FROM workgroups as w, groups as g, "
-						+ "groups_related_to_users as g_r_u, wiseworkgroups as ww "
+				.createSQLQuery("SELECT w.*, g.* FROM workgroups as w, groups as g, "
+						+ "groups_related_to_users as g_r_u "
 						+ "WHERE w.group_fk = g.id "
 						+ "AND g_r_u.group_fk = w.group_fk "
 						+ "AND g_r_u.user_fk = :user_param "
-						+ "AND w.run_fk = :run_param "
-						+ "AND w.id = ww.id");
+						+ "AND w.run_fk = :run_param ");
 
-		sqlQuery.addEntity("wiseworkgroup", WISEWorkgroupImpl.class);
+		sqlQuery.addEntity("workgroup", WorkgroupImpl.class);
 		sqlQuery.setParameter("run_param", run.getId());
 		sqlQuery.setParameter("user_param", user.getId());
 		return sqlQuery.list();
@@ -86,13 +85,12 @@ public class HibernateWorkgroupDao extends AbstractHibernateDao<Workgroup>
 	public List<Workgroup> getListByUser(User user) {
 		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
 		SQLQuery sqlQuery = session
-				.createSQLQuery("SELECT w.*, g.*, ww.* FROM workgroups as w, groups as g, "
-						+ "groups_related_to_users as g_r_u, wiseworkgroups as ww  "
+				.createSQLQuery("SELECT w.*, g.* FROM workgroups as w, groups as g, "
+						+ "groups_related_to_users as g_r_u "
 						+ "WHERE w.group_fk = g.id "
 						+ "AND g_r_u.group_fk = w.group_fk "
-						+ "AND g_r_u.user_fk = :user_param "
-						+ "AND w.id = ww.id");
-		sqlQuery.addEntity("wiseworkgroup", WISEWorkgroupImpl.class);
+						+ "AND g_r_u.user_fk = :user_param ");
+		sqlQuery.addEntity("workgroup", WorkgroupImpl.class);
 		sqlQuery.setParameter("user_param", user.getId());
 		return sqlQuery.list();
 	}
@@ -101,25 +99,25 @@ public class HibernateWorkgroupDao extends AbstractHibernateDao<Workgroup>
      * @see org.wise.portal.dao.impl.AbstractHibernateDao#getDataObjectClass()
      */
     @Override
-    protected Class<WISEWorkgroupImpl> getDataObjectClass() {
-        return WISEWorkgroupImpl.class;
+    protected Class<WorkgroupImpl> getDataObjectClass() {
+        return WorkgroupImpl.class;
     }
 
     @Override
-    @Transactional(readOnly=true)
-	public WISEWorkgroupImpl getById(Long workgroupId, boolean doEagerFetch) {
+    @Transactional(readOnly = true)
+	public WorkgroupImpl getById(Long workgroupId, boolean doEagerFetch) {
 		Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
 
-		WISEWorkgroupImpl result;
+		WorkgroupImpl result;
 		if (doEagerFetch) {
-			result = (WISEWorkgroupImpl) session.createCriteria(WISEWorkgroupImpl.class)
+			result = (WorkgroupImpl) session.createCriteria(WorkgroupImpl.class)
 					.add( Restrictions.eq("id", workgroupId))
 					.setFetchMode("run", FetchMode.JOIN)
 					.setFetchMode("group", FetchMode.JOIN)
 					.setFetchMode("period", FetchMode.JOIN)
 					.uniqueResult();
 		} else {
-			result = (WISEWorkgroupImpl) session.createCriteria(WISEWorkgroupImpl.class)
+			result = (WorkgroupImpl) session.createCriteria(WorkgroupImpl.class)
 					.add( Restrictions.eq("id", workgroupId))
 					.uniqueResult();        	
 		}

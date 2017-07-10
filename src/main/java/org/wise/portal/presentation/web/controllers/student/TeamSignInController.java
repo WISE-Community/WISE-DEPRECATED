@@ -56,7 +56,6 @@ import org.wise.portal.domain.project.impl.Projectcode;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.run.StudentRunInfo;
 import org.wise.portal.domain.user.User;
-import org.wise.portal.domain.workgroup.WISEWorkgroup;
 import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.presentation.validators.student.TeamSignInFormValidator;
 import org.wise.portal.presentation.web.TeamSignInForm;
@@ -291,7 +290,7 @@ public class TeamSignInController {
 		}
 
 		if (workgroups.size() == 0) {
-			workgroup = workgroupService.createWISEWorkgroup(workgroupname, membersLoggedIn, run, period);
+			workgroup = workgroupService.createWorkgroup(workgroupname, membersLoggedIn, run, period);
 		} else if (workgroups.size() == 1) {
 			workgroup = workgroups.get(0);
 			workgroupService.addMembers(workgroup, membersLoggedIn);
@@ -366,7 +365,7 @@ public class TeamSignInController {
 		
 		LaunchProjectParameters launchProjectParameters = new LaunchProjectParameters();
 		launchProjectParameters.setRun(run);
-		launchProjectParameters.setWorkgroup((WISEWorkgroup) workgroup);
+		launchProjectParameters.setWorkgroup(workgroup);
 		launchProjectParameters.setHttpServletRequest(request);
 		StartProjectController.notifyServletSession(request, run);
 		ModelAndView modelAndView = (ModelAndView) projectService.launchProject(launchProjectParameters);

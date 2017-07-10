@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2007-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -32,7 +32,6 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.acls.domain.BasePermission;
@@ -45,7 +44,6 @@ import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.teacher.management.ViewMyStudentsPeriod;
 import org.wise.portal.domain.user.User;
-import org.wise.portal.domain.workgroup.WISEWorkgroup;
 import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.acl.AclService;
@@ -67,27 +65,10 @@ public class ViewMyStudentsController {
 	@Autowired
 	private AclService<Run> aclService;
 
-	protected final static String CURRENT_RUN_LIST_KEY = "current_run_list";
-	
-	protected final static String WORKGROUP_MAP_KEY = "workgroup_map";
-	
-	private static final String VIEWMYSTUDENTS_KEY = "viewmystudentsallperiods";
-
-	private static final String TAB_INDEX = "tabIndex";
-
-	private static final String RUN_NAME_KEY = "run_name";
-	
-	private static final String PROJECT_NAME = "project_name";
-	
-	private static final String PROJECT_ID = "project_id";
-	
-	protected static final String RUN_KEY = "run";
-
 	@RequestMapping("/teacher/management/viewmystudents.html")
 	protected ModelAndView handleRequestInternal(
 			@RequestParam("runId") String runIdStr,
-			HttpServletRequest servletRequest,
-			HttpServletResponse servletResponse) throws Exception {
+			HttpServletRequest servletRequest) throws Exception {
 		
 		User user = ControllerUtil.getSignedInUser();
 
@@ -126,8 +107,8 @@ public class ViewMyStudentsController {
 					grouplessStudents.removeAll(workgroup.getMembers());
 					try {
 						if (workgroup.getMembers().size() > 0    // don't include workgroups with no members.
-								&& !((WISEWorkgroup) workgroup).isTeacherWorkgroup() 
-								&& ((WISEWorkgroup) workgroup).getPeriod().getId().equals(period.getId())) {
+								&& !workgroup.isTeacherWorkgroup()
+								&& workgroup.getPeriod().getId().equals(period.getId())) {
 							// set url where this workgroup's work can be retrieved as PDF
 							periodworkgroups.add(workgroup);				
 						}
@@ -154,14 +135,14 @@ public class ViewMyStudentsController {
 
 			ModelAndView modelAndView = new ModelAndView();
 			modelAndView.addObject("user", user);
-			modelAndView.addObject(CURRENT_RUN_LIST_KEY, current_run_list);
-			modelAndView.addObject(WORKGROUP_MAP_KEY, workgroupMap);
-			modelAndView.addObject(VIEWMYSTUDENTS_KEY, viewmystudentsallperiods);
-			modelAndView.addObject(RUN_KEY, run);
-			modelAndView.addObject(RUN_NAME_KEY, run.getName());
-			modelAndView.addObject(TAB_INDEX, tabIndex);
-			modelAndView.addObject(PROJECT_NAME, projectName);
-			modelAndView.addObject(PROJECT_ID, projectId);
+			modelAndView.addObject("current_run_list", current_run_list);
+			modelAndView.addObject("workgroup_map", workgroupMap);
+			modelAndView.addObject("viewmystudentsallperiods", viewmystudentsallperiods);
+			modelAndView.addObject("run", run);
+			modelAndView.addObject("run_name", run.getName());
+			modelAndView.addObject("tabIndex", tabIndex);
+			modelAndView.addObject("project_name", projectName);
+			modelAndView.addObject("project_id", projectId);
 			modelAndView.addObject("workgroupsWithoutPeriod", workgroupsWithoutPeriod);
 			return modelAndView;
 		} else {

@@ -32,7 +32,7 @@ import org.wise.portal.dao.impl.AbstractHibernateDao;
 import org.wise.portal.dao.notification.NotificationDao;
 import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.run.Run;
-import org.wise.portal.domain.workgroup.WISEWorkgroup;
+import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.vle.domain.notification.Notification;
 
 import java.util.ArrayList;
@@ -88,7 +88,7 @@ public class HibernateNotificationDao
 
     @Override
     public List<Notification> getNotificationListByParams(
-            Integer id, Run run, Group period, WISEWorkgroup toWorkgroup,
+            Integer id, Run run, Group period, Workgroup toWorkgroup,
             String groupId, String nodeId, String componentId) {
 
         Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();

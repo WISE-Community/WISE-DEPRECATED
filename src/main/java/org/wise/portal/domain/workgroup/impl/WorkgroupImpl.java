@@ -51,17 +51,10 @@ import org.wise.portal.domain.workgroup.Workgroup;
  */
 @Entity
 @Table(name = WorkgroupImpl.DATA_STORE_NAME)
-@Inheritance(strategy = InheritanceType.JOINED)
-public class WorkgroupImpl implements Workgroup {
+public class WorkgroupImpl implements Workgroup, Comparable<WorkgroupImpl> {
 
     @Transient
     public static final String DATA_STORE_NAME = "workgroups";
-
-    @Transient
-    public static final String USERS_JOIN_COLUMN_NAME = "user_fk";
-
-    @Transient
-    public static final String WORKGROUPS_JOIN_COLUMN_NAME = "workgroup_fk";
 
     @Transient
     private static final long serialVersionUID = 1L;
@@ -81,6 +74,13 @@ public class WorkgroupImpl implements Workgroup {
     @OneToOne(targetEntity = PersistentGroup.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "group_fk", nullable = false)
     private Group group = new PersistentGroup();
+
+    @OneToOne(targetEntity = PersistentGroup.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "period")
+    private Group period;
+
+    @Column(name = "isTeacherWorkgroup")
+    private boolean teacherWorkgroup;
 
     /**
      * @see Workgroup#getMembers()
@@ -153,7 +153,39 @@ public class WorkgroupImpl implements Workgroup {
     private void setId(Long id) {
         this.id = id;
     }
-    
+
+    /**
+     * @see Workgroup#getPeriod()
+     */
+    public Group getPeriod() {
+        return period;
+    }
+
+    /**
+     * @see Workgroup#setPeriod(Group)
+     */
+    public void setPeriod(Group period) {
+        this.period = period;
+    }
+
+    public int compareTo(WorkgroupImpl o) {
+        return this.id.compareTo(o.id);
+    }
+
+    /**
+     * @return the teacherWorkgroup
+     */
+    public boolean isTeacherWorkgroup() {
+        return teacherWorkgroup;
+    }
+
+    /**
+     * @param teacherWorkgroup the teacherWorkgroup to set
+     */
+    public void setTeacherWorkgroup(boolean teacherWorkgroup) {
+        this.teacherWorkgroup = teacherWorkgroup;
+    }
+
     /**
      * @see Workgroup#generateWorkgroupName()
      */
@@ -164,23 +196,6 @@ public class WorkgroupImpl implements Workgroup {
 		}
 		return workgroupName;
 	}
-
-    /**
-     * @return the version
-     */
-    @SuppressWarnings("unused")
-    private Integer getVersion() {
-        return version;
-    }
-
-    /**
-     * @param version
-     *            the version to set
-     */
-    @SuppressWarnings("unused")
-    private void setVersion(Integer version) {
-        this.version = version;
-    }
 
 	/**
 	 * @see java.lang.Object#hashCode()

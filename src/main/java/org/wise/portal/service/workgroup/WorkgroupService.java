@@ -28,7 +28,6 @@ import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.impl.ChangeWorkgroupParameters;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
-import org.wise.portal.domain.workgroup.WISEWorkgroup;
 import org.wise.portal.domain.workgroup.Workgroup;
 
 /**
@@ -115,16 +114,16 @@ public interface WorkgroupService {
     Workgroup updateWorkgroupMembership(ChangeWorkgroupParameters params) throws Exception;
     
 	/**
-	 * Creates a <code>WISEWorkgroup</code> with given parameters
+	 * Creates a <code>Workgroup</code> with given parameters
 	 * 
 	 * @param name
 	 * @param members
 	 * @param run
 	 * @param period
-	 * @return the created <code>WISEWorkgroup</code>
+	 * @return the created <code>Workgroup</code>
 	 * @throws ObjectNotFoundException
 	 */
-	WISEWorkgroup createWISEWorkgroup(String name, Set<User> members, Run run, Group period) throws ObjectNotFoundException;
+	Workgroup createWorkgroup(String name, Set<User> members, Run run, Group period) throws ObjectNotFoundException;
 	
 	/**
      * Check if a user is in any workgroup for the run

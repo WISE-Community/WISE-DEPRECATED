@@ -31,7 +31,7 @@ import org.wise.portal.dao.impl.AbstractHibernateDao;
 import org.wise.portal.dao.work.StudentAssetDao;
 import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.run.Run;
-import org.wise.portal.domain.workgroup.WISEWorkgroup;
+import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.vle.domain.work.StudentAsset;
 import org.wise.vle.domain.work.StudentWork;
 
@@ -54,7 +54,7 @@ public class HibernateStudentAssetDao extends AbstractHibernateDao<StudentAsset>
 
     @Override
     public List<StudentWork> getStudentAssetListByParams(
-            Integer id, Run run, Group period, WISEWorkgroup workgroup,
+            Integer id, Run run, Group period, Workgroup workgroup,
             String nodeId, String componentId, String componentType,
             Boolean isReferenced) {
         Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();

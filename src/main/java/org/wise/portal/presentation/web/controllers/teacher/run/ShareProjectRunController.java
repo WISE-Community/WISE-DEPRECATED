@@ -294,7 +294,7 @@ public class ShareProjectRunController {
 						User sharedOwner = userService.retrieveUserByUsername(sharedOwnerUsername);
 						Set<User> sharedOwners = new HashSet<User>();
 						sharedOwners.add(sharedOwner);
-						workgroupService.createWISEWorkgroup("teacher", sharedOwners, run, null);			
+						workgroupService.createWorkgroup("teacher", sharedOwners, run, null);
 						
 						//send an email to the new shared owner
 						Locale locale = request.getLocale();

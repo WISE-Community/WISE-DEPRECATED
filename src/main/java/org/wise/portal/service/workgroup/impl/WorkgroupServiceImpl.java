@@ -36,9 +36,8 @@ import org.wise.portal.domain.impl.ChangeWorkgroupParameters;
 import org.wise.portal.domain.project.impl.ProjectTypeVisitor;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
-import org.wise.portal.domain.workgroup.WISEWorkgroup;
 import org.wise.portal.domain.workgroup.Workgroup;
-import org.wise.portal.domain.workgroup.impl.WISEWorkgroupImpl;
+import org.wise.portal.domain.workgroup.impl.WorkgroupImpl;
 import org.wise.portal.service.acl.AclService;
 import org.wise.portal.service.group.GroupService;
 import org.wise.portal.service.run.RunService;
@@ -75,16 +74,16 @@ public class WorkgroupServiceImpl implements WorkgroupService {
 	}
 	
 	/**
-	 * @see org.wise.portal.service.workgroup.WorkgroupService#createWISEWorkgroup(String, Set, Run, Group)
+	 * @see org.wise.portal.service.workgroup.WorkgroupService#createWorkgroup(String, Set, Run, Group)
 	 */
 	@Transactional()
-	public WISEWorkgroup createWISEWorkgroup(String name, Set<User> members,
+	public Workgroup createWorkgroup(String name, Set<User> members,
 			Run run, Group period) throws ObjectNotFoundException {
 
-		WISEWorkgroup workgroup = null;
+		Workgroup workgroup = null;
 		ProjectTypeVisitor typeVisitor = new ProjectTypeVisitor();
 		String result = (String) run.getProject().accept(typeVisitor);
-		workgroup = createWISEWorkgroup(members, run, period);
+		workgroup = createWorkgroup(members, run, period);
 
 		this.groupDao.save(workgroup.getGroup());
 		this.workgroupDao.save(workgroup);
@@ -95,19 +94,19 @@ public class WorkgroupServiceImpl implements WorkgroupService {
 	}
 
 	/**
-	 * A helper method to create a <code>WISEWorkgroup</code> given parameters.
+	 * A helper method to create a <code>Workgroup</code> given parameters.
 	 * 
-	 * A teacher can be in a WISEWorkgroup. In this case, the members
+	 * A teacher can be in a Workgroup. In this case, the members
 	 * provided as a parameter in this method must match the owners
 	 * of the run.
 	 * 
 	 * @param members set of users in this workgroup
 	 * @param run the <code>Run</code> that this workgroup belongs in
 	 * @param period <code>Group</code> that this workgroup belongs in
-	 * @return the created <code>WISEWorkgroup</code>
+	 * @return the created <code>Workgroup</code>
 	 */
-	private WISEWorkgroup createWISEWorkgroup(Set<User> members, Run run, Group period) {
-		WISEWorkgroup workgroup = new WISEWorkgroupImpl();
+	private Workgroup createWorkgroup(Set<User> members, Run run, Group period) {
+		Workgroup workgroup = new WorkgroupImpl();
 		for (User member : members) {
 			workgroup.addMember(member);
 		}
@@ -181,7 +180,7 @@ public class WorkgroupServiceImpl implements WorkgroupService {
 		if (params.getWorkgroupTo() == null) {
 			if ((params.getWorkgroupToId() != null) && 
 					(params.getWorkgroupToId().intValue() == -1)) {   		
-				workgroupCreated = createWISEWorkgroup("workgroup " + user.getUserDetails().getUsername(), addMemberSet, run, period);
+				workgroupCreated = createWorkgroup("workgroup " + user.getUserDetails().getUsername(), addMemberSet, run, period);
 			}
 		} else {
 			toGroup = params.getWorkgroupTo();

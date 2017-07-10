@@ -45,7 +45,6 @@ import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.project.impl.LaunchProjectParameters;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
-import org.wise.portal.domain.workgroup.WISEWorkgroup;
 import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.attendance.StudentAttendanceService;
@@ -129,7 +128,7 @@ public class StartProjectController {
 		List<Workgroup> workgroups = workgroupService.getWorkgroupListByRunAndUser(run, user);
 		assert(workgroups.size() <= 1);
 		
-		WISEWorkgroup workgroup = null;
+		Workgroup workgroup = null;
 		if (workgroups.size() == 0) { 	// student is not yet in a workgroup
 			if (bymyself) { 
 				// if bymyself=true was passed in as request
@@ -137,7 +136,7 @@ public class StartProjectController {
 				String name = "Workgroup for user: " + user.getUserDetails().getUsername();
 				Set<User> members = new HashSet<User>();
 				members.add(user);
-				workgroup = workgroupService.createWISEWorkgroup(name, members, run, period);
+				workgroup = workgroupService.createWorkgroup(name, members, run, period);
 				
 				/* update run statistics */
 				int maxLoop = 30;  // to ensure that the following while loop gets run at most this many times.
@@ -190,7 +189,7 @@ public class StartProjectController {
 				return modelAndView;
 			}
 		} else if (workgroups.size() == 1) {
-			workgroup = (WISEWorkgroup) workgroups.get(0);
+			workgroup = workgroups.get(0);
 			if (workgroup.getMembers().size() == 1) {
 				/* update run statistics */
 				int maxLoop = 30;  // to ensure that the following while loop gets run at most this many times.
@@ -240,7 +239,7 @@ public class StartProjectController {
 			// the workgroup issues, leave this for now.
 			
 			//the user is in multiple workgroups for the run so we will just get the last one
-			workgroup = (WISEWorkgroup) workgroups.get(workgroups.size() - 1);
+			workgroup = workgroups.get(workgroups.size() - 1);
 			if (workgroup.getMembers().size() == 1) {
 				/* update run statistics */
 				int maxLoop = 30;  // to ensure that the following while loop gets run at most this many times.

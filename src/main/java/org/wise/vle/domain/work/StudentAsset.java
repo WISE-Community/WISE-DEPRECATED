@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -29,9 +29,8 @@ import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.group.impl.PersistentGroup;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.run.impl.RunImpl;
-import org.wise.portal.domain.workgroup.WISEWorkgroup;
 import org.wise.portal.domain.workgroup.Workgroup;
-import org.wise.portal.domain.workgroup.impl.WISEWorkgroupImpl;
+import org.wise.portal.domain.workgroup.impl.WorkgroupImpl;
 import org.wise.vle.domain.PersistableDomain;
 
 import javax.persistence.*;
@@ -59,9 +58,9 @@ public class StudentAsset extends PersistableDomain {
     @JoinColumn(name = "periodId", nullable = false)
     private Group period;
 
-    @ManyToOne(targetEntity = WISEWorkgroupImpl.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
+    @ManyToOne(targetEntity = WorkgroupImpl.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
 	@JoinColumn(name = "workgroupId", nullable = false)
-	private WISEWorkgroup workgroup;
+	private Workgroup workgroup;
 
     @Column(name = "nodeId", length = 30)
     private String nodeId;
@@ -128,7 +127,7 @@ public class StudentAsset extends PersistableDomain {
 		return workgroup;
 	}
 
-	public void setWorkgroup(WISEWorkgroup workgroup) {
+	public void setWorkgroup(Workgroup workgroup) {
 		this.workgroup = workgroup;
 	}
 
