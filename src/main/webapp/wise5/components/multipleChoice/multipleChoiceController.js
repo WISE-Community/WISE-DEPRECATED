@@ -1932,6 +1932,46 @@ var MultipleChoiceController = function () {
         key: 'deleteChoice',
         value: function deleteChoice(choiceId) {
 
+            // ask the author if they are sure they want to delete the choice
+            var answer = confirm(this.$translate('multipleChoice.areYouSureYouWantToDeleteThisChoice'));
+
+            if (answer) {
+                // the author answered yes to delete the choice
+
+                // get the authored choices
+                var choices = this.authoringComponentContent.choices;
+
+                if (choices != null) {
+
+                    // loop through all the authored choices
+                    for (var c = 0; c < choices.length; c++) {
+                        var choice = choices[c];
+
+                        if (choice != null) {
+                            var tempChoiceId = choice.id;
+
+                            if (choiceId === tempChoiceId) {
+                                // we have found the choice that we want to delete so we will remove it
+                                choices.splice(c, 1);
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                this.authoringViewComponentChanged();
+            }
+        }
+
+        /**
+         * Move a choice up
+         * @param choiceId the choice to move
+         */
+
+    }, {
+        key: 'moveChoiceUp',
+        value: function moveChoiceUp(choiceId) {
+
             // get the authored choices
             var choices = this.authoringComponentContent.choices;
 
@@ -1945,8 +1985,22 @@ var MultipleChoiceController = function () {
                         var tempChoiceId = choice.id;
 
                         if (choiceId === tempChoiceId) {
-                            // we have found the choice that we want to delete so we will remove it
-                            choices.splice(c, 1);
+
+                            if (c == 0) {
+                                /*
+                                 * the choice is the first choice so we can't move
+                                 * it up
+                                 */
+                            } else {
+                                // we have found the choice that we want to move up
+
+                                // remove the choice
+                                choices.splice(c, 1);
+
+                                // add the choice one index back
+                                choices.splice(c - 1, 0, choice);
+                            }
+
                             break;
                         }
                     }
@@ -1954,6 +2008,50 @@ var MultipleChoiceController = function () {
             }
 
             this.authoringViewComponentChanged();
+        }
+
+        /**
+         * Move a choice down
+         * @param choiceId the choice to move
+         */
+
+    }, {
+        key: 'moveChoiceDown',
+        value: function moveChoiceDown(choiceId) {
+            // get the authored choices
+            var choices = this.authoringComponentContent.choices;
+
+            if (choices != null) {
+
+                // loop through all the authored choices
+                for (var c = 0; c < choices.length; c++) {
+                    var choice = choices[c];
+
+                    if (choice != null) {
+                        var tempChoiceId = choice.id;
+
+                        if (choiceId === tempChoiceId) {
+
+                            if (c == choices.length - 1) {
+                                /*
+                                 * the choice is the last choice so we can't move
+                                 * it down
+                                 */
+                            } else {
+                                // we have found the choice that we want to move down
+
+                                // remove the choice
+                                choices.splice(c, 1);
+
+                                // add the choice one index forward
+                                choices.splice(c + 1, 0, choice);
+                            }
+
+                            break;
+                        }
+                    }
+                }
+            }
         }
 
         /**

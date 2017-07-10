@@ -1,8 +1,13 @@
 {
     "MultipleChoice.componentTypeLabel": "Multiple Choice",
     "multipleChoice.addChoice": "Add Choice",
+    "multipleChoice.areYouSureYouWantToDeleteThisChoice": "Are you sure you want to delete this choice?",
     "multipleChoice.checkbox": "Checkbox",
+    "multipleChoice.clickOnTheAddChoiceButtonToAddAChoice": "Click on the \"Add Choice\" button to add a choice.",
+    "multipleChoice.choiceText": "Choice Text",
+    "multipleChoice.chooseAnImage": "Choose an Image",
     "multipleChoice.radio": "Radio",
+    "multipleChoice.selectionType": "Selection Type",
     "multipleChoice.userChose": "User chose '{{choiceText}}' (Choice Id: {{choiceId}}) on this component.",
     "multipleChoice.youHaveUsedXofYAttempt": "You have used {{x}} of {{y}} attempt",
     "multipleChoice.youHaveUsedXofYAttempts": "You have used {{x}} of {{y}} attempts"
