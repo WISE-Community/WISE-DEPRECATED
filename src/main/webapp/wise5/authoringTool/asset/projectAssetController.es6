@@ -48,32 +48,32 @@ class ProjectAssetController {
         this.targetObject = null;
 
         if (this.$stateParams != null) {
-            if (this.$stateParams.popup) {
+            if (this.$stateParams.popup != null) {
                 // this asset page is being displayed in a popup
                 this.popup = true;
             }
 
-            if (this.$stateParams.projectId) {
+            if (this.$stateParams.projectId != null) {
                 // get the project id that opened this popup
                 this.projectId = this.$stateParams.projectId;
             }
 
-            if (this.$stateParams.nodeId) {
+            if (this.$stateParams.nodeId != null) {
                 // get the node id that opened this popup
                 this.nodeId = this.$stateParams.nodeId;
             }
 
-            if (this.$stateParams.componentId) {
+            if (this.$stateParams.componentId != null) {
                 // get the component id that opened this popup
                 this.componentId = this.$stateParams.componentId;
             }
 
-            if (this.$stateParams.target) {
+            if (this.$stateParams.target != null) {
                 // get the target to put the asset in
                 this.target = this.$stateParams.target;
             }
 
-            if (this.$stateParams.targetObject) {
+            if (this.$stateParams.targetObject != null) {
                 // get the target object to put the asset in
                 this.targetObject = this.$stateParams.targetObject;
             }
