@@ -1374,7 +1374,7 @@
 		otable; // object to hold datatables instances (requires jQuery datatables plugin: http://datatables.net/)
 
 	// adds/removes bookmark (favorite) for the specified project. pID=projectID of project to remove bookmark
-	function toggleBookmark(pID){
+	function toggleBookmark(pID) {
 		var bookmarkLink = $('.bookmark[data-id="' + pID + '"]'),
 			row = $('.projectRow[data-id="' + pID + '"]'),
 			box = $('.projectBow[data-id="' + pID + '"]'),
@@ -2437,11 +2437,11 @@
 			closeOnEscape: false,
 			beforeclose : function() { return agreed; },
 			buttons: [
-				{ text: '<spring:message code="cancel" />', class: 'secondary', click: function(){
+				{ text: '<spring:message code="cancel" />', class: 'secondary', click: function() {
 					agreed = true;
 					$(this).dialog('close');
 				} },
-				{ text: '<spring:message code="ok" />', click: function(){
+				{ text: '<spring:message code="ok" />', click: function() {
 					var processingHtml = '<p>' + processing + '</p>' +
 						'<p><img src="${contextPath}/themes/default/images/rel_interstitial_loading.gif" /></p>';
 					$('#unshareDialog').css('text-align','center');
@@ -2450,25 +2450,17 @@
 					$('button',$(this).parent()).hide().unbind();
 					//make the request to unshare the project
 					$.ajax({
-						url:"${contextPath}/teacher/projects/customized/unshareproject.html",
-						type:"POST",
-						data:{"projectId":projectId},
-						success: function(data, text, xml){
+						url: "${contextPath}/teacher/projects/customized/unshareproject",
+						type: "POST",
+						data:{ "projectId":projectId },
+						success: function(data, text, xml) {
 							$('#unshareDialog').html("<p><spring:message code='teacher.management.projectlibrarydisplay.unshare_success' /></p><p><spring:message code='teacher.management.projectlibrarydisplay.reloadmessage' /></p>");
-							$('button:eq(1)',$('#unshareDialog').parent()).show().click(function(){
-								agreed = true;
-								$('#unshareDialog').dialog('close');
-								$("html, body").animate({ scrollTop: 0 }, "1");
-								//refresh the project library page
-								// TODO: update library datatable instead of page reload
-								window.location.reload();
-								//$(".projectRow[data-id='"+projectId+"']")[0].fadeOut($(this).remove());
-							});
+							window.setTimeout(function() {window.location.reload()}, 3000);
 						},
-						error: function(data, text, xml){
+						error: function(data, text, xml) {
 							// an error occured, so we will display an error message to the user
 							$('#unshareDialog').html('<p><spring:message code="teacher.management.projectlibrarydisplay.unshare_fail" /></p>');
-							$('button:eq(1)',$('#unshareDialog').parent()).show().click(function(){
+							$('button:eq(1)',$('#unshareDialog').parent()).show().click(function() {
 								agreed = true;
 								$('#unshareDialog').dialog('close');
 							});

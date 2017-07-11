@@ -76,10 +76,6 @@ public class TeacherAccountController {
 	@Autowired
 	protected TeacherAccountFormValidator teacherAccountFormValidator;
 
-	protected static final String USERNAME_KEY = "username";
-
-	protected static final String DISPLAYNAME_KEY = "displayname";
-
 	/**
 	 * Called before the page is loaded to initialize values.
 	 * Adds the TeacherAccountForm object to the model. 
@@ -88,15 +84,15 @@ public class TeacherAccountController {
 	 * @param modelMap the model object that contains values for the page to use when rendering the view
 	 * @return the path of the view to display
 	 */
-	@RequestMapping(value = {"/teacher/join"}, method = RequestMethod.GET)
+	@RequestMapping(value = "/teacher/join", method = RequestMethod.GET)
 	public String initializeFormNewTeacher(ModelMap modelMap) throws Exception {
-		//create the teacher account form object
+		// create the teacher account form object
 		TeacherAccountForm teacherAccountForm = new TeacherAccountForm();
 
-		//put the teacher account form object into the model
+		// put the teacher account form object into the model
 		modelMap.addAttribute("teacherAccountForm", teacherAccountForm);
 
-		//populate the model with other objects the form requires
+		// populate the model with other objects the form requires
 		populateModelMap(modelMap);
 
 		return "teacher/join";
@@ -109,10 +105,10 @@ public class TeacherAccountController {
 	 * @param modelMap the model object that contains values for the page to use when rendering the view
 	 * @return the path of the view to display
 	 */
-	@RequestMapping(value = {"/teacher/management/updatemyaccountinfo.html"}, method = RequestMethod.GET)
+	@RequestMapping(value = "/teacher/management/updatemyaccountinfo.html", method = RequestMethod.GET)
 	public String initializeFormExistingTeacher(ModelMap modelMap) throws Exception {
-		//get the signed in user
-		User signedInUser = ControllerUtil.getSignedInUser();
+
+		User signedInUser = ControllerUtil.getSignedInUser(); // get the signed in user
 
 		//get the teacher user details for the signed in user
 		TeacherUserDetails teacherUserDetails = (TeacherUserDetails) signedInUser.getUserDetails();
@@ -132,7 +128,7 @@ public class TeacherAccountController {
 	/**
 	 * Shows page where teacher selects between changing password or changing other account information
 	 */
-	@RequestMapping(value={"/teacher/management/updatemyaccount.html"}, method=RequestMethod.GET)
+	@RequestMapping(value = "/teacher/management/updatemyaccount.html", method = RequestMethod.GET)
 	public String updateMyAccountIntialPage() {
 		return "teacher/management/updatemyaccount";
 	}
@@ -165,7 +161,8 @@ public class TeacherAccountController {
 	 * @param modelMap the object that contains values to be displayed on the page
 	 * @return the path of the view to display
 	 */
-	@RequestMapping(value = {"/teacher/join", "/teacher/management/updatemyaccountinfo.html"}, method = RequestMethod.POST)
+	@RequestMapping(value = {"/teacher/join", "/teacher/management/updatemyaccountinfo.html"},
+			method = RequestMethod.POST)
 	protected String onSubmit(
 			@ModelAttribute("teacherAccountForm") TeacherAccountForm accountForm, 
 			BindingResult bindingResult, 
@@ -186,14 +183,15 @@ public class TeacherAccountController {
 
 			TeacherUserDetails userDetails = (TeacherUserDetails) accountForm.getUserDetails();
 
-			//there were no errors
 			if (accountForm.isNewAccount()) {
-				//set the sign up date
-				userDetails.setSignupdate(Calendar.getInstance().getTime());
-				//validate the form
-				teacherAccountFormValidator.validate(accountForm, bindingResult);
+				// we're creating a new account
+
+				userDetails.setSignupdate(Calendar.getInstance().getTime()); // set the sign up date
+
+				teacherAccountFormValidator.validate(accountForm, bindingResult); // validate the form
+
 				if (bindingResult.hasErrors()) {
-					//there were errors
+					// there were errors in the form
 					populateModelMap(modelMap);
 					return "teacher/join";
 				}
@@ -202,13 +200,13 @@ public class TeacherAccountController {
 					userDetails.setDisplayname(userDetails.getFirstname() + " " + userDetails.getLastname());
 					userDetails.setEmailValid(true);
 					User createdUser = this.userService.createUser(userDetails);
-					// send email to new teacher if email server is configured properly
 
-					NewAccountEmailService newAccountEmailService = new NewAccountEmailService(createdUser,request.getLocale());
+					// send email to new teacher if email server is configured properly
+					NewAccountEmailService newAccountEmailService = new NewAccountEmailService(createdUser, request.getLocale());
 					Thread thread = new Thread(newAccountEmailService);
 					thread.start();
-					modelMap.addAttribute(USERNAME_KEY, userDetails.getUsername());
-					modelMap.addAttribute(DISPLAYNAME_KEY, userDetails.getDisplayname());
+					modelMap.addAttribute("username", userDetails.getUsername());
+					modelMap.addAttribute("displayname", userDetails.getDisplayname());
 					return "teacher/joinsuccess";
 				}
 				catch (DuplicateUsernameException e) {
@@ -218,16 +216,16 @@ public class TeacherAccountController {
 				}
 			} else {
 				// we're updating an existing teacher's account
-				//validate the form
-				teacherAccountFormValidator.validate(accountForm, bindingResult);
-				if(bindingResult.hasErrors()) {
-					//there were errors
+
+				teacherAccountFormValidator.validate(accountForm, bindingResult); // validate the form
+
+				if (bindingResult.hasErrors()) {
+					// there were errors in the form
 					populateModelMap(modelMap);
 					return "teacher/management/updatemyaccountinfo";
 				}
 				
 				User user = userService.retrieveUserByUsername(userDetails.getUsername());
-
 				TeacherUserDetails teacherUserDetails = (TeacherUserDetails) user.getUserDetails();
 				teacherUserDetails.setCity(userDetails.getCity());
 				teacherUserDetails.setCountry(userDetails.getCountry());
@@ -238,6 +236,7 @@ public class TeacherAccountController {
 				teacherUserDetails.setState(userDetails.getState());
 				teacherUserDetails.setDisplayname(userDetails.getDisplayname());
 				teacherUserDetails.setEmailValid(true);
+
 				if ("default".equals(userDetails.getLanguage())) {
 					teacherUserDetails.setLanguage(null);
 				} else {
@@ -268,7 +267,7 @@ public class TeacherAccountController {
 				return "teacher/management/updatemyaccount";
 			}
 		} else {
-			//the request is not coming from a valid domain address so we will not allow it
+			// the request is not coming from a valid domain address so we will not allow it
 			bindingResult.reject("Forbidden");
 			populateModelMap(modelMap);
 			return "teacher/join";
@@ -279,8 +278,7 @@ public class TeacherAccountController {
      * When the session is expired, send teacher back to form page.
      */
     @ExceptionHandler(HttpSessionRequiredException.class)
-    public ModelAndView handleRegisterTeacherSessionExpired(HttpServletRequest request
-                                                            ) {
+    public ModelAndView handleRegisterTeacherSessionExpired(HttpServletRequest request) {
         ModelAndView mav = new ModelAndView();
         String domain = ControllerUtil.getBaseUrlString(request);
         String domainWithPort = domain + ":" + request.getLocalPort();
@@ -361,7 +359,7 @@ public class TeacherAccountController {
 			String fromEmail = wiseProperties.getProperty("portalemailaddress");
 
 			try {
-				//sends the email to the recipients
+				// send the email to the recipients
 				mailService.postMail(recipients, subject, message, fromEmail);
 			} catch (MessagingException e) {
 				// do nothing, no notification to uber_admin required.

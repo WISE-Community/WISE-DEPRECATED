@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -21,7 +21,7 @@
  * ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF
  * REGENTS HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.wise.portal.presentation.web.controllers.teacher.project.customized;
+package org.wise.portal.presentation.web.controllers.teacher.project;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
@@ -36,6 +36,7 @@ import java.util.Set;
 
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -45,12 +46,7 @@ import org.springframework.security.acls.domain.BasePermission;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.SessionAttributes;
-import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.bind.annotation.*;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
 import org.wise.portal.domain.impl.AddSharedTeacherParameters;
@@ -65,12 +61,15 @@ import org.wise.portal.service.project.ProjectService;
 import org.wise.portal.service.user.UserService;
 
 /**
+ * Controller for sharing projects between teachers and
+ * handling requests to grant/modify permissions on projects.
+ *
  * @author Hiroki Terashima
+ * @author Geoffrey Kwan
  * @author MattFish
  */
 @Controller
 @SessionAttributes("addSharedTeacherParameters")
-@RequestMapping("/teacher/projects/customized/shareproject.html")
 public class ShareProjectController {
 
 	@Autowired
@@ -94,23 +93,14 @@ public class ShareProjectController {
 	@Autowired
 	private MessageSource messageSource;
 
-	protected static final String PROJECTID_PARAM_NAME = "projectId";
+	protected String formView = "teacher/projects/customized/shareproject"; // the path to this form view
 
-	protected static final String PROJECT_PARAM_NAME = "project";
-
-	private static final String ALL_TEACHER_USERNAMES = "teacher_usernames";
+	protected String successView = "teacher/projects/customized/shareproject"; // the path to the success view
 	
-	//the path to this form view
-	protected String formView = "teacher/projects/customized/shareproject";
-	
-	//the path to the success view
-	protected String successView = "teacher/projects/customized/shareproject";
-	
-	/* change this to true if you are testing and do not want to send mail to
-	   the actual groups */
+	// change this to true if you are testing and do not want to send mail to the actual groups
 	private static final Boolean DEBUG = false;
 	
-	//set this to your email
+	// set this to your email for testing
 	private static final String DEBUG_EMAIL = "youremail@email.com";
     
     /**
@@ -118,22 +108,22 @@ public class ShareProjectController {
 	 * Adds the AddSharedTeacherParameters object as a form-backing
 	 * object. This object will be filled out and submitted for adding
 	 * new teachers to the shared teachers list.
-     * @param model the model object that contains values for the page to use when rendering the view
+     * @param modelMap the model object that contains values for the page to use when rendering the view
      * @param request the http request object
      * @return the path of the view to display
      */
-    @RequestMapping(method=RequestMethod.GET)
+    @RequestMapping(method = RequestMethod.GET, value = "/teacher/projects/customized/shareproject.html")
     public String initializeForm(ModelMap modelMap, HttpServletRequest request) throws Exception {
-    	//get the signed in user
+    	// get the signed in user
 		User user = ControllerUtil.getSignedInUser();
 		
-		//get the project
-		Project project = projectService.getById(Long.parseLong(request.getParameter(PROJECTID_PARAM_NAME)));
-		
-		//get the message if any
+		// get the project
+		Project project = projectService.getById(Long.parseLong(request.getParameter("projectId")));
+
+		// get the message if any
 		String message = request.getParameter("message");
-		
-		//set the necessary objects into the model
+
+		// set the necessary objects into the model
 		populateModel(modelMap, user, project, message);
 		
     	return formView;
@@ -149,22 +139,22 @@ public class ShareProjectController {
      * @throws Exception
      */
     private Map<String, Object> populateModel(Map<String, Object> modelMap, User user, Project project, String message) throws Exception {
-    	if(user.isAdmin() || this.aclService.hasPermission(project, BasePermission.ADMINISTRATION, user)){
-			//add the message if it is provided
+    	if (user.isAdmin() || this.aclService.hasPermission(project, BasePermission.ADMINISTRATION, user)) {
+			// add the message if it is provided
 			if (message != null) {
 				modelMap.put("message", message);
 			}
 
-			//get all the teacher user names in WISE in alphabetical order
+			// get all the teacher user names in WISE in alphabetical order
 			List<String> allTeacherUsernames = userDetailsService.retrieveAllUsernames("TeacherUserDetails");
 
-			//remove the owner from the user names
+			// remove the owner from the user names
 			allTeacherUsernames.remove(user.getUserDetails().getUsername());
 
-			//get the shared owners of the project
+			// get the shared owners of the project
 			Set<User> sharedowners = project.getSharedowners();
 			
-			//loop through all the shared owners
+			// loop through all the shared owners
 			for (User sharedowner : sharedowners) {
 				//get the permissions of the shared owner for the project
 				String sharedTeacherRole = projectService.getSharedTeacherRole(project, sharedowner);
@@ -181,19 +171,19 @@ public class ShareProjectController {
 				addSharedTeacherParameters.setProject(project);
 				addSharedTeacherParameters.setSharedOwnerUsername(userName);
 				
-				//add the shared owner to the model
+				// add the shared owner to the model
 				modelMap.put(userName, addSharedTeacherParameters);
 			}
 			
 			//add the project to the model
-			modelMap.put(PROJECT_PARAM_NAME, project);
+			modelMap.put("project", project);
 			
 			AlphabeticalStringComparator alphabeticalStringComparator = new AlphabeticalStringComparator();
 			Collections.sort(allTeacherUsernames, alphabeticalStringComparator);
 			String allTeacherUsernameString = StringUtils.join(allTeacherUsernames.iterator(), ":");
 			
 			//add all the teacher user names to the model
-			modelMap.put(ALL_TEACHER_USERNAMES, allTeacherUsernameString);
+			modelMap.put("teacher_usernames", allTeacherUsernameString);
 			
 			//create the params object and add it to the model
 			AddSharedTeacherParameters params = new AddSharedTeacherParameters();
@@ -211,14 +201,14 @@ public class ShareProjectController {
      * On submission of the AddSharedTeacherParameters, the specified
      * teacher is granted the specified permission to the specified project.
      * @param params the object that contains values from the form
-     * @param bindingResult the object used for validation in which errors will be stored
      * @param request the http request
      * @param model the model object that contains values for the page to use when rendering the view
-     * @param sessionStatus the session status
      * @return the path of the view to display
      */
-	@RequestMapping(method=RequestMethod.POST)
-    protected String onSubmit(@ModelAttribute("addSharedTeacherParameters") AddSharedTeacherParameters params, BindingResult bindingResult, HttpServletRequest request, Model model, SessionStatus sessionStatus) {
+	@RequestMapping(method = RequestMethod.POST, value = "/teacher/projects/customized/shareproject.html")
+    protected String onSubmit(@ModelAttribute("addSharedTeacherParameters") AddSharedTeacherParameters params,
+							  HttpServletRequest request,
+							  Model model) {
     	String view = formView;
     	
 		//get the signed in user
@@ -244,9 +234,6 @@ public class ShareProjectController {
     	//get the user object associated with the user name
     	User retrievedUser = userService.retrieveUserByUsername(sharedOwnerUsername);
 
-    	//get the context path e.g. /wise
-    	String contextPath = request.getContextPath();
-    	
     	if (retrievedUser == null) {
     		//we could not find the user so we will display an error message
 	    	model.addAttribute("message", "Username not recognized. Make sure to use the exact spelling of the username.");
@@ -283,11 +270,13 @@ public class ShareProjectController {
     					newSharedOwner = true;
     				}
     				
-    				//add the shared teacher to the project
+    				// add the shared teacher to the project
     				projectService.addSharedTeacherToProject(params);
 
-    				// only send email if this is a new shared owner
-    				if (newSharedOwner) {
+					if (newSharedOwner) {
+						// only send email if this is a new shared owner
+						String contextPath = request.getContextPath(); // get the context path e.g. /wise
+
     					Locale locale = request.getLocale();
     					ShareProjectEmailService emailService = 
     						new ShareProjectEmailService(signedInUser, retrievedUser, project, ControllerUtil.getBaseUrlString(request),locale, contextPath);
@@ -297,9 +286,8 @@ public class ShareProjectController {
     			}
         		
         		view = successView;
-        		//sessionStatus.setComplete();
     		} catch (ObjectNotFoundException e) {
-    			//there was an error adding or removing the new shared teacher
+    			// there was an error adding or removing the new shared teacher
     			view = formView;
     		} catch (Exception ex) {
     			// exception sending email, ignore
@@ -308,19 +296,36 @@ public class ShareProjectController {
     	}
     	
     	String message = null;
-    	//get the model as a map so we can add objects to it
-    	Map<String, Object> asMap = model.asMap();
+
+    	Map<String, Object> asMap = model.asMap(); // get the model as a map so we can add objects to it
     	try {
-    		//add the project, teacher names, and shared owners into the model 
+    		// add the project, teacher names, and shared owners into the model
 			populateModel(asMap, signedInUser, project, message);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-    	
-    	//add the project id to the model
-    	model.addAttribute(PROJECTID_PARAM_NAME, project.getId());
+
+    	model.addAttribute("projectId", project.getId()); // add the project id to the model
     	return view;
     }
+
+	/**
+	 * Remove logged in user from a project's shared teacher list.
+	 * @param projectIdStr id of project
+	 * @param response HttpResponse
+	 * @return modelAndView
+	 * @throws Exception
+	 */
+	@RequestMapping(method = RequestMethod.POST, value = "/teacher/projects/customized/unshareproject")
+	protected void unshareSelfFromProject(
+			@RequestParam("projectId") String projectIdStr,
+			HttpServletResponse response) throws Exception {
+		Long projectId = new Long(projectIdStr);
+		Project project = projectService.getById(projectId);
+		String usernameToRemove = ControllerUtil.getSignedInUser().getUserDetails().getUsername();
+		projectService.removeSharedTeacherFromProject(usernameToRemove, project);
+		response.getWriter().write("success");
+	}
 	
     class ShareProjectEmailService implements Runnable {
 
@@ -381,18 +386,18 @@ public class ShareProjectController {
 					// if this WISE instance uses discourse for teacher community, append link to it in the P.S. section of the email
 					String defaultPS = messageSource.getMessage("teacherEmailPSCommunity", new Object[] {discourseURL}, Locale.US);
 					String pS = messageSource.getMessage("teacherEmailPSCommunity", new Object[] {discourseURL}, defaultPS, this.locale);
-					message += "\n\n"+pS;
+					message += "\n\n" + pS;
 				}
 			}			
 			
     		String fromEmail = sharerEmailAddress;
 
-    		//for testing out the email functionality without spamming the groups
-    		if(DEBUG) {
+    		// for testing out the email functionality without spamming the groups
+    		if (DEBUG) {
     			recipients[0] = DEBUG_EMAIL;
     		}
 
-    		//sends the email to the recipients
+    		// sends the email to the recipients
     		try {
     			mailService.postMail(recipients, subject, message, fromEmail);
     		} catch (MessagingException e) {
@@ -420,7 +425,7 @@ public class ShareProjectController {
 		public int compare(String string1, String string2) {
 			int result = 0;
 			
-			if(string1 != null && string2 != null) {
+			if (string1 != null && string2 != null) {
 				String string1LowerCase = string1.toLowerCase();
 				String string2LowerCase = string2.toLowerCase();
 				result = string1LowerCase.compareTo(string2LowerCase);

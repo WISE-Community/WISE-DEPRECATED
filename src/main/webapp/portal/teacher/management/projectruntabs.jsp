@@ -142,7 +142,7 @@
 											<li>
 												<spring:message code="teacher.management.projectruntabs.projectLabel"/>&nbsp;<a href="${contextPath}/previewproject.html?projectId=${run.project.id}" target="_blank"><img class="icon" alt="preview" src="${contextPath}/<spring:theme code="screen"/>" /><span><spring:message code="preview"/></span></a>
 												|&nbsp;<a id="projectInfo_${run.project.id}" class="projectInfo" title="<spring:message code="project_details"/>"><img class="icon" alt="info" src="${contextPath}/<spring:theme code="id"/>" /><span><spring:message code="teacher.management.projectruntabs.projectInfo"/></span></a>
-												<sec:accesscontrollist domainObject="${run.project}" hasPermission="16">
+												<sec:accesscontrollist domainObject="${run.project}" hasPermission="2">
 													|&nbsp;<a onclick="if(confirm('<spring:message code="teacher.management.projectruntabs.editWarning"/>')){window.top.location='${contextPath}/author/authorproject.html?projectId=${run.project.id}';} return true;"><img class="icon" alt="edit" src="${contextPath}/<spring:theme code="edit"/>" /><span><spring:message code="teacher.management.projectruntabs.edit"/></span></a>
 												</sec:accesscontrollist>
 											</li>
@@ -648,7 +648,7 @@
 	});
 
 	// setup manage students dialog
-	$('.manageStudents').on('click',function(){
+	$('.manageStudents').on('click',function() {
 		var title = $(this).attr('title');
 		var params = $(this).attr('id').replace('manageStudents_','');
 		var path = "${contextPath}/teacher/management/viewmystudents.html?" + params;
@@ -691,7 +691,7 @@
 	});
 
 	// Set up view project details click action for each project id link
-	$('a.projectDetail, a.projectInfo').on('click',function(){
+	$('a.projectDetail, a.projectInfo').on('click',function() {
 		var title = $(this).attr('title');
 		if($(this).hasClass('projectDetail')){
 			var projectId = $(this).attr('id').replace('projectDetail_','');
@@ -727,11 +727,11 @@
 			closeOnEscape: false,
 			beforeclose : function() { return agreed; },
 			buttons: {
-				'<spring:message code="cancel" />': function(){
+				'<spring:message code="cancel" />': function() {
 					agreed = true;
 					$(this).dialog('close');
 				},
-				'<spring:message code="ok" />': function(){
+				'<spring:message code="ok" />': function() {
 					var processingHtml = '<p>' + processing + '</p>' +
 						'<p><img src="${contextPath}/themes/default/images/rel_interstitial_loading.gif" /></p>';
 					$('#unshareDialog').css('text-align','center');
@@ -740,22 +740,17 @@
 					$('button',$(this).parent()).hide().unbind();
 					//make the request to unshare the project
 					$.ajax({
-						url:"${contextPath}/teacher/run/unshareprojectrun.html",
-						type:"POST",
-						data:{"runId":runId},
-						success: function(data, text, xml){
+						url: "${contextPath}/teacher/run/unshareprojectrun",
+						type: "POST",
+						data: { "runId":runId },
+						success: function(data, text, xml) {
 							$('#unshareDialog').html("<p><spring:message code='teacher.management.projectruntabs.unshare.dialog.success'/></p>");
-							$('button:eq(1)',$('#unshareDialog').parent()).show().click(function(){
-								agreed = true;
-								$('#unshareDialog').dialog('close');
-								// reload page TODO: remove row dynamically without page reload
-								window.location.reload();
-							});
+                            window.setTimeout(function() { window.location.reload() }, 3000);
 						},
-						error: function(data, text, xml){
+						error: function(data, text, xml) {
 							// an error occured, so we will display an error message to the user
 							$('#unshareDialog').html('<p><spring:message code="teacher.management.projectruntabs.unshare.dialog.failure"/></p>');
-							$('button:eq(1)',$('#unshareDialog').parent()).show().click(function(){
+							$('button:eq(1)',$('#unshareDialog').parent()).show().click(function() {
 								agreed = true;
 								$('#unshareDialog').dialog('close');
 							});

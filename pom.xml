@@ -156,7 +156,7 @@
 				<artifactId>maven-javadoc-plugin</artifactId>
 				<version>2.10.4</version>
 				<configuration>
-					<skipTests>true</skipTests>
+					<failOnError>false</failOnError>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -447,19 +447,10 @@
 			<version>2.6.1</version>
 		</dependency>
 	</dependencies>
-	<reporting>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.9</version>
-			</plugin>
-		</plugins>
-	</reporting>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<org.springframework.version>4.3.8.RELEASE</org.springframework.version>
-		<org.springframework.security.version>4.2.2.RELEASE</org.springframework.security.version>
+		<org.springframework.version>4.3.9.RELEASE</org.springframework.version>
+		<org.springframework.security.version>4.2.3.RELEASE</org.springframework.security.version>
 		<org.hibernate.version>5.2.10.Final</org.hibernate.version>
 		<startup.listeners>
 		</startup.listeners>

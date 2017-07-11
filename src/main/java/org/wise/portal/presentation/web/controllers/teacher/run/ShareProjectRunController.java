@@ -36,6 +36,7 @@ import java.util.Set;
 
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -45,12 +46,8 @@ import org.springframework.security.acls.domain.BasePermission;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.SessionAttributes;
-import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
 import org.wise.portal.domain.impl.AddSharedTeacherParameters;
@@ -66,16 +63,16 @@ import org.wise.portal.service.user.UserService;
 import org.wise.portal.service.workgroup.WorkgroupService;
 
 /**
- * Controller for handling requests to grant/modify permissions on
- * Project runs.
+ * Controller for sharing runs between teachers and
+ * handling requests to grant/modify permissions on project runs.
  * 
  * @author Hiroki Terashima
  * @author Patrick Lawler
+ * @author Geoffrey Kwan
  * @author Matt Fishbach
  */
 @Controller
 @SessionAttributes("addSharedTeacherParameters")
-@RequestMapping("/teacher/run/shareprojectrun.html")
 public class ShareProjectRunController {
 
 	@Autowired
@@ -107,21 +104,17 @@ public class ShareProjectRunController {
 	protected static final String RUN_PARAM_NAME = "run";
 
 	private static final String ALL_TEACHER_USERNAMES = "teacher_usernames";
+
+	private String formView = "teacher/run/shareprojectrun"; // the path to this form view
+
+	private String successView = "teacher/run/shareprojectrun"; // the path to the success view
 	
-	//the path to this form view
-	private String formView = "teacher/run/shareprojectrun";
-	
-	//the path to the success view
-	private String successView = "teacher/run/shareprojectrun";
-	
-	/* change this to true if you are testing and do not want to send mail to
-	   the actual groups */
+	// change this to true if you are testing and do not want to send mail to the actual groups
 	private static final Boolean DEBUG = false;
 	
-	//set this to your email
+	// set this to your email
 	private static final String DEBUG_EMAIL = "youremail@email.com";
 
-	
     /**
      * Called before the page is loaded to initialize values.
 	 * Adds the AddSharedTeacherParameters object as a form-backing
@@ -131,19 +124,19 @@ public class ShareProjectRunController {
      * @param request the http request object
      * @return the path of the view to display
      */
-    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping(method = RequestMethod.GET, value = "/teacher/run/shareprojectrun.html")
     public String initializeForm(ModelMap modelMap, HttpServletRequest request) throws Exception {
-    	//get the signed in user
-		User user = ControllerUtil.getSignedInUser();
+
+		User user = ControllerUtil.getSignedInUser(); // get the signed in user
 		
-		//get the run
+		// get the run
 		boolean doEagerFetch = true;
 		Run run = runService.retrieveById(Long.parseLong(request.getParameter(RUNID_PARAM_NAME)), doEagerFetch);
 		
-		//get the message if any
+		// get the message if any
 		String message = request.getParameter("message");
 		
-		//set the necessary objects into the model
+		// set the necessary objects into the model
 		populateModel(modelMap, user, run, message);
 		
 		return formView;
@@ -160,7 +153,7 @@ public class ShareProjectRunController {
      */
     private Map<String, Object> populateModel(Map<String, Object> modelMap, User user, Run run, String message) throws Exception {
     	//check if the user is an admin or is the owner of the run
-		if(user.isAdmin() || this.aclService.hasPermission(run, BasePermission.ADMINISTRATION, user)){
+		if (user.isAdmin() || this.aclService.hasPermission(run, BasePermission.ADMINISTRATION, user)) {
 			//add the message if it is provided
 			if (message != null) {
 				modelMap.put("message", message);
@@ -191,11 +184,11 @@ public class ShareProjectRunController {
 				addSharedTeacherParameters.setRun(run);
 				addSharedTeacherParameters.setSharedOwnerUsername(userName);
 				
-				//add the shared owner to the model
+				// add the shared owner to the model
 				modelMap.put(userName, addSharedTeacherParameters);
 			}
 			
-			//add the run and run id to the model
+			// add the run and run id to the model
 			modelMap.put(RUN_PARAM_NAME, run);
 			modelMap.put(RUNID_PARAM_NAME, run.getId());
 			
@@ -203,10 +196,10 @@ public class ShareProjectRunController {
 			Collections.sort(allTeacherUsernames, alphabeticalStringComparator);
 			String allTeacherUsernameString = StringUtils.join(allTeacherUsernames.iterator(), ":");
 			
-			//add all the teacher user names to the model
+			// add all the teacher user names to the model
 			modelMap.put(ALL_TEACHER_USERNAMES, allTeacherUsernameString);
 			
-			//create the params object and add it to the model
+			// create the params object and add it to the model
 			AddSharedTeacherParameters params = new AddSharedTeacherParameters();
 			params.setRun(run);
 			params.setPermission(UserDetailsService.RUN_READ_ROLE);
@@ -223,19 +216,15 @@ public class ShareProjectRunController {
      * teacher is granted the specified permission to the specified run.
      * Only teachers can be added as a shared teacher to a run.
      * @param params the model object that contains values for the page to use when rendering the view
-     * @param bindingResult the object used for validation in which errors will be stored
      * @param request the http request object
      * @param model the object that contains values to be displayed on the page
-     * @param sessionStatus the session status object
      * @return the path of the view to display
      */
-	@RequestMapping(method = RequestMethod.POST)
+	@RequestMapping(method = RequestMethod.POST, value = "/teacher/run/shareprojectrun.html")
 	protected String onSubmit(
 			@ModelAttribute("addSharedTeacherParameters") AddSharedTeacherParameters params, 
-			BindingResult bindingResult, 
-			HttpServletRequest request, 
-			Model model, 
-			SessionStatus sessionStatus) {
+			HttpServletRequest request,
+			Model model) {
 		String view = formView;
 		
 		//get the signed in user
@@ -280,7 +269,7 @@ public class ShareProjectRunController {
 				} else { 
 					// we're adding a new shared teacher or changing her permissions
 					
-					if(run.getSharedowners().contains(retrievedUser)) {
+					if (run.getSharedowners().contains(retrievedUser)) {
 						//the user is already a shared owner so we will update their permissions
 						runService.updateSharedTeacherForRun(params);
 					} else {
@@ -307,7 +296,6 @@ public class ShareProjectRunController {
 				view = formView;
 			}
 			
-			//sessionStatus.setComplete();
 			view = successView;
 		}
 		
@@ -322,6 +310,24 @@ public class ShareProjectRunController {
 		
 		return view;
 	}
+
+    /**
+     * Removes logged-in user from the specified run's shared teacher list
+     * @param runId
+     * @param response
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(method = RequestMethod.POST, value = "/teacher/run/unshareprojectrun")
+    protected ModelAndView unshareSelfFromRun(
+            @RequestParam("runId") String runId,
+            HttpServletResponse response) throws Exception {
+        Long runIdToRemove = new Long(runId);
+        String usernameToRemove = ControllerUtil.getSignedInUser().getUserDetails().getUsername();
+        runService.removeSharedTeacherFromRun(usernameToRemove, runIdToRemove);
+        response.getWriter().write("success");
+        return null;
+    }
 
     class ProjectRunEmailService implements Runnable {
 
@@ -344,18 +350,14 @@ public class ShareProjectRunController {
 		/**
 	     * Sends an email to individuals to notify them that the run has been shared
 	     * On exception sending the email, ignore.
-	     * @param sharee user that the run was shared with
-	     * @param run the run that was shared
 	     */
 		private void sendEmail() {
 			
 			Date date = new Date();
 			SimpleDateFormat sdf = new SimpleDateFormat("EEE, MMMMM d, yyyy");
 			
-			TeacherUserDetails sharerUserDetails = 
-				(TeacherUserDetails) sharer.getUserDetails();
-			String sharerName = sharerUserDetails.getFirstname() + " " + 
-				sharerUserDetails.getLastname();
+			TeacherUserDetails sharerUserDetails = (TeacherUserDetails) sharer.getUserDetails();
+			String sharerName = sharerUserDetails.getFirstname() + " " + sharerUserDetails.getLastname();
 			String sharerEmailAddress = sharerUserDetails.getEmailAddress();
 			
 			TeacherUserDetails shareeDetails = (TeacherUserDetails) sharee.getUserDetails();
@@ -381,18 +383,18 @@ public class ShareProjectRunController {
 					// if this WISE instance uses discourse for teacher community, append link to it in the P.S. section of the email
 					String defaultPS = messageSource.getMessage("teacherEmailPSCommunity", new Object[] {discourseURL}, Locale.US);
 					String pS = messageSource.getMessage("teacherEmailPSCommunity", new Object[] {discourseURL}, defaultPS, this.locale);
-					message += "\n\n"+pS;
+					message += "\n\n" + pS;
 				}
 			}
 			
 			String fromEmail = sharerEmailAddress;
 			
-			//for testing out the email functionality without spamming the groups
-			if(DEBUG) {
+			// for testing out the email functionality without spamming the groups
+			if (DEBUG) {
 				recipients[0] = DEBUG_EMAIL;
 			}
 			
-			//sends the email to the recipients
+			// sends the email to the recipients
 			try {
 				mailService.postMail(recipients, subject, message, fromEmail);
 			} catch (MessagingException e) {
@@ -420,7 +422,7 @@ public class ShareProjectRunController {
 		public int compare(String string1, String string2) {
 			int result = 0;
 			
-			if(string1 != null && string2 != null) {
+			if (string1 != null && string2 != null) {
 				String string1LowerCase = string1.toLowerCase();
 				String string2LowerCase = string2.toLowerCase();
 				result = string1LowerCase.compareTo(string2LowerCase);

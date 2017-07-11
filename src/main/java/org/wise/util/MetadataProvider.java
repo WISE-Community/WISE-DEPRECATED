@@ -6,7 +6,7 @@ import org.hibernate.boot.spi.SessionFactoryBuilderFactory;
 import org.hibernate.boot.spi.SessionFactoryBuilderImplementor;
 
 /**
- * Created by Hiroki Terashima
+ * @author Hiroki Terashima
  * This class is registered through Java's ServiceLoader facility and is used in DbInitExporter.java
  * This is a work-around when we upgraded from hibernate4 to hibernate5.
  * See this thread: http://stackoverflow.com/questions/34612019/programmatic-schemaexport-schemaupdate-with-hibernate-5-and-spring-4

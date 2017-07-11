@@ -25,7 +25,6 @@ package org.wise.portal.presentation.web.controllers.teacher;
 
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,13 +35,11 @@ import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.mail.IMailFacade;
-import org.wise.portal.service.portal.PortalService;
 
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -51,9 +48,6 @@ import java.util.*;
  */
 @Controller
 public class TranslateWISEController {
-
-    @Autowired
-    private PortalService portalService;
 
     @Autowired
     private Properties wiseProperties;
