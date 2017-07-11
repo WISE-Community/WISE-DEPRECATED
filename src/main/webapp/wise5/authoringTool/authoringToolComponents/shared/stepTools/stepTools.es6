@@ -35,6 +35,19 @@ class StepToolsController {
              */
             this.updateModel();
         });
+
+        this.$scope.$on('projectChanged', (event, args) => {
+            /*
+             * the project has changed most likely because the author has
+             * added, deleted, or moved a step
+             */
+
+            // update the idToOrder mappings
+            this.idToOrder = this.ProjectService.idToOrder;
+
+            // update the current node id, previous node id, and next node id
+            this.updateModel();
+        })
     }
 
     /**

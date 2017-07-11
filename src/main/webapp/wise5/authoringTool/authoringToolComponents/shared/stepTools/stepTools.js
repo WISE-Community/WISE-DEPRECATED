@@ -40,6 +40,19 @@ var StepToolsController = function () {
              */
             _this.updateModel();
         });
+
+        this.$scope.$on('projectChanged', function (event, args) {
+            /*
+             * the project has changed most likely because the author has
+             * added, deleted, or moved a step
+             */
+
+            // update the idToOrder mappings
+            _this.idToOrder = _this.ProjectService.idToOrder;
+
+            // update the current node id, previous node id, and next node id
+            _this.updateModel();
+        });
     }
 
     /**

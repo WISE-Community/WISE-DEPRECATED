@@ -173,7 +173,10 @@
                             <h6 translate="chooseNewLocation"></h6>
                         </div>
                         <div layout='row'>
-                            <md-button class='createButton md-raised md-primary' ng-click='projectController.cancelMove()' translate="CANCEL"></md-button>
+                            <md-button class='createButton md-raised md-primary'
+                                       ng-click='projectController.cancelMove()'
+                                       aria-label="{{ 'CANCEL' | translate }}"
+                                       translate="CANCEL"></md-button>
                         </div>
                     </div>
                     <div ng-show='projectController.importMode'>
@@ -252,6 +255,7 @@
                                            ng-model='item.checked'
                                            class="check"
                                            ng-disabled='projectController.showCreateGroup || projectController.showCreateNode || projectController.insertNodeMode || projectController.insertGroupMode'
+                                           aria-label='{{projectController.getNodePositionById(item.$key)}} {{projectController.getNodeTitleByNodeId(item.$key)}}'
                                            ng-if='item.order!==0'>
                                     </md-checkbox>
                                 </div>
@@ -323,7 +327,8 @@
                                     <div layout="row">
                                         <md-checkbox
                                                ng-model='inactiveNode.checked'
-                                               class="check">
+                                               class='check'
+                                               aria-label='{{projectController.getNodeTitleByNodeId(inactiveNode.id)}}'>
                                         </md-checkbox>
                                     </div>
                                     <div layout="row">

@@ -429,6 +429,8 @@ class ProjectService {
                 this.achievements = this.project.achievements;
             }
         }
+
+        this.$rootScope.$broadcast('projectChanged');
     };
 
     setNodeOrder(node) {

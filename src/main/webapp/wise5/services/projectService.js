@@ -47,10 +47,10 @@ var ProjectService = function () {
         this.additionalProcessingFunctionsMap = {};
 
         // filtering options for navigation displays
-        this.filters = [{ 'name': 'all', 'label': 'All' }
-        //{'name': 'todo', 'label': 'Todo'},
-        //{'name': 'completed', 'label': 'Completed'}
-        ];
+        this.filters = [{ 'name': 'all', 'label': 'All'
+            //{'name': 'todo', 'label': 'Todo'},
+            //{'name': 'completed', 'label': 'Completed'}
+        }];
     }
 
     _createClass(ProjectService, [{
@@ -475,6 +475,8 @@ var ProjectService = function () {
                     this.achievements = this.project.achievements;
                 }
             }
+
+            this.$rootScope.$broadcast('projectChanged');
         }
     }, {
         key: 'setNodeOrder',
