@@ -247,17 +247,12 @@
 					$('button',$(this).parent()).hide().unbind();
 					//make the request to unshare the project
 					$.ajax({
-						url:"${contextPath}/teacher/run/unshareprojectrun.html",
-						type:"POST",
-						data:{"runId":runId},
+						url: "${contextPath}/teacher/run/unshareprojectrun",
+						type: "POST",
+						data: { "runId":runId },
 						success: function(data, text, xml) {
 							$('#unshareDialog').html("<p><spring:message code='teacher.run.recentactivity.successfullyRemovedFromSharedTeachers' /></p>");
-							$('button:eq(1)',$('#unshareDialog').parent()).show().click(function() {
-								agreed = true;
-								$('#unshareDialog').dialog('close');
-								// reload page
-								window.location.reload();
-							});
+                            window.setTimeout(function() { window.location.reload() }, 3000);
 						},
 						error: function(data, text, xml) {
 							// an error occured, so we will display an error message to the user
@@ -408,7 +403,7 @@
 							        	<spring:message code="teacher.run.recentactivity.projectDetails" var="projectDetails"/>
 							        	<spring:message code="teacher.run.recentactivity.project"/>&nbsp;<a href="${contextPath}/previewproject.html?projectId=${run.project.id}" target="_blank"><img class="icon" alt="preview" src="${contextPath}/<spring:theme code="screen"/>" /><span><spring:message code="teacher.run.recentactivity.preview"/></span></a>
 						    			|&nbsp;<a id="projectInfo_${run.project.id}" class="projectInfo" title="<spring:message code="teacher.run.recentactivity.projectDetails"/>"><img class="icon" alt="info" src="${contextPath}/<spring:theme code="id"/>" /><span><spring:message code="teacher.run.recentactivity.info"/></span></a>
-							        	<sec:accesscontrollist domainObject="${run.project}" hasPermission="1">
+							        	<sec:accesscontrollist domainObject="${run.project}" hasPermission="2">
 							        		|&nbsp;<a onclick="if (confirm('<spring:message code="teacher.run.recentactivity.warningWillBeEditingProjectForRun"/>')) {window.top.location='${contextPath}/author/authorproject.html?projectId=${run.project.id}';} return true;"><img class="icon" alt="edit" src="${contextPath}/<spring:theme code="edit"/>" /><span><spring:message code="teacher.run.recentactivity.editContent"/></span></a>
 							        	</sec:accesscontrollist>
 							        </li>
