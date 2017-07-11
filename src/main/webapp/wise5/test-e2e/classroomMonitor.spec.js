@@ -40,7 +40,7 @@ describe('WISE Classroom Monitor', function () {
         expect(browser.getCurrentUrl()).toEqual('http://localhost:8080/wise/teacher');
         expect(browser.getTitle()).toEqual('WISE Teacher Dashboard');
         // Find and click on the classroom monitor link
-        var classroomMonitorLink = $(".classroomMonitor");
+        var classroomMonitorLink = element.all(by.css(".classroomMonitor")).get(0);
         expect(classroomMonitorLink.isPresent()).toBeTruthy();
         classroomMonitorLink.click();
 
@@ -81,7 +81,7 @@ describe('WISE Classroom Monitor', function () {
                 // test that the project map is displayed
                 element.all(by.repeater('id in nodeProgressController.rootNode.ids')).then(function (groupNavItems) {
                     var activity1 = groupNavItems[0];
-                    expect(activity1.element(by.className('md-title')).getText()).toEqual('1: First Activity');
+                    expect(activity1.element(by.className('md-title')).getText()).toEqual('1: Act One');
 
                     // Activity 1 should not be expanded yet, so expand it
                     activity1.click();
