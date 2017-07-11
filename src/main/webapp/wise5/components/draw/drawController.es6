@@ -528,6 +528,23 @@ class DrawController {
                                  * perform any changes if needed and then save the project
                                  */
                                 this.authoringViewBackgroundChanged();
+                            } else if (args.target == 'stamp') {
+                                // the target is a stamp
+
+                                // get the index of the stamp
+                                var stampIndex = args.targetObject;
+
+                                // get the file name
+                                var fileName = assetItem.fileName;
+
+                                // set the stamp image
+                                this.setStampImage(stampIndex, fileName);
+
+                                /*
+                                 * the authoring view background has changed so we will
+                                 * perform any changes if needed and then save the project
+                                 */
+                                this.authoringViewBackgroundChanged();
                             }
 
                             if (summernoteId != '') {
@@ -688,15 +705,17 @@ class DrawController {
         // listen for the drawing changed event
         this.drawingTool.on('drawing:changed', angular.bind(this, this.studentDataChanged));
 
-        // listen for selected tool changed event
-        this.drawingTool.on('tool:changed', function (toolName) {
-            // log this event
-            var category = "Tool";
-            var event = "toolSelected";
-            var data = {};
-            data.selectedToolName = toolName;
-            this.StudentDataService.saveComponentEvent(this, category, event, data);
-        }.bind(this));
+        if (this.mode === 'student') {
+            // listen for selected tool changed event
+            this.drawingTool.on('tool:changed', function (toolName) {
+                // log this event
+                var category = "Tool";
+                var event = "toolSelected";
+                var data = {};
+                data.selectedToolName = toolName;
+                this.StudentDataService.saveComponentEvent(this, category, event, data);
+            }.bind(this));
+        }
 
         if (this.mode === 'grading' || this.mode === 'onlyShowWork') {
             // we're in show student work mode, so hide the toolbar and make the drawing non-editable
@@ -2250,6 +2269,33 @@ class DrawController {
 
         // the authoring component content has changed so we will save the project
         this.authoringViewComponentChanged();
+    }
+
+    /**
+     * Open the asset choose to select an image for the stamp
+     * @param index the index of the stamp
+     */
+    chooseStampImage(index) {
+
+        // generate the parameters
+        var params = {};
+        params.popup = true;
+        params.nodeId = this.nodeId;
+        params.componentId = this.componentId;
+        params.target = 'stamp';
+        params.targetObject = index;
+
+        // display the asset chooser
+        this.$rootScope.$broadcast('openAssetChooser', params);
+    }
+
+    /**
+     * Set the stamp image
+     * @param index the index of the stamp
+     * @param fileName the file name of the image
+     */
+    setStampImage(index, fileName) {
+        this.authoringComponentContent.stamps.Stamps[index] = fileName;
     }
 }
 

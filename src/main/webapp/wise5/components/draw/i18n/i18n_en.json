@@ -5,6 +5,8 @@
     "draw.areYouSureYouWantToDeleteTheStarterDrawing": "Are you sure you want to delete the starter drawing?",
     "draw.areYouSureYouWantToDeleteThisStamp": "Are you sure you want to delete this stamp?",
     "draw.areYouSureYouWantToSaveTheStarterDrawing": "Are you sure you want to save the starter drawing?",
+    "draw.canvasHeight": "Canvas Height",
+    "draw.canvasWidth": "Canvas Width",
     "draw.cloneTool": "Clone Tool",
     "draw.cloneToolTooltip": "Clone tool",
     "draw.deleteStarterDrawing": "Delete Starter Drawing",
@@ -40,6 +42,7 @@
     "draw.strokeWidthToolTooltip": "Stroke width (click and hold to show available options)",
     "draw.textTool": "Text Tool",
     "draw.textToolTooltip": "Text tool (click and hold to show available font sizes)",
+    "draw.thereAreNoStampsClickTheAddStampButtonToAddAStamp": "There are no stamps. Click the \"Add Stamp\" button to add a stamp.",
     "draw.undo": "Undo",
     "draw.undoTool": "Undo Tool",
     "draw.versions": "Versions"
