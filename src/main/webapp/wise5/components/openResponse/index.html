@@ -5,14 +5,12 @@
 
     <div ng-if='openResponseController.mode === "authoring" && !openResponseController.authoringComponentContent.showPreviousWork'>
         <md-input-container style='width:100%'>
-            <label>{{ 'PROMPT' | translate }}</label><span ng-style="openResponseController.promptHasFocus || openResponseController.authoringComponentContent.prompt != '' ? { 'margin-left': '0px' } : { 'margin-left': '60px' }"><md-icon>announcement</md-icon><md-tooltip md-direction="right">{{ 'openResponse.promptTip' | translate }}</md-tooltip></span>
+            <label>{{ 'PROMPT' | translate }}</label><span><md-icon>announcement</md-icon><md-tooltip md-direction="right">{{ 'openResponse.promptTip' | translate }}</md-tooltip></span>
             <textarea rows='3'
                     type="textarea"
                     ng-model='openResponseController.authoringComponentContent.prompt'
                     ng-change='openResponseController.authoringViewComponentChanged()'
                     ng-model-options='{ debounce: 1000 }'
-                    ng-focus='openResponseController.promptHasFocus = true'
-                    ng-blur='openResponseController.promptHasFocus = false'
                     placeholder='{{ "enterPromptHere" | translate }}'>
             </textarea>
         </md-input-container>

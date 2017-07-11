@@ -8,7 +8,10 @@
                   rows='10'
                   cols='100'></summernote>
         <div ng-if='htmlController.mode === "authoring"'>
-            <button ng-click='htmlController.showAdvancedAuthoring = !htmlController.showAdvancedAuthoring'>{{ 'ADVANCED' | translate }}</button>
+            <md-button class='topButton md-raised md-primary' ng-click='htmlController.showAdvancedAuthoring = !htmlController.showAdvancedAuthoring'>
+                <md-icon>build</md-icon>
+                <md-tooltip md-direction="top" class="projectButtonTooltip">{{ "ADVANCED" | translate }}</md-tooltip>
+            </md-button>
             <div ng-show='htmlController.showAdvancedAuthoring'>
                 <div ng-if='htmlController.mode === "authoring"'>
                     {{ 'COMPONENT_WIDTH' | translate }}:
