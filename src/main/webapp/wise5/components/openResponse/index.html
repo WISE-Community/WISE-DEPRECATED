@@ -12,7 +12,8 @@
                     ng-change='openResponseController.authoringViewComponentChanged()'
                     ng-model-options='{ debounce: 1000 }'
                     ng-focus='openResponseController.promptHasFocus = true'
-                    ng-blur='openResponseController.promptHasFocus = false'>
+                    ng-blur='openResponseController.promptHasFocus = false'
+                    placeholder='{{ "enterPromptHere" | translate }}'>
             </textarea>
         </md-input-container>
     </div>
