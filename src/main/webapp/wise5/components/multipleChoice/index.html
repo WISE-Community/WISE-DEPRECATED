@@ -7,7 +7,6 @@
                       ng-change='multipleChoiceController.authoringViewComponentChanged()'
                       ng-model-options='{ debounce: 1000 }'
                       rows='3'
-                      cols='100'
                       placeholder='{{ "enterPromptHere" | translate }}'>
             </textarea>
         </md-input-container>
@@ -18,7 +17,7 @@
             <md-radio-button class='md-primary' value='checkbox'>{{ 'multipleChoice.checkbox' | translate }}</md-radio-button>
         </md-radio-group>
         <div ng-show='multipleChoiceController.authoringComponentContent.choices == null || multipleChoiceController.authoringComponentContent.choices.length == 0'>
-            {{ 'multipleChoice.clickOnTheAddChoiceButtonToAddAChoice' | translate }}
+            {{ 'multipleChoice.thereAreNoChoicesClickTheAddChoiceButtonToAddAChoice' | translate }}
         </div>
         <div ng-repeat='choice in multipleChoiceController.authoringComponentContent.choices'
              style='border: 2px solid #dddddd; border-radius: 5px; margin-bottom: 10px; padding: 20px 20px 10px 20px;'>
@@ -30,12 +29,12 @@
                 <md-button class='moveComponentButton md-raised md-primary'
                            ng-click='multipleChoiceController.chooseChoiceAsset(choice)'>
                     <md-icon>insert_photo</md-icon>
-                    <md-tooltip md-direction="top" class="projectButtonTooltip">{{ 'multipleChoice.chooseAnImage' | translate }}</md-tooltip>
+                    <md-tooltip md-direction="top" class="projectButtonTooltip">{{ 'chooseAnImage' | translate }}</md-tooltip>
                 </md-button>
                 <span flex></span>
                 <div>
                     <md-checkbox class='md-primary' ng-model='choice.isCorrect' ng-change='multipleChoiceController.authoringViewFeedbackChanged()' aria-label='{{ "IS_CORRECT" | translate }}'>
-                        <span>{{ 'IS_CORRECT' | translate }}</span>
+                        {{ 'IS_CORRECT' | translate }}
                     </md-checkbox>
                 </div>
             </div>

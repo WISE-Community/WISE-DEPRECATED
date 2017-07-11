@@ -3,7 +3,7 @@
     "multipleChoice.addChoice": "Add Choice",
     "multipleChoice.areYouSureYouWantToDeleteThisChoice": "Are you sure you want to delete this choice?",
     "multipleChoice.checkbox": "Checkbox",
-    "multipleChoice.clickOnTheAddChoiceButtonToAddAChoice": "Click on the \"Add Choice\" button to add a choice.",
+    "multipleChoice.thereAreNoChoicesClickTheAddChoiceButtonToAddAChoice": "There are no choices. Click the \"Add Choice\" button to add a choice.",
     "multipleChoice.choiceText": "Choice Text",
     "multipleChoice.chooseAnImage": "Choose an Image",
     "multipleChoice.radio": "Radio",
