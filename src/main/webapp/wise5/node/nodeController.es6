@@ -354,39 +354,45 @@ class NodeController {
             }
         };
 
-        // add a tour bubble for the node rubric
-        let thisTarget = '#nodeRubric_' + this.nodeId;
-        this.rubricTour.steps.push(
-            {
-                target: thisTarget,
-                placement: 'bottom',
-                title: this.$translate('STEP_INFO'),
-                content: this.ProjectService.replaceAssetPaths(this.rubric),
-                xOffset: 'center',
-                arrowOffset: 'center',
-                onShow: this.onShowRubric,
-                viewed: false
-            }
-        );
+        if (this.rubric) {
+            let thisTarget = '#nodeRubric_' + this.nodeId;
+
+            // add a tour bubble for the node rubric
+            this.rubricTour.steps.push(
+                {
+                    target: thisTarget,
+                    placement: 'bottom',
+                    title: this.$translate('STEP_INFO'),
+                    content: this.ProjectService.replaceAssetPaths(this.rubric),
+                    xOffset: 'center',
+                    arrowOffset: 'center',
+                    onShow: this.onShowRubric,
+                    viewed: false
+                }
+            );
+        }
 
         // add tour bubbles for each of the component rubrics
         let components = this.getComponents();
         let l = components.length, i = 0;
         for (; i < l; i++) {
             let component = components[i];
-            let thisTarget = '#rubric_' + component.id;
-            this.rubricTour.steps.push(
-                {
-                    target: thisTarget,
-                    arrowOffset: 21,
-                    placement: 'right',
-                    yOffset: 1,
-                    title: this.$translate('TEACHING_TIPS'),
-                    content: this.ProjectService.replaceAssetPaths(component.rubric),
-                    onShow: this.onShowRubric,
-                    viewed: false
-                }
-            );
+
+            if (component.rubric) {
+                let thisTarget = '#rubric_' + component.id;
+                this.rubricTour.steps.push(
+                    {
+                        target: thisTarget,
+                        arrowOffset: 21,
+                        placement: 'right',
+                        yOffset: 1,
+                        title: this.$translate('TEACHING_TIPS'),
+                        content: this.ProjectService.replaceAssetPaths(component.rubric),
+                        onShow: this.onShowRubric,
+                        viewed: false
+                    }
+                );
+            }
         }
     }
 
@@ -412,13 +418,15 @@ class NodeController {
                 let l = components.length, i = 0;
                 for (; i < l; i++) {
                     let component = components[i];
-                    thisTarget = '#rubric_' + component.id;
-                    if (component.id === id) {
-                        // the given id matches the current componentId
-                        step = index;
-                        break;
+                    if (component.rubric) {
+                        thisTarget = '#rubric_' + component.id;
+                        if (component.id === id) {
+                            // the given id matches the current componentId
+                            step = index;
+                            break;
+                        }
+                        index++;
                     }
-                    index++;
                 }
             }
 
@@ -444,7 +452,7 @@ class NodeController {
             `<div class="hopscotch-bubble-container help-bubble md-whiteframe-4dp" style="width: ${ step.width }px; padding: ${ step.padding }px;">
                 <md-toolbar class="md-subhead help-bubble__title md-toolbar--wise">
                     <div class="help-bubble___title__content" layout="row" layout-align="start center" flex>
-                        <span>${ step.title !== '' ? `${ step.title }` : '' }</span>
+                        <span>${ tour.isTour ? `${ i18n.stepNum } | ` : '' }${ step.title !== '' ? `${ step.title }` : '' }</span>
                         <span flex></span>
                         ${ buttons.showClose ? `<md-button class="md-icon-button hopscotch-close">
                             <md-icon aria-label="${ i18n.closeTooltip }"> close </md-icon>

@@ -361,18 +361,21 @@ var NodeController = function () {
                 }
             };
 
-            // add a tour bubble for the node rubric
-            var thisTarget = '#nodeRubric_' + this.nodeId;
-            this.rubricTour.steps.push({
-                target: thisTarget,
-                placement: 'bottom',
-                title: this.$translate('STEP_INFO'),
-                content: this.ProjectService.replaceAssetPaths(this.rubric),
-                xOffset: 'center',
-                arrowOffset: 'center',
-                onShow: this.onShowRubric,
-                viewed: false
-            });
+            if (this.rubric) {
+                var thisTarget = '#nodeRubric_' + this.nodeId;
+
+                // add a tour bubble for the node rubric
+                this.rubricTour.steps.push({
+                    target: thisTarget,
+                    placement: 'bottom',
+                    title: this.$translate('STEP_INFO'),
+                    content: this.ProjectService.replaceAssetPaths(this.rubric),
+                    xOffset: 'center',
+                    arrowOffset: 'center',
+                    onShow: this.onShowRubric,
+                    viewed: false
+                });
+            }
 
             // add tour bubbles for each of the component rubrics
             var components = this.getComponents();
@@ -380,17 +383,20 @@ var NodeController = function () {
                 i = 0;
             for (; i < l; i++) {
                 var component = components[i];
-                var _thisTarget = '#rubric_' + component.id;
-                this.rubricTour.steps.push({
-                    target: _thisTarget,
-                    arrowOffset: 21,
-                    placement: 'right',
-                    yOffset: 1,
-                    title: this.$translate('TEACHING_TIPS'),
-                    content: this.ProjectService.replaceAssetPaths(component.rubric),
-                    onShow: this.onShowRubric,
-                    viewed: false
-                });
+
+                if (component.rubric) {
+                    var _thisTarget = '#rubric_' + component.id;
+                    this.rubricTour.steps.push({
+                        target: _thisTarget,
+                        arrowOffset: 21,
+                        placement: 'right',
+                        yOffset: 1,
+                        title: this.$translate('TEACHING_TIPS'),
+                        content: this.ProjectService.replaceAssetPaths(component.rubric),
+                        onShow: this.onShowRubric,
+                        viewed: false
+                    });
+                }
             }
         }
 
@@ -420,13 +426,15 @@ var NodeController = function () {
                         i = 0;
                     for (; i < l; i++) {
                         var component = components[i];
-                        thisTarget = '#rubric_' + component.id;
-                        if (component.id === id) {
-                            // the given id matches the current componentId
-                            step = index;
-                            break;
+                        if (component.rubric) {
+                            thisTarget = '#rubric_' + component.id;
+                            if (component.id === id) {
+                                // the given id matches the current componentId
+                                step = index;
+                                break;
+                            }
+                            index++;
                         }
-                        index++;
                     }
                 }
 
@@ -451,7 +459,7 @@ var NodeController = function () {
             var step = details.step;
             var tour = details.tour;
             var $ctrl = tour.customData.$ctrl;
-            var template = '<div class="hopscotch-bubble-container help-bubble md-whiteframe-4dp" style="width: ' + step.width + 'px; padding: ' + step.padding + 'px;">\n                <md-toolbar class="md-subhead help-bubble__title md-toolbar--wise">\n                    <div class="help-bubble___title__content" layout="row" layout-align="start center" flex>\n                        <span>' + (step.title !== '' ? '' + step.title : '') + '</span>\n                        <span flex></span>\n                        ' + (buttons.showClose ? '<md-button class="md-icon-button hopscotch-close">\n                            <md-icon aria-label="' + i18n.closeTooltip + '"> close </md-icon>\n                        </md-button>' : '') + '\n                    </div>\n                </md-toolbar>\n                <div class="help-bubble__content">\n                    ' + (step.content !== '' ? '' + step.content : '') + '\n                    ' + (buttons.showCTA ? '<md-button class="hopscotch-cta md-primary md-raised">' + i18n.ctaLabel + '</md-button>' : '') + '\n                </div>\n                <md-divider></md-divider>\n                <div class="help-bubble__actions gray-lightest-bg" layout="row" layout-align="start center">\n                    ' + (buttons.showClose ? '<md-button class="button--small hopscotch-close">' + i18n.closeTooltip + '</md-button>' : '') + '\n                    <span flex></span>\n                    ' + (buttons.showPrev ? '<md-button class="button--small info hopscotch-prev">' + i18n.prevBtn + '</md-button>' : '') + '\n                    ' + (buttons.showNext ? '<md-button class="button--small info hopscotch-next">' + i18n.nextBtn + '</md-button>' : '') + '\n                </md-card-actions>\n            </div>';
+            var template = '<div class="hopscotch-bubble-container help-bubble md-whiteframe-4dp" style="width: ' + step.width + 'px; padding: ' + step.padding + 'px;">\n                <md-toolbar class="md-subhead help-bubble__title md-toolbar--wise">\n                    <div class="help-bubble___title__content" layout="row" layout-align="start center" flex>\n                        <span>' + (tour.isTour ? i18n.stepNum + ' | ' : '') + (step.title !== '' ? '' + step.title : '') + '</span>\n                        <span flex></span>\n                        ' + (buttons.showClose ? '<md-button class="md-icon-button hopscotch-close">\n                            <md-icon aria-label="' + i18n.closeTooltip + '"> close </md-icon>\n                        </md-button>' : '') + '\n                    </div>\n                </md-toolbar>\n                <div class="help-bubble__content">\n                    ' + (step.content !== '' ? '' + step.content : '') + '\n                    ' + (buttons.showCTA ? '<md-button class="hopscotch-cta md-primary md-raised">' + i18n.ctaLabel + '</md-button>' : '') + '\n                </div>\n                <md-divider></md-divider>\n                <div class="help-bubble__actions gray-lightest-bg" layout="row" layout-align="start center">\n                    ' + (buttons.showClose ? '<md-button class="button--small hopscotch-close">' + i18n.closeTooltip + '</md-button>' : '') + '\n                    <span flex></span>\n                    ' + (buttons.showPrev ? '<md-button class="button--small info hopscotch-prev">' + i18n.prevBtn + '</md-button>' : '') + '\n                    ' + (buttons.showNext ? '<md-button class="button--small info hopscotch-next">' + i18n.nextBtn + '</md-button>' : '') + '\n                </md-card-actions>\n            </div>';
 
             // need to compile the template here because Hopscotch inserts raw html
             var templateHTML = $ctrl.$compile(template)($ctrl.$scope)[0].outerHTML + '<div class="hopscotch-bubble-arrow-container hopscotch-arrow">\n                <div class="hopscotch-bubble-arrow-border"></div>\n                <div class="hopscotch-bubble-arrow"></div>\n            </div>';
