@@ -1885,7 +1885,7 @@ class GraphController {
         if (seriesName == null || seriesName == '') {
             confirmMessage = this.$translate('graph.areYouSureYouWantToResetTheSeries');
         } else {
-            confirmMessage = this.$translate('graph.areYouSureYouWantToResetTheNamedSeries');
+            confirmMessage = this.$translate('graph.areYouSureYouWantToResetTheNamedSeries', { seriesName: seriesName });
         }
 
         // ask the student if they are sure they want to reset the series
@@ -3189,11 +3189,39 @@ class GraphController {
      */
     authoringDeleteSeriesClicked(index) {
 
-        // remove the series from the series array
-        this.authoringComponentContent.series.splice(index, 1);
+        var confirmMessage = '';
+        var seriesName = '';
 
-        // save the project
-        this.authoringViewComponentChanged();
+        if (this.authoringComponentContent.series != null) {
+
+            // get the series
+            var series = this.authoringComponentContent.series[index];
+
+            if (series != null && series.name != null) {
+
+                // get the series name
+                seriesName = series.name;
+            }
+        }
+
+        if (seriesName == null || seriesName == '') {
+            // the series does not have a name
+            confirmMessage = this.$translate('graph.areYouSureYouWantToDeleteTheSeries');
+        } else {
+            // the series has a name
+            confirmMessage = this.$translate('graph.areYouSureYouWantToDeleteTheNamedSeries', { seriesName: seriesName });
+        }
+
+        // ask the author if they are sure they want to delete the series
+        var answer = confirm(confirmMessage);
+
+        if (answer) {
+            // remove the series from the series array
+            this.authoringComponentContent.series.splice(index, 1);
+
+            // save the project
+            this.authoringViewComponentChanged();
+        }
     };
 
     /**
@@ -4310,11 +4338,38 @@ class GraphController {
      */
     authoringDeleteXAxisCategory(index) {
 
-        // remove the category at the given index
-        this.authoringComponentContent.xAxis.categories.splice(index, 1);
+        if (index != null) {
 
-        // the authoring component content has changed so we will save the project
-        this.authoringViewComponentChanged();
+            var confirmMessage = '';
+
+            var categoryName = '';
+
+            if (this.authoringComponentContent.xAxis != null &&
+                this.authoringComponentContent.xAxis.categories != null) {
+
+                // get the category name
+                categoryName = this.authoringComponentContent.xAxis.categories[index];
+            }
+
+            if (categoryName == null || categoryName == '') {
+                // there category does not have a name
+                confirmMessage = this.$translate('graph.areYouSureYouWantToDeleteTheCategory');
+            } else {
+                // the category has a name
+                confirmMessage = this.$translate('graph.areYouSureYouWantToDeleteTheNamedCategory', { categoryName: categoryName });
+            }
+
+            // ask the author if they are sure they want to delete the category
+            var answer = confirm(confirmMessage);
+
+            if (answer) {
+                // remove the category at the given index
+                this.authoringComponentContent.xAxis.categories.splice(index, 1);
+
+                // the authoring component content has changed so we will save the project
+                this.authoringViewComponentChanged();
+            }
+        }
     }
 
     /**
@@ -4348,12 +4403,70 @@ class GraphController {
     authoringDeleteSeriesDataPoint(series, index) {
 
         if (series != null && series.data != null) {
-            // delete the data point at the given index
-            series.data.splice(index, 1);
-        }
 
-        // the authoring component content has changed so we will save the project
-        this.authoringViewComponentChanged();
+            // ask the author if they are sure they want to delete the point
+            var answer = confirm(this.$translate('graph.areYouSureYouWantToDeleteTheDataPoint'));
+
+            if (answer) {
+                // delete the data point at the given index
+                series.data.splice(index, 1);
+
+                // the authoring component content has changed so we will save the project
+                this.authoringViewComponentChanged();
+            }
+        }
+    }
+
+    /**
+     * Move a data point up
+     * @param series the series the data point belongs to
+     * @param index the index of the data point in the series
+     */
+    authoringMoveSeriesDataPointUp(series, index) {
+        if (series != null && series.data != null) {
+
+            if (index > 0) {
+                // the data point is not at the top so we can move it up
+
+                // remember the data point we are moving
+                var dataPoint = series.data[index];
+
+                // remove the data point at the given index
+                series.data.splice(index, 1);
+
+                // insert the data point back in at one index back
+                series.data.splice(index - 1, 0, dataPoint);
+            }
+
+            // the authoring component content has changed so we will save the project
+            this.authoringViewComponentChanged();
+        }
+    }
+
+    /**
+     * Move a data point down
+     * @param series the series the data point belongs to
+     * @param index the index of the data point in the series
+     */
+    authoringMoveSeriesDataPointDown(series, index) {
+        if (series != null && series.data != null) {
+
+            if (index < series.data.length - 1) {
+                // the data point is not at the bottom so we can move it down
+
+                // remember the data point we are moving
+                var dataPoint = series.data[index];
+
+                // remove the data point at the given index
+                series.data.splice(index, 1);
+
+                // insert the data point back in at one index back
+                series.data.splice(index + 1, 0, dataPoint);
+            }
+
+            // the authoring component content has changed so we will save the project
+            this.authoringViewComponentChanged();
+        }
     }
 
     /**
