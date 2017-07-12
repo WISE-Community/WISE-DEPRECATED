@@ -564,6 +564,37 @@ var EmbeddedController = function () {
             // send the student work to the embedded application
             _this.sendMessageToApplication(message);
         });
+
+        /*
+         * Listen for the assetSelected event which occurs when the user
+         * selects an asset from the choose asset popup
+         */
+        this.$scope.$on('assetSelected', function (event, args) {
+
+            if (args != null) {
+
+                // make sure the event was fired for this component
+                if (args.nodeId == _this.nodeId && args.componentId == _this.componentId) {
+                    // the asset was selected for this component
+                    var assetItem = args.assetItem;
+
+                    if (assetItem != null) {
+                        var fileName = assetItem.fileName;
+
+                        if (fileName != null) {
+
+                            if (args.target == 'modelFile') {
+                                // the target is the model file name
+                                _this.authoringComponentContent.url = fileName;
+                            }
+                        }
+                    }
+                }
+            }
+
+            // close the popup
+            _this.$mdDialog.hide();
+        });
     }
 
     /**
@@ -1447,6 +1478,25 @@ var EmbeddedController = function () {
 
             // the authoring component content has changed so we will save the project
             this.authoringViewComponentChanged();
+        }
+
+        /**
+         * Show the asset popup to allow the author to choose the model file
+         */
+
+    }, {
+        key: 'chooseModelFile',
+        value: function chooseModelFile() {
+
+            // generate the parameters
+            var params = {};
+            params.popup = true;
+            params.nodeId = this.nodeId;
+            params.componentId = this.componentId;
+            params.target = 'modelFile';
+
+            // display the asset chooser
+            this.$rootScope.$broadcast('openAssetChooser', params);
         }
     }]);
 

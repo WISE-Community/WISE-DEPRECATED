@@ -575,6 +575,37 @@ class EmbeddedController {
             // send the student work to the embedded application
             this.sendMessageToApplication(message);
         });
+
+        /*
+         * Listen for the assetSelected event which occurs when the user
+         * selects an asset from the choose asset popup
+         */
+        this.$scope.$on('assetSelected', (event, args) => {
+
+            if (args != null) {
+
+                // make sure the event was fired for this component
+                if (args.nodeId == this.nodeId && args.componentId == this.componentId) {
+                    // the asset was selected for this component
+                    var assetItem = args.assetItem;
+
+                    if (assetItem != null) {
+                        var fileName = assetItem.fileName;
+
+                        if (fileName != null) {
+
+                            if (args.target == 'modelFile') {
+                                // the target is the model file name
+                                this.authoringComponentContent.url = fileName;
+                            }
+                        }
+                    }
+                }
+            }
+
+            // close the popup
+            this.$mdDialog.hide();
+        });
     }
 
     /**
@@ -1357,6 +1388,22 @@ class EmbeddedController {
 
         // the authoring component content has changed so we will save the project
         this.authoringViewComponentChanged();
+    }
+
+    /**
+     * Show the asset popup to allow the author to choose the model file
+     */
+    chooseModelFile() {
+
+        // generate the parameters
+        var params = {};
+        params.popup = true;
+        params.nodeId = this.nodeId;
+        params.componentId = this.componentId;
+        params.target = 'modelFile';
+
+        // display the asset chooser
+        this.$rootScope.$broadcast('openAssetChooser', params);
     }
 }
 
