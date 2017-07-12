@@ -91,8 +91,8 @@ describe('WISE Setting Up a Run', () => {
         submitFormButton.click();
     });
 
-    var newRunId;
-    var newRunCode;
+    let newRunId;
+    let newRunCode;
 
     it('should display the classroom run created confirmation page', () => {
         // check that the user is now on the classroom run created confirmation page
@@ -119,7 +119,7 @@ describe('WISE Setting Up a Run', () => {
 
     it('should sign out', () => {
         browser.ignoreSynchronization = true;  // doesn't use Angular
-        var signOutButton = $("#signOut");
+        let signOutButton = $("#signOut");
         expect(signOutButton.isPresent()).toBeTruthy();
         signOutButton.click();
         expect(browser.getTitle()).toEqual('Web-based Inquiry Science Environment (WISE)');

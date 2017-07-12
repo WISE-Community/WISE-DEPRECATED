@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2007-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * <p>
  * This software is distributed under the GNU General Public License, v3,
@@ -107,7 +107,6 @@ public class StudentIndexController {
                         }
                     }
                 }
-
             }
         }
 
@@ -128,7 +127,6 @@ public class StudentIndexController {
         }
 
         Integer newAnnouncements = announcementRuns.size();
-
         modelMap.put("user", user);
         modelMap.put("pLT", previousLoginTime);
         modelMap.put("lastLoginTime", lastLoginTime);

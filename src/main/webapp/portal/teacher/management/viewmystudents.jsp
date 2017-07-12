@@ -383,13 +383,13 @@ var postChanges = function(tabIndex){
 };
 
 // displays notification messages/warnings
-var displayNotification = function(message){
+var displayNotification = function(message) {
 	var selectedTab = $('#periodTabs').tabs("option", "active");
 	var selected = selectedTab + 1;
 	var toolbars = $('#period_' + selected + ' .studentManageHeader');
 	var top = toolbars.offset().top + toolbars.outerHeight() + 7;
 	// remove any existing notifications
-	if($('#notifications')){
+	if($('#notifications')) {
 		$('#notifications').remove();
 		if(notifyTimeout) clearTimeout(notifyTimeout);
 	}
@@ -400,10 +400,10 @@ var displayNotification = function(message){
 	notificationSpan.appendTo(notificationDiv);
 	notificationDiv.css({'top':top,"left":0,"right":0,"position":"absolute"}).appendTo($('.manageStudents'));
 	$('.gradingContent').css({'margin-top':'2em','padding-top':'0'});
-	notifyTimeout = setTimeout(function(){
+	notifyTimeout = setTimeout(function() {
 		$('#notifications').remove();
 		$('.gradingContent').css({'margin-top':'0','padding-top':'.5em'});
-	},15000); // remove after 15 seconds
+	}, 15000); // remove after 15 seconds
 };
 
 </script>
@@ -422,7 +422,7 @@ var displayNotification = function(message){
 			<div class="gradingTools">
 				<div id="fixedGradingHeader" class="gradingHeader">
 					<div>
-						<a href="studentlist.html?runId=${run.id}" target="_blank"><img class="icon" alt="print" src="${contextPath}/<spring:theme code="print"/>" /><span><spring:message code="teacher.management.viewmystudents.print"/></span></a>
+						<a href="studentlist?runId=${run.id}" target="_blank"><img class="icon" alt="print" src="${contextPath}/<spring:theme code="print"/>" /><span><spring:message code="teacher.management.viewmystudents.print"/></span></a>
 						<a href="studentListExport?runId=${run.id}"><img class="icon" alt="excel" src="${contextPath}/<spring:theme code="address_book"/>" /><span><spring:message code="teacher.management.viewmystudents.export"/></span></a>
 					</div>
 					<div style="float:right;">

@@ -31,7 +31,11 @@ describe('WISE Authoring Tool', () => {
 
     let projectStructureButton = element(by.xpath('//side-menu/div/a[@aria-label="Project Structure"]'));
     let createNewStepButton = $("#createNewStepButton");
-    let createNewProjectButton = $('#createNewProjectButton');
+    let createNewProjectButton = $("#createNewProjectButton");
+    let chooseStepDropDown = element(by.xpath('//step-tools/div/md-select[@ng-model="$ctrl.nodeId"]'));
+    let previousButton = element(by.xpath('//button[@ng-click="$ctrl.goToPrevNode()"]'));
+    let nextButton = element(by.xpath('//button[@ng-click="$ctrl.goToNextNode()"]'));
+    let homeButton = element(by.css('button[aria-label="Home"]'));
 
     it('should require user to log in to use the authoring tool', () => {
         browser.ignoreSynchronization = true;  // doesn't use Angular
@@ -83,6 +87,10 @@ describe('WISE Authoring Tool', () => {
         });
 
         // check that move, delete buttons are disabled and other buttons are enabled.
+        expect(homeButton.isEnabled()).toBe(true);
+        expect(chooseStepDropDown.isEnabled()).toBe(true);
+        expect(previousButton.isEnabled()).toBe(false);
+        expect(nextButton.isEnabled()).toBe(false);
         expect($("#moveButton").isEnabled()).toBe(false);
         expect($("#copyButton").isEnabled()).toBe(false);
         expect($("#deleteButton").isEnabled()).toBe(false);
@@ -116,12 +124,12 @@ describe('WISE Authoring Tool', () => {
 
         element.all(by.repeater("item in projectController.items")).then((nodeItem) => {
             expect(nodeItem[1].element(by.css('.groupHeader h6')).getText()).toBe("1 First Activity");
-            let insertInsideAct1Button = nodeItem[1].element(by.css('button.insertButton'));
+            let insertInsideAct1Button = nodeItem[1].element(by.css('button.insertButton[aria-label="Insert Inside"]'));
             expect(insertInsideAct1Button.isDisplayed()).toBeTruthy();
             insertInsideAct1Button.click();
             let EC = protractor.ExpectedConditions;
             browser.wait(EC.alertIsPresent(), 5000);  // Wait for an alert pops up asking if it should this should be the first step in the project.
-            browser.switchTo().alert().accept();   // accept the alert
+            browser.switchTo().alert().accept();      // accept the alert
         });
 
         element.all(by.repeater("item in projectController.items")).then((nodeItem) => {
@@ -130,14 +138,13 @@ describe('WISE Authoring Tool', () => {
         });
 
         // now test adding another step after the first step. This time the alert should not show.
-
         createNewStepButton.click();
         createNodeTitle.clear();  // clear out what's there.
         createNodeTitle.sendKeys('Step 2');
         $("#createNodeCreateButton").click();
 
         element.all(by.repeater("item in projectController.items")).then((nodeItem) => {
-            let insertAfterStep1Button = nodeItem[2].element(by.css('button.insertButton'));
+            let insertAfterStep1Button = nodeItem[2].element(by.css('button.insertButton[aria-label="Insert After"]'));
             expect(insertAfterStep1Button.isDisplayed()).toBeTruthy();
             insertAfterStep1Button.click();
         });
@@ -147,6 +154,83 @@ describe('WISE Authoring Tool', () => {
             expect(nodeItem[2].element(by.css('.stepHeader h6')).getText()).toBe("1.1 Step 1");  // should have step 1
             expect(nodeItem[3].element(by.css('.stepHeader h6')).getText()).toBe("1.2 Step 2");  // should now have the newly added step
         });
+    });
+
+    // TODO test adding new activity
+
+    it('should allow author to jump to step authoring using the navigation drop-down menu', () => {
+        chooseStepDropDown.click();
+        element.all(by.repeater("item in $ctrl.idToOrder | toArray | orderBy : 'order'")).then((stepSelectOptions) => {
+            expect(stepSelectOptions[0].element(by.css('.node-select__text')).getText()).toBe("1: First Activity");
+            expect(stepSelectOptions[1].element(by.css('.node-select__text')).getText()).toBe("1.1: Step 1");
+            expect(stepSelectOptions[2].element(by.css('.node-select__text')).getText()).toBe("1.2: Step 2");
+            stepSelectOptions[2].element(by.css('.node-select__text')).click();  // Click on step 1.2 in the step select menu
+            expect(browser.getCurrentUrl()).toMatch('http://localhost:8080/wise/author#/project/[0-9]+/node/node2');
+        });
+
+        chooseStepDropDown.click();
+        element.all(by.repeater("item in $ctrl.idToOrder | toArray | orderBy : 'order'")).then((stepSelectOptions) => {
+            stepSelectOptions[0].element(by.css('.node-select__text')).click();  // Click on activity 1 in the step select menu
+            expect(browser.getCurrentUrl()).toMatch('http://localhost:8080/wise/author#/project/[0-9]+/node/group1');
+        });
+
+        projectStructureButton.click(); // click on the project view button
+        expect(browser.getCurrentUrl()).toMatch('http://localhost:8080/wise/author#/project/[0-9]+');
+    });
+
+    it('should allow editing of activity and step titles', () => {
+        element(by.cssContainingText("h6", "First Activity")).click();
+        expect(browser.getCurrentUrl()).toMatch('http://localhost:8080/wise/author#/project/[0-9]+/node/group1');
+        // the navigation drop-down should show the activity title
+        expect(chooseStepDropDown.getText()).toBe("1: First Activity");
+        // TODO: uncomment me when we figured out what to do with home button and project structure buttons
+        // expect(previousButton.isEnabled()).toBe(false);
+        // expect(nextButton.isEnabled()).toBe(false);
+        let activity1TitleInput = element(by.model("nodeAuthoringController.node.title"));
+        expect(activity1TitleInput.isPresent()).toBeTruthy();
+        expect(activity1TitleInput.getAttribute('value')).toBe("First Activity");
+        activity1TitleInput.clear();  // clear out what's there.
+        activity1TitleInput.sendKeys('Act One');  // change the title to "Act One"
+        element(by.css('button[ng-click="nodeAuthoringController.close()"]')).click();  // click on the home button to go back to main view.
+        expect(browser.getCurrentUrl()).toMatch('http://localhost:8080/wise/author#/project/[0-9]+');
+
+        // now check that the activity title has been updated in the project view
+        element.all(by.repeater("item in projectController.items")).then((nodeItem) => {
+            expect(nodeItem[1].element(by.css('.groupHeader h6')).getText()).toBe("1 Act One");
+        });
+
+        element(by.cssContainingText("h6", "Step 1")).click();  // click on step 1
+        expect(browser.getCurrentUrl()).toMatch('http://localhost:8080/wise/author#/project/[0-9]+/node/node1');
+        // the navigation drop-down should show the step title
+        expect(chooseStepDropDown.getText()).toBe("1.1: Step 1");
+        expect(previousButton.isEnabled()).toBe(false); // previous button should be disabled
+        expect(nextButton.isEnabled()).toBe(true); // next button should be enabled
+        let step1TitleInput = element(by.model("nodeAuthoringController.node.title"));
+        expect(step1TitleInput.isPresent()).toBeTruthy();
+        expect(step1TitleInput.getAttribute('value')).toBe("Step 1");
+        step1TitleInput.clear();  // clear out what's there.
+        step1TitleInput.sendKeys('One Small Step for Man');  // change the title to "One Small Step for Man"
+        element(by.css('button[ng-click="nodeAuthoringController.close()"]')).click();  // click on the home button to go back to main view.
+        expect(browser.getCurrentUrl()).toMatch('http://localhost:8080/wise/author#/project/[0-9]+');
+        // now check that the step title has been updated in the project view
+        element.all(by.repeater("item in projectController.items")).then((nodeItem) => {
+            expect(nodeItem[2].element(by.css('.stepHeader h6')).getText()).toBe("1.1 One Small Step for Man");
+        });
+    });
+
+    it('should allow navigating between steps with arrows', () => {
+        element(by.cssContainingText("h6", "One Small Step for Man")).click();
+        expect(browser.getCurrentUrl()).toMatch('http://localhost:8080/wise/author#/project/[0-9]+/node/node1');
+        expect(chooseStepDropDown.getText()).toBe("1.1: One Small Step for Man");
+        expect(previousButton.isEnabled()).toBe(false); // previous button should be disabled
+        expect(nextButton.isEnabled()).toBe(true); // next button should be enabled
+        nextButton.click(); // go to next node, node2.
+        expect(browser.getCurrentUrl()).toMatch('http://localhost:8080/wise/author#/project/[0-9]+/node/node2');
+        expect(chooseStepDropDown.getText()).toBe("1.2: Step 2");
+        expect(previousButton.isEnabled()).toBe(true); // previous button should be enabled
+        expect(nextButton.isEnabled()).toBe(false); // next button should be disabled, because this is the last step
+        previousButton.click(); // go back to node1
+        expect(browser.getCurrentUrl()).toMatch('http://localhost:8080/wise/author#/project/[0-9]+/node/node1');
     });
 
     it('should display my assets', () => {

@@ -17,7 +17,7 @@ var PauseScreensMenuController = function () {
         this.$scope = $scope;
         this.TeacherDataService = TeacherDataService;
 
-        this.periods = this.TeacherDataService.getRunStatus().periods;
+        this.periods = this.TeacherDataService.getPeriods();
         this.allPeriodsPaused = this.getAllPeriodsPaused();
 
         /**
@@ -42,9 +42,9 @@ var PauseScreensMenuController = function () {
             if (period.periodId === -1) {
                 var n = this.periods.length;
                 for (var i = 0; i < n; i++) {
-                    var _period = this.periods[i];
-                    if (_period.id !== -1) {
-                        this.TeacherDataService.pauseScreensChanged(_period.periodId, this.allPeriodsPaused);
+                    var thisPeriod = this.periods[i];
+                    if (thisPeriod.periodId !== -1) {
+                        this.TeacherDataService.pauseScreensChanged(period.periodId, this.allPeriodsPaused);
                     }
                 }
             } else {

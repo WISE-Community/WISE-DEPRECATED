@@ -70,10 +70,13 @@ NotificationsMenuController.$inject = [
 const NotificationsMenu = {
     bindings: {
         newNotifications: '<',
-        dismissedNotifications: '<'
+        dismissedNotifications: '<',
+        withPause: '<'
     },
     template:
-        `<div class="account-menu__caret account-menu__caret--notification" tabindex="0"></div>
+        `<div class="account-menu__caret account-menu__caret--notification"
+                     tabindex="0"
+                     ng-class="{ 'account-menu__caret--notification--with-pause': $ctrl.withPause }"></div>
         <div layout="column" class="account-menu--fixed-height account-menu--fixed-width">
             <md-toolbar md-theme="light" class="account-menu__info md-subhead md-whiteframe-1dp" layout="row" layout-align="start center">
                 <span class="accent-1 account-menu__info__title" layout="row" layout-align="start center"><md-icon class="accent-1"> notifications </md-icon>&nbsp;<span translate="ALERTS"></span></span>

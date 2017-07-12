@@ -93,8 +93,8 @@ describe('WISE Setting Up a Run', function () {
         submitFormButton.click();
     });
 
-    var newRunId;
-    var newRunCode;
+    var newRunId = void 0;
+    var newRunCode = void 0;
 
     it('should display the classroom run created confirmation page', function () {
         // check that the user is now on the classroom run created confirmation page

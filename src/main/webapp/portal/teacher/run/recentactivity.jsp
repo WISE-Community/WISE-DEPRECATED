@@ -130,7 +130,7 @@
 		$('.manageStudents').on('click',function() {
 			var title = $(this).attr('title');
 			var params = $(this).attr('id').replace('manageStudents_','');
-			var path = "${contextPath}/teacher/management/viewmystudents.html?" + params;
+			var path = "${contextPath}/teacher/management/viewmystudents?" + params;
 			var div = $('#manageStudentsDialog').html('<iframe id="manageStudentsIfrm" width="100%" height="100%"></iframe>');
 			div.dialog({
 				modal: true,

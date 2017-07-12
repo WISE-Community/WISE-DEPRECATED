@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2007-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -73,14 +73,15 @@ public class TeacherIndexController {
 	};
 	
 	@RequestMapping(method = RequestMethod.GET)
-	protected String handleGET(ModelMap modelMap) throws Exception {
+	protected String getTeacherHomepage(ModelMap modelMap) throws Exception {
 
 		User user = ControllerUtil.getSignedInUser();
 
+		// combine owned and shared runs
 		List<Run> runList = this.runService.getRunListByOwner(user);
 		runList.addAll(this.runService.getRunListBySharedOwner(user));
 
-		List<Run> current_run_list1 = new ArrayList<Run>();
+		List<Run> allCurrentRuns = new ArrayList<Run>();
 		Map<Run, List<Workgroup>> workgroupMap = new HashMap<Run, List<Workgroup>>();
 		for (Run run : runList) {
 			
@@ -89,29 +90,24 @@ public class TeacherIndexController {
 	
 			workgroupMap.put(run, workgroupList);
 			if (!run.isEnded()) {
-				current_run_list1.add(run);
+				allCurrentRuns.add(run);
 			}
 		}
 		
 		List<Run> current_run_list;
-		Collections.sort(current_run_list1, ORDER_BY_STARTTIME);
-		if (current_run_list1.size() > 5) {
-			current_run_list = current_run_list1.subList(0,5);
+		Collections.sort(allCurrentRuns, ORDER_BY_STARTTIME);
+		if (allCurrentRuns.size() > 5) {
+			current_run_list = allCurrentRuns.subList(0,5);
 		} else {
-			current_run_list = current_run_list1;
+			current_run_list = allCurrentRuns;
 		}
     	
 		modelMap.put("user", user);
-		modelMap.put("current_run_list", current_run_list);
-		modelMap.put("current_run_list1", current_run_list1);
-
-		String isRealTimeEnabledStr = this.wiseProperties.getProperty("isRealTimeEnabled");
-		boolean isRealTimeEnabled = isRealTimeEnabledStr != null ? Boolean.valueOf(isRealTimeEnabledStr) : false;
-		modelMap.put("isRealTimeEnabled", isRealTimeEnabled);
-
+		modelMap.put("current_run_list", current_run_list);  // this is used in run listing page and only contains latest 5 runs
+		modelMap.put("allCurrentRuns", allCurrentRuns);  // this is used to go through all the announcements in the homepage
 		modelMap.put("workgroup_map", workgroupMap);
 		modelMap.put("teacherOnlyNewsItems", newsItemService.retrieveByType("teacherOnly"));
-    	
+
     	// if discourse is enabled for this WISE instance, add the link to the model
     	// so the view can display it
     	String discourseURL = wiseProperties.getProperty("discourse_url");

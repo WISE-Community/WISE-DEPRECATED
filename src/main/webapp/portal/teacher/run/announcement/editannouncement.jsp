@@ -15,7 +15,7 @@
 	<div class="dialogContent">
 		<div class="sectionHead"><spring:message code="teacher.run.announcement.editannouncement.editAnnouncement"/></div>
 		<div class="dialogSection">
-			<form method="POST" action="manageannouncement.html" id="manageannouncement" autocomplete='off'>
+			<form method="POST" action="manageannouncement" id="manageannouncement" autocomplete='off'>
 				<div>
 					<label for="titleField"><spring:message code="teacher.run.announcement.editannouncement.title"/> </label>
 					<input name="title" id="titleField" value="${announcement.title}" size="50"/>
@@ -31,7 +31,7 @@
 					<input type="submit" id="save" value="<spring:message code="save"/>" />
 					<input type="button" id="cancel" 
 						value="<spring:message code='teacher.run.announcement.createannouncement.cancel'/>" 
-						onclick="window.location='manageannouncement.html?runId=${param.runId}';" />
+						onclick="window.location='manageannouncement?runId=${param.runId}';" />
 				</div>
 			</form>
 		</div>

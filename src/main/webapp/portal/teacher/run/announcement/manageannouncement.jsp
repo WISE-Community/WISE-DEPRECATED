@@ -48,7 +48,7 @@ function removeAnnouncement(announcementId, announcementTitle) {
 							<a href="editannouncement?runId=${run.id}&announcementId=${announcement.id}"><spring:message code="teacher.run.announcement.manageannouncement.edit"/></a>
 							<a onclick="removeAnnouncement('${announcement.id}', '${announcement.title}');"><spring:message code="teacher.run.announcement.manageannouncement.delete"/></a>
 							<div style="display:hidden">
-								<form id="removeAnnouncementForm_${announcement.id}" method="POST" action="manageannouncement.html">
+								<form id="removeAnnouncementForm_${announcement.id}" method="POST" action="manageannouncement">
 									<input type="hidden" name="command" value="remove" />
 									<input type="hidden" name="runId" value="${run.id}" />
 									<input type="hidden" name="announcementId" value="${announcement.id}" />
