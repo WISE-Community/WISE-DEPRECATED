@@ -77,12 +77,12 @@
                         </md-button>
                         <md-button id="createNewActivityButton" class='topButton md-raised md-primary' ng-click='projectController.creatNewActivityClicked()'
                                 ng-disabled="projectController.insertGroupMode || projectController.insertNodeMode">
-                            <md-icon>add_box</md-icon>
+                            <md-icon>queue</md-icon>
                             <md-tooltip md-direction="top" class="projectButtonTooltip">{{ "createNewActivity" | translate }}</md-tooltip>
                         </md-button>
                         <md-button id="createNewStepButton" class='topButton md-raised md-primary' ng-click='projectController.createNewStepClicked()'
                                 ng-disabled="projectController.insertGroupMode || projectController.insertNodeMode">
-                            <md-icon>add_circle</md-icon>
+                            <md-icon>add_box</md-icon>
                             <md-tooltip md-direction="top" class="projectButtonTooltip">{{ "createNewStep" | translate }}</md-tooltip>
                         </md-button>
                         <md-button id="importStepButton" class='topButton md-raised md-primary' ng-click='projectController.importStepClicked()'
