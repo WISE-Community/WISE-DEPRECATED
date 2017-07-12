@@ -5,7 +5,8 @@
             <input size='150'
                    ng-model='outsideURLController.authoringComponentContent.url'
                    ng-change='outsideURLController.authoringViewComponentChanged()'
-                   ng-model-options='{ debounce: 1000 }'/>
+                   ng-model-options='{ debounce: 1000 }'
+                   placeholder='{{ "outsideURL.enterURLHere" | translate }}'/>
         </md-input-container>
         <div ng-if='outsideURLController.mode === "authoring"'>
             <md-button class='topButton md-raised md-primary' ng-click='outsideURLController.showAdvancedAuthoring = !outsideURLController.showAdvancedAuthoring'>
