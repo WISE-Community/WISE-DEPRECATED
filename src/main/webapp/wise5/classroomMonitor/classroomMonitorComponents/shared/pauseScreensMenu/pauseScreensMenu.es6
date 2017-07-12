@@ -6,7 +6,7 @@ class PauseScreensMenuController {
         this.$scope = $scope;
         this.TeacherDataService = TeacherDataService;
 
-        this.periods = this.TeacherDataService.getRunStatus().periods;
+        this.periods = this.TeacherDataService.getPeriods();
         this.allPeriodsPaused = this.getAllPeriodsPaused();
 
         /**
@@ -27,8 +27,8 @@ class PauseScreensMenuController {
         if (period.periodId === -1) {
             let n = this.periods.length;
             for (let i = 0; i < n; i++) {
-                let period = this.periods[i];
-                if (period.id !== -1) {
+                let thisPeriod = this.periods[i];
+                if (thisPeriod.periodId !== -1) {
                     this.TeacherDataService.pauseScreensChanged(period.periodId, this.allPeriodsPaused);
                 }
             }
