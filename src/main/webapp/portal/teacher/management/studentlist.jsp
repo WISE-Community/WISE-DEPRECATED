@@ -4,11 +4,8 @@
 <html dir="${textDirection}">
 <head>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-
 <link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
 <link href="${contextPath}/<spring:theme code="stylesheet"/>" media="screen" rel="stylesheet"  type="text/css" />
-<script type="text/javascript">
-</script>
 </head>
 
 <body style="background:#FFF; font-size:.9em;" onload="window.print();">
@@ -18,16 +15,15 @@
 			<c:forEach var="period" varStatus="periodStatus" items="${periods}">
 				<div class="sectionHead">Period: ${period.name}</div>
 				<ul>
-				  <c:forEach var="student" varStatus="studentStatus" items="${period.members}">
-				    <li style="margin:.5em;">
-				      ${student.userDetails.firstname} ${student.userDetails.lastname} (${student.userDetails.username})    
-				    </li>
-				  </c:forEach>      
+				    <c:forEach var="student" varStatus="studentStatus" items="${period.members}">
+						<li style="margin:.5em;">
+							${student.userDetails.firstname} ${student.userDetails.lastname} (${student.userDetails.username})
+						</li>
+					</c:forEach>
 				</ul>
 			</c:forEach>
 		</div>
 	</div>
-
 </body>
 
 </html>

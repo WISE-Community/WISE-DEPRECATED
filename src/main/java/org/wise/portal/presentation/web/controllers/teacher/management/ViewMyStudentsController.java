@@ -23,11 +23,7 @@
  */
 package org.wise.portal.presentation.web.controllers.teacher.management;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -39,7 +35,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.view.RedirectView;
 import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.teacher.management.ViewMyStudentsPeriod;
@@ -65,32 +60,34 @@ public class ViewMyStudentsController {
 	@Autowired
 	private AclService<Run> aclService;
 
-	@RequestMapping("/teacher/management/viewmystudents.html")
-	protected ModelAndView handleRequestInternal(
-			@RequestParam("runId") String runIdStr,
+	/**
+	 * Handles request for viewing students in the specified run
+	 *
+	 * @param runId id of the Run
+	 * @param servletRequest HttpServletRequest
+	 * @return modelAndView containing information needed to view students
+	 * @throws Exception
+	 */
+	@RequestMapping("/teacher/management/viewmystudents")
+	protected ModelAndView viewMyStudents(
+			@RequestParam("runId") Long runId,
 			HttpServletRequest servletRequest) throws Exception {
 		
 		User user = ControllerUtil.getSignedInUser();
-
-		Map<Group, List<Workgroup>> workgroupMap = new HashMap<Group, List<Workgroup>>();
-		
-		List<Run> current_run_list = new ArrayList<Run>();
-		Long runId = Long.valueOf(runIdStr);
 		Run run = runService.retrieveById(runId);
 
-		// Check that the user has permission for this run
+		// check that the logged-in user has permission for this run
 		if (user.isAdmin() ||
 				user.getUserDetails().hasGrantedAuthority(UserDetailsService.RESEARCHER_ROLE) ||
 				this.aclService.hasPermission(run, BasePermission.ADMINISTRATION, user) ||
 				this.aclService.hasPermission(run, BasePermission.READ, user)) {
+
 			Set<Workgroup> allworkgroups = this.runService.getWorkgroups(runId);
 			String workgroupsWithoutPeriod = "";
 			Set<ViewMyStudentsPeriod> viewmystudentsallperiods = new TreeSet<ViewMyStudentsPeriod>();
-			String projectName = run.getProject().getName();
-			String projectId = run.getProject().getId().toString();
-			
-			/* retrieves the get parameter periodName to determine which 
-			   period the link is requesting */
+
+			// retrieves the get parameter periodName to determine which
+			// period the link is requesting
 			String periodName = servletRequest.getParameter("periodName");
 			
 			int tabIndex = 0;
@@ -122,7 +119,7 @@ public class ViewMyStudentsController {
 				viewmystudentsperiod.setWorkgroups(periodworkgroups);
 				viewmystudentsallperiods.add(viewmystudentsperiod);
 				
-				//determines which period tab to show in the AJAX tab object
+				// determines which period tab to show in the AJAX tab object
 				if (periodName != null && periodName.equals(period.getName())) {
 					tabIndex = periodCounter;
 				}
@@ -135,21 +132,48 @@ public class ViewMyStudentsController {
 
 			ModelAndView modelAndView = new ModelAndView();
 			modelAndView.addObject("user", user);
-			modelAndView.addObject("current_run_list", current_run_list);
-			modelAndView.addObject("workgroup_map", workgroupMap);
 			modelAndView.addObject("viewmystudentsallperiods", viewmystudentsallperiods);
 			modelAndView.addObject("run", run);
-			modelAndView.addObject("run_name", run.getName());
 			modelAndView.addObject("tabIndex", tabIndex);
-			modelAndView.addObject("project_name", projectName);
-			modelAndView.addObject("project_id", projectId);
 			modelAndView.addObject("workgroupsWithoutPeriod", workgroupsWithoutPeriod);
 			return modelAndView;
 		} else {
-			//get the context path e.g. /wise
-			String contextPath = servletRequest.getContextPath();
-			
-			return new ModelAndView(new RedirectView(contextPath + "/accessdenied.html"));
+			return new ModelAndView("errors/accessdenied");
+		}
+	}
+
+	/**
+	 * Get the students in the specified run and returns them in the model
+	 * @param runId id of the Run
+	 * @return modelAndView containing information needed to get student list
+	 * @throws Exception
+	 */
+	@RequestMapping("/teacher/management/studentlist")
+	protected ModelAndView getStudentList(
+			@RequestParam("runId") Long runId) throws Exception {
+
+		User user = ControllerUtil.getSignedInUser();
+		Run run = runService.retrieveById(runId);
+
+		// check that the logged-in user has permission for this run
+		if (user.isAdmin() ||
+				user.getUserDetails().hasGrantedAuthority(UserDetailsService.RESEARCHER_ROLE) ||
+				this.aclService.hasPermission(run, BasePermission.ADMINISTRATION, user) ||
+				this.aclService.hasPermission(run, BasePermission.READ, user)) {
+			Set<Group> periods = run.getPeriods();
+			Set<Group> requestedPeriods = new TreeSet<Group>();
+
+			for (Group period : periods) {
+				// TODO in future: filter by period...for now, include all periods
+				requestedPeriods.add(period);
+			}
+
+			ModelAndView modelAndView = new ModelAndView();
+			modelAndView.addObject("run", run);
+			modelAndView.addObject("periods", requestedPeriods);
+			return modelAndView;
+		} else {
+			return new ModelAndView("errors/accessdenied");
 		}
 	}
 }

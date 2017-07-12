@@ -57,7 +57,7 @@ th {
 			    	<ul>
 			    		<sec:authorize access="hasRole('ROLE_ADMINISTRATOR')">
 			    		  <li><a href="${contextPath}/teacher/run/shareprojectrun.html?runId=${run.id}"><spring:message code="admin.run.manageSharedTeachers" /></a></li>
-			    		  <li><a href="${contextPath}/teacher/management/viewmystudents.html?runId=${run.id}"><spring:message code="admin.run.manageStudents" /></a></li>
+			    		  <li><a href="${contextPath}/teacher/management/viewmystudents?runId=${run.id}"><spring:message code="admin.run.manageStudents" /></a></li>
 			    		</sec:authorize>
 			    	</ul>
 			    </td>

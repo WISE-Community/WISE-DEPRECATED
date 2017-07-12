@@ -1380,16 +1380,16 @@
 			box = $('.projectBow[data-id="' + pID + '"]'),
 			checked = bookmarkLink.hasClass('true');
 		$.ajax({
-			type: 'get',
-			url: '${contextPath}/teacher/projects/bookmark.html?projectId=' + pID + '&checked=' + !checked,
-			success: function(request){
+			type: 'POST',
+			url: '${contextPath}/teacher/project/bookmark?projectId=' + pID + '&checked=' + !checked,
+			success: function(response) {
 				var updateString = '',
 					updateRow,
 					updateColumn = 9;
-				if(checked){
+				if (checked) {
 					updateString = 'false';
 					bookmarkLink.removeClass('true');
-					if(box.hasClass('rootProject')){
+					if (box.hasClass('rootProject')) {
 						row.find('td').eq(9).text('false');
 						updateRow = row[0];
 					} else {
@@ -1402,7 +1402,7 @@
 					updateString = 'true';
 					bookmarkLink.addClass('true');
 					bookmarkLink.removeClass('false');
-					if(box.hasClass('rootProject')){
+					if (box.hasClass('rootProject')) {
 						row.find('td').eq(9).text('true');
 						updateRow = row[0];
 					} else {
@@ -1414,7 +1414,7 @@
 				}
 				otable.fnUpdate( updateString, updateRow, updateColumn, false, true );
 			},
-			error: function(request,error){
+			error: function(request,error) {
 				alert('<spring:message code="toggleFavoriteError"/>');
 			}
 		});

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2007-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -54,10 +54,12 @@ import org.wise.portal.service.workgroup.WorkgroupService;
 
 /**
  * Controller to allow students to launch the VLE using the project.
- * This link is *always* used to start the project for students, whether
- * - they're not in a workgroup
- * - they're in a workgroup by themself
- * - they're in a workgroup with other people
+ * This link is *always* used to start the project for students, whether:
+ * <ul>
+ *     <li>they're not in a workgroup</li>
+ *     <li>they're in a workgroup by themself</li>
+ *     <li>they're in a workgroup with other people</li>
+ * </ul>
  *
  * @author Hiroki Terashima
  */
