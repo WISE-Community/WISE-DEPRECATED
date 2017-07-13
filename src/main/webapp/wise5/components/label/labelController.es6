@@ -150,9 +150,6 @@ class LabelController {
         // the background image path
         this.backgroundImage = null;
 
-        // the message to display when the student is in create label mode
-        this.newLabelMessage = this.$translate('label.clickOnTheImageOr');
-
         // the options for when to update this component from a connected component
         this.connectedComponentUpdateOnOptions = [
             {
@@ -309,6 +306,12 @@ class LabelController {
                 }.bind(this), function(newValue, oldValue) {
                     this.componentContent = this.ProjectService.injectAssetPaths(newValue);
 
+                    // the canvas width
+                    this.canvasWidth = 800;
+
+                    // the canvas height
+                    this.canvasHeight = 600;
+                    
                     this.submitCounter = 0;
                     this.isSaveButtonVisible = this.componentContent.showSaveButton;
                     this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
@@ -1373,8 +1376,13 @@ class LabelController {
 
         var canvas = null;
 
-        this.canvasWidth = this.componentContent.width;
-        this.canvasHeight = this.componentContent.height;
+        if (this.componentContent.width != null && this.componentContent.width != '') {
+            this.canvasWidth = this.componentContent.width;
+        }
+
+        if (this.componentContent.height != null && this.componentContent.height != '') {
+            this.canvasHeight = this.componentContent.height;
+        }
 
         // get the canvas object from the html
         if (this.isDisabled) {
@@ -2156,7 +2164,7 @@ class LabelController {
     snipImage($event) {
 
         // get the canvas element
-        var canvas = angular.element('#' + this.componentId + ' canvas');
+        var canvas = angular.element('#' + this.canvasId);
 
         if (canvas != null && canvas.length > 0) {
 
