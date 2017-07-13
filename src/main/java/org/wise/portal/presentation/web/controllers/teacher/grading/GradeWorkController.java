@@ -41,7 +41,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 import org.wise.portal.dao.ObjectNotFoundException;
-import org.wise.portal.domain.project.impl.ProjectTypeVisitor;
+import org.wise.portal.domain.project.impl.ProjectType;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
@@ -129,10 +129,9 @@ public class GradeWorkController {
 			}
 		} else {
 			
-			ProjectTypeVisitor typeVisitor = new ProjectTypeVisitor();
-			String result = (String) run.getProject().accept(typeVisitor);
+			ProjectType projectType = run.getProject().getProjectType();
 			
-			if (result.equals("LDProject")) {
+			if (projectType.equals(ProjectType.LD)) {
 				User user = ControllerUtil.getSignedInUser();
 				
 				// check that the user has read or write permission on the run
@@ -177,7 +176,6 @@ public class GradeWorkController {
 			} else if (runId != null) {
 				ModelAndView modelAndView = new ModelAndView();
 				modelAndView.addObject("runId", runId);
-				
 				return modelAndView;
 			} else {
 				//throw error

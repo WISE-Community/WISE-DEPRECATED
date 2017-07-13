@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2007-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -24,18 +24,17 @@
 package org.wise.portal.presentation.web.controllers.teacher.management;
 
 import java.text.DateFormat;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.acls.domain.BasePermission;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -44,34 +43,171 @@ import org.wise.portal.domain.authentication.MutableUserDetails;
 import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.run.Run;
+import org.wise.portal.domain.teacher.management.ViewMyStudentsPeriod;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.workgroup.Workgroup;
+import org.wise.portal.presentation.web.controllers.ControllerUtil;
+import org.wise.portal.service.acl.AclService;
+import org.wise.portal.service.authentication.UserDetailsService;
 import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.workgroup.WorkgroupService;
 
+/**
+ * Controller for managing students in the run, like
+ * displaying students, exporting student names, and updating workgroup memberships
+ * 
+ * @author Patrick Lawler
+ * @author Hiroki Terashima
+ */
 @Controller
-public class ListStudentNamesController {
+public class ManageStudentsController {
 
 	@Autowired
 	private RunService runService;
 
 	@Autowired
 	private WorkgroupService workgroupService;
-	
-	@RequestMapping("/teacher/management/studentListExport")
-	protected ModelAndView handleRequestInternal(
-			@RequestParam("runId") String runIdStr,
-			HttpServletResponse response) throws Exception {
+
+	@Autowired
+	private AclService<Run> aclService;
+
+	/**
+	 * Handles request for viewing students in the specified run
+	 *
+	 * @param runId id of the Run
+	 * @param servletRequest HttpServletRequest
+	 * @return modelAndView containing information needed to view students
+	 * @throws Exception
+	 */
+	@RequestMapping("/teacher/management/viewmystudents")
+	protected ModelAndView viewMyStudents(
+			@RequestParam("runId") Long runId,
+			HttpServletRequest servletRequest) throws Exception {
 		
-		//get the run
-		Long runId = Long.valueOf(runIdStr);
+		User user = ControllerUtil.getSignedInUser();
 		Run run = runService.retrieveById(runId);
-		
+
+		// check that the logged-in user has permission for this run
+		if (user.isAdmin() ||
+				user.getUserDetails().hasGrantedAuthority(UserDetailsService.RESEARCHER_ROLE) ||
+				this.aclService.hasPermission(run, BasePermission.ADMINISTRATION, user) ||
+				this.aclService.hasPermission(run, BasePermission.READ, user)) {
+
+			Set<Workgroup> allworkgroups = this.runService.getWorkgroups(runId);
+			String workgroupsWithoutPeriod = "";
+			Set<ViewMyStudentsPeriod> viewmystudentsallperiods = new TreeSet<ViewMyStudentsPeriod>();
+
+			// retrieves the get parameter periodName to determine which
+			// period the link is requesting
+			String periodName = servletRequest.getParameter("periodName");
+			
+			int tabIndex = 0;
+			int periodCounter = 0;
+			
+			for (Group period : run.getPeriods()) {
+				ViewMyStudentsPeriod viewmystudentsperiod = new ViewMyStudentsPeriod();
+				viewmystudentsperiod.setRun(run);
+				viewmystudentsperiod.setPeriod(period);
+				Set<Workgroup> periodworkgroups = new TreeSet<Workgroup>();
+				Set<User> grouplessStudents = new HashSet<User>();
+				grouplessStudents.addAll(period.getMembers());
+				for (Workgroup workgroup : allworkgroups) {
+					grouplessStudents.removeAll(workgroup.getMembers());
+					try {
+						if (workgroup.getMembers().size() > 0    // don't include workgroups with no members.
+								&& !workgroup.isTeacherWorkgroup()
+								&& workgroup.getPeriod().getId().equals(period.getId())) {
+							// set url where this workgroup's work can be retrieved as PDF
+							periodworkgroups.add(workgroup);				
+						}
+					} catch (NullPointerException npe) {
+						// if a workgroup is not in a period, make a list of them and let teacher put them in a period...
+						// this should not be the case if the code works correctly and associates workgroups with periods when workgroups are created.
+						workgroupsWithoutPeriod += workgroup.getId().toString() + ",";
+					}
+				}
+				viewmystudentsperiod.setGrouplessStudents(grouplessStudents);
+				viewmystudentsperiod.setWorkgroups(periodworkgroups);
+				viewmystudentsallperiods.add(viewmystudentsperiod);
+				
+				// determines which period tab to show in the AJAX tab object
+				if (periodName != null && periodName.equals(period.getName())) {
+					tabIndex = periodCounter;
+				}
+				periodCounter++;
+			}
+	
+			if (servletRequest.getParameter("tabIndex") != null) {
+				tabIndex = Integer.valueOf(servletRequest.getParameter("tabIndex"));
+			}
+
+			ModelAndView modelAndView = new ModelAndView();
+			modelAndView.addObject("user", user);
+			modelAndView.addObject("viewmystudentsallperiods", viewmystudentsallperiods);
+			modelAndView.addObject("run", run);
+			modelAndView.addObject("tabIndex", tabIndex);
+			modelAndView.addObject("workgroupsWithoutPeriod", workgroupsWithoutPeriod);
+			return modelAndView;
+		} else {
+			return new ModelAndView("errors/accessdenied");
+		}
+	}
+
+	/**
+	 * Get the students in the specified run and returns them in the model
+	 * @param runId id of the Run
+	 * @return modelAndView containing information needed to get student list
+	 * @throws Exception
+	 */
+	@RequestMapping("/teacher/management/studentlist")
+	protected ModelAndView getStudentList(
+			@RequestParam("runId") Long runId) throws Exception {
+
+		User user = ControllerUtil.getSignedInUser();
+		Run run = runService.retrieveById(runId);
+
+		// check that the logged-in user has permission for this run
+		if (user.isAdmin() ||
+				user.getUserDetails().hasGrantedAuthority(UserDetailsService.RESEARCHER_ROLE) ||
+				this.aclService.hasPermission(run, BasePermission.ADMINISTRATION, user) ||
+				this.aclService.hasPermission(run, BasePermission.READ, user)) {
+			Set<Group> periods = run.getPeriods();
+			Set<Group> requestedPeriods = new TreeSet<Group>();
+
+			for (Group period : periods) {
+				// TODO in future: filter by period...for now, include all periods
+				requestedPeriods.add(period);
+			}
+
+			ModelAndView modelAndView = new ModelAndView();
+			modelAndView.addObject("run", run);
+			modelAndView.addObject("periods", requestedPeriods);
+			return modelAndView;
+		} else {
+			return new ModelAndView("errors/accessdenied");
+		}
+	}
+
+	/**
+	 * Handles request to export a list of students in the run
+	 *
+	 * @param runId id of the Run
+	 * @param response response to write the export into
+	 * @throws Exception
+	 */
+	@RequestMapping("/teacher/management/studentListExport")
+	protected void exportStudentList(
+			@RequestParam("runId") Long runId,
+			HttpServletResponse response) throws Exception {
+
+		//get the run
+		Run run = runService.retrieveById(runId);
+
 		//get the project
 		Project project = run.getProject();
-		
+
 		String teacherUserName = "";
-		
+
 		// get the owner of the project
 		User owner = run.getOwner();
 
@@ -98,16 +234,16 @@ public class ListStudentNamesController {
 
 		int rowCounter = 0;
 		int columnCounter = 0;
-		
+
 		//the max number of columns used
 		int maxColumn = 0;
-		
+
 		//make the workbook
 		HSSFWorkbook wb = new HSSFWorkbook();
-		
+
 		//make the sheet
 		HSSFSheet mainSheet = wb.createSheet();
-		
+
 		//add the meta data header row
 		columnCounter = 0;
 		HSSFRow metaDataHeaderRow = mainSheet.createRow(rowCounter++);
@@ -119,12 +255,12 @@ public class ListStudentNamesController {
 		metaDataHeaderRow.createCell(columnCounter++).setCellValue("Run Name");
 		metaDataHeaderRow.createCell(columnCounter++).setCellValue("Start Date");
 		metaDataHeaderRow.createCell(columnCounter++).setCellValue("End Date");
-		
+
 		//update the maxColumn count if necessary
 		if (columnCounter > maxColumn) {
 			maxColumn = columnCounter;
 		}
-		
+
 		//make the meta data row
 		columnCounter = 0;
 		HSSFRow metaDataRow = mainSheet.createRow(rowCounter++);
@@ -136,15 +272,15 @@ public class ListStudentNamesController {
 		metaDataRow.createCell(columnCounter++).setCellValue(runName);
 		metaDataRow.createCell(columnCounter++).setCellValue(timestampToFormattedString(startTime));
 		metaDataRow.createCell(columnCounter++).setCellValue(timestampToFormattedString(endTime));
-		
+
 		//update the maxColumn count if necessary
 		if (columnCounter > maxColumn) {
 			maxColumn = columnCounter;
 		}
-		
+
 		//move the counter to create a blank row
 		rowCounter++;
-		
+
 		//create the header row for the student names
 		columnCounter = 0;
 		HSSFRow studentHeaderRow = mainSheet.createRow(rowCounter++);
@@ -153,27 +289,27 @@ public class ListStudentNamesController {
 		studentHeaderRow.createCell(columnCounter++).setCellValue("Wise Id");
 		studentHeaderRow.createCell(columnCounter++).setCellValue("Student Username");
 		studentHeaderRow.createCell(columnCounter++).setCellValue("Student Name");
-		
+
 		//get all the periods
 		Set<Group> periods = run.getPeriods();
 		Iterator<Group> periodsIterator = periods.iterator();
-		
+
 		//loop through all the periods
 		while(periodsIterator.hasNext()) {
 			Group group = periodsIterator.next();
-			
+
 			//get the name of the period
 			String periodName = group.getName();
-			
+
 			//get all the students in the period
 			Set<User> periodMembers = group.getMembers();
 			Iterator<User> periodMembersIterator = periodMembers.iterator();
-			
+
 			//loop through all the students in the period
 			while(periodMembersIterator.hasNext()) {
 				//get a student
 				User user = periodMembersIterator.next();
-				
+
 				//get the workgroup the student is in
 				List<Workgroup> workgroupListByRunAndUser = workgroupService.getWorkgroupListByRunAndUser(run, user);
 				//get the workgroup id and wise id
@@ -182,31 +318,31 @@ public class ListStudentNamesController {
 					Workgroup workgroup = workgroupListByRunAndUser.get(0);
 					workgroupId = workgroup.getId();
 				}
-				
+
 				Long wiseId = user.getId();
-				
+
 				//get the user details
 				MutableUserDetails userDetails = (MutableUserDetails) user.getUserDetails();
-				
+
 				String userName = "";
 				String firstName = "";
 				String lastName = "";
 				String fullName = "";
-				
+
 				if (userDetails != null) {
 					//get the student username
 					userName = userDetails.getUsername();
-					
+
 					//get the student name
 					firstName = userDetails.getFirstname();
 					lastName = userDetails.getLastname();
-					fullName = firstName + " " + lastName;					
+					fullName = firstName + " " + lastName;
 				}
-				
+
 				//make a row for this student
 				columnCounter = 0;
 				HSSFRow studentDataRow = mainSheet.createRow(rowCounter++);
-				
+
 				if (periodName != null && !periodName.equals("")) {
 					try {
 						//try to convert the value to a number and then set the value into the cell
@@ -217,66 +353,64 @@ public class ListStudentNamesController {
 						studentDataRow.createCell(columnCounter).setCellValue(periodName);
 					}
 				}
-				
+
 				columnCounter++;
-				
+
 				//insert the other values for this student
 				if (workgroupId == null) {
 					studentDataRow.createCell(columnCounter++).setCellValue("N/A");
 				} else {
-					studentDataRow.createCell(columnCounter++).setCellValue(workgroupId);					
+					studentDataRow.createCell(columnCounter++).setCellValue(workgroupId);
 				}
 				studentDataRow.createCell(columnCounter++).setCellValue(wiseId);
 				studentDataRow.createCell(columnCounter++).setCellValue(userName);
 				studentDataRow.createCell(columnCounter++).setCellValue(fullName);
-				
+
 				//update the max column count if necessary
-		        if (columnCounter > maxColumn) {
+				if (columnCounter > maxColumn) {
 					maxColumn = columnCounter;
 				}
 			}
 		}
-		
+
 		/*
 		 * set the content type to an excel xls so the user is prompted to save
 		 * the file as an excel xls
 		 */
 		response.setContentType("application/vnd.ms-excel");
-		
+
 		//set the content type and file name to save it as
 		response.setHeader("Content-Disposition", "attachment; filename=\"" + projectName + "-" + runId + "-student-names.xls\"");
-		
+
 		//get the response output stream
 		ServletOutputStream outputStream = response.getOutputStream();
-		
+
 		if (wb != null) {
 			//write the excel xls to the output stream
 			wb.write(outputStream);
 		}
-		
-		return null;
 	}
 
 	/**
 	 * Get the timestamp as a string
-	 * @param timestamp the timestamp object
+	 * @param date the date object
 	 * @return the timstamp as a string
 	 * e.g.
 	 * Mar 9, 2011 8:50:47 PM
 	 */
 	private String timestampToFormattedString(Date date) {
 		String timestampString = "";
-		
+
 		if (date != null) {
-			//get the object to format timestamps
+			// get the object to format timestamps
 			DateFormat dateTimeInstance = DateFormat.getDateTimeInstance();
-			
-			//get the timestamp for the annotation
+
+			// get the timestamp for the annotation
 			long time = date.getTime();
 			Date timestampDate = new Date(time);
-			timestampString = dateTimeInstance.format(timestampDate);			
+			timestampString = dateTimeInstance.format(timestampDate);
 		}
-		
+
 		return timestampString;
 	}
 }

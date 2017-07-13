@@ -21,7 +21,7 @@
  * ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF
  * REGENTS HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.wise.portal.presentation.web.controllers.project;
+package org.wise.portal.presentation.web.controllers.teacher.project;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -34,7 +34,6 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
@@ -44,7 +43,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.servlet.ModelAndView;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.project.ProjectMetadata;
 import org.wise.portal.domain.user.User;
@@ -53,7 +51,7 @@ import org.wise.portal.service.authentication.UserDetailsService;
 import org.wise.portal.service.project.ProjectService;
 
 /**
- * Exports Project as zip.
+ * Exports Project as zip. Only Teachers and Administrators can export projects
  *
  * @author Hiroki Terashima
  */
@@ -69,13 +67,18 @@ public class ExportProjectController {
 
 	private String projectJSONFilename;
 
+	/**
+	 * Handles request to export the specified project
+	 * @param projectId id of the project to export
+	 * @param response response stream for communicating with clients
+	 * @throws Exception when there was an error while exporting the project
+	 */
 	@RequestMapping(method = RequestMethod.GET)
-	protected ModelAndView handleExportProject(
+	protected void exportProject(
 			@PathVariable String projectId,
 			HttpServletResponse response) throws Exception {
 
 		User signedInUser = ControllerUtil.getSignedInUser();
-
 		Project project = projectService.getById(projectId);
 
 		// check if user is authorized to export
@@ -86,7 +89,7 @@ public class ExportProjectController {
 			// project is marked as being public
 		} else {
 			response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "You are not authorized to access this page");
-			return null;
+			return;
 		}
 
 		String curriculumBaseDir = wiseProperties.getProperty("curriculum_base_dir");
@@ -117,18 +120,18 @@ public class ExportProjectController {
 		// zip the folder and write to outputstream
 		ServletOutputStream outputStream = response.getOutputStream();
 
-		//create ZipOutputStream object
+		// create ZipOutputStream object
 		ZipOutputStream out = new ZipOutputStream(
 				new BufferedOutputStream(outputStream));
 
 
-		//path to the folder to be zipped
+		// path to the folder to be zipped
 		File zipFolder = new File(projectJSONDir);
 
-		//get path prefix so that the zip file does not contain the whole path
+		// get path prefix so that the zip file does not contain the whole path
 		// eg. if folder to be zipped is /home/lalit/test
 		// the zip file when opened will have test folder and not home/lalit/test folder
-    String zipFolderAbsolutePath = zipFolder.getAbsolutePath();
+	    String zipFolderAbsolutePath = zipFolder.getAbsolutePath();
 		int len = 0;
 		if (zipFolderAbsolutePath.lastIndexOf("/") != -1) {
 			len = zipFolderAbsolutePath.lastIndexOf("/");
@@ -139,7 +142,6 @@ public class ExportProjectController {
 		addFolderToZip(zipFolder, out, baseName);
 
 		out.close();
-		return null;
 	}
 
 	/**
@@ -167,6 +169,14 @@ public class ExportProjectController {
 		return false;
 	}
 
+	/**
+	 * Adds the folder to the resulting zip stream
+	 *
+	 * @param folder folder to add to the result
+	 * @param zip zip stream to add the folder to
+	 * @param baseName base name of the zip folder
+	 * @throws IOException
+	 */
 	private void addFolderToZip(File folder, ZipOutputStream zip, String baseName) throws IOException {
 		File[] files = folder.listFiles();
 		for (File file : files) {

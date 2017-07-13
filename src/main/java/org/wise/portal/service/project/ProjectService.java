@@ -30,13 +30,14 @@ import java.util.Set;
 
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.servlet.ModelAndView;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.impl.AddSharedTeacherParameters;
 import org.wise.portal.domain.project.Project;
-import org.wise.portal.domain.project.impl.LaunchProjectParameters;
 import org.wise.portal.domain.project.impl.PreviewProjectParameters;
 import org.wise.portal.domain.project.impl.ProjectParameters;
 import org.wise.portal.domain.user.User;
+import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.presentation.web.exception.NotAuthorizedException;
 
 /**
@@ -107,15 +108,19 @@ public interface ProjectService {
     String getSharedTeacherRole(Project project, User user);
     
     /**
+	 * Add shared teacher to a project
      * @param addSharedTeacherParameters
      */
     @Secured( {"ROLE_TEACHER"} )
     @Transactional()
 	void addSharedTeacherToProject(AddSharedTeacherParameters addSharedTeacherParameters) throws ObjectNotFoundException;
 
-    /**
-     * Removes shared user from project. if user or project does not exist, ignore.
-     */
+	/**
+	 * Removes shared user from project. If user or project does not exist, ignore.
+	 * @param username username of teacher to remove from shared status
+	 * @param project project to remove shared teacher from
+	 * @throws ObjectNotFoundException
+	 */
     @Secured( {"ROLE_TEACHER"} )
     @Transactional()
 	void removeSharedTeacherFromProject(String username, Project project) throws ObjectNotFoundException;
@@ -139,13 +144,14 @@ public interface ProjectService {
 	 */
 	@Transactional()
 	void updateProject(Project project, User user) throws NotAuthorizedException;
-	
+
 	/**
-	 * Launches the project given the launchProjectParameters
-	 * 
-	 * @param launchProjectParameters parameters needed to launch the project
+	 * Launches the VLE for the specified Workgroup
+	 * @param workgroup Workgroup requesting to launch the project
+	 * @return
+	 * @throws Exception
 	 */
-	Object launchProject(LaunchProjectParameters launchProjectParameters) throws Exception;
+	ModelAndView launchProject(Workgroup workgroup) throws Exception;
 
 	/**
 	 * Launches a Preview of the Project
@@ -321,5 +327,4 @@ public interface ProjectService {
 	 * @throws ObjectNotFoundException 
 	 */
 	Long identifyRootProjectId(Project project) throws ObjectNotFoundException;
-
 }

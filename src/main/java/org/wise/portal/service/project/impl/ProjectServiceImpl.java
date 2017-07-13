@@ -47,14 +47,12 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.dao.project.ProjectDao;
-import org.wise.portal.domain.Persistable;
 import org.wise.portal.domain.authentication.MutableUserDetails;
 import org.wise.portal.domain.impl.AddSharedTeacherParameters;
 import org.wise.portal.domain.project.FamilyTag;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.project.ProjectMetadata;
 import org.wise.portal.domain.project.Tag;
-import org.wise.portal.domain.project.impl.LaunchProjectParameters;
 import org.wise.portal.domain.project.impl.PreviewProjectParameters;
 import org.wise.portal.domain.project.impl.ProjectParameters;
 import org.wise.portal.domain.run.Run;
@@ -81,7 +79,8 @@ public class ProjectServiceImpl implements ProjectService {
 	@Autowired
 	private ProjectDao<Project> projectDao;
 
-	private AclService<Persistable> aclService;
+	@Autowired
+	private AclService<Project> aclService;
 
 	@Autowired
 	private UserService userService;
@@ -128,6 +127,9 @@ public class ProjectServiceImpl implements ProjectService {
 		}
 	}
 
+	/**
+	 * @see ProjectService#removeSharedTeacherFromProject(String, Project)
+	 */
 	public void removeSharedTeacherFromProject(String username, Project project) throws ObjectNotFoundException {
 		User user = userService.retrieveUserByUsername(username);
 		if (project == null || user == null) {
@@ -299,10 +301,12 @@ public class ProjectServiceImpl implements ProjectService {
 		return this.projectDao.getList();
 	}
 
-	public ModelAndView launchProject(LaunchProjectParameters params)
+	/**
+	 * @see org.wise.portal.service.project.ProjectService#launchProject(Workgroup)
+	 */
+	public ModelAndView launchProject(Workgroup workgroup)
 			throws Exception {
-		return new ModelAndView(new RedirectView(generateStudentStartProjectUrlString(
-				params.getRun(), params.getWorkgroup())));
+		return new ModelAndView(new RedirectView(generateStudentStartProjectUrlString(workgroup)));
 	}
 
 	/**
@@ -410,12 +414,12 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 	/**
-	 * Returns url string for actual run
-	 * @param run
-	 * @param workgroup
-	 * @return
+	 * Returns url string for starting the run
+	 * @param workgroup Workgroup requesting to launch the project
+	 * @return url string that, when accessed, will launch the project
 	 */
-	public String generateStudentStartProjectUrlString(Run run, Workgroup workgroup) {
+	public String generateStudentStartProjectUrlString(Workgroup workgroup) {
+		Run run = workgroup.getRun();
 	    Project project = run.getProject();
 	    Integer wiseVersion = project.getWiseVersion();
 		String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
@@ -425,13 +429,6 @@ public class ProjectServiceImpl implements ProjectService {
 	        return wiseBaseURL + "/student/run/" + run.getId();
 	    }
 	    return null;
-	}
-
-	/**
-	 * @param aclService the aclService to set
-	 */
-	public void setAclService(AclService<Persistable> aclService) {
-		this.aclService = aclService;
 	}
 
 	/**
@@ -599,11 +596,12 @@ public class ProjectServiceImpl implements ProjectService {
 		return this.projectDao.getProjectListByAuthorName(authorName);
 	}
 
-	@Override
+	/**
+	 * @see ProjectService#getProjectListByTitle(String)
+	 */
 	public List<Project> getProjectListByTitle(String title) {
 		return this.projectDao.getProjectListByTitle(title);
 	}
-
 
 	/**
 	 * @see org.wise.portal.service.project.ProjectService#getProjectCopies(java.lang.Long)
@@ -613,7 +611,6 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 	/**
-	 * @throws ObjectNotFoundException
 	 * @see org.wise.portal.service.project.ProjectService#identifyRootProjectId(Project)
 	 */
 	public Long identifyRootProjectId(Project project) throws ObjectNotFoundException {

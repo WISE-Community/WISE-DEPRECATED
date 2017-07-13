@@ -95,6 +95,7 @@ public class RunServiceImpl implements RunService {
 	@Autowired
 	private Properties wiseProperties;
 
+	@Autowired
 	protected AclService<Persistable> aclService;
 
 	/**
@@ -667,13 +668,4 @@ public class RunServiceImpl implements RunService {
 		run.setSurvey(survey);
 		this.runDao.save(run);
 	}
-
-	/**
-	 * @param aclService the aclService to set
-	 */
-	@Required
-	public void setAclService(AclService<Persistable> aclService) {
-		this.aclService = aclService;
-	}
-
 }

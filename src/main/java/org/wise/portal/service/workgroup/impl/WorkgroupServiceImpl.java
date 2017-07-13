@@ -25,7 +25,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Required;
 import org.springframework.security.acls.domain.BasePermission;
 import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.ObjectNotFoundException;
@@ -33,7 +32,6 @@ import org.wise.portal.dao.group.GroupDao;
 import org.wise.portal.dao.workgroup.WorkgroupDao;
 import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.impl.ChangeWorkgroupParameters;
-import org.wise.portal.domain.project.impl.ProjectTypeVisitor;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.workgroup.Workgroup;
@@ -55,24 +53,19 @@ public class WorkgroupServiceImpl implements WorkgroupService {
     
     @Autowired
     protected GroupDao<Group> groupDao;
-    
-	private GroupService groupService;
-    
-    protected RunService runService;
-    
-    protected AclService<Workgroup> aclService;
-    
-    @Autowired
-    protected UserService userService;
 
-    /**
-	 * @param aclService the aclService to set
-	 */
-    @Required
-	public void setAclService(AclService<Workgroup> aclService) {
-		this.aclService = aclService;
-	}
-	
+	@Autowired
+	private GroupService groupService;
+
+	@Autowired
+    protected RunService runService;
+
+	@Autowired
+	protected UserService userService;
+
+	@Autowired
+	protected AclService<Workgroup> aclService;
+
 	/**
 	 * @see org.wise.portal.service.workgroup.WorkgroupService#createWorkgroup(String, Set, Run, Group)
 	 */
@@ -80,14 +73,10 @@ public class WorkgroupServiceImpl implements WorkgroupService {
 	public Workgroup createWorkgroup(String name, Set<User> members,
 			Run run, Group period) throws ObjectNotFoundException {
 
-		Workgroup workgroup = null;
-		ProjectTypeVisitor typeVisitor = new ProjectTypeVisitor();
-		String result = (String) run.getProject().accept(typeVisitor);
-		workgroup = createWorkgroup(members, run, period);
+		Workgroup workgroup = createWorkgroup(members, run, period);
 
 		this.groupDao.save(workgroup.getGroup());
 		this.workgroupDao.save(workgroup);
-
 		this.aclService.addPermission(workgroup, BasePermission.ADMINISTRATION);
 
 		return workgroup;
@@ -123,8 +112,7 @@ public class WorkgroupServiceImpl implements WorkgroupService {
      * @see org.wise.portal.service.workgroup.WorkgroupService#getWorkgroupListByRunAndUser(Run, User)
      */
     @Transactional(readOnly = true)
-    public List<Workgroup> getWorkgroupListByRunAndUser(Run run,
-														User user) {
+    public List<Workgroup> getWorkgroupListByRunAndUser(Run run, User user) {
         return this.workgroupDao.getListByRunAndUser(run, user);
     }
     
@@ -171,7 +159,7 @@ public class WorkgroupServiceImpl implements WorkgroupService {
 		Workgroup toGroup;
 		Workgroup fromGroup;
 		User user = params.getStudent();
-		Run run = (Run) runService.retrieveById(params.getRunId());
+		Run run = runService.retrieveById(params.getRunId());
 		Group period = groupService.retrieveById(params.getPeriodId());
 
 		fromGroup = params.getWorkgroupFrom();
@@ -208,36 +196,15 @@ public class WorkgroupServiceImpl implements WorkgroupService {
 	}
 
 	/**
-	 * @param runService the runService to set
-	 */
-	public void setRunService(RunService runService) {
-		this.runService = runService;
-	}
-
-	/**
-	 * @param groupService the groupService to set
-	 */
-	public void setGroupService(GroupService groupService) {
-		this.groupService = groupService;
-	}
-
-	/**
 	 * Check if a user is in any workgroup for the run
 	 * @param user the user
 	 * @param run the run
 	 * @return whether the user is in a workgroup for the run
 	 */
 	public boolean isUserInAnyWorkgroupForRun(User user, Run run) {
-	    
-	    boolean result = false;
-	    
+
 	    List<Workgroup> workgroupsForUser = getWorkgroupListByRunAndUser(run, user);
-	    
-	    if (workgroupsForUser.size() > 0) {
-	        result = true;
-	    }
-	    
-	    return result;
+	    return workgroupsForUser.size() > 0;
 	}
 	
 	/**
