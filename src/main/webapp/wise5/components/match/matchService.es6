@@ -20,7 +20,7 @@ class MatchService extends NodeService {
         var component = {};
         component.id = this.UtilService.generateKey();
         component.type = 'Match';
-        component.prompt = this.$translate('ENTER_PROMPT_HERE');
+        component.prompt = '';
         component.showSaveButton = false;
         component.showSubmitButton = false;
         component.choices = [];

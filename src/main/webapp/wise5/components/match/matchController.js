@@ -2081,6 +2081,132 @@ var MatchController = function () {
         }
 
         /**
+         * Move a choice up
+         * @param index the index of the choice
+         */
+
+    }, {
+        key: 'authoringMoveChoiceUp',
+        value: function authoringMoveChoiceUp(index) {
+
+            if (index != 0) {
+                // the choice is not at the top so we can move it up
+
+                // remember the choice
+                var choice = this.authoringComponentContent.choices[index];
+
+                if (choice != null) {
+
+                    // remove the choice
+                    this.authoringComponentContent.choices.splice(index, 1);
+
+                    // insert the choice one index back
+                    this.authoringComponentContent.choices.splice(index - 1, 0, choice);
+                }
+
+                /*
+                 * get the feedback so we can update the order of the choices within
+                 * the bucket feedback
+                 */
+                var feedback = this.authoringComponentContent.feedback;
+
+                if (feedback != null) {
+
+                    // loop through all the bucket feedback objects
+                    for (var f = 0; f < feedback.length; f++) {
+                        var bucketFeedback = feedback[f];
+
+                        if (bucketFeedback != null) {
+
+                            // get all the choices
+                            var bucketFeedbackChoices = bucketFeedback.choices;
+
+                            if (bucketFeedbackChoices != null) {
+
+                                // remmeber the choice
+                                var tempChoice = bucketFeedbackChoices[index];
+
+                                if (tempChoice != null) {
+                                    // remove the choice
+                                    bucketFeedbackChoices.splice(index, 1);
+
+                                    // insert the choice one index back
+                                    bucketFeedbackChoices.splice(index - 1, 0, tempChoice);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // save the project
+                this.authoringViewComponentChanged();
+            }
+        }
+
+        /**
+         * Move a choice down
+         * @param index the index of the choice
+         */
+
+    }, {
+        key: 'authoringMoveChoiceDown',
+        value: function authoringMoveChoiceDown(index) {
+
+            if (index < this.authoringComponentContent.choices.length - 1) {
+                // the choice is not at the bottom so we can move it down
+
+                // remember the choice
+                var choice = this.authoringComponentContent.choices[index];
+
+                if (choice != null) {
+
+                    // remove the choice
+                    this.authoringComponentContent.choices.splice(index, 1);
+
+                    // insert the choice one index forward
+                    this.authoringComponentContent.choices.splice(index + 1, 0, choice);
+                }
+
+                /*
+                 * get the feedback so we can update the order of the choices within
+                 * the bucket feedback
+                 */
+                var feedback = this.authoringComponentContent.feedback;
+
+                if (feedback != null) {
+
+                    // loop through all the bucket feedback objects
+                    for (var f = 0; f < feedback.length; f++) {
+                        var bucketFeedback = feedback[f];
+
+                        if (bucketFeedback != null) {
+
+                            // get all the choices
+                            var bucketFeedbackChoices = bucketFeedback.choices;
+
+                            if (bucketFeedbackChoices != null) {
+
+                                // remmeber the choice
+                                var tempChoice = bucketFeedbackChoices[index];
+
+                                if (tempChoice != null) {
+                                    // remove the choice
+                                    bucketFeedbackChoices.splice(index, 1);
+
+                                    // insert the choice one index forward
+                                    bucketFeedbackChoices.splice(index + 1, 0, tempChoice);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // save the project
+                this.authoringViewComponentChanged();
+            }
+        }
+
+        /**
          * Delete a choice
          * @param index the index of the choice in the choice array
          */
@@ -2107,6 +2233,98 @@ var MatchController = function () {
 
                     // remove the choice from the feedback
                     this.removeChoiceFromFeedback(choiceId);
+                }
+
+                // save the project
+                this.authoringViewComponentChanged();
+            }
+        }
+
+        /**
+         * Move a bucket up
+         * @param index the index of the bucket
+         */
+
+    }, {
+        key: 'authoringMoveBucketUp',
+        value: function authoringMoveBucketUp(index) {
+
+            if (index > 0) {
+                // the bucket is not at the top so we can move it up
+
+                // remember the bucket
+                var bucket = this.authoringComponentContent.buckets[index];
+
+                if (bucket != null) {
+
+                    // remove the bucket
+                    this.authoringComponentContent.buckets.splice(index, 1);
+
+                    // insert the bucket one index back
+                    this.authoringComponentContent.buckets.splice(index - 1, 0, bucket);
+                }
+
+                /*
+                 * Remember the bucket feedback. The first element of the feedback
+                 * contains the origin bucket. The first authored bucket is located
+                 * at index 1. This means we need the index of the bucket feedback
+                 * that we want is located at index + 1.
+                 */
+                var bucketFeedback = this.authoringComponentContent.feedback[index + 1];
+
+                if (bucketFeedback != null) {
+
+                    // remove the bucket feedback
+                    this.authoringComponentContent.feedback.splice(index + 1, 1);
+
+                    // insert the bucket one index back
+                    this.authoringComponentContent.feedback.splice(index, 0, bucketFeedback);
+                }
+
+                // save the project
+                this.authoringViewComponentChanged();
+            }
+        }
+
+        /**
+         * Move a bucket down
+         * @param index the index of the bucket
+         */
+
+    }, {
+        key: 'authoringMoveBucketDown',
+        value: function authoringMoveBucketDown(index) {
+
+            if (index < this.authoringComponentContent.buckets.length - 1) {
+                // the bucket is not at the bottom so we can move it down
+
+                // remember the bucket
+                var bucket = this.authoringComponentContent.buckets[index];
+
+                if (bucket != null) {
+
+                    // remove the bucket
+                    this.authoringComponentContent.buckets.splice(index, 1);
+
+                    // insert the bucket one index forward
+                    this.authoringComponentContent.buckets.splice(index + 1, 0, bucket);
+                }
+
+                /*
+                 * Remember the bucket feedback. The first element of the feedback
+                 * contains the origin bucket. The first authored bucket is located
+                 * at index 1. This means we need the index of the bucket feedback
+                 * that we want is located at index + 1.
+                 */
+                var bucketFeedback = this.authoringComponentContent.feedback[index + 1];
+
+                if (bucketFeedback != null) {
+
+                    // remove the bucket feedback
+                    this.authoringComponentContent.feedback.splice(index + 1, 1);
+
+                    // insert the bucket one index forward
+                    this.authoringComponentContent.feedback.splice(index + 2, 0, bucketFeedback);
                 }
 
                 // save the project

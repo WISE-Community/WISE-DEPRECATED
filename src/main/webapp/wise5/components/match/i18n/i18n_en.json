@@ -4,13 +4,15 @@
     "match.addChoice": "Add Choice",
     "match.areYouSureYouWantToDeleteThisBucket": "Are you sure you want to delete this bucket?",
     "match.areYouSureYouWantToDeleteThisChoice": "Are you sure you want to delete this choice?",
+    "match.bucketName": "Bucket Name",
     "match.buckets": "Buckets",
+    "match.choiceName": "Choice Name",
     "match.choices": "Choices",
+    "match.choicesNeedToBeOrderedWithinBuckets": "Choices need to be ordered within buckets",
     "match.correctBucketButWrongPosition": "Correct bucket but wrong position",
     "match.deleteBucket": "Delete Bucket",
     "match.deleteChoice": "Delete Choice",
     "match.incorrectPositionFeedback": "Incorrect Position Feedback",
-    "match.labelForChoicesBucket": "Label for choices bucket",
-    "match.ordered": "Ordered",
+    "match.originBucketName": "Origin Bucket Name",
     "match.position": "Position"
 }
