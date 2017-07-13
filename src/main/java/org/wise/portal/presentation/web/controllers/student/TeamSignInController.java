@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2007-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -51,7 +51,6 @@ import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 import org.wise.portal.domain.group.Group;
-import org.wise.portal.domain.project.impl.LaunchProjectParameters;
 import org.wise.portal.domain.project.impl.Projectcode;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.run.StudentRunInfo;
@@ -110,10 +109,12 @@ public class TeamSignInController {
 	private TeamSignInFormValidator teamSignInFormValidator;
 
 	/**
-	 * On submission of the Team Sign In form, the workgroup is updated
+	 * On submission of the Team Sign In form, the workgroup is updated and
+	 * the project is launched.
+	 *
 	 * Assume that the usernames are valid usernames that exist in the data store
 	 */
-	@RequestMapping(method=RequestMethod.POST)
+	@RequestMapping(method = RequestMethod.POST)
 	protected synchronized String onSubmit(@ModelAttribute("teamSignInForm") TeamSignInForm teamSignInForm, 
 			BindingResult result, 
 			HttpServletRequest request,
@@ -243,8 +244,8 @@ public class TeamSignInController {
                     
                     if (periodOfStudent != null) {
                         /*
-                         * the student is already in a period for the run.
-                         * this will only occur if the student has registered 
+                         * The student is already in a period for the run,
+                         * which will only occur if the student has registered
                          * to the run but hasn't created or joined a workgroup yet
                          */
                         
@@ -319,7 +320,7 @@ public class TeamSignInController {
 			 * and seeing if the user id is in the presentUserIds
 			 * array
 			 */
-			for(int x=0; x<presentUserIds.length(); x++) {
+			for (int x = 0; x < presentUserIds.length(); x++) {
 				// get a present user id
 				long presentUserId = presentUserIds.getLong(x);
 				
@@ -363,12 +364,8 @@ public class TeamSignInController {
 			break;
 		}
 		
-		LaunchProjectParameters launchProjectParameters = new LaunchProjectParameters();
-		launchProjectParameters.setRun(run);
-		launchProjectParameters.setWorkgroup(workgroup);
-		launchProjectParameters.setHttpServletRequest(request);
 		StartProjectController.notifyServletSession(request, run);
-		ModelAndView modelAndView = (ModelAndView) projectService.launchProject(launchProjectParameters);
+		ModelAndView modelAndView = projectService.launchProject(workgroup);
 
 		// clear the command object from the session
 		status.setComplete(); 
@@ -376,7 +373,7 @@ public class TeamSignInController {
 		return null;
 	}
 	
-    @RequestMapping(method=RequestMethod.GET) 
+    @RequestMapping(method = RequestMethod.GET)
     public String initializeForm(ModelMap modelMap,HttpServletRequest request) throws Exception { 
 
     	// get the signed in username
@@ -419,7 +416,7 @@ public class TeamSignInController {
 			form.setRunId(runId);
 			
 			// get the run
-			Run run = (Run) runService.retrieveById(runId);
+			Run run = runService.retrieveById(runId);
 			
 			// get the members in the workgroup
 			StudentRunInfo studentRunInfo = studentService.getStudentRunInfo(user, run);
@@ -500,7 +497,7 @@ public class TeamSignInController {
 		ModelAndView mav = new ModelAndView();
 		// get the context path e.g. /wise
 		String contextPath = request.getContextPath();
-		String teamSignInFormPath = contextPath+"/student/teamsignin.html";
+		String teamSignInFormPath = contextPath + "/student/teamsignin.html";
 
 		String runIdString = request.getParameter("runId");
 		if (runIdString != null) {

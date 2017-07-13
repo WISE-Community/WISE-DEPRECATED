@@ -42,7 +42,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.wise.portal.domain.group.Group;
-import org.wise.portal.domain.project.impl.LaunchProjectParameters;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.workgroup.Workgroup;
@@ -158,25 +157,20 @@ public class StartProjectController {
 					// if it reaches here, it means that HibernateOptimisticLockingFailureException was not thrown, so we can exit the loop.
 					break;
 				}
-				
-				LaunchProjectParameters launchProjectParameters = new LaunchProjectParameters();
-				launchProjectParameters.setRun(run);
-				launchProjectParameters.setWorkgroup(workgroup);
-				launchProjectParameters.setHttpServletRequest(request);
 
 				// update servlet session
 				notifyServletSession(request, run);
 
-				//get the values for the student attendance
+				// get the values for the student attendance
 				Long workgroupId = workgroup.getId();
 				JSONArray presentUserIds = new JSONArray();
 				JSONArray absentUserIds = new JSONArray();
 				presentUserIds.put(user.getId());
 				
-				//create a student attendance entry
+				// create a student attendance entry
 				addStudentAttendanceEntry(workgroupId, runId, presentUserIds, absentUserIds);
 				
-				return (ModelAndView) projectService.launchProject(launchProjectParameters);
+				return projectService.launchProject(workgroup);
 			} else {
 				// need to create a workgroup for this user, take them to create workgroup wizard
 				ModelAndView modelAndView = new ModelAndView(SELECT_TEAM_URL);
@@ -193,7 +187,9 @@ public class StartProjectController {
 		} else if (workgroups.size() == 1) {
 			workgroup = workgroups.get(0);
 			if (workgroup.getMembers().size() == 1) {
-				/* update run statistics */
+				// launch the project if the student is already in a workgroup and she is the only member
+
+				// update run statistics
 				int maxLoop = 30;  // to ensure that the following while loop gets run at most this many times.
 				int currentLoopIndex = 0;
 				while(currentLoopIndex < maxLoop) {
@@ -212,25 +208,18 @@ public class StartProjectController {
 					break;
 				}
 				
-				// if the student is already in a workgroup and she is the only member,
-				// launch the project
-				LaunchProjectParameters launchProjectParameters = new LaunchProjectParameters();
-				launchProjectParameters.setRun(run);
-				launchProjectParameters.setWorkgroup(workgroup);
-				launchProjectParameters.setHttpServletRequest(request);
-				
-				//get the value for the student attendance
+				// get the value for the student attendance
 				Long workgroupId = workgroup.getId();
 				JSONArray presentUserIds = new JSONArray();
 				JSONArray absentUserIds = new JSONArray();
 				presentUserIds.put(user.getId());
 				
-				//create a student attendance entry
+				// create a student attendance entry
 				addStudentAttendanceEntry(workgroupId, runId, presentUserIds, absentUserIds);
 				
 				// update servlet session
 				notifyServletSession(request, run);
-				return (ModelAndView) projectService.launchProject(launchProjectParameters);				
+				return projectService.launchProject(workgroup);
 			} else {
 				ModelAndView modelAndView = new ModelAndView(TEAM_SIGN_IN_URL);
 				modelAndView.addObject("runId", runId);
@@ -243,7 +232,9 @@ public class StartProjectController {
 			//the user is in multiple workgroups for the run so we will just get the last one
 			workgroup = workgroups.get(workgroups.size() - 1);
 			if (workgroup.getMembers().size() == 1) {
-				/* update run statistics */
+				// launch the project if the student is already in a workgroup and she is the only member
+
+				// update run statistics
 				int maxLoop = 30;  // to ensure that the following while loop gets run at most this many times.
 				int currentLoopIndex = 0;
 				while(currentLoopIndex < maxLoop) {
@@ -262,25 +253,18 @@ public class StartProjectController {
 					break;
 				}
 				
-				// if the student is already in a workgroup and she is the only member,
-				// launch the project
-				LaunchProjectParameters launchProjectParameters = new LaunchProjectParameters();
-				launchProjectParameters.setRun(run);
-				launchProjectParameters.setWorkgroup(workgroup);
-				launchProjectParameters.setHttpServletRequest(request);
-				
-				//get the value for the student attendance
+				// get the value for the student attendance
 				Long workgroupId = workgroup.getId();
 				JSONArray presentUserIds = new JSONArray();
 				JSONArray absentUserIds = new JSONArray();
 				presentUserIds.put(user.getId());
 				
-				//create a student attendance entry
+				// create a student attendance entry
 				addStudentAttendanceEntry(workgroupId, runId, presentUserIds, absentUserIds);
 				
 				// update servlet session
 				notifyServletSession(request, run);
-				return (ModelAndView) projectService.launchProject(launchProjectParameters);				
+				return projectService.launchProject(workgroup);
 			} else {
 				ModelAndView modelAndView = new ModelAndView(TEAM_SIGN_IN_URL);
 				modelAndView.addObject("runId", runId);
@@ -317,10 +301,10 @@ public class StartProjectController {
 	 * @param absentUserIds
 	 */
 	private void addStudentAttendanceEntry(Long workgroupId, Long runId, JSONArray presentUserIds, JSONArray absentUserIds) {
-		//get the current time
-		Date loginTimestamp = new Date();
+
+		Date loginTimestamp = new Date(); // get the current time
 	    
-		//add a student attendance entry
+		// add a student attendance entry
 		this.studentAttendanceService.addStudentAttendanceEntry(workgroupId, runId, loginTimestamp, presentUserIds.toString(), absentUserIds.toString());
 	}
 }

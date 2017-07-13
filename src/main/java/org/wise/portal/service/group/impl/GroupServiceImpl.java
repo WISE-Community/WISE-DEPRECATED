@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2007-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -29,7 +29,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Required;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.acls.domain.BasePermission;
 import org.springframework.security.acls.model.AlreadyExistsException;
@@ -59,20 +58,11 @@ public class GroupServiceImpl implements GroupService {
     @Autowired
     private UserDao<User> userDao;
 
+    @Autowired
     private AclService<Group> aclService;
-        
-    /**
-	 * @param groupAclService
-	 *            the groupAclService to set
-	 */
-    @Required
-	public void setAclService(AclService<Group> aclService) {
-		this.aclService = aclService;
-	}
 
 	/**
-	 * @see net.sf.sail.webapp.service.group.GroupService#changeGroupName(net.sf.sail.webapp.domain.group.Group,
-	 *      java.lang.String)
+	 * @see GroupService#changeGroupName(Group, String)
 	 */
     @Transactional()
     public void changeGroupName(Group group, String newName) {
@@ -81,7 +71,7 @@ public class GroupServiceImpl implements GroupService {
     }
 
     /**
-	 * @see net.sf.sail.webapp.service.group.GroupService#createGroup(net.sf.sail.webapp.domain.group.impl.GroupParameters)
+     * @see GroupService#createGroup(GroupParameters)
 	 */
     @Transactional(rollbackFor = { AlreadyExistsException.class,
             NotFoundException.class, DataIntegrityViolationException.class })
@@ -117,7 +107,7 @@ public class GroupServiceImpl implements GroupService {
     }
     
     /**
-     * @see net.sf.sail.webapp.service.group.GroupService#updateGroup(net.sf.sail.webapp.domain.group.impl.GroupParameters)
+     * @see GroupService#updateGroup(GroupParameters)
      */
     @Transactional()
 	public void updateGroup(GroupParameters groupParameters) throws ObjectNotFoundException {
@@ -142,8 +132,7 @@ public class GroupServiceImpl implements GroupService {
 	// entries
 
     /**
-	 * @see net.sf.sail.webapp.service.group.GroupService#moveGroup(net.sf.sail.webapp.domain.group.Group,
-	 *      net.sf.sail.webapp.domain.group.Group)
+     * @see GroupService#moveGroup(Group, Group)
 	 */
     @Transactional()
     public void moveGroup(Group newParent, Group groupToBeMoved)
@@ -160,9 +149,8 @@ public class GroupServiceImpl implements GroupService {
     }
 
     /**
-	 * @see net.sf.sail.webapp.service.group.GroupService#addMembers(net.sf.sail.webapp.domain.group.Group,
-	 *      java.util.Set)
-	 */
+     * @see GroupService#addMembers(Group, Set)
+     */
     @Transactional()
     public void addMembers(Group group, Set<User> membersToAdd) {
         for (User member : membersToAdd) {
@@ -173,8 +161,7 @@ public class GroupServiceImpl implements GroupService {
 
     
     /**
-     * @throws ObjectNotFoundException 
-     * @see net.sf.sail.webapp.service.group.GroupService#addMember(java.lang.Long, java.lang.Long)
+     * @see GroupService#addMember(Long, User)
      */
     @Transactional()
 	public void addMember(Long groupId, User user) throws ObjectNotFoundException {
@@ -184,7 +171,7 @@ public class GroupServiceImpl implements GroupService {
 	}
 
     /**
-     * @see net.sf.sail.webapp.service.group.GroupService#removeMembers(net.sf.sail.webapp.domain.group.Group, java.util.Set)
+     * @see GroupService#removeMembers(Group, Set)
      */
     @Transactional()
 	public void removeMembers(Group group, Set<User> membersToRemove) {
@@ -195,9 +182,7 @@ public class GroupServiceImpl implements GroupService {
 	}
     
     /**
-     * Remove a member from a group
-     * @param group the group
-     * @param memberToRemove the member to remove
+     * @see GroupService#removeMember(Group, User)
      */
     @Transactional()
     public void removeMember(Group group, User memberToRemove) {
@@ -234,7 +219,7 @@ public class GroupServiceImpl implements GroupService {
     }
 
     /**
-	 * @see net.sf.sail.webapp.service.group.GroupService#getGroups()
+     * @see GroupService#getGroups()
 	 */
     @Transactional(readOnly = true)
     public List<Group> getGroups() {
@@ -242,7 +227,7 @@ public class GroupServiceImpl implements GroupService {
     }
 
     /**
-	 * @see net.sf.sail.webapp.service.group.GroupService#retrieveById(Long)
+     * @see GroupService#retrieveById(Long)
 	 */
     @Transactional(readOnly = true)
 	public Group retrieveById(Long groupId) throws ObjectNotFoundException {

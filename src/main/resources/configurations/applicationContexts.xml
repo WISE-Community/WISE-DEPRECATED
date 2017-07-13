@@ -590,9 +590,7 @@
 		</property>
 	</bean>
 
-	<bean id="groupServiceTarget" class="org.wise.portal.service.group.impl.GroupServiceImpl">
-		<property name="aclService" ref="aclServiceImpl" />
-	</bean>
+	<bean id="groupServiceTarget" class="org.wise.portal.service.group.impl.GroupServiceImpl" />
 
 	<bean id="aclService" class="org.wise.portal.spring.impl.WISEJdbcMutableAclService">
 		<constructor-arg ref="dataSource" />
@@ -674,9 +672,7 @@
 		<property name="securityMetadataSource" ref="securityMetadataSource" />
 	</bean>
 
-	<bean id="runServiceTarget" class="org.wise.portal.service.run.impl.RunServiceImpl">
-		<property name="aclService" ref="aclServiceImpl" />
-	</bean>
+	<bean id="runServiceTarget" class="org.wise.portal.service.run.impl.RunServiceImpl" />
 
 	<bean id="projectService" class="org.springframework.aop.framework.ProxyFactoryBean">
 		<property name="proxyInterfaces" value="org.wise.portal.service.project.ProjectService" />
@@ -696,9 +692,7 @@
 		<property name="securityMetadataSource" ref="securityMetadataSource" />
 	</bean>
 
-	<bean id="projectServiceTarget" class="org.wise.portal.service.project.impl.ProjectServiceImpl">
-		<property name="aclService" ref="aclServiceImpl" />
-	</bean>
+	<bean id="projectServiceTarget" class="org.wise.portal.service.project.impl.ProjectServiceImpl" />
 
 	<bean id="workgroupService" class="org.springframework.aop.framework.ProxyFactoryBean">
 		<property name="proxyInterfaces" value="org.wise.portal.service.workgroup.WorkgroupService" />
@@ -718,11 +712,7 @@
 		<property name="securityMetadataSource" ref="securityMetadataSource" />
 	</bean>
 
-	<bean id="workgroupServiceTarget" class="org.wise.portal.service.workgroup.impl.WorkgroupServiceImpl">
-		<property name="aclService" ref="aclServiceImpl" />
-		<property name="runService" ref="runService" />
-		<property name="groupService" ref="groupService" />
-	</bean>
+	<bean id="workgroupServiceTarget" class="org.wise.portal.service.workgroup.impl.WorkgroupServiceImpl" />
 
 	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
 		<property name="driverClass" value="${hibernate.connection.driver_class}" />

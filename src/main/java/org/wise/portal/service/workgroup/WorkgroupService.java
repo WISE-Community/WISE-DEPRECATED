@@ -31,15 +31,15 @@ import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.workgroup.Workgroup;
 
 /**
+ * Services for working with Workgroups
  * @author Cynick Young
+ * @author Hiroki Terashima
  */
 public interface WorkgroupService {
     
     /**
      * Given a User, returns all of the workgroups that the user is in
-
-     * @param user
-     *            the <code>User</code> to search for
+     * @param user the <code>User</code> to search for
      * @return a list of workgroups that the specified user is in.
      */
     List<Workgroup> getWorkgroupsForUser(User user);
@@ -50,7 +50,7 @@ public interface WorkgroupService {
      * 
      * @param run for the workgroup
      * @param user that is a member of the workgroup
-     * @return
+     * @return a list of workgroups that the user is in for the specified run
      */
     List<Workgroup> getWorkgroupListByRunAndUser(Run run, User user);
 
@@ -58,32 +58,24 @@ public interface WorkgroupService {
      * Adds members to an already-existing workgroup. If a member is
      * already in the group, do not add again. Also update the workgroup name.
      * 
-     * @param workgroup
-     *          an existing <code>Workgroup</code> that the members will be
-     *          added to
-     * @param membersToAdd
-     *          <code>Set</code> of users to add to the group
+     * @param workgroup an existing <code>Workgroup</code> to add the members to
+     * @param membersToAdd  <code>Set</code> of users to add to the group
      */
     void addMembers(Workgroup workgroup, Set<User> membersToAdd);
     
     /**
      * Removes members from an already-existing workgroup. Also update the workgroup name.
      * 
-     * @param workgroup
-     *          an existing <code>Workgroup</code> that the members will be
-     *          removed from
-     * @param membersToRemove
-     *          <code>Set</code> of users to remove from the group
+     * @param workgroup an existing <code>Workgroup</code> to remove members from
+     * @param membersToRemove <code>Set</code> of users to remove from the workggroup
      */
 	void removeMembers(Workgroup workgroup, Set<User> membersToRemove);
     
     /**
      * Retrieves the Workgroup domain object using unique workgroupId
      * 
-     * @param workgroupId
-     *     <code>Long</code> workgroupId to use for lookup
-     * @return <code>Workgroup</code> 
-     *     the Workgroup object with the workgroupId
+     * @param workgroupId <code>Long</code> workgroupId to use for lookup
+     * @return <code>Workgroup</code> the Workgroup object with the workgroupId
      * @throws <code>ObjectNotFoundException</code> when workgroupId cannot
      *     be used to find an existing workgroup
      */
@@ -92,13 +84,10 @@ public interface WorkgroupService {
     /**
      * Retrieves the Workgroup domain object using unique workgroupId
      * 
-     * @param workgroupId
-     *     <code>Long</code> workgroupId to use for lookup
-     * @param doEagerFetch
-     *     <code>boolean</code> fetch all fields eagerly, same as EAGER-load
+     * @param workgroupId  <code>Long</code> workgroupId to use for lookup
+     * @param doEagerFetch <code>boolean</code> fetch all fields eagerly, same as EAGER-load
      *     
-     * @return <code>Workgroup</code> 
-     *     the Workgroup object with the workgroupId
+     * @return <code>Workgroup</code> the Workgroup object with the workgroupId
      * @throws <code>ObjectNotFoundException</code> when workgroupId cannot
      *     be used to find an existing workgroup
      */
@@ -116,10 +105,10 @@ public interface WorkgroupService {
 	/**
 	 * Creates a <code>Workgroup</code> with given parameters
 	 * 
-	 * @param name
-	 * @param members
-	 * @param run
-	 * @param period
+	 * @param name Name of the workgroup
+	 * @param members members in the workgroup
+	 * @param run Run this workgroup is in
+	 * @param period period this workgroup is in
 	 * @return the created <code>Workgroup</code>
 	 * @throws ObjectNotFoundException
 	 */
@@ -127,9 +116,9 @@ public interface WorkgroupService {
 	
 	/**
      * Check if a user is in any workgroup for the run
-     * @param user the user
-     * @param run the run
-     * @return whether the user is in a workgroup for the run
+     * @param user the user to check
+     * @param run the run to check
+     * @return whether the user is in a workgroup for the specified run
      */
 	boolean isUserInAnyWorkgroupForRun(User user, Run run);
 	
@@ -147,7 +136,7 @@ public interface WorkgroupService {
      * @param user the user
      * @param run the run
      * @param workgroup the workgroup
-     * @return 
+     * @return whether the user is in another workgroup for the run
      */
 	boolean isUserInAnotherWorkgroupForRun(User user, Run run, Workgroup workgroup);
 }

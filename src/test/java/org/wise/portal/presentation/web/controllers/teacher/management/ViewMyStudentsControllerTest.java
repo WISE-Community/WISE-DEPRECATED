@@ -64,7 +64,7 @@ import org.wise.vle.domain.webservice.http.HttpRestTransport;
 @RunWith(TestClassRunner.class)
 public class ViewMyStudentsControllerTest extends AbstractModelAndViewTests {
 
-	private ViewMyStudentsController viewMyStudentsController;
+	private ManageStudentsController viewMyStudentsController;
 
 	private HttpRestTransport mockHttpTransport;
 
@@ -116,7 +116,7 @@ public class ViewMyStudentsControllerTest extends AbstractModelAndViewTests {
 		this.expectedRunList.add(run);
 
 		this.mockHttpTransport = EasyMock.createMock(HttpRestTransport.class);
-		this.viewMyStudentsController = new ViewMyStudentsController();
+		this.viewMyStudentsController = new ManageStudentsController();
 		this.viewMyStudentsController
 		.setRunService(this.mockRunService);
 		this.viewMyStudentsController
@@ -156,10 +156,10 @@ public class ViewMyStudentsControllerTest extends AbstractModelAndViewTests {
 		EasyMock.replay(this.mockWorkgroupService);
 
 		ModelAndView modelAndView = viewMyStudentsController.handleRequestInternal(request, response);
-		assertModelAttributeValue(modelAndView,	ViewMyStudentsController.CURRENT_RUN_LIST_KEY, this.expectedRunList);
-		assertModelAttributeValue(modelAndView, ViewMyStudentsController.WORKGROUP_MAP_KEY, expectedWorkgroupMap);
+		assertModelAttributeValue(modelAndView,	ManageStudentsController.CURRENT_RUN_LIST_KEY, this.expectedRunList);
+		assertModelAttributeValue(modelAndView, ManageStudentsController.WORKGROUP_MAP_KEY, expectedWorkgroupMap);
 		assertModelAttributeValue(modelAndView,	ControllerUtil.USER_KEY, this.user);
-		assertModelAttributeValue(modelAndView,	ViewMyStudentsController.HTTP_TRANSPORT_KEY, this.mockHttpTransport);
+		assertModelAttributeValue(modelAndView,	ManageStudentsController.HTTP_TRANSPORT_KEY, this.mockHttpTransport);
 		EasyMock.verify(this.mockRunService);
 		EasyMock.verify(this.mockWorkgroupService);
 	}
@@ -181,11 +181,11 @@ public class ViewMyStudentsControllerTest extends AbstractModelAndViewTests {
 
 		ModelAndView modelAndView = viewMyStudentsController
 		.handleRequestInternal(request, response);
-		assertModelAttributeValue(modelAndView, ViewMyStudentsController.CURRENT_RUN_LIST_KEY, emptyRunList);
-		assertModelAttributeValue(modelAndView, ViewMyStudentsController.WORKGROUP_MAP_KEY, emptyWorkgroupMap);
+		assertModelAttributeValue(modelAndView, ManageStudentsController.CURRENT_RUN_LIST_KEY, emptyRunList);
+		assertModelAttributeValue(modelAndView, ManageStudentsController.WORKGROUP_MAP_KEY, emptyWorkgroupMap);
 		assertModelAttributeValue(modelAndView, ControllerUtil.USER_KEY, this.user);
-		assertModelAttributeValue(modelAndView, ViewMyStudentsController.RUN_KEY, run);
-		assertModelAttributeValue(modelAndView, ViewMyStudentsController.HTTP_TRANSPORT_KEY, this.mockHttpTransport);
+		assertModelAttributeValue(modelAndView, ManageStudentsController.RUN_KEY, run);
+		assertModelAttributeValue(modelAndView, ManageStudentsController.HTTP_TRANSPORT_KEY, this.mockHttpTransport);
 		EasyMock.verify(this.mockRunService);
 		EasyMock.verify(this.mockWorkgroupService);
 		EasyMock.verify(this.mockProject);
