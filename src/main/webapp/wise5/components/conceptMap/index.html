@@ -6,72 +6,138 @@
                 {{conceptMapController.nodeContent.style}}
             </style>
             <div ng-if='conceptMapController.mode === "authoring" && !conceptMapController.authoringComponentContent.showPreviousWork'>
-                <span>{{ 'PROMPT' | translate }}:</span>
+                <md-input-container style='width:100%'>
+                    <label>{{ 'PROMPT' | translate }}</label>
+                    <textarea rows='3'
+                            ng-model='conceptMapController.authoringComponentContent.prompt'
+                            ng-change='conceptMapController.authoringViewComponentChanged()'
+                            ng-model-options='{ debounce: 1000 }'
+                            placeholder='{{ "enterPromptHere" | translate }}'>
+                    </textarea>
+                </md-input-container>
                 <br/>
-                <textarea ng-model='conceptMapController.authoringComponentContent.prompt'
-                          ng-change='conceptMapController.authoringViewComponentChanged()'
-                          ng-model-options='{ debounce: 1000 }'
-                          rows='3'
-                          cols='100'></textarea>
-                <br/>
-                <br/>
-                <span>{{ 'conceptMap.nodes' | translate }}</span>
-                <br/>
-                <div ng-repeat='node in conceptMapController.authoringComponentContent.nodes'>
-                    <span>{{ 'conceptMap.fileName' | translate }}:</span>
-                    <input ng-model='node.fileName'
-                           ng-change='conceptMapController.authoringViewComponentChanged()'
-                           size='30'
-                           ng-model-options='{ debounce: 1000 }'/> <button translate='CHOOSE' ng-click='conceptMapController.chooseNodeImage(node.id)'></button>
-                    <span>{{ 'conceptMap.label' | translate }}:</span>
-                    <input ng-model='node.label'
-                           ng-change='conceptMapController.authoringViewComponentChanged()'
-                           size='30'
-                           ng-model-options='{ debounce: 1000 }'/>
-                    <span>{{ 'WIDTH' | translate }}:</span>
-                    <input ng-model='node.width'
-                           ng-change='conceptMapController.authoringViewComponentChanged()'
-                           size='10'
-                           ng-model-options='{ debounce: 1000 }'/>
-                    <span>{{ 'HEIGHT' | translate }}:</span>
-                    <input ng-model='node.height'
-                           ng-change='conceptMapController.authoringViewComponentChanged()'
-                           size='10'
-                           ng-model-options='{ debounce: 1000 }'/>
-                    <button ng-click='conceptMapController.authoringViewNodeUpButtonClicked($index)'>{{ 'UP' | translate }}</button>
-                    <button ng-click='conceptMapController.authoringViewNodeDownButtonClicked($index)'>{{ 'DOWN' | translate }}</button>
-                    <button ng-click='conceptMapController.authoringViewNodeDeleteButtonClicked($index)'>{{ 'DELETE' | translate }}</button>
+                <div layout='row'>
+                    <h6>{{ 'conceptMap.nodes' | translate }}</h6>
+                    <md-button class='topButton md-raised md-primary'
+                               ng-click='conceptMapController.authoringViewAddNode()'>
+                        <md-icon>add</md-icon>
+                        <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'conceptMap.addNode' | translate }}</md-tooltip>
+                    </md-button>
                 </div>
-                <button ng-click='conceptMapController.authoringViewAddNode()'>{{ 'conceptMap.addNode' | translate }}</button>
-                <br/>
-                <br/>
-                <span>{{ 'conceptMap.links' | translate }}</span>
-                <br/>
-                <div ng-repeat='link in conceptMapController.authoringComponentContent.links'>
-                    <span>{{ 'conceptMap.label' | translate }}:</span>
-                    <input ng-model='link.label'
-                           ng-change='conceptMapController.authoringViewComponentChanged()'
-                           size='30'
-                           ng-model-options='{ debounce: 1000 }'/>
-                    <span>{{ 'conceptMap.color' | translate }}:</span>
-                    <input ng-model='link.color'
-                           ng-change='conceptMapController.authoringViewComponentChanged()'
-                           size='30'
-                           ng-model-options='{ debounce: 1000 }'/>
-                    <button ng-click='conceptMapController.authoringViewLinkUpButtonClicked($index)'>{{ 'UP' | translate }}</button>
-                    <button ng-click='conceptMapController.authoringViewLinkDownButtonClicked($index)'>{{ 'DOWN' | translate }}</button>
-                    <button ng-click='conceptMapController.authoringViewLinkDeleteButtonClicked($index)'>{{ 'DELETE' | translate }}</button>
+                <div ng-show='conceptMapController.authoringComponentContent.nodes == null || conceptMapController.authoringComponentContent.nodes.length == 0'>
+                    <p>{{ 'conceptMap.thereAreNoNodes' | translate }}</p>
+                    <br/>
                 </div>
-                <button ng-click='conceptMapController.authoringViewAddLink()'>{{ 'conceptMap.addLink' | translate }}</button>
-                <br/>
-                <br/>
-                <button ng-click='conceptMapController.saveStarterConceptMap()'>{{ 'conceptMap.saveStarterConceptMap' | translate }}</button>
-                <button ng-click='conceptMapController.deleteStarterConceptMap()'>{{ 'conceptMap.deleteStarterConceptMap' | translate }}</button>
-                <br/>
+                <div ng-repeat='node in conceptMapController.authoringComponentContent.nodes' layout='row'>
+                    <md-input-container style='margin-right: 20;'>
+                        <label>{{ 'conceptMap.label' | translate }}</label>
+                        <input ng-model='node.label'
+                               ng-change='conceptMapController.authoringViewComponentChanged()'
+                               size='50'
+                               ng-model-options='{ debounce: 1000 }'/>
+                    </md-input-container>
+                    <md-input-container>
+                        <label>{{ 'conceptMap.fileName' | translate }}</label>
+                        <input ng-model='node.fileName'
+                               ng-change='conceptMapController.authoringViewComponentChanged()'
+                               size='50'
+                               ng-model-options='{ debounce: 1000 }'/>
+                    </md-input-container>
+                    <md-button class='regularButton md-raised md-primary'
+                               style='margin-right: 20;'
+                               ng-click='conceptMapController.chooseNodeImage(node.id)'>
+                        <md-icon>insert_photo</md-icon>
+                        <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'CHOOSE' | translate}}</md-tooltip>
+                    </md-button>
+                    <md-input-container style='margin-right: 20;'>
+                        <label>{{ 'WIDTH' | translate }}</label>
+                        <input ng-model='node.width'
+                               ng-change='conceptMapController.authoringViewComponentChanged()'
+                               size='10'
+                               ng-model-options='{ debounce: 1000 }'/>
+                    </md-input-container>
+                    <md-input-container>
+                        <label>{{ 'HEIGHT' | translate }}</label>
+                        <input ng-model='node.height'
+                               ng-change='conceptMapController.authoringViewComponentChanged()'
+                               size='10'
+                               ng-model-options='{ debounce: 1000 }'/>
+                    </md-input-container>
+                    <md-button class='regularButton md-raised md-primary'
+                               ng-click='conceptMapController.authoringViewNodeUpButtonClicked($index)'>
+                        <md-icon>arrow_upward</md-icon>
+                        <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'UP' | translate}}</md-tooltip>
+                    </md-button>
+                    <md-button class='regularButton md-raised md-primary'
+                               ng-click='conceptMapController.authoringViewNodeDownButtonClicked($index)'>
+                        <md-icon>arrow_downward</md-icon>
+                        <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'DOWN' | translate}}</md-tooltip>
+                    </md-button>
+                    <md-button class='regularButton md-raised md-primary'
+                               ng-click='conceptMapController.authoringViewNodeDeleteButtonClicked($index)'>
+                        <md-icon>delete</md-icon>
+                        <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'DELETE' | translate}}</md-tooltip>
+                    </md-button>
+                </div>
+                <div layout='row'>
+                    <h6>{{ 'conceptMap.links' | translate }}</h6>
+                    <md-button class='topButton md-raised md-primary'
+                               ng-click='conceptMapController.authoringViewAddLink()'>
+                        <md-icon>add</md-icon>
+                        <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'conceptMap.addLink' | translate }}</md-tooltip>
+                    </md-button>
+                </div>
+                <div ng-show='conceptMapController.authoringComponentContent.links == null || conceptMapController.authoringComponentContent.links.length == 0'>
+                    <p>{{ 'conceptMap.thereAreNoLinks' | translate }}</p>
+                    <br/>
+                </div>
+                <div ng-repeat='link in conceptMapController.authoringComponentContent.links' layout='row'>
+                    <md-input-container style='margin-right: 20;'>
+                        <label>{{ 'conceptMap.label' | translate }}</label>
+                        <input ng-model='link.label'
+                               ng-change='conceptMapController.authoringViewComponentChanged()'
+                               size='50'
+                               ng-model-options='{ debounce: 1000 }'/>
+                    </md-input-container>
+                    <md-input-container>
+                        <label>{{ 'conceptMap.color' | translate }}</label>
+                        <input ng-model='link.color'
+                               ng-change='conceptMapController.authoringViewComponentChanged()'
+                               size='50'
+                               ng-model-options='{ debounce: 1000 }'/>
+                    </md-input-container>
+                    <md-button class='regularButton md-raised md-primary'
+                               ng-click='conceptMapController.authoringViewLinkUpButtonClicked($index)'>
+                        <md-icon>arrow_upward</md-icon>
+                        <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'UP' | translate}}</md-tooltip>
+                    </md-button>
+                    <md-button class='regularButton md-raised md-primary'
+                               ng-click='conceptMapController.authoringViewLinkDownButtonClicked($index)'>
+                        <md-icon>arrow_downward</md-icon>
+                        <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'DOWN' | translate}}</md-tooltip>
+                    </md-button>
+                    <md-button class='regularButton md-raised md-primary'
+                               ng-click='conceptMapController.authoringViewLinkDeleteButtonClicked($index)'>
+                        <md-icon>delete</md-icon>
+                        <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'DELETE' | translate}}</md-tooltip>
+                    </md-button>
+                </div>
+                <md-button class='topButton md-raised md-primary'
+                           ng-click='conceptMapController.saveStarterConceptMap()'>
+                    <md-icon>create</md-icon>
+                    <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'conceptMap.saveStarterConceptMap' | translate }}</md-tooltip>
+                </md-button>
+                <md-button class='topButton md-raised md-primary'
+                           ng-click='conceptMapController.deleteStarterConceptMap()'>
+                    <md-icon>delete_sweep</md-icon>
+                    <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'conceptMap.deleteStarterConceptMap' | translate }}</md-tooltip>
+                </md-button>
             </div>
             <div ng-if='conceptMapController.mode === "authoring"'>
-                <br/>
-                <button ng-click='conceptMapController.showAdvancedAuthoring = !conceptMapController.showAdvancedAuthoring'>{{ 'ADVANCED' | translate }}</button>
+                <md-button class='topButton md-raised md-primary' ng-click='conceptMapController.showAdvancedAuthoring = !conceptMapController.showAdvancedAuthoring'>
+                    <md-icon>build</md-icon>
+                    <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ "ADVANCED" | translate }}</md-tooltip>
+                </md-button>
                 <br/>
                 <div ng-show='conceptMapController.showAdvancedAuthoring'>
                     {{ 'SHOW_SAVE_BUTTON' | translate }}:

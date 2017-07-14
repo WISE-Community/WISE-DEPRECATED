@@ -37,6 +37,8 @@
     "conceptMap.showAutoFeedback": "Show Auto Feedback",
     "conceptMap.showAutoScore": "Show Auto Score",
     "conceptMap.stretchBackground": "Stretch Background",
+    "conceptMap.thereAreNoLinks": "There are no links. Click the \"Add Link\" button to add a link.",
+    "conceptMap.thereAreNoNodes": "There are no nodes. Click the \"Add Node\" button to add a node.",
     "conceptMap.withLink": "with link",
     "conceptMap.youHaveNoMoreChances": "You do not have any more chances to receive feedback on your answer.",
     "conceptMap.youHaveOneChance": "You have {{numberOfSubmitsLeft}} chance to receive feedback on your answer so this this should be your best work.\n\nAre you ready to receive feedback on this answer?",
