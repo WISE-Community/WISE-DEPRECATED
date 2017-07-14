@@ -20,7 +20,7 @@ class AudioOscillatorService extends NodeService {
         var component = {};
         component.id = this.UtilService.generateKey();
         component.type = 'AudioOscillator';
-        component.prompt = this.$translate('ENTER_PROMPT_HERE');
+        component.prompt = '';
         component.oscillatorTypes = [
             'sine'
         ];
@@ -28,7 +28,7 @@ class AudioOscillatorService extends NodeService {
         component.oscilloscopeWidth = 800;
         component.oscilloscopeHeight = 400;
         component.gridCellSize = 50;
-        component.stopAfterGoodDraw = true;
+        component.stopAfterGoodDraw = false;
         component.showSaveButton = false;
         component.showSubmitButton = false;
         component.starterSentence = null;

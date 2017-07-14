@@ -238,6 +238,9 @@ var AudioOscillatorController = function () {
                     }
                 };
 
+                // update which oscillator types should be checked
+                this.authoringProcessCheckedOscillatorTypes();
+
                 this.updateAdvancedAuthoringView();
 
                 $scope.$watch(function () {
@@ -2058,6 +2061,69 @@ var AudioOscillatorController = function () {
 
             // the authoring component content has changed so we will save the project
             this.authoringViewComponentChanged();
+        }
+
+        /**
+         * One of the oscillator types was clicked in the authoring view
+         */
+
+    }, {
+        key: 'authoringViewOscillatorTypeClicked',
+        value: function authoringViewOscillatorTypeClicked() {
+
+            /*
+             * clear the oscillator types so we can repopulate it with the
+             * ones that are checked
+             */
+            this.authoringComponentContent.oscillatorTypes = [];
+
+            if (this.authoringSineChecked) {
+                // sine is checked
+                this.authoringComponentContent.oscillatorTypes.push('sine');
+            }
+
+            if (this.authoringSquareChecked) {
+                // square is checked
+                this.authoringComponentContent.oscillatorTypes.push('square');
+            }
+
+            if (this.authoringTriangleChecked) {
+                // triangle is checked
+                this.authoringComponentContent.oscillatorTypes.push('triangle');
+            }
+
+            if (this.authoringSawtoothChecked) {
+                // sawtooth is checked
+                this.authoringComponentContent.oscillatorTypes.push('sawtooth');
+            }
+
+            // the authoring component content has changed so we will save the project
+            this.authoringViewComponentChanged();
+        }
+
+        /**
+         * Determine which oscillator types should be checked
+         */
+
+    }, {
+        key: 'authoringProcessCheckedOscillatorTypes',
+        value: function authoringProcessCheckedOscillatorTypes() {
+
+            if (this.authoringComponentContent.oscillatorTypes.indexOf('sine') != -1) {
+                this.authoringSineChecked = true;
+            }
+
+            if (this.authoringComponentContent.oscillatorTypes.indexOf('square') != -1) {
+                this.authoringSquareChecked = true;
+            }
+
+            if (this.authoringComponentContent.oscillatorTypes.indexOf('triangle') != -1) {
+                this.authoringTriangleChecked = true;
+            }
+
+            if (this.authoringComponentContent.oscillatorTypes.indexOf('sawtooth') != -1) {
+                this.authoringSawtoothChecked = true;
+            }
         }
     }]);
 

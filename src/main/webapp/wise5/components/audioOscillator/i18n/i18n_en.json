@@ -19,6 +19,11 @@
     "audioOscillator.oscilloscopeStopAfterGoodDraw": "Oscilloscope Stop After Good Draw",
     "audioOscillator.play": "Play",
     "audioOscillator.save": "Save",
+    "audioOscillator.sawtooth": "Sawtooth",
+    "audioOscillator.sine": "Sine",
+    "audioOscillator.square": "Square",
     "audioOscillator.startingFrequency": "Starting Frequency",
-    "audioOscillator.stop": "Stop"
+    "audioOscillator.stop": "Stop",
+    "audioOscillator.thereAreNoOscillatorTypesSelected": "There are no oscillator types selected. Please select at least one oscillator type.",
+    "audioOscillator.triangle": "Triangle"
 }
