@@ -1,59 +1,122 @@
 <div ng-controller='TableController as tableController' style='display: flex'>
+    <style>
+        .rotate90 {
+            -webkit-transform: rotate(90deg);
+            transform: rotate(90deg);
+        }
+        .rotate270 {
+            -webkit-transform: rotate(270deg);
+            transform: rotate(270deg);
+        }
+    </style>
     <div style='flex: 1'>
         <div ng-if='tableController.mode === "authoring" && !tableController.authoringComponentContent.showPreviousWork'>
-            <textarea ng-model='tableController.authoringComponentContent.prompt'
-                      ng-change='tableController.authoringViewComponentChanged()'
-                      ng-model-options='{ debounce: 1000 }'
-                      rows='3'
-                      cols='100'></textarea>
+            <md-input-container style='width:100%'>
+                <label>{{ 'PROMPT' | translate }}</label>
+                <textarea rows='3'
+                        ng-model='tableController.authoringComponentContent.prompt'
+                        ng-change='tableController.authoringViewComponentChanged()'
+                        ng-model-options='{ debounce: 1000 }'
+                        placeholder='{{ "enterPromptHere" | translate }}'>
+                </textarea>
+            </md-input-container>
             <br/>
-            {{ 'table.columns' | translate }}: <input type='number'
-                            ng-model='tableController.authoringComponentContent.numColumns'
-                            ng-change='tableController.authoringViewTableSizeConfirmChange("columns", {{tableController.authoringComponentContent.numColumns}})'
-                            ng-model-options='{ debounce: 1000 }'
-                            style='width: 3em'/>
-            {{ 'table.rows' | translate }}: <input type='number'
-                         ng-model='tableController.authoringComponentContent.numRows'
-                         ng-change='tableController.authoringViewTableSizeConfirmChange("rows", {{tableController.authoringComponentContent.numRows}})'
-                         ng-model-options='{ debounce: 1000 }'
-                         style='width: 3em'/>
-            {{ 'table.cellSize' | translate }}: <input type='number'
-                              ng-model='tableController.authoringComponentContent.globalCellSize'
-                              ng-change='tableController.authoringViewComponentChanged()'
-                              ng-model-options='{ debounce: 1000 }'
-                              style='width: 3em'/>
+            <div style='height: 60px;'>
+                <md-input-container>
+                    <label>{{ 'table.columns' | translate }}</label>
+                    <input type='number'
+                           style='width: 120'
+                           ng-model='tableController.authoringComponentContent.numColumns'
+                           ng-change='tableController.authoringViewTableSizeConfirmChange("columns", {{tableController.authoringComponentContent.numColumns}})'/>
+                </md-input-container>
+                <md-input-container>
+                    <label>{{ 'table.rows' | translate }}</label>
+                    <input type='number'
+                           style='width: 120'
+                           ng-model='tableController.authoringComponentContent.numRows'
+                           ng-change='tableController.authoringViewTableSizeConfirmChange("rows", {{tableController.authoringComponentContent.numRows}})'/>
+                </md-input-container>
+                <md-input-container>
+                    <label>{{ 'table.globalCellSize' | translate }}</label>
+                    <input type='number'
+                           style='width: 120'
+                           ng-model='tableController.authoringComponentContent.globalCellSize'
+                           ng-change='tableController.authoringViewComponentChanged()'/>
+                </md-input-container>
+            </div>
             <br/>
             <table style='border: 1px solid black;'>
                 <tr>
                     <td style='border: 1px solid black;'></td>
                     <td ng-repeat='x in getNumber(tableController.authoringComponentContent.numColumns) track by $index'style='border: 1px solid black;'>
-                        <button ng-click='tableController.authoringViewInsertColumn($index)' title='{{ "table.insertColumn" | translate }}'>+</button>
-                        <button ng-click='tableController.authoringViewDeleteColumn($index)' title='{{ "table.deleteColumn" | translate }}'>x</button>
+                        <md-button class='topButton md-raised md-primary'
+                                   ng-click='tableController.authoringViewInsertColumn($index)'>
+                            <md-icon class='rotate90'>loupe</md-icon>
+                            <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ "table.insertColumnBefore" | translate }}</md-tooltip>
+                        </md-button>
+                        <md-button class='topButton md-raised md-primary'
+                                   ng-click='tableController.authoringViewDeleteColumn($index)'>
+                            <md-icon>delete</md-icon>
+                            <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ "table.deleteColumn" | translate }}</md-tooltip>
+                        </md-button>
+                        <md-button class='topButton md-raised md-primary'
+                                   ng-if='$last'
+                                   ng-click='tableController.authoringViewInsertColumn($index + 1)'>
+                            <md-icon>loupe</md-icon>
+                            <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ "table.insertColumnAfter" | translate }}</md-tooltip>
+                        </md-button>
+                        <br/>
+                        <md-input-container style='height: 20;'>
+                            <label>{{ 'table.columnCellSizes' | translate }}</label>
+                            <input type='number' ng-model='tableController.columnCellSizes[$index]' ng-change='tableController.authoringViewColumnSizeChanged($index)'/>
+                        </md-input-container>
                     </td>
                 </tr>
                 <tr ng-repeat='row in tableController.authoringComponentContent.tableData'>
                     <td style='border: 1px solid black;'>
-                        <button ng-click='tableController.authoringViewInsertRow($index)' title='{{ "table.insertRow" | translate }}'>+</button>
-                        <button ng-click='tableController.authoringViewDeleteRow($index)' title='{{ "table.deleteRow" | translate }}'>x</button>
-                    </td>
-                    <td ng-repeat='cell in row' style='border: 1px solid black;'>
-                        <input type='text'
-                               ng-model='cell.text'
-                               ng-model-options='{ debounce: 1000 }'
-                               ng-change='tableController.authoringViewComponentChanged()'
-                               size='20'/>
+                        <md-button class='topButton md-raised md-primary'
+                                   ng-click='tableController.authoringViewInsertRow($index)'>
+                            <md-icon class='rotate270'>loupe</md-icon>
+                            <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ "table.insertRowBefore" | translate }}</md-tooltip>
+                        </md-button>
                         <br/>
-                        <span title='{{ "table.uneditable" | translate }}'>{{ "table.uneditableSymbol" | translate }}</span> <input type='checkbox' title='{{ "table.uneditable" | translate }}' ng-model='cell.editable' ng-checked='!cell.editable' ng-true-value='false' ng-false-value='true' ng-change='tableController.authoringViewComponentChanged()'/>
-                        <span title='{{ "table.size" | translate }}'>{{ "table.sizeSymbol" | translate }}</span> <input type='number' title='{{ "table.size" | translate }}' ng-model='cell.size'
-                                 ng-model-options='{ debounce: 1000 }'
-                                 ng-change='tableController.authoringViewComponentChanged()' size='3' style='width: 3em'/>
+                        <md-button class='topButton md-raised md-primary'
+                                   ng-click='tableController.authoringViewDeleteRow($index)'>
+                            <md-icon>delete</md-icon>
+                            <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ "table.deleteRow" | translate }}</md-tooltip>
+                        </md-button>
+                        <br/>
+                        <md-button class='topButton md-raised md-primary'
+                                   ng-if='$last'
+                                   ng-click='tableController.authoringViewInsertRow($index + 1)'>
+                            <md-icon>loupe</md-icon>
+                            <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ "table.insertRowAfter" | translate }}</md-tooltip>
+                        </md-button>
+                    </td>
+                    <td ng-repeat='cell in row' style='border: 1px solid black; height: 20;'>
+                        <md-input-container style='height: 20;'>
+                            <input ng-model='cell.text'
+                                   ng-model-options='{ debounce: 1000 }'
+                                   ng-change='tableController.authoringViewComponentChanged()'
+                                   size='20'/>
+                        </md-input-container>
+                        <br/>
+                        <md-checkbox class='md-primary'
+                                     style='margin-left: 10;'
+                                     ng-model='cell.editable'
+                                     ng-change='tableController.authoringViewComponentChanged()'>
+                            {{ "table.editableByStudent" | translate }}
+                        </md-checkbox>
                     </td>
                 </tr>
             </table>
         </div>
         <div ng-if='tableController.mode === "authoring"'>
             <br/>
-            <button ng-click='tableController.showAdvancedAuthoring = !tableController.showAdvancedAuthoring'>{{ 'ADVANCED' | translate }}</button>
+            <md-button class='topButton md-raised md-primary' ng-click='tableController.showAdvancedAuthoring = !tableController.showAdvancedAuthoring'>
+                <md-icon>build</md-icon>
+                <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ "ADVANCED" | translate }}</md-tooltip>
+            </md-button>
             <br/>
             <div ng-show='tableController.showAdvancedAuthoring'>
                 {{ 'SHOW_SAVE_BUTTON' | translate }}:

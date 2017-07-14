@@ -148,6 +148,12 @@ class TableController {
         this.workgroupId = this.$scope.workgroupId;
         this.teacherWorkgroupId = this.$scope.teacherWorkgroupId;
 
+        /*
+         * for the authoring view, get the cell sizes for each column if they
+         * have been customized
+         */
+        this.columnCellSizes = this.parseColumnCellSizes(this.componentContent);
+
         if (this.componentContent != null) {
 
             // get the component id
@@ -240,6 +246,7 @@ class TableController {
                      */
                     this.submitCounter = 0;
                     this.componentContent = this.ProjectService.injectAssetPaths(newValue);
+                    this.columnCellSizes = this.parseColumnCellSizes(this.componentContent);
                     this.isSaveButtonVisible = this.componentContent.showSaveButton;
                     this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
                     this.resetTable();
@@ -1480,6 +1487,15 @@ class TableController {
             for (var c = 0; c < numColumns; c++) {
                 // create an empty cell
                 var newCell = this.createEmptyCell();
+
+                // get the column cell size
+                var cellSize = this.columnCellSizes[c];
+
+                if (cellSize != null) {
+                    // set the cell size
+                    newCell.size = cellSize;
+                }
+
                 newRow.push(newCell);
             }
 
@@ -1551,6 +1567,9 @@ class TableController {
 
             // update the number of columns value
             this.authoringComponentContent.numColumns++;
+
+            // update the column cell sizes model
+            this.parseColumnCellSizes(this.authoringComponentContent);
         }
 
         // save the project and update the preview
@@ -1588,6 +1607,9 @@ class TableController {
 
                 // update the number of columns value
                 this.authoringComponentContent.numColumns--;
+
+                // update the column cell sizes model
+                this.parseColumnCellSizes(this.authoringComponentContent);
             }
 
             // save the project and update the preview
@@ -2294,6 +2316,94 @@ class TableController {
                             // make the cell editable
                             cell.editable = true;
                         }
+                    }
+                }
+            }
+        }
+
+        // the authoring component content has changed so we will save the project
+        this.authoringViewComponentChanged();
+    }
+
+    /**
+     * Parse the column cell sizes. We will get the column cell sizes by looking
+     * at size value of each column in the first row.
+     * @param componentContent the component content
+     */
+    parseColumnCellSizes(componentContent) {
+
+        var columnCellSizes = {};
+
+        if (componentContent != null) {
+
+            // get the table data
+            var tableData = componentContent.tableData;
+
+            if (tableData != null) {
+                var firstRow = tableData[0];
+
+                if (firstRow != null) {
+
+                    // loop through all the columns
+                    for (var x = 0; x < firstRow.length; x++) {
+
+                        // get the cell object
+                        var cell = firstRow[x];
+
+                        /*
+                         * get the cell size and set it into our mapping of
+                         * column to cell size
+                         */
+                        columnCellSizes[x] = cell.size;
+                    }
+                }
+            }
+        }
+
+        return columnCellSizes;
+    }
+
+    /**
+     * One of the column cell sizes has changed
+     */
+    authoringViewColumnSizeChanged(index) {
+
+        if (index != null) {
+            var cellSize = this.columnCellSizes[index];
+
+            if (cellSize == '') {
+                cellSize = null;
+            }
+
+            // set the cell size for all the cells in the column
+            this.authoringSetColumnCellSizes(index, cellSize);
+        }
+    }
+
+    /**
+     * Set the cell sizes for all the cells in a column
+     * @param column the column number
+     * @param size the cell size
+     */
+    authoringSetColumnCellSizes(column, size) {
+
+        // get the table data
+        var tableData = this.authoringComponentContent.tableData;
+
+        if (tableData != null) {
+
+            // loop through all the rows
+            for (var r = 0; r < tableData.length; r++) {
+                var row = tableData[r];
+
+                if (row != null) {
+
+                    // get the cell in the column
+                    var cell = row[column];
+
+                    if (cell != null) {
+                        // set the cell size
+                        cell.size = size;
                     }
                 }
             }
