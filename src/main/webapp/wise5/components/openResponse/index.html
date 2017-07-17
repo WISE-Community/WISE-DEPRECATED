@@ -17,7 +17,7 @@
     <div ng-if='openResponseController.mode === "authoring"'>
         <md-button class='topButton md-raised md-primary' ng-click='openResponseController.showAdvancedAuthoring = !openResponseController.showAdvancedAuthoring'>
             <md-icon>build</md-icon>
-            <md-tooltip md-direction="top" class="projectButtonTooltip">{{ "ADVANCED" | translate }}</md-tooltip>
+            <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ "ADVANCED" | translate }}</md-tooltip>
         </md-button>
         <div ng-show='openResponseController.showAdvancedAuthoring'>
             <span>{{ 'openResponse.starterSentence' | translate }} ({{ 'openResponse.optional' | translate }}):</span>

@@ -24,7 +24,7 @@
             </md-input-container>
             <md-button class='topButton md-raised md-primary' ng-click='drawController.chooseBackgroundImage()'>
                 <md-icon>insert_photo</md-icon>
-                <md-tooltip md-direction="top" class="projectButtonTooltip">{{ 'chooseAnImage' | translate }}</md-tooltip>
+                <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'chooseAnImage' | translate }}</md-tooltip>
             </md-button>
         </div>
         <div style='height: 60px;'>
@@ -46,11 +46,11 @@
         <br/>
         <md-button class='topButton md-raised md-primary' ng-click='drawController.authoringEnableAllToolsButtonClicked()'>
             <md-icon>check</md-icon>
-            <md-tooltip md-direction="top" class="projectButtonTooltip">{{ 'draw.enableAllTools' | translate }}</md-tooltip>
+            <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'draw.enableAllTools' | translate }}</md-tooltip>
         </md-button>
         <md-button class='topButton md-raised md-primary' ng-click='drawController.authoringDisableAllToolsButtonClicked()'>
             <md-icon>check_box_outline_blank</md-icon>
-            <md-tooltip md-direction="top" class="projectButtonTooltip">{{ 'draw.disableAllTools' | translate }}</md-tooltip>
+            <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'draw.disableAllTools' | translate }}</md-tooltip>
         </md-button>
         <br/>
         <div layout='row'>
@@ -167,43 +167,44 @@
                 <md-button class='topButton md-raised md-primary'
                            ng-click='drawController.chooseStampImage($index)'>
                     <md-icon>insert_photo</md-icon>
-                    <md-tooltip md-direction="top" class="projectButtonTooltip">{{ 'chooseAnImage' | translate }}</md-tooltip>
+                    <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'chooseAnImage' | translate }}</md-tooltip>
                 </md-button>
                 <md-button class='topButton md-raised md-primary'
                            ng-click='drawController.authoringStampUpClicked($index)'>
                     <md-icon>arrow_upward</md-icon>
-                    <md-tooltip md-direction="top" class="projectButtonTooltip">{{ 'UP' | translate }}</md-tooltip>
+                    <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'UP' | translate }}</md-tooltip>
                 </md-button>
                 <md-button class='topButton md-raised md-primary'
                            ng-click='drawController.authoringStampDownClicked($index)'>
                     <md-icon>arrow_downward</md-icon>
-                    <md-tooltip md-direction="top" class="projectButtonTooltip">{{ 'DOWN' | translate }}</md-tooltip>
+                    <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'DOWN' | translate }}</md-tooltip>
                 </md-button>
                 <md-button class='topButton md-raised md-primary'
                            ng-click='drawController.authoringDeleteStampClicked($index)'>
                     <md-icon>delete</md-icon>
-                    <md-tooltip md-direction="top" class="projectButtonTooltip">{{ 'DELETE' | translate }}</md-tooltip>
+                    <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'DELETE' | translate }}</md-tooltip>
                 </md-button>
             </div>
             <br/>
-            <md-button class='topButton md-raised md-primary'ng-click='drawController.authoringAddStampButtonClicked()'>
+            <md-button class='topButton md-raised md-primary'
+                       ng-click='drawController.authoringAddStampButtonClicked()'>
                 <md-icon>library_add</md-icon>
-                <md-tooltip md-direction="top" class="projectButtonTooltip">{{ 'draw.addStamp' | translate }}</md-tooltip>
+                <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'draw.addStamp' | translate }}</md-tooltip>
             </md-button>
         </div>
         <md-button class='topButton md-raised md-primary' ng-click='drawController.authoringSaveStarterDrawData()'>
             <md-icon>create</md-icon>
-            <md-tooltip md-direction="top" class="projectButtonTooltip">{{ 'draw.saveStarterDrawing' | translate }}</md-tooltip>
+            <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'draw.saveStarterDrawing' | translate }}</md-tooltip>
         </md-button>
         <md-button class='topButton md-raised md-primary' ng-click='drawController.authoringDeleteStarterDrawData()'>
             <md-icon>delete_sweep</md-icon>
-            <md-tooltip md-direction="top" class="projectButtonTooltip">{{ 'draw.deleteStarterDrawing' | translate }}</md-tooltip>
+            <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'draw.deleteStarterDrawing' | translate }}</md-tooltip>
         </md-button>
     </div>
     <div ng-if='drawController.mode === "authoring"'>
         <md-button class='topButton md-raised md-primary' ng-click='drawController.showAdvancedAuthoring = !drawController.showAdvancedAuthoring'>
             <md-icon>build</md-icon>
-            <md-tooltip md-direction="top" class="projectButtonTooltip">{{ "ADVANCED" | translate }}</md-tooltip>
+            <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ "ADVANCED" | translate }}</md-tooltip>
         </md-button>
         <br/>
         <div ng-show='drawController.showAdvancedAuthoring'>

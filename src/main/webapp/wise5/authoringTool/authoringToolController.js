@@ -38,9 +38,9 @@ var AuthoringToolController = function () {
         // ui-views and their corresponding names, labels, and icons
         this.views = {
             'root.project': {
-                name: this.$translate('projectStructure'),
-                label: this.$translate('projectStructure'),
-                icon: 'view_list',
+                name: this.$translate('projectHome'),
+                label: this.$translate('projectHome'),
+                icon: 'home',
                 type: 'primary',
                 showToolbar: true,
                 active: true
@@ -56,7 +56,7 @@ var AuthoringToolController = function () {
             'root.project.asset': {
                 name: this.$translate('fileManager'),
                 label: this.$translate('fileManager'),
-                icon: 'photo_library',
+                icon: 'attach_file',
                 type: 'primary',
                 showToolbar: true,
                 active: true
@@ -70,10 +70,10 @@ var AuthoringToolController = function () {
                 active: true
             },
             'root.main': {
-                name: this.$translate('closeProject'),
-                label: this.$translate('closeProject'),
-                icon: 'close',
-                type: 'secondary',
+                name: this.$translate('projectsList'),
+                label: this.$translate('projectsList'),
+                icon: 'reorder',
+                type: 'primary',
                 showToolbar: false,
                 active: true
             },
