@@ -42,6 +42,12 @@ var NodeAuthoringController = function () {
         this.canChangePathOptions = [null, true, false];
         this.createBranchBranches = [];
 
+        // whether to show the component authoring views
+        this.showComponentAuthoringViews = true;
+
+        // mapping from component id to whether the component checkbox is checked
+        this.componentsToChecked = {};
+
         this.TeacherDataService.setCurrentNodeByNodeId(this.nodeId);
 
         // the available constraint actions
@@ -833,28 +839,27 @@ var NodeAuthoringController = function () {
         }
 
         /**
-         * Create a component in this node
+         * The add component button was clicked
          */
 
     }, {
-        key: 'createComponent',
-        value: function createComponent() {
-            var _this2 = this;
+        key: 'addComponentButtonClicked',
+        value: function addComponentButtonClicked() {
 
-            // create a component and add it to this node
-            this.ProjectService.createComponent(this.nodeId, this.selectedComponent);
+            // show the add component UI elements
+            this.nodeAuthoringViewButtonClicked("addComponent");
 
-            // save the project
-            this.ProjectService.saveProject();
+            // turn on add component mode
+            this.turnOnAddComponentMode();
 
-            // hide the create component elements
-            this.showCreateComponent = false;
+            // turn on the move component mode
+            this.turnOffMoveComponentMode();
 
-            // Scroll to the bottom of the page where the new component was added
-            this.$timeout(function () {
-                _this2.$location.hash('bottom');
-                _this2.$anchorScroll();
-            });
+            // turn on the insert component mode
+            this.turnOnInsertComponentMode();
+
+            // hide the component authoring
+            this.hideComponentAuthoring();
         }
 
         /**
@@ -907,36 +912,8 @@ var NodeAuthoringController = function () {
                 // delete the component from the node
                 this.ProjectService.deleteComponent(this.nodeId, componentId);
 
-                if (this.ProjectService.doesAnyComponentShowSubmitButton(this.nodeId)) {
-                    /*
-                     * there is a component in this step that is showing their
-                     * submit button
-                     */
-                } else {
-                    /*
-                     * there is no component in this step that is showing their
-                     * submit button
-                     */
-
-                    if (this.ProjectService.doesAnyComponentHaveWork(this.nodeId)) {
-                        /*
-                         * there is a component that generates work so we will show
-                         * the step save button
-                         */
-                        this.node.showSaveButton = true;
-                        this.node.showSubmitButton = false;
-
-                        // hide the save button in all the components
-                        this.hideAllComponentSaveButtons();
-                    } else {
-                        /*
-                         * there are no components in the step that generates work
-                         * so we will not show the step save button
-                         */
-                        this.node.showSaveButton = false;
-                        this.node.showSubmitButton = false;
-                    }
-                }
+                // check if we need to show the node save or node submit buttons
+                this.checkIfNeedToShowNodeSaveOrNodeSubmitButtons();
 
                 // save the project
                 this.ProjectService.saveProject();
@@ -1557,6 +1534,15 @@ var NodeAuthoringController = function () {
                 this.showRubric = false;
                 this.showCreateBranch = false;
                 this.showAdvanced = !this.showAdvanced;
+            } else if (view == 'move') {
+                // toggle the move view and hide all the other views
+                this.showCreateComponent = false;
+                this.showEditTransitions = false;
+                this.showConstraints = false;
+                this.showEditButtons = false;
+                this.showRubric = false;
+                this.showCreateBranch = false;
+                this.showAdvanced = false;
             }
         }
 
@@ -2572,6 +2558,445 @@ var NodeAuthoringController = function () {
 
             // save the project
             this.authoringViewNodeChanged();
+        }
+
+        /**
+         * Show the component authoring views
+         */
+
+    }, {
+        key: 'showComponentAuthoring',
+        value: function showComponentAuthoring() {
+            this.showComponentAuthoringViews = true;
+        }
+
+        /**
+         * Hide the component authoring views so that the auther only sees
+         * the component numbers and component names
+         */
+
+    }, {
+        key: 'hideComponentAuthoring',
+        value: function hideComponentAuthoring() {
+            this.showComponentAuthoringViews = false;
+        }
+
+        /**
+         * Show the insert buttons. This is used when choosing where to insert a
+         * component.
+         */
+
+    }, {
+        key: 'turnOnInsertComponentMode',
+        value: function turnOnInsertComponentMode() {
+            this.insertComponentMode = true;
+        }
+
+        /**
+         * Hide the insert buttons.
+         */
+
+    }, {
+        key: 'turnOffInsertComponentMode',
+        value: function turnOffInsertComponentMode() {
+            this.insertComponentMode = false;
+        }
+
+        /**
+         * Turn on the add component mode
+         */
+
+    }, {
+        key: 'turnOnAddComponentMode',
+        value: function turnOnAddComponentMode() {
+            this.addComponentMode = true;
+        }
+
+        /**
+         * Turn off the add component mode
+         */
+
+    }, {
+        key: 'turnOffAddComponentMode',
+        value: function turnOffAddComponentMode() {
+            this.addComponentMode = false;
+        }
+
+        /**
+         * Turn on the move component mode
+         */
+
+    }, {
+        key: 'turnOnMoveComponentMode',
+        value: function turnOnMoveComponentMode() {
+            this.moveComponentMode = true;
+        }
+
+        /**
+         * Turn off the move component mode
+         */
+
+    }, {
+        key: 'turnOffMoveComponentMode',
+        value: function turnOffMoveComponentMode() {
+            this.moveComponentMode = false;
+        }
+
+        /**
+         * Get the components that have been selected
+         * @return an array of component ids that have been selected
+         */
+
+    }, {
+        key: 'getSelectedComponentIds',
+        value: function getSelectedComponentIds() {
+
+            var selectedComponents = [];
+
+            if (this.components != null) {
+
+                // loop through all the components
+                for (var c = 0; c < this.components.length; c++) {
+                    var component = this.components[c];
+
+                    if (component != null && component.id != null) {
+
+                        // see if the component is checked
+                        var checked = this.componentsToChecked[component.id];
+
+                        if (checked) {
+                            // the component is checked
+                            selectedComponents.push(component.id);
+                        }
+                    }
+                }
+            }
+
+            return selectedComponents;
+        }
+
+        /**
+         * Get the component numbers and component types that have been selected
+         * @return an array of strings
+         * example
+         * [
+         *     "1. OpenResponse",
+         *     "3. MultipleChoice"
+         * ]
+         */
+
+    }, {
+        key: 'getSelectedComponentNumbersAndTypes',
+        value: function getSelectedComponentNumbersAndTypes(componentIds) {
+
+            var selectedComponents = [];
+
+            if (this.components != null) {
+
+                // loop through all the components
+                for (var c = 0; c < this.components.length; c++) {
+                    var component = this.components[c];
+
+                    if (component != null && component.id != null) {
+
+                        // see if the component is checked
+                        var checked = this.componentsToChecked[component.id];
+
+                        if (checked) {
+
+                            // get the component number and type example "1. OpenResponse"
+                            var componentNumberAndType = c + 1 + '. ' + component.type;
+
+                            // the component is checked
+                            selectedComponents.push(componentNumberAndType);
+                        }
+                    }
+                }
+            }
+
+            return selectedComponents;
+        }
+
+        /**
+         * The move component button was clicked
+         */
+
+    }, {
+        key: 'moveButtonClicked',
+        value: function moveButtonClicked() {
+
+            // hide the other views
+            this.nodeAuthoringViewButtonClicked("move");
+
+            // turn off add component mode
+            this.turnOffAddComponentMode();
+
+            // turn on the move component mode
+            this.turnOnMoveComponentMode();
+
+            // turn on the insert component mode
+            this.turnOnInsertComponentMode();
+
+            // hide the component authoring
+            this.hideComponentAuthoring();
+        }
+
+        /**
+         * The copy component button was clicked
+         */
+
+    }, {
+        key: 'copyButtonClicked',
+        value: function copyButtonClicked() {
+
+            // turn on the insert component mode
+            this.turnOnInsertComponentMode();
+
+            // hide the component authoring views
+            this.hideComponentAuthoring();
+        }
+
+        /**
+         * The delete button was clicked
+         */
+
+    }, {
+        key: 'deleteButtonClicked',
+        value: function deleteButtonClicked() {
+            var _this2 = this;
+
+            // scroll to the top of the page
+            this.$anchorScroll('top');
+
+            /*
+             * hide all the component authoring so that the author only sees the
+             * component numbers and component types
+             */
+            this.hideComponentAuthoring();
+
+            /*
+             * Use a timeout to allow the effects of hideComponentAuthoring() to
+             * take effect. If we don't use a timeout, the user won't see any change
+             * in the UI.
+             */
+            this.$timeout(function () {
+                var confirmMessage = '';
+
+                // get the selected component numbers and types
+                var selectedComponentNumbersAndTypes = _this2.getSelectedComponentNumbersAndTypes();
+
+                if (selectedComponentNumbersAndTypes.length == 1) {
+                    // there is one selected component
+                    confirmMessage = 'Are you sure you want to delete this component?\n';
+                } else if (selectedComponentNumbersAndTypes.length > 1) {
+                    // there are multiple selected components
+                    confirmMessage = 'Are you sure you want to delete these components?\n';
+                }
+
+                // loop through all the selected components
+                for (var c = 0; c < selectedComponentNumbersAndTypes.length; c++) {
+
+                    // get a component number and type
+                    var selectedComponentNumberAndType = selectedComponentNumbersAndTypes[c];
+
+                    // show the component number and type in the message
+                    confirmMessage += '\n' + selectedComponentNumberAndType;
+                }
+
+                // ask the user if they are sure they want to delete
+                var answer = confirm(confirmMessage);
+
+                if (answer) {
+
+                    // get the selected component ids
+                    var selectedComponents = _this2.getSelectedComponentIds();
+
+                    /*
+                     * loop through all the selected component ids and delete the
+                     * components
+                     */
+                    for (var c = 0; c < selectedComponents.length; c++) {
+
+                        // get a selected component id
+                        var componentId = selectedComponents[c];
+
+                        // delete the component from the node
+                        _this2.ProjectService.deleteComponent(_this2.nodeId, componentId);
+                    }
+
+                    // check if we need to show the node save or node submit buttons
+                    _this2.checkIfNeedToShowNodeSaveOrNodeSubmitButtons();
+
+                    // save the project
+                    _this2.ProjectService.saveProject();
+                }
+
+                /*
+                 * Wait a small amount of time before returning the UI back to the
+                 * normal view. This allows the author to see the component number
+                 * and type view a little longer so that they can see the change
+                 * they just made before we switch back to the normal view.
+                 */
+                _this2.$timeout(function () {
+                    // turn off the insert component mode
+                    _this2.turnOffInsertComponentMode();
+
+                    // show the component authoring
+                    _this2.showComponentAuthoring();
+                }, 2000);
+            });
+        }
+
+        /**
+         * The cancel insert button was clicked
+         */
+
+    }, {
+        key: 'cancelInsertClicked',
+        value: function cancelInsertClicked() {
+
+            // hide the insert buttons
+            this.turnOffInsertComponentMode();
+
+            // show the component authoring views
+            this.showComponentAuthoring();
+        }
+
+        /**
+         * Check if we need to show the node save or node submit buttons
+         */
+
+    }, {
+        key: 'checkIfNeedToShowNodeSaveOrNodeSubmitButtons',
+        value: function checkIfNeedToShowNodeSaveOrNodeSubmitButtons() {
+
+            if (this.ProjectService.doesAnyComponentShowSubmitButton(this.nodeId)) {
+                /*
+                 * there is a component in this step that is showing their
+                 * submit button
+                 */
+            } else {
+                /*
+                 * there is no component in this step that is showing their
+                 * submit button
+                 */
+
+                if (this.ProjectService.doesAnyComponentHaveWork(this.nodeId)) {
+                    /*
+                     * there is a component that generates work so we will show
+                     * the step save button
+                     */
+                    this.node.showSaveButton = true;
+                    this.node.showSubmitButton = false;
+
+                    // hide the save button in all the components
+                    this.hideAllComponentSaveButtons();
+                } else {
+                    /*
+                     * there are no components in the step that generates work
+                     * so we will not show the step save button
+                     */
+                    this.node.showSaveButton = false;
+                    this.node.showSubmitButton = false;
+                }
+            }
+        }
+
+        /**
+         * Insert the component so it becomes the first component in the step
+         */
+
+    }, {
+        key: 'insertComponentAsFirst',
+        value: function insertComponentAsFirst() {
+            var _this3 = this;
+
+            if (this.addComponentMode) {
+                // create a component and add it to this node
+                this.ProjectService.createComponent(this.nodeId, this.selectedComponent, null);
+
+                // turn off the add component mode
+                this.turnOffAddComponentMode();
+            } else if (this.moveComponentMode) {
+
+                // get the component ids we are moving
+                var selectedComponentIds = this.getSelectedComponentIds();
+
+                // move the components to their new location
+                this.ProjectService.moveComponent(this.nodeId, selectedComponentIds, null);
+
+                // turn off the move component mode
+                this.turnOffMoveComponentMode();
+            }
+
+            // save the project
+            this.ProjectService.saveProject();
+
+            /*
+             * Wait a small amount of time before returning the UI back to the
+             * normal view. This allows the author to see the component number
+             * and type view a little longer so that they can see the change
+             * they just made before we switch back to the normal view.
+             */
+            this.$timeout(function () {
+                // show the component authoring
+                _this3.showComponentAuthoring();
+
+                // turn off the insert component mode
+                _this3.turnOffInsertComponentMode();
+
+                // hide the create component elements
+                _this3.showCreateComponent = false;
+            }, 2000);
+        }
+
+        /**
+         * Insert the component after the given component id
+         * @param componentId insert the component after this given component id
+         */
+
+    }, {
+        key: 'insertComponentAfter',
+        value: function insertComponentAfter(componentId) {
+            var _this4 = this;
+
+            if (this.addComponentMode) {
+                // create a component and add it to this node
+                this.ProjectService.createComponent(this.nodeId, this.selectedComponent, componentId);
+
+                // turn off the add component mode
+                this.turnOffAddComponentMode();
+            } else if (this.moveComponentMode) {
+
+                // get the component ids we are moving
+                var selectedComponentIds = this.getSelectedComponentIds();
+
+                // move the components to their new location
+                this.ProjectService.moveComponent(this.nodeId, selectedComponentIds, componentId);
+
+                // turn off the move component mode
+                this.turnOffMoveComponentMode();
+            }
+
+            // save the project
+            this.ProjectService.saveProject();
+
+            /*
+             * Wait a small amount of time before returning the UI back to the
+             * normal view. This allows the author to see the component number
+             * and type view a little longer so that they can see the change
+             * they just made before we switch back to the normal view.
+             */
+            this.$timeout(function () {
+                // show the component authoring
+                _this4.showComponentAuthoring();
+
+                // turn off the insert component mode
+                _this4.turnOffInsertComponentMode();
+
+                // hide the create component elements
+                _this4.showCreateComponent = false;
+            }, 2000);
         }
     }]);
 

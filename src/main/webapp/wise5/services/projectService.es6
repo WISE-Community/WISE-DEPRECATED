@@ -5057,8 +5057,11 @@ class ProjectService {
      * Create a new component
      * @param nodeId the node id to create the component in
      * @param componentType the component type
+     * @param insertAfterComponentId Insert the new compnent after the given
+     * component id. If this argument is null, we will place the new component
+     * in the first position.
      */
-    createComponent(nodeId, componentType) {
+    createComponent(nodeId, componentType, insertAfterComponentId) {
 
         if (nodeId != null && componentType != null) {
             // get the node we will create the component in
@@ -5109,7 +5112,7 @@ class ProjectService {
                 }
 
                 // add the component to the node
-                this.addComponentToNode(node, component);
+                this.addComponentToNode(node, component, insertAfterComponentId);
             }
         }
     }
@@ -5331,11 +5334,122 @@ class ProjectService {
      * Add the component to the node
      * @param node the node
      * @param component the component
+     * @param insertAfterComponentId Insert the component after this given
+     * component id. If this argument is null, we will place the new component
+     * in the first position.
      */
-    addComponentToNode(node, component) {
+    addComponentToNode(node, component, insertAfterComponentId) {
 
         if (node != null && component != null) {
-            node.components.push(component);
+
+            if (insertAfterComponentId == null) {
+                /*
+                 * insertAfterComponentId is null so we will place the new
+                 * component in the first position
+                 */
+                node.components.splice(0, 0, component);
+            } else {
+                // place the new component after the insertAfterComponentId
+
+                // boolean flag for whether we have added the component yet
+                var added = false;
+
+                // get the components in the step
+                var components = node.components;
+
+                // loop through all the components
+                for (var c = 0; c < components.length; c++) {
+                    var tempComponent = components[c];
+
+                    if (tempComponent != null && tempComponent.id != null && tempComponent.id == insertAfterComponentId) {
+                        /*
+                         * we have found the component we want to add the new
+                         * one after
+                         */
+
+                        // add the component
+                        components.splice(c + 1, 0, component);
+                        added = true;
+                        break;
+                    }
+                }
+
+                if (!added) {
+                    /*
+                     * the component has not been added yet so we will just add
+                     * it at the end
+                     */
+                    node.components.push(component);
+                }
+            }
+        }
+    }
+
+    /**
+     * Move the component(s) within the node
+     * @param nodeId we are moving component(s) in this node
+     * @param componentIds the component(s) we are moving
+     * @param insertAfterComponentId Insert the component(s) after this given
+     * component id. If this argument is null, we will place the new
+     * component(s) in the first position.
+     */
+    moveComponent(nodeId, componentIds, insertAfterComponentId) {
+
+        // get the node for which we are moving components
+        var node = this.getNodeById(nodeId);
+
+        // get the components in the node
+        var components = node.components;
+
+        var componentsToMove = [];
+
+        // remove the component(s)
+        for (var a = components.length - 1; a >= 0; a--) {
+            var tempComponent = components[a];
+
+            if (tempComponent != null) {
+
+                if (componentIds.indexOf(tempComponent.id) != -1) {
+                    // we have found a component we want to move
+
+                    // add the component to our array of components we are moving
+                    componentsToMove.splice(0, 0, tempComponent);
+
+                    // remove the component from the components array in the node
+                    components.splice(a, 1);
+                }
+            }
+        }
+
+        // insert the component(s)
+        if (insertAfterComponentId == null) {
+            // insert the components at the beginning of the components list
+
+            // loop through all the components we are moving
+            for (var c = 0; c < componentsToMove.length; c++) {
+
+                // insert a component
+                components.splice(c, 0, componentsToMove[c]);
+            }
+        } else {
+            // insert the component(s) after the given insertAfterComponentId
+
+            // loop through all the components
+            for (var b = 0; b < components.length; b++) {
+                var tempComponent = components[b];
+
+                if (tempComponent != null && tempComponent.id == insertAfterComponentId) {
+                    // we have found the component we want to add after
+
+                    // loop through all the components we are moving
+                    for (var c = 0; c < componentsToMove.length; c++) {
+                        // insert a component
+                        components.splice(b + 1 + c, 0, componentsToMove[c]);
+                    }
+
+                    break;
+                }
+            }
         }
     }
 
