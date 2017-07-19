@@ -31,9 +31,6 @@ class DataExportController {
         this.exportType = null;  // type of export: [latestWork, allWork, events]
         this.componentTypeToComponentService = {};
 
-        this.exportScores = false;
-        this.exportComments = false;
-
         this.setDefaultExportSettings();
 
         // get the project
@@ -1845,12 +1842,12 @@ class DataExportController {
                                                 studentDataString = componentState.studentData;
                                             }
 
-                                            if (this.exportStudentWorkIds) {
+                                            if (this.includeStudentWorkIds) {
                                                 // we are exporting student work ids
                                                 workgroupRow[columnIdToColumnIndex[columnIdPrefix + "-studentWorkId"]] = componentState.id;
                                             }
 
-                                            if (this.exportStudentWorkTimestamps) {
+                                            if (this.includeStudentWorkTimestamps) {
                                                 // we are exporting student work timestamps
 
                                                 if (componentState.serverSaveTime != null) {
@@ -1865,7 +1862,7 @@ class DataExportController {
                                             // set the student data string
                                             workgroupRow[columnIdToColumnIndex[columnIdPrefix + "-studentWork"]] = studentDataString;
 
-                                            if (this.exportScores || this.exportComments) {
+                                            if (this.includeScores || this.includeComments) {
                                                 // we are exporting scores or comments
 
                                                 // get the latest score and comment annotation
@@ -1878,7 +1875,7 @@ class DataExportController {
                                                     if (scoreAnnotation != null) {
 
 
-                                                        if (this.exportScoreTimestamps) {
+                                                        if (this.includeScoreTimestamps) {
                                                             // we are exporting score timestamps
 
                                                             // get the score timestamp as a pretty printed date time
@@ -1888,7 +1885,7 @@ class DataExportController {
                                                             workgroupRow[columnIdToColumnIndex[columnIdPrefix + "-scoreTimestamp"]] = scoreTimestamp;
                                                         }
 
-                                                        if (this.exportScores) {
+                                                        if (this.includeScores) {
                                                             // we are exporting scores
 
                                                             if (scoreAnnotation.data != null && scoreAnnotation.data.value != null) {
@@ -1903,7 +1900,7 @@ class DataExportController {
 
                                                     if (commentAnnotation != null) {
 
-                                                        if (this.exportCommentTimestamps) {
+                                                        if (this.includeCommentTimestamps) {
                                                             // we are exporting comment timestamps
 
                                                             // get the comment timestamp as a pretty printed date time
@@ -1913,7 +1910,7 @@ class DataExportController {
                                                             workgroupRow[columnIdToColumnIndex[columnIdPrefix + "-commentTimestamp"]] = commentTimestamp;
                                                         }
 
-                                                        if (this.exportComments) {
+                                                        if (this.includeComments) {
                                                             // we are exporting comments
 
                                                             if (commentAnnotation.data != null && commentAnnotation.data.value != null) {
@@ -1960,7 +1957,7 @@ class DataExportController {
                                     stepTitle = this.ProjectService.getNodePositionAndTitleByNodeId(toNodeId);
                                 }
 
-                                if (this.exportBranchPathTakenNodeId) {
+                                if (this.includeBranchPathTakenNodeId) {
                                     // we are exporting the branch path taken node ids
 
                                     if (toNodeId != null) {
@@ -1970,7 +1967,7 @@ class DataExportController {
                                     }
                                 }
 
-                                if (this.exportBranchPathTaken) {
+                                if (this.includeBranchPathTaken) {
                                     // we are exporting branch path taken
 
                                     var branchLetter = this.ProjectService.getBranchLetter(toNodeId);
@@ -1982,7 +1979,7 @@ class DataExportController {
                                     }
                                 }
 
-                                if (this.exportBranchPathTakenStepTitle) {
+                                if (this.includeBranchPathTakenStepTitle) {
                                     // we are exporting branch path taken step titles
 
                                     if (stepTitle != null) {
@@ -2048,7 +2045,7 @@ class DataExportController {
 
                                 var columnIdPrefix = nodeId + "-" + componentId;
 
-                                if (this.exportStudentWorkIds) {
+                                if (this.includeStudentWorkIds) {
                                     /*
                                      * we are exporting student work ids so we
                                      * will create the column id for the student
@@ -2057,7 +2054,7 @@ class DataExportController {
                                     columnIds.push(columnIdPrefix + "-studentWorkId");
                                 }
 
-                                if (this.exportStudentWorkTimestamps) {
+                                if (this.includeStudentWorkTimestamps) {
                                     /*
                                      * we are exporting timestamps so we will
                                      * create the column id for the timestamp
@@ -2065,12 +2062,12 @@ class DataExportController {
                                     columnIds.push(columnIdPrefix + "-studentWorkTimestamp");
                                 }
 
-                                if (this.exportStudentWork) {
+                                if (this.includeStudentWork) {
                                     // create the column id for the studentWork
                                     columnIds.push(columnIdPrefix + "-studentWork");
                                 }
 
-                                if (this.exportScoreTimestamps) {
+                                if (this.includeScoreTimestamps) {
                                     /*
                                      * we are exporting score timestamps so we
                                      * will create the column id for the score
@@ -2079,12 +2076,12 @@ class DataExportController {
                                     columnIds.push(columnIdPrefix + "-scoreTimestamp");
                                 }
 
-                                if (this.exportScores) {
+                                if (this.includeScores) {
                                     // we are exporting scores so we will create the column id for the score
                                     columnIds.push(columnIdPrefix + "-score");
                                 }
 
-                                if (this.exportCommentTimestamps) {
+                                if (this.includeCommentTimestamps) {
                                     /*
                                      * we are exporting comment timestamps so we
                                      * will create the column id for the comment
@@ -2093,7 +2090,7 @@ class DataExportController {
                                     columnIds.push(columnIdPrefix + "-commentTimestamp");
                                 }
 
-                                if (this.exportComments) {
+                                if (this.includeComments) {
                                     // we are exporting comments so we will create the column id for the comment
                                     columnIds.push(columnIdPrefix + "-comment");
                                 }
@@ -2108,17 +2105,17 @@ class DataExportController {
                     if (this.ProjectService.isBranchPoint(nodeId)) {
                         // the step is a branch point
 
-                        if (this.exportBranchPathTakenNodeId) {
+                        if (this.includeBranchPathTakenNodeId) {
                             // we are exporting branch path taken node ids
                             columnIds.push(nodeId + "-branchPathTakenNodeId");
                         }
 
-                        if (this.exportBranchPathTaken) {
+                        if (this.includeBranchPathTaken) {
                             // we are exporting branch path taken
                             columnIds.push(nodeId + "-branchPathTaken");
                         }
 
-                        if (this.exportBranchPathTakenStepTitle) {
+                        if (this.includeBranchPathTakenStepTitle) {
                             // we are exporting branch path taken step titles
                             columnIds.push(nodeId + "-branchPathTakenStepTitle");
                         }
@@ -2284,7 +2281,7 @@ class DataExportController {
                                 prompt = " ";
                             }
 
-                            if (this.exportStudentWorkIds) {
+                            if (this.includeStudentWorkIds) {
                                 // we are exporting student work ids
 
                                 // fill in the top 7 cells in the column for this component score
@@ -2298,7 +2295,7 @@ class DataExportController {
                                 descriptionRow[columnIdToColumnIndex[columnIdPrefix + "-studentWorkId"]] = "Student Work ID";
                             }
 
-                            if (this.exportStudentWorkTimestamps) {
+                            if (this.includeStudentWorkTimestamps) {
                                 // we are exporting timestamps
 
                                 // fill in the top 7 cells in the column for this component score
@@ -2312,7 +2309,7 @@ class DataExportController {
                                 descriptionRow[columnIdToColumnIndex[columnIdPrefix + "-studentWorkTimestamp"]] = "Student Work Timestamp";
                             }
 
-                            if (this.exportStudentWork) {
+                            if (this.includeStudentWork) {
                                 // we are exporting student work
 
                                 // fill in the top 7 cells in the column for this component student work
@@ -2326,7 +2323,7 @@ class DataExportController {
                                 descriptionRow[columnIdToColumnIndex[columnIdPrefix + "-studentWork"]] = "Student Work";
                             }
 
-                            if (this.exportScoreTimestamps) {
+                            if (this.includeScoreTimestamps) {
                                 // we are exporting score timestamps
 
                                 // fill in the top 7 cells in the column for this component score timestamp
@@ -2340,7 +2337,7 @@ class DataExportController {
                                 descriptionRow[columnIdToColumnIndex[columnIdPrefix + "-scoreTimestamp"]] = "Score Timestamp";
                             }
 
-                            if (this.exportScores) {
+                            if (this.includeScores) {
                                 // we are exporting scores
 
                                 // fill in the top 7 cells in the column for this component score
@@ -2354,7 +2351,7 @@ class DataExportController {
                                 descriptionRow[columnIdToColumnIndex[columnIdPrefix + "-score"]] = "Score";
                             }
 
-                            if (this.exportCommentTimestamps) {
+                            if (this.includeCommentTimestamps) {
                                 // we are exporting comment timestamps
 
                                 // fill in the top 7 cells in the column for this component comment timestamp
@@ -2368,7 +2365,7 @@ class DataExportController {
                                 descriptionRow[columnIdToColumnIndex[columnIdPrefix + "-commentTimestamp"]] = "Comment Timestamp";
                             }
 
-                            if (this.exportComments) {
+                            if (this.includeComments) {
                                 // we are exporting comments
 
                                 // fill in the top 7 cells in the column for this component comment
@@ -2385,7 +2382,7 @@ class DataExportController {
                     }
                 }
 
-                if (this.exportBranchPathTakenNodeId) {
+                if (this.includeBranchPathTakenNodeId) {
                     // we are exporting branch path taken node ids
 
                     if (this.ProjectService.isBranchPoint(nodeId)) {
@@ -2403,7 +2400,7 @@ class DataExportController {
                     }
                 }
 
-                if (this.exportBranchPathTaken) {
+                if (this.includeBranchPathTaken) {
                     // we are exporting the branch path taken
 
                     if (this.ProjectService.isBranchPoint(nodeId)) {
@@ -2421,7 +2418,7 @@ class DataExportController {
                     }
                 }
 
-                if (this.exportBranchPathTakenStepTitle) {
+                if (this.includeBranchPathTakenStepTitle) {
                     // we are exporting branch path taken step titles
 
                     if (this.ProjectService.isBranchPoint(nodeId)) {
@@ -2583,22 +2580,21 @@ class DataExportController {
         // enable all the settings
 
         // settings for one workgroup per row export
-        this.exportStudentWork = true;
-        this.exportStudentWorkIds = true;
-        this.exportStudentWorkTimestamps = true;
-        this.exportBranchPathTaken = true;
-        this.exportBranchPathTakenStepTitle = true;
-        this.exportBranchPathTakenNodeId = true;
-        this.exportScores = true;
-        this.exportScoreTimestamps = true;
-        this.exportComments = true;
-        this.exportCommentTimestamps = true;
+        this.includeStudentWork = true;
+        this.includeStudentWorkIds = true;
+        this.includeStudentWorkTimestamps = true;
+        this.includeBranchPathTaken = true;
+        this.includeBranchPathTakenStepTitle = true;
+        this.includeBranchPathTakenNodeId = true;
+        this.includeScores = true;
+        this.includeScoreTimestamps = true;
+        this.includeComments = true;
+        this.includeCommentTimestamps = true;
         this.exportStepSelectionType = 'exportAllSteps';
 
         // settings for raw data export
-        this.exportStudentWork = true;
-        this.exportAnnotations = true;
-        this.exportEvents = true;
+        this.includeAnnotations = true;
+        this.includeEvents = true;
     }
 
     /**
@@ -2608,22 +2604,21 @@ class DataExportController {
         // enable the default settings
 
         // settings for one workgroup per row export
-        this.exportStudentWork = true;
-        this.exportStudentWorkIds = false;
-        this.exportStudentWorkTimestamps = false;
-        this.exportBranchPathTaken = true;
-        this.exportBranchPathTakenStepTitle = false;
-        this.exportBranchPathTakenNodeId = false;
-        this.exportScores = false;
-        this.exportScoreTimestamps = false;
-        this.exportComments = false;
-        this.exportCommentTimestamps = false;
+        this.includeStudentWork = true;
+        this.includeStudentWorkIds = false;
+        this.includeStudentWorkTimestamps = false;
+        this.includeBranchPathTaken = true;
+        this.includeBranchPathTakenStepTitle = false;
+        this.includeBranchPathTakenNodeId = false;
+        this.includeScores = false;
+        this.includeScoreTimestamps = false;
+        this.includeComments = false;
+        this.includeCommentTimestamps = false;
         this.exportStepSelectionType = 'exportAllSteps';
 
         // settings for raw data export
-        this.exportStudentWork = true;
-        this.exportAnnotations = false;
-        this.exportEvents = false;
+        this.includeAnnotations = false;
+        this.includeEvents = false;
     }
 
     /**
@@ -2695,7 +2690,7 @@ class DataExportController {
                     // get the workgroup id
                     var workgroupId = workgroup.workgroupId;
 
-                    if (this.exportStudentWork) {
+                    if (this.includeStudentWork) {
                         // the user wants to export the student work
                         workgroup.studentWork = [];
 
@@ -2725,7 +2720,7 @@ class DataExportController {
                         }
                     }
 
-                    if (this.exportAnnotations) {
+                    if (this.includeAnnotations) {
                         // the user wants to export the annotations
                         workgroup.annotations = [];
 
@@ -2755,7 +2750,7 @@ class DataExportController {
                         }
                     }
 
-                    if (this.exportEvents) {
+                    if (this.includeEvents) {
                         // the user wants to export the events
                         workgroup.events = [];
 
