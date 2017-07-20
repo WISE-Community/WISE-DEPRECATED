@@ -66,10 +66,6 @@ class StepToolsController {
     goToNextNode() {
         this.NodeService.goToNextNode();
     }
-
-    closeNode() {
-        this.NodeService.closeNode();
-    }
 }
 
 StepToolsController.$inject = [
@@ -110,9 +106,6 @@ const StepTools = {
             <md-button aria-label="{{ 'nextStep' | translate }}" class="md-icon-button node-nav"
                        ng-disabled="!$ctrl.nextId" ng-click="$ctrl.goToNextNode()">
                 <md-icon> arrow_forward </md-icon>
-            </md-button>
-            <md-button aria-label="{{ 'backToProject' | translate }}" class="md-icon-button node-nav" ng-click="$ctrl.closeNode()">
-                <md-icon md-theme="default"> view_list </md-icon>
             </md-button>
         </div>`,
     controller: StepToolsController

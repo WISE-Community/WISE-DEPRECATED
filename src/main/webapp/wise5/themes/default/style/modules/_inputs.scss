@@ -38,17 +38,6 @@ $input-action-vertical-offset-richtext: -7px;
     border: 1px solid color('gray');
     margin-bottom: 8px;
 
-    &.input--textarea--hasaction {
-        padding-right: $input-action-width;
-        min-height: 96px;
-        float: none;
-
-        .mce-toolbar-grp {
-            padding-right: $input-action-width;
-        }
-
-    }
-
     &:focus {
         background-color: #ffffff;
     }
@@ -65,7 +54,6 @@ $input-action-vertical-offset-richtext: -7px;
 .input--textarea--disabled {
     color: color('text-secondary');
 }
-
 
 .input--textarea__action {
     position: absolute;

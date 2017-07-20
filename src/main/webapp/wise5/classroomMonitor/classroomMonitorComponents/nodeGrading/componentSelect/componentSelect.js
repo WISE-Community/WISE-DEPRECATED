@@ -54,15 +54,17 @@ var ComponentSelectController = function () {
             if (nodeContent) {
                 components = nodeContent.components;
 
-                for (var c = 0; c < components.length; c++) {
-                    var component = components[c];
+                if (components) {
+                    for (var c = 0; c < components.length; c++) {
+                        var component = components[c];
 
-                    // set whether component captures student work (for filtering purposes)
-                    component.hasWork = this.ProjectService.componentHasWork(component);
+                        // set whether component captures student work (for filtering purposes)
+                        component.hasWork = this.ProjectService.componentHasWork(component);
 
-                    if (component.hasWork) {
-                        // component has work, so add it to the initial selectedComponents array
-                        this.selectedComponents.push(component.id);
+                        if (component.hasWork) {
+                            // component has work, so add it to the initial selectedComponents array
+                            this.selectedComponents.push(component.id);
+                        }
                     }
                 }
             }

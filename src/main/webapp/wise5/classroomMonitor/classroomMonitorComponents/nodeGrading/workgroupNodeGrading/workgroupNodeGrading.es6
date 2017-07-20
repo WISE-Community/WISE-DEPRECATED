@@ -139,9 +139,9 @@ const WorkgroupNodeGrading = {
     },
     template:
         `<div class="nav-item__grading">
-            <div id="{{component.id}}_{{$ctrl.workgroupId}}" class="component--grading" ng-repeat='component in $ctrl.components | filter:{hasWork: true}'>
+            <div id="component_{{component.id}}_{{$ctrl.workgroupId}}" class="component component--grading" ng-repeat='component in $ctrl.components | filter:{hasWork: true}'>
                 <div ng-show="$ctrl.isComponentVisible(component.id)">
-                    <div class="accent-2 md-body-2 component-header">{{ $index+1 + '. ' + $ctrl.getComponentTypeLabel(component.type) }}</div>
+                    <div class="accent-2 md-body-2 component__header">{{ $index+1 + '. ' + $ctrl.getComponentTypeLabel(component.type) }}</div>
                     <component ng-if='component.showPreviousWorkNodeId != null && component.showPreviousWorkComponentId != null && component.showPreviousWorkNodeId != "" && component.showPreviousWorkComponentId != ""'
                                class="component-container"
                                node-id='{{component.showPreviousWorkNodeId}}'

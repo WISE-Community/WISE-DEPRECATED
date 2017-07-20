@@ -9,7 +9,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var ClassroomMonitorController = function () {
-    function ClassroomMonitorController($filter, $mdDialog, $mdToast, $rootScope, $scope, $state, $stateParams, $window, ConfigService, NotebookService, NotificationService, ProjectService, SessionService, TeacherDataService, TeacherWebSocketService) {
+    function ClassroomMonitorController($filter, $mdDialog, $mdToast, $rootScope, $scope, $state, $stateParams, $window, ConfigService, NodeService, NotebookService, NotificationService, ProjectService, SessionService, TeacherDataService, TeacherWebSocketService) {
         var _this = this;
 
         _classCallCheck(this, ClassroomMonitorController);
@@ -22,6 +22,7 @@ var ClassroomMonitorController = function () {
         this.$stateParams = $stateParams;
         this.$window = $window;
         this.ConfigService = ConfigService;
+        this.NodeService = NodeService;
         this.NotebookService = NotebookService;
         this.NotificationService = NotificationService;
         this.ProjectService = ProjectService;
@@ -41,53 +42,47 @@ var ClassroomMonitorController = function () {
         this.showToolbar = true; // boolean to indicate whether to show the monitor toolbar
         this.showStepTools = false; // boolean to indicate whether to show the step toolbar
 
-        // ui-views and their corresponding names, labels, and icons
+        // ui-views and their corresponding names and icons
         this.views = {
             'root.dashboard': {
-                name: this.$translate('dashboardView'),
-                label: this.$translate('dashboardViewLabel'),
+                name: this.$translate('dashboard'),
                 icon: 'dashboard',
                 type: 'primary',
                 active: false
             },
             'root.nodeProgress': {
-                name: this.$translate('projectView'),
-                label: this.$translate('projectViewLabel'),
-                icon: 'assignment_turned_in',
+                name: this.$translate('gradeByStep'),
+                icon: 'view_list',
                 type: 'primary',
+                action: function action() {
+                    var currentView = _this.$state.current.name;
+                    if (currentView === 'root.nodeProgress') {
+                        // if we're currently grading a step, close the node when a nodeProgress menu button is clicked
+                        _this.NodeService.closeNode();
+                    }
+                },
                 active: true
             },
             'root.studentProgress': {
-                name: this.$translate('studentView'),
-                label: this.$translate('studentViewLabel'),
+                name: this.$translate('gradeByStudent'),
                 icon: 'people',
                 type: 'primary',
                 active: true
             },
             'root.notebooks': {
-                name: this.$translate('notebookView'),
-                label: this.$translate('notebookViewLabel'),
+                name: this.$translate('studentNotebooks'),
                 icon: 'chrome_reader_mode',
                 type: 'primary',
                 active: this.NotebookService.isNotebookEnabled()
             },
             'root.export': {
-                name: this.$translate('exportView'),
-                label: this.$translate('exportViewLabel'),
+                name: this.$translate('dataExport'),
                 icon: 'file_download',
                 type: 'secondary',
                 active: true
             },
-            'root.notes': {
-                name: this.$translate('notesTipsView'),
-                label: this.$translate('notesTipsViewLabel'),
-                icon: 'speaker_notes',
-                type: 'secondary',
-                active: false
-            },
             'root.milestones': {
-                name: this.$translate('milestonesView'),
-                label: this.$translate('milestonesViewLabel'),
+                name: this.$translate('milestones'),
                 icon: 'flag',
                 type: 'primary',
                 active: true
@@ -252,7 +247,7 @@ var ClassroomMonitorController = function () {
     return ClassroomMonitorController;
 }();
 
-ClassroomMonitorController.$inject = ['$filter', '$mdDialog', '$mdToast', '$rootScope', '$scope', '$state', '$stateParams', '$window', 'ConfigService', 'NotebookService', 'NotificationService', 'ProjectService', 'SessionService', 'TeacherDataService', 'TeacherWebSocketService'];
+ClassroomMonitorController.$inject = ['$filter', '$mdDialog', '$mdToast', '$rootScope', '$scope', '$state', '$stateParams', '$window', 'ConfigService', 'NodeService', 'NotebookService', 'NotificationService', 'ProjectService', 'SessionService', 'TeacherDataService', 'TeacherWebSocketService'];
 
 exports.default = ClassroomMonitorController;
 //# sourceMappingURL=classroomMonitorController.js.map
