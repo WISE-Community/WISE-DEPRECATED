@@ -38,7 +38,7 @@ class TeacherDataService {
         this.runStatus = null;
         this.periods = [];
         this.nodeGradingSort = 'team';
-        this.studentProgressSort = 'team';
+        this.studentProgressSort = 'team student';
 
         /**
          * Listen for the 'annotationSavedToServer' event which is fired when
