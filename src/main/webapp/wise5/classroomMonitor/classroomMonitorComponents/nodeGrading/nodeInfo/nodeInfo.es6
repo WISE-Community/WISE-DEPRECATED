@@ -91,9 +91,7 @@ const NodeInfo = {
         </md-card>
         <md-card class="node-info node-content" style="border-color: {{ $ctrl.color }};">
             <md-card-content>
-                <div id="{{component.id}}"
-                     class="component-section"
-                     ng-repeat='component in $ctrl.components'>
+                <div id="component_{{component.id}}" ng-repeat='component in $ctrl.components' class="component">
                     <md-divider class="divider divider--dashed" ng-if="!$first"></md-divider>
                     <component ng-if='component.showPreviousWorkNodeId != null && component.showPreviousWorkComponentId != null && component.showPreviousWorkNodeId != "" && component.showPreviousWorkComponentId != ""'
                                node-id='{{component.showPreviousWorkNodeId}}'

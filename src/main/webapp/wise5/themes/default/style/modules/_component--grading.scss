@@ -1,5 +1,6 @@
 .component--grading {
-    position: relative;
+    padding: 0;
+    margin: 0;
 
     &:not(:last-child) {
         > div {
@@ -11,12 +12,12 @@
         display: block;
     }
 
-    .component-wrapper {
+    .component {
         padding: 0;
         margin: 0;
     }
 
-    .component {
+    .component__content {
         padding: 16px;
     }
 

@@ -1,17 +1,10 @@
-.component-wrapper {
+.component {
     padding: 0 16px;
     margin: 24px 0;
-}
-
-.component-section {
     position: relative;
 }
 
-.component-header {
-    padding: 12px 16px 0;
-}
-
-.component {
+.component__content {
     overflow-x: auto;
     font-size: rem(1.5);
     overflow-y: hidden; // TODO: figure out why this is needed after update to ng-material 1.1.1
@@ -21,6 +14,10 @@
     }
 }
 
+.component__header {
+    padding: 12px 16px 0;
+}
+
 .component__rubric {
     position: absolute;
     left: -20px;
@@ -28,7 +25,7 @@
 }
 
 .notebook-enabled {
-    .component {
+    .component_content {
         img {
             transition: all 250ms;
             cursor: pointer;

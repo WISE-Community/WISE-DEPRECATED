@@ -8,7 +8,7 @@
                        icon="'info'"
                        icon-class="'info'"></help-icon>
         </div>
-        <div id="component_{{component.id}}" class="component-section"
+        <div id="component_{{component.id}}" class="component"
              ng-repeat='component in nodeController.getComponents()'
              flex="100" flex-gt-sm="{{component.componentWidth ? component.componentWidth : 100}}">
             <div ng-if="component.rubric && nodeController.mode === 'preview'" class="component__rubric">

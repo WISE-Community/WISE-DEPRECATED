@@ -225,7 +225,13 @@ $input-action-vertical-offset-richtext: -7px;
         margin-right: -16px;
     }
 
-    .component, .component-wrapper {
+    .component {
+        &:first-child {
+            margin-top: 12px;
+        }
+    }
+
+    .component, .component__content {
         margin-left: -8px;
         margin-right: -8px;
     }
