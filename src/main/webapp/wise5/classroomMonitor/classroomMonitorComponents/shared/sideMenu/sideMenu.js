@@ -32,7 +32,7 @@ var SideMenu = {
         onMenuToggle: '&'
     },
     controller: SideMenuController,
-    template: '<div class="menu-sidebar">\n            <md-button ng-repeat="(key, value) in $ctrl.views"\n                       ng-if="value.type === \'primary\' && value.active"\n                       aria-label="{{ value.label }}"\n                       ui-sref="{{ key }}"\n                       class="md-icon-button menu-sidebar__link">\n                <md-icon ng-class="{\'primary\': $ctrl.state.$current.name === key}"> {{ value.icon }} </md-icon>\n                <md-tooltip md-direction="right">{{ value.name }}</md-tooltip>\n            </md-button>\n            <md-divider></md-divider>\n            <md-button aria-label="{{ \'mainMenu\' | translate }}"\n                       ng-click="$ctrl.toggleMenu()"\n                       class="md-icon-button menu-sidebar__link">\n                <md-icon ng-class="{\'primary\': $ctrl.views[$ctrl.state.$current.name].type !== \'primary\'}"> more_horiz </md-icon>\n            </md-button>\n        </div>'
+    template: '<div class="menu-sidebar">\n            <md-button ng-repeat="(key, value) in $ctrl.views"\n                       ng-if="value.type === \'primary\' && value.active"\n                       aria-label="{{ value.name }}"\n                       ui-sref="{{ key }}"\n                       ng-click="value.action()"\n                       class="md-icon-button menu-sidebar__link">\n                <md-icon ng-class="{\'primary\': $ctrl.state.$current.name === key}"> {{ value.icon }} </md-icon>\n                <md-tooltip md-direction="right">{{ value.name }}</md-tooltip>\n            </md-button>\n        </div>'
 };
 
 exports.default = SideMenu;

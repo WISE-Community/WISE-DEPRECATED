@@ -16,6 +16,7 @@ const MainMenu = {
                               ng-if="value.type === 'primary' && value.active"
                               aria-label="{{ value.label }}"
                               ui-sref="{{ key }}"
+                              ng-click="value.action()"
                               ng-class="{'active': $ctrl.state.$current.name === key}">
                     <md-icon class="menu-sidenav__icon"> {{ value.icon }} </md-icon>
                     <p class="menu-sidenav__item">{{ value.name }}</p>
@@ -27,6 +28,7 @@ const MainMenu = {
                               ng-if="value.type === 'secondary' && value.active"
                               aria-label="{{ value.label }}"
                               ui-sref="{{ key }}"
+                              ng-click="value.action()"
                               ng-class="{'active': $ctrl.state.$current.name === key}">
                     <md-icon class="menu-sidenav__icon"> {{ value.icon }} </md-icon>
                     <p class="menu-sidenav__item">{{ value.name }}</p>
