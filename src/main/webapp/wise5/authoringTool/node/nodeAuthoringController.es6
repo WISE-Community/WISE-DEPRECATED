@@ -2581,6 +2581,20 @@ class NodeAuthoringController {
     }
 
     /**
+     * Turn on the copy component mode
+     */
+    turnOnCopyComponentMode() {
+        this.copyComponentMode = true;
+    }
+
+    /**
+     * Turn off the copy component mode
+     */
+    turnOffCopyComponentMode() {
+        this.copyComponentMode = false;
+    }
+
+    /**
      * Get the components that have been selected
      * @return an array of component ids that have been selected
      */
@@ -2608,6 +2622,17 @@ class NodeAuthoringController {
         }
 
         return selectedComponents;
+    }
+
+    /**
+     * Uncheck all the components
+     */
+    clearComponentsToChecked() {
+        /*
+         * clear the components to checked mappings so that all the component
+         * checkboxes are no longer checked
+         */
+        this.componentsToChecked = {};
     }
 
     /**
@@ -2649,6 +2674,10 @@ class NodeAuthoringController {
         return selectedComponents;
     }
 
+    importButtonClicked() {
+        
+    }
+
     /**
      * The move component button was clicked
      */
@@ -2674,6 +2703,12 @@ class NodeAuthoringController {
      * The copy component button was clicked
      */
     copyButtonClicked() {
+
+        // hide the other views
+        this.nodeAuthoringViewButtonClicked("copy");
+
+        // turn on the move component mode
+        this.turnOnCopyComponentMode();
 
         // turn on the insert component mode
         this.turnOnInsertComponentMode();
@@ -2823,6 +2858,8 @@ class NodeAuthoringController {
      */
     insertComponentAsFirst() {
 
+        let newComponents = [];
+
         if (this.addComponentMode) {
             // create a component and add it to this node
             this.ProjectService.createComponent(this.nodeId, this.selectedComponent, null);
@@ -2832,34 +2869,33 @@ class NodeAuthoringController {
         } else if (this.moveComponentMode) {
 
             // get the component ids we are moving
-            var selectedComponentIds = this.getSelectedComponentIds();
+            let selectedComponentIds = this.getSelectedComponentIds();
 
             // move the components to their new location
             this.ProjectService.moveComponent(this.nodeId, selectedComponentIds, null);
 
             // turn off the move component mode
             this.turnOffMoveComponentMode();
+        } else if (this.copyComponentMode) {
+
+            // get the component ids we are moving
+            let selectedComponentIds = this.getSelectedComponentIds();
+
+            // copy the components to their new location
+            newComponents = this.ProjectService.copyComponentAndInsert(this.nodeId, selectedComponentIds, null);
+
+            // turn off the copy component mode
+            this.turnOffCopyComponentMode();
         }
 
         // save the project
         this.ProjectService.saveProject();
 
         /*
-         * Wait a small amount of time before returning the UI back to the
-         * normal view. This allows the author to see the component number
-         * and type view a little longer so that they can see the change
-         * they just made before we switch back to the normal view.
+         * temporarily highlight the new components and then show the component
+         * authoring views
          */
-        this.$timeout(() => {
-            // show the component authoring
-            this.showComponentAuthoring();
-
-            // turn off the insert component mode
-            this.turnOffInsertComponentMode();
-
-            // hide the create component elements
-            this.showCreateComponent = false;
-        }, 2000);
+        this.highlightNewComponentsAndThenShowComponentAuthoring(newComponents);
     }
 
     /**
@@ -2867,6 +2903,8 @@ class NodeAuthoringController {
      * @param componentId insert the component after this given component id
      */
     insertComponentAfter(componentId) {
+
+        let newComponents = [];
 
         if (this.addComponentMode) {
             // create a component and add it to this node
@@ -2884,27 +2922,113 @@ class NodeAuthoringController {
 
             // turn off the move component mode
             this.turnOffMoveComponentMode();
+        } else if (this.copyComponentMode) {
+
+            // get the component ids we are moving
+            var selectedComponentIds = this.getSelectedComponentIds();
+
+            // copy the components to their new location
+            newComponents = this.ProjectService.copyComponentAndInsert(this.nodeId, selectedComponentIds, componentId);
+
+            // turn off the copy component mode
+            this.turnOffCopyComponentMode();
         }
 
         // save the project
         this.ProjectService.saveProject();
 
         /*
-         * Wait a small amount of time before returning the UI back to the
-         * normal view. This allows the author to see the component number
-         * and type view a little longer so that they can see the change
-         * they just made before we switch back to the normal view.
+         * temporarily highlight the new components and then show the component
+         * authoring views
          */
+        this.highlightNewComponentsAndThenShowComponentAuthoring(newComponents);
+    }
+
+    /**
+     * Temporarily highlight the new components and then show the component
+     * authoring views
+     * @param newComponents an array of the new components we have just added
+     */
+    highlightNewComponentsAndThenShowComponentAuthoring(newComponents) {
+
+        // use a timeout to allow the components time to show up in the UI
         this.$timeout(() => {
-            // show the component authoring
-            this.showComponentAuthoring();
+            if (newComponents != null) {
 
-            // turn off the insert component mode
-            this.turnOffInsertComponentMode();
+                var scrollPosition = null;
 
-            // hide the create component elements
-            this.showCreateComponent = false;
-        }, 2000);
+                // loop through all the new components
+                for (var n = 0; n < newComponents.length; n++) {
+                    var newComponent = newComponents[n];
+
+                    if (newComponent != null) {
+
+                        // get the component UI element
+                        let componentElement = $("#" + newComponent.id);
+
+                        // save the original background color
+                        let originalBackgroundColor = componentElement.css("backgroundColor");
+
+                        // highlight the background briefly to draw attention to it
+                        componentElement.css("background-color", "#FFFF9C");
+
+                        /*
+                         * Use a timeout before starting to transition back to
+                         * the original background color. For some reason the
+                         * element won't get highlighted in the first place
+                         * unless this timeout is used.
+                         */
+                        this.$timeout(() => {
+                            // slowly fade back to original background color
+                            componentElement.css({
+                                'transition': 'background-color 3s ease-in-out',
+                                'background-color': originalBackgroundColor
+                            });
+                        });
+                    }
+                }
+            }
+
+            /*
+             * Wait a small amount of time before returning the UI back to the
+             * normal view. This allows the author to see the component number
+             * and type view a little longer so that they can see the change
+             * they just made before we switch back to the normal view.
+             */
+            this.$timeout(() => {
+                // show the component authoring
+                this.showComponentAuthoring();
+
+                // turn off the insert component mode
+                this.turnOffInsertComponentMode();
+
+                // hide the create component elements
+                this.showCreateComponent = false;
+
+                // uncheck all the component checkboxes
+                this.clearComponentsToChecked();
+
+                /*
+                 * use a timeout to wait for the UI to update and then scroll
+                 * to the first new component
+                 */
+                this.$timeout(() => {
+
+                    if (newComponents != null && newComponents.length > 0) {
+
+                        // get the UI element of the first new component
+                        let componentElement = $("#" + newComponents[0].id);
+
+                        if (componentElement != null) {
+                            // scroll to the first new component that we've added
+                            $('#content').animate({
+                                scrollTop: componentElement.prop("offsetTop") - 60
+                            }, 1000);
+                        }
+                    }
+                });
+            }, 2000);
+        });
     }
 };
 

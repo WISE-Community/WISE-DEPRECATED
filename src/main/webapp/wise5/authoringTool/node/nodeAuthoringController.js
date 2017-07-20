@@ -2643,6 +2643,26 @@ var NodeAuthoringController = function () {
         }
 
         /**
+         * Turn on the copy component mode
+         */
+
+    }, {
+        key: 'turnOnCopyComponentMode',
+        value: function turnOnCopyComponentMode() {
+            this.copyComponentMode = true;
+        }
+
+        /**
+         * Turn off the copy component mode
+         */
+
+    }, {
+        key: 'turnOffCopyComponentMode',
+        value: function turnOffCopyComponentMode() {
+            this.copyComponentMode = false;
+        }
+
+        /**
          * Get the components that have been selected
          * @return an array of component ids that have been selected
          */
@@ -2673,6 +2693,20 @@ var NodeAuthoringController = function () {
             }
 
             return selectedComponents;
+        }
+
+        /**
+         * Uncheck all the components
+         */
+
+    }, {
+        key: 'clearComponentsToChecked',
+        value: function clearComponentsToChecked() {
+            /*
+             * clear the components to checked mappings so that all the component
+             * checkboxes are no longer checked
+             */
+            this.componentsToChecked = {};
         }
 
         /**
@@ -2716,6 +2750,9 @@ var NodeAuthoringController = function () {
 
             return selectedComponents;
         }
+    }, {
+        key: 'importButtonClicked',
+        value: function importButtonClicked() {}
 
         /**
          * The move component button was clicked
@@ -2748,6 +2785,12 @@ var NodeAuthoringController = function () {
     }, {
         key: 'copyButtonClicked',
         value: function copyButtonClicked() {
+
+            // hide the other views
+            this.nodeAuthoringViewButtonClicked("copy");
+
+            // turn on the move component mode
+            this.turnOnCopyComponentMode();
 
             // turn on the insert component mode
             this.turnOnInsertComponentMode();
@@ -2909,7 +2952,8 @@ var NodeAuthoringController = function () {
     }, {
         key: 'insertComponentAsFirst',
         value: function insertComponentAsFirst() {
-            var _this3 = this;
+
+            var newComponents = [];
 
             if (this.addComponentMode) {
                 // create a component and add it to this node
@@ -2927,27 +2971,26 @@ var NodeAuthoringController = function () {
 
                 // turn off the move component mode
                 this.turnOffMoveComponentMode();
+            } else if (this.copyComponentMode) {
+
+                // get the component ids we are moving
+                var _selectedComponentIds = this.getSelectedComponentIds();
+
+                // copy the components to their new location
+                newComponents = this.ProjectService.copyComponentAndInsert(this.nodeId, _selectedComponentIds, null);
+
+                // turn off the copy component mode
+                this.turnOffCopyComponentMode();
             }
 
             // save the project
             this.ProjectService.saveProject();
 
             /*
-             * Wait a small amount of time before returning the UI back to the
-             * normal view. This allows the author to see the component number
-             * and type view a little longer so that they can see the change
-             * they just made before we switch back to the normal view.
+             * temporarily highlight the new components and then show the component
+             * authoring views
              */
-            this.$timeout(function () {
-                // show the component authoring
-                _this3.showComponentAuthoring();
-
-                // turn off the insert component mode
-                _this3.turnOffInsertComponentMode();
-
-                // hide the create component elements
-                _this3.showCreateComponent = false;
-            }, 2000);
+            this.highlightNewComponentsAndThenShowComponentAuthoring(newComponents);
         }
 
         /**
@@ -2958,7 +3001,8 @@ var NodeAuthoringController = function () {
     }, {
         key: 'insertComponentAfter',
         value: function insertComponentAfter(componentId) {
-            var _this4 = this;
+
+            var newComponents = [];
 
             if (this.addComponentMode) {
                 // create a component and add it to this node
@@ -2976,27 +3020,119 @@ var NodeAuthoringController = function () {
 
                 // turn off the move component mode
                 this.turnOffMoveComponentMode();
+            } else if (this.copyComponentMode) {
+
+                // get the component ids we are moving
+                var selectedComponentIds = this.getSelectedComponentIds();
+
+                // copy the components to their new location
+                newComponents = this.ProjectService.copyComponentAndInsert(this.nodeId, selectedComponentIds, componentId);
+
+                // turn off the copy component mode
+                this.turnOffCopyComponentMode();
             }
 
             // save the project
             this.ProjectService.saveProject();
 
             /*
-             * Wait a small amount of time before returning the UI back to the
-             * normal view. This allows the author to see the component number
-             * and type view a little longer so that they can see the change
-             * they just made before we switch back to the normal view.
+             * temporarily highlight the new components and then show the component
+             * authoring views
              */
+            this.highlightNewComponentsAndThenShowComponentAuthoring(newComponents);
+        }
+
+        /**
+         * Temporarily highlight the new components and then show the component
+         * authoring views
+         * @param newComponents an array of the new components we have just added
+         */
+
+    }, {
+        key: 'highlightNewComponentsAndThenShowComponentAuthoring',
+        value: function highlightNewComponentsAndThenShowComponentAuthoring(newComponents) {
+            var _this3 = this;
+
+            // use a timeout to allow the components time to show up in the UI
             this.$timeout(function () {
-                // show the component authoring
-                _this4.showComponentAuthoring();
+                if (newComponents != null) {
 
-                // turn off the insert component mode
-                _this4.turnOffInsertComponentMode();
+                    var scrollPosition = null;
 
-                // hide the create component elements
-                _this4.showCreateComponent = false;
-            }, 2000);
+                    // loop through all the new components
+                    for (var n = 0; n < newComponents.length; n++) {
+                        var newComponent = newComponents[n];
+
+                        if (newComponent != null) {
+                            (function () {
+
+                                // get the component UI element
+                                var componentElement = $("#" + newComponent.id);
+
+                                // save the original background color
+                                var originalBackgroundColor = componentElement.css("backgroundColor");
+
+                                // highlight the background briefly to draw attention to it
+                                componentElement.css("background-color", "#FFFF9C");
+
+                                /*
+                                 * Use a timeout before starting to transition back to
+                                 * the original background color. For some reason the
+                                 * element won't get highlighted in the first place
+                                 * unless this timeout is used.
+                                 */
+                                _this3.$timeout(function () {
+                                    // slowly fade back to original background color
+                                    componentElement.css({
+                                        'transition': 'background-color 3s ease-in-out',
+                                        'background-color': originalBackgroundColor
+                                    });
+                                });
+                            })();
+                        }
+                    }
+                }
+
+                /*
+                 * Wait a small amount of time before returning the UI back to the
+                 * normal view. This allows the author to see the component number
+                 * and type view a little longer so that they can see the change
+                 * they just made before we switch back to the normal view.
+                 */
+                _this3.$timeout(function () {
+                    // show the component authoring
+                    _this3.showComponentAuthoring();
+
+                    // turn off the insert component mode
+                    _this3.turnOffInsertComponentMode();
+
+                    // hide the create component elements
+                    _this3.showCreateComponent = false;
+
+                    // uncheck all the component checkboxes
+                    _this3.clearComponentsToChecked();
+
+                    /*
+                     * use a timeout to wait for the UI to update and then scroll
+                     * to the first new component
+                     */
+                    _this3.$timeout(function () {
+
+                        if (newComponents != null && newComponents.length > 0) {
+
+                            // get the UI element of the first new component
+                            var componentElement = $("#" + newComponents[0].id);
+
+                            if (componentElement != null) {
+                                // scroll to the first new component that we've added
+                                $('#content').animate({
+                                    scrollTop: componentElement.prop("offsetTop") - 60
+                                }, 1000);
+                            }
+                        }
+                    });
+                }, 2000);
+            });
         }
     }]);
 

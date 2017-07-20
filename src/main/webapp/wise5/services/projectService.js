@@ -4527,12 +4527,15 @@ var ProjectService = function () {
         key: 'moveNodesInside',
         value: function moveNodesInside(nodeIds, nodeId) {
 
+            var movedNodes = [];
+
             // loop through all the nodes we are moving
             for (var n = 0; n < nodeIds.length; n++) {
 
                 // get the node we are moving
                 var tempNodeId = nodeIds[n];
                 var tempNode = this.getNodeById(tempNodeId);
+                movedNodes.push(tempNode);
 
                 var movingNodeIsActive = this.isActive(tempNodeId);
                 var stationaryNodeIsActive = this.isActive(nodeId);
@@ -4605,6 +4608,8 @@ var ProjectService = function () {
                  */
                 nodeId = tempNode.id;
             }
+
+            return movedNodes;
         }
 
         /**
@@ -4617,12 +4622,15 @@ var ProjectService = function () {
         key: 'moveNodesAfter',
         value: function moveNodesAfter(nodeIds, nodeId) {
 
+            var movedNodes = [];
+
             // loop through all the nodes we are moving
             for (var n = 0; n < nodeIds.length; n++) {
 
                 // get the node we are moving
                 var tempNodeId = nodeIds[n];
                 var node = this.getNodeById(tempNodeId);
+                movedNodes.push(node);
 
                 var movingNodeIsActive = this.isActive(tempNodeId);
                 var stationaryNodeIsActive = this.isActive(nodeId);
@@ -4673,6 +4681,8 @@ var ProjectService = function () {
                 // remember the node id so we can put the next node (if any) after this one
                 nodeId = node.id;
             }
+
+            return movedNodes;
         }
 
         /**
@@ -4684,6 +4694,9 @@ var ProjectService = function () {
     }, {
         key: 'copyNodesInside',
         value: function copyNodesInside(nodeIds, nodeId) {
+
+            var newNodes = [];
+
             // loop through all the nodes we are copying
             for (var n = 0; n < nodeIds.length; n++) {
 
@@ -4707,7 +4720,11 @@ var ProjectService = function () {
                 // remember the node id so we can put the next node (if any) after this one
                 nodeId = newNodeId;
                 this.parseProject(); // refresh project and update references because a new node have been added.
+
+                newNodes.push(newNode);
             }
+
+            return newNodes;
         }
 
         /**
@@ -4719,6 +4736,9 @@ var ProjectService = function () {
     }, {
         key: 'copyNodesAfter',
         value: function copyNodesAfter(nodeIds, nodeId) {
+
+            var newNodes = [];
+
             // loop through all the nodes we are copying
             for (var n = 0; n < nodeIds.length; n++) {
 
@@ -4734,7 +4754,11 @@ var ProjectService = function () {
                 // remember the node id so we can put the next node (if any) after this one
                 nodeId = newNodeId;
                 this.parseProject(); // refresh project and update references because a new node have been added.
+
+                newNodes.push(newNode);
             }
+
+            return newNodes;
         }
 
         /**
@@ -8551,12 +8575,22 @@ var ProjectService = function () {
 
         /**
          * Get an unused component id
+         * @param componentIdsToSkip (optional) An array of additional component ids
+         * to skip. This is used when we are creating multiple new components. There
+         * is avery small chance that we create duplicate component ids that aren't
+         * already in the project. We avoid this problem by using this parameter.
+         * Example
+         * We want to create two new components. We first generate a new component
+         * id for the first new component for example "1234567890". Then we generate
+         * a new component id for the second new component and pass in
+         * ["1234567890"] as componentIdsToSkip because the new "1234567890"
+         * component hasn't actually been added to the project yet.
          * @return a component id that isn't already being used in the project
          */
 
     }, {
         key: 'getUnusedComponentId',
-        value: function getUnusedComponentId() {
+        value: function getUnusedComponentId(componentIdsToSkip) {
             // we want to make an id with 10 characters
             var idLength = 10;
 
@@ -8581,6 +8615,14 @@ var ProjectService = function () {
 
                     // check if the id is already being used in the project
                     alreadyUsed = this.isComponentIdUsed(newComponentId);
+
+                    if (componentIdsToSkip != null && componentIdsToSkip.indexOf(newComponentId) != -1) {
+                        /*
+                         * the new component is in the componentIdsToSkip so it has
+                         * already been used
+                         */
+                        alreadyUsed = true;
+                    }
                 }
             }
 
@@ -10379,6 +10421,98 @@ var ProjectService = function () {
             }
 
             return n;
+        }
+
+        /**
+         * Copy a component and insert it into the step
+         * @param nodeId we are copying a component in this node
+         * @param componentIds the components to copy
+         * @param insertAfterComponentId Which component to place the new components
+         * after. If this is null, we will put the new components at the beginning.
+         * @return an array of the new components
+         */
+
+    }, {
+        key: 'copyComponentAndInsert',
+        value: function copyComponentAndInsert(nodeId, componentIds, insertAfterComponentId) {
+
+            // get the node for which we are moving components
+            var node = this.getNodeById(nodeId);
+
+            // array of new components
+            var newComponents = [];
+
+            // array of new component ids
+            var newComponentIds = [];
+
+            // loop through all the components we want to copy
+            for (var c = 0; c < componentIds.length; c++) {
+                var componentId = componentIds[c];
+
+                // create a copy of the component
+                var newComponent = this.copyComponent(nodeId, componentId, newComponentIds);
+
+                newComponents.push(newComponent);
+                newComponentIds.push(newComponent.id);
+            }
+
+            // get the components in the node
+            var components = node.components;
+
+            if (components != null) {
+
+                var insertPosition = 0;
+
+                if (insertAfterComponentId == null) {
+                    // place the new components at the beginning
+                    insertPosition = 0;
+                } else {
+                    // place the new components after the specified component id
+                    insertPosition = this.getComponentPositionByNodeIdAndComponentId(nodeId, insertAfterComponentId) + 1;
+                }
+
+                // loop through all the new components
+                for (var n = 0; n < newComponents.length; n++) {
+                    var newComponent = newComponents[n];
+
+                    // insert the new component
+                    components.splice(insertPosition, 0, newComponent);
+
+                    /*
+                     * increment the insert position for cases when we have multiple
+                     * new components
+                     */
+                    insertPosition += 1;
+                }
+            }
+
+            return newComponents;
+        }
+
+        /**
+         * Copy a component
+         * @param nodeId the node id
+         * @param componentId the compnent id
+         * @param componentIdsToSkip component ids that we can't use for our new
+         * component
+         * @return a new component object
+         */
+
+    }, {
+        key: 'copyComponent',
+        value: function copyComponent(nodeId, componentId, componentIdsToSkip) {
+
+            // get the component we want to copy
+            var component = this.getComponentByNodeIdAndComponentId(nodeId, componentId);
+
+            // make a copy of the component
+            var newComponent = this.UtilService.makeCopyOfJSONObject(component);
+
+            // get a new component id for the component
+            var newComponentId = this.getUnusedComponentId(componentIdsToSkip);
+            newComponent.id = newComponentId;
+
+            return newComponent;
         }
     }]);
 

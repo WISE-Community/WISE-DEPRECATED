@@ -10,20 +10,25 @@
         <md-icon>add</md-icon>
         <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ "addNewComponent" | translate }}</md-tooltip>
     </md-button>
+    <md-button id='importStepButton' class='topButton md-raised md-primary' ng-click='nodeAuthoringController.importButtonClicked()'
+            ng-disabled='nodeAuthoringController.insertComponentMode'>
+        <md-icon>system_update_alt</md-icon>
+        <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ "importComponent" | translate }}</md-tooltip>
+    </md-button>
     <md-button class='topButton md-raised md-primary' ng-click='nodeAuthoringController.moveButtonClicked()'
             ng-disabled='nodeAuthoringController.getSelectedComponentIds().length == 0 || nodeAuthoringController.insertComponentMode'>
         <md-icon>redo</md-icon>
-        <md-tooltip md-direction="top" class="projectButtonTooltip">{{ "move" | translate }}</md-tooltip>
+        <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ "move" | translate }}</md-tooltip>
     </md-button>
     <md-button class='topButton md-raised md-primary' ng-click='nodeAuthoringController.copyButtonClicked()'
             ng-disabled='nodeAuthoringController.getSelectedComponentIds().length == 0 || nodeAuthoringController.insertComponentMode'>
         <md-icon>content_copy</md-icon>
-        <md-tooltip md-direction="top" class="projectButtonTooltip">{{ "copy" | translate }}</md-tooltip>
+        <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ "copy" | translate }}</md-tooltip>
     </md-button>
     <md-button class='topButton md-raised md-primary' ng-click='nodeAuthoringController.deleteButtonClicked()'
             ng-disabled='nodeAuthoringController.getSelectedComponentIds().length == 0 || nodeAuthoringController.insertComponentMode'>
         <md-icon>delete</md-icon>
-        <md-tooltip md-direction="top" class="projectButtonTooltip">{{ "DELETE" | translate }}</md-tooltip>
+        <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ "DELETE" | translate }}</md-tooltip>
     </md-button>
     <md-button class='topButton md-raised md-primary'
                ng-click='nodeAuthoringController.nodeAuthoringViewButtonClicked("editTransitions")'
@@ -622,7 +627,7 @@
     </md-button>
 </div>
 <div ng-repeat='(componentIndex, component) in nodeAuthoringController.components' class="md-padding">
-    <div layout='row'>
+    <div id='{{component.id}}' layout='row'>
         <div layout='row' style='margin-top: 10px; width: 160;'>
             <md-checkbox ng-model='nodeAuthoringController.componentsToChecked[component.id]'>
                 <span style='font-weight:bold; margin-right:10px'>{{componentIndex + 1}}. {{component.type}}</span>

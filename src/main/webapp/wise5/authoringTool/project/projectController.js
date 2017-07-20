@@ -396,6 +396,8 @@ var ProjectController = function () {
                 // create the node inside the group
                 this.ProjectService.createNodeInside(this.nodeToAdd, nodeId);
 
+                var newNodes = [this.nodeToAdd];
+
                 /*
                  * clear this variable that we used to hold the node we inserted.
                  * since we have inserted the node we don't need a handle to it
@@ -409,6 +411,9 @@ var ProjectController = function () {
                 // turn off insert mode
                 this.insertGroupMode = false;
                 this.insertNodeMode = false;
+
+                // temporarily highlight the new nodes
+                this.highlightNewNodes(newNodes);
 
                 // save and refresh the project
                 this.checkPotentialStartNodeIdChangeThenSaveProject();
@@ -430,7 +435,7 @@ var ProjectController = function () {
                     }
                 } else {
                     // move the nodes into the group
-                    this.ProjectService.moveNodesInside(selectedNodeIds, nodeId);
+                    var _newNodes = this.ProjectService.moveNodesInside(selectedNodeIds, nodeId);
 
                     // turn off move mode
                     this.moveMode = false;
@@ -438,6 +443,9 @@ var ProjectController = function () {
                     // turn off insert mode
                     this.insertGroupMode = false;
                     this.insertNodeMode = false;
+
+                    // temporarily highlight the new nodes
+                    this.highlightNewNodes(_newNodes);
                 }
 
                 // save and refresh the project
@@ -449,7 +457,7 @@ var ProjectController = function () {
                 var _selectedNodeIds = this.getSelectedItems();
 
                 // copy the nodes into the group
-                this.ProjectService.copyNodesInside(_selectedNodeIds, nodeId);
+                var _newNodes2 = this.ProjectService.copyNodesInside(_selectedNodeIds, nodeId);
 
                 // turn off copy mode
                 this.copyMode = false;
@@ -457,6 +465,9 @@ var ProjectController = function () {
                 // turn off insert mode
                 this.insertGroupMode = false;
                 this.insertNodeMode = false;
+
+                // temporarily highlight the new nodes
+                this.highlightNewNodes(_newNodes2);
 
                 // save and refresh the project
                 this.checkPotentialStartNodeIdChangeThenSaveProject();
@@ -487,6 +498,8 @@ var ProjectController = function () {
                 // create the node after the node id
                 this.ProjectService.createNodeAfter(this.nodeToAdd, nodeId);
 
+                var newNodes = [this.nodeToAdd];
+
                 /*
                  * clear this variable that we used to hold the node we inserted.
                  * since we have inserted the node we don't need a handle to it
@@ -500,6 +513,9 @@ var ProjectController = function () {
                 // turn off insert mode
                 this.insertGroupMode = false;
                 this.insertNodeMode = false;
+
+                // temporarily highlight the new nodes
+                this.highlightNewNodes(newNodes);
 
                 // save and referesh the project
                 this.checkPotentialStartNodeIdChangeThenSaveProject();
@@ -521,7 +537,7 @@ var ProjectController = function () {
                     }
                 } else {
                     // move the nodes after the node id
-                    this.ProjectService.moveNodesAfter(selectedNodeIds, nodeId);
+                    var _newNodes3 = this.ProjectService.moveNodesAfter(selectedNodeIds, nodeId);
 
                     // turn off move mode
                     this.moveMode = false;
@@ -529,6 +545,9 @@ var ProjectController = function () {
                     // turn off insert mode
                     this.insertGroupMode = false;
                     this.insertNodeMode = false;
+
+                    // temporarily highlight the new nodes
+                    this.highlightNewNodes(_newNodes3);
 
                     // save and refresh the project
                     this.checkPotentialStartNodeIdChangeThenSaveProject();
@@ -540,7 +559,7 @@ var ProjectController = function () {
                 var _selectedNodeIds2 = this.getSelectedItems();
 
                 // copy the nodes and put them after the node id
-                this.ProjectService.copyNodesAfter(_selectedNodeIds2, nodeId);
+                var _newNodes4 = this.ProjectService.copyNodesAfter(_selectedNodeIds2, nodeId);
 
                 // turn off copy mode
                 this.copyMode = false;
@@ -548,6 +567,9 @@ var ProjectController = function () {
                 // turn off insert mode
                 this.insertGroupMode = false;
                 this.insertNodeMode = false;
+
+                // temporarily highlight the new nodes
+                this.highlightNewNodes(_newNodes4);
 
                 // save and refresh the project
                 this.checkPotentialStartNodeIdChangeThenSaveProject();
@@ -1608,6 +1630,56 @@ var ProjectController = function () {
         value: function cancelCreateNodeClicked() {
             // show the project regular project view
             this.toggleView('project');
+        }
+
+        /**
+         * Temporarily highlight the new nodes
+         * @param newNodes the new nodes to highlight
+         */
+
+    }, {
+        key: 'highlightNewNodes',
+        value: function highlightNewNodes(newNodes) {
+            var _this10 = this;
+
+            this.$timeout(function () {
+
+                if (newNodes != null) {
+
+                    // loop through all the new nodes
+                    for (var n = 0; n < newNodes.length; n++) {
+                        var newNode = newNodes[n];
+
+                        if (newNode != null) {
+                            (function () {
+
+                                // get the node UI element
+                                var nodeElement = $("#" + newNode.id);
+
+                                // save the original background color
+                                var originalBackgroundColor = nodeElement.css("backgroundColor");
+
+                                // highlight the background briefly to draw attention to it
+                                nodeElement.css("background-color", "#FFFF9C");
+
+                                /*
+                                 * Use a timeout before starting to transition back to
+                                 * the original background color. For some reason the
+                                 * element won't get highlighted in the first place
+                                 * unless this timeout is used.
+                                 */
+                                _this10.$timeout(function () {
+                                    // slowly fade back to original background color
+                                    nodeElement.css({
+                                        'transition': 'background-color 3s ease-in-out',
+                                        'background-color': originalBackgroundColor
+                                    });
+                                });
+                            })();
+                        }
+                    }
+                }
+            });
         }
     }]);
 

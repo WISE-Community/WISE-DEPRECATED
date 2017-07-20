@@ -255,7 +255,7 @@
                         <div ng-repeat='item in projectController.items | toArray | orderBy : "order"'
                              ng-class='{"node-select--group": projectController.isGroupNode(item.$key), "node-select--node": !projectController.isGroupNode(item.$key)}'
                              ng-show='projectController.projectMode'>
-                            <div layout="row"
+                            <div id='{{item.$key}}' layout="row"
                                  ng-class='{"groupHeader": projectController.isGroupNode(item.$key), "stepHeader": !projectController.isGroupNode(item.$key), "branchPathStepHeader": projectController.isNodeInAnyBranchPath(item.$key) && !projectController.isGroupNode(item.$key)}'>
                                 <div layout="row">
                                     <md-checkbox
