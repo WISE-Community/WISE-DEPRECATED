@@ -46,6 +46,7 @@ var ProjectController = function () {
         this.projectMode = true;
         this.showCreateGroup = false;
         this.showCreateNode = false;
+        this.showImportView = false;
         this.importMode = false;
         this.editProjectRubricMode = false;
         this.advancedMode = false;
@@ -385,6 +386,7 @@ var ProjectController = function () {
     }, {
         key: 'insertInside',
         value: function insertInside(nodeId) {
+            var _this3 = this;
 
             // TODO check that we are inserting into a group
 
@@ -407,6 +409,9 @@ var ProjectController = function () {
                 // turn off insert mode
                 this.insertGroupMode = false;
                 this.insertNodeMode = false;
+
+                // save and refresh the project
+                this.checkPotentialStartNodeIdChangeThenSaveProject();
             } else if (this.moveMode) {
                 // we are in move mode
 
@@ -434,6 +439,9 @@ var ProjectController = function () {
                     this.insertGroupMode = false;
                     this.insertNodeMode = false;
                 }
+
+                // save and refresh the project
+                this.checkPotentialStartNodeIdChangeThenSaveProject();
             } else if (this.copyMode) {
                 // We are in copy mode
 
@@ -449,10 +457,18 @@ var ProjectController = function () {
                 // turn off insert mode
                 this.insertGroupMode = false;
                 this.insertNodeMode = false;
-            }
 
-            // save and refresh the project
-            this.checkPotentialStartNodeIdChangeThenSaveProject();
+                // save and refresh the project
+                this.checkPotentialStartNodeIdChangeThenSaveProject();
+            } else if (this.importMode) {
+                // we are in import mode
+
+                // import the selected nodes and place them inside the given group
+                this.performImport(nodeId).then(function () {
+                    // save and refresh the project
+                    _this3.checkPotentialStartNodeIdChangeThenSaveProject();
+                });
+            }
         }
 
         /**
@@ -463,6 +479,7 @@ var ProjectController = function () {
     }, {
         key: 'insertAfter',
         value: function insertAfter(nodeId) {
+            var _this4 = this;
 
             if (this.createMode) {
                 // we are in create mode
@@ -534,7 +551,64 @@ var ProjectController = function () {
 
                 // save and refresh the project
                 this.checkPotentialStartNodeIdChangeThenSaveProject();
+            } else if (this.importMode) {
+                // we are in import mode
+
+                // import the selected nodes and place them after the given step
+                this.performImport(nodeId).then(function () {
+                    // save and refresh the project
+                    _this4.checkPotentialStartNodeIdChangeThenSaveProject();
+                });
             }
+        }
+
+        /**
+         * Import the step and place it in the chosen location
+         * @param nodeIdToInsertInsideOrAfter If this is a group, we will make the
+         * new step the first step in the group. If this is a step, we will place
+         * the new step after it.
+         */
+
+    }, {
+        key: 'performImport',
+        value: function performImport(nodeIdToInsertInsideOrAfter) {
+            var _this5 = this;
+
+            var selectedNodes = this.getSelectedNodesToImport();
+
+            // get the project id we are importing into
+            var toProjectId = this.ConfigService.getConfigParam('projectId');
+
+            // get the project id we are importing from
+            var fromProjectId = this.importProjectId;
+
+            // copy the nodes into the project
+            return this.ProjectService.copyNodes(selectedNodes, fromProjectId, toProjectId, nodeIdToInsertInsideOrAfter).then(function () {
+
+                // save the project
+                _this5.ProjectService.saveProject();
+
+                // refresh the project
+                _this5.ProjectService.parseProject();
+                _this5.items = _this5.ProjectService.idToOrder;
+
+                // turn off the insert node mode
+                _this5.insertNodeMode = false;
+
+                // go back to the project view
+                _this5.toggleView('project');
+
+                // clear the import fields
+                _this5.importProjectIdToOrder = {};
+                _this5.importProjectItems = [];
+                _this5.importMyProjectId = null;
+                _this5.importLibraryProjectId = null;
+                _this5.importProjectId = null;
+                _this5.importProject = null;
+
+                // go back to the project view
+                _this5.showProjectHome();
+            });
         }
 
         /**
@@ -908,20 +982,20 @@ var ProjectController = function () {
     }, {
         key: 'checkPotentialStartNodeIdChange',
         value: function checkPotentialStartNodeIdChange() {
-            var _this3 = this;
+            var _this6 = this;
 
             return this.$q(function (resolve, reject) {
                 // get the current start node id
-                var currentStartNodeId = _this3.ProjectService.getStartNodeId();
+                var currentStartNodeId = _this6.ProjectService.getStartNodeId();
 
                 // get the first leaf node id
-                var firstLeafNodeId = _this3.ProjectService.getFirstLeafNodeId();
+                var firstLeafNodeId = _this6.ProjectService.getFirstLeafNodeId();
 
                 if (firstLeafNodeId == null) {
                     // there are no steps in the project
 
                     // set the start node id to empty string
-                    _this3.ProjectService.setStartNodeId('');
+                    _this6.ProjectService.setStartNodeId('');
 
                     resolve();
                 } else {
@@ -934,19 +1008,19 @@ var ProjectController = function () {
                          * the author may want to use the first leaf node id as the
                          * new start node id
                          */
-                        var firstLeafNode = _this3.ProjectService.getNodeById(firstLeafNodeId);
+                        var firstLeafNode = _this6.ProjectService.getNodeById(firstLeafNodeId);
 
                         if (firstLeafNode != null) {
                             var firstChildTitle = firstLeafNode.title;
 
                             // ask the user if they would like to change the start step to the step that is now the first child in the group
-                            var confirmUpdateStartStep = _this3.$translate('confirmUpdateStartStep', { startStepTitle: firstChildTitle });
+                            var confirmUpdateStartStep = _this6.$translate('confirmUpdateStartStep', { startStepTitle: firstChildTitle });
 
                             var answer = confirm(confirmUpdateStartStep);
 
                             if (answer) {
                                 // change the project start node id
-                                _this3.ProjectService.setStartNodeId(firstLeafNodeId);
+                                _this6.ProjectService.setStartNodeId(firstLeafNodeId);
                                 resolve();
                             } else {
                                 resolve();
@@ -968,18 +1042,18 @@ var ProjectController = function () {
     }, {
         key: 'checkPotentialStartNodeIdChangeThenSaveProject',
         value: function checkPotentialStartNodeIdChangeThenSaveProject() {
-            var _this4 = this;
+            var _this7 = this;
 
             // check if the project start node id should be changed
             this.checkPotentialStartNodeIdChange().then(function () {
                 // save the project
-                _this4.ProjectService.saveProject();
+                _this7.ProjectService.saveProject();
 
                 // refresh the project
-                _this4.ProjectService.parseProject();
-                _this4.items = _this4.ProjectService.idToOrder;
+                _this7.ProjectService.parseProject();
+                _this7.items = _this7.ProjectService.idToOrder;
 
-                _this4.unselectAllItems();
+                _this7.unselectAllItems();
             });
         }
 
@@ -1086,7 +1160,7 @@ var ProjectController = function () {
     }, {
         key: 'getLibraryProjects',
         value: function getLibraryProjects() {
-            var _this5 = this;
+            var _this8 = this;
 
             this.ConfigService.getLibraryProjects().then(function (libraryProjectsList) {
 
@@ -1095,7 +1169,7 @@ var ProjectController = function () {
                     // reverse the list so that it is ordered by descending id
                     libraryProjectsList.reverse();
 
-                    _this5.libraryProjectsList = libraryProjectsList;
+                    _this8.libraryProjectsList = libraryProjectsList;
                 }
             });
         }
@@ -1138,7 +1212,7 @@ var ProjectController = function () {
     }, {
         key: 'showImportProject',
         value: function showImportProject(importProjectId) {
-            var _this6 = this;
+            var _this9 = this;
 
             this.importProjectId = importProjectId;
 
@@ -1155,13 +1229,13 @@ var ProjectController = function () {
                 this.ProjectService.retrieveProjectById(this.importProjectId).then(function (projectJSON) {
 
                     // create the mapping of node id to order for the import project
-                    _this6.importProjectIdToOrder = {};
-                    _this6.importProject = projectJSON;
+                    _this9.importProjectIdToOrder = {};
+                    _this9.importProject = projectJSON;
 
                     // calculate the node order of the import project
-                    var result = _this6.ProjectService.getNodeOrderOfProject(_this6.importProject);
-                    _this6.importProjectIdToOrder = result.idToOrder;
-                    _this6.importProjectItems = result.nodes;
+                    var result = _this9.ProjectService.getNodeOrderOfProject(_this9.importProject);
+                    _this9.importProjectIdToOrder = result.idToOrder;
+                    _this9.importProjectItems = result.nodes;
                 });
             }
         }
@@ -1215,7 +1289,6 @@ var ProjectController = function () {
     }, {
         key: 'importSteps',
         value: function importSteps() {
-            var _this7 = this;
 
             // get the nodes that were selected
             var selectedNodes = this.getSelectedNodesToImport();
@@ -1224,78 +1297,15 @@ var ProjectController = function () {
                 // the author did not select any steps to import
                 alert('Please select a step to import.');
             } else {
-                var selectedNodeTitles = '';
 
-                // loop through all the selected nodes
-                for (var s = 0; s < selectedNodes.length; s++) {
-                    var selectedNode = selectedNodes[s];
-
-                    if (selectedNode != null) {
-
-                        var stepNumber = null;
-                        var title = selectedNode.title;
-
-                        if (this.importProjectIdToOrder[selectedNode.id] != null) {
-                            // get the step number
-                            stepNumber = this.importProjectIdToOrder[selectedNode.id].stepNumber;
-                        }
-
-                        if (selectedNodeTitles != '') {
-                            selectedNodeTitles += '\n';
-                        }
-
-                        // get the step number and title
-                        selectedNodeTitles += stepNumber + ': ' + title;
-                    }
-                }
-
-                var message = '';
-
-                if (selectedNodes.length == 1) {
-                    // one step is being imported
-                    message = 'Are you sure you want to import this step?\n\n' + selectedNodeTitles + '\n\nThe imported step will be placed in the Inactive Steps section.';
-                } else {
-                    // multiple steps are being imported
-                    message = 'Are you sure you want to import these steps?\n\n' + selectedNodeTitles + '\n\nThe imported steps will be placed in the Inactive Steps section.';
-                }
-
-                // ask the author if they are sure they want to import these steps
-                var answer = confirm(message);
-
-                if (answer) {
-                    // the author answered yes to import
-
-                    // get the project id we are importing into
-                    var toProjectId = this.ConfigService.getConfigParam('projectId');
-
-                    // get the project id we are importing from
-                    var fromProjectId = this.importProjectId;
-
-                    // copy the nodes into the project
-                    this.ProjectService.copyNodes(selectedNodes, fromProjectId, toProjectId, this.importProjectIdToOrder).then(function () {
-
-                        // save the project
-                        _this7.ProjectService.saveProject();
-
-                        // refresh the project
-                        _this7.ProjectService.parseProject();
-                        _this7.items = _this7.ProjectService.idToOrder;
-
-                        // turn off import mode
-                        _this7.importMode = false;
-
-                        // clear the import fields
-                        _this7.importProjectIdToOrder = {};
-                        _this7.importProjectItems = [];
-                        _this7.importMyProjectId = null;
-                        _this7.importLibraryProjectId = null;
-                        _this7.importProjectId = null;
-                        _this7.importProject = null;
-
-                        // go back to the project view
-                        _this7.showProjectHome();
-                    });
-                }
+                /*
+                 * hide the import view because we want to go back to the
+                 * project view so that the author can choose where to place
+                 * the new steps
+                 */
+                this.showImportView = false;
+                this.insertNodeMode = true;
+                this.projectMode = true;
             }
         }
 
@@ -1482,6 +1492,7 @@ var ProjectController = function () {
                 this.showCreateGroup = false;
                 this.showCreateNode = false;
                 this.importMode = false;
+                this.showImportView = false;
                 this.editProjectRubricMode = false;
                 this.advancedMode = false;
                 this.showJSONAuthoring = false;
@@ -1491,6 +1502,7 @@ var ProjectController = function () {
                 this.showCreateGroup = !this.showCreateGroup;
                 this.showCreateNode = false;
                 this.importMode = false;
+                this.showImportView = false;
                 this.editProjectRubricMode = false;
                 this.advancedMode = false;
                 this.showJSONAuthoring = false;
@@ -1502,6 +1514,7 @@ var ProjectController = function () {
                 this.showCreateGroup = false;
                 this.showCreateNode = !this.showCreateNode;
                 this.importMode = false;
+                this.showImportView = false;
                 this.editProjectRubricMode = false;
                 this.advancedMode = false;
                 this.showJSONAuthoring = false;
@@ -1513,6 +1526,7 @@ var ProjectController = function () {
                 this.showCreateGroup = false;
                 this.showCreateNode = false;
                 this.importMode = !this.importMode;
+                this.showImportView = !this.showImportView;
                 this.editProjectRubricMode = false;
                 this.advancedMode = false;
                 this.showJSONAuthoring = false;
@@ -1524,6 +1538,7 @@ var ProjectController = function () {
                 this.showCreateGroup = false;
                 this.showCreateNode = false;
                 this.importMode = false;
+                this.showImportView = false;
                 this.editProjectRubricMode = !this.editProjectRubricMode;
                 this.advancedMode = false;
                 this.showJSONAuthoring = false;
@@ -1535,6 +1550,7 @@ var ProjectController = function () {
                 this.showCreateGroup = false;
                 this.showCreateNode = false;
                 this.importMode = false;
+                this.showImportView = false;
                 this.editProjectRubricMode = false;
                 this.advancedMode = !this.advancedMode;
                 this.showJSONAuthoring = false;

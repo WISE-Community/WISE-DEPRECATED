@@ -3996,6 +3996,12 @@ var ProjectService = function () {
             // get the node we are inserting
             var nodeToInsert = this.getNodeById(nodeIdToInsert);
 
+            if (nodeToInsert != null && nodeToInsert.transitionLogic != null && nodeToInsert.transitionLogic.transitions != null) {
+
+                // clear out any existing transitions
+                nodeToInsert.transitionLogic.transitions = [];
+            }
+
             // get the group we are inserting into
             var group = this.getNodeById(nodeIdToInsertInside);
 
@@ -4356,12 +4362,22 @@ var ProjectService = function () {
 
         /**
          * Get the next available node id
+         * @param nodeIdsToSkip (optional) An array of additional node ids to not
+         * use. This parameter is used in cases where we are creating multiple new
+         * nodes at once.
+         * Example
+         * We ask for two new node ids by calling getNextAvailableNodeId() twice.
+         * The first time it returns "node10".
+         * If we ask the second time without actually creating and adding node10,
+         * it will return "node10" again. If we provide "node10" in the
+         * nodeIdsToSkip, then getNextAvailableNodeId() will properly return to us
+         * "node11".
          * @returns the next available node id
          */
 
     }, {
         key: 'getNextAvailableNodeId',
-        value: function getNextAvailableNodeId() {
+        value: function getNextAvailableNodeId(nodeIdsToSkip) {
 
             // get all the node ids
             var nodeIds = this.getNodeIds();
@@ -4406,6 +4422,30 @@ var ProjectService = function () {
                         largestNodeIdNumber = nodeIdNumber;
                     } else if (nodeIdNumber > largestNodeIdNumber) {
                         largestNodeIdNumber = nodeIdNumber;
+                    }
+                }
+            }
+
+            if (nodeIdsToSkip != null) {
+                // there are node ids to skip
+
+                // loop through all the node ids to skip
+                for (var s = 0; s < nodeIdsToSkip.length; s++) {
+                    var nodeIdToSkip = nodeIdsToSkip[s];
+
+                    // get the number from the node id e.g. the number of 'node2' would be 2
+                    var nodeIdNumber = nodeIdToSkip.replace('node', '');
+
+                    // make sure the number is an actual number
+                    if (!isNaN(nodeIdNumber)) {
+                        nodeIdNumber = parseInt(nodeIdNumber);
+
+                        // update the largest node id number if necessary
+                        if (largestNodeIdNumber == null) {
+                            largestNodeIdNumber = nodeIdNumber;
+                        } else if (nodeIdNumber > largestNodeIdNumber) {
+                            largestNodeIdNumber = nodeIdNumber;
+                        }
                     }
                 }
             }
@@ -8661,11 +8701,14 @@ var ProjectService = function () {
          * @param selectedNodes the nodes to import
          * @param fromProjectId copy the nodes from this project
          * @param toProjectId copy the nodes into this project
+         * @param nodeIdToInsertInsideOrAfter If this is a group, we will make the
+         * new step the first step in the group. If this is a step, we will place
+         * the new step after it.
          */
 
     }, {
         key: 'copyNodes',
-        value: function copyNodes(selectedNodes, fromProjectId, toProjectId) {
+        value: function copyNodes(selectedNodes, fromProjectId, toProjectId, nodeIdToInsertInsideOrAfter) {
             var _this5 = this;
 
             // get the import steps URL
@@ -8700,8 +8743,11 @@ var ProjectService = function () {
                 // get the inactive nodes from the project
                 var inactiveNodes = _this5.getInactiveNodes();
 
-                // we will insert the steps into the inactive steps
-                var nodeIdToInsertAfter = 'inactiveSteps';
+                // used to hold all the new nodes
+                var newNodes = [];
+
+                // used to hold all the new node ids
+                var newNodeIds = [];
 
                 // loop through the nodes we will import
                 for (var n = 0; n < selectedNodes.length; n++) {
@@ -8711,16 +8757,6 @@ var ProjectService = function () {
 
                     if (selectedNode != null) {
 
-                        /*
-                         * Insert the node after the last inactive node. If there
-                         * are no inactive nodes it will just be placed in the
-                         * inactive nodes section. In the latter case we do this by
-                         * setting nodeIdToInsertAfter to 'inactiveSteps'.
-                         */
-                        if (inactiveNodes != null && inactiveNodes.length > 0) {
-                            nodeIdToInsertAfter = inactiveNodes[inactiveNodes.length - 1];
-                        }
-
                         // make a copy of the node so that we don't modify the source
                         var tempNode = _this5.UtilService.makeCopyOfJSONObject(selectedNode);
 
@@ -8729,7 +8765,7 @@ var ProjectService = function () {
                             // the node id is already being used in the current project
 
                             // get the next available node id
-                            var nextAvailableNodeId = _this5.getNextAvailableNodeId();
+                            var nextAvailableNodeId = _this5.getNextAvailableNodeId(newNodeIds);
 
                             // change the node id of the node we are importing
                             tempNode.id = nextAvailableNodeId;
@@ -8765,9 +8801,61 @@ var ProjectService = function () {
                         // clear the constraints
                         tempNode.constraints = [];
 
-                        // add the imported node to the end of the inactive nodes
-                        _this5.addInactiveNode(tempNode, nodeIdToInsertAfter);
+                        // add the new node and new node id to our arrays
+                        newNodes.push(tempNode);
+                        newNodeIds.push(tempNode.id);
                     }
+                }
+
+                if (nodeIdToInsertInsideOrAfter == null) {
+                    /*
+                     * the place to put the new node has not been specified so we
+                     * will place it in the inactive steps section
+                     */
+
+                    /*
+                     * Insert the node after the last inactive node. If there
+                     * are no inactive nodes it will just be placed in the
+                     * inactive nodes section. In the latter case we do this by
+                     * setting nodeIdToInsertInsideOrAfter to 'inactiveSteps'.
+                     */
+                    if (inactiveNodes != null && inactiveNodes.length > 0) {
+                        nodeIdToInsertInsideOrAfter = inactiveNodes[inactiveNodes.length - 1];
+                    } else {
+                        nodeIdToInsertInsideOrAfter = 'inactiveSteps';
+                    }
+                }
+
+                // loop through all the new nodes
+                for (var nn = 0; nn < newNodes.length; nn++) {
+                    var newNode = newNodes[nn];
+
+                    if (_this5.isGroupNode(nodeIdToInsertInsideOrAfter)) {
+                        // we want to make the new step the first step in the given activity
+                        _this5.createNodeInside(newNode, nodeIdToInsertInsideOrAfter);
+                    } else {
+                        // we want to place the new step after the given step
+                        _this5.createNodeAfter(newNode, nodeIdToInsertInsideOrAfter);
+                    }
+
+                    /*
+                     * Update the nodeIdToInsertInsideOrAfter so that when we are
+                     * importing multiple steps, the steps get placed in the correct
+                     * order.
+                     *
+                     * Example
+                     * We are importing nodeA and nodeB and want to place them after
+                     * nodeX. Therefore we want the order to be
+                     *
+                     * nodeX
+                     * nodeA
+                     * nodeB
+                     *
+                     * This means after we add nodeA, we must update
+                     * nodeIdToInsertInsideOrAfter to be nodeA so that when we add
+                     * nodeB, it will be placed after nodeA.
+                     */
+                    nodeIdToInsertInsideOrAfter = newNode.id;
                 }
             });
         }
