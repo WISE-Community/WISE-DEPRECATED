@@ -2,7 +2,8 @@
 
 class AuthoringToolController {
 
-    constructor($filter,
+    constructor($anchorScroll,
+                $filter,
                 $location,
                 $mdDialog,
                 $scope,
@@ -12,6 +13,7 @@ class AuthoringToolController {
                 ProjectService,
                 SessionService) {
 
+        this.$anchorScroll = $anchorScroll;
         this.$filter = $filter;
         this.$location = $location;
         this.$mdDialog = $mdDialog;
@@ -216,6 +218,10 @@ class AuthoringToolController {
      * TODO: remove/rework this and put items in their own ui states?
      */
     processUI() {
+
+        // scroll to the top of the page
+        this.$anchorScroll('top');
+
         // set current view and whether to show the toolbars and step tools
         this.showStepTools = (this.$state.$current.name === 'root.project' || this.$state.$current.name === 'root.project.node');
         let view = this.views[this.$state.$current.name];
@@ -305,6 +311,7 @@ class AuthoringToolController {
 }
 
 AuthoringToolController.$inject = [
+    '$anchorScroll',
     '$filter',
     '$location',
     '$mdDialog',

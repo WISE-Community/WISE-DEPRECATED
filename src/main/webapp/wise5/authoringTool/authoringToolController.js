@@ -9,11 +9,12 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var AuthoringToolController = function () {
-    function AuthoringToolController($filter, $location, $mdDialog, $scope, $state, $timeout, ConfigService, ProjectService, SessionService) {
+    function AuthoringToolController($anchorScroll, $filter, $location, $mdDialog, $scope, $state, $timeout, ConfigService, ProjectService, SessionService) {
         var _this = this;
 
         _classCallCheck(this, AuthoringToolController);
 
+        this.$anchorScroll = $anchorScroll;
         this.$filter = $filter;
         this.$location = $location;
         this.$mdDialog = $mdDialog;
@@ -210,6 +211,10 @@ var AuthoringToolController = function () {
     _createClass(AuthoringToolController, [{
         key: 'processUI',
         value: function processUI() {
+
+            // scroll to the top of the page
+            this.$anchorScroll('top');
+
             // set current view and whether to show the toolbars and step tools
             this.showStepTools = this.$state.$current.name === 'root.project' || this.$state.$current.name === 'root.project.node';
             var view = this.views[this.$state.$current.name];
@@ -319,7 +324,7 @@ var AuthoringToolController = function () {
     return AuthoringToolController;
 }();
 
-AuthoringToolController.$inject = ['$filter', '$location', '$mdDialog', '$scope', '$state', '$timeout', 'ConfigService', 'ProjectService', 'SessionService', 'moment'];
+AuthoringToolController.$inject = ['$anchorScroll', '$filter', '$location', '$mdDialog', '$scope', '$state', '$timeout', 'ConfigService', 'ProjectService', 'SessionService', 'moment'];
 
 exports.default = AuthoringToolController;
 //# sourceMappingURL=authoringToolController.js.map
