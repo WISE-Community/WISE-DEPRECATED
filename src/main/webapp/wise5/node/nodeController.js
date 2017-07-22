@@ -9,7 +9,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var NodeController = function () {
-    function NodeController($compile, $filter, $q, $rootScope, $scope, AnnotationService, ConfigService, NodeService, NotebookService, ProjectService, StudentDataService) {
+    function NodeController($compile, $filter, $q, $rootScope, $scope, $state, $timeout, AnnotationService, ConfigService, NodeService, NotebookService, ProjectService, StudentDataService) {
         var _this = this;
 
         _classCallCheck(this, NodeController);
@@ -19,6 +19,8 @@ var NodeController = function () {
         this.$q = $q;
         this.$rootScope = $rootScope;
         this.$scope = $scope;
+        this.$state = $state;
+        this.$timeout = $timeout;
         this.AnnotationService = AnnotationService;
         this.ConfigService = ConfigService;
         this.NodeService = NodeService;
@@ -136,6 +138,44 @@ var NodeController = function () {
 
                 // create the rubric tour bubbles
                 this.createRubricTour();
+            }
+
+            /*
+             * Check if the component id was provided in the state params. If
+             * it is provided, we will scroll to it and then briefly highlight
+             * it.
+             */
+            if (this.$state != null && this.$state.params != null && this.$state.params.componentId != null) {
+
+                // get the component id
+                var componentId = this.$state.params.componentId;
+
+                this.$timeout(function () {
+                    // get the UI element of the component
+                    var componentElement = $("#component_" + componentId);
+
+                    if (componentElement != null) {
+                        // save the original background color
+                        var originalBackgroundColor = componentElement.css("backgroundColor");
+
+                        // highlight the background briefly to draw attention to it
+                        componentElement.css("background-color", "#FFFF9C");
+
+                        // scroll to the first new component that we've added
+                        $('#content').animate({
+                            scrollTop: componentElement.prop("offsetTop")
+                        }, 1000);
+
+                        /*
+                         * remove the background highlighting so that it returns
+                         * to its original color
+                         */
+                        componentElement.css({
+                            'transition': 'background-color 3s ease-in-out',
+                            'background-color': originalBackgroundColor
+                        });
+                    }
+                }, 1000);
             }
         }
 
@@ -1409,7 +1449,7 @@ var NodeController = function () {
     return NodeController;
 }();
 
-NodeController.$inject = ['$compile', '$filter', '$q', '$rootScope', '$scope', 'AnnotationService', 'ConfigService', 'NodeService', 'NotebookService', 'ProjectService', 'StudentDataService'];
+NodeController.$inject = ['$compile', '$filter', '$q', '$rootScope', '$scope', '$state', '$timeout', 'AnnotationService', 'ConfigService', 'NodeService', 'NotebookService', 'ProjectService', 'StudentDataService'];
 
 exports.default = NodeController;
 //# sourceMappingURL=nodeController.js.map

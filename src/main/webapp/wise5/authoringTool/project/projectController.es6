@@ -1025,80 +1025,16 @@ class ProjectController {
         if (this.importMode) {
             if (this.myProjectsList == null) {
                 // populate the authorable projects drop down
-                this.getAuthorableProjects();
+                this.myProjectsList = this.ConfigService.getAuthorableProjects();
             }
 
             if (this.libraryProjectsList == null) {
                 // populate the library projects drop down
-                this.getLibraryProjects();
+                this.ConfigService.getLibraryProjects().then((libraryProjectsList) => {
+                    this.libraryProjectsList = libraryProjectsList;
+                });
             }
         }
-    }
-
-    /**
-     * Get all the authorable projects
-     */
-    getAuthorableProjects() {
-
-        // get the projects this teacher owns
-        var projects = this.ConfigService.getConfigParam('projects');
-
-        // get the projects that were shared with the teacher
-        var sharedProjects = this.ConfigService.getConfigParam('sharedProjects');
-
-        var authorableProjects = [];
-
-        if (projects != null) {
-            // add the owned projects
-            authorableProjects = authorableProjects.concat(projects);
-        }
-
-        if (sharedProjects != null) {
-            // add the shared projects
-            authorableProjects = authorableProjects.concat(sharedProjects);
-        }
-
-        // sort the projects by descending id
-        authorableProjects.sort(this.sortByProjectId);
-
-        this.myProjectsList = authorableProjects;
-    }
-
-    /**
-     * Sort the objects by descending id.
-     * @param projectA an object with an id field
-     * @param projectB an object with an id field
-     * @return 1 if projectA comes before projectB
-     * -1 if projectA comes after projectB
-     * 0 if they are the same
-     */
-    sortByProjectId(projectA, projectB) {
-        var projectIdA = projectA.id;
-        var projectIdB = projectB.id;
-
-        if (projectIdA < projectIdB) {
-            return 1;
-        } else if (projectIdA > projectIdB) {
-            return -1;
-        } else {
-            return 0;
-        }
-    }
-
-    /**
-     * Get all the library projects
-     */
-    getLibraryProjects() {
-        this.ConfigService.getLibraryProjects().then((libraryProjectsList) => {
-
-            if (libraryProjectsList != null) {
-
-                // reverse the list so that it is ordered by descending id
-                libraryProjectsList.reverse();
-
-                this.libraryProjectsList = libraryProjectsList;
-            }
-        });
     }
 
     /**
@@ -1483,7 +1419,7 @@ class ProjectController {
     highlightNewNodes(newNodes) {
 
         this.$timeout(() => {
-            
+
             if (newNodes != null) {
 
                 // loop through all the new nodes

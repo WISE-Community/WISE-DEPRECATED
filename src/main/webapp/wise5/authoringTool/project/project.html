@@ -36,6 +36,9 @@
                         .branchPathStepHeader {
                             margin-left: 55px !important;
                         }
+                        .componentHeader {
+                            margin-left: 30px !important;
+                        }
                         .topButton {
                             min-width: 50px;
                         }
@@ -288,15 +291,6 @@
                                     </md-button>
                                 </div>
                             </div>
-                                <!--
-                            <h6 ng-if='item.order==0'
-                                style='display:inline'>
-                                <label translate="projectTitle"></label>: <input id="projectTitle" size='100' ng-model='projectController.projectTitle' ng-model-options='{ debounce: 500 }' ng-change='projectController.projectTitleChanged()'/>
-                                <label ng-if='projectController.projectId != null'>{{ 'PROJECT_ID' | translate }}: {{projectController.projectId}}</label>
-                                <label ng-if='projectController.runId == null'>({{ 'RUN_ID' | translate }}: {{ 'none' | translate }})</label>
-                                <label ng-if='projectController.runId != null'>({{ 'RUN_ID' | translate }}: {{projectController.runId}})</label>
-                            </h6>
-                                -->
                         </div>
                         <h6 style='display:none' translate='inactiveActivities'></h6>
                         <md-button ng-show='projectController.insertGroupMode'

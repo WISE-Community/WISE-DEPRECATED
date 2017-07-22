@@ -230,6 +230,23 @@ let vleModule = angular.module('vle', [
                         }
                     }
                 })
+                .state('root.component', {
+                    url: '/vle/:nodeId/:componentId',
+                    views: {
+                        'nodeView': {
+                            templateProvider: ['$http', 'ConfigService', function ($http, ConfigService) {
+                                let wiseBaseURL = ConfigService.getWISEBaseURL();
+                                return $http.get(wiseBaseURL + '/wise5/node/index.html').then(
+                                    response => {
+                                        return response.data;
+                                    }
+                                );
+                            }],
+                            controller: 'NodeController',
+                            controllerAs: 'nodeController'
+                        }
+                    }
+                })
                 /*.state('root.notebook', {
                     url: '/notebook/:nodeid',
                     views: {

@@ -318,6 +318,20 @@ var vleModule = _angular2.default.module('vle', [(0, _angularDragula2.default)(_
                 controllerAs: 'nodeController'
             }
         }
+    }).state('root.component', {
+        url: '/vle/:nodeId/:componentId',
+        views: {
+            'nodeView': {
+                templateProvider: ['$http', 'ConfigService', function ($http, ConfigService) {
+                    var wiseBaseURL = ConfigService.getWISEBaseURL();
+                    return $http.get(wiseBaseURL + '/wise5/node/index.html').then(function (response) {
+                        return response.data;
+                    });
+                }],
+                controller: 'NodeController',
+                controllerAs: 'nodeController'
+            }
+        }
     })
     /*.state('root.notebook', {
         url: '/notebook/:nodeid',

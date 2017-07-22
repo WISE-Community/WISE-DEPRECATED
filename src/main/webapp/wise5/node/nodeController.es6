@@ -4,6 +4,8 @@ class NodeController {
                 $q,
                 $rootScope,
                 $scope,
+                $state,
+                $timeout,
                 AnnotationService,
                 ConfigService,
                 NodeService,
@@ -16,6 +18,8 @@ class NodeController {
         this.$q = $q;
         this.$rootScope = $rootScope;
         this.$scope = $scope;
+        this.$state = $state;
+        this.$timeout = $timeout;
         this.AnnotationService = AnnotationService;
         this.ConfigService = ConfigService;
         this.NodeService = NodeService;
@@ -133,6 +137,46 @@ class NodeController {
 
                 // create the rubric tour bubbles
                 this.createRubricTour();
+            }
+
+            /*
+             * Check if the component id was provided in the state params. If
+             * it is provided, we will scroll to it and then briefly highlight
+             * it.
+             */
+            if (this.$state != null &&
+                this.$state.params != null &&
+                this.$state.params.componentId != null) {
+
+                // get the component id
+                var componentId = this.$state.params.componentId;
+
+                this.$timeout(() => {
+                    // get the UI element of the component
+                    let componentElement = $("#component_" + componentId);
+
+                    if (componentElement != null) {
+                        // save the original background color
+                        let originalBackgroundColor = componentElement.css("backgroundColor");
+
+                        // highlight the background briefly to draw attention to it
+                        componentElement.css("background-color", "#FFFF9C");
+
+                        // scroll to the first new component that we've added
+                        $('#content').animate({
+                            scrollTop: componentElement.prop("offsetTop")
+                        }, 1000);
+
+                        /*
+                         * remove the background highlighting so that it returns
+                         * to its original color
+                         */
+                        componentElement.css({
+                            'transition': 'background-color 3s ease-in-out',
+                            'background-color': originalBackgroundColor
+                        });
+                    }
+                }, 1000);
             }
         }
 
@@ -1340,6 +1384,8 @@ NodeController.$inject = [
     '$q',
     '$rootScope',
     '$scope',
+    '$state',
+    '$timeout',
     'AnnotationService',
     'ConfigService',
     'NodeService',

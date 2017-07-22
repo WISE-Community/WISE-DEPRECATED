@@ -847,7 +847,7 @@ var NodeAuthoringController = function () {
         value: function addComponentButtonClicked() {
 
             // show the add component UI elements
-            this.nodeAuthoringViewButtonClicked("addComponent");
+            this.nodeAuthoringViewButtonClicked('addComponent');
 
             // turn on add component mode
             this.turnOnAddComponentMode();
@@ -1438,6 +1438,7 @@ var NodeAuthoringController = function () {
                 this.showRubric = false;
                 this.showCreateBranch = false;
                 this.showAdvanced = false;
+                this.showImportView = false;
             } else if (view == 'editTransitions') {
                 // toggle the edit transitions view and hide all the other views
                 this.showCreateComponent = false;
@@ -1447,6 +1448,7 @@ var NodeAuthoringController = function () {
                 this.showRubricButton = false;
                 this.showCreateBranch = false;
                 this.showAdvanced = false;
+                this.showImportView = false;
             } else if (view == 'editConstraints') {
                 // toggle the edit constraints view and hide all the other views
                 this.showCreateComponent = false;
@@ -1456,6 +1458,7 @@ var NodeAuthoringController = function () {
                 this.showRubric = false;
                 this.showCreateBranch = false;
                 this.showAdvanced = false;
+                this.showImportView = false;
             } else if (view == 'editButtons') {
                 // toggle the edit buttons view and hide all the other views
                 this.showCreateComponent = false;
@@ -1465,6 +1468,7 @@ var NodeAuthoringController = function () {
                 this.showRubric = false;
                 this.showCreateBranch = false;
                 this.showAdvanced = false;
+                this.showImportView = false;
             } else if (view == 'editRubric') {
                 // toggle the edit buttons view and hide all the other views
                 this.showCreateComponent = false;
@@ -1474,6 +1478,7 @@ var NodeAuthoringController = function () {
                 this.showRubric = !this.showRubric;
                 this.showCreateBranch = false;
                 this.showAdvanced = false;
+                this.showImportView = false;
             } else if (view == 'createBranch') {
                 // toggle the edit buttons view and hide all the other views
                 this.showCreateComponent = false;
@@ -1483,6 +1488,7 @@ var NodeAuthoringController = function () {
                 this.showRubric = false;
                 this.showCreateBranch = !this.showCreateBranch;
                 this.showAdvanced = false;
+                this.showImportView = false;
             } else if (view == 'previousNode') {
                 // hide all the other views
                 this.showCreateComponent = false;
@@ -1492,6 +1498,7 @@ var NodeAuthoringController = function () {
                 this.showRubric = false;
                 this.showCreateBranch = false;
                 this.showAdvanced = false;
+                this.showImportView = false;
 
                 // get the previous node id
                 var prevNodeId = this.ProjectService.getPreviousNodeId(this.nodeId);
@@ -1513,6 +1520,7 @@ var NodeAuthoringController = function () {
                 this.showRubric = false;
                 this.showCreateBranch = false;
                 this.showAdvanced = false;
+                this.showImportView = false;
 
                 // get the next node id
                 var nextNodeId = this.ProjectService.getNextNodeId(this.nodeId);
@@ -1534,6 +1542,17 @@ var NodeAuthoringController = function () {
                 this.showRubric = false;
                 this.showCreateBranch = false;
                 this.showAdvanced = !this.showAdvanced;
+                this.showImportView = false;
+            } else if (view == 'copy') {
+                // toggle the copy view and hide all the other views
+                this.showCreateComponent = false;
+                this.showEditTransitions = false;
+                this.showConstraints = false;
+                this.showEditButtons = false;
+                this.showRubric = false;
+                this.showCreateBranch = false;
+                this.showAdvanced = false;
+                this.showImportView = false;
             } else if (view == 'move') {
                 // toggle the move view and hide all the other views
                 this.showCreateComponent = false;
@@ -1543,6 +1562,17 @@ var NodeAuthoringController = function () {
                 this.showRubric = false;
                 this.showCreateBranch = false;
                 this.showAdvanced = false;
+                this.showImportView = false;
+            } else if (view == 'import') {
+                // toggle the import view and hide all the other views
+                this.showCreateComponent = false;
+                this.showEditTransitions = false;
+                this.showConstraints = false;
+                this.showEditButtons = false;
+                this.showRubric = false;
+                this.showCreateBranch = false;
+                this.showAdvanced = false;
+                this.showImportView = !this.showImportView;
             }
         }
 
@@ -2663,6 +2693,26 @@ var NodeAuthoringController = function () {
         }
 
         /**
+         * Turn on the import component mode
+         */
+
+    }, {
+        key: 'turnOnImportComponentMode',
+        value: function turnOnImportComponentMode() {
+            this.importComponentMode = true;
+        }
+
+        /**
+         * Turn off the import component mode
+         */
+
+    }, {
+        key: 'turnOffImportComponentMode',
+        value: function turnOffImportComponentMode() {
+            this.importComponentMode = false;
+        }
+
+        /**
          * Get the components that have been selected
          * @return an array of component ids that have been selected
          */
@@ -2750,9 +2800,37 @@ var NodeAuthoringController = function () {
 
             return selectedComponents;
         }
+
+        /**
+         * The import button was clicked to turn on the import view
+         */
+
     }, {
         key: 'importButtonClicked',
-        value: function importButtonClicked() {}
+        value: function importButtonClicked() {
+            var _this2 = this;
+
+            // hide the other views
+            this.nodeAuthoringViewButtonClicked('import');
+
+            if (this.showImportView) {
+
+                // turn on import mode
+                this.turnOnImportComponentMode();
+
+                if (this.myProjectsList == null) {
+                    // populate the authorable projects drop down
+                    this.myProjectsList = this.ConfigService.getAuthorableProjects();
+                }
+
+                if (this.libraryProjectsList == null) {
+                    // populate the library projects drop down
+                    this.ConfigService.getLibraryProjects().then(function (libraryProjectsList) {
+                        _this2.libraryProjectsList = libraryProjectsList;
+                    });
+                }
+            }
+        }
 
         /**
          * The move component button was clicked
@@ -2763,7 +2841,7 @@ var NodeAuthoringController = function () {
         value: function moveButtonClicked() {
 
             // hide the other views
-            this.nodeAuthoringViewButtonClicked("move");
+            this.nodeAuthoringViewButtonClicked('move');
 
             // turn off add component mode
             this.turnOffAddComponentMode();
@@ -2787,7 +2865,7 @@ var NodeAuthoringController = function () {
         value: function copyButtonClicked() {
 
             // hide the other views
-            this.nodeAuthoringViewButtonClicked("copy");
+            this.nodeAuthoringViewButtonClicked('copy');
 
             // turn on the move component mode
             this.turnOnCopyComponentMode();
@@ -2806,7 +2884,7 @@ var NodeAuthoringController = function () {
     }, {
         key: 'deleteButtonClicked',
         value: function deleteButtonClicked() {
-            var _this2 = this;
+            var _this3 = this;
 
             // scroll to the top of the page
             this.$anchorScroll('top');
@@ -2826,7 +2904,7 @@ var NodeAuthoringController = function () {
                 var confirmMessage = '';
 
                 // get the selected component numbers and types
-                var selectedComponentNumbersAndTypes = _this2.getSelectedComponentNumbersAndTypes();
+                var selectedComponentNumbersAndTypes = _this3.getSelectedComponentNumbersAndTypes();
 
                 if (selectedComponentNumbersAndTypes.length == 1) {
                     // there is one selected component
@@ -2852,7 +2930,7 @@ var NodeAuthoringController = function () {
                 if (answer) {
 
                     // get the selected component ids
-                    var selectedComponents = _this2.getSelectedComponentIds();
+                    var selectedComponents = _this3.getSelectedComponentIds();
 
                     /*
                      * loop through all the selected component ids and delete the
@@ -2864,14 +2942,14 @@ var NodeAuthoringController = function () {
                         var componentId = selectedComponents[c];
 
                         // delete the component from the node
-                        _this2.ProjectService.deleteComponent(_this2.nodeId, componentId);
+                        _this3.ProjectService.deleteComponent(_this3.nodeId, componentId);
                     }
 
                     // check if we need to show the node save or node submit buttons
-                    _this2.checkIfNeedToShowNodeSaveOrNodeSubmitButtons();
+                    _this3.checkIfNeedToShowNodeSaveOrNodeSubmitButtons();
 
                     // save the project
-                    _this2.ProjectService.saveProject();
+                    _this3.ProjectService.saveProject();
                 }
 
                 /*
@@ -2880,12 +2958,12 @@ var NodeAuthoringController = function () {
                  * and type view a little longer so that they can see the change
                  * they just made before we switch back to the normal view.
                  */
-                _this2.$timeout(function () {
+                _this3.$timeout(function () {
                     // turn off the insert component mode
-                    _this2.turnOffInsertComponentMode();
+                    _this3.turnOffInsertComponentMode();
 
                     // show the component authoring
-                    _this2.showComponentAuthoring();
+                    _this3.showComponentAuthoring();
                 }, 2000);
             });
         }
@@ -2957,7 +3035,9 @@ var NodeAuthoringController = function () {
 
             if (this.addComponentMode) {
                 // create a component and add it to this node
-                this.ProjectService.createComponent(this.nodeId, this.selectedComponent, null);
+                var newComponent = this.ProjectService.createComponent(this.nodeId, this.selectedComponent, null);
+
+                newComponents.push(newComponent);
 
                 // turn off the add component mode
                 this.turnOffAddComponentMode();
@@ -2967,7 +3047,7 @@ var NodeAuthoringController = function () {
                 var selectedComponentIds = this.getSelectedComponentIds();
 
                 // move the components to their new location
-                this.ProjectService.moveComponent(this.nodeId, selectedComponentIds, null);
+                newComponents = this.ProjectService.moveComponent(this.nodeId, selectedComponentIds, null);
 
                 // turn off the move component mode
                 this.turnOffMoveComponentMode();
@@ -2981,6 +3061,13 @@ var NodeAuthoringController = function () {
 
                 // turn off the copy component mode
                 this.turnOffCopyComponentMode();
+            } else if (this.importComponentMode) {
+
+                // import the selected components and insert them
+                newComponents = this.importComponents(this.nodeId);
+
+                // turn off import component mode
+                this.turnOffImportComponentMode();
             }
 
             // save the project
@@ -3006,7 +3093,9 @@ var NodeAuthoringController = function () {
 
             if (this.addComponentMode) {
                 // create a component and add it to this node
-                this.ProjectService.createComponent(this.nodeId, this.selectedComponent, componentId);
+                var newComponent = this.ProjectService.createComponent(this.nodeId, this.selectedComponent, componentId);
+
+                newComponents.push(newComponent);
 
                 // turn off the add component mode
                 this.turnOffAddComponentMode();
@@ -3016,7 +3105,7 @@ var NodeAuthoringController = function () {
                 var selectedComponentIds = this.getSelectedComponentIds();
 
                 // move the components to their new location
-                this.ProjectService.moveComponent(this.nodeId, selectedComponentIds, componentId);
+                newComponents = this.ProjectService.moveComponent(this.nodeId, selectedComponentIds, componentId);
 
                 // turn off the move component mode
                 this.turnOffMoveComponentMode();
@@ -3030,6 +3119,13 @@ var NodeAuthoringController = function () {
 
                 // turn off the copy component mode
                 this.turnOffCopyComponentMode();
+            } else if (this.importComponentMode) {
+
+                // import the selected components and insert them
+                newComponents = this.importComponents(this.nodeId, componentId);
+
+                // turn off import component mode
+                this.turnOffImportComponentMode();
             }
 
             // save the project
@@ -3051,7 +3147,7 @@ var NodeAuthoringController = function () {
     }, {
         key: 'highlightNewComponentsAndThenShowComponentAuthoring',
         value: function highlightNewComponentsAndThenShowComponentAuthoring(newComponents) {
-            var _this3 = this;
+            var _this4 = this;
 
             // use a timeout to allow the components time to show up in the UI
             this.$timeout(function () {
@@ -3081,7 +3177,7 @@ var NodeAuthoringController = function () {
                                  * element won't get highlighted in the first place
                                  * unless this timeout is used.
                                  */
-                                _this3.$timeout(function () {
+                                _this4.$timeout(function () {
                                     // slowly fade back to original background color
                                     componentElement.css({
                                         'transition': 'background-color 3s ease-in-out',
@@ -3099,24 +3195,24 @@ var NodeAuthoringController = function () {
                  * and type view a little longer so that they can see the change
                  * they just made before we switch back to the normal view.
                  */
-                _this3.$timeout(function () {
+                _this4.$timeout(function () {
                     // show the component authoring
-                    _this3.showComponentAuthoring();
+                    _this4.showComponentAuthoring();
 
                     // turn off the insert component mode
-                    _this3.turnOffInsertComponentMode();
+                    _this4.turnOffInsertComponentMode();
 
                     // hide the create component elements
-                    _this3.showCreateComponent = false;
+                    _this4.showCreateComponent = false;
 
                     // uncheck all the component checkboxes
-                    _this3.clearComponentsToChecked();
+                    _this4.clearComponentsToChecked();
 
                     /*
                      * use a timeout to wait for the UI to update and then scroll
                      * to the first new component
                      */
-                    _this3.$timeout(function () {
+                    _this4.$timeout(function () {
 
                         if (newComponents != null && newComponents.length > 0) {
 
@@ -3133,6 +3229,236 @@ var NodeAuthoringController = function () {
                     });
                 }, 2000);
             });
+        }
+
+        /**
+         * The author has chosen an authorable project to import from
+         * @param importProjectId the project id to import from
+         */
+
+    }, {
+        key: 'showMyImportProject',
+        value: function showMyImportProject(importProjectId) {
+
+            // clear the select drop down for the library project
+            this.importLibraryProjectId = null;
+
+            // show the import project
+            this.showImportProject(importProjectId);
+        }
+
+        /**
+         * The author has chosen a library project to import from
+         * @param importProjectId the project id to import from
+         */
+
+    }, {
+        key: 'showLibraryImportProject',
+        value: function showLibraryImportProject(importProjectId) {
+            this.importMyProjectId = null;
+
+            // show the import project
+            this.showImportProject(importProjectId);
+        }
+
+        /**
+         * Show the project we want to import steps from
+         * @param importProjectId the import project id
+         */
+
+    }, {
+        key: 'showImportProject',
+        value: function showImportProject(importProjectId) {
+            var _this5 = this;
+
+            this.importProjectId = importProjectId;
+
+            if (this.importProjectId == null) {
+                // clear all the import project values
+                this.importProjectIdToOrder = {};
+                this.importProjectItems = [];
+                this.importMyProjectId = null;
+                this.importLibraryProjectId = null;
+                this.importProjectId = null;
+                this.importProject = null;
+            } else {
+                // get the import project
+                this.ProjectService.retrieveProjectById(this.importProjectId).then(function (projectJSON) {
+
+                    // create the mapping of node id to order for the import project
+                    _this5.importProjectIdToOrder = {};
+                    _this5.importProject = projectJSON;
+
+                    // calculate the node order of the import project
+                    var result = _this5.ProjectService.getNodeOrderOfProject(_this5.importProject);
+                    _this5.importProjectIdToOrder = result.idToOrder;
+                    _this5.importProjectItems = result.nodes;
+                });
+            }
+        }
+
+        /**
+         * Import the selected steps
+         */
+
+    }, {
+        key: 'importComponentsButtonClicked',
+        value: function importComponentsButtonClicked() {
+
+            // get the components that were selected
+            var selectedComponents = this.getSelectedComponentsToImport();
+
+            if (selectedComponents == null || selectedComponents.length == 0) {
+                // the author did not select any components to import
+                alert('Please select a component to import.');
+            } else {
+
+                /*
+                 * hide the import view because we want to go back to the
+                 * project view so that the author can choose where to place
+                 * the new steps
+                 */
+                this.showImportView = false;
+                this.turnOnInsertComponentMode();
+                this.hideComponentAuthoring();
+
+                // scroll to the top of the page
+                this.$anchorScroll('top');
+            }
+        }
+
+        /**
+         * Get the selected components to import
+         * @return an array of selected components
+         */
+
+    }, {
+        key: 'getSelectedComponentsToImport',
+        value: function getSelectedComponentsToImport() {
+            var selectedComponents = [];
+
+            // loop through all the import project items
+            for (var n = 0; n < this.importProjectItems.length; n++) {
+                var item = this.importProjectItems[n];
+
+                if (item != null && item.node != null && item.node.components != null) {
+
+                    // get the components in the node
+                    var components = item.node.components;
+
+                    // loop through all the components in the node
+                    for (var c = 0; c < components.length; c++) {
+                        var component = components[c];
+
+                        if (component != null && component.checked) {
+                            /*
+                             * this component is checked so we will add it to
+                             * the array of components that we will import
+                             */
+                            selectedComponents.push(component);
+                        }
+                    }
+                }
+            }
+
+            return selectedComponents;
+        }
+
+        /**
+         * Get the components that were selected
+         * @param insertAfterComponentId (optional) Insert the components after this
+         * component id. If this is null, we will insert the components at the
+         * beginning of the step.
+         */
+
+    }, {
+        key: 'importComponents',
+        value: function importComponents(nodeId, insertAfterComponentId) {
+
+            // get all the selected component objects
+            var selectedComponents = this.getSelectedComponentsToImport();
+
+            // loop through all the selected component objects
+            for (var c = 0; c < selectedComponents.length; c++) {
+                var selectedComponent = selectedComponents[c];
+
+                if (selectedComponent != null) {
+                    // remove the checked field
+                    delete selectedComponent.checked;
+                }
+            }
+
+            // insert the components into the project
+            var newComponents = this.ProjectService.importComponents(selectedComponents, nodeId, insertAfterComponentId);
+
+            return newComponents;
+        }
+
+        /**
+         * Preview the import project
+         */
+
+    }, {
+        key: 'previewImportProject',
+        value: function previewImportProject() {
+
+            if (this.importProject != null) {
+                // get the preview project url for the import project
+                var previewProjectURL = this.importProject.previewProjectURL;
+
+                // open the preview step in a new tab
+                window.open(previewProjectURL);
+            }
+        }
+
+        /**
+         * Preview the step
+         * @param node
+         */
+
+    }, {
+        key: 'previewImportNode',
+        value: function previewImportNode(node) {
+
+            if (node != null) {
+
+                // get the node id
+                var nodeId = node.id;
+
+                // get the preview project url for the import project
+                var previewProjectURL = this.importProject.previewProjectURL;
+
+                // create the url to preview the step
+                var previewStepURL = previewProjectURL + "#/vle/" + nodeId;
+
+                // open the preview step in a new tab
+                window.open(previewStepURL);
+            }
+        }
+
+        /**
+         * Preview the component
+         * @param node the node
+         * @param componentId the component id
+         */
+
+    }, {
+        key: 'previewImportComponent',
+        value: function previewImportComponent(node, componentId) {
+            if (node != null) {
+
+                // get the node id
+                var nodeId = node.id;
+
+                // get the preview project url for the import project
+                var previewProjectURL = this.importProject.previewProjectURL;
+
+                // create the url to preview the step
+                var previewStepURL = previewProjectURL + "#/vle/" + nodeId + "/" + componentId;
+
+                // open the preview step in a new tab
+                window.open(previewStepURL);
+            }
         }
     }]);
 

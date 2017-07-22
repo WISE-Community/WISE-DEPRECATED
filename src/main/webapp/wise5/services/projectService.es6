@@ -5129,6 +5129,8 @@ class ProjectService {
      */
     createComponent(nodeId, componentType, insertAfterComponentId) {
 
+        var component = null;
+
         if (nodeId != null && componentType != null) {
             // get the node we will create the component in
             var node = this.getNodeById(nodeId);
@@ -5139,7 +5141,7 @@ class ProjectService {
             if (node != null && service != null) {
 
                 // create the new component
-                var component = service.createComponent();
+                component = service.createComponent();
 
                 if (service.componentHasWork()) {
                     /*
@@ -5181,6 +5183,8 @@ class ProjectService {
                 this.addComponentToNode(node, component, insertAfterComponentId);
             }
         }
+
+        return component;
     }
 
     /**
@@ -5517,6 +5521,8 @@ class ProjectService {
                 }
             }
         }
+
+        return componentsToMove;
     }
 
     /**
@@ -9858,6 +9864,83 @@ class ProjectService {
         newComponent.id = newComponentId;
 
         return newComponent;
+    }
+
+    /**
+     * Add components to a node
+     * @param components an array of component objects
+     * @param nodeId the node we are adding the components to
+     * @param insertAfterComponentId insert the components after this component
+     * id
+     * @return an array of the new components
+     */
+    importComponents(components, nodeId, insertAfterComponentId) {
+
+        var newComponents = [];
+        var newComponentIds = [];
+
+        /*
+         * loop through all the components and make sure their ids are not
+         * already used in the project
+         */
+        for (var c = 0; c < components.length; c++) {
+            var component = components[c];
+
+            if (component != null) {
+
+                // make a copy of the component object
+                var newComponent = this.UtilService.makeCopyOfJSONObject(component);
+                var newComponentId = newComponent.id;
+
+                // check if the component id is used in this project
+                if (this.isComponentIdUsed(newComponentId)) {
+                    /*
+                     * the component id is already used so we will find a new
+                     * component id
+                     */
+
+                    // get a new component id
+                    newComponentId = this.getUnusedComponentId(newComponentIds);
+
+                    // set the new component id into our new component
+                    newComponent.id = newComponentId;
+                }
+
+                // add the new component and new component id to our arrays
+                newComponents.push(newComponent);
+                newComponentIds.push(newComponentId);
+            }
+        }
+
+        // get the current components in the node
+        var node = this.getNodeById(nodeId);
+        var currentComponents = node.components;
+
+        var insertPosition = 0;
+
+        if (insertAfterComponentId == null) {
+            // place the new components at the beginning
+            insertPosition = 0;
+        } else {
+            // place the new components after the specified component id
+            insertPosition = this.getComponentPositionByNodeIdAndComponentId(nodeId, insertAfterComponentId) + 1;
+        }
+
+        // loop through all the new components and add them to the project
+        for (var n = 0; n < newComponents.length; n++) {
+            var newComponent = newComponents[n];
+
+            // insert the new component
+            currentComponents.splice(insertPosition, 0, newComponent);
+
+            /*
+             * increment the insert position for cases when we have multiple
+             * new components
+             */
+            insertPosition += 1;
+        }
+
+        return newComponents;
     }
 }
 
