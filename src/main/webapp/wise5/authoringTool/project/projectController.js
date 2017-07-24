@@ -955,6 +955,15 @@ var ProjectController = function () {
         value: function cancelMove() {
             this.insertGroupMode = false;
             this.insertNodeMode = false;
+
+            // clear any new node that we might be inserting
+            this.nodeToAdd = null;
+
+            // turn off the modes
+            this.createMode = false;
+            this.moveMode = false;
+            this.copyMode = false;
+            this.importMode = false;
         }
 
         /**
