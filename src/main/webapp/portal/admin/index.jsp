@@ -120,9 +120,9 @@
 						</h5>
 						<h5>
 							<spring:message code='admin.index.find' />
-							<a href="${contextPath}/admin/account/lookupuser.html?userType=teacher"><spring:message
+							<a href="${contextPath}/admin/account/lookupuser?userType=teacher"><spring:message
 									code='teacher_cap' /></a> | <a
-								href="${contextPath}/admin/account/lookupuser.html?userType=student"><spring:message
+								href="${contextPath}/admin/account/lookupuser?userType=student"><spring:message
 								code='student_cap' /></a>
 						</h5>
 						<h5>

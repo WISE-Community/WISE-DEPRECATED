@@ -141,7 +141,7 @@ const TopBar = {
                     </md-menu-content>
                 </md-menu>
                 <md-menu md-position-mode="target-right target" md-offset="40 26">
-                    <md-button aria-label="{{ 'USER_MENU' | translate }}"
+                    <md-button aria-label="{{ 'pauseStudentScreens' | translate }}"
                                class="md-icon-button"
                                ng-class="{ 'has-indicator has-indicator--icon-button': $ctrl.isAnyPeriodPaused() }"
                                ng-click="$mdMenu.open($event)">

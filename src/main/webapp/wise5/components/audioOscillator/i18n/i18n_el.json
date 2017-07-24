@@ -1,4 +1,5 @@
 {
+    "AudioOscillator.componentTypeLabel": "Ακουστικός Ταλαντωτής",
     "audioOscillator.add": "Πρόσθεση",
     "audioOscillator.addOscillatorType": "Πρόσθεση Τύπου Ταλαντωτή",
     "audioOscillator.errorYouHaveAlreadyAddedOscillatorType": "Σφάλμα: Έχετε ήδη προσθέσει {{oscillatorTypeToAdd}}",
@@ -18,7 +19,6 @@
     "audioOscillator.oscilloscopeStopAfterGoodDraw": "Παύση Παλμογράφου Ύστερα από Καλό Σχέδιο",
     "audioOscillator.play": "Παίξε",
     "audioOscillator.save": "Αποθήκευση",
-    "audioOscillator.stop": "Παύση",
     "audioOscillator.startingFrequency": "Συχνότητα Έναρξης",
-    "AudioOscillator.componentTypeLabel": "Ακουστικός Ταλαντωτής"
+    "audioOscillator.stop": "Παύση"
 }

@@ -52,13 +52,15 @@ describe('WISE Classroom Monitor', () => {
                 browser.waitForAngular();   // wait for Angular to load
                 expect(browser.getCurrentUrl()).toMatch('http://localhost:8080/wise/classroomMonitor/[0-9]+#/project/');
                 expect(browser.getTitle()).toEqual('WISE Classroom Monitor');
+                expect(element(by.cssContainingText('top-bar',"My Awesome Science Project")).isDisplayed()).toBeTruthy();  // check that the title of the run is displayed
+                expect(element(by.cssContainingText('md-toolbar',"Grade By Step")).isDisplayed()).toBeTruthy();  // check Grade by Step view is displayed
 
                 // check for elements on the page
-                expect(element(by.xpath('//button[@aria-label="Main Menu"]')).isPresent()).toBeTruthy();
-                expect(element(by.xpath('//a[@aria-label="Grading & Feedback"]')).isPresent()).toBeTruthy();
-                expect(element(by.xpath('//a[@aria-label="Student Summary"]')).isPresent()).toBeTruthy();
+                expect(element(by.xpath('//a[@aria-label="Grade By Step"]')).isPresent()).toBeTruthy();
+                expect(element(by.xpath('//a[@aria-label="Grade By Student"]')).isPresent()).toBeTruthy();
                 expect(element(by.xpath('//a[@aria-label="Milestones"]')).isPresent()).toBeTruthy();
 
+                // tests for notifications
                 let notificationButton = element(by.xpath('//button[@aria-label="Alerts"]'));
                 let notificationMenu = element(by.cssContainingText('.md-open-menu-container','Alerts'));
                 expect(notificationMenu.getAttribute('aria-hidden')).toEqual("true");  // Notification menu should be hidden
@@ -69,6 +71,18 @@ describe('WISE Classroom Monitor', () => {
                 element(by.xpath('//body')).click();
                 expect(notificationMenu.getAttribute('aria-hidden')).toEqual("true");  // Notification menu should be hidden
 
+                // tests for pause screens
+                let pauseScreensButton = element(by.xpath('//button[@aria-label="Lock Student Screens"]'));
+                let pauseScreensMenu = element(by.cssContainingText('.md-open-menu-container','Lock Student Screens'));
+                expect(pauseScreensMenu.getAttribute('aria-hidden')).toEqual("true");  // Pause Screens menu should be hidden
+
+                pauseScreensButton.click();   // Open the Pause Screens Menu by clicking on the pause screens button
+                expect(pauseScreensMenu.getAttribute('aria-hidden')).toEqual("false");  // Pause Screens Menu should be displayed
+                // Clicking outside of the Pause Screens Menu should dismiss the Pause Screens Menu
+                element(by.xpath('//body')).click();
+                expect(pauseScreensMenu.getAttribute('aria-hidden')).toEqual("true");  // Pause Screens menu should be hidden
+
+                // tests for user accounts
                 let accountButton = element(by.xpath('//button[@aria-label="User Menu"]'));
                 expect(accountButton.isPresent()).toBeTruthy();
 

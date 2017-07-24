@@ -1,6 +1,6 @@
 // E2E test for Authoring Tool
 describe('WISE Authoring Tool', () => {
-    
+
     /**
      * @name waitForUrlToChangeTo
      * @description Wait until the URL changes to match a provided regex
@@ -23,7 +23,7 @@ describe('WISE Authoring Tool', () => {
         );
     }
 
-    let projectStructureButton = element(by.xpath('//side-menu/div/a[@aria-label="Project Structure"]'));
+    let projectHomeButton = element(by.xpath('//side-menu/div/a[@aria-label="Project Home"]'));
     let createNewStepButton = $("#createNewStepButton");
     let createNewProjectButton = $("#createNewProjectButton");
     let chooseStepDropDown = element(by.xpath('//step-tools/div/md-select[@ng-model="$ctrl.nodeId"]'));
@@ -98,7 +98,7 @@ describe('WISE Authoring Tool', () => {
         expect(createNewStepButton.isEnabled()).toBe(true);
         expect($("#previewProjectButton").isEnabled()).toBe(true);
         // look for side-menu items
-        expect(projectStructureButton.isDisplayed()).toBe(true);
+        expect(projectHomeButton.isDisplayed()).toBe(true);
         expect(element(by.xpath('//side-menu/div/a[@aria-label="Notebook Settings"]')).isDisplayed()).toBe(true);
         expect(element(by.xpath('//side-menu/div/a[@aria-label="File Manager"]')).isDisplayed()).toBe(true);
         expect(element(by.xpath('//side-menu/div/a[@aria-label="Project Info"]')).isDisplayed()).toBe(true);
@@ -128,7 +128,7 @@ describe('WISE Authoring Tool', () => {
             expect(insertInsideAct1Button.isDisplayed()).toBeTruthy();
             insertInsideAct1Button.click();
             let EC = protractor.ExpectedConditions;
-            browser.wait(EC.alertIsPresent(), 5000);  // Wait for an alert pops up asking if it should this should be the first step in the project.
+            browser.wait(EC.alertIsPresent(), 3000);  // Wait for an alert pops up asking if it should this should be the first step in the project.
             browser.switchTo().alert().accept();      // accept the alert
         });
 
@@ -138,6 +138,7 @@ describe('WISE Authoring Tool', () => {
         });
 
         // now test adding another step after the first step. This time the alert should not show.
+
         createNewStepButton.click();
         createNodeTitle.clear();  // clear out what's there.
         createNodeTitle.sendKeys('Step 2');
@@ -157,7 +158,6 @@ describe('WISE Authoring Tool', () => {
     });
 
     // TODO test adding new activity
-
     it('should allow author to jump to step authoring using the navigation drop-down menu', () => {
         chooseStepDropDown.click();
         element.all(by.repeater("item in $ctrl.idToOrder | toArray | orderBy : 'order'")).then((stepSelectOptions) => {
@@ -174,7 +174,7 @@ describe('WISE Authoring Tool', () => {
             expect(browser.getCurrentUrl()).toEqual('http://localhost:8080/wise/author#/project/' + projectId + '/node/group1');
         });
 
-        projectStructureButton.click(); // click on the project view button
+        projectHomeButton.click(); // click on the project view button
         expect(browser.getCurrentUrl()).toEqual('http://localhost:8080/wise/author#/project/' + projectId);
     });
 
@@ -237,7 +237,7 @@ describe('WISE Authoring Tool', () => {
         element(by.xpath('//side-menu/div/a[@aria-label="File Manager"]')).click();
         expect(browser.getCurrentUrl()).toEqual('http://localhost:8080/wise/author#/project/' + projectId + '/asset');
         expect($(".drop-box").isPresent()).toBeTruthy();  // the drop box for uploading assets should exist.
-        projectStructureButton.click();
+        projectHomeButton.click();
         expect(browser.getCurrentUrl()).toEqual('http://localhost:8080/wise/author#/project/' + projectId); // should go back to the project editing view.
     });
 
@@ -268,7 +268,7 @@ describe('WISE Authoring Tool', () => {
             summaryTextarea.sendKeys('This is my science project summary.');
         });
 
-        projectStructureButton.click();
+        projectHomeButton.click();
         expect(browser.getCurrentUrl()).toEqual('http://localhost:8080/wise/author#/project/' + projectId); // should go back to the project editing view.
         let projectTitle = element(by.css('[ng-if="$ctrl.projectTitle"]'));
         expect(element(by.cssContainingText('top-bar',"My Awesome Science Project")).isDisplayed()).toBeTruthy();  // check that the title has been updated
@@ -296,7 +296,7 @@ describe('WISE Authoring Tool', () => {
         browser.getAllWindowHandles().then((handles) => {
             browser.switchTo().window(handles[1]).then(() => {
                 browser.refresh();  // needed for this issue https://github.com/angular/protractor/issues/2643
-                expect(browser.getCurrentUrl()).toEqual('http://localhost:8080/wise/project/' + projectId + '?constraints=false#/vle/node1');
+                expect(browser.getCurrentUrl()).toContain('http://localhost:8080/wise/project/' + projectId + '?constraints=false#/vle/');
                 // close the current window
                 browser.driver.close().then(() => {
                     // switch to the main authoring window
