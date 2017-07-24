@@ -709,13 +709,13 @@
         </div>
     </div>
 </div>
-<div style='margin-left: 176;'>
+<div style='margin-left: 176;' ng-show='nodeAuthoringController.insertComponentMode'>
     <md-button class='moveComponentButton md-raised md-primary'
-               ng-show='nodeAuthoringController.insertComponentMode'
                ng-click='nodeAuthoringController.insertComponentAsFirst()'>
         <md-icon>keyboard_backspace</md-icon>
         <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'insertAsFirstComponent' | translate }}</md-tooltip>
     </md-button>
+    <span style='font-weight:bold; margin-right:10px'>{{ 'insertAsFirstComponent' | translate }}</span>
 </div>
 <div ng-repeat='(componentIndex, component) in nodeAuthoringController.components'
      class="md-padding"

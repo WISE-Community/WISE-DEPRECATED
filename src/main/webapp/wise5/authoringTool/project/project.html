@@ -281,7 +281,7 @@
                                             ng-if='projectController.isGroupNode(item.$key)'
                                             ng-click='projectController.insertInside(item.$key)'>
                                         <md-icon>call_received</md-icon>
-                                        <md-tooltip md-direction="top" class="projectButtonTooltip">{{ "insertInside" | translate }}</md-tooltip>
+                                        <md-tooltip md-direction="top" class="projectButtonTooltip">{{ "insertAsFirstStep" | translate }}</md-tooltip>
                                     </md-button>
                                     <md-button class='insertButton md-raised md-primary' ng-show='(projectController.insertNodeMode && !projectController.isGroupNode(item.$key)) || (projectController.insertGroupMode && projectController.isGroupNode(item.$key))'
                                            ng-if='item.order!==0'

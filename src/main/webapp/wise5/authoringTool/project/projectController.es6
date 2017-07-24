@@ -55,6 +55,9 @@ class ProjectController {
         this.advancedMode = false;
         this.showJSONAuthoring = false;
 
+        // scroll to the top of the page
+        this.$anchorScroll('top');
+        
         // process metadata
         this.metadata = this.ProjectService.getProjectMetadata();
 
