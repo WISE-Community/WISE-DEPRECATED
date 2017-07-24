@@ -142,13 +142,15 @@
                                     -->
                         </div>
                         <div ng-show='projectController.showCreateGroup' layout='row' style='height:50'>
-                            <div layout='row' style='margin-top: -8px;'>
+                            <div layout='row'>
                                 <md-input-container style="width: 500;">
                                     <label translate="activityTitle"></label>
-                                    <input ng-model='projectController.createGroupTitle' ng-keyup='$event.keyCode == 13 && projectController.createGroup()' size='50'/>
+                                    <input id='createGroupTitle'
+                                           ng-model='projectController.createGroupTitle'
+                                           ng-keyup='$event.keyCode == 13 && projectController.createGroup()'/>
                                 </md-input-container>
                             </div>
-                            <div layout='row'>
+                            <div layout='row' style='margin-top: 8px;'>
                                 <md-button id="createGroupCreateButton" class='createButton md-raised md-primary' ng-click='projectController.createGroup()'>
                                     <md-icon>check</md-icon>
                                     <md-tooltip md-direction="top" class="projectButtonTooltip">{{ "create" | translate }}</md-tooltip>
@@ -160,13 +162,15 @@
                             </div>
                         </div>
                         <div ng-show='projectController.showCreateNode' layout='row' style='height:50;'>
-                            <div layout='row' style='margin-top: -8px;'>
+                            <div layout='row'>
                                 <md-input-container style="width: 500;">
                                     <label translate="stepTitle"></label>
-                                    <input ng-model='projectController.createNodeTitle' ng-keyup='$event.keyCode == 13 && projectController.createNode()'/>
+                                    <input id='createNodeTitle'
+                                           ng-model='projectController.createNodeTitle'
+                                           ng-keyup='$event.keyCode == 13 && projectController.createNode()'/>
                                 </md-input-container>
                             </div>
-                            <div layout='row'>
+                            <div layout='row' style='margin-top: 8px;'>
                                 <md-button id="createNodeCreateButton" class='createButton md-raised md-primary' ng-click='projectController.createNode()'>
                                     <md-icon>check</md-icon>
                                     <md-tooltip md-direction="top" class="projectButtonTooltip">{{ "create" | translate }}</md-tooltip>
