@@ -47,7 +47,7 @@ function lookupFieldChanged() {
 	</spring:bind>
 </div>
 
-<form:form method="post" action="lookupuser.html" commandName="lookupUserParameters" id="lookupUser" autocomplete='off'>
+<form:form method="post" action="lookupuser" commandName="lookupUserParameters" id="lookupUser" autocomplete='off'>
 	<c:choose>
 		<c:when test="${userType == 'student'}">
 			<form:label path="lookupField"><spring:message code="admin.account.lookupteacher.searchForStudentsBy" /></form:label>

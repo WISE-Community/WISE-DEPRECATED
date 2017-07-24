@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2008-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2008-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  * 
  * This software is distributed under the GNU General Public License, v3,
@@ -46,11 +46,12 @@ import org.wise.portal.presentation.validators.LookupUserParametersValidator;
 import org.wise.portal.service.user.UserService;
 
 /**
+ * Admin controller for looking up user accounts
  * @author Patrick Lawler
  * @author Hiroki Terashima
  */
 @Controller
-@RequestMapping("/admin/account/lookupuser.html")
+@RequestMapping("/admin/account/lookupuser")
 public class LookupUserController {
 	
 	@Autowired
@@ -68,7 +69,7 @@ public class LookupUserController {
 			return null;
 		}
 
-		Object term = new Object();
+		Object term;
 		
 		String lookupField = param.getLookupField();
 		String lookupCriteria = param.getLookupCriteria();
@@ -103,7 +104,7 @@ public class LookupUserController {
 			usernames.add(user.getUserDetails().getUsername());
 		}
 		
-		if (users.size() < 1){
+		if (users.size() < 1) {
 			modelAndView.addObject("message", "No users given search criteria found.");
 		} else {
 			if ("student".equals(request.getParameter("userType"))) {
@@ -116,7 +117,7 @@ public class LookupUserController {
 		return modelAndView;
 	}
 	
-    @RequestMapping(method=RequestMethod.GET) 
+    @RequestMapping(method = RequestMethod.GET)
     public ModelAndView initializeForm(ModelMap model, HttpServletRequest request) { 
     	ModelAndView mav = new ModelAndView();
     	mav.addObject("lookupUserParameters", new LookupUserParameters());
@@ -132,18 +133,11 @@ public class LookupUserController {
         return mav; 
     } 
 
-	private Schoollevel getLevel(String level){
+	private Schoollevel getLevel(String level) {
 		for (Schoollevel schoolLevel : Schoollevel.values()) {
 			if (schoolLevel.toString().toUpperCase().contains(level.toUpperCase()))
 				return schoolLevel;
 		}
 		return Schoollevel.OTHER;
-	}
-	
-	/**
-	 * @param userService the userService to set
-	 */
-	public void setUserService(UserService userService) {
-		this.userService = userService;
 	}
 }

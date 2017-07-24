@@ -39,6 +39,7 @@ var AuthoringToolController = function () {
         // ui-views and their corresponding names, labels, and icons
         this.views = {
             'root.project': {
+                id: "projectHomeButton",
                 name: this.$translate('projectHome'),
                 label: this.$translate('projectHome'),
                 icon: 'home',
