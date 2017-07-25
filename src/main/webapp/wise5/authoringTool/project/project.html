@@ -195,46 +195,76 @@
                     </div>
                     <div ng-show='projectController.showImportView'>
                         <h4>{{ 'importStepsParens' | translate }}</h4>
-                        {{ 'myProjects' | translate }}
                         <br/>
-                        <select ng-model='projectController.importMyProjectId'
-                                ng-options="project.id as (project.id + ' ' + project.name + (project.runId ? ' (' + ('RUN_ID' | translate) + ': ' + project.runId + ')': '')) for project in projectController.myProjectsList"
-                                ng-change='projectController.showMyImportProject(projectController.importMyProjectId)'>
-                                <option value='' translate='selectMyProject'></option>
-                        </select>
+                        <span>{{ 'chooseAProjectToImportAndThenChooseAStep' | translate }}</span>
                         <br/>
-                        {{ 'libraryProjects' | translate }}
+                        <md-input-container style='margin-right: 20; width: 100%;'>
+                            <label>{{ 'myProjects' | translate }}</label>
+                            <md-select ng-model='projectController.importMyProjectId'
+                                       ng-change='projectController.showMyImportProject(projectController.importMyProjectId)'
+                                       style='width: 100%;'>
+                                <md-option ng-repeat="project in projectController.myProjectsList"
+                                           value='{{project.id}}'>
+                                    {{project.id + ' ' + project.name + (project.runId ? ' (' + ('RUN_ID' | translate) + ': ' + project.runId + ')': '')}}
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
                         <br/>
-                        <select ng-model='projectController.importLibraryProjectId'
-                                ng-options="project.id as (project.id + ' ' + project.title + (project.runId ? ' (' + ('RUN_ID' | translate) + ': ' + project.runId + ')': '')) for project in projectController.libraryProjectsList"
-                                ng-change='projectController.showLibraryImportProject(projectController.importLibraryProjectId)'>
-                                <option value='' translate='selectLibraryProject'></option>
-                        </select>
+                        <md-input-container style='margin-right: 20; width: 100%;'>
+                            <label>{{ 'libraryProjects' | translate }}</label>
+                            <md-select ng-model='projectController.importLibraryProjectId'
+                                       ng-change='projectController.showLibraryImportProject(projectController.importLibraryProjectId)'
+                                       style='width: 100%;'>
+                                <md-option ng-repeat="project in projectController.libraryProjectsList"
+                                           value='{{project.id}}'>
+                                    {{project.id + ' ' + project.title + (project.runId ? ' (' + ('RUN_ID' | translate) + ': ' + project.runId + ')': '')}}
+                                </md-option>
+                            </md-select>
+                        </md-input-container>
                         <br/>
-                        <br/>
-                        <button ng-if='projectController.importProject != null'
-                                ng-click='projectController.importSteps()' translate='importStepsParens'></button>
+                        <md-button class='topButton md-raised md-primary'
+                                ng-if='projectController.importProject != null'
+                                ng-click='projectController.importSteps()'>
+                            <md-icon>system_update_alt</md-icon>
+                            <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'importStepsParens' | translate }}</md-tooltip>
+                        </md-button>
                         <br/>
                         <h4 style='display:inline'>{{projectController.importProject.metadata.title}}</h4>
-                        <button ng-if='projectController.importProject != null'
-                                ng-click='projectController.previewImportProject()'
-                                translate='preview'></button>
+                        <md-button class='topButton md-raised md-primary'
+                                ng-if='projectController.importProject != null'
+                                ng-click='projectController.previewImportProject()'>
+                            <md-icon>visibility</md-icon>
+                            <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'previewProject' | translate }}</md-tooltip>
+                        </md-button>
                         <br/>
-                        <div ng-repeat='importItem in projectController.importProjectIdToOrder'>
-                            <input type='checkbox'
-                                   ng-model='importItem.checked'
-                                   ng-if='importItem.order != 0 && importItem.node.type != "group"' />
-                            <h6 style='display: inline; cursor: pointer'
-                                ng-if='importItem.order != 0'>
+                        <div ng-repeat='importItem in projectController.importProjectIdToOrder'
+                             ng-class='{"groupHeader": importItem.node.type == "group", "stepHeader": importItem.node.type != "group"}'>
+                            <h6 ng-if='importItem.order != 0 && importItem.node.type == "group"'>
                                 {{importItem.stepNumber}}: {{importItem.node.title}}
                             </h6>
-                            <button ng-if='importItem.node.type != "group"'
-                                    ng-click='projectController.previewImportNode(importItem.node)'
-                                    translate='preview'></button>
+                            <div layout='row' ng-if='importItem.order != 0 && importItem.node.type != "group"'>
+                                <div layout='row'>
+                                    <md-checkbox ng-model='importItem.checked'>
+                                        <h6 style='display: inline;'>{{importItem.stepNumber}}: {{importItem.node.title}}</h6>
+                                    </md-checkbox>
+                                </div>
+                                <div layout='row' style='height: 40;'>
+                                    <md-button class='regularButton md-raised md-primary'
+                                            style='margin-top: -5;'
+                                            ng-click='projectController.previewImportNode(importItem.node)'
+                                            aria-label='{{ "previewStep" | translate }}'>
+                                        <md-icon>visibility</md-icon>
+                                        <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'previewStep' | translate }}</md-tooltip>
+                                    </md-button>
+                                </div>
+                            </div>
                         </div>
-                        <button ng-if='projectController.importProject != null'
-                                ng-click='projectController.importSteps()'
-                                translate='importStepsParens'></button>
+                        <md-button class='topButton md-raised md-primary'
+                                ng-if='projectController.importProject != null'
+                                ng-click='projectController.importSteps()'>
+                            <md-icon>system_update_alt</md-icon>
+                            <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'importStepsParens' | translate }}</md-tooltip>
+                        </md-button>
                     </div>
                     <div ng-show='projectController.editProjectRubricMode'>
                         <h5 translate="editProjectRubric"></h5>
