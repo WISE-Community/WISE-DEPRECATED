@@ -37,10 +37,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.acls.domain.BasePermission;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.wise.portal.domain.authentication.MutableUserDetails;
 import org.wise.portal.domain.group.Group;
+import org.wise.portal.domain.impl.ChangeWorkgroupParameters;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.teacher.management.ViewMyStudentsPeriod;
@@ -49,7 +51,9 @@ import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.acl.AclService;
 import org.wise.portal.service.authentication.UserDetailsService;
+import org.wise.portal.service.group.GroupService;
 import org.wise.portal.service.run.RunService;
+import org.wise.portal.service.user.UserService;
 import org.wise.portal.service.workgroup.WorkgroupService;
 
 /**
@@ -67,6 +71,12 @@ public class ManageStudentsController {
 
 	@Autowired
 	private WorkgroupService workgroupService;
+
+	@Autowired
+	private UserService userService;
+
+	@Autowired
+	private GroupService groupService;
 
 	@Autowired
 	private AclService<Run> aclService;
@@ -389,6 +399,90 @@ public class ManageStudentsController {
 			//write the excel xls to the output stream
 			wb.write(outputStream);
 		}
+	}
+
+	/**
+	 * Handle teacher's request to update workgroup membership
+	 * @param request
+	 * @param response
+	 * @throws Exception
+	 */
+	@RequestMapping(method = RequestMethod.POST, value = "/teacher/management/submitworkgroupchanges")
+	protected void handleWorkgroupChanges(
+			HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+		// scenarios
+		// 0) workgroupFrom and workgroupTo are equal. -> do nothing
+		// 1) workgroupFrom and workgroupTo are both positive and exist
+		// 2) workgroupFrom is groupless and workgroupTo is positive
+		// 3) workgroupFrom is groupless and workgroupTo is negative
+		// 4) workgroupFrom is positive and workgroupTo is groupless
+		// 5) workgroupFrom is positive and workgroupTo is negative
+		String periodId = request.getParameter("periodId");
+		String runId = request.getParameter("runId");
+		String tabIndex = request.getParameter("tabIndex");
+
+		int numChanges = Integer.parseInt(request.getParameter("numChanges"));
+		Map<Long, ArrayList<ChangeWorkgroupParameters>> newWorkgroupMap =
+				new HashMap<Long, ArrayList<ChangeWorkgroupParameters>>();
+
+		for (int i = 0; i < numChanges; i++) {
+			String userId = request.getParameter("userId_" + i);
+			String workgroupFromId = request.getParameter("workgroupFrom_" + i);
+			String workgroupToId = request.getParameter("workgroupTo_" + i);
+			if (workgroupFromId.equals(workgroupToId)) {
+				continue;
+			}
+			ChangeWorkgroupParameters params = new ChangeWorkgroupParameters();
+			params.setRunId(Long.valueOf(runId));
+			params.setPeriodId(Long.valueOf(periodId));
+			params.setStudent(userService.retrieveById(Long.valueOf(userId)));
+			if (!workgroupFromId.equals("groupless")) {
+				params.setWorkgroupFrom(workgroupService.retrieveById(Long.valueOf(workgroupFromId)));
+			}
+			if (!workgroupToId.equals("groupless")) {
+				Long workgroupToIdLong = Long.valueOf(workgroupToId);
+				// handle cases when workgroupTo is negative separately (see below)
+				if (workgroupToIdLong < 0) {
+					ArrayList<ChangeWorkgroupParameters> newWGParams =
+							newWorkgroupMap.get(workgroupToIdLong);
+					if (newWGParams == null) {
+						newWGParams = new ArrayList<ChangeWorkgroupParameters>();
+					}
+					newWGParams.add(params);
+					newWorkgroupMap.put(workgroupToIdLong, newWGParams);
+					continue;
+				}
+				params.setWorkgroupTo(workgroupService.retrieveById(workgroupToIdLong));
+				params.setWorkgroupToId(Long.valueOf(workgroupToId));
+			}
+			try {
+				workgroupService.updateWorkgroupMembership(params);
+			} catch (Exception e) {
+				throw e;
+			}
+		}
+
+		// go through all of the new workgroups, create them, and populate them
+		for (Long key : newWorkgroupMap.keySet()) {
+			ArrayList<ChangeWorkgroupParameters> newWGList =
+					newWorkgroupMap.get(key);
+			ChangeWorkgroupParameters params = newWGList.get(0);
+			Set<User> members = new HashSet<User>();
+			members.add(params.getStudent());
+			String name = "newWorkgroup";
+			Run run = runService.retrieveById(params.getRunId());
+			Group period = groupService.retrieveById(params.getPeriodId());
+			params.setWorkgroupToId(new Long(-1));  // to indicate that we want to create a new workgroup
+			Workgroup newWorkgroup = workgroupService.updateWorkgroupMembership(params);
+			for (int j = 1; j < newWGList.size(); j++) {
+				params = newWGList.get(j);
+				params.setWorkgroupTo(newWorkgroup);
+				params.setWorkgroupToId(newWorkgroup.getId());
+				workgroupService.updateWorkgroupMembership(params);
+			}
+		}
+		response.getWriter().print(tabIndex);
 	}
 
 	/**

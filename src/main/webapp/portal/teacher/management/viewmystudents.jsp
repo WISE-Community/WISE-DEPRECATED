@@ -317,7 +317,7 @@ var registerWorkgroupChange = function(event, ui){
 
 var postChanges = function(tabIndex){
 	var postData = function(postdata){
-   		var submitChangesUrl = "submitworkgroupchanges.html";
+   		var submitChangesUrl = "submitworkgroupchanges";
    		$.ajax({
    			type: "POST",
    			url: submitChangesUrl,
