@@ -8,6 +8,8 @@
     "addNewTransitionCriteria": "Add new logic for choosing a path",
     "addReportNote": "Add Report Note",
     "addRemovalCriteria": "Add Removal Criteria",
+    "afterYouHaveChosenTheComponentToImportClickThisButtonToImport": "After you have chosen the component(s) you want to import, click this button to import them",
+    "afterYouHaveChosenTheStepToImportClickThisButtonToImport": "After you have chosen the step(s) you want to import, click this button to import them",
     "all": "All",
     "any": "Any",
     "areYouSureYouWantToDeleteThisFile": "Are you sure you want to delete this file?",
