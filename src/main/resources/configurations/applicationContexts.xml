@@ -120,7 +120,7 @@
 		</constructor-arg>
 	</bean>
 
-	<bean id="switchUserProcessingFilter" class="org.springframework.security.web.authentication.switchuser.SwitchUserFilter">
+	<bean id="switchUserProcessingFilter" class="org.wise.portal.presentation.web.filters.WISESwitchUserFilter">
 		<property name="userDetailsService" ref="userDetailsService" />
 		<property name="switchUserUrl" value="/login/impersonate" />
 		<property name="exitUserUrl" value="/logout/impersonate" />
