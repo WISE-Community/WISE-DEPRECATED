@@ -9,7 +9,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var ProjectController = function () {
-    function ProjectController($anchorScroll, $filter, $interval, $mdDialog, $q, $rootScope, $scope, $state, $stateParams, $timeout, AuthorWebSocketService, ConfigService, ProjectService, TeacherDataService, UtilService) {
+    function ProjectController($anchorScroll, $filter, $interval, $mdDialog, $q, $rootScope, $scope, $state, $stateParams, $timeout, AuthorWebSocketService, ConfigService, ProjectAssetService, ProjectService, TeacherDataService, UtilService) {
         var _this = this;
 
         _classCallCheck(this, ProjectController);
@@ -27,6 +27,7 @@ var ProjectController = function () {
         this.$translate = this.$filter('translate');
         this.AuthorWebSocketService = AuthorWebSocketService;
         this.ConfigService = ConfigService;
+        this.ProjectAssetService = ProjectAssetService;
         this.ProjectService = ProjectService;
         this.TeacherDataService = TeacherDataService;
         this.UtilService = UtilService;
@@ -633,6 +634,12 @@ var ProjectController = function () {
 
                 // go back to the project view
                 _this5.showProjectHome();
+
+                /*
+                 * refresh the project assets in case any of the imported
+                 * steps also imported assets
+                 */
+                _this5.ProjectAssetService.retrieveProjectAssets();
             });
         }
 
@@ -1624,7 +1631,7 @@ var ProjectController = function () {
     return ProjectController;
 }();
 
-ProjectController.$inject = ['$anchorScroll', '$filter', '$interval', '$mdDialog', '$q', '$rootScope', '$scope', '$state', '$stateParams', '$timeout', 'AuthorWebSocketService', 'ConfigService', 'ProjectService', 'TeacherDataService', 'UtilService'];
+ProjectController.$inject = ['$anchorScroll', '$filter', '$interval', '$mdDialog', '$q', '$rootScope', '$scope', '$state', '$stateParams', '$timeout', 'AuthorWebSocketService', 'ConfigService', 'ProjectAssetService', 'ProjectService', 'TeacherDataService', 'UtilService'];
 
 exports.default = ProjectController;
 //# sourceMappingURL=projectController.js.map

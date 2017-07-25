@@ -13,6 +13,7 @@ class NodeAuthoringController {
                 $timeout,
                 ConfigService,
                 NodeService,
+                ProjectAssetService,
                 ProjectService,
                 TeacherDataService,
                 UtilService) {
@@ -29,6 +30,7 @@ class NodeAuthoringController {
         this.$translate = this.$filter('translate');
         this.ConfigService = ConfigService;
         this.NodeService = NodeService;
+        this.ProjectAssetService = ProjectAssetService;
         this.ProjectService = ProjectService;
         this.TeacherDataService = TeacherDataService;
         this.UtilService = UtilService;
@@ -2998,6 +3000,12 @@ class NodeAuthoringController {
                  * authoring views
                  */
                 this.highlightNewComponentsAndThenShowComponentAuthoring(newComponents);
+
+                /*
+                 * refresh the project assets in case any of the imported
+                 * components also imported assets
+                 */
+                this.ProjectAssetService.retrieveProjectAssets();
             });
         }
     }
@@ -3080,6 +3088,12 @@ class NodeAuthoringController {
                  * authoring views
                  */
                 this.highlightNewComponentsAndThenShowComponentAuthoring(newComponents);
+
+                /*
+                 * refresh the project assets in case any of the imported
+                 * components also imported assets
+                 */
+                this.ProjectAssetService.retrieveProjectAssets();
             });
         }
     }
@@ -3389,6 +3403,7 @@ NodeAuthoringController.$inject = [
     '$timeout',
     'ConfigService',
     'NodeService',
+    'ProjectAssetService',
     'ProjectService',
     'TeacherDataService',
     'UtilService'

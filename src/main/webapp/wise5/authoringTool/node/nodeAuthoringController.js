@@ -9,7 +9,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var NodeAuthoringController = function () {
-    function NodeAuthoringController($anchorScroll, $filter, $injector, $location, $mdDialog, $scope, $state, $stateParams, $timeout, ConfigService, NodeService, ProjectService, TeacherDataService, UtilService) {
+    function NodeAuthoringController($anchorScroll, $filter, $injector, $location, $mdDialog, $scope, $state, $stateParams, $timeout, ConfigService, NodeService, ProjectAssetService, ProjectService, TeacherDataService, UtilService) {
         var _this = this;
 
         _classCallCheck(this, NodeAuthoringController);
@@ -26,6 +26,7 @@ var NodeAuthoringController = function () {
         this.$translate = this.$filter('translate');
         this.ConfigService = ConfigService;
         this.NodeService = NodeService;
+        this.ProjectAssetService = ProjectAssetService;
         this.ProjectService = ProjectService;
         this.TeacherDataService = TeacherDataService;
         this.UtilService = UtilService;
@@ -3105,6 +3106,12 @@ var NodeAuthoringController = function () {
                      * authoring views
                      */
                     _this4.highlightNewComponentsAndThenShowComponentAuthoring(newComponents);
+
+                    /*
+                     * refresh the project assets in case any of the imported
+                     * components also imported assets
+                     */
+                    _this4.ProjectAssetService.retrieveProjectAssets();
                 });
             }
         }
@@ -3191,6 +3198,12 @@ var NodeAuthoringController = function () {
                      * authoring views
                      */
                     _this5.highlightNewComponentsAndThenShowComponentAuthoring(newComponents);
+
+                    /*
+                     * refresh the project assets in case any of the imported
+                     * components also imported assets
+                     */
+                    _this5.ProjectAssetService.retrieveProjectAssets();
                 });
             }
         }
@@ -3524,7 +3537,7 @@ var NodeAuthoringController = function () {
 
 ;
 
-NodeAuthoringController.$inject = ['$anchorScroll', '$filter', '$injector', '$location', '$mdDialog', '$scope', '$state', '$stateParams', '$timeout', 'ConfigService', 'NodeService', 'ProjectService', 'TeacherDataService', 'UtilService'];
+NodeAuthoringController.$inject = ['$anchorScroll', '$filter', '$injector', '$location', '$mdDialog', '$scope', '$state', '$stateParams', '$timeout', 'ConfigService', 'NodeService', 'ProjectAssetService', 'ProjectService', 'TeacherDataService', 'UtilService'];
 
 exports.default = NodeAuthoringController;
 //# sourceMappingURL=nodeAuthoringController.js.map

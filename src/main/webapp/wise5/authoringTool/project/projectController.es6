@@ -14,6 +14,7 @@ class ProjectController {
                 $timeout,
                 AuthorWebSocketService,
                 ConfigService,
+                ProjectAssetService,
                 ProjectService,
                 TeacherDataService,
                 UtilService) {
@@ -30,6 +31,7 @@ class ProjectController {
         this.$translate = this.$filter('translate');
         this.AuthorWebSocketService = AuthorWebSocketService;
         this.ConfigService = ConfigService;
+        this.ProjectAssetService = ProjectAssetService;
         this.ProjectService = ProjectService;
         this.TeacherDataService = TeacherDataService;
         this.UtilService = UtilService;
@@ -595,6 +597,12 @@ class ProjectController {
 
             // go back to the project view
             this.showProjectHome();
+
+            /*
+             * refresh the project assets in case any of the imported
+             * steps also imported assets
+             */
+            this.ProjectAssetService.retrieveProjectAssets();
         });
     }
 
@@ -1482,6 +1490,7 @@ ProjectController.$inject = [
     '$timeout',
     'AuthorWebSocketService',
     'ConfigService',
+    'ProjectAssetService',
     'ProjectService',
     'TeacherDataService',
     'UtilService'
