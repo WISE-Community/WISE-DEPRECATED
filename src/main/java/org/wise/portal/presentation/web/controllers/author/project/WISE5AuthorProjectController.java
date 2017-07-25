@@ -1166,7 +1166,7 @@ public class WISE5AuthorProjectController {
          * content.
          * e.g. carbon.png
          */
-        String patternString = "(\'|\"|\\\\\'|\\\\\")([^:][^/]?[^/]?[a-zA-Z0-9@\\._\\/\\s\\-]*[.](png|jpe?g|pdf|gif|mov|mp4|mp3|wav|swf|css|txt|json|xlsx?|doc|html.*?|js))(\'|\"|\\\\\'|\\\\\")";
+        String patternString = "(\'|\"|\\\\\'|\\\\\")([^:][^/]?[^/]?[a-zA-Z0-9@\\._\\/\\s\\-]*[.](png|jpe?g|pdf|gif|mov|mp4|mp3|wav|swf|css|txt|json|xlsx?|doc|html.*?|js)).*?(\'|\"|\\\\\'|\\\\\")";
 
         // compile the regex
         Pattern pattern = Pattern.compile(patternString);

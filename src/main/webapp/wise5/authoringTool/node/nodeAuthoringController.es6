@@ -2935,6 +2935,15 @@ class NodeAuthoringController {
 
             // turn off the add component mode
             this.turnOffAddComponentMode();
+
+            // save the project
+            this.ProjectService.saveProject();
+
+            /*
+             * temporarily highlight the new components and then show the component
+             * authoring views
+             */
+            this.highlightNewComponentsAndThenShowComponentAuthoring(newComponents);
         } else if (this.moveComponentMode) {
 
             // get the component ids we are moving
@@ -2945,6 +2954,15 @@ class NodeAuthoringController {
 
             // turn off the move component mode
             this.turnOffMoveComponentMode();
+
+            // save the project
+            this.ProjectService.saveProject();
+
+            /*
+             * temporarily highlight the new components and then show the component
+             * authoring views
+             */
+            this.highlightNewComponentsAndThenShowComponentAuthoring(newComponents);
         } else if (this.copyComponentMode) {
 
             // get the component ids we are moving
@@ -2955,23 +2973,33 @@ class NodeAuthoringController {
 
             // turn off the copy component mode
             this.turnOffCopyComponentMode();
+
+            // save the project
+            this.ProjectService.saveProject();
+
+            /*
+             * temporarily highlight the new components and then show the component
+             * authoring views
+             */
+            this.highlightNewComponentsAndThenShowComponentAuthoring(newComponents);
         } else if (this.importComponentMode) {
 
             // import the selected components and insert them
-            newComponents = this.importComponents(this.nodeId);
+            this.importComponents(this.nodeId).then((newComponents) => {
 
-            // turn off import component mode
-            this.turnOffImportComponentMode();
+                // turn off import component mode
+                this.turnOffImportComponentMode();
+
+                // save the project
+                this.ProjectService.saveProject();
+
+                /*
+                 * temporarily highlight the new components and then show the component
+                 * authoring views
+                 */
+                this.highlightNewComponentsAndThenShowComponentAuthoring(newComponents);
+            });
         }
-
-        // save the project
-        this.ProjectService.saveProject();
-
-        /*
-         * temporarily highlight the new components and then show the component
-         * authoring views
-         */
-        this.highlightNewComponentsAndThenShowComponentAuthoring(newComponents);
     }
 
     /**
@@ -2990,6 +3018,15 @@ class NodeAuthoringController {
 
             // turn off the add component mode
             this.turnOffAddComponentMode();
+
+            // save the project
+            this.ProjectService.saveProject();
+
+            /*
+             * temporarily highlight the new components and then show the component
+             * authoring views
+             */
+            this.highlightNewComponentsAndThenShowComponentAuthoring(newComponents);
         } else if (this.moveComponentMode) {
 
             // get the component ids we are moving
@@ -3000,6 +3037,15 @@ class NodeAuthoringController {
 
             // turn off the move component mode
             this.turnOffMoveComponentMode();
+
+            // save the project
+            this.ProjectService.saveProject();
+
+            /*
+             * temporarily highlight the new components and then show the component
+             * authoring views
+             */
+            this.highlightNewComponentsAndThenShowComponentAuthoring(newComponents);
         } else if (this.copyComponentMode) {
 
             // get the component ids we are moving
@@ -3010,23 +3056,32 @@ class NodeAuthoringController {
 
             // turn off the copy component mode
             this.turnOffCopyComponentMode();
+
+            // save the project
+            this.ProjectService.saveProject();
+
+            /*
+             * temporarily highlight the new components and then show the component
+             * authoring views
+             */
+            this.highlightNewComponentsAndThenShowComponentAuthoring(newComponents);
         } else if (this.importComponentMode) {
 
             // import the selected components and insert them
-            newComponents = this.importComponents(this.nodeId, componentId);
+            newComponents = this.importComponents(this.nodeId, componentId).then((newComponents) => {
+                // turn off import component mode
+                this.turnOffImportComponentMode();
 
-            // turn off import component mode
-            this.turnOffImportComponentMode();
+                // save the project
+                this.ProjectService.saveProject();
+
+                /*
+                 * temporarily highlight the new components and then show the component
+                 * authoring views
+                 */
+                this.highlightNewComponentsAndThenShowComponentAuthoring(newComponents);
+            });
         }
-
-        // save the project
-        this.ProjectService.saveProject();
-
-        /*
-         * temporarily highlight the new components and then show the component
-         * authoring views
-         */
-        this.highlightNewComponentsAndThenShowComponentAuthoring(newComponents);
     }
 
     /**
@@ -3257,9 +3312,9 @@ class NodeAuthoringController {
         }
 
         // insert the components into the project
-        var newComponents = this.ProjectService.importComponents(selectedComponents, nodeId, insertAfterComponentId);
-
-        return newComponents;
+         return this.ProjectService.importComponents(selectedComponents, this.importProjectId, nodeId, insertAfterComponentId).then((newComponents) => {
+             return newComponents;
+         });
     }
 
 

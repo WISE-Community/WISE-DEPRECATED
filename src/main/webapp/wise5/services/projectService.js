@@ -881,7 +881,7 @@ var ProjectService = function () {
                 // only look for string that starts with ' or " and ends in png, jpg, jpeg, pdf, etc.
                 // the string we're looking for can't start with '/ and "/.
                 // note that this also works for \"abc.png and \'abc.png, where the quotes are escaped
-                contentString = contentString.replace(new RegExp('(\'|\"|\\\\\'|\\\\\")[^:][^\/]?[^\/]?[a-zA-Z0-9@\\._\\/\\s\\-]*[\.](png|jpe?g|pdf|gif|mov|mp4|mp3|wav|swf|css|txt|json|xlsx?|doc|html.*?|js)(\'|\"|\\\\\'|\\\\\")', 'gi'), function (matchedString) {
+                contentString = contentString.replace(new RegExp('(\'|\"|\\\\\'|\\\\\")[^:][^\/]?[^\/]?[a-zA-Z0-9@\\._\\/\\s\\-]*[\.](png|jpe?g|pdf|gif|mov|mp4|mp3|wav|swf|css|txt|json|xlsx?|doc|html.*?|js).*?(\'|\"|\\\\\'|\\\\\")', 'gi'), function (matchedString) {
                     // once found, we prepend the contentBaseURL + "assets/" to the string within the quotes and keep everything else the same.
                     var delimiter = '';
                     var matchedStringWithoutQuotes = '';
@@ -10522,8 +10522,10 @@ var ProjectService = function () {
         }
 
         /**
-         * Add components to a node
-         * @param components an array of component objects
+         * Import components from a project. Also import asset files that are
+         * referenced in any of those components.
+         * @param components an array of component objects that we are importing
+         * @param importProjectId the id of the project we are importing from
          * @param nodeId the node we are adding the components to
          * @param insertAfterComponentId insert the components after this component
          * id
@@ -10532,7 +10534,8 @@ var ProjectService = function () {
 
     }, {
         key: 'importComponents',
-        value: function importComponents(components, nodeId, insertAfterComponentId) {
+        value: function importComponents(components, importProjectId, nodeId, insertAfterComponentId) {
+            var _this6 = this;
 
             var newComponents = [];
             var newComponentIds = [];
@@ -10570,35 +10573,71 @@ var ProjectService = function () {
                 }
             }
 
-            // get the current components in the node
-            var node = this.getNodeById(nodeId);
-            var currentComponents = node.components;
+            // get the import steps URL
+            var importStepsURL = this.ConfigService.getConfigParam('importStepsURL');
 
-            var insertPosition = 0;
+            var httpParams = {};
+            httpParams.method = 'POST';
+            httpParams.url = importStepsURL;
+            httpParams.headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
 
-            if (insertAfterComponentId == null) {
-                // place the new components at the beginning
-                insertPosition = 0;
-            } else {
-                // place the new components after the specified component id
-                insertPosition = this.getComponentPositionByNodeIdAndComponentId(nodeId, insertAfterComponentId) + 1;
-            }
+            // get the project id we are importing into
+            var toProjectId = this.ConfigService.getConfigParam('projectId');
 
-            // loop through all the new components and add them to the project
-            for (var n = 0; n < newComponents.length; n++) {
-                var newComponent = newComponents[n];
+            // get the project id we are importing from
+            var fromProjectId = importProjectId;
 
-                // insert the new component
-                currentComponents.splice(insertPosition, 0, newComponent);
+            // set the POST params
+            var params = {};
+            params.steps = angular.toJson(newComponents);
+            params.fromProjectId = fromProjectId;
+            params.toProjectId = toProjectId;
+            httpParams.data = $.param(params);
 
-                /*
-                 * increment the insert position for cases when we have multiple
-                 * new components
-                 */
-                insertPosition += 1;
-            }
+            /*
+             * Make the request to import the components. This will copy the asset files
+             * and change file names if necessary. If an asset file with the same
+             * name exists in both projects we will check if their content is the
+             * same. If the content is the same we don't need to copy the file. If
+             * the content is different, we need to make a copy of the file with a
+             * new name and change all the references in the steps to use the new
+             * name.
+             */
+            return this.$http(httpParams).then(function (result) {
 
-            return newComponents;
+                // get the components from the result that may have been modified
+                newComponents = result.data;
+
+                // get the current components in the node
+                var node = _this6.getNodeById(nodeId);
+                var currentComponents = node.components;
+
+                var insertPosition = 0;
+
+                if (insertAfterComponentId == null) {
+                    // place the new components at the beginning
+                    insertPosition = 0;
+                } else {
+                    // place the new components after the specified component id
+                    insertPosition = _this6.getComponentPositionByNodeIdAndComponentId(nodeId, insertAfterComponentId) + 1;
+                }
+
+                // loop through all the new components and add them to the project
+                for (var n = 0; n < newComponents.length; n++) {
+                    var newComponent = newComponents[n];
+
+                    // insert the new component
+                    currentComponents.splice(insertPosition, 0, newComponent);
+
+                    /*
+                     * increment the insert position for cases when we have multiple
+                     * new components
+                     */
+                    insertPosition += 1;
+                }
+
+                return newComponents;
+            });
         }
     }]);
 

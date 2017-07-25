@@ -3030,6 +3030,7 @@ var NodeAuthoringController = function () {
     }, {
         key: 'insertComponentAsFirst',
         value: function insertComponentAsFirst() {
+            var _this4 = this;
 
             var newComponents = [];
 
@@ -3041,6 +3042,15 @@ var NodeAuthoringController = function () {
 
                 // turn off the add component mode
                 this.turnOffAddComponentMode();
+
+                // save the project
+                this.ProjectService.saveProject();
+
+                /*
+                 * temporarily highlight the new components and then show the component
+                 * authoring views
+                 */
+                this.highlightNewComponentsAndThenShowComponentAuthoring(newComponents);
             } else if (this.moveComponentMode) {
 
                 // get the component ids we are moving
@@ -3051,6 +3061,15 @@ var NodeAuthoringController = function () {
 
                 // turn off the move component mode
                 this.turnOffMoveComponentMode();
+
+                // save the project
+                this.ProjectService.saveProject();
+
+                /*
+                 * temporarily highlight the new components and then show the component
+                 * authoring views
+                 */
+                this.highlightNewComponentsAndThenShowComponentAuthoring(newComponents);
             } else if (this.copyComponentMode) {
 
                 // get the component ids we are moving
@@ -3061,23 +3080,33 @@ var NodeAuthoringController = function () {
 
                 // turn off the copy component mode
                 this.turnOffCopyComponentMode();
+
+                // save the project
+                this.ProjectService.saveProject();
+
+                /*
+                 * temporarily highlight the new components and then show the component
+                 * authoring views
+                 */
+                this.highlightNewComponentsAndThenShowComponentAuthoring(newComponents);
             } else if (this.importComponentMode) {
 
                 // import the selected components and insert them
-                newComponents = this.importComponents(this.nodeId);
+                this.importComponents(this.nodeId).then(function (newComponents) {
 
-                // turn off import component mode
-                this.turnOffImportComponentMode();
+                    // turn off import component mode
+                    _this4.turnOffImportComponentMode();
+
+                    // save the project
+                    _this4.ProjectService.saveProject();
+
+                    /*
+                     * temporarily highlight the new components and then show the component
+                     * authoring views
+                     */
+                    _this4.highlightNewComponentsAndThenShowComponentAuthoring(newComponents);
+                });
             }
-
-            // save the project
-            this.ProjectService.saveProject();
-
-            /*
-             * temporarily highlight the new components and then show the component
-             * authoring views
-             */
-            this.highlightNewComponentsAndThenShowComponentAuthoring(newComponents);
         }
 
         /**
@@ -3088,6 +3117,7 @@ var NodeAuthoringController = function () {
     }, {
         key: 'insertComponentAfter',
         value: function insertComponentAfter(componentId) {
+            var _this5 = this;
 
             var newComponents = [];
 
@@ -3099,6 +3129,15 @@ var NodeAuthoringController = function () {
 
                 // turn off the add component mode
                 this.turnOffAddComponentMode();
+
+                // save the project
+                this.ProjectService.saveProject();
+
+                /*
+                 * temporarily highlight the new components and then show the component
+                 * authoring views
+                 */
+                this.highlightNewComponentsAndThenShowComponentAuthoring(newComponents);
             } else if (this.moveComponentMode) {
 
                 // get the component ids we are moving
@@ -3109,6 +3148,15 @@ var NodeAuthoringController = function () {
 
                 // turn off the move component mode
                 this.turnOffMoveComponentMode();
+
+                // save the project
+                this.ProjectService.saveProject();
+
+                /*
+                 * temporarily highlight the new components and then show the component
+                 * authoring views
+                 */
+                this.highlightNewComponentsAndThenShowComponentAuthoring(newComponents);
             } else if (this.copyComponentMode) {
 
                 // get the component ids we are moving
@@ -3119,23 +3167,32 @@ var NodeAuthoringController = function () {
 
                 // turn off the copy component mode
                 this.turnOffCopyComponentMode();
+
+                // save the project
+                this.ProjectService.saveProject();
+
+                /*
+                 * temporarily highlight the new components and then show the component
+                 * authoring views
+                 */
+                this.highlightNewComponentsAndThenShowComponentAuthoring(newComponents);
             } else if (this.importComponentMode) {
 
                 // import the selected components and insert them
-                newComponents = this.importComponents(this.nodeId, componentId);
+                newComponents = this.importComponents(this.nodeId, componentId).then(function (newComponents) {
+                    // turn off import component mode
+                    _this5.turnOffImportComponentMode();
 
-                // turn off import component mode
-                this.turnOffImportComponentMode();
+                    // save the project
+                    _this5.ProjectService.saveProject();
+
+                    /*
+                     * temporarily highlight the new components and then show the component
+                     * authoring views
+                     */
+                    _this5.highlightNewComponentsAndThenShowComponentAuthoring(newComponents);
+                });
             }
-
-            // save the project
-            this.ProjectService.saveProject();
-
-            /*
-             * temporarily highlight the new components and then show the component
-             * authoring views
-             */
-            this.highlightNewComponentsAndThenShowComponentAuthoring(newComponents);
         }
 
         /**
@@ -3147,7 +3204,7 @@ var NodeAuthoringController = function () {
     }, {
         key: 'highlightNewComponentsAndThenShowComponentAuthoring',
         value: function highlightNewComponentsAndThenShowComponentAuthoring(newComponents) {
-            var _this4 = this;
+            var _this6 = this;
 
             // use a timeout to allow the components time to show up in the UI
             this.$timeout(function () {
@@ -3177,7 +3234,7 @@ var NodeAuthoringController = function () {
                                  * element won't get highlighted in the first place
                                  * unless this timeout is used.
                                  */
-                                _this4.$timeout(function () {
+                                _this6.$timeout(function () {
                                     // slowly fade back to original background color
                                     componentElement.css({
                                         'transition': 'background-color 3s ease-in-out',
@@ -3195,24 +3252,24 @@ var NodeAuthoringController = function () {
                  * and type view a little longer so that they can see the change
                  * they just made before we switch back to the normal view.
                  */
-                _this4.$timeout(function () {
+                _this6.$timeout(function () {
                     // show the component authoring
-                    _this4.showComponentAuthoring();
+                    _this6.showComponentAuthoring();
 
                     // turn off the insert component mode
-                    _this4.turnOffInsertComponentMode();
+                    _this6.turnOffInsertComponentMode();
 
                     // hide the create component elements
-                    _this4.showCreateComponent = false;
+                    _this6.showCreateComponent = false;
 
                     // uncheck all the component checkboxes
-                    _this4.clearComponentsToChecked();
+                    _this6.clearComponentsToChecked();
 
                     /*
                      * use a timeout to wait for the UI to update and then scroll
                      * to the first new component
                      */
-                    _this4.$timeout(function () {
+                    _this6.$timeout(function () {
 
                         if (newComponents != null && newComponents.length > 0) {
 
@@ -3269,7 +3326,7 @@ var NodeAuthoringController = function () {
     }, {
         key: 'showImportProject',
         value: function showImportProject(importProjectId) {
-            var _this5 = this;
+            var _this7 = this;
 
             this.importProjectId = importProjectId;
 
@@ -3286,13 +3343,13 @@ var NodeAuthoringController = function () {
                 this.ProjectService.retrieveProjectById(this.importProjectId).then(function (projectJSON) {
 
                     // create the mapping of node id to order for the import project
-                    _this5.importProjectIdToOrder = {};
-                    _this5.importProject = projectJSON;
+                    _this7.importProjectIdToOrder = {};
+                    _this7.importProject = projectJSON;
 
                     // calculate the node order of the import project
-                    var result = _this5.ProjectService.getNodeOrderOfProject(_this5.importProject);
-                    _this5.importProjectIdToOrder = result.idToOrder;
-                    _this5.importProjectItems = result.nodes;
+                    var result = _this7.ProjectService.getNodeOrderOfProject(_this7.importProject);
+                    _this7.importProjectIdToOrder = result.idToOrder;
+                    _this7.importProjectItems = result.nodes;
                 });
             }
         }
@@ -3389,9 +3446,9 @@ var NodeAuthoringController = function () {
             }
 
             // insert the components into the project
-            var newComponents = this.ProjectService.importComponents(selectedComponents, nodeId, insertAfterComponentId);
-
-            return newComponents;
+            return this.ProjectService.importComponents(selectedComponents, this.importProjectId, nodeId, insertAfterComponentId).then(function (newComponents) {
+                return newComponents;
+            });
         }
 
         /**
