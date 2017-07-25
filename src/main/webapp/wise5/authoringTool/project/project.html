@@ -222,12 +222,16 @@
                             </md-select>
                         </md-input-container>
                         <br/>
-                        <md-button class='topButton md-raised md-primary'
-                                ng-if='projectController.importProject != null'
-                                ng-click='projectController.importSteps()'>
-                            <md-icon>system_update_alt</md-icon>
-                            <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'importStepsParens' | translate }}</md-tooltip>
-                        </md-button>
+                        <div style='background-color: white; position: sticky; top: 65px; z-index: 3;'
+                             ng-if='projectController.importProject != null'>
+                            <span>{{ 'afterYouHaveChosenTheStepToImportClickThisButtonToImport' | translate }}</span>
+                            <md-button class='topButton md-raised md-primary'
+                                    ng-if='projectController.importProject != null'
+                                    ng-click='projectController.importSteps()'>
+                                <md-icon>vertical_align_bottom</md-icon>
+                                <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'importStepsParens' | translate }}</md-tooltip>
+                            </md-button>
+                        </div>
                         <br/>
                         <h4 style='display:inline'>{{projectController.importProject.metadata.title}}</h4>
                         <md-button class='topButton md-raised md-primary'
@@ -262,7 +266,7 @@
                         <md-button class='topButton md-raised md-primary'
                                 ng-if='projectController.importProject != null'
                                 ng-click='projectController.importSteps()'>
-                            <md-icon>system_update_alt</md-icon>
+                            <md-icon>vertical_align_bottom</md-icon>
                             <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'importStepsParens' | translate }}</md-tooltip>
                         </md-button>
                     </div>
