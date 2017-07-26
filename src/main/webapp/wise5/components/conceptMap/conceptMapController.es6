@@ -1152,7 +1152,7 @@ class ConceptMapController {
                     // show the auto feedback in a modal dialog
                     this.$mdDialog.show(
                         this.$mdDialog.alert()
-                        .parent(angular.element(document.querySelector('#' + feedbackContainerId)))
+                        .parent(angular.element(document.querySelector('#' + this.feedbackContainerId)))
                         .clickOutsideToClose(true)
                         .title(this.$translate('FEEDBACK'))
                         .htmlContent(resultString)
@@ -2825,7 +2825,7 @@ class ConceptMapController {
         //var overlayWidth = this.modalWidth + 'px';
         var overlayWidth = this.modalWidth;
 
-        var conceptMapContainer = angular.element('#' + conceptMapContainerId);
+        var conceptMapContainer = angular.element('#' + this.conceptMapContainerId);
         var width = conceptMapContainer.width();
         var height = conceptMapContainer.height();
         var offset = conceptMapContainer.offset();
@@ -2886,7 +2886,7 @@ class ConceptMapController {
         var svgHeight = null;
 
         // get the height of the left select node bar
-        var selectNodeBarHeightString = angular.element(document.getElementById('#' + selectNodeBarId)).css('height');
+        var selectNodeBarHeightString = angular.element(document.getElementById('#' + this.selectNodeBarId)).css('height');
 
         // get the height of the svg element
         var svgHeightString = angular.element(document.getElementById(this.svgId)).css('height');
@@ -4513,7 +4513,7 @@ class ConceptMapController {
         // show the auto feedback in a modal dialog
         this.$mdDialog.show(
             this.$mdDialog.alert()
-            .parent(angular.element(document.querySelector('#' + feedbackContainerId)))
+            .parent(angular.element(document.querySelector('#' + this.feedbackContainerId)))
             .clickOutsideToClose(true)
             .title(this.$translate('FEEDBACK'))
             .htmlContent(this.autoFeedbackString)
