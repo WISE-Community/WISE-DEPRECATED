@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2015 Regents of the University of California (Regents).
+ * Copyright (c) 2007-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
  *
  * This software is distributed under the GNU General Public License, v3,
@@ -131,7 +131,7 @@ public class WISEAuthenticationProcessingFilter extends UsernamePasswordAuthenti
         }
 
         return super.attemptAuthentication(request, response);
-}
+    }
 
     /**
      * Check if the user is required to answer ReCaptcha. The user is required

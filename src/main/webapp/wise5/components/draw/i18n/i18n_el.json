@@ -1,4 +1,5 @@
 {
+    "Draw.componentTypeLabel": "Σχεδίαση",
     "draw.addStamp": "Προσθήκη Σφραγίδας",
     "draw.areYouSureYouWantToClearYourDrawing": "Θέλετε σίγουρα να καθαρίστε το σχέδιό σας;",
     "draw.areYouSureYouWantToDeleteThisStamp": "Θέλετε σίγουρα να διαγράψετε αυτή τη σφραγίδα;",
@@ -39,6 +40,5 @@
     "draw.textToolTooltip": "Εργαλείο κειμένου (πατήστε και κρατήστε για προβολή διαθέσιμων μεγεθών χαρακτήρων)",
     "draw.undo": "Αναίρεση",
     "draw.undoTool": "Εργαλείο Αναίρεσηης",
-    "draw.versions": "Εκδόσεις",
-    "Draw.componentTypeLabel": "Σχεδίαση"
+    "draw.versions": "Εκδόσεις"
 }

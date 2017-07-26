@@ -204,6 +204,21 @@
 						</div>
 					</sec:authorize>
 
+					<!-- "Misc." section -->
+					<div class="sectionHead">
+						<spring:message code='misc' />
+					</div>
+					<div class="sectionContent">
+						<h5><a href="${contextPath}/admin/run/mergespreadsheets.html"><spring:message code='admin.index.mergeFiles' /></a>
+							| <a href="${contextPath}/translate"><spring:message code='admin.index.translateWISE' /></a>
+ 							<sec:authorize access="hasRole('ROLE_ADMINISTRATOR')">
+								| <a href="${contextPath}/admin/run/replacebase64withpng.html"><spring:message code='admin.index.replaceBase64WithPNG' /></a>
+								| <a onclick="mergeProjectMetadata()"><spring:message code='admin.index.mergeProjectMetadata' /></a>
+							</sec:authorize>
+						</h5>
+					</div>
+
+
 					<sec:authorize access="hasRole('ROLE_ADMINISTRATOR')">
 						<div class="sectionHead">
 							<spring:message code='admin.index.newsManagement' />
@@ -212,18 +227,6 @@
 							<h5>
 								<a href="${contextPath}/admin/news/managenewsitems.html"><spring:message
 										code='admin.index.workWithNewsItems' /></a>
-							</h5>
-						</div>
-
-						<!-- "Misc." section -->
-						<div class="sectionHead">
-							<spring:message code='misc' />
-						</div>
-						<div class="sectionContent">
-							<h5><a href="${contextPath}/admin/run/mergespreadsheets.html"><spring:message code='admin.index.mergeFiles' /></a>
-								| <a href="${contextPath}/translate"><spring:message code='admin.index.translateWISE' /></a>
-								| <a href="${contextPath}/admin/run/replacebase64withpng.html"><spring:message code='admin.index.replaceBase64WithPNG' /></a>
-								| <a onclick="mergeProjectMetadata()"><spring:message code='admin.index.mergeProjectMetadata' /></a>
 							</h5>
 						</div>
 
