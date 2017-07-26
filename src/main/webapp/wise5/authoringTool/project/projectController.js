@@ -785,6 +785,9 @@ var ProjectController = function () {
                     }
                 }
             }
+
+            // uncheck all the checkboxes
+            this.unselectAllItems();
         }
 
         /**
@@ -971,6 +974,9 @@ var ProjectController = function () {
             this.moveMode = false;
             this.copyMode = false;
             this.importMode = false;
+
+            // uncheck all the checkboxes
+            this.unselectAllItems();
         }
 
         /**

@@ -2942,6 +2942,7 @@ var NodeAuthoringController = function () {
                 var answer = confirm(confirmMessage);
 
                 if (answer) {
+                    // the user answered yes
 
                     // get the selected component ids
                     var selectedComponents = _this3.getSelectedComponentIds();
@@ -2964,6 +2965,11 @@ var NodeAuthoringController = function () {
 
                     // save the project
                     _this3.ProjectService.saveProject();
+                } else {
+                    // the user answer no
+
+                    // uncheck the component check boxes
+                    _this3.clearComponentsToChecked();
                 }
 
                 /*
@@ -2975,6 +2981,9 @@ var NodeAuthoringController = function () {
                 _this3.$timeout(function () {
                     // turn off the insert component mode
                     _this3.turnOffInsertComponentMode();
+
+                    // uncheck the component check boxes
+                    _this3.clearComponentsToChecked();
 
                     // show the component authoring
                     _this3.showComponentAuthoring();
@@ -3001,6 +3010,9 @@ var NodeAuthoringController = function () {
 
             // hide the insert buttons
             this.turnOffInsertComponentMode();
+
+            // uncheck the component check boxes
+            this.clearComponentsToChecked();
 
             // show the component authoring views
             this.showComponentAuthoring();
@@ -3244,8 +3256,6 @@ var NodeAuthoringController = function () {
             // use a timeout to allow the components time to show up in the UI
             this.$timeout(function () {
                 if (newComponents != null) {
-
-                    var scrollPosition = null;
 
                     // loop through all the new components
                     for (var n = 0; n < newComponents.length; n++) {

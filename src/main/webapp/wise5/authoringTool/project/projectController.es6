@@ -59,7 +59,7 @@ class ProjectController {
 
         // scroll to the top of the page
         this.$anchorScroll('top');
-        
+
         // process metadata
         this.metadata = this.ProjectService.getProjectMetadata();
 
@@ -739,6 +739,9 @@ class ProjectController {
                 }
             }
         }
+
+        // uncheck all the checkboxes
+        this.unselectAllItems();
     }
 
     /**
@@ -907,6 +910,9 @@ class ProjectController {
         this.moveMode = false;
         this.copyMode = false;
         this.importMode = false;
+
+        // uncheck all the checkboxes
+        this.unselectAllItems();
     }
 
     /**
