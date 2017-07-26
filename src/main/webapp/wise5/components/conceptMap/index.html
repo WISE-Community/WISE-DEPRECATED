@@ -432,8 +432,8 @@
                                    ng-if='conceptMapController.mode !== "grading" && conceptMapController.showSnipButton()'>
                             <md-icon> content_cut </md-icon>  {{ 'ADD_TO_NOTEBOOK' | translate:{label:tableController.notebookConfig.label} }}
                         </md-button>
-                        <div id="conceptMapContainer" style="display: flex">
-                            <div id="selectNodeBar" style="flex: 10; border: 1px solid black">
+                        <div id="{{conceptMapController.conceptMapContainerId}}" style="display: flex">
+                            <div id="{{conceptMapController.selectNodeBarId}}" style="flex: 10; border: 1px solid black">
                                 <div ng-repeat="availableNode in conceptMapController.availableNodes"
                                      style="text-align: center; border: 1px solid black">
                                     <img ng-src="{{availableNode.fileName}}"
@@ -445,7 +445,7 @@
                                     <span>{{availableNode.name}}</span>
                                 </div>
                             </div>
-                            <div id="svgDiv" style="flex: 90">
+                            <div style="flex: 90">
                                 <svg id="{{conceptMapController.svgId}}"
                                      width="800"
                                      height="600"
@@ -460,11 +460,10 @@
                                      '-o-user-select':'none'}">
                                 </svg>
                             </div>
-                            <div id="linkTypeChooserModalOverlay"
-                                ng-show="conceptMapController.displayLinkTypeChooserModalOverlay"
-                                ng-style="conceptMapController.linkTypeChooserModalOverlayStyle">
+                            <div ng-show="conceptMapController.displayLinkTypeChooserModalOverlay"
+                                 ng-style="conceptMapController.linkTypeChooserModalOverlayStyle">
                             </div>
-                            <draggable id="linkTypeChooser" container-width="conceptMapController.modalWidth" container-height="conceptMapController.modalHeight" ng-show="conceptMapController.displayLinkTypeChooser" class="ng-modal" ng-style="conceptMapController.linkTypeChooserStyle">
+                            <draggable container-width="conceptMapController.modalWidth" container-height="conceptMapController.modalHeight" ng-show="conceptMapController.displayLinkTypeChooser" class="ng-modal" ng-style="conceptMapController.linkTypeChooserStyle">
                                 <div style="display: inline-block;"><span>{{conceptMapController.getLinksTitle()}}</span></div>
                                 <md-radio-group ng-model="conceptMapController.selectedLinkType"
                                                 ng-change="conceptMapController.studentDataChanged()">
@@ -493,7 +492,7 @@
                                 </div>
                             </draggable>
                         </div>
-                        <div id="feedbackDiv"></div>
+                        <div id="{{conceptMapController.feedbackContainerId}}"></div>
                         <md-button class="input--textarea__action input--textarea__action--revision md-icon-button"
                                    ng-click='nodeController.showRevisions($event, component.id, conceptMapController.isDisabled)'
                                    ng-if="nodeController.getRevisions(component.id).length > 1">

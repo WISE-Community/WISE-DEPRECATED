@@ -215,8 +215,11 @@ var ConceptMapController = function () {
             // get the component id
             this.componentId = this.componentContent.id;
 
-            // set the id of the svg element
+            // set the id of the svg and other display elements
             this.svgId = 'svg_' + this.nodeId + '_' + this.componentId;
+            this.conceptMapContainerId = 'conceptMapContainer_' + this.nodeId + '_' + this.componentId;
+            this.selectNodeBarId = 'selectNodeBar_' + this.nodeId + '_' + this.componentId;
+            this.feedbackContainerId = 'feedbackContainer_' + this.nodeId + '_' + this.componentId;
 
             if (this.componentContent.width != null) {
                 this.width = this.componentContent.width;
@@ -246,20 +249,27 @@ var ConceptMapController = function () {
 
                 var componentState = this.$scope.componentState;
 
-                if (componentState == null) {
+                if (componentState) {
+                    // set ids for the svg and other display elements using the componentStateId (so we have unique ids when showing revisions)
+                    /*
+                     * the student has work for this component so we will use
+                     * the node id, component id, and workgroup id, and
+                     * componentStateId for the svg id
+                     */
+                    this.svgId = 'svg_' + this.nodeId + '_' + this.componentId + '_' + this.workgroupId + '_' + componentState.id;
+                    this.conceptMapContainerId = 'conceptMapContainer_' + this.nodeId + '_' + this.componentId + '_' + this.workgroupId + '_' + componentState.id;
+                    this.selectNodeBarId = 'selectNodeBar_' + this.nodeId + '_' + this.componentId + '_' + this.workgroupId + '_' + componentState.id;
+                    this.feedbackContainerId = 'feedbackContainer_' + this.nodeId + '_' + this.componentId + '_' + this.workgroupId + '_' + componentState.id;
+                } else {
                     /*
                      * the student does not have any work for this component so
                      * we will use the node id, component id, and workgroup id
                      * for the svg id
                      */
                     this.svgId = 'svg_' + this.nodeId + '_' + this.componentId + '_' + this.workgroupId;
-                } else {
-                    /*
-                     * the student has work for this component so we will use
-                     * the node id, component id, and component state id
-                     * for the svg id
-                     */
-                    this.svgId = 'svg_' + this.nodeId + '_' + this.componentId + '_' + componentState.id;
+                    this.conceptMapContainerId = 'conceptMapContainer_' + this.nodeId + '_' + this.componentId + '_' + this.workgroupId;
+                    this.selectNodeBarId = 'selectNodeBar_' + this.nodeId + '_' + this.componentId + '_' + this.workgroupId;
+                    this.feedbackContainerId = 'feedbackContainer_' + this.nodeId + '_' + this.componentId + '_' + this.workgroupId;
                 }
             } else if (this.mode === 'onlyShowWork') {
                 this.isPromptVisible = false;
@@ -1136,7 +1146,7 @@ var ConceptMapController = function () {
 
                     if (resultString != "") {
                         // show the auto feedback in a modal dialog
-                        this.$mdDialog.show(this.$mdDialog.alert().parent(angular.element(document.querySelector('#feedbackDiv'))).clickOutsideToClose(true).title(this.$translate('FEEDBACK')).htmlContent(resultString).ariaLabel(this.$translate('FEEDBACK')).ok(this.$translate('CLOSE')));
+                        this.$mdDialog.show(this.$mdDialog.alert().parent(angular.element(document.querySelector('#' + this.feedbackContainerId))).clickOutsideToClose(true).title(this.$translate('FEEDBACK')).htmlContent(resultString).ariaLabel(this.$translate('FEEDBACK')).ok(this.$translate('CLOSE')));
                     }
 
                     // remember the feedback string
@@ -2979,7 +2989,7 @@ var ConceptMapController = function () {
             //var overlayWidth = this.modalWidth + 'px';
             var overlayWidth = this.modalWidth;
 
-            var conceptMapContainer = angular.element('#conceptMapContainer');
+            var conceptMapContainer = angular.element('#' + this.conceptMapContainerId);
             var width = conceptMapContainer.width();
             var height = conceptMapContainer.height();
             var offset = conceptMapContainer.offset();
@@ -3012,7 +3022,7 @@ var ConceptMapController = function () {
             var svgWidth = null;
 
             // get the width of the left select node bar
-            var selectNodeBarWidthString = angular.element(document.getElementById('selectNodeBar')).css('width');
+            var selectNodeBarWidthString = angular.element(document.getElementById('#' + this.selectNodeBarId)).css('width');
 
             // get the width of the svg element
             var svgWidthString = angular.element(document.getElementById(this.svgId)).css('width');
@@ -3046,7 +3056,7 @@ var ConceptMapController = function () {
             var svgHeight = null;
 
             // get the height of the left select node bar
-            var selectNodeBarHeightString = angular.element(document.getElementById('selectNodeBar')).css('height');
+            var selectNodeBarHeightString = angular.element(document.getElementById('#' + this.selectNodeBarId)).css('height');
 
             // get the height of the svg element
             var svgHeightString = angular.element(document.getElementById(this.svgId)).css('height');
@@ -4823,7 +4833,7 @@ var ConceptMapController = function () {
         value: function showAutoFeedback() {
 
             // show the auto feedback in a modal dialog
-            this.$mdDialog.show(this.$mdDialog.alert().parent(angular.element(document.querySelector('#feedbackDiv'))).clickOutsideToClose(true).title(this.$translate('FEEDBACK')).htmlContent(this.autoFeedbackString).ariaLabel(this.$translate('FEEDBACK')).ok(this.$translate('CLOSE')));
+            this.$mdDialog.show(this.$mdDialog.alert().parent(angular.element(document.querySelector('#' + this.feedbackContainerId))).clickOutsideToClose(true).title(this.$translate('FEEDBACK')).htmlContent(this.autoFeedbackString).ariaLabel(this.$translate('FEEDBACK')).ok(this.$translate('CLOSE')));
         }
 
         /**
