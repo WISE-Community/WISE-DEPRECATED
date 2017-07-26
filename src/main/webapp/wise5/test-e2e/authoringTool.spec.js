@@ -124,7 +124,7 @@ describe('WISE Authoring Tool', function () {
 
         element.all(by.repeater("item in projectController.items")).then(function (nodeItem) {
             expect(nodeItem[1].element(by.css('.groupHeader h6')).getText()).toBe("1 First Activity");
-            var insertInsideAct1Button = nodeItem[1].element(by.css('button.insertButton[aria-label="Insert Inside"]'));
+            var insertInsideAct1Button = nodeItem[1].element(by.css('button.insertButton[aria-label="Insert As First Step"]'));
             expect(insertInsideAct1Button.isDisplayed()).toBeTruthy();
             insertInsideAct1Button.click();
             var EC = protractor.ExpectedConditions;

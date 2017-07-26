@@ -1,9 +1,10 @@
 {
+    "Match.componentTypeLabel": "Αντιστοίχηση",
     "match.addBucket": "Προσθήκη Κάδου",
     "match.addChoice": "Προσθήκη Επιλογής",
     "match.areYouSureYouWantToDeleteThisBucket": "Θέλετε σίγουρα να διαγράψετε αυτό τον κάδο;",
     "match.areYouSureYouWantToDeleteThisChoice": "Θέλετε σίγουρα να διαγράψετε αυτή την επιλογή;",
-    "match.buckets": "Κάδοι",
+    "Match.buckets": "Κάδοι",
     "match.choices": "Επιλογές",
     "match.correctBucketButWrongPosition": "Σωστός κάδος αλλά λάθος θέση",
     "match.deleteBucket": "Διαγραφή Κάδου",
@@ -11,7 +12,5 @@
     "match.incorrectPositionFeedback": "Λάθος Θέση Ανατροφοδότησης",
     "match.labelForChoicesBucket": "Επισήμανση για κάδο επιλογών",
     "match.ordered": "Παραγγέλθηκε",
-    "match.position": "Θέση",
-    "Match.buckets": "Κάδοι",
-    "Match.componentTypeLabel": "Αντιστοίχηση"
+    "match.position": "Θέση"
 }
