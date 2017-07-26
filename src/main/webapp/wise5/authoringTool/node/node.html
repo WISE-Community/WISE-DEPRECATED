@@ -1,3 +1,9 @@
+<style>
+    .componentTypeSelected {
+        border-style: solid;
+        border-color: black;
+    }
+</style>
 <div style='background-color: white; position: sticky; top: 17px; z-index: 2;'>
     <md-button class='topButton md-raised md-primary md-raised md-primary' ng-click='nodeAuthoringController.close()'
                ng-disabled='nodeAuthoringController.insertComponentMode'>
@@ -6,7 +12,7 @@
     </md-button>
     <md-button class='topButton md-raised md-primary' ng-click='nodeAuthoringController.addComponentButtonClicked()'
                ng-disabled='nodeAuthoringController.insertComponentMode'
-            ng-show='!projectController.isGroupNode(nodeAuthoringController.node.id)'>
+               ng-show='!projectController.isGroupNode(nodeAuthoringController.node.id)'>
         <md-icon>add</md-icon>
         <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ "addNewComponent" | translate }}</md-tooltip>
     </md-button>
@@ -82,18 +88,23 @@
     </div>
     <div ng-show='nodeAuthoringController.showCreateComponent' layout='row' style='margin-left: 10px;'>
         <div layout='row'>
-            <h6>{{ 'chooseNewComponentType' | translate }}: </h6>
+            <h6>{{ 'clickTheNewComponentTypeYouWantToAdd' | translate }}</h6>
+            <md-button class='createButton md-raised md-primary'
+                       ng-click='nodeAuthoringController.cancelCreateComponentClicked()'
+                       aria-label="{{ 'CANCEL' | translate }}"
+                       translate="CANCEL">
+            </md-button>
         </div>
-        <div layout='row' style='margin-left: 20px; width: 180px;'>
-            <md-input-container style='margin-top: 0px; margin-bottom: 0px;'>
-                <md-select ng-model='nodeAuthoringController.selectedComponent'
-                           aria-label='abc'>
-                    <md-option ng-repeat='componentType in nodeAuthoringController.componentTypes' value='{{componentType.componentType}}' aria-label='{{componentType.componentType}}'>
-                        {{componentType.componentName}}
-                    </md-option>
-                </md-select>
-            </md-input-container>
-        </div>
+    </div>
+    <div ng-show='nodeAuthoringController.showCreateComponent'>
+        <md-grid-list md-cols-xs='1' md-cols-sm='2' md-cols-md='4' md-cols-gt-md='7' md-row-height='50'>
+            <md-grid-tile ng-repeat='componentType in nodeAuthoringController.componentTypes'
+                          style='outline: none; cursor: pointer;'
+                          ng-mousedown='nodeAuthoringController.componentTypeClicked(componentType.componentType)'
+                          ng-class='{ componentTypeSelected: componentType.componentType == nodeAuthoringController.selectedComponent }'>
+                {{componentType.componentName}}
+            </md-grid-tile>
+        </md-grid-list>
     </div>
     <div ng-show='nodeAuthoringController.showEditTransitions'>
         <span>{{'transitions' | translate}}:</span>
@@ -114,7 +125,6 @@
             </md-select>
             <br/>
             <div ng-repeat='(criteriaIndex, transitionCriteria) in transition.criteria' style="margin:10px; border: .5px dotted gray">
-
                 {{'transitionCriteriaStep' | translate}}:
                 <md-select ng-model='transitionCriteria.name'
                            ng-change='nodeAuthoringController.transitionCriteriaNameChanged(transitionCriteria)'

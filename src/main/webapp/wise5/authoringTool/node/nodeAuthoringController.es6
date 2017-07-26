@@ -310,7 +310,7 @@ class NodeAuthoringController {
             {componentType: 'Table', componentName: this.UtilService.getComponentTypeLabel('Table')}
         ];
 
-        // set the drop down to the first item
+        // select the first component type by default
         this.selectedComponent = this.componentTypes[0].componentType;
 
         // get the node
@@ -902,6 +902,9 @@ class NodeAuthoringController {
      * The add component button was clicked
      */
     addComponentButtonClicked() {
+
+        // select the first component type by default
+        this.selectedComponent = this.componentTypes[0].componentType;
 
         // show the add component UI elements
         this.nodeAuthoringViewButtonClicked('addComponent');
@@ -1576,6 +1579,16 @@ class NodeAuthoringController {
             this.showCreateBranch = false;
             this.showAdvanced = false;
             this.showImportView = !this.showImportView;
+        } else {
+            // hide all the views
+            this.showCreateComponent = false;
+            this.showEditTransitions = false;
+            this.showConstraints = false;
+            this.showEditButtons = false;
+            this.showRubric = false;
+            this.showCreateBranch = false;
+            this.showAdvanced = false;
+            this.showImportView = false;
         }
     }
 
@@ -2878,6 +2891,15 @@ class NodeAuthoringController {
      */
     cancelInsertClicked() {
 
+        // hide all the authoring views
+        this.nodeAuthoringViewButtonClicked();
+
+        // turn on add component mode
+        this.turnOffAddComponentMode();
+
+        // turn on the move component mode
+        this.turnOffMoveComponentMode();
+
         // hide the insert buttons
         this.turnOffInsertComponentMode()
 
@@ -3388,6 +3410,37 @@ class NodeAuthoringController {
             // open the preview step in a new tab
             window.open(previewStepURL);
         }
+    }
+
+    /**
+     * We are in the create a new component mode and the user has clicked
+     * on a component type
+     * @param componentType the component type the author clicked
+     */
+    componentTypeClicked(componentType) {
+        this.selectedComponent = componentType;
+    }
+
+    /**
+     * We are in the create a new component mode and the user has clicked
+     * on the cancel button
+     */
+    cancelCreateComponentClicked() {
+
+        // hide all the authoring views
+        this.nodeAuthoringViewButtonClicked();
+
+        // turn on add component mode
+        this.turnOffAddComponentMode();
+
+        // turn on the move component mode
+        this.turnOffMoveComponentMode();
+
+        // hide the insert buttons
+        this.turnOffInsertComponentMode()
+
+        // show the component authoring views
+        this.showComponentAuthoring();
     }
 };
 

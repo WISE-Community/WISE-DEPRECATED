@@ -227,7 +227,7 @@ var NodeAuthoringController = function () {
         // TODO: automate by looping through active component types for this WISE instance
         this.componentTypes = [{ componentType: 'AudioOscillator', componentName: this.UtilService.getComponentTypeLabel('AudioOscillator') }, { componentType: 'ConceptMap', componentName: this.UtilService.getComponentTypeLabel('ConceptMap') }, { componentType: 'Discussion', componentName: this.UtilService.getComponentTypeLabel('Discussion') }, { componentType: 'Draw', componentName: this.UtilService.getComponentTypeLabel('Draw') }, { componentType: 'Embedded', componentName: this.UtilService.getComponentTypeLabel('Embedded') }, { componentType: 'Graph', componentName: this.UtilService.getComponentTypeLabel('Graph') }, { componentType: 'HTML', componentName: this.UtilService.getComponentTypeLabel('HTML') }, { componentType: 'Label', componentName: this.UtilService.getComponentTypeLabel('Label') }, { componentType: 'Match', componentName: this.UtilService.getComponentTypeLabel('Match') }, { componentType: 'MultipleChoice', componentName: this.UtilService.getComponentTypeLabel('MultipleChoice') }, { componentType: 'OpenResponse', componentName: this.UtilService.getComponentTypeLabel('OpenResponse') }, { componentType: 'OutsideURL', componentName: this.UtilService.getComponentTypeLabel('OutsideURL') }, { componentType: 'Table', componentName: this.UtilService.getComponentTypeLabel('Table') }];
 
-        // set the drop down to the first item
+        // select the first component type by default
         this.selectedComponent = this.componentTypes[0].componentType;
 
         // get the node
@@ -846,6 +846,9 @@ var NodeAuthoringController = function () {
     }, {
         key: 'addComponentButtonClicked',
         value: function addComponentButtonClicked() {
+
+            // select the first component type by default
+            this.selectedComponent = this.componentTypes[0].componentType;
 
             // show the add component UI elements
             this.nodeAuthoringViewButtonClicked('addComponent');
@@ -1574,6 +1577,16 @@ var NodeAuthoringController = function () {
                 this.showCreateBranch = false;
                 this.showAdvanced = false;
                 this.showImportView = !this.showImportView;
+            } else {
+                // hide all the views
+                this.showCreateComponent = false;
+                this.showEditTransitions = false;
+                this.showConstraints = false;
+                this.showEditButtons = false;
+                this.showRubric = false;
+                this.showCreateBranch = false;
+                this.showAdvanced = false;
+                this.showImportView = false;
             }
         }
 
@@ -2977,6 +2990,15 @@ var NodeAuthoringController = function () {
         key: 'cancelInsertClicked',
         value: function cancelInsertClicked() {
 
+            // hide all the authoring views
+            this.nodeAuthoringViewButtonClicked();
+
+            // turn on add component mode
+            this.turnOffAddComponentMode();
+
+            // turn on the move component mode
+            this.turnOffMoveComponentMode();
+
             // hide the insert buttons
             this.turnOffInsertComponentMode();
 
@@ -3529,6 +3551,43 @@ var NodeAuthoringController = function () {
                 // open the preview step in a new tab
                 window.open(previewStepURL);
             }
+        }
+
+        /**
+         * We are in the create a new component mode and the user has clicked
+         * on a component type
+         * @param componentType the component type the author clicked
+         */
+
+    }, {
+        key: 'componentTypeClicked',
+        value: function componentTypeClicked(componentType) {
+            this.selectedComponent = componentType;
+        }
+
+        /**
+         * We are in the create a new component mode and the user has clicked
+         * on the cancel button
+         */
+
+    }, {
+        key: 'cancelCreateComponentClicked',
+        value: function cancelCreateComponentClicked() {
+
+            // hide all the authoring views
+            this.nodeAuthoringViewButtonClicked();
+
+            // turn on add component mode
+            this.turnOffAddComponentMode();
+
+            // turn on the move component mode
+            this.turnOffMoveComponentMode();
+
+            // hide the insert buttons
+            this.turnOffInsertComponentMode();
+
+            // show the component authoring views
+            this.showComponentAuthoring();
         }
     }]);
 
