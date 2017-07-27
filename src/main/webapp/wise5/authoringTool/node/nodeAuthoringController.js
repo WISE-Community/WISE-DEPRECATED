@@ -2824,6 +2824,14 @@ var NodeAuthoringController = function () {
         value: function importButtonClicked() {
             var _this2 = this;
 
+            // clear all the import project values
+            this.importProjectIdToOrder = {};
+            this.importProjectItems = [];
+            this.importMyProjectId = null;
+            this.importLibraryProjectId = null;
+            this.importProjectId = null;
+            this.importProject = null;
+
             // hide the other views
             this.nodeAuthoringViewButtonClicked('import');
 
