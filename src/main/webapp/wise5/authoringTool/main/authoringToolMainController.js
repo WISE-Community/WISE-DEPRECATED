@@ -9,44 +9,237 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var AuthoringToolMainController = function () {
-    function AuthoringToolMainController($state, ConfigService, ProjectService) {
+    function AuthoringToolMainController($anchorScroll, $filter, $state, $timeout, ConfigService, ProjectService) {
         _classCallCheck(this, AuthoringToolMainController);
 
+        this.$anchorScroll = $anchorScroll;
+        this.$filter = $filter;
         this.$state = $state;
+        this.$timeout = $timeout;
         this.ConfigService = ConfigService;
         this.ProjectService = ProjectService;
+
+        this.$translate = this.$filter('translate');
 
         // get list of projects owned by this user and shared with this
         this.projects = this.ConfigService.getConfigParam("projects");
         this.sharedProjects = this.ConfigService.getConfigParam("sharedProjects");
+
+        this.showCreateProjectView = false;
     }
 
+    /**
+     * Get a project by project id
+     * @param projectId the project id
+     * @return the project object that just contains the name and id and run id
+     * if it is associated with a run
+     */
+
+
     _createClass(AuthoringToolMainController, [{
-        key: "copyProject",
+        key: 'getProjectByProjectId',
+        value: function getProjectByProjectId(projectId) {
+
+            // loop through all my projects
+            for (var p = 0; p < this.projects.length; p++) {
+                var project = this.projects[p];
+
+                if (project != null) {
+                    if (project.id == projectId) {
+                        // we have found the project we want
+                        return project;
+                    }
+                }
+            }
+
+            // loop through all the shared projects
+            for (var sp = 0; sp < this.sharedProjects.length; sp++) {
+                var sharedProject = this.sharedProjects[sp];
+
+                if (sharedProject != null) {
+                    if (sharedProject.id == projectId) {
+                        // we have found the project we want
+                        return sharedProject;
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        /**
+         * Copy a project
+         * @param projectId the project to copy
+         */
+
+    }, {
+        key: 'copyProject',
         value: function copyProject(projectId) {
             var _this = this;
 
-            this.ProjectService.copyProject(projectId).then(function (projectId) {
-                // refresh the project list
-                var configURL = window.configURL;
-                _this.ConfigService.retrieveConfig(configURL).then(function () {
-                    _this.projects = _this.ConfigService.getConfigParam("projects");
+            // get the project info
+            var project = this.getProjectByProjectId(projectId);
+
+            // get the project name
+            var projectName = project.name;
+
+            // get the project run id if any
+            var projectRunId = project.runId;
+
+            // get the project info that we will display in the confirm message
+            var projectInfo = projectId + ' ' + projectName;
+
+            if (projectRunId != null) {
+                // add the run id to the info
+                projectInfo += ' (Run ID: ' + projectRunId + ')';
+            }
+
+            /*
+             * the message that we will use to confirm that the author wants to copy
+             * the project
+             */
+            var message = this.$translate('areYouSureYouWantToCopyThisProject') + '\n\n' + projectInfo;
+
+            var answer = confirm(message);
+
+            if (answer) {
+                // the author answered yes they want to copy
+
+                // copy the project
+                this.ProjectService.copyProject(projectId).then(function (projectId) {
+
+                    // refresh the project list
+                    var configURL = window.configURL;
+                    _this.ConfigService.retrieveConfig(configURL).then(function () {
+                        _this.projects = _this.ConfigService.getConfigParam("projects");
+
+                        // scroll to the top of the page
+                        _this.$anchorScroll('top');
+
+                        // briefly highlight the new project to draw attention to it
+                        _this.$timeout(function () {
+
+                            // get the component UI element
+                            var componentElement = $("#" + projectId);
+
+                            // save the original background color
+                            var originalBackgroundColor = componentElement.css("backgroundColor");
+
+                            // highlight the background briefly to draw attention to it
+                            componentElement.css("background-color", "#FFFF9C");
+
+                            /*
+                             * Use a timeout before starting to transition back to
+                             * the original background color. For some reason the
+                             * element won't get highlighted in the first place
+                             * unless this timeout is used.
+                             */
+                            _this.$timeout(function () {
+                                // slowly fade back to original background color
+                                componentElement.css({
+                                    'transition': 'background-color 3s ease-in-out',
+                                    'background-color': originalBackgroundColor
+                                });
+
+                                /*
+                                 * remove these styling fields after we perform
+                                 * the fade otherwise the regular mouseover
+                                 * background color change will not work
+                                 */
+                                _this.$timeout(function () {
+                                    componentElement.css({
+                                        'transition': '',
+                                        'background-color': ''
+                                    });
+                                }, 3000);
+                            });
+                        });
+                    });
                 });
-            });
+            }
         }
+
+        /**
+         * Download a project as a zip file
+         * @param projectId the project id
+         */
+
     }, {
-        key: "downloadProject",
+        key: 'downloadProject',
         value: function downloadProject(projectId) {
+            // make a request to download the project as a zip file
             var exportProjectURL = this.ConfigService.getWISEBaseURL() + "/project/export/" + projectId;
             window.location.href = exportProjectURL;
         }
+
+        /**
+         * The create new project button was clicked
+         */
+
     }, {
-        key: "createNewProject",
-        value: function createNewProject() {
-            this.$state.go('root.new');
+        key: 'createNewProjectButtonClicked',
+        value: function createNewProjectButtonClicked() {
+            // generate a project template for the new project
+            this.project = this.ProjectService.getNewProjectTemplate();
+
+            // show the view where the author enters the title for the new project
+            this.showCreateProjectView = true;
         }
+
+        /**
+         * Create a new project
+         */
+
     }, {
-        key: "openProject",
+        key: 'registerNewProject',
+        value: function registerNewProject() {
+            var _this2 = this;
+
+            // get the project title the author has entered
+            var projectTitle = this.project.metadata.title;
+
+            if (projectTitle == null || projectTitle == '') {
+                // the author has not entered a project title
+                alert(this.$translate('pleaseEnterAProjectTitleForYourNewProject'));
+            } else {
+                // the author has entered a project title
+
+                // get the project json string
+                var projectJSONString = angular.toJson(this.project, 4);
+                var commitMessage = this.$translate('projectCreatedOn') + new Date().getTime();
+
+                // create the new project on the server
+                this.ProjectService.registerNewProject(projectJSONString, commitMessage).then(function (projectId) {
+                    // hide the create project view
+                    _this2.showCreateProjectView = false;
+
+                    // open the new project in the authoring tool
+                    _this2.$state.go('root.project', { projectId: projectId });
+                });
+            }
+        }
+
+        /**
+         * Cancel the create new project
+         */
+
+    }, {
+        key: 'cancelRegisterNewProject',
+        value: function cancelRegisterNewProject() {
+            // clear the project template
+            this.project = null;
+
+            // hide the create project view
+            this.showCreateProjectView = false;
+        }
+
+        /**
+         * Open a project in the authoring tool
+         * @param projectId the project id to open
+         */
+
+    }, {
+        key: 'openProject',
         value: function openProject(projectId) {
             this.$state.go('root.project', { projectId: projectId });
         }
@@ -56,13 +249,18 @@ var AuthoringToolMainController = function () {
          */
 
     }, {
-        key: "previewProject",
+        key: 'previewProject',
         value: function previewProject(projectId) {
             var previewProjectURL = this.ConfigService.getWISEBaseURL() + "/project/" + projectId;
             window.open(previewProjectURL);
         }
+
+        /**
+         * Go to the teacher home
+         */
+
     }, {
-        key: "goHome",
+        key: 'goHome',
         value: function goHome() {
             // send the user to the teacher home page
             var wiseBaseURL = this.ConfigService.getWISEBaseURL();
@@ -76,7 +274,7 @@ var AuthoringToolMainController = function () {
 
 ;
 
-AuthoringToolMainController.$inject = ['$state', 'ConfigService', 'ProjectService'];
+AuthoringToolMainController.$inject = ['$anchorScroll', '$filter', '$state', '$timeout', 'ConfigService', 'ProjectService'];
 
 exports.default = AuthoringToolMainController;
 //# sourceMappingURL=authoringToolMainController.js.map

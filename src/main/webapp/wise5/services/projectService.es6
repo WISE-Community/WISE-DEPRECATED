@@ -7803,7 +7803,7 @@ class ProjectService {
                 "template": "starmap|leftNav|rightNav"
             },
             "metadata": {
-                "title": this.$translate('MY_NEW_PROJECT')
+                "title": ""
             },
             "notebook": {
                 "enabled": false,
