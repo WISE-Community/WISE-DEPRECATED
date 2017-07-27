@@ -1,5 +1,4 @@
 {
-    "Match.componentTypeLabel": "Match",
     "match.addBucket": "Add Bucket",
     "match.addChoice": "Add Choice",
     "match.areYouSureYouWantToDeleteThisBucket": "Are you sure you want to delete this bucket?",
@@ -9,6 +8,7 @@
     "match.choiceName": "Choice Name",
     "match.choices": "Choices",
     "match.choicesNeedToBeOrderedWithinBuckets": "Choices need to be ordered within buckets",
+    "match.componentTypeLabel": "Match",
     "match.correctBucketButWrongPosition": "Correct bucket but wrong position",
     "match.deleteBucket": "Delete Bucket",
     "match.deleteChoice": "Delete Choice",

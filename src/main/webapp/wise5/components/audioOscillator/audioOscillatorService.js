@@ -34,12 +34,24 @@ var AudioOscillatorService = function (_NodeService) {
     }
 
     /**
-     * Create a AudioOscillator component object
-     * @returns a new AudioOscillator component object
+     * Get the component type label
+     * example
+     * "Audio Oscillator"
      */
 
 
     _createClass(AudioOscillatorService, [{
+        key: 'getComponentTypeLabel',
+        value: function getComponentTypeLabel() {
+            return this.$translate('audioOscillator.componentTypeLabel');
+        }
+
+        /**
+         * Create a AudioOscillator component object
+         * @returns a new AudioOscillator component object
+         */
+
+    }, {
         key: 'createComponent',
         value: function createComponent() {
 

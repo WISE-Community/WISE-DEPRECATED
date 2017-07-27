@@ -38,12 +38,24 @@ var ConceptMapService = function (_NodeService) {
     }
 
     /**
-     * Create a ConceptMap component object
-     * @returns a new ConceptMap component object
+     * Get the component type label
+     * example
+     * "Concept Mape"
      */
 
 
     _createClass(ConceptMapService, [{
+        key: 'getComponentTypeLabel',
+        value: function getComponentTypeLabel() {
+            return this.$translate('conceptMap.componentTypeLabel');
+        }
+
+        /**
+         * Create a ConceptMap component object
+         * @returns a new ConceptMap component object
+         */
+
+    }, {
         key: 'createComponent',
         value: function createComponent() {
             var component = {};

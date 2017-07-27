@@ -7,6 +7,15 @@ class EmbeddedService extends NodeService {
     }
 
     /**
+     * Get the component type label
+     * example
+     * "Embedded"
+     */
+    getComponentTypeLabel() {
+        return this.$translate('embedded.componentTypeLabel');
+    }
+
+    /**
      * Create an Embedded component object
      * @returns a new Embedded component object
      */

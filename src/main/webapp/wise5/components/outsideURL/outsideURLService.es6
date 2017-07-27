@@ -7,6 +7,15 @@ class OutsideURLService extends NodeService {
     }
 
     /**
+     * Get the component type label
+     * example
+     * "Outside URL"
+     */
+    getComponentTypeLabel() {
+        return this.$translate('outsideURL.componentTypeLabel');
+    }
+
+    /**
      * Create an OutsideURL component object
      * @returns a new OutsideURL component object
      */

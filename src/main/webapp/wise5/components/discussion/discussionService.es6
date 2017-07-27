@@ -29,6 +29,15 @@ class DiscussionService extends NodeService {
     }
 
     /**
+     * Get the component type label
+     * example
+     * "Discussion"
+     */
+    getComponentTypeLabel() {
+        return this.$translate('discussion.componentTypeLabel');
+    }
+
+    /**
      * Create a Discussion component object
      * @returns a new Discussion component object
      */

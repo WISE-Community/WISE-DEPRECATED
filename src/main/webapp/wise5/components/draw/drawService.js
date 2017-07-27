@@ -35,12 +35,24 @@ var DrawService = function (_NodeService) {
     }
 
     /**
-     * Create a Draw component object
-     * @returns a new Draw component object
+     * Get the component type label
+     * example
+     * "Draw"
      */
 
 
     _createClass(DrawService, [{
+        key: 'getComponentTypeLabel',
+        value: function getComponentTypeLabel() {
+            return this.$translate('draw.componentTypeLabel');
+        }
+
+        /**
+         * Create a Draw component object
+         * @returns a new Draw component object
+         */
+
+    }, {
         key: 'createComponent',
         value: function createComponent() {
             var component = {};

@@ -13,6 +13,15 @@ class TableService extends NodeService {
     }
 
     /**
+     * Get the component type label
+     * example
+     * "Table"
+     */
+    getComponentTypeLabel() {
+        return this.$translate('table.componentTypeLabel');
+    }
+
+    /**
      * Create an Table component object
      * @returns a new Table component object
      */

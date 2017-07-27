@@ -35,12 +35,24 @@ var OpenResponseService = function (_NodeService) {
     }
 
     /**
-     * Create a OpenResponse component object
-     * @returns a new OpenResponse component object
+     * Get the component type label
+     * example
+     * "Open Response"
      */
 
 
     _createClass(OpenResponseService, [{
+        key: 'getComponentTypeLabel',
+        value: function getComponentTypeLabel() {
+            return this.$translate('openResponse.componentTypeLabel');
+        }
+
+        /**
+         * Create a OpenResponse component object
+         * @returns a new OpenResponse component object
+         */
+
+    }, {
         key: 'createComponent',
         value: function createComponent() {
             var component = {};

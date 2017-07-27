@@ -9,11 +9,14 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var UtilService = function () {
-    function UtilService($filter, $rootScope) {
+    function UtilService($filter, $injector, $rootScope) {
         _classCallCheck(this, UtilService);
 
         this.$filter = $filter;
+        this.$injector = $injector;
         this.$rootScope = $rootScope;
+
+        this.componentTypeToLabel = {};
 
         this.$translate = this.$filter('translate');
     }
@@ -823,9 +826,38 @@ var UtilService = function () {
     }, {
         key: 'getComponentTypeLabel',
         value: function getComponentTypeLabel(componentType) {
-            var label = this.$translate(componentType + '.componentTypeLabel');
 
-            return label ? label : componentType;
+            /*
+             * check if we have already obtained the label for this component type
+             * before
+             */
+            var label = this.componentTypeToLabel[componentType];
+
+            if (label == null) {
+                // we have not obtained the label before
+
+                // get the service for the component type
+                var componentService = this.$injector.get(componentType + 'Service');
+
+                if (componentService != null && componentService.getComponentTypeLabel != null) {
+
+                    // get the label for the component type
+                    label = componentService.getComponentTypeLabel();
+
+                    // add the entry of component type to label for future lookup
+                    this.componentTypeToLabel[componentType] = label;
+                }
+            }
+
+            if (label == null) {
+                /*
+                 * we were unable to find the label so we will just use the
+                 * component type as the label
+                 */
+                label = componentType;
+            }
+
+            return label;
         }
     }]);
 
@@ -841,7 +873,7 @@ if (!Array.prototype.last) {
     };
 };
 
-UtilService.$inject = ['$filter', '$rootScope'];
+UtilService.$inject = ['$filter', '$injector', '$rootScope'];
 
 exports.default = UtilService;
 //# sourceMappingURL=utilService.js.map

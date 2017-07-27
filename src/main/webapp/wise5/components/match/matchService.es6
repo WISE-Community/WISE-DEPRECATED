@@ -12,6 +12,15 @@ class MatchService extends NodeService {
     }
 
     /**
+     * Get the component type label
+     * example
+     * "Match"
+     */
+    getComponentTypeLabel() {
+        return this.$translate('match.componentTypeLabel');
+    }
+
+    /**
      * Create a Match component object
      * @returns a new Match component object
      */

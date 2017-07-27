@@ -20,6 +20,15 @@ class ConceptMapService extends NodeService {
     }
 
     /**
+     * Get the component type label
+     * example
+     * "Concept Mape"
+     */
+    getComponentTypeLabel() {
+        return this.$translate('conceptMap.componentTypeLabel');
+    }
+
+    /**
      * Create a ConceptMap component object
      * @returns a new ConceptMap component object
      */

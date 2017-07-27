@@ -31,12 +31,24 @@ var OutsideURLService = function (_NodeService) {
     }
 
     /**
-     * Create an OutsideURL component object
-     * @returns a new OutsideURL component object
+     * Get the component type label
+     * example
+     * "Outside URL"
      */
 
 
     _createClass(OutsideURLService, [{
+        key: 'getComponentTypeLabel',
+        value: function getComponentTypeLabel() {
+            return this.$translate('outsideURL.componentTypeLabel');
+        }
+
+        /**
+         * Create an OutsideURL component object
+         * @returns a new OutsideURL component object
+         */
+
+    }, {
         key: 'createComponent',
         value: function createComponent() {
             var component = {};

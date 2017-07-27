@@ -34,12 +34,24 @@ var LabelService = function (_NodeService) {
     }
 
     /**
-     * Create a Label component object
-     * @returns a new Label component object
+     * Get the component type label
+     * example
+     * "Label"
      */
 
 
     _createClass(LabelService, [{
+        key: 'getComponentTypeLabel',
+        value: function getComponentTypeLabel() {
+            return this.$translate('label.componentTypeLabel');
+        }
+
+        /**
+         * Create a Label component object
+         * @returns a new Label component object
+         */
+
+    }, {
         key: 'createComponent',
         value: function createComponent() {
             var component = {};

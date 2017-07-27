@@ -13,6 +13,15 @@ class OpenResponseService extends NodeService {
     }
 
     /**
+     * Get the component type label
+     * example
+     * "Open Response"
+     */
+    getComponentTypeLabel() {
+        return this.$translate('openResponse.componentTypeLabel');
+    }
+
+    /**
      * Create a OpenResponse component object
      * @returns a new OpenResponse component object
      */

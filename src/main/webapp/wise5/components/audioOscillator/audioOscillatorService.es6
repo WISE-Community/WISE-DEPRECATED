@@ -12,6 +12,15 @@ class AudioOscillatorService extends NodeService {
     }
 
     /**
+     * Get the component type label
+     * example
+     * "Audio Oscillator"
+     */
+    getComponentTypeLabel() {
+        return this.$translate('audioOscillator.componentTypeLabel');
+    }
+
+    /**
      * Create a AudioOscillator component object
      * @returns a new AudioOscillator component object
      */

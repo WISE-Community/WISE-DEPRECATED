@@ -13,6 +13,15 @@ class HTMLService extends NodeService {
     }
 
     /**
+     * Get the component type label
+     * example
+     * "HTML"
+     */
+    getComponentTypeLabel() {
+        return this.$translate('html.componentTypeLabel');
+    }
+
+    /**
      * Create an HTML component object
      * @returns a new HTML component object
      */

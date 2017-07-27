@@ -34,12 +34,24 @@ var TableService = function (_NodeService) {
     }
 
     /**
-     * Create an Table component object
-     * @returns a new Table component object
+     * Get the component type label
+     * example
+     * "Table"
      */
 
 
     _createClass(TableService, [{
+        key: 'getComponentTypeLabel',
+        value: function getComponentTypeLabel() {
+            return this.$translate('table.componentTypeLabel');
+        }
+
+        /**
+         * Create an Table component object
+         * @returns a new Table component object
+         */
+
+    }, {
         key: 'createComponent',
         value: function createComponent() {
             var component = {};

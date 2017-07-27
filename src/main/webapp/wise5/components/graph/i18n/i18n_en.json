@@ -1,5 +1,4 @@
 {
-    "Graph.componentTypeLabel": "Graph",
     "graph.addDataPoint": "Add Data Point",
     "graph.addSeries": "Add Series",
     "graph.addSeriesNumber": "Add Series Number",
@@ -21,6 +20,7 @@
     "graph.circle": "Circle",
     "graph.color": "Color",
     "graph.columnPlot": "Column Plot",
+    "graph.componentTypeLabel": "Graph",
     "graph.dataPoints": "Data Points",
     "graph.deleteCategory": "Delete Category",
     "graph.deleteDataPoint": "Delete Data Point",

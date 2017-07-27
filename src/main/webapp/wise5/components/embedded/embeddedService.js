@@ -31,12 +31,24 @@ var EmbeddedService = function (_NodeService) {
     }
 
     /**
-     * Create an Embedded component object
-     * @returns a new Embedded component object
+     * Get the component type label
+     * example
+     * "Embedded"
      */
 
 
     _createClass(EmbeddedService, [{
+        key: 'getComponentTypeLabel',
+        value: function getComponentTypeLabel() {
+            return this.$translate('embedded.componentTypeLabel');
+        }
+
+        /**
+         * Create an Embedded component object
+         * @returns a new Embedded component object
+         */
+
+    }, {
         key: 'createComponent',
         value: function createComponent() {
             var component = {};

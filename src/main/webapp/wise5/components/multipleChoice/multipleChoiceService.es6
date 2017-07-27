@@ -12,6 +12,15 @@ class MultipleChoiceService extends NodeService {
     }
 
     /**
+     * Get the component type label
+     * example
+     * "Multiple Choice"
+     */
+    getComponentTypeLabel() {
+        return this.$translate('multipleChoice.componentTypeLabel');
+    }
+
+    /**
      * Create a MultipleChoice component object
      * @returns a new MultipleChoice component object
      */

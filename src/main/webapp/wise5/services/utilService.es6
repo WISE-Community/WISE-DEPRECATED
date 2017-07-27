@@ -3,9 +3,13 @@
 class UtilService {
 
     constructor($filter,
+                $injector,
                 $rootScope) {
         this.$filter = $filter;
+        this.$injector = $injector;
         this.$rootScope = $rootScope;
+
+        this.componentTypeToLabel = {};
 
         this.$translate = this.$filter('translate');
     }
@@ -741,9 +745,38 @@ class UtilService {
      * @return string label for the component type
      */
     getComponentTypeLabel(componentType) {
-        let label = this.$translate(componentType + '.componentTypeLabel');
 
-        return label ? label : componentType;
+        /*
+         * check if we have already obtained the label for this component type
+         * before
+         */
+        let label = this.componentTypeToLabel[componentType];
+
+        if (label == null) {
+            // we have not obtained the label before
+
+            // get the service for the component type
+            let componentService = this.$injector.get(componentType + 'Service');
+
+            if (componentService != null && componentService.getComponentTypeLabel != null) {
+
+                // get the label for the component type
+                label = componentService.getComponentTypeLabel();
+
+                // add the entry of component type to label for future lookup
+                this.componentTypeToLabel[componentType] = label;
+            }
+        }
+
+        if (label == null) {
+            /*
+             * we were unable to find the label so we will just use the
+             * component type as the label
+             */
+            label = componentType;
+        }
+
+        return label;
     }
 }
 
@@ -756,6 +789,7 @@ if (!Array.prototype.last) {
 
 UtilService.$inject = [
     '$filter',
+    '$injector',
     '$rootScope'
 ];
 

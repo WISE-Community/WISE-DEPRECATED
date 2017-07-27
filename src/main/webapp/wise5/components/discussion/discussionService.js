@@ -45,12 +45,24 @@ var DiscussionService = function (_NodeService) {
     }
 
     /**
-     * Create a Discussion component object
-     * @returns a new Discussion component object
+     * Get the component type label
+     * example
+     * "Discussion"
      */
 
 
     _createClass(DiscussionService, [{
+        key: 'getComponentTypeLabel',
+        value: function getComponentTypeLabel() {
+            return this.$translate('discussion.componentTypeLabel');
+        }
+
+        /**
+         * Create a Discussion component object
+         * @returns a new Discussion component object
+         */
+
+    }, {
         key: 'createComponent',
         value: function createComponent() {
             var component = {};

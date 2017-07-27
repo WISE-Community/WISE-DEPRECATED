@@ -1,5 +1,4 @@
 {
-    "OpenResponse.componentTypeLabel": "Open Response",
     "openResponse.addFile": "Add File",
     "openResponse.addMultipleAttemptScoringRule": "Add Multiple Attempt Scoring Rule",
     "openResponse.addNewNotification": "Add New Notification",
@@ -9,6 +8,7 @@
     "openResponse.areYouSureYouWantToDeleteThisScoringRule": "Are you sure you want to delete this scoring rule?\n\nScore: {{score}}\n\nFeedback Text: {{feedbackText}}",
     "openResponse.change": "Change",
     "openResponse.cRater": "CRater",
+    "openResponse.componentTypeLabel": "Open Response",
     "openResponse.currentScore": "Current Score",
     "openResponse.dismissCode": "Dismiss Code",
     "openResponse.enableAmbientDisplayDismissMode": "Enable Ambient Display Dismiss Mode",

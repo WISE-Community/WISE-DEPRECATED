@@ -13,6 +13,15 @@ class LabelService extends NodeService {
     }
 
     /**
+     * Get the component type label
+     * example
+     * "Label"
+     */
+    getComponentTypeLabel() {
+        return this.$translate('label.componentTypeLabel');
+    }
+
+    /**
      * Create a Label component object
      * @returns a new Label component object
      */

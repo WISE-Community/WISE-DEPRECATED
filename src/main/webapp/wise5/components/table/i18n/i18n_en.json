@@ -1,5 +1,4 @@
 {
-    "Table.componentTypeLabel": "Table",
     "table.areYouSureYouWantToDecreaseTheNumberOfColumns": "Are you sure you want to decrease the number of columns?",
     "table.areYouSureYouWantToDecreaseTheNumberOfRows": "Are you sure you want to decrease the number of rows?",
     "table.areYouSureYouWantToDeleteThisColumn": "Are you sure you want to delete this column?",
@@ -8,6 +7,7 @@
     "table.cellText": "Cell Text",
     "table.columnCellSizes": "Column Cell Sizes",
     "table.columns": "Columns",
+    "table.componentTypeLabel": "Table",
     "table.deleteColumn": "Delete Column",
     "table.deleteRow": "Delete Row",
     "table.editableByStudent": "Editable by Student",

@@ -13,6 +13,15 @@ class DrawService extends NodeService {
     }
 
     /**
+     * Get the component type label
+     * example
+     * "Draw"
+     */
+    getComponentTypeLabel() {
+        return this.$translate('draw.componentTypeLabel');
+    }
+
+    /**
      * Create a Draw component object
      * @returns a new Draw component object
      */

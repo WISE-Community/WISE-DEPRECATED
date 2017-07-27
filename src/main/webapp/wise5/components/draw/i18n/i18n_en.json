@@ -1,5 +1,4 @@
 {
-    "Draw.componentTypeLabel": "Draw",
     "draw.addStamp": "Add Stamp",
     "draw.areYouSureYouWantToClearYourDrawing": "Are you sure you want to clear your drawing?",
     "draw.areYouSureYouWantToDeleteTheStarterDrawing": "Are you sure you want to delete the starter drawing?",
@@ -9,6 +8,7 @@
     "draw.canvasWidth": "Canvas Width",
     "draw.cloneTool": "Clone Tool",
     "draw.cloneToolTooltip": "Clone tool",
+    "draw.componentTypeLabel": "Draw",
     "draw.deleteStarterDrawing": "Delete Starter Drawing",
     "draw.deleteTool": "Delete Tool",
     "draw.deleteToolTooltip": "Delete selected objects",

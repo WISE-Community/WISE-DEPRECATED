@@ -35,12 +35,24 @@ var GraphService = function (_NodeService) {
     }
 
     /**
-     * Create a Graph component object
-     * @returns a new Graph component object
+     * Get the component type label
+     * example
+     * "Graph"
      */
 
 
     _createClass(GraphService, [{
+        key: 'getComponentTypeLabel',
+        value: function getComponentTypeLabel() {
+            return this.$translate('graph.componentTypeLabel');
+        }
+
+        /**
+         * Create a Graph component object
+         * @returns a new Graph component object
+         */
+
+    }, {
         key: 'createComponent',
         value: function createComponent() {
 

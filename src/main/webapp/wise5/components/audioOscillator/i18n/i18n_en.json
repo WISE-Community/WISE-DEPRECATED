@@ -1,7 +1,7 @@
 {
-    "AudioOscillator.componentTypeLabel": "Audio Oscillator",
     "audioOscillator.add": "Add",
     "audioOscillator.addOscillatorType": "Add Oscillator Type",
+    "audioOscillator.componentTypeLabel": "Audio Oscillator",
     "audioOscillator.errorYouHaveAlreadyAddedOscillatorType": "Error: You have already added {{oscillatorTypeToAdd}}",
     "audioOscillator.frequenciesPlayed": "Frequencies Played",
     "audioOscillator.frequenciesPlayedSorted": "Frequencies Played Sorted",

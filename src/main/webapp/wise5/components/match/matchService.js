@@ -34,12 +34,24 @@ var MatchService = function (_NodeService) {
     }
 
     /**
-     * Create a Match component object
-     * @returns a new Match component object
+     * Get the component type label
+     * example
+     * "Match"
      */
 
 
     _createClass(MatchService, [{
+        key: 'getComponentTypeLabel',
+        value: function getComponentTypeLabel() {
+            return this.$translate('match.componentTypeLabel');
+        }
+
+        /**
+         * Create a Match component object
+         * @returns a new Match component object
+         */
+
+    }, {
         key: 'createComponent',
         value: function createComponent() {
 

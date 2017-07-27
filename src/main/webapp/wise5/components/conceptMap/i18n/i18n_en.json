@@ -1,5 +1,4 @@
 {
-    "ConceptMap.componentTypeLabel": "Concept Map",
     "conceptMap.addCategoryOptional": "Add Category (Optional)",
     "conceptMap.addFile": "Add File",
     "conceptMap.addLink": "Add Link",
@@ -16,6 +15,7 @@
     "conceptMap.canvasHeight": "Canvas Height",
     "conceptMap.canvasWidth": "Canvas Width",
     "conceptMap.color": "Color",
+    "conceptMap.componentTypeLabel": "Concept Map",
     "conceptMap.contain": "contain",
     "conceptMap.customRuleEvaluator": "Custom Rule Evaluator",
     "conceptMap.deleteStarterConceptMap": "Delete Starter Concept Map",

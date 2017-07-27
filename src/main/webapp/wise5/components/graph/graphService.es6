@@ -13,6 +13,15 @@ class GraphService extends NodeService {
     }
 
     /**
+     * Get the component type label
+     * example
+     * "Graph"
+     */
+    getComponentTypeLabel() {
+        return this.$translate('graph.componentTypeLabel');
+    }
+
+    /**
      * Create a Graph component object
      * @returns a new Graph component object
      */

@@ -34,12 +34,24 @@ var MultipleChoiceService = function (_NodeService) {
     }
 
     /**
-     * Create a MultipleChoice component object
-     * @returns a new MultipleChoice component object
+     * Get the component type label
+     * example
+     * "Multiple Choice"
      */
 
 
     _createClass(MultipleChoiceService, [{
+        key: 'getComponentTypeLabel',
+        value: function getComponentTypeLabel() {
+            return this.$translate('multipleChoice.componentTypeLabel');
+        }
+
+        /**
+         * Create a MultipleChoice component object
+         * @returns a new MultipleChoice component object
+         */
+
+    }, {
         key: 'createComponent',
         value: function createComponent() {
             var component = {};

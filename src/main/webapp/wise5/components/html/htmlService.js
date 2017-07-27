@@ -35,12 +35,24 @@ var HTMLService = function (_NodeService) {
     }
 
     /**
-     * Create an HTML component object
-     * @returns a new HTML component object
+     * Get the component type label
+     * example
+     * "HTML"
      */
 
 
     _createClass(HTMLService, [{
+        key: 'getComponentTypeLabel',
+        value: function getComponentTypeLabel() {
+            return this.$translate('html.componentTypeLabel');
+        }
+
+        /**
+         * Create an HTML component object
+         * @returns a new HTML component object
+         */
+
+    }, {
         key: 'createComponent',
         value: function createComponent() {
 
