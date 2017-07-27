@@ -3074,20 +3074,33 @@ class NodeAuthoringController {
             // get the component ids we are moving
             var selectedComponentIds = this.getSelectedComponentIds();
 
-            // move the components to their new location
-            newComponents = this.ProjectService.moveComponent(this.nodeId, selectedComponentIds, componentId);
+            if (selectedComponentIds != null && selectedComponentIds.indexOf(componentId) != -1) {
+                /*
+                 * the author is trying to move a component and place it after
+                 * itself which we will not allow
+                 */
 
-            // turn off the move component mode
-            this.turnOffMoveComponentMode();
+                if (selectedComponentIds.length == 1) {
+                    alert(this.$translate('youAreNotAllowedToInsertTheSelectedItemAfterItself'));
+                } else if (selectedComponentIds.length > 1) {
+                    alert(this.$translate('youAreNotAllowedToInsertTheSelectedItemsAfterItself'));
+                }
+            } else {
+                // move the components to their new location
+                newComponents = this.ProjectService.moveComponent(this.nodeId, selectedComponentIds, componentId);
 
-            // save the project
-            this.ProjectService.saveProject();
+                // turn off the move component mode
+                this.turnOffMoveComponentMode();
 
-            /*
-             * temporarily highlight the new components and then show the component
-             * authoring views
-             */
-            this.highlightNewComponentsAndThenShowComponentAuthoring(newComponents);
+                // save the project
+                this.ProjectService.saveProject();
+
+                /*
+                 * temporarily highlight the new components and then show the component
+                 * authoring views
+                 */
+                this.highlightNewComponentsAndThenShowComponentAuthoring(newComponents);
+            }
         } else if (this.copyComponentMode) {
 
             // get the component ids we are moving

@@ -535,9 +535,9 @@ var ProjectController = function () {
                      * itself so we will not allow that
                      */
                     if (selectedNodeIds.length == 1) {
-                        alert('You are not allowed to insert the selected item after itself.');
+                        alert(this.$translate('youAreNotAllowedToInsertTheSelectedItemAfterItself'));
                     } else if (selectedNodeIds.length > 1) {
-                        alert('You are not allowed to insert the selected items after itself.');
+                        alert(this.$translate('youAreNotAllowedToInsertTheSelectedItemsAfterItself'));
                     }
                 } else {
                     // move the nodes after the node id

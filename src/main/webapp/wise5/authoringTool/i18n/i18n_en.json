@@ -193,5 +193,7 @@
     "usedXSubmits": "Used X Submits",
     "viewHistory": "View History",
     "whenToChoosePath": "When to choose path",
-    "yes": "Yes"
+    "yes": "Yes",
+    "youAreNotAllowedToInsertTheSelectedItemAfterItself": "You are not allowed to insert the selected item after itself.",
+    "youAreNotAllowedToInsertTheSelectedItemsAfterItself": "You are not allowed to insert the selected items after itself."
 }
