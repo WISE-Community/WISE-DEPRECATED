@@ -58,16 +58,15 @@ describe('WISE Authoring Tool', () => {
 
     it('should create a new project and open it', () => {
         createNewProjectButton.click();  // click button to create a new project
-        expect(browser.getCurrentUrl()).toEqual('http://localhost:8080/wise/author#/new');
+        expect(browser.getCurrentUrl()).toEqual('http://localhost:8080/wise/author#/'); // url should stay the same
         let createProjectButton = $('#createProjectButton');
         expect(createProjectButton.isPresent()).toBeTruthy();
         let cancelCreateProjectButton = $('#cancelCreateProjectButton');
         expect(cancelCreateProjectButton.isPresent()).toBeTruthy();
-        cancelCreateProjectButton.click();  // cancel create. We should go back to main authoring page.
+        cancelCreateProjectButton.click();  // cancel create. url should stay the same
         expect(browser.getCurrentUrl()).toEqual('http://localhost:8080/wise/author#/');
 
         createNewProjectButton.click();  // click button to create a new project
-        expect(browser.getCurrentUrl()).toEqual('http://localhost:8080/wise/author#/new');
         $('#newProjectTitle').clear();  // clear out what's there.
         $('#newProjectTitle').sendKeys('My Science Project');
         createProjectButton.click();
@@ -314,27 +313,52 @@ describe('WISE Authoring Tool', () => {
 
         element.all(by.repeater("project in authoringToolMainController.projects")).then((projectItems) => {
             projectItems[0].all(by.css('span')).then((projectItemSpans) => {
-                expect(projectItemSpans[0].getText()).toBe(projectId + " My Awesome Science Project");
+                expect(projectItemSpans[0].getText()).toBe("pageview");
+                expect(projectItemSpans[1].getText()).toBe("content_copy");
+                expect(projectItemSpans[2].getText()).toBe("file_download");
+                expect(projectItemSpans[3].getText()).toBe("mode_edit");
+                expect(projectItemSpans[4].getText()).toBe(projectId + " - My Awesome Science Project");
             })
         });
     });
+
+    it('should open the project authoring from project listing view', () => {
+        element.all(by.repeater("project in authoringToolMainController.projects")).then((projectItems) => {
+            projectItems[0].all(by.css('span')).then((projectItemSpans) => {
+                projectItemSpans[3].click(); // open Project authoring view by clicking on mode_edit icon
+            });
+        });
+        expect(browser.getCurrentUrl()).toEqual('http://localhost:8080/wise/author#/project/' + projectId);
+
+        browser.get('http://localhost:8080/wise/author');
+        browser.refresh();  // needed for this issue https://github.com/angular/protractor/issues/2643
+        waitForUrlToChangeTo(new RegExp('http://localhost:8080/wise/author#/', 'gi'));
+        expect(browser.getTitle()).toEqual('WISE Authoring Tool');
+
+        element.all(by.repeater("project in authoringToolMainController.projects")).then((projectItems) => {
+            projectItems[0].all(by.css('span')).then((projectItemSpans) => {
+                projectItemSpans[4].click(); // open Project authoring view by clicking on project title
+            });
+        });
+        expect(browser.getCurrentUrl()).toEqual('http://localhost:8080/wise/author#/project/' + projectId);
+    });
+
+
+    it('should exit the authoring tool from project listing view and go to teacher home', () => {
+        browser.get('http://localhost:8080/wise/author');
+        browser.refresh();  // needed for this issue https://github.com/angular/protractor/issues/2643
+        waitForUrlToChangeTo(new RegExp('http://localhost:8080/wise/author#/', 'gi'));
+        expect(browser.getTitle()).toEqual('WISE Authoring Tool');
+
+        $("#goHomeButton").click();
+
+         browser.ignoreSynchronization = true;  // doesn't use Angular
+         expect(browser.getTitle()).toEqual('WISE Teacher Dashboard');
+     });
 
     // TODO: add test for copying a project
 
     // TODO: add test for copying a step
 
 
-    /*
-    it('should exit the authoring tool and then sign out', () => {
-        exitAuthoringToolButton.click();
-
-        browser.ignoreSynchronization = true;  // doesn't use Angular
-        expect(browser.getTitle()).toEqual('WISE Teacher Dashboard');
-        let signOutButton = $("#signOut");
-        expect(signOutButton.isPresent()).toBeTruthy();
-        signOutButton.click();
-        expect(browser.getTitle()).toEqual('Web-based Inquiry Science Environment (WISE)');
-        expect(browser.getCurrentUrl()).toEqual('http://localhost:8080/wise/');
-    });
-    */
 });
