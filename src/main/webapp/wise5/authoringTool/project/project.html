@@ -367,6 +367,7 @@
                                         <md-checkbox
                                                ng-model='inactiveNode.checked'
                                                class='check'
+                                               ng-disabled='projectController.showCreateGroup || projectController.showCreateNode || projectController.insertNodeMode || projectController.insertGroupMode'
                                                aria-label='{{projectController.getNodeTitleByNodeId(inactiveNode.id)}}'>
                                         </md-checkbox>
                                     </div>
