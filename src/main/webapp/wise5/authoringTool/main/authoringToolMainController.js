@@ -184,6 +184,18 @@ var AuthoringToolMainController = function () {
 
             // show the view where the author enters the title for the new project
             this.showCreateProjectView = true;
+
+            /*
+             * we are showing the create project view so we will give focus to the
+             * newProjectTitle input element
+             */
+            this.$timeout(function () {
+                var createGroupTitleInput = document.getElementById('newProjectTitle');
+
+                if (createGroupTitleInput != null) {
+                    createGroupTitleInput.focus();
+                }
+            });
         }
 
         /**
