@@ -1,9 +1,12 @@
 import NodeService from '../../services/nodeService';
 
 class OutsideURLService extends NodeService {
-    constructor(UtilService) {
+    constructor($filter, UtilService) {
         super();
+        this.$filter = $filter;
         this.UtilService = UtilService;
+
+        this.$translate = this.$filter('translate');
     }
 
     /**
@@ -100,6 +103,7 @@ class OutsideURLService extends NodeService {
 
 
 OutsideURLService.$inject = [
+    '$filter',
     'UtilService'
 ];
 

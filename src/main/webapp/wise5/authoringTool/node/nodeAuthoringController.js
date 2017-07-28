@@ -3620,6 +3620,20 @@ var NodeAuthoringController = function () {
             // show the component authoring views
             this.showComponentAuthoring();
         }
+
+        /**
+         * Get the component type label
+         * @param componentType the component type
+         * @return the component type label
+         * example
+         * "Open Response"
+         */
+
+    }, {
+        key: 'getComponentTypeLabel',
+        value: function getComponentTypeLabel(componentType) {
+            return this.UtilService.getComponentTypeLabel(componentType);
+        }
     }]);
 
     return NodeAuthoringController;

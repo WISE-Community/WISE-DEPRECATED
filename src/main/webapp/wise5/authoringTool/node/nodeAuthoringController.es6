@@ -3473,6 +3473,17 @@ class NodeAuthoringController {
         // show the component authoring views
         this.showComponentAuthoring();
     }
+
+    /**
+     * Get the component type label
+     * @param componentType the component type
+     * @return the component type label
+     * example
+     * "Open Response"
+     */
+    getComponentTypeLabel(componentType) {
+        return this.UtilService.getComponentTypeLabel(componentType);
+    }
 };
 
 NodeAuthoringController.$inject = [

@@ -21,12 +21,15 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var EmbeddedService = function (_NodeService) {
     _inherits(EmbeddedService, _NodeService);
 
-    function EmbeddedService(UtilService) {
+    function EmbeddedService($filter, UtilService) {
         _classCallCheck(this, EmbeddedService);
 
         var _this = _possibleConstructorReturn(this, (EmbeddedService.__proto__ || Object.getPrototypeOf(EmbeddedService)).call(this));
 
+        _this.$filter = $filter;
         _this.UtilService = UtilService;
+
+        _this.$translate = _this.$filter('translate');
         return _this;
     }
 
@@ -193,7 +196,7 @@ var EmbeddedService = function (_NodeService) {
     return EmbeddedService;
 }(_nodeService2.default);
 
-EmbeddedService.$inject = ['UtilService'];
+EmbeddedService.$inject = ['$filter', 'UtilService'];
 
 exports.default = EmbeddedService;
 //# sourceMappingURL=embeddedService.js.map

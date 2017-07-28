@@ -1,9 +1,12 @@
 import NodeService from '../../services/nodeService';
 
 class EmbeddedService extends NodeService {
-    constructor(UtilService) {
+    constructor($filter, UtilService) {
         super();
+        this.$filter = $filter;
         this.UtilService = UtilService;
+
+        this.$translate = this.$filter('translate');
     }
 
     /**
@@ -145,6 +148,7 @@ class EmbeddedService extends NodeService {
 }
 
 EmbeddedService.$inject = [
+    '$filter',
     'UtilService'
 ];
 

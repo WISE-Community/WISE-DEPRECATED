@@ -21,12 +21,15 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var OutsideURLService = function (_NodeService) {
     _inherits(OutsideURLService, _NodeService);
 
-    function OutsideURLService(UtilService) {
+    function OutsideURLService($filter, UtilService) {
         _classCallCheck(this, OutsideURLService);
 
         var _this = _possibleConstructorReturn(this, (OutsideURLService.__proto__ || Object.getPrototypeOf(OutsideURLService)).call(this));
 
+        _this.$filter = $filter;
         _this.UtilService = UtilService;
+
+        _this.$translate = _this.$filter('translate');
         return _this;
     }
 
@@ -147,7 +150,7 @@ var OutsideURLService = function (_NodeService) {
     return OutsideURLService;
 }(_nodeService2.default);
 
-OutsideURLService.$inject = ['UtilService'];
+OutsideURLService.$inject = ['$filter', 'UtilService'];
 
 exports.default = OutsideURLService;
 //# sourceMappingURL=outsideURLService.js.map
