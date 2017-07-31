@@ -417,6 +417,7 @@ class GraphController {
                 // check if we need to import work
                 var importPreviousWorkNodeId = this.componentContent.importPreviousWorkNodeId;
                 var importPreviousWorkComponentId = this.componentContent.importPreviousWorkComponentId;
+                var importWork = this.componentContent.importWork;
 
                 if (importPreviousWorkNodeId == null || importPreviousWorkNodeId == '') {
                     /*
@@ -436,6 +437,9 @@ class GraphController {
 
                 if (importPreviousWorkNodeId != null && importPreviousWorkComponentId != null) {
                     // import the work from the other component
+                    this.importWork();
+                } else if(importWork != null) {
+                    // we are going to import work from one or more components
                     this.importWork();
                 } else {
 
@@ -2532,6 +2536,7 @@ class GraphController {
             // get the import previous work node id and component id
             var importPreviousWorkNodeId = componentContent.importPreviousWorkNodeId;
             var importPreviousWorkComponentId = componentContent.importPreviousWorkComponentId;
+            var importWork = componentContent.importWork;
 
             if (importPreviousWorkNodeId == null || importPreviousWorkNodeId == '') {
 
@@ -2584,6 +2589,69 @@ class GraphController {
                         this.studentDataChanged();
                     }
                 }
+            }
+
+            if (importWork != null) {
+
+                var mergedTrials = [];
+
+                // get the components to import work from
+                var importWorkComponents = importWork.components;
+
+                // loop through all the import work components
+                for (var c = 0; c < importWorkComponents.length; c++) {
+                    var importWorkComponent = importWorkComponents[c];
+
+                    if (importWorkComponent != null) {
+
+                        // get the node id and component id to import from
+                        var nodeId = importWorkComponent.nodeId;
+                        var componentId = importWorkComponent.componentId;
+
+                        // get the latest component state from the component
+                        var componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
+
+                        if (componentState != null) {
+
+                            // get the student data
+                            var studentData = componentState.studentData;
+
+                            if (studentData != null) {
+
+                                // get the trials
+                                var trials = studentData.trials;
+
+                                if (trials != null) {
+
+                                    /*
+                                     * loop through all the trials and add them
+                                     * to our array of merged trials
+                                     */
+                                    for (var t = 0; t < trials.length; t++) {
+                                        var trial = trials[t];
+
+                                        mergedTrials.push(trial);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // create a new student data
+                var studentData = {};
+                studentData.trials = mergedTrials;
+                studentData.version = 2;
+
+                // create a new component state
+                var newComponentState = this.NodeService.createNewComponentState();
+                newComponentState.studentData = studentData;
+
+                // populate the component state into this component
+                this.setStudentWork(newComponentState);
+
+                // make the work dirty so that it gets saved
+                this.studentDataChanged();
             }
         }
     };
