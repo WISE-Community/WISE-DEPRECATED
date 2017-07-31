@@ -351,31 +351,56 @@
         <div ng-if='openResponseController.mode === "authoring"'>
             <h5>{{ 'PREVIEW' | translate }}</h5>
         </div>
-        <md-input-container class="input-container md-block input-container--open-response input-container--component md-no-float">
-            <label class="input-label md-no-float" ng-disabled="openResponseController.isDisabled"
-                   ng-if="openResponseController.isPromptVisible"><compile data="openResponseController.getPrompt()"></compile></label>
-            <possible-score max-score="openResponseController.componentContent.maxScore"
-                            ng-if="openResponseController.mode === 'student' && !openResponseController.latestAnnotations.score"></possible-score>
-            <div class="input-wrapper" ng-class="{'input-wrapper--richtext': openResponseController.isRichTextEnabled}">
-                <textarea ng-if="openResponseController.isRichTextEnabled && !openResponseController.isDisabled"
-                          ui-tinymce="openResponseController.tinymceOptions"
-                          ng-model="openResponseController.studentResponse"
-                          ng-model-options='{ debounce: 100 }'
-                          ng-change="openResponseController.studentDataChanged()"></textarea>
-                <div ng-if="openResponseController.isRichTextEnabled && openResponseController.isDisabled"
-                     class="input--textarea input--textarea--disabled">
-                        <compile data="openResponseController.studentResponse"></compile>
+        <div ng-switch="openResponseController.mode">
+            <div ng-switch-when="grading" layout="row" layout-wrap>
+                <div flex="100" flex-gt-sm="66" layout="column" class="component--grading__response">
+                    <div class="component--grading__response__content"><compile data="openResponseController.studentResponse"></compile></div>
+                    <span flex></span>
+                    <component-revisions-info node-id='openResponseController.nodeId'
+                                         component-id='openResponseController.componentId'
+                                         max-score="openResponseController.componentContent.maxScore"
+                                         to-workgroup-id='workgroupId'
+                                         component-state-id='componentState.id'></component-revisions-info>
                 </div>
-                <textarea ng-if="!openResponseController.isRichTextEnabled"
-                          class="input--textarea input--textarea--hasaction"
-                          rows="{{openResponseController.getNumRows() || 3}}"
-                          ng-model="openResponseController.studentResponse"
-                          ng-model-options='{ debounce: 100 }'
-                          ng-disabled="openResponseController.isDisabled"
-                          ng-change="openResponseController.studentDataChanged()"
-                          md-no-autogrow></textarea>
+                <div flex="100" flex-gt-sm="33" class="component--grading__annotations">
+                    <component-grading node-id='openResponseController.nodeId'
+                                       component-id='openResponseController.componentId'
+                                       max-score="openResponseController.componentContent.maxScore"
+                                       from-workgroup-id='teacherWorkgroupId'
+                                       to-workgroup-id='workgroupId'
+                                       component-state-id='componentState.id'
+                                       active="true"></component-grading>
+                </div>
             </div>
-        </md-input-container>
+            <div ng-switch-default>
+                <md-input-container class="input-container input-container--open-response md-block">
+                    <label class="input-label md-no-float" ng-disabled="openResponseController.isDisabled"
+                           ng-if="openResponseController.isPromptVisible">
+                        <compile data="openResponseController.getPrompt()"></compile>
+                        <possible-score max-score="openResponseController.componentContent.maxScore"></possible-score>
+                    </label>
+                    <div class="input-wrapper" ng-class="{'input-wrapper--richtext': openResponseController.isRichTextEnabled}">
+                        <textarea ng-if="openResponseController.isRichTextEnabled && !openResponseController.isDisabled"
+                                  ui-tinymce="openResponseController.tinymceOptions"
+                                  ng-model="openResponseController.studentResponse"
+                                  ng-model-options='{ debounce: 100 }'
+                                  ng-change="openResponseController.studentDataChanged()"></textarea>
+                        <div ng-if="openResponseController.isRichTextEnabled && openResponseController.isDisabled"
+                             class="input--textarea input--textarea--disabled">
+                                <compile data="openResponseController.studentResponse"></compile>
+                        </div>
+                        <textarea ng-if="!openResponseController.isRichTextEnabled"
+                                  class="input--textarea"
+                                  rows="{{openResponseController.getNumRows() || 3}}"
+                                  ng-model="openResponseController.studentResponse"
+                                  ng-model-options='{ debounce: 100 }'
+                                  ng-disabled="openResponseController.isDisabled"
+                                  ng-change="openResponseController.studentDataChanged()"
+                                  md-no-autogrow></textarea>
+                    </div>
+                </md-input-container>
+            </div>
+        </div>
         <div ng-if="nodeController.getRevisions().length > 1" layout="row" layout-align="center end">
             <a ng-click="nodeController.showRevisions($event, component.id, openResponseController.isDisabled)">
                + {{ 'openResponse.previousVersions' | translate }}: {{nodeController.getRevisions().length - 1}}
@@ -416,13 +441,5 @@
         <component-annotations ng-if="openResponseController.mode === 'student' || openResponseController.mode === 'authoring'"
                                annotations='openResponseController.latestAnnotations'
                                max-score="openResponseController.componentContent.maxScore"></component-annotations>
-        <component-grading ng-if="openResponseController.mode === 'grading'"
-                           node-id='openResponseController.nodeId'
-                           component-id='openResponseController.componentId'
-                           max-score="openResponseController.componentContent.maxScore"
-                           from-workgroup-id='teacherWorkgroupId'
-                           to-workgroup-id='workgroupId'
-                           component-state-id='componentState.id'
-                           active="true"></component-grading>
     </div>
 </div>

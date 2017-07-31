@@ -136,9 +136,6 @@ class AudioOscillatorController {
         this.oscilloscopeHeight = 400;
         this.gridCellSize = 50;
 
-        // create the audio context
-        this.audioContext = new AudioContext();
-
         // whether we should stop drawing after a good draw
         this.stopAfterGoodDraw = true;
 
@@ -357,13 +354,18 @@ class AudioOscillatorController {
                 this.$scope.$parent.nodeController.registerComponentController(this.$scope, this.componentContent);
             }
 
-            /*
-             * draw the oscilloscope grid after angular has finished rendering
-             * the view. we need to wait until after angular has set the
-             * canvas width and height to draw the grid because setting the
-             * dimensions of the canvas will erase it.
-             */
-            $timeout(() => {this.drawOscilloscopeGrid()}, 0);
+            if (this.mode !== 'grading') {
+                // create the audio context
+                this.audioContext = new AudioContext();
+
+                /*
+                 * draw the oscilloscope grid after angular has finished rendering
+                 * the view. we need to wait until after angular has set the
+                 * canvas width and height to draw the grid because setting the
+                 * dimensions of the canvas will erase it.
+                 */
+                $timeout(() => {this.drawOscilloscopeGrid()}, 0);
+            }
         }
 
         /**

@@ -290,65 +290,92 @@
             <div ng-if='tableController.mode === "authoring"'>
                 <h5>{{ 'PREVIEW' | translate }}</h5>
             </div>
-            <div class="component__prompt">
-                <div class="component__prompt__content"><compile data='tableController.getPrompt()'></compile></div>
-                <possible-score max-score="tableController.componentContent.maxScore"
-                                ng-if="tableController.mode === 'student' && !tableController.latestAnnotations.score"></possible-score>
+            <div ng-switch="tableController.mode">
+                <div ng-switch-when="grading" layout="row" layout-wrap>
+                    <div flex="100" flex-gt-sm="66" layout="column" class="component--grading__response">
+                        <div class="component--grading__response__content" ng-if="tableController.$scope.componentState">
+                            <table id="{{tableController.tableId}}">
+                                <tr ng-repeat='row in tableController.getTableDataRows()'>
+                                    <td ng-repeat='cell in row'>
+                                        <input type='text'
+                                            ng-model='cell.text'
+                                            size='{{cell.size || tableController.componentContent.globalCellSize}}'
+                                            ng-disabled='!cell.editable || tableController.isDisabled'/>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <span flex></span>
+                        <component-revisions-info node-id='tableController.nodeId'
+                                             component-id='tableController.componentId'
+                                             max-score="tableController.componentContent.maxScore"
+                                             to-workgroup-id='workgroupId'
+                                             component-state-id='componentState.id'></component-revisions-info>
+                    </div>
+                    <div flex="100" flex-gt-sm="33" class="component--grading__annotations">
+                        <component-grading node-id='tableController.nodeId'
+                                           component-id='tableController.componentId'
+                                           max-score="tableController.componentContent.maxScore"
+                                           from-workgroup-id='teacherWorkgroupId'
+                                           to-workgroup-id='workgroupId'
+                                           component-state-id='componentState.id'
+                                           active="true"></component-grading>
+                    </div>
+                </div>
+                <div ng-switch-default>
+                    <div class="component__prompt">
+                        <div class="component__prompt__content"><compile data='tableController.getPrompt()'></compile></div>
+                        <possible-score max-score="tableController.componentContent.maxScore"
+                                        ng-if="tableController.mode === 'student' && !tableController.latestAnnotations.score"></possible-score>
+                    </div>
+                    <div class="component__actions" layout="row">
+                        <md-button class="md-accent" ng-show="tableController.isStudentAttachmentEnabled"
+                                   ng-click="nodeController.showStudentAssets($event, component.id, tableController.isDisabled)">
+                            <md-icon>image</md-icon> {{ 'table.importData' | translate }}
+                        </md-button>
+                    </div>
+                    <md-button class="md-accent" ng-click='tableController.resetTable()' ng-show='tableController.showResetTableButton()'>
+                        <md-icon> restore </md-icon> {{ 'reset' | translate }}
+                    </md-button>
+                    <md-button class="md-accent"
+                               ng-click='tableController.snipTable($event)'
+                               ng-if='tableController.showSnipTableButton()'>
+                        <md-icon> content_cut </md-icon>  {{ 'ADD_TO_NOTEBOOK' | translate:{label:tableController.notebookConfig.label} }}
+                    </md-button>
+                    <table id="{{tableController.tableId}}">
+                        <tr ng-repeat='row in tableController.getTableDataRows()'>
+                            <td ng-repeat='cell in row'>
+                                <input type='text'
+                                    ng-model='cell.text'
+                                    ng-change='tableController.studentDataChanged()'
+                                    size='{{cell.size || tableController.componentContent.globalCellSize}}'
+                                    ng-disabled='!cell.editable || tableController.isDisabled'/>
+                            </td>
+                        </tr>
+                    </table>
+                    <div ng-if="tableController.isSaveButtonVisible || tableController.isSubmitButtonVisible"
+                         class="component__actions" layout="row" layout-align="start center">
+                        <md-button class="md-raised md-primary"
+                                   ng-click='tableController.saveButtonClicked()'
+                                   ng-disabled='tableController.isDisabled || !tableController.isDirty'
+                                   ng-if='tableController.isSaveButtonVisible'
+                                   aria-label="Save"
+                                   translate="SAVE">{{ 'save' | translate }}</md-button>
+                        <md-button class="md-raised md-primary"
+                                   ng-click='tableController.submitButtonClicked()'
+                                   ng-disabled='tableController.isDisabled || !tableController.isSubmitDirty || tableController.isSubmitButtonDisabled'
+                                   ng-show='tableController.isSubmitButtonVisible'
+                                   aria-label="Submit"
+                                   translate="SUBMIT">{{ 'submit' | translate }}</md-button>
+                        <span ng-show="tableController.saveMessage.text"
+                              class="component__actions__info md-caption">
+                            {{tableController.saveMessage.text}} <span class="component__actions__more"><md-tooltip md-direction="top">{{ tableController.saveMessage.time | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip><span am-time-ago="tableController.saveMessage.time"></span></span>
+                        </span>
+                    </div>
+                    <component-annotations ng-if="tableController.mode === 'student' || tableController.mode === 'authoring'"
+                                           annotations='tableController.latestAnnotations'
+                                           max-score="tableController.componentContent.maxScore"></component-annotations>
+                </div>
             </div>
-            <div class="component__actions" layout="row">
-                <md-button class="md-accent" ng-show="tableController.isStudentAttachmentEnabled"
-                           ng-click="nodeController.showStudentAssets($event, component.id, tableController.isDisabled)">
-                    <md-icon>image</md-icon> {{ 'table.importData' | translate }}
-                </md-button>
-            </div>
-            <md-button class="md-accent" ng-click='tableController.resetTable()' ng-show='tableController.showResetTableButton()'>
-                <md-icon> restore </md-icon> {{ 'reset' | translate }}
-            </md-button>
-            <md-button class="md-accent"
-                       ng-click='tableController.snipTable($event)'
-                       ng-if='tableController.showSnipTableButton()'>
-                <md-icon> content_cut </md-icon>  {{ 'ADD_TO_NOTEBOOK' | translate:{label:tableController.notebookConfig.label} }}
-            </md-button>
-            <table id="{{tableController.tableId}}">
-                <tr ng-repeat='row in tableController.getTableDataRows()'>
-                    <td ng-repeat='cell in row'>
-                        <input type='text'
-                            ng-model='cell.text'
-                            ng-change='tableController.studentDataChanged()'
-                            size='{{cell.size || tableController.componentContent.globalCellSize}}'
-                            ng-disabled='!cell.editable || tableController.isDisabled'/>
-                    </td>
-                </tr>
-            </table>
-            <div ng-if="tableController.isSaveButtonVisible || tableController.isSubmitButtonVisible"
-                 class="component__actions" layout="row" layout-align="start center">
-                <md-button class="md-raised md-primary"
-                           ng-click='tableController.saveButtonClicked()'
-                           ng-disabled='tableController.isDisabled || !tableController.isDirty'
-                           ng-if='tableController.isSaveButtonVisible'
-                           aria-label="Save"
-                           translate="SAVE">{{ 'save' | translate }}</md-button>
-                <md-button class="md-raised md-primary"
-                           ng-click='tableController.submitButtonClicked()'
-                           ng-disabled='tableController.isDisabled || !tableController.isSubmitDirty || tableController.isSubmitButtonDisabled'
-                           ng-show='tableController.isSubmitButtonVisible'
-                           aria-label="Submit"
-                           translate="SUBMIT">{{ 'submit' | translate }}</md-button>
-                <span ng-show="tableController.saveMessage.text"
-                      class="component__actions__info md-caption">
-                    {{tableController.saveMessage.text}} <span class="component__actions__more"><md-tooltip md-direction="top">{{ tableController.saveMessage.time | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip><span am-time-ago="tableController.saveMessage.time"></span></span>
-                </span>
-            </div>
-            <component-annotations ng-if="tableController.mode === 'student' || tableController.mode === 'authoring'"
-                                   annotations='tableController.latestAnnotations'
-                                   max-score="tableController.componentContent.maxScore"></component-annotations>
-            <component-grading ng-if="tableController.mode === 'grading'"
-                              node-id='tableController.nodeId'
-                              component-id='tableController.componentId'
-                              max-score="tableController.componentContent.maxScore"
-                              from-workgroup-id='teacherWorkgroupId'
-                              to-workgroup-id='workgroupId'
-                              component-state-id='componentState.id'
-                              active="true"></component-grading>
         </div>
 </div>

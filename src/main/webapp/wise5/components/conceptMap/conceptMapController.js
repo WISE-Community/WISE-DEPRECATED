@@ -256,20 +256,22 @@ var ConceptMapController = function () {
                      * the node id, component id, and workgroup id, and
                      * componentStateId for the svg id
                      */
-                    this.svgId = 'svg_' + this.nodeId + '_' + this.componentId + '_' + this.workgroupId + '_' + componentState.id;
-                    this.conceptMapContainerId = 'conceptMapContainer_' + this.nodeId + '_' + this.componentId + '_' + this.workgroupId + '_' + componentState.id;
-                    this.selectNodeBarId = 'selectNodeBar_' + this.nodeId + '_' + this.componentId + '_' + this.workgroupId + '_' + componentState.id;
-                    this.feedbackContainerId = 'feedbackContainer_' + this.nodeId + '_' + this.componentId + '_' + this.workgroupId + '_' + componentState.id;
+                    var idInfo = this.nodeId + '_' + this.componentId + '_' + this.workgroupId + '_' + componentState.id;
+                    this.svgId = 'svg_' + idInfo;
+                    this.conceptMapContainerId = 'conceptMapContainer_' + idInfo;
+                    this.selectNodeBarId = 'selectNodeBar_' + idInfo;
+                    this.feedbackContainerId = 'feedbackContainer_' + idInfo;
                 } else {
                     /*
                      * the student does not have any work for this component so
                      * we will use the node id, component id, and workgroup id
                      * for the svg id
                      */
-                    this.svgId = 'svg_' + this.nodeId + '_' + this.componentId + '_' + this.workgroupId;
-                    this.conceptMapContainerId = 'conceptMapContainer_' + this.nodeId + '_' + this.componentId + '_' + this.workgroupId;
-                    this.selectNodeBarId = 'selectNodeBar_' + this.nodeId + '_' + this.componentId + '_' + this.workgroupId;
-                    this.feedbackContainerId = 'feedbackContainer_' + this.nodeId + '_' + this.componentId + '_' + this.workgroupId;
+                    var _idInfo = this.nodeId + '_' + this.componentId + '_' + this.workgroupId;
+                    this.svgId = 'svg_' + _idInfo;
+                    this.conceptMapContainerId = 'conceptMapContainer_' + _idInfo;
+                    this.selectNodeBarId = 'selectNodeBar_' + _idInfo;
+                    this.feedbackContainerId = 'feedbackContainer_' + _idInfo;
                 }
             } else if (this.mode === 'onlyShowWork') {
                 this.isPromptVisible = false;

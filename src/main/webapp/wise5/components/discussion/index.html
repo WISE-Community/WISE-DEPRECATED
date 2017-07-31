@@ -149,98 +149,128 @@
         <div ng-if='discussionController.mode === "authoring"'>
             <h5>{{ 'PREVIEW' | translate }}</h5>
         </div>
-        <div class="component__prompt">
-            <div class="component__prompt__content"><compile data='discussionController.getPrompt()'></compile></div>
-            <possible-score max-score="discussionController.componentContent.maxScore"
-                            ng-if="discussionController.mode === 'student' && !discussionController.latestAnnotations.score"></possible-score>
-        </div>
-        <div class="md-padding discussion-content">
-            <component-annotations ng-if="discussionController.mode === 'student' || discussionController.mode === 'authoring'"
-                                   class="annotations--inside"
-                                   annotations='discussionController.latestAnnotations'
-                                   max-score="discussionController.componentContent.maxScore"></component-annotations>
-            <div layout="row">
-                <div class="discussion-posts" flex>
-                    <md-card class="discussion-new discussion-post"
-                             ng-show="!discussionController.isDisabled"
-                             ng-class="{'discussion-new--focused md-whiteframe-z3': discussionController.focus || discussionController.newResponse || discussionController.newAttachments.length}">
-                        <md-input-container class="input--placeholder-only discussion-new__input-container input-container"
-                                            md-no-float>
-                            <textarea ng-if="discussionController.isRichTextEnabled && !discussionController.isDisabled"
-                                      ui-tinymce="discussionController.tinymceOptions"
-                                      ng-model="discussionController.newResponse"
-                                      ng-model-options='{ debounce: 100 }'
-                                      ng-change="discussionController.studentDataChanged()"
-                                      ng-init="discussionController.focus = false"
-                                      ng-focus="discussionController.focus = true"
-                                      ng-blur="discussionController.focus = false"></textarea>
-                            <div ng-if="discussionController.isDisabled"
-                                 class="discussion-new__input--textarea input--textarea--disabled"
-                                 ng-model="discussionController.newResponse"></div>
-                            <textarea ng-if="!discussionController.isRichTextEnabled && !discussionController.isDisabled"
-                                      class="discussion-new__input--textarea"
-                                      placeholder="Share with class..."
-                                      ng-model="discussionController.newResponse"
-                                      ng-model-options='{ debounce: 100 }'
-                                      ng-disabled="discussionController.isDisabled"
-                                      ng-change="discussionController.studentDataChanged()"
-                                      ng-init="discussionController.focus = false"
-                                      ng-focus="discussionController.focus = true"
-                                      ng-blur="discussionController.focus = false"></textarea>
-                        </md-input-container>
-                        <div class="discussion-new__actions" ng-if="!discussionController.isDisabled && discussionController.isStudentAttachmentEnabled && discussionController.newAttachments.length">
-                            <div class="component__attachment discussion-new__attachment" ng-repeat="attachment in discussionController.newAttachments">
-                                <img ng-src="{{attachment.iconURL}}" alt="Image" class="discussion-post__attachment discussion-new__attachment__content" />
-                                <md-button class="component__attachment__delete" ng-click='discussionController.removeAttachment(attachment)' title="Remove file"><md-icon>cancel</md-icon></md-button>
+        <div ng-switch="discussionController.mode">
+            <div ng-switch-when="grading" layout="row" layout-wrap>
+                <div flex="100" flex-gt-sm="66" layout="column" class="component--grading__response">
+                    <div class="component--grading__response__content">
+                        <div class="md-padding discussion-content">
+                            <div layout="row">
+                                <div class="discussion-posts" flex>
+                                    <class-response ng-repeat="componentState in discussionController.topLevelResponses.slice().reverse()"
+                                                    response="componentState" submitbuttonclicked="submitbuttonclicked(r)"
+                                                    mode="discussionController.mode"
+                                                    deletebuttonclicked="discussionController.deletebuttonclicked(componentState)"
+                                                    undodeletebuttonclicked="discussionController.undodeletebuttonclicked(componentState)"
+                                                    studentdatachanged="studentdatachanged()"
+                                                    class="post animate-repeat"></class-response>
+                                </div>
                             </div>
                         </div>
-                        <div class="discussion-new__actions" layout="row" layout-align="end center">
-                            <md-button class="md-accent md-icon-button"
-                                       ng-click='nodeController.showStudentAssets($event, discussionController.componentId, discussionController.isDisabled)'
-                                       ng-if="discussionController.isStudentAttachmentEnabled"
-                                       title="Add picture">
-                                <md-icon>image</md-icon>
-                            </md-button>
-                            <!--<md-button class="md-primary"
-                                       ng-class="{'md-raised': !discussionController.showSubmitButton()}"
-                                       ng-click="discussionController.saveButtonClicked()"
-                                       ng-disabled="discussionController.isDisabled || !discussionController.newResponse"
-                                       ng-if="discussionController.showSaveButton()">Save Draft</md-button>-->
-                            <md-button class="md-raised md-primary"
-                                       ng-click="discussionController.submitButtonClicked()"
-                                       ng-disabled="discussionController.isDisabled || (!discussionController.newResponse && discussionController.newAttachments.length == 0)">{{ 'discussion.post' | translate }}</md-button>
-                        </div>
-                    </md-card>
-
-                    <class-response ng-repeat="componentState in discussionController.topLevelResponses.slice().reverse()"
-                                    ng-if="mdScreen ? $odd : true"
-                                    response="componentState" submitbuttonclicked="submitbuttonclicked(r)"
-                                    mode="discussionController.mode"
-                                    deletebuttonclicked="discussionController.deletebuttonclicked(componentState)"
-                                    undodeletebuttonclicked="discussionController.undodeletebuttonclicked(componentState)"
-                                    studentdatachanged="studentdatachanged()"
-                                    class="post animate-repeat"></class-response>
+                    </div>
+                    <span flex></span>
+                    <component-revisions-info node-id='discussionController.nodeId'
+                                              component-id='discussionController.componentId'
+                                              max-score="discussionController.componentContent.maxScore"
+                                              to-workgroup-id='workgroupId'
+                                              component-state-id='componentState.id'></component-revisions-info>
                 </div>
-                <div class="discussion-posts" ng-if="mdScreen && discussionController.topLevelResponses.length" flex>
-                    <class-response ng-repeat="componentState in discussionController.topLevelResponses.slice().reverse()"
-                                    ng-if="$even"
-                                    response="componentState" submitbuttonclicked="submitbuttonclicked(r)"
-                                    mode="discussionController.mode"
-                                    deletebuttonclicked="discussionController.deletebuttonclicked(componentState)"
-                                    undodeletebuttonclicked="discussionController.undodeletebuttonclicked(componentState)"
-                                    studentdatachanged="studentdatachanged()"
-                                    class="animate-repeat"
-                                    style="display: block;"></class-response>
+                <div flex="100" flex-gt-sm="33" class="component--grading__annotations">
+                    <component-grading node-id='discussionController.nodeId'
+                                       component-id='discussionController.componentId'
+                                       max-score="discussionController.componentContent.maxScore"
+                                       from-workgroup-id='teacherWorkgroupId'
+                                       to-workgroup-id='workgroupId'
+                                       component-state-id='componentState.id'
+                                       active="true"></component-grading>
+                </div>
+            </div>
+            <div ng-switch-default>
+                <div class="component__prompt">
+                    <div class="component__prompt__content"><compile data='discussionController.getPrompt()'></compile></div>
+                    <possible-score max-score="discussionController.componentContent.maxScore"
+                                    ng-if="discussionController.mode === 'student' && !discussionController.latestAnnotations.score"></possible-score>
+                </div>
+                <div class="md-padding discussion-content">
+                    <component-annotations ng-if="discussionController.mode === 'student' || discussionController.mode === 'authoring'"
+                                           class="annotations--inside"
+                                           annotations='discussionController.latestAnnotations'
+                                           max-score="discussionController.componentContent.maxScore"></component-annotations>
+                    <div layout="row">
+                        <div class="discussion-posts" flex>
+                            <md-card class="discussion-new discussion-post"
+                                     ng-show="!discussionController.isDisabled"
+                                     ng-class="{'discussion-new--focused md-whiteframe-z3': discussionController.focus || discussionController.newResponse || discussionController.newAttachments.length}">
+                                <md-input-container class="input--placeholder-only discussion-new__input-container input-container"
+                                                    md-no-float>
+                                    <textarea ng-if="discussionController.isRichTextEnabled && !discussionController.isDisabled"
+                                              ui-tinymce="discussionController.tinymceOptions"
+                                              ng-model="discussionController.newResponse"
+                                              ng-model-options='{ debounce: 100 }'
+                                              ng-change="discussionController.studentDataChanged()"
+                                              ng-init="discussionController.focus = false"
+                                              ng-focus="discussionController.focus = true"
+                                              ng-blur="discussionController.focus = false"></textarea>
+                                    <div ng-if="discussionController.isDisabled"
+                                         class="discussion-new__input--textarea input--textarea--disabled"
+                                         ng-model="discussionController.newResponse"></div>
+                                    <textarea ng-if="!discussionController.isRichTextEnabled && !discussionController.isDisabled"
+                                              class="discussion-new__input--textarea"
+                                              placeholder="Share with class..."
+                                              ng-model="discussionController.newResponse"
+                                              ng-model-options='{ debounce: 100 }'
+                                              ng-disabled="discussionController.isDisabled"
+                                              ng-change="discussionController.studentDataChanged()"
+                                              ng-init="discussionController.focus = false"
+                                              ng-focus="discussionController.focus = true"
+                                              ng-blur="discussionController.focus = false"></textarea>
+                                </md-input-container>
+                                <div class="discussion-new__actions" ng-if="!discussionController.isDisabled && discussionController.isStudentAttachmentEnabled && discussionController.newAttachments.length">
+                                    <div class="component__attachment discussion-new__attachment" ng-repeat="attachment in discussionController.newAttachments">
+                                        <img ng-src="{{attachment.iconURL}}" alt="Image" class="discussion-post__attachment discussion-new__attachment__content" />
+                                        <md-button class="component__attachment__delete" ng-click='discussionController.removeAttachment(attachment)' title="Remove file"><md-icon>cancel</md-icon></md-button>
+                                    </div>
+                                </div>
+                                <div class="discussion-new__actions" layout="row" layout-align="end center">
+                                    <md-button class="md-accent md-icon-button"
+                                               ng-click='nodeController.showStudentAssets($event, discussionController.componentId, discussionController.isDisabled)'
+                                               ng-if="discussionController.isStudentAttachmentEnabled"
+                                               title="Add picture">
+                                        <md-icon>image</md-icon>
+                                    </md-button>
+                                    <!--<md-button class="md-primary"
+                                               ng-class="{'md-raised': !discussionController.showSubmitButton()}"
+                                               ng-click="discussionController.saveButtonClicked()"
+                                               ng-disabled="discussionController.isDisabled || !discussionController.newResponse"
+                                               ng-if="discussionController.showSaveButton()">Save Draft</md-button>-->
+                                    <md-button class="md-raised md-primary"
+                                               ng-click="discussionController.submitButtonClicked()"
+                                               ng-disabled="discussionController.isDisabled || (!discussionController.newResponse && discussionController.newAttachments.length == 0)">{{ 'discussion.post' | translate }}</md-button>
+                                </div>
+                            </md-card>
+
+                            <class-response ng-repeat="componentState in discussionController.topLevelResponses.slice().reverse()"
+                                            ng-if="mdScreen ? $odd : true"
+                                            response="componentState" submitbuttonclicked="submitbuttonclicked(r)"
+                                            mode="discussionController.mode"
+                                            deletebuttonclicked="discussionController.deletebuttonclicked(componentState)"
+                                            undodeletebuttonclicked="discussionController.undodeletebuttonclicked(componentState)"
+                                            studentdatachanged="studentdatachanged()"
+                                            class="post animate-repeat"></class-response>
+                        </div>
+                        <div class="discussion-posts" ng-if="mdScreen && discussionController.topLevelResponses.length" flex>
+                            <class-response ng-repeat="componentState in discussionController.topLevelResponses.slice().reverse()"
+                                            ng-if="$even"
+                                            response="componentState" submitbuttonclicked="submitbuttonclicked(r)"
+                                            mode="discussionController.mode"
+                                            deletebuttonclicked="discussionController.deletebuttonclicked(componentState)"
+                                            undodeletebuttonclicked="discussionController.undodeletebuttonclicked(componentState)"
+                                            studentdatachanged="studentdatachanged()"
+                                            class="animate-repeat"
+                                            style="display: block;"></class-response>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-        <component-grading ng-if="discussionController.mode === 'grading'"
-                          node-id='discussionController.nodeId'
-                          component-id='discussionController.componentId'
-                          max-score="discussionController.componentContent.maxScore"
-                          from-workgroup-id='teacherWorkgroupId'
-                          to-workgroup-id='workgroupId'
-                          component-state-id='componentState.id'
-                          active="true"></component-grading>
     </div>
 </div>

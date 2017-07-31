@@ -200,49 +200,69 @@
             <div ng-if='embeddedController.mode === "authoring"'>
                 <h5>{{ 'PREVIEW' | translate }}</h5>
             </div>
-            <div style="text-align: center">
-                <md-button class="md-accent md-primary"
-                            ng-click='embeddedController.snipModel($event)'
-                            ng-show='embeddedController.showSnipModelButton()'>
-                    <md-icon> content_cut </md-icon>  {{ 'ADD_TO_NOTEBOOK' | translate:{label:embeddedController.notebookConfig.label} }}
-                </md-button>
-                <br/>
-                <iframe ng-attr-id="{{'componentApp_' + embeddedController.componentId}}" ng-src='{{embeddedController.url}}'
-                        class="embedded-content__iframe"
-                        style="width: {{embeddedController.width}}; height: {{embeddedController.height}};"></iframe>
+            <div ng-switch="embeddedController.mode">
+                <div ng-switch-when="grading" layout="row" layout-wrap>
+                    <div flex="100" flex-gt-sm="66" layout="column" class="component--grading__response">
+                        <div class="component--grading__response__content" style="text-align: center">
+                            <iframe ng-attr-id="{{'componentApp_' + embeddedController.componentId}}" ng-src='{{embeddedController.url}}'
+                                    class="embedded-content__iframe"
+                                    style="width: {{embeddedController.width}}; height: {{embeddedController.height}};"></iframe>
+                        </div>
+                        <span flex></span>
+                        <component-revisions-info node-id='embeddedController.nodeId'
+                                             component-id='embeddedController.componentId'
+                                             max-score="embeddedController.componentContent.maxScore"
+                                             to-workgroup-id='workgroupId'
+                                             component-state-id='componentState.id'></component-revisions-info>
+                    </div>
+                    <div flex="100" flex-gt-sm="33" class="component--grading__annotations">
+                        <component-grading node-id='embeddedController.nodeId'
+                                           component-id='embeddedController.componentId'
+                                           max-score="embeddedController.componentContent.maxScore"
+                                           from-workgroup-id='teacherWorkgroupId'
+                                           to-workgroup-id='workgroupId'
+                                           component-state-id='componentState.id'
+                                           active="true"></component-grading>
+                    </div>
+                </div>
+                <div ng-switch-default>
+                    <div style="text-align: center">
+                        <md-button class="md-accent md-primary"
+                                    ng-click='embeddedController.snipModel($event)'
+                                    ng-show='embeddedController.showSnipModelButton()'>
+                            <md-icon> content_cut </md-icon>  {{ 'ADD_TO_NOTEBOOK' | translate:{label:embeddedController.notebookConfig.label} }}
+                        </md-button>
+                        <br/>
+                        <iframe ng-attr-id="{{'componentApp_' + embeddedController.componentId}}" ng-src='{{embeddedController.url}}'
+                                class="embedded-content__iframe"
+                                style="width: {{embeddedController.width}}; height: {{embeddedController.height}};"></iframe>
+                    </div>
+                    <div ng-if="embeddedController.isSaveButtonVisible || embeddedController.isSubmitButtonVisible"
+                         class="component__actions" layout="row" layout-align="start center">
+                        <md-button class="md-raised md-primary"
+                                   ng-class="{'md-raised': !embeddedController.isSubmitButtonVisible}"
+                                   ng-click="embeddedController.saveButtonClicked()"
+                                   ng-disabled="embeddedController.isDisabled || !embeddedController.isDirty"
+                                   ng-if="embeddedController.isSaveButtonVisible"
+                                   aria-label="Save"
+                                   translate="SAVE"></md-button>
+                        <md-button class="md-raised md-primary"
+                                   ng-click="embeddedController.submitButtonClicked()"
+                                   ng-disabled="embeddedController.isDisabled || !embeddedController.isSubmitDirty"
+                                   ng-if="embeddedController.isSubmitButtonVisible"
+                                   aria-label="Submit"
+                                   translate="SUBMIT"></md-button>
+                        <span ng-show="embeddedController.saveMessage.text"
+                              class="component__actions__info md-caption">
+                              {{embeddedController.saveMessage.text}} <span class="component__actions__more"><md-tooltip md-direction="top">{{ embeddedController.saveMessage.time | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip><span am-time-ago="embeddedController.saveMessage.time"></span></span>
+                        </span>
+                    </div>
+                    <component-annotations ng-if="embeddedController.mode === 'student' || embeddedController.mode === 'authoring'"
+                                           score-annotation='embeddedController.latestAnnotations.score'
+                                           comment-annotation='embeddedController.latestAnnotations.comment'
+                                           max-score="embeddedController.componentContent.maxScore"></component-annotations>
+                </div>
             </div>
-            <div ng-if="embeddedController.isSaveButtonVisible || embeddedController.isSubmitButtonVisible"
-                 class="component__actions" layout="row" layout-align="start center">
-                <md-button class="md-raised md-primary"
-                           ng-class="{'md-raised': !embeddedController.isSubmitButtonVisible}"
-                           ng-click="embeddedController.saveButtonClicked()"
-                           ng-disabled="embeddedController.isDisabled || !embeddedController.isDirty"
-                           ng-if="embeddedController.isSaveButtonVisible"
-                           aria-label="Save"
-                           translate="SAVE"></md-button>
-                <md-button class="md-raised md-primary"
-                           ng-click="embeddedController.submitButtonClicked()"
-                           ng-disabled="embeddedController.isDisabled || !embeddedController.isSubmitDirty"
-                           ng-if="embeddedController.isSubmitButtonVisible"
-                           aria-label="Submit"
-                           translate="SUBMIT"></md-button>
-                <span ng-show="embeddedController.saveMessage.text"
-                      class="component__actions__info md-caption">
-                      {{embeddedController.saveMessage.text}} <span class="component__actions__more"><md-tooltip md-direction="top">{{ embeddedController.saveMessage.time | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip><span am-time-ago="embeddedController.saveMessage.time"></span></span>
-                </span>
-            </div>
-            <component-annotations ng-if="embeddedController.mode === 'student' || embeddedController.mode === 'authoring'"
-                                   score-annotation='embeddedController.latestAnnotations.score'
-                                   comment-annotation='embeddedController.latestAnnotations.comment'
-                                   max-score="embeddedController.componentContent.maxScore"></component-annotations>
         </div>
-        <component-grading ng-if="embeddedController.mode === 'grading'"
-                           node-id='embeddedController.nodeId'
-                           component-id='embeddedController.componentId'
-                           max-score="embeddedController.componentContent.maxScore"
-                           from-workgroup-id='teacherWorkgroupId'
-                           to-workgroup-id='workgroupId'
-                           component-state-id='componentState.id'
-                           active="true"></component-grading>
     </div>
 </div>
