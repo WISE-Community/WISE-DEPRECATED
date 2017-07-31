@@ -1,16 +1,19 @@
 .annotations--grading {
-    //margin: 8px 2px 4px;
-    //padding: 12px 8px 8px;
-    border: 2px solid color('primary');
-    background-color: color('selected-bg');
-
-    margin: 8px 0 0;
-    padding: 12px 8px 0;
-    //border: 1px solid color('primary');
-    //box-shadow: 0 0 3px color('gray') inset;
-
     md-input-container {
         margin-bottom: 0;
+    }
+
+    .md-errors-spacer {
+        display: none;
+    }
+
+    input, textarea {
+        //border-width: 0;
+        //background-color: color('text-light-secondary');
+
+        &:focus {
+            background-color: #ffffff;
+        }
     }
 }
 
@@ -24,20 +27,16 @@
     margin: 8px 8px 4px;
 }
 
+
 .annotations--grading__score {
-    @media only screen and (min-width: $layout-breakpoint-xs) {
-        margin-left: 16px;
-        //min-width: 108px;
-    }
+    margin-bottom: 24px;
 
     input {
+        margin-top: 0 !important;
         font-size: rem(1.8);
-        width: 54px;
+        width: 52px;
+        text-align: center;
     }
-}
-
-.annotations--grading__score__max {
-    margin-left: 8px;
 }
 
 .annotations--grading__score__label {
@@ -45,7 +44,13 @@
     width: auto;
     display: block;
     padding: 0;
-    margin: 3px 0 8px;
+    margin: 0 8px 0 0;
+}
+
+.annotations--grading__score__max {
+    label {
+        display: none;
+    }
 }
 
 .annotations--grading__score__divider {
@@ -55,6 +60,5 @@
 }
 
 .annotations--grading__auto-comment {
-    margin: 12px 4px 16px;
-    //border-left: 3px solid color('gray-light');
+    margin: 12px 2px;
 }

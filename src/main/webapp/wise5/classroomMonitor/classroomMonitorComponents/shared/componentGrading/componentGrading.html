@@ -1,0 +1,59 @@
+<div class="annotations--grading">
+    <div class="annotations--grading__score" layout="row" layout-align="start-center">
+        <md-input-container class="md-no-float" layout="row" layout-align="start-center">
+            <label class="input-label md-no-float annotations--grading__score__label">
+                <span ng-if="$ctrl.latestAnnotations.score.type === 'autoScore'">{{ 'AUTO_SCORE' | translate }}
+                    <span ng-if="$ctrl.active">
+                        (<a ng-click="$ctrl.editScore($event)">{{ 'EDIT' | translate }}</a>)
+                    </span>:</span>
+                <span ng-if="$ctrl.latestAnnotations.score.type !== 'autoScore'">{{ 'ITEM_SCORE' | translate }}:</span>
+            </label>
+            <input id="{{ 'scoreInput_' + $ctrl.componentId + '_' + $ctrl.toWorkgroupId }}"
+                   type="number"
+                   placeholder="0"
+                   min="0"
+                   ng-model="$ctrl.score"
+                   ng-disabled="!$ctrl.active"
+                   ng-change="$ctrl.postAnnotation('score')"
+                   ng-model-options="{ debounce: 1000 }">
+        </md-input-container>
+        <span> / </span>
+        <md-input-container class="md-no-float annotations--grading__score__max" layout="row" layout-align="start-center">
+            <label class="input-label md-no-float annotations--grading__score__label">{{ 'MAX' | translate }}</label>
+            <input aria-label="{{ 'MAX_SCORE' | translate }}"
+                   type="number"
+                   placeholder="0"
+                   min="0"
+                   ng-model="$ctrl.maxScore"
+                   ng-disabled="!$ctrl.active"
+                   ng-change="$ctrl.updateMaxScore()"
+                   ng-model-options="{ debounce: 1000 }">
+        </md-input-container>
+    </div>
+    <div ng-if="$ctrl.showAutoComment()" class="annotations--grading__auto-comment">
+        <div class="heavy">
+            <span class="md-no-float">{{ 'AUTO_COMMENT' | translate }}
+                <span ng-if="$ctrl.active">
+                    (<a ng-click="$ctrl.editComment()">{{ 'EDIT' | translate }}</a>)
+                </span>:</span>
+        </div>
+        <blockquote>
+            <compile data="$ctrl.latestAnnotations.comment.data.value"></compile>
+        </blockquote>
+    </div>
+    <md-input-container class="input-container md-block md-no-float"
+                        ng-show="$ctrl.edit || !$ctrl.showAutoComment()"
+                        flex>
+        <label class="input-label md-no-float" ng-disabled="!$ctrl.active">{{ 'TEACHER_COMMENT' | translate }}:</label>
+        <div class="input-wrapper">
+            <textarea id="{{ 'commentInput_' + $ctrl.componentId + '_' + $ctrl.toWorkgroupId }}"
+                      md-detect-hidden
+                      placeholder="{{ 'enterCommentHere' | translate }}"
+                      ng-model="$ctrl.comment"
+                      ng-disabled="!$ctrl.active"
+                      ng-change="$ctrl.postAnnotation('comment')"
+                      ng-model-options="{ debounce: 5000 }"></textarea>
+        </div>
+    </md-input-container>
+</div>
+</div>

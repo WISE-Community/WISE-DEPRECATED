@@ -9,7 +9,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var ComponentGradingController = function () {
-    function ComponentGradingController($filter, $mdDialog, $scope, AnnotationService, ConfigService, ProjectService, TeacherDataService, UtilService) {
+    function ComponentGradingController($filter, $mdDialog, $scope, $timeout, AnnotationService, ConfigService, ProjectService, TeacherDataService, UtilService) {
         var _this = this;
 
         _classCallCheck(this, ComponentGradingController);
@@ -17,6 +17,7 @@ var ComponentGradingController = function () {
         this.$filter = $filter;
         this.$mdDialog = $mdDialog;
         this.$scope = $scope;
+        this.$timeout = $timeout;
         this.AnnotationService = AnnotationService;
         this.ConfigService = ConfigService;
         this.ProjectService = ProjectService;
@@ -33,12 +34,6 @@ var ComponentGradingController = function () {
                 // set the period id
                 _this.periodId = toUserInfo.periodId;
             }
-
-            // get the workgroup user names
-            var userNamesArray = _this.ConfigService.getUserNamesByWorkgroupId(_this.toWorkgroupId);
-            _this.userNames = userNamesArray.map(function (obj) {
-                return obj.name;
-            }).join(', ');
         };
 
         this.$onChanges = function (changes) {
@@ -48,7 +43,6 @@ var ComponentGradingController = function () {
             }
 
             _this.componentStates = _this.TeacherDataService.getComponentStatesByWorkgroupIdAndComponentId(_this.toWorkgroupId, _this.componentId);
-            _this.latestComponentStateTime = _this.getLatestComponentStateTime();
 
             _this.processAnnotations();
         };
@@ -98,31 +92,7 @@ var ComponentGradingController = function () {
                 this.score = this.latestAnnotations.score.data.value;
             }
 
-            this.latestTeacherAnnotationTime = this.getLatestTeacherAnnotationTime();
-
-            this.hasNewWork = this.checkHasNewWork();
-        }
-    }, {
-        key: 'checkHasNewWork',
-        value: function checkHasNewWork() {
-            var result = false;
-
-            if (this.latestComponentStateTime) {
-                // there is work for this component
-
-                if (this.latestTeacherAnnotationTime) {
-                    if (this.latestComponentStateTime > this.latestTeacherAnnotationTime) {
-                        // latest component state is newer than latest annotation, so work is new
-                        result = true;
-                        this.comment = null;
-                    }
-                } else {
-                    // there are no annotations, so work is new
-                    result = true;
-                }
-            }
-
-            return result;
+            this.latestAnnotationTime = this.getLatestAnnotationTime();
         }
 
         /**
@@ -151,27 +121,25 @@ var ComponentGradingController = function () {
         }
 
         /**
-         * Get the most recent teacher annotation (from the current score and comment annotations)
-         * @return Object (latest teacher annotation)
+         * Get the most recent annotation (from the current score and comment annotations)
+         * @return Object (latest annotation)
          */
 
     }, {
-        key: 'getLatestTeacherAnnotation',
-        value: function getLatestTeacherAnnotation() {
+        key: 'getLatestAnnotation',
+        value: function getLatestAnnotation() {
             var latest = null;
             var latestComment = this.latestAnnotations.comment;
             var latestScore = this.latestAnnotations.score;
-            var latestTeacherComment = latestComment && latestComment.type === 'comment' ? latestComment : null;
-            var latestTeacherScore = latestScore && latestScore.type === 'score' ? latestScore : null;
 
-            if (latestTeacherComment || latestTeacherScore) {
-                var commentSaveTime = latestTeacherComment ? latestTeacherComment.serverSaveTime : 0;
-                var scoreSaveTime = latestTeacherScore ? latestTeacherScore.serverSaveTime : 0;
+            if (latestComment || latestScore) {
+                var commentSaveTime = latestComment ? latestComment.serverSaveTime : 0;
+                var scoreSaveTime = latestScore ? latestScore.serverSaveTime : 0;
 
                 if (commentSaveTime >= scoreSaveTime) {
-                    latest = latestTeacherComment;
+                    latest = latestComment;
                 } else if (scoreSaveTime > commentSaveTime) {
-                    latest = latestTeacherScore;
+                    latest = latestScore;
                 }
             }
 
@@ -179,14 +147,14 @@ var ComponentGradingController = function () {
         }
 
         /**
-         * Calculate the save time of the latest teacher annotation
-         * @return Number (latest teacher annotation post time)
+         * Calculate the save time of the latest annotation
+         * @return Number (latest annotation post time)
          */
 
     }, {
-        key: 'getLatestTeacherAnnotationTime',
-        value: function getLatestTeacherAnnotationTime() {
-            var latest = this.getLatestTeacherAnnotation();
+        key: 'getLatestAnnotationTime',
+        value: function getLatestAnnotationTime() {
+            var latest = this.getLatestAnnotation();
             var time = 0;
 
             if (latest) {
@@ -195,61 +163,6 @@ var ComponentGradingController = function () {
             }
 
             return time;
-        }
-
-        /**
-         * Calculate the save time of the latest component state
-         * @return Number (latest annotation post time)
-         */
-
-    }, {
-        key: 'getLatestComponentStateTime',
-        value: function getLatestComponentStateTime() {
-            var total = this.componentStates.length;
-            var time = null;
-
-            if (total) {
-                var latest = this.componentStates[total - 1];
-
-                if (latest) {
-                    var serverSaveTime = latest.serverSaveTime;
-                    time = this.ConfigService.convertToClientTimestamp(serverSaveTime);
-                }
-            }
-
-            return time;
-        }
-    }, {
-        key: 'showRevisions',
-        value: function showRevisions($event) {
-            var workgroupId = this.toWorkgroupId;
-            var componentId = this.componentId;
-            var maxScore = this.maxScore;
-            var userNames = this.userNames;
-
-            this.$mdDialog.show({
-                parent: angular.element(document.body),
-                targetEvent: $event,
-                fullscreen: true,
-                template: '<md-dialog aria-label="{{ \'revisionsForTeam\' | translate:{teamNames: userNames} }}" class="dialog--wider">\n                    <md-toolbar>\n                        <div class="md-toolbar-tools">\n                            <h2 class="overflow--ellipsis">{{ \'revisionsForTeam\' | translate:{teamNames: userNames} }}</h2>\n                        </div>\n                    </md-toolbar>\n                    <md-dialog-content>\n                        <div class="md-dialog-content gray-lighter-bg">\n                            <workgroup-component-revisions workgroup-id="workgroupId" component-id="{{ componentId }}" max-score="maxScore"></workgroup-component-revisions>\n                        </div>\n                    </md-dialog-content>\n                    <md-dialog-actions layout="row" layout-align="end center">\n                        <md-button class="md-primary" ng-click="close()" aria-label="{{ \'close\' | translate }}">{{ \'close\' | translate }}</md-button>\n                    </md-dialog-actions>\n                </md-dialog>',
-                locals: {
-                    workgroupId: workgroupId,
-                    componentId: componentId,
-                    maxScore: maxScore,
-                    userNames: userNames
-                },
-                controller: RevisionsController
-            });
-            function RevisionsController($scope, $mdDialog, workgroupId, componentId, maxScore, userNames) {
-                $scope.workgroupId = workgroupId;
-                $scope.componentId = componentId;
-                $scope.maxScore = maxScore;
-                $scope.userNames = userNames;
-                $scope.close = function () {
-                    $mdDialog.hide();
-                };
-            }
-            RevisionsController.$inject = ["$scope", "$mdDialog", "workgroupId", "componentId", "maxScore", "userNames"];
         }
 
         /**
@@ -289,16 +202,7 @@ var ComponentGradingController = function () {
                     var annotation = this.AnnotationService.createAnnotation(this.annotationId, this.runId, this.periodId, this.fromWorkgroupId, this.toWorkgroupId, this.nodeId, this.componentId, this.componentStateId, localNotebookItemId, notebookItemId, type, data, clientSaveTime);
 
                     // save the annotation to the server
-                    this.AnnotationService.saveAnnotation(annotation).then(function (result) {
-                        /*let localAnnotation = result;
-                          if (localAnnotation != null) {
-                            if (this.annotationId == null) {
-                                // set the annotation id if there was no annotation id
-                                this.annotationId = localAnnotation.id;
-                            }
-                              this.processAnnotations();
-                        }*/
-                    });
+                    this.AnnotationService.saveAnnotation(annotation).then(function (result) {});
                 }
             }
         }
@@ -324,12 +228,42 @@ var ComponentGradingController = function () {
                 }
             }
         }
+
+        /**
+         * Shows (or hides) the teacher comment field when user wants to override an automated comment
+         */
+
+    }, {
+        key: 'editComment',
+        value: function editComment() {
+            this.edit = !this.edit;
+
+            if (this.edit) {
+                var componentId = this.componentId;
+                var toWorkgroupId = this.toWorkgroupId;
+                // if we're showing the comment field, focus it
+                this.$timeout(function () {
+                    angular.element(document.querySelector('#commentInput_' + componentId + '_' + toWorkgroupId)).focus();
+                }, 100);
+            }
+        }
+
+        /**
+         * Focuses the score input when user wants to override an automated score
+         * @param an angular trigger event
+         */
+
+    }, {
+        key: 'editScore',
+        value: function editScore($event) {
+            angular.element(document.querySelector('#scoreInput_' + this.componentId + '_' + this.toWorkgroupId)).focus();
+        }
     }]);
 
     return ComponentGradingController;
 }();
 
-ComponentGradingController.$inject = ['$filter', '$mdDialog', '$scope', 'AnnotationService', 'ConfigService', 'ProjectService', 'TeacherDataService', 'UtilService'];
+ComponentGradingController.$inject = ['$filter', '$mdDialog', '$scope', '$timeout', 'AnnotationService', 'ConfigService', 'ProjectService', 'TeacherDataService', 'UtilService'];
 
 var ComponentGrading = {
     bindings: {
@@ -341,7 +275,7 @@ var ComponentGrading = {
         componentStateId: '<',
         active: '<'
     },
-    templateUrl: 'wise5/directives/componentGrading/componentGrading.html',
+    templateUrl: 'wise5/classroomMonitor/classroomMonitorComponents/shared/componentGrading/componentGrading.html',
     controller: ComponentGradingController
 };
 

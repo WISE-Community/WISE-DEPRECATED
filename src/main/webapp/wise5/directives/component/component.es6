@@ -101,7 +101,10 @@ class ComponentController {
             $scope.originalComponentContent = originalComponentContent;
         }
 
-        var componentHTML = '<div ng-include="componentTemplatePath" class="component__content component__content--{{type}}"></div>';
+        var componentHTML =
+            `<div class="component__wrapper">
+                <div ng-include="componentTemplatePath" class="component__content component__content--{{type}}"></div>
+            </div>`;
 
         if (componentHTML != null) {
             $element.html(componentHTML);

@@ -212,6 +212,7 @@ $input-action-vertical-offset-richtext: -7px;
     }
 }
 
+// TODO: move to own sass module file (.node--info)
 .node-info {
     margin: 0;
 
@@ -221,8 +222,8 @@ $input-action-vertical-offset-richtext: -7px;
     }
 
     .divider {
-        margin-left: -16px;
-        margin-right: -16px;
+        margin-left: -8px;
+        margin-right: -8px;
     }
 
     .component {

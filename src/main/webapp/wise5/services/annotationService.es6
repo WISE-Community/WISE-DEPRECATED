@@ -563,9 +563,14 @@ class AnnotationService {
      * 'autoScore' for auto graded score
      * 'score' for teacher graded score
      * 'any' for auto graded score or teacher graded score
+     * @param commentType (optional) the type of comment
+     * e.g.
+     * 'autoComment' for auto graded comment
+     * 'comment' for teacher graded comment
+     * 'any' for auto graded comment or teacher graded comment
      * @return object containing the component's latest score and comment annotations
      */
-    getLatestComponentAnnotations(nodeId, componentId, workgroupId, scoreType) {
+    getLatestComponentAnnotations(nodeId, componentId, workgroupId, scoreType, commentType) {
         let latestScoreAnnotation = null;
         let latestCommentAnnotation = null;
 
@@ -573,7 +578,7 @@ class AnnotationService {
         latestScoreAnnotation = this.getLatestScoreAnnotation(nodeId, componentId, workgroupId, scoreType);
 
         // get the latest comment annotation for this component
-        latestCommentAnnotation = this.getLatestCommentAnnotation(nodeId, componentId, workgroupId, scoreType);
+        latestCommentAnnotation = this.getLatestCommentAnnotation(nodeId, componentId, workgroupId, commentType);
 
         return {
             'score': latestScoreAnnotation,

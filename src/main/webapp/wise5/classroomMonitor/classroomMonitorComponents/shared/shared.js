@@ -14,6 +14,18 @@ var _alertStatusIcon = require('./alertStatusIcon/alertStatusIcon');
 
 var _alertStatusIcon2 = _interopRequireDefault(_alertStatusIcon);
 
+var _componentGrading = require('./componentGrading/componentGrading');
+
+var _componentGrading2 = _interopRequireDefault(_componentGrading);
+
+var _componentNewWorkBadge = require('./componentNewWorkBadge/componentNewWorkBadge');
+
+var _componentNewWorkBadge2 = _interopRequireDefault(_componentNewWorkBadge);
+
+var _componentRevisionsInfo = require('./componentRevisionsInfo/componentRevisionsInfo');
+
+var _componentRevisionsInfo2 = _interopRequireDefault(_componentRevisionsInfo);
+
 var _mainMenu = require('./mainMenu/mainMenu');
 
 var _mainMenu2 = _interopRequireDefault(_mainMenu);
@@ -69,6 +81,9 @@ var Shared = angular.module('shared', []);
 //Shared.component('accountMenu', AccountMenu);
 Shared.component('alertStatusCorner', _alertStatusCorner2.default);
 Shared.component('alertStatusIcon', _alertStatusIcon2.default);
+Shared.component('componentGrading', _componentGrading2.default);
+Shared.component('componentNewWorkBadge', _componentNewWorkBadge2.default);
+Shared.component('componentRevisionsInfo', _componentRevisionsInfo2.default);
 Shared.component('mainMenu', _mainMenu2.default);
 Shared.component('notificationsMenu', _notificationsMenu2.default);
 Shared.component('nodeCompletionIcon', _nodeCompletionIcon2.default);

@@ -117,6 +117,7 @@ const WorkgroupItem = {
             </md-subheader>
             <md-list-item ng-if="$ctrl.expand" class="node-grading-item">
                 <workgroup-node-grading workgroup-id="$ctrl.workgroupId"
+                                        class="workgroup-node-grading"
                                         node-id="{{$ctrl.nodeId}}"
                                         hidden-components="$ctrl.hiddenComponents"
                                         flex></workgroup-node-grading>

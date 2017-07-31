@@ -1,7 +1,10 @@
 .component {
+    position: relative;
+}
+
+.component__wrapper {
     padding: 0 16px;
     margin: 24px 0;
-    position: relative;
 }
 
 .component__content {
@@ -15,7 +18,8 @@
 }
 
 .component__header {
-    padding: 12px 16px 0;
+    padding: 8px 12px;
+    margin: 0;
 }
 
 .component__rubric {
@@ -54,7 +58,8 @@
 .component__actions__info {
     font-style: italic;
     margin-left: 8px;
-    color: color('accent-2');
+    //color: color('accent-2');
+    color: color('text-secondary');
 }
 
 .component__actions__more {
