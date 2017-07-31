@@ -177,6 +177,19 @@ a {
     color: color('text');
 }
 
+// Inputs
+// Hide number picker on number inputs when not focused
+// Safari and Chrome
+input[type=number]:not(:hover):not(:focus)::-webkit-inner-spin-button,
+input[type=number]:not(:hover):not(:focus)::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+// Firefox
+input[type=number]:not(:hover):not(:focus) {
+  -moz-appearance: textfield;
+}
+
 // Images & Icons
 .avatar {
   border-radius: 50%;

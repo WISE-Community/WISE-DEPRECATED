@@ -101,11 +101,14 @@
     }
 }
 
+// TODO: move to own file
 .annotations--info {
     margin-bottom: 32px;
+    margin-right: 8px;
+    margin-left: 72px;
 
     @media only screen and (min-width: ($layout-breakpoint-xs)) {
-        margin: 16px 12px 32px 70px;
+        margin: 16px 16px 32px 76px;
     }
 
     &:after {

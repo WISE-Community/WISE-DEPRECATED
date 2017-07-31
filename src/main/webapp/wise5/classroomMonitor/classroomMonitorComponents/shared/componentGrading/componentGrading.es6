@@ -4,6 +4,7 @@ class ComponentGradingController {
     constructor($filter,
                 $mdDialog,
                 $scope,
+                $timeout,
                 AnnotationService,
                 ConfigService,
                 ProjectService,
@@ -12,6 +13,7 @@ class ComponentGradingController {
         this.$filter = $filter;
         this.$mdDialog = $mdDialog;
         this.$scope = $scope;
+        this.$timeout = $timeout;
         this.AnnotationService = AnnotationService;
         this.ConfigService = ConfigService;
         this.ProjectService = ProjectService;
@@ -28,12 +30,6 @@ class ComponentGradingController {
                 // set the period id
                 this.periodId = toUserInfo.periodId;
             }
-
-            // get the workgroup user names
-            let userNamesArray = this.ConfigService.getUserNamesByWorkgroupId(this.toWorkgroupId);
-            this.userNames = userNamesArray.map( (obj) => {
-                return obj.name;
-            }).join(', ');
         };
 
         this.$onChanges = (changes) => {
@@ -43,7 +39,6 @@ class ComponentGradingController {
             }
 
             this.componentStates = this.TeacherDataService.getComponentStatesByWorkgroupIdAndComponentId(this.toWorkgroupId, this.componentId);
-            this.latestComponentStateTime = this.getLatestComponentStateTime();
 
             this.processAnnotations();
         };
@@ -93,30 +88,7 @@ class ComponentGradingController {
             this.score = this.latestAnnotations.score.data.value;
         }
 
-        this.latestTeacherAnnotationTime = this.getLatestTeacherAnnotationTime();
-
-        this.hasNewWork = this.checkHasNewWork();
-    }
-
-    checkHasNewWork() {
-        let result = false;
-
-        if (this.latestComponentStateTime) {
-            // there is work for this component
-
-            if (this.latestTeacherAnnotationTime) {
-                if (this.latestComponentStateTime > this.latestTeacherAnnotationTime) {
-                    // latest component state is newer than latest annotation, so work is new
-                    result = true;
-                    this.comment = null;
-                }
-            } else {
-                // there are no annotations, so work is new
-                result = true;
-            }
-        }
-
-        return result;
+        this.latestAnnotationTime = this.getLatestAnnotationTime();
     }
 
     /**
@@ -142,24 +114,22 @@ class ComponentGradingController {
     }
 
     /**
-     * Get the most recent teacher annotation (from the current score and comment annotations)
-     * @return Object (latest teacher annotation)
+     * Get the most recent annotation (from the current score and comment annotations)
+     * @return Object (latest annotation)
      */
-    getLatestTeacherAnnotation() {
+    getLatestAnnotation() {
         let latest = null;
         let latestComment = this.latestAnnotations.comment;
         let latestScore = this.latestAnnotations.score;
-        let latestTeacherComment = (latestComment && latestComment.type === 'comment') ? latestComment : null;
-        let latestTeacherScore = (latestScore && latestScore.type === 'score') ? latestScore : null;
 
-        if (latestTeacherComment || latestTeacherScore) {
-            let commentSaveTime = latestTeacherComment ? latestTeacherComment.serverSaveTime : 0;
-            let scoreSaveTime = latestTeacherScore ? latestTeacherScore.serverSaveTime : 0;
+        if (latestComment || latestScore) {
+            let commentSaveTime = latestComment ? latestComment.serverSaveTime : 0;
+            let scoreSaveTime = latestScore ? latestScore.serverSaveTime : 0;
 
             if (commentSaveTime >= scoreSaveTime) {
-                latest = latestTeacherComment;
+                latest = latestComment;
             } else if (scoreSaveTime > commentSaveTime) {
-                latest = latestTeacherScore;
+                latest = latestScore;
             }
         }
 
@@ -167,11 +137,11 @@ class ComponentGradingController {
     }
 
     /**
-     * Calculate the save time of the latest teacher annotation
-     * @return Number (latest teacher annotation post time)
+     * Calculate the save time of the latest annotation
+     * @return Number (latest annotation post time)
      */
-    getLatestTeacherAnnotationTime() {
-        let latest = this.getLatestTeacherAnnotation();
+    getLatestAnnotationTime() {
+        let latest = this.getLatestAnnotation();
         let time = 0;
 
         if (latest) {
@@ -180,72 +150,6 @@ class ComponentGradingController {
         }
 
         return time;
-    }
-
-    /**
-     * Calculate the save time of the latest component state
-     * @return Number (latest annotation post time)
-     */
-    getLatestComponentStateTime() {
-        let total = this.componentStates.length;
-        let time = null;
-
-        if (total) {
-            let latest = this.componentStates[total-1];
-
-            if (latest) {
-                let serverSaveTime = latest.serverSaveTime;
-                time = this.ConfigService.convertToClientTimestamp(serverSaveTime)
-            }
-        }
-
-        return time;
-    }
-
-    showRevisions($event) {
-        let workgroupId = this.toWorkgroupId;
-        let componentId = this.componentId;
-        let maxScore  = this.maxScore;
-        let userNames = this.userNames;
-
-        this.$mdDialog.show({
-            parent: angular.element(document.body),
-            targetEvent: $event,
-            fullscreen: true,
-            template:
-                `<md-dialog aria-label="{{ 'revisionsForTeam' | translate:{teamNames: userNames} }}" class="dialog--wider">
-                    <md-toolbar>
-                        <div class="md-toolbar-tools">
-                            <h2 class="overflow--ellipsis">{{ 'revisionsForTeam' | translate:{teamNames: userNames} }}</h2>
-                        </div>
-                    </md-toolbar>
-                    <md-dialog-content>
-                        <div class="md-dialog-content gray-lighter-bg">
-                            <workgroup-component-revisions workgroup-id="workgroupId" component-id="{{ componentId }}" max-score="maxScore"></workgroup-component-revisions>
-                        </div>
-                    </md-dialog-content>
-                    <md-dialog-actions layout="row" layout-align="end center">
-                        <md-button class="md-primary" ng-click="close()" aria-label="{{ 'close' | translate }}">{{ 'close' | translate }}</md-button>
-                    </md-dialog-actions>
-                </md-dialog>`,
-            locals: {
-                workgroupId: workgroupId,
-                componentId: componentId,
-                maxScore: maxScore,
-                userNames: userNames
-            },
-            controller: RevisionsController
-        });
-        function RevisionsController($scope, $mdDialog, workgroupId, componentId, maxScore, userNames) {
-            $scope.workgroupId = workgroupId;
-            $scope.componentId = componentId;
-            $scope.maxScore = maxScore;
-            $scope.userNames = userNames;
-            $scope.close = () => {
-                $mdDialog.hide();
-            };
-        }
-        RevisionsController.$inject = ["$scope", "$mdDialog", "workgroupId", "componentId", "maxScore", "userNames"];
     }
 
     /**
@@ -301,16 +205,7 @@ class ComponentGradingController {
 
                 // save the annotation to the server
                 this.AnnotationService.saveAnnotation(annotation).then(result => {
-                    /*let localAnnotation = result;
 
-                    if (localAnnotation != null) {
-                        if (this.annotationId == null) {
-                            // set the annotation id if there was no annotation id
-                            this.annotationId = localAnnotation.id;
-                        }
-
-                        this.processAnnotations();
-                    }*/
                 });
             }
         }
@@ -337,12 +232,38 @@ class ComponentGradingController {
             }
         }
     }
+
+    /**
+     * Shows (or hides) the teacher comment field when user wants to override an automated comment
+     */
+    editComment() {
+        this.edit = !this.edit;
+
+        if (this.edit) {
+            let componentId = this.componentId;
+            let toWorkgroupId = this.toWorkgroupId;
+            // if we're showing the comment field, focus it
+            this.$timeout(
+                () => {
+                    angular.element(document.querySelector('#commentInput_' + componentId + '_' + toWorkgroupId)).focus();
+                }, 100);
+        }
+    }
+
+    /**
+     * Focuses the score input when user wants to override an automated score
+     * @param an angular trigger event
+     */
+    editScore($event) {
+        angular.element(document.querySelector('#scoreInput_' + this.componentId + '_' + this.toWorkgroupId)).focus();
+    }
 }
 
 ComponentGradingController.$inject = [
     '$filter',
     '$mdDialog',
     '$scope',
+    '$timeout',
     'AnnotationService',
     'ConfigService',
     'ProjectService',
@@ -360,7 +281,7 @@ const ComponentGrading = {
         componentStateId: '<',
         active: '<'
     },
-    templateUrl: 'wise5/directives/componentGrading/componentGrading.html',
+    templateUrl: 'wise5/classroomMonitor/classroomMonitorComponents/shared/componentGrading/componentGrading.html',
     controller: ComponentGradingController
 };
 

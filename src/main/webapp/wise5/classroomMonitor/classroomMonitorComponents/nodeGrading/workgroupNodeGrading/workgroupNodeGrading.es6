@@ -141,7 +141,12 @@ const WorkgroupNodeGrading = {
         `<div class="nav-item__grading">
             <div id="component_{{component.id}}_{{$ctrl.workgroupId}}" class="component component--grading" ng-repeat='component in $ctrl.components | filter:{hasWork: true}'>
                 <div ng-show="$ctrl.isComponentVisible(component.id)">
-                    <div class="accent-2 md-body-2 component__header">{{ $index+1 + '. ' + $ctrl.getComponentTypeLabel(component.type) }}</div>
+                    <h3 class="accent-2 md-body-2 gray-lightest-bg component__header">
+                        {{ $index+1 + '. ' + $ctrl.getComponentTypeLabel(component.type) }}&nbsp;
+                        <component-new-work-badge component-id="component.id"
+                                                  workgroup-id="$ctrl.workgroupId"
+                                                  node-id="$ctrl.nodeId"></component-new-work-badge>
+                    </h3>
                     <component ng-if='component.showPreviousWorkNodeId != null && component.showPreviousWorkComponentId != null && component.showPreviousWorkNodeId != "" && component.showPreviousWorkComponentId != ""'
                                class="component-container"
                                node-id='{{component.showPreviousWorkNodeId}}'

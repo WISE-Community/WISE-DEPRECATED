@@ -20,10 +20,6 @@ var _componentAnnotations = require('./componentAnnotations/componentAnnotations
 
 var _componentAnnotations2 = _interopRequireDefault(_componentAnnotations);
 
-var _componentGrading = require('./componentGrading/componentGrading');
-
-var _componentGrading2 = _interopRequireDefault(_componentGrading);
-
 var _disableDeleteKeypress = require('./disableDeleteKeypress/disableDeleteKeypress');
 
 var _disableDeleteKeypress2 = _interopRequireDefault(_disableDeleteKeypress);
@@ -70,7 +66,6 @@ Components.component('annotation', _annotation2.default);
 Components.component('compile', _compile2.default);
 Components.component('component', _component2.default);
 Components.component('componentAnnotations', _componentAnnotations2.default);
-Components.component('componentGrading', _componentGrading2.default);
 Components.component('disableDeleteKeypress', _disableDeleteKeypress2.default);
 Components.component('draggable', _draggable2.default);
 Components.component('globalAnnotations', _globalAnnotations2.default);

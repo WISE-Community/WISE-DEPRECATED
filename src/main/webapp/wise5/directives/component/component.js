@@ -106,7 +106,7 @@ var ComponentController = function ComponentController($injector, $scope, $compi
         $scope.originalComponentContent = originalComponentContent;
     }
 
-    var componentHTML = '<div ng-include="componentTemplatePath" class="component__content component__content--{{type}}"></div>';
+    var componentHTML = "<div class=\"component__wrapper\">\n                <div ng-include=\"componentTemplatePath\" class=\"component__content component__content--{{type}}\"></div>\n            </div>";
 
     if (componentHTML != null) {
         $element.html(componentHTML);

@@ -4,24 +4,42 @@
 
     &:not(:last-child) {
         > div {
-            border-bottom: 1px dashed color('gray-dark');
+            border-bottom: 1px solid color('gray-light');
         }
     }
 
-    .component-container {
-        display: block;
-    }
-
-    .component {
+    .component__wrapper {
         padding: 0;
         margin: 0;
     }
 
     .component__content {
         padding: 16px;
+        margin: 0;
     }
+}
 
-    .component__actions__info {
-        margin: 0 4px;
+.component--grading__response {
+    padding-bottom: 16px;
+
+    @media only screen and (min-width: $layout-breakpoint-sm) {
+        padding-right: 16px;
+        padding-bottom: 0;
     }
+}
+
+.component--grading__response__content {
+    overflow: auto;
+}
+
+.component--grading__annotations {
+    background-color: color('selected-bg');
+    margin: 0;
+    padding: 8px;
+}
+
+.component--grading__actions__info {
+    margin: 16px 0 0;
+    padding-top: 8px;
+    border-top: 1px solid color('gray-lighter');
 }
