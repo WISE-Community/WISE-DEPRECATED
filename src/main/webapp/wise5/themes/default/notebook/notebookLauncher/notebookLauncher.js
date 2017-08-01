@@ -10,8 +10,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var NotebookLauncherController = function () {
     function NotebookLauncherController($filter, $timeout) {
-        var _this = this;
-
         _classCallCheck(this, NotebookLauncherController);
 
         this.$filter = $filter;
@@ -23,47 +21,50 @@ var NotebookLauncherController = function () {
             noteLabel: this.config.itemTypes.note.label.singular
         };
 
-        //this.isOpen = false;
-        this.tooltipVisible = false;
+        //this.tooltipVisible = false;
 
-        this.$doCheck = function () {
+        /*this.$doCheck = () => {
             // On opening, add a delayed property which shows tooltips after the speed dial has opened
             // so that they have the proper position; if closing, immediately hide the tooltips
-            if (_this.isOpen) {
-                _this.$timeout(function () {
-                    _this.tooltipVisible = _this.isOpen;
+            if (this.isOpen) {
+                this.$timeout(() => {
+                    this.tooltipVisible = this.isOpen;
                 }, 500);
             } else {
-                _this.tooltipVisible = _this.isOpen;
+                this.tooltipVisible = this.isOpen;
             }
-        };
+        }*/
     }
 
+    /*mouseenter($event) {
+        if (this.notesVisible) {
+            return;
+        } else {
+            this.isOpen = true;
+        }
+    }
+      mouseleave($event) {
+        if (this.notesVisible) {
+            return;
+        } else {
+            this.isOpen = false;
+        }
+    }
+      mainClick($event) {
+        if (this.notesVisible) {
+            this.open($event, 'new');
+        } else {
+            this.isOpen = !this.isOpen;
+        }
+    }*/
+
     _createClass(NotebookLauncherController, [{
-        key: 'mouseenter',
-        value: function mouseenter($event) {
-            if (this.notesVisible) {
-                return;
-            } else {
-                this.isOpen = true;
-            }
-        }
-    }, {
-        key: 'mouseleave',
-        value: function mouseleave($event) {
-            if (this.notesVisible) {
-                return;
-            } else {
-                this.isOpen = false;
-            }
-        }
-    }, {
-        key: 'mainClick',
-        value: function mainClick($event) {
+        key: 'fabAction',
+        value: function fabAction($event) {
             if (this.notesVisible) {
                 this.open($event, 'new');
             } else {
-                this.isOpen = !this.isOpen;
+                this.open($event, 'note');
             }
         }
     }, {
@@ -96,7 +97,39 @@ var NotebookLauncher = {
         notesVisible: '<',
         onOpen: '&'
     },
-    template: '<md-fab-speed-dial md-direction="up" md-open="$ctrl.isOpen"\n                            ng-mouseenter="$ctrl.mouseenter($event)"\n                            ng-mouseleave="$ctrl.mouseleave($event)"\n                            ng-click="$ctrl.mainClick($event)"\n                            class="md-scale md-fab-bottom-right notebook-launcher">\n            <md-fab-trigger>\n                <md-button aria-label="{{$ctrl.fabLabel()}}" class="md-fab md-accent">\n                    <md-icon ng-if="!$ctrl.notesVisible">{{$ctrl.config.icon}}</md-icon>\n                    <md-icon ng-if="$ctrl.notesVisible">add</md-icon>\n                    <span>{{$ctrl.noteCount}}</span>\n                </md-button>\n            </md-fab-trigger>\n            <md-fab-actions>\n                <div layout="column" ng-show="!$ctrl.notesVisible">\n                    <md-button ng-repeat="item in $ctrl.config.itemTypes | toArray" ng-if="item.enabled && item.$key !== \'report\'"\n                               aria-label="{{item.label.link}}" class="md-fab md-raised md-mini"\n                               ng-click="$ctrl.open($event, item.type)">\n                        <md-tooltip md-direction="left" md-autohide="false" md-visible="$ctrl.tooltipVisible && !$ctrl.notesVisible">\n                            {{item.label.link}}\n                        </md-tooltip>\n\n                        <md-icon aria-label="{{item.label.link}}" style="color: {{item.label.color}};">{{item.label.icon}}</md-icon>\n                    </md-button>\n                    <md-button ng-if="$ctrl.config.enableAddNew" aria-label="{{ \'addNote\' | translate:$ctrl.translationData }}" class="md-fab md-raised md-mini"\n                               ng-click="$ctrl.open($event, \'new\')">\n                        <md-tooltip md-direction="left" md-autohide="false" md-visible="$ctrl.tooltipVisible && !$ctrl.notesVisible">\n                            {{ \'addNote\' | translate:$ctrl.translationData }}\n                        </md-tooltip>\n                        <md-icon class="accent">{{$ctrl.config.addIcon}}</md-icon>\n                    </md-button>\n                </div>\n            </md-fab-actions>\n        </md-fab-speed-dial>',
+    template: '<md-button class="md-scale md-fab md-fab-bottom-right notebook-launcher"\n                    aria-label="{{ $ctrl.fabLabel() }}"\n                    ng-click="$ctrl.fabAction($event)">\n            <md-icon ng-if="!$ctrl.notesVisible">{{ $ctrl.config.icon }}</md-icon>\n            <md-icon ng-if="$ctrl.notesVisible">add</md-icon>\n            <md-tooltip md-direction="top">\n                {{ $ctrl.fabLabel() }}\n            </md-tooltip>\n        </md-button>',
+    /*<md-fab-speed-dial md-direction="up" md-open="$ctrl.isOpen"
+                        ng-mouseenter="$ctrl.mouseenter($event)"
+                        ng-mouseleave="$ctrl.mouseleave($event)"
+                        ng-click="$ctrl.mainClick($event)"
+                        class="md-scale md-fab-bottom-right notebook-launcher">
+        <md-fab-trigger>
+            <md-button aria-label="{{$ctrl.fabLabel()}}" class="md-fab md-accent">
+                <md-icon ng-if="!$ctrl.notesVisible">{{$ctrl.config.icon}}</md-icon>
+                <md-icon ng-if="$ctrl.notesVisible">add</md-icon>
+                <span>{{$ctrl.noteCount}}</span>
+            </md-button>
+        </md-fab-trigger>
+        <md-fab-actions>
+            <div layout="column" ng-show="!$ctrl.notesVisible">
+                <md-button ng-repeat="item in $ctrl.config.itemTypes | toArray" ng-if="item.enabled && item.$key !== 'report'"
+                           aria-label="{{item.label.link}}" class="md-fab md-raised md-mini"
+                           ng-click="$ctrl.open($event, item.type)">
+                    <md-tooltip md-direction="left" md-autohide="false" md-visible="$ctrl.tooltipVisible && !$ctrl.notesVisible">
+                        {{item.label.link}}
+                    </md-tooltip>
+                      <md-icon aria-label="{{item.label.link}}" style="color: {{item.label.color}};">{{item.label.icon}}</md-icon>
+                </md-button>
+                <md-button ng-if="$ctrl.config.enableAddNew" aria-label="{{ 'addNote' | translate:$ctrl.translationData }}" class="md-fab md-raised md-mini"
+                           ng-click="$ctrl.open($event, 'new')">
+                    <md-tooltip md-direction="left" md-autohide="false" md-visible="$ctrl.tooltipVisible && !$ctrl.notesVisible">
+                        {{ 'addNote' | translate:$ctrl.translationData }}
+                    </md-tooltip>
+                    <md-icon class="accent">{{$ctrl.config.addIcon}}</md-icon>
+                </md-button>
+            </div>
+        </md-fab-actions>
+    </md-fab-speed-dial>`,*/
     controller: NotebookLauncherController
 };
 

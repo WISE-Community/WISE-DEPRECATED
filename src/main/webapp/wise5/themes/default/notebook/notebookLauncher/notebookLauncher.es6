@@ -5,17 +5,16 @@ class NotebookLauncherController {
                 $timeout) {
         this.$filter = $filter;
         this.$timeout = $timeout;
-        
+
         this.$translate = this.$filter('translate');
-        
+
         this.translationData = {
             noteLabel: this.config.itemTypes.note.label.singular
         }
 
-        //this.isOpen = false;
-        this.tooltipVisible = false;
+        //this.tooltipVisible = false;
 
-        this.$doCheck = () => {
+        /*this.$doCheck = () => {
             // On opening, add a delayed property which shows tooltips after the speed dial has opened
             // so that they have the proper position; if closing, immediately hide the tooltips
             if (this.isOpen) {
@@ -25,17 +24,17 @@ class NotebookLauncherController {
             } else {
                 this.tooltipVisible = this.isOpen;
             }
-        }
+        }*/
     }
-    
-    mouseenter($event) {
+
+    /*mouseenter($event) {
         if (this.notesVisible) {
             return;
         } else {
             this.isOpen = true;
         }
     }
-    
+
     mouseleave($event) {
         if (this.notesVisible) {
             return;
@@ -43,12 +42,20 @@ class NotebookLauncherController {
             this.isOpen = false;
         }
     }
-    
+
     mainClick($event) {
         if (this.notesVisible) {
             this.open($event, 'new');
         } else {
             this.isOpen = !this.isOpen;
+        }
+    }*/
+
+    fabAction($event) {
+        if (this.notesVisible) {
+            this.open($event, 'new');
+        } else {
+            this.open($event, 'note');
         }
     }
 
@@ -57,7 +64,7 @@ class NotebookLauncherController {
         this.onOpen({value: target, event: $event});
         this.isOpen = false;
     }
-    
+
     fabLabel() {
         if (this.notesVisible) {
             return this.$translate('addNote', { noteLabel: this.config.itemTypes.note.label.singular });
@@ -80,7 +87,16 @@ const NotebookLauncher = {
         onOpen: '&'
     },
     template:
-        `<md-fab-speed-dial md-direction="up" md-open="$ctrl.isOpen"
+        `<md-button class="md-scale md-fab md-fab-bottom-right notebook-launcher"
+                    aria-label="{{ $ctrl.fabLabel() }}"
+                    ng-click="$ctrl.fabAction($event)">
+            <md-icon ng-if="!$ctrl.notesVisible">{{ $ctrl.config.icon }}</md-icon>
+            <md-icon ng-if="$ctrl.notesVisible">add</md-icon>
+            <md-tooltip md-direction="top">
+                {{ $ctrl.fabLabel() }}
+            </md-tooltip>
+        </md-button>`,
+        /*<md-fab-speed-dial md-direction="up" md-open="$ctrl.isOpen"
                             ng-mouseenter="$ctrl.mouseenter($event)"
                             ng-mouseleave="$ctrl.mouseleave($event)"
                             ng-click="$ctrl.mainClick($event)"
@@ -112,7 +128,7 @@ const NotebookLauncher = {
                     </md-button>
                 </div>
             </md-fab-actions>
-        </md-fab-speed-dial>`,
+        </md-fab-speed-dial>`,*/
     controller: NotebookLauncherController
 };
 

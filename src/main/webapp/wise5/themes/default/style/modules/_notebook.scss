@@ -4,7 +4,9 @@ $notebook-sidebar-width: 56px;
 // Base
 .notebook-launcher {
     @media only screen and (min-width: $layout-breakpoint-xs) {
-        z-index: 61;
+        &.md-button.md-fab {
+            z-index: 61;
+        }
     }
 }
 
