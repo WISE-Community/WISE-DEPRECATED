@@ -382,7 +382,7 @@ var GraphController = function () {
             // set whether studentAttachment is enabled
             this.isStudentAttachmentEnabled = this.componentContent.isStudentAttachmentEnabled;
 
-            if (componentState == null) {
+            if (!this.GraphService.componentStateHasStudentWork(componentState)) {
                 /*
                  * only import work if the student does not already have
                  * work for this component
@@ -2707,6 +2707,9 @@ var GraphController = function () {
                             var nodeId = importWorkComponent.nodeId;
                             var componentId = importWorkComponent.componentId;
 
+                            // get the step number and title e.g. "1.3: Explore the evidence"
+                            var nodePositionAndTitle = this.ProjectService.getNodePositionAndTitleByNodeId(nodeId);
+
                             // get the latest component state from the component
                             var componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
 
@@ -2717,19 +2720,47 @@ var GraphController = function () {
 
                                 if (studentData != null) {
 
-                                    // get the trials
-                                    var trials = studentData.trials;
-
-                                    if (trials != null) {
-
+                                    if (studentData.version == 1) {
                                         /*
-                                         * loop through all the trials and add them
-                                         * to our array of merged trials
+                                         * we are using the old student data format
+                                         * that can contain multiple series
                                          */
-                                        for (var t = 0; t < trials.length; t++) {
-                                            var trial = trials[t];
 
-                                            mergedTrials.push(trial);
+                                        var series = studentData.series;
+
+                                        // create a new trial and put the series into it
+                                        var newTrial = {};
+                                        newTrial.id = this.UtilService.generateKey(10);
+                                        newTrial.name = nodePositionAndTitle;
+                                        newTrial.show = true;
+                                        newTrial.series = series;
+                                        mergedTrials.push(newTrial);
+                                    } else {
+                                        /*
+                                         * we are using the new student data format
+                                         * that can contain multiple trials
+                                         */
+
+                                        // get the trials
+                                        var trials = studentData.trials;
+
+                                        if (trials != null) {
+
+                                            /*
+                                             * loop through all the trials and add them
+                                             * to our array of merged trials
+                                             */
+                                            for (var t = 0; t < trials.length; t++) {
+                                                var trial = trials[t];
+
+                                                // make a copy of the trial
+                                                newTrial = this.UtilService.makeCopyOfJSONObject(trial);
+
+                                                // set the name of the trial to be the step number and title
+                                                newTrial.name = nodePositionAndTitle;
+
+                                                mergedTrials.push(newTrial);
+                                            }
                                         }
                                     }
                                 }

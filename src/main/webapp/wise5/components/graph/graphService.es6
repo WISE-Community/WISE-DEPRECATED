@@ -866,6 +866,172 @@ class GraphService extends NodeService {
     componentUsesSubmitButton() {
         return true;
     }
+
+    /**
+     * Check if the component state has student work. Sometimes a component
+     * state may be created if the student visits a component but doesn't
+     * actually perform any work. This is where we will check if the student
+     * actually performed any work.
+     * @param componentState the component state object
+     * @return whether the component state has any work
+     */
+    componentStateHasStudentWork(componentState) {
+        let hasStudentWork = false;
+
+        if (componentState != null) {
+            let studentData = componentState.studentData;
+
+            if (studentData != null) {
+
+                if (studentData.version == 1) {
+                    /*
+                     * this is the old graph student data format where the
+                     * student data can contain multiple series.
+                     */
+
+                     // check if any of the series has a data point
+                     if (this.anySeriesHasDataPoint(studentData.series)) {
+
+                         // at least one of the series has a data point
+                         hasStudentWork = true;
+                     }
+                } else {
+                    /*
+                     * this is the new graph student data format where the
+                     * student data can contain multiple trials and each trial
+                     * can contain multiple series.
+                     */
+
+                    // check if any of the trials has a data point
+                    if (this.anyTrialHasDataPoint(studentData.trials)) {
+
+                        /*
+                         * at least one of the trials has a series that has a
+                         * data point
+                         */
+                        hasStudentWork = true;
+                    }
+                }
+            }
+        }
+
+        return hasStudentWork;
+    }
+
+    /**
+     * Check if any of the trials contains a data point
+     * @param trials an array of trials
+     * @return whether any of the trials contains a data point
+     */
+    anyTrialHasDataPoint(trials) {
+        let hasDataPoint = false;
+
+        if (trials != null) {
+
+            // loop through all the trials
+            for (let t = 0; t < trials.length; t++) {
+                let trial = trials[t];
+
+                // check if the trial contains a data point
+                hasDataPoint = this.trialHasDataPoint(trial);
+
+                if (hasDataPoint) {
+                    // the trial has a data point so we are done looking
+                    break;
+                }
+            }
+        }
+
+        return hasDataPoint;
+    }
+
+    /**
+     * Check if a trial has a data point
+     * @param trial a trial object which can contain multiple series
+     * @return whether the trial contains a data point
+     */
+    trialHasDataPoint(trial) {
+        let hasDataPoint = false;
+
+        if (trial != null) {
+            let series = trial.series;
+
+            if (series != null) {
+
+                // loop through all the series
+                for (let s = 0; s < series.length; s++) {
+
+                    let singleSeries = series[s];
+
+                    if (singleSeries != null) {
+
+                        // check if the series contains a data point
+                        hasDataPoint = this.seriesHasDataPoint(singleSeries);
+
+                        if (hasDataPoint) {
+                            // the series has a data point so we are done looking
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        return hasDataPoint;
+    }
+
+    /**
+     * Check if an array of series has any data point
+     * @param multipleSeries an array of series
+     * @return whether any of the series has a data point
+     */
+    anySeriesHasDataPoint(multipleSeries) {
+
+        let hasDataPoint = false;
+
+        if (multipleSeries != null) {
+
+            // loop through all the series
+            for (let s = 0; s < multipleSeries.length; s++) {
+                let singleSeries = multipleSeries[s];
+
+                if (singleSeries != null) {
+
+                    // check if the series has a data point
+                    hasDataPoint = this.seriesHasDataPoint(singleSeries);
+
+                    if (hasDataPoint) {
+                        // the series has a data point so we are done looking
+                        break;
+                    }
+                }
+            }
+        }
+
+        return hasDataPoint;
+    }
+
+    /**
+     * Check if a series has a data point
+     * @param singleSeries a series object
+     * @return whether the series object has any data points
+     */
+    seriesHasDataPoint(singleSeries) {
+        let hasDataPoint = false;
+
+        if (singleSeries != null) {
+
+            // get the data from the series
+            let data = singleSeries.data;
+
+            if (data.length > 0) {
+                // the series has a data point
+                hasDataPoint = true;
+            }
+        }
+
+        return hasDataPoint;
+    }
 }
 
 GraphService.$inject = [
