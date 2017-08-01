@@ -1453,7 +1453,7 @@ class NodeAuthoringController {
             this.showEditButtons = false;
             this.showRubricButton = false;
             this.showCreateBranch = false;
-            this.showAdvanced = false;
+            //this.showAdvanced = false;
             this.showImportView = false;
         } else if (view == 'editConstraints') {
             // toggle the edit constraints view and hide all the other views
@@ -1463,7 +1463,7 @@ class NodeAuthoringController {
             this.showEditButtons = false;
             this.showRubric = false;
             this.showCreateBranch = false;
-            this.showAdvanced = false;
+            //this.showAdvanced = false;
             this.showImportView = false;
         } else if (view == 'editButtons') {
             // toggle the edit buttons view and hide all the other views
@@ -1493,7 +1493,7 @@ class NodeAuthoringController {
             this.showEditButtons = false;
             this.showRubric = false;
             this.showCreateBranch = !this.showCreateBranch;
-            this.showAdvanced = false;
+            //this.showAdvanced = false;
             this.showImportView = false;
         } else if (view == 'previousNode') {
             // hide all the other views
@@ -3483,6 +3483,20 @@ class NodeAuthoringController {
      */
     getComponentTypeLabel(componentType) {
         return this.UtilService.getComponentTypeLabel(componentType);
+    }
+
+    /**
+     * The author has clicked the back button
+     */
+    backButtonClicked() {
+
+        if (this.showImportView) {
+            // we are in the import view so we will go back to the node view
+            this.nodeAuthoringViewButtonClicked();
+        } else {
+            // we are in the node view so we will go back to the project view
+            this.close();
+        }
     }
 };
 

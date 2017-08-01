@@ -1537,6 +1537,29 @@ var ProjectController = function () {
         }
 
         /**
+         * The author has clicked the back button
+         */
+
+    }, {
+        key: 'backButtonClicked',
+        value: function backButtonClicked() {
+
+            if (this.showImportView) {
+                // we are in the import view so we will go back to the project view
+                this.toggleView('project');
+            } else if (this.editProjectRubricMode) {
+                // we are in the edit rubric view so we will go back to the project view
+                this.toggleView('project');
+            } else if (this.advancedMode) {
+                // we are in the advanced view so we will go back to the project view
+                this.toggleView('project');
+            } else {
+                // we are in the project view so we will go back to the project list view
+                this.$state.go('root.main');
+            }
+        }
+
+        /**
          * Show the regular project view
          */
 

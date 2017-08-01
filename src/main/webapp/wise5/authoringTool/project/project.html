@@ -80,10 +80,10 @@
                         }
                     </style>
                     <div style="background-color: white; margin-bottom: 15px; position: sticky; top: 17px; z-index: 2;">
-                        <md-button id="projectHomeButton" class='topButton md-raised md-primary' ng-click='projectController.projectHomeClicked()'
+                        <md-button id="projectHomeButton" class='topButton md-raised md-primary' ng-click='projectController.backButtonClicked()'
                                 ng-disabled="projectController.insertGroupMode || projectController.insertNodeMode">
-                            <md-icon>home</md-icon>
-                            <md-tooltip md-direction="top" class="projectButtonTooltip">{{ "home" | translate }}</md-tooltip>
+                            <md-icon>arrow_back</md-icon>
+                            <md-tooltip md-direction="top" class="projectButtonTooltip">{{ "back" | translate }}</md-tooltip>
                         </md-button>
                         <md-button id="createNewActivityButton" class='topButton md-raised md-primary' ng-click='projectController.creatNewActivityClicked()'
                                 ng-disabled="projectController.insertGroupMode || projectController.insertNodeMode">
