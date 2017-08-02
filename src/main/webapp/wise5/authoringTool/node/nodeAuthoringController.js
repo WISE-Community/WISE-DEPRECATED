@@ -43,6 +43,12 @@ var NodeAuthoringController = function () {
         this.canChangePathOptions = [null, true, false];
         this.createBranchBranches = [];
 
+        // whether to show the components
+        this.showComponents = true;
+
+        // whether to show the step buttons
+        this.showStepButtons = true;
+
         // whether to show the component authoring views
         this.showComponentAuthoringViews = true;
 
@@ -1443,7 +1449,8 @@ var NodeAuthoringController = function () {
                 this.showCreateBranch = false;
                 this.showAdvanced = false;
                 this.showImportView = false;
-                this.showStepView = true;
+                this.showStepButtons = true;
+                this.showComponents = true;
             } else if (view == 'editTransitions') {
                 // toggle the edit transitions view and hide all the other views
                 this.showCreateComponent = false;
@@ -1454,7 +1461,8 @@ var NodeAuthoringController = function () {
                 this.showCreateBranch = false;
                 //this.showAdvanced = false;
                 this.showImportView = false;
-                this.showStepView = true;
+                this.showStepButtons = false;
+                this.showComponents = false;
             } else if (view == 'editConstraints') {
                 // toggle the edit constraints view and hide all the other views
                 this.showCreateComponent = false;
@@ -1465,7 +1473,8 @@ var NodeAuthoringController = function () {
                 this.showCreateBranch = false;
                 //this.showAdvanced = false;
                 this.showImportView = false;
-                this.showStepView = true;
+                this.showStepButtons = false;
+                this.showComponents = false;
             } else if (view == 'editButtons') {
                 // toggle the edit buttons view and hide all the other views
                 this.showCreateComponent = false;
@@ -1476,7 +1485,7 @@ var NodeAuthoringController = function () {
                 this.showCreateBranch = false;
                 this.showAdvanced = false;
                 this.showImportView = false;
-                this.showStepView = true;
+                this.showStepButtons = false;
             } else if (view == 'editRubric') {
                 // toggle the edit buttons view and hide all the other views
                 this.showCreateComponent = false;
@@ -1487,7 +1496,8 @@ var NodeAuthoringController = function () {
                 this.showCreateBranch = false;
                 this.showAdvanced = false;
                 this.showImportView = false;
-                this.showStepView = true;
+                this.showStepButtons = false;
+                this.showComponents = false;
             } else if (view == 'createBranch') {
                 // toggle the edit buttons view and hide all the other views
                 this.showCreateComponent = false;
@@ -1498,7 +1508,8 @@ var NodeAuthoringController = function () {
                 this.showCreateBranch = !this.showCreateBranch;
                 //this.showAdvanced = false;
                 this.showImportView = false;
-                this.showStepView = true;
+                this.showStepButtons = false;
+                this.showComponents = false;
             } else if (view == 'previousNode') {
                 // hide all the other views
                 this.showCreateComponent = false;
@@ -1553,7 +1564,8 @@ var NodeAuthoringController = function () {
                 this.showCreateBranch = false;
                 this.showAdvanced = !this.showAdvanced;
                 this.showImportView = false;
-                this.showStepView = true;
+                this.showStepButtons = false;
+                this.showComponents = false;
             } else if (view == 'copy') {
                 // toggle the copy view and hide all the other views
                 this.showCreateComponent = false;
@@ -1564,7 +1576,8 @@ var NodeAuthoringController = function () {
                 this.showCreateBranch = false;
                 this.showAdvanced = false;
                 this.showImportView = false;
-                this.showStepView = true;
+                this.showStepButtons = true;
+                this.showComponents = true;
             } else if (view == 'move') {
                 // toggle the move view and hide all the other views
                 this.showCreateComponent = false;
@@ -1575,7 +1588,8 @@ var NodeAuthoringController = function () {
                 this.showCreateBranch = false;
                 this.showAdvanced = false;
                 this.showImportView = false;
-                this.showStepView = true;
+                this.showStepButtons = true;
+                this.showComponents = true;
             } else if (view == 'import') {
                 // toggle the import view and hide all the other views
                 this.showCreateComponent = false;
@@ -1586,7 +1600,8 @@ var NodeAuthoringController = function () {
                 this.showCreateBranch = false;
                 this.showAdvanced = false;
                 this.showImportView = !this.showImportView;
-                this.showStepView = false;
+                this.showStepButtons = false;
+                this.showComponents = true;
             } else {
                 // hide all the views
                 this.showCreateComponent = false;
@@ -1597,7 +1612,8 @@ var NodeAuthoringController = function () {
                 this.showCreateBranch = false;
                 this.showAdvanced = false;
                 this.showImportView = false;
-                this.showStepView = true;
+                this.showStepButtons = true;
+                this.showComponents = true;
             }
         }
 
@@ -3654,7 +3670,7 @@ var NodeAuthoringController = function () {
         key: 'backButtonClicked',
         value: function backButtonClicked() {
 
-            if (this.showImportView) {
+            if (this.showImportView || this.showRubric || this.showAdvanced) {
                 // we are in the import view so we will go back to the node view
                 this.nodeAuthoringViewButtonClicked();
             } else {
