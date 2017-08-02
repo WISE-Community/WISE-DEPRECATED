@@ -57,7 +57,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author Hiroki Terashima
  */
 @Controller
-@RequestMapping("/admin/run/mergespreadsheets.html")
+@RequestMapping("/admin/run/mergespreadsheets")
 public class MergeSpreadsheetsController {
 
     @RequestMapping(method = RequestMethod.POST)

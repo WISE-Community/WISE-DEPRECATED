@@ -33,20 +33,31 @@
             <div style="color:red; font-weight:bold; border:red 1px dotted; padding:5px;"><c:out value="${errorMsg}" /></div><br/>
         </c:if>
 
-        <div>Instructions:</div>
+        <h1>Overview</h1>
+        <div>
+            Use this form to merge one excel workbook with multiple spreadsheets based on a common column in each sheet.
+        </div>
+        <br/>
+        <h1>Instructions</h1>
         <ol>
             <li>1. Choose and upload a spreadsheet.</li>
-            <li>2. Specify the title of the column to merge on. All the sheets in uploaded file need a column with this
-                column title.
+            <li>2. Specify the title of the column (e.g. "Student Id") to merge on. <span span="color:red">All the sheets in uploaded file need a column with this
+                column title.</span>
             </li>
+            <li>3. Click on the "Submit" button.</li>
         </ol>
         <br/>
+        <h1>Troubleshooting</h1>
+        <div>If you see an error page after hitting submit, check your excel file for any corrupt cells. Fix the error, save the file, and try again.</div>
+        <br/>
+        <br/>
+        <hr/>
 
-        <form:form method="post" action="mergespreadsheets.html"
+        <form:form method="post" action="mergespreadsheets"
                    id="uploadFileForm" enctype="multipart/form-data" autocomplete='off'
                    onsubmit="return validateForm();">
             <input type="file" name="uploadFile" id="uploadFile"/><br/><br/>
-            Common Column Title: <input type="text" name="mergeColumnTitle" id="mergeColumnTitle"/>
+            Title of the Common Column: <input type="text" name="mergeColumnTitle" id="mergeColumnTitle"/>
             <br/><br/>
             <input type="submit" value="Submit"/>
         </form:form>
