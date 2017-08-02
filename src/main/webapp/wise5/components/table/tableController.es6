@@ -1106,15 +1106,89 @@ class TableController {
      */
     setGraphDataIntoTableData(componentState, params) {
 
+        var trialIndex = 0;
+        var seriesIndex = 0;
+
+        if (params != null) {
+
+            if (params.trialIndex != null) {
+                // get the trial index
+                trialIndex = params.trialIndex;
+            }
+
+            if (params.seriesIndex != null) {
+                // get the series index
+                seriesIndex = params.seriesIndex;
+            }
+        }
+
+        if (componentState != null && componentState.studentData != null) {
+
+            // get the student data
+            var studentData = componentState.studentData;
+
+            // get the student data version
+            var studentDataVersion = studentData.version;
+
+            if (studentDataVersion == null || studentDataVersion == 1) {
+                // this is the old student data format that can't contain trials
+
+                // get the series
+                var series = studentData.series;
+
+                if (series != null && series.length > 0) {
+
+                    // get the series that we will get data from
+                    var tempSeries = series[seriesIndex];
+
+                    // set the series data into the table
+                    this.setSeriesIntoTable(tempSeries);
+                }
+            } else {
+                // this is the new student data format that can contain trials
+
+                // get all the trials
+                var trials = studentData.trials;
+
+                if (trials != null) {
+
+                    // get the specific trial we want
+                    var trial = trials[trialIndex];
+
+                    if (trial != null) {
+
+                        // get the series in the trial
+                        var multipleSeries = trial.series;
+
+                        if (multipleSeries != null) {
+
+                            // get the specific series we want
+                            var series = multipleSeries[seriesIndex];
+
+                            // set the series data into the table
+                            this.setSeriesIntoTable(series);
+                        }
+                    }
+                }
+            }
+        }
+    };
+
+    /**
+     * Set the series data into the table
+     * @param series an object that contains the data for a single series
+     * @param params the parameters for where to place the points in the table
+     */
+    setSeriesIntoTable(series, params) {
+
         /*
          * the default is set to not skip the first row and for the
          * x column to be the first column and the y column to be the
          * second column
          */
-        var skipFirstRow = false;
+        var skipFirstRow = true;
         var xColumn = 0;
         var yColumn = 1;
-        var seriesIndex = 0;
 
         if (params != null) {
 
@@ -1132,76 +1206,51 @@ class TableController {
                 // get the y column
                 yColumn = params.yColumn;
             }
-
-            if (params.seriesIndex != null) {
-                // get the series index
-                seriesIndex = params.seriesIndex;
-            }
         }
 
-        if (componentState != null && componentState.studentData != null) {
+        if (series != null) {
 
             // get the table data rows
             var tableDataRows = this.getTableDataRows();
 
-            if (tableDataRows != null) {
+            // get the data from the series
+            var data = series.data;
 
-                var data = null;
+            if (data != null) {
 
-                var studentData = componentState.studentData;
+                // our counter for traversing the data rows
+                var dataRowCounter = 0;
 
-                // get the series
-                var series = studentData.series;
+                // loop through all the table data rows
+                for (var r = 0; r < tableDataRows.length; r++) {
 
-                if (series != null && series.length > 0) {
-
-                    // get the series that we will get data from
-                    var tempSeries = series[seriesIndex];
-
-                    if (tempSeries != null) {
-
-                        // get the data from the series
-                        data = tempSeries.data;
-
-                        if (data != null) {
-
-                            // our counter for traversing the data rows
-                            var dataRowCounter = 0;
-
-                            // loop through all the table data rows
-                            for (var r = 0; r < tableDataRows.length; r++) {
-
-                                if (skipFirstRow && r === 0) {
-                                    // skip the first table data row
-                                    continue;
-                                }
-
-                                var x = '';
-                                var y = '';
-
-                                // get the data row
-                                var dataRow = data[dataRowCounter];
-
-                                if (dataRow != null) {
-                                    // get the x and y values from the data row
-                                    x = dataRow[0];
-                                    y = dataRow[1];
-
-                                }
-
-                                // set the x and y values into the table data
-                                this.setTableDataCellValue(xColumn, r, null, x);
-                                this.setTableDataCellValue(yColumn, r, null, y);
-
-                                // increment the data row counter
-                                dataRowCounter++;
-                            }
-                        }
+                    if (skipFirstRow && r === 0) {
+                        // skip the first table data row
+                        continue;
                     }
+
+                    var x = '';
+                    var y = '';
+
+                    // get the data row
+                    var dataRow = data[dataRowCounter];
+
+                    if (dataRow != null) {
+                        // get the x and y values from the data row
+                        x = dataRow[0];
+                        y = dataRow[1];
+                    }
+
+                    // set the x and y values into the table data
+                    this.setTableDataCellValue(xColumn, r, null, x);
+                    this.setTableDataCellValue(yColumn, r, null, y);
+
+                    // increment the data row counter
+                    dataRowCounter++;
                 }
             }
         }
-    };
+    }
 
     /**
      * Set the table data cell value
