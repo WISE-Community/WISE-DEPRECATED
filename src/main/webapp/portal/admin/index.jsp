@@ -209,7 +209,7 @@
 						<spring:message code='misc' />
 					</div>
 					<div class="sectionContent">
-						<h5><a href="${contextPath}/admin/run/mergespreadsheets.html"><spring:message code='admin.index.mergeFiles' /></a>
+						<h5><a href="${contextPath}/admin/run/mergespreadsheets"><spring:message code='admin.index.mergeFiles' /></a>
 							| <a href="${contextPath}/translate"><spring:message code='admin.index.translateWISE' /></a>
  							<sec:authorize access="hasRole('ROLE_ADMINISTRATOR')">
 								| <a href="${contextPath}/admin/run/replacebase64withpng.html"><spring:message code='admin.index.replaceBase64WithPNG' /></a>
