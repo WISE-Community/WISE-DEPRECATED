@@ -29,7 +29,7 @@ describe('WISE Authoring Tool', function () {
     var chooseStepDropDown = element(by.xpath('//step-tools/div/md-select[@ng-model="$ctrl.nodeId"]'));
     var previousButton = element(by.xpath('//button[@ng-click="$ctrl.goToPrevNode()"]'));
     var nextButton = element(by.xpath('//button[@ng-click="$ctrl.goToNextNode()"]'));
-    var homeButton = element(by.css('button[aria-label="Home"]'));
+    var homeButton = $("#projectHomeButton");
     var projectId = null; // this will be set when we create a new project.
 
     it('should require user to log in to use the authoring tool', function () {
@@ -190,7 +190,7 @@ describe('WISE Authoring Tool', function () {
         expect(activity1TitleInput.getAttribute('value')).toBe("First Activity");
         activity1TitleInput.clear(); // clear out what's there.
         activity1TitleInput.sendKeys('Act One'); // change the title to "Act One"
-        element(by.css('button[ng-click="nodeAuthoringController.close()"]')).click(); // click on the home button to go back to main view.
+        element(by.css('button[ng-click="nodeAuthoringController.backButtonClicked()"]')).click(); // click on the home button to go back to main view.
         expect(browser.getCurrentUrl()).toEqual('http://localhost:8080/wise/author#/project/' + projectId);
 
         // now check that the activity title has been updated in the project view
@@ -209,7 +209,7 @@ describe('WISE Authoring Tool', function () {
         expect(step1TitleInput.getAttribute('value')).toBe("Step 1");
         step1TitleInput.clear(); // clear out what's there.
         step1TitleInput.sendKeys('One Small Step for Man'); // change the title to "One Small Step for Man"
-        element(by.css('button[ng-click="nodeAuthoringController.close()"]')).click(); // click on the home button to go back to main view.
+        element(by.css('button[ng-click="nodeAuthoringController.backButtonClicked()"]')).click(); // click on the home button to go back to main view.
         expect(browser.getCurrentUrl()).toEqual('http://localhost:8080/wise/author#/project/' + projectId);
         // now check that the step title has been updated in the project view
         element.all(by.repeater("item in projectController.items")).then(function (nodeItem) {
@@ -349,15 +349,11 @@ describe('WISE Authoring Tool', function () {
         waitForUrlToChangeTo(new RegExp('http://localhost:8080/wise/author#/', 'gi'));
         expect(browser.getTitle()).toEqual('WISE Authoring Tool');
 
+        browser.ignoreSynchronization = true; // doesn't use Angular, disable synchronization
         $("#goHomeButton").click();
-
-        browser.ignoreSynchronization = true; // doesn't use Angular
-        expect(browser.getTitle()).toEqual('WISE Teacher Dashboard');
     });
 
     // TODO: add test for copying a project
-
     // TODO: add test for copying a step
-
 });
 //# sourceMappingURL=authoringTool.spec.js.map
