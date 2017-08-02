@@ -83,7 +83,8 @@
                         <md-button id="projectHomeButton" class='topButton md-raised md-primary' ng-click='projectController.backButtonClicked()'
                                 ng-disabled="projectController.insertGroupMode || projectController.insertNodeMode">
                             <md-icon>arrow_back</md-icon>
-                            <md-tooltip md-direction="top" class="projectButtonTooltip">{{ "back" | translate }}</md-tooltip>
+                            <md-tooltip md-direction="top" class="projectButtonTooltip" ng-if="projectController.projectMode">{{ "backToProjectsList" | translate }}</md-tooltip>
+                            <md-tooltip md-direction="top" class="projectButtonTooltip" ng-if="!projectController.projectMode">{{ "backToProjectView" | translate }}</md-tooltip>
                         </md-button>
                         <md-button id="createNewActivityButton" class='topButton md-raised md-primary' ng-click='projectController.creatNewActivityClicked()'
                                 ng-disabled="projectController.insertGroupMode || projectController.insertNodeMode">

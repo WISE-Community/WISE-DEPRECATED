@@ -1443,6 +1443,7 @@ var NodeAuthoringController = function () {
                 this.showCreateBranch = false;
                 this.showAdvanced = false;
                 this.showImportView = false;
+                this.showStepView = true;
             } else if (view == 'editTransitions') {
                 // toggle the edit transitions view and hide all the other views
                 this.showCreateComponent = false;
@@ -1453,6 +1454,7 @@ var NodeAuthoringController = function () {
                 this.showCreateBranch = false;
                 //this.showAdvanced = false;
                 this.showImportView = false;
+                this.showStepView = true;
             } else if (view == 'editConstraints') {
                 // toggle the edit constraints view and hide all the other views
                 this.showCreateComponent = false;
@@ -1463,6 +1465,7 @@ var NodeAuthoringController = function () {
                 this.showCreateBranch = false;
                 //this.showAdvanced = false;
                 this.showImportView = false;
+                this.showStepView = true;
             } else if (view == 'editButtons') {
                 // toggle the edit buttons view and hide all the other views
                 this.showCreateComponent = false;
@@ -1473,6 +1476,7 @@ var NodeAuthoringController = function () {
                 this.showCreateBranch = false;
                 this.showAdvanced = false;
                 this.showImportView = false;
+                this.showStepView = true;
             } else if (view == 'editRubric') {
                 // toggle the edit buttons view and hide all the other views
                 this.showCreateComponent = false;
@@ -1483,6 +1487,7 @@ var NodeAuthoringController = function () {
                 this.showCreateBranch = false;
                 this.showAdvanced = false;
                 this.showImportView = false;
+                this.showStepView = true;
             } else if (view == 'createBranch') {
                 // toggle the edit buttons view and hide all the other views
                 this.showCreateComponent = false;
@@ -1493,6 +1498,7 @@ var NodeAuthoringController = function () {
                 this.showCreateBranch = !this.showCreateBranch;
                 //this.showAdvanced = false;
                 this.showImportView = false;
+                this.showStepView = true;
             } else if (view == 'previousNode') {
                 // hide all the other views
                 this.showCreateComponent = false;
@@ -1547,6 +1553,7 @@ var NodeAuthoringController = function () {
                 this.showCreateBranch = false;
                 this.showAdvanced = !this.showAdvanced;
                 this.showImportView = false;
+                this.showStepView = true;
             } else if (view == 'copy') {
                 // toggle the copy view and hide all the other views
                 this.showCreateComponent = false;
@@ -1557,6 +1564,7 @@ var NodeAuthoringController = function () {
                 this.showCreateBranch = false;
                 this.showAdvanced = false;
                 this.showImportView = false;
+                this.showStepView = true;
             } else if (view == 'move') {
                 // toggle the move view and hide all the other views
                 this.showCreateComponent = false;
@@ -1567,6 +1575,7 @@ var NodeAuthoringController = function () {
                 this.showCreateBranch = false;
                 this.showAdvanced = false;
                 this.showImportView = false;
+                this.showStepView = true;
             } else if (view == 'import') {
                 // toggle the import view and hide all the other views
                 this.showCreateComponent = false;
@@ -1577,6 +1586,7 @@ var NodeAuthoringController = function () {
                 this.showCreateBranch = false;
                 this.showAdvanced = false;
                 this.showImportView = !this.showImportView;
+                this.showStepView = false;
             } else {
                 // hide all the views
                 this.showCreateComponent = false;
@@ -1587,6 +1597,7 @@ var NodeAuthoringController = function () {
                 this.showCreateBranch = false;
                 this.showAdvanced = false;
                 this.showImportView = false;
+                this.showStepView = true;
             }
         }
 
