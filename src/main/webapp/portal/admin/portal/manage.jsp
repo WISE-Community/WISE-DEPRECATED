@@ -28,6 +28,20 @@
                             });
                     });
                 });
+            $("#portalNameInput").on("change", function() {
+                $.ajax(
+                    {
+                        type: 'POST',
+                        url: 'manage',
+                        data: 'attr=portalName&portalId=' + portalId + '&val=' + $("#portalNameInput").val(),
+                        error: function () {
+                            alert('Error: please talk to wise administrator, which might be you. If this is the case, please talk to yourself.');
+                        },
+                        success: function () {
+                            alert('Save Successful!');
+                        }
+                    });
+            });
             $("#revertToDefaultProjectMetadataSettings").on("click", function() {
                 if (confirm("You will lose any changes to your project metadata settings. Continue?")) {
                     var defaultProjectMetadataSettings = ${defaultProjectMetadataSettings};
@@ -89,7 +103,8 @@
 <span id="portalId" style="display:none">${portal.id}</span>
 <h5 style="color:#0000CC;"><a href="${contextPath}/admin"><spring:message code="returnToMainAdminPage" /></a></h5>
 <br/>
-name: ${portal.portalName} | address: ${portal.address} | send_email_on_exception: ${portal.sendMailOnException}
+name: <input id="portalNameInput" size="50" value="${portal.portalName}"><br/>
+address: ${portal.address} | send_email_on_exception: ${portal.sendMailOnException}
 <br/>
 Is Login Allowed:
 <select id="isLoginAllowed">

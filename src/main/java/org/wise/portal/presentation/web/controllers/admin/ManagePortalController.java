@@ -65,7 +65,11 @@ public class ManagePortalController {
 		Portal portal = portalService.getById(portalId);
 
 		try {
-			if (attr.equals("isLoginAllowed")) {
+			if (attr.equals("portalName")) {
+				portal.setPortalName(val);
+				portalService.updatePortal(portal);
+				modelMap.put("msg", "success");
+			} else if (attr.equals("isLoginAllowed")) {
 				portal.setLoginAllowed(Boolean.valueOf(val));
 				portalService.updatePortal(portal);
 				modelMap.put("msg", "success");
