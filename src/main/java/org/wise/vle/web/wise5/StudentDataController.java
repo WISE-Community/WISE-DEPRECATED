@@ -96,14 +96,15 @@ public class StudentDataController {
             @RequestParam(value = "localNotebookItemId", required = false) String localNotebookItemId,
             @RequestParam(value = "notebookItemId", required = false) Integer notebookItemId,
             @RequestParam(value = "annotationType", required = false) String annotationType,
-            @RequestParam(value = "components", required = false) List<JSONObject> components
+            @RequestParam(value = "components", required = false) List<JSONObject> components,
+            @RequestParam(value = "onlyGetLatest", required = false) Boolean onlyGetLatest
             ) {
 
         JSONObject result = new JSONObject();
 
         if (getStudentWork) {
             List<StudentWork> studentWorkList = vleService.getStudentWorkList(id, runId, periodId, workgroupId,
-                    isAutoSave, isSubmit, nodeId, componentId, componentType, components);
+                    isAutoSave, isSubmit, nodeId, componentId, componentType, components, onlyGetLatest);
 
             JSONArray studentWorkJSONArray = new JSONArray();
 

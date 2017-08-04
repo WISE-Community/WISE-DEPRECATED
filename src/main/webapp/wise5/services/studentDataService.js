@@ -3035,6 +3035,58 @@ var StudentDataService = function () {
 
             return event;
         }
+
+        /**
+         * Get classmate student work
+         * @param nodeId the node id
+         * @param componentId the component id
+         * @param showClassmateWorkSource Where to get the work from.
+         * 'period' will get the classmate work only from the period the student is in.
+         * null will get work from the whole class (all periods).
+         *
+         * @return a promise that will return the component states from classmates
+         */
+
+    }, {
+        key: 'getClassmateStudentWork',
+        value: function getClassmateStudentWork(nodeId, componentId, showClassmateWorkSource) {
+
+            // get the url to get the student data
+            var studentDataURL = this.ConfigService.getConfigParam('studentDataURL');
+
+            var httpParams = {};
+            httpParams.method = 'GET';
+            httpParams.url = studentDataURL;
+
+            // set the workgroup id and run id
+            var params = {};
+            params.runId = this.ConfigService.getRunId();
+            params.nodeId = nodeId;
+            params.componentId = componentId;
+            params.getStudentWork = true;
+            params.getEvents = false;
+            params.getAnnotations = false;
+            params.onlyGetLatest = true;
+
+            if (showClassmateWorkSource == 'period') {
+                // get the period the student is in
+                params.periodId = this.ConfigService.getPeriodId();
+            }
+
+            httpParams.params = params;
+
+            // make the request for the student data
+            return this.$http(httpParams).then(function (result) {
+                var componentStates = [];
+                var resultData = result.data;
+
+                if (resultData != null) {
+                    componentStates = resultData.studentWorkList;
+                }
+
+                return componentStates;
+            });
+        }
     }]);
 
     return StudentDataService;

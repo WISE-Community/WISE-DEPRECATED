@@ -48,7 +48,7 @@ public interface VLEService {
 	 */
 	List<StudentWork> getStudentWorkList(Integer id, Integer runId, Integer periodId, Integer workgroupId,
                                             Boolean isAutoSave, Boolean isSubmit, String nodeId, String componentId, String componentType,
-                                            List<JSONObject> components);
+                                            List<JSONObject> components, Boolean onlyGetLatest);
 
     /**
      * @return JSONArray of student work for researcher export for the given run id.

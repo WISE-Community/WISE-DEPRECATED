@@ -98,7 +98,7 @@ public class VLEServiceImpl implements VLEService {
     public List<StudentWork> getStudentWorkList(Integer id, Integer runId, Integer periodId, Integer workgroupId,
                                                    Boolean isAutoSave, Boolean isSubmit,
                                                    String nodeId, String componentId, String componentType,
-                                                   List<JSONObject> components) {
+                                                   List<JSONObject> components, Boolean onlyGetLatest) {
         Run run = null;
         if (runId != null) {
             try {
@@ -126,7 +126,7 @@ public class VLEServiceImpl implements VLEService {
         }
 
         return studentWorkDao.getStudentWorkListByParams(id, run, period, workgroup,
-                isAutoSave, isSubmit, nodeId, componentId, componentType, components);
+                isAutoSave, isSubmit, nodeId, componentId, componentType, components, onlyGetLatest);
     }
 
     public JSONArray getNotebookExport(Integer runId) {

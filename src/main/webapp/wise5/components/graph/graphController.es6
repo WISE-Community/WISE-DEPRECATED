@@ -408,7 +408,9 @@ class GraphController {
             // set whether studentAttachment is enabled
             this.isStudentAttachmentEnabled = this.componentContent.isStudentAttachmentEnabled;
 
-            if (!this.GraphService.componentStateHasStudentWork(componentState)) {
+            if (this.mode == 'student' && this.GraphService.showClassmateWork(this.componentContent)) {
+                this.importWork();
+            } else if (this.mode == 'student' && !this.GraphService.componentStateHasStudentWork(componentState)) {
                 /*
                  * only import work if the student does not already have
                  * work for this component
@@ -442,7 +444,6 @@ class GraphController {
                     // we are going to import work from one or more components
                     this.importWork();
                 } else {
-
                     /*
                      * trials are enabled so we will create an empty trial
                      * since there is no student work
@@ -2592,8 +2593,16 @@ class GraphController {
             }
 
             if (importWork != null) {
+                // we are importing work
 
                 var mergedTrials = [];
+
+                /*
+                 * This will hold all the promises that will return the trials
+                 * that we want. The trials will either be from this student
+                 * or from classmates.
+                 */
+                var promises = [];
 
                 // get the components to import work from
                 var importWorkComponents = importWork.components;
@@ -2608,84 +2617,228 @@ class GraphController {
                         var nodeId = importWorkComponent.nodeId;
                         var componentId = importWorkComponent.componentId;
 
-                        // get the step number and title e.g. "1.3: Explore the evidence"
-                        var nodePositionAndTitle = this.ProjectService.getNodePositionAndTitleByNodeId(nodeId);
+                        /*
+                         * example of the importWork field in a component that
+                         * shows classmate work
+                         *
+                         * "importWork": {
+                         *     "components": [
+                         *         {
+                         *             "nodeId": "node1",
+                         *             "componentId": "yppyfy01er",
+                         *             "showClassmateWork": true,
+                         *             "showClassmateWorkSource": "period"
+                         *         }
+                         *     ]
+                         * }
+                         */
 
-                        // get the latest component state from the component
-                        var componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
+                        // whether we are showing classmate work
+                        var showClassmateWork = importWorkComponent.showClassmateWork;
 
-                        if (componentState != null) {
+                        if (showClassmateWork) {
+                            // we are showing classmate work
 
-                            // get the student data
-                            var studentData = componentState.studentData;
+                            /*
+                             * showClassmateWorkSource determines whether to get
+                             * work from the period or the whole class (all periods)
+                             */
+                            var showClassmateWorkSource = importWorkComponent.showClassmateWorkSource;
 
-                            if (studentData != null) {
+                            // get the trials from the classmates
+                            promises.push(this.getTrialsFromClassmates(nodeId, componentId, showClassmateWorkSource));
+                        } else {
+                            // we are getting the work from this student
 
-                                if (studentData.version == 1) {
-                                    /*
-                                     * we are using the old student data format
-                                     * that can contain multiple series
-                                     */
+                            // get the latest component state from the component
+                            var componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
 
-                                    var series = studentData.series;
-
-                                    // create a new trial and put the series into it
-                                    var newTrial = {};
-                                    newTrial.id = this.UtilService.generateKey(10);
-                                    newTrial.name = nodePositionAndTitle;
-                                    newTrial.show = true;
-                                    newTrial.series = series;
-                                    mergedTrials.push(newTrial);
-                                } else {
-                                    /*
-                                     * we are using the new student data format
-                                     * that can contain multiple trials
-                                     */
-
-                                    // get the trials
-                                    var trials = studentData.trials;
-
-                                    if (trials != null) {
-
-                                        /*
-                                         * loop through all the trials and add them
-                                         * to our array of merged trials
-                                         */
-                                        for (var t = 0; t < trials.length; t++) {
-                                            var trial = trials[t];
-
-                                            // make a copy of the trial
-                                            newTrial = this.UtilService.makeCopyOfJSONObject(trial);
-
-                                            // set the name of the trial to be the step number and title
-                                            newTrial.name = nodePositionAndTitle;
-
-                                            mergedTrials.push(newTrial);
-                                        }
-                                    }
-                                }
-                            }
+                            // get the trials from the component state
+                            promises.push(this.getTrialsFromComponentState(nodeId, componentId, componentState));
                         }
                     }
                 }
 
-                // create a new student data
-                var studentData = {};
-                studentData.trials = mergedTrials;
-                studentData.version = 2;
+                /*
+                 * wait for all the promises to resolve because we may need to
+                 * request the classmate work from the server
+                 */
+                this.$q.all(promises).then((promiseResults) => {
 
-                // create a new component state
-                var newComponentState = this.NodeService.createNewComponentState();
-                newComponentState.studentData = studentData;
+                    // this will hold all the trials
+                    var mergedTrials = [];
 
-                // populate the component state into this component
-                this.setStudentWork(newComponentState);
+                    /*
+                     * Loop through all the promise results. There will be a
+                     * promise result for each component we are importing from.
+                     * Each promiseResult is an array of trials.
+                     */
+                    for (var p = 0; p < promiseResults.length; p++) {
 
-                // make the work dirty so that it gets saved
-                this.studentDataChanged();
+                        // get the array of trials for one component
+                        var trials = promiseResults[p];
+
+                        // loop through all the trials from the component
+                        for (var t = 0; t < trials.length; t++) {
+                            var trial = trials[t];
+
+                            // add the trial to our array of merged trials
+                            mergedTrials.push(trial);
+                        }
+                    }
+
+                    // create a new student data
+                    var studentData = {};
+                    studentData.trials = mergedTrials;
+                    studentData.version = 2;
+
+                    // create a new component state
+                    var newComponentState = this.NodeService.createNewComponentState();
+                    newComponentState.studentData = studentData;
+
+                    // populate the component state into this component
+                    this.setStudentWork(newComponentState);
+
+                    // make the work dirty so that it gets saved
+                    this.studentDataChanged();
+                });
             }
         }
     };
+
+    /**
+     * Get the trials from classmates
+     * @param nodeId the node id
+     * @param componentId the component id
+     * @param showClassmateWorkSource Whether to get the work only from the
+     * period the student is in or from all the periods. The possible values
+     * are "period" or "class".
+     * @return a promise that will return all the trials from the classmates
+     */
+    getTrialsFromClassmates(nodeId, componentId, showClassmateWorkSource) {
+
+        var deferred = this.$q.defer();
+
+        // make a request for the classmate student work
+        this.StudentDataService.getClassmateStudentWork(nodeId, componentId, showClassmateWorkSource).then((componentStates) => {
+
+            var promises = [];
+
+            // loop through all the component states
+            for (var c = 0; c < componentStates.length; c++) {
+                var componentState = componentStates[c];
+
+                if (componentState != null) {
+
+                    // get the trials from the component state
+                    promises.push(this.getTrialsFromComponentState(nodeId, componentId, componentState));
+                }
+            }
+
+            // wait for all the promises of trials
+            this.$q.all(promises).then((promiseResults) => {
+
+                var mergedTrials = [];
+
+                // loop through all the promise results
+                for (var p = 0; p < promiseResults.length; p++) {
+
+                    // get the trials from one of the promise results
+                    var trials = promiseResults[p];
+
+                    // loop through all the trials
+                    for (var t = 0; t < trials.length; t++) {
+                        var trial = trials[t];
+
+                        // add the trial to our merged trials
+                        mergedTrials.push(trial);
+                    }
+                }
+
+                // return the merged trials
+                deferred.resolve(mergedTrials);
+            });
+        });
+
+        return deferred.promise;
+    }
+
+    /**
+     * Get the trials from a component state.
+     * Note: The code in this function doesn't actually require usage of a
+     * promise. It's just the code that calls this function that utilizes
+     * promise functionality. It's possible to refactor the code so that this
+     * function doesn't need to return a promise.
+     * @param nodeId the node id
+     * @param componentId the component id
+     * @param componentState the component state
+     * @return a promise that will return the trials from the component state
+     */
+    getTrialsFromComponentState(nodeId, componentId, componentState) {
+        var deferred = this.$q.defer();
+
+        var mergedTrials = [];
+
+        // get the step number and title e.g. "1.3: Explore the evidence"
+        var nodePositionAndTitle = this.ProjectService.getNodePositionAndTitleByNodeId(nodeId);
+
+        if (componentState != null) {
+
+            // get the student data
+            var studentData = componentState.studentData;
+
+            if (studentData != null) {
+
+                if (studentData.version == 1) {
+                    /*
+                     * we are using the old student data format
+                     * that can contain multiple series
+                     */
+
+                    var series = studentData.series;
+
+                    // create a new trial and put the series into it
+                    var newTrial = {};
+                    newTrial.id = this.UtilService.generateKey(10);
+                    newTrial.name = nodePositionAndTitle;
+                    newTrial.show = true;
+                    newTrial.series = series;
+                    mergedTrials.push(newTrial);
+                } else {
+                    /*
+                     * we are using the new student data format
+                     * that can contain multiple trials
+                     */
+
+                    // get the trials
+                    var trials = studentData.trials;
+
+                    if (trials != null) {
+
+                        /*
+                         * loop through all the trials and add them
+                         * to our array of merged trials
+                         */
+                        for (var t = 0; t < trials.length; t++) {
+                            var trial = trials[t];
+                            // make a copy of the trial
+                            newTrial = this.UtilService.makeCopyOfJSONObject(trial);
+
+                            // set the name of the trial to be the step number and title
+                            newTrial.name = nodePositionAndTitle;
+                            newTrial.show = true;
+
+                            mergedTrials.push(newTrial);
+                        }
+                    }
+                }
+            }
+        }
+
+        deferred.resolve(mergedTrials);
+
+        return deferred.promise;
+    }
 
     /**
      * Handle importing external data (we only support csv for now)

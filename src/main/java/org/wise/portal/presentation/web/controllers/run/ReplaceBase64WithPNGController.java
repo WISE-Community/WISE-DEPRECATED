@@ -61,6 +61,7 @@ public class ReplaceBase64WithPNGController {
         Boolean isSubmit = null;
         String componentType = null;
         List<JSONObject> components = null;
+        Boolean onlyGetLatest = false;
 
         // counter for the number of student data we have replaced
         int replaceCounter = 0;
@@ -118,7 +119,7 @@ public class ReplaceBase64WithPNGController {
 
             // get the student work for the given run id, node id, component id, and workgroup id
             List<StudentWork> studentWorkList = vleService.getStudentWorkList(id, runId, periodId, workgroupId,
-                    isAutoSave, isSubmit, nodeId, componentId, componentType, components);
+                    isAutoSave, isSubmit, nodeId, componentId, componentType, components, onlyGetLatest);
 
             // the number of student work rows we have found
             debugOutput(writer, response, "Found " + studentWorkList.size() + " Student Work Rows");

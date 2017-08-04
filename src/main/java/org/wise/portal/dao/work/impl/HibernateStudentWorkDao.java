@@ -87,7 +87,9 @@ public class HibernateStudentWorkDao extends AbstractHibernateDao<StudentWork> i
             Integer id, Run run, Group period, Workgroup workgroup,
             Boolean isAutoSave, Boolean isSubmit,
             String nodeId, String componentId, String componentType,
-            List<JSONObject> components) {
+            List<JSONObject> components, Boolean onlyGetLatest) {
+
+        List<StudentWork> result = null;
 
         Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
         Criteria sessionCriteria = session.createCriteria(StudentWork.class);
@@ -153,9 +155,47 @@ public class HibernateStudentWorkDao extends AbstractHibernateDao<StudentWork> i
             sessionCriteria.add(disjunction);
         }
 
-        // order the student work by server save time from oldest to newest
-        sessionCriteria.addOrder(Order.asc("serverSaveTime"));
+        if (onlyGetLatest != null && onlyGetLatest == true) {
+            // we are only getting the latest student work for each workgroup
 
-        return sessionCriteria.list();
+            // make the query group by the workgroup id and then get the row with the max id within each group
+            ProjectionList projectionList = Projections.projectionList();
+            projectionList.add(Projections.max("id"));
+            projectionList.add(Projections.groupProperty("workgroup"));
+            sessionCriteria.setProjection(projectionList);
+
+            // run the sub query to get the latest student work for each workgroup
+            List<Object> subQueryResults = sessionCriteria.list();
+
+            // we will use this list to hold the student work ids that we want
+            List<Integer> studentWorkIds = new ArrayList<Integer>();
+
+            // loop through all the rows that the sub query returned
+            for (int x = 0; x < subQueryResults.size(); x++) {
+
+                // get a row
+                Object[] projection = (Object[]) subQueryResults.get(x);
+
+                // 0 is the student work id
+                Integer studentWorkId = (Integer) projection[0];
+
+                // add the student work id to our list
+                studentWorkIds.add(studentWorkId);
+            }
+
+            // get all the student work with the given student work ids
+            result = session.createCriteria(StudentWork.class).add(Restrictions.in("id", studentWorkIds)).list();
+
+        } else {
+            // we are getting all the student work as opposed to just getting the latest
+
+            // order the student work by server save time from oldest to newest
+            sessionCriteria.addOrder(Order.asc("serverSaveTime"));
+
+            // run the query
+            result = sessionCriteria.list();
+        }
+
+        return result;
     }
 }

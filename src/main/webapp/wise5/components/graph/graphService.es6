@@ -1032,6 +1032,33 @@ class GraphService extends NodeService {
 
         return hasDataPoint;
     }
+
+    /**
+     * Determine whether the component has been authored to show classmate work
+     * @param componentContent the component content
+     * @return whether to show the classmate work in this component
+     */
+    showClassmateWork(componentContent) {
+
+        if (componentContent != null && componentContent.importWork != null && componentContent.importWork.components != null) {
+
+            let components = componentContent.importWork.components;
+
+            // loop through all the components that we are importing from
+            for (let c = 0; c < components.length; c++) {
+                let component = components[c];
+
+                if (component != null) {
+                    if (component.showClassmateWork) {
+                        // the component is importing work from classmates
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
 }
 
 GraphService.$inject = [
