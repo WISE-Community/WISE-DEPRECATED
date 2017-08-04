@@ -48,6 +48,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.wise.portal.domain.admin.DailyAdminJob;
+import org.wise.portal.domain.portal.Portal;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.presentation.web.listeners.WISESessionListener;
@@ -90,6 +91,11 @@ public class AdminIndexController {
 			modelAndView.addObject("thisWISEVersion", "error retrieving current WISE version");
 			e.printStackTrace();
 		}
+
+		// add the Portal object to the page
+		Integer portalId = 1;
+		Portal portal = portalService.getById(portalId);
+		modelAndView.addObject("portal", portal);
 
 		// add URL where people can download new versions of WISE
 		modelAndView.addObject("updateWISEURL", WISE_UPDATE_URL);
@@ -138,7 +144,24 @@ public class AdminIndexController {
 	@RequestMapping(value = "/admin/latestWISEVersion", method = RequestMethod.GET)
 	public void getLatestGlobalWISEVersion(HttpServletResponse response) throws IOException {
 		String latestWISEVersion = null;
-		String wiseInstanceName = wiseProperties.getProperty("wise.name", "noName");
+
+		// get the WISE instance name
+		String wiseInstanceName = "";
+
+		try {
+			Integer portalId = 1;
+			Portal portal = portalService.getById(portalId);
+			if (portal != null) {
+				wiseInstanceName = portal.getPortalName();
+			}
+		} catch (Exception e) {
+			// do nothing
+		}
+
+		if (wiseInstanceName.isEmpty()) {
+			wiseInstanceName = wiseProperties.getProperty("wise.name", "noName");
+		}
+
 		String wiseInstanceVersion = ControllerUtil.getWISEVersion();
 		String wiseInfoUrl = GET_WISE_INFO_URL + "?wiseInstanceName=" +  URLEncoder.encode(wiseInstanceName, "UTF-8") + "&wiseInstanceVersion=" + URLEncoder.encode(wiseInstanceVersion, "UTF-8");
 		String globalWISEVersionJSONString = retrieveString(wiseInfoUrl);

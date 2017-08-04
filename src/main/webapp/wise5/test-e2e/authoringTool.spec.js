@@ -29,7 +29,6 @@ describe('WISE Authoring Tool', function () {
     var chooseStepDropDown = element(by.xpath('//step-tools/div/md-select[@ng-model="$ctrl.nodeId"]'));
     var previousButton = element(by.xpath('//button[@ng-click="$ctrl.goToPrevNode()"]'));
     var nextButton = element(by.xpath('//button[@ng-click="$ctrl.goToNextNode()"]'));
-    var homeButton = $("#projectHomeButton");
     var projectId = null; // this will be set when we create a new project.
 
     it('should require user to log in to use the authoring tool', function () {
@@ -86,7 +85,6 @@ describe('WISE Authoring Tool', function () {
         });
 
         // check that move, delete buttons are disabled and other buttons are enabled.
-        expect(homeButton.isEnabled()).toBe(true);
         expect(chooseStepDropDown.isEnabled()).toBe(true);
         expect(previousButton.isEnabled()).toBe(false);
         expect(nextButton.isEnabled()).toBe(false);
@@ -137,7 +135,6 @@ describe('WISE Authoring Tool', function () {
         });
 
         // now test adding another step after the first step. This time the alert should not show.
-
         createNewStepButton.click();
         createNodeTitle.clear(); // clear out what's there.
         createNodeTitle.sendKeys('Step 2');
@@ -156,7 +153,74 @@ describe('WISE Authoring Tool', function () {
         });
     });
 
-    // TODO test adding new activity
+    it('should create new components', function () {
+        // test adding a new component to step 1.1
+        element(by.cssContainingText("h6", "Step 1")).click(); // click on step 1
+        expect(browser.getCurrentUrl()).toEqual('http://localhost:8080/wise/author#/project/' + projectId + '/node/node1');
+        // the navigation drop-down should show the step title
+        expect(chooseStepDropDown.getText()).toBe("1.1: Step 1");
+
+        var addComponentButton = element(by.xpath('//button[@ng-click="nodeAuthoringController.addComponentButtonClicked()"]'));
+        expect(addComponentButton.isEnabled()).toBeTruthy();
+        addComponentButton.click();
+        expect(addComponentButton.isEnabled()).toBeFalsy();
+        // test that we can cancel adding new component
+        var cancelAddComponentButton = element(by.xpath('//button[@ng-click="nodeAuthoringController.cancelCreateComponentClicked()"]'));
+        cancelAddComponentButton.click();
+
+        expect(addComponentButton.isEnabled()).toBeTruthy();
+        addComponentButton.click(); // click on add component button again
+        expect(addComponentButton.isEnabled()).toBeFalsy();
+        var orComponentChoice = element(by.cssContainingText('md-grid-tile', 'Open Response'));
+        orComponentChoice.click(); // choose the open response component
+        var insertAsFirstComponentButton = element(by.xpath('//button[@ng-click="nodeAuthoringController.insertComponentAsFirst()"]'));
+        insertAsFirstComponentButton.click();
+        expect(addComponentButton.isEnabled()).toBeTruthy(); // user should be able to add more components again
+
+        // check that the new Open Response component has been added to the step
+        element.all(by.repeater("(componentIndex, component) in nodeAuthoringController.components")).then(function (components) {
+            expect(components.length).toEqual(1);
+            expect(components[0].element(by.css('md-checkbox')).getText()).toBe("1. Open Response");
+        });
+
+        // add a new HTML component above the Open Response component
+        addComponentButton.click(); // click on add component button again
+        expect(addComponentButton.isEnabled()).toBeFalsy();
+        var htmlComponentChoice = element(by.cssContainingText('md-grid-tile', 'HTML'));
+        htmlComponentChoice.click(); // choose the open response component
+        insertAsFirstComponentButton.click();
+        expect(addComponentButton.isEnabled()).toBeTruthy(); // user should be able to add more components again
+
+        // check that the new HTML component has been added to the step above the Open Response component
+        element.all(by.repeater("(componentIndex, component) in nodeAuthoringController.components")).then(function (components) {
+            expect(components.length).toEqual(2);
+            expect(components[0].element(by.css('md-checkbox')).getText()).toBe("1. HTML");
+            expect(components[1].element(by.css('md-checkbox')).getText()).toBe("2. Open Response");
+        });
+
+        // add a new MC component below the Open Response component, as the third component
+        addComponentButton.click(); // click on add component button again
+        expect(addComponentButton.isEnabled()).toBeFalsy();
+        var mcComponentChoice = element(by.cssContainingText('md-grid-tile', 'Multiple Choice'));
+        mcComponentChoice.click(); // choose the open response component
+        element.all(by.repeater("(componentIndex, component) in nodeAuthoringController.components")).then(function (components) {
+            var insertAfterORButton = components[1].element(by.css('button[aria-label="Insert After"]'));
+            expect(insertAfterORButton.isDisplayed()).toBeTruthy();
+            insertAfterORButton.click();
+        });
+        expect(addComponentButton.isEnabled()).toBeTruthy(); // user should be able to add more components again
+
+        // check that the new MC component has been added to the step after the Open Response component
+        element.all(by.repeater("(componentIndex, component) in nodeAuthoringController.components")).then(function (components) {
+            expect(components.length).toEqual(3);
+            expect(components[0].element(by.css('md-checkbox')).getText()).toBe("1. HTML");
+            expect(components[1].element(by.css('md-checkbox')).getText()).toBe("2. Open Response");
+            expect(components[2].element(by.css('md-checkbox')).getText()).toBe("3. Multiple Choice");
+        });
+    });
+
+    // TODO: test deleting a component
+
     it('should allow author to jump to step authoring using the navigation drop-down menu', function () {
         chooseStepDropDown.click();
         element.all(by.repeater("item in $ctrl.idToOrder | toArray | orderBy : 'order'")).then(function (stepSelectOptions) {
@@ -182,9 +246,6 @@ describe('WISE Authoring Tool', function () {
         expect(browser.getCurrentUrl()).toEqual('http://localhost:8080/wise/author#/project/' + projectId + '/node/group1');
         // the navigation drop-down should show the activity title
         expect(chooseStepDropDown.getText()).toBe("1: First Activity");
-        // TODO: uncomment me when we figured out what to do with home button and project structure buttons
-        // expect(previousButton.isEnabled()).toBe(false);
-        // expect(nextButton.isEnabled()).toBe(false);
         var activity1TitleInput = element(by.model("nodeAuthoringController.node.title"));
         expect(activity1TitleInput.isPresent()).toBeTruthy();
         expect(activity1TitleInput.getAttribute('value')).toBe("First Activity");
@@ -246,7 +307,6 @@ describe('WISE Authoring Tool', function () {
 
         var enableNotebookCheckbox = $("#enableNotebookCheckbox");
         expect(enableNotebookCheckbox.isPresent()).toBeTruthy(); // the checkbox for enabling/disabling notebook should exist.
-        // TODO: the checkbox should be unchecked by default.
         $("#closeNotebookSettingsButton").click();
         expect(browser.getCurrentUrl()).toEqual('http://localhost:8080/wise/author#/project/' + projectId); // should go back to the project editing view.
     });
@@ -343,16 +403,17 @@ describe('WISE Authoring Tool', function () {
         expect(browser.getCurrentUrl()).toEqual('http://localhost:8080/wise/author#/project/' + projectId);
     });
 
-    it('should exit the authoring tool from project listing view and go to teacher home', function () {
-        browser.get('http://localhost:8080/wise/author');
-        browser.refresh(); // needed for this issue https://github.com/angular/protractor/issues/2643
-        waitForUrlToChangeTo(new RegExp('http://localhost:8080/wise/author#/', 'gi'));
-        expect(browser.getTitle()).toEqual('WISE Authoring Tool');
-
-        browser.ignoreSynchronization = true; // doesn't use Angular, disable synchronization
-        $("#goHomeButton").click();
-    });
-
+    /*
+        it('should exit the authoring tool from project listing view and go to teacher home', () => {
+            browser.get('http://localhost:8080/wise/author');
+            browser.refresh();  // needed for this issue https://github.com/angular/protractor/issues/2643
+            waitForUrlToChangeTo(new RegExp('http://localhost:8080/wise/author#/', 'gi'));
+            expect(browser.getTitle()).toEqual('WISE Authoring Tool');
+    
+            browser.ignoreSynchronization = true;  // doesn't use Angular, disable synchronization
+            $("#goHomeButton").click();
+         });
+    */
     // TODO: add test for copying a project
     // TODO: add test for copying a step
 });

@@ -94,7 +94,7 @@
 
 			<div class="contentPanel">
 				<div class="panelHeader">
-					<spring:message code='admin.index.wiseAdministratorTools' />
+					<spring:message code='admin.index.wiseAdministratorTools' /> (${portal.portalName})
 				</div>
 				<div class="panelContent">
 
