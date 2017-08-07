@@ -532,7 +532,7 @@ class ConfigService {
     };
 
     getUserIdsByWorkgroupId(workgroupId) {
-        var userIds = null;
+        var userIds = [];
 
         if (workgroupId != null) {
             var userInfo = this.getUserInfoByWorkgroupId(workgroupId);

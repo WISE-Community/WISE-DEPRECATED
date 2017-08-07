@@ -604,7 +604,7 @@ var ConfigService = function () {
     }, {
         key: 'getUserIdsByWorkgroupId',
         value: function getUserIdsByWorkgroupId(workgroupId) {
-            var userIds = null;
+            var userIds = [];
 
             if (workgroupId != null) {
                 var userInfo = this.getUserInfoByWorkgroupId(workgroupId);
