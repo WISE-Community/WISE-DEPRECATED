@@ -14,6 +14,7 @@ import angularToArrayFilter from 'lib/angular-toArrayFilter/toArrayFilter';
 import angularTranslate from 'angular-translate';
 import angularTranslateLoaderPartial from 'angular-translate-loader-partial';
 import angularWebSocket from 'angular-websocket';
+import AnimationComponentModule from '../components/animation/animationComponentModule';
 import AnnotationService from '../services/annotationService';
 import AudioOscillatorComponentModule from '../components/audioOscillator/audioOscillatorComponentModule';
 import AuthoringToolComponents from './authoringToolComponents';
@@ -66,6 +67,7 @@ let authoringModule = angular.module('authoring', [
     angularDragula(angular),
     'angularMoment',
     'angular-toArrayFilter',
+    'animationComponentModule',
     'audioOscillatorComponentModule',
     'authoringTool.components',
     'components',

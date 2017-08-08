@@ -15,6 +15,7 @@ import angularTranslateLoaderPartial from 'angular-translate-loader-partial';
 import angularUIRouter from 'angular-ui-router';
 import angularUIScrollpoint from 'angular-ui-scrollpoint';
 import angularWebSocket from 'angular-websocket';
+import AnimationComponentModule from '../components/animation/animationComponentModule';
 import AnnotationService from '../services/annotationService';
 import AudioOscillatorComponentModule from '../components/audioOscillator/audioOscillatorComponentModule';
 import ConceptMapComponentModule from '../components/conceptMap/conceptMapComponentModule';
@@ -61,6 +62,7 @@ let vleModule = angular.module('vle', [
     angularDragula(angular),
     'angularMoment',
     'angular-toArrayFilter',
+    'animationComponentModule',
     'audioOscillatorComponentModule',
     'components',
     'conceptMapComponentModule',

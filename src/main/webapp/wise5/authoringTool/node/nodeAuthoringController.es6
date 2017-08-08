@@ -301,6 +301,7 @@ class NodeAuthoringController {
         // the array of component types that can be created
         // TODO: automate by looping through active component types for this WISE instance
         this.componentTypes = [
+            {componentType: 'Animation', componentName: this.UtilService.getComponentTypeLabel('Animation')},
             {componentType: 'AudioOscillator', componentName: this.UtilService.getComponentTypeLabel('AudioOscillator')},
             {componentType: 'ConceptMap', componentName: this.UtilService.getComponentTypeLabel('ConceptMap')},
             {componentType: 'Discussion', componentName: this.UtilService.getComponentTypeLabel('Discussion')},

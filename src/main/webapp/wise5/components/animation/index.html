@@ -1,0 +1,460 @@
+<div class='animation' ng-controller='AnimationController as animationController' flex>
+    <style>
+        {{animationController.nodeContent.style}}
+    </style>
+
+    <div ng-if='animationController.mode === "authoring" && !animationController.authoringComponentContent.showPreviousWork'>
+        <md-input-container style='width:100%'>
+            <label>{{ 'PROMPT' | translate }}</label>
+            <textarea rows='3'
+                    ng-model='animationController.authoringComponentContent.prompt'
+                    ng-change='animationController.authoringViewComponentChanged()'
+                    ng-model-options='{ debounce: 1000 }'
+                    placeholder='{{ "enterPromptHere" | translate }}'>
+            </textarea>
+        </md-input-container>
+    </div>
+    <div ng-if='animationController.mode === "authoring"'>
+        <md-button class='topButton md-raised md-primary' ng-click='animationController.showAdvancedAuthoring = !animationController.showAdvancedAuthoring'>
+            <md-icon>build</md-icon>
+            <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ "ADVANCED" | translate }}</md-tooltip>
+        </md-button>
+        <div ng-show='animationController.showAdvancedAuthoring'>
+            <span>{{ 'animation.starterSentence' | translate }} ({{ 'animation.optional' | translate }}):</span>
+            <br/>
+            <textarea ng-model='animationController.authoringComponentContent.starterSentence'
+                      ng-change='animationController.authoringViewComponentChanged()'
+                      ng-model-options='{ debounce: 1000 }'
+                      rows='2'
+                      cols='100'></textarea>
+            <br/>
+            <span>{{ 'SHOW_SAVE_BUTTON' | translate }}:</span>
+            <input type='checkbox'
+                   ng-model='animationController.authoringComponentContent.showSaveButton'
+                   ng-change='animationController.authoringViewComponentChanged()'/>
+            <br/>
+            <span>{{ 'SHOW_SUBMIT_BUTTON' | translate }}:</span>
+            <input type='checkbox'
+                   ng-model='animationController.authoringComponentContent.showSubmitButton'
+                   ng-change='animationController.showSubmitButtonValueChanged()'/>
+            <div ng-show='animationController.authoringComponentContent.showSubmitButton'
+                 style='display:inline'>
+                <span>{{ 'MAX_SUBMIT' | translate }}:</span>
+                <input type='number'
+                       ng-model='animationController.authoringComponentContent.maxSubmitCount'
+                       ng-change='animationController.authoringViewComponentChanged()'/>
+            </div>
+            <br/>
+            <span>{{ 'MAX_SCORE' | translate }}:</span>
+            <input type='number'
+                   ng-model='animationController.authoringComponentContent.maxScore'
+                   ng-change='animationController.authoringViewComponentChanged()'
+                   ng-model-options='{ debounce: 1000 }'
+                   style='width: 3em'/>
+            <br/>
+            {{ 'COMPONENT_WIDTH' | translate }}:
+            <input type='number'
+                   ng-model='animationController.authoringComponentContent.componentWidth'
+                   ng-change='animationController.authoringViewComponentChanged()'
+                   ng-model-options='{ debounce: 1000 }'
+                   style='width: 3em'/>
+            <br/>
+            <span>{{ 'animation.enableCRater' | translate }}:</span>
+            <input type='checkbox'
+                   ng-model='animationController.authoringComponentContent.enableCRater'
+                   ng-change='animationController.authoringViewEnableCRaterClicked()'/>
+            <div ng-show='animationController.authoringComponentContent.enableCRater'>
+                <span>{{ 'animation.type' | translate }}:</span>
+                <input type='radio'
+                       ng-model='animationController.authoringComponentContent.cRater.itemType'
+                       value='CRATER'
+                       ng-change='animationController.authoringViewComponentChanged()'/> <span>{{ 'animation.cRater' | translate }}</span>
+                <input type='radio'
+                       ng-model='animationController.authoringComponentContent.cRater.itemType'
+                       value='HENRY'
+                       ng-change='animationController.authoringViewComponentChanged()'/> <span>{{ 'animation.henry' | translate }}</span>
+                <br/>
+                <span>{{ 'animation.itemId' | translate }}:</span>
+                <input type='text'
+                       ng-model='animationController.authoringComponentContent.cRater.itemId'
+                       ng-change='animationController.authoringViewComponentChanged()'
+                       size='30'/>
+                <br/>
+                <span>{{ 'animation.scoreOn' | translate }}:</span>
+                <input type='radio'
+                       ng-model='animationController.authoringComponentContent.cRater.scoreOn'
+                       value='submit'
+                       ng-change='animationController.authoringViewComponentChanged()'/> <span>{{ 'SUBMIT' | translate }}</span>
+                <input type='radio'
+                       ng-model='animationController.authoringComponentContent.cRater.scoreOn'
+                       value='save'
+                       ng-change='animationController.authoringViewComponentChanged()'/> <span>{{ 'SAVE' | translate }}</span>
+                <input type='radio'
+                       ng-model='animationController.authoringComponentContent.cRater.scoreOn'
+                       value='change'
+                       ng-change='animationController.authoringViewComponentChanged()'/> <span>{{ 'animation.change' | translate }}</span>
+                <br/>
+                <input type='checkbox'
+                       ng-model='animationController.authoringComponentContent.cRater.showScore'
+                       ng-change='animationController.authoringViewComponentChanged()'/> <span>{{ 'SHOW_SCORE' | translate }}</span>
+                <br/>
+                <input type='checkbox'
+                       ng-model='animationController.authoringComponentContent.cRater.showFeedback'
+                       ng-change='animationController.authoringViewComponentChanged()'/> <span>{{ 'SHOW_FEEDBACK' | translate }}<span/>
+                <br/>
+                <button ng-click='animationController.authoringAddScoringRule()'>{{ 'animation.addScoringRule' | translate }}</button>
+                <div ng-repeat='scoringRule in animationController.authoringComponentContent.cRater.scoringRules'>
+                    <span>{{ 'SCORE' | translate }}:</span> <input type='text'
+                                  ng-model='scoringRule.score'
+                                  ng-model-options='{ debounce: 500 }'
+                                  ng-change='animationController.authoringViewComponentChanged()'
+                                  style='width: 3em'/>
+                    <span>{{ 'animation.feedbackText' | translate }}:</span> <textarea type='text'
+                                     ng-model='scoringRule.feedbackText'
+                                     rows='5'
+                                     cols='100'
+                                     ng-model-options='{ debounce: 500 }'
+                                     ng-change='animationController.authoringViewComponentChanged()'/>
+                    <button ng-click='animationController.authoringViewScoringRuleUpClicked($index)'>{{ 'UP' | translate }}</button>
+                    <button ng-click='animationController.authoringViewScoringRuleDownClicked($index)'>{{ 'DOWN' | translate }}</button>
+                    <button ng-click='animationController.authoringViewScoringRuleDeleteClicked($index)'>{{ 'DELETE' | translate }}</button>
+                </div>
+                <button ng-click='animationController.authoringAddScoringRule()'>{{ 'animation.addScoringRule' | translate }}</button>
+                <br/>
+                <span>{{ 'animation.enableMultipleAttemptFeedback' | translate }}</span>
+                <input type='checkbox'
+                       ng-model='animationController.authoringComponentContent.cRater.enableMultipleAttemptScoringRules'
+                       ng-click='animationController.enableMultipleAttemptScoringRulesClicked()'/>
+                <br/>
+                <div ng-show='animationController.authoringComponentContent.cRater.enableMultipleAttemptScoringRules'>
+                    <div ng-repeat='multipleAttemptScoringRule in animationController.authoringComponentContent.cRater.multipleAttemptScoringRules'
+                         ng-show='animationController.authoringComponentContent.cRater.enableMultipleAttemptScoringRules'>
+                        <span>{{ 'animation.previousScore' | translate }}:</span> <input type='text'
+                                               ng-model='multipleAttemptScoringRule.scoreSequence[0]'
+                                               size='5'
+                                               ng-model-options='{ debounce: 500 }'
+                                               ng-change='animationController.authoringViewComponentChanged()'/>
+                        <span>{{ 'animation.currentScore' | translate }}:</span> <input type='text'
+                                              ng-model='multipleAttemptScoringRule.scoreSequence[1]'
+                                              size='5'
+                                              ng-model-options='{ debounce: 500 }'
+                                              ng-change='animationController.authoringViewComponentChanged()'/>
+                        <span>{{ 'animation.feedbackToStudent' | translate }}:</span> <textarea type='text'
+                                                 ng-model='multipleAttemptScoringRule.feedbackText'
+                                                 rows='5'
+                                                 cols='100'
+                                                 ng-model-options='{ debounce: 500 }'
+                                                 ng-change='animationController.authoringViewComponentChanged()'/>
+                         <button ng-click='animationController.authoringViewMultipleAttemptScoringRuleUpClicked($index)'>{{ 'UP' | translate }}</button>
+                         <button ng-click='animationController.authoringViewMultipleAttemptScoringRuleDownClicked($index)'>{{ 'DOWN' | translate }}</button>
+                         <button ng-click='animationController.authoringViewMultipleAttemptScoringRuleDeleteClicked($index)'>{{ 'DELETE' | translate }}</button>
+                    </div>
+                    <button ng-click='animationController.authoringAddMultipleAttemptScoringRule()'
+                            ng-show='animationController.authoringComponentContent.cRater.enableMultipleAttemptScoringRules'>
+                            {{ 'animation.addMultipleAttemptScoringRule' | translate }}
+                    </button>
+                    <br/>
+                </div>
+                <span>{{ 'animation.enableNotifications' | translate }}:</span>
+                <input type='checkbox'
+                       ng-model='animationController.authoringComponentContent.enableNotifications'
+                       ng-change='animationController.authoringViewEnableNotificationsClicked()'/>
+                <div ng-show='animationController.authoringComponentContent.enableNotifications'>
+                    <div style="border:.5px dotted; padding: 5px" ng-repeat='notification in animationController.authoringComponentContent.notificationSettings.notifications'>
+                        <span>{{ 'animation.previousScore' | translate }}:</span> <input type='text'
+                                               ng-model='notification.enableCriteria.scoreSequence[0]'
+                                               size='5'
+                                               ng-model-options='{ debounce: 500 }'
+                                               ng-change='animationController.authoringViewComponentChanged()'/>
+                        <span>{{ 'animation.currentScore' | translate }}:</span> <input type='text'
+                                              ng-model='notification.enableCriteria.scoreSequence[1]'
+                                              size='5'
+                                              ng-model-options='{ debounce: 500 }'
+                                              ng-change='animationController.authoringViewComponentChanged()'/>
+                        <br/>
+                        <span>{{ 'animation.enableAmbientDisplayDismissMode' | translate }}</span>
+                        <input type='checkbox'
+                               ng-model='notification.isAmbient' />
+                        <div ng-show='notification.isAmbient'>
+                            <span>{{ 'animation.dismissCode' | translate }}:</span>
+                            <input ng-model='notification.dismissCode'
+                                   ng-model-options='{ debounce: 500 }'
+                                   ng-change='animationController.authoringViewComponentChanged()' />
+                        </div>
+                        <br/>
+                        <span>{{ 'animation.notifyStudent' | translate }}</span>
+                        <input type='checkbox'
+                               ng-model='notification.isNotifyStudent' />
+                        <br/>
+                        <div ng-show='notification.isNotifyStudent'>
+                        <span>{{ 'animation.feedbackToStudent' | translate }}:</span> <textarea type='text'
+                                         ng-model='notification.notificationMessageToStudent'
+                                         rows='5'
+                                         cols='100'
+                                         ng-model-options='{ debounce: 500 }'
+                                         ng-change='animationController.authoringViewComponentChanged()'/>
+                        </div>
+                        <span>{{ 'animation.notifyTeacher' | translate }}</span>
+                        <input type='checkbox'
+                               ng-model='notification.isNotifyTeacher' />
+                        <div ng-show='notification.isNotifyTeacher'>
+                        <span>{{ 'animation.feedbackToTeacher' | translate }}:</span> <textarea type='text'
+                                                            ng-model='notification.notificationMessageToTeacher'
+                                                            rows='5'
+                                                            cols='100'
+                                                            ng-model-options='{ debounce: 500 }'
+                                                            ng-change='animationController.authoringViewComponentChanged()'/>
+                        </div>
+                        <br/>
+                        <button ng-click='animationController.authoringViewNotificationUpClicked($index)'>{{ 'UP' | translate }}</button>
+                        <button ng-click='animationController.authoringViewNotificationDownClicked($index)'>{{ 'DOWN' | translate }}</button>
+                        <button ng-click='animationController.authoringViewNotificationDeleteClicked($index)'>{{ 'DELETE' | translate }}</button>
+                     </div>
+                    <button ng-click='animationController.authoringAddNotification()'>
+                        {{ 'animation.addNewNotification' | translate }}
+                    </button>
+                </div>
+            </div>
+            <div ng-if='animationController.mode === "authoring"'>
+                <span>{{ 'IMPORT_PREVIOUS_WORK' | translate }}:</span>
+                <input type='checkbox'
+                       ng-model='animationController.authoringComponentContent.importPreviousWork'
+                       ng-click='animationController.authoringImportPreviousWorkClicked()'
+                       ng-change='animationController.authoringViewComponentChanged()'/>
+            </div>
+            <div ng-if='animationController.mode === "authoring" && animationController.authoringComponentContent.importPreviousWork'>
+                <span>{{ 'IMPORT_PREVIOUS_WORK_STEP' | translate }}:</span>
+                <select ng-model='animationController.authoringComponentContent.importPreviousWorkNodeId'
+                        ng-change='animationController.authoringImportPreviousWorkNodeIdChanged()'>
+                    <option></option>
+                    <option ng-repeat='item in animationController.idToOrder | toArray | orderBy : "order"'
+                            value='{{item.$key}}'
+                            ng-if='animationController.isApplicationNode(item.$key)'>{{animationController.getNodePositionAndTitleByNodeId(item.$key)}}</option>
+                </select>
+                <br/>
+                <span>{{ 'IMPORT_PREVIOUS_WORK_COMPONENT' | translate }}:</span>
+                <select ng-model='animationController.authoringComponentContent.importPreviousWorkComponentId'
+                        ng-change='animationController.authoringImportPreviousWorkComponentIdChanged()'
+                        ng-options='component.id as component.type disable when !animationController.componentHasWork(component) for component in animationController.getComponentsByNodeId(animationController.authoringComponentContent.importPreviousWorkNodeId)'>
+                    <option></option>
+                </select>
+            </div>
+            <div ng-if='animationController.mode === "authoring"'>
+                <span>{{ 'SHOW_PREVIOUS_WORK' | translate }}:</span>
+                <input type='checkbox'
+                       ng-model='animationController.authoringComponentContent.showPreviousWork'
+                       ng-click='animationController.authoringShowPreviousWorkClicked()'
+                       ng-change='animationController.authoringViewComponentChanged()'/>
+            </div>
+            <div ng-if='animationController.mode === "authoring" && animationController.authoringComponentContent.showPreviousWork'>
+                <span>{{ 'SHOW_PREVIOUS_WORK_STEP' | translate }}:</span>
+                <select ng-model='animationController.authoringComponentContent.showPreviousWorkNodeId'
+                        ng-change='animationController.authoringShowPreviousWorkNodeIdChanged()'>
+                    <option></option>
+                    <option ng-repeat='item in animationController.idToOrder | toArray | orderBy : "order"'
+                            value='{{item.$key}}'
+                            ng-if='animationController.isApplicationNode(item.$key)'>{{animationController.getNodePositionAndTitleByNodeId(item.$key)}}</option>
+                </select>
+                <br/>
+                <span>{{ 'SHOW_PREVIOUS_WORK_COMPONENT' | translate }}:</span>
+                <select ng-model='animationController.authoringComponentContent.showPreviousWorkComponentId'
+                        ng-change='animationController.authoringShowPreviousWorkComponentIdChanged()'
+                        ng-options='component.id as component.type disable when !animationController.componentHasWork(component) for component in animationController.getComponentsByNodeId(animationController.authoringComponentContent.showPreviousWorkNodeId)'>
+                    <option></option>
+                </select>
+                <br/>
+                <span>{{ 'SHOW_PREVIOUS_WORK_PROMPT' | translate }}:</span>
+                <input type='checkbox'
+                       ng-model='animationController.authoringComponentContent.showPreviousWorkPrompt'
+                       ng-change='animationController.authoringViewComponentChanged()'/>
+            </div>
+            <div ng-if='animationController.mode === "authoring"'>
+                <button ng-click='animationController.addConnectedComponent()'>{{ 'ADD_CONNECTED_COMPONENT' | translate }}</button>
+                <div ng-repeat='connectedComponent in animationController.authoringComponentContent.connectedComponents track by $index'>
+                    <table border='1'>
+                        <tr>
+                            <td style='padding:5'>
+                                <span>{{ 'CONNECTED_COMPONENT' | translate }}</span>
+                            </td>
+                            <td style='padding:5'>
+                                <div style='display:none'>
+                                    <span>{{ 'NODE_ID' | translate }}:</span>
+                                    <select ng-model='connectedComponent.nodeId'
+                                            ng-change='animationController.authoringViewComponentChanged()'>
+                                        <option></option>
+                                        <option ng-repeat='item in animationController.idToOrder | toArray | orderBy : "order"'
+                                                value='{{item.$key}}'
+                                                ng-if='animationController.isApplicationNode(item.$key)'>{{animationController.getNodePositionAndTitleByNodeId(item.$key)}}</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <span>{{ 'COMPONENT_ID' | translate }}:</span>
+                                    <select ng-model='connectedComponent.componentId'
+                                            ng-change='animationController.authoringViewComponentChanged()'>
+                                        <option></option>
+                                        <option ng-repeat='(componentIndex, component) in animationController.getComponentsByNodeId(connectedComponent.nodeId)'
+                                                ng-disabled='!animationController.componentHasWork(component)'
+                                                value='{{component.id}}'>
+                                            {{componentIndex + 1}}. {{component.type}}
+                                        </option>
+                                    </select>
+                                </div>
+                            </td>
+                            <td style='padding:5'>
+                                <select ng-model='connectedComponent.updateOn'
+                                        ng-change='animationController.authoringViewComponentChanged()'>
+                                        <option ng-repeat='updateOnOption in animationController.connectedComponentUpdateOnOptions'
+                                                value='{{updateOnOption.value}}'>
+                                            {{updateOnOption.text}}
+                                        </option>
+                                </select>
+                            </td>
+                            <td style='padding:5'>
+                                <button ng-click='animationController.deleteConnectedComponent($index)'>{{ 'DELETE' | translate }}</button>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div ng-if='animationController.mode === "authoring"'>
+                <button ng-click='animationController.showRubricAuthoring = !animationController.showRubricAuthoring'>
+                    {{ 'EDIT_COMPONENT_RUBRIC' | translate }}
+                </button>
+                <div ng-show='animationController.showRubricAuthoring'>
+                    <summernote id='{{animationController.summernoteRubricId}}'
+                                ng-model='animationController.summernoteRubricHTML'
+                                ng-change='animationController.summernoteRubricHTMLChanged()'
+                                config='animationController.summernoteRubricOptions'
+                                ng-model-options='{ debounce: 1000 }'
+                                rows='10'
+                                cols='100'>
+                    </summernote>
+                </div>
+            </div>
+            <div ng-if='animationController.mode === "authoring"'>
+                <button ng-click='animationController.showJSONAuthoring = !animationController.showJSONAuthoring'>
+                        {{ 'SHOW_JSON' | translate }}
+                </button>
+                <br/>
+                <div ng-show='animationController.showJSONAuthoring'>
+                    <textarea ng-model='animationController.authoringComponentContentJSONString'
+                           ng-change='animationController.advancedAuthoringViewComponentChanged()'
+                           ng-model-options="{ updateOn: 'blur' }"
+                           rows='10'
+                           cols='100'></textarea>
+                </div>
+            </div>
+        </div>
+        <br/>
+    </div>
+    <div>
+        <div ng-if='animationController.mode === "authoring"'>
+            <h5>{{ 'PREVIEW' | translate }}</h5>
+        </div>
+        <div ng-switch="animationController.mode">
+            <div ng-switch-when="grading" layout="row" layout-wrap>
+                <div flex="100" flex-gt-sm="66" layout="column" class="component--grading__response">
+                    <div class="component--grading__response__content"><compile data="animationController.studentResponse"></compile></div>
+                    <span flex></span>
+                    <component-revisions-info node-id='animationController.nodeId'
+                                         component-id='animationController.componentId'
+                                         max-score="animationController.componentContent.maxScore"
+                                         to-workgroup-id='workgroupId'
+                                         component-state-id='componentState.id'></component-revisions-info>
+                </div>
+                <div flex="100" flex-gt-sm="33" class="component--grading__annotations">
+                    <component-grading node-id='animationController.nodeId'
+                                       component-id='animationController.componentId'
+                                       max-score="animationController.componentContent.maxScore"
+                                       from-workgroup-id='teacherWorkgroupId'
+                                       to-workgroup-id='workgroupId'
+                                       component-state-id='componentState.id'
+                                       active="true"></component-grading>
+                </div>
+            </div>
+            <div ng-switch-default>
+                <md-input-container class="input-container input-container--open-response md-block">
+                    <label class="input-label md-no-float" ng-disabled="animationController.isDisabled"
+                           ng-if="animationController.isPromptVisible">
+                        <compile data="animationController.getPrompt()"></compile>
+                        <possible-score max-score="animationController.componentContent.maxScore"></possible-score>
+                    </label>
+                    <md-button ng-click="animationController.startButtonClicked()">Start</md-button>
+                    <br/>
+                    <svg id="{{animationController.svgId}}"
+                         width="{{animationController.width}}"
+                         height="{{animationController.height}}"
+                         ng-style="{'background-image': animationController.componentContent.background != null ? 'url(' + animationController.componentContent.background + ')' : '',
+                         'background-size': animationController.backgroundSize,
+                         'background-repeat': 'no-repeat',
+                         'border': '1px solid black',
+                         '-moz-user-select': 'none',
+                         '-webkit-user-select': 'none',
+                         '-ms-user-select':'none',
+                         'user-select':'none',
+                         '-o-user-select':'none'}">
+                    </svg>
+                    <div class="input-wrapper" ng-class="{'input-wrapper--richtext': animationController.isRichTextEnabled}">
+                        <textarea ng-if="animationController.isRichTextEnabled && !animationController.isDisabled"
+                                  ui-tinymce="animationController.tinymceOptions"
+                                  ng-model="animationController.studentResponse"
+                                  ng-model-options='{ debounce: 100 }'
+                                  ng-change="animationController.studentDataChanged()"></textarea>
+                        <div ng-if="animationController.isRichTextEnabled && animationController.isDisabled"
+                             class="input--textarea input--textarea--disabled">
+                                <compile data="animationController.studentResponse"></compile>
+                        </div>
+                        <textarea ng-if="!animationController.isRichTextEnabled"
+                                  class="input--textarea"
+                                  rows="{{animationController.getNumRows() || 3}}"
+                                  ng-model="animationController.studentResponse"
+                                  ng-model-options='{ debounce: 100 }'
+                                  ng-disabled="animationController.isDisabled"
+                                  ng-change="animationController.studentDataChanged()"
+                                  md-no-autogrow></textarea>
+                    </div>
+                </md-input-container>
+            </div>
+        </div>
+        <div ng-if="nodeController.getRevisions().length > 1" layout="row" layout-align="center end">
+            <a ng-click="nodeController.showRevisions($event, component.id, animationController.isDisabled)">
+               + {{ 'animation.previousVersions' | translate }}: {{nodeController.getRevisions().length - 1}}
+           </a>
+        </div>
+        <div class="component__actions" ng-if="animationController.isStudentAttachmentEnabled" layout="row" layout-wrap="true">
+            <div class="component__add-attachment">
+                <md-button class="md-accent"
+                           ng-click="nodeController.showStudentAssets($event, component.id, animationController.isDisabled)">
+                    <md-icon>image</md-icon> <span>{{ 'animation.addFile' | translate }}</span>
+                </md-button>
+            </div>
+            <div class="component__attachment" ng-repeat="attachment in animationController.attachments">
+                <img ng-src="{{attachment.iconURL}}" class="component__attachment__content" />
+                <md-button ng-show="!animationController.isDisabled" class="component__attachment__delete" ng-click='animationController.removeAttachment(attachment)' title="Remove file"><md-icon>cancel</md-icon></md-button>
+            </div>
+        </div>
+        <div ng-if="animationController.isSaveButtonVisible || animationController.isSubmitButtonVisible"
+             class="component__actions" layout="row" layout-align="start center">
+            <md-button class="md-raised md-primary"
+                       ng-class="{'md-raised': !animationController.isSubmitButtonVisible}"
+                       ng-click="animationController.saveButtonClicked()"
+                       ng-disabled="animationController.isDisabled || !animationController.isDirty"
+                       ng-if="animationController.isSaveButtonVisible"
+                       aria-label="{{SAVE | translate}}"
+                       translate="SAVE"></md-button>
+            <md-button class="md-raised md-primary"
+                       ng-click="animationController.submitButtonClicked()"
+                       ng-disabled="animationController.isDisabled || !animationController.isSubmitDirty || animationController.isSubmitButtonDisabled"
+                       ng-if="animationController.isSubmitButtonVisible"
+                       aria-label="{{SUBMIT | translate}}"
+                       translate="SUBMIT"></md-button>
+            <span ng-show="animationController.saveMessage.text"
+                  class="component__actions__info md-caption">
+                  {{animationController.saveMessage.text}} <span class="component__actions__more"><md-tooltip md-direction="top">{{ animationController.saveMessage.time | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip><span am-time-ago="animationController.saveMessage.time"></span></span>
+            </span>
+        </div>
+        <component-annotations ng-if="animationController.mode === 'student' || animationController.mode === 'authoring'"
+                               annotations='animationController.latestAnnotations'
+                               max-score="animationController.componentContent.maxScore"></component-annotations>
+    </div>
+</div>
