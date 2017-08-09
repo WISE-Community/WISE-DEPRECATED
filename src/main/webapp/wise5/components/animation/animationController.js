@@ -192,6 +192,15 @@ var AnimationController = function () {
         this.dataXOriginInPixels = 0;
         this.dataYOriginInPixels = 0;
 
+        // the current state of the animation ('playing', 'paused', or 'stopped')
+        this.animationState = 'stopped';
+
+        // the coordinate system to use ('screen' or 'cartesian')
+        this.coordinateSystem = 'screen';
+
+        // mapping from id to whether the object is animating
+        this.idToAnimationState = {};
+
         // get the component state from the scope
         var componentState = this.$scope.componentState;
 
@@ -227,6 +236,11 @@ var AnimationController = function () {
             if (this.componentContent.dataYOriginInPixels != null && this.componentContent.dataYOriginInPixels != '') {
                 // get the data y origin in pixels
                 this.dataYOriginInPixels = this.componentContent.dataYOriginInPixels;
+            }
+
+            if (this.componentContent.coordinateSystem != null && this.componentContent.coordinateSystem != '') {
+                // get the coordinate system
+                this.coordinateSystem = this.componentContent.coordinateSystem;
             }
 
             if (this.mode === 'student') {
@@ -672,8 +686,11 @@ var AnimationController = function () {
                                 svgObject = this.draw.text(text);
                             }
 
-                            // save an entry in our id to svg object mapping
+                            // add an entry in our id to svg object mapping
                             this.idToSVGObject[id] = svgObject;
+
+                            // add an entry in our id to animation state mapping
+                            this.idToAnimationState[id] = false;
 
                             // initialize the svg object position
                             this.initializeObjectPosition(object);
@@ -828,6 +845,14 @@ var AnimationController = function () {
                 y = pixelY;
             }
 
+            if (this.isUsingCartesianCoordinateSystem()) {
+                /*
+                 * we are using the cartesian coordinate system so we need to modify
+                 * the y value
+                 */
+                y = this.convertToCartesianCoordinateSystem(y);
+            }
+
             // get the svg object
             var svgObject = this.idToSVGObject[id];
 
@@ -863,6 +888,15 @@ var AnimationController = function () {
                             if (firstDataPointY != null && firstDataPointY != '' && typeof firstDataPointY != 'undefined') {
                                 // convert the data y value to a pixel y value
                                 firstDataPointYInPixels = this.dataYToPixelY(firstDataPointY);
+
+                                if (this.isUsingCartesianCoordinateSystem()) {
+                                    /*
+                                     * we are using the cartesian coordinate system so we need to modify
+                                     * the y value
+                                     */
+                                    firstDataPointYInPixels = this.convertToCartesianCoordinateSystem(firstDataPointYInPixels);
+                                }
+
                                 svgObject.attr('y', firstDataPointYInPixels);
                             }
                         }
@@ -878,6 +912,7 @@ var AnimationController = function () {
     }, {
         key: 'startAnimation',
         value: function startAnimation() {
+            var _this2 = this;
 
             // set the images back to their starting images in case they have changed
             this.initializeObjectImages();
@@ -896,29 +931,60 @@ var AnimationController = function () {
                         var object = objects[o];
 
                         if (object != null) {
-                            var id = object.id;
-                            var data = object.data;
+                            var previousDataPoint;
+                            var currentDataPoint;
 
-                            // get the object in the svg world
-                            var svgObject = this.idToSVGObject[id];
+                            (function () {
+                                var id = object.id;
+                                var data = object.data;
 
-                            if (svgObject != null && data != null) {
+                                // get the object in the svg world
+                                var svgObject = _this2.idToSVGObject[id];
 
-                                // loop through all the data
-                                for (var d = 0; d < data.length; d++) {
+                                if (svgObject != null && data != null) {
 
-                                    // get the previous point
-                                    var previousDataPoint = data[d - 1];
+                                    // loop through all the data
+                                    for (var d = 0; d < data.length; d++) {
 
-                                    // get the current point
-                                    var currentDataPoint = data[d];
+                                        // get the previous point
+                                        previousDataPoint = data[d - 1];
 
-                                    if (currentDataPoint != null) {
-                                        // move the object
-                                        this.animateObject(svgObject, previousDataPoint, currentDataPoint);
+                                        // get the current point
+
+                                        currentDataPoint = data[d];
+
+
+                                        if (currentDataPoint != null) {
+                                            // move the object
+                                            var animateReturnValue = _this2.animateObject(id, svgObject, previousDataPoint, currentDataPoint);
+
+                                            if (d == data.length - 1) {
+                                                // this is the last data point
+
+                                                // after all the animations are done on the object we will perform some processing
+                                                animateReturnValue.afterAll(function () {
+
+                                                    // we are done animating the object
+                                                    _this2.idToAnimationState[id] = false;
+
+                                                    // check if there are any objects that are still animating
+                                                    if (!_this2.areAnyObjectsAnimating()) {
+                                                        // there are no objects animating
+
+                                                        // set the animation state to 'stopped'
+                                                        _this2.animationState = 'stopped';
+
+                                                        // perform a digest after a timeout so that the buttons update
+                                                        _this2.$timeout(function () {
+                                                            _this2.$scope.$digest();
+                                                        });
+                                                    }
+                                                });
+                                            }
+                                        }
                                     }
                                 }
-                            }
+                            })();
                         }
                     }
                 }
@@ -927,6 +993,7 @@ var AnimationController = function () {
 
         /**
          * Move the object
+         * @param id the id of the object
          * @param svgObject the svg object
          * @param previousDataPoint the previous data point so we can calculate
          * how much time occurs between the previous and current point
@@ -935,7 +1002,7 @@ var AnimationController = function () {
 
     }, {
         key: 'animateObject',
-        value: function animateObject(svgObject, previousDataPoint, currentDataPoint) {
+        value: function animateObject(id, svgObject, previousDataPoint, currentDataPoint) {
 
             var t = currentDataPoint.t;
             var x = currentDataPoint.x;
@@ -959,6 +1026,14 @@ var AnimationController = function () {
             x = this.dataXToPixelX(x);
             y = this.dataYToPixelY(y);
 
+            if (this.isUsingCartesianCoordinateSystem()) {
+                /*
+                 * we are using the cartesian coordinate system so we need to modify
+                 * the y value
+                 */
+                y = this.convertToCartesianCoordinateSystem(y);
+            }
+
             if (t == 0) {
                 // we are at time 0 so we will just set the image and position
 
@@ -970,8 +1045,11 @@ var AnimationController = function () {
                 svgObject.attr({ x: x, y: y });
             } else {
 
+                // set the animation state to true for the object
+                this.idToAnimationState[id] = true;
+
                 // move the object and then change the image after if necessary
-                svgObject.animate(tDiff * 100).move(x, y).after(function (situation) {
+                return svgObject.animate(tDiff * 100).move(x, y).after(function (situation) {
                     if (image != null && image != '') {
                         // change the image
                         this.load(image);
@@ -1196,7 +1274,7 @@ var AnimationController = function () {
          * Called when the student changes their work
          */
         value: function studentDataChanged() {
-            var _this2 = this;
+            var _this3 = this;
 
             /*
              * set the dirty flags so we will know we need to save or submit the
@@ -1224,7 +1302,7 @@ var AnimationController = function () {
 
             // create a component state populated with the student data
             this.createComponentState(action).then(function (componentState) {
-                _this2.$scope.$emit('componentStudentDataChanged', { nodeId: _this2.nodeId, componentId: componentId, componentState: componentState });
+                _this3.$scope.$emit('componentStudentDataChanged', { nodeId: _this3.nodeId, componentId: componentId, componentState: componentState });
             });
         }
     }, {
@@ -1301,7 +1379,7 @@ var AnimationController = function () {
          * e.g. 'submit', 'save', 'change'
          */
         value: function createComponentStateAdditionalProcessing(deferred, componentState, action) {
-            var _this3 = this;
+            var _this4 = this;
 
             var performCRaterScoring = false;
 
@@ -1364,17 +1442,17 @@ var AnimationController = function () {
                                 // create the auto score annotation
                                 var autoScoreAnnotationData = {};
                                 autoScoreAnnotationData.value = score;
-                                autoScoreAnnotationData.maxAutoScore = _this3.ProjectService.getMaxScoreForComponent(_this3.nodeId, _this3.componentId);
+                                autoScoreAnnotationData.maxAutoScore = _this4.ProjectService.getMaxScoreForComponent(_this4.nodeId, _this4.componentId);
                                 autoScoreAnnotationData.concepts = concepts;
                                 autoScoreAnnotationData.autoGrader = 'cRater';
 
-                                var autoScoreAnnotation = _this3.createAutoScoreAnnotation(autoScoreAnnotationData);
+                                var autoScoreAnnotation = _this4.createAutoScoreAnnotation(autoScoreAnnotationData);
 
                                 var annotationGroupForScore = null;
 
-                                if (_this3.$scope.$parent.nodeController != null) {
+                                if (_this4.$scope.$parent.nodeController != null) {
                                     // get the previous score and comment annotations
-                                    var latestAnnotations = _this3.$scope.$parent.nodeController.getLatestComponentAnnotations(_this3.componentId);
+                                    var latestAnnotations = _this4.$scope.$parent.nodeController.getLatestComponentAnnotations(_this4.componentId);
 
                                     if (latestAnnotations != null && latestAnnotations.score != null && latestAnnotations.score.data != null) {
 
@@ -1382,18 +1460,18 @@ var AnimationController = function () {
                                         previousScore = latestAnnotations.score.data.value;
                                     }
 
-                                    if (_this3.componentContent.enableGlobalAnnotations && _this3.componentContent.globalAnnotationSettings != null) {
+                                    if (_this4.componentContent.enableGlobalAnnotations && _this4.componentContent.globalAnnotationSettings != null) {
 
                                         var globalAnnotationMaxCount = 0;
-                                        if (_this3.componentContent.globalAnnotationSettings.globalAnnotationMaxCount != null) {
-                                            globalAnnotationMaxCount = _this3.componentContent.globalAnnotationSettings.globalAnnotationMaxCount;
+                                        if (_this4.componentContent.globalAnnotationSettings.globalAnnotationMaxCount != null) {
+                                            globalAnnotationMaxCount = _this4.componentContent.globalAnnotationSettings.globalAnnotationMaxCount;
                                         }
                                         // get the annotation properties for the score that the student got.
-                                        annotationGroupForScore = _this3.ProjectService.getGlobalAnnotationGroupByScore(_this3.componentContent, previousScore, score);
+                                        annotationGroupForScore = _this4.ProjectService.getGlobalAnnotationGroupByScore(_this4.componentContent, previousScore, score);
 
                                         // check if we need to apply this globalAnnotationSetting to this annotation: we don't need to if we've already reached the maxCount
                                         if (annotationGroupForScore != null) {
-                                            var globalAnnotationGroupsByNodeIdAndComponentId = _this3.AnnotationService.getAllGlobalAnnotationGroups(_this3.nodeId, _this3.componentId);
+                                            var globalAnnotationGroupsByNodeIdAndComponentId = _this4.AnnotationService.getAllGlobalAnnotationGroups(_this4.nodeId, _this4.componentId);
                                             annotationGroupForScore.annotationGroupCreatedTime = autoScoreAnnotation.clientSaveTime; // save annotation creation time
 
                                             if (globalAnnotationGroupsByNodeIdAndComponentId.length >= globalAnnotationMaxCount) {
@@ -1422,33 +1500,33 @@ var AnimationController = function () {
 
                                 componentState.annotations.push(autoScoreAnnotation);
 
-                                if (_this3.mode === 'authoring') {
-                                    if (_this3.latestAnnotations == null) {
-                                        _this3.latestAnnotations = {};
+                                if (_this4.mode === 'authoring') {
+                                    if (_this4.latestAnnotations == null) {
+                                        _this4.latestAnnotations = {};
                                     }
 
                                     /*
                                      * we are in the authoring view so we will set the
                                      * latest score annotation manually
                                      */
-                                    _this3.latestAnnotations.score = autoScoreAnnotation;
+                                    _this4.latestAnnotations.score = autoScoreAnnotation;
                                 }
 
                                 var autoComment = null;
 
                                 // get the submit counter
-                                var submitCounter = _this3.submitCounter;
+                                var submitCounter = _this4.submitCounter;
 
-                                if (_this3.componentContent.cRater.enableMultipleAttemptScoringRules && submitCounter > 1) {
+                                if (_this4.componentContent.cRater.enableMultipleAttemptScoringRules && submitCounter > 1) {
                                     /*
                                      * this step has multiple attempt scoring rules and this is
                                      * a subsequent submit
                                      */
                                     // get the feedback based upon the previous score and current score
-                                    autoComment = _this3.CRaterService.getMultipleAttemptCRaterFeedbackTextByScore(_this3.componentContent, previousScore, score);
+                                    autoComment = _this4.CRaterService.getMultipleAttemptCRaterFeedbackTextByScore(_this4.componentContent, previousScore, score);
                                 } else {
                                     // get the feedback text
-                                    autoComment = _this3.CRaterService.getCRaterFeedbackTextByScore(_this3.componentContent, score);
+                                    autoComment = _this4.CRaterService.getCRaterFeedbackTextByScore(_this4.componentContent, score);
                                 }
 
                                 if (autoComment != null) {
@@ -1458,9 +1536,9 @@ var AnimationController = function () {
                                     autoCommentAnnotationData.concepts = concepts;
                                     autoCommentAnnotationData.autoGrader = 'cRater';
 
-                                    var autoCommentAnnotation = _this3.createAutoCommentAnnotation(autoCommentAnnotationData);
+                                    var autoCommentAnnotation = _this4.createAutoCommentAnnotation(autoCommentAnnotationData);
 
-                                    if (_this3.componentContent.enableGlobalAnnotations) {
+                                    if (_this4.componentContent.enableGlobalAnnotations) {
                                         if (annotationGroupForScore != null) {
                                             // copy over the annotation properties into the autoCommentAnnotation's data
                                             angular.merge(autoCommentAnnotation.data, annotationGroupForScore);
@@ -1468,33 +1546,33 @@ var AnimationController = function () {
                                     }
                                     componentState.annotations.push(autoCommentAnnotation);
 
-                                    if (_this3.mode === 'authoring') {
-                                        if (_this3.latestAnnotations == null) {
-                                            _this3.latestAnnotations = {};
+                                    if (_this4.mode === 'authoring') {
+                                        if (_this4.latestAnnotations == null) {
+                                            _this4.latestAnnotations = {};
                                         }
 
                                         /*
                                          * we are in the authoring view so we will set the
                                          * latest comment annotation manually
                                          */
-                                        _this3.latestAnnotations.comment = autoCommentAnnotation;
+                                        _this4.latestAnnotations.comment = autoCommentAnnotation;
                                     }
                                 }
-                                if (_this3.componentContent.enableNotifications) {
+                                if (_this4.componentContent.enableNotifications) {
                                     // get the notification properties for the score that the student got.
-                                    var notificationForScore = _this3.ProjectService.getNotificationByScore(_this3.componentContent, previousScore, score);
+                                    var notificationForScore = _this4.ProjectService.getNotificationByScore(_this4.componentContent, previousScore, score);
 
                                     if (notificationForScore != null) {
                                         notificationForScore.score = score;
-                                        notificationForScore.nodeId = _this3.nodeId;
-                                        notificationForScore.componentId = _this3.componentId;
-                                        _this3.NotificationService.sendNotificationForScore(notificationForScore);
+                                        notificationForScore.nodeId = _this4.nodeId;
+                                        notificationForScore.componentId = _this4.componentId;
+                                        _this4.NotificationService.sendNotificationForScore(notificationForScore);
                                     }
                                 }
 
                                 // display global annotations dialog if needed
-                                if (_this3.componentContent.enableGlobalAnnotations && annotationGroupForScore != null && annotationGroupForScore.isGlobal && annotationGroupForScore.isPopup) {
-                                    _this3.$scope.$emit('displayGlobalAnnotations');
+                                if (_this4.componentContent.enableGlobalAnnotations && annotationGroupForScore != null && annotationGroupForScore.isGlobal && annotationGroupForScore.isPopup) {
+                                    _this4.$scope.$emit('displayGlobalAnnotations');
                                 }
                             }
                         }
@@ -1504,7 +1582,7 @@ var AnimationController = function () {
                      * hide the dialog that tells the student to wait since
                      * the work has been scored.
                      */
-                    _this3.$mdDialog.hide();
+                    _this4.$mdDialog.hide();
 
                     // resolve the promise now that we are done performing additional processing
                     deferred.resolve(componentState);
@@ -1657,7 +1735,7 @@ var AnimationController = function () {
          * @param studentAsset
          */
         value: function attachStudentAsset(studentAsset) {
-            var _this4 = this;
+            var _this5 = this;
 
             if (studentAsset != null) {
                 this.StudentAssetService.copyAssetForReference(studentAsset).then(function (copiedAsset) {
@@ -1667,8 +1745,8 @@ var AnimationController = function () {
                             iconURL: copiedAsset.iconURL
                         };
 
-                        _this4.attachments.push(attachment);
-                        _this4.studentDataChanged();
+                        _this5.attachments.push(attachment);
+                        _this5.studentDataChanged();
                     }
                 });
             }
@@ -2910,14 +2988,219 @@ var AnimationController = function () {
         }
 
         /**
-         * The start button was clicked
+         * The play button was clicked
          */
 
     }, {
-        key: 'startButtonClicked',
-        value: function startButtonClicked() {
+        key: 'playButtonClicked',
+        value: function playButtonClicked() {
+
+            // set the animation state
+            this.animationState = 'playing';
+
             // start the animation
             this.startAnimation();
+        }
+
+        /**
+         * The pause button was clicked
+         */
+
+    }, {
+        key: 'pauseButtonClicked',
+        value: function pauseButtonClicked() {
+
+            // set the animation state
+            this.animationState = 'paused';
+
+            if (this.componentContent != null) {
+
+                // get the objects
+                var objects = this.componentContent.objects;
+
+                if (objects != null) {
+
+                    // loop through all the objects
+                    for (var o = 0; o < objects.length; o++) {
+                        var object = objects[o];
+
+                        if (object != null) {
+                            var id = object.id;
+
+                            // get the svg object
+                            var svgObject = this.idToSVGObject[id];
+
+                            if (svgObject != null) {
+
+                                // pause the object from animating
+                                svgObject.pause();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        /**
+         * The resume button was clicked
+         */
+
+    }, {
+        key: 'resumeButtonClicked',
+        value: function resumeButtonClicked() {
+
+            // set the animation state
+            this.animationState = 'playing';
+
+            if (this.componentContent != null) {
+
+                // get the objects
+                var objects = this.componentContent.objects;
+
+                if (objects != null) {
+
+                    // loop through all the objects
+                    for (var o = 0; o < objects.length; o++) {
+                        var object = objects[o];
+
+                        if (object != null) {
+                            var id = object.id;
+
+                            // get the svg object
+                            var svgObject = this.idToSVGObject[id];
+
+                            if (svgObject != null) {
+
+                                // resume playing the object animation
+                                svgObject.play();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        /**
+         * The stop button was clicked
+         */
+
+    }, {
+        key: 'stopButtonClicked',
+        value: function stopButtonClicked() {
+
+            // set the animation state
+            this.animationState = 'stopped';
+
+            if (this.componentContent != null) {
+
+                // get the objects
+                var objects = this.componentContent.objects;
+
+                if (objects != null) {
+
+                    // loop through all the objects
+                    for (var o = 0; o < objects.length; o++) {
+                        var object = objects[o];
+
+                        if (object != null) {
+                            var id = object.id;
+
+                            // get the svg object
+                            var svgObject = this.idToSVGObject[id];
+
+                            if (svgObject != null) {
+
+                                var jumpToEnd = true;
+                                var clearQueue = true;
+
+                                /*
+                                 * We need to play it in case it is currently paused.
+                                 * There is a minor bug in the animation library
+                                 * which is cause if you pause an animation and
+                                 * then stop the animation. Then if you try to play the
+                                 * animation, the animation will not play. We avoid
+                                 * this problem by making sure the object animation
+                                 * is playing when we stop it.
+                                 */
+                                svgObject.play();
+
+                                // stop the object from animating
+                                svgObject.stop(jumpToEnd, clearQueue);
+                            }
+                        }
+                    }
+                }
+            }
+
+            // set the images back to their starting images in case they have changed
+            this.initializeObjectImages();
+
+            // put the objects in their starting positions
+            this.initializeObjectPositions();
+        }
+
+        /**
+         * Check if any of the objects are animating
+         * @return whether any of the objects are animating
+         */
+
+    }, {
+        key: 'areAnyObjectsAnimating',
+        value: function areAnyObjectsAnimating() {
+
+            if (this.componentContent != null) {
+
+                // get the objects
+                var objects = this.componentContent.objects;
+
+                if (objects != null) {
+
+                    // loop through all the objects
+                    for (var o = 0; o < objects.length; o++) {
+                        var object = objects[o];
+
+                        if (object != null) {
+                            var id = object.id;
+
+                            if (this.idToAnimationState[id]) {
+                                // an object is animating
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        /**
+         * Whether we are using the cartesian coordinate system
+         * @return whether we are using the cartesian coordinate system
+         */
+
+    }, {
+        key: 'isUsingCartesianCoordinateSystem',
+        value: function isUsingCartesianCoordinateSystem() {
+
+            if (this.coordinateSystem == 'cartesian') {
+                // we are using the cartesian coordinate system
+                return true;
+            }
+
+            return false;
+        }
+
+        /**
+         * Convert the y value to the cartesian coordinate system
+         * @param y the pixel y value in the screen coordinate system
+         * @return the pixel y value in the cartesian coordinate system
+         */
+
+    }, {
+        key: 'convertToCartesianCoordinateSystem',
+        value: function convertToCartesianCoordinateSystem(y) {
+            return this.height - y;
         }
     }]);
 

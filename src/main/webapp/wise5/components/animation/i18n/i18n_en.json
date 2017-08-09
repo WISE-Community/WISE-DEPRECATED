@@ -1,3 +1,7 @@
 {
-    "animation.componentTypeLabel": "Animation"
+    "animation.componentTypeLabel": "Animation",
+    "animation.pause": "Pause",
+    "animation.play": "Play",
+    "animation.resume": "Resume",
+    "animation.stop": "Stop"
 }

@@ -1,6 +1,14 @@
 <div class='animation' ng-controller='AnimationController as animationController' flex>
     <style>
         {{animationController.nodeContent.style}}
+
+        .regularButton {
+            min-height: 36px !important;
+            max-height: 36px !important;
+            min-width: 50px !important;
+            font-size: 10px !important;
+            line-height: 0px;
+        }
     </style>
 
     <div ng-if='animationController.mode === "authoring" && !animationController.authoringComponentContent.showPreviousWork'>
@@ -379,7 +387,29 @@
                         <compile data="animationController.getPrompt()"></compile>
                         <possible-score max-score="animationController.componentContent.maxScore"></possible-score>
                     </label>
-                    <md-button ng-click="animationController.startButtonClicked()">Start</md-button>
+                    <md-button class="regularButton md-raised md-primary"
+                               ng-click="animationController.playButtonClicked()"
+                               ng-show="animationController.animationState == 'stopped'">
+                        <md-icon>play_arrow</md-icon>
+                        <md-tooltip>{{ 'animation.play' | translate }}</md-tooltip>
+                    </md-button>
+                    <md-button class="regularButton md-raised md-primary"
+                               ng-click="animationController.pauseButtonClicked()"
+                               ng-show="animationController.animationState == 'playing'">
+                        <md-icon>pause</md-icon>
+                        <md-tooltip>{{ 'animation.pause' | translate }}</md-tooltip>
+                    </md-button>
+                    <md-button class="regularButton md-raised md-primary"
+                               ng-click="animationController.resumeButtonClicked()"
+                               ng-show="animationController.animationState == 'paused'">
+                        <md-icon>play_arrow</md-icon>
+                        <md-tooltip>{{ 'animation.resume' | translate }}</md-tooltip>
+                    </md-button>
+                    <md-button class="regularButton md-raised md-primary"
+                               ng-click="animationController.stopButtonClicked()">
+                        <md-icon>stop</md-icon>
+                        <md-tooltip>{{ 'animation.stop' | translate }}</md-tooltip>
+                    </md-button>
                     <br/>
                     <svg id="{{animationController.svgId}}"
                          width="{{animationController.width}}"

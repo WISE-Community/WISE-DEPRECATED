@@ -201,6 +201,15 @@ class AnimationController {
         this.dataXOriginInPixels = 0;
         this.dataYOriginInPixels = 0;
 
+        // the current state of the animation ('playing', 'paused', or 'stopped')
+        this.animationState = 'stopped';
+
+        // the coordinate system to use ('screen' or 'cartesian')
+        this.coordinateSystem = 'screen';
+
+        // mapping from id to whether the object is animating
+        this.idToAnimationState = {};
+
         // get the component state from the scope
         var componentState = this.$scope.componentState;
 
@@ -236,6 +245,11 @@ class AnimationController {
             if (this.componentContent.dataYOriginInPixels != null && this.componentContent.dataYOriginInPixels != '') {
                 // get the data y origin in pixels
                 this.dataYOriginInPixels = this.componentContent.dataYOriginInPixels;
+            }
+
+            if (this.componentContent.coordinateSystem != null && this.componentContent.coordinateSystem != '') {
+                // get the coordinate system
+                this.coordinateSystem = this.componentContent.coordinateSystem;
             }
 
             if (this.mode === 'student') {
@@ -689,8 +703,11 @@ class AnimationController {
                             svgObject = this.draw.text(text);
                         }
 
-                        // save an entry in our id to svg object mapping
+                        // add an entry in our id to svg object mapping
                         this.idToSVGObject[id] = svgObject;
+
+                        // add an entry in our id to animation state mapping
+                        this.idToAnimationState[id] = false;
 
                         // initialize the svg object position
                         this.initializeObjectPosition(object);
@@ -830,6 +847,14 @@ class AnimationController {
             y = pixelY;
         }
 
+        if (this.isUsingCartesianCoordinateSystem()) {
+            /*
+             * we are using the cartesian coordinate system so we need to modify
+             * the y value
+             */
+            y = this.convertToCartesianCoordinateSystem(y);
+        }
+
         // get the svg object
         let svgObject = this.idToSVGObject[id];
 
@@ -865,6 +890,15 @@ class AnimationController {
                         if (firstDataPointY != null && firstDataPointY != '' && typeof firstDataPointY != 'undefined') {
                             // convert the data y value to a pixel y value
                             firstDataPointYInPixels = this.dataYToPixelY(firstDataPointY);
+
+                            if (this.isUsingCartesianCoordinateSystem()) {
+                                /*
+                                 * we are using the cartesian coordinate system so we need to modify
+                                 * the y value
+                                 */
+                                firstDataPointYInPixels = this.convertToCartesianCoordinateSystem(firstDataPointYInPixels);
+                            }
+
                             svgObject.attr('y', firstDataPointYInPixels);
                         }
                     }
@@ -914,7 +948,31 @@ class AnimationController {
 
                                 if (currentDataPoint != null) {
                                     // move the object
-                                    this.animateObject(svgObject, previousDataPoint, currentDataPoint);
+                                    let animateReturnValue = this.animateObject(id, svgObject, previousDataPoint, currentDataPoint);
+
+                                    if (d == data.length - 1) {
+                                        // this is the last data point
+
+                                        // after all the animations are done on the object we will perform some processing
+                                        animateReturnValue.afterAll(() => {
+
+                                            // we are done animating the object
+                                            this.idToAnimationState[id] = false;
+
+                                            // check if there are any objects that are still animating
+                                            if (!this.areAnyObjectsAnimating()) {
+                                                // there are no objects animating
+
+                                                // set the animation state to 'stopped'
+                                                this.animationState = 'stopped';
+
+                                                // perform a digest after a timeout so that the buttons update
+                                                this.$timeout(() => {
+                                                    this.$scope.$digest();
+                                                });
+                                            }
+                                        });
+                                    }
                                 }
                             }
                         }
@@ -926,12 +984,13 @@ class AnimationController {
 
     /**
      * Move the object
+     * @param id the id of the object
      * @param svgObject the svg object
      * @param previousDataPoint the previous data point so we can calculate
      * how much time occurs between the previous and current point
      * @param currentDataPoint the current data point
      */
-    animateObject(svgObject, previousDataPoint, currentDataPoint) {
+    animateObject(id, svgObject, previousDataPoint, currentDataPoint) {
 
         var t = currentDataPoint.t;
         var x = currentDataPoint.x;
@@ -955,6 +1014,14 @@ class AnimationController {
         x = this.dataXToPixelX(x);
         y = this.dataYToPixelY(y);
 
+        if (this.isUsingCartesianCoordinateSystem()) {
+            /*
+             * we are using the cartesian coordinate system so we need to modify
+             * the y value
+             */
+            y = this.convertToCartesianCoordinateSystem(y);
+        }
+
         if (t == 0) {
             // we are at time 0 so we will just set the image and position
 
@@ -966,8 +1033,11 @@ class AnimationController {
             svgObject.attr({ x: x, y: y });
         } else {
 
+            // set the animation state to true for the object
+            this.idToAnimationState[id] = true;
+
             // move the object and then change the image after if necessary
-            svgObject.animate(tDiff  * 100).move(x, y).after(function(situation) {
+            return svgObject.animate(tDiff  * 100).move(x, y).after(function(situation) {
                 if (image != null && image != '') {
                     // change the image
                     this.load(image);
@@ -2727,11 +2797,198 @@ class AnimationController {
     }
 
     /**
-     * The start button was clicked
+     * The play button was clicked
      */
-    startButtonClicked() {
+    playButtonClicked() {
+
+        // set the animation state
+        this.animationState = 'playing';
+
         // start the animation
         this.startAnimation();
+    }
+
+    /**
+     * The pause button was clicked
+     */
+    pauseButtonClicked() {
+
+        // set the animation state
+        this.animationState = 'paused';
+
+        if (this.componentContent != null) {
+
+            // get the objects
+            let objects = this.componentContent.objects;
+
+            if (objects != null) {
+
+                // loop through all the objects
+                for (let o = 0; o < objects.length; o++) {
+                    let object = objects[o];
+
+                    if (object != null) {
+                        let id = object.id;
+
+                        // get the svg object
+                        let svgObject = this.idToSVGObject[id];
+
+                        if (svgObject != null) {
+
+                            // pause the object from animating
+                            svgObject.pause();
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * The resume button was clicked
+     */
+    resumeButtonClicked() {
+
+        // set the animation state
+        this.animationState = 'playing';
+
+        if (this.componentContent != null) {
+
+            // get the objects
+            let objects = this.componentContent.objects;
+
+            if (objects != null) {
+
+                // loop through all the objects
+                for (let o = 0; o < objects.length; o++) {
+                    let object = objects[o];
+
+                    if (object != null) {
+                        let id = object.id;
+
+                        // get the svg object
+                        let svgObject = this.idToSVGObject[id];
+
+                        if (svgObject != null) {
+
+                            // resume playing the object animation
+                            svgObject.play();
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * The stop button was clicked
+     */
+    stopButtonClicked() {
+
+        // set the animation state
+        this.animationState = 'stopped';
+
+        if (this.componentContent != null) {
+
+            // get the objects
+            let objects = this.componentContent.objects;
+
+            if (objects != null) {
+
+                // loop through all the objects
+                for (let o = 0; o < objects.length; o++) {
+                    let object = objects[o];
+
+                    if (object != null) {
+                        let id = object.id;
+
+                        // get the svg object
+                        let svgObject = this.idToSVGObject[id];
+
+                        if (svgObject != null) {
+
+                            let jumpToEnd = true;
+                            let clearQueue = true;
+
+                            /*
+                             * We need to play it in case it is currently paused.
+                             * There is a minor bug in the animation library
+                             * which is cause if you pause an animation and
+                             * then stop the animation. Then if you try to play the
+                             * animation, the animation will not play. We avoid
+                             * this problem by making sure the object animation
+                             * is playing when we stop it.
+                             */
+                            svgObject.play();
+
+                            // stop the object from animating
+                            svgObject.stop(jumpToEnd, clearQueue);
+                        }
+                    }
+                }
+            }
+        }
+
+        // set the images back to their starting images in case they have changed
+        this.initializeObjectImages();
+
+        // put the objects in their starting positions
+        this.initializeObjectPositions();
+    }
+
+    /**
+     * Check if any of the objects are animating
+     * @return whether any of the objects are animating
+     */
+    areAnyObjectsAnimating() {
+
+        if (this.componentContent != null) {
+
+            // get the objects
+            let objects = this.componentContent.objects;
+
+            if (objects != null) {
+
+                // loop through all the objects
+                for (let o = 0; o < objects.length; o++) {
+                    let object = objects[o];
+
+                    if (object != null) {
+                        let id = object.id;
+
+                        if (this.idToAnimationState[id]) {
+                            // an object is animating
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Whether we are using the cartesian coordinate system
+     * @return whether we are using the cartesian coordinate system
+     */
+    isUsingCartesianCoordinateSystem() {
+
+        if (this.coordinateSystem == 'cartesian') {
+            // we are using the cartesian coordinate system
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Convert the y value to the cartesian coordinate system
+     * @param y the pixel y value in the screen coordinate system
+     * @return the pixel y value in the cartesian coordinate system
+     */
+    convertToCartesianCoordinateSystem(y) {
+        return this.height - y;
     }
 };
 
