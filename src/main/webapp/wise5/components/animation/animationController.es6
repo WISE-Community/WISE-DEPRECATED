@@ -929,53 +929,9 @@ class AnimationController {
                     let object = objects[o];
 
                     if (object != null) {
-                        let id = object.id;
-                        let data = object.data;
 
-                        // get the object in the svg world
-                        let svgObject = this.idToSVGObject[id];
-
-                        if (svgObject != null && data != null) {
-
-                            // loop through all the data
-                            for (let d = 0; d < data.length; d++) {
-
-                                // get the previous point
-                                var previousDataPoint = data[d - 1];
-
-                                // get the current point
-                                var currentDataPoint = data[d];
-
-                                if (currentDataPoint != null) {
-                                    // move the object
-                                    let animateReturnValue = this.animateObject(id, svgObject, previousDataPoint, currentDataPoint);
-
-                                    if (d == data.length - 1) {
-                                        // this is the last data point
-
-                                        // after all the animations are done on the object we will perform some processing
-                                        animateReturnValue.afterAll(() => {
-
-                                            // we are done animating the object
-                                            this.idToAnimationState[id] = false;
-
-                                            // check if there are any objects that are still animating
-                                            if (!this.areAnyObjectsAnimating()) {
-                                                // there are no objects animating
-
-                                                // set the animation state to 'stopped'
-                                                this.animationState = 'stopped';
-
-                                                // perform a digest after a timeout so that the buttons update
-                                                this.$timeout(() => {
-                                                    this.$scope.$digest();
-                                                });
-                                            }
-                                        });
-                                    }
-                                }
-                            }
-                        }
+                        // animate the object
+                        this.animateObject(object);
                     }
                 }
             }
@@ -984,33 +940,357 @@ class AnimationController {
 
     /**
      * Move the object
+     * @param object the authored object
+     */
+    animateObject(object) {
+
+        if (object != null) {
+            let id = object.id;
+            let data = object.data;
+
+            if (data != null) {
+
+                // get the svg object
+                let svgObject = this.idToSVGObject[id];
+
+                if (svgObject != null) {
+
+                    /*
+                     * this will hold SVG.FX object that is returned from
+                     * calling animate()
+                     */
+                    let animateObject = null;
+
+                    // loop through all the data
+                    for (let d = 0; d < data.length; d++) {
+
+                        // get the current point
+                        let currentDataPoint = data[d];
+                        let t = currentDataPoint.t;
+                        let x = currentDataPoint.x;
+                        let y = currentDataPoint.y;
+                        let image = currentDataPoint.image;
+
+                        // convert the data values to pixels
+                        let xPixel = this.dataXToPixelX(x);
+                        let yPixel = this.dataYToPixelY(y);
+
+                        // get the next point
+                        let nextDataPoint = data[d + 1];
+                        let nextT = null;
+                        let nextX = null;
+                        let nextY = null;
+                        let nextXPixel = null;
+                        let nextYPixel = null;
+
+                        if (nextDataPoint != null) {
+                            nextT = nextDataPoint.t;
+                            nextX = nextDataPoint.x;
+                            nextY = nextDataPoint.y;
+
+                            // convert the data values to pixels
+                            nextXPixel = this.dataXToPixelX(nextX);
+                            nextYPixel = this.dataYToPixelY(nextY);
+                        }
+
+                        if (this.isUsingCartesianCoordinateSystem()) {
+                            /*
+                             * we are using the cartesian coordinate system so we need to modify
+                             * the y value
+                             */
+                            yPixel = this.convertToCartesianCoordinateSystem(yPixel);
+                            nextYPixel = this.convertToCartesianCoordinateSystem(nextYPixel);
+                        }
+
+                        // set the animation state to true for the object
+                        this.idToAnimationState[id] = true;
+
+                        let tDiff = 0;
+
+                        if (nextT != null && nextT != '') {
+                            /*
+                             * calculate the time difference so we know how long we should make
+                             * it take to move to the new position
+                             */
+                            tDiff = nextT - t;
+                        }
+
+                        if (d == 0) {
+                            // this is the first data point
+
+                            if (t == 0) {
+                                /*
+                                 * immediately set the position since we are at
+                                 * time 0
+                                 */
+
+                                // set the position
+                                svgObject.attr({ x: xPixel, y: yPixel });
+                            } else {
+                                /*
+                                 * the first data point is not at time 0 so we will
+                                 * need to wait until time t before we set the
+                                 * position of the object
+                                 */
+                                animateObject = svgObject.animate(t * 100).after(function() {
+                                    // set the position
+                                    this.attr({ x: xPixel, y: yPixel });
+                                });
+                            }
+                        }
+
+                        if (image != null && image != '') {
+                            /*
+                             * there is an image specified for this data point
+                             * so we will change to that image
+                             */
+
+                            if (animateObject == null) {
+                                /*
+                                 * there is no animateObject yet so we will
+                                 * change the image immediately
+                                 */
+                                svgObject.load(image);
+                            } else {
+                                /*
+                                 * change the image after all the existing
+                                 * animations
+                                 */
+                                animateObject = animateObject.after(function() {
+                                    this.load(image);
+                                });
+                            }
+                        } else if (nextDataPoint != null) {
+                            /*
+                             * there is a next data point so we will see if we
+                             * can determine what image to show based upon the
+                             * movement of the object
+                             */
+
+                            // get the image to show based upon the movement
+                            let dynamicallyCalculatedImage = this.getImageBasedOnMovement(object, currentDataPoint, nextDataPoint);
+
+                            if (dynamicallyCalculatedImage != null) {
+                                if (animateObject == null) {
+                                    /*
+                                     * there is no animateObject yet so we will
+                                     * change the image immediately
+                                     */
+                                    svgObject.load(dynamicallyCalculatedImage);
+                                } else {
+                                    /*
+                                     * change the image after all the existing
+                                     * animations
+                                     */
+                                    animateObject = animateObject.after(function() {
+                                        this.load(dynamicallyCalculatedImage);
+                                    });
+                                }
+                            }
+                        }
+
+                        if (d != data.length - 1) {
+                            // this is a data point that is not the last
+
+                            // move the image to the next position
+                            animateObject = svgObject.animate(tDiff * 100).move(nextXPixel, nextYPixel);
+                        }
+
+                        if (d == data.length - 1) {
+                            // this is the last data point
+
+                            // after all the animations are done on the object we will perform some processing
+                            animateObject = animateObject.afterAll(() => {
+
+                                /*
+                                 * we are done animating this object so we will
+                                 * set the animation state to false for the
+                                 * object
+                                 */
+                                this.idToAnimationState[id] = false;
+
+                                // check if all svg objects are done animating
+                                this.checkIfAllAnimatingIsDone();
+                            });
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Get the image based upon the movement of the object
+     * @param object the object that is being moved
+     * @param currentDataPoint the current data point
+     * @param nextDataPoint the next data point
+     */
+    getImageBasedOnMovement(object, currentDataPoint, nextDataPoint) {
+
+        let image = null;
+
+        if (currentDataPoint != null && nextDataPoint != null) {
+
+            let currentX = currentDataPoint.x;
+            let currentY = currentDataPoint.y;
+
+            let nextX = nextDataPoint.x;
+            let nextY = nextDataPoint.y;
+
+            if (currentY == nextY) {
+                // there is no change in y
+
+                if (currentX == nextX) {
+                    // there is no change in x
+
+                    // the image is staying in place
+                } else if (currentX < nextX) {
+                    // x is moving to the right
+                    if (object.imageMovingRight != null && object.imageMovingRight != '') {
+                        image = object.imageMovingRight;
+                    }
+                } else if (currentX > nextX) {
+                    // x is moving to the left
+                    if (object.imageMovingLeft != null && object.imageMovingLeft != '') {
+                        image = object.imageMovingLeft;
+                    }
+                }
+            } else if (currentX == nextX) {
+                // there is no change in x
+
+                if (currentY == nextY) {
+                    // there is no change in y
+
+                    // the image is staying in place
+                } else if (currentY < nextY) {
+                    // y is getting larger
+
+                    if (this.isUsingCartesianCoordinateSystem()) {
+                        // y is moving up
+                        if (object.imageMovingUp != null && object.imageMovingUp != '') {
+                            image = object.imageMovingUp;
+                        }
+                    } else {
+                        // y is moving down
+                        if (object.imageMovingDown != null && object.imageMovingDown != '') {
+                            image = object.imageMovingDown;
+                        }
+                    }
+                } else if (currentY > nextY) {
+                    // y is getting smaller
+
+                    if (this.isUsingCartesianCoordinateSystem()) {
+                        // y is moving down
+                        if (object.imageMovingDown != null && object.imageMovingDown != '') {
+                            image = object.imageMovingDown;
+                        }
+                    } else {
+                        // y is moving up
+                        if (object.imageMovingUp != null && object.imageMovingUp != '') {
+                            image = object.imageMovingUp;
+                        }
+                    }
+                }
+            } else {
+                // there is a change in x and y
+
+                // TODO: fill out these if/else cases by setting the appropriate image
+
+                if (currentX < nextX && currentY < nextY) {
+                    // x is getting larger and y is getting larger
+
+                    if (this.isUsingCartesianCoordinateSystem()) {
+                        // the image is moving up to the right
+                    } else {
+                        // the image is moving down to the right
+                    }
+                } else if (currentX < nextX && currentY > nextY) {
+                    // x is getting larger and y is getting smaller
+
+                    if (this.isUsingCartesianCoordinateSystem()) {
+                        // the image is moving down to the right
+                    } else {
+                        // the image is moving up to the right
+                    }
+                } else if (currentX > nextX && currentY > nextY) {
+                    // x is getting smaller and y is getting smaller
+
+                    if (this.isUsingCartesianCoordinateSystem()) {
+                        // the image is moving down to the left
+                    } else {
+                        // the image is moving up to the left
+                    }
+                } else if (currentX > nextX && currentY < nextY) {
+                    // x is getting smaller and y is getting larger
+
+                    if (this.isUsingCartesianCoordinateSystem()) {
+                        // the image is moving up to the right
+                    } else {
+                        // the image is moving down to the right
+                    }
+                }
+            }
+        }
+
+        return image;
+    }
+
+    /**
+     * Check if all svg objects are done animating. If there are not svg objects
+     * animating, we will set the animationState to 'stopped'.
+     */
+    checkIfAllAnimatingIsDone() {
+
+        // check if there are any other objects that are still animating
+        if (!this.areAnyObjectsAnimating()) {
+            // there are no objects animating
+
+            // set the animation state to 'stopped'
+            this.animationState = 'stopped';
+
+            // perform a digest after a timeout so that the buttons update
+            this.$timeout(() => {
+                this.$scope.$digest();
+            });
+        }
+    }
+
+    /**
+     * Move the object
      * @param id the id of the object
-     * @param svgObject the svg object
      * @param previousDataPoint the previous data point so we can calculate
      * how much time occurs between the previous and current point
      * @param currentDataPoint the current data point
      */
-    animateObject(id, svgObject, previousDataPoint, currentDataPoint) {
+    animateObject0(object, previousDataPoint, currentDataPoint) {
 
+        var id = object.id;
         var t = currentDataPoint.t;
         var x = currentDataPoint.x;
         var y = currentDataPoint.y;
+        var previousT = null;
+        var previousX = null;
+        var previousY = null;
         var image = currentDataPoint.image;
+        var svgObject = this.idToSVGObject[id];
 
         var tDiff = 0;
 
         if (previousDataPoint != null) {
             // get the previous time value
-            var previousT = previousDataPoint.t;
+            previousT = previousDataPoint.t;
 
             /*
              * calculate the time difference so we know how long we should make
              * it take to move to the new position
              */
             tDiff = t - previousT;
+
+            previousX = previousDataPoint.x;
+            previousY = previousDataPoint.y;
         }
 
-        // conver the data values to pixels
+        // convert the data values to pixels
         x = this.dataXToPixelX(x);
         y = this.dataYToPixelY(y);
 
@@ -1022,27 +1302,44 @@ class AnimationController {
             y = this.convertToCartesianCoordinateSystem(y);
         }
 
-        if (t == 0) {
-            // we are at time 0 so we will just set the image and position
+        if (svgObject != null) {
+            if (t == 0) {
+                // we are at time 0 so we will just set the image and position
 
-            if (image != null && image != '') {
-                svgObject.load(image);
-            }
-
-            // set the position
-            svgObject.attr({ x: x, y: y });
-        } else {
-
-            // set the animation state to true for the object
-            this.idToAnimationState[id] = true;
-
-            // move the object and then change the image after if necessary
-            return svgObject.animate(tDiff  * 100).move(x, y).after(function(situation) {
                 if (image != null && image != '') {
-                    // change the image
-                    this.load(image);
+                    svgObject.load(image);
                 }
-            });
+
+                // set the position
+                svgObject.attr({ x: x, y: y });
+            } else {
+
+                // set the animation state to true for the object
+                this.idToAnimationState[id] = true;
+
+                if (previousDataPoint != null) {
+
+                    if (previousX != null) {
+                        if (previousX <= x) {
+                            if (object.imageMovingRight != null && object.imageMovingRight != '') {
+                                svgObject.load(object.imageMovingRight);
+                            }
+                        } else {
+                            if (object.imageMovingLeft != null && object.imageMovingLeft != '') {
+                                svgObject.load(object.imageMovingLeft);
+                            }
+                        }
+                    }
+                }
+
+                // move the object and then change the image after if necessary
+                return svgObject.animate(tDiff  * 100).move(x, y).after(function(situation) {
+                    if (image != null && image != '') {
+                        // change the image
+                        this.load(image);
+                    }
+                });
+            }
         }
     }
 

@@ -912,7 +912,6 @@ var AnimationController = function () {
     }, {
         key: 'startAnimation',
         value: function startAnimation() {
-            var _this2 = this;
 
             // set the images back to their starting images in case they have changed
             this.initializeObjectImages();
@@ -931,60 +930,9 @@ var AnimationController = function () {
                         var object = objects[o];
 
                         if (object != null) {
-                            var previousDataPoint;
-                            var currentDataPoint;
 
-                            (function () {
-                                var id = object.id;
-                                var data = object.data;
-
-                                // get the object in the svg world
-                                var svgObject = _this2.idToSVGObject[id];
-
-                                if (svgObject != null && data != null) {
-
-                                    // loop through all the data
-                                    for (var d = 0; d < data.length; d++) {
-
-                                        // get the previous point
-                                        previousDataPoint = data[d - 1];
-
-                                        // get the current point
-
-                                        currentDataPoint = data[d];
-
-
-                                        if (currentDataPoint != null) {
-                                            // move the object
-                                            var animateReturnValue = _this2.animateObject(id, svgObject, previousDataPoint, currentDataPoint);
-
-                                            if (d == data.length - 1) {
-                                                // this is the last data point
-
-                                                // after all the animations are done on the object we will perform some processing
-                                                animateReturnValue.afterAll(function () {
-
-                                                    // we are done animating the object
-                                                    _this2.idToAnimationState[id] = false;
-
-                                                    // check if there are any objects that are still animating
-                                                    if (!_this2.areAnyObjectsAnimating()) {
-                                                        // there are no objects animating
-
-                                                        // set the animation state to 'stopped'
-                                                        _this2.animationState = 'stopped';
-
-                                                        // perform a digest after a timeout so that the buttons update
-                                                        _this2.$timeout(function () {
-                                                            _this2.$scope.$digest();
-                                                        });
-                                                    }
-                                                });
-                                            }
-                                        }
-                                    }
-                                }
-                            })();
+                            // animate the object
+                            this.animateObject(object);
                         }
                     }
                 }
@@ -993,36 +941,378 @@ var AnimationController = function () {
 
         /**
          * Move the object
+         * @param object the authored object
+         */
+
+    }, {
+        key: 'animateObject',
+        value: function animateObject(object) {
+            var _this2 = this;
+
+            if (object != null) {
+                (function () {
+                    var id = object.id;
+                    var data = object.data;
+
+                    if (data != null) {
+
+                        // get the svg object
+                        var svgObject = _this2.idToSVGObject[id];
+
+                        if (svgObject != null) {
+
+                            /*
+                             * this will hold SVG.FX object that is returned from
+                             * calling animate()
+                             */
+                            var animateObject = null;
+
+                            // loop through all the data
+
+                            var _loop = function _loop(d) {
+
+                                // get the current point
+                                var currentDataPoint = data[d];
+                                var t = currentDataPoint.t;
+                                var x = currentDataPoint.x;
+                                var y = currentDataPoint.y;
+                                var image = currentDataPoint.image;
+
+                                // convert the data values to pixels
+                                var xPixel = _this2.dataXToPixelX(x);
+                                var yPixel = _this2.dataYToPixelY(y);
+
+                                // get the next point
+                                var nextDataPoint = data[d + 1];
+                                var nextT = null;
+                                var nextX = null;
+                                var nextY = null;
+                                var nextXPixel = null;
+                                var nextYPixel = null;
+
+                                if (nextDataPoint != null) {
+                                    nextT = nextDataPoint.t;
+                                    nextX = nextDataPoint.x;
+                                    nextY = nextDataPoint.y;
+
+                                    // convert the data values to pixels
+                                    nextXPixel = _this2.dataXToPixelX(nextX);
+                                    nextYPixel = _this2.dataYToPixelY(nextY);
+                                }
+
+                                if (_this2.isUsingCartesianCoordinateSystem()) {
+                                    /*
+                                     * we are using the cartesian coordinate system so we need to modify
+                                     * the y value
+                                     */
+                                    yPixel = _this2.convertToCartesianCoordinateSystem(yPixel);
+                                    nextYPixel = _this2.convertToCartesianCoordinateSystem(nextYPixel);
+                                }
+
+                                // set the animation state to true for the object
+                                _this2.idToAnimationState[id] = true;
+
+                                var tDiff = 0;
+
+                                if (nextT != null && nextT != '') {
+                                    /*
+                                     * calculate the time difference so we know how long we should make
+                                     * it take to move to the new position
+                                     */
+                                    tDiff = nextT - t;
+                                }
+
+                                if (d == 0) {
+                                    // this is the first data point
+
+                                    if (t == 0) {
+                                        /*
+                                         * immediately set the position since we are at
+                                         * time 0
+                                         */
+
+                                        // set the position
+                                        svgObject.attr({ x: xPixel, y: yPixel });
+                                    } else {
+                                        /*
+                                         * the first data point is not at time 0 so we will
+                                         * need to wait until time t before we set the
+                                         * position of the object
+                                         */
+                                        animateObject = svgObject.animate(t * 100).after(function () {
+                                            // set the position
+                                            this.attr({ x: xPixel, y: yPixel });
+                                        });
+                                    }
+                                }
+
+                                if (image != null && image != '') {
+                                    /*
+                                     * there is an image specified for this data point
+                                     * so we will change to that image
+                                     */
+
+                                    if (animateObject == null) {
+                                        /*
+                                         * there is no animateObject yet so we will
+                                         * change the image immediately
+                                         */
+                                        svgObject.load(image);
+                                    } else {
+                                        /*
+                                         * change the image after all the existing
+                                         * animations
+                                         */
+                                        animateObject = animateObject.after(function () {
+                                            this.load(image);
+                                        });
+                                    }
+                                } else if (nextDataPoint != null) {
+                                    /*
+                                     * there is a next data point so we will see if we
+                                     * can determine what image to show based upon the
+                                     * movement of the object
+                                     */
+
+                                    // get the image to show based upon the movement
+                                    var dynamicallyCalculatedImage = _this2.getImageBasedOnMovement(object, currentDataPoint, nextDataPoint);
+
+                                    if (dynamicallyCalculatedImage != null) {
+                                        if (animateObject == null) {
+                                            /*
+                                             * there is no animateObject yet so we will
+                                             * change the image immediately
+                                             */
+                                            svgObject.load(dynamicallyCalculatedImage);
+                                        } else {
+                                            /*
+                                             * change the image after all the existing
+                                             * animations
+                                             */
+                                            animateObject = animateObject.after(function () {
+                                                this.load(dynamicallyCalculatedImage);
+                                            });
+                                        }
+                                    }
+                                }
+
+                                if (d != data.length - 1) {
+                                    // this is a data point that is not the last
+
+                                    // move the image to the next position
+                                    animateObject = svgObject.animate(tDiff * 100).move(nextXPixel, nextYPixel);
+                                }
+
+                                if (d == data.length - 1) {
+                                    // this is the last data point
+
+                                    // after all the animations are done on the object we will perform some processing
+                                    animateObject = animateObject.afterAll(function () {
+
+                                        /*
+                                         * we are done animating this object so we will
+                                         * set the animation state to false for the
+                                         * object
+                                         */
+                                        _this2.idToAnimationState[id] = false;
+
+                                        // check if all svg objects are done animating
+                                        _this2.checkIfAllAnimatingIsDone();
+                                    });
+                                }
+                            };
+
+                            for (var d = 0; d < data.length; d++) {
+                                _loop(d);
+                            }
+                        }
+                    }
+                })();
+            }
+        }
+
+        /**
+         * Get the image based upon the movement of the object
+         * @param object the object that is being moved
+         * @param currentDataPoint the current data point
+         * @param nextDataPoint the next data point
+         */
+
+    }, {
+        key: 'getImageBasedOnMovement',
+        value: function getImageBasedOnMovement(object, currentDataPoint, nextDataPoint) {
+
+            var image = null;
+
+            if (currentDataPoint != null && nextDataPoint != null) {
+
+                var currentX = currentDataPoint.x;
+                var currentY = currentDataPoint.y;
+
+                var _nextX = nextDataPoint.x;
+                var _nextY = nextDataPoint.y;
+
+                if (currentY == _nextY) {
+                    // there is no change in y
+
+                    if (currentX == _nextX) {
+                        // there is no change in x
+
+                        // the image is staying in place
+                    } else if (currentX < _nextX) {
+                        // x is moving to the right
+                        if (object.imageMovingRight != null && object.imageMovingRight != '') {
+                            image = object.imageMovingRight;
+                        }
+                    } else if (currentX > _nextX) {
+                        // x is moving to the left
+                        if (object.imageMovingLeft != null && object.imageMovingLeft != '') {
+                            image = object.imageMovingLeft;
+                        }
+                    }
+                } else if (currentX == _nextX) {
+                    // there is no change in x
+
+                    if (currentY == _nextY) {
+                        // there is no change in y
+
+                        // the image is staying in place
+                    } else if (currentY < _nextY) {
+                        // y is getting larger
+
+                        if (this.isUsingCartesianCoordinateSystem()) {
+                            // y is moving up
+                            if (object.imageMovingUp != null && object.imageMovingUp != '') {
+                                image = object.imageMovingUp;
+                            }
+                        } else {
+                            // y is moving down
+                            if (object.imageMovingDown != null && object.imageMovingDown != '') {
+                                image = object.imageMovingDown;
+                            }
+                        }
+                    } else if (currentY > _nextY) {
+                        // y is getting smaller
+
+                        if (this.isUsingCartesianCoordinateSystem()) {
+                            // y is moving down
+                            if (object.imageMovingDown != null && object.imageMovingDown != '') {
+                                image = object.imageMovingDown;
+                            }
+                        } else {
+                            // y is moving up
+                            if (object.imageMovingUp != null && object.imageMovingUp != '') {
+                                image = object.imageMovingUp;
+                            }
+                        }
+                    }
+                } else {
+                    // there is a change in x and y
+
+                    // TODO: fill out these if/else cases by setting the appropriate image
+
+                    if (currentX < _nextX && currentY < _nextY) {
+                        // x is getting larger and y is getting larger
+
+                        if (this.isUsingCartesianCoordinateSystem()) {
+                            // the image is moving up to the right
+                        } else {
+                                // the image is moving down to the right
+                            }
+                    } else if (currentX < _nextX && currentY > _nextY) {
+                        // x is getting larger and y is getting smaller
+
+                        if (this.isUsingCartesianCoordinateSystem()) {
+                            // the image is moving down to the right
+                        } else {
+                                // the image is moving up to the right
+                            }
+                    } else if (currentX > _nextX && currentY > _nextY) {
+                        // x is getting smaller and y is getting smaller
+
+                        if (this.isUsingCartesianCoordinateSystem()) {
+                            // the image is moving down to the left
+                        } else {
+                                // the image is moving up to the left
+                            }
+                    } else if (currentX > _nextX && currentY < _nextY) {
+                        // x is getting smaller and y is getting larger
+
+                        if (this.isUsingCartesianCoordinateSystem()) {
+                            // the image is moving up to the right
+                        } else {
+                                // the image is moving down to the right
+                            }
+                    }
+                }
+            }
+
+            return image;
+        }
+
+        /**
+         * Check if all svg objects are done animating. If there are not svg objects
+         * animating, we will set the animationState to 'stopped'.
+         */
+
+    }, {
+        key: 'checkIfAllAnimatingIsDone',
+        value: function checkIfAllAnimatingIsDone() {
+            var _this3 = this;
+
+            // check if there are any other objects that are still animating
+            if (!this.areAnyObjectsAnimating()) {
+                // there are no objects animating
+
+                // set the animation state to 'stopped'
+                this.animationState = 'stopped';
+
+                // perform a digest after a timeout so that the buttons update
+                this.$timeout(function () {
+                    _this3.$scope.$digest();
+                });
+            }
+        }
+
+        /**
+         * Move the object
          * @param id the id of the object
-         * @param svgObject the svg object
          * @param previousDataPoint the previous data point so we can calculate
          * how much time occurs between the previous and current point
          * @param currentDataPoint the current data point
          */
 
     }, {
-        key: 'animateObject',
-        value: function animateObject(id, svgObject, previousDataPoint, currentDataPoint) {
+        key: 'animateObject0',
+        value: function animateObject0(object, previousDataPoint, currentDataPoint) {
 
+            var id = object.id;
             var t = currentDataPoint.t;
             var x = currentDataPoint.x;
             var y = currentDataPoint.y;
+            var previousT = null;
+            var previousX = null;
+            var previousY = null;
             var image = currentDataPoint.image;
+            var svgObject = this.idToSVGObject[id];
 
             var tDiff = 0;
 
             if (previousDataPoint != null) {
                 // get the previous time value
-                var previousT = previousDataPoint.t;
+                previousT = previousDataPoint.t;
 
                 /*
                  * calculate the time difference so we know how long we should make
                  * it take to move to the new position
                  */
                 tDiff = t - previousT;
+
+                previousX = previousDataPoint.x;
+                previousY = previousDataPoint.y;
             }
 
-            // conver the data values to pixels
+            // convert the data values to pixels
             x = this.dataXToPixelX(x);
             y = this.dataYToPixelY(y);
 
@@ -1034,27 +1324,44 @@ var AnimationController = function () {
                 y = this.convertToCartesianCoordinateSystem(y);
             }
 
-            if (t == 0) {
-                // we are at time 0 so we will just set the image and position
+            if (svgObject != null) {
+                if (t == 0) {
+                    // we are at time 0 so we will just set the image and position
 
-                if (image != null && image != '') {
-                    svgObject.load(image);
-                }
-
-                // set the position
-                svgObject.attr({ x: x, y: y });
-            } else {
-
-                // set the animation state to true for the object
-                this.idToAnimationState[id] = true;
-
-                // move the object and then change the image after if necessary
-                return svgObject.animate(tDiff * 100).move(x, y).after(function (situation) {
                     if (image != null && image != '') {
-                        // change the image
-                        this.load(image);
+                        svgObject.load(image);
                     }
-                });
+
+                    // set the position
+                    svgObject.attr({ x: x, y: y });
+                } else {
+
+                    // set the animation state to true for the object
+                    this.idToAnimationState[id] = true;
+
+                    if (previousDataPoint != null) {
+
+                        if (previousX != null) {
+                            if (previousX <= x) {
+                                if (object.imageMovingRight != null && object.imageMovingRight != '') {
+                                    svgObject.load(object.imageMovingRight);
+                                }
+                            } else {
+                                if (object.imageMovingLeft != null && object.imageMovingLeft != '') {
+                                    svgObject.load(object.imageMovingLeft);
+                                }
+                            }
+                        }
+                    }
+
+                    // move the object and then change the image after if necessary
+                    return svgObject.animate(tDiff * 100).move(x, y).after(function (situation) {
+                        if (image != null && image != '') {
+                            // change the image
+                            this.load(image);
+                        }
+                    });
+                }
             }
         }
 
@@ -1274,7 +1581,7 @@ var AnimationController = function () {
          * Called when the student changes their work
          */
         value: function studentDataChanged() {
-            var _this3 = this;
+            var _this4 = this;
 
             /*
              * set the dirty flags so we will know we need to save or submit the
@@ -1302,7 +1609,7 @@ var AnimationController = function () {
 
             // create a component state populated with the student data
             this.createComponentState(action).then(function (componentState) {
-                _this3.$scope.$emit('componentStudentDataChanged', { nodeId: _this3.nodeId, componentId: componentId, componentState: componentState });
+                _this4.$scope.$emit('componentStudentDataChanged', { nodeId: _this4.nodeId, componentId: componentId, componentState: componentState });
             });
         }
     }, {
@@ -1379,7 +1686,7 @@ var AnimationController = function () {
          * e.g. 'submit', 'save', 'change'
          */
         value: function createComponentStateAdditionalProcessing(deferred, componentState, action) {
-            var _this4 = this;
+            var _this5 = this;
 
             var performCRaterScoring = false;
 
@@ -1442,17 +1749,17 @@ var AnimationController = function () {
                                 // create the auto score annotation
                                 var autoScoreAnnotationData = {};
                                 autoScoreAnnotationData.value = score;
-                                autoScoreAnnotationData.maxAutoScore = _this4.ProjectService.getMaxScoreForComponent(_this4.nodeId, _this4.componentId);
+                                autoScoreAnnotationData.maxAutoScore = _this5.ProjectService.getMaxScoreForComponent(_this5.nodeId, _this5.componentId);
                                 autoScoreAnnotationData.concepts = concepts;
                                 autoScoreAnnotationData.autoGrader = 'cRater';
 
-                                var autoScoreAnnotation = _this4.createAutoScoreAnnotation(autoScoreAnnotationData);
+                                var autoScoreAnnotation = _this5.createAutoScoreAnnotation(autoScoreAnnotationData);
 
                                 var annotationGroupForScore = null;
 
-                                if (_this4.$scope.$parent.nodeController != null) {
+                                if (_this5.$scope.$parent.nodeController != null) {
                                     // get the previous score and comment annotations
-                                    var latestAnnotations = _this4.$scope.$parent.nodeController.getLatestComponentAnnotations(_this4.componentId);
+                                    var latestAnnotations = _this5.$scope.$parent.nodeController.getLatestComponentAnnotations(_this5.componentId);
 
                                     if (latestAnnotations != null && latestAnnotations.score != null && latestAnnotations.score.data != null) {
 
@@ -1460,18 +1767,18 @@ var AnimationController = function () {
                                         previousScore = latestAnnotations.score.data.value;
                                     }
 
-                                    if (_this4.componentContent.enableGlobalAnnotations && _this4.componentContent.globalAnnotationSettings != null) {
+                                    if (_this5.componentContent.enableGlobalAnnotations && _this5.componentContent.globalAnnotationSettings != null) {
 
                                         var globalAnnotationMaxCount = 0;
-                                        if (_this4.componentContent.globalAnnotationSettings.globalAnnotationMaxCount != null) {
-                                            globalAnnotationMaxCount = _this4.componentContent.globalAnnotationSettings.globalAnnotationMaxCount;
+                                        if (_this5.componentContent.globalAnnotationSettings.globalAnnotationMaxCount != null) {
+                                            globalAnnotationMaxCount = _this5.componentContent.globalAnnotationSettings.globalAnnotationMaxCount;
                                         }
                                         // get the annotation properties for the score that the student got.
-                                        annotationGroupForScore = _this4.ProjectService.getGlobalAnnotationGroupByScore(_this4.componentContent, previousScore, score);
+                                        annotationGroupForScore = _this5.ProjectService.getGlobalAnnotationGroupByScore(_this5.componentContent, previousScore, score);
 
                                         // check if we need to apply this globalAnnotationSetting to this annotation: we don't need to if we've already reached the maxCount
                                         if (annotationGroupForScore != null) {
-                                            var globalAnnotationGroupsByNodeIdAndComponentId = _this4.AnnotationService.getAllGlobalAnnotationGroups(_this4.nodeId, _this4.componentId);
+                                            var globalAnnotationGroupsByNodeIdAndComponentId = _this5.AnnotationService.getAllGlobalAnnotationGroups(_this5.nodeId, _this5.componentId);
                                             annotationGroupForScore.annotationGroupCreatedTime = autoScoreAnnotation.clientSaveTime; // save annotation creation time
 
                                             if (globalAnnotationGroupsByNodeIdAndComponentId.length >= globalAnnotationMaxCount) {
@@ -1500,33 +1807,33 @@ var AnimationController = function () {
 
                                 componentState.annotations.push(autoScoreAnnotation);
 
-                                if (_this4.mode === 'authoring') {
-                                    if (_this4.latestAnnotations == null) {
-                                        _this4.latestAnnotations = {};
+                                if (_this5.mode === 'authoring') {
+                                    if (_this5.latestAnnotations == null) {
+                                        _this5.latestAnnotations = {};
                                     }
 
                                     /*
                                      * we are in the authoring view so we will set the
                                      * latest score annotation manually
                                      */
-                                    _this4.latestAnnotations.score = autoScoreAnnotation;
+                                    _this5.latestAnnotations.score = autoScoreAnnotation;
                                 }
 
                                 var autoComment = null;
 
                                 // get the submit counter
-                                var submitCounter = _this4.submitCounter;
+                                var submitCounter = _this5.submitCounter;
 
-                                if (_this4.componentContent.cRater.enableMultipleAttemptScoringRules && submitCounter > 1) {
+                                if (_this5.componentContent.cRater.enableMultipleAttemptScoringRules && submitCounter > 1) {
                                     /*
                                      * this step has multiple attempt scoring rules and this is
                                      * a subsequent submit
                                      */
                                     // get the feedback based upon the previous score and current score
-                                    autoComment = _this4.CRaterService.getMultipleAttemptCRaterFeedbackTextByScore(_this4.componentContent, previousScore, score);
+                                    autoComment = _this5.CRaterService.getMultipleAttemptCRaterFeedbackTextByScore(_this5.componentContent, previousScore, score);
                                 } else {
                                     // get the feedback text
-                                    autoComment = _this4.CRaterService.getCRaterFeedbackTextByScore(_this4.componentContent, score);
+                                    autoComment = _this5.CRaterService.getCRaterFeedbackTextByScore(_this5.componentContent, score);
                                 }
 
                                 if (autoComment != null) {
@@ -1536,9 +1843,9 @@ var AnimationController = function () {
                                     autoCommentAnnotationData.concepts = concepts;
                                     autoCommentAnnotationData.autoGrader = 'cRater';
 
-                                    var autoCommentAnnotation = _this4.createAutoCommentAnnotation(autoCommentAnnotationData);
+                                    var autoCommentAnnotation = _this5.createAutoCommentAnnotation(autoCommentAnnotationData);
 
-                                    if (_this4.componentContent.enableGlobalAnnotations) {
+                                    if (_this5.componentContent.enableGlobalAnnotations) {
                                         if (annotationGroupForScore != null) {
                                             // copy over the annotation properties into the autoCommentAnnotation's data
                                             angular.merge(autoCommentAnnotation.data, annotationGroupForScore);
@@ -1546,33 +1853,33 @@ var AnimationController = function () {
                                     }
                                     componentState.annotations.push(autoCommentAnnotation);
 
-                                    if (_this4.mode === 'authoring') {
-                                        if (_this4.latestAnnotations == null) {
-                                            _this4.latestAnnotations = {};
+                                    if (_this5.mode === 'authoring') {
+                                        if (_this5.latestAnnotations == null) {
+                                            _this5.latestAnnotations = {};
                                         }
 
                                         /*
                                          * we are in the authoring view so we will set the
                                          * latest comment annotation manually
                                          */
-                                        _this4.latestAnnotations.comment = autoCommentAnnotation;
+                                        _this5.latestAnnotations.comment = autoCommentAnnotation;
                                     }
                                 }
-                                if (_this4.componentContent.enableNotifications) {
+                                if (_this5.componentContent.enableNotifications) {
                                     // get the notification properties for the score that the student got.
-                                    var notificationForScore = _this4.ProjectService.getNotificationByScore(_this4.componentContent, previousScore, score);
+                                    var notificationForScore = _this5.ProjectService.getNotificationByScore(_this5.componentContent, previousScore, score);
 
                                     if (notificationForScore != null) {
                                         notificationForScore.score = score;
-                                        notificationForScore.nodeId = _this4.nodeId;
-                                        notificationForScore.componentId = _this4.componentId;
-                                        _this4.NotificationService.sendNotificationForScore(notificationForScore);
+                                        notificationForScore.nodeId = _this5.nodeId;
+                                        notificationForScore.componentId = _this5.componentId;
+                                        _this5.NotificationService.sendNotificationForScore(notificationForScore);
                                     }
                                 }
 
                                 // display global annotations dialog if needed
-                                if (_this4.componentContent.enableGlobalAnnotations && annotationGroupForScore != null && annotationGroupForScore.isGlobal && annotationGroupForScore.isPopup) {
-                                    _this4.$scope.$emit('displayGlobalAnnotations');
+                                if (_this5.componentContent.enableGlobalAnnotations && annotationGroupForScore != null && annotationGroupForScore.isGlobal && annotationGroupForScore.isPopup) {
+                                    _this5.$scope.$emit('displayGlobalAnnotations');
                                 }
                             }
                         }
@@ -1582,7 +1889,7 @@ var AnimationController = function () {
                      * hide the dialog that tells the student to wait since
                      * the work has been scored.
                      */
-                    _this4.$mdDialog.hide();
+                    _this5.$mdDialog.hide();
 
                     // resolve the promise now that we are done performing additional processing
                     deferred.resolve(componentState);
@@ -1735,7 +2042,7 @@ var AnimationController = function () {
          * @param studentAsset
          */
         value: function attachStudentAsset(studentAsset) {
-            var _this5 = this;
+            var _this6 = this;
 
             if (studentAsset != null) {
                 this.StudentAssetService.copyAssetForReference(studentAsset).then(function (copiedAsset) {
@@ -1745,8 +2052,8 @@ var AnimationController = function () {
                             iconURL: copiedAsset.iconURL
                         };
 
-                        _this5.attachments.push(attachment);
-                        _this5.studentDataChanged();
+                        _this6.attachments.push(attachment);
+                        _this6.studentDataChanged();
                     }
                 });
             }
