@@ -2371,6 +2371,15 @@ var GraphController = function () {
             // set the student data into the component state
             componentState.studentData = studentData;
 
+            // set the component type
+            componentState.componentType = 'Graph';
+
+            // set the node id
+            componentState.nodeId = this.nodeId;
+
+            // set the component id
+            componentState.componentId = this.componentId;
+
             /*
              * reset the isSubmit value so that the next component state
              * doesn't maintain the same value

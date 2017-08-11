@@ -247,12 +247,6 @@ var NodeController = function () {
 
                 if (componentId != null && componentState != null) {
 
-                    /*
-                     * notify the parts that are connected that the student
-                     * data has changed
-                     */
-                    _this.notifyConnectedParts(componentId, componentState);
-
                     if (componentState.nodeId == null) {
 
                         if (args.nodeId != null) {
@@ -276,6 +270,12 @@ var NodeController = function () {
                             componentState.componentId = args.componentId;
                         }
                     }
+
+                    /*
+                     * notify the parts that are connected that the student
+                     * data has changed
+                     */
+                    _this.notifyConnectedParts(componentId, componentState);
 
                     _this.$scope.$broadcast('siblingComponentStudentDataChanged', args);
                 }

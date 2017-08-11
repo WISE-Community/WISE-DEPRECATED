@@ -642,6 +642,29 @@ class AnimationController {
             this.$mdDialog.hide();
         });
 
+        /**
+         * A connected component has changed its student data so we will
+         * perform any necessary changes to this component
+         * @param connectedComponent the connected component
+         * @param connectedComponentParams the connected component params
+         * @param componentState the student data from the connected
+         * component that has changed
+         */
+        this.$scope.handleConnectedComponentStudentDataChanged = (connectedComponent, connectedComponentParams, componentState) => {
+
+            if (connectedComponent != null && componentState != null) {
+
+                // get the component type that has changed
+                var componentType = connectedComponent.type;
+
+                if (componentType === 'Graph') {
+
+                    // update the object datas
+                    this.updateObjectDatasFromDataSources(componentState);
+                }
+            }
+        };
+
         // load script for this component, if any
         let script = this.componentContent.script;
         if (script != null) {
@@ -660,6 +683,9 @@ class AnimationController {
 
         // create the objects
         this.createObjects();
+
+        // if an object uses data from another data source, update its data
+        this.updateObjectDatasFromDataSources();
     }
 
     /**
@@ -883,13 +909,13 @@ class AnimationController {
 
                         if (firstDataPointX != null && firstDataPointX != '' && typeof firstDataPointX != 'undefined') {
                             // convert the data x value to a pixel x value
-                            firstDataPointXInPixels = this.dataXToPixelX(firstDataPointX);
+                            let firstDataPointXInPixels = this.dataXToPixelX(firstDataPointX);
                             svgObject.attr('x', firstDataPointXInPixels);
                         }
 
                         if (firstDataPointY != null && firstDataPointY != '' && typeof firstDataPointY != 'undefined') {
                             // convert the data y value to a pixel y value
-                            firstDataPointYInPixels = this.dataYToPixelY(firstDataPointY);
+                            let firstDataPointYInPixels = this.dataYToPixelY(firstDataPointY);
 
                             if (this.isUsingCartesianCoordinateSystem()) {
                                 /*
@@ -936,6 +962,163 @@ class AnimationController {
                 }
             }
         }
+    }
+
+    /**
+     * Update the object data from their data source
+     * @param componentState (optional) a component state which may be the
+     * data source for one of the objects
+     */
+    updateObjectDatasFromDataSources(componentState) {
+
+        if (this.componentContent != null) {
+
+            let objects = this.componentContent.objects;
+
+            if (objects != null) {
+
+                // loop through all the objects
+                for (let o = 0; o < objects.length; o++) {
+                    let object = objects[o];
+
+                    if (object != null) {
+
+                        if (object.dataSource != null) {
+                            // the object gets its data from a data source
+                            this.updateObjectDataFromDataSource(object, componentState);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Update the data from its data source
+     * @param object update the data for this object
+     * @param componentState (optional) The component state to get the data
+     * from. If this is not provided, we will look up the latest component
+     * state.
+     */
+    updateObjectDataFromDataSource(object, componentState) {
+
+        if (object != null) {
+
+            // get the data source details
+            let dataSource = object.dataSource;
+
+            if (dataSource != null) {
+                let nodeId = dataSource.nodeId;
+                let componentId = dataSource.componentId;
+
+                if (componentState == null) {
+                    // the component state was not passed in so we will get it
+                    componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
+                }
+
+                if (componentState != null && nodeId == componentState.nodeId && componentId == componentState.componentId) {
+                    // the component state matches the data source
+
+                    if (componentState.componentType == 'Graph') {
+                        this.setDataFromGraphComponentState(object, componentState);
+                    } else if (componentState.componentType == 'Table') {
+                        this.setDataFromTableComponentState(object, componentState);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Get the data from the graph component state
+     * @param object set the data into this object
+     * @param componentState
+     */
+    setDataFromGraphComponentState(object, componentState) {
+        if (object != null) {
+
+            // get the data source specification
+            let dataSource = object.dataSource;
+
+            if (dataSource != null) {
+                let nodeId = dataSource.nodeId;
+                let componentId = dataSource.componentId;
+                let trialIndex = dataSource.trialIndex;
+                let seriesIndex = dataSource.seriesIndex;
+                let tColumnIndex = dataSource.tColumnIndex;
+                let xColumnIndex = dataSource.xColumnIndex;
+                let yColumnIndex = dataSource.yColumnIndex;
+
+                if (componentState != null && nodeId == componentState.nodeId && componentId == componentState.componentId) {
+                    // the component state matches the data source
+
+                    let studentData = componentState.studentData;
+
+                    if (studentData != null) {
+                        let trials = studentData.trials;
+
+                        if (trials != null) {
+
+                            // get the trial we ant
+                            let trial = trials[trialIndex];
+
+                            if (trial != null) {
+                                let series = trial.series;
+
+                                if (series != null) {
+
+                                    // get the series we want
+                                    let singleSeries = series[seriesIndex];
+
+                                    if (singleSeries != null) {
+                                        let seriesData = singleSeries.data;
+
+                                        if (seriesData != null) {
+
+                                            // array to store our animation data
+                                            let data = [];
+
+                                            // loop through all the points in the series
+                                            for (let d = 0; d < seriesData.length; d++) {
+                                                let seriesDataPoint = seriesData[d];
+
+                                                // create a data point
+                                                let animationDataPoint = {};
+
+                                                if (tColumnIndex != null) {
+                                                    // get the t value
+                                                    animationDataPoint.t = seriesDataPoint[tColumnIndex];
+                                                }
+
+                                                if (xColumnIndex != null) {
+                                                    // get the x value
+                                                    animationDataPoint.x = seriesDataPoint[xColumnIndex];
+                                                }
+
+                                                if (yColumnIndex != null) {
+                                                    // get the y value
+                                                    animationDataPoint.y = seriesDataPoint[yColumnIndex];
+                                                }
+
+                                                // add the data point to the array
+                                                data.push(animationDataPoint);
+                                            }
+
+                                            // set the data into the object
+                                            object.data = data;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    setDataFromTableComponentState() {
+
     }
 
     /**
@@ -1252,94 +1435,6 @@ class AnimationController {
             this.$timeout(() => {
                 this.$scope.$digest();
             });
-        }
-    }
-
-    /**
-     * Move the object
-     * @param id the id of the object
-     * @param previousDataPoint the previous data point so we can calculate
-     * how much time occurs between the previous and current point
-     * @param currentDataPoint the current data point
-     */
-    animateObject0(object, previousDataPoint, currentDataPoint) {
-
-        var id = object.id;
-        var t = currentDataPoint.t;
-        var x = currentDataPoint.x;
-        var y = currentDataPoint.y;
-        var previousT = null;
-        var previousX = null;
-        var previousY = null;
-        var image = currentDataPoint.image;
-        var svgObject = this.idToSVGObject[id];
-
-        var tDiff = 0;
-
-        if (previousDataPoint != null) {
-            // get the previous time value
-            previousT = previousDataPoint.t;
-
-            /*
-             * calculate the time difference so we know how long we should make
-             * it take to move to the new position
-             */
-            tDiff = t - previousT;
-
-            previousX = previousDataPoint.x;
-            previousY = previousDataPoint.y;
-        }
-
-        // convert the data values to pixels
-        x = this.dataXToPixelX(x);
-        y = this.dataYToPixelY(y);
-
-        if (this.isUsingCartesianCoordinateSystem()) {
-            /*
-             * we are using the cartesian coordinate system so we need to modify
-             * the y value
-             */
-            y = this.convertToCartesianCoordinateSystem(y);
-        }
-
-        if (svgObject != null) {
-            if (t == 0) {
-                // we are at time 0 so we will just set the image and position
-
-                if (image != null && image != '') {
-                    svgObject.load(image);
-                }
-
-                // set the position
-                svgObject.attr({ x: x, y: y });
-            } else {
-
-                // set the animation state to true for the object
-                this.idToAnimationState[id] = true;
-
-                if (previousDataPoint != null) {
-
-                    if (previousX != null) {
-                        if (previousX <= x) {
-                            if (object.imageMovingRight != null && object.imageMovingRight != '') {
-                                svgObject.load(object.imageMovingRight);
-                            }
-                        } else {
-                            if (object.imageMovingLeft != null && object.imageMovingLeft != '') {
-                                svgObject.load(object.imageMovingLeft);
-                            }
-                        }
-                    }
-                }
-
-                // move the object and then change the image after if necessary
-                return svgObject.animate(tDiff  * 100).move(x, y).after(function(situation) {
-                    if (image != null && image != '') {
-                        // change the image
-                        this.load(image);
-                    }
-                });
-            }
         }
     }
 
