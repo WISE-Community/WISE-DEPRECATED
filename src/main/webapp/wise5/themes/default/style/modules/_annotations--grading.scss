@@ -14,6 +14,10 @@
         &:focus {
             background-color: #ffffff;
         }
+
+        &:disabled {
+            color: color('text');
+        }
     }
 }
 
@@ -27,10 +31,11 @@
     margin: 8px 8px 4px;
 }
 
+.annotations--grading__item {
+    padding: 8px;
+}
 
 .annotations--grading__score {
-    margin-bottom: 24px;
-
     input {
         margin-top: 0 !important;
         font-size: rem(1.8);
@@ -60,5 +65,9 @@
 }
 
 .annotations--grading__auto-comment {
-    margin: 12px 2px;
+    margin: 0 2px;
+}
+
+.annotations--grading__auto-comment__content {
+    margin-top: 8px;
 }

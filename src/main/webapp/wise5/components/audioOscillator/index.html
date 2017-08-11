@@ -251,7 +251,7 @@
             <h5>{{ 'PREVIEW' | translate }}</h5>
         </div>
         <div ng-switch="audioOscillatorController.mode">
-            <div ng-switch-when="grading" layout="row" layout-wrap>
+            <div ng-switch-when="grading|gradingRevision" ng-switch-when-separator="|" layout="row" layout-wrap>
                 <div flex="100" flex-gt-sm="66" layout="column" class="component--grading__response">
                     <div class="component--grading__response__content">
                         <p>{{ 'audioOscillator.frequenciesPlayed' | translate }}: {{audioOscillatorController.frequenciesPlayed}}</p>
@@ -261,20 +261,22 @@
                         <p>{{ 'audioOscillator.maxFrequencyPlayed' | translate }}: {{audioOscillatorController.maxFrequencyPlayed}}</p>
                     </div>
                     <span flex></span>
-                    <component-revisions-info node-id='audioOscillatorController.nodeId'
-                                         component-id='audioOscillatorController.componentId'
-                                         max-score="audioOscillatorController.componentContent.maxScore"
-                                         to-workgroup-id='workgroupId'
-                                         component-state-id='audioOscillatorController.id'></component-revisions-info>
+                    <component-revisions-info node-id="audioOscillatorController.nodeId"
+                                              component-id="audioOscillatorController.componentId"
+                                              max-score="audioOscillatorController.componentContent.maxScore"
+                                              to-workgroup-id="workgroupId"
+                                              component-state="componentState"
+                                              active="audioOscillatorController.mode === 'grading'"></component-revisions-info>
                 </div>
                 <div flex="100" flex-gt-sm="33" class="component--grading__annotations">
-                    <component-grading node-id='audioOscillatorController.nodeId'
-                                       component-id='audioOscillatorController.componentId'
+                    <component-grading node-id="audioOscillatorController.nodeId"
+                                       component-id="audioOscillatorController.componentId"
                                        max-score="audioOscillatorController.componentContent.maxScore"
-                                       from-workgroup-id='teacherWorkgroupId'
-                                       to-workgroup-id='workgroupId'
-                                       component-state-id='componentState.id'
-                                       active="true"></component-grading>
+                                       from-workgroup-id="teacherWorkgroupId"
+                                       to-workgroup-id="workgroupId"
+                                       component-state-id="componentState.id"
+                                       show-all-annotations="audioOscillatorController.mode !== 'grading'"
+                                       is-disabled="audioOscillatorController.mode !== 'grading'"></component-grading>
                 </div>
             </div>
             <div ng-switch-default>

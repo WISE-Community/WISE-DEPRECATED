@@ -266,7 +266,7 @@ class GraphController {
             this.componentId = this.componentContent.id;
 
             // set the chart id
-            this.chartId = 'chart' + this.componentId;
+            this.chartId = 'chart_' + this.componentId;
 
             // get the graph type
             this.graphType = this.componentContent.graphType;
@@ -302,8 +302,7 @@ class GraphController {
                 // TODO: watch for new annotations and update accordingly
                 this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
                 this.backgroundImage = this.componentContent.backgroundImage;
-            } else if (this.mode === 'grading') {
-                this.isPromptVisible = true;
+            } else if (this.mode === 'grading' || this.mode === 'gradingRevision') {
                 this.isSaveButtonVisible = false;
                 this.isSubmitButtonVisible = false;
                 //this.isResetGraphButtonVisible = false;
@@ -312,8 +311,21 @@ class GraphController {
                 this.isDisabled = true;
                 this.isSnipDrawingButtonVisible = false;
 
-                // get the latest annotations
-                this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
+                // get the component state from the scope
+                let componentState = this.$scope.componentState;
+
+                if (componentState != null) {
+                    // create a unique id for the application iframe using this component state
+                    this.chartId = "chart_" + componentState.id;
+                    if (this.mode === 'gradingRevision') {
+                        this.chartId = "chart_gradingRevision_" + componentState.id;
+                    }
+                }
+
+                if (this.mode === 'grading') {
+                    // get the latest annotations
+                    this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
+                }
             } else if (this.mode === 'onlyShowWork') {
                 this.isPromptVisible = true;
                 this.isSaveButtonVisible = false;

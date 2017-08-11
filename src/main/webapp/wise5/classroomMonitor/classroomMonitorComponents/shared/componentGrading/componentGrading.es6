@@ -75,20 +75,30 @@ class ComponentGradingController {
     }
 
     processAnnotations() {
-        this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.toWorkgroupId);
+        if (this.showAllAnnotations) {
+            // we want to show all the latest annotation types (both teacher- and auto-generated)
+            this.latestAnnotations = {};
+            this.latestAnnotations.score = this.AnnotationService.getLatestTeacherScoreAnnotationByStudentWorkId(this.componentStateId);
+            this.latestAnnotations.autoScore = this.AnnotationService.getLatestAutoScoreAnnotationByStudentWorkId(this.componentStateId);
+            this.latestAnnotations.comment = this.AnnotationService.getLatestTeacherCommentAnnotationByStudentWorkId(this.componentStateId);
+            this.latestAnnotations.autoComment = this.AnnotationService.getLatestAutoCommentAnnotationByStudentWorkId(this.componentStateId);
+        } else {
+            // we only want to show the latest score and comment annotations (either teacher- or auto-generated)
+            this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.toWorkgroupId);
 
-        if (this.latestAnnotations && this.latestAnnotations.comment) {
-            let latestComment = this.latestAnnotations.comment;
-            if (latestComment.type === 'comment') {
-                this.comment = latestComment.data.value;
+            if (this.latestAnnotations && this.latestAnnotations.comment) {
+                let latestComment = this.latestAnnotations.comment;
+                if (latestComment.type === 'comment') {
+                    this.comment = latestComment.data.value;
+                }
             }
-        }
 
-        if (this.latestAnnotations && this.latestAnnotations.score) {
-            this.score = this.latestAnnotations.score.data.value;
-        }
+            if (this.latestAnnotations && this.latestAnnotations.score) {
+                this.score = this.latestAnnotations.score.data.value;
+            }
 
-        this.latestAnnotationTime = this.getLatestAnnotationTime();
+            this.latestAnnotationTime = this.getLatestAnnotationTime();
+        }
     }
 
     /**
@@ -111,6 +121,35 @@ class ComponentGradingController {
         }
 
         return result;
+    }
+
+    /**
+     * Returns true if there are both teacher and auto annotations for this component state
+     */
+    hasTeacherAndAutoAnnotations() {
+        return (this.latestAnnotations.score || this.latestAnnotations.comment) &&
+               (this.latestAnnotations.autoScore || this.latestAnnotations.autoComment);
+    }
+
+    /**
+     * Returns true if there are any teacher annotations for this component state
+     */
+    hasTeacherAnnotations() {
+        return this.latestAnnotations.score || this.latestAnnotations.comment;
+    }
+
+    /**
+     * Returns true if there are any auto annotations for this component state
+     */
+    hasAutoAnnotations() {
+        return this.latestAnnotations.autoScore || this.latestAnnotations.autoComment;
+    }
+
+    /**
+     * Returns true if there are no annotations for this component state
+     */
+    hasNoAnnotations() {
+        return !this.latestAnnotations.score && !this.latestAnnotations.comment && !this.latestAnnotations.autoScore && !this.latestAnnotations.autoComment;
     }
 
     /**
@@ -151,6 +190,8 @@ class ComponentGradingController {
 
         return time;
     }
+
+
 
     /**
      * Save the annotation to the server
@@ -273,13 +314,14 @@ ComponentGradingController.$inject = [
 
 const ComponentGrading = {
     bindings: {
-        nodeId: '<',
         componentId: '<',
-        maxScore: '<',
-        fromWorkgroupId: '<',
-        toWorkgroupId: '<',
         componentStateId: '<',
-        active: '<'
+        isDisabled: '<',
+        fromWorkgroupId: '<',
+        maxScore: '<',
+        nodeId: '<',
+        showAllAnnotations: '<',
+        toWorkgroupId: '<'
     },
     templateUrl: 'wise5/classroomMonitor/classroomMonitorComponents/shared/componentGrading/componentGrading.html',
     controller: ComponentGradingController

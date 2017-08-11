@@ -9,7 +9,7 @@
         </div>
         <div class="md-content discussion-post__content md-body-1" ng-bind-html="classResponseCtrl.response.studentData.response"></div>
         <img ng-repeat="attachment in classResponseCtrl.response.studentData.attachments" ng-src="{{attachment.iconURL}}" alt="Image" class="discussion-post__attachment" />
-        <div align="right" ng-if="classResponseCtrl.mode == 'grading'">
+        <div align="right" ng-if="classResponseCtrl.mode == 'grading' || classResponseCtrl.mode == 'gradingRevision'">
             <br/>
             <md-button ng-if="classResponseCtrl.response.latestInappropriateFlagAnnotation == null || classResponseCtrl.response.latestInappropriateFlagAnnotation.data == null || classResponseCtrl.response.latestInappropriateFlagAnnotation.data.action != 'Delete'" class="md-raised" style="color:red" ng-click="classResponseCtrl.deleteButtonClicked(classResponseCtrl.response)">Delete</md-button>
             <md-button class="md-raised" ng-if="classResponseCtrl.response.latestInappropriateFlagAnnotation.data.action == 'Delete'" style="color:red" ng-click="classResponseCtrl.undoDeleteButtonClicked(classResponseCtrl.response)">Undo Delete</md-button>
@@ -33,7 +33,7 @@
                         <h3 class="discussion-post__user discussion-post__user--reply" flex>{{ reply.userNames }} <span class="md-caption discussion-post__date discussion-post__date--reply component__actions__more"><md-tooltip md-direction="right">{{ classResponseCtrl.adjustClientSaveTime(reply.serverSaveTime) | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip><span am-time-ago="{{classResponseCtrl.adjustClientSaveTime(reply.serverSaveTime)}}"></span></span></h3>
                         <div class="discusstion-reply__content md-body-1" ng-bind-html="reply.studentData.response"></div>
                     </div>
-                    <div ng-if="classResponseCtrl.mode == 'grading'">
+                    <div ng-if="classResponseCtrl.mode == 'grading' || classResponseCtrl.mode == 'gradingRevision'">
                         <md-button class="md-raised" ng-if="(classResponseCtrl.response.latestInappropriateFlagAnnotation == null || classResponseCtrl.response.latestInappropriateFlagAnnotation.data.action != 'Delete') && (reply.latestInappropriateFlagAnnotation == null || reply.latestInappropriateFlagAnnotation.data.action != 'Delete')" style="color:red" ng-click="classResponseCtrl.deleteButtonClicked(reply)">Delete</md-button>
                         <span ng-if="classResponseCtrl.response.latestInappropriateFlagAnnotation != null && classResponseCtrl.response.latestInappropriateFlagAnnotation.data.action == 'Delete'" style="color:red" title="Students will not see this post">Parent Deleted</span>
                         <md-button class="md-raised" ng-if="reply.latestInappropriateFlagAnnotation != null && reply.latestInappropriateFlagAnnotation.data.action == 'Delete'" style="color:red" ng-click="classResponseCtrl.undoDeleteButtonClicked(reply)">Undo Delete</md-button>
@@ -42,7 +42,7 @@
             </md-list>
             <md-divider></md-divider>
         </div>
-        <div class="discussion-new-reply" flex layout="row">
+        <div class="discussion-new-reply" flex layout="row" ng-if="discussionController.node === 'student'">
             <md-input-container class="input-container discussion-new-reply__input-container md-block" md-no-float flex>
                 <textarea class="input--textarea discussion-reply__input"
                           ng-model='classResponseCtrl.response.replyText'
