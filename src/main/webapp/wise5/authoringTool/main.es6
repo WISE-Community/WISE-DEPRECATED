@@ -345,6 +345,7 @@ let authoringModule = angular.module('authoring', [
                 });
 
             $mdThemingProvider.setDefaultTheme('default');
+            $mdThemingProvider.enableBrowserColor();
     }]);
 
 export default authoringModule;

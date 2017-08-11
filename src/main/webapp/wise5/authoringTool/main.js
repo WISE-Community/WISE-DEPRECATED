@@ -432,6 +432,7 @@ var authoringModule = _angular2.default.module('authoring', [(0, _angularDragula
     });
 
     $mdThemingProvider.setDefaultTheme('default');
+    $mdThemingProvider.enableBrowserColor();
 }]);
 
 exports.default = authoringModule;

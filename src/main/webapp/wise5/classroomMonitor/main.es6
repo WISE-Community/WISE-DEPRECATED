@@ -9,7 +9,6 @@ import angularFileSaver from 'angular-file-saver';
 import angularInview from 'angular-inview';
 import angularMoment from 'angular-moment';
 import angularToArrayFilter from 'lib/angular-toArrayFilter/toArrayFilter';
-import angularUIBootstrap from 'angular-ui-bootstrap';
 import angularUIRouter from 'angular-ui-router';
 import ngFileUpload from 'ng-file-upload';
 import ngMaterial from 'angular-material';
@@ -95,7 +94,6 @@ let classroomMonitorModule = angular.module('classroomMonitor', [
         'outsideURLComponentModule',
         'pascalprecht.translate',
         'tableComponentModule',
-        'ui.bootstrap',
         'ui.router'
     ])
     .service(AchievementService.name, AchievementService)
@@ -266,29 +264,6 @@ let classroomMonitorModule = angular.module('classroomMonitor', [
             .determinePreferredLanguage()
             .useSanitizeValueStrategy('sanitizeParameters', 'escape');
 
-            // ngMaterial default theme configuration
-            /*$mdThemingProvider.definePalette('primary', {
-                '50': 'e1f0f4',
-                '100': 'b8dbe4',
-                '200': '8ec6d4',
-                '300': '5faec2',
-                '400': '3d9db5',
-                '500': '1c8ca8',
-                '600': '197f98',
-                '700': '167188',
-                '800': '136377',
-                '900': '0e4957',
-                'A100': 'abf3ff',
-                'A200': '66e2ff',
-                'A400': '17bee5',
-                'A700': '00A1C6',
-                'contrastDefaultColor': 'light',    // whether, by default, text (contrast)
-                                                    // on this palette should be dark or light
-                'contrastDarkColors': ['50', '100', //hues which contrast should be 'dark' by default
-                    '200', '300', 'A100'],
-                'contrastLightColors': undefined    // could also specify this if default was 'dark'
-            });*/
-
             $mdThemingProvider.definePalette('accent', {
                 '50': 'fde9e6',
                 '100': 'fbcbc4',
@@ -335,6 +310,7 @@ let classroomMonitorModule = angular.module('classroomMonitor', [
                 });
 
             $mdThemingProvider.setDefaultTheme('default');
+            $mdThemingProvider.enableBrowserColor();
 
             // moment.js default overrides
             // TODO: add i18n support

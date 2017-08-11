@@ -425,31 +425,18 @@ var vleModule = _angular2.default.module('vle', [(0, _angularDragula2.default)(_
     }).accentPalette('primary');
 
     $mdThemingProvider.setDefaultTheme('default');
+    $mdThemingProvider.enableBrowserColor();
 
     // moment.js default overrides
-    _moment2.default.locale('en', {
+    // TODO: add i18n support
+    _moment2.default.updateLocale('en', {
         calendar: {
-            lastDay: '[Yesterday at] LT',
-            sameDay: '[Today at] LT',
-            nextDay: '[Tomorrow at] LT',
-            lastWeek: '[Last] dddd [at] LT',
-            nextWeek: 'dddd [at] LT',
-            sameElse: 'MMM D, YYYY [at] LT'
-        },
-        relativeTime: {
-            future: "in %s",
-            past: "%s",
-            s: "seconds ago",
-            m: "1 minute ago",
-            mm: "%d minutes ago",
-            h: "1 hour ago",
-            hh: "%d hours ago",
-            d: "1 day ago",
-            dd: "%d days ago",
-            M: "1 month ago",
-            MM: "%d months ago",
-            y: "1 year ago",
-            yy: "%d years ago"
+            lastDay: '[Yesterday]',
+            sameDay: '[Today]',
+            nextDay: '[Tomorrow]',
+            lastWeek: '[Last] dddd',
+            nextWeek: 'dddd',
+            sameElse: 'ddd MMM D'
         }
     });
 }]);
