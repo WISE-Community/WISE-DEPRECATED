@@ -9,6 +9,9 @@
             font-size: 10px !important;
             line-height: 0px;
         }
+        md-slider {
+            width: 200px;
+        }
     </style>
 
     <div ng-if='animationController.mode === "authoring" && !animationController.authoringComponentContent.showPreviousWork'>
@@ -407,9 +410,23 @@
                     </md-button>
                     <md-button class="regularButton md-raised md-primary"
                                ng-click="animationController.stopButtonClicked()">
-                        <md-icon>stop</md-icon>
+                        <md-icon>replay</md-icon>
                         <md-tooltip>{{ 'animation.stop' | translate }}</md-tooltip>
                     </md-button>
+                    <span style="display: inline-block;">
+                        <md-slider-container style="width: 100px;">
+                            <div style="margin-right: 35">
+                                {{ 'animation.slower' | translate }}
+                            </div>
+                            <md-slider ng-model="animationController.speedSliderValue"
+                                       ng-change="animationController.speedSliderChanged()"
+                                       min="1"
+                                       max="5"></md-slider>
+                            <div>
+                                {{ 'animation.faster' | translate }}
+                            </div>
+                        </md-slider-container>
+                    </span>
                     <br/>
                     <svg id="{{animationController.svgId}}"
                          width="{{animationController.width}}"

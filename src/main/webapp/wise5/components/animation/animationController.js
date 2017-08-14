@@ -211,6 +211,9 @@ var AnimationController = function () {
          */
         this.realTimePerDataTime = 100;
 
+        // the speed slider value
+        this.speedSliderValue = 3;
+
         // get the component state from the scope
         var componentState = this.$scope.componentState;
 
@@ -3632,6 +3635,9 @@ var AnimationController = function () {
                 }
             }
 
+            // set the display time to 0
+            this.showTime(0);
+
             // set the images back to their starting images in case they have changed
             this.initializeObjectImages();
 
@@ -3701,6 +3707,27 @@ var AnimationController = function () {
         key: 'convertToCartesianCoordinateSystem',
         value: function convertToCartesianCoordinateSystem(y) {
             return this.height - y;
+        }
+
+        /**
+         * The student changed the speed slider value
+         */
+
+    }, {
+        key: 'speedSliderChanged',
+        value: function speedSliderChanged() {
+
+            if (this.speedSliderValue == 1) {
+                this.realTimePerDataTime = 10000;
+            } else if (this.speedSliderValue == 2) {
+                this.realTimePerDataTime = 1000;
+            } else if (this.speedSliderValue == 3) {
+                this.realTimePerDataTime = 100;
+            } else if (this.speedSliderValue == 4) {
+                this.realTimePerDataTime = 10;
+            } else if (this.speedSliderValue == 5) {
+                this.realTimePerDataTime = 1;
+            }
         }
     }]);
 
