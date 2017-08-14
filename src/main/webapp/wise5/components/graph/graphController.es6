@@ -582,6 +582,16 @@ class GraphController {
                          */
                         this.studentDataChanged();
                     }
+                } else if (componentType == 'Animation') {
+
+                    if (componentState != null && componentState.t != null) {
+
+                        // set the vertical plot line to show where t is
+                        this.setVerticalPlotLine(componentState.t);
+
+                        // redraw the graph so that the plot line displays
+                        this.setupGraph();
+                    }
                 }
             }
         }.bind(this);
@@ -1123,6 +1133,11 @@ class GraphController {
          */
         this.updateMinMaxAxisValues(allSeries, xAxis, yAxis);
         let timeout = this.$timeout;
+
+        if (this.plotLines != null) {
+            // set the plot lines
+            xAxis.plotLines = this.plotLines;
+        }
 
         this.chartConfig = {
             options: {
@@ -5233,6 +5248,26 @@ class GraphController {
              */
             this.setActiveSeriesByIndex(0);
         }
+    }
+
+    /**
+     * Set the vertical plot line
+     * @param x the x location to display the vertical plot line
+     */
+    setVerticalPlotLine(x) {
+
+        // make the plot line
+        let plotLine = {
+            color: 'red',
+            width: 2,
+            value: x,
+            zIndex: 5
+        }
+
+        // set the plot line into the plot lines array
+        this.plotLines = [
+            plotLine
+        ];
     }
 }
 

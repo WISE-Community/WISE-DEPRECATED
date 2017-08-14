@@ -201,6 +201,16 @@ var AnimationController = function () {
         // mapping from id to whether the object is animating
         this.idToAnimationState = {};
 
+        /*
+         * milliseconds per data time
+         * example
+         * The data time can be labelled with any unit of time such as seconds,
+         * minutes, hours, days, years, etc.
+         * If realTimePerDataTime is 100, that means for 1 data time, 100
+         * milliseconds will pass in real time.
+         */
+        this.realTimePerDataTime = 100;
+
         // get the component state from the scope
         var componentState = this.$scope.componentState;
 
@@ -966,6 +976,65 @@ var AnimationController = function () {
         }
 
         /**
+         * Show the time on the svg div
+         */
+
+    }, {
+        key: 'showTime',
+        value: function showTime(t) {
+
+            if (this.timerText == null) {
+                // initialize the timer text
+                this.timerText = this.draw.text("0").attr({ fill: '#f03' });
+            }
+
+            // get the width of the svg div
+            var width = this.width;
+
+            // set the x position near the top right of the svg div
+            var x = width - 30;
+            var y = 0;
+
+            // set the text that the student will see
+            this.timerText.text(t + "");
+
+            if (t >= 10) {
+                x = width - 38;
+            }
+
+            this.timerText.attr({ x: x, y: y });
+        }
+    }, {
+        key: 'getMaxT',
+        value: function getMaxT(objects) {
+
+            var maxT = 0;
+
+            if (objects != null) {
+
+                for (var o = 0; o < objects.length; o++) {
+                    var object = objects[o];
+
+                    if (object != null) {
+                        var data = object.data;
+
+                        if (data != null && data.length > 0) {
+                            var lastDataPoint = data[data.length - 1];
+
+                            if (lastDataPoint != null) {
+                                if (lastDataPoint.t > maxT) {
+                                    maxT = lastDataPoint.t;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            return maxT;
+        }
+
+        /**
          * Update the object data from their data source
          * @param componentState (optional) a component state which may be the
          * data source for one of the objects
@@ -1151,171 +1220,209 @@ var AnimationController = function () {
                         var svgObject = _this2.idToSVGObject[id];
 
                         if (svgObject != null) {
+                            (function () {
 
-                            /*
-                             * this will hold SVG.FX object that is returned from
-                             * calling animate()
-                             */
-                            var animateObject = null;
+                                /*
+                                 * this will hold SVG.FX object that is returned from
+                                 * calling animate()
+                                 */
+                                var animateObject = null;
 
-                            // loop through all the data
+                                var thisAnimationController = _this2;
 
-                            var _loop = function _loop(d) {
+                                // loop through all the data
 
-                                // get the current point
-                                var currentDataPoint = data[d];
-                                var t = currentDataPoint.t;
-                                var x = currentDataPoint.x;
-                                var y = currentDataPoint.y;
-                                var image = currentDataPoint.image;
+                                var _loop = function _loop(d) {
 
-                                // convert the data values to pixels
-                                var xPixel = _this2.dataXToPixelX(x);
-                                var yPixel = _this2.dataYToPixelY(y);
-
-                                // get the next point
-                                var nextDataPoint = data[d + 1];
-                                var nextT = null;
-                                var nextX = null;
-                                var nextY = null;
-                                var nextXPixel = null;
-                                var nextYPixel = null;
-
-                                if (nextDataPoint != null) {
-                                    nextT = nextDataPoint.t;
-                                    nextX = nextDataPoint.x;
-                                    nextY = nextDataPoint.y;
+                                    // get the current point
+                                    var currentDataPoint = data[d];
+                                    var t = currentDataPoint.t;
+                                    var x = currentDataPoint.x;
+                                    var y = currentDataPoint.y;
+                                    var image = currentDataPoint.image;
 
                                     // convert the data values to pixels
-                                    nextXPixel = _this2.dataXToPixelX(nextX);
-                                    nextYPixel = _this2.dataYToPixelY(nextY);
-                                }
+                                    var xPixel = _this2.dataXToPixelX(x);
+                                    var yPixel = _this2.dataYToPixelY(y);
 
-                                if (_this2.isUsingCartesianCoordinateSystem()) {
-                                    /*
-                                     * we are using the cartesian coordinate system so we need to modify
-                                     * the y value
-                                     */
-                                    yPixel = _this2.convertToCartesianCoordinateSystem(yPixel);
-                                    nextYPixel = _this2.convertToCartesianCoordinateSystem(nextYPixel);
-                                }
+                                    // get the next point
+                                    var nextDataPoint = data[d + 1];
+                                    var nextT = null;
+                                    var nextX = null;
+                                    var nextY = null;
+                                    var nextXPixel = null;
+                                    var nextYPixel = null;
 
-                                // set the animation state to true for the object
-                                _this2.idToAnimationState[id] = true;
+                                    if (nextDataPoint != null) {
+                                        nextT = nextDataPoint.t;
+                                        nextX = nextDataPoint.x;
+                                        nextY = nextDataPoint.y;
 
-                                var tDiff = 0;
+                                        // convert the data values to pixels
+                                        nextXPixel = _this2.dataXToPixelX(nextX);
+                                        nextYPixel = _this2.dataYToPixelY(nextY);
+                                    }
 
-                                if (nextT != null && nextT != '') {
-                                    /*
-                                     * calculate the time difference so we know how long we should make
-                                     * it take to move to the new position
-                                     */
-                                    tDiff = nextT - t;
-                                }
-
-                                if (d == 0) {
-                                    // this is the first data point
-
-                                    if (t == 0) {
+                                    if (_this2.isUsingCartesianCoordinateSystem()) {
                                         /*
-                                         * immediately set the position since we are at
-                                         * time 0
+                                         * we are using the cartesian coordinate system so we need to modify
+                                         * the y value
                                          */
+                                        yPixel = _this2.convertToCartesianCoordinateSystem(yPixel);
+                                        nextYPixel = _this2.convertToCartesianCoordinateSystem(nextYPixel);
+                                    }
 
-                                        // set the position
-                                        svgObject.attr({ x: xPixel, y: yPixel });
-                                    } else {
+                                    // set the animation state to true for the object
+                                    _this2.idToAnimationState[id] = true;
+
+                                    var tDiff = 0;
+
+                                    if (nextT != null && nextT != '') {
                                         /*
-                                         * the first data point is not at time 0 so we will
-                                         * need to wait until time t before we set the
-                                         * position of the object
+                                         * calculate the time difference so we know how long we should make
+                                         * it take to move to the new position
                                          */
-                                        animateObject = svgObject.animate(t * 100).after(function () {
+                                        tDiff = nextT - t;
+                                    }
+
+                                    if (d == 0) {
+                                        // this is the first data point
+
+                                        if (t == 0) {
+                                            /*
+                                             * immediately set the position since we are at
+                                             * time 0
+                                             */
+
                                             // set the position
-                                            this.attr({ x: xPixel, y: yPixel });
-                                        });
+                                            svgObject.attr({ x: xPixel, y: yPixel });
+                                        } else {
+                                            /*
+                                             * the first data point is not at time 0 so we will
+                                             * need to wait until time t before we set the
+                                             * position of the object
+                                             */
+                                            animateObject = svgObject.animate(t * _this2.realTimePerDataTime).during(function (pos, morph, eased, situation) {
+                                                //position = from + (to - from) * pos;
+                                                //console.log('pos=' + pos);
+                                                //console.log('morph=' + morph);
+                                                //console.log('eased=' + eased);
+                                                //console.log('situation=' + situation);
+                                                var elapsedTime = t * pos;
+                                                console.log(elapsedTime);
+
+                                                var componentState = {};
+                                                componentState.t = elapsedTime;
+
+                                                var displayTime = parseInt(elapsedTime * 10) / 10;
+
+                                                thisAnimationController.showTime(displayTime);
+
+                                                thisAnimationController.$scope.$emit('componentStudentDataChanged', { nodeId: thisAnimationController.nodeId, componentId: thisAnimationController.componentId, componentState: componentState });
+                                            }).after(function () {
+                                                // set the position
+                                                this.attr({ x: xPixel, y: yPixel });
+                                            });
+                                        }
                                     }
-                                }
 
-                                if (image != null && image != '') {
-                                    /*
-                                     * there is an image specified for this data point
-                                     * so we will change to that image
-                                     */
-
-                                    if (animateObject == null) {
+                                    if (image != null && image != '') {
                                         /*
-                                         * there is no animateObject yet so we will
-                                         * change the image immediately
+                                         * there is an image specified for this data point
+                                         * so we will change to that image
                                          */
-                                        svgObject.load(image);
-                                    } else {
-                                        /*
-                                         * change the image after all the existing
-                                         * animations
-                                         */
-                                        animateObject = animateObject.after(function () {
-                                            this.load(image);
-                                        });
-                                    }
-                                } else if (nextDataPoint != null) {
-                                    /*
-                                     * there is a next data point so we will see if we
-                                     * can determine what image to show based upon the
-                                     * movement of the object
-                                     */
 
-                                    // get the image to show based upon the movement
-                                    var dynamicallyCalculatedImage = _this2.getImageBasedOnMovement(object, currentDataPoint, nextDataPoint);
-
-                                    if (dynamicallyCalculatedImage != null) {
                                         if (animateObject == null) {
                                             /*
                                              * there is no animateObject yet so we will
                                              * change the image immediately
                                              */
-                                            svgObject.load(dynamicallyCalculatedImage);
+                                            svgObject.load(image);
                                         } else {
                                             /*
                                              * change the image after all the existing
                                              * animations
                                              */
                                             animateObject = animateObject.after(function () {
-                                                this.load(dynamicallyCalculatedImage);
+                                                this.load(image);
                                             });
                                         }
-                                    }
-                                }
-
-                                if (d != data.length - 1) {
-                                    // this is a data point that is not the last
-
-                                    // move the image to the next position
-                                    animateObject = svgObject.animate(tDiff * 100).move(nextXPixel, nextYPixel);
-                                }
-
-                                if (d == data.length - 1) {
-                                    // this is the last data point
-
-                                    // after all the animations are done on the object we will perform some processing
-                                    animateObject = animateObject.afterAll(function () {
-
+                                    } else if (nextDataPoint != null) {
                                         /*
-                                         * we are done animating this object so we will
-                                         * set the animation state to false for the
-                                         * object
+                                         * there is a next data point so we will see if we
+                                         * can determine what image to show based upon the
+                                         * movement of the object
                                          */
-                                        _this2.idToAnimationState[id] = false;
 
-                                        // check if all svg objects are done animating
-                                        _this2.checkIfAllAnimatingIsDone();
-                                    });
+                                        // get the image to show based upon the movement
+                                        var dynamicallyCalculatedImage = _this2.getImageBasedOnMovement(object, currentDataPoint, nextDataPoint);
+
+                                        if (dynamicallyCalculatedImage != null) {
+                                            if (animateObject == null) {
+                                                /*
+                                                 * there is no animateObject yet so we will
+                                                 * change the image immediately
+                                                 */
+                                                svgObject.load(dynamicallyCalculatedImage);
+                                            } else {
+                                                /*
+                                                 * change the image after all the existing
+                                                 * animations
+                                                 */
+                                                animateObject = animateObject.after(function () {
+                                                    this.load(dynamicallyCalculatedImage);
+                                                });
+                                            }
+                                        }
+                                    }
+
+                                    if (d != data.length - 1) {
+                                        // this is a data point that is not the last
+
+                                        // move the image to the next position
+                                        animateObject = svgObject.animate(tDiff * _this2.realTimePerDataTime).move(nextXPixel, nextYPixel).during(function (pos, morph, eased, situation) {
+                                            //position = from + (to - from) * pos;
+                                            //console.log('pos=' + pos);
+                                            //console.log('morph=' + morph);
+                                            //console.log('eased=' + eased);
+                                            //console.log('situation=' + situation);
+                                            var elapsedTime = t + tDiff * pos;
+                                            console.log(elapsedTime);
+
+                                            var componentState = {};
+                                            componentState.t = elapsedTime;
+
+                                            var displayTime = parseInt(elapsedTime * 10) / 10;
+
+                                            thisAnimationController.showTime(displayTime);
+
+                                            thisAnimationController.$scope.$emit('componentStudentDataChanged', { nodeId: thisAnimationController.nodeId, componentId: thisAnimationController.componentId, componentState: componentState });
+                                        });
+                                    }
+
+                                    if (d == data.length - 1) {
+                                        // this is the last data point
+
+                                        // after all the animations are done on the object we will perform some processing
+                                        animateObject = animateObject.afterAll(function () {
+
+                                            /*
+                                             * we are done animating this object so we will
+                                             * set the animation state to false for the
+                                             * object
+                                             */
+                                            _this2.idToAnimationState[id] = false;
+
+                                            // check if all svg objects are done animating
+                                            _this2.checkIfAllAnimatingIsDone();
+                                        });
+                                    }
+                                };
+
+                                for (var d = 0; d < data.length; d++) {
+                                    _loop(d);
                                 }
-                            };
-
-                            for (var d = 0; d < data.length; d++) {
-                                _loop(d);
-                            }
+                            })();
                         }
                     }
                 })();

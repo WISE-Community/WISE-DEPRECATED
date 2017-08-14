@@ -556,6 +556,16 @@ var GraphController = function () {
                          */
                         this.studentDataChanged();
                     }
+                } else if (componentType == 'Animation') {
+
+                    if (componentState != null && componentState.t != null) {
+
+                        // set the vertical plot line to show where t is
+                        this.setVerticalPlotLine(componentState.t);
+
+                        // redraw the graph so that the plot line displays
+                        this.setupGraph();
+                    }
                 }
             }
         }.bind(this);
@@ -1101,6 +1111,11 @@ var GraphController = function () {
              */
             this.updateMinMaxAxisValues(allSeries, xAxis, yAxis);
             var timeout = this.$timeout;
+
+            if (this.plotLines != null) {
+                // set the plot lines
+                xAxis.plotLines = this.plotLines;
+            }
 
             this.chartConfig = {
                 options: {
@@ -5554,6 +5569,26 @@ var GraphController = function () {
                  */
                 this.setActiveSeriesByIndex(0);
             }
+        }
+
+        /**
+         * Set the vertical plot line
+         * @param x the x location to display the vertical plot line
+         */
+
+    }, {
+        key: 'setVerticalPlotLine',
+        value: function setVerticalPlotLine(x) {
+
+            // make the plot line
+            var plotLine = {
+                color: 'red',
+                width: 2,
+                value: x,
+                zIndex: 5
+
+                // set the plot line into the plot lines array
+            };this.plotLines = [plotLine];
         }
     }]);
 

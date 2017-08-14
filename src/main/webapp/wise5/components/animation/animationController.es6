@@ -210,6 +210,16 @@ class AnimationController {
         // mapping from id to whether the object is animating
         this.idToAnimationState = {};
 
+        /*
+         * milliseconds per data time
+         * example
+         * The data time can be labelled with any unit of time such as seconds,
+         * minutes, hours, days, years, etc.
+         * If realTimePerDataTime is 100, that means for 1 data time, 100
+         * milliseconds will pass in real time.
+         */
+        this.realTimePerDataTime = 100;
+
         // get the component state from the scope
         var componentState = this.$scope.componentState;
 
@@ -965,6 +975,39 @@ class AnimationController {
     }
 
     /**
+     * Show the time on the svg div
+     * @param t the time
+     */
+    showTime(t) {
+
+        if (this.timerText == null) {
+            // initialize the timer text
+            this.timerText = this.draw.text("0").attr({ fill: '#f03' });
+        }
+
+        // get the width of the svg div
+        let width = this.width;
+
+        // set the x position near the top right of the svg div
+        let x = width - 30;
+        let y = 0;
+
+        // set the text that the student will see
+        this.timerText.text(t + "");
+
+        if (t >= 10) {
+            // shift the text to the left if there are two digits
+            x = width - 38;
+        } else if (t > = 100) {
+            // shift the text to the left more if there are three digits
+            x = width - 46;
+        }
+
+        // set the position of the text
+        this.timerText.attr({ x: x, y: y });
+    }
+
+    /**
      * Update the object data from their data source
      * @param componentState (optional) a component state which may be the
      * data source for one of the objects
@@ -1144,6 +1187,8 @@ class AnimationController {
                      */
                     let animateObject = null;
 
+                    let thisAnimationController = this;
+
                     // loop through all the data
                     for (let d = 0; d < data.length; d++) {
 
@@ -1215,7 +1260,14 @@ class AnimationController {
                                  * need to wait until time t before we set the
                                  * position of the object
                                  */
-                                animateObject = svgObject.animate(t * 100).after(function() {
+                                animateObject = svgObject.animate(t * this.realTimePerDataTime).during(function(pos, morph, eased, situation) {
+
+                                    // calculate the amount of time that has elapsed
+                                    let elapsedTime = t * pos;
+
+                                    // display and broadcast the elapsed time
+                                    thisAnimationController.displayAndBroadcastTime(elapsedTime);
+                                }).after(function() {
                                     // set the position
                                     this.attr({ x: xPixel, y: yPixel });
                                 });
@@ -1276,7 +1328,14 @@ class AnimationController {
                             // this is a data point that is not the last
 
                             // move the image to the next position
-                            animateObject = svgObject.animate(tDiff * 100).move(nextXPixel, nextYPixel);
+                            animateObject = svgObject.animate(tDiff * this.realTimePerDataTime).move(nextXPixel, nextYPixel).during(function(pos, morph, eased, situation) {
+
+                                // calculate the elapsed time
+                                let elapsedTime = t + (tDiff * pos);
+
+                                // display and broadcast the elapsed time
+                                thisAnimationController.displayAndBroadcastTime(elapsedTime);
+                            });
                         }
 
                         if (d == data.length - 1) {
@@ -1300,6 +1359,32 @@ class AnimationController {
                 }
             }
         }
+    }
+
+    /**
+     * Display and broadcast the time
+     * @param t the time
+     */
+    displayAndBroadcastTime(t) {
+        /*
+         * Remove the digits after the first decimal place.
+         * example
+         * 12.817 will be changed to 12.8
+         */
+        let displayTime = parseInt(t * 10) / 10;
+
+        // show the time on the svg div
+        thisAnimationController.showTime(displayTime);
+
+        // create a component state with the time in it
+        let componentState = {};
+        componentState.t = t;
+
+        /*
+         * broadcast the component state with the time in it
+         * so other components can know the elapsed time
+         */
+        thisAnimationController.$scope.$emit('componentStudentDataChanged', {nodeId: thisAnimationController.nodeId, componentId: thisAnimationController.componentId, componentState: componentState});
     }
 
     /**
