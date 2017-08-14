@@ -1449,6 +1449,15 @@ class MatchController {
 
             //set the student data into the component state
             componentState.studentData = studentData;
+
+            // set the component type
+            componentState.componentType = 'Match';
+
+            // set the node id
+            componentState.nodeId = this.nodeId;
+
+            // set the component id
+            componentState.componentId = this.componentId;
         }
 
         let deferred = this.$q.defer();

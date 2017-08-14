@@ -734,6 +734,15 @@ var EmbeddedController = function () {
             // set the student data into the component state
             componentState.studentData = this.studentData;
 
+            // set the component type
+            componentState.componentType = 'Embedded';
+
+            // set the node id
+            componentState.nodeId = this.nodeId;
+
+            // set the component id
+            componentState.componentId = this.componentId;
+
             var deferred = this.$q.defer();
 
             /*

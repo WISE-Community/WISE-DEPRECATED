@@ -796,6 +796,15 @@ var DiscussionController = function () {
 
                 componentState.studentData = studentData;
 
+                // set the component type
+                componentState.componentType = 'Discussion';
+
+                // set the node id
+                componentState.nodeId = this.nodeId;
+
+                // set the component id
+                componentState.componentId = this.componentId;
+
                 if (this.ConfigService.isPreview() && !this.componentStateIdReplyingTo || this.mode === 'authoring') {
                     // create a dummy component state id if we're in preview mode and posting a new response
                     componentState.id = this.UtilService.generateKey();
@@ -820,15 +829,6 @@ var DiscussionController = function () {
                             this.StudentDataService.studentData = {};
                             this.StudentDataService.studentData.componentStates = [];
                         }
-
-                        /*
-                         * set the node id and component id into the component state.
-                         * this is usually performed in the nodeController but since
-                         * we are in the authoring mode, the nodeController never gets
-                         * called
-                         */
-                        componentState.nodeId = this.nodeId;
-                        componentState.componentId = this.componentId;
 
                         // add the component state to the StudentDataService studentData
                         this.StudentDataService.studentData.componentStates.push(componentState);
