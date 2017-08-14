@@ -217,8 +217,7 @@ var LabelController = function () {
 
                 // get the latest annotations
                 this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
-            } else if (this.mode === 'grading') {
-                this.isPromptVisible = true;
+            } else if (this.mode === 'grading' || this.mode === 'gradingRevision') {
                 this.isSaveButtonVisible = false;
                 this.isSubmitButtonVisible = false;
                 this.isNewLabelButtonVisible = false;
@@ -227,7 +226,11 @@ var LabelController = function () {
                 this.isDisabled = true;
 
                 if (componentState != null) {
-                    this.canvasId = 'labelCanvas_' + componentState.id;
+                    // create a unique id for the application iframe using this component state
+                    this.canvasId = "labelCanvas_" + componentState.id;
+                    if (this.mode === 'gradingRevision') {
+                        this.canvasId = "labelCanvas_gradingRevision_" + componentState.id;
+                    }
                 }
 
                 // get the latest annotations

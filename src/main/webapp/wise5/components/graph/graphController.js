@@ -251,7 +251,7 @@ var GraphController = function () {
             this.componentId = this.componentContent.id;
 
             // set the chart id
-            this.chartId = 'chart' + this.componentId;
+            this.chartId = 'chart_' + this.componentId;
 
             // get the graph type
             this.graphType = this.componentContent.graphType;
@@ -287,8 +287,7 @@ var GraphController = function () {
                 // TODO: watch for new annotations and update accordingly
                 this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
                 this.backgroundImage = this.componentContent.backgroundImage;
-            } else if (this.mode === 'grading') {
-                this.isPromptVisible = true;
+            } else if (this.mode === 'grading' || this.mode === 'gradingRevision') {
                 this.isSaveButtonVisible = false;
                 this.isSubmitButtonVisible = false;
                 //this.isResetGraphButtonVisible = false;
@@ -297,8 +296,21 @@ var GraphController = function () {
                 this.isDisabled = true;
                 this.isSnipDrawingButtonVisible = false;
 
-                // get the latest annotations
-                this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
+                // get the component state from the scope
+                var _componentState = this.$scope.componentState;
+
+                if (_componentState != null) {
+                    // create a unique id for the application iframe using this component state
+                    this.chartId = "chart_" + _componentState.id;
+                    if (this.mode === 'gradingRevision') {
+                        this.chartId = "chart_gradingRevision_" + _componentState.id;
+                    }
+                }
+
+                if (this.mode === 'grading') {
+                    // get the latest annotations
+                    this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
+                }
             } else if (this.mode === 'onlyShowWork') {
                 this.isPromptVisible = true;
                 this.isSaveButtonVisible = false;
@@ -2344,7 +2356,7 @@ var GraphController = function () {
             }
 
             /*
-             // remove high-charts assigned id's from each series before saving
+              // remove high-charts assigned id's from each series before saving
             for (var s = 0; s < studentData.series.length; s++) {
                 var series = studentData.series[s];
                 //series.id = null;

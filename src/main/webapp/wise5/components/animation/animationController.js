@@ -977,6 +977,7 @@ var AnimationController = function () {
 
         /**
          * Show the time on the svg div
+         * @param t the time
          */
 
     }, {
@@ -999,39 +1000,15 @@ var AnimationController = function () {
             this.timerText.text(t + "");
 
             if (t >= 10) {
+                // shift the text to the left if there are two digits
                 x = width - 38;
+            } else if (t >= 100) {
+                // shift the text to the left more if there are three digits
+                x = width - 46;
             }
 
+            // set the position of the text
             this.timerText.attr({ x: x, y: y });
-        }
-    }, {
-        key: 'getMaxT',
-        value: function getMaxT(objects) {
-
-            var maxT = 0;
-
-            if (objects != null) {
-
-                for (var o = 0; o < objects.length; o++) {
-                    var object = objects[o];
-
-                    if (object != null) {
-                        var data = object.data;
-
-                        if (data != null && data.length > 0) {
-                            var lastDataPoint = data[data.length - 1];
-
-                            if (lastDataPoint != null) {
-                                if (lastDataPoint.t > maxT) {
-                                    maxT = lastDataPoint.t;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            return maxT;
         }
 
         /**
@@ -1303,22 +1280,12 @@ var AnimationController = function () {
                                              * position of the object
                                              */
                                             animateObject = svgObject.animate(t * _this2.realTimePerDataTime).during(function (pos, morph, eased, situation) {
-                                                //position = from + (to - from) * pos;
-                                                //console.log('pos=' + pos);
-                                                //console.log('morph=' + morph);
-                                                //console.log('eased=' + eased);
-                                                //console.log('situation=' + situation);
+
+                                                // calculate the amount of time that has elapsed
                                                 var elapsedTime = t * pos;
-                                                console.log(elapsedTime);
 
-                                                var componentState = {};
-                                                componentState.t = elapsedTime;
-
-                                                var displayTime = parseInt(elapsedTime * 10) / 10;
-
-                                                thisAnimationController.showTime(displayTime);
-
-                                                thisAnimationController.$scope.$emit('componentStudentDataChanged', { nodeId: thisAnimationController.nodeId, componentId: thisAnimationController.componentId, componentState: componentState });
+                                                // display and broadcast the elapsed time
+                                                thisAnimationController.displayAndBroadcastTime(elapsedTime);
                                             }).after(function () {
                                                 // set the position
                                                 this.attr({ x: xPixel, y: yPixel });
@@ -1381,22 +1348,12 @@ var AnimationController = function () {
 
                                         // move the image to the next position
                                         animateObject = svgObject.animate(tDiff * _this2.realTimePerDataTime).move(nextXPixel, nextYPixel).during(function (pos, morph, eased, situation) {
-                                            //position = from + (to - from) * pos;
-                                            //console.log('pos=' + pos);
-                                            //console.log('morph=' + morph);
-                                            //console.log('eased=' + eased);
-                                            //console.log('situation=' + situation);
+
+                                            // calculate the elapsed time
                                             var elapsedTime = t + tDiff * pos;
-                                            console.log(elapsedTime);
 
-                                            var componentState = {};
-                                            componentState.t = elapsedTime;
-
-                                            var displayTime = parseInt(elapsedTime * 10) / 10;
-
-                                            thisAnimationController.showTime(displayTime);
-
-                                            thisAnimationController.$scope.$emit('componentStudentDataChanged', { nodeId: thisAnimationController.nodeId, componentId: thisAnimationController.componentId, componentState: componentState });
+                                            // display and broadcast the elapsed time
+                                            thisAnimationController.displayAndBroadcastTime(elapsedTime);
                                         });
                                     }
 
@@ -1427,6 +1384,35 @@ var AnimationController = function () {
                     }
                 })();
             }
+        }
+
+        /**
+         * Display and broadcast the time
+         * @param t the time
+         */
+
+    }, {
+        key: 'displayAndBroadcastTime',
+        value: function displayAndBroadcastTime(t) {
+            /*
+             * Remove the digits after the first decimal place.
+             * example
+             * 12.817 will be changed to 12.8
+             */
+            var displayTime = parseInt(t * 10) / 10;
+
+            // show the time on the svg div
+            thisAnimationController.showTime(displayTime);
+
+            // create a component state with the time in it
+            var componentState = {};
+            componentState.t = t;
+
+            /*
+             * broadcast the component state with the time in it
+             * so other components can know the elapsed time
+             */
+            thisAnimationController.$scope.$emit('componentStudentDataChanged', { nodeId: thisAnimationController.nodeId, componentId: thisAnimationController.componentId, componentState: componentState });
         }
 
         /**

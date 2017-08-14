@@ -157,8 +157,7 @@ $input-action-vertical-offset-richtext: -7px;
 .node-content__actions__info {
     font-style: italic;
     margin-left: 8px;
-    opacity: 0.8;
-    color: lighten(color('accent-2'), 5%);
+    color: color('text-secondary');
 }
 
 .node-content__actions__more {

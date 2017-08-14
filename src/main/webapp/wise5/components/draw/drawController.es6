@@ -173,13 +173,19 @@ class DrawController {
 
                 // get the latest annotations
                 this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
-            } else if (this.mode === 'grading' || this.mode === "onlyShowWork") {
-                // get the component state from the scope
-                var componentState = this.$scope.componentState;
-                if (componentState != null) {
-                    this.drawingToolId = "drawingtool_" + componentState.id;
-                }
+            } else if (this.mode === 'grading' || this.mode === 'gradingRevision' || this.mode === "onlyShowWork") {
                 this.isSnipDrawingButtonVisible = false;
+
+                // get the component state from the scope
+                let componentState = this.$scope.componentState;
+
+                if (componentState != null) {
+                    // create a unique id for the application iframe using this component state
+                    this.drawingToolId = "drawingtool_" + componentState.id;
+                    if (this.mode === 'gradingRevision') {
+                        this.drawingToolId = "drawingtool_gradingRevision_" + componentState.id;
+                    }
+                }
 
                 if (this.mode === 'grading') {
                     // get the latest annotations
@@ -717,13 +723,13 @@ class DrawController {
             }.bind(this));
         }
 
-        if (this.mode === 'grading' || this.mode === 'onlyShowWork') {
+        if (this.mode === 'grading' || this.mode === 'gradingRevision' || this.mode === 'onlyShowWork') {
             // we're in show student work mode, so hide the toolbar and make the drawing non-editable
-            $(".dt-tools").hide();
+            $('#' + this.drawingToolId).find('.dt-tools').hide();
+        } else {
+            // show or hide the draw tools
+            this.setupTools();
         }
-
-        // show or hide the draw tools
-        this.setupTools();
     }
 
     /**
@@ -741,137 +747,138 @@ class DrawController {
 
             // the title for the select button
             var selectTitle = this.$translate('draw.selectToolTooltip');
+            let $drawingTool = $('#' + this.drawingToolId);
 
             if (tools.select) {
-                $('#drawingtool_' + this.nodeId + '_' + this.componentId).find('[title="' + selectTitle + '"]').show();
+                $drawingTool.find('[title="' + selectTitle + '"]').show();
             } else {
-                $('#drawingtool_' + this.nodeId + '_' + this.componentId).find('[title="' + selectTitle + '"]').hide();
+                $drawingTool.find('[title="' + selectTitle + '"]').hide();
             }
 
             // the title for the line button
             var lineTitle = this.$translate('draw.lineToolTooltip');
 
             if (tools.line) {
-                $('#drawingtool_' + this.nodeId + '_' + this.componentId).find('[title="' + lineTitle + '"]').show();
+                $drawingTool.find('[title="' + lineTitle + '"]').show();
             } else {
-                $('#drawingtool_' + this.nodeId + '_' + this.componentId).find('[title="' + lineTitle + '"]').hide();
+                $drawingTool.find('[title="' + lineTitle + '"]').hide();
             }
 
             // the title for the shape button
             var shapeTitle = this.$translate('draw.shapeToolTooltip');
 
             if (tools.shape) {
-                $('#drawingtool_' + this.nodeId + '_' + this.componentId).find('[title="' + shapeTitle + '"]').show();
+                $drawingTool.find('[title="' + shapeTitle + '"]').show();
             } else {
-                $('#drawingtool_' + this.nodeId + '_' + this.componentId).find('[title="' + shapeTitle + '"]').hide();
+                $drawingTool.find('[title="' + shapeTitle + '"]').hide();
             }
 
             // the title for the free hand button
             var freeHandTitle = this.$translate('draw.freeHandToolTooltip');
 
             if (tools.freeHand) {
-                $('#drawingtool_' + this.nodeId + '_' + this.componentId).find('[title="' + freeHandTitle + '"]').show();
+                $drawingTool.find('[title="' + freeHandTitle + '"]').show();
             } else {
-                $('#drawingtool_' + this.nodeId + '_' + this.componentId).find('[title="' + freeHandTitle + '"]').hide();
+                $drawingTool.find('[title="' + freeHandTitle + '"]').hide();
             }
 
             // the title for the text button
             var textTitle = this.$translate('draw.textToolTooltip');
 
             if (tools.text) {
-                $('#drawingtool_' + this.nodeId + '_' + this.componentId).find('[title="' + textTitle + '"]').show();
+                $drawingTool.find('[title="' + textTitle + '"]').show();
             } else {
-                $('#drawingtool_' + this.nodeId + '_' + this.componentId).find('[title="' + textTitle + '"]').hide();
+                $drawingTool.find('[title="' + textTitle + '"]').hide();
             }
 
             // the title for the stamp button
             var stampTitle = this.$translate('draw.stampToolTooltip');
 
             if (tools.stamp) {
-                $('#drawingtool_' + this.nodeId + '_' + this.componentId).find('[title="' + stampTitle + '"]').show();
+                $drawingTool.find('[title="' + stampTitle + '"]').show();
             } else {
-                $('#drawingtool_' + this.nodeId + '_' + this.componentId).find('[title="' + stampTitle + '"]').hide();
+                $drawingTool.find('[title="' + stampTitle + '"]').hide();
             }
 
             // the title for the clone button
             var cloneTitle = this.$translate('draw.cloneToolTooltip');
 
             if (tools.clone) {
-                $('#drawingtool_' + this.nodeId + '_' + this.componentId).find('[title="' + cloneTitle + '"]').show();
+                $drawingTool.find('[title="' + cloneTitle + '"]').show();
             } else {
-                $('#drawingtool_' + this.nodeId + '_' + this.componentId).find('[title="' + cloneTitle + '"]').hide();
+                $drawingTool.find('[title="' + cloneTitle + '"]').hide();
             }
 
             // the title for the stroke color button
             var strokeColorTitle = this.$translate('draw.strokeColorToolTooltip');
 
             if (tools.strokeColor) {
-                $('#drawingtool_' + this.nodeId + '_' + this.componentId).find('[title="' + strokeColorTitle + '"]').show();
+                $drawingTool.find('[title="' + strokeColorTitle + '"]').show();
             } else {
-                $('#drawingtool_' + this.nodeId + '_' + this.componentId).find('[title="' + strokeColorTitle + '"]').hide();
+                $drawingTool.find('[title="' + strokeColorTitle + '"]').hide();
             }
 
             // the title for the fill color button
             var fillColorTitle = this.$translate('draw.fillColorToolTooltip');
 
             if (tools.fillColor) {
-                $('#drawingtool_' + this.nodeId + '_' + this.componentId).find('[title="' + fillColorTitle + '"]').show();
+                $drawingTool.find('[title="' + fillColorTitle + '"]').show();
             } else {
-                $('#drawingtool_' + this.nodeId + '_' + this.componentId).find('[title="' + fillColorTitle + '"]').hide();
+                $drawingTool.find('[title="' + fillColorTitle + '"]').hide();
             }
 
             // the title for the stroke width button
             var strokeWidthTitle = this.$translate('draw.strokeWidthToolTooltip');
 
             if (tools.strokeWidth) {
-                $('#drawingtool_' + this.nodeId + '_' + this.componentId).find('[title="' + strokeWidthTitle + '"]').show();
+                $drawingTool.find('[title="' + strokeWidthTitle + '"]').show();
             } else {
-                $('#drawingtool_' + this.nodeId + '_' + this.componentId).find('[title="' + strokeWidthTitle + '"]').hide();
+                $drawingTool.find('[title="' + strokeWidthTitle + '"]').hide();
             }
 
             // the title for the send back button
             var sendBackTitle = this.$translate('draw.sendBackToolTooltip');
 
             if (tools.sendBack) {
-                $('#drawingtool_' + this.nodeId + '_' + this.componentId).find('[title="' + sendBackTitle + '"]').show();
+                $drawingTool.find('[title="' + sendBackTitle + '"]').show();
             } else {
-                $('#drawingtool_' + this.nodeId + '_' + this.componentId).find('[title="' + sendBackTitle + '"]').hide();
+                $drawingTool.find('[title="' + sendBackTitle + '"]').hide();
             }
 
             // the title for the send forward button
             var sendForwardTitle = this.$translate('draw.sendForwardToolTooltip');
 
             if (tools.sendForward) {
-                $('#drawingtool_' + this.nodeId + '_' + this.componentId).find('[title="' + sendForwardTitle + '"]').show();
+                $drawingTool.find('[title="' + sendForwardTitle + '"]').show();
             } else {
-                $('#drawingtool_' + this.nodeId + '_' + this.componentId).find('[title="' + sendForwardTitle + '"]').hide();
+                $drawingTool.find('[title="' + sendForwardTitle + '"]').hide();
             }
 
             // the title for the undo button
             var undoTitle = this.$translate('draw.undo');
 
             if (tools.undo) {
-                $('#drawingtool_' + this.nodeId + '_' + this.componentId).find('[title="' + undoTitle + '"]').show();
+                $drawingTool.find('[title="' + undoTitle + '"]').show();
             } else {
-                $('#drawingtool_' + this.nodeId + '_' + this.componentId).find('[title="' + undoTitle + '"]').hide();
+                $drawingTool.find('[title="' + undoTitle + '"]').hide();
             }
 
             // the title for the redo button
             var redoTitle = this.$translate('draw.redo');
 
             if (tools.redo) {
-                $('#drawingtool_' + this.nodeId + '_' + this.componentId).find('[title="' + redoTitle + '"]').show();
+                $drawingTool.find('[title="' + redoTitle + '"]').show();
             } else {
-                $('#drawingtool_' + this.nodeId + '_' + this.componentId).find('[title="' + redoTitle + '"]').hide();
+                $drawingTool.find('[title="' + redoTitle + '"]').hide();
             }
 
             // the title for the delete button
             var deleteTitle = this.$translate('draw.deleteToolTooltip');
 
             if (tools.delete) {
-                $('#drawingtool_' + this.nodeId + '_' + this.componentId).find('[title="' + deleteTitle + '"]').show();
+                $drawingTool.find('[title="' + deleteTitle + '"]').show();
             } else {
-                $('#drawingtool_' + this.nodeId + '_' + this.componentId).find('[title="' + deleteTitle + '"]').hide();
+                $drawingTool.find('[title="' + deleteTitle + '"]').hide();
             }
         }
     }

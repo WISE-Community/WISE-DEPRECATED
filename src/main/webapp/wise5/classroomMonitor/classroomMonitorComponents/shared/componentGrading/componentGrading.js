@@ -79,20 +79,30 @@ var ComponentGradingController = function () {
     _createClass(ComponentGradingController, [{
         key: 'processAnnotations',
         value: function processAnnotations() {
-            this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.toWorkgroupId);
+            if (this.showAllAnnotations) {
+                // we want to show all the latest annotation types (both teacher- and auto-generated)
+                this.latestAnnotations = {};
+                this.latestAnnotations.score = this.AnnotationService.getLatestTeacherScoreAnnotationByStudentWorkId(this.componentStateId);
+                this.latestAnnotations.autoScore = this.AnnotationService.getLatestAutoScoreAnnotationByStudentWorkId(this.componentStateId);
+                this.latestAnnotations.comment = this.AnnotationService.getLatestTeacherCommentAnnotationByStudentWorkId(this.componentStateId);
+                this.latestAnnotations.autoComment = this.AnnotationService.getLatestAutoCommentAnnotationByStudentWorkId(this.componentStateId);
+            } else {
+                // we only want to show the latest score and comment annotations (either teacher- or auto-generated)
+                this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.toWorkgroupId);
 
-            if (this.latestAnnotations && this.latestAnnotations.comment) {
-                var latestComment = this.latestAnnotations.comment;
-                if (latestComment.type === 'comment') {
-                    this.comment = latestComment.data.value;
+                if (this.latestAnnotations && this.latestAnnotations.comment) {
+                    var latestComment = this.latestAnnotations.comment;
+                    if (latestComment.type === 'comment') {
+                        this.comment = latestComment.data.value;
+                    }
                 }
-            }
 
-            if (this.latestAnnotations && this.latestAnnotations.score) {
-                this.score = this.latestAnnotations.score.data.value;
-            }
+                if (this.latestAnnotations && this.latestAnnotations.score) {
+                    this.score = this.latestAnnotations.score.data.value;
+                }
 
-            this.latestAnnotationTime = this.getLatestAnnotationTime();
+                this.latestAnnotationTime = this.getLatestAnnotationTime();
+            }
         }
 
         /**
@@ -118,6 +128,46 @@ var ComponentGradingController = function () {
             }
 
             return result;
+        }
+
+        /**
+         * Returns true if there are both teacher and auto annotations for this component state
+         */
+
+    }, {
+        key: 'hasTeacherAndAutoAnnotations',
+        value: function hasTeacherAndAutoAnnotations() {
+            return (this.latestAnnotations.score || this.latestAnnotations.comment) && (this.latestAnnotations.autoScore || this.latestAnnotations.autoComment);
+        }
+
+        /**
+         * Returns true if there are any teacher annotations for this component state
+         */
+
+    }, {
+        key: 'hasTeacherAnnotations',
+        value: function hasTeacherAnnotations() {
+            return this.latestAnnotations.score || this.latestAnnotations.comment;
+        }
+
+        /**
+         * Returns true if there are any auto annotations for this component state
+         */
+
+    }, {
+        key: 'hasAutoAnnotations',
+        value: function hasAutoAnnotations() {
+            return this.latestAnnotations.autoScore || this.latestAnnotations.autoComment;
+        }
+
+        /**
+         * Returns true if there are no annotations for this component state
+         */
+
+    }, {
+        key: 'hasNoAnnotations',
+        value: function hasNoAnnotations() {
+            return !this.latestAnnotations.score && !this.latestAnnotations.comment && !this.latestAnnotations.autoScore && !this.latestAnnotations.autoComment;
         }
 
         /**
@@ -267,13 +317,14 @@ ComponentGradingController.$inject = ['$filter', '$mdDialog', '$scope', '$timeou
 
 var ComponentGrading = {
     bindings: {
-        nodeId: '<',
         componentId: '<',
-        maxScore: '<',
-        fromWorkgroupId: '<',
-        toWorkgroupId: '<',
         componentStateId: '<',
-        active: '<'
+        isDisabled: '<',
+        fromWorkgroupId: '<',
+        maxScore: '<',
+        nodeId: '<',
+        showAllAnnotations: '<',
+        toWorkgroupId: '<'
     },
     templateUrl: 'wise5/classroomMonitor/classroomMonitorComponents/shared/componentGrading/componentGrading.html',
     controller: ComponentGradingController

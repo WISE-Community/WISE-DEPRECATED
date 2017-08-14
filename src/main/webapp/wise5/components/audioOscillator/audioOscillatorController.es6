@@ -198,8 +198,7 @@ class AudioOscillatorController {
 
                 // get the latest annotations
                 this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
-            } else if (this.mode === 'grading') {
-                this.isPromptVisible = true;
+            } else if (this.mode === 'grading' || this.mode === 'gradingRevision') {
                 this.isSaveButtonVisible = false;
                 this.isSubmitButtonVisible = false;
                 this.isDisabled = true;
@@ -354,7 +353,7 @@ class AudioOscillatorController {
                 this.$scope.$parent.nodeController.registerComponentController(this.$scope, this.componentContent);
             }
 
-            if (this.mode !== 'grading') {
+            if (this.mode !== 'grading' && this.mode !== 'gradingRevision') {
                 // create the audio context
                 this.audioContext = new AudioContext();
 
@@ -505,11 +504,13 @@ class AudioOscillatorController {
          * exits the parent node. This will perform any necessary cleanup
          * when the student exits the parent node.
          */
-        this.$scope.$on('exitNode', function(event, args) {
-            // stop playing the audio if the student leaves the step
-            this.stop();
-            this.audioContext.close();
-        }.bind(this));
+        this.$scope.$on('exitNode', (event, args) => {
+            if (this.mode !== 'grading') {
+                // stop playing the audio if the student leaves the step
+                this.stop();
+                this.audioContext.close();
+            }
+        });
 
         /*
          * Listen for the assetSelected event which occurs when the user

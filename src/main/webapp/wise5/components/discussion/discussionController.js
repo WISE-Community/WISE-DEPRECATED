@@ -186,7 +186,7 @@ var DiscussionController = function () {
 
                 // check if we need to lock this component
                 this.calculateDisabled();
-            } else if (this.mode === 'grading') {
+            } else if (this.mode === 'grading' || this.mode === 'gradingRevision') {
 
                 /*
                  * get all the posts that this workgroup id is part of. if the student
@@ -204,8 +204,10 @@ var DiscussionController = function () {
 
                 this.isDisabled = true;
 
-                // get the latest annotations
-                this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
+                if (this.mode === 'grading') {
+                    // get the latest annotations
+                    this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
+                }
             } else if (this.mode === 'onlyShowWork') {
                 this.isDisabled = true;
             } else if (this.mode === 'showPreviousWork') {
@@ -1197,7 +1199,7 @@ var DiscussionController = function () {
                                 // add a replies array to the component state that we will fill with component state replies later
                                 componentState.replies = [];
 
-                                if (this.mode == 'grading') {
+                                if (this.mode == 'grading' || this.mode == 'gradingRevision') {
 
                                     if (latestInappropriateFlagAnnotation != null) {
                                         /*

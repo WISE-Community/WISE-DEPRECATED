@@ -26,7 +26,7 @@ p {
 
 blockquote {
     background-color: lighten(color('primary'), 56%);
-    padding: 8px 12px;
+    padding: 8px;
     margin: 16px 0;
     border-style: solid;
     border-color: color('primary');
@@ -178,15 +178,18 @@ a {
 }
 
 // Inputs
-// Hide number picker on number inputs when not focused
+// Hide number picker on number inputs when disabled and not focused
 // Safari and Chrome
 input[type=number]:not(:hover):not(:focus)::-webkit-inner-spin-button,
-input[type=number]:not(:hover):not(:focus)::-webkit-outer-spin-button {
+input[type=number]:not(:hover):not(:focus)::-webkit-outer-spin-button,
+input[type=number]:disabled::-webkit-inner-spin-button,
+input[type=number]:disabled::-webkit-outer-spin-button {
     -webkit-appearance: none;
     margin: 0;
 }
 // Firefox
-input[type=number]:not(:hover):not(:focus) {
+input[type=number]:not(:hover):not(:focus),
+input[type=number]:disabled {
   -moz-appearance: textfield;
 }
 

@@ -35,7 +35,11 @@
 .component--grading__annotations {
     background-color: color('selected-bg');
     margin: 0;
-    padding: 8px;
+}
+
+.component--grading__annotations__divider {
+    padding: 4px;
+    background-color: #ffffff;
 }
 
 .component--grading__actions__info {

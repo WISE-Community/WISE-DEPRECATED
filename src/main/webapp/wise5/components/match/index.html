@@ -333,7 +333,7 @@
         </div>
 
         <div ng-switch="matchController.mode">
-            <div ng-switch-when="grading" layout="row" layout-wrap>
+            <div ng-switch-when="grading|gradingRevision" ng-switch-when-separator="|" layout="row" layout-wrap>
                 <div flex="100" flex-gt-sm="66" layout="column" class="component--grading__response">
                     <div class="component--grading__response__content">
                         <div class="match-content" ng-if="matchController.$scope.componentState">
@@ -414,20 +414,22 @@
                         </div>
                     </div>
                     <span flex></span>
-                    <component-revisions-info node-id='matchController.nodeId'
-                                         component-id='matchController.componentId'
-                                         max-score="matchController.componentContent.maxScore"
-                                         to-workgroup-id='workgroupId'
-                                         component-state-id='componentState.id'></component-revisions-info>
+                    <component-revisions-info node-id="matchController.nodeId"
+                                              component-id="matchController.componentId"
+                                              max-score="matchController.componentContent.maxScore"
+                                              to-workgroup-id="workgroupId"
+                                              component-state="componentState"
+                                              active="matchController.mode === 'grading'"></component-revisions-info>
                 </div>
                 <div flex="100" flex-gt-sm="33" class="component--grading__annotations">
-                    <component-grading node-id='matchController.nodeId'
-                                       component-id='matchController.componentId'
+                    <component-grading node-id="matchController.nodeId"
+                                       component-id="matchController.componentId"
                                        max-score="matchController.componentContent.maxScore"
-                                       from-workgroup-id='teacherWorkgroupId'
-                                       to-workgroup-id='workgroupId'
-                                       component-state-id='componentState.id'
-                                       active="true"></component-grading>
+                                       from-workgroup-id="teacherWorkgroupId"
+                                       to-workgroup-id="workgroupId"
+                                       component-state-id="componentState.id"
+                                       show-all-annotations="matchController.mode !== 'grading'"
+                                       is-disabled="matchController.mode !== 'grading'"></component-grading>
                 </div>
             </div>
             <div ng-switch-default>

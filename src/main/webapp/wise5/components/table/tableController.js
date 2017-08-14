@@ -168,16 +168,17 @@ var TableController = function () {
                 // get the latest annotations
                 this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
                 this.isResetTableButtonVisible = true;
-            } else if (this.mode === 'grading') {
-                this.isPromptVisible = true;
+            } else if (this.mode === 'grading' || this.mode === 'gradingRevision') {
                 this.isSaveButtonVisible = false;
                 this.isSubmitButtonVisible = false;
                 this.isResetTableButtonVisible = false;
                 this.isSnipTableButtonVisible = false;
                 this.isDisabled = true;
 
-                // get the latest annotations
-                this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
+                if (this.mode === 'grading') {
+                    // get the latest annotations
+                    this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
+                }
             } else if (this.mode === 'onlyShowWork') {
                 this.isPromptVisible = false;
                 this.isSaveButtonVisible = false;
@@ -463,7 +464,7 @@ var TableController = function () {
                              */
                             /*
                             var answer = confirm('Do you want to update the connected table?');
-                             if (answer) {
+                              if (answer) {
                                 // the student answered yes
                                 performUpdate = true;
                             }

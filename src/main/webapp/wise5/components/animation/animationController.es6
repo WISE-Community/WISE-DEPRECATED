@@ -998,7 +998,7 @@ class AnimationController {
         if (t >= 10) {
             // shift the text to the left if there are two digits
             x = width - 38;
-        } else if (t > = 100) {
+        } else if (t >= 100) {
             // shift the text to the left more if there are three digits
             x = width - 46;
         }

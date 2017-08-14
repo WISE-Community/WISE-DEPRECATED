@@ -251,7 +251,7 @@ class ConceptMapController {
 
                 // get the latest annotations
                 this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
-            } else if (this.mode === 'grading') {
+            } else if (this.mode === 'grading' || this.mode === 'gradingRevision') {
                 this.isPromptVisible = true;
                 this.isSaveButtonVisible = false;
                 this.isSubmitButtonVisible = false;
@@ -260,7 +260,7 @@ class ConceptMapController {
                 // get the latest annotations
                 this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
 
-                var componentState = this.$scope.componentState;
+                let componentState = this.$scope.componentState;
 
                 if (componentState) {
                     // set ids for the svg and other display elements using the componentStateId (so we have unique ids when showing revisions)
@@ -270,10 +270,18 @@ class ConceptMapController {
                      * componentStateId for the svg id
                      */
                     let idInfo = this.nodeId + '_' + this.componentId + '_' + this.workgroupId + '_' + componentState.id;
-                    this.svgId = 'svg_' + idInfo;
-                    this.conceptMapContainerId = 'conceptMapContainer_' + idInfo;
-                    this.selectNodeBarId = 'selectNodeBar_' + idInfo;
-                    this.feedbackContainerId = 'feedbackContainer_' + idInfo;
+                    if (this.mode === 'gradingRevision') {
+                        idInfo = '_gradingRevision_' + idInfo
+                        this.svgId = 'svg_' + idInfo;
+                        this.conceptMapContainerId = 'conceptMapContainer_' + idInfo;
+                        this.selectNodeBarId = 'selectNodeBar_' + idInfo;
+                        this.feedbackContainerId = 'feedbackContainer_' + idInfo;
+                    } else {
+                        this.svgId = 'svg_' + idInfo;
+                        this.conceptMapContainerId = 'conceptMapContainer_' + idInfo;
+                        this.selectNodeBarId = 'selectNodeBar_' + idInfo;
+                        this.feedbackContainerId = 'feedbackContainer_' + idInfo;
+                    }
                 } else {
                     /*
                      * the student does not have any work for this component so

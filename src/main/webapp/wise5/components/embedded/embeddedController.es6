@@ -317,13 +317,26 @@ class EmbeddedController {
 
                     this.setURL(this.componentContent.url);
                 }.bind(this), true);
-            } else if (this.mode === 'grading') {
+            } else if (this.mode === 'grading' || this.mode === 'gradingRevision') {
                 this.isSaveButtonVisible = false;
                 this.isSubmitButtonVisible = false;
                 this.isSnipModelButtonVisible = false;
 
-                // get the latest annotations
-                this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
+                // get the component state from the scope
+                let componentState = this.$scope.componentState;
+
+                if (componentState != null) {
+                    // create a unique id for the application iframe using this component state
+                    this.embeddedApplicationIFrameId = "componentApp_" + componentState.id;
+                    if (this.mode === 'gradingRevision') {
+                        this.embeddedApplicationIFrameId = "componentApp_gradingRevision_" + componentState.id;
+                    }
+                }
+
+                if (this.mode === 'grading') {
+                    // get the latest annotations
+                    this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
+                }
             } else if (this.mode === 'onlyShowWork') {
                 this.isSaveButtonVisible = false;
                 this.isSubmitButtonVisible = false;
@@ -838,7 +851,7 @@ class EmbeddedController {
     snipModel($event) {
 
         // get the iframe
-        var iframe = $('#componentApp_' + this.componentId);
+        var iframe = $('#' + this.embeddedApplicationIFrameId);
 
         if (iframe != null && iframe.length > 0) {
 

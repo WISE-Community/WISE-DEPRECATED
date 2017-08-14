@@ -195,7 +195,7 @@ class OpenResponseController {
                 // get the latest annotations
                 this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
             } else if (this.mode === 'grading') {
-                this.isPromptVisible = true;
+                this.isPromptVisible = false;
                 this.isSaveButtonVisible = false;
                 this.isSubmitButtonVisible = false;
                 this.isDisabled = true;
