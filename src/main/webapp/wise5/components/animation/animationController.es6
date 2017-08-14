@@ -1374,7 +1374,7 @@ class AnimationController {
         let displayTime = parseInt(t * 10) / 10;
 
         // show the time on the svg div
-        thisAnimationController.showTime(displayTime);
+        this.showTime(displayTime);
 
         // create a component state with the time in it
         let componentState = {};
@@ -1384,7 +1384,7 @@ class AnimationController {
          * broadcast the component state with the time in it
          * so other components can know the elapsed time
          */
-        thisAnimationController.$scope.$emit('componentStudentDataChanged', {nodeId: thisAnimationController.nodeId, componentId: thisAnimationController.componentId, componentState: componentState});
+        this.$scope.$emit('componentStudentDataChanged', {nodeId: this.nodeId, componentId: this.componentId, componentState: componentState});
     }
 
     /**
