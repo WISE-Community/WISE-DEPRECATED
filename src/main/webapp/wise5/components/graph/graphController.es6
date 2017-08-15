@@ -315,7 +315,7 @@ class GraphController {
                 let componentState = this.$scope.componentState;
 
                 if (componentState != null) {
-                    // create a unique id for the application iframe using this component state
+                    // create a unique id for the chart element using this component state
                     this.chartId = "chart_" + componentState.id;
                     if (this.mode === 'gradingRevision') {
                         this.chartId = "chart_gradingRevision_" + componentState.id;
@@ -1083,7 +1083,7 @@ class GraphController {
                     tempSeries.draggableX = false;
                     tempSeries.draggableY = false;
                     tempSeries.allowPointSelect = false;
-                    tempSeries.enableMouseTracking = false;
+                    //tempSeries.enableMouseTracking = false;
                     tempSeries.stickyTracking = false;
                     tempSeries.shared = false;
                     tempSeries.allowPointSelect = false;
@@ -1155,10 +1155,14 @@ class GraphController {
             xAxis.plotLines = this.plotLines;
         }
 
+        // let user zoom the graph in the grading tool by clicking and dragging with mouse
+        // TODO: provide authoring option to allow zooming for students?
+        let zoomType = this.mode === 'grading' || this.mode === 'gradingRevision' ? 'xy' : null;
+
         this.chartConfig = {
             options: {
-                tooltip: {formatter:function(){
-
+                tooltip: {
+                    formatter: function(){
                         if (this.series != null) {
 
                             var xText = '';
@@ -1279,6 +1283,7 @@ class GraphController {
                     width: this.width,
                     height: this.height,
                     type: this.graphType,
+                    zoomType: zoomType,
                     plotBackgroundImage: this.backgroundImage,
                     events: {
                         click: function(e) {

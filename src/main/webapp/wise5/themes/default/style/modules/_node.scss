@@ -6,12 +6,12 @@ $input-action-vertical-offset-richtext: -7px;
 // Base
 #node {
     margin: 0 auto;
-    padding: 8px;
     position: absolute;
     left: 0;
     right: 0;
 
     @media only screen and (min-width: $layout-breakpoint-xs) {
+        padding: 8px;
         padding: 24px 16px;
         margin-bottom: 32px;
     }
