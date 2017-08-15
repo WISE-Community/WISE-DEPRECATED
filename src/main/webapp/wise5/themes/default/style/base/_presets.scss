@@ -273,6 +273,9 @@ md-icon, .md-button:not([disabled]) {
   &.warn {
     color: color('warn') !important;
   }
+  &.info {
+    color: color('info') !important;
+  }
   &.accent-1 {
     color: color('accent-1') !important;
   }
