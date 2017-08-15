@@ -13,8 +13,8 @@
         <div class="content-head__more" layout="row" layout-align="center center">
             <component-select node-id="{{ nodeGradingController.nodeId }}" on-change="nodeGradingController.onUpdateHiddenComponents(value)"></component-select>
             <md-button ng-click="nodeGradingController.showRubric($event)"
-                       class="md-raised primary">
-                <md-icon class="primary"> info_outline </md-icon>
+                       class="md-raised info">
+                <md-icon class="info"> info_outline </md-icon>
                 <span ng-if="!nodeGradingController.nRubrics">{{ 'STEP_INFO' | translate }}</span>
                 <span ng-if="nodeGradingController.nRubrics">{{ 'infoTipsLabel' | translate:{numberOfTips: nodeGradingController.nRubrics} }}</span>
             </md-button>

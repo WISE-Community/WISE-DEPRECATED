@@ -109,7 +109,7 @@ const NodeInfo = {
                                <md-icon class="annotations__icon md-36">info</md-icon>
                            </div>
                            <div class="annotations__title" layout="row" flex>
-                               <span>{{ 'TEACHING_TIPS' | translate }}</span>
+                               <span>{{ 'ITEM_INFO' | translate }}</span>
                            </div>
                        </md-card-title>
                        <md-card-content class="annotations__body md-body-1">
