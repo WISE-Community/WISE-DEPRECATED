@@ -300,7 +300,7 @@ var GraphController = function () {
                 var _componentState = this.$scope.componentState;
 
                 if (_componentState != null) {
-                    // create a unique id for the application iframe using this component state
+                    // create a unique id for the chart element using this component state
                     this.chartId = "chart_" + _componentState.id;
                     if (this.mode === 'gradingRevision') {
                         this.chartId = "chart_gradingRevision_" + _componentState.id;
@@ -1057,7 +1057,7 @@ var GraphController = function () {
                         tempSeries.draggableX = false;
                         tempSeries.draggableY = false;
                         tempSeries.allowPointSelect = false;
-                        tempSeries.enableMouseTracking = false;
+                        //tempSeries.enableMouseTracking = false;
                         tempSeries.stickyTracking = false;
                         tempSeries.shared = false;
                         tempSeries.allowPointSelect = false;
@@ -1129,10 +1129,14 @@ var GraphController = function () {
                 xAxis.plotLines = this.plotLines;
             }
 
+            // let user zoom the graph in the grading tool by clicking and dragging with mouse
+            // TODO: provide authoring option to allow zooming for students?
+            var zoomType = this.mode === 'grading' || this.mode === 'gradingRevision' ? 'xy' : null;
+
             this.chartConfig = {
                 options: {
-                    tooltip: { formatter: function formatter() {
-
+                    tooltip: {
+                        formatter: function formatter() {
                             if (this.series != null) {
 
                                 var xText = '';
@@ -1249,6 +1253,7 @@ var GraphController = function () {
                         width: this.width,
                         height: this.height,
                         type: this.graphType,
+                        zoomType: zoomType,
                         plotBackgroundImage: this.backgroundImage,
                         events: {
                             click: function click(e) {
@@ -5598,9 +5603,10 @@ var GraphController = function () {
                 width: 2,
                 value: x,
                 zIndex: 5
+            };
 
-                // set the plot line into the plot lines array
-            };this.plotLines = [plotLine];
+            // set the plot line into the plot lines array
+            this.plotLines = [plotLine];
         }
     }]);
 
