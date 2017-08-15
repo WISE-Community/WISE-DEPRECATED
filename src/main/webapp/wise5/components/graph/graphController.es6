@@ -421,7 +421,8 @@ class GraphController {
             this.isStudentAttachmentEnabled = this.componentContent.isStudentAttachmentEnabled;
 
             if (this.mode == 'student' && this.GraphService.showClassmateWork(this.componentContent)) {
-                this.importWork();
+                // show the classmate work from the connected components
+                this.handleConnectedComponents();
             } else if (this.mode == 'student' && !this.GraphService.componentStateHasStudentWork(componentState)) {
                 /*
                  * only import work if the student does not already have
@@ -449,7 +450,10 @@ class GraphController {
                     importPreviousWorkComponentId = this.componentContent.importWorkComponentId;
                 }
 
-                if (importPreviousWorkNodeId != null && importPreviousWorkComponentId != null) {
+                if (this.componentContent.connectedComponents != null) {
+                    // import any work we need from connected components
+                    this.handleConnectedComponents();
+                } else if (importPreviousWorkNodeId != null && importPreviousWorkComponentId != null) {
                     // import the work from the other component
                     this.importWork();
                 } else if(importWork != null) {
@@ -5280,6 +5284,103 @@ class GraphController {
         this.plotLines = [
             plotLine
         ];
+    }
+
+    /**
+     * Import any work we need from connected components
+     */
+    handleConnectedComponents() {
+
+        // get the connected components
+        var connectedComponents = this.componentContent.connectedComponents;
+
+        if (connectedComponents != null) {
+
+            var mergedTrials = [];
+
+            /*
+             * This will hold all the promises that will return the trials
+             * that we want. The trials will either be from this student
+             * or from classmates.
+             */
+            var promises = [];
+
+            // loop through all the connected components
+            for (var c = 0; c < connectedComponents.length; c++) {
+                var connectedComponent = connectedComponents[c];
+
+                if (connectedComponent != null) {
+                    var nodeId = connectedComponent.nodeId;
+                    var componentId = connectedComponent.componentId;
+                    var showClassmateWork = connectedComponent.showClassmateWork;
+
+                    if (showClassmateWork && !this.ConfigService.isPreview()) {
+                        // we are showing classmate work
+
+                        /*
+                         * showClassmateWorkSource determines whether to get
+                         * work from the period or the whole class (all periods)
+                         */
+                        var showClassmateWorkSource = connectedComponent.showClassmateWorkSource;
+
+                        // get the trials from the classmates
+                        promises.push(this.getTrialsFromClassmates(nodeId, componentId, showClassmateWorkSource));
+                    } else {
+                        // we are getting the work from this student
+
+                        // get the latest component state from the component
+                        var componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
+
+                        // get the trials from the component state
+                        promises.push(this.getTrialsFromComponentState(nodeId, componentId, componentState));
+                    }
+                }
+            }
+
+            /*
+             * wait for all the promises to resolve because we may need to
+             * request the classmate work from the server
+             */
+            this.$q.all(promises).then((promiseResults) => {
+
+                // this will hold all the trials
+                var mergedTrials = [];
+
+                /*
+                 * Loop through all the promise results. There will be a
+                 * promise result for each component we are importing from.
+                 * Each promiseResult is an array of trials.
+                 */
+                for (var p = 0; p < promiseResults.length; p++) {
+
+                    // get the array of trials for one component
+                    var trials = promiseResults[p];
+
+                    // loop through all the trials from the component
+                    for (var t = 0; t < trials.length; t++) {
+                        var trial = trials[t];
+
+                        // add the trial to our array of merged trials
+                        mergedTrials.push(trial);
+                    }
+                }
+
+                // create a new student data
+                var studentData = {};
+                studentData.trials = mergedTrials;
+                studentData.version = 2;
+
+                // create a new component state
+                var newComponentState = this.NodeService.createNewComponentState();
+                newComponentState.studentData = studentData;
+
+                // populate the component state into this component
+                this.setStudentWork(newComponentState);
+
+                // make the work dirty so that it gets saved
+                this.studentDataChanged();
+            });
+        }
     }
 }
 

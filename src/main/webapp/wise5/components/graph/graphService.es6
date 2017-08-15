@@ -1036,21 +1036,21 @@ class GraphService extends NodeService {
     /**
      * Determine whether the component has been authored to show classmate work
      * @param componentContent the component content
-     * @return whether to show the classmate work in this component
+     * @return whether to show classmate work in this component
      */
     showClassmateWork(componentContent) {
 
-        if (componentContent != null && componentContent.importWork != null && componentContent.importWork.components != null) {
+        if (componentContent != null && componentContent.connectedComponents != null) {
 
-            let components = componentContent.importWork.components;
+            let connectedComponents = componentContent.connectedComponents;
 
-            // loop through all the components that we are importing from
-            for (let c = 0; c < components.length; c++) {
-                let component = components[c];
+            // loop through all the connected components that we are importing from
+            for (let c = 0; c < connectedComponents.length; c++) {
+                let connectedComponent = connectedComponents[c];
 
-                if (component != null) {
-                    if (component.showClassmateWork) {
-                        // the component is importing work from classmates
+                if (connectedComponent != null) {
+                    if (connectedComponent.showClassmateWork) {
+                        // the connected component is importing work from classmates
                         return true;
                     }
                 }
