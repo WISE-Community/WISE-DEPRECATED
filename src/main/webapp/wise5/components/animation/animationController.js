@@ -3827,16 +3827,41 @@ var AnimationController = function () {
         value: function authoringAddDataPointClicked(object) {
             if (object != null) {
 
-                // initialize the data array if necessary
-                if (object.data == null) {
-                    object.data = [];
+                if (object.dataSource != null) {
+                    // the object already has a data source
+
+                    // ask the user if they are sure they want to delete the data source
+                    var answer = confirm('You can only have Data Points or a Data Source. If you add a Data Point, the Data Source will be deleted. Are you sure you want to add a Data Point?');
+
+                    if (answer) {
+                        // the author answered yes to delete the data source
+                        delete object.dataSource;
+
+                        // initialize the data array if necessary
+                        if (object.data == null) {
+                            object.data = [];
+                        }
+
+                        // create a new data point
+                        var newDataPoint = {};
+
+                        // add the new data point
+                        object.data.push(newDataPoint);
+                    }
+                } else {
+                    // the object does not have a data source so we can add a data point
+
+                    // initialize the data array if necessary
+                    if (object.data == null) {
+                        object.data = [];
+                    }
+
+                    // create a new data point
+                    var newDataPoint = {};
+
+                    // add the new data point
+                    object.data.push(newDataPoint);
                 }
-
-                // create a new data point
-                var newDataPoint = {};
-
-                // add the new data point
-                object.data.push(newDataPoint);
             }
 
             // the authoring component content has changed so we will save the project
@@ -4014,6 +4039,140 @@ var AnimationController = function () {
                         // remove the object from the array of objects
                         objects.splice(index, 1);
                     }
+                }
+            }
+
+            // the authoring component content has changed so we will save the project
+            this.authoringViewComponentChanged();
+        }
+
+        /**
+         * Get a component
+         * @param nodeId the node id
+         * @param componentId the component id
+         */
+
+    }, {
+        key: 'getComponentByNodeIdAndComponentId',
+        value: function getComponentByNodeIdAndComponentId(nodeId, componentId) {
+            return this.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
+        }
+
+        /**
+         * The add data source button was clicked
+         * @param object the object we will add the data source to
+         */
+
+    }, {
+        key: 'authoringAddDataSourceClicked',
+        value: function authoringAddDataSourceClicked(object) {
+
+            if (object != null && object.data != null && object.data.length > 0) {
+                /*
+                 * the object has data so we will ask the author if they are sure
+                 * they want to add a data source which will remove the data
+                 */
+
+                var answer = confirm('You can only have Data Points or a Data Source. If you add a Data Source, the Data Points will be deleted. Are you sure you want to add a Data Source?');
+
+                if (answer) {
+                    // the author answered yes to delete the data points
+
+                    // delete the data points
+                    delete object.data;
+
+                    // add the data source
+                    object.dataSource = {};
+                }
+            } else {
+                // there are no data points so we can add the data source
+
+                // delete the data points
+                delete object.data;
+
+                // add the data source
+                object.dataSource = {};
+            }
+
+            // the authoring component content has changed so we will save the project
+            this.authoringViewComponentChanged();
+        }
+
+        /**
+         * The delete data source button was clicked
+         * @param object the object to delete the data source from
+         */
+
+    }, {
+        key: 'authoringDeleteDataSourceClicked',
+        value: function authoringDeleteDataSourceClicked(object) {
+
+            // ask the author if they are sure they want to delete the data source
+            var answer = confirm('Are you sure you want to delete the Data Source?');
+
+            if (answer) {
+                // the author answered yes to delete the data source
+                delete object.dataSource;
+            }
+
+            // the authoring component content has changed so we will save the project
+            this.authoringViewComponentChanged();
+        }
+
+        /**
+         * The data source node has changed
+         * @param object the object that has changed
+         */
+
+    }, {
+        key: 'dataSourceNodeChanged',
+        value: function dataSourceNodeChanged(object) {
+
+            if (object != null) {
+
+                // remember the node id
+                var nodeId = object.dataSource.nodeId;
+
+                // clear the dataSource object except for the node id
+                object.dataSource = {
+                    nodeId: nodeId
+                };
+            }
+
+            // the authoring component content has changed so we will save the project
+            this.authoringViewComponentChanged();
+        }
+
+        /**
+         * The data source component has changed
+         * @param object the object that has changed
+         */
+
+    }, {
+        key: 'dataSourceComponentChanged',
+        value: function dataSourceComponentChanged(object) {
+
+            if (object != null) {
+
+                // remember the node id and component id
+                var nodeId = object.dataSource.nodeId;
+                var componentId = object.dataSource.componentId;
+
+                // get the component
+                var component = this.getComponentByNodeIdAndComponentId(nodeId, componentId);
+
+                // clear the dataSource object except for the node id and component id
+                object.dataSource = {
+                    nodeId: nodeId,
+                    componentId: componentId
+                };
+
+                if (component != null && component.type == 'Graph') {
+                    // set the default parameters for a graph data source
+                    object.dataSource.trialIndex = 0;
+                    object.dataSource.seriesIndex = 0;
+                    object.dataSource.tColumnIndex = 0;
+                    object.dataSource.xColumnIndex = 1;
                 }
             }
 
