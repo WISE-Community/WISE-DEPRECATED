@@ -3981,6 +3981,8 @@ class AnimationController {
             } else if (object.type == 'text') {
                 // the type changed to text so we will delete the image fields
                 delete object.image;
+                delete object.width;
+                delete object.height;
                 delete object.imageMovingLeft;
                 delete object.imageMovingRight;
                 delete object.imageMovingUp;
