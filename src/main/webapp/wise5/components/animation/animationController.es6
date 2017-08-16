@@ -599,6 +599,21 @@ class AnimationController {
                             } else if (args.target == 'rubric') {
                                 // the target is the summernote rubric element
                                 summernoteId = 'summernoteRubric_' + this.nodeId + '_' + this.componentId;
+                            } else if (args.target == 'image') {
+                                // the target is the image
+                                if (args.targetObject != null) {
+                                    args.targetObject.image = fileName;
+                                }
+                            } else if (args.target == 'imageMovingLeft') {
+                                // the target is the image moving left
+                                if (args.targetObject != null) {
+                                    args.targetObject.imageMovingLeft = fileName;
+                                }
+                            } else if (args.target == 'imageMovingRight') {
+                                // the target is the image moving right
+                                if (args.targetObject != null) {
+                                    args.targetObject.imageMovingRight = fileName;
+                                }
                             }
 
                             if (summernoteId != '') {
@@ -631,6 +646,9 @@ class AnimationController {
                     }
                 }
             }
+
+            // the authoring component content has changed so we will save the project
+            this.authoringViewComponentChanged();
 
             // close the popup
             this.$mdDialog.hide();
@@ -3890,6 +3908,83 @@ class AnimationController {
                 object.dataSource.seriesIndex = 0;
                 object.dataSource.tColumnIndex = 0;
                 object.dataSource.xColumnIndex = 1;
+            }
+        }
+
+        // the authoring component content has changed so we will save the project
+        this.authoringViewComponentChanged();
+    }
+
+    /**
+     * Show the asset popup to allow the author to choose the image
+     */
+    chooseImage(object) {
+
+        // generate the parameters
+        var params = {};
+        params.popup = true;
+        params.nodeId = this.nodeId;
+        params.componentId = this.componentId;
+        params.target = 'image';
+        params.targetObject = object;
+
+        // display the asset chooser
+        this.$rootScope.$broadcast('openAssetChooser', params);
+    }
+
+    /**
+     * Show the asset popup to allow the author to choose the image moving left
+     * @param object the object to set the image moving left
+     */
+    chooseImageMovingLeft(object) {
+
+        // generate the parameters
+        var params = {};
+        params.popup = true;
+        params.nodeId = this.nodeId;
+        params.componentId = this.componentId;
+        params.target = 'imageMovingLeft';
+        params.targetObject = object;
+
+        // display the asset chooser
+        this.$rootScope.$broadcast('openAssetChooser', params);
+    }
+
+    /**
+     * Show the asset popup to allow the author to choose the image moving right
+     * @param object the object to set the image moving right
+     */
+    chooseImageMovingRight(object) {
+
+        // generate the parameters
+        var params = {};
+        params.popup = true;
+        params.nodeId = this.nodeId;
+        params.componentId = this.componentId;
+        params.target = 'imageMovingRight';
+        params.targetObject = object;
+
+        // display the asset chooser
+        this.$rootScope.$broadcast('openAssetChooser', params);
+    }
+
+    /**
+     * The type for an object changed
+     * @param object the object that changed
+     */
+    authoringObjectTypeChanged(object) {
+
+        if (object != null) {
+            if (object.type == 'image') {
+                // the type changed to an image so we will delete the text field
+                delete object.text;
+            } else if (object.type == 'text') {
+                // the type changed to text so we will delete the image fields
+                delete object.image;
+                delete object.imageMovingLeft;
+                delete object.imageMovingRight;
+                delete object.imageMovingUp;
+                delete object.imageMovingDown;
             }
         }
 
