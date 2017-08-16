@@ -3407,9 +3407,9 @@ class AnimationController {
     }
 
     /**
-     * The stop button was clicked
+     * The reset button was clicked
      */
-    stopButtonClicked() {
+    resetButtonClicked() {
 
         // set the animation state
         this.animationState = 'stopped';

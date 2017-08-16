@@ -3633,12 +3633,12 @@ var AnimationController = function () {
         }
 
         /**
-         * The stop button was clicked
+         * The reset button was clicked
          */
 
     }, {
-        key: 'stopButtonClicked',
-        value: function stopButtonClicked() {
+        key: 'resetButtonClicked',
+        value: function resetButtonClicked() {
 
             // set the animation state
             this.animationState = 'stopped';
