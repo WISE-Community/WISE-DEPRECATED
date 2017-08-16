@@ -33,6 +33,14 @@ class AnimationService extends NodeService {
         component.showSaveButton = false;
         component.showSubmitButton = false;
         component.isStudentAttachmentEnabled = false;
+        component.widthInPixels = 600;
+        component.widthInUnits = 60;
+        component.heightInPixels = 200;
+        component.heightInUnits = 20;
+        component.dataXOriginInPixels = 0;
+        component.dataYOriginInPixels = 80;
+        component.coordinateSystem = 'screen';
+        component.objects = [];
         return component;
     }
 

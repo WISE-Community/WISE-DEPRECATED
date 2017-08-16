@@ -225,36 +225,8 @@ var AnimationController = function () {
             // get the svg id
             this.svgId = 'svg_' + this.nodeId + '_' + this.componentId;
 
-            if (this.componentContent.widthInPixels != null && this.componentContent.widthInPixels != '') {
-                // get the width of the canvas in pixels
-                this.width = this.componentContent.widthInPixels;
-
-                // get the ratio of pixels per x unit
-                this.pixelsPerXUnit = this.componentContent.widthInPixels / this.componentContent.widthInUnits;
-            }
-
-            if (this.componentContent.heightInPixels != null && this.componentContent.heightInPixels != '') {
-                // get the height of the canvas in pixels
-                this.height = this.componentContent.heightInPixels;
-
-                // get the ratio of pixels per y unit
-                this.pixelsPerYUnit = this.componentContent.heightInPixels / this.componentContent.heightInUnits;
-            }
-
-            if (this.componentContent.dataXOriginInPixels != null && this.componentContent.dataXOriginInPixels != '') {
-                // get the data x origin in pixels
-                this.dataXOriginInPixels = this.componentContent.dataXOriginInPixels;
-            }
-
-            if (this.componentContent.dataYOriginInPixels != null && this.componentContent.dataYOriginInPixels != '') {
-                // get the data y origin in pixels
-                this.dataYOriginInPixels = this.componentContent.dataYOriginInPixels;
-            }
-
-            if (this.componentContent.coordinateSystem != null && this.componentContent.coordinateSystem != '') {
-                // get the coordinate system
-                this.coordinateSystem = this.componentContent.coordinateSystem;
-            }
+            // initialize all the coordinates
+            this.initializeCoordinates();
 
             if (this.mode === 'student') {
                 this.isPromptVisible = true;
@@ -348,6 +320,15 @@ var AnimationController = function () {
                          */
                         this.studentResponse = this.componentContent.starterSentence;
                     }
+
+                    // remove all the old objects
+                    this.removeAllObjects();
+
+                    // initialize all the coordinates
+                    this.initializeCoordinates();
+
+                    // re-render the svg div
+                    this.setup();
                 }.bind(this), true);
             }
 
@@ -664,11 +645,51 @@ var AnimationController = function () {
     }
 
     /**
-     * Setup the objects
+     * Initialize the coordinates of the svg div
      */
 
 
     _createClass(AnimationController, [{
+        key: 'initializeCoordinates',
+        value: function initializeCoordinates() {
+
+            if (this.componentContent.widthInPixels != null && this.componentContent.widthInPixels != '') {
+                // get the width of the canvas in pixels
+                this.width = this.componentContent.widthInPixels;
+
+                // get the ratio of pixels per x unit
+                this.pixelsPerXUnit = this.componentContent.widthInPixels / this.componentContent.widthInUnits;
+            }
+
+            if (this.componentContent.heightInPixels != null && this.componentContent.heightInPixels != '') {
+                // get the height of the canvas in pixels
+                this.height = this.componentContent.heightInPixels;
+
+                // get the ratio of pixels per y unit
+                this.pixelsPerYUnit = this.componentContent.heightInPixels / this.componentContent.heightInUnits;
+            }
+
+            if (this.componentContent.dataXOriginInPixels != null && this.componentContent.dataXOriginInPixels != '') {
+                // get the data x origin in pixels
+                this.dataXOriginInPixels = this.componentContent.dataXOriginInPixels;
+            }
+
+            if (this.componentContent.dataYOriginInPixels != null && this.componentContent.dataYOriginInPixels != '') {
+                // get the data y origin in pixels
+                this.dataYOriginInPixels = this.componentContent.dataYOriginInPixels;
+            }
+
+            if (this.componentContent.coordinateSystem != null && this.componentContent.coordinateSystem != '') {
+                // get the coordinate system
+                this.coordinateSystem = this.componentContent.coordinateSystem;
+            }
+        }
+
+        /**
+         * Setup the objects
+         */
+
+    }, {
         key: 'setup',
         value: function setup() {
             // get the svg.js draw handle
@@ -718,6 +739,16 @@ var AnimationController = function () {
                                 // create the image in the svg world
                                 svgObject = this.draw.image(image, width, height);
                             } else if (type == 'text') {
+
+                                /*
+                                 * if the text field is null, change it to an empty
+                                 * string otherwise this.draw.text(null) will return
+                                 * an empty string and cause problems later
+                                 */
+                                if (object.text == null) {
+                                    object.text = '';
+                                }
+
                                 // get the text
                                 var text = object.text;
 
@@ -3728,6 +3759,266 @@ var AnimationController = function () {
             } else if (this.speedSliderValue == 5) {
                 this.realTimePerDataTime = 1;
             }
+        }
+
+        /**
+         * Remove all the objects from the svg div
+         */
+
+    }, {
+        key: 'removeAllObjects',
+        value: function removeAllObjects() {
+
+            if (this.idToSVGObject != null) {
+
+                // get all the object ids
+                var keys = Object.keys(this.idToSVGObject);
+
+                if (keys != null) {
+
+                    // loop through all the keys
+                    for (var k = 0; k < keys.length; k++) {
+                        var key = keys[k];
+
+                        // get the svg object
+                        var svgObject = this.idToSVGObject[key];
+
+                        if (svgObject != null) {
+                            // remove the svg object from the svg div
+                            svgObject.remove();
+                        }
+                    }
+                }
+            }
+        }
+
+        /**
+         * Add a new object
+         */
+
+    }, {
+        key: 'authoringAddObjectClicked',
+        value: function authoringAddObjectClicked() {
+
+            // initialize the objects array if necessary
+            if (this.authoringComponentContent.objects == null) {
+                this.authoringComponentContent.objects = [];
+            }
+
+            // create a new object
+            var newObject = {};
+            newObject.id = this.UtilService.generateKey(10);
+            newObject.type = 'image';
+
+            // add the object to our array of objects
+            this.authoringComponentContent.objects.push(newObject);
+
+            // the authoring component content has changed so we will save the project
+            this.authoringViewComponentChanged();
+        }
+
+        /**
+         * Add a data point to an object
+         * @param object add a data point to this object
+         */
+
+    }, {
+        key: 'authoringAddDataPointClicked',
+        value: function authoringAddDataPointClicked(object) {
+            if (object != null) {
+
+                // initialize the data array if necessary
+                if (object.data == null) {
+                    object.data = [];
+                }
+
+                // create a new data point
+                var newDataPoint = {};
+
+                // add the new data point
+                object.data.push(newDataPoint);
+            }
+
+            // the authoring component content has changed so we will save the project
+            this.authoringViewComponentChanged();
+        }
+
+        /**
+         * Delete a data point from an object
+         * @param object the object to delete a data point from
+         * @param index the index of the data point to delete
+         */
+
+    }, {
+        key: 'authoringDeleteObjectDataPointClicked',
+        value: function authoringDeleteObjectDataPointClicked(object, index) {
+
+            if (object != null && object.data != null) {
+
+                // ask the author if they are sure they want to delete the point
+                var answer = confirm(this.$translate('animation.areYouSureYouWantToDeleteThisDataPoint'));
+
+                if (answer) {
+                    // delete the data point at the given index
+                    object.data.splice(index, 1);
+
+                    // the authoring component content has changed so we will save the project
+                    this.authoringViewComponentChanged();
+                }
+            }
+        }
+
+        /**
+         * Move a data point up
+         * @param object the object the data point belongs to
+         * @param index the index of the data point in the object
+         */
+
+    }, {
+        key: 'authoringMoveObjectDataPointUpClicked',
+        value: function authoringMoveObjectDataPointUpClicked(object, index) {
+            if (object != null && object.data != null) {
+
+                if (index > 0) {
+                    // the data point is not at the top so we can move it up
+
+                    // remember the data point we are moving
+                    var dataPoint = object.data[index];
+
+                    // remove the data point at the given index
+                    object.data.splice(index, 1);
+
+                    // insert the data point back in at one index back
+                    object.data.splice(index - 1, 0, dataPoint);
+                }
+
+                // the authoring component content has changed so we will save the project
+                this.authoringViewComponentChanged();
+            }
+        }
+
+        /**
+         * Move a data point down
+         * @param object the object the data point belongs to
+         * @param index the index of the data point in the object
+         */
+
+    }, {
+        key: 'authoringMoveObjectDataPointDownClicked',
+        value: function authoringMoveObjectDataPointDownClicked(object, index) {
+            if (object != null && object.data != null) {
+
+                if (index < object.data.length - 1) {
+                    // the data point is not at the bottom so we can move it down
+
+                    // remember the data point we are moving
+                    var dataPoint = object.data[index];
+
+                    // remove the data point at the given index
+                    object.data.splice(index, 1);
+
+                    // insert the data point back in at one index forward
+                    object.data.splice(index + 1, 0, dataPoint);
+                }
+
+                // the authoring component content has changed so we will save the project
+                this.authoringViewComponentChanged();
+            }
+        }
+
+        /**
+         * Move an object up
+         * @param index the index of the object
+         */
+
+    }, {
+        key: 'authoringMoveObjectUpClicked',
+        value: function authoringMoveObjectUpClicked(index) {
+
+            if (this.authoringComponentContent != null) {
+
+                var objects = this.authoringComponentContent.objects;
+
+                if (objects != null) {
+
+                    if (index > 0) {
+                        // the object is not at the top so we can move it up
+
+                        // remember the object we are moving
+                        var object = objects[index];
+
+                        // remove the object
+                        objects.splice(index, 1);
+
+                        // insert the object back in at one index back
+                        objects.splice(index - 1, 0, object);
+                    }
+                }
+            }
+
+            // the authoring component content has changed so we will save the project
+            this.authoringViewComponentChanged();
+        }
+
+        /**
+         * Move an object down
+         * @param index the index of the object
+         */
+
+    }, {
+        key: 'authoringMoveObjectDownClicked',
+        value: function authoringMoveObjectDownClicked(index) {
+
+            if (this.authoringComponentContent != null) {
+
+                var objects = this.authoringComponentContent.objects;
+
+                if (objects != null) {
+
+                    if (index < objects.length - 1) {
+                        // the object is not at the bottom so we can move it down
+
+                        // remember the object we are moving
+                        var object = objects[index];
+
+                        // remove the object
+                        objects.splice(index, 1);
+
+                        // insert the object back in at one index forward
+                        objects.splice(index + 1, 0, object);
+                    }
+                }
+            }
+
+            // the authoring component content has changed so we will save the project
+            this.authoringViewComponentChanged();
+        }
+
+        /**
+         * Delete an object
+         * @param index the index of the object
+         */
+
+    }, {
+        key: 'authoringDeleteObjectClicked',
+        value: function authoringDeleteObjectClicked(index) {
+
+            if (this.authoringComponentContent != null) {
+
+                var answer = confirm(this.$translate('animation.areYouSureYouWantToDeleteThisObject'));
+
+                if (answer) {
+                    var objects = this.authoringComponentContent.objects;
+
+                    if (objects != null) {
+                        // remove the object from the array of objects
+                        objects.splice(index, 1);
+                    }
+                }
+            }
+
+            // the authoring component content has changed so we will save the project
+            this.authoringViewComponentChanged();
         }
     }]);
 
