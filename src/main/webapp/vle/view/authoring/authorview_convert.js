@@ -1669,7 +1669,8 @@ View.prototype.convertGrapher = function(node, nodeContent) {
     var component = {};
     component.id = this.createRandomId();
     component.type = 'Graph';
-
+    component.graphType = 'line';
+    component.roundValuesTo = 'integer';
     component.prompt = nodeContent.prompt;
     component.showSaveButton = false;
     component.showSubmitButton = false;
@@ -1737,39 +1738,69 @@ View.prototype.convertCarGraph = function(node, nodeContent) {
     wise5Node.showSubmitButton = false;
     wise5Node.components = [];
 
-    var component = {};
-    component.id = this.createRandomId();
-    component.type = 'Graph';
+    // create an html component to show the prompt
+    var htmlComponent = {};
+    htmlComponent.id = this.createRandomId();
+    htmlComponent.type = 'HTML';
+    htmlComponent.html = nodeContent.prompt;
 
-    component.prompt = nodeContent.prompt;
-    component.showSaveButton = false;
-    component.showSubmitButton = false;
-    component.title = nodeContent.graphTitle;
-    component.xAxis = {};
-    component.xAxis.title = {};
-    component.xAxis.title.text = nodeContent.graphParams.xLabel;
+    // create a graph component
+    var graphComponent = {};
+    graphComponent.id = this.createRandomId();
+    graphComponent.type = 'Graph';
+
+    // create an animation component
+    var animationComponent = {};
+    animationComponent.id = this.createRandomId();
+    animationComponent.type = 'Animation';
+
+    // get the ymin and ymax so we can use it later in the animation component
+    var ymin = nodeContent.graphParams.ymin;
+    var ymax = nodeContent.graphParams.ymax;
+
+
+    // create the graph component //
+
+    graphComponent.showSaveButton = false;
+    graphComponent.showSubmitButton = false;
+    graphComponent.graphType = 'line';
+    graphComponent.title = nodeContent.graphTitle;
+    graphComponent.width = 600;
+    graphComponent.height = 250;
+    graphComponent.roundValuesTo = 'integer';
+
+    // create the x axis
+    graphComponent.xAxis = {};
+    graphComponent.xAxis.title = {};
+    graphComponent.xAxis.title.text = nodeContent.graphParams.xLabel;
+    graphComponent.xAxis.locked = true;
+    graphComponent.xAxis.units = nodeContent.graphParams.xUnits;
 
     if (nodeContent.graphParams.xmin != null) {
-        component.xAxis.min = parseFloat(nodeContent.graphParams.xmin);
+        graphComponent.xAxis.min = parseFloat(nodeContent.graphParams.xmin);
     }
 
     if (nodeContent.graphParams.xmax != null) {
-        component.xAxis.max = parseFloat(nodeContent.graphParams.xmax);
+        graphComponent.xAxis.max = parseFloat(nodeContent.graphParams.xmax);
     }
 
-    component.yAxis = {};
-    component.yAxis.title = {};
-    component.yAxis.title.text = nodeContent.graphParams.yLabel;
+    // create the y axis
+    graphComponent.yAxis = {};
+    graphComponent.yAxis.title = {};
+    graphComponent.yAxis.title.text = nodeContent.graphParams.yLabel;
+    graphComponent.yAxis.locked = true;
+    graphComponent.yAxis.units = nodeContent.graphParams.yUnits;
 
     if (nodeContent.graphParams.ymin != null) {
-        component.yAxis.min = parseFloat(nodeContent.graphParams.ymin);
+        graphComponent.yAxis.min = parseFloat(nodeContent.graphParams.ymin);
     }
 
     if (nodeContent.graphParams.ymax != null) {
-        component.yAxis.max = parseFloat(nodeContent.graphParams.ymax);
+        graphComponent.yAxis.max = parseFloat(nodeContent.graphParams.ymax);
     }
 
-    component.series = [
+    // create a series
+    graphComponent.series = [
         {
             "name": "Data",
             "data": [
@@ -1785,12 +1816,345 @@ View.prototype.convertCarGraph = function(node, nodeContent) {
         }
     ];
 
-    wise5Node.components.push(component);
+    /*
+     * Create two connected components. One will import the student graph from
+     * the previous step. Another will listen for the time from the animation
+     * component to show the red vertical line while the animation plays.
+     */
+    var connectedComponents = [];
+
+    // Create the connected component that will import the student graph
+
+    var previousWorkNodeId = null;
+    var previousWorkComponentId = null;
+
+    var previousWorkNodeIds = node.previousWorkNodeIds;
+
+    if (previousWorkNodeIds != null) {
+
+        /*
+         * Loop through all the WISE4 previous work node ids for this step.
+         * There should only be one.
+         */
+        for (var p = 0; p < previousWorkNodeIds.length; p++) {
+
+            var previousWorkNodeId = previousWorkNodeIds[p];
+
+            // get the WISE5 node id
+            var previousWorkWISE5NodeId = this.getWISE5NodeIdByWISE4NodeId(previousWorkNodeId);
+
+            // get the WISE5 node
+            var previousWorkWISE5Node = this.getWISE5NodeById(previousWorkWISE5NodeId);
+
+            if (previousWorkWISE5Node != null &&
+                previousWorkWISE5Node.components != null &&
+                previousWorkWISE5Node.components.length > 0) {
+
+                // get the first component
+                var tempComponent = previousWorkWISE5Node.components[0];
+
+                if (tempComponent != null) {
+
+                    if (tempComponent) {
+
+                        // create the connected component
+                        var previousWorkConnectedComponent = {};
+                        previousWorkConnectedComponent.nodeId = previousWorkWISE5Node.id;
+                        previousWorkConnectedComponent.componentId = tempComponent.id;
+                        connectedComponents.push(previousWorkConnectedComponent);
+
+                        /*
+                         * remember the node id and component id so we can use
+                         * them later when we are creating the dynamic animation
+                         * object
+                         */
+                        previousWorkNodeId = previousWorkWISE5Node.id;
+                        previousWorkComponentId = tempComponent.id;
+                    }
+                }
+            }
+        }
+    }
+
+    /*
+     * Create the connected component that will listen for the time from the
+     * animation component
+     */
+    var connectedComponent = {};
+    connectedComponent.nodeId = wise5Node.id;
+    connectedComponent.componentId = animationComponent.id;
+    connectedComponent.updateOn = 'change';
+    connectedComponents.push(connectedComponent);
+
+    // set the connected components into the graph component
+    graphComponent.connectedComponents = connectedComponents;
+
+
+    // create the animation component //
+
+    animationComponent.showSaveButton = false;
+    animationComponent.showSubmitButton = false;
+
+    /*
+     * guess the with and height of the svg div. Ideally we would match the
+     * width with the width of the background image but that would require
+     * some synchronization.
+     */
+    animationComponent.widthInPixels = 800;
+    animationComponent.heightInPixels = 200;
+
+    // set the width and height in units
+    animationComponent.widthInUnits = parseInt(ymax) + 3;
+    animationComponent.heightInUnits = 20;
+
+    // set the data origin location
+    animationComponent.dataXOriginInPixels = 0;
+    animationComponent.dataYOriginInPixels = 90;
+
+    // set the coordinate system
+    animationComponent.coordinateSystem = 'screen';
+
+    // create the objects we will display in the svg div
+    animationComponent.objects = [];
+
+    // get the background image filename
+    var pathBackgroundImage = nodeContent.pathBackgroundImage;
+    pathBackgroundImage = pathBackgroundImage.replace('assets/', '');
+
+    // create the background image object
+    var backgroundObject = {};
+    backgroundObject.id = this.createRandomId();
+    backgroundObject.type = 'image';
+    backgroundObject.image = pathBackgroundImage;
+    backgroundObject.pixelX = 0;
+    backgroundObject.pixelY = 90;
+    animationComponent.objects.push(backgroundObject);
+
+    // calcualte the tick spacing and tick size
+    var tickSpacing = nodeContent.tickSpacing;
+    var tickSize = parseInt(700 / (nodeContent.graphParams.ymax / tickSpacing));
+
+    // handle the static images
+    var staticImages = nodeContent.staticImages;
+
+    if (staticImages != null) {
+
+        // loop through all the static images
+        for (var s = 0; s < staticImages.length; s++) {
+            var staticImage = staticImages[s];
+
+            if (staticImage != null) {
+                var id = staticImage.id;
+                var label = staticImage.label;
+                var tickIndex = staticImage.tickIndex;
+                var img = staticImage.img;
+                img = img.replace('assets/', '');
+
+                // set the x location
+                var left = parseInt((tickIndex / tickSpacing) * tickSize);
+
+                // set the image object
+                var staticImageObject = {};
+                staticImageObject.id = this.createRandomId();
+                staticImageObject.type = 'image';
+                staticImageObject.image = img;
+                staticImageObject.pixelX = left;
+                staticImageObject.pixelY = 25;
+
+                // set the text label object for the image
+                var staticImageTextObject = {};
+                staticImageTextObject.id = this.createRandomId();
+                staticImageTextObject.type = 'text';
+                staticImageTextObject.text = label;
+                staticImageTextObject.pixelX = left;
+                staticImageTextObject.pixelY = 0;
+
+                animationComponent.objects.push(staticImageObject);
+                animationComponent.objects.push(staticImageTextObject);
+            }
+        }
+    }
+
+    // handle the tick label objects that will be displayed in the svg div
+    var tickValues = nodeContent.tickValues;
+
+    if (tickValues == null || tickValues.length == 0) {
+
+        // tick values are not explicitly defined so we will generate them
+        for (var i = parseInt(ymin); i <= ymax; i += tickSpacing) {
+            var tickPosition = parseInt((i / tickSpacing) * tickSize);
+
+            // create the tick text object
+            var tickObject = {};
+            tickObject.id = this.createRandomId();
+            tickObject.type = 'text';
+            tickObject.text = i + '';
+            tickObject.pixelX = tickPosition;
+            tickObject.pixelY = 60;
+            animationComponent.objects.push(tickObject);
+        }
+    } else {
+        // tick values are defined
+
+        // loop through all the tick values
+        for (var t = 0; t < tickValues.length; t++) {
+            var tickValue = tickValues[t];
+
+            // get the x location
+            var tick = parseInt((tickValue / tickSpacing) * tickSize);
+
+            // create the tick text object
+            var tickObject = {};
+            tickObject.id = this.createRandomId();
+            tickObject.type = 'text';
+            tickObject.text = tickValue + '';
+            tickObject.pixelX = tick;
+            tickObject.pixelY = 60;
+
+            animationComponent.objects.push(tickObject);
+        }
+    }
+
+    // handle the correct image objects that show the correct movement
+    var expectedResults = nodeContent.expectedResults;
+
+    if (expectedResults != null) {
+
+        // loop through all the expected results
+        for (var e = 0; e < expectedResults.length; e++) {
+            var expectedResult = expectedResults[e];
+
+            if (expectedResult != null) {
+
+                // get the filename of the correct image
+                var filename = this.getDynamicImageFilenameById(expectedResult.id, dynamicImages);
+
+                if (filename != null) {
+                    filename = filename.replace('.png', '-correct.png');
+                }
+
+                // create the image object for the correct image
+                var expectedResultObject = {};
+                expectedResultObject.id = this.createRandomId();
+                expectedResultObject.type = 'image';
+                expectedResultObject.image = filename;
+                expectedResultObject.dataX = 0;
+                expectedResultObject.dataY = 0;
+                expectedResultObject.data = [];
+
+                // generate the correct data points
+                var expectedPoints = expectedResult.expectedPoints;
+
+                if (expectedPoints != null) {
+                    for (var ep = 0; ep < expectedPoints.length; ep++) {
+                        var expectedPoint = expectedPoints[ep];
+
+                        if (expectedPoint != null) {
+                            var x = expectedPoint.x;
+                            var y = expectedPoint.y;
+
+                            var dataPoint = {};
+                            dataPoint.t = x;
+                            dataPoint.x = y;
+
+                            expectedResultObject.data.push(dataPoint);
+                        }
+                    }
+                }
+
+                animationComponent.objects.push(expectedResultObject);
+            }
+        }
+    }
+
+    // handle the student image objects
+    var dynamicImages = nodeContent.dynamicImages;
+
+    if (dynamicImages != null) {
+
+        // loop through all the images that will be controlled by the student data
+        for (var d = 0; d < dynamicImages.length; d++) {
+            var dynamicImage = dynamicImages[d];
+
+            if (dynamicImage != null) {
+
+                // get the filename of the image
+                var img = dynamicImage.img;
+                img = img.replace('assets/', '');
+
+                // create the image object for the student controlled image
+                var dynamicImageObject = {};
+                dynamicImageObject.id = this.createRandomId();
+                dynamicImageObject.type = 'image';
+                dynamicImageObject.image = img;
+                dynamicImageObject.dataX = 0;
+                dynamicImageObject.dataY = 0;
+
+                if (previousWorkNodeId != null && previousWorkComponentId != null) {
+                    // we are getting the student data from a previous step
+
+                    /*
+                     * create the data source which specifies to get the data
+                     * for this object from another component
+                     */
+                    var dataSource = {};
+                    dataSource.nodeId = previousWorkNodeId;
+                    dataSource.componentId = previousWorkComponentId;
+                    dataSource.trialIndex = 0;
+                    dataSource.seriesIndex = 0;
+                    dataSource.tColumnIndex = 0;
+                    dataSource.xColumnIndex = 1;
+
+                    dynamicImageObject.dataSource = dataSource;
+                }
+
+                if (dynamicImage.width != null && dynamicImage.width != '' &&
+                    dynamicImage.height != null && dynamicImage.height != '') {
+
+                    dynamicImageObject.width = dynamicImage.width;
+                    dynamicImageObject.height = dynamicImage.height;
+                }
+
+                animationComponent.objects.push(dynamicImageObject);
+            }
+        }
+    }
+
+    // add the 3 components
+    wise5Node.components.push(htmlComponent);
+    wise5Node.components.push(graphComponent);
+    wise5Node.components.push(animationComponent);
 
     // add the WISE5 node to the project
     this.addWISE5Node(wise5Node);
 
     return wise5Node;
+}
+
+/**
+ * Get a dynamic image filename by id
+ * @param id the WISE4 id of the dynamic image object
+ * @param dynamicImages an array of WISE4 dynamic image objects from a cargraph
+ * step
+ */
+View.prototype.getDynamicImageFilenameById = function(id, dynamicImages) {
+
+    if (id != null && dynamicImages != null) {
+
+        // loop through all the dynamic images
+        for (var d = 0; d < dynamicImages.length; d++) {
+            var dynamicImage = dynamicImages[d];
+
+            if (dynamicImage != null) {
+                if (dynamicImage.id == id) {
+                    // we have found the image with the id we want
+                    return dynamicImage.img;
+                }
+            }
+        }
+    }
+
+    return null;
 }
 
 /**
