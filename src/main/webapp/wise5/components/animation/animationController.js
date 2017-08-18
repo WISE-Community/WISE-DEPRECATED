@@ -3777,6 +3777,9 @@ var AnimationController = function () {
             } else if (this.speedSliderValue == 5) {
                 this.realTimePerDataTime = 1;
             }
+
+            // reset the animation
+            this.resetButtonClicked();
         }
 
         /**

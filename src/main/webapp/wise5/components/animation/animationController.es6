@@ -3536,6 +3536,9 @@ class AnimationController {
         } else if (this.speedSliderValue == 5) {
             this.realTimePerDataTime = 1;
         }
+
+        // reset the animation
+        this.resetButtonClicked();
     }
 
     /**
