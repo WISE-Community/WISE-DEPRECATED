@@ -957,6 +957,10 @@ class MultipleChoiceController {
                     // whether the choice is correct
                     var isChoiceCorrect = choice.isCorrect;
 
+                    if (isChoiceCorrect == null) {
+                        isChoiceCorrect = false;
+                    }
+
                     // whether the student checked the choice
                     var isChoiceChecked = this.isChecked(choiceId);
 
