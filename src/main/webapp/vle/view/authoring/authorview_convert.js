@@ -633,8 +633,8 @@ View.prototype.createWISE5Node = function() {
 
     wise5Node.id = this.getNextNodeId();
     wise5Node.type = 'node';
-    wise5Node.showSaveButton = true;
-    wise5Node.showSubmitButton = true;
+    wise5Node.showSaveButton = false;
+    wise5Node.showSubmitButton = false;
     wise5Node.constraints = [];
 
     var transitionLogic = {};
@@ -745,18 +745,6 @@ View.prototype.convertAssessmentList = function(node, nodeContent) {
     // set the title
     wise5Node.title = node.title;
 
-    if (this.test) {
-        console.log('before');
-        console.log(prompt);
-
-        prompt = this.fixAssetReferences(prompt);
-
-        console.log('after');
-        console.log(prompt);
-
-        //this.test = true;
-    }
-
     wise5Node.showSaveButton = true;
     wise5Node.showSubmitButton = false;
     wise5Node.components = [];
@@ -792,6 +780,8 @@ View.prototype.convertAssessmentList = function(node, nodeContent) {
 
                 // set the prompt
                 component.prompt = assessment.prompt;
+                component.showSaveButton = false;
+                component.showSubmitButton = false;
 
                 if (assessment.type === 'text') {
                     // create an open response component
@@ -872,7 +862,7 @@ View.prototype.convertOpenResponse = function(node, nodeContent) {
 
     var prompt = this.getPromptFromAssessmentItem(nodeContent);
 
-    wise5Node.showSaveButton = true;
+    wise5Node.showSaveButton = false;
     wise5Node.showSubmitButton = false;
     wise5Node.components = [];
 
@@ -883,6 +873,8 @@ View.prototype.convertOpenResponse = function(node, nodeContent) {
 
     component.type = 'OpenResponse';
     component.prompt = prompt;
+    component.showSaveButton = true;
+    component.showSubmitButton = false;
 
     if (nodeContent.starterSentence != null) {
         if (nodeContent.starterSentence.display == 2 &&
@@ -919,7 +911,7 @@ View.prototype.convertMultipleChoice = function(node, nodeContent) {
     // get the prompt
     var prompt = this.getPromptFromAssessmentItem(nodeContent);
 
-    wise5Node.showSaveButton = true;
+    wise5Node.showSaveButton = false;
     wise5Node.showSubmitButton = false;
     wise5Node.components = [];
 
@@ -931,7 +923,7 @@ View.prototype.convertMultipleChoice = function(node, nodeContent) {
     component.type = 'MultipleChoice';
     component.prompt = prompt;
     component.choices = [];
-    component.showSaveButton = false;
+    component.showSaveButton = true;
     component.showSubmitButton = false;
     component.showFeedback = true;
 
@@ -991,7 +983,11 @@ View.prototype.convertMultipleChoice = function(node, nodeContent) {
                         wise5Choice.isCorrect = isCorrect;
 
                         if (isCorrect) {
-                            // there is a correct choice so we will show the submit button
+                            /*
+                             * there is a correct choice so we will show the
+                             * save and submit button in the component
+                             */
+                            component.showSaveButton = true;
                             component.showSubmitButton = true;
                         }
 
@@ -1054,7 +1050,7 @@ View.prototype.convertMatchSequence = function(node, nodeContent) {
     // get the prompt
     var prompt = this.getPromptFromAssessmentItem(nodeContent);
 
-    wise5Node.showSaveButton = true;
+    wise5Node.showSaveButton = false;
     wise5Node.showSubmitButton = false;
     wise5Node.components = [];
 
@@ -1068,8 +1064,8 @@ View.prototype.convertMatchSequence = function(node, nodeContent) {
     component.choices = [];
     component.buckets = [];
     component.feedback = [];
-    component.showSaveButton = false;
-    component.showSubmitButton = true;
+    component.showSaveButton = true;
+    component.showSubmitButton = false;
     component.ordered = false;
 
     var hasCorrectAnswer = false;
@@ -1250,6 +1246,7 @@ View.prototype.convertMatchSequence = function(node, nodeContent) {
 
     // show the submit button if there is a correct answer
     if (hasCorrectAnswer) {
+        component.showSaveButton = true;
         component.showSubmitButton = true;
     }
 
@@ -1317,7 +1314,7 @@ View.prototype.convertTable = function(node, nodeContent) {
     // set the title
     wise5Node.title = node.title;
 
-    wise5Node.showSaveButton = true;
+    wise5Node.showSaveButton = false;
     wise5Node.showSubmitButton = false;
     wise5Node.components = [];
 
@@ -1327,6 +1324,8 @@ View.prototype.convertTable = function(node, nodeContent) {
     tableComponent.id = this.createRandomId();
     tableComponent.type = 'Table';
     tableComponent.prompt = nodeContent.prompt;
+    tableComponent.showSaveButton = true;
+    tableComponent.showSubmitButton = false;
     tableComponent.globalCellSize = nodeContent.globalCellSize;
 
     // convert the WISE4 table to a WISE5 table
@@ -1413,7 +1412,7 @@ View.prototype.convertPhet = function(node, nodeContent) {
 
     wise5Node.title = node.title;
 
-    wise5Node.showSaveButton = true;
+    wise5Node.showSaveButton = false;
     wise5Node.showSubmitButton = false;
     wise5Node.components = [];
 
@@ -1443,7 +1442,7 @@ View.prototype.convertDraw = function(node, nodeContent) {
     var wise5Node = this.createWISE5Node();
     wise5Node.title = node.title;
 
-    wise5Node.showSaveButton = true;
+    wise5Node.showSaveButton = false;
     wise5Node.showSubmitButton = false;
     wise5Node.components = [];
 
@@ -1451,7 +1450,7 @@ View.prototype.convertDraw = function(node, nodeContent) {
     component.id = this.createRandomId();
     component.type = 'Draw';
     component.prompt = nodeContent.prompt;
-    component.showSaveButton = false;
+    component.showSaveButton = true;
     component.showSubmitButton = false;
 
     if (nodeContent.stamps != null) {
@@ -1534,7 +1533,7 @@ View.prototype.convertBrainstorm = function(node, nodeContent) {
     var wise5Node = this.createWISE5Node();
     wise5Node.title = node.title;
 
-    wise5Node.showSaveButton = true;
+    wise5Node.showSaveButton = false;
     wise5Node.showSubmitButton = false;
     wise5Node.components = [];
 
@@ -1575,7 +1574,7 @@ View.prototype.convertAnnotator = function(node, nodeContent) {
     var wise5Node = this.createWISE5Node();
     wise5Node.title = node.title;
 
-    wise5Node.showSaveButton = true;
+    wise5Node.showSaveButton = false;
     wise5Node.showSubmitButton = false;
     wise5Node.components = [];
 
@@ -1583,7 +1582,7 @@ View.prototype.convertAnnotator = function(node, nodeContent) {
     component.id = this.createRandomId();
     component.type = 'Label';
     component.prompt = nodeContent.prompt;
-    component.showSaveButton = false;
+    component.showSaveButton = true;
     component.showSubmitButton = false;
     component.backgroundImage = nodeContent.backgroundImg;
     component.width = 800;
@@ -1662,7 +1661,7 @@ View.prototype.convertGrapher = function(node, nodeContent) {
     var wise5Node = this.createWISE5Node();
     wise5Node.title = node.title;
 
-    wise5Node.showSaveButton = true;
+    wise5Node.showSaveButton = false;
     wise5Node.showSubmitButton = false;
     wise5Node.components = [];
 
@@ -1672,7 +1671,7 @@ View.prototype.convertGrapher = function(node, nodeContent) {
     component.graphType = 'line';
     component.roundValuesTo = 'integer';
     component.prompt = nodeContent.prompt;
-    component.showSaveButton = false;
+    component.showSaveButton = true;
     component.showSubmitButton = false;
     component.title = nodeContent.graphTitle;
     component.xAxis = {};
@@ -1734,7 +1733,7 @@ View.prototype.convertCarGraph = function(node, nodeContent) {
     var wise5Node = this.createWISE5Node();
     wise5Node.title = node.title;
 
-    wise5Node.showSaveButton = true;
+    wise5Node.showSaveButton = false;
     wise5Node.showSubmitButton = false;
     wise5Node.components = [];
 
@@ -2201,7 +2200,7 @@ View.prototype.convertMysystem = function(node, nodeContent) {
 
     wise5Node.title = node.title;
 
-    wise5Node.showSaveButton = true;
+    wise5Node.showSaveButton = false;
     wise5Node.showSubmitButton = false;
     wise5Node.components = [];
 
@@ -2209,6 +2208,8 @@ View.prototype.convertMysystem = function(node, nodeContent) {
 
     component.id = this.createRandomId();
     component.type = 'Embedded';
+    component.showSaveButton = false;
+    component.showSubmitButton = false;
 
     wise5Node.components.push(component);
 
@@ -2230,7 +2231,7 @@ View.prototype.convertMysystem2 = function(node, nodeContent) {
 
     wise5Node.title = node.title;
 
-    wise5Node.showSaveButton = true;
+    wise5Node.showSaveButton = false;
     wise5Node.showSubmitButton = false;
     wise5Node.components = [];
 
@@ -2238,6 +2239,8 @@ View.prototype.convertMysystem2 = function(node, nodeContent) {
 
     component.id = this.createRandomId();
     component.type = 'Embedded';
+    component.showSaveButton = false;
+    component.showSubmitButton = false;
 
     wise5Node.components.push(component);
 
@@ -2258,7 +2261,7 @@ View.prototype.convertWebApp = function(node, nodeContent) {
 
     wise5Node.title = node.title;
 
-    wise5Node.showSaveButton = true;
+    wise5Node.showSaveButton = false;
     wise5Node.showSubmitButton = false;
     wise5Node.components = [];
 
@@ -2266,6 +2269,8 @@ View.prototype.convertWebApp = function(node, nodeContent) {
 
     component.id = this.createRandomId();
     component.type = 'Embedded';
+    component.showSaveButton = false;
+    component.showSubmitButton = false;
     component.url = nodeContent.url;
 
     wise5Node.components.push(component);
@@ -2287,7 +2292,7 @@ View.prototype.convertBox2dModel = function(node, nodeContent) {
 
     wise5Node.title = node.title;
 
-    wise5Node.showSaveButton = true;
+    wise5Node.showSaveButton = false;
     wise5Node.showSubmitButton = false;
     wise5Node.components = [];
 
