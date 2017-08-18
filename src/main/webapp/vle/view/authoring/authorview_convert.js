@@ -825,12 +825,15 @@ View.prototype.convertAssessmentList = function(node, nodeContent) {
                             choice.text = tempText;
                             choice.feedback = '';
 
-                            component.choices.push(choice);
-
                             if (tempChoice.isCorrect) {
                                 // this choice is the correct choice
-                                component.correctChoice = choiceId;
+                                choice.isCorrect = true;
+                            } else {
+                                // this choice is not the correct choice
+                                choice.isCorrect = false;
                             }
+
+                            component.choices.push(choice);
                         }
                     }
                 }
