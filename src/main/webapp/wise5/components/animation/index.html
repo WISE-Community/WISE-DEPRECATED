@@ -765,25 +765,6 @@
                          'user-select':'none',
                          '-o-user-select':'none'}">
                     </svg>
-                    <div class="input-wrapper" ng-class="{'input-wrapper--richtext': animationController.isRichTextEnabled}">
-                        <textarea ng-if="animationController.isRichTextEnabled && !animationController.isDisabled"
-                                  ui-tinymce="animationController.tinymceOptions"
-                                  ng-model="animationController.studentResponse"
-                                  ng-model-options='{ debounce: 100 }'
-                                  ng-change="animationController.studentDataChanged()"></textarea>
-                        <div ng-if="animationController.isRichTextEnabled && animationController.isDisabled"
-                             class="input--textarea input--textarea--disabled">
-                                <compile data="animationController.studentResponse"></compile>
-                        </div>
-                        <textarea ng-if="!animationController.isRichTextEnabled"
-                                  class="input--textarea"
-                                  rows="{{animationController.getNumRows() || 3}}"
-                                  ng-model="animationController.studentResponse"
-                                  ng-model-options='{ debounce: 100 }'
-                                  ng-disabled="animationController.isDisabled"
-                                  ng-change="animationController.studentDataChanged()"
-                                  md-no-autogrow></textarea>
-                    </div>
                 </md-input-container>
             </div>
         </div>
