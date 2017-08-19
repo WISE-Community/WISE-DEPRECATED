@@ -1680,6 +1680,7 @@ View.prototype.convertGrapher = function(node, nodeContent) {
     component.xAxis = {};
     component.xAxis.title = {};
     component.xAxis.title.text = nodeContent.graphParams.xLabel;
+    component.xAxis.locked = true;
 
     if (nodeContent.graphParams.xmin != null) {
         component.xAxis.min = parseFloat(nodeContent.graphParams.xmin);
@@ -1692,6 +1693,7 @@ View.prototype.convertGrapher = function(node, nodeContent) {
     component.yAxis = {};
     component.yAxis.title = {};
     component.yAxis.title.text = nodeContent.graphParams.yLabel;
+    component.yAxis.locked = true;
 
     if (nodeContent.graphParams.ymin != null) {
         component.yAxis.min = parseFloat(nodeContent.graphParams.ymin);
