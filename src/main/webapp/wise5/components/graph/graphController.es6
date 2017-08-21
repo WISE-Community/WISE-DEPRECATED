@@ -208,15 +208,15 @@ class GraphController {
         this.connectedComponentUpdateOnOptions = [
             {
                 value: 'change',
-                text: 'Change'
+                text: this.$translate('CHANGE')
             },
             {
                 value: 'save',
-                text: 'Save'
+                text: this.$translate('SAVE')
             },
             {
                 value: 'submit',
-                text: 'Submit'
+                text: this.$translate('SUBMIT')
             }
         ];
 
@@ -5198,6 +5198,24 @@ class GraphController {
     }
 
     /**
+     * The connected component node id has changed
+     * @param connectedComponent the connected component that has changed
+     */
+    authoringConnectedComponentNodeIdChanged(connectedComponent) {
+        if (connectedComponent != null) {
+
+            // remove all the specific component parameters
+            this.authoringConnectedComponentComponentIdChanged(connectedComponent);
+
+            // clear the component id
+            connectedComponent.componentId = null;
+
+            // the authoring component content has changed so we will save the project
+            this.authoringViewComponentChanged();
+        }
+    }
+
+    /**
      * The connected component component id has changed
      * @param connectedComponent the connected component that has changed
      */
@@ -5338,6 +5356,10 @@ class GraphController {
 
                         // get the trials from the component state
                         promises.push(this.getTrialsFromComponentState(nodeId, componentId, componentState));
+                    }
+
+                    if (connectedComponent.canEdit === false) {
+                        this.isDisabled = true;
                     }
                 }
             }

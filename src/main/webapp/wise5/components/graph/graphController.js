@@ -196,13 +196,13 @@ var GraphController = function () {
         // the options for when to update this component from a connected component
         this.connectedComponentUpdateOnOptions = [{
             value: 'change',
-            text: 'Change'
+            text: this.$translate('CHANGE')
         }, {
             value: 'save',
-            text: 'Save'
+            text: this.$translate('SAVE')
         }, {
             value: 'submit',
-            text: 'Submit'
+            text: this.$translate('SUBMIT')
         }];
 
         // get the current node and node id
@@ -5513,6 +5513,27 @@ var GraphController = function () {
         }
 
         /**
+         * The connected component node id has changed
+         * @param connectedComponent the connected component that has changed
+         */
+
+    }, {
+        key: 'authoringConnectedComponentNodeIdChanged',
+        value: function authoringConnectedComponentNodeIdChanged(connectedComponent) {
+            if (connectedComponent != null) {
+
+                // remove all the specific component parameters
+                this.authoringConnectedComponentComponentIdChanged(connectedComponent);
+
+                // clear the component id
+                connectedComponent.componentId = null;
+
+                // the authoring component content has changed so we will save the project
+                this.authoringViewComponentChanged();
+            }
+        }
+
+        /**
          * The connected component component id has changed
          * @param connectedComponent the connected component that has changed
          */
@@ -5607,10 +5628,9 @@ var GraphController = function () {
                 width: 2,
                 value: x,
                 zIndex: 5
-            };
 
-            // set the plot line into the plot lines array
-            this.plotLines = [plotLine];
+                // set the plot line into the plot lines array
+            };this.plotLines = [plotLine];
         }
 
         /**
@@ -5664,6 +5684,10 @@ var GraphController = function () {
 
                             // get the trials from the component state
                             promises.push(this.getTrialsFromComponentState(nodeId, componentId, componentState));
+                        }
+
+                        if (connectedComponent.canEdit === false) {
+                            this.isDisabled = true;
                         }
                     }
                 }
