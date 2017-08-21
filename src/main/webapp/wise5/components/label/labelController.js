@@ -226,7 +226,7 @@ var LabelController = function () {
                 this.isDisabled = true;
 
                 if (componentState != null) {
-                    // create a unique id for the application iframe using this component state
+                    // create a unique id for the application label element using this component state
                     this.canvasId = "labelCanvas_" + componentState.id;
                     if (this.mode === 'gradingRevision') {
                         this.canvasId = "labelCanvas_gradingRevision_" + componentState.id;

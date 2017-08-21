@@ -180,7 +180,7 @@ class DrawController {
                 let componentState = this.$scope.componentState;
 
                 if (componentState != null) {
-                    // create a unique id for the application iframe using this component state
+                    // create a unique id for the application drawing tool element using this component state
                     this.drawingToolId = "drawingtool_" + componentState.id;
                     if (this.mode === 'gradingRevision') {
                         this.drawingToolId = "drawingtool_gradingRevision_" + componentState.id;

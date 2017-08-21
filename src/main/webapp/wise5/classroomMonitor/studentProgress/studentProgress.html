@@ -12,57 +12,57 @@
                     <workgroup-select></workgroup-select>
                 </div>
             </md-list-item>
-            <div class="table-wise--with-sticky-header">
-                <table class="table--wise md-whiteframe-1dp" layout-fill>
-                    <thead>
+            <div class="table-wrap-sticky">
+                <table class="table--list md-whiteframe-1dp" layout-fill>
+                    <thead class="table--list__thead">
                         <tr>
-                            <th class="thead" sticky>
-                                <md-button class="thead__link thead__link--center"
+                            <th class="table--list__thead__th" sticky>
+                                <md-button class="table--list__thead__link table--list__thead__link--center"
                                            ng-click="studentProgressController.setSort('online')" title="{{'sortByOnline' | translate}}">
                                     <span translate="onlineLabel"></span>
-                                    <md-icon ng-if="studentProgressController.sort === 'online' || studentProgressController.sort === '-online'" class="text-light thead__sort" ng-class="{'thead__sort--reverse': studentProgressController.sort === '-online'}"> arrow_drop_up </md-icon>
+                                    <md-icon ng-if="studentProgressController.sort === 'online' || studentProgressController.sort === '-online'" class="text-light table--list__thead__sort" ng-class="{'table--list__thead__sort--reverse': studentProgressController.sort === '-online'}"> arrow_drop_up </md-icon>
                                 </md-button>
                             </th>
-                            <th class="thead" sticky>
-                                <md-button class="thead__link thead__link--center"
+                            <th class="table--list__thead__th" sticky>
+                                <md-button class="table--list__thead__link table--list__thead__link--center"
                                            ng-click="studentProgressController.setSort('team')" title="{{'sortByTeam' | translate}}">
                                     <span translate="teamIdTitle"></span>
-                                    <md-icon ng-if="studentProgressController.sort === 'team' || studentProgressController.sort === '-team'" class="text-light thead__sort" ng-class="{'thead__sort--reverse': studentProgressController.sort === '-team'}"> arrow_drop_up </md-icon>
+                                    <md-icon ng-if="studentProgressController.sort === 'team' || studentProgressController.sort === '-team'" class="text-light table--list__thead__sort" ng-class="{'table--list__thead__sort--reverse': studentProgressController.sort === '-team'}"> arrow_drop_up </md-icon>
                                 </md-button>
                             </th>
-                            <th class="thead" sticky>
-                                <md-button class="thead__link thead__link--left"
+                            <th class="table--list__thead__th" sticky>
+                                <md-button class="table--list__thead__link table--list__thead__link--left"
                                            ng-click="studentProgressController.setSort('student')" title="{{'sortByStudent' | translate}}">
                                     <span translate="student"></span>
-                                    <md-icon ng-if="studentProgressController.sort === 'student' || studentProgressController.sort === '-student'" class="text-light thead__sort" ng-class="{'thead__sort--reverse': studentProgressController.sort === '-student'}"> arrow_drop_up </md-icon>
+                                    <md-icon ng-if="studentProgressController.sort === 'student' || studentProgressController.sort === '-student'" class="text-light table--list__thead__sort" ng-class="{'table--list__thead__sort--reverse': studentProgressController.sort === '-student'}"> arrow_drop_up </md-icon>
                                 </md-button>
                             </th>
-                            <th class="thead" sticky>
-                                <md-button class="thead__link thead__link--center td--max-width"
+                            <th class="table--list__thead__th" sticky>
+                                <md-button class="table--list__thead__link table--list__thead__link--center td--max-width"
                                            ng-click="studentProgressController.setSort('location')" title="{{'sortByLocation' | translate}}">
                                     <span translate="currentLocation"></span>
-                                    <md-icon ng-if="studentProgressController.sort === 'location' || studentProgressController.sort === '-location'" class="text-light thead__sort" ng-class="{'thead__sort--reverse': studentProgressController.sort === '-location'}"> arrow_drop_up </md-icon>
+                                    <md-icon ng-if="studentProgressController.sort === 'location' || studentProgressController.sort === '-location'" class="text-light table--list__thead__sort" ng-class="{'table--list__thead__sort--reverse': studentProgressController.sort === '-location'}"> arrow_drop_up </md-icon>
                                 </md-button>
                             </th>
-                            <th class="thead" sticky>
-                                <md-button class="thead__link thead__link--center"
+                            <th class="table--list__thead__th" sticky>
+                                <md-button class="table--list__thead__link table--list__thead__link--center"
                                            ng-click="studentProgressController.setSort('time')" title="{{'sortByTimeSpent' | translate}}">
                                     <span translate="timeSpent"></span>
-                                    <md-icon ng-if="studentProgressController.sort === 'time' || studentProgressController.sort === '-time'" class="text-light thead__sort" ng-class="{'thead__sort--reverse': studentProgressController.sort === '-time'}"> arrow_drop_up </md-icon>
+                                    <md-icon ng-if="studentProgressController.sort === 'time' || studentProgressController.sort === '-time'" class="text-light table--list__thead__sort" ng-class="{'table--list__thead__sort--reverse': studentProgressController.sort === '-time'}"> arrow_drop_up </md-icon>
                                 </md-button>
                             </th>
-                            <th class="thead" sticky>
-                                <md-button class="thead__link thead__link--center"
+                            <th class="table--list__thead__th" sticky>
+                                <md-button class="table--list__thead__link table--list__thead__link--center"
                                            ng-click="studentProgressController.setSort('completion')" title="{{'sortByCompletion' | translate}}">
                                     <span translate="projectCompletion"></span>
-                                    <md-icon ng-if="studentProgressController.sort === 'completion' || studentProgressController.sort === '-completion'" class="text-light thead__sort" ng-class="{'thead__sort--reverse': studentProgressController.sort === '-completion'}"> arrow_drop_up </md-icon>
+                                    <md-icon ng-if="studentProgressController.sort === 'completion' || studentProgressController.sort === '-completion'" class="text-light table--list__thead__sort" ng-class="{'table--list__thead__sort--reverse': studentProgressController.sort === '-completion'}"> arrow_drop_up </md-icon>
                                 </md-button>
                             </th>
-                            <th class="thead" sticky>
-                                <md-button class="thead__link thead__link--center"
+                            <th class="table--list__thead__th" sticky>
+                                <md-button class="table--list__thead__link table--list__thead__link--center"
                                            ng-click="studentProgressController.setSort('score')" title="{{'sortByScore' | translate}}">
                                     <span translate="score"></span>
-                                    <md-icon ng-if="studentProgressController.sort === 'score' || studentProgressController.sort === '-score'" class="text-light thead__sort" ng-class="{'thead__sort--reverse': studentProgressController.sort === '-score'}"> arrow_drop_up </md-icon>
+                                    <md-icon ng-if="studentProgressController.sort === 'score' || studentProgressController.sort === '-score'" class="text-light table--list__thead__sort" ng-class="{'table--list__thead__sort--reverse': studentProgressController.sort === '-score'}"> arrow_drop_up </md-icon>
                                 </md-button>
                             </th>
                         </tr>

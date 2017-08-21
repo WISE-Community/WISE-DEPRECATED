@@ -431,7 +431,7 @@ var NodeController = function () {
                         arrowOffset: 21,
                         placement: 'right',
                         yOffset: 1,
-                        title: this.$translate('TEACHING_TIPS'),
+                        title: this.$translate('ITEM_INFO'),
                         content: this.ProjectService.replaceAssetPaths(component.rubric),
                         onShow: this.onShowRubric,
                         viewed: false
