@@ -16,15 +16,20 @@ var CompileController = function CompileController($compile, $element, $scope) {
 
     _classCallCheck(this, CompileController);
 
-    $element.html(this.data);
-    $compile($element.contents())($scope);
-
-    $scope.$watch(function () {
-        return _this.data;
-    }, function (data) {
-        $element.html(data);
+    if ($scope.$parent.mode === 'authoring') {
+        // we are in authoring mode so we will watch for changes to the data
+        $scope.$watch(function () {
+            return _this.data;
+        }, function (data) {
+            // update the html
+            $element.html(data);
+            $compile($element.contents())($scope);
+        });
+    } else {
+        // we are not in authoring mode so we will just load the data
+        $element.html(this.data);
         $compile($element.contents())($scope);
-    });
+    }
 };
 
 CompileController.$inject = ['$compile', '$element', '$scope'];
