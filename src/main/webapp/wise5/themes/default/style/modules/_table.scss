@@ -1,9 +1,54 @@
-.table--wise {
+.table {
+    max-width: 100%;
+    width: auto;
+    min-width: 100px;
+    margin: 8px 0;
+
+    thead, tbody, tfoot { // TODO: remove chaining when bootstrap dependency is removed
+        > tr > th,
+        > tr > td {
+            border: 1px solid color('gray');
+            padding: 6px;
+            font-size: rem(1.5);
+            min-height: 32px;
+            height: 32px;
+            min-width: 32px;
+            vertical-align: top;
+        }
+    }
+
+    td.inactive, th {
+        background-color: color('gray-lightest');
+    }
+
+    md-input-container {
+        margin: 0;
+    }
+
+    .md-errors-spacer {
+        display: none;
+    }
+}
+
+.table--student {
+    td {
+        &.inactive {
+            padding: 8px 10px;
+        }
+    }
+}
+
+.table--full-width {
+    width: 100%;
+}
+
+.table--list {
     border: 0 none;
     background-color: #ffffff;
+    max-width: 100%;
 
     th, td {
-        padding: 8px 2px;
+        padding: 0 2px;
         border: 0 none;
     }
 
@@ -24,27 +69,30 @@
     }
 }
 
-.table-wise--with-sticky-header {
+.table-wrap-sticky {
     @media only screen and (max-width: $layout-breakpoint-sm - 1) {
         overflow-x: auto;
     }
 }
 
-.thead {
-    background-color: color('gray-darker');
-    color: color('text-light');
+.table--list__thead {
     font-size: rem(1.4);
     font-weight: 700;
-    min-height: $wise-toolbar-height;
-    height: $wise-toolbar-height;
 }
 
-.thead__row {
+.table--list__thead__tr {
     height: 100%;
     margin: 0;
 }
 
-.thead__link {
+.table--list__thead__th {
+    background-color: color('gray-darker');
+    color: color('text-light');
+    min-height: $wise-toolbar-height;
+    height: $wise-toolbar-height;
+}
+
+.table--list__thead__link {
     color: #ffffff;
     text-transform: none;
     margin: 0;
@@ -53,21 +101,21 @@
     line-height: 1.4;
 }
 
-.thead__link--center {
+.table--list__thead__link--center {
     width: 100%;
     margin: 0 auto;
 }
 
-.thead__link--left {
+.table--list__thead__link--left {
     width: 100%;
     text-align: left;
 }
 
-.thead__sort {
+.table--list__thead__sort {
     margin: 0;
 }
 
-.thead__sort--reverse {
+.table--list__thead__sort--reverse {
     transform: rotate(180deg);
 }
 

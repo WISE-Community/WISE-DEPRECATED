@@ -294,13 +294,13 @@
                 <div ng-switch-when="grading|gradingRevision" ng-switch-when-separator="|" layout="row" layout-wrap>
                     <div flex="100" flex-gt-sm="66" layout="column" class="component--grading__response">
                         <div class="component--grading__response__content">
-                            <table id="{{tableController.tableId}}" ng-if="tableController.$scope.componentState">
+                            <table id="{{tableController.tableId}}"
+                                   class="table"
+                                   ng-if="tableController.$scope.componentState">
                                 <tr ng-repeat='row in tableController.getTableDataRows()'>
-                                    <td ng-repeat='cell in row'>
-                                        <input type='text'
-                                            ng-model='cell.text'
-                                            size='{{cell.size || tableController.componentContent.globalCellSize}}'
-                                            ng-disabled='!cell.editable || tableController.isDisabled'/>
+                                    <td ng-repeat='cell in row'
+                                        ng-class="{ 'inactive' : !cell.editable }">
+                                        {{ cell.text }}
                                     </td>
                                 </tr>
                             </table>
@@ -344,29 +344,31 @@
                                ng-if='tableController.showSnipTableButton()'>
                         <md-icon> content_cut </md-icon>  {{ 'ADD_TO_NOTEBOOK' | translate:{label:tableController.notebookConfig.label} }}
                     </md-button>
-                    <table id="{{tableController.tableId}}">
-                        <tr ng-repeat='row in tableController.getTableDataRows()'>
-                            <td ng-repeat='cell in row'>
-                                <input type='text'
-                                    ng-model='cell.text'
-                                    ng-change='tableController.studentDataChanged()'
-                                    size='{{cell.size || tableController.componentContent.globalCellSize}}'
-                                    ng-disabled='!cell.editable || tableController.isDisabled'/>
+                    <table id="{{tableController.tableId}}" class="table table--student">
+                        <tr ng-repeat="row in tableController.getTableDataRows()">
+                            <td ng-repeat="cell in row" ng-class="{ 'inactive' : !cell.editable }">
+                                <span ng-if="!cell.editable || tableController.isDisabled">{{ cell.text }}</span>
+                                <md-input-container ng-if="cell.editable && !tableController.isDisabled">
+                                    <input type="text"
+                                           ng-model="cell.text"
+                                           ng-change="tableController.studentDataChanged()"
+                                           size="{{cell.size || tableController.componentContent.globalCellSize}}"/>
+                                </md-input-container>
                             </td>
                         </tr>
                     </table>
                     <div ng-if="tableController.isSaveButtonVisible || tableController.isSubmitButtonVisible"
                          class="component__actions" layout="row" layout-align="start center">
                         <md-button class="md-raised md-primary"
-                                   ng-click='tableController.saveButtonClicked()'
-                                   ng-disabled='tableController.isDisabled || !tableController.isDirty'
-                                   ng-if='tableController.isSaveButtonVisible'
+                                   ng-click="tableController.saveButtonClicked()"
+                                   ng-disabled="tableController.isDisabled || !tableController.isDirty"
+                                   ng-if="tableController.isSaveButtonVisible"
                                    aria-label="Save"
                                    translate="SAVE">{{ 'save' | translate }}</md-button>
                         <md-button class="md-raised md-primary"
-                                   ng-click='tableController.submitButtonClicked()'
-                                   ng-disabled='tableController.isDisabled || !tableController.isSubmitDirty || tableController.isSubmitButtonDisabled'
-                                   ng-show='tableController.isSubmitButtonVisible'
+                                   ng-click="tableController.submitButtonClicked()"
+                                   ng-disabled="tableController.isDisabled || !tableController.isSubmitDirty || tableController.isSubmitButtonDisabled"
+                                   ng-show="tableController.isSubmitButtonVisible"
                                    aria-label="Submit"
                                    translate="SUBMIT">{{ 'submit' | translate }}</md-button>
                         <span ng-show="tableController.saveMessage.text"
