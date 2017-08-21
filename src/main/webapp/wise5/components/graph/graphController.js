@@ -5565,6 +5565,13 @@ var GraphController = function () {
                     delete connectedComponent['yColumn'];
                 }
 
+                if (connectedComponentType == 'Table') {
+                    // set default values for the connected component params
+                    connectedComponent.skipFirstRow = true;
+                    connectedComponent.xColumn = 0;
+                    connectedComponent.yColumn = 1;
+                }
+
                 // the authoring component content has changed so we will save the project
                 this.authoringViewComponentChanged();
             }
