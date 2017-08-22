@@ -5279,6 +5279,9 @@ class GraphController {
                 connectedComponent.yColumn = 1;
             }
 
+            // default the type to import work
+            connectedComponent.type = 'importWork';
+
             // the authoring component content has changed so we will save the project
             this.authoringViewComponentChanged();
         }

@@ -471,7 +471,8 @@
                                     <md-option value='showWork'>
                                         {{ 'showWork' | translate }}
                                     </md-option>
-                                    <md-option value='showClassmateWork'>
+                                    <md-option value='showClassmateWork'
+                                               ng-if='graphController.authoringGetConnectedComponentType(connectedComponent) == "Graph"'>
                                         {{ 'showClassmateWork' | translate }}
                                     </md-option>
                                 </md-select>
