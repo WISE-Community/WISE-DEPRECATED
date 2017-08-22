@@ -208,7 +208,7 @@ class GraphController {
         this.connectedComponentUpdateOnOptions = [
             {
                 value: 'change',
-                text: this.$translate('CHANGE')
+                text: this.$translate('change')
             },
             {
                 value: 'save',
@@ -5231,7 +5231,7 @@ class GraphController {
                  * the component type is not Embedded so we will remove the
                  * seriesNumbers field
                  */
-                delete connectedComponent['seriesNumbers'];
+                delete connectedComponent.seriesNumbers;
             }
 
             if (connectedComponentType != 'Table') {
@@ -5239,9 +5239,18 @@ class GraphController {
                  * the component type is not Table so we will remove the
                  * skipFirstRow, xColumn, and yColumn fields
                  */
-                delete connectedComponent['skipFirstRow'];
-                delete connectedComponent['xColumn'];
-                delete connectedComponent['yColumn'];
+                delete connectedComponent.skipFirstRow;
+                delete connectedComponent.xColumn;
+                delete connectedComponent.yColumn;
+            }
+
+            if (connectedComponentType != 'Graph') {
+                /*
+                 * the component type is not Graph so we will remove the
+                 * show classmate work fields
+                 */
+                delete connectedComponent.showClassmateWork;
+                delete connectedComponent.showClassmateWorkSource;
             }
 
             if (connectedComponentType == 'Table') {
@@ -5414,6 +5423,34 @@ class GraphController {
                 // make the work dirty so that it gets saved
                 this.studentDataChanged();
             });
+        }
+    }
+
+    /**
+     * The showClassmateWork value has changed in a connected component
+     * @param connectedComponent the connected component that changed
+     */
+    connectedComponentShowClassmateWorkChanged(connectedComponent) {
+
+        if (connectedComponent != null) {
+
+            if (connectedComponent.showClassmateWork) {
+                /*
+                 * show classmate work was enabled so we will default the
+                 * show classmate work source to period
+                 */
+                connectedComponent.showClassmateWorkSource = 'period';
+            } else {
+                /*
+                 * the show classmate work was disabled so we will remove
+                 * the show classmate work fields
+                 */
+                delete connectedComponent.showClassmateWork;
+                delete connectedComponent.showClassmateWorkSource;
+            }
+
+            // the authoring component content has changed so we will save the project
+            this.authoringViewComponentChanged();
         }
     }
 }
