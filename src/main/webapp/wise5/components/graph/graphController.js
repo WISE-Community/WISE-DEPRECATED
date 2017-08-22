@@ -277,9 +277,6 @@ var GraphController = function () {
                 this.isPromptVisible = true;
                 this.isSaveButtonVisible = this.componentContent.showSaveButton;
                 this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
-                //this.isResetGraphButtonVisible = true;
-                //this.isResetGraphButtonVisible = this.componentContent.showResetGraphButton;
-                //this.isResetSeriesButtonVisible = this.componentContent.showResetSeriesButton;
                 this.isResetSeriesButtonVisible = true;
                 this.isSelectSeriesVisible = true;
 
@@ -395,7 +392,20 @@ var GraphController = function () {
             this.isStudentAttachmentEnabled = this.componentContent.isStudentAttachmentEnabled;
 
             if (this.mode == 'student' && this.GraphService.showClassmateWork(this.componentContent)) {
-                // show the classmate work from the connected components
+                // we will show classmate work from another component
+                this.handleConnectedComponents();
+            } else if (this.mode == 'student' && this.GraphService.componentStateHasStudentWork(componentState)) {
+                /*
+                 * the student has work so we will populate the work into this
+                 * component
+                 */
+                this.setStudentWork(componentState);
+            } else if (this.mode == 'student' && this.hasConnectedComponent(this.componentContent)) {
+                /*
+                 * the student does not have any work and there are connected
+                 * components so we will get the work from the connected
+                 * components
+                 */
                 this.handleConnectedComponents();
             } else if (this.mode == 'student' && !this.GraphService.componentStateHasStudentWork(componentState)) {
                 /*
@@ -5327,6 +5337,7 @@ var GraphController = function () {
             var newConnectedComponent = {};
             newConnectedComponent.nodeId = this.nodeId;
             newConnectedComponent.componentId = null;
+            newConnectedComponent.type = 'importWork';
             newConnectedComponent.updateOn = 'change';
 
             // initialize the array of connected components if it does not exist yet
@@ -5336,6 +5347,15 @@ var GraphController = function () {
 
             // add the connected component
             this.authoringComponentContent.connectedComponents.push(newConnectedComponent);
+
+            if (this.authoringComponentContent.connectedComponents.length > 1) {
+                /*
+                 * there is more than one connected component so we will enable
+                 * trials so that each connected component can put work in a
+                 * different trial
+                 */
+                this.authoringComponentContent.enableTrials = true;
+            }
 
             // the authoring component content has changed so we will save the project
             this.authoringViewComponentChanged();
@@ -5570,7 +5590,6 @@ var GraphController = function () {
                      * the component type is not Graph so we will remove the
                      * show classmate work fields
                      */
-                    delete connectedComponent.showClassmateWork;
                     delete connectedComponent.showClassmateWorkSource;
                 }
 
@@ -5679,9 +5698,9 @@ var GraphController = function () {
                     if (connectedComponent != null) {
                         var nodeId = connectedComponent.nodeId;
                         var componentId = connectedComponent.componentId;
-                        var showClassmateWork = connectedComponent.showClassmateWork;
+                        var type = connectedComponent.type;
 
-                        if (showClassmateWork && !this.ConfigService.isPreview()) {
+                        if (type == 'showClassmateWork' && !this.ConfigService.isPreview()) {
                             // we are showing classmate work
 
                             /*
@@ -5692,7 +5711,10 @@ var GraphController = function () {
 
                             // get the trials from the classmates
                             promises.push(this.getTrialsFromClassmates(nodeId, componentId, showClassmateWorkSource));
-                        } else {
+
+                            // we are showing work so we will not allow the student to edit it
+                            this.isDisabled = true;
+                        } else if (type == 'showWork') {
                             // we are getting the work from this student
 
                             // get the latest component state from the component
@@ -5700,10 +5722,17 @@ var GraphController = function () {
 
                             // get the trials from the component state
                             promises.push(this.getTrialsFromComponentState(nodeId, componentId, componentState));
-                        }
 
-                        if (connectedComponent.canEdit === false) {
+                            // we are showing work so we will not allow the student to edit it
                             this.isDisabled = true;
+                        } else if (type == 'importWork') {
+                            // we are getting the work from this student
+
+                            // get the latest component state from the component
+                            var componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
+
+                            // get the trials from the component state
+                            promises.push(this.getTrialsFromComponentState(nodeId, componentId, componentState));
                         }
                     }
                 }
@@ -5783,6 +5812,61 @@ var GraphController = function () {
                 // the authoring component content has changed so we will save the project
                 this.authoringViewComponentChanged();
             }
+        }
+
+        /**
+         * The connected component type has changed
+         * @param connectedComponent the connected component that changed
+         */
+
+    }, {
+        key: 'authoringConnectedComponentTypeChanged',
+        value: function authoringConnectedComponentTypeChanged(connectedComponent) {
+
+            if (connectedComponent != null) {
+
+                if (connectedComponent.type == 'importWork') {
+                    /*
+                     * the type has changed to import work
+                     */
+                } else if (connectedComponent.type == 'showWork') {
+                    /*
+                     * the type has changed to show work
+                     */
+                } else if (connectedComponent.type == 'showClassmateWork') {
+                    /*
+                     * the type has changed to show classmate work so we will enable
+                     * trials so that each classmate work will show up in a
+                     * different trial
+                     */
+                    this.authoringComponentContent.enableTrials = true;
+                }
+
+                // the authoring component content has changed so we will save the project
+                this.authoringViewComponentChanged();
+            }
+        }
+
+        /**
+         * Whether there are any connected components
+         * @param componentContent the component content
+         * @return whether there are any connected components
+         */
+
+    }, {
+        key: 'hasConnectedComponent',
+        value: function hasConnectedComponent(componentContent) {
+
+            if (componentContent != null) {
+
+                var connectedComponents = componentContent.connectedComponents;
+
+                if (connectedComponents != null && connectedComponents.length > 0) {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }]);
 

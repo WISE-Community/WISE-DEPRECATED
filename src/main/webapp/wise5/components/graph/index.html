@@ -460,26 +460,24 @@
                             </md-input-container>
                         </div>
                         <div layout='row'>
-                            <md-input-container style='margin-right: 20; width: 120;'>
-                                <label>{{ 'updateOn' | translate }}</label>
-                                <md-select ng-model='connectedComponent.updateOn'
-                                           ng-change='graphController.authoringViewComponentChanged()'
-                                           style='width: 120'>
-                                    <md-option ng-repeat='updateOnOption in graphController.connectedComponentUpdateOnOptions'
-                                               value='{{updateOnOption.value}}'>
-                                        {{updateOnOption.text}}
+                            <md-input-container style='margin-right: 20; width: 200;'>
+                                <label>{{ 'type' | translate }}</label>
+                                <md-select ng-model='connectedComponent.type'
+                                           ng-change='graphController.authoringConnectedComponentTypeChanged(connectedComponent)'
+                                           style='width: 200'>
+                                    <md-option value='importWork'>
+                                        {{ 'importWork' | translate }}
+                                    </md-option>
+                                    <md-option value='showWork'>
+                                        {{ 'showWork' | translate }}
+                                    </md-option>
+                                    <md-option value='showClassmateWork'>
+                                        {{ 'showClassmateWork' | translate }}
                                     </md-option>
                                 </md-select>
                             </md-input-container>
-                        </div>
-                        <div ng-show='graphController.authoringGetConnectedComponentType(connectedComponent) == "Graph"'>
-                            <md-checkbox ng-model='connectedComponent.showClassmateWork'
-                                         style='margin-right: 20;'
-                                         ng-change='graphController.connectedComponentShowClassmateWorkChanged(connectedComponent)'>
-                                {{ 'showClassmateWork' | translate }}
-                            </md-checkbox>
                             <md-input-container style='margin-right: 20; width: 270;'
-                                                ng-show='connectedComponent.showClassmateWork'>
+                                                ng-show='connectedComponent.type == "showClassmateWork" && graphController.authoringGetConnectedComponentType(connectedComponent) == "Graph"'>
                                 <label>{{ 'showClassmateWorkSource' | translate }}</label>
                                 <md-select ng-model='connectedComponent.showClassmateWorkSource'
                                            style='margin-right: 20;'

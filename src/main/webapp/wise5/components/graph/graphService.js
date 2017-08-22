@@ -1174,7 +1174,7 @@ var GraphService = function (_NodeService) {
                     var connectedComponent = connectedComponents[c];
 
                     if (connectedComponent != null) {
-                        if (connectedComponent.showClassmateWork) {
+                        if (connectedComponent.type == 'showClassmateWork') {
                             // the connected component is importing work from classmates
                             return true;
                         }

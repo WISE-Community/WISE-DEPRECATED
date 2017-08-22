@@ -1049,7 +1049,7 @@ class GraphService extends NodeService {
                 let connectedComponent = connectedComponents[c];
 
                 if (connectedComponent != null) {
-                    if (connectedComponent.showClassmateWork) {
+                    if (connectedComponent.type == 'showClassmateWork') {
                         // the connected component is importing work from classmates
                         return true;
                     }
