@@ -695,7 +695,62 @@
                             <md-icon>image</md-icon> {{ 'graph.importData' | translate }}
                         </md-button>
                     </div>
-                    <highchart id="{{graphController.chartId}}" config="graphController.chartConfig"></highchart>
+                    <div layout='column'>
+                        <div layout='row'>
+                            <div layout='column'
+                                 style='width: 80;'
+                                 ng-show='!graphController.componentContent.yAxis.locked'>
+                                <md-input-container>
+                                    <label>{{ 'graph.yMax' | translate }}</label>
+                                    <input type='number'
+                                           style='width: 60'
+                                           ng-model='graphController.yAxis.max'
+                                           ng-model-options='{ debounce: 1000 }'
+                                           ng-change='graphController.studentDataChanged()'/>
+                                </md-input-container>
+                                <span flex></span>
+                                <md-input-container>
+                                    <label>{{ 'graph.yMin' | translate }}</label>
+                                    <input type='number'
+                                           style='width: 60'
+                                           ng-model='graphController.yAxis.min'
+                                           ng-model-options='{ debounce: 1000 }'
+                                           ng-change='graphController.studentDataChanged()'/>
+                                </md-input-container>
+                            </div>
+                            <div>
+                                <highchart id="{{graphController.chartId}}" config="graphController.chartConfig"></highchart>
+                            </div>
+                        </div>
+                        <div layout='row'
+                             ng-show='!graphController.componentContent.xAxis.locked'>
+                            <div style='width: 80;'
+                                 ng-show='!graphController.componentContent.yAxis.locked && !graphController.componentContent.xAxis.locked'>
+
+                            </div>
+                            <div layout='row'
+                                 style='width: 100%;'
+                                 ng-show='!graphController.componentContent.xAxis.locked'>
+                                <md-input-container>
+                                    <label>{{ 'graph.xMin' | translate }}</label>
+                                    <input type='number'
+                                           style='width: 60'
+                                           ng-model='graphController.xAxis.min'
+                                           ng-model-options='{ debounce: 1000 }'
+                                           ng-change='graphController.studentDataChanged()'/>
+                                </md-input-container>
+                                <span style='width: {{graphController.xAxisLimitSpacerWidth}};'></span>
+                                <md-input-container>
+                                    <label>{{ 'graph.xMax' | translate }}</label>
+                                    <input type='number'
+                                           style='width: 60'
+                                           ng-model='graphController.xAxis.max'
+                                           ng-model-options='{ debounce: 1000 }'
+                                           ng-change='graphController.studentDataChanged()'/>
+                                </md-input-container>
+                            </div>
+                        </div>
+                    </div>
                     <div ng-if="graphController.isSaveButtonVisible || graphController.isSubmitButtonVisible"
                          class="component__actions" layout="row" layout-align="start center">
                         <md-button class="md-raised md-primary"

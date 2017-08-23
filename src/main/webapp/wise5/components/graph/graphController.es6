@@ -1027,6 +1027,9 @@ class GraphController {
             this.yAxis.allowDecimals = false;
         }
 
+        this.xAxis.endOnTick = false;
+        this.yAxis.endOnTick = false;
+
         if (this.componentContent.width != null) {
             // set the width of the graph
             this.width = this.componentContent.width;
@@ -1035,6 +1038,13 @@ class GraphController {
         if (this.componentContent.height != null) {
             // set the height of the graph
             this.height = this.componentContent.height;
+        }
+
+        // set the width of the span between the student x min and x max inputs
+        if (this.width > 100) {
+            this.xAxisLimitSpacerWidth = this.width - 100;
+        } else {
+            this.xAxisLimitSpacerWidth = 0;
         }
 
         /*
