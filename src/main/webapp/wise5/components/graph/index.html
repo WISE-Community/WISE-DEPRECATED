@@ -618,7 +618,7 @@
                            ng-show="graphController.componentContent.enableFileUpload"
                            onchange="angular.element(this).scope().fileUploadChanged(this)"/>
                     <hr />
-                    <div class="component__actions">
+                    <div class="component__actions" layout='row'>
                         <md-input-container ng-if='graphController.componentContent.enableTrials'>
                             <label>{{ 'graph.selectTrialsToShow' | translate }}</label>
                             <md-select ng-model="graphController.trialIdsToShow"
@@ -660,11 +660,19 @@
                                 </md-option>
                             </md-select>
                         </md-input-container>
-                        <md-button class="md-accent"
-                                   ng-click='graphController.resetSeries()'
-                                   ng-if='graphController.showResetSeriesButton() && graphController.activeSeries.canEdit'>
-                            <md-icon> restore </md-icon> {{ 'graph.resetSeries' | translate }}
-                        </md-button>
+                        <md-input-container>
+                            <md-button class="md-accent"
+                                       ng-click='graphController.resetSeries()'
+                                       ng-if='graphController.showResetSeriesButton() && graphController.activeSeries.canEdit'>
+                                <md-icon> restore </md-icon> {{ 'graph.resetSeries' | translate }}
+                            </md-button>
+                        </md-input-container>
+                        <md-input-container>
+                            <md-button class="md-accent"
+                                       ng-click='graphController.undoClicked()'>
+                                <md-icon>undo</md-icon> {{ 'undo' | translate }}
+                            </md-button>
+                        </md-input-container>
                     </div>
                     <div class="component__actions">
                         <md-button class="md-accent"

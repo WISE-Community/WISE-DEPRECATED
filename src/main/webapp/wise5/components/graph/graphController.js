@@ -245,6 +245,16 @@ var GraphController = function () {
 
         this.backgroundImage = null;
 
+        /*
+         * An array to store the component states for the student to undo.
+         * The undoStack will contain the component states from the current
+         * visit except for the current component state.
+         */
+        this.undoStack = [];
+
+        // used to hold the component state that is loaded when this component loads
+        this.initialComponentState = null;
+
         if (this.componentContent != null) {
 
             // get the component id
@@ -453,6 +463,17 @@ var GraphController = function () {
             } else {
                 // populate the student work into this component
                 this.setStudentWork(componentState);
+            }
+
+            if (componentState != null) {
+                // there is an initial component state so we will remember it
+                this.initialComponentState = componentState;
+
+                /*
+                 * remember this component state as the previous component
+                 * state for undo purposes
+                 */
+                this.previousComponentState = componentState;
             }
 
             // check if the student has used up all of their submits
@@ -1937,6 +1958,25 @@ var GraphController = function () {
          * Reset the table data to its initial state from the component content
          */
         value: function resetGraph() {
+
+            // reset the series and parameters of the graph
+            this.resetGraphHelper();
+
+            /*
+             * notify the controller that the student data has changed
+             * so that the graph will be redrawn
+             */
+            this.studentDataChanged();
+        }
+    }, {
+        key: 'resetGraphHelper',
+
+
+        /**
+         * Reset the series and parameters of the graph
+         */
+        value: function resetGraphHelper() {
+
             // get the original series from the component content
             this.setSeries(this.UtilService.makeCopyOfJSONObject(this.componentContent.series));
 
@@ -1953,20 +1993,14 @@ var GraphController = function () {
 
             // set the background image
             this.backgroundImage = this.componentContent.backgroundImage;
-
-            /*
-             * notify the controller that the student data has changed
-             * so that the graph will be redrawn
-             */
-            this.studentDataChanged();
         }
-    }, {
-        key: 'resetSeries',
-
 
         /**
          * Reset the active series
          */
+
+    }, {
+        key: 'resetSeries',
         value: function resetSeries() {
 
             var confirmMessage = '';
@@ -1986,47 +2020,59 @@ var GraphController = function () {
             if (answer) {
                 // the student answer yes to reset the series
 
-                // get the index of the active series
-                var activeSeriesIndex = this.getSeriesIndex(this.activeSeries);
+                // reset the active series
+                this.resetSeriesHelper();
+            }
+        }
 
-                if (activeSeriesIndex != null) {
+        /**
+         * Reset the active series
+         */
 
-                    // get the original series from the component content
-                    var originalSeries = this.componentContent.series[activeSeriesIndex];
+    }, {
+        key: 'resetSeriesHelper',
+        value: function resetSeriesHelper() {
 
-                    if (originalSeries != null) {
+            // get the index of the active series
+            var activeSeriesIndex = this.getSeriesIndex(this.activeSeries);
 
-                        // make a copy of the series
-                        originalSeries = this.UtilService.makeCopyOfJSONObject(originalSeries);
+            if (activeSeriesIndex != null) {
 
-                        // set the series
-                        this.setSeriesByIndex(originalSeries, activeSeriesIndex);
+                // get the original series from the component content
+                var originalSeries = this.componentContent.series[activeSeriesIndex];
 
-                        /*
-                         * set the active series index so that the the active series
-                         * is the same as before.
-                         */
-                        this.setActiveSeriesByIndex(activeSeriesIndex);
+                if (originalSeries != null) {
 
-                        if (this.componentContent.xAxis != null) {
-                            // reset the x axis
-                            this.setXAxis(this.componentContent.xAxis);
-                        }
+                    // make a copy of the series
+                    originalSeries = this.UtilService.makeCopyOfJSONObject(originalSeries);
 
-                        if (this.componentContent.yAxis != null) {
-                            // reset the y axis
-                            this.setYAxis(this.componentContent.yAxis);
-                        }
+                    // set the series
+                    this.setSeriesByIndex(originalSeries, activeSeriesIndex);
 
-                        // reset the background image
-                        this.backgroundImage = this.componentContent.backgroundImage;
+                    /*
+                     * set the active series index so that the the active series
+                     * is the same as before.
+                     */
+                    this.setActiveSeriesByIndex(activeSeriesIndex);
 
-                        /*
-                         * notify the controller that the student data has changed
-                         * so that the graph will be redrawn
-                         */
-                        this.studentDataChanged();
+                    if (this.componentContent.xAxis != null) {
+                        // reset the x axis
+                        this.setXAxis(this.componentContent.xAxis);
                     }
+
+                    if (this.componentContent.yAxis != null) {
+                        // reset the y axis
+                        this.setYAxis(this.componentContent.yAxis);
+                    }
+
+                    // reset the background image
+                    this.backgroundImage = this.componentContent.backgroundImage;
+
+                    /*
+                     * notify the controller that the student data has changed
+                     * so that the graph will be redrawn
+                     */
+                    this.studentDataChanged();
                 }
             }
         }
@@ -2326,6 +2372,24 @@ var GraphController = function () {
 
             // create a component state populated with the student data
             this.createComponentState(action).then(function (componentState) {
+
+                if (_this3.previousComponentState != null) {
+                    // push the previous component state onto our undo stack
+                    _this3.undoStack.push(_this3.previousComponentState);
+                }
+
+                /*
+                 * Remember this current component state for the next time
+                 * studentDataChanged() is called. The next time
+                 * studentDataChanged() is called, this will be the previous
+                 * component state and we will add it to the undoStack. We do not
+                 * want to put the current component state onto the undoStack
+                 * because if the student clicks undo and this current component
+                 * state is on the top of the stack, the graph won't change.
+                 * Basically the undoStack contains the component states from the
+                 * current visit except for the current component state.
+                 */
+                _this3.previousComponentState = componentState;
 
                 // check if a digest is in progress
                 if (!_this3.$scope.$$phase) {
@@ -4141,14 +4205,21 @@ var GraphController = function () {
                 if (!this.getTrialById(idToShow)) {
                     trialIdsToShow.splice(a, 1);
                 }
-                this.trialIdsToShow = trialIdsToShow;
             }
 
-            /*
-             * notify the controller that the student data has
-             * changed so that it will perform any necessary saving
-             */
-            this.studentDataChanged();
+            // check if the trialIdsToShow has changed
+            if (angular.toJson(this.trialIdsToShow) != angular.toJson(trialIdsToShow)) {
+                // the trialIdsToShow has changed
+
+                // update the trialIdsToShow
+                this.trialIdsToShow = trialIdsToShow;
+
+                /*
+                 * notify the controller that the student data has
+                 * changed so that it will perform any necessary saving
+                 */
+                this.studentDataChanged();
+            }
 
             // update the selected trial text
             this.selectedTrialsText = this.getSelectedTrialsText();
@@ -4173,7 +4244,9 @@ var GraphController = function () {
                 }
             }
 
-            this.trialIdsToShow = idsToShow;
+            if (angular.toJson(this.trialIdsToShow) !== angular.toJson(idsToShow)) {
+                this.trialIdsToShow = idsToShow;
+            }
         }
     }, {
         key: 'getSelectedTrialsText',
@@ -5870,6 +5943,60 @@ var GraphController = function () {
             }
 
             return false;
+        }
+
+        /**
+         * The undo button was clicked
+         */
+
+    }, {
+        key: 'undoClicked',
+        value: function undoClicked() {
+
+            if (this.undoStack != null && this.undoStack.length > 0) {
+                // there are component states on the undo stack
+
+                // get the previous component state
+                var previousComponentState = this.undoStack.pop();
+
+                if (previousComponentState != null) {
+
+                    // load the previous component state
+                    this.setStudentWork(previousComponentState);
+
+                    // remember this previous component state
+                    this.previousComponentState = previousComponentState;
+
+                    // re-render the graph
+                    this.setupGraph();
+                }
+            } else {
+                // there are no previous component states
+
+                // check if there was a component state when this component loaded
+                if (this.initialComponentState == null) {
+
+                    // there is no previous component state now
+                    this.previousComponentState = null;
+
+                    /*
+                     * there was no initial component state so we can just
+                     * reset the graph
+                     */
+
+                    // remove all the trials
+                    this.trials = [];
+
+                    // create a blank trial
+                    this.newTrial();
+
+                    // reset the series
+                    this.resetSeriesHelper();
+
+                    // re-render the graph
+                    this.setupGraph();
+                }
+            }
         }
     }]);
 
