@@ -5452,20 +5452,36 @@ class GraphController {
                     var componentId = connectedComponent.componentId;
                     var type = connectedComponent.type;
 
-                    if (type == 'showClassmateWork' && !this.ConfigService.isPreview()) {
+                    if (type == 'showClassmateWork') {
                         // we are showing classmate work
 
-                        /*
-                         * showClassmateWorkSource determines whether to get
-                         * work from the period or the whole class (all periods)
-                         */
-                        var showClassmateWorkSource = connectedComponent.showClassmateWorkSource;
+                        if (this.ConfigService.isPreview()) {
+                            /*
+                             * we are in preview mode so we will just get the
+                             * work for this student and show it
+                             */
 
-                        // get the trials from the classmates
-                        promises.push(this.getTrialsFromClassmates(nodeId, componentId, showClassmateWorkSource));
+                            // get the latest component state from the component
+                            var componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
 
-                        // we are showing work so we will not allow the student to edit it
-                        this.isDisabled = true;
+                            // get the trials from the component state
+                            promises.push(this.getTrialsFromComponentState(nodeId, componentId, componentState));
+
+                            // we are showing work so we will not allow the student to edit it
+                            this.isDisabled = true;
+                        } else {
+                            /*
+                             * showClassmateWorkSource determines whether to get
+                             * work from the period or the whole class (all periods)
+                             */
+                            var showClassmateWorkSource = connectedComponent.showClassmateWorkSource;
+
+                            // get the trials from the classmates
+                            promises.push(this.getTrialsFromClassmates(nodeId, componentId, showClassmateWorkSource));
+
+                            // we are showing work so we will not allow the student to edit it
+                            this.isDisabled = true;
+                        }
                     } else if (type == 'showWork') {
                         // we are getting the work from this student
 
