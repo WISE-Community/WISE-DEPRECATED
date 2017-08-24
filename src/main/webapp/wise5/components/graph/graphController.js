@@ -187,6 +187,24 @@ var GraphController = function () {
             text: this.$translate('graph.diamond')
         }];
 
+        // the options for line types
+        this.availableLineTypes = [{
+            value: 'Solid',
+            text: this.$translate('graph.solid')
+        }, {
+            value: 'Dash',
+            text: this.$translate('graph.dash')
+        }, {
+            value: 'Dot',
+            text: this.$translate('graph.dot')
+        }, {
+            value: 'ShortDash',
+            text: this.$translate('graph.shortDash')
+        }, {
+            value: 'ShortDot',
+            text: this.$translate('graph.shortDot')
+        }];
+
         // the width of the graph
         this.width = null;
 

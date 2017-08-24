@@ -94,6 +94,7 @@ var GraphService = function (_NodeService) {
                 name: this.$translate('graph.prediction'),
                 data: [],
                 color: 'blue',
+                dashStyle: 'Solid',
                 marker: {
                     symbol: 'circle'
                 },

@@ -66,6 +66,7 @@ class GraphService extends NodeService {
                 name: this.$translate('graph.prediction'),
                 data: [],
                 color: 'blue',
+                dashStyle: 'Solid',
                 marker: {
                     symbol: 'circle'
                 },
