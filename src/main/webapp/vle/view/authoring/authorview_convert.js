@@ -2032,7 +2032,7 @@ View.prototype.convertCarGraph = function(node, nodeContent) {
             if (expectedResult != null) {
 
                 // get the filename of the correct image
-                var filename = this.getDynamicImageFilenameById(expectedResult.id, dynamicImages);
+                var filename = this.getDynamicImageFilenameById(expectedResult.id, nodeContent.dynamicImages);
 
                 if (filename != null) {
                     filename = filename.replace('.png', '-correct.png');
