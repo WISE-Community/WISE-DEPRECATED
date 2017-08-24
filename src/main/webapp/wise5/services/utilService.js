@@ -859,6 +859,47 @@ var UtilService = function () {
 
             return label;
         }
+
+        /**
+         * Check if two arrays contain the same values. This is commonly used to
+         * check if two arrays of ids contain the same values. The order of the
+         * elements is not compared, only the actual values. This means the elements
+         * can be in different orders but still contain the same values.
+         * Example:
+         * array1=['1234567890', 'abcdefghij']
+         * array2=['abcdefghij', '1234567890']
+         * If these two arrays are passed in as the two arguments, this function
+         * will return true.
+         * Note: This may only work if the elements are strings, numbers or
+         * booleans. If the elements are objects, this function may or may not work.
+         * @param array1 an array of strings, numbers, or booleans
+         * @param array2 an array of strings, numbers, or booleans
+         * @return whether the arrays contain the same values
+         */
+
+    }, {
+        key: 'arraysContainSameValues',
+        value: function arraysContainSameValues(array1, array2) {
+
+            if (array1 != null && array2 != null) {
+                // make a copy of array 1 and sort it
+                var array1Copy = this.makeCopyOfJSONObject(array1);
+                array1Copy.sort();
+
+                // make a copy of array 2 and sort it
+                var array2Copy = this.makeCopyOfJSONObject(array2);
+                array2Copy.sort();
+
+                // compare the string values of both array
+                if (angular.toJson(array1Copy) == angular.toJson(array2Copy)) {
+                    // the arrays are the same
+                    return true;
+                }
+            }
+
+            // the arrays are not the same
+            return false;
+        }
     }]);
 
     return UtilService;

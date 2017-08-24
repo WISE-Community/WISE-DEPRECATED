@@ -270,6 +270,12 @@ class GraphController {
         // used to hold the component state that is loaded when this component loads
         this.initialComponentState = null;
 
+        /*
+         * whether to add the next component state created in
+         * studentDataChanged() to the undoStack
+         */
+        this.addNextComponentStateToUndoStack = false;
+
         if (this.componentContent != null) {
 
             // get the component id
@@ -1393,6 +1399,12 @@ class GraphController {
                                         // add the point to the series
                                         thisGraphController.addPointToSeries(activeSeries, x, y);
 
+                                        /*
+                                         * add the next component state created in studentDataChanged() to the
+                                         * undo stack
+                                         */
+                                        thisGraphController.addNextComponentStateToUndoStack = true;
+
                                         // notify the controller that the student data has changed
                                         thisGraphController.studentDataChanged();
                                     } else {
@@ -1488,6 +1500,12 @@ class GraphController {
                                                     } else if (thisGraphController.graphType == 'column') {
                                                         data[index] = y;
                                                     }
+
+                                                    /*
+                                                     * add the next component state created in studentDataChanged() to the
+                                                     * undo stack
+                                                     */
+                                                    thisGraphController.addNextComponentStateToUndoStack = true;
 
                                                     // tell the controller the student data has changed
                                                     thisGraphController.studentDataChanged();
@@ -1935,6 +1953,12 @@ class GraphController {
         this.resetGraphHelper();
 
         /*
+         * set the flag to add the next component state created in
+         * studentDataChanged() to the undo stack
+         */
+        this.addNextComponentStateToUndoStack = true;
+
+        /*
          * notify the controller that the student data has changed
          * so that the graph will be redrawn
          */
@@ -2030,6 +2054,12 @@ class GraphController {
 
                 // reset the background image
                 this.backgroundImage = this.componentContent.backgroundImage;
+
+                /*
+                 * set the flag to add the next component state created in
+                 * studentDataChanged() to the undo stack
+                 */
+                this.addNextComponentStateToUndoStack = true;
 
                 /*
                  * notify the controller that the student data has changed
@@ -2310,23 +2340,27 @@ class GraphController {
         // create a component state populated with the student data
         this.createComponentState(action).then((componentState) => {
 
-            if (this.previousComponentState != null) {
-                // push the previous component state onto our undo stack
-                this.undoStack.push(this.previousComponentState);
-            }
+            if (this.addNextComponentStateToUndoStack) {
+                if (this.previousComponentState != null) {
+                    // push the previous component state onto our undo stack
+                    this.undoStack.push(this.previousComponentState);
+                }
 
-            /*
-             * Remember this current component state for the next time
-             * studentDataChanged() is called. The next time
-             * studentDataChanged() is called, this will be the previous
-             * component state and we will add it to the undoStack. We do not
-             * want to put the current component state onto the undoStack
-             * because if the student clicks undo and this current component
-             * state is on the top of the stack, the graph won't change.
-             * Basically the undoStack contains the component states from the
-             * current visit except for the current component state.
-             */
-            this.previousComponentState = componentState;
+                /*
+                 * Remember this current component state for the next time
+                 * studentDataChanged() is called. The next time
+                 * studentDataChanged() is called, this will be the previous
+                 * component state and we will add it to the undoStack. We do not
+                 * want to put the current component state onto the undoStack
+                 * because if the student clicks undo and this current component
+                 * state is on the top of the stack, the graph won't change.
+                 * Basically the undoStack contains the component states from the
+                 * current visit except for the current component state.
+                 */
+                this.previousComponentState = componentState;
+
+                this.addNextComponentStateToUndoStack = false;
+            }
 
             // check if a digest is in progress
             if(!this.$scope.$$phase) {
@@ -3010,6 +3044,12 @@ class GraphController {
                         // the graph has changed
                         this.isDirty = true;
 
+                        /*
+                         * set the flag to add the next component state created in
+                         * studentDataChanged() to the undo stack
+                         */
+                        this.addNextComponentStateToUndoStack = true;
+
                         this.studentDataChanged();
                     });
                 }
@@ -3282,6 +3322,12 @@ class GraphController {
                         data.splice(index, 1);
                     }
                 }
+
+                /*
+                 * set the flag to add the next component state created in
+                 * studentDataChanged() to the undo stack
+                 */
+                this.addNextComponentStateToUndoStack = true;
 
                 this.studentDataChanged();
             }
@@ -3686,6 +3732,12 @@ class GraphController {
         this.newTrial();
 
         /*
+         * set the flag to add the next component state created in
+         * studentDataChanged() to the undo stack
+         */
+        this.addNextComponentStateToUndoStack = true;
+
+        /*
          * notify the controller that the student data has
          * changed so that it will perform any necessary saving
          */
@@ -3907,6 +3959,12 @@ class GraphController {
         }
 
         /*
+         * set the flag to add the next component state created in
+         * studentDataChanged() to the undo stack
+         */
+        this.addNextComponentStateToUndoStack = true;
+
+        /*
          * notify the controller that the student data has
          * changed so that it will perform any necessary saving
          */
@@ -3948,6 +4006,12 @@ class GraphController {
              * previously active series
              */
             this.setActiveSeriesByIndex(seriesIndex);
+
+            /*
+             * set the flag to add the next component state created in
+             * studentDataChanged() to the undo stack
+             */
+            this.addNextComponentStateToUndoStack = true;
 
             /*
              * notify the controller that the student data has
@@ -4021,10 +4085,17 @@ class GraphController {
             }
         }
 
-        // check if the trialIdsToShow has changed
-        if (angular.toJson(this.trialIdsToShow) != angular.toJson(trialIdsToShow)) {
-            // the trialIdsToShow has changed
-
+        /*
+         * Make sure the trialIdsToShow has actually changed. Sometimes
+         * trialIdsToShowChanged() gets called even if trialIdsToShow
+         * does not change because the model for the trial checkbox
+         * select is graphController.trials. This means trialIdsToShowChanged()
+         * will be called when we replace the trials increateComponentState()
+         * but this does not necessarily mean the trialIdsToShow has changed.
+         * We do this check to minimize the number of times studentDataChanged()
+         * is called.
+         */
+        if (!this.UtilService.arraysContainSameValues(this.previousTrialIdsToShow, trialIdsToShow)) {
             // update the trialIdsToShow
             this.trialIdsToShow = trialIdsToShow;
 
@@ -4035,9 +4106,18 @@ class GraphController {
             this.studentDataChanged();
         }
 
+        /*
+         * Remember the trial ids to show so we can use it to make sure the
+         * trialIdsToShow actually change the next time trialIdsToShowChanged()
+         * is called.
+         */
+        this.previousTrialIdsToShow = this.UtilService.makeCopyOfJSONObject(this.trialIdsToShow);
+
         // update the selected trial text
         this.selectedTrialsText = this.getSelectedTrialsText();
     };
+
+
 
     /**
      * Set which trials are selected in the trial select model
@@ -4055,9 +4135,7 @@ class GraphController {
             }
         }
 
-        if (angular.toJson(this.trialIdsToShow) !== angular.toJson(idsToShow)) {
-            this.trialIdsToShow = idsToShow;
-        }
+        this.trialIdsToShow = idsToShow;
     };
 
     /**
@@ -5677,6 +5755,18 @@ class GraphController {
                 this.setupGraph();
             }
         }
+    }
+
+    /**
+     * A trial checkbox was clicked to hide or show a trial
+     */
+    trialCheckboxClicked() {
+
+        /*
+         * set the flag to add the next component state created in
+         * studentDataChanged() to the undo stack
+         */
+        this.addNextComponentStateToUndoStack = true;
     }
 }
 

@@ -626,7 +626,9 @@
                                        md-selected-text="graphController.selectedTrialsText"
                                        class="graph-select"
                                        multiple>
-                                <md-option ng-repeat="trial in graphController.trials" ng-value="trial.id">
+                                <md-option ng-repeat="trial in graphController.trials"
+                                           ng-value="trial.id"
+                                           ng-click='graphController.trialCheckboxClicked()'>
                                     <span>{{trial.name}}</span>
                                     <md-button ng-click='graphController.deleteTrial($index)'
                                                ng-if='graphController.componentContent.canDeleteTrials'
