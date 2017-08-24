@@ -5921,7 +5921,7 @@ var GraphController = function () {
 
                             // we are showing work so we will not allow the student to edit it
                             this.isDisabled = true;
-                        } else if (type == 'importWork') {
+                        } else if (type == 'importWork' || type == null) {
                             // we are getting the work from this student
 
                             // get the latest component state from the component
