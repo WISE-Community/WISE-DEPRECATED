@@ -1029,9 +1029,6 @@ var GraphController = function () {
                 this.yAxis.allowDecimals = false;
             }
 
-            this.xAxis.endOnTick = false;
-            this.yAxis.endOnTick = false;
-
             if (this.componentContent.width != null) {
                 // set the width of the graph
                 this.width = this.componentContent.width;
@@ -2197,8 +2194,14 @@ var GraphController = function () {
 
                     this.setTrialIdsToShow();
 
-                    this.setXAxis(studentData.xAxis);
-                    this.setYAxis(studentData.yAxis);
+                    if (studentData.xAxis != null) {
+                        this.setXAxis(studentData.xAxis);
+                    }
+
+                    if (studentData.yAxis != null) {
+                        this.setYAxis(studentData.yAxis);
+                    }
+
                     this.setActiveSeriesByIndex(studentData.activeSeriesIndex);
 
                     if (studentData.backgroundImage != null) {
