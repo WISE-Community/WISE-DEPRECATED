@@ -1865,6 +1865,7 @@ View.prototype.convertCarGraph = function(node, nodeContent) {
                         var previousWorkConnectedComponent = {};
                         previousWorkConnectedComponent.nodeId = previousWorkWISE5Node.id;
                         previousWorkConnectedComponent.componentId = tempComponent.id;
+                        previousWorkConnectedComponent.type = 'showWork';
                         connectedComponents.push(previousWorkConnectedComponent);
 
                         /*
