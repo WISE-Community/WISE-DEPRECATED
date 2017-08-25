@@ -42,16 +42,16 @@
     padding: 16px;
 }
 
-.discussion-post__avatar, md-list-item.md-3-line > .md-avatar.discussion-post__avatar {
+.discussion-post__avatar, md-list-item > .md-avatar.discussion-post__avatar {
     margin-right: 8px;
 }
 
-.discussion-post__avatar--reply, md-list-item.md-3-line > .md-avatar.discussion-post__avatar--reply {
+.discussion-post__avatar--reply, md-list-item > .md-avatar.discussion-post__avatar--reply {
     margin-top: 8px;
 }
 
 
-.discussion-post__user, md-list-item.md-3-line .md-list-item-text h3.discussion-post__user {
+.discussion-post__user, md-list-item .md-list-item-text h3.discussion-post__user {
     padding-bottom: 4px;
     font-weight: 700;
     line-height: 1.3;
@@ -167,19 +167,20 @@ md-input-container.discussion-new__input-container {
     margin-bottom: 0;
 }
 
-.discussion-reply, md-list-item.md-3-line.md-long-text.discussion-reply {
+.discussion-reply, md-list-item.discussion-reply {
     margin: 0 12px 8px;
     padding: 0;
     min-height: 56px;
 }
 
-.discusstion-reply__details, md-list-item.md-3-line .md-list-item-text.discusstion-reply__details {
+.discusstion-reply__details, md-list-item .md-list-item-text.discusstion-reply__details {
     margin: 8px 0;
 }
 
-.discussion-post__user--reply, md-list-item.md-3-line .md-list-item-text h3.discussion-post__user--reply {
+.discussion-post__user--reply, md-list-item .md-list-item-text h3.discussion-post__user--reply {
     font-size: ($body-font-size-base) - 1;
     padding: 0;
+    margin: 0;
 }
 
 .discusstion-reply__content {
