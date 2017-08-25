@@ -460,7 +460,7 @@ class GraphController {
             if (this.mode == 'student' && this.GraphService.showClassmateWork(this.componentContent)) {
                 // we will show classmate work from another component
                 this.handleConnectedComponents();
-            } else if (this.mode == 'student' && this.GraphService.componentStateHasStudentWork(componentState)) {
+            } else if (this.mode == 'student' && this.GraphService.componentStateHasStudentWork(componentState, this.componentContent)) {
                 /*
                  * the student has work so we will populate the work into this
                  * component
@@ -473,7 +473,7 @@ class GraphController {
                  * components
                  */
                 this.handleConnectedComponents();
-            } else if (this.mode == 'student' && !this.GraphService.componentStateHasStudentWork(componentState)) {
+            } else if (this.mode == 'student' && !this.GraphService.componentStateHasStudentWork(componentState, this.componentContent)) {
                 /*
                  * only import work if the student does not already have
                  * work for this component

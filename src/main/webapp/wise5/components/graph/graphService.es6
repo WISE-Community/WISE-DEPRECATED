@@ -876,7 +876,7 @@ class GraphService extends NodeService {
      * @param componentState the component state object
      * @return whether the component state has any work
      */
-    componentStateHasStudentWork(componentState) {
+    componentStateHasStudentWork(componentState, componentContent) {
         let hasStudentWork = false;
 
         if (componentState != null) {
@@ -914,9 +914,50 @@ class GraphService extends NodeService {
                     }
                 }
             }
+
+            // check if the student has changed any of the axis limits
+            if (this.anyAxisLimitChanged(componentState, componentContent)) {
+                hasStudentWork = true;
+            }
         }
 
         return hasStudentWork;
+    }
+
+    /**
+     * Check if the student has changed any of the axis limits
+     * @param componentState the component state
+     * @param componentContent the component content
+     * @return whether the student has changed any of the axis limits
+     */
+    anyAxisLimitChanged(componentState, componentContent) {
+
+        if (componentState != null && componentState.studentData != null && componentContent != null) {
+
+            if (componentState.studentData.xAxis != null && componentContent.xAxis != null) {
+
+                if (componentState.studentData.xAxis.min != componentContent.xAxis.min) {
+                    // the student has changed the x min
+                    return true;
+                } else if (componentState.studentData.xAxis.max != componentContent.xAxis.max) {
+                    // the student has changed the x max
+                    return true;
+                }
+            }
+
+            if (componentState.studentData.yAxis != null && componentContent.yAxis != null) {
+
+                if (componentState.studentData.yAxis.min != componentContent.yAxis.min) {
+                    // the student has changed the y min
+                    return true;
+                } else if (componentState.studentData.yAxis.max != componentContent.yAxis.max) {
+                    // the student has changed the y max
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     /**
