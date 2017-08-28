@@ -29,13 +29,6 @@
 }
 
 .match-bucket--choices {
-    .match-bucket__contents {
-        column-gap: 8px;
-
-        @media only screen and (max-width: ($layout-breakpoint-sm - 1)) {
-            column-count: 1 !important;
-        }
-    }
     .match-bucket__header {
         color: color('accent-2');
     }
@@ -49,6 +42,12 @@
     transition: background-color 250ms;
     border-bottom-left-radius: $card-border-radius;
     border-bottom-right-radius: $card-border-radius;
+
+    column-gap: 8px;
+
+    @media only screen and (max-width: ($layout-breakpoint-xs - 1)) {
+        column-count: 1 !important;
+    }
 
     img {
         max-width: 100%;

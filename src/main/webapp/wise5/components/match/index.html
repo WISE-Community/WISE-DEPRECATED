@@ -382,7 +382,7 @@
                                                 <md-list class="match-bucket__contents"
                                                          dragula="'match_{{matchController.componentId}}'"
                                                          dragula-model='bucket.items'
-                                                         ng-style="$index === 0 ? matchController.choiceStyle : {}">
+                                                         ng-style="matchController.bucketStyle">
                                                     <div class="match-bucket__item" ng-repeat='item in bucket.items'>
                                                         <md-list-item class="match-bucket__item__contents">
                                                             <div class="md-list-item-text">
@@ -490,7 +490,7 @@
                                         <md-list class="match-bucket__contents"
                                                  dragula="'match_{{matchController.componentId}}'"
                                                  dragula-model='bucket.items'
-                                                 ng-style="$index === 0 ? matchController.choiceStyle : {}">
+                                                 ng-style="matchController.bucketStyle">
                                             <div class="match-bucket__item" ng-repeat='item in bucket.items'>
                                                 <md-list-item class="match-bucket__item__contents">
                                                     <div class="md-list-item-text">

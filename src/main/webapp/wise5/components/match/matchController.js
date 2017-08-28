@@ -81,6 +81,9 @@ var MatchController = function () {
         // css style for the choice items
         this.choiceStyle = '';
 
+        // css style for the buckets
+        this.bucketStyle = '';
+
         // message to show next to save/submit buttons
         this.saveMessage = {
             text: '',
@@ -875,7 +878,7 @@ var MatchController = function () {
                     this.bucketWidth = 100;
                     this.choiceColumns = 1;
                 } else {
-                    if (this.componentContent.bucketWidth) {
+                    if (typeof this.componentContent.bucketWidth === 'number') {
                         this.bucketWidth = this.componentContent.bucketWidth;
                         this.choiceColumns = Math.round(100 / this.componentContent.bucketWidth);
                     } else {
@@ -889,11 +892,19 @@ var MatchController = function () {
                         }
                     }
 
+                    if (typeof this.componentContent.choiceColumns === 'number') {
+                        this.choiceColumns = this.componentContent.choiceColumns;
+                    }
+
                     this.choiceStyle = {
                         '-moz-column-count': this.choiceColumns,
                         '-webkit-column-count': this.choiceColumns,
                         'column-count': this.choiceColumns
                     };
+
+                    if (this.bucketWidth === 100) {
+                        this.bucketStyle = this.choiceStyle;
+                    }
                 }
 
                 /*
