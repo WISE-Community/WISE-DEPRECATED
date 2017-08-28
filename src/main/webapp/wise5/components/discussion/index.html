@@ -217,7 +217,7 @@
                                          ng-model="discussionController.newResponse"></div>
                                     <textarea ng-if="!discussionController.isRichTextEnabled && !discussionController.isDisabled"
                                               class="discussion-new__input--textarea"
-                                              placeholder="Share with class..."
+                                              placeholder="{{ 'shareWithClass' | translate }}"
                                               ng-model="discussionController.newResponse"
                                               ng-model-options='{ debounce: 100 }'
                                               ng-disabled="discussionController.isDisabled"

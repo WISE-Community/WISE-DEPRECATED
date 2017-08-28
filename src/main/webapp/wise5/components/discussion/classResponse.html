@@ -1,7 +1,7 @@
 <md-card class="discussion-post">
     <div class="discussion-post__contents">
         <div layout="row" layout-align="start center">
-            <div class="md-avatar discussion-post__avatar"><md-icon class="md-48" style="color: {{getAvatarColorForWorkgroupId(response.workgroupId)}};"> account_circle </md-icon></div>
+            <div class="md-avatar discussion-post__avatar"><md-icon class="md-48" style="color: {{classResponseCtrl.getAvatarColorForWorkgroupId(classResponseCtrl.response.workgroupId)}};"> account_circle </md-icon></div>
             <div flex>
                 <div class="discussion-post__user">{{ classResponseCtrl.response.userNames }}</div>
                 <div class="md-body-1 discussion-post__date"><span class="component__actions__more"><md-tooltip md-direction="right">{{ classResponseCtrl.adjustClientSaveTime(classResponseCtrl.response.serverSaveTime) | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip>{{ classResponseCtrl.adjustClientSaveTime(classResponseCtrl.response.serverSaveTime) | amCalendar }}</span></div>
@@ -20,15 +20,16 @@
     <div class="discussion-comments">
         <div class="discussion-comments__contents" ng-show="classResponseCtrl.response.replies.length">
             <md-subheader class="md-no-sticky discussion-comments__header">
-                <a ng-if="classResponseCtrl.response.replies.length > 1" ng-click="classResponseCtrl.toggleExpanded()">{{ 'discussion.comments' | translate }} ({{ classResponseCtrl.response.replies.length }})<md-icon ng-if="!classResponseCtrl.expanded">expand_more</md-icon><md-icon ng-if="classResponseCtrl.expanded">expand_less</md-icon></a>
+                <a ng-if="classResponseCtrl.response.replies.length > 1" ng-click="classResponseCtrl.toggleExpanded()">{{ 'discussion.comments' | translate }} ({{ classResponseCtrl.response.replies.length }})<md-icon class="md-primary" ng-if="!classResponseCtrl.expanded">expand_more</md-icon><md-icon class="md-primary" ng-if="classResponseCtrl.expanded">expand_less</md-icon></a>
                 <span ng-if="classResponseCtrl.response.replies.length < 2">{{ 'discussion.comments' | translate }} ({{ classResponseCtrl.response.replies.length }})</span>
             </md-subheader>
             <md-list class="discussion-comments__list">
-                <md-list-item class="md-3-line md-long-text discussion-reply"
+                <md-list-item class="discussion-reply"
+                              layout-align="start start"
                               ng-class="{'animate-show': !$last}"
                               ng-repeat="reply in classResponseCtrl.response.replies"
                               ng-show="$last || classResponseCtrl.expanded">
-                    <div class="md-avatar discussion-post__avatar--reply discussion-post__avatar"><md-icon class="md-36" style="color: {{getAvatarColorForWorkgroupId(reply.workgroupId)}}"> account_circle </md-icon></div>
+                    <div class="md-avatar discussion-post__avatar--reply discussion-post__avatar"><md-icon class="md-36" style="color: {{classResponseCtrl.getAvatarColorForWorkgroupId(reply.workgroupId)}}"> account_circle </md-icon></div>
                     <div class="md-list-item-text discusstion-reply__details">
                         <h3 class="discussion-post__user discussion-post__user--reply" flex>{{ reply.userNames }} <span class="md-caption discussion-post__date discussion-post__date--reply component__actions__more"><md-tooltip md-direction="right">{{ classResponseCtrl.adjustClientSaveTime(reply.serverSaveTime) | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip><span am-time-ago="{{classResponseCtrl.adjustClientSaveTime(reply.serverSaveTime)}}"></span></span></h3>
                         <div class="discusstion-reply__content md-body-1" ng-bind-html="reply.studentData.response"></div>
@@ -42,13 +43,13 @@
             </md-list>
             <md-divider></md-divider>
         </div>
-        <div class="discussion-new-reply" flex layout="row" ng-if="discussionController.node === 'student'">
+        <div class="discussion-new-reply" flex layout="row" ng-if="classResponseCtrl.mode === 'student'">
             <md-input-container class="input-container discussion-new-reply__input-container md-block" md-no-float flex>
                 <textarea class="input--textarea discussion-reply__input"
                           ng-model='classResponseCtrl.response.replyText'
                           ng-model-options='{ debounce: 100 }'
-                          placeholder="Add comment..."
-                          aria-label="Add comment"
+                          placeholder="{{ 'addComment' | translate }}"
+                          aria-label="{{ 'addComment' | translate }}"
                           ng-keyup="classResponseCtrl.replyEntered($event, classResponseCtrl.response)"></textarea>
             </md-input-container>
             <div class="discussion-new__actions discussion-new-reply__actions">
