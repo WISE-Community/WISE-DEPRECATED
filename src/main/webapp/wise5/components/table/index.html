@@ -154,105 +154,64 @@
                 <button ng-click='tableController.makeAllCellsEditable()'>Make All Cells Editable</button>
                 </br>
                 <div ng-if='tableController.mode === "authoring"'>
-                    {{ 'IMPORT_PREVIOUS_WORK' | translate }}:
-                    <input type='checkbox'
-                           ng-model='tableController.authoringComponentContent.importPreviousWork'
-                           ng-click='tableController.authoringImportPreviousWorkClicked()'
-                           ng-change='tableController.authoringViewComponentChanged()'/>
-                </div>
-                <div ng-if='tableController.mode === "authoring" && tableController.authoringComponentContent.importPreviousWork'>
-                    {{ 'IMPORT_PREVIOUS_WORK_STEP' | translate }}:
-                    <select ng-model='tableController.authoringComponentContent.importPreviousWorkNodeId'
-                            ng-change='tableController.authoringImportPreviousWorkNodeIdChanged()'>
-                        <option></option>
-                        <option ng-repeat='item in tableController.idToOrder | toArray | orderBy : "order"'
-                                value='{{item.$key}}'
-                                ng-if='tableController.isApplicationNode(item.$key)'>{{tableController.getNodePositionAndTitleByNodeId(item.$key)}}</option>
-                    </select>
-                    <br/>
-                    {{ 'IMPORT_PREVIOUS_WORK_COMPONENT' | translate }}:
-                    <select ng-model='tableController.authoringComponentContent.importPreviousWorkComponentId'
-                            ng-change='tableController.authoringImportPreviousWorkComponentIdChanged()'
-                            ng-options='component.id as component.type disable when !tableController.componentHasWork(component) for component in tableController.getComponentsByNodeId(tableController.authoringComponentContent.importPreviousWorkNodeId)'>
-                        <option></option>
-                    </select>
-                </div>
-                <div ng-if='tableController.mode === "authoring"'>
-                    {{ 'SHOW_PREVIOUS_WORK' | translate }}:
-                    <input type='checkbox'
-                           ng-model='tableController.authoringComponentContent.showPreviousWork'
-                           ng-click='tableController.authoringShowPreviousWorkClicked()'
-                           ng-change='tableController.authoringViewComponentChanged()'/>
-                </div>
-                <div ng-if='tableController.mode === "authoring" && tableController.authoringComponentContent.showPreviousWork'>
-                    {{ 'SHOW_PREVIOUS_WORK_STEP' | translate }}:
-                    <select ng-model='tableController.authoringComponentContent.showPreviousWorkNodeId'
-                            ng-change='tableController.authoringShowPreviousWorkNodeIdChanged()'>
-                        <option></option>
-                        <option ng-repeat='item in tableController.idToOrder | toArray | orderBy : "order"'
-                                value='{{item.$key}}'
-                                ng-if='tableController.isApplicationNode(item.$key)'>{{tableController.getNodePositionAndTitleByNodeId(item.$key)}}</option>
-                    </select>
-                    <br/>
-                    {{ 'SHOW_PREVIOUS_WORK_COMPONENT' | translate }}:
-                    <select ng-model='tableController.authoringComponentContent.showPreviousWorkComponentId'
-                            ng-change='tableController.authoringShowPreviousWorkComponentIdChanged()'
-                            ng-options='component.id as component.type disable when !tableController.componentHasWork(component) for component in tableController.getComponentsByNodeId(tableController.authoringComponentContent.showPreviousWorkNodeId)'>
-                        <option></option>
-                    </select>
-                    <br/>
-                    {{ 'SHOW_PREVIOUS_WORK_PROMPT' | translate }}:
-                    <input type='checkbox'
-                           ng-model='tableController.authoringComponentContent.showPreviousWorkPrompt'
-                           ng-model-options='{ debounce: 1000 }'
-                           ng-change='tableController.authoringViewComponentChanged()'/>
-                </div>
-                <div ng-if='tableController.mode === "authoring"'>
-                    <button ng-click='tableController.addConnectedComponent()'>{{ 'ADD_CONNECTED_COMPONENT' | translate }}</button>
-                    <div ng-repeat='connectedComponent in tableController.authoringComponentContent.connectedComponents track by $index'>
-                        <table border='1'>
-                            <tr>
-                                <td style='padding:5'>
-                                    {{ 'CONNECTED_COMPONENT' | translate }}
-                                </td>
-                                <td style='padding:5'>
-                                    <div style='display:none'>
-                                        {{ 'NODE_ID' | translate }}:
-                                        <select ng-model='connectedComponent.nodeId'
-                                                ng-change='tableController.authoringViewComponentChanged()'>
-                                            <option></option>
-                                            <option ng-repeat='item in tableController.idToOrder | toArray | orderBy : "order"'
-                                                    value='{{item.$key}}'
-                                                    ng-if='tableController.isApplicationNode(item.$key)'>{{tableController.getNodePositionAndTitleByNodeId(item.$key)}}</option>
-                                        </select>
-                                    </div>
-                                    <div>
-                                        {{ 'COMPONENT_ID' | translate }}:
-                                        <select ng-model='connectedComponent.componentId'
-                                                ng-change='tableController.authoringViewComponentChanged()'>
-                                            <option></option>
-                                            <option ng-repeat='(componentIndex, component) in tableController.getComponentsByNodeId(connectedComponent.nodeId)'
-                                                    ng-disabled='!tableController.componentHasWork(component)'
-                                                    value='{{component.id}}'>
-                                                {{componentIndex + 1}}. {{component.type}}
-                                            </option>
-                                        </select>
-                                    </div>
-                                </td>
-                                <td style='padding:5'>
-                                    <select ng-model='connectedComponent.updateOn'
-                                            ng-change='tableController.authoringViewComponentChanged()'>
-                                            <option ng-repeat='updateOnOption in tableController.connectedComponentUpdateOnOptions'
-                                                    value='{{updateOnOption.value}}'>
-                                                {{updateOnOption.text}}
-                                            </option>
-                                    </select>
-                                </td>
-                                <td style='padding:5'>
-                                    <button ng-click='tableController.deleteConnectedComponent($index)'>{{ 'DELETE' | translate }}</button>
-                                </td>
-                            </tr>
-                        </table>
+                    <div layout='row'>
+                        <h6>{{ 'CONNECTED_COMPONENT' | translate }}</h6>
+                        <md-button class='topButton md-raised md-primary'
+                                   ng-click='tableController.authoringAddConnectedComponent()'>
+                            <md-icon>add</md-icon>
+                            <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'ADD_CONNECTED_COMPONENT' | translate }}</md-tooltip>
+                        </md-button>
+                    </div>
+                    <div ng-repeat='connectedComponent in tableController.authoringComponentContent.connectedComponents track by $index'
+                         style='border: 2px solid #dddddd; border-radius: 5px; margin-bottom: 10px; padding: 20px 20px 10px 20px;'>
+                        <div layout='row'>
+                            <md-input-container style='margin-right: 20; width: 300;'>
+                                <label>{{ 'step' | translate }}</label>
+                                <md-select ng-model='connectedComponent.nodeId'
+                                           ng-change='tableController.authoringConnectedComponentNodeIdChanged(connectedComponent)'
+                                           style='width: 300'>
+                                    <md-option ng-repeat='item in tableController.idToOrder | toArray | orderBy : "order"'
+                                               value='{{item.$key}}'
+                                               ng-if='tableController.isApplicationNode(item.$key)'>
+                                        {{tableController.getNodePositionAndTitleByNodeId(item.$key)}}
+                                    </md-option>
+                                </md-select>
+                            </md-input-container>
+                            <md-input-container style='margin-right: 20; width: 300;'>
+                                <label>{{ 'component' | translate }}</label>
+                                <md-select ng-model='connectedComponent.componentId'
+                                           ng-change='tableController.authoringConnectedComponentComponentIdChanged(connectedComponent)'
+                                           style='width: 300'>
+                                    <md-option ng-repeat='component in tableController.getComponentsByNodeId(connectedComponent.nodeId)'
+                                               value='{{component.id}}'>
+                                        {{component.type}}
+                                    </md-option>
+                                </md-select>
+                            </md-input-container>
+                        </div>
+                        <div layout='row'>
+                            <md-input-container style='margin-right: 20; width: 200;'>
+                                <label>{{ 'type' | translate }}</label>
+                                <md-select ng-model='connectedComponent.type'
+                                           ng-change='tableController.authoringConnectedComponentTypeChanged(connectedComponent)'
+                                           style='width: 200'>
+                                    <md-option value='importWork'>
+                                        {{ 'importWork' | translate }}
+                                    </md-option>
+                                    <md-option value='showWork'>
+                                        {{ 'showWork' | translate }}
+                                    </md-option>
+                                </md-select>
+                            </md-input-container>
+                        </div>
+                        <div layout='row'>
+                            <span flex></span>
+                            <md-button class='topButton md-raised md-primary'
+                                       ng-click='tableController.authoringDeleteConnectedComponent($index)'>
+                                <md-icon>delete</md-icon>
+                                <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'DELETE' | translate }}</md-tooltip>
+                            </md-button>
+                        </div>
                     </div>
                 </div>
                 <div ng-if='tableController.mode === "authoring"'>

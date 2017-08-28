@@ -246,6 +246,103 @@ var TableService = function (_NodeService) {
         value: function componentUsesSubmitButton() {
             return true;
         }
+
+        /**
+         * Check if the component state has student work. Sometimes a component
+         * state may be created if the student visits a component but doesn't
+         * actually perform any work. This is where we will check if the student
+         * actually performed any work.
+         * @param componentState the component state object
+         * @return whether the component state has any work
+         */
+
+    }, {
+        key: 'componentStateHasStudentWork',
+        value: function componentStateHasStudentWork(componentState, componentContent) {
+
+            if (componentState != null) {
+
+                var studentData = componentState.studentData;
+
+                if (studentData != null) {
+
+                    // get the table from the student data
+                    var studentTableData = studentData.tableData;
+
+                    // get the table from the component content
+                    var componentContentTableData = componentContent.tableData;
+
+                    if (studentTableData != null) {
+
+                        var studentRows = studentTableData;
+
+                        // loop through the student rows
+                        for (var r = 0; r < studentRows.length; r++) {
+                            var studentRow = studentRows[r];
+
+                            if (studentRow != null) {
+
+                                // loop through the student columns
+                                for (var c = 0; c < studentRow.length; c++) {
+
+                                    // get cell from the student
+                                    var studentCell = this.getTableDataCellValue(r, c, studentTableData);
+
+                                    // get a cell from the component content
+                                    var componentContentCell = this.getTableDataCellValue(r, c, componentContentTableData);
+
+                                    if (studentCell !== componentContentCell) {
+                                        /*
+                                         * the cell values are not the same which means
+                                         * the student has changed the table
+                                         */
+                                        return true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        /**
+         * Get the value of a cell in the table
+         * @param x the x coordinate
+         * @param y the y coordinate
+         * @param table (optional) table data to get the value from. this is used
+         * when we want to look up the value in the default authored table
+         * @returns the cell value (text or a number)
+         */
+
+    }, {
+        key: 'getTableDataCellValue',
+        value: function getTableDataCellValue(x, y, table) {
+
+            var cellValue = null;
+
+            if (table != null) {
+
+                // get the row we want
+                var row = table[y];
+
+                if (row != null) {
+
+                    // get the cell we want
+                    var cell = row[x];
+
+                    if (cell != null) {
+
+                        // set the value into the cell
+                        cellValue = cell.text;
+                    }
+                }
+            }
+
+            return cellValue;
+        }
     }]);
 
     return TableService;
