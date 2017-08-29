@@ -23,5 +23,20 @@
     "label.uploadBackgroundImage": "Φόρτωση Εικόνας Υποβάθρου",
     "label.viewColors": "Προβολή Χρωμάτων",
     "label.xLocation": "Θέση Χ",
-    "label.yLocation": "Θέση Υ"
+    "label.yLocation": "Θέση Υ",
+    "label.addNewLabel": "Προσθήκη Νέας Επισήμανσης",
+    "label.addStarterLabel": "Προσθήκη Εναρκτήριας Επισήμανσης",
+    "label.canvasHeight": "Υψος Καμβά",
+    "label.canvasWidth": "Πλάτος Καμβά",
+    "label.componentTypeLabel": "Επισήμανση",
+    "label.enterLabelTextHere": "Εισαγωγή κειμένου επισήμανσης εδώ",
+    "label.newLabel": "Νέα Επισήμανση",
+    "label.pointLocation": "Θέση Σημείου",
+    "label.relativeToTextLocation": "Σε σχέση με τη Θέση του Σημείου",
+    "label.starterLabels": "Εναρκτήριες Επισημάνσεις",
+    "label.textLocation": "Θέση Κειμένου",
+    "label.thereAreNoStarterLabels": "Δεν υπάρχει καμμία εναρκτήρια επισήμανση. Πατήστε το εικονίδιο \"Προσθήκη Επισήμανσης\" για να προσθέσετε την εναρκτήρια επισήμαναση.",
+    "label.toCancel": "για ακύρωση.",
+    "label.x": "X",
+    "label.y": "Y"
 }

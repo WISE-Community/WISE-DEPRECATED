@@ -1,4 +1,6 @@
 {
     "Embedded.componentTypeLabel": "Ενσωματωμένο (Εξατομικευμένο)",
-    "embedded.modelFileName": "Όνομα Τυπικού Αρχείου"
+    "embedded.modelFileName": "Όνομα Τυπικού Αρχείου",
+    "embedded.componentTypeLabel": "Ενσωματωμένα (Εξατομίκευση)",
+    "embedded.chooseTheModelFile": "Επιλέξτε το Τυπικό Αρχείο"
 }

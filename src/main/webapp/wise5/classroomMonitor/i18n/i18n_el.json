@@ -174,5 +174,13 @@
     "student": "Μαθητής",
     "studentId": "Μαθητής {{Id}}",
     "teamIdTitle": "ID ομάδας",
-    "viewTeam": "Προβολή ομάδας"
+    "viewTeam": "Προβολή ομάδας",
+    "dataExport": "Εξαγωγή Δεδομένων\n",
+    "exportRawData": "Εξαγωγή Ανεπεξέργαστων Δεδομένων",
+    "gradeByStudent": "Βαθμολογία ανά Μαθητή",
+    "includeEvents": "Συμπερίληψη Γεγονότων",
+    "studentNotebooks": "Σημειωματάρια Μαθητών",
+    "rawData": "Ανεπεξέργαστα Δεδομένα",
+    "includeAnnotations": "Συμπερίληψη Σχολίων",
+    "dashboard": "Πίνακας"
 }

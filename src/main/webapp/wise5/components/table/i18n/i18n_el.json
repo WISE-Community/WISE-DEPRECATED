@@ -15,5 +15,14 @@
     "table.size": "Μέγεθος",
     "table.sizeSymbol": "S",
     "table.uneditable": "Μη επεξεργάσιμο",
-    "table.uneditableSymbol": "U"
+    "table.uneditableSymbol": "U",
+    "table.cellText": "Κείμενο Κελιού",
+    "table.columnCellSizes": "Μεγέθη Κελιού Στήλης",
+    "table.componentTypeLabel": "Πίνακας",
+    "table.editableByStudent": "Επεξεργάσιμα από τους Μαθητές",
+    "table.globalCellSize": "Συνολικό Μέγεθος Κελιού",
+    "table.insertColumnAfter": "Εισαγωγή Στήλης Μετά",
+    "table.insertColumnBefore": "Εισαγωγή Στήλης Πριν",
+    "table.insertRowAfter": "Εισαγωγή Σειράς Μετά",
+    "table.insertRowBefore": "Εισαγωγή Σειράς Πριν"
 }

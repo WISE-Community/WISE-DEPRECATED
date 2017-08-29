@@ -12,5 +12,11 @@
     "match.incorrectPositionFeedback": "Λάθος Θέση Ανατροφοδότησης",
     "match.labelForChoicesBucket": "Επισήμανση για κάδο επιλογών",
     "match.ordered": "Παραγγέλθηκε",
-    "match.position": "Θέση"
+    "match.position": "Θέση",
+    "match.bucketName": "Ονομασία Κάδου",
+    "match.buckets": "Κάδοι",
+    "match.choiceName": "Όνομα Επιλογής",
+    "match.choicesNeedToBeOrderedWithinBuckets": "Οι επιλογές πρέπει να ταξινομηθούν εντός των κάδων",
+    "match.componentTypeLabel": "Αντιστοίχηση",
+    "match.originBucketName": "Ονομασία Κάδου Προέλευσης"
 }
