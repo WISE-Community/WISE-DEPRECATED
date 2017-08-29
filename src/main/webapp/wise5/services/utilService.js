@@ -900,6 +900,90 @@ var UtilService = function () {
             // the arrays are not the same
             return false;
         }
+
+        /**
+         * Whether there are any connected components
+         * @param componentContent the component content
+         * @return whether there are any connected components
+         */
+
+    }, {
+        key: 'hasConnectedComponent',
+        value: function hasConnectedComponent(componentContent) {
+
+            if (componentContent != null) {
+
+                var connectedComponents = componentContent.connectedComponents;
+
+                if (connectedComponents != null && connectedComponents.length > 0) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /**
+         * Whether this component shows work from a connected component
+         * @param componentContent the component content
+         * @return whether this component shows work from a connected component
+         */
+
+    }, {
+        key: 'hasShowWorkConnectedComponent',
+        value: function hasShowWorkConnectedComponent(componentContent) {
+
+            if (componentContent != null) {
+
+                var connectedComponents = componentContent.connectedComponents;
+
+                if (connectedComponents != null) {
+                    for (var c = 0; c < connectedComponents.length; c++) {
+                        var connectedComponent = connectedComponents[c];
+
+                        if (connectedComponent != null) {
+
+                            if (connectedComponent.type == 'showWork') {
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        /**
+         * Whether this component imports work from a connected component
+         * @param componentContent the component content
+         * @return whether this component imports work from a connected component
+         */
+
+    }, {
+        key: 'hasImportWorkConnectedComponent',
+        value: function hasImportWorkConnectedComponent(componentContent) {
+
+            if (componentContent != null) {
+
+                var connectedComponents = componentContent.connectedComponents;
+
+                if (connectedComponents != null) {
+                    for (var c = 0; c < connectedComponents.length; c++) {
+                        var connectedComponent = connectedComponents[c];
+
+                        if (connectedComponent != null) {
+
+                            if (connectedComponent.type == 'importWork') {
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+
+            return false;
+        }
     }]);
 
     return UtilService;
