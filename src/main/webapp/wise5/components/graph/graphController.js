@@ -425,68 +425,73 @@ var GraphController = function () {
             // set whether studentAttachment is enabled
             this.isStudentAttachmentEnabled = this.componentContent.isStudentAttachmentEnabled;
 
-            if (this.mode == 'student' && this.GraphService.showClassmateWork(this.componentContent)) {
-                // we will show classmate work from another component
-                this.handleConnectedComponents();
-            } else if (this.mode == 'student' && this.GraphService.componentStateHasStudentWork(componentState, this.componentContent)) {
-                /*
-                 * the student has work so we will populate the work into this
-                 * component
-                 */
-                this.setStudentWork(componentState);
-            } else if (this.mode == 'student' && this.hasConnectedComponent(this.componentContent)) {
-                /*
-                 * the student does not have any work and there are connected
-                 * components so we will get the work from the connected
-                 * components
-                 */
-                this.handleConnectedComponents();
-            } else if (this.mode == 'student' && !this.GraphService.componentStateHasStudentWork(componentState, this.componentContent)) {
-                /*
-                 * only import work if the student does not already have
-                 * work for this component
-                 */
-
-                // check if we need to import work
-                var importPreviousWorkNodeId = this.componentContent.importPreviousWorkNodeId;
-                var importPreviousWorkComponentId = this.componentContent.importPreviousWorkComponentId;
-                var importWork = this.componentContent.importWork;
-
-                if (importPreviousWorkNodeId == null || importPreviousWorkNodeId == '') {
-                    /*
-                     * check if the node id is in the field that we used to store
-                     * the import previous work node id in
-                     */
-                    importPreviousWorkNodeId = this.componentContent.importWorkNodeId;
-                }
-
-                if (importPreviousWorkComponentId == null || importPreviousWorkComponentId == '') {
-                    /*
-                     * check if the component id is in the field that we used to store
-                     * the import previous work component id in
-                     */
-                    importPreviousWorkComponentId = this.componentContent.importWorkComponentId;
-                }
-
-                if (this.componentContent.connectedComponents != null) {
-                    // import any work we need from connected components
+            if (this.mode == 'student') {
+                if (this.GraphService.showClassmateWork(this.componentContent)) {
+                    // we will show classmate work from another component
                     this.handleConnectedComponents();
-                } else if (importPreviousWorkNodeId != null && importPreviousWorkComponentId != null) {
-                    // import the work from the other component
-                    this.importWork();
-                } else if (importWork != null) {
-                    // we are going to import work from one or more components
-                    this.importWork();
-                } else {
+                } else if (this.UtilService.hasShowWorkConnectedComponent(this.componentContent)) {
+                    // we will show work from another component
+                    this.handleConnectedComponents();
+                } else if (this.GraphService.componentStateHasStudentWork(componentState, this.componentContent)) {
                     /*
-                     * trials are enabled so we will create an empty trial
-                     * since there is no student work
+                     * the student has work so we will populate the work into this
+                     * component
                      */
-                    this.newTrial();
+                    this.setStudentWork(componentState);
+                } else if (this.UtilService.hasConnectedComponent(this.componentContent)) {
+                    /*
+                     * the student does not have any work and there are connected
+                     * components so we will get the work from the connected
+                     * components
+                     */
+                    this.handleConnectedComponents();
+                } else if (!this.GraphService.componentStateHasStudentWork(componentState, this.componentContent)) {
+                    /*
+                     * only import work if the student does not already have
+                     * work for this component
+                     */
+
+                    // check if we need to import work
+                    var importPreviousWorkNodeId = this.componentContent.importPreviousWorkNodeId;
+                    var importPreviousWorkComponentId = this.componentContent.importPreviousWorkComponentId;
+                    var importWork = this.componentContent.importWork;
+
+                    if (importPreviousWorkNodeId == null || importPreviousWorkNodeId == '') {
+                        /*
+                         * check if the node id is in the field that we used to store
+                         * the import previous work node id in
+                         */
+                        importPreviousWorkNodeId = this.componentContent.importWorkNodeId;
+                    }
+
+                    if (importPreviousWorkComponentId == null || importPreviousWorkComponentId == '') {
+                        /*
+                         * check if the component id is in the field that we used to store
+                         * the import previous work component id in
+                         */
+                        importPreviousWorkComponentId = this.componentContent.importWorkComponentId;
+                    }
+
+                    if (this.componentContent.connectedComponents != null) {
+                        // import any work we need from connected components
+                        this.handleConnectedComponents();
+                    } else if (importPreviousWorkNodeId != null && importPreviousWorkComponentId != null) {
+                        // import the work from the other component
+                        this.importWork();
+                    } else if (importWork != null) {
+                        // we are going to import work from one or more components
+                        this.importWork();
+                    } else {
+                        /*
+                         * trials are enabled so we will create an empty trial
+                         * since there is no student work
+                         */
+                        this.newTrial();
+                    }
+                } else {
+                    // populate the student work into this component
+                    this.setStudentWork(componentState);
                 }
-            } else {
-                // populate the student work into this component
-                this.setStudentWork(componentState);
             }
 
             if (componentState != null) {
@@ -2082,52 +2087,61 @@ var GraphController = function () {
         key: 'resetSeriesHelper',
         value: function resetSeriesHelper() {
 
-            // get the index of the active series
-            var activeSeriesIndex = this.getSeriesIndex(this.activeSeries);
+            if (this.UtilService.hasConnectedComponent(this.componentContent)) {
+                /*
+                 * There are connected components so we will get the work from them.
+                 * This will actually reset all the series and not just the active
+                 * one.
+                 */
+                this.handleConnectedComponents();
+            } else {
+                // get the index of the active series
+                var activeSeriesIndex = this.getSeriesIndex(this.activeSeries);
 
-            if (activeSeriesIndex != null) {
+                if (activeSeriesIndex != null) {
 
-                // get the original series from the component content
-                var originalSeries = this.componentContent.series[activeSeriesIndex];
+                    // get the original series from the component content
+                    var originalSeries = this.componentContent.series[activeSeriesIndex];
 
-                if (originalSeries != null) {
+                    if (originalSeries != null) {
 
-                    // make a copy of the series
-                    originalSeries = this.UtilService.makeCopyOfJSONObject(originalSeries);
+                        // make a copy of the series
+                        originalSeries = this.UtilService.makeCopyOfJSONObject(originalSeries);
 
-                    // set the series
-                    this.setSeriesByIndex(originalSeries, activeSeriesIndex);
+                        // set the series
+                        this.setSeriesByIndex(originalSeries, activeSeriesIndex);
 
-                    /*
-                     * set the active series index so that the the active series
-                     * is the same as before.
-                     */
-                    this.setActiveSeriesByIndex(activeSeriesIndex);
+                        /*
+                         * set the active series index so that the the active series
+                         * is the same as before.
+                         */
+                        this.setActiveSeriesByIndex(activeSeriesIndex);
 
-                    if (this.componentContent.xAxis != null) {
-                        // reset the x axis
-                        this.setXAxis(this.componentContent.xAxis);
+                        if (this.componentContent.xAxis != null) {
+                            // reset the x axis
+                            this.setXAxis(this.componentContent.xAxis);
+                        }
+
+                        if (this.componentContent.yAxis != null) {
+                            // reset the y axis
+                            this.setYAxis(this.componentContent.yAxis);
+                        }
+
+                        // reset the background image
+                        this.backgroundImage = this.componentContent.backgroundImage;
+
+                        /*
+                         * set the flag to add the next component state created in
+                         * studentDataChanged() to the undo stack
+                         */
+                        this.addNextComponentStateToUndoStack = true;
+
+                        /*
+                         * notify the controller that the student data has changed
+                         * so that the graph will be redrawn
+                         */
+                        this.studentDataChanged();
                     }
-
-                    if (this.componentContent.yAxis != null) {
-                        // reset the y axis
-                        this.setYAxis(this.componentContent.yAxis);
-                    }
-
-                    // reset the background image
-                    this.backgroundImage = this.componentContent.backgroundImage;
-
-                    /*
-                     * set the flag to add the next component state created in
-                     * studentDataChanged() to the undo stack
-                     */
-                    this.addNextComponentStateToUndoStack = true;
-
-                    /*
-                     * notify the controller that the student data has changed
-                     * so that the graph will be redrawn
-                     */
-                    this.studentDataChanged();
                 }
             }
         }
@@ -5518,7 +5532,6 @@ var GraphController = function () {
             newConnectedComponent.nodeId = this.nodeId;
             newConnectedComponent.componentId = null;
             newConnectedComponent.type = 'importWork';
-            newConnectedComponent.updateOn = 'change';
 
             // initialize the array of connected components if it does not exist yet
             if (this.authoringComponentContent.connectedComponents == null) {
@@ -6044,28 +6057,6 @@ var GraphController = function () {
                 // the authoring component content has changed so we will save the project
                 this.authoringViewComponentChanged();
             }
-        }
-
-        /**
-         * Whether there are any connected components
-         * @param componentContent the component content
-         * @return whether there are any connected components
-         */
-
-    }, {
-        key: 'hasConnectedComponent',
-        value: function hasConnectedComponent(componentContent) {
-
-            if (componentContent != null) {
-
-                var connectedComponents = componentContent.connectedComponents;
-
-                if (connectedComponents != null && connectedComponents.length > 0) {
-                    return true;
-                }
-            }
-
-            return false;
         }
 
         /**

@@ -383,59 +383,6 @@
                        style='width: 3em'/>
                 <br/>
                 <div ng-if='graphController.mode === "authoring"'>
-                    {{ 'IMPORT_PREVIOUS_WORK' | translate }}:
-                    <input type='checkbox'
-                           ng-model='graphController.authoringComponentContent.importPreviousWork'
-                           ng-click='graphController.authoringImportPreviousWorkClicked()'
-                           ng-change='graphController.authoringViewComponentChanged()'/>
-                </div>
-                <div ng-if='graphController.mode === "authoring" && graphController.authoringComponentContent.importPreviousWork'>
-                    {{ 'IMPORT_PREVIOUS_WORK_STEP' | translate }}:
-                    <select ng-model='graphController.authoringComponentContent.importPreviousWorkNodeId'
-                            ng-change='graphController.authoringImportPreviousWorkNodeIdChanged()'>
-                        <option></option>
-                        <option ng-repeat='item in graphController.idToOrder | toArray | orderBy : "order"'
-                                value='{{item.$key}}'
-                                ng-if='graphController.isApplicationNode(item.$key)'>{{graphController.getNodePositionAndTitleByNodeId(item.$key)}}</option>
-                    </select>
-                    <br/>
-                    {{ 'IMPORT_PREVIOUS_WORK_COMPONENT' | translate }}:
-                    <select ng-model='graphController.authoringComponentContent.importPreviousWorkComponentId'
-                            ng-change='graphController.authoringImportPreviousWorkComponentIdChanged()'
-                            ng-options='component.id as component.type disable when !graphController.componentHasWork(component) for component in graphController.getComponentsByNodeId(graphController.authoringComponentContent.importPreviousWorkNodeId)'>
-                        <option></option>
-                    </select>
-                </div>
-                <div ng-if='graphController.mode === "authoring"'>
-                    {{ 'SHOW_PREVIOUS_WORK' | translate }}:
-                    <input type='checkbox'
-                           ng-model='graphController.authoringComponentContent.showPreviousWork'
-                           ng-click='graphController.authoringShowPreviousWorkClicked()'
-                           ng-change='graphController.authoringViewComponentChanged()'/>
-                </div>
-                <div ng-if='graphController.mode === "authoring" && graphController.authoringComponentContent.showPreviousWork'>
-                    {{ 'SHOW_PREVIOUS_WORK_STEP' | translate }}:
-                    <select ng-model='graphController.authoringComponentContent.showPreviousWorkNodeId'
-                            ng-change='graphController.authoringShowPreviousWorkNodeIdChanged()'>
-                        <option></option>
-                        <option ng-repeat='item in graphController.idToOrder | toArray | orderBy : "order"'
-                                value='{{item.$key}}'
-                                ng-if='graphController.isApplicationNode(item.$key)'>{{graphController.getNodePositionAndTitleByNodeId(item.$key)}}</option>
-                    </select>
-                    <br/>
-                    {{ 'SHOW_PREVIOUS_WORK_COMPONENT' | translate }}:
-                    <select ng-model='graphController.authoringComponentContent.showPreviousWorkComponentId'
-                            ng-change='graphController.authoringShowPreviousWorkComponentIdChanged()'
-                            ng-options='component.id as component.type disable when !graphController.componentHasWork(component) for component in graphController.getComponentsByNodeId(graphController.authoringComponentContent.showPreviousWorkNodeId)'>
-                        <option></option>
-                    </select>
-                    <br/>
-                    {{ 'SHOW_PREVIOUS_WORK_PROMPT' | translate }}:
-                    <input type='checkbox'
-                           ng-model='graphController.authoringComponentContent.showPreviousWorkPrompt'
-                           ng-change='graphController.authoringViewComponentChanged()'/>
-                </div>
-                <div ng-if='graphController.mode === "authoring"'>
                     <div layout='row'>
                         <h6>{{ 'CONNECTED_COMPONENT' | translate }}</h6>
                         <md-button class='topButton md-raised md-primary'
