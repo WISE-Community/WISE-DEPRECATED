@@ -456,7 +456,9 @@ class NodeController {
             }
 
             if (step < 0) {
-                index++;
+                if (this.rubric) {
+                    index++;
+                }
 
                 let components = this.getComponents();
                 let l = components.length, i = 0;
