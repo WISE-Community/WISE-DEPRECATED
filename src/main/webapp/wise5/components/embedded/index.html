@@ -3,43 +3,43 @@
         <script>
             var embeddedController = embeddedController;
         </script>
-        <div ng-if='embeddedController.mode === "authoring" && !embeddedController.authoringComponentContent.showPreviousWork'>
-            <md-input-container style='height: 40'>
-                <label>{{ 'embedded.modelFileName' | translate }}</label>
-                <input size='100'
-                       ng-model='embeddedController.authoringComponentContent.url'
-                       ng-change='embeddedController.authoringViewComponentChanged()'
-                       ng-model-options='{ debounce: 1000 }'/>
-            </md-input-container>
-            <md-button class='topButton md-raised md-primary' ng-click='embeddedController.chooseModelFile()'>
-                <md-icon>insert_photo</md-icon>
-                <md-tooltip md-direction="top" class="projectButtonTooltip">{{ 'embedded.chooseTheModelFile' | translate }}</md-tooltip>
-            </md-button>
-            <br/>
-            <md-input-container style='height: 40'>
-                <label>{{ 'WIDTH' | translate }} ({{ 'OPTIONAL' | translate }})</label>
-                <input size='20'
-                       type='number'
-                       ng-model='embeddedController.authoringComponentContent.width'
-                       ng-change='embeddedController.authoringViewComponentChanged()'
-                       ng-model-options='{ debounce: 1000 }'/>
-            </md-input-container>
-            <md-input-container style='height: 40'>
-                <label>{{ 'HEIGHT' | translate }} ({{ 'OPTIONAL' | translate }})</label>
-                <input size='20'
-                       type='number'
-                       ng-model='embeddedController.authoringComponentContent.height'
-                       ng-change='embeddedController.authoringViewComponentChanged()'
-                       ng-model-options='{ debounce: 1000 }'/>
-            </md-input-container>
-        </div>
         <div ng-if='embeddedController.mode === "authoring"'>
+            <div ng-if='!embeddedController.authoringComponentContent.showPreviousWork'>
+                <md-input-container style='height: 40px'>
+                    <label>{{ 'embedded.modelFileName' | translate }}</label>
+                    <input size='100'
+                           ng-model='embeddedController.authoringComponentContent.url'
+                           ng-change='embeddedController.authoringViewComponentChanged()'
+                           ng-model-options='{ debounce: 1000 }'/>
+                </md-input-container>
+                <md-button class='topButton md-raised md-primary' ng-click='embeddedController.chooseModelFile()'>
+                    <md-icon>insert_photo</md-icon>
+                    <md-tooltip md-direction="top" class="projectButtonTooltip">{{ 'embedded.chooseTheModelFile' | translate }}</md-tooltip>
+                </md-button>
+                <br/>
+                <md-input-container style='height: 40px'>
+                    <label>{{ 'WIDTH' | translate }} ({{ 'OPTIONAL' | translate }})</label>
+                    <input size='20'
+                           type='number'
+                           ng-model='embeddedController.authoringComponentContent.width'
+                           ng-change='embeddedController.authoringViewComponentChanged()'
+                           ng-model-options='{ debounce: 1000 }'/>
+                </md-input-container>
+                <md-input-container style='height: 40px'>
+                    <label>{{ 'HEIGHT' | translate }} ({{ 'OPTIONAL' | translate }})</label>
+                    <input size='20'
+                           type='number'
+                           ng-model='embeddedController.authoringComponentContent.height'
+                           ng-change='embeddedController.authoringViewComponentChanged()'
+                           ng-model-options='{ debounce: 1000 }'/>
+                </md-input-container>
+            </div>
             <md-button class='topButton md-raised md-primary' ng-click='embeddedController.showAdvancedAuthoring = !embeddedController.showAdvancedAuthoring'>
                 <md-icon>build</md-icon>
                 <md-tooltip md-direction="top" class="projectButtonTooltip">{{ "ADVANCED" | translate }}</md-tooltip>
             </md-button>
             <br/>
-            <div ng-show='embeddedController.showAdvancedAuthoring'>
+            <div ng-if='embeddedController.showAdvancedAuthoring'>
                 {{ 'SHOW_SAVE_BUTTON' | translate }}:
                 <input type='checkbox'
                        ng-model='embeddedController.authoringComponentContent.showSaveButton'
@@ -64,60 +64,7 @@
                        ng-model-options='{ debounce: 1000 }'
                        style='width: 3em'/>
                 <br/>
-                <div ng-if='embeddedController.mode === "authoring2"'>
-                    {{ 'IMPORT_PREVIOUS_WORK' | translate }}:
-                    <input type='checkbox'
-                           ng-model='embeddedController.authoringComponentContent.importPreviousWork'
-                           ng-click='embeddedController.authoringImportPreviousWorkClicked()'
-                           ng-change='embeddedController.authoringViewComponentChanged()'/>
-                </div>
-                <div ng-if='embeddedController.mode === "authoring2" && embeddedController.authoringComponentContent.importPreviousWork'>
-                    {{ 'IMPORT_PREVIOUS_WORK_STEP' | translate }}:
-                    <select ng-model='embeddedController.authoringComponentContent.importPreviousWorkNodeId'
-                            ng-change='embeddedController.authoringImportPreviousWorkNodeIdChanged()'>
-                        <option></option>
-                        <option ng-repeat='item in embeddedController.idToOrder | toArray | orderBy : "order"'
-                                value='{{item.$key}}'
-                                ng-if='embeddedController.isApplicationNode(item.$key)'>{{embeddedController.getNodePositionAndTitleByNodeId(item.$key)}}</option>
-                    </select>
-                    <br/>
-                    {{ 'IMPORT_PREVIOUS_WORK_COMPONENT' | translate }}:
-                    <select ng-model='embeddedController.authoringComponentContent.importPreviousWorkComponentId'
-                            ng-change='embeddedController.authoringImportPreviousWorkComponentIdChanged()'
-                            ng-options='component.id as component.type disable when !embeddedController.componentHasWork(component) for component in embeddedController.getComponentsByNodeId(embeddedController.authoringComponentContent.importPreviousWorkNodeId)'>
-                        <option></option>
-                    </select>
-                </div>
-                <div ng-if='embeddedController.mode === "authoring2"'>
-                    {{ 'SHOW_PREVIOUS_WORK' | translate }}:
-                    <input type='checkbox'
-                           ng-model='embeddedController.authoringComponentContent.showPreviousWork'
-                           ng-click='embeddedController.authoringShowPreviousWorkClicked()'
-                           ng-change='embeddedController.authoringViewComponentChanged()'/>
-                </div>
-                <div ng-if='embeddedController.mode === "authoring2" && embeddedController.authoringComponentContent.showPreviousWork'>
-                    {{ 'SHOW_PREVIOUS_WORK_STEP' | translate }}:
-                    <select ng-model='embeddedController.authoringComponentContent.showPreviousWorkNodeId'
-                            ng-change='embeddedController.authoringShowPreviousWorkNodeIdChanged()'>
-                        <option></option>
-                        <option ng-repeat='item in embeddedController.idToOrder | toArray | orderBy : "order"'
-                                value='{{item.$key}}'
-                                ng-if='embeddedController.isApplicationNode(item.$key)'>{{embeddedController.getNodePositionAndTitleByNodeId(item.$key)}}</option>
-                    </select>
-                    <br/>
-                    {{ 'SHOW_PREVIOUS_WORK_COMPONENT' | translate }}:
-                    <select ng-model='embeddedController.authoringComponentContent.showPreviousWorkComponentId'
-                            ng-change='embeddedController.authoringShowPreviousWorkComponentIdChanged()'
-                            ng-options='component.id as component.type disable when !embeddedController.componentHasWork(component) for component in embeddedController.getComponentsByNodeId(embeddedController.authoringComponentContent.showPreviousWorkNodeId)'>
-                        <option></option>
-                    </select>
-                    <br/>
-                    {{ 'SHOW_PREVIOUS_WORK_PROMPT' | translate }}:
-                    <input type='checkbox'
-                           ng-model='embeddedController.authoringComponentContent.showPreviousWorkPrompt'
-                           ng-change='embeddedController.authoringViewComponentChanged()'/>
-                </div>
-                <div ng-if='embeddedController.mode === "authoring"'>
+                <div>
                     <button ng-click='embeddedController.addConnectedComponent()'>{{ 'ADD_CONNECTED_COMPONENT' | translate }}</button>
                     <div ng-repeat='connectedComponent in embeddedController.authoringComponentContent.connectedComponents track by $index'>
                         <table border='1'>
@@ -125,7 +72,7 @@
                                 <td style='padding:5'>
                                     {{ 'CONNECTED_COMPONENT' | translate }}
                                 </td>
-                                <td style='padding:5'>
+                                <td style='padding:5px'>
                                     <div style='display:none'>
                                         {{ 'NODE_ID' | translate }}:
                                         <select ng-model='connectedComponent.nodeId'
@@ -149,7 +96,7 @@
                                         </select>
                                     </div>
                                 </td>
-                                <td style='padding:5'>
+                                <td style='padding:5px'>
                                     <select ng-model='connectedComponent.updateOn'
                                             ng-change='embeddedController.authoringViewComponentChanged()'>
                                             <option ng-repeat='updateOnOption in embeddedController.connectedComponentUpdateOnOptions'
@@ -158,18 +105,18 @@
                                             </option>
                                     </select>
                                 </td>
-                                <td style='padding:5'>
+                                <td style='padding:5px'>
                                     <button ng-click='embeddedController.deleteConnectedComponent($index)'>{{ 'DELETE' | translate }}</button>
                                 </td>
                             </tr>
                         </table>
                     </div>
                 </div>
-                <div ng-if='embeddedController.mode === "authoring"'>
+                <div>
                     <button ng-click='embeddedController.showRubricAuthoring = !embeddedController.showRubricAuthoring'>
                         {{ 'EDIT_COMPONENT_RUBRIC' | translate }}
                     </button>
-                    <div ng-show='embeddedController.showRubricAuthoring'>
+                    <div ng-if='embeddedController.showRubricAuthoring'>
                         <summernote id='{{embeddedController.summernoteRubricId}}'
                                     ng-model='embeddedController.summernoteRubricHTML'
                                     ng-change='embeddedController.summernoteRubricHTMLChanged()'
@@ -180,12 +127,12 @@
                         </summernote>
                     </div>
                 </div>
-                <div ng-if='embeddedController.mode === "authoring"'>
+                <div>
                     <button ng-click='embeddedController.showJSON = !embeddedController.showJSON'>
                             {{ 'SHOW_JSON' | translate }}
                     </button>
                     <br/>
-                    <div ng-show='embeddedController.showJSON'>
+                    <div ng-if='embeddedController.showJSON'>
                         <textarea ng-model='embeddedController.authoringComponentContentJSONString'
                                   ng-change='embeddedController.advancedAuthoringViewComponentChanged()'
                                   ng-model-options="{ updateOn: 'blur' }"
@@ -233,7 +180,7 @@
                     <div style="text-align: center">
                         <md-button class="md-accent md-primary"
                                     ng-click='embeddedController.snipModel($event)'
-                                    ng-show='embeddedController.showSnipModelButton()'>
+                                    ng-if='embeddedController.showSnipModelButton()'>
                             <md-icon> content_cut </md-icon>  {{ 'ADD_TO_NOTEBOOK' | translate:{label:embeddedController.notebookConfig.label} }}
                         </md-button>
                         <br/>
@@ -256,7 +203,7 @@
                                    ng-if="embeddedController.isSubmitButtonVisible"
                                    aria-label="Submit"
                                    translate="SUBMIT"></md-button>
-                        <span ng-show="embeddedController.saveMessage.text"
+                        <span ng-if="embeddedController.saveMessage.text"
                               class="component__actions__info md-caption">
                               {{embeddedController.saveMessage.text}} <span class="component__actions__more"><md-tooltip md-direction="top">{{ embeddedController.saveMessage.time | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip><span am-time-ago="embeddedController.saveMessage.time"></span></span>
                         </span>

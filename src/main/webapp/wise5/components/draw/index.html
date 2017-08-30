@@ -5,209 +5,209 @@
     }
 </style>
 <div ng-controller='DrawController as drawController' flex>
-    <div ng-if='drawController.mode === "authoring" && !drawController.authoringComponentContent.showPreviousWork'>
-        <md-input-container style='width: 100%; margin-bottom: 0px;'>
-            <label>{{ 'PROMPT' | translate }}</label>
-            <textarea ng-model='drawController.authoringComponentContent.prompt'
-                      ng-change='drawController.authoringViewComponentChanged()'
-                      ng-model-options='{ debounce: 1000 }'
-                      rows='3'
-                      placeholder='{{ "enterPromptHere" | translate }}'>
+    <div ng-if='drawController.mode === "authoring"'>
+        <div ng-if='!drawController.authoringComponentContent.showPreviousWork'>
+            <md-input-container style='width: 100%; margin-bottom: 0px;'>
+                <label>{{ 'PROMPT' | translate }}</label>
+                <textarea ng-model='drawController.authoringComponentContent.prompt'
+                          ng-change='drawController.authoringViewComponentChanged()'
+                          ng-model-options='{ debounce: 1000 }'
+                          rows='1'
+                          placeholder='{{ "enterPromptHere" | translate }}'>
             </textarea>
-        </md-input-container>
-        <div style='height: 60px;'>
-            <md-input-container>
-                <label>{{ 'BACKGROUND_IMAGE' | translate }} ({{ 'OPTIONAL' | translate }})</label>
-                <input size='100'
-                       ng-model='drawController.authoringComponentContent.background'
-                       ng-change='drawController.authoringViewBackgroundChanged()'/>
             </md-input-container>
-            <md-button class='topButton md-raised md-primary' ng-click='drawController.chooseBackgroundImage()'>
-                <md-icon>insert_photo</md-icon>
-                <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'chooseAnImage' | translate }}</md-tooltip>
-            </md-button>
-        </div>
-        <div style='height: 60px;'>
-            <md-input-container>
-                <label>{{ 'draw.canvasWidth' | translate }} ({{ 'OPTIONAL' | translate }})</label>
-                <input type='number'
-                       style='width: 200'
-                       ng-model='drawController.authoringComponentContent.width'
-                       ng-change='drawController.authoringViewWidthChanged()'/>
-            </md-input-container>
-            <md-input-container>
-                <label>{{ 'draw.canvasHeight' | translate }} ({{ 'OPTIONAL' | translate }})</label>
-                <input type='number'
-                       style='width: 200'
-                       ng-model='drawController.authoringComponentContent.height'
-                       ng-change='drawController.authoringViewWidthChanged()'/>
-            </md-input-container>
-        </div>
-        <br/>
-        <md-button class='topButton md-raised md-primary' ng-click='drawController.authoringEnableAllToolsButtonClicked()'>
-            <md-icon>check</md-icon>
-            <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'draw.enableAllTools' | translate }}</md-tooltip>
-        </md-button>
-        <md-button class='topButton md-raised md-primary' ng-click='drawController.authoringDisableAllToolsButtonClicked()'>
-            <md-icon>check_box_outline_blank</md-icon>
-            <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'draw.disableAllTools' | translate }}</md-tooltip>
-        </md-button>
-        <br/>
-        <div layout='row'>
-            <div class='toolsDiv'>
-                <md-checkbox class='md-primary'
-                             ng-model='drawController.authoringComponentContent.tools.select'
-                             ng-change='drawController.authoringViewToolClicked()'>
-                    {{ 'draw.selectTool' | translate }}
-                </md-checkbox>
-                <br/>
-                <md-checkbox class='md-primary'
-                             ng-model='drawController.authoringComponentContent.tools.line'
-                             ng-change='drawController.authoringViewToolClicked()'>
-                    {{ 'draw.lineTool' | translate }}
-                </md-checkbox>
-                <br/>
-                <md-checkbox class='md-primary'
-                             ng-model='drawController.authoringComponentContent.tools.shape'
-                             ng-change='drawController.authoringViewToolClicked()'>
-                    {{ 'draw.shapeTool' | translate }}
-                </md-checkbox>
-                <br/>
-                <md-checkbox class='md-primary'
-                             ng-model='drawController.authoringComponentContent.tools.freeHand'
-                             ng-change='drawController.authoringViewToolClicked()'>
-                    {{ 'draw.freeHandTool' | translate }}
-                </md-checkbox>
-            </div>
-            <div class='toolsDiv'>
-                <md-checkbox class='md-primary'
-                             ng-model='drawController.authoringComponentContent.tools.text'
-                             ng-change='drawController.authoringViewToolClicked()'>
-                    {{ 'draw.textTool' | translate }}
-                </md-checkbox>
-                <br/>
-                <md-checkbox class='md-primary'
-                             ng-model='drawController.authoringComponentContent.tools.stamp'
-                             ng-change='drawController.authoringViewToolClicked()'>
-                    {{ 'draw.stampTool' | translate }}
-                </md-checkbox>
-                <br/>
-                <md-checkbox class='md-primary'
-                             ng-model='drawController.authoringComponentContent.tools.clone'
-                             ng-change='drawController.authoringViewToolClicked()'>
-                    {{ 'draw.cloneTool' | translate }}
-                </md-checkbox>
-                <br/>
-                <md-checkbox class='md-primary'
-                             ng-model='drawController.authoringComponentContent.tools.strokeColor'
-                             ng-change='drawController.authoringViewToolClicked()'>
-                    {{ 'draw.strokeColorTool' | translate }}
-                </md-checkbox>
-            </div>
-            <div class='toolsDiv'>
-                <md-checkbox class='md-primary'
-                             ng-model='drawController.authoringComponentContent.tools.fillColor'
-                             ng-change='drawController.authoringViewToolClicked()'>
-                    {{ 'draw.fillColorTool' | translate }}
-                </md-checkbox>
-                <br/>
-                <md-checkbox class='md-primary'
-                             ng-model='drawController.authoringComponentContent.tools.strokeWidth'
-                             ng-change='drawController.authoringViewToolClicked()'>
-                    {{ 'draw.strokeWidthTool' | translate }}
-                </md-checkbox>
-                <br/>
-                <md-checkbox class='md-primary'
-                             ng-model='drawController.authoringComponentContent.tools.sendBack'
-                             ng-change='drawController.authoringViewToolClicked()'>
-                    {{ 'draw.sendBackTool' | translate }}
-                </md-checkbox>
-                <br/>
-                <md-checkbox class='md-primary'
-                             ng-model='drawController.authoringComponentContent.tools.sendForward'
-                             ng-change='drawController.authoringViewToolClicked()'>
-                    {{ 'draw.sendForwardTool' | translate }}
-                </md-checkbox>
-            </div>
-            <div class='toolsDiv'>
-                <md-checkbox class='md-primary'
-                             ng-model='drawController.authoringComponentContent.tools.undo'
-                             ng-change='drawController.authoringViewToolClicked()'>
-                    {{ 'draw.undoTool' | translate }}
-                </md-checkbox>
-                <br/>
-                <md-checkbox class='md-primary'
-                             ng-model='drawController.authoringComponentContent.tools.redo'
-                             ng-change='drawController.authoringViewToolClicked()'>
-                    {{ 'draw.redoTool' | translate }}
-                </md-checkbox>
-                <br/>
-                <md-checkbox class='md-primary'
-                             ng-model='drawController.authoringComponentContent.tools.delete'
-                             ng-change='drawController.authoringViewToolClicked()'>
-                    {{ 'draw.deleteTool' | translate }}
-                </md-checkbox>
-            </div>
-        </div>
-        <div ng-show='drawController.authoringComponentContent.tools.stamp'>
-            <p>{{ 'draw.stamps' | translate }}</p>
-            <br/>
-            <div ng-show='drawController.authoringComponentContent.stamps.Stamps.length == 0'>
-                {{ 'draw.thereAreNoStampsClickTheAddStampButtonToAddAStamp' | translate }}
-            </div>
-            <div ng-repeat='stamp in drawController.authoringComponentContent.stamps.Stamps track by $index'
-                 style='height: 60'>
+            <div style='height: 60px;'>
                 <md-input-container>
-                    <label></label>
-                    <input size='50'
-                           ng-model='drawController.authoringComponentContent.stamps.Stamps[$index]'
-                           ng-change='drawController.authoringViewComponentChanged()'
-                           placeholder='{{ "chooseAnImage" | translate }}'/>
+                    <label>{{ 'BACKGROUND_IMAGE' | translate }} ({{ 'OPTIONAL' | translate }})</label>
+                    <input size='100'
+                           ng-model='drawController.authoringComponentContent.background'
+                           ng-change='drawController.authoringViewBackgroundChanged()'/>
                 </md-input-container>
-                <md-button class='topButton md-raised md-primary'
-                           ng-click='drawController.chooseStampImage($index)'>
+                <md-button class='topButton md-raised md-primary' ng-click='drawController.chooseBackgroundImage()'>
                     <md-icon>insert_photo</md-icon>
                     <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'chooseAnImage' | translate }}</md-tooltip>
                 </md-button>
-                <md-button class='topButton md-raised md-primary'
-                           ng-click='drawController.authoringStampUpClicked($index)'>
-                    <md-icon>arrow_upward</md-icon>
-                    <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'UP' | translate }}</md-tooltip>
-                </md-button>
-                <md-button class='topButton md-raised md-primary'
-                           ng-click='drawController.authoringStampDownClicked($index)'>
-                    <md-icon>arrow_downward</md-icon>
-                    <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'DOWN' | translate }}</md-tooltip>
-                </md-button>
-                <md-button class='topButton md-raised md-primary'
-                           ng-click='drawController.authoringDeleteStampClicked($index)'>
-                    <md-icon>delete</md-icon>
-                    <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'DELETE' | translate }}</md-tooltip>
-                </md-button>
+            </div>
+            <div style='height: 60px;'>
+                <md-input-container>
+                    <label>{{ 'draw.canvasWidth' | translate }} ({{ 'OPTIONAL' | translate }})</label>
+                    <input type='number'
+                           style='width: 200'
+                           ng-model='drawController.authoringComponentContent.width'
+                           ng-change='drawController.authoringViewWidthChanged()'/>
+                </md-input-container>
+                <md-input-container>
+                    <label>{{ 'draw.canvasHeight' | translate }} ({{ 'OPTIONAL' | translate }})</label>
+                    <input type='number'
+                           style='width: 200'
+                           ng-model='drawController.authoringComponentContent.height'
+                           ng-change='drawController.authoringViewWidthChanged()'/>
+                </md-input-container>
             </div>
             <br/>
-            <md-button class='topButton md-raised md-primary'
-                       ng-click='drawController.authoringAddStampButtonClicked()'>
-                <md-icon>library_add</md-icon>
-                <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'draw.addStamp' | translate }}</md-tooltip>
+            <md-button class='topButton md-raised md-primary' ng-click='drawController.authoringEnableAllToolsButtonClicked()'>
+                <md-icon>check</md-icon>
+                <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'draw.enableAllTools' | translate }}</md-tooltip>
+            </md-button>
+            <md-button class='topButton md-raised md-primary' ng-click='drawController.authoringDisableAllToolsButtonClicked()'>
+                <md-icon>check_box_outline_blank</md-icon>
+                <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'draw.disableAllTools' | translate }}</md-tooltip>
+            </md-button>
+            <br/>
+            <div layout='row'>
+                <div class='toolsDiv'>
+                    <md-checkbox class='md-primary'
+                                 ng-model='drawController.authoringComponentContent.tools.select'
+                                 ng-change='drawController.authoringViewToolClicked()'>
+                        {{ 'draw.selectTool' | translate }}
+                    </md-checkbox>
+                    <br/>
+                    <md-checkbox class='md-primary'
+                                 ng-model='drawController.authoringComponentContent.tools.line'
+                                 ng-change='drawController.authoringViewToolClicked()'>
+                        {{ 'draw.lineTool' | translate }}
+                    </md-checkbox>
+                    <br/>
+                    <md-checkbox class='md-primary'
+                                 ng-model='drawController.authoringComponentContent.tools.shape'
+                                 ng-change='drawController.authoringViewToolClicked()'>
+                        {{ 'draw.shapeTool' | translate }}
+                    </md-checkbox>
+                    <br/>
+                    <md-checkbox class='md-primary'
+                                 ng-model='drawController.authoringComponentContent.tools.freeHand'
+                                 ng-change='drawController.authoringViewToolClicked()'>
+                        {{ 'draw.freeHandTool' | translate }}
+                    </md-checkbox>
+                </div>
+                <div class='toolsDiv'>
+                    <md-checkbox class='md-primary'
+                                 ng-model='drawController.authoringComponentContent.tools.text'
+                                 ng-change='drawController.authoringViewToolClicked()'>
+                        {{ 'draw.textTool' | translate }}
+                    </md-checkbox>
+                    <br/>
+                    <md-checkbox class='md-primary'
+                                 ng-model='drawController.authoringComponentContent.tools.stamp'
+                                 ng-change='drawController.authoringViewToolClicked()'>
+                        {{ 'draw.stampTool' | translate }}
+                    </md-checkbox>
+                    <br/>
+                    <md-checkbox class='md-primary'
+                                 ng-model='drawController.authoringComponentContent.tools.clone'
+                                 ng-change='drawController.authoringViewToolClicked()'>
+                        {{ 'draw.cloneTool' | translate }}
+                    </md-checkbox>
+                    <br/>
+                    <md-checkbox class='md-primary'
+                                 ng-model='drawController.authoringComponentContent.tools.strokeColor'
+                                 ng-change='drawController.authoringViewToolClicked()'>
+                        {{ 'draw.strokeColorTool' | translate }}
+                    </md-checkbox>
+                </div>
+                <div class='toolsDiv'>
+                    <md-checkbox class='md-primary'
+                                 ng-model='drawController.authoringComponentContent.tools.fillColor'
+                                 ng-change='drawController.authoringViewToolClicked()'>
+                        {{ 'draw.fillColorTool' | translate }}
+                    </md-checkbox>
+                    <br/>
+                    <md-checkbox class='md-primary'
+                                 ng-model='drawController.authoringComponentContent.tools.strokeWidth'
+                                 ng-change='drawController.authoringViewToolClicked()'>
+                        {{ 'draw.strokeWidthTool' | translate }}
+                    </md-checkbox>
+                    <br/>
+                    <md-checkbox class='md-primary'
+                                 ng-model='drawController.authoringComponentContent.tools.sendBack'
+                                 ng-change='drawController.authoringViewToolClicked()'>
+                        {{ 'draw.sendBackTool' | translate }}
+                    </md-checkbox>
+                    <br/>
+                    <md-checkbox class='md-primary'
+                                 ng-model='drawController.authoringComponentContent.tools.sendForward'
+                                 ng-change='drawController.authoringViewToolClicked()'>
+                        {{ 'draw.sendForwardTool' | translate }}
+                    </md-checkbox>
+                </div>
+                <div class='toolsDiv'>
+                    <md-checkbox class='md-primary'
+                                 ng-model='drawController.authoringComponentContent.tools.undo'
+                                 ng-change='drawController.authoringViewToolClicked()'>
+                        {{ 'draw.undoTool' | translate }}
+                    </md-checkbox>
+                    <br/>
+                    <md-checkbox class='md-primary'
+                                 ng-model='drawController.authoringComponentContent.tools.redo'
+                                 ng-change='drawController.authoringViewToolClicked()'>
+                        {{ 'draw.redoTool' | translate }}
+                    </md-checkbox>
+                    <br/>
+                    <md-checkbox class='md-primary'
+                                 ng-model='drawController.authoringComponentContent.tools.delete'
+                                 ng-change='drawController.authoringViewToolClicked()'>
+                        {{ 'draw.deleteTool' | translate }}
+                    </md-checkbox>
+                </div>
+            </div>
+            <div ng-if='drawController.authoringComponentContent.tools.stamp'>
+                <p>{{ 'draw.stamps' | translate }}</p>
+                <br/>
+                <div ng-if='drawController.authoringComponentContent.stamps.Stamps.length == 0'>
+                    {{ 'draw.thereAreNoStampsClickTheAddStampButtonToAddAStamp' | translate }}
+                </div>
+                <div ng-repeat='stamp in drawController.authoringComponentContent.stamps.Stamps track by $index'
+                     style='height: 60px'>
+                    <md-input-container>
+                        <label></label>
+                        <input size='50'
+                               ng-model='drawController.authoringComponentContent.stamps.Stamps[$index]'
+                               ng-change='drawController.authoringViewComponentChanged()'
+                               placeholder='{{ "chooseAnImage" | translate }}'/>
+                    </md-input-container>
+                    <md-button class='topButton md-raised md-primary'
+                               ng-click='drawController.chooseStampImage($index)'>
+                        <md-icon>insert_photo</md-icon>
+                        <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'chooseAnImage' | translate }}</md-tooltip>
+                    </md-button>
+                    <md-button class='topButton md-raised md-primary'
+                               ng-click='drawController.authoringStampUpClicked($index)'>
+                        <md-icon>arrow_upward</md-icon>
+                        <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'UP' | translate }}</md-tooltip>
+                    </md-button>
+                    <md-button class='topButton md-raised md-primary'
+                               ng-click='drawController.authoringStampDownClicked($index)'>
+                        <md-icon>arrow_downward</md-icon>
+                        <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'DOWN' | translate }}</md-tooltip>
+                    </md-button>
+                    <md-button class='topButton md-raised md-primary'
+                               ng-click='drawController.authoringDeleteStampClicked($index)'>
+                        <md-icon>delete</md-icon>
+                        <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'DELETE' | translate }}</md-tooltip>
+                    </md-button>
+                </div>
+                <br/>
+                <md-button class='topButton md-raised md-primary'
+                           ng-click='drawController.authoringAddStampButtonClicked()'>
+                    <md-icon>library_add</md-icon>
+                    <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'draw.addStamp' | translate }}</md-tooltip>
+                </md-button>
+            </div>
+            <md-button class='topButton md-raised md-primary' ng-click='drawController.authoringSaveStarterDrawData()'>
+                <md-icon>create</md-icon>
+                <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'draw.saveStarterDrawing' | translate }}</md-tooltip>
+            </md-button>
+            <md-button class='topButton md-raised md-primary' ng-click='drawController.authoringDeleteStarterDrawData()'>
+                <md-icon>delete_sweep</md-icon>
+                <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'draw.deleteStarterDrawing' | translate }}</md-tooltip>
             </md-button>
         </div>
-        <md-button class='topButton md-raised md-primary' ng-click='drawController.authoringSaveStarterDrawData()'>
-            <md-icon>create</md-icon>
-            <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'draw.saveStarterDrawing' | translate }}</md-tooltip>
-        </md-button>
-        <md-button class='topButton md-raised md-primary' ng-click='drawController.authoringDeleteStarterDrawData()'>
-            <md-icon>delete_sweep</md-icon>
-            <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'draw.deleteStarterDrawing' | translate }}</md-tooltip>
-        </md-button>
-    </div>
-    <div ng-if='drawController.mode === "authoring"'>
         <md-button class='topButton md-raised md-primary' ng-click='drawController.showAdvancedAuthoring = !drawController.showAdvancedAuthoring'>
             <md-icon>build</md-icon>
             <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ "ADVANCED" | translate }}</md-tooltip>
         </md-button>
         <br/>
-        <div ng-show='drawController.showAdvancedAuthoring'>
+        <div ng-if='drawController.showAdvancedAuthoring'>
             {{ 'SHOW_SAVE_BUTTON' | translate }}:
             <input type='checkbox'
                    ng-model='drawController.authoringComponentContent.showSaveButton'
@@ -217,7 +217,7 @@
             <input type='checkbox'
                    ng-model='drawController.authoringComponentContent.showSubmitButton'
                    ng-change='drawController.showSubmitButtonValueChanged()'/>
-            <div ng-show='drawController.authoringComponentContent.showSubmitButton'
+            <div ng-if='drawController.authoringComponentContent.showSubmitButton'
                  style='display:inline'>
                 <span>{{ 'MAX_SUBMIT' | translate }}:</span>
                 <input type='number'
@@ -239,14 +239,14 @@
                    ng-model-options='{ debounce: 1000 }'
                    style='width: 3em'/>
             <br/>
-            <div ng-if='drawController.mode === "authoring"'>
+            <div>
                 {{ 'IMPORT_PREVIOUS_WORK' | translate }}:
                 <input type='checkbox'
                        ng-model='drawController.authoringComponentContent.importPreviousWork'
                        ng-click='drawController.authoringImportPreviousWorkClicked()'
                        ng-change='drawController.authoringViewComponentChanged()'/>
             </div>
-            <div ng-if='drawController.mode === "authoring" && drawController.authoringComponentContent.importPreviousWork'>
+            <div ng-if='drawController.authoringComponentContent.importPreviousWork'>
                 {{ 'IMPORT_PREVIOUS_WORK_STEP' | translate }}:
                 <select ng-model='drawController.authoringComponentContent.importPreviousWorkNodeId'
                         ng-change='drawController.authoringImportPreviousWorkNodeIdChanged()'>
@@ -263,14 +263,14 @@
                     <option></option>
                 </select>
             </div>
-            <div ng-if='drawController.mode === "authoring"'>
+            <div>
                 {{ 'SHOW_PREVIOUS_WORK' | translate }}:
                 <input type='checkbox'
                        ng-model='drawController.authoringComponentContent.showPreviousWork'
                        ng-click='drawController.authoringShowPreviousWorkClicked()'
                        ng-change='drawController.authoringViewComponentChanged()'/>
             </div>
-            <div ng-if='drawController.mode === "authoring" && drawController.authoringComponentContent.showPreviousWork'>
+            <div ng-if='drawController.authoringComponentContent.showPreviousWork'>
                 {{ 'SHOW_PREVIOUS_WORK_STEP' | translate }}:
                 <select ng-model='drawController.authoringComponentContent.showPreviousWorkNodeId'
                         ng-change='drawController.authoringShowPreviousWorkNodeIdChanged()'>
@@ -292,15 +292,15 @@
                        ng-model='drawController.authoringComponentContent.showPreviousWorkPrompt'
                        ng-change='drawController.authoringViewComponentChanged()'/>
             </div>
-            <div ng-if='drawController.mode === "authoring"'>
+            <div>
                 <button ng-click='drawController.addConnectedComponent()'>{{ 'ADD_CONNECTED_COMPONENT' | translate }}</button>
                 <div ng-repeat='connectedComponent in drawController.authoringComponentContent.connectedComponents track by $index'>
                     <table border='1'>
                         <tr>
-                            <td style='padding:5'>
+                            <td style='padding:5px'>
                                 {{ 'CONNECTED_COMPONENT' | translate }}
                             </td>
-                            <td style='padding:5'>
+                            <td style='padding:5px'>
                                 <div style='display:none'>
                                     {{ 'NODE_ID' | translate }}:
                                     <select ng-model='connectedComponent.nodeId'
@@ -324,7 +324,7 @@
                                     </select>
                                 </div>
                             </td>
-                            <td style='padding:5'>
+                            <td style='padding:5px'>
                                 <select ng-model='connectedComponent.updateOn'
                                         ng-change='drawController.authoringViewComponentChanged()'>
                                         <option ng-repeat='updateOnOption in drawController.connectedComponentUpdateOnOptions'
@@ -333,18 +333,18 @@
                                         </option>
                                 </select>
                             </td>
-                            <td style='padding:5'>
+                            <td style='padding:5px'>
                                 <button ng-click='drawController.deleteConnectedComponent($index)'>{{ 'DELETE' | translate }}</button>
                             </td>
                         </tr>
                     </table>
                 </div>
             </div>
-            <div ng-if='drawController.mode === "authoring"'>
+            <div>
                 <button ng-click='drawController.showRubricAuthoring = !drawController.showRubricAuthoring'>
                     {{ 'EDIT_COMPONENT_RUBRIC' | translate }}
                 </button>
-                <div ng-show='drawController.showRubricAuthoring'>
+                <div ng-if='drawController.showRubricAuthoring'>
                     <summernote id='{{drawController.summernoteRubricId}}'
                                 ng-model='drawController.summernoteRubricHTML'
                                 ng-change='drawController.summernoteRubricHTMLChanged()'
@@ -355,12 +355,12 @@
                     </summernote>
                 </div>
             </div>
-            <div ng-if='drawController.mode === "authoring"'>
+            <div>
                 <button ng-click='drawController.showJSON = !drawController.showJSON'>
                         {{ 'SHOW_JSON' | translate }}
                 </button>
                 <br/>
-                <div ng-show='drawController.showJSON'>
+                <div ng-if='drawController.showJSON'>
                     <textarea ng-model='drawController.authoringComponentContentJSONString'
                               ng-change='drawController.advancedAuthoringViewComponentChanged()'
                               ng-model-options="{ updateOn: 'blur' }"
@@ -407,14 +407,14 @@
                                     ng-if="drawController.mode === 'student' && !drawController.latestAnnotations.score"></possible-score>
                 </div>
                 <div class="component__actions" layout="row">
-                    <md-button class="md-accent" ng-show="drawController.isStudentAttachmentEnabled"
+                    <md-button class="md-accent" ng-if="drawController.isStudentAttachmentEnabled"
                                ng-click="nodeController.showStudentAssets($event, component.id, drawController.isDisabled)">
                         <md-icon>image</md-icon> {{ 'draw.insertFile' | translate }}
                     </md-button>
                 </div>
                 <md-button class="md-accent"
                         ng-click="drawController.resetButtonClicked()"
-                        ng-show="drawController.isResetButtonVisible">
+                        ng-if="drawController.isResetButtonVisible">
                         <md-icon> restore </md-icon> {{ 'RESET' | translate }}
                 </md-button>
                 <md-button class="md-accent md-primary"
@@ -451,12 +451,12 @@
                     <md-button class="md-raised md-primary"
                                ng-click='drawController.saveButtonClicked()'
                                ng-disabled='drawController.isDisabled || !drawController.isDirty'
-                               ng-show='drawController.isSaveButtonVisible'>{{ 'SAVE' | translate }}</md-button>
+                               ng-if='drawController.isSaveButtonVisible'>{{ 'SAVE' | translate }}</md-button>
                     <md-button class="md-raised md-primary"
                                ng-click='drawController.submitButtonClicked()'
                                ng-disabled='drawController.isDisabled || !drawController.isSubmitDirty || drawController.isSubmitButtonDisabled'
-                               ng-show='drawController.isSubmitButtonVisible'>{{ 'SUBMIT' | translate }}</md-button>
-                    <span ng-show="drawController.saveMessage.text"
+                               ng-if='drawController.isSubmitButtonVisible'>{{ 'SUBMIT' | translate }}</md-button>
+                    <span ng-if="drawController.saveMessage.text"
                           class="component__actions__info md-caption">
                           {{drawController.saveMessage.text}} <span class="component__actions__more"><md-tooltip md-direction="top">{{ drawController.saveMessage.time | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip><span am-time-ago="drawController.saveMessage.time"></span></span>
                     </span>

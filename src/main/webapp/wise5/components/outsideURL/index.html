@@ -8,13 +8,14 @@
                    ng-model-options='{ debounce: 1000 }'
                    placeholder='{{ "outsideURL.enterURLHere" | translate }}'/>
         </md-input-container>
-        <div ng-if='outsideURLController.mode === "authoring"'>
-            <md-button class='topButton md-raised md-primary' ng-click='outsideURLController.showAdvancedAuthoring = !outsideURLController.showAdvancedAuthoring'>
+        <div>
+            <md-button class='topButton md-raised md-primary'
+                       ng-click='outsideURLController.showAdvancedAuthoring = !outsideURLController.showAdvancedAuthoring'>
                 <md-icon>build</md-icon>
                 <md-tooltip md-direction="top" class="projectButtonTooltip">{{ "ADVANCED" | translate }}</md-tooltip>
             </md-button>
             <br/>
-            <div ng-show='outsideURLController.showAdvancedAuthoring'>
+            <div ng-if='outsideURLController.showAdvancedAuthoring'>
                 {{ 'COMPONENT_WIDTH' | translate }}:
                 <input type='number'
                        ng-model='outsideURLController.authoringComponentContent.componentWidth'
@@ -25,7 +26,7 @@
                 <button ng-click='outsideURLController.showRubricAuthoring = !outsideURLController.showRubricAuthoring'>
                     {{ 'EDIT_COMPONENT_RUBRIC' | translate }}
                 </button>
-                <div ng-show='outsideURLController.showRubricAuthoring'>
+                <div ng-if='outsideURLController.showRubricAuthoring'>
                     <summernote id='{{outsideURLController.summernoteRubricId}}'
                                 ng-model='outsideURLController.summernoteRubricHTML'
                                 ng-change='outsideURLController.summernoteRubricHTMLChanged()'
@@ -35,12 +36,12 @@
                                 cols='100'>
                     </summernote>
                 </div>
-                <div ng-if='outsideURLController.mode === "authoring"'>
+                <div>
                     <button ng-click='outsideURLController.showJSON = !outsideURLController.showJSON'>
                             {{ 'SHOW_JSON' | translate }}
                     </button>
                     <br/>
-                    <div ng-show='outsideURLController.showJSON'>
+                    <div ng-if='outsideURLController.showJSON'>
                         <textarea ng-model='outsideURLController.authoringComponentContentJSONString'
                                   ng-change='outsideURLController.advancedAuthoringViewComponentChanged()'
                                   ng-model-options="{ updateOn: 'blur' }"

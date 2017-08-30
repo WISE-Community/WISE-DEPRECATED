@@ -782,7 +782,7 @@
             </div>
             <div class="component__attachment" ng-repeat="attachment in animationController.attachments">
                 <img ng-src="{{attachment.iconURL}}" class="component__attachment__content" />
-                <md-button ng-show="!animationController.isDisabled" class="component__attachment__delete" ng-click='animationController.removeAttachment(attachment)' title="Remove file"><md-icon>cancel</md-icon></md-button>
+                <md-button ng-if="!animationController.isDisabled" class="component__attachment__delete" ng-click='animationController.removeAttachment(attachment)' title="Remove file"><md-icon>cancel</md-icon></md-button>
             </div>
         </div>
         <div ng-if="animationController.isSaveButtonVisible || animationController.isSubmitButtonVisible"
@@ -800,7 +800,7 @@
                        ng-if="animationController.isSubmitButtonVisible"
                        aria-label="{{SUBMIT | translate}}"
                        translate="SUBMIT"></md-button>
-            <span ng-show="animationController.saveMessage.text"
+            <span ng-if="animationController.saveMessage.text"
                   class="component__actions__info md-caption">
                   {{animationController.saveMessage.text}} <span class="component__actions__more"><md-tooltip md-direction="top">{{ animationController.saveMessage.time | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip><span am-time-ago="animationController.saveMessage.time"></span></span>
             </span>

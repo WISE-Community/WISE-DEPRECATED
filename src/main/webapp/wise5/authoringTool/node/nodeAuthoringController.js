@@ -3330,7 +3330,7 @@ var NodeAuthoringController = function () {
                                 _this6.$timeout(function () {
                                     // slowly fade back to original background color
                                     componentElement.css({
-                                        'transition': 'background-color 3s ease-in-out',
+                                        'transition': 'background-color 2s ease-in-out',
                                         'background-color': originalBackgroundColor
                                     });
                                 });
@@ -3377,7 +3377,7 @@ var NodeAuthoringController = function () {
                             }
                         }
                     });
-                }, 2000);
+                }, 1000);
             });
         }
 
