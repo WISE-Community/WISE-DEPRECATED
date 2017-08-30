@@ -6,9 +6,7 @@ Object.defineProperty(exports, "__esModule", {
 
 require('../themes/default/js/webfonts');
 
-var _jquery = require('jquery');
-
-var _jquery2 = _interopRequireDefault(_jquery);
+require('jquery');
 
 var _angular = require('angular');
 
@@ -18,61 +16,35 @@ var _angularDragula = require('angular-dragula');
 
 var _angularDragula2 = _interopRequireDefault(_angularDragula);
 
-var _ngFileUpload = require('ng-file-upload');
+require('ng-file-upload');
 
-var _ngFileUpload2 = _interopRequireDefault(_ngFileUpload);
+require('highcharts-ng');
 
-var _highchartsNg = require('highcharts-ng');
+require('angular-ui-router');
 
-var _highchartsNg2 = _interopRequireDefault(_highchartsNg);
+require('angular-material');
 
-var _angularUiRouter = require('angular-ui-router');
+require('angular-moment');
 
-var _angularUiRouter2 = _interopRequireDefault(_angularUiRouter);
+require('angular-sanitize');
 
-var _angularMaterial = require('angular-material');
+require('lib/angular-toArrayFilter/toArrayFilter');
 
-var _angularMaterial2 = _interopRequireDefault(_angularMaterial);
+require('angular-translate');
 
-var _angularMoment = require('angular-moment');
+require('angular-translate-loader-partial');
 
-var _angularMoment2 = _interopRequireDefault(_angularMoment);
+require('angular-websocket');
 
-var _angularSanitize = require('angular-sanitize');
-
-var _angularSanitize2 = _interopRequireDefault(_angularSanitize);
-
-var _toArrayFilter = require('lib/angular-toArrayFilter/toArrayFilter');
-
-var _toArrayFilter2 = _interopRequireDefault(_toArrayFilter);
-
-var _angularTranslate = require('angular-translate');
-
-var _angularTranslate2 = _interopRequireDefault(_angularTranslate);
-
-var _angularTranslateLoaderPartial = require('angular-translate-loader-partial');
-
-var _angularTranslateLoaderPartial2 = _interopRequireDefault(_angularTranslateLoaderPartial);
-
-var _angularWebsocket = require('angular-websocket');
-
-var _angularWebsocket2 = _interopRequireDefault(_angularWebsocket);
-
-var _animationComponentModule = require('../components/animation/animationComponentModule');
-
-var _animationComponentModule2 = _interopRequireDefault(_animationComponentModule);
+require('../components/animation/animationComponentModule');
 
 var _annotationService = require('../services/annotationService');
 
 var _annotationService2 = _interopRequireDefault(_annotationService);
 
-var _audioOscillatorComponentModule = require('../components/audioOscillator/audioOscillatorComponentModule');
+require('../components/audioOscillator/audioOscillatorComponentModule');
 
-var _audioOscillatorComponentModule2 = _interopRequireDefault(_audioOscillatorComponentModule);
-
-var _authoringToolComponents = require('./authoringToolComponents');
-
-var _authoringToolComponents2 = _interopRequireDefault(_authoringToolComponents);
+require('./authoringToolComponents');
 
 var _authoringToolController = require('./authoringToolController');
 
@@ -94,9 +66,7 @@ var _authorWebSocketService = require('../services/authorWebSocketService');
 
 var _authorWebSocketService2 = _interopRequireDefault(_authorWebSocketService);
 
-var _conceptMapComponentModule = require('../components/conceptMap/conceptMapComponentModule');
-
-var _conceptMapComponentModule2 = _interopRequireDefault(_conceptMapComponentModule);
+require('../components/conceptMap/conceptMapComponentModule');
 
 var _configService = require('../services/configService');
 
@@ -106,49 +76,27 @@ var _cRaterService = require('../services/cRaterService');
 
 var _cRaterService2 = _interopRequireDefault(_cRaterService);
 
-var _components = require('../directives/components');
+require('../directives/components');
 
-var _components2 = _interopRequireDefault(_components);
+require('../components/discussion/discussionComponentModule');
 
-var _discussionComponentModule = require('../components/discussion/discussionComponentModule');
+require('../components/draw/drawComponentModule');
 
-var _discussionComponentModule2 = _interopRequireDefault(_discussionComponentModule);
+require('../components/embedded/embeddedComponentModule');
 
-var _drawComponentModule = require('../components/draw/drawComponentModule');
+require('../filters/filters');
 
-var _drawComponentModule2 = _interopRequireDefault(_drawComponentModule);
+require('../lib/highcharts@4.2.1');
 
-var _embeddedComponentModule = require('../components/embedded/embeddedComponentModule');
+require('../components/graph/graphComponentModule');
 
-var _embeddedComponentModule2 = _interopRequireDefault(_embeddedComponentModule);
+require('../components/html/htmlComponentModule');
 
-var _filters = require('../filters/filters');
+require('../components/label/labelComponentModule');
 
-var _filters2 = _interopRequireDefault(_filters);
+require('../components/match/matchComponentModule');
 
-var _highcharts = require('../lib/highcharts@4.2.1');
-
-var _highcharts2 = _interopRequireDefault(_highcharts);
-
-var _graphComponentModule = require('../components/graph/graphComponentModule');
-
-var _graphComponentModule2 = _interopRequireDefault(_graphComponentModule);
-
-var _htmlComponentModule = require('../components/html/htmlComponentModule');
-
-var _htmlComponentModule2 = _interopRequireDefault(_htmlComponentModule);
-
-var _labelComponentModule = require('../components/label/labelComponentModule');
-
-var _labelComponentModule2 = _interopRequireDefault(_labelComponentModule);
-
-var _matchComponentModule = require('../components/match/matchComponentModule');
-
-var _matchComponentModule2 = _interopRequireDefault(_matchComponentModule);
-
-var _multipleChoiceComponentModule = require('../components/multipleChoice/multipleChoiceComponentModule');
-
-var _multipleChoiceComponentModule2 = _interopRequireDefault(_multipleChoiceComponentModule);
+require('../components/multipleChoice/multipleChoiceComponentModule');
 
 var _nodeAuthoringController = require('./node/nodeAuthoringController');
 
@@ -158,9 +106,7 @@ var _nodeService = require('../services/nodeService');
 
 var _nodeService2 = _interopRequireDefault(_nodeService);
 
-var _notebook = require('../directives/notebook/notebook');
-
-var _notebook2 = _interopRequireDefault(_notebook);
+require('../directives/notebook/notebook');
 
 var _notebookService = require('../services/notebookService');
 
@@ -170,13 +116,9 @@ var _notificationService = require('../services/notificationService');
 
 var _notificationService2 = _interopRequireDefault(_notificationService);
 
-var _openResponseComponentModule = require('../components/openResponse/openResponseComponentModule');
+require('../components/openResponse/openResponseComponentModule');
 
-var _openResponseComponentModule2 = _interopRequireDefault(_openResponseComponentModule);
-
-var _outsideURLComponentModule = require('../components/outsideURL/outsideURLComponentModule');
-
-var _outsideURLComponentModule2 = _interopRequireDefault(_outsideURLComponentModule);
+require('../components/outsideURL/outsideURLComponentModule');
 
 var _projectAssetController = require('./asset/projectAssetController');
 
@@ -222,9 +164,7 @@ var _studentWebSocketService = require('../services/studentWebSocketService');
 
 var _studentWebSocketService2 = _interopRequireDefault(_studentWebSocketService);
 
-var _tableComponentModule = require('../components/table/tableComponentModule');
-
-var _tableComponentModule2 = _interopRequireDefault(_tableComponentModule);
+require('../components/table/tableComponentModule');
 
 var _teacherDataService = require('../services/teacherDataService');
 
@@ -242,9 +182,7 @@ var _wiseLinkAuthoringController = require('./wiseLink/wiseLinkAuthoringControll
 
 var _wiseLinkAuthoringController2 = _interopRequireDefault(_wiseLinkAuthoringController);
 
-var _angularSummernote = require('lib/angular-summernote/dist/angular-summernote.min');
-
-var _angularSummernote2 = _interopRequireDefault(_angularSummernote);
+require('lib/angular-summernote/dist/angular-summernote.min');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
