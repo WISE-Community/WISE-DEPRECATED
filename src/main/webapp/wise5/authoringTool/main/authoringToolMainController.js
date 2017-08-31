@@ -160,19 +160,6 @@ var AuthoringToolMainController = function () {
         }
 
         /**
-         * Download a project as a zip file
-         * @param projectId the project id
-         */
-
-    }, {
-        key: 'downloadProject',
-        value: function downloadProject(projectId) {
-            // make a request to download the project as a zip file
-            var exportProjectURL = this.ConfigService.getWISEBaseURL() + "/project/export/" + projectId;
-            window.location.href = exportProjectURL;
-        }
-
-        /**
          * The create new project button was clicked
          */
 

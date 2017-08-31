@@ -143,16 +143,6 @@ class AuthoringToolMainController {
     }
 
     /**
-     * Download a project as a zip file
-     * @param projectId the project id
-     */
-    downloadProject(projectId) {
-        // make a request to download the project as a zip file
-        let exportProjectURL = this.ConfigService.getWISEBaseURL() + "/project/export/" + projectId;
-        window.location.href = exportProjectURL;
-    }
-
-    /**
      * The create new project button was clicked
      */
     createNewProjectButtonClicked() {
