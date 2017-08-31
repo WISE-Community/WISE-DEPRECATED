@@ -661,14 +661,20 @@ public class WISETextWebSocketHandler extends TextWebSocketHandler implements WI
 
 		ArrayList<String> sessions = openedProjectsToSessions.get(projectId);  // sessions that are currently authoring this project
 
-		// Now get all the logged in users who are editing this same project
-		HashMap<String, User> allLoggedInUsers = (HashMap<String, User>) servletContext
-				.getAttribute(WISESessionListener.ALL_LOGGED_IN_USERS);
+        if (sessions != null) {
 
-		for (String sessionId : sessions) {
-			User user = allLoggedInUsers.get(sessionId);
-			currentAuthors.add(user);
-		}
+            // now get all the logged in users who are editing this same project
+            HashMap<String, User> allLoggedInUsers = (HashMap<String, User>) servletContext
+                .getAttribute(WISESessionListener.ALL_LOGGED_IN_USERS);
+
+            if (allLoggedInUsers != null) {
+                for (String sessionId : sessions) {
+                    User user = allLoggedInUsers.get(sessionId);
+                    currentAuthors.add(user);
+                }
+            }
+        }
+
 		return currentAuthors;
 	}
 
