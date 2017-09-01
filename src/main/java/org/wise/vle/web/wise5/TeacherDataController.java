@@ -326,9 +326,7 @@ public class TeacherDataController {
                     userId = userIdLong.intValue();
                 }
             }
-            System.out.println("runId=" + runId);
-            System.out.println("projectId=" + projectId);
-            System.out.println("events=" + events);
+            
             /*
              * the signed in user is an owner of the project or run
              * or
