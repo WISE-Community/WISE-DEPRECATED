@@ -422,7 +422,9 @@ public class StudentDataController {
                                         eventJSONObject.isNull("category") ? null : eventJSONObject.getString("category"),
                                         eventJSONObject.isNull("event") ? null : eventJSONObject.getString("event"),
                                         eventJSONObject.isNull("data") ? null : eventJSONObject.getString("data"),
-                                        eventJSONObject.isNull("clientSaveTime") ? null : eventJSONObject.getString("clientSaveTime"));
+                                        eventJSONObject.isNull("clientSaveTime") ? null : eventJSONObject.getString("clientSaveTime"),
+                                        eventJSONObject.isNull("projectId") ? null : eventJSONObject.getInt("projectId"),
+                                        eventJSONObject.isNull("userId") ? null : eventJSONObject.getInt("userId"));
 
                                 // before returning saved Event, strip all fields except id, responseToken, and serverSaveTime to minimize response size
                                 JSONObject savedEventJSONObject = new JSONObject();

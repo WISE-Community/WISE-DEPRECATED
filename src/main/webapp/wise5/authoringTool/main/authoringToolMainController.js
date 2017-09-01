@@ -9,15 +9,19 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var AuthoringToolMainController = function () {
-    function AuthoringToolMainController($anchorScroll, $filter, $state, $timeout, ConfigService, ProjectService) {
+    function AuthoringToolMainController($anchorScroll, $filter, $rootScope, $state, $timeout, ConfigService, ProjectService, TeacherDataService) {
+        var _this = this;
+
         _classCallCheck(this, AuthoringToolMainController);
 
         this.$anchorScroll = $anchorScroll;
         this.$filter = $filter;
+        this.$rootScope = $rootScope;
         this.$state = $state;
         this.$timeout = $timeout;
         this.ConfigService = ConfigService;
         this.ProjectService = ProjectService;
+        this.TeacherDataService = TeacherDataService;
 
         this.$translate = this.$filter('translate');
 
@@ -26,6 +30,16 @@ var AuthoringToolMainController = function () {
         this.sharedProjects = this.ConfigService.getConfigParam("sharedProjects");
 
         this.showCreateProjectView = false;
+
+        this.$rootScope.$on('goHome', function () {
+            // save the go to teacher home event to the server
+            _this.saveEvent('goToTeacherHome', 'Navigation', null, null);
+        });
+
+        this.$rootScope.$on('logOut', function () {
+            // save the log out event to the server
+            _this.saveEvent('logOut', 'Navigation', null, null);
+        });
     }
 
     /**
@@ -75,7 +89,7 @@ var AuthoringToolMainController = function () {
     }, {
         key: 'copyProject',
         value: function copyProject(projectId) {
-            var _this = this;
+            var _this2 = this;
 
             // get the project info
             var project = this.getProjectByProjectId(projectId);
@@ -108,16 +122,19 @@ var AuthoringToolMainController = function () {
                 // copy the project
                 this.ProjectService.copyProject(projectId).then(function (projectId) {
 
+                    // save the project copied event to the server
+                    _this2.saveEvent('projectCopied', 'Authoring', null, projectId);
+
                     // refresh the project list
                     var configURL = window.configURL;
-                    _this.ConfigService.retrieveConfig(configURL).then(function () {
-                        _this.projects = _this.ConfigService.getConfigParam("projects");
+                    _this2.ConfigService.retrieveConfig(configURL).then(function () {
+                        _this2.projects = _this2.ConfigService.getConfigParam("projects");
 
                         // scroll to the top of the page
-                        _this.$anchorScroll('top');
+                        _this2.$anchorScroll('top');
 
                         // briefly highlight the new project to draw attention to it
-                        _this.$timeout(function () {
+                        _this2.$timeout(function () {
 
                             // get the component UI element
                             var componentElement = $("#" + projectId);
@@ -134,7 +151,7 @@ var AuthoringToolMainController = function () {
                              * element won't get highlighted in the first place
                              * unless this timeout is used.
                              */
-                            _this.$timeout(function () {
+                            _this2.$timeout(function () {
                                 // slowly fade back to original background color
                                 componentElement.css({
                                     'transition': 'background-color 3s ease-in-out',
@@ -146,7 +163,7 @@ var AuthoringToolMainController = function () {
                                  * the fade otherwise the regular mouseover
                                  * background color change will not work
                                  */
-                                _this.$timeout(function () {
+                                _this2.$timeout(function () {
                                     componentElement.css({
                                         'transition': '',
                                         'background-color': ''
@@ -167,6 +184,10 @@ var AuthoringToolMainController = function () {
     }, {
         key: 'downloadProject',
         value: function downloadProject(projectId) {
+
+            // save the project downloaded event to the server
+            this.saveEvent('projectDownloaded', 'Authoring', null, projectId);
+
             // make a request to download the project as a zip file
             var exportProjectURL = this.ConfigService.getWISEBaseURL() + "/project/export/" + projectId;
             window.location.href = exportProjectURL;
@@ -205,7 +226,7 @@ var AuthoringToolMainController = function () {
     }, {
         key: 'registerNewProject',
         value: function registerNewProject() {
-            var _this2 = this;
+            var _this3 = this;
 
             // get the project title the author has entered
             var projectTitle = this.project.metadata.title;
@@ -223,10 +244,13 @@ var AuthoringToolMainController = function () {
                 // create the new project on the server
                 this.ProjectService.registerNewProject(projectJSONString, commitMessage).then(function (projectId) {
                     // hide the create project view
-                    _this2.showCreateProjectView = false;
+                    _this3.showCreateProjectView = false;
+
+                    // save the project created event to the server
+                    _this3.saveEvent('projectCreated', 'Authoring', null, projectId);
 
                     // open the new project in the authoring tool
-                    _this2.$state.go('root.project', { projectId: projectId });
+                    _this3.$state.go('root.project', { projectId: projectId });
                 });
             }
         }
@@ -263,6 +287,13 @@ var AuthoringToolMainController = function () {
     }, {
         key: 'previewProject',
         value: function previewProject(projectId) {
+
+            var data = {};
+            data.constraints = true;
+
+            // save the project previewed event
+            this.saveEvent('projectPreviewed', 'Authoring', data, projectId);
+
             var previewProjectURL = this.ConfigService.getWISEBaseURL() + "/project/" + projectId;
             window.open(previewProjectURL);
         }
@@ -274,10 +305,35 @@ var AuthoringToolMainController = function () {
     }, {
         key: 'goHome',
         value: function goHome() {
+
             // send the user to the teacher home page
             var wiseBaseURL = this.ConfigService.getWISEBaseURL();
             var teacherHomePageURL = wiseBaseURL + '/teacher';
             window.location = teacherHomePageURL;
+        }
+
+        /**
+         * Save an Authoring Tool event
+         * @param eventName the name of the event
+         * @param category the category of the event
+         * example 'Navigation' or 'Authoring'
+         */
+
+    }, {
+        key: 'saveEvent',
+        value: function saveEvent(eventName, category, data, projectId) {
+
+            var context = 'AuthoringTool';
+            var nodeId = null;
+            var componentId = null;
+            var componentType = null;
+
+            if (data == null) {
+                data = {};
+            }
+
+            // save the event to the server
+            this.TeacherDataService.saveEvent(context, nodeId, componentId, componentType, category, eventName, data, projectId);
         }
     }]);
 
@@ -286,7 +342,7 @@ var AuthoringToolMainController = function () {
 
 ;
 
-AuthoringToolMainController.$inject = ['$anchorScroll', '$filter', '$state', '$timeout', 'ConfigService', 'ProjectService'];
+AuthoringToolMainController.$inject = ['$anchorScroll', '$filter', '$rootScope', '$state', '$timeout', 'ConfigService', 'ProjectService', 'TeacherDataService'];
 
 exports.default = AuthoringToolMainController;
 //# sourceMappingURL=authoringToolMainController.js.map

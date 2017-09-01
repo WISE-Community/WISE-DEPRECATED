@@ -211,8 +211,9 @@ class TeacherDataService {
      * @param event the event object
      * @returns a promise
      */
-    saveEvent(context, nodeId, componentId, componentType, category, event, data) {
+    saveEvent(context, nodeId, componentId, componentType, category, event, data, projectId) {
         let newEvent = {
+            projectId : this.ConfigService.getProjectId(),
             runId : this.ConfigService.getRunId(),
             workgroupId : this.ConfigService.getWorkgroupId(),
             clientSaveTime : Date.parse(new Date()),
@@ -225,13 +226,22 @@ class TeacherDataService {
             data : data
         };
 
+        if (newEvent.projectId == null) {
+            newEvent.projectId = projectId;
+        }
+
         let events = [newEvent];
 
         let params = {
-             runId : this.ConfigService.getRunId(),
-             workgroupId : this.ConfigService.getWorkgroupId(),
-             events : angular.toJson(events)
+            projectId : this.ConfigService.getProjectId(),
+            runId : this.ConfigService.getRunId(),
+            workgroupId : this.ConfigService.getWorkgroupId(),
+            events : angular.toJson(events)
         };
+
+        if (params.projectId == null) {
+            params.projectId = projectId;
+        }
 
         let httpParams = {};
         httpParams.method = 'POST';

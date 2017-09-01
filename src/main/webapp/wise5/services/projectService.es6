@@ -8356,6 +8356,8 @@ class ProjectService {
                  */
                 nodeIdToInsertInsideOrAfter = newNode.id;
             }
+
+            return newNodes;
         });
     }
 

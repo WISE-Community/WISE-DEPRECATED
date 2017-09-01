@@ -10,9 +10,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.socket.WebSocketHandler;
 import org.wise.portal.dao.ObjectNotFoundException;
+import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
+import org.wise.portal.service.project.ProjectService;
 import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.vle.wise5.VLEService;
 import org.wise.portal.service.websocket.WISEWebSocketHandler;
@@ -41,6 +43,9 @@ public class TeacherDataController {
 
     @Autowired
     private VLEService vleService;
+
+    @Autowired
+    private ProjectService projectService;
 
     @Autowired
     private RunService runService;
@@ -273,6 +278,7 @@ public class TeacherDataController {
     public void postWISETeacherData(
             HttpServletResponse response,
             @RequestParam(value = "workgroupId", required = true) Integer workgroupId,
+            @RequestParam(value = "projectId", required = false) Integer projectId,
             @RequestParam(value = "runId", required = true) Integer runId,
             @RequestParam(value = "annotations", required = false) String annotations,
             @RequestParam(value = "events", required = false) String events
@@ -284,12 +290,53 @@ public class TeacherDataController {
             // make sure the signed-in user has access to the run
             User signedInUser = ControllerUtil.getSignedInUser();
 
-            Run run = runService.retrieveById(new Long(runId));
+            Project project = null;
+            Run run = null;
+            User owner = null;
+            Integer userId = null;
+            Set<User> sharedOwners = null;
 
-            User owner = run.getOwner();
-            Set<User> sharedOwners = run.getSharedowners();
+            if (runId != null) {
+                // get the run object
+                run = runService.retrieveById(new Long(runId));
 
-            if (owner.equals(signedInUser) || sharedOwners.contains(signedInUser)) {
+                if (run != null) {
+                    // get the owners of the run
+                    owner = run.getOwner();
+                    sharedOwners = run.getSharedowners();
+                }
+            }
+
+            if (projectId != null) {
+                // get the project object
+                project = projectService.getById(new Long(projectId));
+
+                if (project != null) {
+                    // get the owners of the project
+                    owner = project.getOwner();
+                    sharedOwners = project.getSharedowners();
+                }
+            }
+
+            if (signedInUser != null) {
+                // get the user id
+                Long userIdLong = signedInUser.getId();
+
+                if (userIdLong != null) {
+                    userId = userIdLong.intValue();
+                }
+            }
+            System.out.println("runId=" + runId);
+            System.out.println("projectId=" + projectId);
+            System.out.println("events=" + events);
+            /*
+             * the signed in user is an owner of the project or run
+             * or
+             * we are saving a teacher event that isn't associated with a project or run
+             */
+            if ((owner != null && owner.equals(signedInUser)) ||
+                (sharedOwners != null && sharedOwners.contains(signedInUser)) ||
+                (runId == null && projectId == null && events != null)) {
 
                 if (annotations != null) {
                     // handle POST'ed annotations
@@ -375,7 +422,9 @@ public class TeacherDataController {
                                         eventJSONObject.isNull("category") ? null : eventJSONObject.getString("category"),
                                         eventJSONObject.isNull("event") ? null : eventJSONObject.getString("event"),
                                         eventJSONObject.isNull("data") ? null : eventJSONObject.getString("data"),
-                                        eventJSONObject.isNull("clientSaveTime") ? null : eventJSONObject.getString("clientSaveTime"));
+                                        eventJSONObject.isNull("clientSaveTime") ? null : eventJSONObject.getString("clientSaveTime"),
+                                        eventJSONObject.isNull("projectId") ? null : eventJSONObject.getInt("projectId"),
+                                        userId);
 
                                 // before returning saved Event, strip all fields except id, responseToken, and serverSaveTime to minimize response size
                                 JSONObject savedEventJSONObject = new JSONObject();

@@ -257,6 +257,26 @@ var ConfigService = function () {
             return workgroupId;
         }
     }, {
+        key: 'getUserId',
+
+
+        /**
+         * Get the user id (aka WISE ID)
+         * @return the user id
+         */
+        value: function getUserId() {
+
+            var userId = null;
+
+            var myUserInfo = this.getMyUserInfo();
+
+            if (myUserInfo != null) {
+                userId = myUserInfo.id;
+            }
+
+            return userId;
+        }
+    }, {
         key: 'getMyUserInfo',
         value: function getMyUserInfo() {
             var myUserInfo = null;

@@ -143,11 +143,17 @@ create table events (
     periodId bigint,
     runId bigint not null,
     workgroupId bigint not null,
+    projectId bigint not null,
+    userId bigint not null,
     index eventsRunIdIndex (runId),
     index eventsWorkgroupIdIndex (workgroupId),
+    index eventsProjectIdIndex (projectId),
+    index eventsUserIdIndex (userId),
     constraint eventsPeriodIdFK foreign key (periodId) references groups (id),
     constraint eventsRunIdFK foreign key (runId) references runs (id),
     constraint eventsWorkgroupIdFK foreign key (workgroupId) references workgroups (id),
+    constraint eventsProjectIdFK foreign key (projectId) references projects (id),
+    constraint eventsUserIdFK foreign key (userId) references users (id),
     primary key (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

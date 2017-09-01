@@ -196,12 +196,50 @@ class ProjectController {
             // close the popup
             this.$mdDialog.hide();
         });
+
+        this.$rootScope.$on('$stateChangeSuccess', (event, toState, toParams, fromState, fromParams) => {
+
+            if (toState != null) {
+                let stateName = toState.name;
+
+                if (stateName == 'root.project') {
+                    // save the project opened event to the server
+                    this.saveEvent('projectHomeViewOpened', 'Navigation');
+                } else if (stateName == 'root.project.node') {
+
+                } else if (stateName == 'root.project.asset') {
+                    // save the assets viewed event to the server
+                    this.saveEvent('assetsViewOpened', 'Navigation');
+                } else if (stateName == 'root.project.info') {
+                    // save the project info viewed event to the server
+                    this.saveEvent('projectInfoViewOpened', 'Navigation');
+                } else if (stateName == 'root.project.notebook') {
+                    // save the notebook viewed event to the server
+                    this.saveEvent('notebookViewOpened', 'Navigation');
+                }
+            }
+        });
+
+        this.$rootScope.$on('projectSaved', () => {
+            // save the project saved event to the server
+            this.saveEvent('projectSaved', 'Authoring');
+        });
+
+        // save the project opened event to the server
+        this.saveEvent('projectOpened', 'Navigation');
     };
 
     /**
      * Launch the project in preview mode
      */
     previewProject() {
+
+        let data = {};
+        data.constraints = true;
+
+        // save the project previewed event to the server
+        this.saveEvent('projectPreviewed', 'Navigation', data);
+
         let previewProjectURL = this.ConfigService.getConfigParam("previewProjectURL");
         window.open(previewProjectURL);
     };
@@ -210,6 +248,13 @@ class ProjectController {
      * Launch the project in preview mode without constraints
      */
     previewProjectWithoutConstraints() {
+
+        let data = {};
+        data.constraints = false;
+
+        // save the project previewed event to the server
+        this.saveEvent('projectPreviewed', 'Navigation', data);
+
         let previewProjectURL = this.ConfigService.getConfigParam("previewProjectURL");
         previewProjectURL = previewProjectURL + '?constraints=false';
         window.open(previewProjectURL);
@@ -376,6 +421,9 @@ class ProjectController {
 
             let newNodes = [this.nodeToAdd];
 
+            // remember the new node
+            let newNode = this.nodeToAdd;
+
             /*
              * clear this variable that we used to hold the node we inserted.
              * since we have inserted the node we don't need a handle to it
@@ -394,7 +442,22 @@ class ProjectController {
             this.highlightNewNodes(newNodes);
 
             // save and refresh the project
-            this.checkPotentialStartNodeIdChangeThenSaveProject();
+            this.checkPotentialStartNodeIdChangeThenSaveProject().then(() => {
+                if (newNode != null) {
+
+                    let data = {};
+                    data.nodeId = newNode.id;
+                    data.title = this.ProjectService.getNodePositionAndTitleByNodeId(newNode.id);
+
+                    if (this.ProjectService.isGroupNode(newNode.id)) {
+                        // save the activity created event to the server
+                        this.saveEvent('activityCreated', 'Authoring', data);
+                    } else {
+                        // save the step created event to the server
+                        this.saveEvent('stepCreated', 'Authoring', data);
+                    }
+                }
+            });
         } else if (this.moveMode) {
             // we are in move mode
 
@@ -412,6 +475,26 @@ class ProjectController {
                     alert('You are not allowed to insert the selected items into itself.');
                 }
             } else {
+                // perform the move
+
+                /*
+                 * an array of nodes that will be saved in the data for the move
+                 * event
+                 */
+                let nodes = [];
+
+                // loop through all the selected node ids
+                for (let n = 0; n < selectedNodeIds.length; n++) {
+                    let selectedNodeId = selectedNodeIds[n];
+
+                    // create an object that contains the id and title
+                    let node = {};
+                    node.nodeId = selectedNodeId;
+                    node.fromTitle = this.ProjectService.getNodePositionAndTitleByNodeId(selectedNodeId);
+
+                    nodes.push(node);
+                }
+
                 // move the nodes into the group
                 let newNodes = this.ProjectService.moveNodesInside(selectedNodeIds, nodeId);
 
@@ -424,15 +507,68 @@ class ProjectController {
 
                 // temporarily highlight the new nodes
                 this.highlightNewNodes(newNodes);
-            }
 
-            // save and refresh the project
-            this.checkPotentialStartNodeIdChangeThenSaveProject();
+                // save and refresh the project
+                this.checkPotentialStartNodeIdChangeThenSaveProject().then(() => {
+                    if (newNodes != null && newNodes.length > 0) {
+                        var firstNewNode = newNodes[0];
+
+                        if (firstNewNode != null && firstNewNode.id != null) {
+
+                            // loop through all the nodes that will be saved in the event data
+                            for (let n = 0; n < nodes.length; n++) {
+                                let node = nodes[n];
+
+                                // get the new node object
+                                let newNode = newNodes[n];
+
+                                if (node != null && newNode != null) {
+
+                                    // set the new title
+                                    node.toTitle = this.ProjectService.getNodePositionAndTitleByNodeId(newNode.id);
+                                }
+                            }
+
+                            if (this.ProjectService.isGroupNode(firstNewNode.id)) {
+                                let data = {};
+                                data.activitiesMoved = nodes;
+
+                                // save the activity moved event to the server
+                                this.saveEvent('activityMoved', 'Authoring', data);
+                            } else {
+                                let data = {};
+                                data.stepsMoved = nodes;
+
+                                // save the step moved event to the server
+                                this.saveEvent('stepMoved', 'Authoring', data);
+                            }
+                        }
+                    }
+                });
+            }
         } else if (this.copyMode) {
             // We are in copy mode
 
             // get the nodes that were selected
             let selectedNodeIds = this.getSelectedItems();
+
+            /*
+             * an array of nodes that will be saved in the data for the move
+             * event
+             */
+            let nodes = [];
+
+            // loop through the selected node ids
+            for (let n = 0; n < selectedNodeIds.length; n++) {
+                let selectedNodeId = selectedNodeIds[n];
+
+                // create an object that contains the id and title
+                let node = {};
+                node.fromNodeId = selectedNodeId;
+                node.fromTitle = this.ProjectService.getNodePositionAndTitleByNodeId(selectedNodeId);
+
+                nodes.push(node);
+            }
 
             // copy the nodes into the group
             let newNodes = this.ProjectService.copyNodesInside(selectedNodeIds, nodeId);
@@ -448,15 +584,48 @@ class ProjectController {
             this.highlightNewNodes(newNodes);
 
             // save and refresh the project
-            this.checkPotentialStartNodeIdChangeThenSaveProject();
+            this.checkPotentialStartNodeIdChangeThenSaveProject().then(() => {
+                if (newNodes != null && newNodes.length > 0) {
+                    var firstNewNode = newNodes[0];
+
+                    if (firstNewNode != null && firstNewNode.id != null) {
+
+                        // loop through all the nodes that will be saved in the event data
+                        for (let n = 0; n < nodes.length; n++) {
+                            let node = nodes[n];
+                            let newNode = newNodes[n];
+
+                            if (node != null && newNode != null) {
+
+                                // set the new id
+                                node.toNodeId = newNode.id;
+
+                                // set the new title
+                                node.toTitle = this.ProjectService.getNodePositionAndTitleByNodeId(newNode.id);
+                            }
+                        }
+
+                        if (this.ProjectService.isGroupNode(firstNewNode.id)) {
+                            let data = {};
+                            data.activitiesCopied = nodes;
+
+                            // save the activity moved event to the server
+                            this.saveEvent('activityCopied', 'Authoring', data);
+                        } else {
+                            let data = {};
+                            data.stepsCopied = nodes;
+
+                            // save the step moved event to the server
+                            this.saveEvent('stepCopied', 'Authoring', data);
+                        }
+                    }
+                }
+            });
         } else if (this.importMode) {
             // we are in import mode
 
-            // import the selected nodes and place them inside the given group
-            this.performImport(nodeId).then(() => {
-                // save and refresh the project
-                this.checkPotentialStartNodeIdChangeThenSaveProject();
-            });
+            // import the selected nodes
+            this.importSelectedNodes(nodeId);
         }
     }
 
@@ -473,6 +642,8 @@ class ProjectController {
             this.ProjectService.createNodeAfter(this.nodeToAdd, nodeId);
 
             let newNodes = [this.nodeToAdd];
+
+            let newNode = this.nodeToAdd;
 
             /*
              * clear this variable that we used to hold the node we inserted.
@@ -492,7 +663,22 @@ class ProjectController {
             this.highlightNewNodes(newNodes);
 
             // save and referesh the project
-            this.checkPotentialStartNodeIdChangeThenSaveProject();
+            this.checkPotentialStartNodeIdChangeThenSaveProject().then(() => {
+                if (newNode != null) {
+
+                    let data = {};
+                    data.nodeId = newNode.id;
+                    data.title = this.ProjectService.getNodePositionAndTitleByNodeId(newNode.id);
+
+                    if (this.ProjectService.isGroupNode(newNode.id)) {
+                        // save the activity created event to the server
+                        this.saveEvent('activityCreated', 'Authoring', data);
+                    } else {
+                        // save the step created event to the server
+                        this.saveEvent('stepCreated', 'Authoring', data);
+                    }
+                }
+            });
         } else if (this.moveMode) {
             // we are in move mode
 
@@ -510,6 +696,26 @@ class ProjectController {
                     alert(this.$translate('youAreNotAllowedToInsertTheSelectedItemsAfterItself'));
                 }
             } else {
+                // perform the move
+
+                /*
+                 * an array of nodes that will be saved in the data for the move
+                 * event
+                 */
+                let nodes = [];
+
+                // loop through all the selected node ids
+                for (let n = 0; n < selectedNodeIds.length; n++) {
+                    let selectedNodeId = selectedNodeIds[n];
+
+                    // create an object that contains the id and title
+                    let node = {};
+                    node.nodeId = selectedNodeId;
+                    node.fromTitle = this.ProjectService.getNodePositionAndTitleByNodeId(selectedNodeId);
+
+                    nodes.push(node);
+                }
+
                 // move the nodes after the node id
                 let newNodes = this.ProjectService.moveNodesAfter(selectedNodeIds, nodeId);
 
@@ -524,13 +730,66 @@ class ProjectController {
                 this.highlightNewNodes(newNodes);
 
                 // save and refresh the project
-                this.checkPotentialStartNodeIdChangeThenSaveProject();
+                this.checkPotentialStartNodeIdChangeThenSaveProject().then(() => {
+                    if (newNodes != null && newNodes.length > 0) {
+                        var firstNewNode = newNodes[0];
+
+                        if (firstNewNode != null && firstNewNode.id != null) {
+
+                            // loop through all the nodes that will be saved in the event data
+                            for (let n = 0; n < nodes.length; n++) {
+                                let node = nodes[n];
+
+                                // get the new node object
+                                let newNode = newNodes[n];
+
+                                if (node != null && newNode != null) {
+
+                                    // set the new title
+                                    node.toTitle = this.ProjectService.getNodePositionAndTitleByNodeId(newNode.id);
+                                }
+                            }
+
+                            if (this.ProjectService.isGroupNode(firstNewNode.id)) {
+                                let data = {};
+                                data.activitesMoved = nodes;
+
+                                // save the activity moved event to the server
+                                this.saveEvent('activityMoved', 'Authoring', data);
+                            } else {
+                                let data = {};
+                                data.stepsMoved = nodes;
+
+                                // save the step moved event to the server
+                                this.saveEvent('stepMoved', 'Authoring', data);
+                            }
+                        }
+                    }
+                });
             }
         } else if (this.copyMode) {
             // We are in copy mode
 
             // get the selected nodes
             let selectedNodeIds = this.getSelectedItems();
+
+            /*
+             * an array of nodes that will be saved in the data for the move
+             * event
+             */
+            let nodes = [];
+
+            // loop through the selected node ids
+            for (let n = 0; n < selectedNodeIds.length; n++) {
+                let selectedNodeId = selectedNodeIds[n];
+
+                // create an object that contains the id and title
+                let node = {};
+                node.fromNodeId = selectedNodeId;
+                node.fromTitle = this.ProjectService.getNodePositionAndTitleByNodeId(selectedNodeId);
+
+                nodes.push(node);
+            }
 
             // copy the nodes and put them after the node id
             let newNodes = this.ProjectService.copyNodesAfter(selectedNodeIds, nodeId);
@@ -546,16 +805,106 @@ class ProjectController {
             this.highlightNewNodes(newNodes);
 
             // save and refresh the project
-            this.checkPotentialStartNodeIdChangeThenSaveProject();
+            this.checkPotentialStartNodeIdChangeThenSaveProject().then(() => {
+                if (newNodes != null && newNodes.length > 0) {
+                    var firstNewNode = newNodes[0];
+
+                    if (firstNewNode != null && firstNewNode.id != null) {
+
+                        // loop through all the nodes that will be saved in the event data
+                        for (let n = 0; n < nodes.length; n++) {
+                            let node = nodes[n];
+                            let newNode = newNodes[n];
+
+                            if (node != null && newNode != null) {
+
+                                // set the new id
+                                node.toNodeId = newNode.id;
+
+                                // set the new title
+                                node.toTitle = this.ProjectService.getNodePositionAndTitleByNodeId(newNode.id);
+                            }
+                        }
+
+                        if (this.ProjectService.isGroupNode(firstNewNode.id)) {
+
+                            let data = {};
+                            data.activitiesCopied = nodes;
+
+                            // save the activity moved event to the server
+                            this.saveEvent('activityCopied', 'Authoring', data);
+                        } else {
+
+                            let data = {};
+                            data.stepsCopied = nodes;
+
+                            // save the step moved event to the server
+                            this.saveEvent('stepCopied', 'Authoring', data);
+                        }
+                    }
+                }
+            });
         } else if (this.importMode) {
             // we are in import mode
 
-            // import the selected nodes and place them after the given step
-            this.performImport(nodeId).then(() => {
-                // save and refresh the project
-                this.checkPotentialStartNodeIdChangeThenSaveProject();
-            });
+            // import the selected nodes
+            this.importSelectedNodes(nodeId);
         }
+    }
+
+    /**
+     * Import the step and then create a stepImported event
+     * @param nodeIdToInsertInsideOrAfter If this is a group, we will make the
+     * new step the first step in the group. If this is a step, we will place
+     * the new step after it.
+     */
+    importSelectedNodes(nodeIdToInsertInsideOrAfter) {
+
+        // get the selected nodes
+        var selectedNodes = this.getSelectedNodesToImport();
+
+        // get the node titles that we are importing
+        var selectedNodeTitles = this.getSelectedNodeTitlesToImport();
+
+        // get the project id we are importing into
+        var toProjectId = this.ConfigService.getConfigParam('projectId');
+
+        // get the project id we are importing from
+        var fromProjectId = this.importProjectId;
+
+        // import the selected nodes and place them after the given group
+        this.performImport(nodeIdToInsertInsideOrAfter).then((newNodes) => {
+            // save and refresh the project
+            this.checkPotentialStartNodeIdChangeThenSaveProject().then(() => {
+
+                // the data for the step imported event
+                var data = {};
+                data.stepsImported = [];
+
+                // loop through all the steps that were imported
+                for (var n = 0; n < selectedNodes.length; n++) {
+                    var selectedNode = selectedNodes[n];
+
+                    // get the old step title
+                    var selectedNodeTitle = selectedNodeTitles[n];
+
+                    var newNode = newNodes[n];
+
+                    // set the from and to ids and titles
+                    var tempNode = {};
+                    tempNode.fromProjectId = parseInt(fromProjectId);
+                    tempNode.fromNodeId = selectedNode.id;
+                    tempNode.fromTitle = selectedNodeTitle;
+                    tempNode.toNodeId = newNode.id;
+                    tempNode.toTitle = this.ProjectService.getNodePositionAndTitleByNodeId(newNode.id);
+
+                    data.stepsImported.push(tempNode);
+                }
+
+                // save the step imported event to the server
+                this.saveEvent('stepImported', 'Authoring', data);
+            });
+        });
     }
 
     /**
@@ -575,10 +924,10 @@ class ProjectController {
         var fromProjectId = this.importProjectId;
 
         // copy the nodes into the project
-        return this.ProjectService.copyNodes(selectedNodes, fromProjectId, toProjectId, nodeIdToInsertInsideOrAfter).then(() => {
+        return this.ProjectService.copyNodes(selectedNodes, fromProjectId, toProjectId, nodeIdToInsertInsideOrAfter).then((newNodes) => {
 
             // save the project
-            this.ProjectService.saveProject();
+            //this.ProjectService.saveProject();
 
             // refresh the project
             this.ProjectService.parseProject();
@@ -606,6 +955,8 @@ class ProjectController {
              * steps also imported assets
              */
             this.ProjectAssetService.retrieveProjectAssets();
+
+            return newNodes;
         });
     }
 
@@ -715,13 +1066,59 @@ class ProjectController {
                     // flag that will be set if we have deleted the start node id
                     var deletedStartNodeId = false;
 
+                    var activityDeleted = false;
+                    var stepDeleted = false;
+
+                    var stepsDeleted = [];
+                    var activitiesDeleted = [];
+
                     // loop through each node id
                     for (var n = 0; n < selectedNodeIds.length; n++) {
                         var nodeId = selectedNodeIds[n];
 
+                        var node = this.ProjectService.getNodeById(nodeId);
+
+                        var tempNode = {};
+
+                        if (node != null) {
+                            tempNode.nodeId = node.id;
+                            tempNode.title = this.ProjectService.getNodePositionAndTitleByNodeId(node.id);
+                        }
+
                         if (this.ProjectService.isStartNodeId(nodeId)) {
                             // we have deleted the start node id
                             deletedStartNodeId = true;
+                        }
+
+                        if (this.ProjectService.isGroupNode(nodeId)) {
+                            // we are deleting an activity
+                            activityDeleted = true;
+
+                            var stepsInActivityDeleted = [];
+
+                            // loop through all the steps in the activity
+                            for (var s = 0; s < node.ids.length; s++) {
+                                var stepNodeId = node.ids[s];
+
+                                // get the step title
+                                var stepTitle = this.ProjectService.getNodePositionAndTitleByNodeId(stepNodeId);
+
+                                // create an object with the step id and title
+                                var stepObject = {};
+                                stepObject.nodeId = stepNodeId;
+                                stepObject.title = stepTitle;
+
+                                stepsInActivityDeleted.push(stepObject);
+                            }
+
+                            tempNode.stepsInActivityDeleted = stepsInActivityDeleted;
+
+                            activitiesDeleted.push(tempNode);
+                        } else {
+                            // we are deleting a step
+                            stepDeleted = true;
+
+                            stepsDeleted.push(tempNode);
                         }
 
                         // delete the node
@@ -731,6 +1128,18 @@ class ProjectController {
                     // update start node id if necesary
                     if (deletedStartNodeId) {
                         this.updateStartNodeId();
+                    }
+
+                    if (activityDeleted) {
+                        var data = {};
+                        data.activitiesDeleted = activitiesDeleted;
+                        this.saveEvent('activityDeleted', 'Authoring', data);
+                    }
+
+                    if (stepDeleted) {
+                        var data = {};
+                        data.stepsDeleted = stepsDeleted;
+                        this.saveEvent('stepDeleted', 'Authoring', data);
                     }
 
                     // save the project
@@ -1018,7 +1427,7 @@ class ProjectController {
      */
     checkPotentialStartNodeIdChangeThenSaveProject() {
         // check if the project start node id should be changed
-        this.checkPotentialStartNodeIdChange().then(() => {
+        return this.checkPotentialStartNodeIdChange().then(() => {
             // save the project
             this.ProjectService.saveProject();
 
@@ -1503,6 +1912,64 @@ class ProjectController {
                 }
             }
         });
+    }
+
+    /**
+     * Save an Authoring Tool event
+     * @param eventName the name of the event
+     * @param category the category of the event
+     * example 'Navigation' or 'Authoring'
+     * @param data (optional) an object that contains more specific data about
+     * the event
+     */
+    saveEvent(eventName, category, data) {
+
+        let context = 'AuthoringTool';
+        let nodeId = null;
+        let componentId = null;
+        let componentType = null;
+
+        if (data == null) {
+            data = {};
+        }
+
+        // save the event to the server
+        this.TeacherDataService.saveEvent(context, nodeId, componentId, componentType, category, eventName, data);
+    }
+
+    /**
+     * Get the selected node titles that we are importing
+     * @return an array of node titles that may include the step numbers
+     */
+    getSelectedNodeTitlesToImport() {
+
+        var selectedNodeTitles = [];
+
+        // get the selected nodes
+        var selectedNodes = this.getSelectedNodesToImport();
+
+        // loop through all the selected nodes
+        for (var n = 0; n < selectedNodes.length; n++) {
+            var selectedNode = selectedNodes[n];
+
+            if (selectedNode != null) {
+
+                // get the step number and title from the import project
+                var tempNode = this.importProjectIdToOrder[selectedNode.id];
+                var stepNumber = tempNode.stepNumber;
+                var title = '';
+
+                if (stepNumber == null) {
+                    title = selectedNode.title;
+                } else {
+                    title = stepNumber + ': ' + selectedNode.title;
+                }
+
+                selectedNodeTitles[n] = title;
+            }
+        }
+
+        return selectedNodeTitles;
     }
 }
 

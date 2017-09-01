@@ -504,6 +504,7 @@ public class WISE5AuthorProjectController {
             config.put("notifyProjectBeginURL", wiseBaseURL + "/project/notifyAuthorBegin/");
             config.put("notifyProjectEndURL", wiseBaseURL + "/project/notifyAuthorEnd/");
             config.put("getLibraryProjectsURL", wiseBaseURL + "/author/authorproject.html?command=projectList&projectPaths=&projectTag=library&wiseVersion=5");
+            config.put("teacherDataURL", wiseBaseURL + "/teacher/data");
 
             // get project metadata settings
             String projectMetadataSettings = null;
@@ -533,6 +534,7 @@ public class WISE5AuthorProjectController {
 
             // add this teachers's info in config.userInfo.myUserInfo object
             JSONObject myUserInfo = new JSONObject();
+            myUserInfo.put("id", user.getId());
             myUserInfo.put("userName", userName);
             myUserInfo.put("firstName", firstName);
             myUserInfo.put("lastName", lastName);

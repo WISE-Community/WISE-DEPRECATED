@@ -409,6 +409,17 @@ var NodeAuthoringController = function () {
 
         // scroll to the top of the page
         this.$anchorScroll('top');
+
+        var data = {};
+        data.title = this.ProjectService.getNodePositionAndTitleByNodeId(this.nodeId);
+
+        if (this.ProjectService.isGroupNode(this.nodeId)) {
+            // save the activity viewed event to the server
+            this.saveEvent('activityViewOpened', 'Navigation', data);
+        } else {
+            // save the step viewed event to the server
+            this.saveEvent('stepViewOpened', 'Navigation', data);
+        }
     }
 
     /**
@@ -577,6 +588,13 @@ var NodeAuthoringController = function () {
     }, {
         key: 'previewStep',
         value: function previewStep() {
+
+            var data = {};
+            data.constraints = true;
+
+            // save the step previewed event to the server
+            this.saveEvent('stepPreviewed', 'Navigation', data);
+
             var previewProjectURL = this.ConfigService.getConfigParam("previewProjectURL");
             var previewStepURL = previewProjectURL + "#/vle/" + this.nodeId;
             window.open(previewStepURL);
@@ -589,6 +607,13 @@ var NodeAuthoringController = function () {
          * Launch VLE with this current step as the initial step without constraints
          */
         value: function previewStepWithoutConstraints() {
+
+            var data = {};
+            data.constraints = false;
+
+            // save the step previewed event to the server
+            this.saveEvent('stepPreviewed', 'Navigation', data);
+
             var previewProjectURL = this.ConfigService.getConfigParam("previewProjectURL");
             var previewStepURL = previewProjectURL + "?constraints=false" + "#/vle/" + this.nodeId;
             window.open(previewStepURL);
@@ -2982,6 +3007,10 @@ var NodeAuthoringController = function () {
                     // get the selected component ids
                     var selectedComponents = _this3.getSelectedComponentIds();
 
+                    // data saved in the component deleted event
+                    var data = {};
+                    data.componentsDeleted = _this3.getComponentObjectsForEventData(selectedComponents);
+
                     /*
                      * loop through all the selected component ids and delete the
                      * components
@@ -2994,6 +3023,9 @@ var NodeAuthoringController = function () {
                         // delete the component from the node
                         _this3.ProjectService.deleteComponent(_this3.nodeId, componentId);
                     }
+
+                    // save the component deleted event to the server
+                    _this3.saveEvent('componentDeleted', 'Authoring', data);
 
                     // check if we need to show the node save or node submit buttons
                     _this3.checkIfNeedToShowNodeSaveOrNodeSubmitButtons();
@@ -3108,6 +3140,13 @@ var NodeAuthoringController = function () {
                 // create a component and add it to this node
                 var newComponent = this.ProjectService.createComponent(this.nodeId, this.selectedComponent, null);
 
+                var data = {};
+                data.compoenntId = newComponent.id;
+                data.componentType = newComponent.type;
+
+                // save the component created event to the server
+                this.saveEvent('componentCreated', 'Authoring', data);
+
                 newComponents.push(newComponent);
 
                 // turn off the add component mode
@@ -3126,8 +3165,15 @@ var NodeAuthoringController = function () {
                 // get the component ids we are moving
                 var selectedComponentIds = this.getSelectedComponentIds();
 
+                // data saved in the component moved event
+                var _data = {};
+                _data.componentsMoved = this.getComponentObjectsForEventData(selectedComponentIds);
+
                 // move the components to their new location
                 newComponents = this.ProjectService.moveComponent(this.nodeId, selectedComponentIds, null);
+
+                // save the component moved event to the server
+                this.saveEvent('componentMoved', 'Authoring', _data);
 
                 // turn off the move component mode
                 this.turnOffMoveComponentMode();
@@ -3145,8 +3191,27 @@ var NodeAuthoringController = function () {
                 // get the component ids we are moving
                 var _selectedComponentIds = this.getSelectedComponentIds();
 
+                // data saved in the component copied event
+                var _data2 = {};
+                var componentsCopied = this.getComponentObjectsForEventData(_selectedComponentIds);
+
                 // copy the components to their new location
                 newComponents = this.ProjectService.copyComponentAndInsert(this.nodeId, _selectedComponentIds, null);
+
+                // get the information for all the components that were copied
+                for (var c = 0; c < componentsCopied.length; c++) {
+                    var componentCopied = componentsCopied[c];
+                    var _newComponent = newComponents[c];
+
+                    componentCopied.fromComponentId = componentCopied.componentId;
+                    componentCopied.toComponentId = _newComponent.id;
+                    delete componentCopied.componentId;
+                }
+
+                _data2.componentsCopied = componentsCopied;
+
+                // save the component copied event to the server
+                this.saveEvent('componentCopied', 'Authoring', _data2);
 
                 // turn off the copy component mode
                 this.turnOffCopyComponentMode();
@@ -3201,6 +3266,13 @@ var NodeAuthoringController = function () {
                 // create a component and add it to this node
                 var newComponent = this.ProjectService.createComponent(this.nodeId, this.selectedComponent, componentId);
 
+                var data = {};
+                data.componentId = newComponent.id;
+                data.componentType = newComponent.type;
+
+                // save the component created event to the server
+                this.saveEvent('componentCreated', 'Authoring', data);
+
                 newComponents.push(newComponent);
 
                 // turn off the add component mode
@@ -3231,8 +3303,16 @@ var NodeAuthoringController = function () {
                         alert(this.$translate('youAreNotAllowedToInsertTheSelectedItemsAfterItself'));
                     }
                 } else {
+
+                    // data saved in the component moved event
+                    var _data3 = {};
+                    _data3.componentsMoved = this.getComponentObjectsForEventData(selectedComponentIds);
+
                     // move the components to their new location
                     newComponents = this.ProjectService.moveComponent(this.nodeId, selectedComponentIds, componentId);
+
+                    // save the component moved event to the server
+                    this.saveEvent('componentMoved', 'Authoring', _data3);
 
                     // turn off the move component mode
                     this.turnOffMoveComponentMode();
@@ -3249,10 +3329,29 @@ var NodeAuthoringController = function () {
             } else if (this.copyComponentMode) {
 
                 // get the component ids we are moving
-                var selectedComponentIds = this.getSelectedComponentIds();
+                var _selectedComponentIds2 = this.getSelectedComponentIds();
+
+                // data saved in the component copied event
+                var _data4 = {};
+                var componentsCopied = this.getComponentObjectsForEventData(_selectedComponentIds2);
 
                 // copy the components to their new location
-                newComponents = this.ProjectService.copyComponentAndInsert(this.nodeId, selectedComponentIds, componentId);
+                newComponents = this.ProjectService.copyComponentAndInsert(this.nodeId, _selectedComponentIds2, componentId);
+
+                // get the information for all the components that were copied
+                for (var c = 0; c < componentsCopied.length; c++) {
+                    var componentCopied = componentsCopied[c];
+                    var _newComponent2 = newComponents[c];
+
+                    componentCopied.fromComponentId = componentCopied.componentId;
+                    componentCopied.toComponentId = _newComponent2.id;
+                    delete componentCopied.componentId;
+                }
+
+                _data4.componentsCopied = componentsCopied;
+
+                // save the component copied event to the server
+                this.saveEvent('componentCopied', 'Authoring', _data4);
 
                 // turn off the copy component mode
                 this.turnOffCopyComponentMode();
@@ -3524,6 +3623,11 @@ var NodeAuthoringController = function () {
     }, {
         key: 'importComponents',
         value: function importComponents(nodeId, insertAfterComponentId) {
+            var _this8 = this;
+
+            // data saved in the component imported event
+            var data = {};
+            data.componentsImported = this.getComponentObjectsForImportEventData();
 
             // get all the selected component objects
             var selectedComponents = this.getSelectedComponentsToImport();
@@ -3540,6 +3644,23 @@ var NodeAuthoringController = function () {
 
             // insert the components into the project
             return this.ProjectService.importComponents(selectedComponents, this.importProjectId, nodeId, insertAfterComponentId).then(function (newComponents) {
+
+                // loop through all the components that were imported
+                for (var c = 0; c < data.componentsImported.length; c++) {
+                    var componentImported = data.componentsImported[c];
+                    var newComponent = newComponents[c];
+                    var newComponentId = newComponent.id;
+
+                    /*
+                     * set the toComponentId so the event knows what the new
+                     * component id is
+                     */
+                    componentImported.toComponentId = newComponentId;
+                }
+
+                // save the component imported event to the server
+                _this8.saveEvent('componentImported', 'Authoring', data);
+
                 return newComponents;
             });
         }
@@ -3677,6 +3798,115 @@ var NodeAuthoringController = function () {
                 // we are in the node view so we will go back to the project view
                 this.close();
             }
+        }
+
+        /**
+         * Save an Authoring Tool event
+         * @param eventName the name of the event
+         * @param category the category of the event
+         * example 'Navigation' or 'Authoring'
+         * @param data (optional) an object that contains more specific data about
+         * the event
+         */
+
+    }, {
+        key: 'saveEvent',
+        value: function saveEvent(eventName, category, data) {
+
+            var context = 'AuthoringTool';
+            var nodeId = this.nodeId;
+            var componentId = null;
+            var componentType = null;
+
+            if (data == null) {
+                data = {};
+            }
+
+            // save the event to the server
+            this.TeacherDataService.saveEvent(context, nodeId, componentId, componentType, category, eventName, data);
+        }
+
+        /**
+         * Get an array of objects that contain the component id and type
+         * @param componentIds an array of component ids
+         * @return an array of objects that contain the component id and type
+         */
+
+    }, {
+        key: 'getComponentObjectsForEventData',
+        value: function getComponentObjectsForEventData(componentIds) {
+
+            var componentObjects = [];
+
+            if (componentIds != null) {
+
+                // loop through all the component ids
+                for (var c = 0; c < componentIds.length; c++) {
+                    var componentId = componentIds[c];
+
+                    if (componentId != null) {
+
+                        // get the component
+                        var component = this.ProjectService.getComponentByNodeIdAndComponentId(this.nodeId, componentId);
+
+                        if (component != null) {
+
+                            // create an object with the component id and type
+                            var tempComponent = {};
+                            tempComponent.componentId = component.id;
+                            tempComponent.type = component.type;
+
+                            componentObjects.push(tempComponent);
+                        }
+                    }
+                }
+            }
+
+            return componentObjects;
+        }
+
+        /**
+         * Get an array of objects that contain the node id, component id and type
+         * @return an array of objects that contain the node id, component id and type
+         */
+
+    }, {
+        key: 'getComponentObjectsForImportEventData',
+        value: function getComponentObjectsForImportEventData() {
+            var componentObjects = [];
+
+            // loop through all the import project items
+            for (var n = 0; n < this.importProjectItems.length; n++) {
+                var item = this.importProjectItems[n];
+
+                if (item != null && item.node != null && item.node.components != null) {
+
+                    // get the components in the node
+                    var components = item.node.components;
+
+                    // loop through all the components in the node
+                    for (var c = 0; c < components.length; c++) {
+                        var component = components[c];
+
+                        if (component != null && component.checked) {
+
+                            var tempComponent = {};
+                            tempComponent.fromProjectId = parseInt(this.importProjectId);
+                            tempComponent.fromNodeId = item.node.id;
+                            tempComponent.fromComponentId = component.id;
+                            tempComponent.type = component.type;
+
+                            /*
+                             * this component is checked so we will add it to
+                             * the array of components that we will import
+                             */
+                            componentObjects.push(tempComponent);
+                        }
+                    }
+                }
+            }
+
+            return componentObjects;
         }
     }]);
 

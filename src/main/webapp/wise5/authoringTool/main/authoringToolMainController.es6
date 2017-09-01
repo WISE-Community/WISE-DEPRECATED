@@ -2,13 +2,22 @@
 
 class AuthoringToolMainController {
 
-    constructor($anchorScroll, $filter, $state, $timeout, ConfigService, ProjectService) {
+    constructor($anchorScroll,
+                $filter,
+                $rootScope,
+                $state,
+                $timeout,
+                ConfigService,
+                ProjectService,
+                TeacherDataService) {
         this.$anchorScroll = $anchorScroll;
         this.$filter = $filter;
+        this.$rootScope = $rootScope;
         this.$state = $state;
         this.$timeout = $timeout;
         this.ConfigService = ConfigService;
         this.ProjectService = ProjectService;
+        this.TeacherDataService = TeacherDataService;
 
         this.$translate = this.$filter('translate');
 
@@ -17,6 +26,16 @@ class AuthoringToolMainController {
         this.sharedProjects = this.ConfigService.getConfigParam("sharedProjects");
 
         this.showCreateProjectView = false;
+
+        this.$rootScope.$on('goHome', () => {
+            // save the go to teacher home event to the server
+            this.saveEvent('goToTeacherHome', 'Navigation', null, null);
+        });
+
+        this.$rootScope.$on('logOut', () => {
+            // save the log out event to the server
+            this.saveEvent('logOut', 'Navigation', null, null);
+        });
     }
 
     /**
@@ -91,6 +110,9 @@ class AuthoringToolMainController {
             // copy the project
             this.ProjectService.copyProject(projectId).then((projectId) => {
 
+                // save the project copied event to the server
+                this.saveEvent('projectCopied', 'Authoring', null, projectId);
+
                 // refresh the project list
                 var configURL = window.configURL;
                 this.ConfigService.retrieveConfig(configURL).then(() => {
@@ -147,6 +169,10 @@ class AuthoringToolMainController {
      * @param projectId the project id
      */
     downloadProject(projectId) {
+
+        // save the project downloaded event to the server
+        this.saveEvent('projectDownloaded', 'Authoring', null, projectId);
+
         // make a request to download the project as a zip file
         let exportProjectURL = this.ConfigService.getWISEBaseURL() + "/project/export/" + projectId;
         window.location.href = exportProjectURL;
@@ -198,6 +224,9 @@ class AuthoringToolMainController {
                 // hide the create project view
                 this.showCreateProjectView = false;
 
+                // save the project created event to the server
+                this.saveEvent('projectCreated', 'Authoring', null, projectId);
+
                 // open the new project in the authoring tool
                 this.$state.go('root.project', {projectId: projectId});
             });
@@ -227,6 +256,13 @@ class AuthoringToolMainController {
      * Launch the project in preview mode
      */
     previewProject(projectId) {
+
+        var data = {};
+        data.constraints = true;
+
+        // save the project previewed event
+        this.saveEvent('projectPreviewed', 'Authoring', data, projectId);
+
         let previewProjectURL = this.ConfigService.getWISEBaseURL() + "/project/" + projectId;
         window.open(previewProjectURL);
     }
@@ -235,20 +271,44 @@ class AuthoringToolMainController {
      * Go to the teacher home
      */
     goHome() {
+
         // send the user to the teacher home page
         let wiseBaseURL = this.ConfigService.getWISEBaseURL();
         let teacherHomePageURL = wiseBaseURL + '/teacher';
         window.location = teacherHomePageURL;
+    }
+
+    /**
+     * Save an Authoring Tool event
+     * @param eventName the name of the event
+     * @param category the category of the event
+     * example 'Navigation' or 'Authoring'
+     */
+    saveEvent(eventName, category, data, projectId) {
+
+        let context = 'AuthoringTool';
+        let nodeId = null;
+        let componentId = null;
+        let componentType = null;
+
+        if (data == null) {
+            data = {};
+        }
+
+        // save the event to the server
+        this.TeacherDataService.saveEvent(context, nodeId, componentId, componentType, category, eventName, data, projectId);
     }
 };
 
 AuthoringToolMainController.$inject = [
     '$anchorScroll',
     '$filter',
+    '$rootScope',
     '$state',
     '$timeout',
     'ConfigService',
-    'ProjectService'
+    'ProjectService',
+    'TeacherDataService'
 ];
 
 export default AuthoringToolMainController;

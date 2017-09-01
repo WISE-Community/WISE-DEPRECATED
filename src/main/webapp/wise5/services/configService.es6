@@ -215,6 +215,23 @@ class ConfigService {
         return workgroupId;
     };
 
+    /**
+     * Get the user id (aka WISE ID)
+     * @return the user id
+     */
+    getUserId() {
+
+        var userId = null;
+
+        var myUserInfo = this.getMyUserInfo();
+
+        if (myUserInfo != null) {
+            userId = myUserInfo.id;
+        }
+
+        return userId;
+    }
+
     getMyUserInfo() {
         var myUserInfo = null;
 

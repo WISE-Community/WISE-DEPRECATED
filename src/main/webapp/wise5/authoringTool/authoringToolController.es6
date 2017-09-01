@@ -6,17 +6,20 @@ class AuthoringToolController {
                 $filter,
                 $location,
                 $mdDialog,
+                $rootScope,
                 $scope,
                 $state,
                 $timeout,
                 ConfigService,
                 ProjectService,
-                SessionService) {
+                SessionService,
+                TeacherDataService) {
 
         this.$anchorScroll = $anchorScroll;
         this.$filter = $filter;
         this.$location = $location;
         this.$mdDialog = $mdDialog;
+        this.$rootScope = $rootScope;
         this.$scope = $scope;
         this.$state = $state;
         this.$timeout = $timeout;
@@ -24,6 +27,7 @@ class AuthoringToolController {
         this.ConfigService = ConfigService;
         this.ProjectService = ProjectService;
         this.SessionService = SessionService;
+        this.TeacherDataService = TeacherDataService;
 
         this.numberProject = true; // TODO: make dynamic or remove
 
@@ -212,6 +216,23 @@ class AuthoringToolController {
                 escapeToClose: true
             });
         });
+
+        this.$rootScope.$on('$stateChangeSuccess', (event, toState, toParams, fromState, fromParams) => {
+
+            if (toState != null) {
+                let stateName = toState.name;
+
+                if (stateName == 'root.main') {
+                    // save the project list viewed event to the server
+                    this.saveEvent('projectListViewed', 'Navigation');
+                }
+            }
+        });
+
+        if (this.$state.current.name == 'root.main') {
+            // save the project list viewed event to the server
+            this.saveEvent('projectListViewed', 'Navigation');
+        }
     }
 
     /**
@@ -309,6 +330,24 @@ class AuthoringToolController {
         this.globalMessage.text = message;
         this.globalMessage.time = time;
     };
+
+    /**
+     * Save an Authoring Tool event
+     * @param eventName the name of the event
+     * @param category the category of the event
+     * example 'Navigation' or 'Authoring'
+     */
+    saveEvent(eventName, category) {
+
+        let context = 'AuthoringTool';
+        let nodeId = null;
+        let componentId = null;
+        let componentType = null;
+        let data = {};
+
+        // save the event to the server
+        this.TeacherDataService.saveEvent(context, nodeId, componentId, componentType, category, eventName, data);
+    }
 }
 
 AuthoringToolController.$inject = [
@@ -316,12 +355,14 @@ AuthoringToolController.$inject = [
     '$filter',
     '$location',
     '$mdDialog',
+    '$rootScope',
     '$scope',
     '$state',
     '$timeout',
     'ConfigService',
     'ProjectService',
     'SessionService',
+    'TeacherDataService',
     'moment'
 ];
 

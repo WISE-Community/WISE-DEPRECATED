@@ -41,7 +41,9 @@ import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.service.group.GroupService;
+import org.wise.portal.service.project.ProjectService;
 import org.wise.portal.service.run.RunService;
+import org.wise.portal.service.user.UserService;
 import org.wise.portal.service.vle.wise5.VLEService;
 import org.wise.portal.service.workgroup.WorkgroupService;
 import org.wise.vle.domain.achievement.Achievement;
@@ -86,7 +88,13 @@ public class VLEServiceImpl implements VLEService {
     private NotificationDao notificationDao;
 
     @Autowired
+    private ProjectService projectService;
+
+    @Autowired
     private RunService runService;
+
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private GroupService groupService;
@@ -353,7 +361,7 @@ public class VLEServiceImpl implements VLEService {
     public Event saveEvent(Integer id, Integer runId, Integer periodId, Integer workgroupId,
                            String nodeId, String componentId, String componentType,
                            String context, String category, String eventString, String data,
-                           String clientSaveTime) throws ObjectNotFoundException {
+                           String clientSaveTime, Integer projectId, Integer userId) throws ObjectNotFoundException {
         Event event;
         if (id != null) {
             // if the id is passed in, the client is requesting an update, so fetch the Event from data store
@@ -414,6 +422,20 @@ public class VLEServiceImpl implements VLEService {
         if (clientSaveTime != null) {
             Timestamp clientSaveTimestamp = new Timestamp(new Long(clientSaveTime));
             event.setClientSaveTime(clientSaveTimestamp);
+        }
+        if (projectId != null) {
+            try {
+                event.setProject(projectService.getById(new Long(projectId)));
+            } catch (ObjectNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+        if (userId != null) {
+            try {
+                event.setUser(userService.retrieveById(new Long(userId)));
+            } catch (ObjectNotFoundException e) {
+                e.printStackTrace();
+            }
         }
         // set postTime
         Calendar now = Calendar.getInstance();

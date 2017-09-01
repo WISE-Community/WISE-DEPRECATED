@@ -9,7 +9,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var AuthoringToolController = function () {
-    function AuthoringToolController($anchorScroll, $filter, $location, $mdDialog, $scope, $state, $timeout, ConfigService, ProjectService, SessionService) {
+    function AuthoringToolController($anchorScroll, $filter, $location, $mdDialog, $rootScope, $scope, $state, $timeout, ConfigService, ProjectService, SessionService, TeacherDataService) {
         var _this = this;
 
         _classCallCheck(this, AuthoringToolController);
@@ -18,6 +18,7 @@ var AuthoringToolController = function () {
         this.$filter = $filter;
         this.$location = $location;
         this.$mdDialog = $mdDialog;
+        this.$rootScope = $rootScope;
         this.$scope = $scope;
         this.$state = $state;
         this.$timeout = $timeout;
@@ -25,6 +26,7 @@ var AuthoringToolController = function () {
         this.ConfigService = ConfigService;
         this.ProjectService = ProjectService;
         this.SessionService = SessionService;
+        this.TeacherDataService = TeacherDataService;
 
         this.numberProject = true; // TODO: make dynamic or remove
 
@@ -201,6 +203,23 @@ var AuthoringToolController = function () {
                 escapeToClose: true
             });
         });
+
+        this.$rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
+
+            if (toState != null) {
+                var stateName = toState.name;
+
+                if (stateName == 'root.main') {
+                    // save the project list viewed event to the server
+                    _this.saveEvent('projectListViewed', 'Navigation');
+                }
+            }
+        });
+
+        if (this.$state.current.name == 'root.main') {
+            // save the project list viewed event to the server
+            this.saveEvent('projectListViewed', 'Navigation');
+        }
     }
 
     /**
@@ -320,12 +339,33 @@ var AuthoringToolController = function () {
             this.globalMessage.text = message;
             this.globalMessage.time = time;
         }
+    }, {
+        key: 'saveEvent',
+
+
+        /**
+         * Save an Authoring Tool event
+         * @param eventName the name of the event
+         * @param category the category of the event
+         * example 'Navigation' or 'Authoring'
+         */
+        value: function saveEvent(eventName, category) {
+
+            var context = 'AuthoringTool';
+            var nodeId = null;
+            var componentId = null;
+            var componentType = null;
+            var data = {};
+
+            // save the event to the server
+            this.TeacherDataService.saveEvent(context, nodeId, componentId, componentType, category, eventName, data);
+        }
     }]);
 
     return AuthoringToolController;
 }();
 
-AuthoringToolController.$inject = ['$anchorScroll', '$filter', '$location', '$mdDialog', '$scope', '$state', '$timeout', 'ConfigService', 'ProjectService', 'SessionService', 'moment'];
+AuthoringToolController.$inject = ['$anchorScroll', '$filter', '$location', '$mdDialog', '$rootScope', '$scope', '$state', '$timeout', 'ConfigService', 'ProjectService', 'SessionService', 'TeacherDataService', 'moment'];
 
 exports.default = AuthoringToolController;
 //# sourceMappingURL=authoringToolController.js.map

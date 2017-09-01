@@ -224,8 +224,9 @@ var TeacherDataService = function () {
          * @param event the event object
          * @returns a promise
          */
-        value: function saveEvent(context, nodeId, componentId, componentType, category, event, data) {
+        value: function saveEvent(context, nodeId, componentId, componentType, category, event, data, projectId) {
             var newEvent = {
+                projectId: this.ConfigService.getProjectId(),
                 runId: this.ConfigService.getRunId(),
                 workgroupId: this.ConfigService.getWorkgroupId(),
                 clientSaveTime: Date.parse(new Date()),
@@ -238,13 +239,22 @@ var TeacherDataService = function () {
                 data: data
             };
 
+            if (newEvent.projectId == null) {
+                newEvent.projectId = projectId;
+            }
+
             var events = [newEvent];
 
             var params = {
+                projectId: this.ConfigService.getProjectId(),
                 runId: this.ConfigService.getRunId(),
                 workgroupId: this.ConfigService.getWorkgroupId(),
                 events: angular.toJson(events)
             };
+
+            if (params.projectId == null) {
+                params.projectId = projectId;
+            }
 
             var httpParams = {};
             httpParams.method = 'POST';

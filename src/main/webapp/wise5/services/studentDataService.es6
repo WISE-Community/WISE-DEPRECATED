@@ -1390,6 +1390,7 @@ class StudentDataService {
     createNewEvent() {
         var event = {};
 
+        event.projectId = this.ConfigService.getProjectId();
         event.runId = this.ConfigService.getRunId();
         event.periodId = this.ConfigService.getPeriodId();
         event.workgroupId = this.ConfigService.getWorkgroupId();
@@ -1491,6 +1492,7 @@ class StudentDataService {
         } else {
             // set the workgroup id and run id
             var params = {};
+            params.projectId = this.ConfigService.getProjectId();
             params.runId = this.ConfigService.getRunId();
             params.workgroupId = this.ConfigService.getWorkgroupId();
             params.studentWorkList = angular.toJson(studentWorkList);

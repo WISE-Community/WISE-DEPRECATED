@@ -8905,6 +8905,8 @@ var ProjectService = function () {
                      */
                     nodeIdToInsertInsideOrAfter = newNode.id;
                 }
+
+                return newNodes;
             });
         }
 
