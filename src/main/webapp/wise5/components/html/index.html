@@ -7,13 +7,13 @@
                   ng-model-options='{ debounce: 1000 }'
                   rows='10'
                   cols='100'></summernote>
-        <div ng-if='htmlController.mode === "authoring"'>
+        <div>
             <md-button class='topButton md-raised md-primary' ng-click='htmlController.showAdvancedAuthoring = !htmlController.showAdvancedAuthoring'>
                 <md-icon>build</md-icon>
                 <md-tooltip md-direction="top" class="projectButtonTooltip">{{ "ADVANCED" | translate }}</md-tooltip>
             </md-button>
-            <div ng-show='htmlController.showAdvancedAuthoring'>
-                <div ng-if='htmlController.mode === "authoring"'>
+            <div ng-if='htmlController.showAdvancedAuthoring'>
+                <div>
                     {{ 'COMPONENT_WIDTH' | translate }}:
                     <input type='number'
                            ng-model='htmlController.authoringComponentContent.componentWidth'
@@ -24,7 +24,7 @@
                     <button ng-click='htmlController.showRubricAuthoring = !htmlController.showRubricAuthoring'>
                         {{ 'EDIT_COMPONENT_RUBRIC' | translate }}
                     </button>
-                    <div ng-show='htmlController.showRubricAuthoring'>
+                    <div ng-if='htmlController.showRubricAuthoring'>
                         <summernote id='{{htmlController.summernoteRubricId}}'
                                     ng-model='htmlController.summernoteRubricHTML'
                                     ng-change='htmlController.summernoteRubricHTMLChanged()'
@@ -35,12 +35,12 @@
                         </summernote>
                     </div>
                 </div>
-                <div ng-if='htmlController.mode === "authoring"'>
+                <div>
                     <button ng-click='htmlController.showJSONAuthoring = !htmlController.showJSONAuthoring'>
                             {{ 'SHOW_JSON' | translate }}
                     </button>
                     <br/>
-                    <div ng-show='htmlController.showJSONAuthoring'>
+                    <div ng-if='htmlController.showJSONAuthoring'>
                         <textarea ng-model='htmlController.authoringComponentContentJSONString'
                                   ng-change='htmlController.advancedAuthoringViewComponentChanged()'
                                   ng-model-options="{ updateOn: 'blur' }"

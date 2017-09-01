@@ -291,6 +291,15 @@ class ProjectController {
     };
 
     /**
+     * Download this project as a zip file
+     */
+    downloadProject() {
+        // make a request to download the project as a zip file
+        let exportProjectURL = this.ConfigService.getWISEBaseURL() + "/project/export/" + this.projectId;
+        window.location.href = exportProjectURL;
+    }
+
+    /**
      * Close authoring for the current project and bring user back to main AT page
      */
     closeProject() {

@@ -1,5 +1,4 @@
 {
-    "AudioOscillator.componentTypeLabel": "Ακουστικός Ταλαντωτής",
     "audioOscillator.add": "Πρόσθεση",
     "audioOscillator.addOscillatorType": "Πρόσθεση Τύπου Ταλαντωτή",
     "audioOscillator.errorYouHaveAlreadyAddedOscillatorType": "Σφάλμα: Έχετε ήδη προσθέσει {{oscillatorTypeToAdd}}",
@@ -20,5 +19,11 @@
     "audioOscillator.play": "Παίξε",
     "audioOscillator.save": "Αποθήκευση",
     "audioOscillator.startingFrequency": "Συχνότητα Έναρξης",
-    "audioOscillator.stop": "Παύση"
+    "audioOscillator.stop": "Παύση",
+    "audioOscillator.componentTypeLabel": "Ακουστικός Ταλαντωτής",
+    "audioOscillator.sine": "Ημίτονο",
+    "audioOscillator.square": "Τετραγωνικός",
+    "audioOscillator.triangle": "Τριγωνικός",
+    "audioOscillator.sawtooth": "Πριονωτός",
+    "audioOscillator.thereAreNoOscillatorTypesSelected": "Δεν έχουν επιλεγεί τύποι ταλαντωτών. Παρακαλώ επιλέξτε τουλάχιστον έναν τύπο ταλαντωτή."
 }

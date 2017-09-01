@@ -1,5 +1,4 @@
 {
-    "Draw.componentTypeLabel": "Σχεδίαση",
     "draw.addStamp": "Προσθήκη Σφραγίδας",
     "draw.areYouSureYouWantToClearYourDrawing": "Θέλετε σίγουρα να καθαρίστε το σχέδιό σας;",
     "draw.areYouSureYouWantToDeleteThisStamp": "Θέλετε σίγουρα να διαγράψετε αυτή τη σφραγίδα;",
@@ -40,5 +39,11 @@
     "draw.textToolTooltip": "Εργαλείο κειμένου (πατήστε και κρατήστε για προβολή διαθέσιμων μεγεθών χαρακτήρων)",
     "draw.undo": "Αναίρεση",
     "draw.undoTool": "Εργαλείο Αναίρεσηης",
-    "draw.versions": "Εκδόσεις"
+    "draw.versions": "Εκδόσεις",
+    "draw.areYouSureYouWantToDeleteTheStarterDrawing": "Θέλετε σίγουρα να διαγράψετε το εναρκτήριο σχέδιο;",
+    "draw.areYouSureYouWantToSaveTheStarterDrawing": "θέλετε σίγουρα να αποθηκεύσετε το εναρκτήριο σχέδιο;",
+    "draw.componentTypeLabel": "Σχεδιασμός",
+    "draw.thereAreNoStampsClickTheAddStampButtonToAddAStamp": "Δεν υπάρχει καμμια σφραγίδα. Πατήστε το εικονίδιο \"Προσθήκη Σφραγίδας\" για να προσθέσετε μια σφραγίδα.",
+    "draw.canvasHeight": "Ύψος Καμβά",
+    "draw.canvasWidth": "Πλάτος Καμβά"
 }

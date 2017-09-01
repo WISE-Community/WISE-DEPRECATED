@@ -459,7 +459,9 @@ var NodeController = function () {
                 }
 
                 if (step < 0) {
-                    index++;
+                    if (this.rubric) {
+                        index++;
+                    }
 
                     var components = this.getComponents();
                     var l = components.length,

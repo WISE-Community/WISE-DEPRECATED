@@ -3315,7 +3315,7 @@ class NodeAuthoringController {
                         this.$timeout(() => {
                             // slowly fade back to original background color
                             componentElement.css({
-                                'transition': 'background-color 3s ease-in-out',
+                                'transition': 'background-color 2s ease-in-out',
                                 'background-color': originalBackgroundColor
                             });
                         });
@@ -3361,7 +3361,7 @@ class NodeAuthoringController {
                         }
                     }
                 });
-            }, 2000);
+            }, 1000);
         });
     }
 

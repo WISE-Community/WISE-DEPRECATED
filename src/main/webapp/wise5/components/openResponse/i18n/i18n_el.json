@@ -1,5 +1,4 @@
 {
-    "OpenResponse.componentTypeLabel": "Ανοικτή Απάντηση",
     "openResponse.addFile": "Προσθήκη Αρχείου",
     "openResponse.addMultipleAttemptScoringRule": "Προσθήκη Κανόνα Βαθμολόγησης Πολλαπλής Προσπάθειας",
     "openResponse.addNewNotification": "Προσθήκη Νέας Γνωστοποίησης",
@@ -37,5 +36,6 @@
     "openResponse.youGotAScoreOf": "έλαβες βαθμολογία ίση με",
     "openResponse.youHaveNoMoreChances": "Δεν έχετε πια άλλες ευκαιρίες για ανατροφοδότηση στην απάντησή σας",
     "openResponse.youHaveOneChance": "Έχετε {{numberOFSubmitsLeft}} ευκαιρία για να λάβετε ανατροφοδότηση στην απάντησή σας οπότε αυτή πρέπει να είναι η καλύτερη δουλειά που μπορείτε να κάνετε. Είστε έτοιμοι/ες για να λάβετε ανατροφοδότηση στην απάντησή σας;",
-    "openResponse.youHaveMultipleChances": "Έχετε {{numberOFSubmitsLeft}} ευκαιρίες για να λάβετε ανατροφοδότηση στην απάντησή σας οπότε αυτή πρέπει να είναι η καλύτερη δουλειά που μπορείτε να κάνετε. Είστε έτοιμοι/ες για να λάβετε ανατροφοδότηση στην απάντησή σας;"
+    "openResponse.youHaveMultipleChances": "Έχετε {{numberOFSubmitsLeft}} ευκαιρίες για να λάβετε ανατροφοδότηση στην απάντησή σας οπότε αυτή πρέπει να είναι η καλύτερη δουλειά που μπορείτε να κάνετε. Είστε έτοιμοι/ες για να λάβετε ανατροφοδότηση στην απάντησή σας;",
+    "openResponse.componentTypeLabel": "Ανοιχτή Απάντηση"
 }

@@ -73,6 +73,7 @@
     "deleteTransitionCriteria": "Delete this logic for choosing a path",
     "description": "Description",
     "download": "Download",
+    "downloadProject": "Download Project",
     "dropAssetMessage": "Drop image or file here or click to upload!",
     "editButtons": "Edit Buttons",
     "editConstraints": "Edit Constraints",

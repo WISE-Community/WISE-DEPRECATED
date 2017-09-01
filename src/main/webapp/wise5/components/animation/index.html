@@ -17,22 +17,22 @@
     <div ng-if='animationController.mode === "authoring" && !animationController.authoringComponentContent.showPreviousWork'>
         <md-input-container style='width:100%'>
             <label>{{ 'PROMPT' | translate }}</label>
-            <textarea rows='3'
-                    ng-model='animationController.authoringComponentContent.prompt'
-                    ng-change='animationController.authoringViewComponentChanged()'
-                    ng-model-options='{ debounce: 1000 }'
-                    placeholder='{{ "enterPromptHere" | translate }}'>
+            <textarea rows='1'
+                      ng-model='animationController.authoringComponentContent.prompt'
+                      ng-change='animationController.authoringViewComponentChanged()'
+                      ng-model-options='{ debounce: 1000 }'
+                      placeholder='{{ "enterPromptHere" | translate }}'>
             </textarea>
         </md-input-container>
         <div layout='row'>
-            <md-input-container style='margin-right: 20; width: 110;'>
+            <md-input-container style='margin-right: 20px; width: 110px;'>
                 <label>{{ 'animation.width' | translate }} ({{ 'animation.pixels' | translate }})</label>
                 <input type='number'
                        ng-model='animationController.authoringComponentContent.widthInPixels'
                        ng-model-options='{ debounce: 1000 }'
                        ng-change='animationController.authoringViewComponentChanged()'/>
             </md-input-container>
-            <md-input-container style='margin-right: 20; width: 110;'>
+            <md-input-container style='margin-right: 20px; width: 110px;'>
                 <label>{{ 'animation.height' | translate }} ({{ 'animation.pixels' | translate }})</label>
                 <input type='number'
                        ng-model='animationController.authoringComponentContent.heightInPixels'
@@ -41,14 +41,14 @@
             </md-input-container>
         </div>
         <div layout='row'>
-            <md-input-container style='margin-right: 20; width: 110;'>
+            <md-input-container style='margin-right: 20px; width: 110px;'>
                 <label>{{ 'animation.width' | translate }} ({{ 'animation.units' | translate }})</label>
                 <input type='number'
                        ng-model='animationController.authoringComponentContent.widthInUnits'
                        ng-model-options='{ debounce: 1000 }'
                        ng-change='animationController.authoringViewComponentChanged()'/>
             </md-input-container>
-            <md-input-container style='margin-right: 20; width: 110;'>
+            <md-input-container style='margin-right: 20px; width: 110px;'>
                 <label>{{ 'animation.height' | translate }} ({{ 'animation.units' | translate }})</label>
                 <input type='number'
                        ng-model='animationController.authoringComponentContent.heightInUnits'
@@ -57,14 +57,14 @@
             </md-input-container>
         </div>
         <div layout='row'>
-            <md-input-container style='margin-right: 20; width: 150;'>
+            <md-input-container style='margin-right: 20px; width: 150px;'>
                 <label>{{ 'animation.dataOriginX' | translate }} ({{ 'animation.pixels' | translate }})</label>
                 <input type='number'
                        ng-model='animationController.authoringComponentContent.dataXOriginInPixels'
                        ng-model-options='{ debounce: 1000 }'
                        ng-change='animationController.authoringViewComponentChanged()'/>
             </md-input-container>
-            <md-input-container style='margin-right: 20; width: 150;'>
+            <md-input-container style='margin-right: 20px; width: 150px;'>
                 <label>{{ 'animation.dataOriginY' | translate }} ({{ 'animation.pixels' | translate }})</label>
                 <input type='number'
                        ng-model='animationController.authoringComponentContent.dataYOriginInPixels'
@@ -92,7 +92,7 @@
             <div layout='row'>
                 <div ng-show='object.type == "image"'
                      layout='row'>
-                    <md-input-container style='margin-right: 20; width: 400;'>
+                    <md-input-container style='margin-right: 20px; width: 400px;'>
                         <label>{{ 'animation.image' | translate }}</label>
                         <input ng-model='object.image'
                                ng-model-options='{ debounce: 1000 }'
@@ -108,7 +108,7 @@
                     </md-input-container>
                 </div>
                 <md-input-container ng-show='object.type == "text"'
-                                    style='margin-right: 20; width: 400;'>
+                                    style='margin-right: 20px; width: 400px;'>
                     <label>{{ 'animation.text' | translate }}</label>
                     <input ng-model='object.text'
                            ng-model-options='{ debounce: 1000 }'
@@ -138,16 +138,15 @@
                     <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'animation.deleteObject' | translate }}</md-tooltip>
                 </md-button>
             </div>
-            <div layout='row'
-                 ng-show='object.type == "image"'>
-                <md-input-container style='margin-right: 20; width: 150;'>
+            <div layout='row' ng-if='object.type == "image"'>
+                <md-input-container style='margin-right: 20px; width: 150px;'>
                     <label>{{ 'animation.imageWidth' | translate }} ({{ 'animation.pixels' | translate }})</label>
                     <input type='number'
                            ng-model='object.width'
                            ng-model-options='{ debounce: 1000 }'
                            ng-change='animationController.authoringViewComponentChanged()'/>
                 </md-input-container>
-                <md-input-container style='margin-right: 20; width: 150;'>
+                <md-input-container style='margin-right: 20px; width: 150px;'>
                     <label>{{ 'animation.imageHeight' | translate }} ({{ 'animation.pixels' | translate }})</label>
                     <input type='number'
                            ng-model='object.height'
@@ -155,9 +154,8 @@
                            ng-change='animationController.authoringViewComponentChanged()'/>
                 </md-input-container>
             </div>
-            <div ng-show='object.type == "image"'
-                 layout='row'>
-                <md-input-container style='margin-right: 20; width: 250;'>
+            <div ng-if='object.type == "image"' layout='row'>
+                <md-input-container style='margin-right: 20px; width: 250px;'>
                     <label>{{ 'animation.imageMovingLeft' | translate }}</label>
                     <input ng-model='object.imageMovingLeft'
                            ng-model-options='{ debounce: 1000 }'
@@ -165,13 +163,13 @@
                 </md-input-container>
                 <md-input-container>
                     <md-button class='topButton md-raised md-primary'
-                               style='margin-right: 20; margin-top: -5;'
+                               style='margin-right: 20px; margin-top: -5px;'
                                ng-click='animationController.chooseImageMovingLeft(object)'>
                         <md-icon>insert_photo</md-icon>
                         <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'chooseAnImage' | translate }}</md-tooltip>
                     </md-button>
                 </md-input-container>
-                <md-input-container style='margin-right: 20; width: 250;'>
+                <md-input-container style='margin-right: 20px; width: 250px;'>
                     <label>{{ 'animation.imageMovingRight' | translate }}</label>
                     <input ng-model='object.imageMovingRight'
                            ng-model-options='{ debounce: 1000 }'
@@ -179,7 +177,7 @@
                 </md-input-container>
                 <md-input-container>
                     <md-button class='topButton md-raised md-primary'
-                               style='margin-right: 20; margin-top: -5;'
+                               style='margin-right: 20px; margin-top: -5px;'
                                ng-click='animationController.chooseImageMovingRight(object)'>
                         <md-icon>insert_photo</md-icon>
                         <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'chooseAnImage' | translate }}</md-tooltip>
@@ -187,28 +185,28 @@
                 </md-input-container>
             </div>
             <div layout='row'>
-                <md-input-container style='margin-right: 20; width: 150;'>
+                <md-input-container style='margin-right: 20px; width: 150px;'>
                     <label>{{ 'animation.locationX' | translate }} ({{ 'animation.pixels' | translate }})</label>
                     <input type='number'
                            ng-model='object.pixelX'
                            ng-model-options='{ debounce: 1000 }'
                            ng-change='animationController.authoringViewComponentChanged()'/>
                 </md-input-container>
-                <md-input-container style='margin-right: 20; width: 150;'>
+                <md-input-container style='margin-right: 20px; width: 150px;'>
                     <label>{{ 'animation.locationY' | translate }} ({{ 'animation.pixels' | translate }})</label>
                     <input type='number'
                            ng-model='object.pixelY'
                            ng-model-options='{ debounce: 1000 }'
                            ng-change='animationController.authoringViewComponentChanged()'/>
                 </md-input-container>
-                <md-input-container style='margin-right: 20; width: 100;'>
+                <md-input-container style='margin-right: 20px; width: 100px;'>
                     <label>{{ 'animation.dataX' | translate }} ({{ 'animation.units' | translate }})</label>
                     <input type='number'
                            ng-model='object.dataX'
                            ng-model-options='{ debounce: 1000 }'
                            ng-change='animationController.authoringViewComponentChanged()'/>
                 </md-input-container>
-                <md-input-container style='margin-right: 20; width: 100;'>
+                <md-input-container style='margin-right: 20px; width: 100px;'>
                     <label>{{ 'animation.dataY' | translate }} ({{ 'animation.units' | translate }})</label>
                     <input type='number'
                            ng-model='object.dataY'
@@ -224,21 +222,21 @@
                     <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'animation.addDataPoint' | translate }}</md-tooltip>
                 </md-button>
                 <div ng-repeat='dataPoint in object.data track by $index' layout='row'>
-                    <md-input-container style='margin-right: 20; width: 100;'>
+                    <md-input-container style='margin-right: 20px; width: 100px;'>
                         <label>{{ 'animation.time' | translate }}</label>
                         <input type='number'
                                ng-model='dataPoint.t'
                                ng-model-options='{ debounce: 1000 }'
                                ng-change='animationController.authoringViewComponentChanged()'/>
                     </md-input-container>
-                    <md-input-container style='margin-right: 20; width: 100;'>
+                    <md-input-container style='margin-right: 20px; width: 100px;'>
                         <label>{{ 'animation.x' | translate }}</label>
                         <input type='number'
                                ng-model='dataPoint.x'
                                ng-model-options='{ debounce: 1000 }'
                                ng-change='animationController.authoringViewComponentChanged()'/>
                     </md-input-container>
-                    <md-input-container style='margin-right: 20; width: 100;'>
+                    <md-input-container style='margin-right: 20px; width: 100px;'>
                         <label>{{ 'animation.y' | translate }}</label>
                         <input type='number'
                                ng-model='dataPoint.y'
@@ -283,12 +281,12 @@
                     <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'animation.addDataPoint' | translate }}</md-tooltip>
                 </md-button>
                 <br/>
-                <div ng-show='object.dataSource != null'>
-                    <md-input-container style='margin-right: 20; width: 300;'>
+                <div ng-if='object.dataSource != null'>
+                    <md-input-container style='margin-right: 20px; width: 300px;'>
                         <label>{{ 'animation.step' | translate }}</label>
                         <md-select ng-model='object.dataSource.nodeId'
                                    ng-change='animationController.dataSourceNodeChanged()'
-                                   style='width: 300'>
+                                   style='width: 300px'>
                             <md-option ng-repeat='item in animationController.idToOrder | toArray | orderBy : "order"'
                                        value='{{item.$key}}'
                                        ng-if='animationController.isApplicationNode(item.$key)'>
@@ -296,48 +294,48 @@
                             </md-option>
                         </md-select>
                     </md-input-container>
-                    <md-input-container style='margin-right: 20; width: 300;'>
+                    <md-input-container style='margin-right: 20px; width: 300px;'>
                         <label>{{ 'animation.component' | translate }}</label>
                         <md-select ng-model='object.dataSource.componentId'
                                    ng-change='animationController.dataSourceComponentChanged(object)'
-                                   style='width: 300'>
+                                   style='width: 300px'>
                             <md-option ng-repeat='component in animationController.getComponentsByNodeId(object.dataSource.nodeId)'
                                        value='{{component.id}}'>
                                 {{component.type}}
                             </md-option>
                         </md-select>
                     </md-input-container>
-                    <div ng-show='animationController.getComponentByNodeIdAndComponentId(object.dataSource.nodeId, object.dataSource.componentId).type == "Graph"'
+                    <div ng-if='animationController.getComponentByNodeIdAndComponentId(object.dataSource.nodeId, object.dataSource.componentId).type == "Graph"'
                          layout='row'>
-                        <md-input-container style='margin-right: 20; width: 100;'>
+                        <md-input-container style='margin-right: 20px; width: 100px;'>
                             <label>{{ 'animation.trialIndex' | translate }}</label>
                             <input type='number'
                                    ng-model='object.dataSource.trialIndex'
                                    ng-model-options='{ debounce: 1000 }'
                                    ng-change='animationController.authoringViewComponentChanged()'/>
                         </md-input-container>
-                        <md-input-container style='margin-right: 20; width: 100;'>
+                        <md-input-container style='margin-right: 20px; width: 100px;'>
                             <label>{{ 'animation.seriesIndex' | translate }}</label>
                             <input type='number'
                                    ng-model='object.dataSource.seriesIndex'
                                    ng-model-options='{ debounce: 1000 }'
                                    ng-change='animationController.authoringViewComponentChanged()'/>
                         </md-input-container>
-                        <md-input-container style='margin-right: 20; width: 150;'>
+                        <md-input-container style='margin-right: 20px; width: 150px;'>
                             <label>{{ 'animation.timeColumnIndex' | translate }}</label>
                             <input type='number'
                                    ng-model='object.dataSource.tColumnIndex'
                                    ng-model-options='{ debounce: 1000 }'
                                    ng-change='animationController.authoringViewComponentChanged()'/>
                         </md-input-container>
-                        <md-input-container style='margin-right: 20; width: 150;'>
+                        <md-input-container style='margin-right: 20px; width: 150px;'>
                             <label>{{ 'animation.xColumnIndex' | translate }}</label>
                             <input type='number'
                                    ng-model='object.dataSource.xColumnIndex'
                                    ng-model-options='{ debounce: 1000 }'
                                    ng-change='animationController.authoringViewComponentChanged()'/>
                         </md-input-container>
-                        <md-input-container style='margin-right: 20; width: 150;'>
+                        <md-input-container style='margin-right: 20px; width: 150px;'>
                             <label>{{ 'animation.yColumnIndex' | translate }}</label>
                             <input type='number'
                                    ng-model='object.dataSource.yColumnIndex'
@@ -349,12 +347,14 @@
             </div>
         </div>
     </div>
+
     <div ng-if='animationController.mode === "authoring"'>
+
         <md-button class='topButton md-raised md-primary' ng-click='animationController.showAdvancedAuthoring = !animationController.showAdvancedAuthoring'>
             <md-icon>build</md-icon>
             <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ "ADVANCED" | translate }}</md-tooltip>
         </md-button>
-        <div ng-show='animationController.showAdvancedAuthoring'>
+        <div ng-if='animationController.showAdvancedAuthoring'>
             <span>{{ 'animation.starterSentence' | translate }} ({{ 'animation.optional' | translate }}):</span>
             <br/>
             <textarea ng-model='animationController.authoringComponentContent.starterSentence'
@@ -372,7 +372,7 @@
             <input type='checkbox'
                    ng-model='animationController.authoringComponentContent.showSubmitButton'
                    ng-change='animationController.showSubmitButtonValueChanged()'/>
-            <div ng-show='animationController.authoringComponentContent.showSubmitButton'
+            <div ng-if='animationController.authoringComponentContent.showSubmitButton'
                  style='display:inline'>
                 <span>{{ 'MAX_SUBMIT' | translate }}:</span>
                 <input type='number'
@@ -398,7 +398,7 @@
             <input type='checkbox'
                    ng-model='animationController.authoringComponentContent.enableCRater'
                    ng-change='animationController.authoringViewEnableCRaterClicked()'/>
-            <div ng-show='animationController.authoringComponentContent.enableCRater'>
+            <div ng-if='animationController.authoringComponentContent.enableCRater'>
                 <span>{{ 'animation.type' | translate }}:</span>
                 <input type='radio'
                        ng-model='animationController.authoringComponentContent.cRater.itemType'
@@ -435,7 +435,7 @@
                 <br/>
                 <input type='checkbox'
                        ng-model='animationController.authoringComponentContent.cRater.showFeedback'
-                       ng-change='animationController.authoringViewComponentChanged()'/> <span>{{ 'SHOW_FEEDBACK' | translate }}<span/>
+                       ng-change='animationController.authoringViewComponentChanged()'/> <span>{{ 'SHOW_FEEDBACK' | translate }}</span>
                 <br/>
                 <button ng-click='animationController.authoringAddScoringRule()'>{{ 'animation.addScoringRule' | translate }}</button>
                 <div ng-repeat='scoringRule in animationController.authoringComponentContent.cRater.scoringRules'>
@@ -461,9 +461,9 @@
                        ng-model='animationController.authoringComponentContent.cRater.enableMultipleAttemptScoringRules'
                        ng-click='animationController.enableMultipleAttemptScoringRulesClicked()'/>
                 <br/>
-                <div ng-show='animationController.authoringComponentContent.cRater.enableMultipleAttemptScoringRules'>
+                <div ng-if='animationController.authoringComponentContent.cRater.enableMultipleAttemptScoringRules'>
                     <div ng-repeat='multipleAttemptScoringRule in animationController.authoringComponentContent.cRater.multipleAttemptScoringRules'
-                         ng-show='animationController.authoringComponentContent.cRater.enableMultipleAttemptScoringRules'>
+                         ng-if='animationController.authoringComponentContent.cRater.enableMultipleAttemptScoringRules'>
                         <span>{{ 'animation.previousScore' | translate }}:</span> <input type='text'
                                                ng-model='multipleAttemptScoringRule.scoreSequence[0]'
                                                size='5'
@@ -485,7 +485,7 @@
                          <button ng-click='animationController.authoringViewMultipleAttemptScoringRuleDeleteClicked($index)'>{{ 'DELETE' | translate }}</button>
                     </div>
                     <button ng-click='animationController.authoringAddMultipleAttemptScoringRule()'
-                            ng-show='animationController.authoringComponentContent.cRater.enableMultipleAttemptScoringRules'>
+                            ng-if='animationController.authoringComponentContent.cRater.enableMultipleAttemptScoringRules'>
                             {{ 'animation.addMultipleAttemptScoringRule' | translate }}
                     </button>
                     <br/>
@@ -494,7 +494,7 @@
                 <input type='checkbox'
                        ng-model='animationController.authoringComponentContent.enableNotifications'
                        ng-change='animationController.authoringViewEnableNotificationsClicked()'/>
-                <div ng-show='animationController.authoringComponentContent.enableNotifications'>
+                <div ng-if='animationController.authoringComponentContent.enableNotifications'>
                     <div style="border:.5px dotted; padding: 5px" ng-repeat='notification in animationController.authoringComponentContent.notificationSettings.notifications'>
                         <span>{{ 'animation.previousScore' | translate }}:</span> <input type='text'
                                                ng-model='notification.enableCriteria.scoreSequence[0]'
@@ -510,7 +510,7 @@
                         <span>{{ 'animation.enableAmbientDisplayDismissMode' | translate }}</span>
                         <input type='checkbox'
                                ng-model='notification.isAmbient' />
-                        <div ng-show='notification.isAmbient'>
+                        <div ng-if='notification.isAmbient'>
                             <span>{{ 'animation.dismissCode' | translate }}:</span>
                             <input ng-model='notification.dismissCode'
                                    ng-model-options='{ debounce: 500 }'
@@ -521,7 +521,7 @@
                         <input type='checkbox'
                                ng-model='notification.isNotifyStudent' />
                         <br/>
-                        <div ng-show='notification.isNotifyStudent'>
+                        <div ng-if='notification.isNotifyStudent'>
                         <span>{{ 'animation.feedbackToStudent' | translate }}:</span> <textarea type='text'
                                          ng-model='notification.notificationMessageToStudent'
                                          rows='5'
@@ -532,7 +532,7 @@
                         <span>{{ 'animation.notifyTeacher' | translate }}</span>
                         <input type='checkbox'
                                ng-model='notification.isNotifyTeacher' />
-                        <div ng-show='notification.isNotifyTeacher'>
+                        <div ng-if='notification.isNotifyTeacher'>
                         <span>{{ 'animation.feedbackToTeacher' | translate }}:</span> <textarea type='text'
                                                             ng-model='notification.notificationMessageToTeacher'
                                                             rows='5'
@@ -550,14 +550,14 @@
                     </button>
                 </div>
             </div>
-            <div ng-if='animationController.mode === "authoring"'>
+            <div>
                 <span>{{ 'IMPORT_PREVIOUS_WORK' | translate }}:</span>
                 <input type='checkbox'
                        ng-model='animationController.authoringComponentContent.importPreviousWork'
                        ng-click='animationController.authoringImportPreviousWorkClicked()'
                        ng-change='animationController.authoringViewComponentChanged()'/>
             </div>
-            <div ng-if='animationController.mode === "authoring" && animationController.authoringComponentContent.importPreviousWork'>
+            <div ng-if='animationController.authoringComponentContent.importPreviousWork'>
                 <span>{{ 'IMPORT_PREVIOUS_WORK_STEP' | translate }}:</span>
                 <select ng-model='animationController.authoringComponentContent.importPreviousWorkNodeId'
                         ng-change='animationController.authoringImportPreviousWorkNodeIdChanged()'>
@@ -574,14 +574,14 @@
                     <option></option>
                 </select>
             </div>
-            <div ng-if='animationController.mode === "authoring"'>
+            <div>
                 <span>{{ 'SHOW_PREVIOUS_WORK' | translate }}:</span>
                 <input type='checkbox'
                        ng-model='animationController.authoringComponentContent.showPreviousWork'
                        ng-click='animationController.authoringShowPreviousWorkClicked()'
                        ng-change='animationController.authoringViewComponentChanged()'/>
             </div>
-            <div ng-if='animationController.mode === "authoring" && animationController.authoringComponentContent.showPreviousWork'>
+            <div ng-if='animationController.authoringComponentContent.showPreviousWork'>
                 <span>{{ 'SHOW_PREVIOUS_WORK_STEP' | translate }}:</span>
                 <select ng-model='animationController.authoringComponentContent.showPreviousWorkNodeId'
                         ng-change='animationController.authoringShowPreviousWorkNodeIdChanged()'>
@@ -603,7 +603,7 @@
                        ng-model='animationController.authoringComponentContent.showPreviousWorkPrompt'
                        ng-change='animationController.authoringViewComponentChanged()'/>
             </div>
-            <div ng-if='animationController.mode === "authoring"'>
+            <div>
                 <button ng-click='animationController.addConnectedComponent()'>{{ 'ADD_CONNECTED_COMPONENT' | translate }}</button>
                 <div ng-repeat='connectedComponent in animationController.authoringComponentContent.connectedComponents track by $index'>
                     <table border='1'>
@@ -651,11 +651,11 @@
                     </table>
                 </div>
             </div>
-            <div ng-if='animationController.mode === "authoring"'>
+            <div>
                 <button ng-click='animationController.showRubricAuthoring = !animationController.showRubricAuthoring'>
                     {{ 'EDIT_COMPONENT_RUBRIC' | translate }}
                 </button>
-                <div ng-show='animationController.showRubricAuthoring'>
+                <div ng-if='animationController.showRubricAuthoring'>
                     <summernote id='{{animationController.summernoteRubricId}}'
                                 ng-model='animationController.summernoteRubricHTML'
                                 ng-change='animationController.summernoteRubricHTMLChanged()'
@@ -666,12 +666,12 @@
                     </summernote>
                 </div>
             </div>
-            <div ng-if='animationController.mode === "authoring"'>
+            <div>
                 <button ng-click='animationController.showJSONAuthoring = !animationController.showJSONAuthoring'>
                         {{ 'SHOW_JSON' | translate }}
                 </button>
                 <br/>
-                <div ng-show='animationController.showJSONAuthoring'>
+                <div ng-if='animationController.showJSONAuthoring'>
                     <textarea ng-model='animationController.authoringComponentContentJSONString'
                            ng-change='animationController.advancedAuthoringViewComponentChanged()'
                            ng-model-options="{ updateOn: 'blur' }"
@@ -782,7 +782,7 @@
             </div>
             <div class="component__attachment" ng-repeat="attachment in animationController.attachments">
                 <img ng-src="{{attachment.iconURL}}" class="component__attachment__content" />
-                <md-button ng-show="!animationController.isDisabled" class="component__attachment__delete" ng-click='animationController.removeAttachment(attachment)' title="Remove file"><md-icon>cancel</md-icon></md-button>
+                <md-button ng-if="!animationController.isDisabled" class="component__attachment__delete" ng-click='animationController.removeAttachment(attachment)' title="Remove file"><md-icon>cancel</md-icon></md-button>
             </div>
         </div>
         <div ng-if="animationController.isSaveButtonVisible || animationController.isSubmitButtonVisible"
@@ -800,7 +800,7 @@
                        ng-if="animationController.isSubmitButtonVisible"
                        aria-label="{{SUBMIT | translate}}"
                        translate="SUBMIT"></md-button>
-            <span ng-show="animationController.saveMessage.text"
+            <span ng-if="animationController.saveMessage.text"
                   class="component__actions__info md-caption">
                   {{animationController.saveMessage.text}} <span class="component__actions__more"><md-tooltip md-direction="top">{{ animationController.saveMessage.time | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip><span am-time-ago="animationController.saveMessage.time"></span></span>
             </span>
