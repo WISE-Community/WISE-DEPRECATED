@@ -4422,35 +4422,29 @@ class ProjectService {
     copyNode(nodeId) {
         var node = this.getNodeById(nodeId);
 
-        var nodeCopy = JSON.parse(JSON.stringify(node));
+        // make a copy of the node
+        var nodeCopy = this.UtilService.makeCopyOfJSONObject(node);
         nodeCopy.id = this.getNextAvailableNodeId();
         nodeCopy.transitionLogic = {};  // clear transition logic
         nodeCopy.constraints = [];  // clear constraints
-        for (var c = 0; c < nodeCopy.components.length; c++) {
-            var component = nodeCopy.components[c];
-            var componentType = component.type;
-            // get the service for the node type 
-            var service = this.$injector.get(componentType + 'Service'); 
-            // copy the component
-            var componentCopy = service.copyComponent(component);
-            if (component.maxScore != null) {
-                // Also copy the max score if exists in original node
-                componentCopy.maxScore = component.maxScore;
-            }
-            if (component.showPreviousWorkPrompt != null) {
-                // Also copy the showPreviousWorkPrompt if exists in original node
-                componentCopy.showPreviousWorkPrompt = component.showPreviousWorkPrompt;
-            }
-            if (component.showPreviousWorkNodeId != null) {
-                // Also copy the showPreviousWorkNodeId if exists in original node
-                componentCopy.showPreviousWorkNodeId = component.showPreviousWorkNodeId;
-            }
-            if (component.showPreviousWorkComponentId != null) {
-                // Also copy the showPreviousWorkComponentId if exists in original node
-                componentCopy.showPreviousWorkComponentId = component.showPreviousWorkComponentId;
-            }
 
-            nodeCopy.components[c] = componentCopy;
+        // used to hold the new component ids
+        var newComponentIds = [];
+
+        // loop through all the components and give them a new component id
+        for (var c = 0; c < nodeCopy.components.length; c++) {
+
+            // get a component
+            var component = nodeCopy.components[c];
+
+            // give the component a new id
+            var newComponentId = this.getUnusedComponentId(newComponentIds);
+
+            // remember the new component id
+            newComponentIds.push(newComponentId);
+
+            // set the new component id into the component
+            component.id = newComponentId;
         }
         return nodeCopy;
     }
