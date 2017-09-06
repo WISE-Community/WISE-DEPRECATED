@@ -894,6 +894,57 @@ class ProjectController {
             // save and refresh the project
             this.checkPotentialStartNodeIdChangeThenSaveProject().then(() => {
 
+                /*
+                 * use a timeout to allow angular to update the UI and then
+                 * highlight and scroll to the new nodes
+                 */
+                this.$timeout(() => {
+
+                    // loop through all the new nodes and highlight them
+                    for (var n = 0; n < newNodes.length; n++) {
+                        var newNode = newNodes[n];
+
+                        if (newNode != null) {
+
+                            // get the node UI element
+                            let nodeElement = $("#" + newNode.id);
+
+                            // save the original background color
+                            let originalBackgroundColor = nodeElement.css("backgroundColor");
+
+                            // highlight the background briefly to draw attention to it
+                            nodeElement.css("background-color", "#FFFF9C");
+
+                            /*
+                             * Use a timeout before starting to transition back to
+                             * the original background color. For some reason the
+                             * element won't get highlighted in the first place
+                             * unless this timeout is used.
+                             */
+                            this.$timeout(() => {
+                                // slowly fade back to original background color
+                                nodeElement.css({
+                                    'transition': 'background-color 2s ease-in-out',
+                                    'background-color': originalBackgroundColor
+                                });
+                            });
+                        }
+                    }
+
+                    if (newNodes != null && newNodes.length > 0) {
+
+                        // get the UI element of the first new node
+                        let nodeElement = $("#" + newNodes[0].id);
+
+                        if (nodeElement != null) {
+                            // scroll to the first new node that we've added
+                            $('#content').animate({
+                                scrollTop: nodeElement.prop("offsetTop") - 60
+                            }, 1000);
+                        }
+                    }
+                });
+
                 // the data for the step imported event
                 var data = {};
                 data.stepsImported = [];
