@@ -488,10 +488,10 @@ var GraphController = function () {
                          */
                         this.newTrial();
                     }
-                } else {
-                    // populate the student work into this component
-                    this.setStudentWork(componentState);
                 }
+            } else {
+                // populate the student work into this component
+                this.setStudentWork(componentState);
             }
 
             if (componentState != null) {
@@ -2518,7 +2518,7 @@ var GraphController = function () {
             }
 
             /*
-             // remove high-charts assigned id's from each series before saving
+              // remove high-charts assigned id's from each series before saving
             for (var s = 0; s < studentData.series.length; s++) {
                 var series = studentData.series[s];
                 //series.id = null;
@@ -5859,9 +5859,10 @@ var GraphController = function () {
                 width: 2,
                 value: x,
                 zIndex: 5
+            };
 
-                // set the plot line into the plot lines array
-            };this.plotLines = [plotLine];
+            // set the plot line into the plot lines array
+            this.plotLines = [plotLine];
         }
 
         /**

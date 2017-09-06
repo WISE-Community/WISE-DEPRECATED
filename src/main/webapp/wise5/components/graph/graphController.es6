@@ -520,10 +520,10 @@ class GraphController {
                          */
                         this.newTrial();
                     }
-                } else {
-                    // populate the student work into this component
-                    this.setStudentWork(componentState);
                 }
+            } else {
+                // populate the student work into this component
+                this.setStudentWork(componentState);
             }
 
             if (componentState != null) {
