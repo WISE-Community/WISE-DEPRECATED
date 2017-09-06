@@ -38,7 +38,7 @@
 }
 
 .list-item--info {
-    &._md-button-wrap>div.md-button:first-child {
+    &._md-button-wrap>div.md-button:first-child, .md-subheader-content {
         border-left: 4px solid color('info') !important;
         margin-left: -4px;
     }
@@ -47,7 +47,7 @@
 .list-item--warn {
     //background-color: lighten(color('warn'), 56%);
 
-    &._md-button-wrap>div.md-button:first-child {
+    &._md-button-wrap>div.md-button:first-child, .md-subheader-content {
         border-left: 4px solid color('warn') !important;
         margin-left: -4px;
     }

@@ -187,13 +187,15 @@ var StudentStatusService = function () {
          * Get the percentage of the period that has completed the node
          * @param nodeId the node id
          * @param periodId the period id. pass in -1 to select all periods.
+         * @param workgroupId the workgroup id to limit results to (optional)
+         * @param excludeNonWorkNodes boolean whether to exclude nodes without student work or not (optional)
          * @returns the percentage of the period that has completed the node.
          * this value will be an integer between 0-100.
          */
 
     }, {
         key: 'getNodeCompletion',
-        value: function getNodeCompletion(nodeId, periodId) {
+        value: function getNodeCompletion(nodeId, periodId, workgroupId, excludeNonWorkNodes) {
             var numCompleted = 0;
             var numTotal = 0;
             var isGroupNode = this.ProjectService.isGroupNode(nodeId);
@@ -209,34 +211,75 @@ var StudentStatusService = function () {
                     if (periodId == -1 || periodId == studentStatus.periodId) {
                         // the period matches the one we are looking for
 
-                        var nodeStatuses = studentStatus.nodeStatuses;
+                        if (!workgroupId || workgroupId === studentStatus.workgroupId) {
+                            // either no workgroupId was specified or the workgroupId matches the one we're looking for
 
-                        if (nodeStatuses) {
-                            // get the node status for the node
-                            var nodeStatus = nodeStatuses[nodeId];
+                            var nodeStatuses = studentStatus.nodeStatuses;
 
-                            if (nodeStatus != null) {
-                                if (isGroupNode) {
-                                    var progress = nodeStatus.progress;
-                                    if (progress) {
-                                        numTotal += progress.totalItems;
-                                        numCompleted += progress.completedItems;
-                                    }
-                                } else {
-                                    if (nodeStatus.isVisible) {
-                                        /*
-                                         * the student can see the step. we need this check
-                                         * for cases when a project has branching. this way
-                                         * we only calculate the step completion percentage
-                                         * based on the students that can actually go to
-                                         * the step.
-                                         */
-                                        numTotal++;
-                                    }
+                            if (nodeStatuses) {
+                                // get the node status for the node
+                                var nodeStatus = nodeStatuses[nodeId];
 
-                                    if (nodeStatus.isCompleted) {
-                                        // the student has completed the node
-                                        numCompleted++;
+                                if (nodeStatus != null) {
+                                    if (isGroupNode) {
+                                        if (excludeNonWorkNodes) {
+                                            /* nodeStatus.progress includes completion information for all nodes;
+                                             * we want only nodes that capture student work, so we need to do a custom calculation
+                                             */
+                                            var group = this.ProjectService.getNodeById(nodeId);
+
+                                            // get all the descendants of the group
+                                            var descendants = this.ProjectService.getDescendentsOfGroup(group);
+                                            var l = descendants.length;
+
+                                            // loop through all the descendants to check for completion
+                                            for (var i = 0; i < l; i++) {
+                                                var descendantId = descendants[i];
+
+                                                if (!this.ProjectService.isGroupNode(descendantId)) {
+                                                    // node is not a group, so add to totals if visible and has student work
+                                                    var descendantStatus = nodeStatuses[descendantId];
+
+                                                    if (descendantStatus && descendantStatus.isVisible && this.ProjectService.nodeHasWork(descendantId)) {
+                                                        numTotal++;
+
+                                                        if (descendantStatus.isCompleted) {
+                                                            numCompleted++;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        } else {
+                                            // we're looking for completion percentage of all nodes, so we can use nodeStatus.progress
+                                            var progress = nodeStatus.progress;
+                                            if (progress) {
+                                                numTotal += progress.totalItems;
+                                                numCompleted += progress.completedItems;
+                                            }
+                                        }
+                                    } else {
+                                        if (nodeStatus.isVisible) {
+                                            /*
+                                             * the student can see the step. we need this check
+                                             * for cases when a project has branching. this way
+                                             * we only calculate the step completion percentage
+                                             * based on the students that can actually go to
+                                             * the step.
+                                             */
+
+                                            // check whether we should include the node in the calculation
+                                            // i.e. either includeNonWorkNodes is true or the node has student work
+                                            var includeNode = !excludeNonWorkNodes || this.ProjectService.nodeHasWork(nodeId);
+
+                                            if (includeNode) {
+                                                numTotal++;
+
+                                                if (nodeStatus.isCompleted) {
+                                                    // the student has completed the node
+                                                    numCompleted++;
+                                                }
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -265,27 +308,27 @@ var StudentStatusService = function () {
         /*getTotalApplicationNodeDescendents(nodeId, periodId) {
             let numTotal = 0;
             let numWorkgroups = 0;
-             let isGroupNode = this.ProjectService.isGroupNode(nodeId);
-             if (isGroupNode) {
+              let isGroupNode = this.ProjectService.isGroupNode(nodeId);
+              if (isGroupNode) {
                 let isPlanning = this.ProjectService.isPlanning(nodeId);
                 let studentStatuses = this.studentStatuses;
-                 // loop through all the student statuses
+                  // loop through all the student statuses
                 for (let ss = 0; ss < studentStatuses.length; ss++) {
                     let studentStatus = studentStatuses[ss];
-                     if (studentStatus) {
-                         if (periodId == -1 || periodId == studentStatus.periodId) {
+                      if (studentStatus) {
+                          if (periodId == -1 || periodId == studentStatus.periodId) {
                             // the period matches the one we are looking for
-                             let nodeStatuses = studentStatus.nodeStatuses;
-                             if (nodeStatuses) {
+                              let nodeStatuses = studentStatus.nodeStatuses;
+                              if (nodeStatuses) {
                                 // get the node status for the node
                                 let nodeStatus = nodeStatuses[nodeId];
-                                 if (nodeStatus) {
+                                  if (nodeStatus) {
                                     let progress = nodeStatus.progress;
                                     if (progress) {
                                         let totalItems = progress.totalItems;
                                         if (totalItems) {
                                             numWorkgroups++;
-                                             if (isPlanning) {
+                                              if (isPlanning) {
                                                 numTotal += progress.totalItems;
                                             } else {
                                                 // this is not a planning activity, so we can assume the total number of items is the same for all students
@@ -300,7 +343,7 @@ var StudentStatusService = function () {
                     }
                 }
             }
-             return (numWorkgroups > 0 ? numTotal/numWorkgroups : 0);
+              return (numWorkgroups > 0 ? numTotal/numWorkgroups : 0);
         };*/
 
         /**

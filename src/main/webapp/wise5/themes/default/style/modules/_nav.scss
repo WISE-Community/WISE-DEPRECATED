@@ -53,10 +53,10 @@
         md-list-item {
             background-color: color('selected-bg');
 
-            &._md-button-wrap>div.md-button:first-child {
+            /*&._md-button-wrap>div.md-button:first-child {
                 border-left: 4px solid color('primary');
                 margin-left: -4px;
-            }
+            }*/
         }
     }
 }
@@ -99,7 +99,7 @@
 //}
 
 .nav-item--list__info-item {
-    padding-right: 18px;
+    padding: 0 16px 0 4px;
     display: inline-block;
 }
 

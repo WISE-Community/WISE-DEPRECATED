@@ -96,7 +96,10 @@ var NavItemController = function () {
             _this.getAlertNotifications();
 
             _this.hasRubrics = _this.ProjectService.getNumberOfRubricsByNodeId(_this.nodeId) > 0;
-            _this.rubricIconLabel = _this.$translate('STEP_HAS_INFO_TEACHING_TIPS');
+            _this.alertIconLabel = _this.$translate('HAS_ALERTS_NEW');
+            _this.alertIconClass = 'warn';
+            _this.alertIconName = 'notifications';
+            _this.rubricIconLabel = _this.$translate('STEP_HAS_TEACHING_TIPS');
             _this.rubricIconClass = 'info';
             _this.rubricIconName = 'info';
         };
@@ -315,25 +318,16 @@ var NavItemController = function () {
         }
 
         /**
-         * Get the percentage of the node that the class, period, or workgroup has completed
-         * @returns the percentage of the node that the class, period, or workgroup has completed
+         * Get the percentage of the node that the class or period has completed
+         * @returns the percentage of the node that the class or period has completed
          */
 
     }, {
         key: 'getNodeCompletion',
         value: function getNodeCompletion() {
-            if (this.currentWorkgroup) {
-                // get the percentage of the node that the workgroup has completed
-                return this.currentNodeStatus.progress.completionPct;
-            } else {
-                // there is no currently selected workgroup, so get the currently selected period
-                var periodId = this.currentPeriod.periodId;
-
-                // et the percentage of the node that the class or period has completed
-                return this.StudentStatusService.getNodeCompletion(this.nodeId, periodId);
-            }
-
-            return completionPercentage;
+            // get completion for all students in the current period
+            var periodId = this.currentPeriod.periodId;
+            return this.StudentStatusService.getNodeCompletion(this.nodeId, periodId, null, true);
         }
 
         /**
@@ -408,7 +402,7 @@ var NavItemController = function () {
                 // get the workgroup's studentStatus
                 var studentStatus = this.StudentStatusService.getStudentStatusForWorkgroupId(this.currentWorkgroup.workgroupId);
 
-                // get the percentage of the node that the workgroup has completed
+                // get the current node status
                 this.currentNodeStatus = studentStatus.nodeStatuses[this.nodeId];
             }
         }
@@ -422,7 +416,7 @@ var NavItemController = function () {
             var args = {};
             args.nodeId = this.nodeId;
             args.periodId = periodId;
-            args.workgroupId = workgroupId;
+            args.toWorkgroupId = workgroupId;
             this.alertNotifications = this.NotificationService.getAlertNotifications(args);
 
             this.hasAlert = this.alertNotifications.length > 0;
