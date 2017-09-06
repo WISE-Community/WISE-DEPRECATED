@@ -26,6 +26,7 @@ class ProjectService {
         this.componentServices = {};
         this.nodeIdToNumber = {};
         this.nodeIdToIsInBranchPath = {};
+        this.nodeIdToBranchPathLetter = {};
         this.achievements = [];
 
         this.$translate = this.$filter('translate');
@@ -9121,6 +9122,9 @@ class ProjectService {
         // clear the node id to number mapping
         this.nodeIdToNumber = {};
 
+        // clear the node id to branch path letter mapping
+        this.nodeIdToBranchPathLetter = {};
+
         // get the start node id
         var startNodeId = this.getStartNodeId();
 
@@ -9295,6 +9299,9 @@ class ProjectService {
 
                                 // get the node number e.g. 1.5 A
                                 number = currentActivityNumber + '.' + currentStepNumber + ' ' + branchLetter;
+
+                                // remember the branch path letter for this node
+                                this.nodeIdToBranchPathLetter[nodeId] = branchLetter;
                             }
 
                             // set the number for the node
@@ -9975,6 +9982,16 @@ class ProjectService {
 
             return newComponents;
         });
+    }
+
+    /**
+     * Get the branch path letter
+     * @param nodeId get the branch path letter for this node if it is in a
+     * branch
+     * @return the branch path letter for the node if it is in a branch
+     */
+    getBranchPathLetter(nodeId) {
+        return this.nodeIdToBranchPathLetter[nodeId];
     }
 }
 

@@ -39,6 +39,7 @@ var ProjectService = function () {
         this.componentServices = {};
         this.nodeIdToNumber = {};
         this.nodeIdToIsInBranchPath = {};
+        this.nodeIdToBranchPathLetter = {};
         this.achievements = [];
 
         this.$translate = this.$filter('translate');
@@ -9728,6 +9729,9 @@ var ProjectService = function () {
             // clear the node id to number mapping
             this.nodeIdToNumber = {};
 
+            // clear the node id to branch path letter mapping
+            this.nodeIdToBranchPathLetter = {};
+
             // get the start node id
             var startNodeId = this.getStartNodeId();
 
@@ -9905,6 +9909,9 @@ var ProjectService = function () {
 
                                     // get the node number e.g. 1.5 A
                                     number = currentActivityNumber + '.' + currentStepNumber + ' ' + branchLetter;
+
+                                    // remember the branch path letter for this node
+                                    this.nodeIdToBranchPathLetter[nodeId] = branchLetter;
                                 }
 
                                 // set the number for the node
@@ -10632,6 +10639,19 @@ var ProjectService = function () {
 
                 return newComponents;
             });
+        }
+
+        /**
+         * Get the branch path letter
+         * @param nodeId get the branch path letter for this node if it is in a
+         * branch
+         * @return the branch path letter for the node if it is in a branch
+         */
+
+    }, {
+        key: 'getBranchPathLetter',
+        value: function getBranchPathLetter(nodeId) {
+            return this.nodeIdToBranchPathLetter[nodeId];
         }
     }]);
 

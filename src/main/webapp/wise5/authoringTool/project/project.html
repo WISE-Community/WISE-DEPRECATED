@@ -317,7 +317,8 @@
                              ng-class='{"node-select--group": projectController.isGroupNode(item.$key), "node-select--node": !projectController.isGroupNode(item.$key)}'
                              ng-if='projectController.projectMode'>
                             <div id='{{item.$key}}' layout="row"
-                                 ng-class='{"groupHeader": projectController.isGroupNode(item.$key), "stepHeader": !projectController.isGroupNode(item.$key), "branchPathStepHeader": projectController.isNodeInAnyBranchPath(item.$key) && !projectController.isGroupNode(item.$key)}'>
+                                 ng-class='{"groupHeader": projectController.isGroupNode(item.$key), "stepHeader": !projectController.isGroupNode(item.$key), "branchPathStepHeader": projectController.isNodeInAnyBranchPath(item.$key) && !projectController.isGroupNode(item.$key)}'
+                                 ng-style='{"background-color": projectController.getStepBackgroundColor(item.$key)}'>
                                 <div layout="row">
                                     <md-checkbox
                                            ng-model='item.checked'

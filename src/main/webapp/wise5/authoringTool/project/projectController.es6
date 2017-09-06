@@ -57,6 +57,14 @@ class ProjectController {
         this.advancedMode = false;
         this.showJSONAuthoring = false;
 
+        /*
+         * The colors for the branch path steps. The colors are from
+         * http://colorbrewer2.org/
+         * http://colorbrewer2.org/export/colorbrewer.js
+         * The colors chosen are from the "qualitative", "Set2".
+         */
+        this.stepBackgroundColors = ["#66c2a5","#fc8d62","#8da0cb","#e78ac3","#a6d854","#ffd92f","#e5c494","#b3b3b3"];
+
         // we are opening the project so we will set the current node to null
         this.TeacherDataService.setCurrentNode(null);
 
@@ -1979,6 +1987,35 @@ class ProjectController {
         }
 
         return selectedNodeTitles;
+    }
+
+    /**
+     * Get the background color for a step
+     * @param nodeId get the background color for a step in the project view
+     * @return If the node is in a branch path it will return a color. If the
+     * ndoe is not in a branch path it will return null.
+     */
+    getStepBackgroundColor(nodeId) {
+
+        let color = null;
+
+        // get the branch path letter if the node is in a branch path
+        let branchPathLetter = this.ProjectService.getBranchPathLetter(nodeId);
+
+        if (branchPathLetter != null) {
+            // the node is in a branch path
+
+            // get the ascii code for the letter. example A=65, B=66, C=67, etc.
+            let letterASCIICode = branchPathLetter.charCodeAt(0);
+
+            // get the branch path number A=0, B=1, C=2, etc.
+            let branchPathNumber = letterASCIICode - 65;
+
+            // get the color for the branch path number
+            color = this.stepBackgroundColors[branchPathNumber];
+        }
+
+        return color;
     }
 }
 
