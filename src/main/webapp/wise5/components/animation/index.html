@@ -666,6 +666,40 @@
                     </summernote>
                 </div>
             </div>
+            <div style='margin-top: 10px; margin-bottom: 10px;'>
+                <div>
+                    <label>{{ 'tags' | translate }}</label>
+                </div>
+                <div ng-repeat='tag in animationController.authoringComponentContent.tags track by $index'>
+                    <div layout='row'>
+                        <md-input-container style='margin-bottom: 0px'>
+                            <label></label>
+                            <input ng-model='animationController.authoringComponentContent.tags[$index]'
+                                   ng-change='animationController.authoringViewComponentChanged()'
+                                   ng-model-options='{ debounce: 1000 }'
+                                   size='100'
+                                   placeholder='{{ "enterTag" | translate }}'/>
+                        </md-input-container>
+                        <md-button class='moveComponentButton md-raised md-primary' ng-click='animationController.moveTagUp($index)'>
+                            <md-icon>arrow_upward</md-icon>
+                            <md-tooltip md-direction="top" class="projectButtonTooltip">{{ 'moveUp' | translate }}</md-tooltip>
+                        </md-button>
+                        <md-button class='moveComponentButton md-raised md-primary' ng-click='animationController.moveTagDown($index)'>
+                            <md-icon>arrow_downward</md-icon>
+                            <md-tooltip md-direction="top" class="projectButtonTooltip">{{ 'moveDown' | translate }}</md-tooltip>
+                        </md-button>
+                        <md-button class='moveComponentButton md-raised md-primary' ng-click='animationController.deleteTag($index)'>
+                            <md-icon>delete</md-icon>
+                            <md-tooltip md-direction="top" class="projectButtonTooltip">{{ 'DELETE' | translate }}</md-tooltip>
+                        </md-button>
+                    </div>
+                </div>
+                <md-button class='topButton md-raised md-primary'
+                           ng-click='animationController.addTag()'>
+                    <md-icon>add</md-icon>
+                    <md-tooltip md-direction="top" class="projectButtonTooltip">{{ "addTag" | translate }}</md-tooltip>
+                </md-button>
+            </div>
             <div>
                 <button ng-click='animationController.showJSONAuthoring = !animationController.showJSONAuthoring'>
                         {{ 'SHOW_JSON' | translate }}
