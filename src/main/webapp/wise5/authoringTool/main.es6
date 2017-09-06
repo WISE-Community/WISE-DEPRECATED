@@ -62,6 +62,7 @@ import UtilService from '../services/utilService';
 import WISELinkAuthoringController from './wiseLink/wiseLinkAuthoringController';
 
 import 'lib/angular-summernote/dist/angular-summernote.min';
+import moment from 'moment';
 
 let authoringModule = angular.module('authoring', [
     angularDragula(angular),
