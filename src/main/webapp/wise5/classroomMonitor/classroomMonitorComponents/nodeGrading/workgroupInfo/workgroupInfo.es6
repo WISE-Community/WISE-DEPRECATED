@@ -1,24 +1,29 @@
 "use strict";
 
 class WorkgroupInfoController {
-    constructor(ConfigService) {
+    constructor($filter,
+                ConfigService) {
+        this.$filter = $filter;
         this.ConfigService = ConfigService;
+
+        this.$translate = this.$filter('translate');
 
         this.$onInit = () => {
             this.avatarColor = this.ConfigService.getAvatarColorForWorkgroupId(this.workgroupId);
             this.alertIconClass = this.hasNewAlert ? 'warn' : 'text-disabled';
-            this.alertIconName = 'error';
+            this.alertIconName = 'notifications';
+            this.alertLabel = this.hasNewAlert ? this.$translate('HAS_ALERTS_NEW') : this.$translate('HAS_ALERTS_DISMISSED');
         }
     };
 }
 
 WorkgroupInfoController.$inject = [
+    '$filter',
     'ConfigService'
 ];
 
 const WorkgroupInfo = {
     bindings: {
-        alertMsg: '@',
         hasAlert: '<',
         hasNewAlert: '<',
         workgroupId: '<',
@@ -32,8 +37,9 @@ const WorkgroupInfo = {
             <div class="heavy">
                 {{$ctrl.usernames}}
                 <status-icon ng-if="$ctrl.hasAlert"
-                             icon-label="$ctrl.alertMsg"
-                             tooltip="$ctrl.alertMsg"
+                             icon-label="$ctrl.alertLabel"
+                             icon-tooltip="$ctrl.alertLabel"
+                             icon-tooltip="$ctrl.alertMsg"
                              icon-name="$ctrl.alertIconName"
                              icon-class="$ctrl.alertIconClass"></status-icon>
                 <span ng-if="$ctrl.hasNewWork" class="badge badge--info animate-fade">New</span>

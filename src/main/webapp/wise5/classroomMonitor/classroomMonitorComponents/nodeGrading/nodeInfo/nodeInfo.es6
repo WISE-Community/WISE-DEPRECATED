@@ -79,7 +79,7 @@ const NodeInfo = {
         `<md-card ng-if="$ctrl.nodeContent.rubric" class="annotations annotations--info">
             <md-card-title class="annotations__header">
                 <div class="annotations__avatar md-avatar avatar--icon md-36 avatar md-whiteframe-1dp">
-                    <md-icon class="annotations__icon md-36">info</md-icon>
+                    <md-icon class="annotations__icon md-36 info">info</md-icon>
                 </div>
                 <div class="annotations__title" layout="row" flex>
                     <span>{{ 'STEP_INFO' | translate }}</span>
@@ -106,7 +106,7 @@ const NodeInfo = {
                     <md-card class="annotations annotations--info" ng-if="component.rubric">
                        <md-card-title class="annotations__header">
                            <div class="annotations__avatar md-avatar avatar--icon md-36 avatar md-whiteframe-1dp">
-                               <md-icon class="annotations__icon md-36">info</md-icon>
+                               <md-icon class="annotations__icon md-36 info">info</md-icon>
                            </div>
                            <div class="annotations__title" layout="row" flex>
                                <span>{{ 'ITEM_INFO' | translate }}</span>

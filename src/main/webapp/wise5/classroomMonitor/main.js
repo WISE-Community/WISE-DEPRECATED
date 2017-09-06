@@ -411,12 +411,12 @@ var classroomMonitorModule = _angular2.default.module('classroomMonitor', [(0, _
     // TODO: add i18n support
     _moment2.default.updateLocale('en', {
         calendar: {
-            lastDay: '[Yesterday]',
-            sameDay: '[Today]',
-            nextDay: '[Tomorrow]',
-            lastWeek: '[Last] dddd',
-            nextWeek: 'dddd',
-            sameElse: 'ddd MMM D'
+            lastDay: '[Yesterday at] LT',
+            sameDay: '[Today at] LT',
+            nextDay: '[Tomorrow at] LT',
+            lastWeek: '[last] dddd [at] LT',
+            nextWeek: 'dddd [at] LT',
+            sameElse: 'll'
         }
     });
 }]);

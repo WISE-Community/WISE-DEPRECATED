@@ -371,6 +371,19 @@ var authoringModule = _angular2.default.module('authoring', [(0, _angularDragula
 
     $mdThemingProvider.setDefaultTheme('default');
     $mdThemingProvider.enableBrowserColor();
+
+    // moment.js default overrides
+    // TODO: add i18n support
+    moment.updateLocale('en', {
+        calendar: {
+            lastDay: '[Yesterday at] LT',
+            sameDay: '[Today at] LT',
+            nextDay: '[Tomorrow at] LT',
+            lastWeek: '[last] dddd [at] LT',
+            nextWeek: 'dddd [at] LT',
+            sameElse: 'll'
+        }
+    });
 }]);
 
 exports.default = authoringModule;

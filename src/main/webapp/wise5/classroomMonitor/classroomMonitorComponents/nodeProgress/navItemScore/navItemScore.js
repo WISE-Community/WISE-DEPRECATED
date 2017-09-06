@@ -63,7 +63,7 @@ var NavItemScore = {
         averageScore: '<',
         maxScore: '<'
     },
-    template: '<span ng-if="$ctrl.showScore">\n            <md-icon class="score"> grade </md-icon>\n            <span class="md-body-2 text-secondary">{{$ctrl.averageScoreDisplay}}</span>\n        </span>',
+    template: '<span ng-if="$ctrl.showScore" layout="row" layout-align="start center">\n            <md-icon class="score"> grade </md-icon>\n            <span class="md-body-2 text-secondary">{{$ctrl.averageScoreDisplay}}</span>\n        </span>',
     controller: NavItemScoreController
 };
 

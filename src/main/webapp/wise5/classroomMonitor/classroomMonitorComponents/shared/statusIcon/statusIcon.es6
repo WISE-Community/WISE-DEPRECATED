@@ -1,22 +1,31 @@
 "use strict";
 
+class StatusIconController {
+    constructor() {}
+
+    click() {
+        this.onClick();
+    }
+}
+
 const StatusIcon = {
     bindings: {
         iconName: '<',
         iconClass: '<',
         iconLabel: '<',
-        tooltip: '<',
+        iconTooltip: '<',
         onClick: '&'
     },
+    controller: StatusIconController,
     template:
-        `<md-icon class="status-icon"
-                  ng-class="[$ctrl.iconClass]"
-                  title="{{ $ctrl.iconLabel }}"
-                  aria-label="{{ $ctrl.iconLabel }}"
-                  ng-click="$ctrl.onClick">
-            {{ $ctrl.iconName }}
-            <md-tooltip md-direction="top" ng-if='$ctrl.tooltip'>{{$ctrl.tooltip}}</md-tooltip>
-        </md-icon>`
+        `<md-button class="md-icon-button status-icon"
+                    ng-click="$ctrl.click()"
+                    aria-label="{{ $ctrl.iconLabel }}">
+            <md-icon ng-class="[$ctrl.iconClass]">
+                {{ $ctrl.iconName }}
+            </md-icon>
+            <md-tooltip md-direction="top" ng-if="$ctrl.iconTooltip">{{ $ctrl.iconTooltip }}</md-tooltip>
+        </md-button>`
 };
 
 export default StatusIcon;

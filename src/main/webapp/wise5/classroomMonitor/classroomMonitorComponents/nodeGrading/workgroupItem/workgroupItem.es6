@@ -95,11 +95,11 @@ const WorkgroupItem = {
     },
     controller: WorkgroupItemController,
     template:
-        `<div class="md-whiteframe-1dp">
+        `<div class="md-whiteframe-1dp" ng-class="{'list-item--warn': $ctrl.statusClass === 'warn', 'list-item--info': $ctrl.statusClass === 'info'}">
             <md-subheader class="list-item md-whiteframe-1dp">
                 <button class="md-button md-ink-ripple list-item__subheader-button"
                                aria-label="{{ toggleTeamWorkDisplay | translate }}"
-                               ng-class="{'list-item--warn': $ctrl.statusClass === 'warn', 'list-item--info': $ctrl.statusClass === 'info', 'list-item--expanded': $ctrl.showWork, 'list-item--noclick': !$ctrl.showScore}"
+                               ng-class="{'list-item--expanded': $ctrl.showWork, 'list-item--noclick': !$ctrl.showScore}"
                                ng-click="$ctrl.toggleExpand()"
                                layout-wrap>
                     <div layout="row" flex>

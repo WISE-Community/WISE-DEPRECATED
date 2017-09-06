@@ -338,47 +338,54 @@ var NotificationService = function () {
         }
 
         /**
-         * Returns all notifications for a given nodeId and workgroupId
-         * @param nodeId the nodeId to look for (optional)
-         * @param workgroupId the workgroupId to look for (optional)
-         * TODO: update this to allow for more parameters (like periodId, maybe componentID?)
+         * Returns all notifications for the given parameters
+         * @param args object of optional parameters to filter on (e.g. nodeId, componentId, toWorkgroupId, fromWorkgroupId, periodId, type)
+         * @returns array of notificaitons
          */
 
     }, {
         key: 'getNotifications',
-        value: function getNotifications(nodeId, workgroupId) {
-            if (nodeId || workgroupId) {
-                return this.notifications.filter(function (notification) {
-                    if (nodeId && workgroupId) {
-                        return notification.nodeId === nodeId && notification.toWorkgroupId === workgroupId;
-                    } else if (nodeId) {
-                        return notification.nodeId === nodeId;
-                    } else if (workgroupId) {
-                        return notification.toWorkgroupId === workgroupId;
+        value: function getNotifications(args) {
+            var notifications = this.notifications;
+
+            if (args) {
+                var _loop = function _loop(p) {
+                    if (args.hasOwnProperty(p) && args[p] !== null) {
+                        notifications = notifications.filter(function (notification) {
+                            return notification[p] === args[p];
+                        });
                     }
-                });
-            } else {
-                return this.notifications;
+                };
+
+                // loop through all the given parameters and find notifications that match
+                for (var p in args) {
+                    _loop(p);
+                }
             }
+
+            return notifications;
         }
 
         /**
-         * Returns all CRaterResult notifications for given workgroup and node
+         * Returns all CRaterResult notifications for given parameters
          * TODO: expand to encompass other notification types that should be shown in classroom monitor
-         * @param args object of optional parameters to filter on (nodeId, workgroupId, periodId)
+         * @param args object of optional parameters to filter on (e.g. nodeId, componentId, toWorkgroupId, fromWorkgroupId, periodId)
          * @returns array of cRater notificaitons
          */
 
     }, {
         key: 'getAlertNotifications',
         value: function getAlertNotifications(args) {
-            // get all CRaterResult notifications for the giver parameters
+            // get all CRaterResult notifications for the given parameters
             // TODO: expand to encompass other notification types that should be shown to teacher
-            var notifications = [];
             var alertNotifications = [];
             var nodeId = args.nodeId;
-            var workgroupId = args.workgroupId;
-            var periodId = args.periodId;
+            var params = args;
+            params.type = 'CRaterResult';
+
+            if (args.periodId) {
+                params.periodId = args.periodId === -1 ? null : args.periodId;
+            }
 
             if (nodeId && this.ProjectService.isGroupNode(nodeId)) {
                 var groupNode = this.ProjectService.getNodeById(nodeId);
@@ -387,18 +394,12 @@ var NotificationService = function () {
 
                 for (var i = 0; i < n; i++) {
                     var childId = children[i];
-                    var childAlerts = this.getAlertNotifications({ nodeId: childId, workgroupId: workgroupId, periodId: periodId });
+                    params.nodeId = childId;
+                    var childAlerts = this.getAlertNotifications(args);
                     alertNotifications = alertNotifications.concat(childAlerts);
                 }
             } else {
-                notifications = this.getNotifications(nodeId, workgroupId);
-                alertNotifications = notifications.filter(function (notification) {
-                    if (periodId && periodId !== -1) {
-                        return notification.type === 'CRaterResult' && notification.periodId === periodId;
-                    } else {
-                        return notification.type === 'CRaterResult';
-                    }
-                });
+                alertNotifications = this.getNotifications(params);
             }
 
             return alertNotifications;

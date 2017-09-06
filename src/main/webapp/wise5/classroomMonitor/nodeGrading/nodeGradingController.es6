@@ -186,7 +186,7 @@ class NodeGradingController {
     getAlertNotificationsByWorkgroupId(workgroupId) {
         let args = {};
         args.nodeId = this.nodeId;
-        args.workgroupId = workgroupId;
+        args.toWorkgroupId = workgroupId;
         return this.NotificationService.getAlertNotifications(args);
     }
 

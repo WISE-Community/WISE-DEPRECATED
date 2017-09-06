@@ -18,7 +18,7 @@ const NavItemProgress = {
                     <span translate="percentCompleted" translate-value-percent="{{$ctrl.nodeCompletion}}" />
                 </md-tooltip>
             </span>
-            <span class="nav-item__progress-value md-body-2 text-secondary">{{$ctrl.nodeCompletion}}%</span>
+            <span class="nav-item__progress-value md-body-2 text-secondary" hide-xs>{{$ctrl.nodeCompletion}}%</span>
         </span>`
 };
 

@@ -1,4 +1,4 @@
-<ng-switch on="$ctrl.type">
+<ng-switch on="$ctrl.type" ng-if="$ctrl.nodeHasWork || $ctrl.isGroup">
     <md-card ng-switch-when="card"
              class="nav-item--card"
              ng-class="{'nav-item--card--group':$ctrl.isGroup, 'expanded md-whiteframe-3dp':$ctrl.expanded}">
@@ -10,7 +10,7 @@
                 </div>
                 <md-icon class="nav-item__collapse" ng-show="$ctrl.isGroup && $ctrl.expanded" aria-label="collapse">remove</md-icon>
             </div>
-            <alert-status-corner has-alert="$ctrl.hasNewAlert()" has-new-alert="$ctrl.hasNewAlert()"></alert-status-corner>
+            <alert-status-corner has-alert="$ctrl.hasNewAlert()" has-new-alert="$ctrl.hasNewAlert()" message="$ctrl.alertIconLabel"></alert-status-corner>
         </md-card-content>
         <md-card-content ng-if="$ctrl.isGroup" ng-show="$ctrl.expanded" class="nav-contents nav-contents--group">
             <div ng-if="$ctrl.isPlanning" class="md-padding" layout="column" layout-align="center center">
@@ -19,7 +19,7 @@
             <md-list class="nav-contents__list">
                 <nav-item ng-repeat="childId in $ctrl.item.ids"
                           ng-class="{'expanded': itemExpanded, 'prev': isPrevStep}"
-                          aria-label="{{ isPrevNode ? 'Last Viewed Item' : null }}"
+                          aria-label="{{ isPrevStep ? $ctrl.$translate('LAST_VIEWED_ITEM') : null }}"
                           show-position="$ctrl.showPosition"
                           node-id="childId" type="'list'" ng-animate-ref="{{ childId }}"
                           class="nav-item"
@@ -28,7 +28,7 @@
                 <nav-item ng-if="$ctrl.item.planning"
                           ng-repeat="planningNode in $ctrl.item.availablePlanningNodes"
                           ng-class="{'expanded': itemExpanded, 'prev': isPrevStep}"
-                          aria-label="{{ isPrevNode ? 'Last Viewed Item' : null }}"
+                          aria-label="{{ isPrevStep ? 'Last Viewed Item' : null }}"
                           node-id="planningNode.nodeId" type="'list'" is-planning-node="true"
                           ng-animate-ref="{{ planningNode.nodeId }}"
                           class="nav-item"
@@ -36,54 +36,42 @@
                 </nav-item>
             </md-list>
         </md-card-content>
-        <md-card-footer class="nav-item__more md-body-1" layout="row" layout-align="center center" flex>
+        <md-card-footer class="nav-item__more md-body-1" layout="row" layout-align="start center" flex>
             <nav-item-progress node-completion="$ctrl.getNodeCompletion()"
                                period-id="$ctrl.currentPeriod.periodId"
-                               period-name="$ctrl.currentPeriod.periodName"
-                               workgroup="$ctrl.currentWorkgroup"></nav-item-progress>
-            <span flex></span>
-            <nav-item-score ng-if="$ctrl.currentWorkgroup"
-                            max-score="$ctrl.maxScore"
-                            average-score="$ctrl.getNodeAverageScore()"></nav-item-score>
-            <workgroups-on-node ng-if="!$ctrl.currentWorkgroup"
-                                is-group="$ctrl.isGroup"
-                                node-title="$ctrl.nodeTitle"
-                                workgroups="$ctrl.workgroupsOnNodeData"
-                                online="$ctrl.isWorkgroupOnlineOnNode"></workgroups-on-node>
+                               period-name="$ctrl.currentPeriod.periodName"></nav-item-progress>
         </md-card-footer>
     </md-card>
 
     <md-list-item ng-switch-when="list" ng-click="$ctrl.itemClicked($event)"
-                  class="md-long-text noright list-item md-whiteframe-z1"
+                  class="md-long-text noright list-item md-whiteframe-1dp"
                   aria-label="{{$ctrl.nodeTitle}}"
                   ng-class="{'nav-item--list--group': $ctrl.isGroup,
                       'nav-item--planning-mode': $ctrl.planningMode && $ctrl.isPlanningInstance,
                       'list-item--warn': $ctrl.newAlert,
+                      'warn': $ctrl.newAlert,
                       'text-secondary': !$ctrl.nodeHasWork}">
-        <node-icon ng-if="!$ctrl.newAlert" node-id="$ctrl.nodeId" custom-class="'md-avatar'"></node-icon>
-        <alert-status-icon ng-if="$ctrl.newAlert" has-new-alert="$ctrl.newAlert"></alert-status-icon>
+        <node-icon node-id="$ctrl.nodeId" custom-class="'md-avatar'"></node-icon>
         <p flex layout="row" layout-align="start center">
             <span>{{ $ctrl.nodeTitle }}</span>&nbsp;
-            <status-icon ng-show="$ctrl.hasRubrics"
+            <span flex hide-gt-xs></span>
+            <status-icon ng-if="$ctrl.newAlert"
+                         icon-class="$ctrl.alertIconClass"
+                         icon-name="$ctrl.alertIconName"
+                         icon-label="$ctrl.alertIconLabel"
+                         icon-tooltip="$ctrl.alertIconLabel"></status-icon>
+            <status-icon ng-if="$ctrl.hasRubrics"
                          icon-class="$ctrl.rubricIconClass"
                          icon-name="$ctrl.rubricIconName"
                          icon-label="$ctrl.rubricIconLabel"
                          icon-tooltip="$ctrl.rubricIconLabel"></status-icon>
-            <span flex></span>
+            <span flex hide-xs></span>
             <nav-item-score class="nav-item--list__info-item"
                             max-score="$ctrl.maxScore"
                             average-score="$ctrl.getNodeAverageScore()"></nav-item-score>
-            <node-completion-icon ng-if="$ctrl.currentWorkgroup" node-status="$ctrl.currentNodeStatus"></node-completion-icon>
-            <nav-item-progress class="nav-item--list__info-item"
-                               ng-if="!$ctrl.currentWorkgroup"
-                               node-completion="$ctrl.getNodeCompletion()"
+            <nav-item-progress node-completion="$ctrl.getNodeCompletion()"
                                period-id="$ctrl.currentPeriod.periodId"
-                               period-name="$ctrl.currentPeriod.periodName"
-                               workgroup="$ctrl.currentWorkgroup"></nav-item-progress>
-            <workgroups-on-node ng-if="!$ctrl.currentWorkgroup"
-                                node-title="$ctrl.nodeTitle"
-                                workgroups="$ctrl.workgroupsOnNodeData"
-                                online="$ctrl.isWorkgroupOnlineOnNode"></workgroups-on-node>
+                               period-name="$ctrl.currentPeriod.periodName"></nav-item-progress>
         </p>
     </md-list-item>
 </ng-switch>

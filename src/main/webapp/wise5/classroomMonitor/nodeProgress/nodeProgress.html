@@ -1,13 +1,8 @@
 <div class="view-content--with-sidemenu" ng-show="nodeProgressController.isGroupNode(nodeProgressController.nodeId)">
     <div class="l-constrained l-constrained-md md-padding nav">
-        <div class="flex md-subhead content-head" layout="row" layout-align="start center" layout-wrap>
+        <div class="flex md-subhead" layout="row" layout-align="start center" layout-wrap layout-margin>
             <div layout="row" layout-align="start center">
-                <h2 class="accent-2">
-                    <div class="content-head__item">{{nodeProgressController.getNodeCompletion('group0')}}%<span class="md-subhead" translate="completion"></span></div>
-                </h2>
-                <div layout-margin>
-                    <period-select></period-select>
-                </div>
+                <period-select></period-select>
             </div>
             <span flex></span>
             <md-button ng-show="nodeProgressController.showRubricButton"
@@ -18,40 +13,15 @@
             </md-button>
         </div>
 
-        <div class="gray-bg">
-            <md-list class="user-list student-select md-whiteframe-1dp">
-                <md-list-item class="list-item list-item--actions" layout-wrap>
-                    <div flex-sm="100" flex-xs="100">
-                        <workgroup-select></workgroup-select>
-                    </div>
-                    <span flex></span>
-                    <div class="workgroup-progress" layout-align="center center" flex-sm="100" flex-xs="100">
-                        <div ng-if="nodeProgressController.currentWorkgroup">
-                            <workgroup-progress color="{{ nodeProgressController.getCurrentWorkgroupAvatarColor() }}"
-                                                completion="nodeProgressController.getCurrentWorkgroupCompletion()"
-                                                display-names="{{ nodeProgressController.getCurrentWorkgroupDisplayNames() }}"
-                                                max-score="nodeProgressController.maxScore"
-                                                number-of-students="nodeProgressController.getCurrentWorkgroupNumberOfStudents()"
-                                                score="nodeProgressController.getCurrentWorkgroupScore()"></workgroup-progress>
-                        </div>
-                        <div ng-if="!nodeProgressController.currentWorkgroup" class="text-secondary center md-caption md-padding">
-                            <span ng-if="nodeProgressController.getCurrentPeriod().periodId === -1">{{ 'showingStatsForAllTeams' | translate }}</span>
-                            <span ng-if="nodeProgressController.getCurrentPeriod().periodId !== -1">{{ 'showingStatsForAllTeamsInPeriod' | translate:{periodName: nodeProgressController.getCurrentPeriod().periodName} }}</span>
-                        </div>
-                    </div>
-                </md-list-item>
-            </md-list>
-
-            <div class="nav-contents nav-contents--root">
-                <div layout="row" layout-wrap layout-align="center start">
-                    <nav-item ng-repeat="id in nodeProgressController.rootNode.ids"
-                              class="nav-item nav-item--root"
-                              ng-class="{'expanded': itemExpanded}"
-                              node-id="id"
-                              show-position="true"
-                              type="'card'"
-                              flex="100" flex-sm="50" flex-gt-sm="50"></nav-item>
-                </div>
+        <div class="nav-contents nav-contents--root">
+            <div layout="row" layout-wrap layout-align="center start">
+                <nav-item ng-repeat="id in nodeProgressController.rootNode.ids"
+                          class="nav-item nav-item--root"
+                          ng-class="{'expanded': itemExpanded}"
+                          node-id="id"
+                          show-position="true"
+                          type="'card'"
+                          flex="100" flex-sm="50" flex-gt-sm="50"></nav-item>
             </div>
         </div>
     </div>

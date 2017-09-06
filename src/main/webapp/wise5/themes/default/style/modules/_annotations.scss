@@ -115,7 +115,11 @@
         border-right: 16px solid color('info');
     }
 
-    .annotations__avatar, .annotations__header {
+    .annotations__avatar {
+        background-color: #ffffff;
+    }
+
+    .annotations__header {
         background-color: color('info');
     }
 }

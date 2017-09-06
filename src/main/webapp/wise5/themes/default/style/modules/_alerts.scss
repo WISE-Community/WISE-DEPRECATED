@@ -1,7 +1,16 @@
 .status-icon {
-    margin-right: 4px;
+    margin: 0 4px;
     z-index: 1;
     vertical-align: bottom;
+}
+
+.md-button.status-icon {
+    height: auto;
+    width: auto;
+    min-height: 0;
+    line-height: inherit;
+    margin: 0 4px;
+    padding: 0;
 }
 
 .status-corner-wrapper {

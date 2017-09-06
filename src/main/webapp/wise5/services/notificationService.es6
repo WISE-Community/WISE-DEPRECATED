@@ -300,43 +300,46 @@ class NotificationService {
     }
 
     /**
-     * Returns all notifications for a given nodeId and workgroupId
-     * @param nodeId the nodeId to look for (optional)
-     * @param workgroupId the workgroupId to look for (optional)
-     * TODO: update this to allow for more parameters (like periodId, maybe componentID?)
+     * Returns all notifications for the given parameters
+     * @param args object of optional parameters to filter on (e.g. nodeId, componentId, toWorkgroupId, fromWorkgroupId, periodId, type)
+     * @returns array of notificaitons
      */
-    getNotifications(nodeId, workgroupId) {
-        if (nodeId || workgroupId) {
-            return this.notifications.filter(
-                notification => {
-                    if (nodeId && workgroupId) {
-                        return (notification.nodeId === nodeId && notification.toWorkgroupId === workgroupId);
-                    } else if (nodeId) {
-                        return (notification.nodeId === nodeId);
-                    } else if (workgroupId) {
-                        return (notification.toWorkgroupId === workgroupId);
-                    }
+    getNotifications(args) {
+        let notifications = this.notifications;
+
+        if (args) {
+            // loop through all the given parameters and find notifications that match
+            for (let p in args) {
+                if (args.hasOwnProperty(p) && args[p] !== null) {
+                    notifications = notifications.filter(
+                        notification => {
+                            return (notification[p] === args[p]);
+                        }
+                    );
                 }
-            );
-        } else {
-            return this.notifications;
+            }
         }
+
+        return notifications;
     }
 
     /**
-     * Returns all CRaterResult notifications for given workgroup and node
+     * Returns all CRaterResult notifications for given parameters
      * TODO: expand to encompass other notification types that should be shown in classroom monitor
-     * @param args object of optional parameters to filter on (nodeId, workgroupId, periodId)
+     * @param args object of optional parameters to filter on (e.g. nodeId, componentId, toWorkgroupId, fromWorkgroupId, periodId)
      * @returns array of cRater notificaitons
      */
     getAlertNotifications(args) {
-        // get all CRaterResult notifications for the giver parameters
+        // get all CRaterResult notifications for the given parameters
         // TODO: expand to encompass other notification types that should be shown to teacher
-        let notifications = [];
         let alertNotifications = [];
         let nodeId = args.nodeId;
-        let workgroupId = args.workgroupId;
-        let periodId = args.periodId;
+        let params = args;
+        params.type = 'CRaterResult';
+
+        if (args.periodId) {
+            params.periodId = args.periodId === -1 ? null : args.periodId;
+        }
 
         if (nodeId && this.ProjectService.isGroupNode(nodeId)) {
             let groupNode = this.ProjectService.getNodeById(nodeId);
@@ -345,20 +348,12 @@ class NotificationService {
 
             for (let i = 0; i < n; i++) {
                 let childId = children[i];
-                let childAlerts = this.getAlertNotifications({nodeId: childId, workgroupId: workgroupId, periodId: periodId});
+                params.nodeId = childId;
+                let childAlerts = this.getAlertNotifications(args);
                 alertNotifications = alertNotifications.concat(childAlerts);
             }
         } else {
-            notifications = this.getNotifications(nodeId, workgroupId);
-            alertNotifications = notifications.filter(
-                notification => {
-                    if (periodId && periodId !== -1) {
-                        return (notification.type === 'CRaterResult' && notification.periodId === periodId);
-                    } else {
-                        return (notification.type === 'CRaterResult');
-                    }
-                }
-            );
+            alertNotifications = this.getNotifications(params);
         }
 
         return alertNotifications;

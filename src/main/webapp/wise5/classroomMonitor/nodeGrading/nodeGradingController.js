@@ -197,7 +197,7 @@ var NodeGradingController = function () {
         value: function getAlertNotificationsByWorkgroupId(workgroupId) {
             var args = {};
             args.nodeId = this.nodeId;
-            args.workgroupId = workgroupId;
+            args.toWorkgroupId = workgroupId;
             return this.NotificationService.getAlertNotifications(args);
         }
     }, {
