@@ -184,6 +184,10 @@ var _wiseLinkAuthoringController2 = _interopRequireDefault(_wiseLinkAuthoringCon
 
 require('lib/angular-summernote/dist/angular-summernote.min');
 
+var _moment = require('moment');
+
+var _moment2 = _interopRequireDefault(_moment);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var authoringModule = _angular2.default.module('authoring', [(0, _angularDragula2.default)(_angular2.default), 'angularMoment', 'angular-toArrayFilter', 'animationComponentModule', 'audioOscillatorComponentModule', 'authoringTool.components', 'components', 'conceptMapComponentModule', 'discussionComponentModule', 'drawComponentModule', 'embeddedComponentModule', 'filters', 'graphComponentModule', 'highcharts-ng', 'htmlComponentModule', 'labelComponentModule', 'matchComponentModule', 'multipleChoiceComponentModule', 'ngAnimate', 'ngAria', 'ngFileUpload', 'ngMaterial', 'ngSanitize', 'ngWebSocket', 'notebook', 'openResponseComponentModule', 'outsideURLComponentModule', 'pascalprecht.translate', 'summernote', 'tableComponentModule', 'ui.router']).service(_annotationService2.default.name, _annotationService2.default).service(_authorWebSocketService2.default.name, _authorWebSocketService2.default).service(_configService2.default.name, _configService2.default).service(_cRaterService2.default.name, _cRaterService2.default).service(_nodeService2.default.name, _nodeService2.default).service(_notebookService2.default.name, _notebookService2.default).service(_notificationService2.default.name, _notificationService2.default).service(_projectService2.default.name, _projectService2.default).service(_projectAssetService2.default.name, _projectAssetService2.default).service(_sessionService2.default.name, _sessionService2.default).service(_studentAssetService2.default.name, _studentAssetService2.default).service(_studentDataService2.default.name, _studentDataService2.default).service(_studentStatusService2.default.name, _studentStatusService2.default).service(_studentWebSocketService2.default.name, _studentWebSocketService2.default).service(_teacherDataService2.default.name, _teacherDataService2.default).service(_teacherWebSocketService2.default.name, _teacherWebSocketService2.default).service(_utilService2.default.name, _utilService2.default).controller(_authoringToolController2.default.name, _authoringToolController2.default).controller(_authoringToolMainController2.default.name, _authoringToolMainController2.default).controller(_authoringToolNewProjectController2.default.name, _authoringToolNewProjectController2.default).controller(_authorNotebookController2.default.name, _authorNotebookController2.default).controller(_nodeAuthoringController2.default.name, _nodeAuthoringController2.default).controller(_projectAssetController2.default.name, _projectAssetController2.default).controller(_projectController2.default.name, _projectController2.default).controller(_projectHistoryController2.default.name, _projectHistoryController2.default).controller(_projectInfoController2.default.name, _projectInfoController2.default).controller(_wiseLinkAuthoringController2.default.name, _wiseLinkAuthoringController2.default).config(['$urlRouterProvider', '$stateProvider', '$translateProvider', '$translatePartialLoaderProvider', '$controllerProvider', '$mdThemingProvider', function ($urlRouterProvider, $stateProvider, $translateProvider, $translatePartialLoaderProvider, $controllerProvider, $mdThemingProvider) {
@@ -374,7 +378,7 @@ var authoringModule = _angular2.default.module('authoring', [(0, _angularDragula
 
     // moment.js default overrides
     // TODO: add i18n support
-    moment.updateLocale('en', {
+    _moment2.default.updateLocale('en', {
         calendar: {
             lastDay: '[Yesterday at] LT',
             sameDay: '[Today at] LT',
