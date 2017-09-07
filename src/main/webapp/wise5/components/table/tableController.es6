@@ -292,10 +292,10 @@ class TableController {
                          */
                         this.handleConnectedComponents();
                     }
-                } else {
-                    // populate the student work into this component
-                    this.setStudentWork(componentState);
                 }
+            } else {
+                // populate the student work into this component
+                this.setStudentWork(componentState);
             }
 
             // set up the table

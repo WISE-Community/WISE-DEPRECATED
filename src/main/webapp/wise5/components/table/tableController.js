@@ -280,10 +280,10 @@ var TableController = function () {
                          */
                         this.handleConnectedComponents();
                     }
-                } else {
-                    // populate the student work into this component
-                    this.setStudentWork(componentState);
                 }
+            } else {
+                // populate the student work into this component
+                this.setStudentWork(componentState);
             }
 
             // set up the table
@@ -485,7 +485,7 @@ var TableController = function () {
                              */
                             /*
                             var answer = confirm('Do you want to update the connected table?');
-                             if (answer) {
+                              if (answer) {
                                 // the student answered yes
                                 performUpdate = true;
                             }
