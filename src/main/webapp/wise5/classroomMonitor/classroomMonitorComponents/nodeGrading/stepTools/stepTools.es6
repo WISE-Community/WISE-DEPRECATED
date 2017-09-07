@@ -59,6 +59,10 @@ class StepToolsController {
         return this.ProjectService.isGroupNode(nodeId);
     }
 
+    showNode(nodeId) {
+        return this.isGroupNode(nodeId) || this.ProjectService.nodeHasWork(nodeId);
+    }
+
     goToPrevNode() {
         this.NodeService.goToPrevNode();
     }
@@ -89,7 +93,7 @@ const StepTools = {
                        ng-change="$ctrl.toNodeIdChanged()"
                        md-selected-text="$ctrl.getSelectedText()">
                 <md-option ng-repeat="item in $ctrl.idToOrder | toArray | orderBy : 'order'"
-                           ng-if="item.order !== 0"
+                           ng-if="item.order !== 0 && $ctrl.showNode(item.$key)"
                            value="{{ item.$key }}"
                            ng-class="{'node-select-option--group': $ctrl.isGroupNode(item.$key), 'node-select-option--node': !$ctrl.isGroupNode(item.$key)}">
                     <div layout="row" layout-align="start center">
