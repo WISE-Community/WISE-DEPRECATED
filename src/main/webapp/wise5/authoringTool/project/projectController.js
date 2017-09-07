@@ -216,6 +216,16 @@ var ProjectController = function () {
             _this.saveEvent('projectSaved', 'Authoring');
         });
 
+        /*
+         * Listen for the event to parse the project. This is so other
+         * controllers can trigger parsing the project in this controller.
+         */
+        this.$rootScope.$on('parseProject', function () {
+            // refresh the project
+            _this.ProjectService.parseProject();
+            _this.items = _this.ProjectService.idToOrder;
+        });
+
         // save the project opened event to the server
         this.saveEvent('projectOpened', 'Navigation');
     }

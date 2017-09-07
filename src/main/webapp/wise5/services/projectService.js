@@ -389,6 +389,11 @@ var ProjectService = function () {
                 }
             }
         }
+
+        /**
+         * Parse the project to detect the nodes, branches, node numbers, etc.
+         */
+
     }, {
         key: 'parseProject',
         value: function parseProject() {
@@ -10652,6 +10657,44 @@ var ProjectService = function () {
         key: 'getBranchPathLetter',
         value: function getBranchPathLetter(nodeId) {
             return this.nodeIdToBranchPathLetter[nodeId];
+        }
+
+        /**
+         * Set the node into the project by replacing the existing node with the
+         * given node id
+         * @param nodeId the node id of the node
+         * @param node the node object
+         */
+
+    }, {
+        key: 'setNode',
+        value: function setNode(nodeId, node) {
+
+            if (nodeId != null && node != null) {
+
+                // loop through all the nodes
+                for (var n = 0; n < this.project.nodes.length; n++) {
+                    var tempNode = this.project.nodes[n];
+
+                    if (tempNode != null && tempNode.id == nodeId) {
+                        // we have found the node we want to replace
+                        this.project.nodes[n] = node;
+                    }
+                }
+
+                // loop through all the inactive nodes
+                for (var i = 0; i < this.project.inactiveNodes.length; i++) {
+                    var _tempNode = this.project.inactiveNodes[i];
+
+                    if (_tempNode != null && _tempNode.id == nodeId) {
+                        // we have found the node we want to replace
+                        this.project.inactiveNodes[i] = node;
+                    }
+                }
+
+                // update the id to node mapping with the new node
+                this.idToNode[nodeId] = node;
+            }
         }
     }]);
 

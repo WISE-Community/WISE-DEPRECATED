@@ -345,6 +345,9 @@ class ProjectService {
         }
     }
 
+    /**
+     * Parse the project to detect the nodes, branches, node numbers, etc.
+     */
     parseProject() {
         var project = this.project;
         if (project != null) {
@@ -9992,6 +9995,41 @@ class ProjectService {
      */
     getBranchPathLetter(nodeId) {
         return this.nodeIdToBranchPathLetter[nodeId];
+    }
+
+    /**
+     * Set the node into the project by replacing the existing node with the
+     * given node id
+     * @param nodeId the node id of the node
+     * @param node the node object
+     */
+    setNode(nodeId, node) {
+
+        if (nodeId != null && node != null) {
+
+            // loop through all the nodes
+            for (let n = 0; n < this.project.nodes.length; n++) {
+                let tempNode = this.project.nodes[n];
+
+                if (tempNode != null && tempNode.id == nodeId) {
+                    // we have found the node we want to replace
+                    this.project.nodes[n] = node;
+                }
+            }
+
+            // loop through all the inactive nodes
+            for (let i = 0; i < this.project.inactiveNodes.length; i++) {
+                let tempNode = this.project.inactiveNodes[i];
+
+                if (tempNode != null && tempNode.id == nodeId) {
+                    // we have found the node we want to replace
+                    this.project.inactiveNodes[i] = node;
+                }
+            }
+
+            // update the id to node mapping with the new node
+            this.idToNode[nodeId] = node;
+        }
     }
 }
 

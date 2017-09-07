@@ -7,6 +7,7 @@ class NodeAuthoringController {
                 $injector,
                 $location,
                 $mdDialog,
+                $rootScope,
                 $scope,
                 $state,
                 $stateParams,
@@ -23,6 +24,7 @@ class NodeAuthoringController {
         this.$injector = $injector;
         this.$location = $location;
         this.$mdDialog = $mdDialog;
+        this.$rootScope = $rootScope;
         this.$scope = $scope;
         this.$state = $state;
         this.$stateParams = $stateParams;
@@ -522,6 +524,9 @@ class NodeAuthoringController {
      */
     populateBranchAuthoring() {
         if (this.node.transitionLogic != null) {
+
+            // clear the create branch branches so we can populate them again
+            this.createBranchBranches = [];
 
             // get the number of branches
             if (this.node.transitionLogic.transitions != null) {
@@ -1043,11 +1048,13 @@ class NodeAuthoringController {
         // put the previous version of the node on to the undo stack
         this.undoStack.push(this.currentNodeCopy);
 
-        // save the project
-        this.ProjectService.saveProject();
-
         // update the current node copy
         this.currentNodeCopy = this.UtilService.makeCopyOfJSONObject(this.node);
+
+        // save the project
+        return this.ProjectService.saveProject().then(() => {
+            this.$rootScope.$broadcast('parseProject');
+        });;
     }
 
     /**
@@ -1479,7 +1486,12 @@ class NodeAuthoringController {
             this.showImportView = false;
             this.showStepButtons = true;
             this.showComponents = true;
+            this.showJSON = false;
         } else if (view == 'editTransitions') {
+
+            // save and parse the JSON if it has changed
+            this.saveAndParseJSON();
+
             // toggle the edit transitions view and hide all the other views
             this.showCreateComponent = false;
             this.showEditTransitions = !this.showEditTransitions;
@@ -1491,7 +1503,12 @@ class NodeAuthoringController {
             this.showImportView = false;
             this.showStepButtons = false;
             this.showComponents = false;
+            this.showJSON = false;
         } else if (view == 'editConstraints') {
+
+            // save and parse the JSON if it has changed
+            this.saveAndParseJSON();
+
             // toggle the edit constraints view and hide all the other views
             this.showCreateComponent = false;
             this.showEditTransitions = false;
@@ -1503,6 +1520,7 @@ class NodeAuthoringController {
             this.showImportView = false;
             this.showStepButtons = false;
             this.showComponents = false;
+            this.showJSON = false;
         } else if (view == 'editButtons') {
             // toggle the edit buttons view and hide all the other views
             this.showCreateComponent = false;
@@ -1514,6 +1532,7 @@ class NodeAuthoringController {
             this.showAdvanced = false;
             this.showImportView = false;
             this.showStepButtons = false;
+            this.showJSON = false;
         } else if (view == 'editRubric') {
             // toggle the edit buttons view and hide all the other views
             this.showCreateComponent = false;
@@ -1526,7 +1545,12 @@ class NodeAuthoringController {
             this.showImportView = false;
             this.showStepButtons = false;
             this.showComponents = false;
+            this.showJSON = false;
         } else if (view == 'createBranch') {
+
+            // save and parse the JSON if it has changed
+            this.saveAndParseJSON();
+
             // toggle the edit buttons view and hide all the other views
             this.showCreateComponent = false;
             this.showEditTransitions = false;
@@ -1538,6 +1562,7 @@ class NodeAuthoringController {
             this.showImportView = false;
             this.showStepButtons = false;
             this.showComponents = false;
+            this.showJSON = false;
         } else if (view == 'previousNode') {
             // hide all the other views
             this.showCreateComponent = false;
@@ -1548,6 +1573,7 @@ class NodeAuthoringController {
             this.showCreateBranch = false;
             this.showAdvanced = false;
             this.showImportView = false;
+            this.showJSON = false;
 
             // get the previous node id
             var prevNodeId = this.ProjectService.getPreviousNodeId(this.nodeId);
@@ -1570,6 +1596,7 @@ class NodeAuthoringController {
             this.showCreateBranch = false;
             this.showAdvanced = false;
             this.showImportView = false;
+            this.showJSON = false;
 
             // get the next node id
             var nextNodeId = this.ProjectService.getNextNodeId(this.nodeId);
@@ -1594,6 +1621,7 @@ class NodeAuthoringController {
             this.showImportView = false;
             this.showStepButtons = false;
             this.showComponents = false;
+            this.showJSON = false;
         } else if (view == 'copy') {
             // toggle the copy view and hide all the other views
             this.showCreateComponent = false;
@@ -1606,6 +1634,7 @@ class NodeAuthoringController {
             this.showImportView = false;
             this.showStepButtons = true;
             this.showComponents = true;
+            this.showJSON = false;
         } else if (view == 'move') {
             // toggle the move view and hide all the other views
             this.showCreateComponent = false;
@@ -1618,6 +1647,7 @@ class NodeAuthoringController {
             this.showImportView = false;
             this.showStepButtons = true;
             this.showComponents = true;
+            this.showJSON = false;
         } else if (view == 'import') {
             // toggle the import view and hide all the other views
             this.showCreateComponent = false;
@@ -1630,6 +1660,26 @@ class NodeAuthoringController {
             this.showImportView = !this.showImportView;
             this.showStepButtons = false;
             this.showComponents = true;
+            this.showJSON = false;
+        } else if (view == 'showJSON') {
+
+            // save and parse the JSON if it has changed
+            this.saveAndParseJSON();
+
+            // toggle the import view and hide all the other views
+            this.showCreateComponent = false;
+            this.showEditTransitions = false;
+            this.showConstraints = false;
+            this.showEditButtons = false;
+            this.showRubric = false;
+            this.showCreateBranch = false;
+            //this.showAdvanced = false;
+            this.showImportView = false;
+            this.showStepButtons = false;
+            this.showComponents = false;
+
+            this.authoringNodeContentJSONString = angular.toJson(this.node, 4);
+            this.showJSON = !this.showJSON;
         } else {
             // hide all the views
             this.showCreateComponent = false;
@@ -1642,6 +1692,7 @@ class NodeAuthoringController {
             this.showImportView = false;
             this.showStepButtons = true;
             this.showComponents = true;
+            this.showJSON = false;
         }
     }
 
@@ -3638,6 +3689,15 @@ class NodeAuthoringController {
     backButtonClicked() {
 
         if (this.showImportView || this.showRubric || this.showAdvanced) {
+
+            if (this.showJSON) {
+                /*
+                 * we are showing the JSON so we will check if it has changed
+                 * and then save and parse the JSON
+                 */
+                this.saveAndParseJSON();
+            }
+
             // we are in the import view so we will go back to the node view
             this.nodeAuthoringViewButtonClicked();
         } else {
@@ -3745,6 +3805,45 @@ class NodeAuthoringController {
 
         return componentObjects;
     }
+
+    /**
+     * Check if the JSON has changed and then save and parse the JSON
+     */
+    saveAndParseJSON() {
+
+        if (this.showJSON) {
+            /*
+             * We are showing the JSON so we will now check to see if the
+             * JSON changed. If the JSON changed we will save the node with
+             * new JSON.
+             */
+
+            if (this.authoringNodeContentJSONString != angular.toJson(this.node, 4)) {
+                // the JSON has been changed so we will update the node
+
+                // create the updated node object
+                var updatedNode = angular.fromJson(this.authoringNodeContentJSONString);
+
+                // set the updated node into the project
+                this.ProjectService.setNode(this.nodeId, updatedNode);
+
+                // set the updated node into this controller
+                this.node = updatedNode;
+
+                // set the components into this controller
+                this.components = this.ProjectService.getComponentsByNodeId(this.nodeId);
+
+                // set the current node
+                this.TeacherDataService.setCurrentNodeByNodeId(this.nodeId);
+
+                // update the branch authoring fields into the controller
+                this.populateBranchAuthoring();
+
+                // save the project
+                this.authoringViewNodeChanged();
+            }
+        }
+    }
 };
 
 NodeAuthoringController.$inject = [
@@ -3753,6 +3852,7 @@ NodeAuthoringController.$inject = [
     '$injector',
     '$location',
     '$mdDialog',
+    '$rootScope',
     '$scope',
     '$state',
     '$stateParams',

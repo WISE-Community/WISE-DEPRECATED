@@ -115,6 +115,12 @@
             <md-icon>call_split</md-icon>
             <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ "createBranch" | translate }}</md-tooltip>
         </md-button>
+        <md-button class='topButton md-raised md-primary'
+                   ng-click='nodeAuthoringController.nodeAuthoringViewButtonClicked("showJSON")'
+                   ng-disabled='nodeAuthoringController.insertComponentMode'>
+            <md-icon>code</md-icon>
+            <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ "showJSON" | translate }}</md-tooltip>
+        </md-button>
         <br/>
         {{ 'SHOW_SAVE_BUTTON' | translate }}:
         <input type='checkbox'
@@ -596,6 +602,14 @@
                     </md-select>
                 </div>
             </div>
+        </div>
+        <div ng-if='nodeAuthoringController.showJSON'>
+            <h6 ng-if='projectController.isGroupNode(nodeAuthoringController.nodeId)'>{{ 'editActivityJSON' | translate }}</h6>
+            <h6 ng-if='!projectController.isGroupNode(nodeAuthoringController.nodeId)'>{{ 'editStepJSON' | translate }}</h6>
+            <md-input-container style='width: 100%;'>
+                <textarea ng-model='nodeAuthoringController.authoringNodeContentJSONString'
+                          style='width: 90%; border: 1px solid black;'></textarea>
+            </md-input-container>
         </div>
     </div>
 
