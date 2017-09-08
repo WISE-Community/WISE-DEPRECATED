@@ -28,6 +28,7 @@ class ProjectService {
         this.nodeIdToIsInBranchPath = {};
         this.nodeIdToBranchPathLetter = {};
         this.achievements = [];
+        this.isNodeAffectedByConstraintResult = {};
 
         this.$translate = this.$filter('translate');
 
@@ -1254,42 +1255,58 @@ class ProjectService {
         var result = false;
 
         if (node != null && constraint != null) {
-            var nodeId = node.id;
-            var targetId = constraint.targetId;
-            var action = constraint.action;
 
-            if (action === 'makeAllNodesAfterThisNotVisible') {
-                if (this.isNodeIdAfter(targetId, node.id)) {
-                    result = true;
-                }
-            } else if (action === 'makeAllNodesAfterThisNotVisitable') {
-                if (this.isNodeIdAfter(targetId, node.id)) {
-                    result = true;
-                }
+            // check if we have previously calculated the result before
+            var rememberedResult = this.getIsNodeAffectedByConstraintResult(node.id, constraint.id, result);
+
+            if (rememberedResult !== null) {
+                // we have calculated the result before
+
+                // use the remembered result
+                result = rememberedResult;
             } else {
-                var targetNode = this.getNodeById(targetId);
+                // we have not calculated the result before
 
-                if (targetNode != null) {
-                    var nodeType = targetNode.type;
+                var nodeId = node.id;
+                var targetId = constraint.targetId;
+                var action = constraint.action;
 
-                    if (nodeType === 'node') {
-                        // the target is an application
+                if (action === 'makeAllNodesAfterThisNotVisible') {
+                    if (this.isNodeIdAfter(targetId, node.id)) {
+                        result = true;
+                    }
+                } else if (action === 'makeAllNodesAfterThisNotVisitable') {
+                    if (this.isNodeIdAfter(targetId, node.id)) {
+                        result = true;
+                    }
+                } else {
+                    var targetNode = this.getNodeById(targetId);
 
-                        if (nodeId === targetId) {
-                            result = true;
-                        }
-                    } else if (nodeType === 'group') {
-                        // the target is a group
+                    if (targetNode != null) {
+                        var nodeType = targetNode.type;
 
-                        if (nodeId === targetId) {
-                            result = true;
-                        }
+                        if (nodeType === 'node') {
+                            // the target is an application
 
-                        if (this.isNodeDescendentOfGroup(node, targetNode)) {
-                            result = true;
+                            if (nodeId === targetId) {
+                                result = true;
+                            }
+                        } else if (nodeType === 'group') {
+                            // the target is a group
+
+                            if (nodeId === targetId) {
+                                result = true;
+                            }
+
+                            if (this.isNodeDescendentOfGroup(node, targetNode)) {
+                                result = true;
+                            }
                         }
                     }
                 }
+
+                // remember the result so we can look it up in the future
+                this.setIsNodeAffectedByConstraintResult(node.id, constraint.id, result);
             }
         }
 
@@ -10030,6 +10047,28 @@ class ProjectService {
             // update the id to node mapping with the new node
             this.idToNode[nodeId] = node;
         }
+    }
+
+    /**
+     * Remember the result for whether the node is affected by the constraint
+     * @param nodeId the node id
+     * @param constraintId the constraint id
+     * @param whether the node is affected by the constraint
+     */
+    setIsNodeAffectedByConstraintResult(nodeId, constraintId, result) {
+        this.isNodeAffectedByConstraintResult[nodeId + '-' + constraintId] = result;
+    }
+
+    /**
+     * Check if we have calculated the result for whether the node is affected
+     * by the constraint
+     * @param nodeId the node id
+     * @param constraintId the constraint id
+     * @return Return the result if we have calculated the result before. If we
+     * have not calculated the result before, we will return null.
+     */
+    getIsNodeAffectedByConstraintResult(nodeId, constraintId) {
+        return this.isNodeAffectedByConstraintResult[nodeId + '-' + constraintId];
     }
 }
 
