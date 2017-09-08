@@ -236,6 +236,76 @@ class DrawService extends NodeService {
     componentUsesSubmitButton() {
         return true;
     }
+
+    /**
+     * Check if the component state has student work. Sometimes a component
+     * state may be created if the student visits a component but doesn't
+     * actually perform any work. This is where we will check if the student
+     * actually performed any work.
+     * @param componentState the component state object
+     * @return whether the component state has any work
+     */
+    componentStateHasStudentWork(componentState, componentContent) {
+
+        if (componentState != null) {
+
+            let studentData = componentState.studentData;
+
+            if (studentData != null) {
+
+                // get the student draw data
+                let drawData = studentData.drawData;
+
+                // get the draw data as a JSON object
+                let drawDataJSON = angular.fromJson(drawData);
+
+                if (componentContent == null) {
+                    // the component content was not provided
+
+                    if (drawDataJSON != null &&
+                        drawDataJSON.canvas != null &&
+                        drawDataJSON.canvas.objects != null &&
+                        drawDataJSON.canvas.objects.length > 0) {
+
+                        return true;
+                    }
+                } else {
+                    // the component content was provided
+
+                    let starterDrawData = componentContent.starterDrawData;
+
+                    if (starterDrawData == null || starterDrawData == '') {
+                        // there is no starter draw data
+
+                        if (drawDataJSON != null &&
+                            drawDataJSON.canvas != null &&
+                            drawDataJSON.canvas.objects != null &&
+                            drawDataJSON.canvas.objects.length > 0) {
+
+                            return true;
+                        }
+                    } else {
+                        /*
+                         * there is starter draw data so we will compare it with
+                         * the student draw data
+                         */
+
+                        if (drawData != null &&
+                            drawData != '' &&
+                            drawData !== starterDrawData) {
+                            /*
+                             * the student draw data is different than the
+                             * starter draw data
+                             */
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
 }
 
 DrawService.$inject = [
