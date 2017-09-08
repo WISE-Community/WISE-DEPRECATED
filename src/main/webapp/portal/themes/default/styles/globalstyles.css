@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2006 Encore Research Group, University of Toronto
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
@@ -15,8 +15,8 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  *
-  
-/* THESE STYLES ARE USED GLOBALLY IN THE SITE  */	
+
+/* THESE STYLES ARE USED GLOBALLY IN THE SITE  */
 
 /* CSS Reset */
 html, body, div, span, object, iframe,
@@ -28,7 +28,7 @@ b, i,
 dl, dt, dd, ol, ul, li,
 fieldset, form, label, legend,
 table, caption, tbody, tfoot, thead, tr, th, td,
-article, aside, canvas, details, figcaption, figure, 
+article, aside, canvas, details, figcaption, figure,
 footer, header, hgroup, menu, nav, section, summary,
 time, mark, audio, video {
   margin:0;
@@ -57,10 +57,10 @@ body {
 	background:url("../images/body-bg.png") repeat-y scroll center top #555555;
 	/*background:url("../images/body-bg-circles.png") repeat-y scroll center top #555555;*/
 }
-	
+
 img {border: 0px;}
 
-h1 {font-size:2.0em;} 
+h1 {font-size:2.0em;}
 h2 {font-size:1.5em; }
 h3 {font-size:1.4em;}
 h4 {font-size:1.2em;}
@@ -79,10 +79,10 @@ a {
 a:hover {
 	text-decoration:underline;
 }
-	
+
 abbr, acronym {
 	cursor:help;
-	border-bottom: 1px dotted #666666;	
+	border-bottom: 1px dotted #666666;
 }
 
 .center {
@@ -519,7 +519,7 @@ a#name {
 }
 
 .inactive {
-	color:#555; 
+	color:#555;
 }
 
 .sectionContent td, .sectionContent th {
@@ -664,7 +664,7 @@ a#name {
 #signinForm label {
 	font-size:.9em;
 }
-		
+
 .loginContent #signinForm label {
 	font-size:1em;
 	width:100px;
@@ -767,21 +767,21 @@ li.welcome > a {
 	display:inline-block !important;
 }
 
-/* This little trick solves a problem with Safari getting confused by a call for "c:url value="/logout"/>" 
+/* This little trick solves a problem with Safari getting confused by a call for "c:url value="/logout"/>"
 .styleOverRideSafari1 {
 	color:#FFFF66;
 	font-size:.7em;
-	text-decoration:none; 
+	text-decoration:none;
 	border-bottom: 1px solid #FFFF66;
 }*/
-					
+
 .popUpMenuDefault {
 	font-size:1.0em;
 	font-style:italic;
 }
 
 #overviewMessage {
-	font-size:1.0em; 
+	font-size:1.0em;
 	margin:0px;
 	padding: 0 0 12px 0;
 }
@@ -811,8 +811,8 @@ li.welcome > a {
 		padding: 0;
 		margin: 0 auto;
 		}
-		
-	
+
+
 #hotInputFields  {
 	margin:15px;
 }
@@ -836,7 +836,7 @@ li.welcome > a {
 form {margin:0px; padding:0px;}
 
 
-/* STYLES FOR THE PANEL LAYOUT METHOD   */	
+/* STYLES FOR THE PANEL LAYOUT METHOD   */
 
 .panel {
 	-moz-border-radius:5px;
@@ -1023,6 +1023,15 @@ form {margin:0px; padding:0px;}
 	float:right;
 }
 
+/* Terms of Use styles*/
+.terms h2 {
+    margin: 24px 0 12px;
+}
+
+.terms h4 {
+    margin: 12px 0 8px;
+}
+
 /* FOOTER Styling   */
 
 #contentFooter {
@@ -1083,7 +1092,7 @@ form {margin:0px; padding:0px;}
 #contentFooter li.first {
 	padding-left:0;
 }
-	
+
 #contentFooter li.last {
 	border-right:none;
 	padding-right:0;
@@ -1107,7 +1116,7 @@ form {margin:0px; padding:0px;}
 	font-weight:bold;
 	margin:0;
 }
-	
+
 #contentFooter a:hover {
 	text-decoration:underline;
 }
@@ -1120,7 +1129,7 @@ a.printLesson {
     margin-right: 0.25em;
     padding-left: 28px;
 }
-	
+
 .alignLeft 	{text-align:left;}
 .alignCenter {text-align:center;}
 .alignRight {text-align:right;}
