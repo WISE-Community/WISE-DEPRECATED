@@ -234,6 +234,53 @@ class OpenResponseService extends NodeService {
     componentUsesSubmitButton() {
         return true;
     }
+
+    /**
+     * Check if the component state has student work. Sometimes a component
+     * state may be created if the student visits a component but doesn't
+     * actually perform any work. This is where we will check if the student
+     * actually performed any work.
+     * @param componentState the component state object
+     * @return whether the component state has any work
+     */
+    componentStateHasStudentWork(componentState, componentContent) {
+
+        if (componentState != null) {
+
+            let studentData = componentState.studentData;
+
+            if (studentData != null) {
+
+                // get the response from the student data
+                let response = studentData.response;
+
+                if (componentContent != null) {
+                    let starterSentence = componentContent.starterSentence;
+
+                    if (starterSentence == null || starterSentence === '') {
+                        // there is no starter sentence
+
+                        if (response != null && response !== '') {
+                            // the student has work
+                            return true;
+                        }
+                    } else {
+                        // there is a starter sentence
+
+                        if (response != null && response !== '' && response !== starterSentence) {
+                            /*
+                             * the student has a response that is different than
+                             * the starter sentence
+                             */
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
 }
 
 OpenResponseService.$inject = [
