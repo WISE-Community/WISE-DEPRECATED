@@ -47,6 +47,12 @@ class StudentProgressController {
             this.canGradeStudentWork = false;
         }
 
+        // a switched user (admin/researcher user impersonating a teacher) should not be able to view/grade
+        if (this.ConfigService.isSwitchedUser()) {
+            this.canViewStudentNames = false;
+            this.canGradeStudentWork = false;
+        }
+
         this.studentsOnline = this.TeacherWebSocketService.getStudentsOnline();
 
         this.students = [];

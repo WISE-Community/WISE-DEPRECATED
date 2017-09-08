@@ -726,6 +726,12 @@ View.prototype.createUserAndClassInfo = function(myUserInfo, periods, classmateU
             return wiseIds;
         }
 
+        var isLoggedInUserSwitchedUser = function() {
+            if (myUserInfo != null) {
+                return myUserInfo.isSwitchedUser;
+            }
+        };
+
 		return {
 			getWorkgroupId:function() {
 				return getWorkgroupId();
@@ -828,6 +834,9 @@ View.prototype.createUserAndClassInfo = function(myUserInfo, periods, classmateU
 			},
             getWISEIdsByWorkgroupId:function(workgroupId) {
                 return getWISEIdsByWorkgroupId(workgroupId);
+            },
+            isLoggedInUserSwitchedUser:function() {
+			    return isLoggedInUserSwitchedUser();
             }
 		};
 	}(myUserInfo, periods, classmateUserInfos, teacherUserInfo, sharedTeacherUserInfos);

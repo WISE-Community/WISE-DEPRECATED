@@ -60,9 +60,9 @@
 					</c:set>
 					<span><spring:message code="accountmenu.welcome" arguments="${firstName},${lastName}" /></span>
 				</div>
-				<sec:authorize access="!hasAnyRole('ROLE_STUDENT')">
+				<sec:authorize access="!hasAnyRole('ROLE_STUDENT,ROLE_PREVIOUS_ADMINISTRATOR')">
 					<div>
-						<a href="${contextPath}/teacher/management/updatemyaccount.html"><spring:message code="accountmenu.myAccount" /></a>
+						<a href="${contextPath}/teacher/management/updatemyaccount"><spring:message code="accountmenu.myAccount" /></a>
 					</div>
 				</sec:authorize>
 				<sec:authorize access="hasRole('ROLE_ADMINISTRATOR')">
@@ -71,6 +71,11 @@
 				<sec:authorize access="hasRole('ROLE_RESEARCHER')">
 					<a id="researchTools" class="wisebutton smallbutton-wide" href="${contextPath}/admin">
 						<spring:message code="accountmenu.research" />
+					</a>
+				</sec:authorize>
+				<sec:authorize access="hasRole('ROLE_PREVIOUS_ADMINISTRATOR')">
+					<a id="logOutImpersonator" href="${contextPath}/logout/impersonate">
+						<spring:message code="accountmenu.switchBackToOriginalUser" />
 					</a>
 				</sec:authorize>
 				<sec:authorize access="hasRole('ROLE_STUDENT')">

@@ -516,9 +516,11 @@ var ConfigService = function () {
     }, {
         key: 'getPermissions',
         value: function getPermissions() {
+
+            // a switched user (admin/researcher user impersonating a teacher) should not be able to view/grade
             return {
-                canViewStudentNames: this.config.canViewStudentNames,
-                canGradeStudentWork: this.config.canGradeStudentWork
+                canViewStudentNames: this.config.canViewStudentNames && !this.isSwitchedUser(),
+                canGradeStudentWork: this.config.canGradeStudentWork && !this.isSwitchedUser()
             };
         }
     }, {
@@ -1145,6 +1147,25 @@ var ConfigService = function () {
             authorableProjects.sort(this.sortByProjectId);
 
             return authorableProjects;
+        }
+
+        /**
+         * Determines whether the current user is logged in as somebody else
+         * @return true iff the user is a switched user
+         */
+
+    }, {
+        key: 'isSwitchedUser',
+        value: function isSwitchedUser() {
+            var myUserInfo = this.getMyUserInfo();
+
+            if (myUserInfo != null) {
+
+                if (myUserInfo.isSwitchedUser) {
+                    return true;
+                }
+            }
+            return false;
         }
 
         /**
