@@ -182,27 +182,6 @@ function createAccount() {
 	$('#teacherRegForm').submit();
 };
 
-$(document).ready(function() {
-	/*
-	 * Set up terms of use dialog
-	 */
-	$('#terms').click(function() {
-		var termsdiv = $('<div id="termsDialog"></div>');
-		termsdiv.load('${contextPath}/pages/termsofuse').dialog({
-			modal:true,
-			resizeable:false,
-			title:'<spring:message code="teacher.registerteacher.termsOfUse" />',
-			position:'center',
-			height:450,
-			width:600,
-			draggable:false,
-			close: function() {
-				$(this).dialog("destroy");
-			},
-			buttons: { "Ok": function() { $(this).dialog("close"); }}
-		});
-	});
-});
 </script>
 
 </head>
@@ -334,7 +313,7 @@ $(document).ready(function() {
 					     	<td><label for="legalAcknowledged" id="legalAcknowledged1"><spring:message code="teacher.registerteacher.legal" /></label></td>
 							<td id="termsOfUse">
 							     <form:checkbox path="legalAcknowledged" id="legalAcknowledged"/>
-						     	 <spring:message code="teacher.registerteacher.iAgreeToThe"/>&nbsp;<a id="terms"><spring:message code="teacher.registerteacher.termsOfUse2"/></a>
+						     	 <spring:message code="teacher.registerteacher.iAgreeToThe"/>&nbsp;<a href="../pages/privacy-terms.html" target="_blank"><spring:message code="teacher.registerteacher.termsOfUse2"/></a>
 						    </td>
 						 </tr>
 

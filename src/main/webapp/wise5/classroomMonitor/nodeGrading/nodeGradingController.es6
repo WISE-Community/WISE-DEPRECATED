@@ -161,7 +161,8 @@ class NodeGradingController {
     }
 
     /**
-     * Update statuses, scores, notifications, etc. for a workgroup object
+     * Update statuses, scores, notifications, etc. for a workgroup object. Also check if we need to hide student
+     * names because logged-in user does not have the right permissions
      * @param workgroupID a workgroup ID number
      * @param init Boolean whether we're in controller initialization or not
      */
@@ -176,6 +177,10 @@ class NodeGradingController {
             workgroup.hasNewWork = completionStatus.hasNewWork;
             workgroup.completionStatus = this.getWorkgroupCompletionStatus(completionStatus);
             workgroup.score = this.getNodeScoreByWorkgroupId(workgroupId);
+
+            if (!this.canViewStudentNames) {
+                workgroup.displayNames = 'Student ' + workgroupId;
+            }
 
             if (!init) {
                 this.workgroupsById[workgroupId] = angular.copy(workgroup);

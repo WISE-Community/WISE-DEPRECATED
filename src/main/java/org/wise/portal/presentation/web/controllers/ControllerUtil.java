@@ -3,7 +3,7 @@
  *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
- * 
+ *
  * Permission is hereby granted, without written agreement and without license
  * or royalty fees, to use, copy, modify, and distribute this software and its
  * documentation for any purpose, provided that the above copyright notice and
@@ -23,13 +23,18 @@ package org.wise.portal.presentation.web.controllers;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.authentication.switchuser.SwitchUserFilter;
+import org.springframework.security.web.authentication.switchuser.SwitchUserGrantedAuthority;
 import org.springframework.stereotype.Component;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.service.portal.PortalService;
 import org.wise.portal.service.user.UserService;
+
+import java.util.Collection;
 
 /**
  * A utility class for use by all controllers
@@ -69,7 +74,7 @@ public class ControllerUtil {
 			return null;
 		}
 	}
-	
+
 	/**
 	 * Returns the base url of the specified request
 	 * ex: http://128.32.xxx.11:8080
@@ -79,13 +84,29 @@ public class ControllerUtil {
 		String host = request.getHeader("Host");
 		String portalUrl = request.getScheme() + "://" + request.getServerName() + ":" +
 		request.getServerPort();
-		
+
 		if (host != null) {
 			portalUrl = request.getScheme() + "://" + host;
 		}
-		
+
 		return portalUrl;
 	}
+
+    /**
+     * Determines whether the logged-in user is an adminstrator currently logged in as somebody else
+     * @return true iff this user is currently logged in as somebody else
+     */
+	public static boolean isUserPreviousAdministrator() {
+
+        Collection<? extends GrantedAuthority> authorities = SecurityContextHolder.getContext().getAuthentication().getAuthorities();
+
+        for (GrantedAuthority grantedAuthority : authorities) {
+            if (SwitchUserFilter.ROLE_PREVIOUS_ADMINISTRATOR.equals(grantedAuthority.getAuthority())) {
+                return true;
+            }
+        }
+        return false;
+    }
 
 	/**
 	 * Returns the portal url

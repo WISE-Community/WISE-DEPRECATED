@@ -10,7 +10,7 @@
 						<li><a href="${contextPath}/pages/teacher-tools.html"><spring:message code="footer.teacherTools" /></a></li>
 						<li><a href="${contextPath}/pages/teacherfaq.html"><spring:message code="footer.faq" /></a></li>
 						<li><a href="${contextPath}/pages/gettingstarted.html"><spring:message code="footer.gettingStarted" /></a></li>
-						<li><a href="${contextPath}/pages/terms.html"><spring:message code="footer.termsOfUse" /></a></li>
+						<li><a href="${contextPath}/pages/privacy-terms.html"><spring:message code="footer.privacyAndUse" /></a></li>
 						<li class="last"><a href="${contextPath}/contact/contactwise.html"><spring:message code="footer.contact" /></a></li>
 						<!-- TODO: uncomment me when credits page is ready <li class="last"><a href="credits.html"><spring:message code="footer.credits" /></a></li> -->
 					</ul>
@@ -40,7 +40,7 @@
 					<p><spring:message code="footer.nsfSupport" /></p>
 					<p>
 					<c:if test="${wiseVersion != null}">
-						WISE ${wiseVersion} 
+						WISE ${wiseVersion}
 					</c:if>
 					&copy; <spring:message code="legalCopyright" />
 					</p>

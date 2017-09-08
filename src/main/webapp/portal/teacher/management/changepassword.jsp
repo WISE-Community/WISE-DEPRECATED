@@ -76,7 +76,7 @@
 								</div>
 
 						<div><input type="submit" value="<spring:message code="saveChanges"/>"/></div>
-						<div><a href="updatemyaccount.html"><spring:message code="cancel"/></a></div>
+						<div><a href="updatemyaccount"><spring:message code="cancel"/></a></div>
 
 						</form:form>
 

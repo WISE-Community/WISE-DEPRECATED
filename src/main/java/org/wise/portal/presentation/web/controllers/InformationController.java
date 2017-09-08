@@ -42,6 +42,7 @@ import org.springframework.security.acls.domain.BasePermission;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.authentication.switchuser.SwitchUserFilter;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -146,6 +147,7 @@ public class InformationController {
 	}
 
 	/**
+     * Get an user info object for the logged in user for the specified run
      * @param request
      * @return UserInfo as JSON object
      * @throws ObjectNotFoundException
@@ -227,44 +229,44 @@ public class InformationController {
 			periodName = periodNames.toString();
 		}
 
-		//obtain the user name in the format like "Geoffrey Kwan (GeoffreyKwan)"
+		// obtain the user name in the format like "Geoffrey Kwan (GeoffreyKwan)"
 		String userNames = "";
 		if (workgroup != null) {
 			userNames = getUserNamesFromWorkgroup(workgroup);
 
-			//get the user ids for the students in the workgroup
+			// get the user ids for the students in the workgroup
 			userIds = getStudentIdsFromWorkgroup(workgroup);
 		} else if (workgroup == null && loggedInUser.isAdmin()) {
 			userNames = ((MutableUserDetails) loggedInUser.getUserDetails()).getCoreUsername();
 
-			//get the user id of the admin
+			// get the user id of the admin
 			userIds.put(loggedInUser.getId());
 		}
 
 		JSONArray periods = new JSONArray();
 
-		//get all the periods in the run
+		// get all the periods in the run
 		Set<Group> periodsSet = run.getPeriods();
 
 		if (periodsSet != null) {
 			Iterator<Group> periodsIterator = periodsSet.iterator();
 
-			//loop through all the periods in the run
+			// loop through all the periods in the run
 			while (periodsIterator.hasNext()) {
 				//get a period
 				Group period = periodsIterator.next();
 
-				//get the period id and period name
+				// get the period id and period name
 				Long tempPeriodId = period.getId();
 				String tempPeriodName = period.getName();
 
 				try {
-					//put the period id and period name in a JSONObject
+					// put the period id and period name in a JSONObject
 					JSONObject periodObject = new JSONObject();
 					periodObject.put("periodId", tempPeriodId);
 					periodObject.put("periodName", tempPeriodName);
 
-					//add the JSONObject into our array of periods
+					// add the JSONObject into our array of periods
 					periods.put(periodObject);
 				} catch (JSONException e) {
 					e.printStackTrace();
@@ -277,6 +279,8 @@ public class InformationController {
 		try {
 			myUserInfo.put("workgroupId", workgroupId);
 			myUserInfo.put("userName", userNames);
+            myUserInfo.put("isSwitchedUser", ControllerUtil.isUserPreviousAdministrator());
+            //myUserInfo.put("isSwitchedUser", loggedInUser.isPreviousAdmin());
 
             try {
                 myUserInfo.put("periodId", Long.parseLong(periodId));
@@ -947,10 +951,12 @@ public class InformationController {
 			if (signedInUser != null) {
 				UserDetails userDetails = (UserDetails) signedInUser.getUserDetails();
 				if (userDetails instanceof StudentUserDetails) {
+
 					config.put("userType", "student");
 					config.put("indexURL", ControllerUtil.getPortalUrlString(request) + WISEAuthenticationProcessingFilter.STUDENT_DEFAULT_TARGET_PATH);
 
 				} else if (userDetails instanceof TeacherUserDetails) {
+
 					config.put("userType", "teacher");
 					config.put("indexURL", ControllerUtil.getPortalUrlString(request) + WISEAuthenticationProcessingFilter.TEACHER_DEFAULT_TARGET_PATH);
 				}

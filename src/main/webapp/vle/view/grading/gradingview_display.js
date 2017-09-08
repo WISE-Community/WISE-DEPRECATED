@@ -243,7 +243,7 @@ View.prototype.displayResearcherToolsPage = function() {
     getResearcherToolsHtml += "<td colspan='2'><input class='blueButton' type='button' value='Customize' onClick=\"view.displayRevisitAndRevisePage()\"></input></td>";
     //getResearcherToolsHtml += "<td><input class='blueButton' type='button' value='"+this.getI18NString("grading_button_explanation")+"' onClick=\"eventManager.fire('exportExplanationButtonClicked', ['special'])\"></input></td>";
     getResearcherToolsHtml += "</tr>";
-    
+
 	/*
 	//create row for export flash work
 	getResearcherToolsHtml += "<tr>";
@@ -536,7 +536,7 @@ View.prototype.displaySpecialExportPageHelper = function(node) {
             if (node.type === 'TableNode') {
                 displayCustomExportPageHelperHtml += "<input id='stepButton_" + nodeId + "_CSV' type='button' value='Latest CSV' style='margin-left:20px' onClick=\"eventManager.fire('specialExportCSVButtonClicked', '" + nodeId + "')\"/>";
             }
-			
+
             if (node.type === 'MatchSequenceNode') {
 				displayCustomExportPageHelperHtml += "<input id='stepButton_" + nodeId + "_CSV' type='button' value='All Work CSV' style='margin-left:20px' onClick=\"eventManager.fire('specialExportCSVButtonClicked', ['" + nodeId + "', 'all'])\"/>";
 				displayCustomExportPageHelperHtml += "<input id='stepButton_" + nodeId + "_CSV' type='button' value='First and Latest Work CSV' style='margin-left:20px' onClick=\"eventManager.fire('specialExportCSVButtonClicked', ['" + nodeId + "', 'firstAndLatest'])\"/>";
@@ -729,18 +729,18 @@ View.prototype.displayGradeByTeamSelectPage = function() {
 
 	displayGradeByTeamSelectPageHtml += "<tbody>";
 
-	//loop through all the student work objects
-	for(var x=0; x<classmatesInAlphabeticalOrder.length; x++) {
-		//get a vleState
+	// loop through all the student work objects
+	for (var x = 0; x < classmatesInAlphabeticalOrder.length; x++) {
+		// get a vleState
 		var student = classmatesInAlphabeticalOrder[x];
 
-		//get the workgroup id
+		// get the workgroup id
 		var workgroupId = student.workgroupId;
 
-		//get the user names for the workgroup
+		// get the user names for the workgroup
 		var userNames = student.userName.replace(/:/g, "<br>");
 
-		if(!this.isSignedInUserRunOwner()) {
+		if (!this.isSignedInUserRunOwner()) {
 			/*
 			 * the signed in teacher is not the run owner and is
 			 * not a shared teacher with grading privilege so we
@@ -5704,25 +5704,30 @@ View.prototype.displayGroupAssignments = function(workgroupId) {
 View.prototype.isSignedInUserRunOwner = function() {
 	var result = false;
 
-	//get the user and class info
+	// get the user and class info
 	var userAndClassInfo = this.getUserAndClassInfo();
 
-	if(userAndClassInfo != null) {
-		//get the logged in user name
-		var userLoginName = userAndClassInfo.getUserLoginName();
+	if (userAndClassInfo != null) {
+        if (userAndClassInfo.isSwitchedUser) {
+            // switchedUser is not considered a run owner. This way they can't see student names.
+            result = false;
+        } else {
+            // get the logged in user name
+            var userLoginName = userAndClassInfo.getUserLoginName();
 
-		//get the info for the run owner
-		var teacherUserInfo = userAndClassInfo.getTeacherUserInfo();
+            // get the info for the run owner
+            var teacherUserInfo = userAndClassInfo.getTeacherUserInfo();
 
-		if(teacherUserInfo != null) {
-			//get the user name for the run owner
-			var runOwnerUserName = userAndClassInfo.getTeacherUserInfo().userName;
+            if (teacherUserInfo != null) {
+                // get the user name for the run owner
+                var runOwnerUserName = userAndClassInfo.getTeacherUserInfo().userName;
 
-			//check if the logged in user name is the same as the run owner user name
-			if(userLoginName == runOwnerUserName) {
-				result = true;
-			}
-		}
+                // check if the logged in user name is the same as the run owner user name
+                if (userLoginName == runOwnerUserName) {
+                    result = true;
+                }
+            }
+        }
 	}
 
 	return result;
@@ -5741,7 +5746,7 @@ View.prototype.getStudentStatuses = function() {
 	//create the params for the request
 	var studentStatusParams = {
 		runId:runId
-	}
+	};
 
 	if (studentStatusURL != null) {
 		//make the request to the server for the student statuses
@@ -5804,7 +5809,7 @@ View.prototype.calculateStudentCompletionForWorkgroupId = function(workgroupId) 
 	//get the student status for the workgroup id
 	var studentStatus = this.getStudentStatusByWorkgroupId(workgroupId);
 
-	if(studentStatus != null) {
+	if (studentStatus != null) {
 		//get the project completion percentage
 		result = this.calculateStudentCompletionForStudentStatus(studentStatus);
 	}
@@ -6119,7 +6124,7 @@ View.prototype.displayRevisitAndRevisePage = function() {
     var researcherExportPageHtml = "<div class='gradingContent'>";
 
     researcherExportPageHtml += "<br>";
-    
+
     researcherExportPageHtml += "<h3>Revisit and Revise Export</h3>";
 
     //the button to go back to the previous page
@@ -6127,29 +6132,29 @@ View.prototype.displayRevisitAndRevisePage = function() {
 
     researcherExportPageHtml += "<br>";
     researcherExportPageHtml += "<br>";
-    
+
     // create the input for the initial step numbers
     researcherExportPageHtml += "Initial Step(s): <input id='initialSteps' size='30'/> ";
     researcherExportPageHtml += "Require Submit: <input id='initialStepsIsSubmit' type='checkbox'/>";
     researcherExportPageHtml += "<br>";
-    
+
     // create the input for the revisit step numbers
     researcherExportPageHtml += "Revisit Step(s): <input id='revisitSteps' size='30'/>";
     researcherExportPageHtml += "<br>";
-    
+
     // create the input for the revise step numbers
     researcherExportPageHtml += "Revise Step(s): <input id='reviseSteps' size='30'/>";
     researcherExportPageHtml += "<br>";
-    
+
     // create the input for the minimum revisit time
     researcherExportPageHtml += "Minimum Revisit Time (seconds): <input id='minimumRevisitTime'/>";
     researcherExportPageHtml += "<br>";
-    
+
     // create the submit button
     researcherExportPageHtml += "<input class='blueButton' type='button' value='Generate Export' onClick='view.generateRevisitAndReviseExport()'/>";
     researcherExportPageHtml += "<br>";
     researcherExportPageHtml += "<br>";
-    
+
     //the button to go back to the previous page
     //researcherExportPageHtml += "<input class='blueButton' type='button' value='"+"Back To Researcher Tools"+"' onClick=\"view.displayResearcherToolsPage()\"></input>";
 

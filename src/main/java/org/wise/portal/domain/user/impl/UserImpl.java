@@ -3,7 +3,7 @@
  *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
- * 
+ *
  * Permission is hereby granted, without written agreement and without license
  * or royalty fees, to use, copy, modify, and distribute this software and its
  * documentation for any purpose, provided that the above copyright notice and
@@ -66,42 +66,42 @@ public class UserImpl implements User {
     private MutableUserDetails userDetails;
 
     /**
-     * @see org.wise.portal.domain.user.User#getUserDetails()
+     * @see User#getUserDetails()
      */
     public MutableUserDetails getUserDetails() {
         return userDetails;
     }
 
     /**
-     * @see org.wise.portal.domain.user.User#setUserDetails(org.wise.portal.domain.authentication.MutableUserDetails)
+     * @see User#setUserDetails(org.wise.portal.domain.authentication.MutableUserDetails)
      */
     public void setUserDetails(MutableUserDetails userDetails) {
         this.userDetails = userDetails;
     }
 
     /**
-     * @see org.wise.portal.domain.user.User#isAdmin()
+     * @see User#isAdmin()
      */
     public boolean isStudent(){
         return this.userDetails.hasGrantedAuthority(UserDetailsService.STUDENT_ROLE);
     }
 
     /**
-     * @see org.wise.portal.domain.user.User#isTeacher()
+     * @see User#isTeacher()
      */
     public boolean isTeacher(){
         return this.userDetails.hasGrantedAuthority(UserDetailsService.TEACHER_ROLE);
     }
 
     /**
-     * @see org.wise.portal.domain.user.User#isAdmin()
+     * @see User#isAdmin()
      */
     public boolean isAdmin(){
     	return this.userDetails.hasGrantedAuthority(UserDetailsService.ADMIN_ROLE);
     }
-    
+
     /**
-     * @see org.wise.portal.domain.user.User#isAdmin()
+     * @see User#isAdmin()
      */
     public boolean isTrustedAuthor(){
     	return this.userDetails.hasGrantedAuthority(UserDetailsService.TRUSTED_AUTHOR_ROLE);

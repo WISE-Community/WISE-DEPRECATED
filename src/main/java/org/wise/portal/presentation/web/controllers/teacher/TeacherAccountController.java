@@ -1,21 +1,21 @@
 /**
  * Copyright (c) 2007-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
- * 
+ *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
- * 
+ *
  * Permission is hereby granted, without written agreement and without license
  * or royalty fees, to use, copy, modify, and distribute this software and its
  * documentation for any purpose, provided that the above copyright notice and
  * the following two paragraphs appear in all copies of this software.
- * 
+ *
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
  * PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
  * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
  * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
- * 
+ *
  * IN NO EVENT SHALL REGENTS BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT,
  * SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, INCLUDING LOST PROFITS,
  * ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF
@@ -78,7 +78,7 @@ public class TeacherAccountController {
 
 	/**
 	 * Called before the page is loaded to initialize values.
-	 * Adds the TeacherAccountForm object to the model. 
+	 * Adds the TeacherAccountForm object to the model.
 	 * This object will be filled out and submitted for creating
 	 * the new teacher
 	 * @param modelMap the model object that contains values for the page to use when rendering the view
@@ -128,9 +128,14 @@ public class TeacherAccountController {
 	/**
 	 * Shows page where teacher selects between changing password or changing other account information
 	 */
-	@RequestMapping(value = "/teacher/management/updatemyaccount.html", method = RequestMethod.GET)
+	@RequestMapping(value = "/teacher/management/updatemyaccount", method = RequestMethod.GET)
 	public String updateMyAccountIntialPage() {
-		return "teacher/management/updatemyaccount";
+	    // Switched user (e.g. admin/researcher logged in as this user) should not be able to view/modify user account
+        if (ControllerUtil.isUserPreviousAdministrator()) {
+            return "errors/accessdenied";
+        } else {
+            return "teacher/management/updatemyaccount";
+        }
 	}
 
 	/**
@@ -164,9 +169,9 @@ public class TeacherAccountController {
 	@RequestMapping(value = {"/teacher/join", "/teacher/management/updatemyaccountinfo.html"},
 			method = RequestMethod.POST)
 	protected String onSubmit(
-			@ModelAttribute("teacherAccountForm") TeacherAccountForm accountForm, 
-			BindingResult bindingResult, 
-			HttpServletRequest request, 
+			@ModelAttribute("teacherAccountForm") TeacherAccountForm accountForm,
+			BindingResult bindingResult,
+			HttpServletRequest request,
 			ModelMap modelMap) {
 
 		String referrer = request.getHeader("referer");
@@ -224,7 +229,7 @@ public class TeacherAccountController {
 					populateModelMap(modelMap);
 					return "teacher/management/updatemyaccountinfo";
 				}
-				
+
 				User user = userService.retrieveUserByUsername(userDetails.getUsername());
 				TeacherUserDetails teacherUserDetails = (TeacherUserDetails) user.getUserDetails();
 				teacherUserDetails.setCity(userDetails.getCity());
@@ -242,7 +247,7 @@ public class TeacherAccountController {
 				} else {
 					teacherUserDetails.setLanguage(userDetails.getLanguage());
 				}
-				
+
 		        // set user's language (if specified)
 		        Locale locale = null;
 		        String userLanguage = teacherUserDetails.getLanguage();
@@ -250,7 +255,7 @@ public class TeacherAccountController {
 		        	if (userLanguage.contains("_")) {
 		        		String language = userLanguage.substring(0, userLanguage.indexOf("_"));
 		        		String country = userLanguage.substring(userLanguage.indexOf("_")+1);
-		            	locale = new Locale(language, country); 	
+		            	locale = new Locale(language, country);
 		        	} else {
 		        		locale = new Locale(userLanguage);
 		        	}
@@ -258,7 +263,7 @@ public class TeacherAccountController {
 		        	// user default browser locale setting if user hasn't specified locale
 		        	locale = request.getLocale();
 		        }
-				
+
 				request.getSession().setAttribute(SessionLocaleResolver.LOCALE_SESSION_ATTRIBUTE_NAME, locale);
 
 				userService.updateUser(user);
@@ -333,7 +338,7 @@ public class TeacherAccountController {
 			if (!sendEmailEnabled) {
 				return;
 			}
-			TeacherUserDetails newUserDetails = 
+			TeacherUserDetails newUserDetails =
 					(TeacherUserDetails) newUser.getUserDetails();
 			String userUsername = newUserDetails.getUsername();
 			String userEmailAddress[] = {newUserDetails.getEmailAddress()};
