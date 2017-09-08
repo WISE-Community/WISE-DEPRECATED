@@ -306,7 +306,16 @@ var OpenResponseService = function (_NodeService) {
                     // get the response from the student data
                     var response = studentData.response;
 
-                    if (componentContent != null) {
+                    if (componentContent == null) {
+                        // the component content was not provided
+
+                        if (response != null && response !== '') {
+                            // the student has work
+                            return true;
+                        }
+                    } else {
+                        // the component content was provided
+
                         var starterSentence = componentContent.starterSentence;
 
                         if (starterSentence == null || starterSentence === '') {
@@ -317,7 +326,10 @@ var OpenResponseService = function (_NodeService) {
                                 return true;
                             }
                         } else {
-                            // there is a starter sentence
+                            /*
+                             * there is a starter sentence so we will compare it
+                             * with the student response
+                             */
 
                             if (response != null && response !== '' && response !== starterSentence) {
                                 /*

@@ -485,7 +485,7 @@ var TableController = function () {
                              */
                             /*
                             var answer = confirm('Do you want to update the connected table?');
-                              if (answer) {
+                             if (answer) {
                                 // the student answered yes
                                 performUpdate = true;
                             }
@@ -2741,12 +2741,19 @@ var TableController = function () {
         key: 'authoringDeleteConnectedComponent',
         value: function authoringDeleteConnectedComponent(index) {
 
-            if (this.authoringComponentContent.connectedComponents != null) {
-                this.authoringComponentContent.connectedComponents.splice(index, 1);
-            }
+            // ask the author if they are sure they want to delete the connected component
+            var answer = confirm(this.$translate('areYouSureYouWantToDeleteThisConnectedComponent'));
 
-            // the authoring component content has changed so we will save the project
-            this.authoringViewComponentChanged();
+            if (answer) {
+                // the author answered yes to delete
+
+                if (this.authoringComponentContent.connectedComponents != null) {
+                    this.authoringComponentContent.connectedComponents.splice(index, 1);
+                }
+
+                // the authoring component content has changed so we will save the project
+                this.authoringViewComponentChanged();
+            }
         }
 
         /**

@@ -2518,7 +2518,7 @@ var GraphController = function () {
             }
 
             /*
-              // remove high-charts assigned id's from each series before saving
+             // remove high-charts assigned id's from each series before saving
             for (var s = 0; s < studentData.series.length; s++) {
                 var series = studentData.series[s];
                 //series.id = null;
@@ -5563,12 +5563,19 @@ var GraphController = function () {
         key: 'authoringDeleteConnectedComponent',
         value: function authoringDeleteConnectedComponent(index) {
 
-            if (this.authoringComponentContent.connectedComponents != null) {
-                this.authoringComponentContent.connectedComponents.splice(index, 1);
-            }
+            // ask the author if they are sure they want to delete the connected component
+            var answer = confirm(this.$translate('areYouSureYouWantToDeleteThisConnectedComponent'));
 
-            // the authoring component content has changed so we will save the project
-            this.authoringViewComponentChanged();
+            if (answer) {
+                // the author answered yes to delete
+
+                if (this.authoringComponentContent.connectedComponents != null) {
+                    this.authoringComponentContent.connectedComponents.splice(index, 1);
+                }
+
+                // the authoring component content has changed so we will save the project
+                this.authoringViewComponentChanged();
+            }
         }
 
         /**
@@ -5859,10 +5866,9 @@ var GraphController = function () {
                 width: 2,
                 value: x,
                 zIndex: 5
-            };
 
-            // set the plot line into the plot lines array
-            this.plotLines = [plotLine];
+                // set the plot line into the plot lines array
+            };this.plotLines = [plotLine];
         }
 
         /**

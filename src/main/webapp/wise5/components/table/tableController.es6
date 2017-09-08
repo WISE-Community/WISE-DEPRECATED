@@ -2547,12 +2547,19 @@ class TableController {
      */
     authoringDeleteConnectedComponent(index) {
 
-        if (this.authoringComponentContent.connectedComponents != null) {
-            this.authoringComponentContent.connectedComponents.splice(index, 1);
-        }
+        // ask the author if they are sure they want to delete the connected component
+        let answer = confirm(this.$translate('areYouSureYouWantToDeleteThisConnectedComponent'));
 
-        // the authoring component content has changed so we will save the project
-        this.authoringViewComponentChanged();
+        if (answer) {
+            // the author answered yes to delete
+
+            if (this.authoringComponentContent.connectedComponents != null) {
+                this.authoringComponentContent.connectedComponents.splice(index, 1);
+            }
+
+            // the authoring component content has changed so we will save the project
+            this.authoringViewComponentChanged();
+        }
     }
 
     /**

@@ -380,6 +380,21 @@
                        style='width: 3em'/>
                 <br/>
                 <div>
+                    <button ng-click='graphController.showRubricAuthoring = !graphController.showRubricAuthoring'>
+                        {{ 'EDIT_COMPONENT_RUBRIC' | translate }}
+                    </button>
+                    <div ng-if='graphController.showRubricAuthoring'>
+                        <summernote id='{{graphController.summernoteRubricId}}'
+                                    ng-model='graphController.summernoteRubricHTML'
+                                    ng-change='graphController.summernoteRubricHTMLChanged()'
+                                    config='graphController.summernoteRubricOptions'
+                                    ng-model-options='{ debounce: 1000 }'
+                                    rows='10'
+                                    cols='100'>
+                        </summernote>
+                    </div>
+                </div>
+                <div>
                     <div layout='row'>
                         <h6>{{ 'CONNECTED_COMPONENT' | translate }}</h6>
                         <md-button class='topButton md-raised md-primary'
@@ -503,24 +518,14 @@
                         </div>
                     </div>
                 </div>
-                <div>
-                    <button ng-click='graphController.showRubricAuthoring = !graphController.showRubricAuthoring'>
-                        {{ 'EDIT_COMPONENT_RUBRIC' | translate }}
-                    </button>
-                    <div ng-if='graphController.showRubricAuthoring'>
-                        <summernote id='{{graphController.summernoteRubricId}}'
-                                    ng-model='graphController.summernoteRubricHTML'
-                                    ng-change='graphController.summernoteRubricHTMLChanged()'
-                                    config='graphController.summernoteRubricOptions'
-                                    ng-model-options='{ debounce: 1000 }'
-                                    rows='10'
-                                    cols='100'>
-                        </summernote>
-                    </div>
-                </div>
                 <div style='margin-top: 10px; margin-bottom: 10px;'>
-                    <div>
-                        <label>{{ 'tags' | translate }}</label>
+                    <div layout='row'>
+                        <h6>{{ 'tags' | translate }}</h6>
+                        <md-button class='topButton md-raised md-primary'
+                                   ng-click='graphController.addTag()'>
+                            <md-icon>add</md-icon>
+                            <md-tooltip md-direction="top" class="projectButtonTooltip">{{ "addTag" | translate }}</md-tooltip>
+                        </md-button>
                     </div>
                     <div ng-repeat='tag in graphController.authoringComponentContent.tags track by $index'>
                         <div layout='row'>
@@ -546,11 +551,6 @@
                             </md-button>
                         </div>
                     </div>
-                    <md-button class='topButton md-raised md-primary'
-                               ng-click='graphController.addTag()'>
-                        <md-icon>add</md-icon>
-                        <md-tooltip md-direction="top" class="projectButtonTooltip">{{ "addTag" | translate }}</md-tooltip>
-                    </md-button>
                 </div>
                 <div>
                     <button ng-click='graphController.showJSON = !graphController.showJSON'>

@@ -2654,7 +2654,7 @@ var OpenResponseController = function () {
         /**
          * Create a component state with the merged student responses
          * @param componentStates an array of component states
-         * @return a component staet with the merged student responses
+         * @return a component state with the merged student responses
          */
 
     }, {
@@ -2741,12 +2741,19 @@ var OpenResponseController = function () {
         key: 'authoringDeleteConnectedComponent',
         value: function authoringDeleteConnectedComponent(index) {
 
-            if (this.authoringComponentContent.connectedComponents != null) {
-                this.authoringComponentContent.connectedComponents.splice(index, 1);
-            }
+            // ask the author if they are sure they want to delete the connected component
+            var answer = confirm(this.$translate('areYouSureYouWantToDeleteThisConnectedComponent'));
 
-            // the authoring component content has changed so we will save the project
-            this.authoringViewComponentChanged();
+            if (answer) {
+                // the author answered yes to delete
+
+                if (this.authoringComponentContent.connectedComponents != null) {
+                    this.authoringComponentContent.connectedComponents.splice(index, 1);
+                }
+
+                // the authoring component content has changed so we will save the project
+                this.authoringViewComponentChanged();
+            }
         }
 
         /**
