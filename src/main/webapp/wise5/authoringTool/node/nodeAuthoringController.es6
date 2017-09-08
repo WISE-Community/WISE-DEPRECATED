@@ -1052,9 +1052,7 @@ class NodeAuthoringController {
         this.currentNodeCopy = this.UtilService.makeCopyOfJSONObject(this.node);
 
         // save the project
-        return this.ProjectService.saveProject().then(() => {
-            this.$rootScope.$broadcast('parseProject');
-        });;
+        return this.ProjectService.saveProject();
     }
 
     /**
@@ -3840,7 +3838,9 @@ class NodeAuthoringController {
                 this.populateBranchAuthoring();
 
                 // save the project
-                this.authoringViewNodeChanged();
+                this.authoringViewNodeChanged().then(() => {
+                    this.$rootScope.$broadcast('parseProject');
+                });
             }
         }
     }
