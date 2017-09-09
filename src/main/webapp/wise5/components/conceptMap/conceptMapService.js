@@ -1431,6 +1431,161 @@ var ConceptMapService = function (_NodeService) {
             // return the promise
             return deferred.promise;
         }
+
+        /**
+         * Check if the component state has student work. Sometimes a component
+         * state may be created if the student visits a component but doesn't
+         * actually perform any work. This is where we will check if the student
+         * actually performed any work.
+         * @param componentState the component state object
+         * @param componentContent the component content
+         * @return whether the component state has any work
+         */
+
+    }, {
+        key: 'componentStateHasStudentWork',
+        value: function componentStateHasStudentWork(componentState, componentContent) {
+
+            if (componentState != null) {
+
+                var studentData = componentState.studentData;
+
+                if (studentData != null) {
+
+                    var nodes = [];
+                    var links = [];
+                    var conceptMapData = studentData.conceptMapData;
+
+                    if (conceptMapData != null) {
+                        if (conceptMapData.nodes != null) {
+                            nodes = conceptMapData.nodes;
+                        }
+
+                        if (conceptMapData.links != null) {
+                            links = conceptMapData.links;
+                        }
+                    }
+
+                    if (componentContent == null) {
+                        // the component content was not provided
+
+                        if (nodes.length > 0) {
+                            // the student has created a node
+                            return true;
+                        }
+
+                        if (links.length > 0) {
+                            // the student has created a link
+                            return true;
+                        }
+                    } else {
+                        // the component content was provided
+
+                        var starterConceptMap = componentContent.starterConceptMap;
+
+                        if (starterConceptMap == null || starterConceptMap === '') {
+                            // there is no starter concept map
+
+                            if (nodes.length > 0) {
+                                // the student has created a node
+                                return true;
+                            }
+
+                            if (links.length > 0) {
+                                // the student has created a link
+                                return true;
+                            }
+                        } else {
+                            /*
+                             * there is a starter concept map so we will compare it
+                             * with the student concept map
+                             */
+                            if (this.isStudentConceptMapDifferentThanStarterConceptMap(conceptMapData, starterConceptMap)) {
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        /**
+         * Check if the student concept map is different than the starter conept map
+         * @param studentConceptMap the student concept map
+         * @param starterConceptMap the authored starter concept map
+         * @return whether the student concept map is different than the starter
+         * concept map
+         */
+
+    }, {
+        key: 'isStudentConceptMapDifferentThanStarterConceptMap',
+        value: function isStudentConceptMapDifferentThanStarterConceptMap(studentConceptMap, starterConceptMap) {
+
+            if (studentConceptMap != null && starterConceptMap != null) {
+
+                var studentNodes = studentConceptMap.nodes;
+                var studentLinks = studentConceptMap.links;
+
+                var starterNodes = starterConceptMap.nodes;
+                var starterLinks = starterConceptMap.links;
+
+                if (studentNodes.length == starterNodes.length) {
+                    /*
+                     * the student has the same number of nodes as the starter so
+                     * we will need to check if the nodes area actually different
+                     */
+
+                    // loop through all the nodes
+                    for (var n = 0; n < studentNodes.length; n++) {
+                        var studentNode = studentNodes[n];
+                        var starterNode = starterNodes[n];
+
+                        if (studentNode != null && starterNode != null) {
+
+                            // check if any of the fields have different values
+                            if (studentNode.originalId != starterNode.originalId || studentNode.instanceId != starterNode.instanceId || studentNode.x != starterNode.x || studentNode.y != starterNode.y) {
+
+                                // the student node is different than the starter node
+                                return true;
+                            }
+                        }
+                    }
+                } else {
+                    // the student has a different number of nodes
+                    return true;
+                }
+
+                if (studentLinks.length == starterLinks.length) {
+                    /*
+                     * the student has the same number of links as the starter so
+                     * we will need to check if the links area actually different
+                     */
+
+                    // loop through all the links
+                    for (var l = 0; l < studentLinks.length; l++) {
+                        var studentLink = studentLinks[l];
+                        var starterLink = starterLinks[l];
+
+                        if (studentLink != null && starterLink != null) {
+
+                            // check if any of the fields have different values
+                            if (studentLink.label != starterLink.label || studentLink.originalId != starterLink.originalId || studentLink.instanceId != starterLink.instanceId || studentLink.sourceNodeOriginalId != starterLink.sourceNodeOriginalId || studentLink.sourceNodeInstanceId != starterLink.sourceNodeInstanceId || studentLink.destinationNodeOriginalId != starterLink.destinationNodeOriginalId || studentLink.destinationNodeInstanceId != starterLink.destinationNodeInstanceId) {
+
+                                // the student link is different than the starter link
+                                return true;
+                            }
+                        }
+                    }
+                } else {
+                    // the student has a different number of links
+                    return true;
+                }
+            }
+
+            return false;
+        }
     }]);
 
     return ConceptMapService;
