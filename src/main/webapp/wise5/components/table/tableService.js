@@ -253,6 +253,7 @@ var TableService = function (_NodeService) {
          * actually perform any work. This is where we will check if the student
          * actually performed any work.
          * @param componentState the component state object
+         * @param componentContent the component content
          * @return whether the component state has any work
          */
 
