@@ -14,6 +14,7 @@
     "all": "All",
     "any": "Any",
     "areYouSureYouWantToCopyThisProject": "Are you sure you want to copy this project?",
+    "areYouSureYouWantToDeleteThisConnectedComponent": "Are you sure you want to delete this connected component?",
     "areYouSureYouWantToDeleteThisFile": "Are you sure you want to delete this file?",
     "areYouSureYouWantToDeleteThisTag": "Are you sure you want to delete this tag?",
     "areYouSureYouWantToReduceTheNumberOfBranchesToX": "Are you sure you want to reduce the number of branches to {{createBranchNumberOfBranches}}?",

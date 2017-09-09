@@ -119,6 +119,16 @@ class TableController {
             }
         ];
 
+        // the component types we are allowed to connect to
+        this.allowedConnectedComponentTypes = [
+            {
+                type: 'Graph'
+            },
+            {
+                type: 'Table'
+            }
+        ];
+
         // get the current node and node id
         var currentNode = this.StudentDataService.getCurrentNode();
         if (currentNode != null) {
@@ -2727,6 +2737,33 @@ class TableController {
 
         // the authoring component content has changed so we will save the project
         this.authoringViewComponentChanged();
+    }
+
+    /**
+     * Check if we are allowed to connect to this component type
+     * @param componentType the component type
+     * @return whether we can connect to the component type
+     */
+    isConnectedComponentTypeAllowed(componentType) {
+
+        if (componentType != null) {
+
+            let allowedConnectedComponentTypes = this.allowedConnectedComponentTypes;
+
+            // loop through the allowed connected component types
+            for (let a = 0; a < allowedConnectedComponentTypes.length; a++) {
+                let allowedConnectedComponentType = allowedConnectedComponentTypes[a];
+
+                if (allowedConnectedComponentType != null) {
+                    if (componentType == allowedConnectedComponentType.type) {
+                        // the component type is allowed
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
     }
 }
 
