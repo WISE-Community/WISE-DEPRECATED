@@ -4,6 +4,8 @@ jdk:
 before_install:
 - nvm install 5.0
 - nvm use 5.0
+- npm install jspm
+- jspm config endpoints.github.auth $JSPM_GITHUB_AUTH_TOKEN
 before_script:
 - ./wise.sh run &
 - sleep 210
