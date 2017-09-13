@@ -222,6 +222,18 @@ class GraphController {
             }
         ];
 
+        // the options for the x axis types
+        this.availableXAxisTypes = [
+            {
+                value: 'limits',
+                text: 'Limits'
+            },
+            {
+                value: 'categories',
+                text: 'Categories'
+            }
+        ]
+
         // the width of the graph
         this.width = null;
 
@@ -1275,12 +1287,11 @@ class GraphController {
                                 yAxisUnits = this.series.yAxis.userOptions.units;
                             }
 
-                            if (this.series.type === 'line' || this.series.type === 'scatter') {
-                                // the series is a line or scatter plot
+                            if (thisGraphController.xAxis.type == null ||
+                                thisGraphController.xAxis.type === '' ||
+                                thisGraphController.xAxis.type === 'limits') {
 
                                 var text = '';
-
-                                // get the series name
                                 var seriesName = this.series.name;
 
                                 // get the x and y values
@@ -1333,12 +1344,9 @@ class GraphController {
                                 }
 
                                 return text;
-                            } else if (this.series.type === 'column') {
-                                // the series is a column graph
+                            } else if (thisGraphController.xAxis.type === 'categories') {
 
                                 var text = '';
-
-                                // get the series name
                                 var seriesName = this.series.name;
 
                                 // get the x and y values
@@ -1351,7 +1359,7 @@ class GraphController {
                                 }
 
                                 if (x != null && x != '') {
-                                    // get the x valuen
+                                    // get the x value
                                     xText += x;
                                 }
 
@@ -1376,7 +1384,6 @@ class GraphController {
                     plotBackgroundImage: this.backgroundImage,
                     events: {
                         click: function(e) {
-
                             if (thisGraphController.graphType == 'line' ||
                                 thisGraphController.graphType == 'scatter') {
                                 // only attempt to add a new point if the graph type is line or scatter
@@ -1533,13 +1540,13 @@ class GraphController {
                                                 var data = activeSeries.data;
 
                                                 if (data != null) {
-
                                                     // update the point
-                                                    if (thisGraphController.graphType == 'line' ||
-                                                        thisGraphController.graphType == 'scatter') {
+                                                    if (thisGraphController.xAxis.type == null ||
+                                                        thisGraphController.xAxis.type === '' ||
+                                                        thisGraphController.xAxis.type === 'limits') {
 
                                                         data[index] = [x, y];
-                                                    } else if (thisGraphController.graphType == 'column') {
+                                                    } else if (thisGraphController.xAxis.type == 'categories') {
                                                         data[index] = y;
                                                     }
 
@@ -1641,7 +1648,12 @@ class GraphController {
             var data = series.data;
 
             if (data != null) {
-                data.push([x, y]);
+                if (this.componentContent.xAxis.type == 'categories') {
+                    data[x] = y;
+                } else {
+                    // the x axis type is limits
+                    data.push([x, y]);
+                }
             }
         }
     };
@@ -2428,7 +2440,15 @@ class GraphController {
                 //this.$scope.$apply();
             }
 
-            this.$scope.$emit('componentStudentDataChanged', {nodeId: this.nodeId, componentId: componentId, componentState: componentState});
+            /*
+             * fire the componentStudentDataChanged event after a short timeout
+             * so that the other component handleConnectedComponentStudentDataChanged()
+             * listeners can initialize before this and are then able to process
+             * this componentStudentDataChanged event
+             */
+            this.$timeout(() => {
+                this.$scope.$emit('componentStudentDataChanged', {nodeId: this.nodeId, componentId: componentId, componentState: componentState});
+            }, 100);
         });
     };
 
@@ -4899,12 +4919,11 @@ class GraphController {
 
         if (series != null && series.data != null) {
 
-            if (this.authoringComponentContent.graphType === 'line' ||
-                this.authoringComponentContent.graphType === 'scatter') {
-
+            if (this.authoringComponentContent.xAxis.type == null ||
+                this.authoringComponentContent.xAxis.type === 'limits') {
                 // add an empty data point to the series
                 series.data.push([]);
-            } else if (this.authoringComponentContent.graphType === 'column') {
+            } else if (this.authoringComponentContent.xAxis.type === 'categories') {
                 // add an empty data point to the series
                 series.data.push(null);
             }
@@ -4995,42 +5014,44 @@ class GraphController {
      */
     authoringViewGraphTypeChanged(newValue, oldValue) {
 
-        // ask if the author is sure they want to change the graph type
-        var answer = confirm(this.$translate('graph.areYouSureYouWantToChangeTheGraphType'));
+        // the authoring component content has changed so we will save the project
+        this.authoringViewComponentChanged();
+    }
+
+    /**
+     * The author has changed the x axis type
+     * @param newValue the new x axis type
+     * @param oldValue the old x axis type
+     */
+    authoringViewXAxisTypeChanged(newValue, oldValue) {
+        // ask the author if they are sure they want to change the x axis type
+        let answer = confirm(this.$translate('graph.areYouSureYouWantToChangeTheXAxisType'));
 
         if (answer) {
-            // the author answered yes so we will change the graph type
-
-            if (newValue === 'line' || newValue === 'scatter') {
-                // the new value is a line or scatter plot
-
-                if (oldValue === 'column') {
-                    // the graph type is changing from a column to a line or scatter
+            // the author answered yes to change the type
+            if (newValue === 'limits') {
+                if (oldValue === 'categories') {
+                    // the graph type is changing from categories to limits
+                    delete this.authoringComponentContent.xAxis.categories;
                     this.authoringComponentContent.xAxis.min = 0;
                     this.authoringComponentContent.xAxis.max = 10;
                     this.authoringConvertAllSeriesDataPoints(newValue);
-                    this.authoringAddSymbolsToSeries();
                 }
-                delete this.authoringComponentContent.xAxis.categories;
-            } else if (newValue === 'column') {
-                // the new value is a column plot
-
-                if (oldValue === 'line' || oldValue === 'scatter') {
-                    // the graph type is changing from a line or scatter to a column
+            } else if (newValue === 'categories') {
+                if (oldValue === 'limits' || oldValue === '' || oldValue == null) {
+                    // the graph type is changing from limits to categories
                     delete this.authoringComponentContent.xAxis.min;
                     delete this.authoringComponentContent.xAxis.max;
                     delete this.authoringComponentContent.xAxis.units;
                     delete this.authoringComponentContent.yAxis.units;
                     this.authoringComponentContent.xAxis.categories = [];
                     this.authoringConvertAllSeriesDataPoints(newValue);
-                    this.authoringRemoveSymbolsFromSeries();
                 }
             }
         } else {
-            // the author answered no so we will not change the graph type
-
-            // revert the graph type to the previous value
-            this.authoringComponentContent.graphType = oldValue;
+            // the author answered no so we will not change the type
+            // revert the x axis type
+            this.authoringComponentContent.xAxis.type = oldValue;
         }
 
         // the authoring component content has changed so we will save the project
@@ -5063,34 +5084,10 @@ class GraphController {
     }
 
     /**
-     * Remove symbols from all the series
-     */
-    authoringRemoveSymbolsFromSeries() {
-
-        // get all the series
-        var series = this.authoringComponentContent.series;
-
-        if (series != null) {
-
-            // loop through all the series
-            for (var s = 0; s < series.length; s++) {
-
-                // get a series
-                var tempSeries = series[s];
-
-                if (tempSeries != null) {
-                    // delete the marker object which contains the symbol
-                    delete tempSeries.marker;
-                }
-            }
-        }
-    }
-
-    /**
      * Convert the data points in all the series
-     * @param graphType the new graph type to convert the data points to
+     * @param graphType the x axis type to convert the data points to
      */
-    authoringConvertAllSeriesDataPoints(graphType) {
+    authoringConvertAllSeriesDataPoints(xAxisType) {
 
         // get all the series
         var series = this.authoringComponentContent.series;
@@ -5104,7 +5101,7 @@ class GraphController {
                 var tempSeries = series[s];
 
                 // convert the data points in the series
-                this.convertSeriesDataPoints(tempSeries, graphType);
+                this.convertSeriesDataPoints(tempSeries, xAxisType);
             }
         }
     }
@@ -5112,9 +5109,9 @@ class GraphController {
     /**
      * Convert all the data points in the series
      * @param series convert the data points in the series
-     * @param newGraphType the new graph type to convert to
+     * @param xAxisType the new x axis type to convert to
      */
-    convertSeriesDataPoints(series, newGraphType) {
+    convertSeriesDataPoints(series, xAxisType) {
 
         if (series != null && series.data != null) {
 
@@ -5128,9 +5125,7 @@ class GraphController {
             for (var d = 0; d < data.length; d++) {
                 var oldDataPoint = data[d];
 
-                if (newGraphType === 'line' || newGraphType === 'scatter') {
-                    // the new graph type is a line or scatter
-
+                if (xAxisType == null || xAxisType === '' || xAxisType === 'limits') {
                     if (!Array.isArray(oldDataPoint)) {
                         /*
                          * the old data point is not an array which means it is
@@ -5146,9 +5141,7 @@ class GraphController {
                         newData.push(oldDataPoint);
                     }
 
-                } else if (newGraphType === 'column') {
-                    // the new graph type is a column
-
+                } else if (xAxisType === 'categories') {
                     if (Array.isArray(oldDataPoint)) {
                         /*
                          * the old data point is an array which is most likely
@@ -5285,7 +5278,7 @@ class GraphController {
     authoringDeleteConnectedComponent(index) {
 
         // ask the author if they are sure they want to delete the connected component
-        let answer = confirm(this.$translate('areYouSureYouWantToDeleteThisConnectedComponent'));
+        let answer = confirm(this.$translate('graph.areYouSureYouWantToDeleteThisConnectedComponent'));
 
         if (answer) {
             // the author answered yes to delete

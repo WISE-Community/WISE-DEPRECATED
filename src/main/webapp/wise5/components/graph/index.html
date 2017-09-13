@@ -56,7 +56,18 @@
                                ng-model-options='{ debounce: 1000 }'
                                ng-change='graphController.authoringViewComponentChanged()'/>
                     </md-input-container>
-                    <div ng-if='graphController.authoringComponentContent.graphType == "line" || graphController.authoringComponentContent.graphType == "scatter"'>
+                    <md-input-container style='margin-right: 20px; width: 120px;'>
+                        <label>{{ 'graph.axisType' | translate }}</label>
+                        <md-select ng-model='graphController.authoringComponentContent.xAxis.type'
+                                   ng-change='graphController.authoringViewXAxisTypeChanged(graphController.authoringComponentContent.xAxis.type, "{{graphController.authoringComponentContent.xAxis.type}}")'
+                                   style='width: 120px'>
+                            <md-option ng-repeat='availableAxisType in graphController.availableXAxisTypes'
+                                       value='{{availableAxisType.value}}'>
+                                {{availableAxisType.text}}
+                            </md-option>
+                        </md-select>
+                    </md-input-container>
+                    <div ng-if='graphController.authoringComponentContent.xAxis.type === "limits" || graphController.authoringComponentContent.xAxis.type === "" || graphController.authoringComponentContent.xAxis.type == null'>
                         <md-input-container style='margin-right: 20px; width: 100px;'>
                             <label>{{ 'graph.units' | translate }}</label>
                             <input ng-model='graphController.authoringComponentContent.xAxis.units'
@@ -84,7 +95,7 @@
                             </md-checkbox>
                         </md-input-container>
                     </div>
-                    <div ng-if='graphController.authoringComponentContent.graphType == "column"'
+                    <div ng-if='graphController.authoringComponentContent.xAxis.type == "categories"'
                          style='margin-right: 10px'>
                         <md-input-container>
                             <span>{{ 'graph.categories' | translate }}</span>
@@ -96,8 +107,6 @@
                                 <md-tooltip md-direction='top' class='projectButtonTooltip'>Add Category</md-tooltip>
                             </md-button>
                         </md-input-container>
-                    </div>
-                    <div ng-if='graphController.authoringComponentContent.graphType == "column"'>
                         <div ng-repeat='category in graphController.authoringComponentContent.xAxis.categories track by $index'>
                             <md-input-container>
                                 <label>{{ 'graph.categoryName' | translate }}</label>
@@ -290,31 +299,31 @@
                         {{ 'graph.thisSeriesHasNoStarterDataPoints' | translate }}
                     </div>
                     <div ng-repeat='dataPoint in series.data track by $index'>
-                    <span ng-if='graphController.authoringComponentContent.graphType == "line" || graphController.authoringComponentContent.graphType == "scatter"'>
-                        <md-input-container>
-                            <label>{{ 'graph.x' | translate }}</label>
-                            <input type='number'
-                                   ng-model='series.data[$index][0]'
-                                   style='width:5em'
-                                   ng-change='graphController.authoringViewComponentChanged()'/>
-                        </md-input-container>
-                        <md-input-container>
-                            <label>{{ 'graph.y' | translate }}</label>
-                            <input type='number'
-                                   ng-model='series.data[$index][1]'
-                                   style='width:5em'
-                                   ng-change='graphController.authoringViewComponentChanged()'/>
-                        </md-input-container>
-                    </span>
-                        <span ng-if='graphController.authoringComponentContent.graphType == "column"'>
-                        <md-input-container>
-                            <label>{{graphController.authoringComponentContent.xAxis.categories[$index]}}</label>
-                            <input type='number'
-                                   ng-model='series.data[$index]'
-                                   style='width:5em'
-                                   ng-change='graphController.authoringViewComponentChanged()'/>
-                        </md-input-container>
-                    </span>
+                        <span ng-if='graphController.authoringComponentContent.xAxis.type === "limits" || graphController.authoringComponentContent.xAxis.type === "" || graphController.authoringComponentContent.xAxis.type == null'>
+                            <md-input-container>
+                                <label>{{ 'graph.x' | translate }}</label>
+                                <input type='number'
+                                       ng-model='series.data[$index][0]'
+                                       style='width:5em'
+                                       ng-change='graphController.authoringViewComponentChanged()'/>
+                            </md-input-container>
+                            <md-input-container>
+                                <label>{{ 'graph.y' | translate }}</label>
+                                <input type='number'
+                                       ng-model='series.data[$index][1]'
+                                       style='width:5em'
+                                       ng-change='graphController.authoringViewComponentChanged()'/>
+                            </md-input-container>
+                        </span>
+                        <span ng-if='graphController.authoringComponentContent.xAxis.type === "categories"'>
+                            <md-input-container>
+                                <label>{{graphController.authoringComponentContent.xAxis.categories[$index]}}</label>
+                                <input type='number'
+                                       ng-model='series.data[$index]'
+                                       style='width:5em'
+                                       ng-change='graphController.authoringViewComponentChanged()'/>
+                            </md-input-container>
+                        </span>
                         <md-button class='topButton md-raised md-primary'
                                    ng-click='graphController.authoringMoveSeriesDataPointUp(series, $index)'>
                             <md-icon>arrow_upward</md-icon>

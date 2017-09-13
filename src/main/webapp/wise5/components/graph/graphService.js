@@ -70,7 +70,7 @@ var GraphService = function (_NodeService) {
             component.canDeleteTrials = false;
             component.hideAllTrialsOnNewTrial = false;
             component.canStudentHideSeriesOnLegendClick = false;
-            component.roundValuesTo = "hundredth";
+            component.roundValuesTo = 'integer';
             component.graphType = 'line';
             component.xAxis = {
                 title: {
@@ -79,7 +79,8 @@ var GraphService = function (_NodeService) {
                 min: 0,
                 max: 10,
                 units: this.$translate('graph.secondsUnit'),
-                locked: true
+                locked: true,
+                type: 'limits'
             };
             component.yAxis = {
                 title: {
