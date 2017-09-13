@@ -4,12 +4,13 @@ jdk:
 before_install:
 - nvm install 5.0
 - nvm use 5.0
+- npm install -g jspm
+- jspm config endpoints.github.auth $JSPM_GITHUB_AUTH_TOKEN
 before_script:
 - ./wise.sh run &
 - sleep 210
 script:
 - npm test
-- npm run test-e2e
 notifications:
   email:
   - honchikun@gmail.com
