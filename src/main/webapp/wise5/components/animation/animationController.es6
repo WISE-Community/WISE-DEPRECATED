@@ -381,23 +381,6 @@ class AnimationController {
                 } else if (this.UtilService.hasConnectedComponent(this.componentContent)) {
                     // we will import work from another component
                     this.handleConnectedComponents();
-                } else if (componentState == null) {
-                    // check if we need to import work
-
-                    var importPreviousWorkNodeId = this.getImportPreviousWorkNodeId();
-                    var importPreviousWorkComponentId = this.getImportPreviousWorkComponentId();
-
-                    if (importPreviousWorkNodeId != null && importPreviousWorkComponentId != null) {
-                        // import the work from the other component
-                        this.importWork();
-                    } else if (this.UtilService.hasConnectedComponent(this.componentContent)) {
-                        /*
-                         * the student does not have any work and there are connected
-                         * components so we will get the work from the connected
-                         * components
-                         */
-                        this.handleConnectedComponents();
-                    }
                 }
             } else {
                 // populate the student work into this component
