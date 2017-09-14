@@ -7,6 +7,8 @@
 // -----------------------------------------------------------------------------
 
 var gulp = require('gulp');
+const babel = require('gulp-babel');
+const sourcemaps = require('gulp-sourcemaps');
 var autoprefixer = require('autoprefixer');
 var cssnano = require('cssnano');
 var fs = require('fs');
@@ -16,7 +18,6 @@ var newer = require('gulp-newer');
 var postcss = require('gulp-postcss');
 var print = require('gulp-print');
 var sass = require('gulp-sass');
-var sourcemaps = require('gulp-sourcemaps');
 //var rtlscss = require('rtlcss');
 
 // -----------------------------------------------------------------------------
@@ -24,45 +25,66 @@ var sourcemaps = require('gulp-sourcemaps');
 // -----------------------------------------------------------------------------
 
 var sassOptions = { style: 'compact' };
-var paths = ['./src/main/webapp/wise5/style/**/*.scss', './src/main/webapp/wise5/themes/*/style/**/*.scss'];
-var autoprefixerOptions = { browsers: ['> 5%', 'last 2 versions', 'Firefox ESR', 'not ie <= 10'] };
+var paths = ['./src/main/webapp/wise5/style/**/*.scss',
+    './src/main/webapp/wise5/themes/*/style/**/*.scss'];
+var autoprefixerOptions = { browsers: ['> 5%', 'last 2 versions',
+    'Firefox ESR', 'not ie <= 10'] };
 
 // -----------------------------------------------------------------------------
 // Sass compilation
 // -----------------------------------------------------------------------------
 gulp.task('compile-sass', function() {
-    return gulp
-        .src(paths, {base: './'})
-        .pipe(gulpif(global.isWatching, newer({dest: './', ext: '.css', extra: paths })))
-        .pipe(sourcemaps.init())
-        .pipe(sass(sassOptions).on('error', sass.logError))
-        .pipe(postcss([ autoprefixer(autoprefixerOptions), cssnano({zindex: false})/*, rtlcss*/ ]) )
-        .pipe(sourcemaps.write('.'))
-        //.pipe(rename({suffix: ".min"}))
-        .pipe(gulp.dest('./'))
-        .pipe(print(function(filepath) {
-            return "Compiled: " + filepath;
-        }));
-        //.pipe(gulp.dest(function(file) {
-            //return file.base;
-        //}));
+  return gulp
+    .src(paths, {base: './'})
+    .pipe(gulpif(global.isWatching,
+        newer({dest: './', ext: '.css', extra: paths })))
+    .pipe(sourcemaps.init())
+    .pipe(sass(sassOptions).on('error', sass.logError))
+    .pipe(postcss([ autoprefixer(autoprefixerOptions),
+        cssnano({zindex: false})/*, rtlcss*/ ]) )
+    .pipe(sourcemaps.write('.'))
+    //.pipe(rename({suffix: ".min"}))
+    .pipe(gulp.dest('./'))
+    .pipe(print(function(filepath) {
+      return "Compiled: " + filepath;
+    }));
+    //.pipe(gulp.dest(function(file) {
+      //return file.base;
+    //}));
 });
 
 // -----------------------------------------------------------------------------
 // Watchers
 // -----------------------------------------------------------------------------
 gulp.task('set-watch', function() {
-    global.isWatching = true;
+  global.isWatching = true;
 });
 
 gulp.task('watch-sass', ['set-watch'], function() {
-    return gulp
-        // Watch folders for *.scss changes in the specified paths,
-        // and run `compile-sass` task on change
-        .watch(paths, ['compile-sass'])
-        .on('change', function(event) {
-            console.log('File ' + event.path + ' was ' + event.type);
-        });
+  return gulp
+    // Watch folders for *.scss changes in the specified paths,
+    // and run `compile-sass` task on change
+    .watch(paths, ['compile-sass'])
+    .on('change', function(event) {
+      console.log('File ' + event.path + ' was ' + event.type);
+    });
+});
+
+gulp.task('transpile', function() {
+  return gulp.watch(["./src/main/webapp/wise5/**/*.es6"])
+    .on("change", function(event) {
+      const changedFilePath = event.path;
+      const changedFileDir =
+        changedFilePath.substr(0, changedFilePath.lastIndexOf("/"));
+      console.log("transpiled: " + changedFilePath);
+      gulp.src(changedFilePath)
+        .pipe(sourcemaps.init())
+        .pipe(babel({
+          presets: ['es2015']
+        }))
+        .pipe(sourcemaps.write('.'))
+        .pipe(gulp.dest(changedFileDir));
+    });
 });
 
 // -----------------------------------------------------------------------------
@@ -70,63 +92,66 @@ gulp.task('watch-sass', ['set-watch'], function() {
 // Removes extra keys from foreignLocale
 // -----------------------------------------------------------------------------
 gulp.task('update-i18n', function() {
-    var supportedLocales = ['ar','es','fr','de','el','iw','ja','ko','nl','pt','tr','zh_CN','zh_TW'];
-    // update WISE5 i18n files
-    var wise5_i18n_folders = [
-        './src/main/webapp/wise5/i18n/',
-        './src/main/webapp/wise5/authoringTool/i18n/',
-        './src/main/webapp/wise5/classroomMonitor/i18n/',
-        './src/main/webapp/wise5/vle/i18n/',
-        './src/main/webapp/wise5/components/audioOscillator/i18n/',
-        './src/main/webapp/wise5/components/conceptMap/i18n/',
-        './src/main/webapp/wise5/components/discussion/i18n/',
-        './src/main/webapp/wise5/components/draw/i18n/',
-        './src/main/webapp/wise5/components/embedded/i18n/',
-        './src/main/webapp/wise5/components/graph/i18n/',
-        './src/main/webapp/wise5/components/html/i18n/',
-        './src/main/webapp/wise5/components/label/i18n/',
-        './src/main/webapp/wise5/components/match/i18n/',
-        './src/main/webapp/wise5/components/multipleChoice/i18n/',
-        './src/main/webapp/wise5/components/openResponse/i18n/',
-        './src/main/webapp/wise5/components/outsideURL/i18n/',
-        './src/main/webapp/wise5/components/table/i18n/'
-    ];
-    var updatedAtLeasetOneI18NFile = false;  // set to true iff there was at least one i18n file change
-    wise5_i18n_folders.map(function(i18n_folder) {
-        var english = JSON.parse(fs.readFileSync(i18n_folder + "i18n_en.json"));
-        supportedLocales.map(function(supportedLocale) {
-            var result = JSON.parse(fs.readFileSync(i18n_folder + "i18n_en.json"));
-            var foreignLocale = {};
-            try {
-              // if the file doesn't exist, it will throw an exception
-              foreignLocale = JSON.parse(fs.readFileSync(i18n_folder + "i18n_" + supportedLocale + ".json"));
-            } catch (ex) {
-              // do nothing. we'll use the default {} object
-            }
-            for (var key in foreignLocale) {
-              if (result[key]) {
-                result[key] = foreignLocale[key];
-              }
-            }
-            // now look for keys that don't exist in the foreignLocale and set value to ""
-            for (var key in english) {
-              if (foreignLocale[key] == null || foreignLocale[key] == "") {
-                  //result[key] = "";
-                  //updatedAtLeasetOneI18NFile = true;
-                  delete result[key];
-              }
-            }
+  var supportedLocales = ['ar','es','fr','de','el','iw','ja','ko',
+    'nl','pt','tr','zh_CN','zh_TW'];
 
-            var jsonReplacer = null;
-            var jsonSpace = 4;  // use 4 spaces
-            var result = JSON.stringify(result, jsonReplacer, jsonSpace);
-            fs.writeFileSync(i18n_folder + "i18n_" + supportedLocale + ".json", result);
-        });
+  // update WISE5 i18n files
+  var wise5_i18n_folders = [
+    './src/main/webapp/wise5/i18n/',
+    './src/main/webapp/wise5/authoringTool/i18n/',
+    './src/main/webapp/wise5/classroomMonitor/i18n/',
+    './src/main/webapp/wise5/vle/i18n/',
+    './src/main/webapp/wise5/components/audioOscillator/i18n/',
+    './src/main/webapp/wise5/components/conceptMap/i18n/',
+    './src/main/webapp/wise5/components/discussion/i18n/',
+    './src/main/webapp/wise5/components/draw/i18n/',
+    './src/main/webapp/wise5/components/embedded/i18n/',
+    './src/main/webapp/wise5/components/graph/i18n/',
+    './src/main/webapp/wise5/components/html/i18n/',
+    './src/main/webapp/wise5/components/label/i18n/',
+    './src/main/webapp/wise5/components/match/i18n/',
+    './src/main/webapp/wise5/components/multipleChoice/i18n/',
+    './src/main/webapp/wise5/components/openResponse/i18n/',
+    './src/main/webapp/wise5/components/outsideURL/i18n/',
+    './src/main/webapp/wise5/components/table/i18n/'
+  ];
+  var updatedAtLeasetOneI18NFile = false;
+  wise5_i18n_folders.map(function(i18n_folder) {
+    var english = JSON.parse(fs.readFileSync(i18n_folder + "i18n_en.json"));
+    supportedLocales.map(function(supportedLocale) {
+      var result = JSON.parse(fs.readFileSync(i18n_folder + "i18n_en.json"));
+      var foreignLocale = {};
+      try {
+        // if the file doesn't exist, it will throw an exception
+        foreignLocale = JSON.parse(fs.readFileSync(i18n_folder +
+            "i18n_" + supportedLocale + ".json"));
+      } catch (ex) {
+        // do nothing. we'll use the default {} object
+      }
+      for (var key in foreignLocale) {
+        if (result[key]) {
+        result[key] = foreignLocale[key];
+        }
+      }
+      // look for keys that don't exist in the foreignLocale and set value to ""
+      for (var key in english) {
+        if (foreignLocale[key] == null || foreignLocale[key] == "") {
+          delete result[key];
+        }
+      }
+
+      var jsonReplacer = null;
+      var jsonSpace = 4;  // use 4 spaces
+      var result = JSON.stringify(result, jsonReplacer, jsonSpace);
+      fs.writeFileSync(i18n_folder +
+          "i18n_" + supportedLocale + ".json", result);
     });
-    if (updatedAtLeasetOneI18NFile) {
-        console.log("I18N file(s) were updated as a result of running gulp update-i18n task.");
-        process.exit(1);
-    }
+  });
+  if (updatedAtLeasetOneI18NFile) {
+    console.log("I18N file(s) were updated as a result of " +
+        "running gulp update-i18n task.");
+    process.exit(1);
+  }
 });
 
 
