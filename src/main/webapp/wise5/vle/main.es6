@@ -35,7 +35,7 @@ import LabelComponentModule from '../components/label/labelComponentModule';
 import MatchComponentModule from '../components/match/matchComponentModule';
 import MultipleChoiceComponentModule from '../components/multipleChoice/multipleChoiceComponentModule';
 import NavigationController from './navigation/navigationController';
-import NodeController from '../node/nodeController';
+import NodeController from './node/nodeController';
 import NodeService from '../services/nodeService';
 import NotebookService from '../services/notebookService';
 import NotificationService from '../services/notificationService';
@@ -53,9 +53,6 @@ import UtilService from '../services/utilService';
 import VLEController from './vleController';
 import ocLazyLoad from 'oclazyload';
 import moment from 'moment';
-
-//import bootstrap from 'bootstrap';
-//import summernote from 'summernote';
 import angularSummernote from 'lib/angular-summernote/dist/angular-summernote.min';
 
 let vleModule = angular.module('vle', [
@@ -127,7 +124,6 @@ let vleModule = angular.module('vle', [
          $mdThemingProvider,
          $httpProvider,
          $provide) => {
-
             $urlRouterProvider.otherwise('/vle/');
 
             angular.module('vle').$controllerProvider = $controllerProvider;
@@ -221,7 +217,7 @@ let vleModule = angular.module('vle', [
                         'nodeView': {
                             templateProvider: ['$http', 'ConfigService', function ($http, ConfigService) {
                                 let wiseBaseURL = ConfigService.getWISEBaseURL();
-                                return $http.get(wiseBaseURL + '/wise5/node/index.html').then(
+                                return $http.get(wiseBaseURL + '/wise5/vle/node/index.html').then(
                                     response => {
                                         return response.data;
                                     }
@@ -238,7 +234,7 @@ let vleModule = angular.module('vle', [
                         'nodeView': {
                             templateProvider: ['$http', 'ConfigService', function ($http, ConfigService) {
                                 let wiseBaseURL = ConfigService.getWISEBaseURL();
-                                return $http.get(wiseBaseURL + '/wise5/node/index.html').then(
+                                return $http.get(wiseBaseURL + '/wise5/vle/node/index.html').then(
                                     response => {
                                         return response.data;
                                     }
@@ -363,5 +359,4 @@ let vleModule = angular.module('vle', [
             });
         }
     ]);
-
 export default vleModule;

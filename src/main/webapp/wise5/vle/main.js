@@ -144,7 +144,7 @@ var _navigationController = require('./navigation/navigationController');
 
 var _navigationController2 = _interopRequireDefault(_navigationController);
 
-var _nodeController = require('../node/nodeController');
+var _nodeController = require('./node/nodeController');
 
 var _nodeController2 = _interopRequireDefault(_nodeController);
 
@@ -223,7 +223,6 @@ var _angularSummernote2 = _interopRequireDefault(_angularSummernote);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var vleModule = _angular2.default.module('vle', [(0, _angularDragula2.default)(_angular2.default), 'angularMoment', 'angular-toArrayFilter', 'animationComponentModule', 'audioOscillatorComponentModule', 'components', 'conceptMapComponentModule', 'discussionComponentModule', 'drawComponentModule', 'embeddedComponentModule', 'filters', 'graphComponentModule', 'highcharts-ng', 'htmlComponentModule', 'labelComponentModule', 'matchComponentModule', 'multipleChoiceComponentModule', 'ngAria', 'ngFileUpload', 'ngMaterial', 'ngSanitize', 'ngWebSocket', 'oc.lazyLoad', 'openResponseComponentModule', 'outsideURLComponentModule', 'pascalprecht.translate', 'studentAsset', 'summernote', 'tableComponentModule', 'ui.router', 'ui.scrollpoint']).service(_achievementService2.default.name, _achievementService2.default).service(_annotationService2.default.name, _annotationService2.default).service(_configService2.default.name, _configService2.default).service(_cRaterService2.default.name, _cRaterService2.default).service(_httpInterceptor2.default.name, _httpInterceptor2.default).service(_nodeService2.default.name, _nodeService2.default).service(_notebookService2.default.name, _notebookService2.default).service(_notificationService2.default.name, _notificationService2.default).service(_projectService2.default.name, _projectService2.default).service(_sessionService2.default.name, _sessionService2.default).service(_studentAssetService2.default.name, _studentAssetService2.default).service(_studentDataService2.default.name, _studentDataService2.default).service(_studentStatusService2.default.name, _studentStatusService2.default).service(_studentWebSocketService2.default.name, _studentWebSocketService2.default).service(_utilService2.default.name, _utilService2.default).controller(_navigationController2.default.name, _navigationController2.default).controller(_nodeController2.default.name, _nodeController2.default).controller(_vleController2.default.name, _vleController2.default).filter(_filters2.default.name, _filters2.default).config(['$urlRouterProvider', '$stateProvider', '$translateProvider', '$translatePartialLoaderProvider', '$controllerProvider', '$mdThemingProvider', '$httpProvider', '$provide', function ($urlRouterProvider, $stateProvider, $translateProvider, $translatePartialLoaderProvider, $controllerProvider, $mdThemingProvider, $httpProvider, $provide) {
-
     $urlRouterProvider.otherwise('/vle/');
 
     _angular2.default.module('vle').$controllerProvider = $controllerProvider;
@@ -314,7 +313,7 @@ var vleModule = _angular2.default.module('vle', [(0, _angularDragula2.default)(_
             'nodeView': {
                 templateProvider: ['$http', 'ConfigService', function ($http, ConfigService) {
                     var wiseBaseURL = ConfigService.getWISEBaseURL();
-                    return $http.get(wiseBaseURL + '/wise5/node/index.html').then(function (response) {
+                    return $http.get(wiseBaseURL + '/wise5/vle/node/index.html').then(function (response) {
                         return response.data;
                     });
                 }],
@@ -328,7 +327,7 @@ var vleModule = _angular2.default.module('vle', [(0, _angularDragula2.default)(_
             'nodeView': {
                 templateProvider: ['$http', 'ConfigService', function ($http, ConfigService) {
                     var wiseBaseURL = ConfigService.getWISEBaseURL();
-                    return $http.get(wiseBaseURL + '/wise5/node/index.html').then(function (response) {
+                    return $http.get(wiseBaseURL + '/wise5/vle/node/index.html').then(function (response) {
                         return response.data;
                     });
                 }],
@@ -440,8 +439,5 @@ var vleModule = _angular2.default.module('vle', [(0, _angularDragula2.default)(_
         }
     });
 }]);
-
-//import bootstrap from 'bootstrap';
-//import summernote from 'summernote';
 exports.default = vleModule;
 //# sourceMappingURL=main.js.map
