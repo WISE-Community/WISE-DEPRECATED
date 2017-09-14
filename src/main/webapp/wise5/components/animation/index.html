@@ -469,6 +469,11 @@
             <div style='margin-top: 10px; margin-bottom: 10px;'>
                 <div>
                     <label>{{ 'tags' | translate }}</label>
+                    <md-button class='topButton md-raised md-primary'
+                               ng-click='animationController.addTag()'>
+                        <md-icon>add</md-icon>
+                        <md-tooltip md-direction="top" class="projectButtonTooltip">{{ "addTag" | translate }}</md-tooltip>
+                    </md-button>
                 </div>
                 <div ng-repeat='tag in animationController.authoringComponentContent.tags track by $index'>
                     <div layout='row'>
@@ -494,11 +499,6 @@
                         </md-button>
                     </div>
                 </div>
-                <md-button class='topButton md-raised md-primary'
-                           ng-click='animationController.addTag()'>
-                    <md-icon>add</md-icon>
-                    <md-tooltip md-direction="top" class="projectButtonTooltip">{{ "addTag" | translate }}</md-tooltip>
-                </md-button>
             </div>
             <div>
                 <button ng-click='animationController.showJSONAuthoring = !animationController.showJSONAuthoring'>
