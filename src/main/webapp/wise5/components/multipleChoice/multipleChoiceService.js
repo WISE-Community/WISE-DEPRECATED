@@ -407,6 +407,31 @@ var MultipleChoiceService = function (_NodeService) {
         value: function componentUsesSubmitButton() {
             return true;
         }
+
+        /**
+         * Check if the component state has student work. Sometimes a component
+         * state may be created if the student visits a component but doesn't
+         * actually perform any work. This is where we will check if the student
+         * actually performed any work.
+         * @param componentState the component state object
+         * @param componentContent the component content
+         * @return whether the component state has any work
+         */
+
+    }, {
+        key: 'componentStateHasStudentWork',
+        value: function componentStateHasStudentWork(componentState, componentContent) {
+            if (componentState != null) {
+                var studentData = componentState.studentData;
+                if (studentData != null) {
+                    var studentChoices = studentData.studentChoices;
+                    if (studentChoices != null && studentChoices.length > 0) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
     }]);
 
     return MultipleChoiceService;
