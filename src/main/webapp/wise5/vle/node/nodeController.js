@@ -27,7 +27,6 @@ var NodeController = function () {
         this.NotebookService = NotebookService;
         this.ProjectService = ProjectService;
         this.StudentDataService = StudentDataService;
-
         this.$translate = this.$filter('translate');
 
         // the auto save interval in milliseconds
@@ -35,17 +34,11 @@ var NodeController = function () {
 
         // the node id of the current node
         this.nodeId = null;
-
-        // field that will hold the node content
         this.nodeContent = null;
-
-        // field that will hold the node status
         this.nodeStatus = null;
-
-        // field that will hold the node title
         this.nodeTitle = null;
 
-        // array to hold ids of dirty component
+        // hold ids of dirty components
         this.dirtyComponentIds = [];
 
         // array to hold ids of components where student work has changed since last submission
@@ -53,9 +46,7 @@ var NodeController = function () {
 
         // whether the student work has changed since last submit
         this.submit = false;
-
         this.workgroupId = this.ConfigService.getWorkgroupId();
-
         this.teacherWorkgroupId = this.ConfigService.getTeacherWorkgroupId();
 
         /*
