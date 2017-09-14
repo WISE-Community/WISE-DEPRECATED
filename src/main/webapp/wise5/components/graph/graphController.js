@@ -464,6 +464,12 @@ var GraphController = function () {
                      * components so we will get the work from the connected
                      * components
                      */
+
+                    /*
+                     * trials are enabled so we will create an empty trial
+                     * since there is no student work
+                     */
+                    this.newTrial();
                     this.handleConnectedComponents();
                 } else if (!this.GraphService.componentStateHasStudentWork(componentState, this.componentContent)) {
                     /*
@@ -492,21 +498,18 @@ var GraphController = function () {
                         importPreviousWorkComponentId = this.componentContent.importWorkComponentId;
                     }
 
-                    if (this.componentContent.connectedComponents != null) {
-                        // import any work we need from connected components
-                        this.handleConnectedComponents();
-                    } else if (importPreviousWorkNodeId != null && importPreviousWorkComponentId != null) {
+                    /*
+                     * trials are enabled so we will create an empty trial
+                     * since there is no student work
+                     */
+                    this.newTrial();
+
+                    if (importPreviousWorkNodeId != null && importPreviousWorkComponentId != null) {
                         // import the work from the other component
                         this.importWork();
                     } else if (importWork != null) {
                         // we are going to import work from one or more components
                         this.importWork();
-                    } else {
-                        /*
-                         * trials are enabled so we will create an empty trial
-                         * since there is no student work
-                         */
-                        this.newTrial();
                     }
                 }
             } else {
@@ -2893,7 +2896,7 @@ var GraphController = function () {
                      * we will only import work into this component if the student
                      * has not done any work for this component
                      */
-                    if (componentState == null) {
+                    if (componentState == null || !this.GraphService.componentStateHasStudentWork(componentState)) {
                         // the student has not done any work for this component
 
                         // get the latest component state from the component we are importing from
