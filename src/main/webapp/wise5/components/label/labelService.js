@@ -220,6 +220,117 @@ var LabelService = function (_NodeService) {
         value: function componentUsesSubmitButton() {
             return true;
         }
+
+        /**
+         * Check if the component state has student work. Sometimes a component
+         * state may be created if the student visits a component but doesn't
+         * actually perform any work. This is where we will check if the student
+         * actually performed any work.
+         * @param componentState the component state object
+         * @param componentContent the component content
+         * @return whether the component state has any work
+         */
+
+    }, {
+        key: 'componentStateHasStudentWork',
+        value: function componentStateHasStudentWork(componentState, componentContent) {
+            if (componentState != null) {
+                var studentData = componentState.studentData;
+                if (studentData != null) {
+                    // get the labels from the student data
+                    var labels = studentData.labels;
+
+                    if (componentContent == null) {
+                        // the component content was not provided
+                        if (labels != null && labels.length > 0) {
+                            // the student has work
+                            return true;
+                        }
+                    } else {
+                        // the component content was provided
+                        var starterLabels = componentContent.labels;
+                        if (starterLabels == null || starterLabels.length == 0) {
+                            // there are no starter labels
+                            if (labels != null && labels.length > 0) {
+                                // the student has work
+                                return true;
+                            }
+                        } else {
+                            /*
+                             * there are starter labels so we will compare it
+                             * with the student labels
+                             */
+                            if (!this.labelArraysAreTheSame(labels, starterLabels)) {
+                                /*
+                                 * the student has a response that is different than
+                                 * the starter sentence
+                                 */
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        /**
+         * Check if the two arrays of labels contain the same values
+         * @param labels1 an array of label objects
+         * @param labels2 an array of label objects
+         * @return whether the labels contain the same values
+         */
+
+    }, {
+        key: 'labelArraysAreTheSame',
+        value: function labelArraysAreTheSame(labels1, labels2) {
+
+            if (labels1 == null && labels2 == null) {
+                return true;
+            } else if (labels1 == null && labels2 != null || labels1 != null && labels2 == null) {
+                return false;
+            } else {
+                if (labels1.length != labels2.length) {
+                    return false;
+                } else {
+                    for (var l = 0; l < labels1.length; l++) {
+                        var label1 = labels1[l];
+                        var label2 = labels2[l];
+                        if (!this.labelsAreTheSame(label1, label2)) {
+                            return false;
+                        }
+                    }
+                }
+            }
+
+            return true;
+        }
+
+        /**
+         * Check if two labels contain the same values
+         * @param label1 a label object
+         * @param label2 a label object
+         * @return whether the labels contain the same values
+         */
+
+    }, {
+        key: 'labelsAreTheSame',
+        value: function labelsAreTheSame(label1, label2) {
+
+            if (label1 == null && label2 == null) {
+                return true;
+            } else if (label1 == null && label2 != null || label1 != null && label2 == null) {
+                return false;
+            } else {
+                if (label1.text != label2.text || label1.pointX != label2.pointX || label1.pointY != label2.pointY || label1.textX != label2.textX || label1.textY != label2.textY || label1.color != label2.color) {
+                    // at least one of the fields are different
+                    return false;
+                }
+            }
+
+            return true;
+        }
     }]);
 
     return LabelService;

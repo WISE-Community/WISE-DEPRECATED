@@ -153,6 +153,11 @@ var LabelController = function () {
             text: 'Submit'
         }];
 
+        // the component types we are allowed to connect to
+        this.allowedConnectedComponentTypes = [{
+            type: 'Label'
+        }];
+
         // get the current node and node id
         var currentNode = this.StudentDataService.getCurrentNode();
         if (currentNode != null) {
@@ -184,6 +189,8 @@ var LabelController = function () {
 
             // get the component id
             this.componentId = this.componentContent.id;
+
+            this.canvasId = 'canvas_' + this.nodeId + '_' + this.componentId;
 
             // get the component state from the scope
             var componentState = this.$scope.componentState;
@@ -671,45 +678,67 @@ var LabelController = function () {
             // set whether studentAttachment is enabled
             this.isStudentAttachmentEnabled = this.componentContent.isStudentAttachmentEnabled;
 
-            if (componentState == null) {
-                /*
-                 * only import work if the student does not already have
-                 * work for this component
-                 */
-
-                // check if we need to import work
-                var importPreviousWorkNodeId = this.componentContent.importPreviousWorkNodeId;
-                var importPreviousWorkComponentId = this.componentContent.importPreviousWorkComponentId;
-
-                if (importPreviousWorkNodeId == null || importPreviousWorkNodeId == '') {
+            if (this.mode == 'student') {
+                if (this.UtilService.hasShowWorkConnectedComponent(this.componentContent)) {
+                    // we will show work from another component
+                    this.handleConnectedComponents();
+                } else if (this.LabelService.componentStateHasStudentWork(componentState, this.componentContent)) {
                     /*
-                     * check if the node id is in the field that we used to store
-                     * the import previous work node id in
+                     * the student has work so we will populate the work into this
+                     * component
                      */
-                    importPreviousWorkNodeId = this.componentContent.importWorkNodeId;
-                }
-
-                if (importPreviousWorkComponentId == null || importPreviousWorkComponentId == '') {
+                    this.setStudentWork(componentState);
+                } else if (this.UtilService.hasConnectedComponent(this.componentContent)) {
+                    // we will import work from another component
+                    this.handleConnectedComponents();
+                } else if (componentState == null) {
                     /*
-                     * check if the component id is in the field that we used to store
-                     * the import previous work component id in
+                     * only import work if the student does not already have
+                     * work for this component
                      */
-                    importPreviousWorkComponentId = this.componentContent.importWorkComponentId;
-                }
 
-                if (importPreviousWorkNodeId != null && importPreviousWorkComponentId != null) {
-                    // import the work from the other component
-                    this.importWork();
-                } else if (this.componentContent.labels != null) {
-                    /*
-                     * the student has not done any work and there are starter labels
-                     * so we will populate the canvas with the starter labels
-                     */
-                    this.addLabelsToCanvas(this.componentContent.labels);
+                    // check if we need to import work
+                    var importPreviousWorkNodeId = this.componentContent.importPreviousWorkNodeId;
+                    var importPreviousWorkComponentId = this.componentContent.importPreviousWorkComponentId;
+
+                    if (importPreviousWorkNodeId == null || importPreviousWorkNodeId == '') {
+                        /*
+                         * check if the node id is in the field that we used to store
+                         * the import previous work node id in
+                         */
+                        importPreviousWorkNodeId = this.componentContent.importWorkNodeId;
+                    }
+
+                    if (importPreviousWorkComponentId == null || importPreviousWorkComponentId == '') {
+                        /*
+                         * check if the component id is in the field that we used to store
+                         * the import previous work component id in
+                         */
+                        importPreviousWorkComponentId = this.componentContent.importWorkComponentId;
+                    }
+
+                    if (importPreviousWorkNodeId != null && importPreviousWorkComponentId != null) {
+                        // import the work from the other component
+                        this.importWork();
+                    } else if (this.componentContent.labels != null) {
+                        /*
+                         * the student has not done any work and there are starter labels
+                         * so we will populate the canvas with the starter labels
+                         */
+                        this.addLabelsToCanvas(this.componentContent.labels);
+                    }
                 }
-            } else {
+            } else if (this.mode === 'grading') {
                 // populate the student work into this component
                 this.setStudentWork(componentState);
+            } else {
+                if (componentState == null && this.componentContent.labels != null) {
+                    // populate the canvas with the starter labels
+                    this.addLabelsToCanvas(this.componentContent.labels);
+                } else {
+                    // populate the student work into this component
+                    this.setStudentWork(componentState);
+                }
             }
 
             // get the background image that may have been set by the student data
@@ -2901,6 +2930,287 @@ var LabelController = function () {
 
             // the authoring component content has changed so we will save the project
             this.authoringViewComponentChanged();
+        }
+
+        /**
+         * Import any work we need from connected components
+         */
+
+    }, {
+        key: 'handleConnectedComponents',
+        value: function handleConnectedComponents() {
+
+            // get the connected components
+            var connectedComponents = this.componentContent.connectedComponents;
+
+            if (connectedComponents != null) {
+
+                var componentStates = [];
+
+                // loop through all the connected components
+                for (var c = 0; c < connectedComponents.length; c++) {
+                    var connectedComponent = connectedComponents[c];
+
+                    if (connectedComponent != null) {
+                        var nodeId = connectedComponent.nodeId;
+                        var componentId = connectedComponent.componentId;
+                        var type = connectedComponent.type;
+
+                        if (type == 'showWork') {
+                            // we are getting the work from this student
+
+                            // get the latest component state from the component
+                            var componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
+
+                            if (componentState != null) {
+                                componentStates.push(this.UtilService.makeCopyOfJSONObject(componentState));
+                            }
+
+                            // we are showing work so we will not allow the student to edit it
+                            this.isDisabled = true;
+                        } else if (type == 'importWork' || type == null) {
+                            // we are getting the work from this student
+
+                            // get the latest component state from the component
+                            var componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
+
+                            if (componentState != null) {
+                                componentStates.push(this.UtilService.makeCopyOfJSONObject(componentState));
+                            }
+                        }
+                    }
+                }
+
+                // merge the student responses from all the component states
+                var mergedComponentState = this.createMergedComponentState(componentStates);
+
+                // set the student work into the component
+                this.setStudentWork(mergedComponentState);
+
+                // make the work dirty so that it gets saved
+                this.studentDataChanged();
+            }
+        }
+
+        /**
+         * Create a component state with the merged student responses
+         * @param componentStates an array of component states
+         * @return a component state with the merged student responses
+         */
+
+    }, {
+        key: 'createMergedComponentState',
+        value: function createMergedComponentState(componentStates) {
+
+            var mergedComponentState = this.NodeService.createNewComponentState();
+
+            if (componentStates != null) {
+                var mergedLabels = [];
+                var mergedBackgroundImage = null;
+                for (var c = 0; c < componentStates.length; c++) {
+                    var componentState = componentStates[c];
+                    if (componentState != null) {
+                        var studentData = componentState.studentData;
+                        if (studentData != null) {
+                            var labels = studentData.labels;
+                            var backgroundImage = studentData.backgroundImage;
+                            if (labels != null && labels != '') {
+                                mergedLabels = mergedLabels.concat(labels);
+                            }
+                            if (backgroundImage != null && backgroundImage != '') {
+                                mergedBackgroundImage = backgroundImage;
+                            }
+                        }
+                    }
+                }
+
+                if (mergedLabels != null) {
+                    mergedComponentState.studentData = {};
+                    mergedComponentState.studentData.labels = mergedLabels;
+                    mergedComponentState.studentData.backgroundImage = mergedBackgroundImage;
+                }
+            }
+
+            return mergedComponentState;
+        }
+
+        /**
+         * Add a connected component
+         */
+
+    }, {
+        key: 'authoringAddConnectedComponent',
+        value: function authoringAddConnectedComponent() {
+
+            /*
+             * create the new connected component object that will contain a
+             * node id and component id
+             */
+            var newConnectedComponent = {};
+            newConnectedComponent.nodeId = this.nodeId;
+            newConnectedComponent.componentId = null;
+            newConnectedComponent.type = 'importWork';
+
+            // initialize the array of connected components if it does not exist yet
+            if (this.authoringComponentContent.connectedComponents == null) {
+                this.authoringComponentContent.connectedComponents = [];
+            }
+
+            // add the connected component
+            this.authoringComponentContent.connectedComponents.push(newConnectedComponent);
+
+            // the authoring component content has changed so we will save the project
+            this.authoringViewComponentChanged();
+        }
+
+        /**
+         * Delete a connected component
+         * @param index the index of the component to delete
+         */
+
+    }, {
+        key: 'authoringDeleteConnectedComponent',
+        value: function authoringDeleteConnectedComponent(index) {
+
+            // ask the author if they are sure they want to delete the connected component
+            var answer = confirm(this.$translate('areYouSureYouWantToDeleteThisConnectedComponent'));
+
+            if (answer) {
+                // the author answered yes to delete
+
+                if (this.authoringComponentContent.connectedComponents != null) {
+                    this.authoringComponentContent.connectedComponents.splice(index, 1);
+                }
+
+                // the authoring component content has changed so we will save the project
+                this.authoringViewComponentChanged();
+            }
+        }
+
+        /**
+         * Get the connected component type
+         * @param connectedComponent get the component type of this connected component
+         * @return the connected component type
+         */
+
+    }, {
+        key: 'authoringGetConnectedComponentType',
+        value: function authoringGetConnectedComponentType(connectedComponent) {
+
+            var connectedComponentType = null;
+
+            if (connectedComponent != null) {
+
+                // get the node id and component id of the connected component
+                var nodeId = connectedComponent.nodeId;
+                var componentId = connectedComponent.componentId;
+
+                // get the component
+                var component = this.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
+
+                if (component != null) {
+                    // get the component type
+                    connectedComponentType = component.type;
+                }
+            }
+
+            return connectedComponentType;
+        }
+
+        /**
+         * The connected component node id has changed
+         * @param connectedComponent the connected component that has changed
+         */
+
+    }, {
+        key: 'authoringConnectedComponentNodeIdChanged',
+        value: function authoringConnectedComponentNodeIdChanged(connectedComponent) {
+            if (connectedComponent != null) {
+
+                // remove all the specific component parameters
+                this.authoringConnectedComponentComponentIdChanged(connectedComponent);
+
+                // clear the component id
+                connectedComponent.componentId = null;
+
+                // the authoring component content has changed so we will save the project
+                this.authoringViewComponentChanged();
+            }
+        }
+
+        /**
+         * The connected component component id has changed
+         * @param connectedComponent the connected component that has changed
+         */
+
+    }, {
+        key: 'authoringConnectedComponentComponentIdChanged',
+        value: function authoringConnectedComponentComponentIdChanged(connectedComponent) {
+
+            if (connectedComponent != null) {
+
+                // default the type to import work
+                connectedComponent.type = 'importWork';
+
+                // the authoring component content has changed so we will save the project
+                this.authoringViewComponentChanged();
+            }
+        }
+
+        /**
+         * The connected component type has changed
+         * @param connectedComponent the connected component that changed
+         */
+
+    }, {
+        key: 'authoringConnectedComponentTypeChanged',
+        value: function authoringConnectedComponentTypeChanged(connectedComponent) {
+
+            if (connectedComponent != null) {
+
+                if (connectedComponent.type == 'importWork') {
+                    /*
+                     * the type has changed to import work
+                     */
+                } else if (connectedComponent.type == 'showWork') {}
+                /*
+                 * the type has changed to show work
+                 */
+
+
+                // the authoring component content has changed so we will save the project
+                this.authoringViewComponentChanged();
+            }
+        }
+
+        /**
+         * Check if we are allowed to connect to this component type
+         * @param componentType the component type
+         * @return whether we can connect to the component type
+         */
+
+    }, {
+        key: 'isConnectedComponentTypeAllowed',
+        value: function isConnectedComponentTypeAllowed(componentType) {
+
+            if (componentType != null) {
+
+                var allowedConnectedComponentTypes = this.allowedConnectedComponentTypes;
+
+                // loop through the allowed connected component types
+                for (var a = 0; a < allowedConnectedComponentTypes.length; a++) {
+                    var allowedConnectedComponentType = allowedConnectedComponentTypes[a];
+
+                    if (allowedConnectedComponentType != null) {
+                        if (componentType == allowedConnectedComponentType.type) {
+                            // the component type is allowed
+                            return true;
+                        }
+                    }
+                }
+            }
+
+            return false;
         }
     }]);
 
