@@ -145,6 +145,25 @@ class EmbeddedService extends NodeService {
     componentUsesSubmitButton() {
         return true;
     }
+
+    /**
+     * Check if the component state has student work. Sometimes a component
+     * state may be created if the student visits a component but doesn't
+     * actually perform any work. This is where we will check if the student
+     * actually performed any work.
+     * @param componentState the component state object
+     * @param componentContent the component content
+     * @return whether the component state has any work
+     */
+    componentStateHasStudentWork(componentState, componentContent) {
+        if (componentState != null) {
+            let studentData = componentState.studentData;
+            if (studentData != null) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
 
 EmbeddedService.$inject = [
