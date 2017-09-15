@@ -5728,10 +5728,12 @@ class GraphController {
                 /*
                  * the type has changed to import work
                  */
+                delete connectedComponent.showClassmateWorkSource;
             } else if (connectedComponent.type == 'showWork') {
                 /*
                  * the type has changed to show work
                  */
+                delete connectedComponent.showClassmateWorkSource;
             } else if (connectedComponent.type == 'showClassmateWork') {
                 /*
                  * the type has changed to show classmate work so we will enable
@@ -5739,6 +5741,10 @@ class GraphController {
                  * different trial
                  */
                 this.authoringComponentContent.enableTrials = true;
+
+                if (connectedComponent.showClassmateWorkSource == null) {
+                    connectedComponent.showClassmateWorkSource = 'period';
+                }
             }
 
             // the authoring component content has changed so we will save the project
