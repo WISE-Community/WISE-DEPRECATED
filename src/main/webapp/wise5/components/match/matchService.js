@@ -257,6 +257,40 @@ var MatchService = function (_NodeService) {
         value: function componentUsesSubmitButton() {
             return true;
         }
+
+        /**
+         * Check if the component state has student work. Sometimes a component
+         * state may be created if the student visits a component but doesn't
+         * actually perform any work. This is where we will check if the student
+         * actually performed any work.
+         * @param componentState the component state object
+         * @param componentContent the component content
+         * @return whether the component state has any work
+         */
+
+    }, {
+        key: 'componentStateHasStudentWork',
+        value: function componentStateHasStudentWork(componentState, componentContent) {
+            if (componentState != null) {
+                var studentData = componentState.studentData;
+                if (studentData != null) {
+                    var buckets = studentData.buckets;
+                    if (buckets != null) {
+                        for (var b = 0; b < buckets.length; b++) {
+                            var bucket = buckets[b];
+                            if (bucket != null) {
+                                var items = bucket.items;
+                                if (items != null && items.length > 0) {
+                                    return true;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            return false;
+        }
     }]);
 
     return MatchService;
