@@ -12,6 +12,7 @@
     "collapseAll": "- Collapse All",
     "collapseAllTeams": "Collapse all teams",
     "completed": "Completed",
+    "completedSteps": "Completed {{completed}}/{{total}} steps",
     "completion": "completion",
     "createMilestone": "Create Milestone",
     "currentLocation": "Current Location",
