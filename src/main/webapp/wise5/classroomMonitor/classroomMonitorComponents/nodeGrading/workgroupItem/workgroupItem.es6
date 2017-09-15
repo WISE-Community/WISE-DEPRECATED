@@ -115,7 +115,7 @@ const WorkgroupItem = {
                     </div>
                 </button>
             </md-subheader>
-            <md-list-item ng-if="$ctrl.expand" class="node-grading-item">
+            <md-list-item ng-if="$ctrl.expand" class="grading__item-container">
                 <workgroup-node-grading workgroup-id="$ctrl.workgroupId"
                                         class="workgroup-node-grading"
                                         node-id="{{$ctrl.nodeId}}"
