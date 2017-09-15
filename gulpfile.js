@@ -74,8 +74,15 @@ gulp.task('transpile', function() {
   return gulp.watch(["./src/main/webapp/wise5/**/*.es6"])
     .on("change", function(event) {
       const changedFilePath = event.path;
-      const changedFileDir =
-        changedFilePath.substr(0, changedFilePath.lastIndexOf("/"));
+      let changedFileDir = '';
+      let lastIndexOfForwardSlash = changedFilePath.lastIndexOf("/");
+      if (lastIndexOfForwardSlash > 0) {
+        changedFileDir = changedFilePath.substr(0, lastIndexOfForwardSlash);
+      } else {
+        changedFileDir =
+          changedFilePath.substr(0, changedFilePath.lastIndexOf("\\"));
+      }
+
       console.log("transpiled: " + changedFilePath);
       gulp.src(changedFilePath)
         .pipe(sourcemaps.init())
