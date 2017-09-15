@@ -31,11 +31,10 @@ class StepToolsController {
         var nodeId = this.TeacherDataService.getCurrentNodeId();
         if (!this.ProjectService.isGroupNode(nodeId)) {
             this.nodeId = nodeId;
-
-            this.prevId = this.NodeService.getPrevNodeId();
+            this.prevId = this.NodeService.getPrevNodeIdWithWork();
             this.nextId = null;
-            this.NodeService.getNextNodeId().then((nodeId) => {
-                this.nextId = nodeId;
+            this.NodeService.getNextNodeIdWithWork().then((nextNodeId) => {
+              this.nextId = nextNodeId;
             });
 
             // model variable for selected node id
@@ -64,11 +63,11 @@ class StepToolsController {
     }
 
     goToPrevNode() {
-        this.NodeService.goToPrevNode();
+        this.NodeService.goToPrevNodeWithWork();
     }
 
     goToNextNode() {
-        this.NodeService.goToNextNode();
+        this.NodeService.goToNextNodeWithWork();
     }
 }
 

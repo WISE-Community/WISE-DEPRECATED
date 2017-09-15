@@ -253,7 +253,6 @@ var NodeService = function () {
 
             // get the next node id
             return this.getNextNodeId().then(function (nextNodeId) {
-
                 if (nextNodeId != null) {
                     var mode = _this.ConfigService.getMode();
                     if (mode === 'classroomMonitor' || mode === 'author') {
@@ -441,6 +440,54 @@ var NodeService = function () {
             return promise;
         }
     }, {
+        key: "goToNextNodeWithWork",
+
+
+        /**
+         * Go to the next node that captures work
+         * @return a promise that will return the next node id
+         */
+        value: function goToNextNodeWithWork() {
+            var _this3 = this;
+
+            this.getNextNodeIdWithWork().then(function (nextNodeId) {
+                if (nextNodeId) {
+                    var mode = _this3.ConfigService.getMode();
+                    if (mode === 'classroomMonitor' || mode === 'author') {
+                        _this3.TeacherDataService.endCurrentNodeAndSetCurrentNodeByNodeId(nextNodeId);
+                    } else {
+                        _this3.StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(nextNodeId);
+                    }
+                }
+                return nextNodeId;
+            });
+        }
+    }, {
+        key: "getNextNodeIdWithWork",
+
+
+        /**
+         * Get the next node id in the project sequence that captures student work
+         * @param currentId (optional)
+         * @returns next node id
+         */
+        value: function getNextNodeIdWithWork(currentId) {
+            var _this4 = this;
+
+            return this.getNextNodeId(currentId).then(function (nextNodeId) {
+                if (nextNodeId) {
+                    var hasWork = _this4.ProjectService.nodeHasWork(nextNodeId);
+                    if (hasWork) {
+                        return nextNodeId;
+                    } else {
+                        return _this4.getNextNodeIdWithWork(nextNodeId);
+                    }
+                } else {
+                    return null;
+                }
+            });
+        }
+    }, {
         key: "goToPrevNode",
 
 
@@ -533,6 +580,44 @@ var NodeService = function () {
             }
 
             return prevNodeId;
+        }
+    }, {
+        key: "goToPrevNodeWithWork",
+
+
+        /**
+         * Go to the previous node that captures work
+         */
+        value: function goToPrevNodeWithWork() {
+            var prevNodeId = this.getPrevNodeIdWithWork();
+            var mode = this.ConfigService.getMode();
+            if (mode === 'classroomMonitor' || mode === 'author') {
+                this.TeacherDataService.endCurrentNodeAndSetCurrentNodeByNodeId(prevNodeId);
+            } else {
+                this.StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(prevNodeId);
+            }
+        }
+    }, {
+        key: "getPrevNodeIdWithWork",
+
+
+        /**
+         * Get the previous node id in the project sequence that captures student work
+         * @param currentId (optional)
+         * @returns next node id
+         */
+        value: function getPrevNodeIdWithWork(currentId) {
+            var prevNodeId = this.getPrevNodeId(currentId);
+            if (prevNodeId) {
+                var hasWork = this.ProjectService.nodeHasWork(prevNodeId);
+                if (hasWork) {
+                    return prevNodeId;
+                } else {
+                    return this.getPrevNodeIdWithWork(prevNodeId);
+                }
+            } else {
+                return null;
+            }
         }
     }, {
         key: "closeNode",
@@ -681,22 +766,22 @@ var NodeService = function () {
 
                             if (transitionResult != null) {
                                 /*
-                                 * the user has previously chosen the branch path
-                                 * so we will use the transition they chose and
-                                 * not ask them again
-                                 */
+                                   * the user has previously chosen the branch path
+                                   * so we will use the transition they chose and
+                                   * not ask them again
+                                   */
                             } else {
 
                                 /**
-                                 * Controller that handles the dialog popup that lets the user
-                                 * which branch path to go to.
-                                 * @param $scope the scope
-                                 * @param $mdDialog the dialog popup object
-                                 * @param availableTransitions the branch paths
-                                 * @param deferred used to resolve the promise once the user
-                                 * has chosen a branch path
-                                 * @param nodeId the current node
-                                 */
+                                   * Controller that handles the dialog popup that lets the user
+                                   * which branch path to go to.
+                                   * @param $scope the scope
+                                   * @param $mdDialog the dialog popup object
+                                   * @param availableTransitions the branch paths
+                                   * @param deferred used to resolve the promise once the user
+                                   * has chosen a branch path
+                                   * @param nodeId the current node
+                                   */
                                 var ChooseBranchPathController = function ChooseBranchPathController($scope, $mdDialog, NodeService, ProjectService, availableTransitions, deferred, nodeId) {
 
                                     $scope.availableTransitions = availableTransitions;
@@ -712,9 +797,9 @@ var NodeService = function () {
                                         deferred.resolve(transitionResult);
 
                                         /*
-                                         * don't remember the promise for this step anymore
-                                         * since we have resolved it
-                                         */
+                                           * don't remember the promise for this step anymore
+                                           * since we have resolved it
+                                           */
                                         $scope.NodeService.setChooseTransitionPromise(nodeId, null);
 
                                         // close the dialog
@@ -751,9 +836,9 @@ var NodeService = function () {
                                 ChooseBranchPathController.$inject = ['$scope', '$mdDialog', 'NodeService', 'ProjectService', 'availableTransitions', 'deferred', 'nodeId'];
 
                                 /*
-                                 * show the popup dialog that lets the user choose the
-                                 * branch path
-                                 */
+                                   * show the popup dialog that lets the user choose the
+                                   * branch path
+                                   */
                                 this.$mdDialog.show(dialogOptions);
                             }
                         } else {
@@ -836,7 +921,7 @@ var NodeService = function () {
          * path taken events if necessary.
          */
         value: function evaluateTransitionLogic() {
-            var _this3 = this;
+            var _this5 = this;
 
             // get the current node
             var currentNode = this.StudentDataService.getCurrentNode();
@@ -877,7 +962,7 @@ var NodeService = function () {
                                     toNodeId = transition.to;
 
                                     // create a branchPathTaken event to signify taking the branch path
-                                    _this3.createBranchPathTakenEvent(fromNodeId, toNodeId);
+                                    _this5.createBranchPathTakenEvent(fromNodeId, toNodeId);
                                 }
                             });
                         } else {
@@ -895,7 +980,7 @@ var NodeService = function () {
                                 toNodeId = transition.to;
 
                                 // create a branchPathTaken event to signify taking the branch path
-                                _this3.createBranchPathTakenEvent(fromNodeId, toNodeId);
+                                _this5.createBranchPathTakenEvent(fromNodeId, toNodeId);
                             }
                         });
                     }

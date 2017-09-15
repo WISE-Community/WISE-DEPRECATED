@@ -221,7 +221,6 @@ class NodeService {
 
         // get the next node id
         return this.getNextNodeId().then((nextNodeId) => {
-
             if (nextNodeId != null) {
                 var mode = this.ConfigService.getMode();
                 if (mode === 'classroomMonitor' || mode === 'author') {
@@ -406,6 +405,44 @@ class NodeService {
     };
 
     /**
+     * Go to the next node that captures work
+     * @return a promise that will return the next node id
+     */
+    goToNextNodeWithWork() {
+        this.getNextNodeIdWithWork().then((nextNodeId) => {
+            if (nextNodeId) {
+                const mode = this.ConfigService.getMode();
+                if (mode === 'classroomMonitor' || mode === 'author') {
+                    this.TeacherDataService.endCurrentNodeAndSetCurrentNodeByNodeId(nextNodeId);
+                } else {
+                    this.StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(nextNodeId);
+                }
+            }
+            return nextNodeId;
+        });
+    };
+
+    /**
+     * Get the next node id in the project sequence that captures student work
+     * @param currentId (optional)
+     * @returns next node id
+     */
+    getNextNodeIdWithWork(currentId) {
+        return this.getNextNodeId(currentId).then((nextNodeId) => {
+            if (nextNodeId) {
+                const hasWork = this.ProjectService.nodeHasWork(nextNodeId);
+                if (hasWork) {
+                    return nextNodeId;
+                } else {
+                    return this.getNextNodeIdWithWork(nextNodeId);
+                }
+            } else {
+                return null;
+            }
+        });
+    };
+
+    /**
      * Go to the previous node
      */
     goToPrevNode() {
@@ -493,6 +530,38 @@ class NodeService {
         }
 
         return prevNodeId;
+    };
+
+    /**
+     * Go to the previous node that captures work
+     */
+    goToPrevNodeWithWork() {
+        const prevNodeId = this.getPrevNodeIdWithWork();
+        const mode = this.ConfigService.getMode();
+        if (mode === 'classroomMonitor' || mode === 'author') {
+            this.TeacherDataService.endCurrentNodeAndSetCurrentNodeByNodeId(prevNodeId);
+        } else {
+            this.StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(prevNodeId);
+        }
+    };
+
+    /**
+     * Get the previous node id in the project sequence that captures student work
+     * @param currentId (optional)
+     * @returns next node id
+     */
+    getPrevNodeIdWithWork(currentId) {
+        const prevNodeId = this.getPrevNodeId(currentId);
+        if (prevNodeId) {
+            const hasWork = this.ProjectService.nodeHasWork(prevNodeId);
+            if (hasWork) {
+                return prevNodeId;
+            } else {
+                return this.getPrevNodeIdWithWork(prevNodeId);
+            }
+        } else {
+            return null;
+        }
     };
 
     /**
@@ -635,10 +704,10 @@ class NodeService {
 
                          if (transitionResult != null) {
                              /*
-                              * the user has previously chosen the branch path
-                              * so we will use the transition they chose and
-                              * not ask them again
-                              */
+                                * the user has previously chosen the branch path
+                                * so we will use the transition they chose and
+                                * not ask them again
+                                */
                          } else {
                              // ask the user which branch path to go to
 
@@ -657,15 +726,15 @@ class NodeService {
                              };
 
                              /**
-                              * Controller that handles the dialog popup that lets the user
-                              * which branch path to go to.
-                              * @param $scope the scope
-                              * @param $mdDialog the dialog popup object
-                              * @param availableTransitions the branch paths
-                              * @param deferred used to resolve the promise once the user
-                              * has chosen a branch path
-                              * @param nodeId the current node
-                              */
+                                * Controller that handles the dialog popup that lets the user
+                                * which branch path to go to.
+                                * @param $scope the scope
+                                * @param $mdDialog the dialog popup object
+                                * @param availableTransitions the branch paths
+                                * @param deferred used to resolve the promise once the user
+                                * has chosen a branch path
+                                * @param nodeId the current node
+                                */
                              function ChooseBranchPathController($scope, $mdDialog, NodeService, ProjectService, availableTransitions, deferred, nodeId) {
 
                                  $scope.availableTransitions = availableTransitions;
@@ -681,9 +750,9 @@ class NodeService {
                                      deferred.resolve(transitionResult);
 
                                      /*
-                                      * don't remember the promise for this step anymore
-                                      * since we have resolved it
-                                      */
+                                        * don't remember the promise for this step anymore
+                                        * since we have resolved it
+                                        */
                                      $scope.NodeService.setChooseTransitionPromise(nodeId, null);
 
                                      // close the dialog
@@ -704,9 +773,9 @@ class NodeService {
                              ChooseBranchPathController.$inject = ['$scope', '$mdDialog', 'NodeService', 'ProjectService', 'availableTransitions', 'deferred', 'nodeId'];
 
                              /*
-                              * show the popup dialog that lets the user choose the
-                              * branch path
-                              */
+                                * show the popup dialog that lets the user choose the
+                                * branch path
+                                */
                              this.$mdDialog.show(dialogOptions);
                          }
                     } else {
