@@ -1,8 +1,8 @@
 {
     "graph.addSeries": "增加系列",
     "graph.areYouSureYouWantToOverwriteTheCurrentLineData": "您确定要覆盖当前折线数据么？",
-    "graph.areYouSureYouWantToResetTheSeries": "您确定要重置系列么？",
     "graph.areYouSureYouWantToResetTheNamedSeries": "您确定要重置 '{{seriesName}}' 系列么？",
+    "graph.areYouSureYouWantToResetTheSeries": "您确定要重置系列么？",
     "graph.canStudentCreateTrials": "允许学生创建尝试",
     "graph.canStudentDeleteTrials": "允许学生删除尝试",
     "graph.canStudentEdit": "允许学生编辑",
@@ -31,10 +31,8 @@
     "graph.timeSeconds": "时间(秒)",
     "graph.trial": "尝试",
     "graph.trialsShown": "显示的尝试",
-    "graph.xAxisTitle": "X轴标题",
     "graph.xMax": "X最大值",
     "graph.xMin": "X最小值",
-    "graph.yAxisTitle": "Y轴标题",
     "graph.yMax": "Y最大值",
     "graph.yMin": "Y最小值"
 }

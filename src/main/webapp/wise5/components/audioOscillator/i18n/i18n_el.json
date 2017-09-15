@@ -1,6 +1,7 @@
 {
     "audioOscillator.add": "Πρόσθεση",
     "audioOscillator.addOscillatorType": "Πρόσθεση Τύπου Ταλαντωτή",
+    "audioOscillator.componentTypeLabel": "Ακουστικός Ταλαντωτής",
     "audioOscillator.errorYouHaveAlreadyAddedOscillatorType": "Σφάλμα: Έχετε ήδη προσθέσει {{oscillatorTypeToAdd}}",
     "audioOscillator.frequenciesPlayed": "Συχνότητες που έχουν παιχτεί",
     "audioOscillator.frequenciesPlayedSorted": "Ταξινόμηση Συχνοτήτων που έχουν παιχτεί",
@@ -18,12 +19,11 @@
     "audioOscillator.oscilloscopeStopAfterGoodDraw": "Παύση Παλμογράφου Ύστερα από Καλό Σχέδιο",
     "audioOscillator.play": "Παίξε",
     "audioOscillator.save": "Αποθήκευση",
-    "audioOscillator.startingFrequency": "Συχνότητα Έναρξης",
-    "audioOscillator.stop": "Παύση",
-    "audioOscillator.componentTypeLabel": "Ακουστικός Ταλαντωτής",
+    "audioOscillator.sawtooth": "Πριονωτός",
     "audioOscillator.sine": "Ημίτονο",
     "audioOscillator.square": "Τετραγωνικός",
-    "audioOscillator.triangle": "Τριγωνικός",
-    "audioOscillator.sawtooth": "Πριονωτός",
-    "audioOscillator.thereAreNoOscillatorTypesSelected": "Δεν έχουν επιλεγεί τύποι ταλαντωτών. Παρακαλώ επιλέξτε τουλάχιστον έναν τύπο ταλαντωτή."
+    "audioOscillator.startingFrequency": "Συχνότητα Έναρξης",
+    "audioOscillator.stop": "Παύση",
+    "audioOscillator.thereAreNoOscillatorTypesSelected": "Δεν έχουν επιλεγεί τύποι ταλαντωτών. Παρακαλώ επιλέξτε τουλάχιστον έναν τύπο ταλαντωτή.",
+    "audioOscillator.triangle": "Τριγωνικός"
 }

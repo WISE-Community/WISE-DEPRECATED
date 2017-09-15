@@ -83,7 +83,6 @@
     "TO_VISIT_STEP_YOU_MUST_PERFORM_ONE_OF_THE_ACTIONS_BELOW": "要访问 \"{{nodeTitle}}\" 您必须先完成下列动作中的一项",
     "TYPE": "类型",
     "UP": "向上",
-    "VERSIONS": "版本",
     "WIDTH": "宽度",
     "WORKGROUP_ID": "工作组编号"
 }

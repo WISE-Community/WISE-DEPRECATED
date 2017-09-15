@@ -93,7 +93,6 @@
     "TO_VISIT_STEP_YOU_MUST_PERFORM_ONE_OF_THE_ACTIONS_BELOW": "要訪問 {{nodeTitle}} 您必須先完成下列動作中的一項",
     "TYPE": "類型",
     "UP": "上移",
-    "VERSIONS": "版本",
     "WIDTH": "寬度",
     "WORKGROUP_ID": "工作組ID",
     "YOU_HAVE_USED_X_OF_Y_ATTEMPT": "你已經嘗試過 {{x}} 的 {{y}}",

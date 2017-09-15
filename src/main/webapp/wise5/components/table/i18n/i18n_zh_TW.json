@@ -8,11 +8,5 @@
     "table.deleteColumn": "刪除欄",
     "table.deleteRow": "刪除列",
     "table.importData": "導入資料",
-    "table.insertColumn": "插入欄",
-    "table.insertRow": "插入列",
-    "table.rows": "列數",
-    "table.size": "尺寸",
-    "table.sizeSymbol": "S",
-    "table.uneditable": "不可編輯",
-    "table.uneditableSymbol": "U"
+    "table.rows": "列數"
 }

@@ -9,7 +9,5 @@
     "match.deleteBucket": "刪除配對項目",
     "match.deleteChoice": "刪除選項",
     "match.incorrectPositionFeedback": "錯誤的位置",
-    "match.labelForChoicesBucket": "配對題說明",
-    "match.ordered": "有序的",
     "match.position": "位置"
 }

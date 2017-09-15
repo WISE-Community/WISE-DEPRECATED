@@ -1,9 +1,14 @@
 {
     "draw.addStamp": "Προσθήκη Σφραγίδας",
     "draw.areYouSureYouWantToClearYourDrawing": "Θέλετε σίγουρα να καθαρίστε το σχέδιό σας;",
+    "draw.areYouSureYouWantToDeleteTheStarterDrawing": "Θέλετε σίγουρα να διαγράψετε το εναρκτήριο σχέδιο;",
     "draw.areYouSureYouWantToDeleteThisStamp": "Θέλετε σίγουρα να διαγράψετε αυτή τη σφραγίδα;",
+    "draw.areYouSureYouWantToSaveTheStarterDrawing": "θέλετε σίγουρα να αποθηκεύσετε το εναρκτήριο σχέδιο;",
+    "draw.canvasHeight": "Ύψος Καμβά",
+    "draw.canvasWidth": "Πλάτος Καμβά",
     "draw.cloneTool": "Εργαλείο Κλωνοποίησης",
     "draw.cloneToolTooltip": "Εργαλείο κλωνοποίησης",
+    "draw.componentTypeLabel": "Σχεδιασμός",
     "draw.deleteStarterDrawing": "Διαγραφή Αρχικού Σχεδίου",
     "draw.deleteTool": "Εργαλείο Διαγραφής",
     "draw.deleteToolTooltip": "Διαγραφή επιλεγμένων αντικειμένων",
@@ -37,13 +42,8 @@
     "draw.strokeWidthToolTooltip": "Διαδρομή πλάτους (πατήστε και κρατήστε για προβολή διαθέσιμων επιλογών)",
     "draw.textTool": "Εργαλείο Κειμένου",
     "draw.textToolTooltip": "Εργαλείο κειμένου (πατήστε και κρατήστε για προβολή διαθέσιμων μεγεθών χαρακτήρων)",
+    "draw.thereAreNoStampsClickTheAddStampButtonToAddAStamp": "Δεν υπάρχει καμμια σφραγίδα. Πατήστε το εικονίδιο \"Προσθήκη Σφραγίδας\" για να προσθέσετε μια σφραγίδα.",
     "draw.undo": "Αναίρεση",
     "draw.undoTool": "Εργαλείο Αναίρεσηης",
-    "draw.versions": "Εκδόσεις",
-    "draw.areYouSureYouWantToDeleteTheStarterDrawing": "Θέλετε σίγουρα να διαγράψετε το εναρκτήριο σχέδιο;",
-    "draw.areYouSureYouWantToSaveTheStarterDrawing": "θέλετε σίγουρα να αποθηκεύσετε το εναρκτήριο σχέδιο;",
-    "draw.componentTypeLabel": "Σχεδιασμός",
-    "draw.thereAreNoStampsClickTheAddStampButtonToAddAStamp": "Δεν υπάρχει καμμια σφραγίδα. Πατήστε το εικονίδιο \"Προσθήκη Σφραγίδας\" για να προσθέσετε μια σφραγίδα.",
-    "draw.canvasHeight": "Ύψος Καμβά",
-    "draw.canvasWidth": "Πλάτος Καμβά"
+    "draw.versions": "Εκδόσεις"
 }

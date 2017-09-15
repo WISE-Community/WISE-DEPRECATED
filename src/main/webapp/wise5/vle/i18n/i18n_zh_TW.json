@@ -81,7 +81,6 @@
     "scoreLabel": "分數:",
     "selectItemToInsert": "選擇要插入的項目",
     "serverError": "伺服器錯誤: ",
-    "serverErrorCheckYourInternetConnection": "伺服器錯誤，請檢查網路連接。",
     "serverUpdate": "WISE伺服器更新",
     "serverUpdateRequestLogoutMessage": "很快就要維護WISE伺服器了，請盡快儲存並登出。",
     "sessionTimeout": "會話超時",

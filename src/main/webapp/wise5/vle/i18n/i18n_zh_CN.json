@@ -76,7 +76,6 @@
     "scoreLabel": "得分:",
     "selectItemToInsert": "选择要插入的条目",
     "serverError": "服务器错误: ",
-    "serverErrorCheckYourInternetConnection": "服务器错误，请检查网络连接。",
     "serverUpdate": "WISE服务器更新",
     "serverUpdateRequestLogoutMessage": "很快就要维护WISE服务器了，请尽快保存并退出。",
     "sessionTimeout": "会话超时",

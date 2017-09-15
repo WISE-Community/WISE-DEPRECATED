@@ -105,7 +105,6 @@
     "SHOW_SCORE": "Προβολή Βαθμολογίας",
     "SHOW_SUBMIT_BUTTON": "Προβολή Εικονιδίου Υποβολή",
     "SIGN_OUT": "Αποθήκευση",
-    "STEP_HAS_INFO_TEACHING_TIPS": "Περιλαμβάνει πληροφορίες βήματος/διδακτικές συμβουλές",
     "STEP_INFO": "Πληροφορίες Βήματος",
     "STUDENT_DATA_SERVICE_SAVE_COMPONENT_EVENT_COMPONENT_CATEGORY_EVENT_ERROR": "ΥπηρεσίαΔεδομένωνΜαθητή.αποθήκευσηΣυμβάνΣτοιχείου: τα πεδία στοιχείο, κατηγορία, συμβάν δεν πρέπει να είναι κενά",
     "STUDENT_DATA_SERVICE_SAVE_COMPONENT_EVENT_NODE_ID_COMPONENT_ID_COMPONENT_TYPE_ERROR": "ΥπηρεσίαΔεδομένωνΜαθητή.αποθήκευσηΣυμβάνΣτοιχείου: κόμβοςId, στοιχείοId, στοιχείοΤύπος δεν πρέπει να είναι κενά",

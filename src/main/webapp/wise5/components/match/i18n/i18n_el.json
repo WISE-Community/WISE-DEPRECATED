@@ -1,18 +1,1 @@
-{
-    "match.addBucket": "Προσθήκη Κάδου",
-    "match.addChoice": "Προσθήκη Επιλογής",
-    "match.areYouSureYouWantToDeleteThisBucket": "Θέλετε σίγουρα να διαγράψετε αυτό τον κάδο;",
-    "match.areYouSureYouWantToDeleteThisChoice": "Θέλετε σίγουρα να διαγράψετε αυτή την επιλογή;",
-    "match.bucketName": "Ονομασία Κάδου",
-    "match.buckets": "Κάδοι",
-    "match.choiceName": "Όνομα Επιλογής",
-    "match.choices": "Επιλογές",
-    "match.choicesNeedToBeOrderedWithinBuckets": "Οι επιλογές πρέπει να ταξινομηθούν εντός των κάδων",
-    "match.componentTypeLabel": "Αντιστοίχηση",
-    "match.correctBucketButWrongPosition": "Σωστός κάδος αλλά λάθος θέση",
-    "match.deleteBucket": "Διαγραφή Κάδου",
-    "match.deleteChoice": "Διαγραφή Επιλογής",
-    "match.incorrectPositionFeedback": "Λάθος Θέση Ανατροφοδότησης",
-    "match.originBucketName": "Ονομασία Κάδου Προέλευσης",
-    "match.position": "Θέση",
-}
+{}

@@ -2,7 +2,6 @@
     "averageScore": "Ortalama Puan",
     "downloadStudentWork": "Öğrenci Çalışmasını İndir",
     "gradeByStep": "Adıma göre değerlendir",
-    "gradeByWorkgroup": "Çalışma grubuna göre değerlendir",
     "newWorkCounter": "Yeni Çalışma Sayısı:  {{count}}",
     "numberOfStudentOnStep": "Adımdaki öğrenci sayısı # ",
     "pauseStudentScreens": "Öğrenci Ekranlarını Duraklat"
