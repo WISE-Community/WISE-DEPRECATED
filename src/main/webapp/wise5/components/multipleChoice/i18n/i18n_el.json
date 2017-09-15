@@ -1,14 +1,14 @@
 {
-    "multipleChoice.addChoice": "Προσθήκη Επιλογής",
-    "multipleChoice.areYouSureYouWantToDeleteThisChoice": "Θέλετε σίγουρα να διαγράψετε αυτή την επιλογή;",
-    "multipleChoice.checkbox": "Κουτί Επιλογής",
-    "multipleChoice.componentTypeLabel": "Πολλαπλή Επιλογή",
-    "multipleChoice.thereAreNoChoicesClickTheAddChoiceButtonToAddAChoice": "Δεν υπάρχει καμμια επιλογή. Πατήστε το εικονίδια \"Προσθήκη Επιλογή\" για να προσθέσετε μια επιλογή.",
-    "multipleChoice.choiceText": "Κείμενο Επιλογής",
-    "multipleChoice.chooseAnImage": "Επιλέξτε μια Εικόνα",
-    "multipleChoice.radio": "Ραδιόφωνο",
-    "multipleChoice.selectionType": "Τύπος Επιλογής",
-    "multipleChoice.userChose": "Ο χρήστης επέλεξε '{{choiceText}}' (Id Επιλογής: {{choiceId}} σε αυτό το στοιχείο",
-    "multipleChoice.youHaveUsedXofYAttempt": "Έχετε χηρησιμοποιήσει {{x}} από {{y}} προσπάθεια",
-    "multipleChoice.youHaveUsedXofYAttempts": "Έχετε χηρησιμοποιήσει {{x}} από {{y}} προσπάθειες"
+  "multipleChoice.addChoice": "Προσθήκη Επιλογής",
+  "multipleChoice.areYouSureYouWantToDeleteThisChoice": "Θέλετε σίγουρα να διαγράψετε αυτή την επιλογή;",
+  "multipleChoice.checkbox": "Κουτί Επιλογής",
+  "multipleChoice.componentTypeLabel": "Πολλαπλή Επιλογή",
+  "multipleChoice.thereAreNoChoicesClickTheAddChoiceButtonToAddAChoice": "Δεν υπάρχει καμμια επιλογή. Πατήστε το εικονίδια \"Προσθήκη Επιλογή\" για να προσθέσετε μια επιλογή.",
+  "multipleChoice.choiceText": "Κείμενο Επιλογής",
+  "multipleChoice.chooseAnImage": "Επιλέξτε μια Εικόνα",
+  "multipleChoice.radio": "Ραδιόφωνο",
+  "multipleChoice.selectionType": "Τύπος Επιλογής",
+  "multipleChoice.userChose": "Ο χρήστης επέλεξε '{{choiceText}}' (Id Επιλογής: {{choiceId}} σε αυτό το στοιχείο",
+  "multipleChoice.youHaveUsedXofYAttempt": "Έχετε χηρησιμοποιήσει {{x}} από {{y}} προσπάθεια",
+  "multipleChoice.youHaveUsedXofYAttempts": "Έχετε χηρησιμοποιήσει {{x}} από {{y}} προσπάθειες"
 }

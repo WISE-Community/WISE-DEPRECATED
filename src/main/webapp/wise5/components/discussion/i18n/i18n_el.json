@@ -1,10 +1,10 @@
 {
-    "discussion.allowUploadedImagesInPosts": "Οι μαθητές μπορούν στις αναρτήσεις τους να φορτώσουν και να χρησιμοποιήσουν εικόνες",
-    "discussion.areYouSureYouWantToDeleteThisPost": "Θέλετε σίγουρα να διαγράψετε αυτή την ανάρτηση;",
-    "discussion.areYouSureYouWantToShowThisPost": "Θέλετε σίγουρα να προβάλετε αυτή την ανάρτηση;",
-    "discussion.comments": "Σχόλια",
-    "discussion.componentTypeLabel": "Συζήτηση",
-    "discussion.post": "Ανάρτηση",
-    "discussion.repliedToADiscussionYouWereIn": "{{userNames}} απάντησαν σε μια συνομιλία στην οποία συμμετείχατε!",
-    "discussion.reply": "Απάντηση"
+  "discussion.allowUploadedImagesInPosts": "Οι μαθητές μπορούν στις αναρτήσεις τους να φορτώσουν και να χρησιμοποιήσουν εικόνες",
+  "discussion.areYouSureYouWantToDeleteThisPost": "Θέλετε σίγουρα να διαγράψετε αυτή την ανάρτηση;",
+  "discussion.areYouSureYouWantToShowThisPost": "Θέλετε σίγουρα να προβάλετε αυτή την ανάρτηση;",
+  "discussion.comments": "Σχόλια",
+  "discussion.componentTypeLabel": "Συζήτηση",
+  "discussion.post": "Ανάρτηση",
+  "discussion.repliedToADiscussionYouWereIn": "{{userNames}} απάντησαν σε μια συνομιλία στην οποία συμμετείχατε!",
+  "discussion.reply": "Απάντηση"
 }

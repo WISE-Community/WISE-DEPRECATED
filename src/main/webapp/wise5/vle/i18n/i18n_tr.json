@@ -1,10 +1,10 @@
 {
-    "accountMenuItems": "{{item}} öğeler",
-    "accountMenuPoints": "{{point}} puanlar",
-    "accountMenuTotalScore": "Toplam puan",
-    "addNewNote": "Yeni not ekle",
-    "newNote": "Yeni not ekle",
-    "projectCompletion": "Proje tamamlama",
-    "projectPlan": "Proje planı",
-    "typeYourNoteHere": "Notunuzu buraya yazın..."
+  "accountMenuItems": "{{item}} öğeler",
+  "accountMenuPoints": "{{point}} puanlar",
+  "accountMenuTotalScore": "Toplam puan",
+  "addNewNote": "Yeni not ekle",
+  "newNote": "Yeni not ekle",
+  "projectCompletion": "Proje tamamlama",
+  "projectPlan": "Proje planı",
+  "typeYourNoteHere": "Notunuzu buraya yazın..."
 }

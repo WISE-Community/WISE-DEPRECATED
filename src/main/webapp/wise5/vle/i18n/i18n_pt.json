@@ -1,10 +1,10 @@
 {
-    "accountMenuItems": "{{item}} itens",
-    "accountMenuPoints": "{{point}} pontos",
-    "accountMenuTotalScore": "Total de pontos",
-    "addNewNote": "Adicionar uma nova nota",
-    "newNote": "Adicionar uma nova nota",
-    "projectCompletion": "Conclusão do projeto",
-    "projectPlan": "Plano do projeto",
-    "typeYourNoteHere": "Escreva a sua nota aqui"
+  "accountMenuItems": "{{item}} itens",
+  "accountMenuPoints": "{{point}} pontos",
+  "accountMenuTotalScore": "Total de pontos",
+  "addNewNote": "Adicionar uma nova nota",
+  "newNote": "Adicionar uma nova nota",
+  "projectCompletion": "Conclusão do projeto",
+  "projectPlan": "Plano do projeto",
+  "typeYourNoteHere": "Escreva a sua nota aqui"
 }

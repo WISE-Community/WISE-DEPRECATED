@@ -1,8 +1,8 @@
 {
-    "multipleChoice.addChoice": "新增選項",
-    "multipleChoice.checkbox": "複選",
-    "multipleChoice.radio": "單選",
-    "multipleChoice.userChose": "學生在組件上選擇 '{{choiceText}}' (選項編號: {{choiceId}}) 。",
-    "multipleChoice.youHaveUsedXofYAttempt": "您已經嘗試了{{x}}次（最多{{y}} 次）",
-    "multipleChoice.youHaveUsedXofYAttempts": "您已經嘗試了{{x}}次（最多{{y}} 次）"
+  "multipleChoice.addChoice": "新增選項",
+  "multipleChoice.checkbox": "複選",
+  "multipleChoice.radio": "單選",
+  "multipleChoice.userChose": "學生在組件上選擇 '{{choiceText}}' (選項編號: {{choiceId}}) 。",
+  "multipleChoice.youHaveUsedXofYAttempt": "您已經嘗試了{{x}}次（最多{{y}} 次）",
+  "multipleChoice.youHaveUsedXofYAttempts": "您已經嘗試了{{x}}次（最多{{y}} 次）"
 }

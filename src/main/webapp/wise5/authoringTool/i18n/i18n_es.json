@@ -1,9 +1,9 @@
 {
-    "activityTitle": "Título de actividad",
-    "addNewComponent": "Agregar nuevo componente",
-    "addNewTransition": "Agregar nueva traducción",
-    "addNewTransitionCriteria": "Agregar nuevo criterio de transición",
-    "backToTeacherHome": "Regresar al Inicio de maestro",
-    "chooseNewLocation": "Escoger nueva localidad",
-    "confirmDeleteComponent": "Seguro quieres borrar este compnente?"
+  "activityTitle": "Título de actividad",
+  "addNewComponent": "Agregar nuevo componente",
+  "addNewTransition": "Agregar nueva traducción",
+  "addNewTransitionCriteria": "Agregar nuevo criterio de transición",
+  "backToTeacherHome": "Regresar al Inicio de maestro",
+  "chooseNewLocation": "Escoger nueva localidad",
+  "confirmDeleteComponent": "Seguro quieres borrar este compnente?"
 }

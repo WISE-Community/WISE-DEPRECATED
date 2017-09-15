@@ -1,13 +1,13 @@
 {
-    "match.addBucket": "新增配對項目",
-    "match.addChoice": "新增選項",
-    "match.areYouSureYouWantToDeleteThisBucket": "您確定要刪除此配對項目嗎？",
-    "match.areYouSureYouWantToDeleteThisChoice": "您確定要刪除此選項嗎？",
-    "match.buckets": "配對項目",
-    "match.choices": "選項",
-    "match.correctBucketButWrongPosition": "配對項目正確，但位置不對",
-    "match.deleteBucket": "刪除配對項目",
-    "match.deleteChoice": "刪除選項",
-    "match.incorrectPositionFeedback": "錯誤的位置",
-    "match.position": "位置"
+  "match.addBucket": "新增配對項目",
+  "match.addChoice": "新增選項",
+  "match.areYouSureYouWantToDeleteThisBucket": "您確定要刪除此配對項目嗎？",
+  "match.areYouSureYouWantToDeleteThisChoice": "您確定要刪除此選項嗎？",
+  "match.buckets": "配對項目",
+  "match.choices": "選項",
+  "match.correctBucketButWrongPosition": "配對項目正確，但位置不對",
+  "match.deleteBucket": "刪除配對項目",
+  "match.deleteChoice": "刪除選項",
+  "match.incorrectPositionFeedback": "錯誤的位置",
+  "match.position": "位置"
 }
