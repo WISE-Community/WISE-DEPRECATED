@@ -25,49 +25,22 @@ var StudentProgressController = function () {
 
         this.teacherWorkgroupId = this.ConfigService.getWorkgroupId();
 
+        var startNodeId = this.ProjectService.getStartNodeId();
+        this.rootNodeId = this.ProjectService.getRootNode(startNodeId).id;
+
         // get the current sort order
         this.sort = this.TeacherDataService.studentProgressSort;
 
         // initialize the current workgroup
         this.TeacherDataService.setCurrentWorkgroup(null);
 
-        this.canViewStudentNames = true;
-        this.canGradeStudentWork = true;
-
-        // get the role of the teacher for the run e.g. 'owner', 'write', 'read'
-        var role = this.ConfigService.getTeacherRole(this.teacherWorkgroupId);
-
-        if (role === 'owner') {
-            // the teacher is the owner of the run and has full access
-            this.canViewStudentNames = true;
-            this.canGradeStudentWork = true;
-        } else if (role === 'write') {
-            // the teacher is a shared teacher that can grade the student work
-            this.canViewStudentNames = true;
-            this.canGradeStudentWork = true;
-        } else if (role === 'read') {
-            // the teacher is a shared teacher that can only view the student work
-            this.canViewStudentNames = false;
-            this.canGradeStudentWork = false;
-        }
-
-        // a switched user (admin/researcher user impersonating a teacher) should not be able to view/grade
-        if (this.ConfigService.isSwitchedUser()) {
-            this.canViewStudentNames = false;
-            this.canGradeStudentWork = false;
-        }
+        // get the teacher permissions
+        this.permissions = this.ConfigService.getPermissions();
 
         this.studentsOnline = this.TeacherWebSocketService.getStudentsOnline();
 
         this.students = [];
         this.initializeStudents();
-
-        this.studentStatuses = this.StudentStatusService.getStudentStatuses();
-
-        this.maxScore = this.ProjectService.getMaxScore();
-        if (this.maxScore === null) {
-            this.maxScore = 0;
-        }
 
         this.periods = [];
 
@@ -95,9 +68,6 @@ var StudentProgressController = function () {
 
             // update the students
             _this.initializeStudents();
-
-            // refresh the view
-            _this.$scope.$apply();
         });
 
         // listen for the studentStatusReceived event
@@ -109,11 +79,8 @@ var StudentProgressController = function () {
             // update the time spent for the workgroup
             _this.updateTimeSpentForWorkgroupId(workgroupId);
 
-            // update the students
-            _this.initializeStudents();
-
-            // refresh the view
-            _this.$scope.$apply();
+            // update students in the workgroup
+            _this.updateStudents(workgroupId);
         });
 
         // listen for the studentDisconnected event
@@ -129,11 +96,8 @@ var StudentProgressController = function () {
                 // remove the workgroup from the students online list
                 studentsOnline.splice(indexOfWorkgroupId, 1);
 
-                // update the students
-                _this.initializeStudents();
-
-                // refresh the view
-                _this.$scope.$apply();
+                // update students in the workgroup
+                _this.updateStudents(workgroupId);
             }
         });
 
@@ -179,7 +143,8 @@ var StudentProgressController = function () {
     }, {
         key: 'getStudentProjectCompletion',
         value: function getStudentProjectCompletion(workgroupId) {
-            return this.StudentStatusService.getStudentProjectCompletion(workgroupId);
+            // get project completion data for the given workgroup (only include nodes with student work)
+            return this.StudentStatusService.getStudentProjectCompletion(workgroupId, true);
         }
     }, {
         key: 'isWorkgroupOnline',
@@ -402,12 +367,12 @@ var StudentProgressController = function () {
                         var id = userIds[i];
                         var displayName = '';
 
-                        if (this.canViewStudentNames) {
+                        if (this.permissions.canViewStudentNames) {
                             // put user display name in 'lastName, firstName' order
                             var names = displayNames[i].split(' ');
                             displayName = names[1] + ', ' + names[0];
                         } else {
-                            displayName = 'Student ' + id;
+                            displayName = id;
                         }
 
                         var user = {
@@ -421,7 +386,8 @@ var StudentProgressController = function () {
                             location: this.getCurrentNodeForWorkgroupId(workgroup.workgroupId),
                             timeSpent: this.getStudentTimeSpent(workgroup.workgroupId),
                             completion: this.getStudentProjectCompletion(workgroup.workgroupId),
-                            score: this.getStudentTotalScore(workgroup.workgroupId)
+                            score: this.getStudentTotalScore(workgroup.workgroupId),
+                            maxScore: this.StudentStatusService.getMaxScoreForWorkgroupId(workgroup.workgroupId)
                         };
                         students.push(user);
                     }
@@ -430,11 +396,39 @@ var StudentProgressController = function () {
 
             this.students = students;
         }
+
+        /**
+         * Update student progress data for students with the given workgroup id
+         * @param workgroupId
+         */
+
     }, {
-        key: 'showWorkgroupProjectView',
-        value: function showWorkgroupProjectView(workgroup) {
-            this.TeacherDataService.setCurrentWorkgroup(workgroup);
-            this.$state.go('root.nodeProgress');
+        key: 'updateStudents',
+        value: function updateStudents(workgroupId) {
+            var isOnline = this.isWorkgroupOnline(workgroupId);
+            var location = this.getCurrentNodeForWorkgroupId(workgroupId);
+            var timeSpent = this.getStudentTimeSpent(workgroupId);
+            var completion = this.getStudentProjectCompletion(workgroupId);
+            var score = this.getStudentTotalScore(workgroupId);
+            var maxScore = this.StudentStatusService.getMaxScoreForWorkgroupId(workgroupId);
+
+            for (var i = 0; i < this.students; i++) {
+                var student = this.students[i];
+
+                if (student.workgroupId === workgroupId) {
+                    student.isOnline = isOnline;
+                    student.location = location;
+                    student.timeSpent = timeSpent;
+                    student.completion = completion;
+                    student.score = score;
+                    student.maxScore = maxScore;
+                }
+            }
+        }
+    }, {
+        key: 'showStudentGradingView',
+        value: function showStudentGradingView(workgroup) {
+            this.$state.go('root.studentGrading', { workgroupId: workgroup.workgroupId });
         }
     }, {
         key: 'setSort',

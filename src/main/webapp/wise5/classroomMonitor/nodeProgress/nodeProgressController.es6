@@ -183,7 +183,7 @@ class NodeProgressController {
         var periodId = currentPeriod.periodId;
 
         // get the percentage of the class or period that has completed the node
-        var completionPercentage = this.StudentStatusService.getNodeCompletion(nodeId, periodId);
+        var completionPercentage = this.StudentStatusService.getNodeCompletion(nodeId, periodId).completionPct;
 
         return completionPercentage;
     }

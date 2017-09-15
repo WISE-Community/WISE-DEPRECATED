@@ -69,26 +69,25 @@
                     </thead>
                     <tbody>
                         <tr class="list-item md-button"
-                            ng-repeat="workgroup in studentProgressController.students | orderBy:studentProgressController.getOrderBy()"
-                            ng-show="studentProgressController.isWorkgroupShown(workgroup)"
-                            ng-click="studentProgressController.showWorkgroupProjectView(workgroup)">
+                            ng-repeat="student in studentProgressController.students | orderBy:studentProgressController.getOrderBy()"
+                            ng-show="studentProgressController.isWorkgroupShown(student)">
                             <td class="center">
-                                <md-icon ng-if="workgroup.online" class="success" aria-label="{{ online |translate }}"> fiber_manual_record </md-icon>
-                                <md-icon ng-if="!workgroup.online" aria-label="{{ offline | translate }}"> fiber_manual_record </md-icon>
+                                <md-icon ng-if="student.online" class="success" aria-label="{{ online |translate }}"> fiber_manual_record </md-icon>
+                                <md-icon ng-if="!student.online" aria-label="{{ offline | translate }}"> fiber_manual_record </md-icon>
                             </td>
-                            <td class="center">{{workgroup.workgroupId}}</td>
-                            <td class="heavy">{{workgroup.userName}}</td>
+                            <td class="center">{{ student.workgroupId }}</td>
+                            <td class="heavy">{{ student.userName }}</td>
                             <td class="center">
-                                <div class="td--max-width">{{workgroup.location}}</div>
+                                <div class="td--max-width">{{ student.location }}</div>
                             </td>
-                            <td class="center">{{workgroup.timeSpent}}</td>
+                            <td class="center">{{ student.timeSpent }}</td>
                             <td layout="row" layout-align="center center">
-                                <project-progress completion="workgroup.completion"</project-progress>
+                                <project-progress completed="student.completion.completedItems" total="student.completion.totalItems" percent="student.completion.completionPct"</project-progress>
                                 </td>
                             <td class="center">
                                 <div layout="row" layout-align="center center" class="layout-align-center-center layout-row">
-                                    <span class="md-display-1">{{workgroup.score}}</span>&nbsp;
-                                    <span class="md-title text-secondary normal ng-binding">/{{studentProgressController.maxScore}}</span>
+                                    <span class="md-display-1">{{ student.score }}</span>&nbsp;
+                                    <span class="md-title text-secondary normal ng-binding">/{{ student.maxScore }}</span>
                                 </div>
                             </td>
                         </tr>

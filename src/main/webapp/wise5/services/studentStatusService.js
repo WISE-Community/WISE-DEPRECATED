@@ -114,32 +114,49 @@ var StudentStatusService = function () {
 
 
         /**
-         * Get the student project completion by workgroup id
+         * Get the student project completion data by workgroup id
          * @param workgroupId the workgroup id
-         * @returns the project completion percentage for the given workgroup
+         * @param excludeNonWorkNodes boolean whether to exclude nodes without
+         * @returns object with completed, total, and percent completed (integer
+         * between 0 and 100)
          */
-        value: function getStudentProjectCompletion(workgroupId) {
-
-            var completionPercentage = null;
+        value: function getStudentProjectCompletion(workgroupId, excludeNonWorkNodes) {
+            var completion = {
+                totalItems: 0,
+                completedItems: 0,
+                completionPct: 0
+            };
 
             // get the student status for the workgroup
             var studentStatus = this.getStudentStatusForWorkgroupId(workgroupId);
 
-            if (studentStatus != null) {
+            if (studentStatus) {
+                // get the project completion object
+                var projectCompletion = studentStatus.projectCompletion;
 
-                if (studentStatus != null) {
+                if (projectCompletion) {
+                    if (excludeNonWorkNodes) {
+                        // we're only looking for completion of nodes with work
+                        var completionPctWithWork = projectCompletion.completionPctWithWork;
 
-                    // get the project completion object
-                    var projectCompletion = studentStatus.projectCompletion;
-
-                    if (projectCompletion != null) {
-                        // get the project completion percentage
-                        completionPercentage = projectCompletion.completionPct;
+                        if (completionPctWithWork) {
+                            completion.totalItems = projectCompletion.totalItemsWithWork;
+                            completion.completedItems = projectCompletion.completedItemsWithWork;
+                            completion.completionPct = projectCompletion.completionPct;
+                        } else {
+                            /*
+                             * we have a legacy projectCompletion object that only includes information for all nodes
+                             * so we need to calculate manually
+                             */
+                            completion = this.getNodeCompletion('group0', -1, workgroupId, true);
+                        }
+                    } else {
+                        completion = projectCompletion;
                     }
                 }
             }
 
-            return completionPercentage;
+            return completion;
         }
 
         /**
@@ -184,13 +201,14 @@ var StudentStatusService = function () {
         }
 
         /**
-         * Get the percentage of the period that has completed the node
+         * Get node completion info for the given parameters
          * @param nodeId the node id
-         * @param periodId the period id. pass in -1 to select all periods.
+         * @param periodId the period id (pass in -1 to select all periods)
          * @param workgroupId the workgroup id to limit results to (optional)
-         * @param excludeNonWorkNodes boolean whether to exclude nodes without student work or not (optional)
-         * @returns the percentage of the period that has completed the node.
-         * this value will be an integer between 0-100.
+         * @param excludeNonWorkNodes boolean whether to exclude nodes without
+         * student work or not (optional)
+         * @returns object with completed, total, and percent completed (integer
+         * between 0 and 100).
          */
 
     }, {
@@ -222,42 +240,53 @@ var StudentStatusService = function () {
 
                                 if (nodeStatus != null) {
                                     if (isGroupNode) {
+                                        // given node is a group
+                                        // get progress object from the nodeStatus
+                                        var progress = nodeStatus.progress;
+
                                         if (excludeNonWorkNodes) {
-                                            /* nodeStatus.progress includes completion information for all nodes;
-                                             * we want only nodes that capture student work, so we need to do a custom calculation
-                                             */
-                                            var group = this.ProjectService.getNodeById(nodeId);
+                                            // we're looking for only nodes with student work
+                                            if (progress && progress.totalItemsWithWork) {
+                                                numTotal += progress.totalItemsWithWork;
+                                                numCompleted += progress.completedItemsWithWork;
+                                            } else {
+                                                /*
+                                                 * we have a legacy nodeStatus.progress that only includes completion information for all nodes
+                                                 * so we need to calculate manually
+                                                 */
+                                                var group = this.ProjectService.getNodeById(nodeId);
 
-                                            // get all the descendants of the group
-                                            var descendants = this.ProjectService.getDescendentsOfGroup(group);
-                                            var l = descendants.length;
+                                                // get all the descendants of the group
+                                                var descendants = this.ProjectService.getDescendentsOfGroup(group);
+                                                var l = descendants.length;
 
-                                            // loop through all the descendants to check for completion
-                                            for (var i = 0; i < l; i++) {
-                                                var descendantId = descendants[i];
+                                                // loop through all the descendants to check for completion
+                                                for (var i = 0; i < l; i++) {
+                                                    var descendantId = descendants[i];
 
-                                                if (!this.ProjectService.isGroupNode(descendantId)) {
-                                                    // node is not a group, so add to totals if visible and has student work
-                                                    var descendantStatus = nodeStatuses[descendantId];
+                                                    if (!this.ProjectService.isGroupNode(descendantId)) {
+                                                        // node is not a group, so add to totals if visible and has student work
+                                                        var descendantStatus = nodeStatuses[descendantId];
 
-                                                    if (descendantStatus && descendantStatus.isVisible && this.ProjectService.nodeHasWork(descendantId)) {
-                                                        numTotal++;
+                                                        if (descendantStatus && descendantStatus.isVisible && this.ProjectService.nodeHasWork(descendantId)) {
+                                                            numTotal++;
 
-                                                        if (descendantStatus.isCompleted) {
-                                                            numCompleted++;
+                                                            if (descendantStatus.isCompleted) {
+                                                                numCompleted++;
+                                                            }
                                                         }
                                                     }
                                                 }
                                             }
                                         } else {
-                                            // we're looking for completion percentage of all nodes, so we can use nodeStatus.progress
-                                            var progress = nodeStatus.progress;
+                                            // we're looking for completion percentage of all nodes
                                             if (progress) {
                                                 numTotal += progress.totalItems;
                                                 numCompleted += progress.completedItems;
                                             }
                                         }
                                     } else {
+                                        // given node is not a group
                                         if (nodeStatus.isVisible) {
                                             /*
                                              * the student can see the step. we need this check
@@ -267,8 +296,10 @@ var StudentStatusService = function () {
                                              * the step.
                                              */
 
-                                            // check whether we should include the node in the calculation
-                                            // i.e. either includeNonWorkNodes is true or the node has student work
+                                            /*
+                                             * check whether we should include the node in the calculation
+                                             * i.e. either includeNonWorkNodes is true or the node has student work
+                                             */
                                             var includeNode = !excludeNonWorkNodes || this.ProjectService.nodeHasWork(nodeId);
 
                                             if (includeNode) {
@@ -288,13 +319,14 @@ var StudentStatusService = function () {
                 }
             }
 
-            /*
-             * generate the percentage number rounded down to the nearest integer.
-             * the value will be between 0-100
-             */
+            // generate the percentage number rounded down to the nearest integer
             var completionPercentage = numTotal > 0 ? Math.floor(100 * numCompleted / numTotal) : 0;
 
-            return completionPercentage;
+            return {
+                completedItems: numCompleted,
+                totalItems: numTotal,
+                completionPct: completionPercentage
+            };
         }
 
         /**
@@ -434,6 +466,48 @@ var StudentStatusService = function () {
             }
 
             return averageScore;
+        }
+
+        /**
+         * Get the max score for the project for the given workgroup id
+         * @param workgroupId
+         * @returns the sum of the max scores for all the nodes in the project visible
+         * to the given workgroupId or null if none of the visible components has max scores.
+         */
+
+    }, {
+        key: 'getMaxScoreForWorkgroupId',
+        value: function getMaxScoreForWorkgroupId(workgroupId) {
+            var maxScore = null;
+
+            var studentStatus = this.getStudentStatusForWorkgroupId(workgroupId);
+
+            if (studentStatus) {
+                var nodeStatuses = studentStatus.nodeStatuses;
+
+                if (nodeStatuses) {
+                    // loop through all the node statuses
+                    for (var p in nodeStatuses) {
+                        if (nodeStatuses.hasOwnProperty(p)) {
+                            var nodeStatus = nodeStatuses[p];
+                            var nodeId = nodeStatus.nodeId;
+
+                            if (nodeStatus.isVisible && !this.ProjectService.isGroupNode(nodeId)) {
+                                // node is visible and is not a group
+                                // get node max score
+                                var nodeMaxScore = this.ProjectService.getMaxScoreForNode(nodeId);
+
+                                if (nodeMaxScore) {
+                                    // there is a max score for the node, so add to total
+                                    maxScore += nodeMaxScore;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            return maxScore;
         }
     }]);
 
