@@ -9,6 +9,8 @@ Setup WISE on a Server: https://github.com/WISE-Community/WISE/wiki/How-to-Setup
 Run WISE locally using Docker: https://github.com/WISE-Community/WISE/wiki/WISE-Docker
 
 Develop WISE locally using Docker: https://github.com/WISE-Community/WISE/wiki/WISE-Development-using-Docker
+
+Release Notes: https://github.com/WISE-Community/WISE/wiki/WISE-Release-Notes
  
 Design Doc and Notes: https://github.com/WISE-Community/WISE/wiki/WISE5-Design-Documentation-and-Notes
 
