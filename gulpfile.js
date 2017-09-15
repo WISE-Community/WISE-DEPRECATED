@@ -82,6 +82,7 @@ gulp.task('transpile', function() {
         .pipe(babel({
           presets: ['es2015']
         }))
+        .on('error', console.error.bind(console))
         .pipe(sourcemaps.write('.'))
         .pipe(gulp.dest(changedFileDir));
     });
