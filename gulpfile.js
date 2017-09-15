@@ -142,7 +142,7 @@ gulp.task('update-i18n', function() {
       }
 
       var jsonReplacer = null;
-      var jsonSpace = 4;  // use 4 spaces
+      var jsonSpace = 2;  // use 2 spaces
       var result = JSON.stringify(result, jsonReplacer, jsonSpace);
       fs.writeFileSync(i18n_folder +
           "i18n_" + supportedLocale + ".json", result);
