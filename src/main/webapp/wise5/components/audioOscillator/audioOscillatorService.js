@@ -195,6 +195,31 @@ var AudioOscillatorService = function (_NodeService) {
         value: function componentUsesSubmitButton() {
             return true;
         }
+
+        /**
+         * Check if the component state has student work. Sometimes a component
+         * state may be created if the student visits a component but doesn't
+         * actually perform any work. This is where we will check if the student
+         * actually performed any work.
+         * @param componentState the component state object
+         * @param componentContent the component content
+         * @return whether the component state has any work
+         */
+
+    }, {
+        key: 'componentStateHasStudentWork',
+        value: function componentStateHasStudentWork(componentState, componentContent) {
+            if (componentState != null) {
+                var _studentData2 = componentState.studentData;
+                if (_studentData2 != null) {
+                    if (_studentData2.frequenciesPlayed != null && _studentData2.frequenciesPlayed.length > 0) {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
     }]);
 
     return AudioOscillatorService;
