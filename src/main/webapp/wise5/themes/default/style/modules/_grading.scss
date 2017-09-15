@@ -1,0 +1,27 @@
+.grading {
+    padding-left: 8px;
+    padding-right: 8px;
+
+    @media (min-width: $layout-breakpoint-xs) {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+    @media (min-width: $layout-breakpoint-sm) {
+        padding-left: 24px;
+        padding-right: 24px;
+    }
+}
+
+.grading__item-container {
+    margin: 0 0 16px;
+    padding: 0 !important;
+}
+
+.grading__item {
+    background-color: #ffffff;
+
+    .component {
+        padding: 0;
+    }
+}

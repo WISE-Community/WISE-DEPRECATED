@@ -47,8 +47,8 @@ class VLEController {
         // get the total score for the workgroup
         this.totalScore = this.StudentDataService.getTotalScore();
 
-        // get the max score for the project
-        this.maxScore = this.ProjectService.getMaxScore();
+        // get the max possible score for the workgroup
+        this.maxScore = this.StudentDataService.maxScore;
 
         this.notebookEnabled = this.NotebookService.isNotebookEnabled();
 

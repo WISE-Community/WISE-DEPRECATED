@@ -290,12 +290,6 @@ var TeacherDataService = function () {
          */
         value: function retrieveStudentDataByNodeId(nodeId) {
 
-            //var periodId = null;
-
-            //if (this.currentPeriod != null && this.currentPeriod.periodName != 'All') {
-            //periodId = this.currentPeriod.periodId;
-            //}
-
             // get the node ids and component ids in the node
             var nodeIdsAndComponentIds = this.ProjectService.getNodeIdsAndComponentIds(nodeId);
 
@@ -312,6 +306,7 @@ var TeacherDataService = function () {
             params.periodId = null;
             params.workgroupId = null;
             params.components = components;
+            params.getAnnotations = false;
 
             return this.retrieveStudentData(params);
         }
@@ -332,6 +327,7 @@ var TeacherDataService = function () {
             params.nodeId = null;
             params.workgroupId = workgroupId;
             params.toWorkgroupId = workgroupId;
+            params.getAnnotations = false;
 
             return this.retrieveStudentData(params);
         }

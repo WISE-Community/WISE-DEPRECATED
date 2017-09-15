@@ -33,6 +33,7 @@ var StudentDataService = function () {
         this.visitedNodesHistory = [];
         this.nodeStatuses = {};
         this.runStatus = null;
+        this.maxScore = null;
 
         this.maxPlanningNodeNumber = 0;
 
@@ -334,6 +335,9 @@ var StudentDataService = function () {
                     this.updateNodeStatusByNode(group);
                 }
             }
+
+            // update max score
+            this.maxScore = this.getMaxScore();
 
             this.$rootScope.$broadcast('nodeStatusesChanged');
         }
@@ -2246,13 +2250,17 @@ var StudentDataService = function () {
 
 
         /**
-         * Get completed items, total number of visible items, completion % for a node
+         * Get progress information for a given node
          * @param nodeId the node id
-         * @returns object with number of completed items and number of visible items
+         * @returns object with number of completed items (both all and for items
+         * that capture student work), number of visible items (all/with work),
+         * completion % (for all items, items with student work)
          */
         value: function getNodeProgressById(nodeId) {
             var completedItems = 0;
+            var completedItemsWithWork = 0;
             var totalItems = 0;
+            var totalItemsWithWork = 0;
 
             if (this.ProjectService.isGroupNode(nodeId)) {
                 var nodeIds = this.ProjectService.getChildNodeIdsById(nodeId);
@@ -2267,8 +2275,18 @@ var StudentDataService = function () {
                     } else {
                         if (status.isVisible) {
                             totalItems++;
+
+                            var hasWork = this.ProjectService.nodeHasWork(nodeId);
+                            if (hasWork) {
+                                totalItemsWithWork++;
+                            }
+
                             if (status.isCompleted) {
                                 completedItems++;
+
+                                if (hasWork) {
+                                    completedItemsWithWork++;
+                                }
                             }
                         }
                     }
@@ -2278,12 +2296,16 @@ var StudentDataService = function () {
             // TODO: implement for steps (using components instead of child nodes)
 
             var completionPct = totalItems ? Math.round(completedItems / totalItems * 100) : 0;
-            var progress = {
+            var completionPctWithWork = totalItemsWithWork ? Math.round(completedItemsWithWork / totalItemsWithWork * 100) : 0;
+
+            return {
                 "completedItems": completedItems,
+                "completedItemsWithWork": completedItemsWithWork,
                 "totalItems": totalItems,
-                "completionPct": completionPct
+                "totalItemsWithWork": totalItemsWithWork,
+                "completionPct": completionPct,
+                "completionPctWithWork": completionPctWithWork
             };
-            return progress;
         }
     }, {
         key: 'isCompleted',
@@ -3088,6 +3110,39 @@ var StudentDataService = function () {
 
                 return componentStates;
             });
+        }
+
+        /**
+         * Get the max possible score for the project
+         * @returns the sum of the max scores for all the nodes in the project visible
+         * to the current workgroup or null if none of the visible components has max scores.
+         */
+
+    }, {
+        key: 'getMaxScore',
+        value: function getMaxScore() {
+            var maxScore = null;
+
+            // loop through all the node statuses
+            for (var p in this.nodeStatuses) {
+                if (this.nodeStatuses.hasOwnProperty(p)) {
+                    var nodeStatus = this.nodeStatuses[p];
+                    var nodeId = nodeStatus.nodeId;
+
+                    if (nodeStatus.isVisible && !this.ProjectService.isGroupNode(nodeId)) {
+                        // node is visible and is not a group
+                        // get node max score
+                        var nodeMaxScore = this.ProjectService.getMaxScoreForNode(nodeId);
+
+                        if (nodeMaxScore) {
+                            // there is a max score for the node, so add to total
+                            maxScore += nodeMaxScore;
+                        }
+                    }
+                }
+            }
+
+            return maxScore;
         }
     }]);
 

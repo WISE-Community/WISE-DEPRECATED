@@ -138,7 +138,7 @@ const WorkgroupNodeGrading = {
         hiddenComponents: '<'
     },
     template:
-        `<div class="nav-item__grading">
+        `<div class="grading__item">
             <div id="component_{{component.id}}_{{$ctrl.workgroupId}}" class="component component--grading" ng-repeat='component in $ctrl.components | filter:{hasWork: true}'>
                 <div ng-show="$ctrl.isComponentVisible(component.id)">
                     <h3 class="accent-2 md-body-2 gray-lightest-bg component__header">

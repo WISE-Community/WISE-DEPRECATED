@@ -311,7 +311,7 @@ class NavItemController {
     getNodeCompletion() {
         // get completion for all students in the current period
         let periodId = this.currentPeriod.periodId;
-        return this.StudentStatusService.getNodeCompletion(this.nodeId, periodId, null, true);
+        return this.StudentStatusService.getNodeCompletion(this.nodeId, periodId, null, true).completionPct;
     }
 
     /**
