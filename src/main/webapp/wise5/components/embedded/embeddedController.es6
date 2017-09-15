@@ -626,6 +626,9 @@ class EmbeddedController {
                             if (args.target == 'modelFile') {
                                 // the target is the model file name
                                 this.authoringComponentContent.url = fileName;
+
+                                // save the project
+                                this.authoringViewComponentChanged();
                             }
                         }
                     }

@@ -602,6 +602,9 @@ var EmbeddedController = function () {
                             if (args.target == 'modelFile') {
                                 // the target is the model file name
                                 _this.authoringComponentContent.url = fileName;
+
+                                // save the project
+                                _this.authoringViewComponentChanged();
                             }
                         }
                     }
