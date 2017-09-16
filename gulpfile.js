@@ -6,28 +6,28 @@
 // Dependencies
 // -----------------------------------------------------------------------------
 
-var gulp = require('gulp');
+const gulp = require('gulp');
 const babel = require('gulp-babel');
 const sourcemaps = require('gulp-sourcemaps');
-var autoprefixer = require('autoprefixer');
-var cssnano = require('cssnano');
-var fs = require('fs');
-var gulpif = require('gulp-if');
-var merge = require('gulp-merge-json');
-var newer = require('gulp-newer');
-var postcss = require('gulp-postcss');
-var print = require('gulp-print');
-var sass = require('gulp-sass');
-//var rtlscss = require('rtlcss');
+const autoprefixer = require('autoprefixer');
+const cssnano = require('cssnano');
+const fs = require('fs');
+const gulpif = require('gulp-if');
+const merge = require('gulp-merge-json');
+const newer = require('gulp-newer');
+const postcss = require('gulp-postcss');
+const print = require('gulp-print');
+const sass = require('gulp-sass');
+//const rtlscss = require('rtlcss');
 
 // -----------------------------------------------------------------------------
 // Configuration
 // -----------------------------------------------------------------------------
 
-var sassOptions = { style: 'compact' };
-var paths = ['./src/main/webapp/wise5/style/**/*.scss',
+const sassOptions = { style: 'compact' };
+const paths = ['./src/main/webapp/wise5/style/**/*.scss',
     './src/main/webapp/wise5/themes/*/style/**/*.scss'];
-var autoprefixerOptions = { browsers: ['> 5%', 'last 2 versions',
+const autoprefixerOptions = { browsers: ['> 5%', 'last 2 versions',
     'Firefox ESR', 'not ie <= 10'] };
 
 // -----------------------------------------------------------------------------
@@ -43,10 +43,10 @@ gulp.task('compile-sass', function() {
     .pipe(postcss([ autoprefixer(autoprefixerOptions),
         cssnano({zindex: false})/*, rtlcss*/ ]) )
     .pipe(sourcemaps.write('.'))
-    //.pipe(rename({suffix: ".min"}))
+    //.pipe(rename({suffix: '.min'}))
     .pipe(gulp.dest('./'))
     .pipe(print(function(filepath) {
-      return "Compiled: " + filepath;
+      return 'Compiled: ' + filepath;
     }));
     //.pipe(gulp.dest(function(file) {
       //return file.base;
@@ -70,28 +70,26 @@ gulp.task('watch-sass', ['set-watch'], function() {
     });
 });
 
-gulp.task('transpile', function() {
-  return gulp.watch(["./src/main/webapp/wise5/**/*.es6"])
-    .on("change", function(event) {
+gulp.task('transpile', () => {
+  return gulp.watch(['./src/main/webapp/wise5/**/*.es6'])
+    .on('change', (event) => {
       const changedFilePath = event.path;
       let changedFileDir = '';
-      let lastIndexOfForwardSlash = changedFilePath.lastIndexOf("/");
+      const lastIndexOfForwardSlash = changedFilePath.lastIndexOf('/');
       if (lastIndexOfForwardSlash > 0) {
         changedFileDir = changedFilePath.substr(0, lastIndexOfForwardSlash);
       } else {
         changedFileDir =
-          changedFilePath.substr(0, changedFilePath.lastIndexOf("\\"));
+          changedFilePath.substr(0, changedFilePath.lastIndexOf('\\'));
       }
 
-      console.log("transpiled: " + changedFilePath);
       gulp.src(changedFilePath)
         .pipe(sourcemaps.init())
-        .pipe(babel({
-          presets: ['es2015']
-        }))
+        .pipe(babel({ presets: ['es2015'] }))
         .on('error', console.error.bind(console))
         .pipe(sourcemaps.write('.'))
         .pipe(gulp.dest(changedFileDir));
+      console.log('transpiled: ' + changedFilePath);
     });
 });
 
@@ -100,15 +98,16 @@ gulp.task('transpile', function() {
 // Removes extra keys from foreignLocale
 // -----------------------------------------------------------------------------
 gulp.task('update-i18n', function() {
-  var supportedLocales = ['ar','es','fr','de','el','iw','ja','ko',
+  const supportedLocales = ['ar','es','fr','de','el','iw','ja','ko',
     'nl','pt','tr','zh_CN','zh_TW'];
 
   // update WISE5 i18n files
-  var wise5_i18n_folders = [
+  const wise5_i18n_folders = [
     './src/main/webapp/wise5/i18n/',
     './src/main/webapp/wise5/authoringTool/i18n/',
     './src/main/webapp/wise5/classroomMonitor/i18n/',
     './src/main/webapp/wise5/vle/i18n/',
+    './src/main/webapp/wise5/components/animation/i18n/',
     './src/main/webapp/wise5/components/audioOscillator/i18n/',
     './src/main/webapp/wise5/components/conceptMap/i18n/',
     './src/main/webapp/wise5/components/discussion/i18n/',
@@ -123,41 +122,41 @@ gulp.task('update-i18n', function() {
     './src/main/webapp/wise5/components/outsideURL/i18n/',
     './src/main/webapp/wise5/components/table/i18n/'
   ];
-  var updatedAtLeasetOneI18NFile = false;
+  let updatedAtLeasetOneI18NFile = false;
   wise5_i18n_folders.map(function(i18n_folder) {
-    var english = JSON.parse(fs.readFileSync(i18n_folder + "i18n_en.json"));
+    const english = JSON.parse(fs.readFileSync(i18n_folder + 'i18n_en.json'));
     supportedLocales.map(function(supportedLocale) {
-      var result = JSON.parse(fs.readFileSync(i18n_folder + "i18n_en.json"));
-      var foreignLocale = {};
+      let result = JSON.parse(fs.readFileSync(i18n_folder + 'i18n_en.json'));
+      let foreignLocale = {};
       try {
         // if the file doesn't exist, it will throw an exception
         foreignLocale = JSON.parse(fs.readFileSync(i18n_folder +
-            "i18n_" + supportedLocale + ".json"));
+            'i18n_' + supportedLocale + '.json'));
       } catch (ex) {
         // do nothing. we'll use the default {} object
       }
-      for (var key in foreignLocale) {
+      for (let key in foreignLocale) {
         if (result[key]) {
-        result[key] = foreignLocale[key];
+          result[key] = foreignLocale[key];
         }
       }
-      // look for keys that don't exist in the foreignLocale and set value to ""
-      for (var key in english) {
-        if (foreignLocale[key] == null || foreignLocale[key] == "") {
+      // look for keys that don't exist in the foreignLocale and set value to ''
+      for (let key in english) {
+        if (foreignLocale[key] == null || foreignLocale[key] == '') {
           delete result[key];
         }
       }
 
-      var jsonReplacer = null;
-      var jsonSpace = 2;  // use 2 spaces
-      var result = JSON.stringify(result, jsonReplacer, jsonSpace);
+      let jsonReplacer = null;
+      let jsonSpace = 2;  // use 2 spaces
+      result = JSON.stringify(result, jsonReplacer, jsonSpace);
       fs.writeFileSync(i18n_folder +
-          "i18n_" + supportedLocale + ".json", result);
+          'i18n_' + supportedLocale + '.json', result);
     });
   });
   if (updatedAtLeasetOneI18NFile) {
-    console.log("I18N file(s) were updated as a result of " +
-        "running gulp update-i18n task.");
+    console.log('I18N file(s) were updated as a result of ' +
+        'running gulp update-i18n task.');
     process.exit(1);
   }
 });
