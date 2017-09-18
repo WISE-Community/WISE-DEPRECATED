@@ -1353,15 +1353,18 @@ class GraphController {
                                 var seriesName = this.series.name;
 
                                 // get the x and y values
-                                var x = this.x;
-                                var y = this.y;
+                                var x = thisGraphController.performRounding(this.x);
+                                var y = thisGraphController.performRounding(this.y);
+                                var category = thisGraphController.getCategoryByIndex(this.point.index);
 
                                 if (seriesName != null && seriesName != '') {
                                     // add the series name
                                     text += '<b>' + seriesName + '</b><br/>';
                                 }
 
-                                if (x != null && x != '') {
+                                if (category != null) {
+                                    xText = category;
+                                } else if (x != null && x != '') {
                                     // get the x value
                                     xText += x;
                                 }
@@ -5923,6 +5926,25 @@ class GraphController {
         }
 
         return false;
+    }
+
+    /**
+     * Get the category name given the index of the category on the x axis
+     * @param index the index of the category
+     * @return the category name at the given index
+     */
+    getCategoryByIndex(index) {
+
+        let category = null;
+
+        if (this.componentContent.xAxis != null &&
+                this.componentContent.xAxis.categories != null &&
+                index < this.componentContent.xAxis.categories.length) {
+
+            category = this.componentContent.xAxis.categories[index];
+        }
+
+        return category;
     }
 }
 
