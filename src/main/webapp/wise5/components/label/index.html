@@ -245,8 +245,8 @@
                                        style='width: 300'>
                                 <md-option ng-repeat='(componentIndex, component) in labelController.getComponentsByNodeId(connectedComponent.nodeId)'
                                            value='{{component.id}}'
-                                           ng-disabled='!labelController.isConnectedComponentTypeAllowed(component.type)'>
-                                    {{ componentIndex + 1}}. {{ component.type }}
+                                           ng-disabled='!labelController.isConnectedComponentTypeAllowed(component.type) || component.id == labelController.componentId'>
+                                    {{ componentIndex + 1 }}. {{ component.type }} <span ng-if='component.id == labelController.componentId'>({{ 'thisComponent' | translate }})</span>
                                 </md-option>
                             </md-select>
                         </md-input-container>
@@ -260,10 +260,6 @@
                                 </md-option>
                                 <md-option value='showWork'>
                                     {{ 'showWork' | translate }}
-                                </md-option>
-                                <md-option value='showClassmateWork'
-                                           ng-if='labelController.authoringGetConnectedComponentType(connectedComponent) == "Graph"'>
-                                    {{ 'showClassmateWork' | translate }}
                                 </md-option>
                             </md-select>
                         </md-input-container>

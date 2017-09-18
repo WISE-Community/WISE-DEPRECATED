@@ -3400,7 +3400,7 @@ class MatchController {
         var newConnectedComponent = {};
         newConnectedComponent.nodeId = this.nodeId;
         newConnectedComponent.componentId = null;
-        newConnectedComponent.type = 'importWork';
+        newConnectedComponent.type = null;
 
         // initialize the array of connected components if it does not exist yet
         if (this.authoringComponentContent.connectedComponents == null) {
@@ -3468,12 +3468,8 @@ class MatchController {
      */
     authoringConnectedComponentNodeIdChanged(connectedComponent) {
         if (connectedComponent != null) {
-
-            // remove all the specific component parameters
-            this.authoringConnectedComponentComponentIdChanged(connectedComponent);
-
-            // clear the component id
             connectedComponent.componentId = null;
+            connectedComponent.type = null;
 
             // the authoring component content has changed so we will save the project
             this.authoringViewComponentChanged();

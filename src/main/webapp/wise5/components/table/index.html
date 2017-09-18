@@ -199,8 +199,8 @@
                                            style='width: 300'>
                                     <md-option ng-repeat='(componentIndex, component) in tableController.getComponentsByNodeId(connectedComponent.nodeId)'
                                                value='{{component.id}}'
-                                               ng-disabled='!tableController.isConnectedComponentTypeAllowed(component.type)'>
-                                        {{ componentIndex + 1}}. {{component.type}}
+                                               ng-disabled='!tableController.isConnectedComponentTypeAllowed(component.type) || component.id == tableController.componentId'>
+                                        {{ componentIndex + 1 }}. {{component.type}} <span ng-if='component.id == tableController.componentId'>({{ 'thisComponent' | translate }})</span>
                                     </md-option>
                                 </md-select>
                             </md-input-container>
