@@ -310,6 +310,12 @@ var OpenResponseController = function () {
                          * components
                          */
                         this.handleConnectedComponents();
+                    } else if (this.componentContent.starterSentence != null) {
+                        /*
+                         * the student has not done any work and there is a starter sentence
+                         * so we will populate the textarea with the starter sentence
+                         */
+                        this.studentResponse = this.componentContent.starterSentence;
                     }
                 }
             } else {
