@@ -412,7 +412,7 @@ var StudentProgressController = function () {
             var score = this.getStudentTotalScore(workgroupId);
             var maxScore = this.StudentStatusService.getMaxScoreForWorkgroupId(workgroupId);
 
-            for (var i = 0; i < this.students; i++) {
+            for (var i = 0; i < this.students.length; i++) {
                 var student = this.students[i];
 
                 if (student.workgroupId === workgroupId) {

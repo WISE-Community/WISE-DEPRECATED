@@ -43,11 +43,10 @@ var StepToolsController = function () {
             var nodeId = this.TeacherDataService.getCurrentNodeId();
             if (!this.ProjectService.isGroupNode(nodeId)) {
                 this.nodeId = nodeId;
-
-                this.prevId = this.NodeService.getPrevNodeId();
+                this.prevId = this.NodeService.getPrevNodeIdWithWork();
                 this.nextId = null;
-                this.NodeService.getNextNodeId().then(function (nodeId) {
-                    _this2.nextId = nodeId;
+                this.NodeService.getNextNodeIdWithWork().then(function (nextNodeId) {
+                    _this2.nextId = nextNodeId;
                 });
 
                 // model variable for selected node id
@@ -82,12 +81,12 @@ var StepToolsController = function () {
     }, {
         key: 'goToPrevNode',
         value: function goToPrevNode() {
-            this.NodeService.goToPrevNode();
+            this.NodeService.goToPrevNodeWithWork();
         }
     }, {
         key: 'goToNextNode',
         value: function goToNextNode() {
-            this.NodeService.goToNextNode();
+            this.NodeService.goToNextNodeWithWork();
         }
     }]);
 
