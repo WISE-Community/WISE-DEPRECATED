@@ -233,6 +233,7 @@ var NodeGradingController = function () {
         key: 'getNodeCompletionStatusByWorkgroupId',
         value: function getNodeCompletionStatusByWorkgroupId(workgroupId) {
             var isCompleted = false;
+            var isVisible = false;
 
             // TODO: store this info in the nodeStatus so we don't have to calculate every time?
             var latestWorkTime = this.getLatestWorkTimeByWorkgroupId(workgroupId);
@@ -241,18 +242,15 @@ var NodeGradingController = function () {
             var studentStatus = this.StudentStatusService.getStudentStatusForWorkgroupId(workgroupId);
             if (studentStatus != null) {
                 var nodeStatus = studentStatus.nodeStatuses[this.nodeId];
-
-                if (latestWorkTime) {
-                    // workgroup has at least one componentState for this node, so check if node is completed
-
-                    if (nodeStatus) {
+                if (nodeStatus) {
+                    isVisible = nodeStatus.isVisible;
+                    if (latestWorkTime) {
+                        // workgroup has at least one componentState for this node, so check if node is completed
                         isCompleted = nodeStatus.isCompleted;
                     }
-                }
 
-                if (!this.ProjectService.nodeHasWork(this.nodeId)) {
-                    // the step does not generate any work so completion = visited
-                    if (nodeStatus) {
+                    if (!this.ProjectService.nodeHasWork(this.nodeId)) {
+                        // the step does not generate any work so completion = visited
                         isCompleted = nodeStatus.isVisited;
                     }
                 }
@@ -260,6 +258,7 @@ var NodeGradingController = function () {
 
             return {
                 isCompleted: isCompleted,
+                isVisible: isVisible,
                 latestWorkTime: latestWorkTime,
                 latestAnnotationTime: latestAnnotationTime
             };
@@ -328,11 +327,14 @@ var NodeGradingController = function () {
         value: function getWorkgroupCompletionStatus(completionStatus) {
             var hasWork = completionStatus.latestWorkTime !== null;
             var isCompleted = completionStatus.isCompleted;
+            var isVisible = completionStatus.isVisible;
 
             // TODO: store this info in the nodeStatus so we don't have to calculate every time (and can use more widely)?
             var status = 0; // default
 
-            if (isCompleted) {
+            if (!isVisible) {
+                status = -1;
+            } else if (isCompleted) {
                 status = 2;
             } else if (hasWork) {
                 status = 1;

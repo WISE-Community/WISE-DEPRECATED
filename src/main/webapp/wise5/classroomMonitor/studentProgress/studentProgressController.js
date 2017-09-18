@@ -411,6 +411,7 @@ var StudentProgressController = function () {
             var completion = this.getStudentProjectCompletion(workgroupId);
             var score = this.getStudentTotalScore(workgroupId);
             var maxScore = this.StudentStatusService.getMaxScoreForWorkgroupId(workgroupId);
+            maxScore = maxScore ? maxScore : 0;
 
             for (var i = 0; i < this.students.length; i++) {
                 var student = this.students[i];
