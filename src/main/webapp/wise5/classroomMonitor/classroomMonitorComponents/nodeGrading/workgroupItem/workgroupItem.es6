@@ -38,6 +38,10 @@ class WorkgroupItemController {
         let completion = 0;
 
         switch (this.status) {
+            case -1:
+                this.statusClass = ' ';
+                this.statusText = this.$translate('notAssigned');
+                break;
             case 2:
                 this.statusClass = 'success';
 
@@ -52,7 +56,6 @@ class WorkgroupItemController {
 
                 this.statusText = this.$translate('partiallyCompleted');
                 break;
-
             default:
                 this.statusClass = 'text-secondary';
 
@@ -66,6 +69,8 @@ class WorkgroupItemController {
         if (this.hasNewAlert) {
             this.statusClass = 'warn';
         }
+
+        this.disabled = (this.status === -1);
     }
 
     toggleExpand() {
@@ -101,6 +106,7 @@ const WorkgroupItem = {
                                aria-label="{{ toggleTeamWorkDisplay | translate }}"
                                ng-class="{'list-item--expanded': $ctrl.showWork, 'list-item--noclick': !$ctrl.showScore}"
                                ng-click="$ctrl.toggleExpand()"
+                               ng-disabled="$ctrl.disabled"
                                layout-wrap>
                     <div layout="row" flex>
                         <div flex layout="row" layout-align="start center">

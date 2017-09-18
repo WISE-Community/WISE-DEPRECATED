@@ -49,6 +49,10 @@ var WorkgroupItemController = function () {
             var completion = 0;
 
             switch (this.status) {
+                case -1:
+                    this.statusClass = ' ';
+                    this.statusText = this.$translate('notAssigned');
+                    break;
                 case 2:
                     this.statusClass = 'success';
 
@@ -63,7 +67,6 @@ var WorkgroupItemController = function () {
 
                     this.statusText = this.$translate('partiallyCompleted');
                     break;
-
                 default:
                     this.statusClass = 'text-secondary';
 
@@ -77,6 +80,8 @@ var WorkgroupItemController = function () {
             if (this.hasNewAlert) {
                 this.statusClass = 'warn';
             }
+
+            this.disabled = this.status === -1;
         }
     }, {
         key: 'toggleExpand',
@@ -105,7 +110,7 @@ var WorkgroupItem = {
         onUpdateExpand: '&'
     },
     controller: WorkgroupItemController,
-    template: '<div class="md-whiteframe-1dp" ng-class="{\'list-item--warn\': $ctrl.statusClass === \'warn\', \'list-item--info\': $ctrl.statusClass === \'info\'}">\n            <md-subheader class="list-item md-whiteframe-1dp">\n                <button class="md-button md-ink-ripple list-item__subheader-button"\n                               aria-label="{{ toggleTeamWorkDisplay | translate }}"\n                               ng-class="{\'list-item--expanded\': $ctrl.showWork, \'list-item--noclick\': !$ctrl.showScore}"\n                               ng-click="$ctrl.toggleExpand()"\n                               layout-wrap>\n                    <div layout="row" flex>\n                        <div flex layout="row" layout-align="start center">\n                            <workgroup-info has-alert="$ctrl.hasAlert" has-new-alert="$ctrl.hasNewAlert" has-new-work="$ctrl.hasNewWork" usernames="{{$ctrl.workgroupData.displayNames}}" workgroup-id="$ctrl.workgroupId"></workgroup-info>\n                        </div>\n                        <div flex="{{$ctrl.showScore ? 30 : 20}}" layout="row" layout-align="center center">\n                            <workgroup-node-status status-text="{{$ctrl.statusText}}" status-class="{{$ctrl.statusClass}}"></workgroup-node-status>\n                        </div>\n                        <div ng-if="$ctrl.showScore" flex="20" layout="row" layout-align="center center">\n                            <workgroup-node-score score="{{$ctrl.score}}" max-score="{{$ctrl.maxScore}}"></workgroup-node-score>\n                        </div>\n                    </div>\n                </button>\n            </md-subheader>\n            <md-list-item ng-if="$ctrl.expand" class="grading__item-container">\n                <workgroup-node-grading workgroup-id="$ctrl.workgroupId"\n                                        class="workgroup-node-grading"\n                                        node-id="{{$ctrl.nodeId}}"\n                                        hidden-components="$ctrl.hiddenComponents"\n                                        flex></workgroup-node-grading>\n            </md-list-item>\n        </div>'
+    template: '<div class="md-whiteframe-1dp" ng-class="{\'list-item--warn\': $ctrl.statusClass === \'warn\', \'list-item--info\': $ctrl.statusClass === \'info\'}">\n            <md-subheader class="list-item md-whiteframe-1dp">\n                <button class="md-button md-ink-ripple list-item__subheader-button"\n                               aria-label="{{ toggleTeamWorkDisplay | translate }}"\n                               ng-class="{\'list-item--expanded\': $ctrl.showWork, \'list-item--noclick\': !$ctrl.showScore}"\n                               ng-click="$ctrl.toggleExpand()"\n                               ng-disabled="$ctrl.disabled"\n                               layout-wrap>\n                    <div layout="row" flex>\n                        <div flex layout="row" layout-align="start center">\n                            <workgroup-info has-alert="$ctrl.hasAlert" has-new-alert="$ctrl.hasNewAlert" has-new-work="$ctrl.hasNewWork" usernames="{{$ctrl.workgroupData.displayNames}}" workgroup-id="$ctrl.workgroupId"></workgroup-info>\n                        </div>\n                        <div flex="{{$ctrl.showScore ? 30 : 20}}" layout="row" layout-align="center center">\n                            <workgroup-node-status status-text="{{$ctrl.statusText}}" status-class="{{$ctrl.statusClass}}"></workgroup-node-status>\n                        </div>\n                        <div ng-if="$ctrl.showScore" flex="20" layout="row" layout-align="center center">\n                            <workgroup-node-score score="{{$ctrl.score}}" max-score="{{$ctrl.maxScore}}"></workgroup-node-score>\n                        </div>\n                    </div>\n                </button>\n            </md-subheader>\n            <md-list-item ng-if="$ctrl.expand" class="grading__item-container">\n                <workgroup-node-grading workgroup-id="$ctrl.workgroupId"\n                                        class="workgroup-node-grading"\n                                        node-id="{{$ctrl.nodeId}}"\n                                        hidden-components="$ctrl.hiddenComponents"\n                                        flex></workgroup-node-grading>\n            </md-list-item>\n        </div>'
 };
 
 exports.default = WorkgroupItem;
