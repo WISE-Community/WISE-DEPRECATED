@@ -377,7 +377,7 @@ class StudentProgressController {
         let score = this.getStudentTotalScore(workgroupId);
         let maxScore = this.StudentStatusService.getMaxScoreForWorkgroupId(workgroupId);
 
-        for (let i = 0; i < this.students; i++) {
+        for (let i = 0; i < this.students.length; i++) {
             let student = this.students[i];
 
             if (student.workgroupId === workgroupId) {
