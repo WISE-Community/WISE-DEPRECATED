@@ -1259,7 +1259,7 @@ class ProjectService {
             // check if we have previously calculated the result before
             var rememberedResult = this.getIsNodeAffectedByConstraintResult(node.id, constraint.id, result);
 
-            if (rememberedResult !== null) {
+            if (rememberedResult != null) {
                 // we have calculated the result before
 
                 // use the remembered result
