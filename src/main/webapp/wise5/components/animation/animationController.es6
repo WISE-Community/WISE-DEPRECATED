@@ -3373,9 +3373,16 @@ class AnimationController {
                         let svgObject = this.idToSVGObject[id];
 
                         if (svgObject != null) {
-
-                            // resume playing the object animation
-                            svgObject.play();
+                            /*
+                             * Check if the object still needs to be animated or
+                             * if it has already finished performing all of its
+                             * animation. We only need to play it if it still
+                             * has more animating.
+                             */
+                            if (this.idToAnimationState[id]) {
+                                // resume playing the object animation
+                                svgObject.play();
+                            }
                         }
                     }
                 }
@@ -3414,15 +3421,23 @@ class AnimationController {
                             let clearQueue = true;
 
                             /*
-                             * We need to play it in case it is currently paused.
-                             * There is a minor bug in the animation library
-                             * which is cause if you pause an animation and
-                             * then stop the animation. Then if you try to play the
-                             * animation, the animation will not play. We avoid
-                             * this problem by making sure the object animation
-                             * is playing when we stop it.
+                             * Check if the object still needs to be animated or
+                             * if it has already finished performing all of its
+                             * animation. We only need to play it if it still
+                             * has more animating.
                              */
-                            svgObject.play();
+                            if (this.idToAnimationState[id]) {
+                                /*
+                                 * We need to play it in case it is currently paused.
+                                 * There is a minor bug in the animation library
+                                 * which is caused if you pause an animation and
+                                 * then stop the animation. Then if you try to play the
+                                 * animation, the animation will not play. We avoid
+                                 * this problem by making sure the object animation
+                                 * is playing when we stop it.
+                                 */
+                                svgObject.play();
+                            }
 
                             // stop the object from animating
                             svgObject.stop(jumpToEnd, clearQueue);
@@ -3462,6 +3477,11 @@ class AnimationController {
                     if (object != null) {
                         let id = object.id;
 
+                        /*
+                         * check if the object still needs to be animated or if
+                         * it has already finished performing all of its
+                         * animating
+                         */
                         if (this.idToAnimationState[id]) {
                             // an object is animating
                             return true;
