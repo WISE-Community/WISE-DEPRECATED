@@ -434,8 +434,8 @@
                                            style='width: 300'>
                                     <md-option ng-repeat='(componentIndex, component) in graphController.getComponentsByNodeId(connectedComponent.nodeId)'
                                                value='{{component.id}}'
-                                               ng-disabled='!graphController.isConnectedComponentTypeAllowed(component.type)'>
-                                        {{ componentIndex + 1}}. {{component.type}}
+                                               ng-disabled='!graphController.isConnectedComponentTypeAllowed(component.type) || component.id == graphController.componentId'>
+                                        {{ componentIndex + 1 }}. {{component.type}} <span ng-if='component.id == graphController.componentId'>({{ 'thisComponent' | translate }})</span>
                                     </md-option>
                                 </md-select>
                             </md-input-container>

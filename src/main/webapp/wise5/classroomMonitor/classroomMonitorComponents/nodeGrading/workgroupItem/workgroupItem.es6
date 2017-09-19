@@ -38,6 +38,10 @@ class WorkgroupItemController {
         let completion = 0;
 
         switch (this.status) {
+            case -1:
+                this.statusClass = ' ';
+                this.statusText = this.$translate('notAssigned');
+                break;
             case 2:
                 this.statusClass = 'success';
 
@@ -52,7 +56,6 @@ class WorkgroupItemController {
 
                 this.statusText = this.$translate('partiallyCompleted');
                 break;
-
             default:
                 this.statusClass = 'text-secondary';
 
@@ -66,6 +69,8 @@ class WorkgroupItemController {
         if (this.hasNewAlert) {
             this.statusClass = 'warn';
         }
+
+        this.disabled = (this.status === -1);
     }
 
     toggleExpand() {
@@ -99,8 +104,10 @@ const WorkgroupItem = {
             <md-subheader class="list-item md-whiteframe-1dp">
                 <button class="md-button md-ink-ripple list-item__subheader-button"
                                aria-label="{{ toggleTeamWorkDisplay | translate }}"
-                               ng-class="{'list-item--expanded': $ctrl.showWork, 'list-item--noclick': !$ctrl.showScore}"
+                               ng-class="{'list-item--expanded': $ctrl.showWork,
+                                   'list-item--noclick': !$ctrl.showScore || $ctrl.disabled}"
                                ng-click="$ctrl.toggleExpand()"
+                               ng-disabled="$ctrl.disabled"
                                layout-wrap>
                     <div layout="row" flex>
                         <div flex layout="row" layout-align="start center">
@@ -115,7 +122,7 @@ const WorkgroupItem = {
                     </div>
                 </button>
             </md-subheader>
-            <md-list-item ng-if="$ctrl.expand" class="grading__item-container">
+            <md-list-item ng-if="$ctrl.expand && !$ctrl.disabled" class="grading__item-container">
                 <workgroup-node-grading workgroup-id="$ctrl.workgroupId"
                                         class="workgroup-node-grading"
                                         node-id="{{$ctrl.nodeId}}"

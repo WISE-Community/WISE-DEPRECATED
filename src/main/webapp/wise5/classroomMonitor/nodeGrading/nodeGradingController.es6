@@ -175,6 +175,7 @@ class NodeGradingController {
             workgroup.hasNewAlert = this.workgroupHasNewAlert(alertNotifications);
             let completionStatus = this.getNodeCompletionStatusByWorkgroupId(workgroupId);
             workgroup.hasNewWork = completionStatus.hasNewWork;
+            workgroup.isVisible = completionStatus.isVisible ? 1 : 0;
             workgroup.completionStatus = this.getWorkgroupCompletionStatus(completionStatus);
             workgroup.score = this.getNodeScoreByWorkgroupId(workgroupId);
 
@@ -218,6 +219,7 @@ class NodeGradingController {
      */
     getNodeCompletionStatusByWorkgroupId(workgroupId) {
         let isCompleted = false;
+        let isVisible = false;
 
         // TODO: store this info in the nodeStatus so we don't have to calculate every time?
         let latestWorkTime = this.getLatestWorkTimeByWorkgroupId(workgroupId);
@@ -226,18 +228,15 @@ class NodeGradingController {
         let studentStatus = this.StudentStatusService.getStudentStatusForWorkgroupId(workgroupId);
         if (studentStatus != null) {
             let nodeStatus = studentStatus.nodeStatuses[this.nodeId];
-
-            if (latestWorkTime) {
-                // workgroup has at least one componentState for this node, so check if node is completed
-
-                if (nodeStatus) {
+            if (nodeStatus) {
+                isVisible = nodeStatus.isVisible;
+                if (latestWorkTime) {
+                    // workgroup has at least one componentState for this node, so check if node is completed
                     isCompleted = nodeStatus.isCompleted;
                 }
-            }
 
-            if (!this.ProjectService.nodeHasWork(this.nodeId)) {
-                // the step does not generate any work so completion = visited
-                if (nodeStatus) {
+                if (!this.ProjectService.nodeHasWork(this.nodeId)) {
+                    // the step does not generate any work so completion = visited
                     isCompleted = nodeStatus.isVisited;
                 }
             }
@@ -245,6 +244,7 @@ class NodeGradingController {
 
         return {
             isCompleted: isCompleted,
+            isVisible: isVisible,
             latestWorkTime: latestWorkTime,
             latestAnnotationTime: latestAnnotationTime
         };
@@ -305,11 +305,14 @@ class NodeGradingController {
     getWorkgroupCompletionStatus(completionStatus) {
         let hasWork = completionStatus.latestWorkTime !== null;
         let isCompleted = completionStatus.isCompleted;
+        let isVisible = completionStatus.isVisible;
 
         // TODO: store this info in the nodeStatus so we don't have to calculate every time (and can use more widely)?
         let status = 0; // default
 
-        if (isCompleted) {
+        if (!isVisible) {
+            status = -1;
+        } else if (isCompleted) {
             status = 2;
         } else if (hasWork) {
             status = 1;
@@ -683,22 +686,22 @@ class NodeGradingController {
 
         switch (this.sort) {
             case 'team':
-                orderBy = ['displayNames'];
+                orderBy = ['-isVisible', 'displayNames'];
                 break;
             case '-team':
-                orderBy = ['-displayNames'];
+                orderBy = ['-isVisible', '-displayNames'];
                 break;
             case 'status':
-                orderBy = ['completionStatus', 'displayNames'];
+                orderBy = ['-isVisible', 'completionStatus', 'displayNames'];
                 break;
             case '-status':
-                orderBy = ['-completionStatus', 'displayNames'];
+                orderBy = ['-isVisible', '-completionStatus', 'displayNames'];
                 break;
             case 'score':
-                orderBy = ['score', 'displayNames'];
+                orderBy = ['-isVisible', 'score', 'displayNames'];
                 break;
             case '-score':
-                orderBy = ['-score', 'displayNames'];
+                orderBy = ['-isVisible', '-score', 'displayNames'];
                 break;
         }
 

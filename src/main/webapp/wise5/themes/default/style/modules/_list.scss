@@ -59,6 +59,7 @@
 
 .list-item--noclick, .list-item--noclick.md-button {
     cursor: default;
+    background-color: color('gray-lightest');
 }
 
 .list-item--actions {

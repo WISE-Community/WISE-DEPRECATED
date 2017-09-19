@@ -204,6 +204,7 @@
     "tags": "Tags",
     "thereIsNoNextStep": "There is no next step",
     "thereIsNoPreviousStep": "There is no previous step",
+    "thisComponent": "This Component",
     "title": "Title",
     "toNodeID": "To Node Id",
     "transitionCriteria": "Which criteria should match to use this path",

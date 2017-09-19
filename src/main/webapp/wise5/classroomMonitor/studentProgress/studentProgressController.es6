@@ -376,6 +376,7 @@ class StudentProgressController {
         let completion = this.getStudentProjectCompletion(workgroupId);
         let score = this.getStudentTotalScore(workgroupId);
         let maxScore = this.StudentStatusService.getMaxScoreForWorkgroupId(workgroupId);
+        maxScore = maxScore ? maxScore : 0;
 
         for (let i = 0; i < this.students.length; i++) {
             let student = this.students[i];
