@@ -129,7 +129,7 @@ class AuthorNotebookController {
                   // insert the video element
                   var videoElement = document.createElement('video');
                   videoElement.controls = 'true';
-                  videoElement.innerHTML = "<source ng-src='" + fullAssetPath + "' type='video/mp4'>";
+                  videoElement.innerHTML = '<source ng-src="' + fullAssetPath + '" type="video/mp4">';
                   $('#' + summernoteId).summernote('insertNode', videoElement);
                 }
               }

@@ -42,7 +42,7 @@ var ProjectController = function () {
     this.inactiveGroups = this.ProjectService.getInactiveGroups();
     this.inactiveNodes = this.ProjectService.getInactiveNodes();
     this.projectScriptFilename = this.ProjectService.getProjectScriptFilename();
-    this.currentAuthorsMessage = ""; // show a message when there is more than one author currently authoring this project
+    this.currentAuthorsMessage = ''; // show a message when there is more than one author currently authoring this project
 
     this.projectMode = true;
     this.showCreateGroup = false;
@@ -57,9 +57,9 @@ var ProjectController = function () {
      * The colors for the branch path steps. The colors are from
      * http://colorbrewer2.org/
      * http://colorbrewer2.org/export/colorbrewer.js
-     * The colors chosen are from the "qualitative", "Set2".
+     * The colors chosen are from the 'qualitative', 'Set2'.
      */
-    this.stepBackgroundColors = ["#66c2a5", "#fc8d62", "#8da0cb", "#e78ac3", "#a6d854", "#ffd92f", "#e5c494", "#b3b3b3"];
+    this.stepBackgroundColors = ['#66c2a5', '#fc8d62', '#8da0cb', '#e78ac3', '#a6d854', '#ffd92f', '#e5c494', '#b3b3b3'];
 
     // we are opening the project so we will set the current node to null
     this.TeacherDataService.setCurrentNode(null);
@@ -107,13 +107,13 @@ var ProjectController = function () {
       // remove my username from the currentAuthors
       currentAuthorsUsernames.splice(currentAuthorsUsernames.indexOf(myUserName), 1);
       if (currentAuthorsUsernames.length > 0) {
-        _this.currentAuthorsMessage = _this.$translate('concurrentAuthorsWarning', { currentAuthors: currentAuthorsUsernames.join(", ") });
+        _this.currentAuthorsMessage = _this.$translate('concurrentAuthorsWarning', { currentAuthors: currentAuthorsUsernames.join(', ') });
       } else {
-        _this.currentAuthorsMessage = "";
+        _this.currentAuthorsMessage = '';
       }
     });
 
-    this.$scope.$on("$destroy", function () {
+    this.$scope.$on('$destroy', function () {
       // notify others that this project is no longer being authored
       _this.ProjectService.notifyAuthorProjectEnd(_this.projectId);
     });
@@ -166,7 +166,7 @@ var ProjectController = function () {
                 // insert the video element
                 var videoElement = document.createElement('video');
                 videoElement.controls = 'true';
-                videoElement.innerHTML = "<source ng-src='" + fullAssetPath + "' type='video/mp4'>";
+                videoElement.innerHTML = '<source ng-src="' + fullAssetPath + '" type="video/mp4">';
                 $('#' + summernoteId).summernote('insertNode', videoElement);
               }
             }
@@ -222,7 +222,7 @@ var ProjectController = function () {
     value: function previewProject() {
       var data = { constraints: true };
       this.saveEvent('projectPreviewed', 'Navigation', data);
-      window.open(this.ConfigService.getConfigParam("previewProjectURL"));
+      window.open(this.ConfigService.getConfigParam('previewProjectURL'));
     }
   }, {
     key: 'previewProjectWithoutConstraints',
@@ -234,7 +234,7 @@ var ProjectController = function () {
     value: function previewProjectWithoutConstraints() {
       var data = { constraints: false };
       this.saveEvent('projectPreviewed', 'Navigation', data);
-      window.open(this.ConfigService.getConfigParam("previewProjectURL") + '?constraints=false');
+      window.open(this.ConfigService.getConfigParam('previewProjectURL') + '?constraints=false');
     }
   }, {
     key: 'viewProjectAssets',
@@ -257,18 +257,18 @@ var ProjectController = function () {
       var _this2 = this;
 
       //let projectJSONString = JSON.stringify(this.project, null, 4);
-      //let commitMessage = $("#commitMessageInput").val();
-      var commitMessage = "Made changes to Project.";
+      //let commitMessage = $('#commitMessageInput').val();
+      var commitMessage = 'Made changes to Project.';
       try {
         // if projectJSONString is bad json, it will throw an exception and not save.
         //this.ProjectService.project = this.project;
 
         this.ProjectService.saveProject(commitMessage).then(function (commitHistoryArray) {
           _this2.commitHistory = commitHistoryArray;
-          $("#commitMessageInput").val(""); // clear field after commit
+          $('#commitMessageInput').val(''); // clear field after commit
         });
       } catch (error) {
-        alert("Invalid JSON. Please check syntax. Aborting save.");
+        alert('Invalid JSON. Please check syntax. Aborting save.');
         return;
       }
     }
@@ -280,7 +280,7 @@ var ProjectController = function () {
      * Make a request to download this project as a zip file
      */
     value: function downloadProject() {
-      window.location.href = this.ConfigService.getWISEBaseURL() + "/project/export/" + this.projectId;
+      window.location.href = this.ConfigService.getWISEBaseURL() + '/project/export/' + this.projectId;
     }
 
     /**
@@ -868,13 +868,13 @@ var ProjectController = function () {
                 (function () {
 
                   // get the node UI element
-                  var nodeElement = $("#" + newNode.id);
+                  var nodeElement = $('#' + newNode.id);
 
                   // save the original background color
-                  var originalBackgroundColor = nodeElement.css("backgroundColor");
+                  var originalBackgroundColor = nodeElement.css('backgroundColor');
 
                   // highlight the background briefly to draw attention to it
-                  nodeElement.css("background-color", "#FFFF9C");
+                  nodeElement.css('background-color', '#FFFF9C');
 
                   /*
                    * Use a timeout before starting to transition back to
@@ -895,11 +895,11 @@ var ProjectController = function () {
 
             if (newNodes != null && newNodes.length > 0) {
               // get the UI element of the first new node
-              var nodeElement = $("#" + newNodes[0].id);
+              var nodeElement = $('#' + newNodes[0].id);
               if (nodeElement != null) {
                 // scroll to the first new node that we've added
                 $('#content').animate({
-                  scrollTop: nodeElement.prop("offsetTop") - 60
+                  scrollTop: nodeElement.prop('offsetTop') - 60
                 }, 1000);
               }
             }
@@ -1592,7 +1592,7 @@ var ProjectController = function () {
       if (node != null) {
         var nodeId = node.id;
         var previewProjectURL = this.importProject.previewProjectURL;
-        var previewStepURL = previewProjectURL + "#/vle/" + nodeId;
+        var previewStepURL = previewProjectURL + '#/vle/' + nodeId;
         window.open(previewStepURL);
       }
     }
@@ -1938,13 +1938,13 @@ var ProjectController = function () {
             var newNode = newNodes[n];
             if (newNode != null) {
               (function () {
-                var nodeElement = $("#" + newNode.id);
+                var nodeElement = $('#' + newNode.id);
 
                 // save the original background color
-                var originalBackgroundColor = nodeElement.css("backgroundColor");
+                var originalBackgroundColor = nodeElement.css('backgroundColor');
 
                 // highlight the background briefly to draw attention to it
-                nodeElement.css("background-color", "#FFFF9C");
+                nodeElement.css('background-color', '#FFFF9C');
 
                 /*
                  * Use a timeout before starting to transition back to

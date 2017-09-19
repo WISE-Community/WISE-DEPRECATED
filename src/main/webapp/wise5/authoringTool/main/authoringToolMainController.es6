@@ -20,8 +20,8 @@ class AuthoringToolMainController {
     this.TeacherDataService = TeacherDataService;
 
     this.$translate = this.$filter('translate');
-    this.projects = this.ConfigService.getConfigParam("projects");
-    this.sharedProjects = this.ConfigService.getConfigParam("sharedProjects");
+    this.projects = this.ConfigService.getConfigParam('projects');
+    this.sharedProjects = this.ConfigService.getConfigParam('sharedProjects');
     this.showCreateProjectView = false;
 
     this.$rootScope.$on('goHome', () => {
@@ -84,18 +84,18 @@ class AuthoringToolMainController {
 
         // refresh the project list
         this.ConfigService.retrieveConfig(window.configURL).then(() => {
-          this.projects = this.ConfigService.getConfigParam("projects");
+          this.projects = this.ConfigService.getConfigParam('projects');
           this.scrollToTopOfPage();
 
           // briefly highlight the new project to draw attention to it
           this.$timeout(() => {
-            let componentElement = $("#" + projectId);
+            let componentElement = $('#' + projectId);
 
             // remember the original background color
-            let originalBackgroundColor = componentElement.css("backgroundColor");
+            let originalBackgroundColor = componentElement.css('backgroundColor');
 
             // highlight the background briefly to draw attention to it
-            componentElement.css("background-color", "#FFFF9C");
+            componentElement.css('background-color', '#FFFF9C');
 
             /*
              * Use a timeout before starting to transition back to
@@ -181,7 +181,7 @@ class AuthoringToolMainController {
   previewProject(projectId) {
     let data = { constraints: true };
     this.saveEvent('projectPreviewed', 'Authoring', data, projectId);
-    window.open(this.ConfigService.getWISEBaseURL() + "/project/" + projectId);
+    window.open(this.ConfigService.getWISEBaseURL() + '/project/' + projectId);
   }
 
   /**

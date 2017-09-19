@@ -24,8 +24,8 @@ var AuthoringToolMainController = function () {
     this.TeacherDataService = TeacherDataService;
 
     this.$translate = this.$filter('translate');
-    this.projects = this.ConfigService.getConfigParam("projects");
-    this.sharedProjects = this.ConfigService.getConfigParam("sharedProjects");
+    this.projects = this.ConfigService.getConfigParam('projects');
+    this.sharedProjects = this.ConfigService.getConfigParam('sharedProjects');
     this.showCreateProjectView = false;
 
     this.$rootScope.$on('goHome', function () {
@@ -138,18 +138,18 @@ var AuthoringToolMainController = function () {
 
           // refresh the project list
           _this2.ConfigService.retrieveConfig(window.configURL).then(function () {
-            _this2.projects = _this2.ConfigService.getConfigParam("projects");
+            _this2.projects = _this2.ConfigService.getConfigParam('projects');
             _this2.scrollToTopOfPage();
 
             // briefly highlight the new project to draw attention to it
             _this2.$timeout(function () {
-              var componentElement = $("#" + projectId);
+              var componentElement = $('#' + projectId);
 
               // remember the original background color
-              var originalBackgroundColor = componentElement.css("backgroundColor");
+              var originalBackgroundColor = componentElement.css('backgroundColor');
 
               // highlight the background briefly to draw attention to it
-              componentElement.css("background-color", "#FFFF9C");
+              componentElement.css('background-color', '#FFFF9C');
 
               /*
                * Use a timeout before starting to transition back to
@@ -246,7 +246,7 @@ var AuthoringToolMainController = function () {
     value: function previewProject(projectId) {
       var data = { constraints: true };
       this.saveEvent('projectPreviewed', 'Authoring', data, projectId);
-      window.open(this.ConfigService.getWISEBaseURL() + "/project/" + projectId);
+      window.open(this.ConfigService.getWISEBaseURL() + '/project/' + projectId);
     }
 
     /**

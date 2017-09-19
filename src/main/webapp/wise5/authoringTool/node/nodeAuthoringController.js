@@ -39,8 +39,8 @@ var NodeAuthoringController = function () {
     this.selectedComponent = null;
     this.nodeCopy = null;
     this.undoStack = [];
-    this.howToChooseAmongAvailablePathsOptions = [null, "random", "workgroupId", "firstAvailable", "lastAvailable"];
-    this.whenToChoosePathOptions = [null, "enterNode", "exitNode", "scoreChanged", "studentDataChanged"];
+    this.howToChooseAmongAvailablePathsOptions = [null, 'random', 'workgroupId', 'firstAvailable', 'lastAvailable'];
+    this.whenToChoosePathOptions = [null, 'enterNode', 'exitNode', 'scoreChanged', 'studentDataChanged'];
     this.canChangePathOptions = [null, true, false];
     this.createBranchBranches = [];
     this.showComponents = true;
@@ -230,8 +230,6 @@ var NodeAuthoringController = function () {
 
     // select the first component type by default
     this.selectedComponent = this.componentTypes[0].componentType;
-
-    // get the node
     this.node = this.ProjectService.getNodeById(this.nodeId);
 
     // get the step number e.g. 1.3
@@ -266,7 +264,7 @@ var NodeAuthoringController = function () {
      * create the custom button for inserting WISE assets into
      * summernote
      */
-    var InsertAssetButton = this.UtilService.createInsertAssetButton(this, null, this.nodeId, null, 'rubric', insertAssetString);
+    var insertAssetButton = this.UtilService.createInsertAssetButton(this, null, this.nodeId, null, 'rubric', insertAssetString);
 
     /*
      * the options that specifies the tools to display in the
@@ -277,7 +275,7 @@ var NodeAuthoringController = function () {
       height: 300,
       disableDragAndDrop: true,
       buttons: {
-        insertAssetButton: InsertAssetButton
+        insertAssetButton: insertAssetButton
       }
     };
 
@@ -292,59 +290,52 @@ var NodeAuthoringController = function () {
      * selects an asset from the choose asset popup
      */
     this.$scope.$on('assetSelected', function (event, args) {
-
       if (args != null) {
-
         // make sure the event was fired for this component
         if (args.nodeId == _this.nodeId && args.componentId == null) {
           // the asset was selected for this component
-          var assetItem = args.assetItem;
+          if (args.assetItem != null && args.assetItem.fileName != null) {
+            var fileName = args.assetItem.fileName;
+            /*
+             * get the assets directory path
+             * e.g.
+             * /wise/curriculum/3/
+             */
+            var assetsDirectoryPath = _this.ConfigService.getProjectAssetsDirectoryPath();
+            var fullAssetPath = assetsDirectoryPath + '/' + fileName;
 
-          if (assetItem != null) {
-            var fileName = assetItem.fileName;
-            if (fileName != null) {
+            var summernoteId = '';
 
-              /*
-               * get the assets directory path
-               * e.g.
-               * /wise/curriculum/3/
-               */
-              var assetsDirectoryPath = _this.ConfigService.getProjectAssetsDirectoryPath();
-              var fullAssetPath = assetsDirectoryPath + '/' + fileName;
+            if (args.target == 'rubric') {
+              // the target is the summernote rubric element
+              summernoteId = 'summernoteRubric_' + _this.nodeId;
+            }
 
-              var summernoteId = '';
+            if (summernoteId != '') {
+              if (_this.UtilService.isImage(fileName)) {
 
-              if (args.target == 'rubric') {
-                // the target is the summernote rubric element
-                summernoteId = 'summernoteRubric_' + _this.nodeId;
-              }
+                /*
+                 * move the cursor back to its position when the asset chooser
+                 * popup was clicked
+                 */
+                $('#' + summernoteId).summernote('editor.restoreRange');
+                $('#' + summernoteId).summernote('editor.focus');
 
-              if (summernoteId != '') {
-                if (_this.UtilService.isImage(fileName)) {
+                // add the image html
+                $('#' + summernoteId).summernote('insertImage', fullAssetPath, fileName);
+              } else if (_this.UtilService.isVideo(fileName)) {
+                /*
+                 * move the cursor back to its position when the asset chooser
+                 * popup was clicked
+                 */
+                $('#' + summernoteId).summernote('editor.restoreRange');
+                $('#' + summernoteId).summernote('editor.focus');
 
-                  /*
-                   * move the cursor back to its position when the asset chooser
-                   * popup was clicked
-                   */
-                  $('#' + summernoteId).summernote('editor.restoreRange');
-                  $('#' + summernoteId).summernote('editor.focus');
-
-                  // add the image html
-                  $('#' + summernoteId).summernote('insertImage', fullAssetPath, fileName);
-                } else if (_this.UtilService.isVideo(fileName)) {
-                  /*
-                   * move the cursor back to its position when the asset chooser
-                   * popup was clicked
-                   */
-                  $('#' + summernoteId).summernote('editor.restoreRange');
-                  $('#' + summernoteId).summernote('editor.focus');
-
-                  // insert the video element
-                  var videoElement = document.createElement('video');
-                  videoElement.controls = 'true';
-                  videoElement.innerHTML = "<source ng-src='" + fullAssetPath + "' type='video/mp4'>";
-                  $('#' + summernoteId).summernote('insertNode', videoElement);
-                }
+                // insert the video element
+                var videoElement = document.createElement('video');
+                videoElement.controls = 'true';
+                videoElement.innerHTML = '<source ng-src="' + fullAssetPath + '" type="video/mp4">';
+                $('#' + summernoteId).summernote('insertNode', videoElement);
               }
             }
           }
@@ -359,7 +350,6 @@ var NodeAuthoringController = function () {
       var nodeId = args.nodeId;
       var componentId = args.componentId;
       var showSubmitButton = args.showSubmitButton;
-
       if (showSubmitButton) {
         /*
          * a component is showing their submit button so we will hide
@@ -427,7 +417,6 @@ var NodeAuthoringController = function () {
     key: 'populateBranchAuthoring',
     value: function populateBranchAuthoring() {
       if (this.node.transitionLogic != null) {
-
         // clear the create branch branches so we can populate them again
         this.createBranchBranches = [];
 
@@ -469,10 +458,8 @@ var NodeAuthoringController = function () {
             var criteria = transition.criteria;
 
             if (criteria != null) {
-
               // loop through all the criterion
               for (var c = 0; c < criteria.length; c++) {
-
                 // get a criterion
                 var criterion = criteria[c];
 
@@ -594,8 +581,8 @@ var NodeAuthoringController = function () {
       // save the step previewed event to the server
       this.saveEvent('stepPreviewed', 'Navigation', data);
 
-      var previewProjectURL = this.ConfigService.getConfigParam("previewProjectURL");
-      var previewStepURL = previewProjectURL + "#/vle/" + this.nodeId;
+      var previewProjectURL = this.ConfigService.getConfigParam('previewProjectURL');
+      var previewStepURL = previewProjectURL + '#/vle/' + this.nodeId;
       window.open(previewStepURL);
     }
   }, {
@@ -613,8 +600,8 @@ var NodeAuthoringController = function () {
       // save the step previewed event to the server
       this.saveEvent('stepPreviewed', 'Navigation', data);
 
-      var previewProjectURL = this.ConfigService.getConfigParam("previewProjectURL");
-      var previewStepURL = previewProjectURL + "?constraints=false" + "#/vle/" + this.nodeId;
+      var previewProjectURL = this.ConfigService.getConfigParam('previewProjectURL');
+      var previewStepURL = previewProjectURL + '?constraints=false' + '#/vle/' + this.nodeId;
       window.open(previewStepURL);
     }
   }, {
@@ -626,7 +613,7 @@ var NodeAuthoringController = function () {
      */
     value: function close() {
       // perform any node cleanup if necessary
-      //let commitMessage = "Made changes to Step.";
+      //let commitMessage = 'Made changes to Step.';
       //this.ProjectService.saveProject(commitMessage);
 
       this.$scope.$broadcast('exitNode', { nodeToExit: this.node });
@@ -1247,14 +1234,14 @@ var NodeAuthoringController = function () {
       // create the constraint object
       var constraint = {};
       constraint.id = newNodeConstraintId;
-      constraint.action = "";
+      constraint.action = '';
       constraint.targetId = this.nodeId;
-      constraint.removalConditional = "all";
+      constraint.removalConditional = 'all';
       constraint.removalCriteria = [];
 
       // create a removal criteria
       var removalCriteria = {};
-      removalCriteria.name = "";
+      removalCriteria.name = '';
       removalCriteria.params = {};
 
       // add the removal criteria to the constraint
@@ -1315,7 +1302,7 @@ var NodeAuthoringController = function () {
 
         // create the removal criteria
         var removalCriteria = {};
-        removalCriteria.name = "";
+        removalCriteria.name = '';
         removalCriteria.params = {};
 
         // add the removal criteria to the constraint
@@ -3455,13 +3442,13 @@ var NodeAuthoringController = function () {
               (function () {
 
                 // get the component UI element
-                var componentElement = $("#" + newComponent.id);
+                var componentElement = $('#' + newComponent.id);
 
                 // save the original background color
-                var originalBackgroundColor = componentElement.css("backgroundColor");
+                var originalBackgroundColor = componentElement.css('backgroundColor');
 
                 // highlight the background briefly to draw attention to it
-                componentElement.css("background-color", "#FFFF9C");
+                componentElement.css('background-color', '#FFFF9C');
 
                 /*
                  * Use a timeout before starting to transition back to
@@ -3509,12 +3496,12 @@ var NodeAuthoringController = function () {
             if (newComponents != null && newComponents.length > 0) {
 
               // get the UI element of the first new component
-              var componentElement = $("#" + newComponents[0].id);
+              var componentElement = $('#' + newComponents[0].id);
 
               if (componentElement != null) {
                 // scroll to the first new component that we've added
                 $('#content').animate({
-                  scrollTop: componentElement.prop("offsetTop") - 60
+                  scrollTop: componentElement.prop('offsetTop') - 60
                 }, 1000);
               }
             }
@@ -3743,7 +3730,7 @@ var NodeAuthoringController = function () {
         var previewProjectURL = this.importProject.previewProjectURL;
 
         // create the url to preview the step
-        var previewStepURL = previewProjectURL + "#/vle/" + nodeId;
+        var previewStepURL = previewProjectURL + '#/vle/' + nodeId;
 
         // open the preview step in a new tab
         window.open(previewStepURL);
@@ -3768,7 +3755,7 @@ var NodeAuthoringController = function () {
         var previewProjectURL = this.importProject.previewProjectURL;
 
         // create the url to preview the step
-        var previewStepURL = previewProjectURL + "#/vle/" + nodeId + "/" + componentId;
+        var previewStepURL = previewProjectURL + '#/vle/' + nodeId + '/' + componentId;
 
         // open the preview step in a new tab
         window.open(previewStepURL);
