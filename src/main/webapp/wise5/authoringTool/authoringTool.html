@@ -5,34 +5,42 @@
 
 <style>
 .global-message.ng-change {
-    transition: 2s linear all;
-    background: red;
+  transition: 2s linear all;
+  background: red;
 }
 </style>
 
 <div disable-delete-keypress
-     ng-mousemove='authoringToolController.mouseMoved()'
-     role="main" layout="column" layout-fill>
-    <top-bar logo-path="{{authoringToolController.logoPath}}"
-             project-id="authoringToolController.projectId"
-             project-title="authoringToolController.projectTitle"
-             run-id="authoringToolController.runId"></top-bar>
-    <toolbar ng-if="authoringToolController.showToolbar"
-             number-project="authoringToolController.numberProject"
-             show-step-tools="authoringToolController.showStepTools"
-             view-name="authoringToolController.currentViewName"
-             on-menu-toggle="authoringToolController.toggleMenu()"></toolbar>
-    <md-sidenav md-component-id="monitorSidenav"
-                md-is-open="authoringToolController.menuOpen"
-                md-whiteframe="4">
-        <main-menu state="authoringToolController.$state" views="authoringToolController.views"></main-menu>
-    </md-sidenav>
-    <md-content id="content" flex role="main" layout="column" class="l-main" ng-class="{ 'l-main--with-toolbar': authoringToolController.showToolbar }" flex role="main">
-        <div ui-view></div>
-    </md-content>
-    <side-menu ng-if="authoringToolController.showToolbar" state="authoringToolController.$state" views="authoringToolController.views" on-menu-toggle="authoringToolController.toggleMenu()"></side-menu>
+    ng-mousemove='authoringToolController.mouseMoved()'
+    role="main" layout="column" layout-fill>
+  <top-bar logo-path="{{authoringToolController.logoPath}}"
+       project-id="authoringToolController.projectId"
+       project-title="authoringToolController.projectTitle"
+       run-id="authoringToolController.runId"></top-bar>
+  <toolbar ng-if="authoringToolController.showToolbar"
+       number-project="authoringToolController.numberProject"
+       show-step-tools="authoringToolController.showStepTools"
+       view-name="authoringToolController.currentViewName"
+       on-menu-toggle="authoringToolController.toggleMenu()"></toolbar>
+  <md-sidenav md-component-id="monitorSidenav"
+        md-is-open="authoringToolController.isMenuOpen"
+        md-whiteframe="4">
+    <main-menu state="authoringToolController.$state"
+        views="authoringToolController.views"></main-menu>
+  </md-sidenav>
+  <md-content id="content" flex role="main" layout="column" class="l-main"
+      ng-class="{ 'l-main--with-toolbar': authoringToolController.showToolbar }"
+      flex role="main">
+    <div ui-view></div>
+  </md-content>
+  <side-menu ng-if="authoringToolController.showToolbar"
+      state="authoringToolController.$state"
+      views="authoringToolController.views"
+      on-menu-toggle="authoringToolController.toggleMenu()">
+  </side-menu>
 </div>
 
-<script src="wise5/lib/bootstrap/js/bootstrap.min.js"></script> <!-- TODO: load using jspm -->
-<script src="wise5/lib/summernote/dist/summernote.js"></script> <!-- TODO: load using jspm -->
-<script src="wise5/lib/summernoteExtensions/summernote-ext-addNote.js"></script> <!-- TODO: load using jspm -->
+<!-- TODO: load below using jspm -->
+<script src="wise5/lib/bootstrap/js/bootstrap.min.js"></script>
+<script src="wise5/lib/summernote/dist/summernote.js"></script>
+<script src="wise5/lib/summernoteExtensions/summernote-ext-addNote.js"></script>

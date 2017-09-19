@@ -1,90 +1,87 @@
 <style>
-    md-dialog {
-        display: initial;
-        width: 80%;
-    }
-
-    .drop-box {
-        background: #F8F8F8;
-        border: 5px dashed #DDD;
-        width: 90%;
-        height: 100px;
-        text-align: center;
-        padding-top: 50px;
-        margin: 10px;
-        bottom: 0px;
-    }
-
-    .drop-box:hover {
-        cursor: pointer;
-    }
-
-    ul {
-        list-style-type: none;
-        padding: 0px;
-        margin: 0px;
-    }
-
-    li {
-        padding-left: 20px;
-    }
-
-    li:hover {
-        cursor: pointer;
-    }
-
-    #assetMessage {
-        background-color: lightpink;
-    }
+  md-dialog {
+    display: initial;
+    width: 80%;
+  }
+  .drop-box {
+    background: #F8F8F8;
+    border: 5px dashed #DDD;
+    width: 90%;
+    height: 100px;
+    text-align: center;
+    padding-top: 50px;
+    margin: 10px;
+    bottom: 0px;
+  }
+  .drop-box:hover {
+    cursor: pointer;
+  }
+  ul {
+    list-style-type: none;
+    padding: 0px;
+    margin: 0px;
+  }
+  li {
+    padding-left: 20px;
+  }
+  li:hover {
+    cursor: pointer;
+  }
+  #assetMessage {
+    background-color: lightpink;
+  }
 </style>
 
-<div ngf-drop ngf-select ngf-change="projectAssetController.uploadAssetItems($files)" class="drop-box"
-     drag-over-class="dragover" ngf-multiple="true" allow-dir="false"
-     accept="image/*,application/pdf,text/csv" translate="dropAssetMessage"></div>
+<div ngf-drop ngf-select
+    ngf-change="projectAssetController.uploadAssetItems($files)" class="drop-box"
+    drag-over-class="dragover" ngf-multiple="true" allow-dir="false"
+    accept="image/*,application/pdf,text/csv" translate="dropAssetMessage"></div>
 <span translate="assetUsageMessage"
-      translate-value-usage="{{projectAssetController.projectAssets.totalFileSize | appropriateSizeText }}"
-      translate-value-max="{{projectAssetController.projectAssetTotalSizeMax | appropriateSizeText }}"
-      translate-value-percentage="{{projectAssetController.projectAssetUsagePercentage | roundToDecimal:0 }}"></span>
-<span ng-if="projectAssetController.totalUnusedFilesSize != null && projectAssetController.totalUnusedFilesSize != 0" style="color:red">({{ 'unusedFiles' | translate }} {{projectAssetController.totalUnusedFilesSize | appropriateSizeText}} ({{projectAssetController.unusedFilesPercentage | roundToDecimal:0}}%))</span>
+    translate-value-usage="{{projectAssetController.projectAssets.totalFileSize | appropriateSizeText }}"
+    translate-value-max="{{projectAssetController.projectAssetTotalSizeMax | appropriateSizeText }}"
+    translate-value-percentage="{{projectAssetController.projectAssetUsagePercentage | roundToDecimal:0 }}"></span>
+<span ng-if="projectAssetController.totalUnusedFilesSize != null && projectAssetController.totalUnusedFilesSize != 0"
+    style="color:red">({{ 'unusedFiles' | translate }} {{projectAssetController.totalUnusedFilesSize | appropriateSizeText}} ({{projectAssetController.unusedFilesPercentage | roundToDecimal:0}}%))
+  </span>
 <span id="assetMessage">{{projectAssetController.assetMessage}}</span><br/>
 <span translate="sortAssets" />: <select ng-model="projectAssetController.assetSortBy">
-    <option value="aToZ" translate="fileNameAToZ"></option>
-    <option value="zToA" translate="fileNameZToA"></option>
-    <option value="smallToLarge" translate="fileSizeSmallToLarge"></option>
-    <option value="largeToSmall" translate="fileSizeLargeToSmall"></option>
+  <option value="aToZ" translate="fileNameAToZ"></option>
+  <option value="zToA" translate="fileNameZToA"></option>
+  <option value="smallToLarge" translate="fileSizeSmallToLarge"></option>
+  <option value="largeToSmall" translate="fileSizeLargeToSmall"></option>
 </select>
 <div style='display:flex'>
-    <div style='flex:1; height:500px; overflow-y:scroll;'>
-        <ul>
-            <li ng-repeat='assetItem in projectAssetController.projectAssets.files'
-                class='assetItem'
-                ng-click='projectAssetController.assetClicked($event, assetItem)'
-                ng-mouseover='projectAssetController.previewAsset($event, assetItem)'
-                ng-style="projectAssetController.selectedAssetItem === assetItem ? { 'backgroundColor': 'yellow'} : { 'backgroundColor': '' }">
-                <span>{{assetItem.fileName}} ({{assetItem.fileSize | appropriateSizeText}})</span>
-                <button ng-click='projectAssetController.chooseAsset(assetItem)'
-                        ng-show='projectAssetController.popup'>Choose</button>
-                <span>
-                    <md-tooltip md-direction="top"><span translate="download"></span></md-tooltip>
-                    <md-icon ng-click="projectAssetController.downloadAsset(assetItem)">file_download</md-icon>
-                </span>
-                <md-icon ng-click='projectAssetController.deleteAsset(assetItem)'> delete </md-icon>
-                <span ng-if="assetItem.used === false">
-                    <span style="color:red">({{ 'notUsed' | translate }})</span>
-                </span>
-            </li>
-        </ul>
+  <div style='flex:1; height:500px; overflow-y:scroll;'>
+    <ul>
+      <li ng-repeat='assetItem in projectAssetController.projectAssets.files'
+        class='assetItem'
+        ng-click='projectAssetController.assetClicked($event, assetItem)'
+        ng-mouseover='projectAssetController.previewAsset($event, assetItem)'
+        ng-style="projectAssetController.selectedAssetItem === assetItem ? { 'backgroundColor': 'yellow'} : { 'backgroundColor': '' }">
+        <span>{{assetItem.fileName}} ({{assetItem.fileSize | appropriateSizeText}})</span>
+        <button ng-click='projectAssetController.chooseAsset(assetItem)'
+            ng-show='projectAssetController.popup'>Choose</button>
+        <span>
+          <md-tooltip md-direction="top"><span translate="download"></span></md-tooltip>
+          <md-icon ng-click="projectAssetController.downloadAsset(assetItem)">file_download</md-icon>
+        </span>
+        <md-icon ng-click='projectAssetController.deleteAsset(assetItem)'> delete </md-icon>
+        <span ng-if="assetItem.used === false">
+          <span style="color:red">({{ 'notUsed' | translate }})</span>
+        </span>
+      </li>
+    </ul>
+  </div>
+  <div style='flex:1;'>
+    <div>
+      <img ng-src='{{projectAssetController.previewAssetURL}}'
+         ng-show='projectAssetController.assetIsImage'
+         style='max-width: 400px'/>
+      <video ng-show='projectAssetController.assetIsVideo'
+           style='max-width: 400px'
+           controls>
+        <source ng-src='{{projectAssetController.previewAssetURL}}' type='video/mp4'>
+      </video>
     </div>
-    <div style='flex:1;'>
-        <div>
-            <img ng-src='{{projectAssetController.previewAssetURL}}'
-                 ng-show='projectAssetController.assetIsImage'
-                 style='max-width: 400px'/>
-            <video ng-show='projectAssetController.assetIsVideo'
-                   style='max-width: 400px'
-                   controls>
-                <source ng-src='{{projectAssetController.previewAssetURL}}' type='video/mp4'>
-            </video>
-        </div>
-    </div>
+  </div>
 </div>
