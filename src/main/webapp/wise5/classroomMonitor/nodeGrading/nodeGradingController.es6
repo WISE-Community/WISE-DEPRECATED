@@ -175,6 +175,7 @@ class NodeGradingController {
             workgroup.hasNewAlert = this.workgroupHasNewAlert(alertNotifications);
             let completionStatus = this.getNodeCompletionStatusByWorkgroupId(workgroupId);
             workgroup.hasNewWork = completionStatus.hasNewWork;
+            workgroup.isVisible = completionStatus.isVisible ? 1 : 0;
             workgroup.completionStatus = this.getWorkgroupCompletionStatus(completionStatus);
             workgroup.score = this.getNodeScoreByWorkgroupId(workgroupId);
 
@@ -685,22 +686,22 @@ class NodeGradingController {
 
         switch (this.sort) {
             case 'team':
-                orderBy = ['displayNames'];
+                orderBy = ['-isVisible', 'displayNames'];
                 break;
             case '-team':
-                orderBy = ['-displayNames'];
+                orderBy = ['-isVisible', '-displayNames'];
                 break;
             case 'status':
-                orderBy = ['completionStatus', 'displayNames'];
+                orderBy = ['-isVisible', 'completionStatus', 'displayNames'];
                 break;
             case '-status':
-                orderBy = ['-completionStatus', 'displayNames'];
+                orderBy = ['-isVisible', '-completionStatus', 'displayNames'];
                 break;
             case 'score':
-                orderBy = ['score', 'displayNames'];
+                orderBy = ['-isVisible', 'score', 'displayNames'];
                 break;
             case '-score':
-                orderBy = ['-score', 'displayNames'];
+                orderBy = ['-isVisible', '-score', 'displayNames'];
                 break;
         }
 

@@ -185,6 +185,7 @@ var NodeGradingController = function () {
                 workgroup.hasNewAlert = this.workgroupHasNewAlert(alertNotifications);
                 var completionStatus = this.getNodeCompletionStatusByWorkgroupId(workgroupId);
                 workgroup.hasNewWork = completionStatus.hasNewWork;
+                workgroup.isVisible = completionStatus.isVisible ? 1 : 0;
                 workgroup.completionStatus = this.getWorkgroupCompletionStatus(completionStatus);
                 workgroup.score = this.getNodeScoreByWorkgroupId(workgroupId);
 
@@ -723,22 +724,22 @@ var NodeGradingController = function () {
 
             switch (this.sort) {
                 case 'team':
-                    orderBy = ['displayNames'];
+                    orderBy = ['-isVisible', 'displayNames'];
                     break;
                 case '-team':
-                    orderBy = ['-displayNames'];
+                    orderBy = ['-isVisible', '-displayNames'];
                     break;
                 case 'status':
-                    orderBy = ['completionStatus', 'displayNames'];
+                    orderBy = ['-isVisible', 'completionStatus', 'displayNames'];
                     break;
                 case '-status':
-                    orderBy = ['-completionStatus', 'displayNames'];
+                    orderBy = ['-isVisible', '-completionStatus', 'displayNames'];
                     break;
                 case 'score':
-                    orderBy = ['score', 'displayNames'];
+                    orderBy = ['-isVisible', 'score', 'displayNames'];
                     break;
                 case '-score':
-                    orderBy = ['-score', 'displayNames'];
+                    orderBy = ['-isVisible', '-score', 'displayNames'];
                     break;
             }
 
