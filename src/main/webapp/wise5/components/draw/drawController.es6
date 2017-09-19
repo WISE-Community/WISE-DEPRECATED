@@ -654,7 +654,8 @@ class DrawController {
             } else if (this.UtilService.hasConnectedComponent(this.componentContent)) {
                 // we will import work from another component
                 this.handleConnectedComponents();
-            } else if (componentState == null) {
+            } else if (componentState == null ||
+                       !this.DrawService.componentStateHasStudentWork(componentState, this.componentContent)) {
                 /*
                  * only import work or use starter draw data if the student
                  * does not already have work for this component
@@ -900,6 +901,10 @@ class DrawController {
                 $drawingTool.find('[title="' + deleteTitle + '"]').show();
             } else {
                 $drawingTool.find('[title="' + deleteTitle + '"]').hide();
+            }
+
+            if (this.isDisabled) {
+                $drawingTool.find('.dt-tools').hide();
             }
         }
     }
@@ -1704,7 +1709,7 @@ class DrawController {
                 // get the draw data
                 var drawData = studentData.drawData;
 
-                if (drawData != null) {
+                if (drawData != null && drawData != '' && drawData != '{}') {
                     // set the draw data into the drawing tool
                     this.drawingTool.load(drawData);
                 }
@@ -2470,6 +2475,16 @@ class DrawController {
             // set the student work into the component
             this.setStudentWork(mergedComponentState);
 
+            if (this.componentContent != null &&
+                    this.componentContent.background != null) {
+
+                /*
+                 * this component has a background so we will use it instead of
+                 * the background from the connected
+                 */
+                this.drawingTool.setBackgroundImage(this.componentContent.background);
+            }
+
             // make the work dirty so that it gets saved
             this.studentDataChanged();
         }
@@ -2530,7 +2545,13 @@ class DrawController {
 
                 // create the draw data with all the objects
                 let drawData = firstDrawData;
-                drawData.canvas.objects = allObjects;
+
+                if (drawData != null &&
+                        drawData.canvas != null &&
+                        drawData.canvas.objects != null) {
+
+                    drawData.canvas.objects = allObjects;
+                }
 
                 // set the draw data JSON string into the component state
                 mergedComponentState.studentData = {};
