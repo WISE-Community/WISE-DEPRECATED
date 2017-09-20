@@ -203,6 +203,12 @@ var EmbeddedController = function () {
 
                 // send the student work to the embedded application
                 this.sendMessageToApplication(message);
+            } else if (messageEventData.messageType === 'getParameters') {
+                // the embedded application is requesting the parameters
+                var message = {};
+                message.messageType = 'parameters';
+                message.parameters = this.componentContent.parameters;
+                this.sendMessageToApplication(message);
             }
         });
 

@@ -1,5 +1,6 @@
 {
     "embedded.chooseTheModelFile": "Choose the Model File",
     "embedded.componentTypeLabel": "Embedded (Custom)",
-    "embedded.modelFileName": "Model File Name"
+    "embedded.modelFileName": "Model File Name",
+    "embedded.modelParameters": "Model Parameters"
 }
