@@ -46,6 +46,22 @@
                            ng-change='labelController.authoringViewComponentChanged()'/>
                 </md-input-container>
             </div>
+            <div style='height: 60px;'>
+                <md-input-container>
+                    <label>{{ 'label.pointSize' | translate }}</label>
+                    <input type='number'
+                           style='width: 200'
+                           ng-model='labelController.authoringComponentContent.pointSize'
+                           ng-change='labelController.authoringViewComponentChanged()'/>
+                </md-input-container>
+                <md-input-container>
+                    <label>{{ 'label.fontSize' | translate }}</label>
+                    <input type='number'
+                           style='width: 200'
+                           ng-model='labelController.authoringComponentContent.fontSize'
+                           ng-change='labelController.authoringViewComponentChanged()'/>
+                </md-input-container>
+            </div>
             <div>
                 <md-checkbox class='md-primary'
                              ng-model='labelController.authoringComponentContent.canCreateLabels'

@@ -65,6 +65,8 @@ var LabelService = function (_NodeService) {
             component.canDeleteLabels = true;
             component.width = 800;
             component.height = 600;
+            component.pointSize = 5;
+            component.fontSize = 20;
             component.labels = [];
             return component;
         }
