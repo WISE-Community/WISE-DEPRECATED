@@ -1782,9 +1782,19 @@ var LabelController = function () {
                 color = 'blue';
             }
 
+            var radius = 5;
+            if (this.componentContent.pointSize != null && this.componentContent.pointSize != '') {
+                radius = parseFloat(this.componentContent.pointSize);
+            }
+
+            var fontSize = 20;
+            if (this.componentContent.fontSize != null && this.componentContent.fontSize != '') {
+                fontSize = parseFloat(this.componentContent.fontSize);
+            }
+
             // create a circle element
             var circle = new fabric.Circle({
-                radius: 5,
+                radius: radius,
                 left: x1,
                 top: y1,
                 originX: 'center',
@@ -1809,7 +1819,7 @@ var LabelController = function () {
                 top: y2,
                 originX: 'center',
                 originY: 'center',
-                fontSize: 20,
+                fontSize: fontSize,
                 fill: 'white',
                 backgroundColor: color,
                 width: 100,
