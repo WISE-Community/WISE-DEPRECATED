@@ -93,59 +93,43 @@ var AuthorNotebookController = function () {
      * selects an asset from the choose asset popup
      */
     this.$scope.$on('assetSelected', function (event, args) {
-      if (args != null) {
-        // make sure the event was fired for this component
-        if (args.projectId == _this.projectId) {
-          // the asset was selected for this component
-          var assetItem = args.assetItem;
-          if (assetItem != null) {
-            var fileName = assetItem.fileName;
+      // make sure the event was fired for this component
+      if (args != null && args.projectId == _this.projectId && args.assetItem != null && args.assetItem.fileName != null && args.target != null) {
+        /*
+         * get the assets directory path
+         * e.g.
+         * /wise/curriculum/3/
+         */
+        var assetsDirectoryPath = _this.ConfigService.getProjectAssetsDirectoryPath();
+        var fileName = args.assetItem.fileName;
+        var fullAssetPath = assetsDirectoryPath + '/' + fileName;
 
-            if (fileName != null) {
-              /*
-               * get the assets directory path
-               * e.g.
-               * /wise/curriculum/3/
-               */
-              var assetsDirectoryPath = _this.ConfigService.getProjectAssetsDirectoryPath();
-              var fullAssetPath = assetsDirectoryPath + '/' + fileName;
+        // the target is the summernote prompt element
+        var _reportId = args.target;
+        var summernoteId = 'summernoteNotebook_' + _reportId;
+        if (_this.UtilService.isImage(fileName)) {
+          /*
+           * move the cursor back to its position when the asset chooser
+           * popup was clicked
+           */
+          $('#' + summernoteId).summernote('editor.restoreRange');
+          $('#' + summernoteId).summernote('editor.focus');
 
-              var summernoteId = '';
-              var reportId = args.target;
+          // add the image html
+          $('#' + summernoteId).summernote('insertImage', fullAssetPath, fileName);
+        } else if (_this.UtilService.isVideo(fileName)) {
+          /*
+           * move the cursor back to its position when the asset chooser
+           * popup was clicked
+           */
+          $('#' + summernoteId).summernote('editor.restoreRange');
+          $('#' + summernoteId).summernote('editor.focus');
 
-              if (reportId != null) {
-                // the target is the summernote prompt element
-                summernoteId = 'summernoteNotebook_' + reportId;
-              }
-
-              if (summernoteId != '') {
-                if (_this.UtilService.isImage(fileName)) {
-                  /*
-                   * move the cursor back to its position when the asset chooser
-                   * popup was clicked
-                   */
-                  $('#' + summernoteId).summernote('editor.restoreRange');
-                  $('#' + summernoteId).summernote('editor.focus');
-
-                  // add the image html
-                  $('#' + summernoteId).summernote('insertImage', fullAssetPath, fileName);
-                } else if (_this.UtilService.isVideo(fileName)) {
-                  /*
-                   * move the cursor back to its position when the asset chooser
-                   * popup was clicked
-                   */
-                  $('#' + summernoteId).summernote('editor.restoreRange');
-                  $('#' + summernoteId).summernote('editor.focus');
-
-                  // insert the video element
-                  var videoElement = document.createElement('video');
-                  videoElement.controls = 'true';
-                  videoElement.innerHTML = '<source ng-src="' + fullAssetPath + '" type="video/mp4">';
-                  $('#' + summernoteId).summernote('insertNode', videoElement);
-                }
-              }
-            }
-          }
+          // insert the video element
+          var videoElement = document.createElement('video');
+          videoElement.controls = 'true';
+          videoElement.innerHTML = '<source ng-src="' + fullAssetPath + '" type="video/mp4">';
+          $('#' + summernoteId).summernote('insertNode', videoElement);
         }
       }
       _this.$mdDialog.hide();
@@ -153,16 +137,17 @@ var AuthorNotebookController = function () {
   }
 
   /**
-   * Adds a new report note item to this project's notebook. Currently we limit 1 report note per project.
+   * Adds a new report note item to this project's notebook.
+   * Currently we limit 1 report note per project.
    */
 
 
   _createClass(AuthorNotebookController, [{
     key: 'addReportNote',
     value: function addReportNote() {
-      // some old projects may not have the notebook settings, so copy default settings from template project.
+      // some old projects may not have the notebook settings,
+      // so copy default settings from template project.
       var projectTemplate = this.ProjectService.getNewProjectTemplate();
-
       if (this.project.notebook.itemTypes.report.notes == null) {
         this.project.notebook.itemTypes.report.notes = [];
       }
@@ -175,17 +160,36 @@ var AuthorNotebookController = function () {
     value: function exit() {
       var notes = this.project.notebook.itemTypes.report.notes;
       if (notes != null) {
-        for (var n = 0; n < notes.length; n++) {
-          var note = notes[n];
-          if (note != null) {
-            // remove the temporary fields that were used for bookkeeping
-            delete note['summernoteId'];
-            delete note['summernoteHTML'];
-            delete note['summernoteOptions'];
+        var _iteratorNormalCompletion2 = true;
+        var _didIteratorError2 = false;
+        var _iteratorError2 = undefined;
+
+        try {
+          for (var _iterator2 = notes[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+            var note = _step2.value;
+
+            if (note != null) {
+              // remove the temporary fields that were used for bookkeeping
+              delete note['summernoteId'];
+              delete note['summernoteHTML'];
+              delete note['summernoteOptions'];
+            }
+          }
+        } catch (err) {
+          _didIteratorError2 = true;
+          _iteratorError2 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion2 && _iterator2.return) {
+              _iterator2.return();
+            }
+          } finally {
+            if (_didIteratorError2) {
+              throw _iteratorError2;
+            }
           }
         }
       }
-
       var commitMessage = this.$translate('madeChangesToNotebook');
       this.ProjectService.saveProject(commitMessage);
       this.$state.go('root.project', { projectId: this.projectId });
@@ -199,12 +203,8 @@ var AuthorNotebookController = function () {
   }, {
     key: 'summernoteHTMLChanged',
     value: function summernoteHTMLChanged(note) {
-
       if (note != null) {
-
-        // get the summernote html
-        var html = note.summernoteHTML;
-
+        var summernoteHTML = note.summernoteHTML;
         /*
          * remove the absolute asset paths
          * e.g.
@@ -212,15 +212,14 @@ var AuthorNotebookController = function () {
          * will be changed to
          * <img src='sun.png'/>
          */
-        html = this.ConfigService.removeAbsoluteAssetPaths(html);
+        summernoteHTML = this.ConfigService.removeAbsoluteAssetPaths(summernoteHTML);
 
         /*
          * replace <a> and <button> elements with <wiselink> elements when
          * applicable
          */
-        html = this.UtilService.insertWISELinks(html);
-
-        note.content = html;
+        summernoteHTML = this.UtilService.insertWISELinks(summernoteHTML);
+        note.content = summernoteHTML;
       }
     }
   }]);

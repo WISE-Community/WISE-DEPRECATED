@@ -21,6 +21,12 @@ var ProjectHistoryController = function () {
     this.retrieveCommitHistory();
   }
 
+  /**
+   * Return to main authoring view
+   * TODO rename to returnToAuthoringView
+   */
+
+
   _createClass(ProjectHistoryController, [{
     key: 'exit',
     value: function exit() {

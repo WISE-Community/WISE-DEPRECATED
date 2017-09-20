@@ -29,6 +29,11 @@ var AuthoringToolNewProjectController = function () {
     });
   }
 
+  /**
+   * Register a new project with WISE
+   */
+
+
   _createClass(AuthoringToolNewProjectController, [{
     key: 'registerNewProject',
     value: function registerNewProject() {

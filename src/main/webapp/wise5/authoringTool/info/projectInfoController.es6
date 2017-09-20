@@ -3,16 +3,16 @@
 class ProjectInfoController {
 
   constructor(
-    $filter,
-    $mdDialog,
-    $rootScope,
-    $state,
-    $stateParams,
-    $scope,
-    $timeout,
-    ConfigService,
-    ProjectService,
-    UtilService) {
+      $filter,
+      $mdDialog,
+      $rootScope,
+      $state,
+      $stateParams,
+      $scope,
+      $timeout,
+      ConfigService,
+      ProjectService,
+      UtilService) {
     this.$filter = $filter;
     this.$mdDialog = $mdDialog;
     this.$rootScope = $rootScope;
@@ -44,7 +44,7 @@ class ProjectInfoController {
       if (field.type === 'checkbox') {
         this.processMetadataAuthoringFieldCheckbox(field);
       } else if (field.type === 'radio') {
-        // do nothing. radio buttons work automatically
+        // do nothing. Radio buttons work automatically
       }
     }
   }
@@ -119,16 +119,16 @@ class ProjectInfoController {
 }
 
 ProjectInfoController.$inject = [
-  '$filter',
-  '$mdDialog',
-  '$rootScope',
-  '$state',
-  '$stateParams',
-  '$scope',
-  '$timeout',
-  'ConfigService',
-  'ProjectService',
-  'UtilService'
+    '$filter',
+    '$mdDialog',
+    '$rootScope',
+    '$state',
+    '$stateParams',
+    '$scope',
+    '$timeout',
+    'ConfigService',
+    'ProjectService',
+    'UtilService'
 ];
 
 export default ProjectInfoController;

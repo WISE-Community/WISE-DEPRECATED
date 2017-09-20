@@ -288,6 +288,7 @@ var NodeAuthoringController = function () {
     /*
      * Listen for the assetSelected event which occurs when the user
      * selects an asset from the choose asset popup
+     * TODO refactor too many nesting
      */
     this.$scope.$on('assetSelected', function (event, args) {
       if (args != null) {
@@ -304,16 +305,11 @@ var NodeAuthoringController = function () {
             var assetsDirectoryPath = _this.ConfigService.getProjectAssetsDirectoryPath();
             var fullAssetPath = assetsDirectoryPath + '/' + fileName;
 
-            var summernoteId = '';
-
             if (args.target == 'rubric') {
               // the target is the summernote rubric element
-              summernoteId = 'summernoteRubric_' + _this.nodeId;
-            }
+              var summernoteId = 'summernoteRubric_' + _this.nodeId;
 
-            if (summernoteId != '') {
               if (_this.UtilService.isImage(fileName)) {
-
                 /*
                  * move the cursor back to its position when the asset chooser
                  * popup was clicked
@@ -355,7 +351,6 @@ var NodeAuthoringController = function () {
          * a component is showing their submit button so we will hide
          * the step save button and submit buttons
          */
-
         _this.node.showSaveButton = false;
         _this.node.showSubmitButton = false;
 
@@ -366,7 +361,6 @@ var NodeAuthoringController = function () {
          * a component is hiding their submit button so we may need
          * to show the step save button
          */
-
         if (_this.ProjectService.doesAnyComponentShowSubmitButton(_this.node.id)) {
           /*
            * there is at least one component in the step that is showing
@@ -393,23 +387,22 @@ var NodeAuthoringController = function () {
       _this.authoringViewNodeChanged();
     });
 
-    // scroll to the top of the page
-    this.$anchorScroll('top');
+    this.scrollToTopOfPage();
 
-    var data = {};
-    data.title = this.ProjectService.getNodePositionAndTitleByNodeId(this.nodeId);
+    var data = {
+      "title": this.ProjectService.getNodePositionAndTitleByNodeId(this.nodeId)
+    };
 
     if (this.ProjectService.isGroupNode(this.nodeId)) {
-      // save the activity viewed event to the server
       this.saveEvent('activityViewOpened', 'Navigation', data);
     } else {
-      // save the step viewed event to the server
       this.saveEvent('stepViewOpened', 'Navigation', data);
     }
   }
 
   /**
    * Populate the branch authoring
+   * TODO refactor too much nesting
    */
 
 
@@ -427,7 +420,6 @@ var NodeAuthoringController = function () {
           this.createBranchNumberOfBranches = 0;
         }
 
-        // loop through all the transitions
         for (var t = 0; t < this.node.transitionLogic.transitions.length; t++) {
           var transition = this.node.transitionLogic.transitions[t];
 
@@ -458,49 +450,66 @@ var NodeAuthoringController = function () {
             var criteria = transition.criteria;
 
             if (criteria != null) {
-              // loop through all the criterion
-              for (var c = 0; c < criteria.length; c++) {
-                // get a criterion
-                var criterion = criteria[c];
+              var _iteratorNormalCompletion = true;
+              var _didIteratorError = false;
+              var _iteratorError = undefined;
 
-                if (criterion != null) {
-                  var name = criterion.name;
-                  var params = criterion.params;
+              try {
+                for (var _iterator = criteria[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                  var criterion = _step.value;
 
-                  if (params != null) {
-                    // get the node id and component id params if any
-                    this.createBranchNodeId = params.nodeId;
-                    this.createBranchComponentId = params.componentId;
+                  if (criterion != null) {
+                    var name = criterion.name;
+                    var params = criterion.params;
+
+                    if (params != null) {
+                      // get the node id and component id params if any
+                      this.createBranchNodeId = params.nodeId;
+                      this.createBranchComponentId = params.componentId;
+                    }
+
+                    if (name == 'score') {
+                      // this is a score criteria
+
+                      // set the branch criterion to score
+                      this.createBranchCriterion = 'score';
+
+                      if (params != null && params.scores != null) {
+                        // set the scores into the branch object
+                        branch.scores = params.scores;
+                      }
+                    } else if (name == 'choiceChosen') {
+                      // this is a choice chosen criteria
+
+                      // set the branch criterion to choice chosen
+                      this.createBranchCriterion = 'choiceChosen';
+
+                      if (params != null && params.choiceIds != null && params.choiceIds.length > 0) {
+                        // set the choice id into the branch object
+                        branch.choiceId = params.choiceIds[0];
+                      }
+
+                      // get the choices from the component
+                      var choices = this.getChoicesByNodeIdAndComponentId(this.createBranchNodeId, this.createBranchComponentId);
+
+                      if (choices != null) {
+                        // set the choices into the branch object
+                        branch.choices = this.UtilService.makeCopyOfJSONObject(choices);
+                      }
+                    }
                   }
-
-                  if (name == 'score') {
-                    // this is a score criteria
-
-                    // set the branch criterion to score
-                    this.createBranchCriterion = 'score';
-
-                    if (params != null && params.scores != null) {
-                      // set the scores into the branch object
-                      branch.scores = params.scores;
-                    }
-                  } else if (name == 'choiceChosen') {
-                    // this is a choice chosen criteria
-
-                    // set the branch criterion to choice chosen
-                    this.createBranchCriterion = 'choiceChosen';
-
-                    if (params != null && params.choiceIds != null && params.choiceIds.length > 0) {
-                      // set the choice id into the branch object
-                      branch.choiceId = params.choiceIds[0];
-                    }
-
-                    // get the choices from the component
-                    var choices = this.getChoicesByNodeIdAndComponentId(this.createBranchNodeId, this.createBranchComponentId);
-
-                    if (choices != null) {
-                      // set the choices into the branch object
-                      branch.choices = this.UtilService.makeCopyOfJSONObject(choices);
-                    }
+                }
+              } catch (err) {
+                _didIteratorError = true;
+                _iteratorError = err;
+              } finally {
+                try {
+                  if (!_iteratorNormalCompletion && _iterator.return) {
+                    _iterator.return();
+                  }
+                } finally {
+                  if (_didIteratorError) {
+                    throw _iteratorError;
                   }
                 }
               }
@@ -508,42 +517,52 @@ var NodeAuthoringController = function () {
 
             // get the node ids in the branch path
             var nodeIdsInBranch = this.ProjectService.getNodeIdsInBranch(this.nodeId, transition.to);
+            var _iteratorNormalCompletion2 = true;
+            var _didIteratorError2 = false;
+            var _iteratorError2 = undefined;
 
-            // loop through all the node ids in the branch path
-            for (var n = 0; n < nodeIdsInBranch.length; n++) {
+            try {
+              for (var _iterator2 = nodeIdsInBranch[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+                var nodeId = _step2.value;
 
-              // get a node id in the branch path
-              var nodeId = nodeIdsInBranch[n];
+                var item = branch.items[nodeId];
+                if (item != null) {
+                  // make the item checked
+                  item.checked = true;
 
-              // get the item
-              var item = branch.items[nodeId];
+                  // add the item to the array of checked items in this branch path
+                  branch.checkedItemsInBranchPath.push(item);
+                }
+              }
 
-              if (item != null) {
-                // make the item checked
-                item.checked = true;
-
-                // add the item to the array of checked items in this branch path
-                branch.checkedItemsInBranchPath.push(item);
+              // set the node ids in branch array into the branch object
+            } catch (err) {
+              _didIteratorError2 = true;
+              _iteratorError2 = err;
+            } finally {
+              try {
+                if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                  _iterator2.return();
+                }
+              } finally {
+                if (_didIteratorError2) {
+                  throw _iteratorError2;
+                }
               }
             }
 
-            // set the node ids in branch array into the branch object
             branch.nodeIdsInBranch = nodeIdsInBranch;
 
             if (nodeIdsInBranch.length > 0) {
-
               // get the last node id in the branch path
               var lastNodeIdInBranch = nodeIdsInBranch[nodeIdsInBranch.length - 1];
 
               if (lastNodeIdInBranch != null) {
-
                 var transitionsFromLastNode = this.ProjectService.getTransitionsByFromNodeId(lastNodeIdInBranch);
-
                 if (transitionsFromLastNode != null && transitionsFromLastNode.length > 0) {
-                  var transition = transitionsFromLastNode[0];
-
-                  if (transition != null) {
-                    this.createBranchMergePointNodeId = transition.to;
+                  var _transition = transitionsFromLastNode[0];
+                  if (_transition != null) {
+                    this.createBranchMergePointNodeId = _transition.to;
                   }
                 }
               }
@@ -574,11 +593,7 @@ var NodeAuthoringController = function () {
   }, {
     key: 'previewStep',
     value: function previewStep() {
-
-      var data = {};
-      data.constraints = true;
-
-      // save the step previewed event to the server
+      var data = { "constraints": true };
       this.saveEvent('stepPreviewed', 'Navigation', data);
 
       var previewProjectURL = this.ConfigService.getConfigParam('previewProjectURL');
@@ -593,11 +608,7 @@ var NodeAuthoringController = function () {
      * Launch VLE with this current step as the initial step without constraints
      */
     value: function previewStepWithoutConstraints() {
-
-      var data = {};
-      data.constraints = false;
-
-      // save the step previewed event to the server
+      var data = { "constraints": false };
       this.saveEvent('stepPreviewed', 'Navigation', data);
 
       var previewProjectURL = this.ConfigService.getConfigParam('previewProjectURL');
@@ -612,18 +623,10 @@ var NodeAuthoringController = function () {
      * Close the node authoring view
      */
     value: function close() {
-      // perform any node cleanup if necessary
-      //let commitMessage = 'Made changes to Step.';
-      //this.ProjectService.saveProject(commitMessage);
-
       this.$scope.$broadcast('exitNode', { nodeToExit: this.node });
-
       this.TeacherDataService.setCurrentNode(null);
-
       this.$state.go('root.project', { projectId: this.projectId });
-
-      // scroll to the top of the page
-      this.$anchorScroll('top');
+      this.scrollToTopOfPage();
     }
   }, {
     key: 'showSaveErrorAdvancedAuthoring',
@@ -644,27 +647,17 @@ var NodeAuthoringController = function () {
      * the recent changes since they opened the node.
      */
     value: function cancel() {
-
       // check if the user has made any changes
       if (!angular.equals(this.node, this.originalNodeCopy)) {
         // the user has made changes
-
-        var result = confirm(this.$translate('confirmUndo'));
-
-        if (result) {
+        if (confirm(this.$translate('confirmUndo'))) {
           // revert the node back to the previous version
           this.ProjectService.replaceNode(this.nodeId, this.originalNodeCopy);
-
-          // save the project
           this.ProjectService.saveProject();
-
-          // close the node authoring view
           this.close();
         }
       } else {
-        // the user has not made any changes
-
-        //close the node authoring view
+        // the user has not made any changes, so close the node authoring view
         this.close();
       }
     }
@@ -701,7 +694,6 @@ var NodeAuthoringController = function () {
          * for the transition logic parameters if they haven't already been
          * set
          */
-
         if (this.node.transitionLogic.howToChooseAmongAvailablePaths == null) {
           this.node.transitionLogic.howToChooseAmongAvailablePaths = 'workgroupId';
         }
@@ -718,7 +710,6 @@ var NodeAuthoringController = function () {
           this.node.transitionLogic.maxPathsVisitable = 1;
         }
       }
-
       // save changes
       this.authoringViewNodeChanged();
     }
@@ -760,7 +751,6 @@ var NodeAuthoringController = function () {
   }, {
     key: 'transitionCriteriaNodeIdChanged',
     value: function transitionCriteriaNodeIdChanged(transitionCriteria) {
-
       if (transitionCriteria != null && transitionCriteria.params != null) {
         // remember the node id
         var nodeId = transitionCriteria.params.nodeId;
@@ -787,9 +777,7 @@ var NodeAuthoringController = function () {
   }, {
     key: 'transitionCriteriaComponentIdChanged',
     value: function transitionCriteriaComponentIdChanged(transitionCriteria) {
-
       if (transitionCriteria != null && transitionCriteria.params != null) {
-
         // remember the node id and component id
         var nodeId = transitionCriteria.params.nodeId;
         var componentId = transitionCriteria.params.componentId;
@@ -820,7 +808,6 @@ var NodeAuthoringController = function () {
     key: 'deleteTransition',
     value: function deleteTransition(transition) {
       var nodeTransitions = this.node.transitionLogic.transitions;
-
       var index = nodeTransitions.indexOf(transition);
       if (index > -1) {
         nodeTransitions.splice(index, 1);
@@ -848,11 +835,7 @@ var NodeAuthoringController = function () {
   }, {
     key: 'saveTransitions',
     value: function saveTransitions() {
-
-      // save the project
       this.ProjectService.saveProject();
-
-      // hide the create component elements
       this.showEditTransitions = false;
     }
 
@@ -863,7 +846,6 @@ var NodeAuthoringController = function () {
   }, {
     key: 'addComponentButtonClicked',
     value: function addComponentButtonClicked() {
-
       // select the first component type by default
       this.selectedComponent = this.componentTypes[0].componentType;
 
@@ -891,11 +873,7 @@ var NodeAuthoringController = function () {
   }, {
     key: 'moveComponentUp',
     value: function moveComponentUp(componentId) {
-
-      // move the component up within the node
       this.ProjectService.moveComponentUp(this.nodeId, componentId);
-
-      // save the project
       this.ProjectService.saveProject();
     }
 
@@ -907,11 +885,7 @@ var NodeAuthoringController = function () {
   }, {
     key: 'moveComponentDown',
     value: function moveComponentDown(componentId) {
-
-      // move the component down within the node
       this.ProjectService.moveComponentDown(this.nodeId, componentId);
-
-      // save the project
       this.ProjectService.saveProject();
     }
 
@@ -923,54 +897,61 @@ var NodeAuthoringController = function () {
   }, {
     key: 'deleteComponent',
     value: function deleteComponent(componentId) {
-
-      // ask the user to confirm the delete
-      var answer = confirm(this.$translate('confirmDeleteComponent'));
-
-      if (answer) {
-        // the user confirmed yes
-
+      if (confirm(this.$translate('confirmDeleteComponent'))) {
         // delete the component from the node
         this.ProjectService.deleteComponent(this.nodeId, componentId);
 
         // check if we need to show the node save or node submit buttons
         this.checkIfNeedToShowNodeSaveOrNodeSubmitButtons();
-
-        // save the project
         this.ProjectService.saveProject();
       }
     }
 
     /**
      * Hide the save button in all the components
+     * TODO refactor too much nesting
      */
 
   }, {
     key: 'hideAllComponentSaveButtons',
     value: function hideAllComponentSaveButtons() {
-
       var components = this.components;
-
       if (components != null) {
+        var _iteratorNormalCompletion3 = true;
+        var _didIteratorError3 = false;
+        var _iteratorError3 = undefined;
 
-        // loop through all the components
-        for (var c = 0; c < components.length; c++) {
-          var component = components[c];
+        try {
+          for (var _iterator3 = components[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+            var component = _step3.value;
 
-          if (component != null) {
-            var componentType = component.type;
+            if (component != null) {
+              var componentType = component.type;
 
-            // get the service for the component type
-            var service = this.$injector.get(componentType + 'Service');
-
-            if (service != null) {
-              if (service.componentUsesSaveButton()) {
-                /*
-                 * this component uses a save button so we will hide
-                 * it
-                 */
-                component.showSaveButton = false;
+              // get the service for the component type
+              var service = this.$injector.get(componentType + 'Service');
+              if (service != null) {
+                if (service.componentUsesSaveButton()) {
+                  /*
+                   * this component uses a save button so we will hide
+                   * it
+                   */
+                  component.showSaveButton = false;
+                }
               }
+            }
+          }
+        } catch (err) {
+          _didIteratorError3 = true;
+          _iteratorError3 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion3 && _iterator3.return) {
+              _iterator3.return();
+            }
+          } finally {
+            if (_didIteratorError3) {
+              throw _iteratorError3;
             }
           }
         }
@@ -989,8 +970,6 @@ var NodeAuthoringController = function () {
 
       // update the current node copy
       this.currentNodeCopy = this.UtilService.makeCopyOfJSONObject(this.node);
-
-      // save the project
       return this.ProjectService.saveProject();
     }
 
@@ -1001,17 +980,13 @@ var NodeAuthoringController = function () {
   }, {
     key: 'undo',
     value: function undo() {
-
       if (this.undoStack.length === 0) {
         // the undo stack is empty so there are no changes to undo
         alert(this.$translate('noUndoAvailable'));
       } else if (this.undoStack.length > 0) {
         // the undo stack has elements
 
-        // ask the user to confirm the delete
-        var result = confirm(this.$translate('confirmUndoLastChange'));
-
-        if (result) {
+        if (confirm(this.$translate('confirmUndoLastChange'))) {
           // perform any node cleanup if necessary
           this.$scope.$broadcast('exitNode', { nodeToExit: this.node });
 
@@ -1021,13 +996,8 @@ var NodeAuthoringController = function () {
           // revert the node back to the previous version
           this.ProjectService.replaceNode(this.nodeId, nodeCopy);
 
-          // get the node
           this.node = this.ProjectService.getNodeById(this.nodeId);
-
-          // get the components in the node
           this.components = this.ProjectService.getComponentsByNodeId(this.nodeId);
-
-          // save the project
           this.ProjectService.saveProject();
         }
       }
@@ -1043,29 +1013,41 @@ var NodeAuthoringController = function () {
     key: 'getRemovalCriteriaParamsByName',
     value: function getRemovalCriteriaParamsByName(name) {
       var params = [];
-
       if (name != null) {
+        var _iteratorNormalCompletion4 = true;
+        var _didIteratorError4 = false;
+        var _iteratorError4 = undefined;
 
-        // loop through all the available removal criteria
-        for (var r = 0; r < this.removalCriteria.length; r++) {
+        try {
+          for (var _iterator4 = this.removalCriteria[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+            var singleRemovalCriteria = _step4.value;
 
-          // get a single removal criteria
-          var singleRemovalCriteria = this.removalCriteria[r];
-
-          if (singleRemovalCriteria != null) {
-
-            if (singleRemovalCriteria.value == name) {
-              /*
-               * we have found the removal criteria we are looking for
-               * so we will get its params
-               */
-              params = singleRemovalCriteria.params;
-              break;
+            if (singleRemovalCriteria != null) {
+              if (singleRemovalCriteria.value == name) {
+                /*
+                 * we have found the removal criteria we are looking for
+                 * so we will get its params
+                 */
+                params = singleRemovalCriteria.params;
+                break;
+              }
+            }
+          }
+        } catch (err) {
+          _didIteratorError4 = true;
+          _iteratorError4 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion4 && _iterator4.return) {
+              _iterator4.return();
+            }
+          } finally {
+            if (_didIteratorError4) {
+              throw _iteratorError4;
             }
           }
         }
       }
-
       return params;
     }
 
@@ -1079,18 +1061,16 @@ var NodeAuthoringController = function () {
     key: 'getTransitionCriteriaParamsByName',
     value: function getTransitionCriteriaParamsByName(name) {
       var params = [];
-
       if (name != null) {
+        var _iteratorNormalCompletion5 = true;
+        var _didIteratorError5 = false;
+        var _iteratorError5 = undefined;
 
-        // loop through all the available transition criteria
-        for (var t = 0; t < this.transitionCriterias.length; t++) {
+        try {
+          for (var _iterator5 = this.transitionCriterias[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+            var singleTransitionCriteria = _step5.value;
 
-          // get a single transition criteria
-          var singleTransitionCriteria = this.transitionCriterias[t];
-
-          if (singleTransitionCriteria != null) {
-
-            if (singleTransitionCriteria.value == name) {
+            if (singleTransitionCriteria != null && singleTransitionCriteria.value == name) {
               /*
                * we have found the removal criteria we are looking for
                * so we will get its params
@@ -1099,9 +1079,21 @@ var NodeAuthoringController = function () {
               break;
             }
           }
+        } catch (err) {
+          _didIteratorError5 = true;
+          _iteratorError5 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion5 && _iterator5.return) {
+              _iterator5.return();
+            }
+          } finally {
+            if (_didIteratorError5) {
+              throw _iteratorError5;
+            }
+          }
         }
       }
-
       return params;
     }
 
@@ -1115,17 +1107,11 @@ var NodeAuthoringController = function () {
   }, {
     key: 'getChoicesByNodeIdAndComponentId',
     value: function getChoicesByNodeIdAndComponentId(nodeId, componentId) {
-
       var choices = [];
-
-      // get the component
       var component = this.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
-
       if (component != null && component.choices != null) {
-        // get the choices
         choices = component.choices;
       }
-
       return choices;
     }
 
@@ -1139,17 +1125,11 @@ var NodeAuthoringController = function () {
   }, {
     key: 'getChoiceTypeByNodeIdAndComponentId',
     value: function getChoiceTypeByNodeIdAndComponentId(nodeId, componentId) {
-
       var choiceType = null;
-
-      // get the component
       var component = this.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
-
       if (component != null && component.choiceType != null) {
-        // get the choice type
         choiceType = component.choiceType;
       }
-
       return choiceType;
     }
 
@@ -1162,34 +1142,35 @@ var NodeAuthoringController = function () {
   }, {
     key: 'getNewNodeConstraintId',
     value: function getNewNodeConstraintId(nodeId) {
-
       var newNodeConstraintId = null;
-
       var usedConstraintIds = [];
-
-      // get the node content
       var node = this.ProjectService.getNodeById(nodeId);
+      if (node != null && node.constraints != null) {
+        var nodeConstraints = node.constraints;
+        var _iteratorNormalCompletion6 = true;
+        var _didIteratorError6 = false;
+        var _iteratorError6 = undefined;
 
-      if (node != null) {
-
-        // get the constraints
-        var constraints = node.constraints;
-
-        if (constraints != null) {
-
-          // loop through all the constraints
-          for (var c = 0; c < constraints.length; c++) {
-
-            // get a constraint
-            var constraint = constraints[c];
+        try {
+          for (var _iterator6 = nodeConstraints[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+            var constraint = _step6.value;
 
             if (constraint != null) {
-
-              // get the id of the constraint
               var constraintId = constraint.id;
-
-              // add the constraint id to the array of used constraint ids
               usedConstraintIds.push(constraintId);
+            }
+          }
+        } catch (err) {
+          _didIteratorError6 = true;
+          _iteratorError6 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion6 && _iterator6.return) {
+              _iterator6.return();
+            }
+          } finally {
+            if (_didIteratorError6) {
+              throw _iteratorError6;
             }
           }
         }
@@ -1200,7 +1181,6 @@ var NodeAuthoringController = function () {
 
       // loop until we have found an unused constraint id
       while (newNodeConstraintId == null) {
-
         // create a potential constraint id
         var potentialNewNodeConstraintId = nodeId + 'Constraint' + constraintCounter;
 
@@ -1216,7 +1196,6 @@ var NodeAuthoringController = function () {
           constraintCounter++;
         }
       }
-
       return newNodeConstraintId;
     }
 
@@ -1227,22 +1206,23 @@ var NodeAuthoringController = function () {
   }, {
     key: 'addConstraint',
     value: function addConstraint() {
-
       // get a new constraint id
       var newNodeConstraintId = this.getNewNodeConstraintId(this.nodeId);
 
       // create the constraint object
-      var constraint = {};
-      constraint.id = newNodeConstraintId;
-      constraint.action = '';
-      constraint.targetId = this.nodeId;
-      constraint.removalConditional = 'all';
-      constraint.removalCriteria = [];
+      var constraint = {
+        "id": newNodeConstraintId,
+        "action": '',
+        "targetId": this.nodeId,
+        "removalConditional": 'all',
+        "removalCriteria": []
+      };
 
       // create a removal criteria
-      var removalCriteria = {};
-      removalCriteria.name = '';
-      removalCriteria.params = {};
+      var removalCriteria = {
+        "name": '',
+        "params": {}
+      };
 
       // add the removal criteria to the constraint
       constraint.removalCriteria.push(removalCriteria);
@@ -1251,11 +1231,7 @@ var NodeAuthoringController = function () {
       if (this.node.constraints == null) {
         this.node.constraints = [];
       }
-
-      // add the constraint to the node
       this.node.constraints.push(constraint);
-
-      // save the project
       this.ProjectService.saveProject();
     }
 
@@ -1267,25 +1243,16 @@ var NodeAuthoringController = function () {
   }, {
     key: 'deleteConstraint',
     value: function deleteConstraint(constraintIndex) {
-
       if (constraintIndex != null) {
-        // get the node content
         var node = this.ProjectService.getNodeById(this.nodeId);
-
         if (node != null) {
-
-          // get the constraints
           var constraints = node.constraints;
-
           if (constraints != null) {
-
             // remove the constraint at the given index
             constraints.splice(constraintIndex, 1);
           }
         }
       }
-
-      // save the project
       this.ProjectService.saveProject();
     }
 
@@ -1297,19 +1264,15 @@ var NodeAuthoringController = function () {
   }, {
     key: 'addRemovalCriteria',
     value: function addRemovalCriteria(constraint) {
-
       if (constraint != null) {
-
         // create the removal criteria
-        var removalCriteria = {};
-        removalCriteria.name = '';
-        removalCriteria.params = {};
-
+        var removalCriteria = {
+          "name": '',
+          "params": {}
+        };
         // add the removal criteria to the constraint
         constraint.removalCriteria.push(removalCriteria);
       }
-
-      // save the project
       this.ProjectService.saveProject();
     }
 
@@ -1323,17 +1286,13 @@ var NodeAuthoringController = function () {
     key: 'deleteRemovalCriteria',
     value: function deleteRemovalCriteria(constraint, removalCriteriaIndex) {
       if (constraint != null) {
-
         // get all the removal criteria
         var removalCriteria = constraint.removalCriteria;
-
         if (removalCriteria != null) {
           // remove the single removal criteria
           removalCriteria.splice(removalCriteriaIndex, 1);
         }
       }
-
-      // save the project
       this.ProjectService.saveProject();
     }
 
@@ -1347,58 +1306,68 @@ var NodeAuthoringController = function () {
     key: 'deleteTransitionCriteria',
     value: function deleteTransitionCriteria(transition, transitionCriteriaIndex) {
       if (transition != null) {
-
         // get all the transition criteria
         var transitionCriterias = transition.criteria;
-
         if (transitionCriterias != null) {
           // remove the single transition criteria
           transitionCriterias.splice(transitionCriteriaIndex, 1);
         }
       }
-
-      // save the project
       this.ProjectService.saveProject();
     }
 
     /**
      * A removal criteria name has changed so we will clear the params so
      * that the params from the previous removal criteria name do not persist
+     * TODO refactor too many nesting
      */
 
   }, {
     key: 'removalCriteriaNameChanged',
     value: function removalCriteriaNameChanged(criteria) {
-
       if (criteria != null) {
         // clear the params
         criteria.params = {};
 
         // get the params for the given criteria name
         var params = this.getRemovalCriteriaParamsByName(criteria.name);
-
         if (params != null) {
+          var _iteratorNormalCompletion7 = true;
+          var _didIteratorError7 = false;
+          var _iteratorError7 = undefined;
 
-          // loop through all the params
-          for (var p = 0; p < params.length; p++) {
-            var paramObject = params[p];
+          try {
+            for (var _iterator7 = params[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
+              var paramObject = _step7.value;
 
-            if (paramObject != null) {
-              var value = paramObject.value;
+              if (paramObject != null) {
+                var value = paramObject.value;
 
-              // intialize the param value
-              criteria.params[value] = '';
+                // intialize the param value
+                criteria.params[value] = '';
 
-              if (value == 'nodeId') {
-                // default the node id param to this node
-                criteria.params[value] = this.nodeId;
+                if (value == 'nodeId') {
+                  // default the node id param to this node
+                  criteria.params[value] = this.nodeId;
+                }
+              }
+            }
+          } catch (err) {
+            _didIteratorError7 = true;
+            _iteratorError7 = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion7 && _iterator7.return) {
+                _iterator7.return();
+              }
+            } finally {
+              if (_didIteratorError7) {
+                throw _iteratorError7;
               }
             }
           }
         }
       }
-
-      // save the project
       this.authoringViewNodeChanged();
     }
 
@@ -1411,9 +1380,7 @@ var NodeAuthoringController = function () {
   }, {
     key: 'transitionCriteriaNameChanged',
     value: function transitionCriteriaNameChanged(transitionCriteria) {
-
       if (transitionCriteria != null) {
-
         var nodeId = null;
         var componentId = null;
 
@@ -1436,8 +1403,6 @@ var NodeAuthoringController = function () {
           transitionCriteria.params.componentId = componentId;
         }
       }
-
-      // save the project
       this.authoringViewNodeChanged();
     }
 
@@ -1449,7 +1414,6 @@ var NodeAuthoringController = function () {
   }, {
     key: 'nodeAuthoringViewButtonClicked',
     value: function nodeAuthoringViewButtonClicked(view) {
-
       if (view == 'addComponent') {
         // toggle the add component view and hide all the other views
         this.showCreateComponent = !this.showCreateComponent;
@@ -1464,7 +1428,6 @@ var NodeAuthoringController = function () {
         this.showComponents = true;
         this.showJSON = false;
       } else if (view == 'editTransitions') {
-
         // save and parse the JSON if it has changed
         this.saveAndParseJSON();
 
@@ -1481,7 +1444,6 @@ var NodeAuthoringController = function () {
         this.showComponents = false;
         this.showJSON = false;
       } else if (view == 'editConstraints') {
-
         // save and parse the JSON if it has changed
         this.saveAndParseJSON();
 
@@ -1523,7 +1485,6 @@ var NodeAuthoringController = function () {
         this.showComponents = false;
         this.showJSON = false;
       } else if (view == 'createBranch') {
-
         // save and parse the JSON if it has changed
         this.saveAndParseJSON();
 
@@ -1551,9 +1512,7 @@ var NodeAuthoringController = function () {
         this.showImportView = false;
         this.showJSON = false;
 
-        // get the previous node id
         var prevNodeId = this.ProjectService.getPreviousNodeId(this.nodeId);
-
         if (prevNodeId != null) {
           // there is a previous node id so we will go to it
           this.$state.go('root.project.node', { projectId: this.projectId, nodeId: prevNodeId });
@@ -1574,9 +1533,7 @@ var NodeAuthoringController = function () {
         this.showImportView = false;
         this.showJSON = false;
 
-        // get the next node id
         var nextNodeId = this.ProjectService.getNextNodeId(this.nodeId);
-
         if (nextNodeId != null) {
           // there is a next node id so we will go to it
           this.$state.go('root.project.node', { projectId: this.projectId, nodeId: nextNodeId });
@@ -1638,7 +1595,6 @@ var NodeAuthoringController = function () {
         this.showComponents = true;
         this.showJSON = false;
       } else if (view == 'showJSON') {
-
         // save and parse the JSON if it has changed
         this.saveAndParseJSON();
 
@@ -1674,12 +1630,12 @@ var NodeAuthoringController = function () {
 
     /**
      * The author has changed the number of branch paths
+     * TODO refactor long function
      */
 
   }, {
     key: 'createBranchNumberOfBranchesChanged',
     value: function createBranchNumberOfBranchesChanged() {
-
       if (this.createBranchNumberOfBranches == 0) {
         // the author has set the number of branch paths to 0 which is not allowed
         alert(this.$translate('errorYouCantHave0BranchPaths'));
@@ -1694,8 +1650,6 @@ var NodeAuthoringController = function () {
         var answer = confirm(this.$translate('areYouSureYouWantToReduceTheNumberOfBranchesToX', { createBranchNumberOfBranches: this.createBranchNumberOfBranches }));
 
         if (answer) {
-          // they answered yes
-
           if (this.createBranchNumberOfBranches == 1) {
             /*
              * the author has removed all the branch paths so we will
@@ -1707,10 +1661,7 @@ var NodeAuthoringController = function () {
              * the author is reducing the number of branch paths but
              * not removing all of them
              */
-
-            // loop through all the branch paths
             for (var bp = 0; bp < this.createBranchBranches.length; bp++) {
-
               if (bp >= this.createBranchNumberOfBranches) {
                 // this is a branch we want to remove
                 var branch = this.createBranchBranches[bp];
@@ -1730,7 +1681,6 @@ var NodeAuthoringController = function () {
         }
       } else if (this.createBranchNumberOfBranches > this.createBranchBranches.length) {
         // the author is increasing the number of branches
-
         if (this.createBranchCriterion == null) {
           /*
            * we will default the branching to be based on workgroup id
@@ -1742,7 +1692,6 @@ var NodeAuthoringController = function () {
 
         // loop for the number of branches and create new branches objects
         for (var b = 0; b < this.createBranchNumberOfBranches; b++) {
-
           if (b >= this.createBranchBranches.length) {
             /*
              * we do not have a branch object for this branch number so
@@ -1750,19 +1699,19 @@ var NodeAuthoringController = function () {
              */
 
             // create the branch object
-            var branch = {};
+            var _branch = {};
 
             // set the branch number
-            branch.number = b + 1;
+            _branch.number = b + 1;
 
             /*
              * set the mapping of all the ids to order for use when choosing which items are
              * in the branch path
              */
-            branch.items = this.UtilService.makeCopyOfJSONObject(this.ProjectService.idToOrder);
+            _branch.items = this.UtilService.makeCopyOfJSONObject(this.ProjectService.idToOrder);
 
             // add the branch to the array of branches
-            this.createBranchBranches.push(branch);
+            this.createBranchBranches.push(_branch);
 
             // create a transition to represent the branch
             var transition = {};
@@ -1771,10 +1720,12 @@ var NodeAuthoringController = function () {
               // the branch is based on score
 
               // create a score criterion
-              var criterion = {};
-              criterion.name = this.createBranchCriterion;
-              criterion.params = {};
-              criterion.params.scores = [];
+              var criterion = {
+                "name": this.createBranchCriterion,
+                "params": {
+                  "scores": []
+                }
+              };
 
               if (this.createBranchNodeId != null) {
                 // set the node for which to look for the score
@@ -1786,27 +1737,25 @@ var NodeAuthoringController = function () {
                 criterion.params.componentId = this.createBranchComponentId;
               }
 
-              transition.criteria = [];
-              transition.criteria.push(criterion);
+              transition.criteria = [criterion];
             } else if (this.createBranchCriterion == 'choiceChosen') {
               // the branch is based on choice chosen
-              var criterion = {};
-              criterion.name = this.createBranchCriterion;
-              criterion.params = {};
-              criterion.params.choiceIds = [];
+              var _criterion = {};
+              _criterion.name = this.createBranchCriterion;
+              _criterion.params = {};
+              _criterion.params.choiceIds = [];
 
               if (this.createBranchNodeId != null) {
                 // set the node for which to look for the score
-                criterion.params.nodeId = this.createBranchNodeId;
+                _criterion.params.nodeId = this.createBranchNodeId;
               }
 
               if (this.createBranchComponentId != null) {
                 // set the component for which to look for the score
-                criterion.params.componentId = this.createBranchComponentId;
+                _criterion.params.componentId = this.createBranchComponentId;
               }
 
-              transition.criteria = [];
-              transition.criteria.push(criterion);
+              transition.criteria = [_criterion];
             } else if (this.createBranchCriterion == 'workgroupId') {
               // workgroup id branching does not require a transition criterion
             } else if (this.createBranchCriterion == 'random') {}
@@ -1817,12 +1766,10 @@ var NodeAuthoringController = function () {
             this.node.transitionLogic.transitions.push(transition);
 
             // save a reference to the transition in the branch
-            branch.transition = transition;
+            _branch.transition = transition;
           }
         }
       }
-
-      // save the project
       this.authoringViewNodeChanged();
     }
 
@@ -1833,12 +1780,8 @@ var NodeAuthoringController = function () {
   }, {
     key: 'createBranchCriterionChanged',
     value: function createBranchCriterionChanged() {
-
       if (this.createBranchCriterion != null) {
-
-        // get this node id
         var nodeId = this.node.id;
-
         if (this.createBranchCriterion == 'workgroupId') {
           // the branch is based on workgroup id
           this.ProjectService.setTransitionLogicField(nodeId, 'howToChooseAmongAvailablePaths', 'workgroupId');
@@ -1871,8 +1814,6 @@ var NodeAuthoringController = function () {
        * fields for the given branch criterion
        */
       this.createBranchUpdateTransitions();
-
-      // save the project
       this.authoringViewNodeChanged();
     }
 
@@ -1883,17 +1824,10 @@ var NodeAuthoringController = function () {
   }, {
     key: 'createBranchNodeIdChanged',
     value: function createBranchNodeIdChanged() {
-
       this.createBranchComponentId = null;
-
-      // get the selected node
-      var node = this.ProjectService.getNodeById(this.createBranchNodeId);
-
-      if (node != null) {
-
-        // get the components of the selected node
-        var components = node.components;
-
+      var selectedNode = this.ProjectService.getNodeById(this.createBranchNodeId);
+      if (selectedNode != null) {
+        var components = selectedNode.components;
         if (components != null) {
           if (components.length == 1) {
             /*
@@ -1942,20 +1876,12 @@ var NodeAuthoringController = function () {
   }, {
     key: 'createBranchUpdateTransitions',
     value: function createBranchUpdateTransitions() {
-
-      // loop through all the branches
       for (var b = 0; b < this.createBranchBranches.length; b++) {
-
-        // get a branch object
         var branch = this.createBranchBranches[b];
-
         if (branch != null) {
-
           // get the transition corresponding to the branch
           var transition = branch.transition;
-
           if (transition != null) {
-
             if (this.createBranchCriterion == 'choiceChosen') {
               // we are branching based on choice chosen
 
@@ -1963,12 +1889,14 @@ var NodeAuthoringController = function () {
               transition.criteria = [];
 
               // create a new choice chosen criterion
-              var criterion = {};
-              criterion.name = 'choiceChosen';
-              criterion.params = {};
-              criterion.params.nodeId = this.createBranchNodeId;
-              criterion.params.componentId = this.createBranchComponentId;
-              criterion.params.choiceIds = [];
+              var criterion = {
+                "name": 'choiceChosen',
+                "params": {
+                  "nodeId": this.createBranchNodeId,
+                  "componentId": this.createBranchComponentId,
+                  "choiceIds": []
+                }
+              };
 
               // add the criterion to the array of criteria
               transition.criteria.push(criterion);
@@ -1991,17 +1919,19 @@ var NodeAuthoringController = function () {
               transition.criteria = [];
 
               // create a new score criterion
-              var criterion = {};
-              criterion.name = 'score';
-              criterion.params = {};
-              criterion.params.nodeId = this.createBranchNodeId;
-              criterion.params.componentId = this.createBranchComponentId;
-              criterion.params.scores = [];
+              var _criterion2 = {
+                "name": 'score',
+                "params": {
+                  "nodeId": this.createBranchNodeId,
+                  "componentId": this.createBranchComponentId,
+                  "scores": []
+                }
+              };
 
               // re-use scores if available
 
               // add the criterion to the array of criteria
-              transition.criteria.push(criterion);
+              transition.criteria.push(_criterion2);
 
               /*
                * clear the choice id since we don't need it in score
@@ -2010,7 +1940,7 @@ var NodeAuthoringController = function () {
               branch.choiceId = null;
 
               // set the scores into the branch object
-              branch.scores = criterion.params.scores;
+              branch.scores = _criterion2.params.scores;
             } else if (this.createBranchCriterion == 'workgroupId') {
               // we are branching based on workgroup id
 
@@ -2066,19 +1996,15 @@ var NodeAuthoringController = function () {
     /**
      * Automatically populate the selected choices if the branch is based on
      * choice chosen and the selected component is a multiple choice component
+     * TODO refactor too many nesting
      */
 
   }, {
     key: 'createBranchUpdateChoiceChosenIds',
     value: function createBranchUpdateChoiceChosenIds() {
-
-      // get the node id and component id
       var nodeId = this.createBranchNodeId;
       var componentId = this.createBranchComponentId;
-
-      // get the component
       var component = this.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
-
       if (component != null) {
         if (component.type == 'MultipleChoice') {
           // the component is a multiple choice component
@@ -2091,7 +2017,6 @@ var NodeAuthoringController = function () {
             // loop through all the choices
             for (var c = 0; c < choices.length; c++) {
               var choice = choices[c];
-
               if (choice != null) {
 
                 // get the fields of the choice
@@ -2152,12 +2077,12 @@ var NodeAuthoringController = function () {
      * A step was clicked in the create branch authoring view
      * @param branch the branch path
      * @param item the step that was clicked
+     * TODO refactor function too long
      */
 
   }, {
     key: 'createBranchStepClicked',
     value: function createBranchStepClicked(branch, item) {
-
       // get all the steps in order
       var orderedItems = this.$filter('orderBy')(this.$filter('toArray')(branch.items), 'order');
 
@@ -2178,60 +2103,71 @@ var NodeAuthoringController = function () {
        * loop through all the items in order and set the transitions so that
        * the steps in a branch path transition to one after the other
        */
-      for (var i = 0; i < orderedItems.length; i++) {
-        var orderedItem = orderedItems[i];
+      var _iteratorNormalCompletion8 = true;
+      var _didIteratorError8 = false;
+      var _iteratorError8 = undefined;
 
-        if (orderedItem != null && orderedItem.checked) {
-          // the item is checked
+      try {
+        for (var _iterator8 = orderedItems[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
+          var orderedItem = _step8.value;
 
-          if (previousCheckedNodeId != null) {
-            // make the previous node id point to the current item
-            var previousCheckedNode = this.ProjectService.getNodeById(previousCheckedNodeId);
+          if (orderedItem != null && orderedItem.checked) {
+            if (previousCheckedNodeId != null) {
+              // make the previous node id point to the current item
+              var previousCheckedNode = this.ProjectService.getNodeById(previousCheckedNodeId);
+              if (previousCheckedNode != null) {
+                // get the transition logic
+                var _transitionLogic = previousCheckedNode.transitionLogic;
+                if (_transitionLogic != null) {
+                  if (_transitionLogic.transitions != null) {
+                    // clear the transitions
+                    _transitionLogic.transitions = [];
 
-            if (previousCheckedNode != null) {
-
-              // get the transition logic
-              var transitionLogic = previousCheckedNode.transitionLogic;
-
-              if (transitionLogic != null) {
-
-                if (transitionLogic.transitions != null) {
-
-                  // clear the transitions
-                  transitionLogic.transitions = [];
-
-                  // create a new transition object to the current item
-                  var transition = {};
-                  transition.to = orderedItem.$key;
-
-                  // add the transition
-                  transitionLogic.transitions.push(transition);
+                    // create a new transition object to the current item
+                    var _transition3 = {
+                      "to": orderedItem.$key
+                    };
+                    // add the transition
+                    _transitionLogic.transitions.push(_transition3);
+                  }
                 }
               }
             }
+
+            // add the item to the checked items array
+            checkedItemsInBranchPath.push(orderedItem);
+
+            // add the node id to the array of node ids in the branch path
+            branch.nodeIdsInBranch.push(orderedItem.$key);
+
+            // remember the previously checked node id
+            previousCheckedNodeId = orderedItem.$key;
           }
 
-          // add the item to the checked items array
-          checkedItemsInBranchPath.push(orderedItem);
-
-          // add the node id to the array of node ids in the branch path
-          branch.nodeIdsInBranch.push(orderedItem.$key);
-
-          // remember the previously checked node id
-          previousCheckedNodeId = orderedItem.$key;
+          // get the previous ordered item (checked or unchecked)
+          var previousOrderedItem = orderedItems[i - 1];
+          if (previousOrderedItem != null) {
+            if (previousOrderedItem.$key == item.$key) {
+              /*
+               * the previous item was the node that was checked/unchecked
+               * so we will remember this item because it is the node
+               * that comes after the node that was checked/unchecked
+               */
+              nodeIdAfter = orderedItem.$key;
+            }
+          }
         }
-
-        // get the previous ordered item (checked or unchecked)
-        var previousOrderedItem = orderedItems[i - 1];
-
-        if (previousOrderedItem != null) {
-          if (previousOrderedItem.$key == item.$key) {
-            /*
-             * the previous item was the node that was checked/unchecked
-             * so we will remember this item because it is the node
-             * that comes after the node that was checked/unchecked
-             */
-            nodeIdAfter = orderedItem.$key;
+      } catch (err) {
+        _didIteratorError8 = true;
+        _iteratorError8 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion8 && _iterator8.return) {
+            _iterator8.return();
+          }
+        } finally {
+          if (_didIteratorError8) {
+            throw _iteratorError8;
           }
         }
       }
@@ -2246,23 +2182,20 @@ var NodeAuthoringController = function () {
          * this is the last node in the branch path so we will make it
          * transition to the merge point
          */
-        var node = this.ProjectService.getNodeById(previousCheckedNodeId);
-
-        if (node != null) {
-          var transitionLogic = node.transitionLogic;
-
+        var _node = this.ProjectService.getNodeById(previousCheckedNodeId);
+        if (_node != null) {
+          var transitionLogic = _node.transitionLogic;
           if (transitionLogic != null) {
             if (transitionLogic.transitions != null) {
-
               // clear the transitions
               transitionLogic.transitions = [];
 
               // make a transition to the merge point
-              var transition = {};
-              transition.to = this.createBranchMergePointNodeId;
+              var _transition2 = {};
+              _transition2.to = this.createBranchMergePointNodeId;
 
               // add the transition
-              transitionLogic.transitions.push(transition);
+              transitionLogic.transitions.push(_transition2);
             }
           }
         }
@@ -2333,74 +2266,77 @@ var NodeAuthoringController = function () {
        * update the constraints of other steps in the branch path if necessary.
        * loop through all theh checked items in the path
        */
-      for (var n = 0; n < checkedItemsInBranchPath.length; n++) {
+      var _iteratorNormalCompletion9 = true;
+      var _didIteratorError9 = false;
+      var _iteratorError9 = undefined;
 
-        // get a checked item in the branch path
-        var item = checkedItemsInBranchPath[n];
-        var itemNodeId = item.$key;
+      try {
+        for (var _iterator9 = checkedItemsInBranchPath[Symbol.iterator](), _step9; !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
+          var _item = _step9.value;
 
-        // remove all branch path taken constraints from the node
-        this.ProjectService.removeBranchPathTakenNodeConstraints(itemNodeId);
+          var itemNodeId = _item.$key;
+
+          // remove all branch path taken constraints from the node
+          this.ProjectService.removeBranchPathTakenNodeConstraints(itemNodeId);
+
+          /*
+           * the branch path taken constraints will be from this node to
+           * the first node in the branch path
+           */
+          var _fromNodeId = this.nodeId;
+          var _toNodeId = firstNodeId;
+
+          // add the branch path taken constraints
+          this.ProjectService.addBranchPathTakenConstraints(itemNodeId, _fromNodeId, _toNodeId);
+        }
 
         /*
-         * the branch path taken constraints will be from this node to
-         * the first node in the branch path
+         * update the node numbers now that a step has been added to a branch path
+         * e.g. if this is a branching step that is called
+         * 1.5 B View the Potential Energy
+         * then the node number is 1.5 B
          */
-        var fromNodeId = this.nodeId;
-        var toNodeId = firstNodeId;
-
-        // add the branch path taken constraints
-        this.ProjectService.addBranchPathTakenConstraints(itemNodeId, fromNodeId, toNodeId);
+      } catch (err) {
+        _didIteratorError9 = true;
+        _iteratorError9 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion9 && _iterator9.return) {
+            _iterator9.return();
+          }
+        } finally {
+          if (_didIteratorError9) {
+            throw _iteratorError9;
+          }
+        }
       }
 
-      /*
-       * update the node numbers now that a step has been added to a branch path
-       * e.g. if this is a branching step that is called
-       * 1.5 B View the Potential Energy
-       * then the node number is 1.5 B
-       */
       this.ProjectService.calculateNodeNumbers();
-
-      // save the project
       this.authoringViewNodeChanged();
     }
 
     /**
      * The score for a path has changed in the branch authoring
      * @param branch the branch for which the score has changed
+     * TODO refactor too many nesting
      */
 
   }, {
     key: 'createBranchScoreChanged',
     value: function createBranchScoreChanged(branch) {
-
       if (branch != null) {
-
-        // get the transition of the branch
         var transition = branch.transition;
-
         if (transition != null) {
-
-          // get the scores
           var scores = branch.scores;
-
           if (scores != null) {
-
-            // get the criteria
             var criteria = transition.criteria;
-
             if (criteria != null) {
-
               // get the first criteria. we will assume there is only one criteria
               var criterion = criteria[0];
-
               if (criterion != null) {
-
                 // get the params of the criterion
                 var params = criterion.params;
-
                 if (params != null) {
-
                   // update the scores into the params
                   params.scores = scores;
                 }
@@ -2416,68 +2352,75 @@ var NodeAuthoringController = function () {
 
     /**
      * The merge point has changed in the branch authoring
+     * TODO refactor too many nesting
      */
 
   }, {
     key: 'createBranchMergePointNodeIdChanged',
     value: function createBranchMergePointNodeIdChanged() {
-
       // get the merge point node id
       var createBranchMergePointNodeId = this.createBranchMergePointNodeId;
-
       var branches = this.createBranchBranches;
+      var _iteratorNormalCompletion10 = true;
+      var _didIteratorError10 = false;
+      var _iteratorError10 = undefined;
 
-      // loop through all the branches
-      for (var b = 0; b < branches.length; b++) {
-        var branch = branches[b];
+      try {
+        for (var _iterator10 = branches[Symbol.iterator](), _step10; !(_iteratorNormalCompletion10 = (_step10 = _iterator10.next()).done); _iteratorNormalCompletion10 = true) {
+          var branch = _step10.value;
 
-        if (branch != null) {
+          if (branch != null) {
+            // get the node ids in the branch path
+            var nodeIdsInBranch = branch.nodeIdsInBranch;
+            if (nodeIdsInBranch != null && nodeIdsInBranch.length > 0) {
+              // get the last node id in the branch path
+              var lastNodeIdInBranchPath = nodeIdsInBranch[nodeIdsInBranch.length - 1];
+              if (lastNodeIdInBranchPath != null) {
+                // get the last node in the branch path
+                var lastNodeInBranchPath = this.ProjectService.getNodeById(lastNodeIdInBranchPath);
+                if (lastNodeInBranchPath != null) {
+                  // get the transition logic of the last node
+                  var transitionLogic = lastNodeInBranchPath.transitionLogic;
+                  if (transitionLogic != null) {
+                    if (transitionLogic.transitions != null) {
+                      // clear the transitions
+                      transitionLogic.transitions = [];
 
-          // get the node ids in the branch path
-          var nodeIdsInBranch = branch.nodeIdsInBranch;
-
-          if (nodeIdsInBranch != null && nodeIdsInBranch.length > 0) {
-
-            // get the last node id in the branch path
-            var lastNodeIdInBranchPath = nodeIdsInBranch[nodeIdsInBranch.length - 1];
-
-            if (lastNodeIdInBranchPath != null) {
-
-              // get the last node in the branch path
-              var lastNodeInBranchPath = this.ProjectService.getNodeById(lastNodeIdInBranchPath);
-
-              if (lastNodeInBranchPath != null) {
-
-                // get the transition logic of the last node
-                var transitionLogic = lastNodeInBranchPath.transitionLogic;
-
-                if (transitionLogic != null) {
-
-                  if (transitionLogic.transitions != null) {
-
-                    // clear the transitions
-                    transitionLogic.transitions = [];
-
-                    // make a new transition to the merge point
-                    var transition = {};
-                    transition.to = createBranchMergePointNodeId;
-
-                    // add the transition
-                    transitionLogic.transitions.push(transition);
+                      // make a new transition to the merge point
+                      var transition = {
+                        "to": createBranchMergePointNodeId
+                      };
+                      // add the transition
+                      transitionLogic.transitions.push(transition);
+                    }
                   }
                 }
               }
             }
           }
         }
+
+        /*
+         * calculate the node numbers
+         * e.g. if the step is called
+         * 1.5 View the Potential Energy
+         * then the node number is 1.5
+         */
+      } catch (err) {
+        _didIteratorError10 = true;
+        _iteratorError10 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion10 && _iterator10.return) {
+            _iterator10.return();
+          }
+        } finally {
+          if (_didIteratorError10) {
+            throw _iteratorError10;
+          }
+        }
       }
 
-      /*
-       * calculate the node numbers
-       * e.g. if the step is called
-       * 1.5 View the Potential Energy
-       * then the node number is 1.5
-       */
       this.ProjectService.calculateNodeNumbers();
 
       // save the project
@@ -2485,19 +2428,13 @@ var NodeAuthoringController = function () {
     }
 
     /**
-     * The remove branch button was clicked
+     * Remove the branch after confirming with the user
      */
 
   }, {
     key: 'removeBranchButtonClicked',
     value: function removeBranchButtonClicked() {
-
-      // ask the user if they are sure they want to remove the branch
-      var message = this.$translate('areYouSureYouWantToRemoveTheBranch');
-      var answer = confirm(message);
-
-      if (answer) {
-        // the user answered yes so we will remove the branch
+      if (confirm(this.$translate('areYouSureYouWantToRemoveTheBranch'))) {
         this.removeBranch();
       }
     }
@@ -2509,10 +2446,7 @@ var NodeAuthoringController = function () {
   }, {
     key: 'removeBranch',
     value: function removeBranch() {
-
-      // loop through all the branch paths
       for (var bp = 0; bp < this.createBranchBranches.length; bp++) {
-
         // remove a branch path
         var branchPath = this.createBranchBranches[bp];
         this.removeBranchPath(branchPath);
@@ -2609,22 +2543,18 @@ var NodeAuthoringController = function () {
   }, {
     key: 'removeBranchPath',
     value: function removeBranchPath(branch) {
-
-      if (branch != null) {
-
+      if (branch != null && branch.checkedItemsInBranchPath != null) {
         // get the checked items in the branch path
         var checkedItemsInBranchPath = branch.checkedItemsInBranchPath;
+        var _iteratorNormalCompletion11 = true;
+        var _didIteratorError11 = false;
+        var _iteratorError11 = undefined;
 
-        if (checkedItemsInBranchPath != null) {
-
-          // loop through all the checked items in the branch path
-          for (var i = 0; i < checkedItemsInBranchPath.length; i++) {
-
-            // get an item in the branch path
-            var checkedItem = checkedItemsInBranchPath[i];
+        try {
+          for (var _iterator11 = checkedItemsInBranchPath[Symbol.iterator](), _step11; !(_iteratorNormalCompletion11 = (_step11 = _iterator11.next()).done); _iteratorNormalCompletion11 = true) {
+            var checkedItem = _step11.value;
 
             if (checkedItem != null) {
-
               // get the node id of the checked item
               var nodeId = checkedItem.$key;
 
@@ -2640,9 +2570,23 @@ var NodeAuthoringController = function () {
               this.ProjectService.setTransition(nodeId, nodeIdAfter);
             }
           }
+
+          // get the index of the branch path
+        } catch (err) {
+          _didIteratorError11 = true;
+          _iteratorError11 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion11 && _iterator11.return) {
+              _iterator11.return();
+            }
+          } finally {
+            if (_didIteratorError11) {
+              throw _iteratorError11;
+            }
+          }
         }
 
-        // get the index of the branch path
         var branchPathIndex = this.createBranchBranches.indexOf(branch);
 
         // remove the branch path
@@ -2660,7 +2604,6 @@ var NodeAuthoringController = function () {
   }, {
     key: 'summernoteRubricHTMLChanged',
     value: function summernoteRubricHTMLChanged() {
-
       // get the summernote rubric html
       var html = this.summernoteRubricHTML;
 
@@ -2816,28 +2759,39 @@ var NodeAuthoringController = function () {
   }, {
     key: 'getSelectedComponentIds',
     value: function getSelectedComponentIds() {
-
       var selectedComponents = [];
-
       if (this.components != null) {
+        var _iteratorNormalCompletion12 = true;
+        var _didIteratorError12 = false;
+        var _iteratorError12 = undefined;
 
-        // loop through all the components
-        for (var c = 0; c < this.components.length; c++) {
-          var component = this.components[c];
+        try {
+          for (var _iterator12 = this.components[Symbol.iterator](), _step12; !(_iteratorNormalCompletion12 = (_step12 = _iterator12.next()).done); _iteratorNormalCompletion12 = true) {
+            var component = _step12.value;
 
-          if (component != null && component.id != null) {
-
-            // see if the component is checked
-            var checked = this.componentsToChecked[component.id];
-
-            if (checked) {
-              // the component is checked
-              selectedComponents.push(component.id);
+            if (component != null && component.id != null) {
+              // see if the component is checked
+              var checked = this.componentsToChecked[component.id];
+              if (checked) {
+                selectedComponents.push(component.id);
+              }
+            }
+          }
+        } catch (err) {
+          _didIteratorError12 = true;
+          _iteratorError12 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion12 && _iterator12.return) {
+              _iterator12.return();
+            }
+          } finally {
+            if (_didIteratorError12) {
+              throw _iteratorError12;
             }
           }
         }
       }
-
       return selectedComponents;
     }
 
@@ -2868,22 +2822,14 @@ var NodeAuthoringController = function () {
   }, {
     key: 'getSelectedComponentNumbersAndTypes',
     value: function getSelectedComponentNumbersAndTypes(componentIds) {
-
       var selectedComponents = [];
-
       if (this.components != null) {
-
-        // loop through all the components
         for (var c = 0; c < this.components.length; c++) {
           var component = this.components[c];
-
           if (component != null && component.id != null) {
-
             // see if the component is checked
             var checked = this.componentsToChecked[component.id];
-
             if (checked) {
-
               // get the component number and type example "1. OpenResponse"
               var componentNumberAndType = c + 1 + '. ' + component.type;
 
@@ -2893,7 +2839,6 @@ var NodeAuthoringController = function () {
           }
         }
       }
-
       return selectedComponents;
     }
 
@@ -2918,7 +2863,6 @@ var NodeAuthoringController = function () {
       this.nodeAuthoringViewButtonClicked('import');
 
       if (this.showImportView) {
-
         // turn on import mode
         this.turnOnImportComponentMode();
 
@@ -2943,7 +2887,6 @@ var NodeAuthoringController = function () {
   }, {
     key: 'moveButtonClicked',
     value: function moveButtonClicked() {
-
       // hide the other views
       this.nodeAuthoringViewButtonClicked('move');
 
@@ -2967,7 +2910,6 @@ var NodeAuthoringController = function () {
   }, {
     key: 'copyButtonClicked',
     value: function copyButtonClicked() {
-
       // hide the other views
       this.nodeAuthoringViewButtonClicked('copy');
 
@@ -2983,6 +2925,7 @@ var NodeAuthoringController = function () {
 
     /**
      * The delete button was clicked
+     * TODO refactor too many nesting
      */
 
   }, {
@@ -2990,8 +2933,7 @@ var NodeAuthoringController = function () {
     value: function deleteButtonClicked() {
       var _this3 = this;
 
-      // scroll to the top of the page
-      this.$anchorScroll('top');
+      this.scrollToTopOfPage();
 
       /*
        * hide all the component authoring so that the author only sees the
@@ -3029,42 +2971,50 @@ var NodeAuthoringController = function () {
         }
 
         // ask the user if they are sure they want to delete
-        var answer = confirm(confirmMessage);
-
-        if (answer) {
-          // the user answered yes
-
-          // get the selected component ids
+        if (confirm(confirmMessage)) {
           var selectedComponents = _this3.getSelectedComponentIds();
 
           // data saved in the component deleted event
-          var data = {};
-          data.componentsDeleted = _this3.getComponentObjectsForEventData(selectedComponents);
+          var data = {
+            "componentsDeleted": _this3.getComponentObjectsForEventData(selectedComponents)
+          };
 
           /*
            * loop through all the selected component ids and delete the
            * components
            */
-          for (var c = 0; c < selectedComponents.length; c++) {
+          var _iteratorNormalCompletion13 = true;
+          var _didIteratorError13 = false;
+          var _iteratorError13 = undefined;
 
-            // get a selected component id
-            var componentId = selectedComponents[c];
+          try {
+            for (var _iterator13 = selectedComponents[Symbol.iterator](), _step13; !(_iteratorNormalCompletion13 = (_step13 = _iterator13.next()).done); _iteratorNormalCompletion13 = true) {
+              var componentId = _step13.value;
 
-            // delete the component from the node
-            _this3.ProjectService.deleteComponent(_this3.nodeId, componentId);
+              _this3.ProjectService.deleteComponent(_this3.nodeId, componentId);
+            }
+          } catch (err) {
+            _didIteratorError13 = true;
+            _iteratorError13 = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion13 && _iterator13.return) {
+                _iterator13.return();
+              }
+            } finally {
+              if (_didIteratorError13) {
+                throw _iteratorError13;
+              }
+            }
           }
 
-          // save the component deleted event to the server
           _this3.saveEvent('componentDeleted', 'Authoring', data);
 
           // check if we need to show the node save or node submit buttons
           _this3.checkIfNeedToShowNodeSaveOrNodeSubmitButtons();
 
-          // save the project
           _this3.ProjectService.saveProject();
         } else {
-          // the user answer no
-
           // uncheck the component check boxes
           _this3.clearComponentsToChecked();
         }
@@ -3095,23 +3045,13 @@ var NodeAuthoringController = function () {
   }, {
     key: 'cancelInsertClicked',
     value: function cancelInsertClicked() {
-
       // hide all the authoring views
       this.nodeAuthoringViewButtonClicked();
 
-      // turn on add component mode
       this.turnOffAddComponentMode();
-
-      // turn on the move component mode
       this.turnOffMoveComponentMode();
-
-      // hide the insert buttons
       this.turnOffInsertComponentMode();
-
-      // uncheck the component check boxes
       this.clearComponentsToChecked();
-
-      // show the component authoring views
       this.showComponentAuthoring();
     }
 
@@ -3122,7 +3062,6 @@ var NodeAuthoringController = function () {
   }, {
     key: 'checkIfNeedToShowNodeSaveOrNodeSubmitButtons',
     value: function checkIfNeedToShowNodeSaveOrNodeSubmitButtons() {
-
       if (this.ProjectService.doesAnyComponentShowSubmitButton(this.nodeId)) {
         /*
          * there is a component in this step that is showing their
@@ -3157,6 +3096,7 @@ var NodeAuthoringController = function () {
 
     /**
      * Insert the component so it becomes the first component in the step
+     * @TODO refactor function is too long
      */
 
   }, {
@@ -3170,54 +3110,33 @@ var NodeAuthoringController = function () {
         // create a component and add it to this node
         var newComponent = this.ProjectService.createComponent(this.nodeId, this.selectedComponent, null);
 
-        var data = {};
-        data.compoenntId = newComponent.id;
-        data.componentType = newComponent.type;
+        var data = {
+          "componentId": newComponent.id,
+          "componentType": newComponent.type
+        };
 
-        // save the component created event to the server
         this.saveEvent('componentCreated', 'Authoring', data);
-
         newComponents.push(newComponent);
-
-        // turn off the add component mode
         this.turnOffAddComponentMode();
-
-        // save the project
         this.ProjectService.saveProject();
-
-        /*
-         * temporarily highlight the new components and then show the component
-         * authoring views
-         */
         this.highlightNewComponentsAndThenShowComponentAuthoring(newComponents);
       } else if (this.moveComponentMode) {
-
         // get the component ids we are moving
         var selectedComponentIds = this.getSelectedComponentIds();
 
         // data saved in the component moved event
-        var _data = {};
-        _data.componentsMoved = this.getComponentObjectsForEventData(selectedComponentIds);
+        var _data = {
+          "componentsMoved": this.getComponentObjectsForEventData(selectedComponentIds)
+        };
 
         // move the components to their new location
         newComponents = this.ProjectService.moveComponent(this.nodeId, selectedComponentIds, null);
 
-        // save the component moved event to the server
         this.saveEvent('componentMoved', 'Authoring', _data);
-
-        // turn off the move component mode
         this.turnOffMoveComponentMode();
-
-        // save the project
         this.ProjectService.saveProject();
-
-        /*
-         * temporarily highlight the new components and then show the component
-         * authoring views
-         */
         this.highlightNewComponentsAndThenShowComponentAuthoring(newComponents);
       } else if (this.copyComponentMode) {
-
         // get the component ids we are moving
         var _selectedComponentIds = this.getSelectedComponentIds();
 
@@ -3239,36 +3158,15 @@ var NodeAuthoringController = function () {
         }
 
         _data2.componentsCopied = componentsCopied;
-
-        // save the component copied event to the server
         this.saveEvent('componentCopied', 'Authoring', _data2);
-
-        // turn off the copy component mode
         this.turnOffCopyComponentMode();
-
-        // save the project
         this.ProjectService.saveProject();
-
-        /*
-         * temporarily highlight the new components and then show the component
-         * authoring views
-         */
         this.highlightNewComponentsAndThenShowComponentAuthoring(newComponents);
       } else if (this.importComponentMode) {
-
         // import the selected components and insert them
         this.importComponents(this.nodeId).then(function (newComponents) {
-
-          // turn off import component mode
           _this4.turnOffImportComponentMode();
-
-          // save the project
           _this4.ProjectService.saveProject();
-
-          /*
-           * temporarily highlight the new components and then show the component
-           * authoring views
-           */
           _this4.highlightNewComponentsAndThenShowComponentAuthoring(newComponents);
 
           /*
@@ -3283,6 +3181,7 @@ var NodeAuthoringController = function () {
     /**
      * Insert the component after the given component id
      * @param componentId insert the component after this given component id
+     * TODO refactor function is too long
      */
 
   }, {
@@ -3291,74 +3190,46 @@ var NodeAuthoringController = function () {
       var _this5 = this;
 
       var newComponents = [];
-
       if (this.addComponentMode) {
         // create a component and add it to this node
         var newComponent = this.ProjectService.createComponent(this.nodeId, this.selectedComponent, componentId);
 
-        var data = {};
-        data.componentId = newComponent.id;
-        data.componentType = newComponent.type;
-
-        // save the component created event to the server
+        var data = {
+          "componentId": newComponent.id,
+          "componentType": newComponent.type
+        };
         this.saveEvent('componentCreated', 'Authoring', data);
-
         newComponents.push(newComponent);
-
-        // turn off the add component mode
         this.turnOffAddComponentMode();
-
-        // save the project
         this.ProjectService.saveProject();
-
-        /*
-         * temporarily highlight the new components and then show the component
-         * authoring views
-         */
         this.highlightNewComponentsAndThenShowComponentAuthoring(newComponents);
       } else if (this.moveComponentMode) {
-
-        // get the component ids we are moving
         var selectedComponentIds = this.getSelectedComponentIds();
-
         if (selectedComponentIds != null && selectedComponentIds.indexOf(componentId) != -1) {
           /*
            * the author is trying to move a component and place it after
            * itself which we will not allow
            */
-
           if (selectedComponentIds.length == 1) {
             alert(this.$translate('youAreNotAllowedToInsertTheSelectedItemAfterItself'));
           } else if (selectedComponentIds.length > 1) {
             alert(this.$translate('youAreNotAllowedToInsertTheSelectedItemsAfterItself'));
           }
         } else {
-
           // data saved in the component moved event
-          var _data3 = {};
-          _data3.componentsMoved = this.getComponentObjectsForEventData(selectedComponentIds);
+          var _data3 = {
+            "componentsMoved": this.getComponentObjectsForEventData(selectedComponentIds)
+          };
 
           // move the components to their new location
           newComponents = this.ProjectService.moveComponent(this.nodeId, selectedComponentIds, componentId);
 
-          // save the component moved event to the server
           this.saveEvent('componentMoved', 'Authoring', _data3);
-
-          // turn off the move component mode
           this.turnOffMoveComponentMode();
-
-          // save the project
           this.ProjectService.saveProject();
-
-          /*
-           * temporarily highlight the new components and then show the component
-           * authoring views
-           */
           this.highlightNewComponentsAndThenShowComponentAuthoring(newComponents);
         }
       } else if (this.copyComponentMode) {
-
-        // get the component ids we are moving
         var _selectedComponentIds2 = this.getSelectedComponentIds();
 
         // data saved in the component copied event
@@ -3379,35 +3250,15 @@ var NodeAuthoringController = function () {
         }
 
         _data4.componentsCopied = componentsCopied;
-
-        // save the component copied event to the server
         this.saveEvent('componentCopied', 'Authoring', _data4);
-
-        // turn off the copy component mode
         this.turnOffCopyComponentMode();
-
-        // save the project
         this.ProjectService.saveProject();
-
-        /*
-         * temporarily highlight the new components and then show the component
-         * authoring views
-         */
         this.highlightNewComponentsAndThenShowComponentAuthoring(newComponents);
       } else if (this.importComponentMode) {
-
         // import the selected components and insert them
         newComponents = this.importComponents(this.nodeId, componentId).then(function (newComponents) {
-          // turn off import component mode
           _this5.turnOffImportComponentMode();
-
-          // save the project
           _this5.ProjectService.saveProject();
-
-          /*
-           * temporarily highlight the new components and then show the component
-           * authoring views
-           */
           _this5.highlightNewComponentsAndThenShowComponentAuthoring(newComponents);
 
           /*
@@ -3421,7 +3272,7 @@ var NodeAuthoringController = function () {
 
     /**
      * Temporarily highlight the new components and then show the component
-     * authoring views
+     * authoring views. Used to bring user's attention to new changes.
      * @param newComponents an array of the new components we have just added
      */
 
@@ -3433,37 +3284,48 @@ var NodeAuthoringController = function () {
       // use a timeout to allow the components time to show up in the UI
       this.$timeout(function () {
         if (newComponents != null) {
+          var _iteratorNormalCompletion14 = true;
+          var _didIteratorError14 = false;
+          var _iteratorError14 = undefined;
 
-          // loop through all the new components
-          for (var n = 0; n < newComponents.length; n++) {
-            var newComponent = newComponents[n];
+          try {
+            for (var _iterator14 = newComponents[Symbol.iterator](), _step14; !(_iteratorNormalCompletion14 = (_step14 = _iterator14.next()).done); _iteratorNormalCompletion14 = true) {
+              var newComponent = _step14.value;
 
-            if (newComponent != null) {
-              (function () {
+              if (newComponent != null) {
+                (function () {
+                  var componentElement = $('#' + newComponent.id);
+                  var componentOriginalBackgroundColor = componentElement.css('backgroundColor');
+                  componentElement.css('background-color', '#FFFF9C');
 
-                // get the component UI element
-                var componentElement = $('#' + newComponent.id);
-
-                // save the original background color
-                var originalBackgroundColor = componentElement.css('backgroundColor');
-
-                // highlight the background briefly to draw attention to it
-                componentElement.css('background-color', '#FFFF9C');
-
-                /*
-                 * Use a timeout before starting to transition back to
-                 * the original background color. For some reason the
-                 * element won't get highlighted in the first place
-                 * unless this timeout is used.
-                 */
-                _this6.$timeout(function () {
-                  // slowly fade back to original background color
-                  componentElement.css({
-                    'transition': 'background-color 2s ease-in-out',
-                    'background-color': originalBackgroundColor
+                  /*
+                   * Use a timeout before starting to transition back to
+                   * the original background color. For some reason the
+                   * element won't get highlighted in the first place
+                   * unless this timeout is used.
+                   */
+                  _this6.$timeout(function () {
+                    // slowly fade back to original background color
+                    componentElement.css({
+                      'transition': 'background-color 2s ease-in-out',
+                      'background-color': componentOriginalBackgroundColor
+                    });
                   });
-                });
-              })();
+                })();
+              }
+            }
+          } catch (err) {
+            _didIteratorError14 = true;
+            _iteratorError14 = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion14 && _iterator14.return) {
+                _iterator14.return();
+              }
+            } finally {
+              if (_didIteratorError14) {
+                throw _iteratorError14;
+              }
             }
           }
         }
@@ -3475,16 +3337,9 @@ var NodeAuthoringController = function () {
          * they just made before we switch back to the normal view.
          */
         _this6.$timeout(function () {
-          // show the component authoring
           _this6.showComponentAuthoring();
-
-          // turn off the insert component mode
           _this6.turnOffInsertComponentMode();
-
-          // hide the create component elements
           _this6.showCreateComponent = false;
-
-          // uncheck all the component checkboxes
           _this6.clearComponentsToChecked();
 
           /*
@@ -3492,9 +3347,7 @@ var NodeAuthoringController = function () {
            * to the first new component
            */
           _this6.$timeout(function () {
-
             if (newComponents != null && newComponents.length > 0) {
-
               // get the UI element of the first new component
               var componentElement = $('#' + newComponents[0].id);
 
@@ -3518,11 +3371,9 @@ var NodeAuthoringController = function () {
   }, {
     key: 'showMyImportProject',
     value: function showMyImportProject(importProjectId) {
-
       // clear the select drop down for the library project
       this.importLibraryProjectId = null;
 
-      // show the import project
       this.showImportProject(importProjectId);
     }
 
@@ -3535,8 +3386,6 @@ var NodeAuthoringController = function () {
     key: 'showLibraryImportProject',
     value: function showLibraryImportProject(importProjectId) {
       this.importMyProjectId = null;
-
-      // show the import project
       this.showImportProject(importProjectId);
     }
 
@@ -3583,15 +3432,11 @@ var NodeAuthoringController = function () {
   }, {
     key: 'importComponentsButtonClicked',
     value: function importComponentsButtonClicked() {
-
-      // get the components that were selected
       var selectedComponents = this.getSelectedComponentsToImport();
-
       if (selectedComponents == null || selectedComponents.length == 0) {
         // the author did not select any components to import
         alert('Please select a component to import.');
       } else {
-
         /*
          * hide the import view because we want to go back to the
          * project view so that the author can choose where to place
@@ -3600,42 +3445,73 @@ var NodeAuthoringController = function () {
         this.showImportView = false;
         this.turnOnInsertComponentMode();
         this.hideComponentAuthoring();
-
-        // scroll to the top of the page
-        this.$anchorScroll('top');
+        this.scrollToTopOfPage();
       }
     }
 
     /**
      * Get the selected components to import
      * @return an array of selected components
+     * TODO refactor too many nesting
      */
 
   }, {
     key: 'getSelectedComponentsToImport',
     value: function getSelectedComponentsToImport() {
       var selectedComponents = [];
+      var _iteratorNormalCompletion15 = true;
+      var _didIteratorError15 = false;
+      var _iteratorError15 = undefined;
 
-      // loop through all the import project items
-      for (var n = 0; n < this.importProjectItems.length; n++) {
-        var item = this.importProjectItems[n];
+      try {
+        for (var _iterator15 = this.importProjectItems[Symbol.iterator](), _step15; !(_iteratorNormalCompletion15 = (_step15 = _iterator15.next()).done); _iteratorNormalCompletion15 = true) {
+          var item = _step15.value;
 
-        if (item != null && item.node != null && item.node.components != null) {
+          if (item != null && item.node != null && item.node.components != null) {
+            var componentsInNode = item.node.components;
+            var _iteratorNormalCompletion16 = true;
+            var _didIteratorError16 = false;
+            var _iteratorError16 = undefined;
 
-          // get the components in the node
-          var components = item.node.components;
+            try {
+              for (var _iterator16 = componentsInNode[Symbol.iterator](), _step16; !(_iteratorNormalCompletion16 = (_step16 = _iterator16.next()).done); _iteratorNormalCompletion16 = true) {
+                var component = _step16.value;
 
-          // loop through all the components in the node
-          for (var c = 0; c < components.length; c++) {
-            var component = components[c];
-
-            if (component != null && component.checked) {
-              /*
-               * this component is checked so we will add it to
-               * the array of components that we will import
-               */
-              selectedComponents.push(component);
+                if (component != null && component.checked) {
+                  /*
+                   * this component is checked so we will add it to
+                   * the array of components that we will import
+                   */
+                  selectedComponents.push(component);
+                }
+              }
+            } catch (err) {
+              _didIteratorError16 = true;
+              _iteratorError16 = err;
+            } finally {
+              try {
+                if (!_iteratorNormalCompletion16 && _iterator16.return) {
+                  _iterator16.return();
+                }
+              } finally {
+                if (_didIteratorError16) {
+                  throw _iteratorError16;
+                }
+              }
             }
+          }
+        }
+      } catch (err) {
+        _didIteratorError15 = true;
+        _iteratorError15 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion15 && _iterator15.return) {
+            _iterator15.return();
+          }
+        } finally {
+          if (_didIteratorError15) {
+            throw _iteratorError15;
           }
         }
       }
@@ -3656,89 +3532,94 @@ var NodeAuthoringController = function () {
       var _this8 = this;
 
       // data saved in the component imported event
-      var data = {};
-      data.componentsImported = this.getComponentObjectsForImportEventData();
+      var data = {
+        "componentsImported": this.getComponentObjectsForImportEventData()
+      };
 
-      // get all the selected component objects
       var selectedComponents = this.getSelectedComponentsToImport();
+      var _iteratorNormalCompletion17 = true;
+      var _didIteratorError17 = false;
+      var _iteratorError17 = undefined;
 
-      // loop through all the selected component objects
-      for (var c = 0; c < selectedComponents.length; c++) {
-        var selectedComponent = selectedComponents[c];
+      try {
+        for (var _iterator17 = selectedComponents[Symbol.iterator](), _step17; !(_iteratorNormalCompletion17 = (_step17 = _iterator17.next()).done); _iteratorNormalCompletion17 = true) {
+          var selectedComponent = _step17.value;
 
-        if (selectedComponent != null) {
-          // remove the checked field
-          delete selectedComponent.checked;
+          if (selectedComponent != null) {
+            // remove the checked field
+            delete selectedComponent.checked;
+          }
+        }
+
+        // insert the components into the project
+      } catch (err) {
+        _didIteratorError17 = true;
+        _iteratorError17 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion17 && _iterator17.return) {
+            _iterator17.return();
+          }
+        } finally {
+          if (_didIteratorError17) {
+            throw _iteratorError17;
+          }
         }
       }
 
-      // insert the components into the project
       return this.ProjectService.importComponents(selectedComponents, this.importProjectId, nodeId, insertAfterComponentId).then(function (newComponents) {
-
-        // loop through all the components that were imported
         for (var c = 0; c < data.componentsImported.length; c++) {
           var componentImported = data.componentsImported[c];
           var newComponent = newComponents[c];
           var newComponentId = newComponent.id;
 
           /*
-           * set the toComponentId so the event knows what the new
-           * component id is
-           */
+          * set the toComponentId so the event knows what the new
+          * component id is
+          */
           componentImported.toComponentId = newComponentId;
         }
 
-        // save the component imported event to the server
         _this8.saveEvent('componentImported', 'Authoring', data);
-
         return newComponents;
       });
     }
+  }, {
+    key: 'scrollToTopOfPage',
+    value: function scrollToTopOfPage() {
+      this.$anchorScroll('top');
+    }
 
     /**
-     * Preview the import project
+     * Preview the import project in a new tab
      */
 
   }, {
     key: 'previewImportProject',
     value: function previewImportProject() {
-
       if (this.importProject != null) {
-        // get the preview project url for the import project
-        var previewProjectURL = this.importProject.previewProjectURL;
-
-        // open the preview step in a new tab
-        window.open(previewProjectURL);
+        window.open(this.importProject.previewProjectURL);
       }
     }
 
     /**
-     * Preview the step
+     * Preview the step in a new tab
      * @param node
      */
 
   }, {
     key: 'previewImportNode',
     value: function previewImportNode(node) {
-
       if (node != null) {
-
-        // get the node id
         var nodeId = node.id;
-
-        // get the preview project url for the import project
         var previewProjectURL = this.importProject.previewProjectURL;
-
-        // create the url to preview the step
         var previewStepURL = previewProjectURL + '#/vle/' + nodeId;
-
-        // open the preview step in a new tab
         window.open(previewStepURL);
       }
     }
 
     /**
-     * Preview the component
+     * Preview the component in a new tab
      * @param node the node
      * @param componentId the component id
      */
@@ -3747,17 +3628,9 @@ var NodeAuthoringController = function () {
     key: 'previewImportComponent',
     value: function previewImportComponent(node, componentId) {
       if (node != null) {
-
-        // get the node id
         var nodeId = node.id;
-
-        // get the preview project url for the import project
         var previewProjectURL = this.importProject.previewProjectURL;
-
-        // create the url to preview the step
         var previewStepURL = previewProjectURL + '#/vle/' + nodeId + '/' + componentId;
-
-        // open the preview step in a new tab
         window.open(previewStepURL);
       }
     }
@@ -3782,7 +3655,6 @@ var NodeAuthoringController = function () {
   }, {
     key: 'cancelCreateComponentClicked',
     value: function cancelCreateComponentClicked() {
-
       // hide all the authoring views
       this.nodeAuthoringViewButtonClicked();
 
@@ -3820,9 +3692,7 @@ var NodeAuthoringController = function () {
   }, {
     key: 'backButtonClicked',
     value: function backButtonClicked() {
-
       if (this.showImportView || this.showRubric || this.showAdvanced) {
-
         if (this.showJSON) {
           /*
            * we are showing the JSON so we will check if it has changed
@@ -3851,17 +3721,13 @@ var NodeAuthoringController = function () {
   }, {
     key: 'saveEvent',
     value: function saveEvent(eventName, category, data) {
-
       var context = 'AuthoringTool';
       var nodeId = this.nodeId;
       var componentId = null;
       var componentType = null;
-
       if (data == null) {
         data = {};
       }
-
-      // save the event to the server
       this.TeacherDataService.saveEvent(context, nodeId, componentId, componentType, category, eventName, data);
     }
 
@@ -3869,78 +3735,123 @@ var NodeAuthoringController = function () {
      * Get an array of objects that contain the component id and type
      * @param componentIds an array of component ids
      * @return an array of objects that contain the component id and type
+     * TODO refactor too many nesting
      */
 
   }, {
     key: 'getComponentObjectsForEventData',
     value: function getComponentObjectsForEventData(componentIds) {
-
       var componentObjects = [];
-
       if (componentIds != null) {
+        var _iteratorNormalCompletion18 = true;
+        var _didIteratorError18 = false;
+        var _iteratorError18 = undefined;
 
-        // loop through all the component ids
-        for (var c = 0; c < componentIds.length; c++) {
-          var componentId = componentIds[c];
+        try {
+          for (var _iterator18 = componentIds[Symbol.iterator](), _step18; !(_iteratorNormalCompletion18 = (_step18 = _iterator18.next()).done); _iteratorNormalCompletion18 = true) {
+            var componentId = _step18.value;
 
-          if (componentId != null) {
+            if (componentId != null) {
+              // get the component
+              var component = this.ProjectService.getComponentByNodeIdAndComponentId(this.nodeId, componentId);
 
-            // get the component
-            var component = this.ProjectService.getComponentByNodeIdAndComponentId(this.nodeId, componentId);
-
-            if (component != null) {
-
-              // create an object with the component id and type
-              var tempComponent = {};
-              tempComponent.componentId = component.id;
-              tempComponent.type = component.type;
-
-              componentObjects.push(tempComponent);
+              if (component != null) {
+                // create an object with the component id and type
+                var tempComponent = {
+                  "componentId": component.id,
+                  "type": component.type
+                };
+                componentObjects.push(tempComponent);
+              }
+            }
+          }
+        } catch (err) {
+          _didIteratorError18 = true;
+          _iteratorError18 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion18 && _iterator18.return) {
+              _iterator18.return();
+            }
+          } finally {
+            if (_didIteratorError18) {
+              throw _iteratorError18;
             }
           }
         }
       }
-
       return componentObjects;
     }
 
     /**
      * Get an array of objects that contain the node id, component id and type
      * @return an array of objects that contain the node id, component id and type
+     * TODO refactor too many nesting
      */
 
   }, {
     key: 'getComponentObjectsForImportEventData',
     value: function getComponentObjectsForImportEventData() {
       var componentObjects = [];
+      var _iteratorNormalCompletion19 = true;
+      var _didIteratorError19 = false;
+      var _iteratorError19 = undefined;
 
-      // loop through all the import project items
-      for (var n = 0; n < this.importProjectItems.length; n++) {
-        var item = this.importProjectItems[n];
+      try {
+        for (var _iterator19 = this.importProjectItems[Symbol.iterator](), _step19; !(_iteratorNormalCompletion19 = (_step19 = _iterator19.next()).done); _iteratorNormalCompletion19 = true) {
+          var item = _step19.value;
 
-        if (item != null && item.node != null && item.node.components != null) {
+          if (item != null && item.node != null && item.node.components != null) {
+            var _iteratorNormalCompletion20 = true;
+            var _didIteratorError20 = false;
+            var _iteratorError20 = undefined;
 
-          // get the components in the node
-          var components = item.node.components;
+            try {
+              for (var _iterator20 = item.node.components[Symbol.iterator](), _step20; !(_iteratorNormalCompletion20 = (_step20 = _iterator20.next()).done); _iteratorNormalCompletion20 = true) {
+                var component = _step20.value;
 
-          // loop through all the components in the node
-          for (var c = 0; c < components.length; c++) {
-            var component = components[c];
+                if (component != null && component.checked) {
+                  var tempComponent = {
+                    "fromProjectId": parseInt(this.importProjectId),
+                    "fromNodeId": item.node.id,
+                    "fromComponentId": component.id,
+                    "type": component.type
+                  };
 
-            if (component != null && component.checked) {
-
-              var tempComponent = {};
-              tempComponent.fromProjectId = parseInt(this.importProjectId);
-              tempComponent.fromNodeId = item.node.id;
-              tempComponent.fromComponentId = component.id;
-              tempComponent.type = component.type;
-
-              /*
-               * this component is checked so we will add it to
-               * the array of components that we will import
-               */
-              componentObjects.push(tempComponent);
+                  /*
+                   * this component is checked so we will add it to
+                   * the array of components that we will import
+                   */
+                  componentObjects.push(tempComponent);
+                }
+              }
+            } catch (err) {
+              _didIteratorError20 = true;
+              _iteratorError20 = err;
+            } finally {
+              try {
+                if (!_iteratorNormalCompletion20 && _iterator20.return) {
+                  _iterator20.return();
+                }
+              } finally {
+                if (_didIteratorError20) {
+                  throw _iteratorError20;
+                }
+              }
             }
+          }
+        }
+      } catch (err) {
+        _didIteratorError19 = true;
+        _iteratorError19 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion19 && _iterator19.return) {
+            _iterator19.return();
+          }
+        } finally {
+          if (_didIteratorError19) {
+            throw _iteratorError19;
           }
         }
       }
@@ -3963,7 +3874,6 @@ var NodeAuthoringController = function () {
          * JSON changed. If the JSON changed we will save the node with
          * new JSON.
          */
-
         if (this.authoringNodeContentJSONString != angular.toJson(this.node, 4)) {
           // the JSON has been changed so we will update the node
 

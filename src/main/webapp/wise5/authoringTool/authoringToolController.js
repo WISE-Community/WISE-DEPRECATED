@@ -259,7 +259,7 @@ var AuthoringToolController = function () {
     }
 
     /**
-     * Notify Session to renew when user moves the mouse.
+     * Notify Session to renew when user moves the mouse
      */
 
   }, {

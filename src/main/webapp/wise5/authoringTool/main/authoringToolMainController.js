@@ -105,7 +105,7 @@ var AuthoringToolMainController = function () {
     }
 
     /**
-     * Copy a project and highlight it to draw attention to it
+     * Copy a project after confirming and highlight it to draw attention to it
      * @param projectId the project to copy
      */
 
@@ -120,9 +120,7 @@ var AuthoringToolMainController = function () {
       // get the project info that we will display in the confirm message
       var projectInfo = projectId + ' ' + projectName;
       var projectRunId = project.runId;
-
       if (projectRunId != null) {
-        // add the run id to the info
         projectInfo += ' (Run ID: ' + projectRunId + ')';
       }
 
@@ -131,51 +129,19 @@ var AuthoringToolMainController = function () {
        * the project
        */
       var doCopyConfirmMessage = this.$translate('areYouSureYouWantToCopyThisProject') + '\n\n' + projectInfo;
-      var doCopy = confirm(doCopyConfirmMessage);
-      if (doCopy) {
+      if (confirm(doCopyConfirmMessage)) {
         this.ProjectService.copyProject(projectId).then(function (projectId) {
           _this2.saveEvent('projectCopied', 'Authoring', null, projectId);
 
-          // refresh the project list
+          // refresh the project list and highlight the newly copied project
           _this2.ConfigService.retrieveConfig(window.configURL).then(function () {
             _this2.projects = _this2.ConfigService.getConfigParam('projects');
             _this2.scrollToTopOfPage();
-
-            // briefly highlight the new project to draw attention to it
+            // the timeout is necessary for new element to appear on the page
             _this2.$timeout(function () {
-              var componentElement = $('#' + projectId);
-
-              // remember the original background color
-              var originalBackgroundColor = componentElement.css('backgroundColor');
-
-              // highlight the background briefly to draw attention to it
-              componentElement.css('background-color', '#FFFF9C');
-
-              /*
-               * Use a timeout before starting to transition back to
-               * the original background color. For some reason the
-               * element won't get highlighted in the first place
-               * unless this timeout is used.
-               */
-              _this2.$timeout(function () {
-                // slowly fade back to original background color
-                componentElement.css({
-                  'transition': 'background-color 3s ease-in-out',
-                  'background-color': originalBackgroundColor
-                });
-
-                /*
-                 * remove these styling fields after we perform
-                 * the fade otherwise the regular mouseover
-                 * background color change will not work
-                 */
-                _this2.$timeout(function () {
-                  componentElement.css({
-                    'transition': '',
-                    'background-color': ''
-                  });
-                }, 3000);
-              });
+              var newProjectElement = $('#' + projectId);
+              var highlightDuration = 3000;
+              _this2.highlightElement(newProjectElement, highlightDuration);
             });
           });
         });
@@ -197,13 +163,55 @@ var AuthoringToolMainController = function () {
     }
 
     /**
+     * Highlights the specified element in yellow for specified duration, used
+     * to draw user's attention to new changes.
+     * @param componentElement DOM element to highlight
+     * @param duration Number how long (in ms) to highlight
+     */
+
+  }, {
+    key: 'highlightElement',
+    value: function highlightElement(componentElement, duration) {
+      var _this3 = this;
+
+      var originalBackgroundColor = componentElement.css('backgroundColor');
+      componentElement.css('background-color', '#FFFF9C');
+
+      /*
+       * Use a timeout before starting to transition back to
+       * the original background color. For some reason the
+       * element won't get highlighted in the first place
+       * unless this timeout is used.
+       */
+      this.$timeout(function () {
+        // slowly fade back to original background color
+        componentElement.css({
+          'transition': 'background-color 3s ease-in-out',
+          'background-color': originalBackgroundColor
+        });
+
+        /*
+         * remove these styling fields after we perform
+         * the fade otherwise the regular mouseover
+         * background color change will not work
+         */
+        _this3.$timeout(function () {
+          componentElement.css({
+            'transition': '',
+            'background-color': ''
+          });
+        }, duration);
+      });
+    }
+
+    /**
      * Create a new project and open it
      */
 
   }, {
     key: 'registerNewProject',
     value: function registerNewProject() {
-      var _this3 = this;
+      var _this4 = this;
 
       var projectTitle = this.project.metadata.title;
       if (projectTitle == null || projectTitle == '') {
@@ -212,9 +220,9 @@ var AuthoringToolMainController = function () {
         var projectJSONString = angular.toJson(this.project, 4);
         var commitMessage = this.$translate('projectCreatedOn') + new Date().getTime();
         this.ProjectService.registerNewProject(projectJSONString, commitMessage).then(function (projectId) {
-          _this3.showCreateProjectView = false;
-          _this3.saveEvent('projectCreated', 'Authoring', null, projectId);
-          _this3.$state.go('root.project', { projectId: projectId });
+          _this4.showCreateProjectView = false;
+          _this4.saveEvent('projectCreated', 'Authoring', null, projectId);
+          _this4.$state.go('root.project', { projectId: projectId });
         });
       }
     }
@@ -227,7 +235,7 @@ var AuthoringToolMainController = function () {
     }
 
     /**
-     * Open a project in the authoring tool
+     * Open a project in the authoring tool, replacing any current view
      * @param projectId the project id to open
      */
 

@@ -2,15 +2,15 @@
 
 class AuthorNotebookController {
 
-  constructor($filter,
-        $mdDialog,
-        $state,
-        $stateParams,
-        $scope,
-        ConfigService,
-        ProjectService,
-        UtilService) {
-
+  constructor(
+      $filter,
+      $mdDialog,
+      $state,
+      $stateParams,
+      $scope,
+      ConfigService,
+      ProjectService,
+      UtilService) {
     this.$filter = $filter;
     this.$mdDialog = $mdDialog;
     this.$state = $state;
@@ -29,7 +29,7 @@ class AuthorNotebookController {
       let projectTemplate = this.ProjectService.getNewProjectTemplate();
       this.project.notebook = projectTemplate.notebook;
     }
-    var notes = this.project.notebook.itemTypes.report.notes;
+    let notes = this.project.notebook.itemTypes.report.notes;
     if (notes != null) {
       for (const note of notes) {
         if (note != null) {
@@ -82,59 +82,48 @@ class AuthorNotebookController {
      * selects an asset from the choose asset popup
      */
     this.$scope.$on('assetSelected', (event, args) => {
-      if (args != null) {
-        // make sure the event was fired for this component
-        if (args.projectId == this.projectId) {
-          // the asset was selected for this component
-          var assetItem = args.assetItem;
-          if (assetItem != null) {
-            var fileName = assetItem.fileName;
+      // make sure the event was fired for this component
+      if (args != null && args.projectId == this.projectId &&
+          args.assetItem != null && args.assetItem.fileName != null &&
+          args.target != null) {
+        /*
+         * get the assets directory path
+         * e.g.
+         * /wise/curriculum/3/
+         */
+        let assetsDirectoryPath =
+            this.ConfigService.getProjectAssetsDirectoryPath();
+        let fileName = args.assetItem.fileName;
+        let fullAssetPath = assetsDirectoryPath + '/' + fileName;
 
-            if (fileName != null) {
-              /*
-               * get the assets directory path
-               * e.g.
-               * /wise/curriculum/3/
-               */
-              var assetsDirectoryPath = this.ConfigService.getProjectAssetsDirectoryPath();
-              var fullAssetPath = assetsDirectoryPath + '/' + fileName;
+        // the target is the summernote prompt element
+        let reportId = args.target;
+        let summernoteId = 'summernoteNotebook_' + reportId;
+        if (this.UtilService.isImage(fileName)) {
+          /*
+           * move the cursor back to its position when the asset chooser
+           * popup was clicked
+           */
+          $('#' + summernoteId).summernote('editor.restoreRange');
+          $('#' + summernoteId).summernote('editor.focus');
 
-              var summernoteId = '';
-              var reportId = args.target;
+          // add the image html
+          $('#' + summernoteId)
+              .summernote('insertImage', fullAssetPath, fileName);
+        } else if (this.UtilService.isVideo(fileName)) {
+          /*
+           * move the cursor back to its position when the asset chooser
+           * popup was clicked
+           */
+          $('#' + summernoteId).summernote('editor.restoreRange');
+          $('#' + summernoteId).summernote('editor.focus');
 
-              if (reportId != null) {
-                // the target is the summernote prompt element
-                summernoteId = 'summernoteNotebook_' + reportId;
-              }
-
-              if (summernoteId != '') {
-                if (this.UtilService.isImage(fileName)) {
-                  /*
-                   * move the cursor back to its position when the asset chooser
-                   * popup was clicked
-                   */
-                  $('#' + summernoteId).summernote('editor.restoreRange');
-                  $('#' + summernoteId).summernote('editor.focus');
-
-                  // add the image html
-                  $('#' + summernoteId).summernote('insertImage', fullAssetPath, fileName);
-                } else if (this.UtilService.isVideo(fileName)) {
-                  /*
-                   * move the cursor back to its position when the asset chooser
-                   * popup was clicked
-                   */
-                  $('#' + summernoteId).summernote('editor.restoreRange');
-                  $('#' + summernoteId).summernote('editor.focus');
-
-                  // insert the video element
-                  var videoElement = document.createElement('video');
-                  videoElement.controls = 'true';
-                  videoElement.innerHTML = '<source ng-src="' + fullAssetPath + '" type="video/mp4">';
-                  $('#' + summernoteId).summernote('insertNode', videoElement);
-                }
-              }
-            }
-          }
+          // insert the video element
+          let videoElement = document.createElement('video');
+          videoElement.controls = 'true';
+          videoElement.innerHTML =
+              '<source ng-src="' + fullAssetPath + '" type="video/mp4">';
+          $('#' + summernoteId).summernote('insertNode', videoElement);
         }
       }
       this.$mdDialog.hide();
@@ -142,25 +131,26 @@ class AuthorNotebookController {
   }
 
   /**
-   * Adds a new report note item to this project's notebook. Currently we limit 1 report note per project.
+   * Adds a new report note item to this project's notebook.
+   * Currently we limit 1 report note per project.
    */
   addReportNote() {
-    // some old projects may not have the notebook settings, so copy default settings from template project.
+    // some old projects may not have the notebook settings,
+    // so copy default settings from template project.
     let projectTemplate = this.ProjectService.getNewProjectTemplate();
-
     if (this.project.notebook.itemTypes.report.notes == null) {
       this.project.notebook.itemTypes.report.notes = [];
     }
     if (this.project.notebook.itemTypes.report.notes < 1) {
-      this.project.notebook.itemTypes.report.notes.push(projectTemplate.notebook.itemTypes.report.notes[0]);
+      this.project.notebook.itemTypes.report.notes
+          .push(projectTemplate.notebook.itemTypes.report.notes[0]);
     }
   }
 
   exit() {
-    var notes = this.project.notebook.itemTypes.report.notes;
+    let notes = this.project.notebook.itemTypes.report.notes;
     if (notes != null) {
-      for (var n = 0; n < notes.length; n++) {
-        var note = notes[n];
+      for (let note of notes) {
         if (note != null) {
           // remove the temporary fields that were used for bookkeeping
           delete note['summernoteId'];
@@ -169,7 +159,6 @@ class AuthorNotebookController {
         }
       }
     }
-
     let commitMessage = this.$translate('madeChangesToNotebook');
     this.ProjectService.saveProject(commitMessage);
     this.$state.go('root.project', {projectId: this.projectId});
@@ -180,12 +169,8 @@ class AuthorNotebookController {
    * @param note the note that was changed
    */
   summernoteHTMLChanged(note) {
-
     if (note != null) {
-
-      // get the summernote html
-      var html = note.summernoteHTML;
-
+      let summernoteHTML = note.summernoteHTML;
       /*
        * remove the absolute asset paths
        * e.g.
@@ -193,27 +178,28 @@ class AuthorNotebookController {
        * will be changed to
        * <img src='sun.png'/>
        */
-      html = this.ConfigService.removeAbsoluteAssetPaths(html);
+      summernoteHTML =
+          this.ConfigService.removeAbsoluteAssetPaths(summernoteHTML);
 
       /*
        * replace <a> and <button> elements with <wiselink> elements when
        * applicable
        */
-      html = this.UtilService.insertWISELinks(html);
-
-      note.content = html;
+      summernoteHTML = this.UtilService.insertWISELinks(summernoteHTML);
+      note.content = summernoteHTML;
     }
   }
 }
 
 AuthorNotebookController.$inject = [
-  '$filter',
-  '$mdDialog',
-  '$state',
-  '$stateParams',
-  '$scope',
-  'ConfigService',
-  'ProjectService',
-  'UtilService'];
+    '$filter',
+    '$mdDialog',
+    '$state',
+    '$stateParams',
+    '$scope',
+    'ConfigService',
+    'ProjectService',
+    'UtilService'
+];
 
 export default AuthorNotebookController;

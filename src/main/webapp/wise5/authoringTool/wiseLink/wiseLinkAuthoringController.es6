@@ -2,11 +2,11 @@
 
 class WISELinkAuthoringController {
 
-  constructor($rootScope,
-        $stateParams,
-        $mdDialog,
-        ProjectService) {
-
+  constructor(
+      $rootScope,
+      $stateParams,
+      $mdDialog,
+      ProjectService) {
     this.$rootScope = $rootScope;
     this.$stateParams = $stateParams;
     this.$mdDialog = $mdDialog;
@@ -90,6 +90,7 @@ class WISELinkAuthoringController {
    * Fire an event to create the WISE Link. Listeners will be the ones that
    * actually create the WISE Link. The event that is fired will provide
    * the parameters for the WISE Link.
+   * TODO: i18n
    */
   createWISELink() {
     if (this.wiseLinkNodeId == null || this.wiseLinkNodeId == '') {
@@ -124,10 +125,10 @@ class WISELinkAuthoringController {
 }
 
 WISELinkAuthoringController.$inject = [
-  '$rootScope',
-  '$stateParams',
-  '$mdDialog',
-  'ProjectService'
+    '$rootScope',
+    '$stateParams',
+    '$mdDialog',
+    'ProjectService'
 ];
 
 export default WISELinkAuthoringController;

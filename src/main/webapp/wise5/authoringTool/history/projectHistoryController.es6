@@ -3,10 +3,10 @@
 class ProjectHistoryController {
 
   constructor(
-    $state,
-    $stateParams,
-    $scope,
-    ProjectService) {
+      $state,
+      $stateParams,
+      $scope,
+      ProjectService) {
     this.$state = $state;
     this.$stateParams = $stateParams;
     this.$scope = $scope;
@@ -16,6 +16,10 @@ class ProjectHistoryController {
     this.retrieveCommitHistory();
   }
 
+  /**
+   * Return to main authoring view
+   * TODO rename to returnToAuthoringView
+   */
   exit() {
     this.$state.go('root.project', {projectId: this.projectId});
   }
@@ -28,10 +32,10 @@ class ProjectHistoryController {
 }
 
 ProjectHistoryController.$inject = [
-  '$state',
-  '$stateParams',
-  '$scope',
-  'ProjectService'
+    '$state',
+    '$stateParams',
+    '$scope',
+    'ProjectService'
 ];
 
 export default ProjectHistoryController

@@ -41,7 +41,7 @@ var ProjectAssetController = function () {
     this.unusedFilesPercentage = 0;
 
     // whether the asset page is being displayed in a popup
-    this.popup = false;
+    this.isPopup = false;
 
     // the project id that opened this popup
     this.projectId = null;
@@ -60,8 +60,8 @@ var ProjectAssetController = function () {
 
     if (this.$stateParams != null) {
       var stateParams = this.$stateParams;
-      if (stateParams.popup != null) {
-        this.popup = true;
+      if (stateParams.isPopup != null) {
+        this.isPopup = true;
       }
 
       if (stateParams.projectId != null) {
@@ -85,7 +85,7 @@ var ProjectAssetController = function () {
       }
     }
 
-    // initially, sort assets alphabetically
+    // sort assets alphabetically at the beginning
     this.assetSortBy = 'aToZ';
     this.assetMessage = '';
 
@@ -164,8 +164,7 @@ var ProjectAssetController = function () {
       var _this2 = this;
 
       var deleteConfirmMessage = this.$translate('areYouSureYouWantToDeleteThisFile') + '\n\n' + assetItem.fileName;
-      var doDelete = confirm(deleteConfirmMessage);
-      if (doDelete) {
+      if (confirm(deleteConfirmMessage)) {
         this.ProjectAssetService.deleteAssetItem(assetItem).then(function (newProjectAssets) {
           _this2.projectAssets = _this2.ProjectAssetService.projectAssets;
           // calculate whether the assets are used in the project
@@ -182,24 +181,6 @@ var ProjectAssetController = function () {
     }
 
     /**
-     * Show asset image in a popup dialog and give author an option to delete it.
-     */
-
-  }, {
-    key: 'viewAsset',
-    value: function viewAsset(assetItem) {
-      // Append dialog to document.body
-      var assetFullURL = this.ProjectAssetService.getFullAssetItemURL(assetItem);
-      var appropriateFileSize = this.$filter('appropriateSizeText')(assetItem.fileSize);
-      var confirm = this.$mdDialog.confirm().parent(angular.element(document.body)).title(assetItem.fileName + ' (' + appropriateFileSize + ')').htmlContent('<img src="' + assetFullURL + '" />').ok(this.$translate('CLOSE'));
-      this.$mdDialog.show(confirm).then(function () {
-        // Author wants to simply close the dialog
-      }, function () {
-        // Author wants to simply close the dialog
-      });
-    }
-
-    /**
      * The user has chosen an asset to use, so notify listeners
      * @param assetItem the asset the user chose
      */
@@ -208,12 +189,12 @@ var ProjectAssetController = function () {
     key: 'chooseAsset',
     value: function chooseAsset(assetItem) {
       var params = {
-        assetItem: assetItem,
-        projectId: this.projectId,
-        nodeId: this.nodeId,
-        componentId: this.componentId,
-        target: this.target,
-        targetObject: this.targetObject
+        "assetItem": assetItem,
+        "projectId": this.projectId,
+        "nodeId": this.nodeId,
+        "componentId": this.componentId,
+        "target": this.target,
+        "targetObject": this.targetObject
       };
       this.$rootScope.$broadcast('assetSelected', params);
     }
@@ -302,17 +283,16 @@ var ProjectAssetController = function () {
     }
 
     /**
-     * Close the asset view
+     * Exits the asset view. If this was opened in a popup, closes the
+     * popup and reveal the activity below.
      */
 
   }, {
     key: 'exit',
     value: function exit() {
-      if (this.popup) {
-        // this asset view was opened in a popup
+      if (this.isPopup) {
         this.$mdDialog.hide();
       } else {
-        // this asset view was opened as a page
         this.$state.go('root.project', { projectId: this.projectId });
       }
     }

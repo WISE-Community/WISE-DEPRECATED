@@ -2,14 +2,15 @@
 
 class AuthoringToolMainController {
 
-  constructor($anchorScroll,
-        $filter,
-        $rootScope,
-        $state,
-        $timeout,
-        ConfigService,
-        ProjectService,
-        TeacherDataService) {
+  constructor(
+      $anchorScroll,
+      $filter,
+      $rootScope,
+      $state,
+      $timeout,
+      ConfigService,
+      ProjectService,
+      TeacherDataService) {
     this.$anchorScroll = $anchorScroll;
     this.$filter = $filter;
     this.$rootScope = $rootScope;
@@ -54,7 +55,7 @@ class AuthoringToolMainController {
   }
 
   /**
-   * Copy a project and highlight it to draw attention to it
+   * Copy a project after confirming and highlight it to draw attention to it
    * @param projectId the project to copy
    */
   copyProject(projectId) {
@@ -64,9 +65,7 @@ class AuthoringToolMainController {
     // get the project info that we will display in the confirm message
     let projectInfo = projectId + ' ' + projectName;
     let projectRunId = project.runId;
-
     if (projectRunId != null) {
-      // add the run id to the info
       projectInfo += ' (Run ID: ' + projectRunId + ')';
     }
 
@@ -77,51 +76,19 @@ class AuthoringToolMainController {
     let doCopyConfirmMessage =
         this.$translate('areYouSureYouWantToCopyThisProject') +
         '\n\n' + projectInfo;
-    let doCopy = confirm(doCopyConfirmMessage);
-    if (doCopy) {
+    if (confirm(doCopyConfirmMessage)) {
       this.ProjectService.copyProject(projectId).then((projectId) => {
         this.saveEvent('projectCopied', 'Authoring', null, projectId);
 
-        // refresh the project list
+        // refresh the project list and highlight the newly copied project
         this.ConfigService.retrieveConfig(window.configURL).then(() => {
           this.projects = this.ConfigService.getConfigParam('projects');
           this.scrollToTopOfPage();
-
-          // briefly highlight the new project to draw attention to it
+          // the timeout is necessary for new element to appear on the page
           this.$timeout(() => {
-            let componentElement = $('#' + projectId);
-
-            // remember the original background color
-            let originalBackgroundColor = componentElement.css('backgroundColor');
-
-            // highlight the background briefly to draw attention to it
-            componentElement.css('background-color', '#FFFF9C');
-
-            /*
-             * Use a timeout before starting to transition back to
-             * the original background color. For some reason the
-             * element won't get highlighted in the first place
-             * unless this timeout is used.
-             */
-            this.$timeout(() => {
-              // slowly fade back to original background color
-              componentElement.css({
-                'transition': 'background-color 3s ease-in-out',
-                'background-color': originalBackgroundColor
-              });
-
-              /*
-               * remove these styling fields after we perform
-               * the fade otherwise the regular mouseover
-               * background color change will not work
-               */
-              this.$timeout(() => {
-                componentElement.css({
-                  'transition': '',
-                  'background-color': ''
-                });
-              }, 3000);
-            });
+            let newProjectElement = $('#' + projectId);
+            let highlightDuration = 3000;
+            this.highlightElement(newProjectElement, highlightDuration);
           });
         });
       });
@@ -138,6 +105,43 @@ class AuthoringToolMainController {
       if (createGroupTitleInput != null) {
         createGroupTitleInput.focus();
       }
+    });
+  }
+
+  /**
+   * Highlights the specified element in yellow for specified duration, used
+   * to draw user's attention to new changes.
+   * @param componentElement DOM element to highlight
+   * @param duration Number how long (in ms) to highlight
+   */
+  highlightElement(componentElement, duration) {
+    let originalBackgroundColor = componentElement.css('backgroundColor');
+    componentElement.css('background-color', '#FFFF9C');
+
+    /*
+     * Use a timeout before starting to transition back to
+     * the original background color. For some reason the
+     * element won't get highlighted in the first place
+     * unless this timeout is used.
+     */
+    this.$timeout(() => {
+      // slowly fade back to original background color
+      componentElement.css({
+        'transition': 'background-color 3s ease-in-out',
+        'background-color': originalBackgroundColor
+      });
+
+      /*
+       * remove these styling fields after we perform
+       * the fade otherwise the regular mouseover
+       * background color change will not work
+       */
+      this.$timeout(() => {
+        componentElement.css({
+          'transition': '',
+          'background-color': ''
+        });
+      }, duration);
     });
   }
 
@@ -168,7 +172,7 @@ class AuthoringToolMainController {
   }
 
   /**
-   * Open a project in the authoring tool
+   * Open a project in the authoring tool, replacing any current view
    * @param projectId the project id to open
    */
   openProject(projectId) {
@@ -215,14 +219,14 @@ class AuthoringToolMainController {
 };
 
 AuthoringToolMainController.$inject = [
-  '$anchorScroll',
-  '$filter',
-  '$rootScope',
-  '$state',
-  '$timeout',
-  'ConfigService',
-  'ProjectService',
-  'TeacherDataService'
+    '$anchorScroll',
+    '$filter',
+    '$rootScope',
+    '$state',
+    '$timeout',
+    'ConfigService',
+    'ProjectService',
+    'TeacherDataService'
 ];
 
 export default AuthoringToolMainController;

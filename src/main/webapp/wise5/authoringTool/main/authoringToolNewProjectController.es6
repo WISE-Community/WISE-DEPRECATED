@@ -2,11 +2,12 @@
 
 class AuthoringToolNewProjectController {
 
-  constructor($filter,
-        $state,
-        $timeout,
-        ConfigService,
-        ProjectService) {
+  constructor(
+      $filter,
+      $state,
+      $timeout,
+      ConfigService,
+      ProjectService) {
     this.$filter = $filter;
     this.$state = $state;
     this.$timeout = $timeout;
@@ -24,6 +25,9 @@ class AuthoringToolNewProjectController {
     });
   }
 
+  /**
+   * Register a new project with WISE
+   */
   registerNewProject() {
     let projectJSONString = angular.toJson(this.project, 4);
     let commitMessage =
@@ -40,11 +44,11 @@ class AuthoringToolNewProjectController {
 }
 
 AuthoringToolNewProjectController.$inject = [
-  '$filter',
-  '$state',
-  '$timeout',
-  'ConfigService',
-  'ProjectService'
+    '$filter',
+    '$state',
+    '$timeout',
+    'ConfigService',
+    'ProjectService'
 ];
 
 export default AuthoringToolNewProjectController;

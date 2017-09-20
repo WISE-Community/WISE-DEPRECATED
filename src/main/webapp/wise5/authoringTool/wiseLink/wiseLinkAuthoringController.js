@@ -111,6 +111,7 @@ var WISELinkAuthoringController = function () {
      * Fire an event to create the WISE Link. Listeners will be the ones that
      * actually create the WISE Link. The event that is fired will provide
      * the parameters for the WISE Link.
+     * TODO: i18n
      */
 
   }, {

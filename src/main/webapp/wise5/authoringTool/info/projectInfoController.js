@@ -66,7 +66,7 @@ var ProjectInfoController = function () {
         if (field.type === 'checkbox') {
           this.processMetadataAuthoringFieldCheckbox(field);
         } else if (field.type === 'radio') {
-          // do nothing. radio buttons work automatically
+          // do nothing. Radio buttons work automatically
         }
       }
     }

@@ -2,16 +2,17 @@
 
 class ProjectAssetController {
 
-  constructor($filter,
-        $mdDialog,
-        $rootScope,
-        $state,
-        $stateParams,
-        $scope,
-        $timeout,
-        ConfigService,
-        ProjectAssetService,
-        UtilService) {
+  constructor(
+      $filter,
+      $mdDialog,
+      $rootScope,
+      $state,
+      $stateParams,
+      $scope,
+      $timeout,
+      ConfigService,
+      ProjectAssetService,
+      UtilService) {
     this.$filter = $filter;
     this.$mdDialog = $mdDialog;
     this.$rootScope = $rootScope;
@@ -41,7 +42,7 @@ class ProjectAssetController {
     this.unusedFilesPercentage = 0;
 
     // whether the asset page is being displayed in a popup
-    this.popup = false;
+    this.isPopup = false;
 
     // the project id that opened this popup
     this.projectId = null;
@@ -60,8 +61,8 @@ class ProjectAssetController {
 
     if (this.$stateParams != null) {
       let stateParams = this.$stateParams;
-      if (stateParams.popup != null) {
-        this.popup = true;
+      if (stateParams.isPopup != null) {
+        this.isPopup = true;
       }
 
       if (stateParams.projectId != null) {
@@ -85,15 +86,13 @@ class ProjectAssetController {
       }
     }
 
-    // initially, sort assets alphabetically
+    // sort assets alphabetically at the beginning
     this.assetSortBy = 'aToZ';
     this.assetMessage = '';
 
-    this.$scope.$watch(
-        () => {
+    this.$scope.$watch(() => {
           return this.projectAssets;
-        },
-        () => {
+        }, () => {
           this.projectAssetUsagePercentage =
               this.projectAssets.totalFileSize / this.projectAssetTotalSizeMax * 100;
           this.sortAssets(this.assetSortBy);
@@ -101,11 +100,9 @@ class ProjectAssetController {
     );
 
     // when the user changes the sort assets by field, also nperform the sort
-    this.$scope.$watch(
-      () => {
+    this.$scope.$watch(() => {
         return this.assetSortBy;
-      },
-      () => {
+      }, () => {
         this.sortAssets(this.assetSortBy);
       }
     );
@@ -127,7 +124,8 @@ class ProjectAssetController {
       this.projectAssets.files.sort(this.sortAssetsSmallToLarge);
     } else if (sortBy === 'largeToSmall') {
       let files = this.projectAssets.files;
-      this.projectAssets.files = files.sort(this.sortAssetsSmallToLarge).reverse();
+      this.projectAssets.files =
+          files.sort(this.sortAssetsSmallToLarge).reverse();
     }
   };
 
@@ -165,8 +163,7 @@ class ProjectAssetController {
     let deleteConfirmMessage =
       this.$translate('areYouSureYouWantToDeleteThisFile')
       + '\n\n' + assetItem.fileName;
-    let doDelete = confirm(deleteConfirmMessage);
-    if (doDelete) {
+    if (confirm(deleteConfirmMessage)) {
       this.ProjectAssetService.deleteAssetItem(assetItem)
         .then((newProjectAssets) => {
         this.projectAssets = this.ProjectAssetService.projectAssets;
@@ -184,37 +181,17 @@ class ProjectAssetController {
   }
 
   /**
-   * Show asset image in a popup dialog and give author an option to delete it.
-   */
-  viewAsset(assetItem) {
-    // Append dialog to document.body
-    let assetFullURL = this.ProjectAssetService.getFullAssetItemURL(assetItem);
-    let appropriateFileSize =
-        this.$filter('appropriateSizeText')(assetItem.fileSize);
-    let confirm = this.$mdDialog.confirm()
-      .parent(angular.element(document.body))
-      .title(assetItem.fileName + ' (' + appropriateFileSize + ')')
-      .htmlContent('<img src="' + assetFullURL + '" />')
-      .ok(this.$translate('CLOSE'))
-    this.$mdDialog.show(confirm).then(() => {
-      // Author wants to simply close the dialog
-    }, () => {
-      // Author wants to simply close the dialog
-    });
-  }
-
-  /**
    * The user has chosen an asset to use, so notify listeners
    * @param assetItem the asset the user chose
    */
   chooseAsset(assetItem) {
     let params = {
-      assetItem: assetItem,
-      projectId: this.projectId,
-      nodeId: this.nodeId,
-      componentId: this.componentId,
-      target: this.target,
-      targetObject: this.targetObject
+      "assetItem": assetItem,
+      "projectId": this.projectId,
+      "nodeId": this.nodeId,
+      "componentId": this.componentId,
+      "target": this.target,
+      "targetObject": this.targetObject
     };
     this.$rootScope.$broadcast('assetSelected', params);
   }
@@ -278,14 +255,13 @@ class ProjectAssetController {
   }
 
   /**
-   * Close the asset view
+   * Exits the asset view. If this was opened in a popup, closes the
+   * popup and reveal the activity below.
    */
   exit() {
-    if (this.popup) {
-      // this asset view was opened in a popup
+    if (this.isPopup) {
       this.$mdDialog.hide();
     } else {
-      // this asset view was opened as a page
       this.$state.go('root.project', {projectId: this.projectId});
     }
   }
@@ -309,16 +285,16 @@ class ProjectAssetController {
 }
 
 ProjectAssetController.$inject = [
-  '$filter',
-  '$mdDialog',
-  '$rootScope',
-  '$state',
-  '$stateParams',
-  '$scope',
-  '$timeout',
-  'ConfigService',
-  'ProjectAssetService',
-  'UtilService'
+    '$filter',
+    '$mdDialog',
+    '$rootScope',
+    '$state',
+    '$stateParams',
+    '$scope',
+    '$timeout',
+    'ConfigService',
+    'ProjectAssetService',
+    'UtilService'
 ];
 
 export default ProjectAssetController;

@@ -2,18 +2,19 @@
 
 class AuthoringToolController {
 
-  constructor($anchorScroll,
-        $filter,
-        $location,
-        $mdDialog,
-        $rootScope,
-        $scope,
-        $state,
-        $timeout,
-        ConfigService,
-        ProjectService,
-        SessionService,
-        TeacherDataService) {
+  constructor(
+      $anchorScroll,
+      $filter,
+      $location,
+      $mdDialog,
+      $rootScope,
+      $scope,
+      $state,
+      $timeout,
+      ConfigService,
+      ProjectService,
+      SessionService,
+      TeacherDataService) {
     this.$anchorScroll = $anchorScroll;
     this.$filter = $filter;
     this.$location = $location;
@@ -264,7 +265,7 @@ class AuthoringToolController {
   }
 
   /**
-   * Notify Session to renew when user moves the mouse.
+   * Notify Session to renew when user moves the mouse
    */
   mouseMoved() {
     this.SessionService.mouseMoved();
@@ -277,7 +278,7 @@ class AuthoringToolController {
       let wiseBaseURL = this.ConfigService.getWISEBaseURL();
       let teacherHomePageURL = wiseBaseURL + '/teacher';
       window.location = teacherHomePageURL;
-    })
+    });
   }
 
   /**
@@ -309,19 +310,19 @@ class AuthoringToolController {
 }
 
 AuthoringToolController.$inject = [
-  '$anchorScroll',
-  '$filter',
-  '$location',
-  '$mdDialog',
-  '$rootScope',
-  '$scope',
-  '$state',
-  '$timeout',
-  'ConfigService',
-  'ProjectService',
-  'SessionService',
-  'TeacherDataService',
-  'moment'
+    '$anchorScroll',
+    '$filter',
+    '$location',
+    '$mdDialog',
+    '$rootScope',
+    '$scope',
+    '$state',
+    '$timeout',
+    'ConfigService',
+    'ProjectService',
+    'SessionService',
+    'TeacherDataService',
+    'moment'
 ];
 
 export default AuthoringToolController;
