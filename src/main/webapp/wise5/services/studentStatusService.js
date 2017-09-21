@@ -142,7 +142,7 @@ var StudentStatusService = function () {
                         if (completionPctWithWork) {
                             completion.totalItems = projectCompletion.totalItemsWithWork;
                             completion.completedItems = projectCompletion.completedItemsWithWork;
-                            completion.completionPct = projectCompletion.completionPct;
+                            completion.completionPct = projectCompletion.completionPctWithWork;
                         } else {
                             /*
                              * we have a legacy projectCompletion object that only includes information for all nodes

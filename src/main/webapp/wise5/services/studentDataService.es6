@@ -2139,6 +2139,7 @@ class StudentDataService {
         let completedItemsWithWork = 0;
         let totalItems = 0;
         let totalItemsWithWork = 0;
+        let progress = {};
 
         if (this.ProjectService.isGroupNode(nodeId)) {
             let nodeIds = this.ProjectService.getChildNodeIdsById(nodeId);
@@ -2146,15 +2147,24 @@ class StudentDataService {
                 let id = nodeIds[n];
                 let status = this.nodeStatuses[id];
                 if (this.ProjectService.isGroupNode(id)) {
-                    let completedGroupItems = status.progress.completedItems;
-                    let totalGroupItems = status.progress.totalItems;
-                    completedItems += completedGroupItems;
-                    totalItems += totalGroupItems;
+                    if (status.progress.totalItemsWithWork > -1) {
+                      completedItems += status.progress.completedItems;
+                      totalItems += status.progress.totalItems;
+                      completedItemsWithWork += status.progress.completedItemsWithWork;
+                      totalItemsWithWork += status.progress.totalItemsWithWork;
+                    } else {
+                        // we have a legacy node status so we'll need to calculate manually
+                        let groupProgress = this.getNodeProgressById(id);
+                        completedItems += groupProgress.completedItems;
+                        totalItems += groupProgress.totalItems;
+                        completedItemsWithWork += groupProgress.completedItemsWithWork;
+                        totalItemsWithWork += groupProgress.totalItemsWithWork;
+                    }
                 } else {
                     if (status.isVisible) {
                         totalItems++;
 
-                        let hasWork = this.ProjectService.nodeHasWork(nodeId);
+                        let hasWork = this.ProjectService.nodeHasWork(id);
                         if (hasWork) {
                             totalItemsWithWork++;
                         }
@@ -2169,21 +2179,23 @@ class StudentDataService {
                     }
                 }
             }
+
+            let completionPct = totalItems ? Math.round(completedItems / totalItems * 100) : 0;
+            let completionPctWithWork = totalItemsWithWork ? Math.round(completedItemsWithWork / totalItemsWithWork * 100) : 0;
+
+            progress = {
+                "completedItems": completedItems,
+                "completedItemsWithWork": completedItemsWithWork,
+                "totalItems": totalItems,
+                "totalItemsWithWork": totalItemsWithWork,
+                "completionPct": completionPct,
+                "completionPctWithWork": completionPctWithWork
+            };
         }
 
-        // TODO: implement for steps (using components instead of child nodes)
+        // TODO: implement for steps (using components instead of child nodes)?
 
-        let completionPct = totalItems ? Math.round(completedItems / totalItems * 100) : 0;
-        let completionPctWithWork = totalItemsWithWork ? Math.round(completedItemsWithWork / totalItemsWithWork * 100) : 0;
-
-        return {
-            "completedItems": completedItems,
-            "completedItemsWithWork": completedItemsWithWork,
-            "totalItems": totalItems,
-            "totalItemsWithWork": totalItemsWithWork,
-            "completionPct": completionPct,
-            "completionPctWithWork": completionPctWithWork
-        };
+        return progress;
     };
 
     /**

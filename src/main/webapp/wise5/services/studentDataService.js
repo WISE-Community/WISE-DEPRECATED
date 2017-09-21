@@ -2261,6 +2261,7 @@ var StudentDataService = function () {
             var completedItemsWithWork = 0;
             var totalItems = 0;
             var totalItemsWithWork = 0;
+            var progress = {};
 
             if (this.ProjectService.isGroupNode(nodeId)) {
                 var nodeIds = this.ProjectService.getChildNodeIdsById(nodeId);
@@ -2268,15 +2269,24 @@ var StudentDataService = function () {
                     var id = nodeIds[n];
                     var status = this.nodeStatuses[id];
                     if (this.ProjectService.isGroupNode(id)) {
-                        var completedGroupItems = status.progress.completedItems;
-                        var totalGroupItems = status.progress.totalItems;
-                        completedItems += completedGroupItems;
-                        totalItems += totalGroupItems;
+                        if (status.progress.totalItemsWithWork > -1) {
+                            completedItems += status.progress.completedItems;
+                            totalItems += status.progress.totalItems;
+                            completedItemsWithWork += status.progress.completedItemsWithWork;
+                            totalItemsWithWork += status.progress.totalItemsWithWork;
+                        } else {
+                            // we have a legacy node status so we'll need to calculate manually
+                            var groupProgress = this.getNodeProgressById(id);
+                            completedItems += groupProgress.completedItems;
+                            totalItems += groupProgress.totalItems;
+                            completedItemsWithWork += groupProgress.completedItemsWithWork;
+                            totalItemsWithWork += groupProgress.totalItemsWithWork;
+                        }
                     } else {
                         if (status.isVisible) {
                             totalItems++;
 
-                            var hasWork = this.ProjectService.nodeHasWork(nodeId);
+                            var hasWork = this.ProjectService.nodeHasWork(id);
                             if (hasWork) {
                                 totalItemsWithWork++;
                             }
@@ -2291,21 +2301,23 @@ var StudentDataService = function () {
                         }
                     }
                 }
+
+                var completionPct = totalItems ? Math.round(completedItems / totalItems * 100) : 0;
+                var completionPctWithWork = totalItemsWithWork ? Math.round(completedItemsWithWork / totalItemsWithWork * 100) : 0;
+
+                progress = {
+                    "completedItems": completedItems,
+                    "completedItemsWithWork": completedItemsWithWork,
+                    "totalItems": totalItems,
+                    "totalItemsWithWork": totalItemsWithWork,
+                    "completionPct": completionPct,
+                    "completionPctWithWork": completionPctWithWork
+                };
             }
 
-            // TODO: implement for steps (using components instead of child nodes)
+            // TODO: implement for steps (using components instead of child nodes)?
 
-            var completionPct = totalItems ? Math.round(completedItems / totalItems * 100) : 0;
-            var completionPctWithWork = totalItemsWithWork ? Math.round(completedItemsWithWork / totalItemsWithWork * 100) : 0;
-
-            return {
-                "completedItems": completedItems,
-                "completedItemsWithWork": completedItemsWithWork,
-                "totalItems": totalItems,
-                "totalItemsWithWork": totalItemsWithWork,
-                "completionPct": completionPct,
-                "completionPctWithWork": completionPctWithWork
-            };
+            return progress;
         }
     }, {
         key: 'isCompleted',
