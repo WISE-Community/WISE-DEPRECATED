@@ -2809,6 +2809,15 @@ class LabelController {
             // set the student work into the component
             this.setStudentWork(mergedComponentState);
 
+            if (this.componentContent.backgroundImage != null &&
+                    this.componentContent.backgroundImage != '') {
+                /*
+                 * this component has a background so we will use it instead of
+                 * the background from the imported student work
+                 */
+                this.setBackgroundImage(this.componentContent.backgroundImage);
+            }
+
             // make the work dirty so that it gets saved
             this.studentDataChanged();
         }
