@@ -1,21 +1,21 @@
 /**
  * Copyright (c) 2008-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
- * 
+ *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
- * 
+ *
  * Permission is hereby granted, without written agreement and without license
  * or royalty fees, to use, copy, modify, and distribute this software and its
  * documentation for any purpose, provided that the above copyright notice and
  * the following two paragraphs appear in all copies of this software.
- * 
+ *
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
  * PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
  * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
  * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
- * 
+ *
  * IN NO EVENT SHALL REGENTS BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT,
  * SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, INCLUDING LOST PROFITS,
  * ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF
@@ -65,7 +65,7 @@ import org.wise.portal.service.workgroup.WorkgroupService;
 /**
  * Controller for sharing runs between teachers and
  * handling requests to grant/modify permissions on project runs.
- * 
+ *
  * @author Hiroki Terashima
  * @author Patrick Lawler
  * @author Geoffrey Kwan
@@ -77,7 +77,7 @@ public class ShareProjectRunController {
 
 	@Autowired
 	private RunService runService;
-	
+
 	@Autowired
 	private WorkgroupService workgroupService;
 
@@ -86,7 +86,7 @@ public class ShareProjectRunController {
 
 	@Autowired
 	private UserDetailsService userDetailsService;
-	
+
 	@Autowired
 	private AclService<Run> aclService;
 
@@ -94,7 +94,7 @@ public class ShareProjectRunController {
 	private IMailFacade mailService;
 
 	@Autowired
-	protected Properties wiseProperties;	
+	protected Properties wiseProperties;
 
 	@Autowired
 	private MessageSource messageSource;
@@ -108,10 +108,10 @@ public class ShareProjectRunController {
 	private String formView = "teacher/run/shareprojectrun"; // the path to this form view
 
 	private String successView = "teacher/run/shareprojectrun"; // the path to the success view
-	
+
 	// change this to true if you are testing and do not want to send mail to the actual groups
 	private static final Boolean DEBUG = false;
-	
+
 	// set this to your email
 	private static final String DEBUG_EMAIL = "youremail@email.com";
 
@@ -126,22 +126,14 @@ public class ShareProjectRunController {
      */
     @RequestMapping(method = RequestMethod.GET, value = "/teacher/run/shareprojectrun.html")
     public String initializeForm(ModelMap modelMap, HttpServletRequest request) throws Exception {
-
-		User user = ControllerUtil.getSignedInUser(); // get the signed in user
-		
-		// get the run
+		User user = ControllerUtil.getSignedInUser();
 		boolean doEagerFetch = true;
 		Run run = runService.retrieveById(Long.parseLong(request.getParameter(RUNID_PARAM_NAME)), doEagerFetch);
-		
-		// get the message if any
 		String message = request.getParameter("message");
-		
-		// set the necessary objects into the model
 		populateModel(modelMap, user, run, message);
-		
 		return formView;
     }
-   
+
     /**
      * Set the run, teacher names, and shared owners into the model
      * @param modelMap the model to add the objects to
@@ -166,12 +158,12 @@ public class ShareProjectRunController {
 
 			//get the shared owners of the run
 			Set<User> sharedowners = run.getSharedowners();
-			
+
 			//loop through all the shared owners
 			for (User sharedowner : sharedowners) {
 				//get the permissions of the shared owner for the run
 				String sharedTeacherRole = runService.getSharedTeacherRole(run, sharedowner);
-				
+
 				//get the user name of the shared owner
 				String userName = sharedowner.getUserDetails().getUsername();
 
@@ -183,22 +175,22 @@ public class ShareProjectRunController {
 				addSharedTeacherParameters.setPermission(sharedTeacherRole);
 				addSharedTeacherParameters.setRun(run);
 				addSharedTeacherParameters.setSharedOwnerUsername(userName);
-				
+
 				// add the shared owner to the model
 				modelMap.put(userName, addSharedTeacherParameters);
 			}
-			
+
 			// add the run and run id to the model
 			modelMap.put(RUN_PARAM_NAME, run);
 			modelMap.put(RUNID_PARAM_NAME, run.getId());
-			
+
 			AlphabeticalStringComparator alphabeticalStringComparator = new AlphabeticalStringComparator();
 			Collections.sort(allTeacherUsernames, alphabeticalStringComparator);
 			String allTeacherUsernameString = StringUtils.join(allTeacherUsernames.iterator(), ":");
-			
+
 			// add all the teacher user names to the model
 			modelMap.put(ALL_TEACHER_USERNAMES, allTeacherUsernameString);
-			
+
 			// create the params object and add it to the model
 			AddSharedTeacherParameters params = new AddSharedTeacherParameters();
 			params.setRun(run);
@@ -207,7 +199,7 @@ public class ShareProjectRunController {
 		} else {
 			throw new NotAuthorizedException("You do not have permission to share this run.");
 		}
-		
+
 		return modelMap;
     }
 
@@ -222,60 +214,46 @@ public class ShareProjectRunController {
      */
 	@RequestMapping(method = RequestMethod.POST, value = "/teacher/run/shareprojectrun.html")
 	protected String onSubmit(
-			@ModelAttribute("addSharedTeacherParameters") AddSharedTeacherParameters params, 
+			@ModelAttribute("addSharedTeacherParameters") AddSharedTeacherParameters params,
 			HttpServletRequest request,
 			Model model) {
 		String view = formView;
-		
-		//get the signed in user
 		User signedInUser = ControllerUtil.getSignedInUser();
-		
-		//get the run
 		Run run = params.getRun();
-		
-		//get run id
 		Long runId = run.getId();
-		
+
 		try {
-			//get the run
 			boolean doEagerFetch = true;
 			run = runService.retrieveById(runId, doEagerFetch);
 			params.setRun(run);
 		} catch (ObjectNotFoundException e1) {
 			e1.printStackTrace();
 		}
-		
+
 		//the error message to display to the user if any
 		String message = null;
-		
-		//get the user that we will share the run with
-		User retrievedUser = userService.retrieveUserByUsername(params.getSharedOwnerUsername());
 
-		if (retrievedUser == null) {
-			//we could not find the user name
+		// get the user that we will share the run with
+		User shareWithUser = userService.retrieveUserByUsername(params.getSharedOwnerUsername());
+
+		if (shareWithUser == null) {
 			message = "Username not recognized. Make sure to use the exact spelling of the username.";
 			view = formView;
-		} else if (!retrievedUser.getUserDetails().hasGrantedAuthority(UserDetailsService.TEACHER_ROLE)) {
-			//the user name entered is not a teacher
+		} else if (!shareWithUser.getUserDetails().hasGrantedAuthority(UserDetailsService.TEACHER_ROLE)) {
 			message = "The user is not a teacher and thus cannot be added as a shared teacher.";
 			view = formView;
 		} else {
 			try {
-				// first check if we're removing a shared teacher
 				String removeUserFromRun = request.getParameter("removeUserFromRun");
 				if (removeUserFromRun != null && Boolean.valueOf(removeUserFromRun)) {
-					//remove the shared teacher
 					runService.removeSharedTeacherFromRun(params.getSharedOwnerUsername(), run.getId());
-				} else { 
-					// we're adding a new shared teacher or changing her permissions
-					
-					if (run.getSharedowners().contains(retrievedUser)) {
-						//the user is already a shared owner so we will update their permissions
+				} else {
+					// we're either adding a new shared teacher or changing her permissions
+					if (run.getSharedowners().contains(shareWithUser)) {
+						// the user is already a shared owner so we will update their permissions
 						runService.updateSharedTeacherForRun(params);
 					} else {
-						//the user is not a shared owner yet so we will add them as a shared teacher
-						
-						//add the shared teacher to the run
+						// the user is not a shared owner yet so we will add them as a shared teacher
 						runService.addSharedTeacherToRun(params);
 
 						// make a workgroup for this shared teacher for this run
@@ -284,10 +262,10 @@ public class ShareProjectRunController {
 						Set<User> sharedOwners = new HashSet<User>();
 						sharedOwners.add(sharedOwner);
 						workgroupService.createWorkgroup("teacher", sharedOwners, run, null);
-						
+
 						//send an email to the new shared owner
 						Locale locale = request.getLocale();
-						ProjectRunEmailService emailService = new ProjectRunEmailService(signedInUser, retrievedUser,  run, locale);
+						ProjectRunEmailService emailService = new ProjectRunEmailService(signedInUser, shareWithUser,  run, locale);
 						Thread thread = new Thread(emailService);
 						thread.start();
 					}
@@ -295,19 +273,19 @@ public class ShareProjectRunController {
 			} catch (ObjectNotFoundException e) {
 				view = formView;
 			}
-			
+
 			view = successView;
 		}
-		
+
     	//get the model as a map so we can add objects to it
     	Map<String, Object> asMap = model.asMap();
     	try {
-    		//add the project, teacher names, and shared owners into the model 
+    		//add the project, teacher names, and shared owners into the model
 			populateModel(asMap, signedInUser, run, message);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return view;
 	}
 
@@ -335,7 +313,7 @@ public class ShareProjectRunController {
     	private User sharee;
     	private Run run;
     	private Locale locale;
-    	
+
 		public ProjectRunEmailService(User sharer, User sharee, Run run, Locale locale) {
 			this.sharer = sharer;
 			this.sharee = sharee;
@@ -352,31 +330,30 @@ public class ShareProjectRunController {
 	     * On exception sending the email, ignore.
 	     */
 		private void sendEmail() {
-			
 			Date date = new Date();
 			SimpleDateFormat sdf = new SimpleDateFormat("EEE, MMMMM d, yyyy");
-			
+
 			TeacherUserDetails sharerUserDetails = (TeacherUserDetails) sharer.getUserDetails();
 			String sharerName = sharerUserDetails.getFirstname() + " " + sharerUserDetails.getLastname();
 			String sharerEmailAddress = sharerUserDetails.getEmailAddress();
-			
+
 			TeacherUserDetails shareeDetails = (TeacherUserDetails) sharee.getUserDetails();
-			
+
 			String[] shareeEmailAddress = {shareeDetails.getEmailAddress()};
-			
+
 			String[] recipients = (String[]) ArrayUtils.addAll(shareeEmailAddress, wiseProperties.getProperty("uber_admin").split(","));
 
-			String defaultSubject = messageSource.getMessage("presentation.web.controllers.teacher.run.ShareProjectRunController.shareProjectRunConfirmationEmailSubject", 
+			String defaultSubject = messageSource.getMessage("presentation.web.controllers.teacher.run.ShareProjectRunController.shareProjectRunConfirmationEmailSubject",
 					new Object[] {sharerName}, Locale.US);
-			String subject = messageSource.getMessage("presentation.web.controllers.teacher.run.ShareProjectRunController.shareProjectRunConfirmationEmailSubject", 
+			String subject = messageSource.getMessage("presentation.web.controllers.teacher.run.ShareProjectRunController.shareProjectRunConfirmationEmailSubject",
 					new Object[] {sharerName}, defaultSubject, this.locale);
-			
-			String defaultMessage = messageSource.getMessage("presentation.web.controllers.teacher.run.ShareProjectRunController.shareProjectRunConfirmationEmailBody", 
+
+			String defaultMessage = messageSource.getMessage("presentation.web.controllers.teacher.run.ShareProjectRunController.shareProjectRunConfirmationEmailBody",
 					new Object[] {sharerName}, Locale.US);
-			String message = messageSource.getMessage("presentation.web.controllers.teacher.run.ShareProjectRunController.shareProjectRunConfirmationEmailBody", 
+			String message = messageSource.getMessage("presentation.web.controllers.teacher.run.ShareProjectRunController.shareProjectRunConfirmationEmailBody",
 					new Object[] {sharerName, run.getName(), run.getId(), run.getProject().getName(), run.getProject().getId(), shareeDetails.getUsername(), sdf.format(date) },
 					defaultMessage, this.locale);
-			
+
 			if (wiseProperties.containsKey("discourse_url")) {
 				String discourseURL = wiseProperties.getProperty("discourse_url");
 				if (discourseURL != null && !discourseURL.isEmpty()) {
@@ -386,14 +363,14 @@ public class ShareProjectRunController {
 					message += "\n\n" + pS;
 				}
 			}
-			
+
 			String fromEmail = sharerEmailAddress;
-			
+
 			// for testing out the email functionality without spamming the groups
 			if (DEBUG) {
 				recipients[0] = DEBUG_EMAIL;
 			}
-			
+
 			// sends the email to the recipients
 			try {
 				mailService.postMail(recipients, subject, message, fromEmail);
@@ -403,7 +380,7 @@ public class ShareProjectRunController {
 			}
 		}
     }
-    
+
     /**
      * Comparator used to order strings alphabetically
      */
@@ -421,13 +398,13 @@ public class ShareProjectRunController {
 		@Override
 		public int compare(String string1, String string2) {
 			int result = 0;
-			
+
 			if (string1 != null && string2 != null) {
 				String string1LowerCase = string1.toLowerCase();
 				String string2LowerCase = string2.toLowerCase();
 				result = string1LowerCase.compareTo(string2LowerCase);
 			}
-			
+
 			return result;
 		}
 	}
