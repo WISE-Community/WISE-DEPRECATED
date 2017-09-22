@@ -412,180 +412,11 @@ class ProjectController {
   insertInside(nodeId) {
     // TODO check that we are inserting into a group
     if (this.createMode) {
-      // create the node inside the group
-      this.ProjectService.createNodeInside(this.nodeToAdd, nodeId);
-
-      let newNodes = [this.nodeToAdd];
-
-      // remember the new node
-      let newNode = this.nodeToAdd;
-
-      /*
-       * clear this variable that we used to hold the node we inserted.
-       * since we have inserted the node we don't need a handle to it
-       * anymore
-       */
-      this.nodeToAdd = null;
-
-      // turn off create mode
-      this.createMode = false;
-
-      // turn off insert mode
-      this.insertGroupMode = false;
-      this.insertNodeMode = false;
-
-      // temporarily highlight the new nodes
-      this.highlightNewNodes(newNodes);
-
-      // save and refresh the project
-      this.checkPotentialStartNodeIdChangeThenSaveProject().then(() => {
-        if (newNode != null) {
-          let data = {
-            "nodeId": newNode.id,
-            "title": this.ProjectService
-                .getNodePositionAndTitleByNodeId(newNode.id)
-          };
-
-          if (this.ProjectService.isGroupNode(newNode.id)) {
-            this.saveEvent('activityCreated', 'Authoring', data);
-          } else {
-            this.saveEvent('stepCreated', 'Authoring', data);
-          }
-        }
-      });
+      this.handleCreateModeInsert(nodeId, 'inside');
     } else if (this.moveMode) {
-      let selectedNodeIds = this.getSelectedItems();
-      if (selectedNodeIds != null && selectedNodeIds.indexOf(nodeId) != -1) {
-        /*
-         * the user is trying to insert the selected node ids into
-         * itself so we will not allow that
-         */
-        if (selectedNodeIds.length == 1) {
-          // TODO: i18n
-          alert('You are not allowed to insert the selected item into itself.');
-        } else if (selectedNodeIds.length > 1) {
-          // TODO: i18n
-          alert('You are not allowed to insert the selected items into itself.');
-        }
-      } else {
-        // perform the move
-
-        /*
-         * an array of nodes that will be saved in the data for the move
-         * event
-         */
-        let nodes = [];
-        for (let selectedNodeId of selectedNodeIds) {
-          let node = {
-            "nodeId": selectedNodeId,
-            "fromTitle": this.ProjectService
-                .getNodePositionAndTitleByNodeId(selectedNodeId)
-          };
-          nodes.push(node);
-        }
-
-        // move the nodes into the group
-        let newNodes = this.ProjectService
-            .moveNodesInside(selectedNodeIds, nodeId);
-
-        // turn off move mode
-        this.moveMode = false;
-
-        // turn off insert mode
-        this.insertGroupMode = false;
-        this.insertNodeMode = false;
-
-        // temporarily highlight the new nodes
-        this.highlightNewNodes(newNodes);
-
-        // save and refresh the project
-        this.checkPotentialStartNodeIdChangeThenSaveProject().then(() => {
-          if (newNodes != null && newNodes.length > 0) {
-            let firstNewNode = newNodes[0];
-            if (firstNewNode != null && firstNewNode.id != null) {
-              // loop through all the nodes that will be saved in the event data
-              for (let n = 0; n < nodes.length; n++) {
-                let node = nodes[n];
-
-                // get the new node object
-                let newNode = newNodes[n];
-
-                if (node != null && newNode != null) {
-                  // set the new title
-                  node.toTitle = this.ProjectService
-                      .getNodePositionAndTitleByNodeId(newNode.id);
-                }
-              }
-
-              if (this.ProjectService.isGroupNode(firstNewNode.id)) {
-                let data = { activitiesMoved: nodes };
-                this.saveEvent('activityMoved', 'Authoring', data);
-              } else {
-                let data = { stepsMoved: nodes };
-                this.saveEvent('stepMoved', 'Authoring', data);
-              }
-            }
-          }
-        });
-      }
+      this.handleMoveModeInsert(nodeId, 'inside');
     } else if (this.copyMode) {
-      /*
-       * an array of nodes that will be saved in the data for the move
-       * event
-       */
-      let nodes = [];
-      let selectedNodeIds = this.getSelectedItems();
-      for (let selectedNodeId of selectedNodeIds) {
-        let node = {
-          "fromNodeId": selectedNodeId,
-          "fromTitle": this.ProjectService
-              .getNodePositionAndTitleByNodeId(selectedNodeId)
-        };
-        nodes.push(node);
-      }
-
-      // copy the nodes into the group
-      let newNodes = this.ProjectService.copyNodesInside(selectedNodeIds, nodeId);
-
-      // turn off copy mode
-      this.copyMode = false;
-
-      // turn off insert mode
-      this.insertGroupMode = false;
-      this.insertNodeMode = false;
-
-      // temporarily highlight the new nodes
-      this.highlightNewNodes(newNodes);
-
-      // save and refresh the project
-      this.checkPotentialStartNodeIdChangeThenSaveProject().then(() => {
-        if (newNodes != null && newNodes.length > 0) {
-          let firstNewNode = newNodes[0];
-          if (firstNewNode != null && firstNewNode.id != null) {
-            // loop through all the nodes that will be saved in the event data
-            for (let n = 0; n < nodes.length; n++) {
-              let node = nodes[n];
-              let newNode = newNodes[n];
-
-              if (node != null && newNode != null) {
-                // set the new id
-                node.toNodeId = newNode.id;
-
-                // set the new title
-                node.toTitle = this.ProjectService.getNodePositionAndTitleByNodeId(newNode.id);
-              }
-            }
-
-            if (this.ProjectService.isGroupNode(firstNewNode.id)) {
-              let data = { activitiesCopied: nodes };
-              this.saveEvent('activityCopied', 'Authoring', data);
-            } else {
-              let data = { stepsCopied: nodes };
-              this.saveEvent('stepCopied', 'Authoring', data);
-            }
-          }
-        }
-      });
+      this.handleCopyModeInsert(nodeId, 'inside');
     } else if (this.importMode) {
       this.importSelectedNodes(nodeId);
     }
@@ -598,192 +429,231 @@ class ProjectController {
    */
   insertAfter(nodeId) {
     if (this.createMode) {
+      this.handleCreateModeInsert(nodeId, 'after');
+    } else if (this.moveMode) {
+      this.handleMoveModeInsert(nodeId, 'after');
+    } else if (this.copyMode) {
+      this.handleCopyModeInsert(nodeId, 'after');
+    } else if (this.importMode) {
+      this.importSelectedNodes(nodeId);
+    }
+  }
+
+  /**
+   * Create a node and then insert it in the specified location
+   * @param nodeId insert the new node inside or after this node id
+   * @param type whether to insert 'inside' or 'after' the nodeId parameter
+   */
+  handleCreateModeInsert(nodeId, type) {
+
+    if (type == 'inside') {
+      // create the node inside the group
+      this.ProjectService.createNodeInside(this.nodeToAdd, nodeId);
+    } else if (type == 'after') {
       // create the node after the node id
       this.ProjectService.createNodeAfter(this.nodeToAdd, nodeId);
+    } else {
+      // an unspecified type was provided
+      return;
+    }
 
-      let newNodes = [this.nodeToAdd];
-      let newNode = this.nodeToAdd;
+    let newNodes = [this.nodeToAdd];
+    let newNode = this.nodeToAdd;
 
-      /*
-       * clear this variable that we used to hold the node we inserted.
-       * since we have inserted the node we don't need a handle to it
-       * anymore
-       */
-      this.nodeToAdd = null;
+    /*
+     * clear this variable that we used to hold the node we inserted.
+     * since we have inserted the node we don't need a handle to it
+     * anymore
+     */
+    this.nodeToAdd = null;
 
-      // turn off create mode
-      this.createMode = false;
+    // turn off create mode
+    this.createMode = false;
 
-      // turn off insert mode
-      this.insertGroupMode = false;
-      this.insertNodeMode = false;
+    // turn off insert mode
+    this.insertGroupMode = false;
+    this.insertNodeMode = false;
 
-      // temporarily highlight the new nodes
-      this.highlightNewNodes(newNodes);
+    this.temporarilyHighlightNewNodes(newNodes);
 
-      // save and referesh the project
-      this.checkPotentialStartNodeIdChangeThenSaveProject().then(() => {
-        if (newNode != null) {
-          let data = {
-            "nodeId": newNode.id,
-            "title": this.ProjectService
-                .getNodePositionAndTitleByNodeId(newNode.id)
-          };
+    // save and refresh the project
+    this.checkPotentialStartNodeIdChangeThenSaveProject().then(() => {
+      if (newNode != null) {
+        let data = {
+          "nodeId": newNode.id,
+          "title": this.ProjectService
+              .getNodePositionAndTitleByNodeId(newNode.id)
+        };
 
-          if (this.ProjectService.isGroupNode(newNode.id)) {
-            // save the activity created event to the server
-            this.saveEvent('activityCreated', 'Authoring', data);
-          } else {
-            // save the step created event to the server
-            this.saveEvent('stepCreated', 'Authoring', data);
-          }
+        if (this.ProjectService.isGroupNode(newNode.id)) {
+          // save the activity created event to the server
+          this.saveEvent('activityCreated', 'Authoring', data);
+        } else {
+          // save the step created event to the server
+          this.saveEvent('stepCreated', 'Authoring', data);
         }
-      });
-    } else if (this.moveMode) {
-      let selectedNodeIds = this.getSelectedItems();
-      if (selectedNodeIds != null && selectedNodeIds.indexOf(nodeId) != -1) {
-        /*
-         * the user is trying to insert the selected node ids after
-         * itself so we will not allow that
-         */
-        if (selectedNodeIds.length == 1) {
-          alert(this.$translate('youAreNotAllowedToInsertTheSelectedItemAfterItself'));
-        } else if (selectedNodeIds.length > 1) {
-          alert(this.$translate('youAreNotAllowedToInsertTheSelectedItemsAfterItself'));
-        }
-      } else {
-        // perform the move
-
-        /*
-         * an array of nodes that will be saved in the data for the move
-         * event
-         */
-        let nodes = [];
-        for (let selectedNodeId of selectedNodeIds) {
-          let node = {
-            "nodeId": selectedNodeId,
-            "fromTitle": this.ProjectService
-                .getNodePositionAndTitleByNodeId(selectedNodeId)
-          };
-          nodes.push(node);
-        }
-
-        // move the nodes after the node id
-        let newNodes = this.ProjectService.moveNodesAfter(selectedNodeIds, nodeId);
-
-        // turn off move mode
-        this.moveMode = false;
-
-        // turn off insert mode
-        this.insertGroupMode = false;
-        this.insertNodeMode = false;
-
-        // temporarily highlight the new nodes
-        this.highlightNewNodes(newNodes);
-
-        // save and refresh the project
-        this.checkPotentialStartNodeIdChangeThenSaveProject().then(() => {
-          if (newNodes != null && newNodes.length > 0) {
-            let firstNewNode = newNodes[0];
-            if (firstNewNode != null && firstNewNode.id != null) {
-
-              // loop through all the nodes that will be saved in the event data
-              for (let n = 0; n < nodes.length; n++) {
-                let node = nodes[n];
-
-                // get the new node object
-                let newNode = newNodes[n];
-
-                if (node != null && newNode != null) {
-
-                  // set the new title
-                  node.toTitle = this.ProjectService.getNodePositionAndTitleByNodeId(newNode.id);
-                }
-              }
-
-              if (this.ProjectService.isGroupNode(firstNewNode.id)) {
-                let data = {};
-                data.activitesMoved = nodes;
-
-                // save the activity moved event to the server
-                this.saveEvent('activityMoved', 'Authoring', data);
-              } else {
-                let data = {};
-                data.stepsMoved = nodes;
-
-                // save the step moved event to the server
-                this.saveEvent('stepMoved', 'Authoring', data);
-              }
-            }
-          }
-        });
       }
-    } else if (this.copyMode) {
+    });
+  }
+
+  /**
+   * Move a node and insert it in the specified location
+   * @param nodeId insert the new node inside or after this node id
+   * @param type whether to insert 'inside' or 'after' the nodeId parameter
+   */
+  handleMoveModeInsert(nodeId, type) {
+    let selectedNodeIds = this.getSelectedItems();
+    if (selectedNodeIds != null && selectedNodeIds.indexOf(nodeId) != -1) {
+      /*
+       * the user is trying to insert the selected node ids after
+       * itself so we will not allow that
+       */
+      if (selectedNodeIds.length == 1) {
+        alert(this.$translate('youAreNotAllowedToInsertTheSelectedItemAfterItself'));
+      } else if (selectedNodeIds.length > 1) {
+        alert(this.$translate('youAreNotAllowedToInsertTheSelectedItemsAfterItself'));
+      }
+    } else {
+      // perform the move
+
       /*
        * an array of nodes that will be saved in the data for the move
        * event
        */
       let nodes = [];
-      let selectedNodeIds = this.getSelectedItems();
       for (let selectedNodeId of selectedNodeIds) {
         let node = {
-          "fromNodeId": selectedNodeId,
+          "nodeId": selectedNodeId,
           "fromTitle": this.ProjectService
               .getNodePositionAndTitleByNodeId(selectedNodeId)
         };
         nodes.push(node);
       }
 
-      // copy the nodes and put them after the node id
-      let newNodes = this.ProjectService.copyNodesAfter(selectedNodeIds, nodeId);
+      let newNodes = [];
+      if (type == 'inside') {
+        // move the nodes into the group
+        newNodes = this.ProjectService.moveNodesInside(selectedNodeIds, nodeId);
+      } else if (type == 'after') {
+        // move the nodes after the node id
+        newNodes = this.ProjectService.moveNodesAfter(selectedNodeIds, nodeId);
+      } else {
+        // an unspecified type was provided
+        return;
+      }
 
-      // turn off copy mode
-      this.copyMode = false;
+      // turn off move mode
+      this.moveMode = false;
 
       // turn off insert mode
       this.insertGroupMode = false;
       this.insertNodeMode = false;
 
-      // temporarily highlight the new nodes
-      this.highlightNewNodes(newNodes);
+      this.temporarilyHighlightNewNodes(newNodes);
 
       // save and refresh the project
       this.checkPotentialStartNodeIdChangeThenSaveProject().then(() => {
         if (newNodes != null && newNodes.length > 0) {
           let firstNewNode = newNodes[0];
           if (firstNewNode != null && firstNewNode.id != null) {
+
             // loop through all the nodes that will be saved in the event data
             for (let n = 0; n < nodes.length; n++) {
               let node = nodes[n];
+
+              // get the new node object
               let newNode = newNodes[n];
 
               if (node != null && newNode != null) {
-                // set the new id
-                node.toNodeId = newNode.id;
-
                 // set the new title
-                node.toTitle = this.ProjectService
-                    .getNodePositionAndTitleByNodeId(newNode.id);
+                node.toTitle = this.ProjectService.getNodePositionAndTitleByNodeId(newNode.id);
               }
             }
 
             if (this.ProjectService.isGroupNode(firstNewNode.id)) {
-              let data = {
-                "activitiesCopied": nodes
-              };
-              this.saveEvent('activityCopied', 'Authoring', data);
+              let data = { activitiesMoved: nodes };
+              this.saveEvent('activityMoved', 'Authoring', data);
             } else {
-              let data = {
-                "stepsCopied": nodes
-              };
-              this.saveEvent('stepCopied', 'Authoring', data);
+              let data = { stepsMoved: nodes };
+              this.saveEvent('stepMoved', 'Authoring', data);
             }
           }
         }
       });
-    } else if (this.importMode) {
-      this.importSelectedNodes(nodeId);
     }
+  }
+
+  /**
+   * Copy a node and insert it in the specified location
+   * @param nodeId insert the new node inside or after this node id
+   * @param type whether to insert 'inside' or 'after' the nodeId parameter
+   */
+  handleCopyModeInsert(nodeId, type) {
+    /*
+     * an array of nodes that will be saved in the data for the move
+     * event
+     */
+    let nodes = [];
+    let selectedNodeIds = this.getSelectedItems();
+    for (let selectedNodeId of selectedNodeIds) {
+      let node = {
+        "fromNodeId": selectedNodeId,
+        "fromTitle": this.ProjectService
+            .getNodePositionAndTitleByNodeId(selectedNodeId)
+      };
+      nodes.push(node);
+    }
+
+    let newNodes = [];
+    if (type == 'inside') {
+      // copy the nodes into the group
+      newNodes = this.ProjectService.copyNodesInside(selectedNodeIds, nodeId);
+    } else if (type == 'after') {
+      // copy the nodes and put them after the node id
+      newNodes = this.ProjectService.copyNodesAfter(selectedNodeIds, nodeId);
+    } else {
+      // an unspecified type was provided
+      return;
+    }
+
+    // turn off copy mode
+    this.copyMode = false;
+
+    // turn off insert mode
+    this.insertGroupMode = false;
+    this.insertNodeMode = false;
+
+    this.temporarilyHighlightNewNodes(newNodes);
+
+    // save and refresh the project
+    this.checkPotentialStartNodeIdChangeThenSaveProject().then(() => {
+      if (newNodes != null && newNodes.length > 0) {
+        let firstNewNode = newNodes[0];
+        if (firstNewNode != null && firstNewNode.id != null) {
+          // loop through all the nodes that will be saved in the event data
+          for (let n = 0; n < nodes.length; n++) {
+            let node = nodes[n];
+            let newNode = newNodes[n];
+
+            if (node != null && newNode != null) {
+              // set the new id
+              node.toNodeId = newNode.id;
+
+              // set the new title
+              node.toTitle = this.ProjectService.getNodePositionAndTitleByNodeId(newNode.id);
+            }
+          }
+
+          if (this.ProjectService.isGroupNode(firstNewNode.id)) {
+            let data = { activitiesCopied: nodes };
+            this.saveEvent('activityCopied', 'Authoring', data);
+          } else {
+            let data = { stepsCopied: nodes };
+            this.saveEvent('stepCopied', 'Authoring', data);
+          }
+        }
+      }
+    });
   }
 
   /**
@@ -1691,7 +1561,7 @@ class ProjectController {
    * Temporarily highlight the new nodes
    * @param newNodes the new nodes to highlight
    */
-  highlightNewNodes(newNodes) {
+  temporarilyHighlightNewNodes(newNodes) {
     this.$timeout(() => {
       if (newNodes != null) {
         for (let newNode of newNodes) {

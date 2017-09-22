@@ -430,223 +430,13 @@ var ProjectController = function () {
   }, {
     key: 'insertInside',
     value: function insertInside(nodeId) {
-      var _this3 = this;
-
       // TODO check that we are inserting into a group
       if (this.createMode) {
-        // create the node inside the group
-        this.ProjectService.createNodeInside(this.nodeToAdd, nodeId);
-
-        var newNodes = [this.nodeToAdd];
-
-        // remember the new node
-        var newNode = this.nodeToAdd;
-
-        /*
-         * clear this variable that we used to hold the node we inserted.
-         * since we have inserted the node we don't need a handle to it
-         * anymore
-         */
-        this.nodeToAdd = null;
-
-        // turn off create mode
-        this.createMode = false;
-
-        // turn off insert mode
-        this.insertGroupMode = false;
-        this.insertNodeMode = false;
-
-        // temporarily highlight the new nodes
-        this.highlightNewNodes(newNodes);
-
-        // save and refresh the project
-        this.checkPotentialStartNodeIdChangeThenSaveProject().then(function () {
-          if (newNode != null) {
-            var data = {
-              "nodeId": newNode.id,
-              "title": _this3.ProjectService.getNodePositionAndTitleByNodeId(newNode.id)
-            };
-
-            if (_this3.ProjectService.isGroupNode(newNode.id)) {
-              _this3.saveEvent('activityCreated', 'Authoring', data);
-            } else {
-              _this3.saveEvent('stepCreated', 'Authoring', data);
-            }
-          }
-        });
+        this.handleCreateModeInsert(nodeId, 'inside');
       } else if (this.moveMode) {
-        var selectedNodeIds = this.getSelectedItems();
-        if (selectedNodeIds != null && selectedNodeIds.indexOf(nodeId) != -1) {
-          /*
-           * the user is trying to insert the selected node ids into
-           * itself so we will not allow that
-           */
-          if (selectedNodeIds.length == 1) {
-            // TODO: i18n
-            alert('You are not allowed to insert the selected item into itself.');
-          } else if (selectedNodeIds.length > 1) {
-            // TODO: i18n
-            alert('You are not allowed to insert the selected items into itself.');
-          }
-        } else {
-          // perform the move
-
-          /*
-           * an array of nodes that will be saved in the data for the move
-           * event
-           */
-          var nodes = [];
-          var _iteratorNormalCompletion = true;
-          var _didIteratorError = false;
-          var _iteratorError = undefined;
-
-          try {
-            for (var _iterator = selectedNodeIds[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-              var selectedNodeId = _step.value;
-
-              var node = {
-                "nodeId": selectedNodeId,
-                "fromTitle": this.ProjectService.getNodePositionAndTitleByNodeId(selectedNodeId)
-              };
-              nodes.push(node);
-            }
-
-            // move the nodes into the group
-          } catch (err) {
-            _didIteratorError = true;
-            _iteratorError = err;
-          } finally {
-            try {
-              if (!_iteratorNormalCompletion && _iterator.return) {
-                _iterator.return();
-              }
-            } finally {
-              if (_didIteratorError) {
-                throw _iteratorError;
-              }
-            }
-          }
-
-          var _newNodes = this.ProjectService.moveNodesInside(selectedNodeIds, nodeId);
-
-          // turn off move mode
-          this.moveMode = false;
-
-          // turn off insert mode
-          this.insertGroupMode = false;
-          this.insertNodeMode = false;
-
-          // temporarily highlight the new nodes
-          this.highlightNewNodes(_newNodes);
-
-          // save and refresh the project
-          this.checkPotentialStartNodeIdChangeThenSaveProject().then(function () {
-            if (_newNodes != null && _newNodes.length > 0) {
-              var firstNewNode = _newNodes[0];
-              if (firstNewNode != null && firstNewNode.id != null) {
-                // loop through all the nodes that will be saved in the event data
-                for (var n = 0; n < nodes.length; n++) {
-                  var node = nodes[n];
-
-                  // get the new node object
-                  var _newNode = _newNodes[n];
-
-                  if (node != null && _newNode != null) {
-                    // set the new title
-                    node.toTitle = _this3.ProjectService.getNodePositionAndTitleByNodeId(_newNode.id);
-                  }
-                }
-
-                if (_this3.ProjectService.isGroupNode(firstNewNode.id)) {
-                  var data = { activitiesMoved: nodes };
-                  _this3.saveEvent('activityMoved', 'Authoring', data);
-                } else {
-                  var _data = { stepsMoved: nodes };
-                  _this3.saveEvent('stepMoved', 'Authoring', _data);
-                }
-              }
-            }
-          });
-        }
+        this.handleMoveModeInsert(nodeId, 'inside');
       } else if (this.copyMode) {
-        /*
-         * an array of nodes that will be saved in the data for the move
-         * event
-         */
-        var _nodes = [];
-        var _selectedNodeIds = this.getSelectedItems();
-        var _iteratorNormalCompletion2 = true;
-        var _didIteratorError2 = false;
-        var _iteratorError2 = undefined;
-
-        try {
-          for (var _iterator2 = _selectedNodeIds[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-            var _selectedNodeId = _step2.value;
-
-            var _node2 = {
-              "fromNodeId": _selectedNodeId,
-              "fromTitle": this.ProjectService.getNodePositionAndTitleByNodeId(_selectedNodeId)
-            };
-            _nodes.push(_node2);
-          }
-
-          // copy the nodes into the group
-        } catch (err) {
-          _didIteratorError2 = true;
-          _iteratorError2 = err;
-        } finally {
-          try {
-            if (!_iteratorNormalCompletion2 && _iterator2.return) {
-              _iterator2.return();
-            }
-          } finally {
-            if (_didIteratorError2) {
-              throw _iteratorError2;
-            }
-          }
-        }
-
-        var _newNodes2 = this.ProjectService.copyNodesInside(_selectedNodeIds, nodeId);
-
-        // turn off copy mode
-        this.copyMode = false;
-
-        // turn off insert mode
-        this.insertGroupMode = false;
-        this.insertNodeMode = false;
-
-        // temporarily highlight the new nodes
-        this.highlightNewNodes(_newNodes2);
-
-        // save and refresh the project
-        this.checkPotentialStartNodeIdChangeThenSaveProject().then(function () {
-          if (_newNodes2 != null && _newNodes2.length > 0) {
-            var firstNewNode = _newNodes2[0];
-            if (firstNewNode != null && firstNewNode.id != null) {
-              // loop through all the nodes that will be saved in the event data
-              for (var n = 0; n < _nodes.length; n++) {
-                var _node = _nodes[n];
-                var _newNode2 = _newNodes2[n];
-
-                if (_node != null && _newNode2 != null) {
-                  // set the new id
-                  _node.toNodeId = _newNode2.id;
-
-                  // set the new title
-                  _node.toTitle = _this3.ProjectService.getNodePositionAndTitleByNodeId(_newNode2.id);
-                }
-              }
-
-              if (_this3.ProjectService.isGroupNode(firstNewNode.id)) {
-                var data = { activitiesCopied: _nodes };
-                _this3.saveEvent('activityCopied', 'Authoring', data);
-              } else {
-                var _data2 = { stepsCopied: _nodes };
-                _this3.saveEvent('stepCopied', 'Authoring', _data2);
-              }
-            }
-          }
-        });
+        this.handleCopyModeInsert(nodeId, 'inside');
       } else if (this.importMode) {
         this.importSelectedNodes(nodeId);
       }
@@ -661,235 +451,285 @@ var ProjectController = function () {
   }, {
     key: 'insertAfter',
     value: function insertAfter(nodeId) {
-      var _this4 = this;
-
       if (this.createMode) {
+        this.handleCreateModeInsert(nodeId, 'after');
+      } else if (this.moveMode) {
+        this.handleMoveModeInsert(nodeId, 'after');
+      } else if (this.copyMode) {
+        this.handleCopyModeInsert(nodeId, 'after');
+      } else if (this.importMode) {
+        this.importSelectedNodes(nodeId);
+      }
+    }
+
+    /**
+     * Create a node and then insert it in the specified location
+     * @param nodeId insert the new node inside or after this node id
+     * @param type whether to insert 'inside' or 'after' the nodeId parameter
+     */
+
+  }, {
+    key: 'handleCreateModeInsert',
+    value: function handleCreateModeInsert(nodeId, type) {
+      var _this3 = this;
+
+      if (type == 'inside') {
+        // create the node inside the group
+        this.ProjectService.createNodeInside(this.nodeToAdd, nodeId);
+      } else if (type == 'after') {
         // create the node after the node id
         this.ProjectService.createNodeAfter(this.nodeToAdd, nodeId);
+      } else {
+        // an unspecified type was provided
+        return;
+      }
 
-        var newNodes = [this.nodeToAdd];
-        var newNode = this.nodeToAdd;
+      var newNodes = [this.nodeToAdd];
+      var newNode = this.nodeToAdd;
 
-        /*
-         * clear this variable that we used to hold the node we inserted.
-         * since we have inserted the node we don't need a handle to it
-         * anymore
-         */
-        this.nodeToAdd = null;
+      /*
+       * clear this variable that we used to hold the node we inserted.
+       * since we have inserted the node we don't need a handle to it
+       * anymore
+       */
+      this.nodeToAdd = null;
 
-        // turn off create mode
-        this.createMode = false;
+      // turn off create mode
+      this.createMode = false;
 
-        // turn off insert mode
-        this.insertGroupMode = false;
-        this.insertNodeMode = false;
+      // turn off insert mode
+      this.insertGroupMode = false;
+      this.insertNodeMode = false;
 
-        // temporarily highlight the new nodes
-        this.highlightNewNodes(newNodes);
+      this.temporarilyHighlightNewNodes(newNodes);
 
-        // save and referesh the project
-        this.checkPotentialStartNodeIdChangeThenSaveProject().then(function () {
-          if (newNode != null) {
-            var data = {
-              "nodeId": newNode.id,
-              "title": _this4.ProjectService.getNodePositionAndTitleByNodeId(newNode.id)
-            };
+      // save and refresh the project
+      this.checkPotentialStartNodeIdChangeThenSaveProject().then(function () {
+        if (newNode != null) {
+          var data = {
+            "nodeId": newNode.id,
+            "title": _this3.ProjectService.getNodePositionAndTitleByNodeId(newNode.id)
+          };
 
-            if (_this4.ProjectService.isGroupNode(newNode.id)) {
-              // save the activity created event to the server
-              _this4.saveEvent('activityCreated', 'Authoring', data);
-            } else {
-              // save the step created event to the server
-              _this4.saveEvent('stepCreated', 'Authoring', data);
-            }
+          if (_this3.ProjectService.isGroupNode(newNode.id)) {
+            // save the activity created event to the server
+            _this3.saveEvent('activityCreated', 'Authoring', data);
+          } else {
+            // save the step created event to the server
+            _this3.saveEvent('stepCreated', 'Authoring', data);
           }
-        });
-      } else if (this.moveMode) {
-        var selectedNodeIds = this.getSelectedItems();
-        if (selectedNodeIds != null && selectedNodeIds.indexOf(nodeId) != -1) {
-          /*
-           * the user is trying to insert the selected node ids after
-           * itself so we will not allow that
-           */
-          if (selectedNodeIds.length == 1) {
-            alert(this.$translate('youAreNotAllowedToInsertTheSelectedItemAfterItself'));
-          } else if (selectedNodeIds.length > 1) {
-            alert(this.$translate('youAreNotAllowedToInsertTheSelectedItemsAfterItself'));
-          }
-        } else {
-          // perform the move
-
-          /*
-           * an array of nodes that will be saved in the data for the move
-           * event
-           */
-          var nodes = [];
-          var _iteratorNormalCompletion3 = true;
-          var _didIteratorError3 = false;
-          var _iteratorError3 = undefined;
-
-          try {
-            for (var _iterator3 = selectedNodeIds[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-              var selectedNodeId = _step3.value;
-
-              var node = {
-                "nodeId": selectedNodeId,
-                "fromTitle": this.ProjectService.getNodePositionAndTitleByNodeId(selectedNodeId)
-              };
-              nodes.push(node);
-            }
-
-            // move the nodes after the node id
-          } catch (err) {
-            _didIteratorError3 = true;
-            _iteratorError3 = err;
-          } finally {
-            try {
-              if (!_iteratorNormalCompletion3 && _iterator3.return) {
-                _iterator3.return();
-              }
-            } finally {
-              if (_didIteratorError3) {
-                throw _iteratorError3;
-              }
-            }
-          }
-
-          var _newNodes3 = this.ProjectService.moveNodesAfter(selectedNodeIds, nodeId);
-
-          // turn off move mode
-          this.moveMode = false;
-
-          // turn off insert mode
-          this.insertGroupMode = false;
-          this.insertNodeMode = false;
-
-          // temporarily highlight the new nodes
-          this.highlightNewNodes(_newNodes3);
-
-          // save and refresh the project
-          this.checkPotentialStartNodeIdChangeThenSaveProject().then(function () {
-            if (_newNodes3 != null && _newNodes3.length > 0) {
-              var firstNewNode = _newNodes3[0];
-              if (firstNewNode != null && firstNewNode.id != null) {
-
-                // loop through all the nodes that will be saved in the event data
-                for (var n = 0; n < nodes.length; n++) {
-                  var node = nodes[n];
-
-                  // get the new node object
-                  var _newNode3 = _newNodes3[n];
-
-                  if (node != null && _newNode3 != null) {
-
-                    // set the new title
-                    node.toTitle = _this4.ProjectService.getNodePositionAndTitleByNodeId(_newNode3.id);
-                  }
-                }
-
-                if (_this4.ProjectService.isGroupNode(firstNewNode.id)) {
-                  var data = {};
-                  data.activitesMoved = nodes;
-
-                  // save the activity moved event to the server
-                  _this4.saveEvent('activityMoved', 'Authoring', data);
-                } else {
-                  var _data3 = {};
-                  _data3.stepsMoved = nodes;
-
-                  // save the step moved event to the server
-                  _this4.saveEvent('stepMoved', 'Authoring', _data3);
-                }
-              }
-            }
-          });
         }
-      } else if (this.copyMode) {
+      });
+    }
+
+    /**
+     * Move a node and insert it in the specified location
+     * @param nodeId insert the new node inside or after this node id
+     * @param type whether to insert 'inside' or 'after' the nodeId parameter
+     */
+
+  }, {
+    key: 'handleMoveModeInsert',
+    value: function handleMoveModeInsert(nodeId, type) {
+      var _this4 = this;
+
+      var selectedNodeIds = this.getSelectedItems();
+      if (selectedNodeIds != null && selectedNodeIds.indexOf(nodeId) != -1) {
+        /*
+         * the user is trying to insert the selected node ids after
+         * itself so we will not allow that
+         */
+        if (selectedNodeIds.length == 1) {
+          alert(this.$translate('youAreNotAllowedToInsertTheSelectedItemAfterItself'));
+        } else if (selectedNodeIds.length > 1) {
+          alert(this.$translate('youAreNotAllowedToInsertTheSelectedItemsAfterItself'));
+        }
+      } else {
+        // perform the move
+
         /*
          * an array of nodes that will be saved in the data for the move
          * event
          */
-        var _nodes2 = [];
-        var _selectedNodeIds2 = this.getSelectedItems();
-        var _iteratorNormalCompletion4 = true;
-        var _didIteratorError4 = false;
-        var _iteratorError4 = undefined;
+        var nodes = [];
+        var _iteratorNormalCompletion = true;
+        var _didIteratorError = false;
+        var _iteratorError = undefined;
 
         try {
-          for (var _iterator4 = _selectedNodeIds2[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
-            var _selectedNodeId2 = _step4.value;
+          for (var _iterator = selectedNodeIds[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+            var selectedNodeId = _step.value;
 
-            var _node4 = {
-              "fromNodeId": _selectedNodeId2,
-              "fromTitle": this.ProjectService.getNodePositionAndTitleByNodeId(_selectedNodeId2)
+            var node = {
+              "nodeId": selectedNodeId,
+              "fromTitle": this.ProjectService.getNodePositionAndTitleByNodeId(selectedNodeId)
             };
-            _nodes2.push(_node4);
+            nodes.push(node);
           }
-
-          // copy the nodes and put them after the node id
         } catch (err) {
-          _didIteratorError4 = true;
-          _iteratorError4 = err;
+          _didIteratorError = true;
+          _iteratorError = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion4 && _iterator4.return) {
-              _iterator4.return();
+            if (!_iteratorNormalCompletion && _iterator.return) {
+              _iterator.return();
             }
           } finally {
-            if (_didIteratorError4) {
-              throw _iteratorError4;
+            if (_didIteratorError) {
+              throw _iteratorError;
             }
           }
         }
 
-        var _newNodes4 = this.ProjectService.copyNodesAfter(_selectedNodeIds2, nodeId);
+        var newNodes = [];
+        if (type == 'inside') {
+          // move the nodes into the group
+          newNodes = this.ProjectService.moveNodesInside(selectedNodeIds, nodeId);
+        } else if (type == 'after') {
+          // move the nodes after the node id
+          newNodes = this.ProjectService.moveNodesAfter(selectedNodeIds, nodeId);
+        } else {
+          // an unspecified type was provided
+          return;
+        }
 
-        // turn off copy mode
-        this.copyMode = false;
+        // turn off move mode
+        this.moveMode = false;
 
         // turn off insert mode
         this.insertGroupMode = false;
         this.insertNodeMode = false;
 
-        // temporarily highlight the new nodes
-        this.highlightNewNodes(_newNodes4);
+        this.temporarilyHighlightNewNodes(newNodes);
 
         // save and refresh the project
         this.checkPotentialStartNodeIdChangeThenSaveProject().then(function () {
-          if (_newNodes4 != null && _newNodes4.length > 0) {
-            var firstNewNode = _newNodes4[0];
+          if (newNodes != null && newNodes.length > 0) {
+            var firstNewNode = newNodes[0];
             if (firstNewNode != null && firstNewNode.id != null) {
+
               // loop through all the nodes that will be saved in the event data
-              for (var n = 0; n < _nodes2.length; n++) {
-                var _node3 = _nodes2[n];
-                var _newNode4 = _newNodes4[n];
+              for (var n = 0; n < nodes.length; n++) {
+                var node = nodes[n];
 
-                if (_node3 != null && _newNode4 != null) {
-                  // set the new id
-                  _node3.toNodeId = _newNode4.id;
+                // get the new node object
+                var newNode = newNodes[n];
 
+                if (node != null && newNode != null) {
                   // set the new title
-                  _node3.toTitle = _this4.ProjectService.getNodePositionAndTitleByNodeId(_newNode4.id);
+                  node.toTitle = _this4.ProjectService.getNodePositionAndTitleByNodeId(newNode.id);
                 }
               }
 
               if (_this4.ProjectService.isGroupNode(firstNewNode.id)) {
-                var data = {
-                  "activitiesCopied": _nodes2
-                };
-                _this4.saveEvent('activityCopied', 'Authoring', data);
+                var data = { activitiesMoved: nodes };
+                _this4.saveEvent('activityMoved', 'Authoring', data);
               } else {
-                var _data4 = {
-                  "stepsCopied": _nodes2
-                };
-                _this4.saveEvent('stepCopied', 'Authoring', _data4);
+                var _data = { stepsMoved: nodes };
+                _this4.saveEvent('stepMoved', 'Authoring', _data);
               }
             }
           }
         });
-      } else if (this.importMode) {
-        this.importSelectedNodes(nodeId);
       }
+    }
+
+    /**
+     * Copy a node and insert it in the specified location
+     * @param nodeId insert the new node inside or after this node id
+     * @param type whether to insert 'inside' or 'after' the nodeId parameter
+     */
+
+  }, {
+    key: 'handleCopyModeInsert',
+    value: function handleCopyModeInsert(nodeId, type) {
+      var _this5 = this;
+
+      /*
+       * an array of nodes that will be saved in the data for the move
+       * event
+       */
+      var nodes = [];
+      var selectedNodeIds = this.getSelectedItems();
+      var _iteratorNormalCompletion2 = true;
+      var _didIteratorError2 = false;
+      var _iteratorError2 = undefined;
+
+      try {
+        for (var _iterator2 = selectedNodeIds[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+          var selectedNodeId = _step2.value;
+
+          var node = {
+            "fromNodeId": selectedNodeId,
+            "fromTitle": this.ProjectService.getNodePositionAndTitleByNodeId(selectedNodeId)
+          };
+          nodes.push(node);
+        }
+      } catch (err) {
+        _didIteratorError2 = true;
+        _iteratorError2 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion2 && _iterator2.return) {
+            _iterator2.return();
+          }
+        } finally {
+          if (_didIteratorError2) {
+            throw _iteratorError2;
+          }
+        }
+      }
+
+      var newNodes = [];
+      if (type == 'inside') {
+        // copy the nodes into the group
+        newNodes = this.ProjectService.copyNodesInside(selectedNodeIds, nodeId);
+      } else if (type == 'after') {
+        // copy the nodes and put them after the node id
+        newNodes = this.ProjectService.copyNodesAfter(selectedNodeIds, nodeId);
+      } else {
+        // an unspecified type was provided
+        return;
+      }
+
+      // turn off copy mode
+      this.copyMode = false;
+
+      // turn off insert mode
+      this.insertGroupMode = false;
+      this.insertNodeMode = false;
+
+      this.temporarilyHighlightNewNodes(newNodes);
+
+      // save and refresh the project
+      this.checkPotentialStartNodeIdChangeThenSaveProject().then(function () {
+        if (newNodes != null && newNodes.length > 0) {
+          var firstNewNode = newNodes[0];
+          if (firstNewNode != null && firstNewNode.id != null) {
+            // loop through all the nodes that will be saved in the event data
+            for (var n = 0; n < nodes.length; n++) {
+              var node = nodes[n];
+              var newNode = newNodes[n];
+
+              if (node != null && newNode != null) {
+                // set the new id
+                node.toNodeId = newNode.id;
+
+                // set the new title
+                node.toTitle = _this5.ProjectService.getNodePositionAndTitleByNodeId(newNode.id);
+              }
+            }
+
+            if (_this5.ProjectService.isGroupNode(firstNewNode.id)) {
+              var data = { activitiesCopied: nodes };
+              _this5.saveEvent('activityCopied', 'Authoring', data);
+            } else {
+              var _data2 = { stepsCopied: nodes };
+              _this5.saveEvent('stepCopied', 'Authoring', _data2);
+            }
+          }
+        }
+      });
     }
 
     /**
@@ -902,7 +742,7 @@ var ProjectController = function () {
   }, {
     key: 'importSelectedNodes',
     value: function importSelectedNodes(nodeIdToInsertInsideOrAfter) {
-      var _this5 = this;
+      var _this6 = this;
 
       var selectedNodes = this.getSelectedNodesToImport();
 
@@ -918,19 +758,19 @@ var ProjectController = function () {
       // import the selected nodes and place them after the given group
       this.performImport(nodeIdToInsertInsideOrAfter).then(function (newNodes) {
         // save and refresh the project
-        _this5.checkPotentialStartNodeIdChangeThenSaveProject().then(function () {
+        _this6.checkPotentialStartNodeIdChangeThenSaveProject().then(function () {
           /*
            * use a timeout to allow angular to update the UI and then
            * highlight and scroll to the new nodes
            */
-          _this5.$timeout(function () {
-            var _iteratorNormalCompletion5 = true;
-            var _didIteratorError5 = false;
-            var _iteratorError5 = undefined;
+          _this6.$timeout(function () {
+            var _iteratorNormalCompletion3 = true;
+            var _didIteratorError3 = false;
+            var _iteratorError3 = undefined;
 
             try {
-              for (var _iterator5 = newNodes[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
-                var newNode = _step5.value;
+              for (var _iterator3 = newNodes[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+                var newNode = _step3.value;
 
                 if (newNode != null) {
                   (function () {
@@ -948,7 +788,7 @@ var ProjectController = function () {
                      * element won't get highlighted in the first place
                      * unless this timeout is used.
                      */
-                    _this5.$timeout(function () {
+                    _this6.$timeout(function () {
                       // slowly fade back to original background color
                       nodeElement.css({
                         'transition': 'background-color 2s ease-in-out',
@@ -959,16 +799,16 @@ var ProjectController = function () {
                 }
               }
             } catch (err) {
-              _didIteratorError5 = true;
-              _iteratorError5 = err;
+              _didIteratorError3 = true;
+              _iteratorError3 = err;
             } finally {
               try {
-                if (!_iteratorNormalCompletion5 && _iterator5.return) {
-                  _iterator5.return();
+                if (!_iteratorNormalCompletion3 && _iterator3.return) {
+                  _iterator3.return();
                 }
               } finally {
-                if (_didIteratorError5) {
-                  throw _iteratorError5;
+                if (_didIteratorError3) {
+                  throw _iteratorError3;
                 }
               }
             }
@@ -1003,11 +843,11 @@ var ProjectController = function () {
               fromNodeId: selectedNode.id,
               fromTitle: selectedNodeTitle,
               toNodeId: newNode.id,
-              toTitle: _this5.ProjectService.getNodePositionAndTitleByNodeId(newNode.id)
+              toTitle: _this6.ProjectService.getNodePositionAndTitleByNodeId(newNode.id)
             };
             data.stepsImported.push(tempNode);
           }
-          _this5.saveEvent('stepImported', 'Authoring', data);
+          _this6.saveEvent('stepImported', 'Authoring', data);
         });
       });
     }
@@ -1022,7 +862,7 @@ var ProjectController = function () {
   }, {
     key: 'performImport',
     value: function performImport(nodeIdToInsertInsideOrAfter) {
-      var _this6 = this;
+      var _this7 = this;
 
       var selectedNodes = this.getSelectedNodesToImport();
 
@@ -1036,27 +876,27 @@ var ProjectController = function () {
       return this.ProjectService.copyNodes(selectedNodes, fromProjectId, toProjectId, nodeIdToInsertInsideOrAfter).then(function (newNodes) {
 
         // refresh the project
-        _this6.ProjectService.parseProject();
-        _this6.items = _this6.ProjectService.idToOrder;
+        _this7.ProjectService.parseProject();
+        _this7.items = _this7.ProjectService.idToOrder;
 
-        _this6.insertNodeMode = false;
-        _this6.toggleView('project');
+        _this7.insertNodeMode = false;
+        _this7.toggleView('project');
 
         // clear the import fields
-        _this6.importProjectIdToOrder = {};
-        _this6.importProjectItems = [];
-        _this6.importMyProjectId = null;
-        _this6.importLibraryProjectId = null;
-        _this6.importProjectId = null;
-        _this6.importProject = null;
+        _this7.importProjectIdToOrder = {};
+        _this7.importProjectItems = [];
+        _this7.importMyProjectId = null;
+        _this7.importLibraryProjectId = null;
+        _this7.importProjectId = null;
+        _this7.importProject = null;
 
         /*
          * go back to the project view and
          * refresh the project assets in case any of the imported
          * steps also imported assets
          */
-        _this6.showProjectHome();
-        _this6.ProjectAssetService.retrieveProjectAssets();
+        _this7.showProjectHome();
+        _this7.ProjectAssetService.retrieveProjectAssets();
         return newNodes;
       });
     }
@@ -1150,13 +990,13 @@ var ProjectController = function () {
             var stepDeleted = false;
             var stepsDeleted = [];
             var activitiesDeleted = [];
-            var _iteratorNormalCompletion6 = true;
-            var _didIteratorError6 = false;
-            var _iteratorError6 = undefined;
+            var _iteratorNormalCompletion4 = true;
+            var _didIteratorError4 = false;
+            var _iteratorError4 = undefined;
 
             try {
-              for (var _iterator6 = selectedNodeIds[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
-                var nodeId = _step6.value;
+              for (var _iterator4 = selectedNodeIds[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+                var nodeId = _step4.value;
 
                 var node = this.ProjectService.getNodeById(nodeId);
                 var tempNode = {};
@@ -1175,13 +1015,13 @@ var ProjectController = function () {
                   // we are deleting an activity
                   activityDeleted = true;
                   var stepsInActivityDeleted = [];
-                  var _iteratorNormalCompletion7 = true;
-                  var _didIteratorError7 = false;
-                  var _iteratorError7 = undefined;
+                  var _iteratorNormalCompletion5 = true;
+                  var _didIteratorError5 = false;
+                  var _iteratorError5 = undefined;
 
                   try {
-                    for (var _iterator7 = node.ids[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
-                      var stepNodeId = _step7.value;
+                    for (var _iterator5 = node.ids[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+                      var stepNodeId = _step5.value;
 
                       var stepTitle = this.ProjectService.getNodePositionAndTitleByNodeId(stepNodeId);
 
@@ -1193,16 +1033,16 @@ var ProjectController = function () {
                       stepsInActivityDeleted.push(stepObject);
                     }
                   } catch (err) {
-                    _didIteratorError7 = true;
-                    _iteratorError7 = err;
+                    _didIteratorError5 = true;
+                    _iteratorError5 = err;
                   } finally {
                     try {
-                      if (!_iteratorNormalCompletion7 && _iterator7.return) {
-                        _iterator7.return();
+                      if (!_iteratorNormalCompletion5 && _iterator5.return) {
+                        _iterator5.return();
                       }
                     } finally {
-                      if (_didIteratorError7) {
-                        throw _iteratorError7;
+                      if (_didIteratorError5) {
+                        throw _iteratorError5;
                       }
                     }
                   }
@@ -1219,16 +1059,16 @@ var ProjectController = function () {
 
               // update start node id if necesary
             } catch (err) {
-              _didIteratorError6 = true;
-              _iteratorError6 = err;
+              _didIteratorError4 = true;
+              _iteratorError4 = err;
             } finally {
               try {
-                if (!_iteratorNormalCompletion6 && _iterator6.return) {
-                  _iterator6.return();
+                if (!_iteratorNormalCompletion4 && _iterator4.return) {
+                  _iterator4.return();
                 }
               } finally {
-                if (_didIteratorError6) {
-                  throw _iteratorError6;
+                if (_didIteratorError4) {
+                  throw _iteratorError4;
                 }
               }
             }
@@ -1245,10 +1085,10 @@ var ProjectController = function () {
             }
 
             if (stepDeleted) {
-              var _data5 = {
+              var _data3 = {
                 "stepsDeleted": stepsDeleted
               };
-              this.saveEvent('stepDeleted', 'Authoring', _data5);
+              this.saveEvent('stepDeleted', 'Authoring', _data3);
             }
 
             // save the project and refresh
@@ -1281,13 +1121,13 @@ var ProjectController = function () {
       }, selectedNodeIds);
 
       if (this.inactiveNodes != null) {
-        var _iteratorNormalCompletion8 = true;
-        var _didIteratorError8 = false;
-        var _iteratorError8 = undefined;
+        var _iteratorNormalCompletion6 = true;
+        var _didIteratorError6 = false;
+        var _iteratorError6 = undefined;
 
         try {
-          for (var _iterator8 = this.inactiveNodes[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
-            var inactiveNode = _step8.value;
+          for (var _iterator6 = this.inactiveNodes[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+            var inactiveNode = _step6.value;
 
             if (inactiveNode != null && inactiveNode.checked) {
               // the inactive node was checked so we will add it
@@ -1295,16 +1135,16 @@ var ProjectController = function () {
             }
           }
         } catch (err) {
-          _didIteratorError8 = true;
-          _iteratorError8 = err;
+          _didIteratorError6 = true;
+          _iteratorError6 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion8 && _iterator8.return) {
-              _iterator8.return();
+            if (!_iteratorNormalCompletion6 && _iterator6.return) {
+              _iterator6.return();
             }
           } finally {
-            if (_didIteratorError8) {
-              throw _iteratorError8;
+            if (_didIteratorError6) {
+              throw _iteratorError6;
             }
           }
         }
@@ -1338,13 +1178,13 @@ var ProjectController = function () {
       }, this);
 
       if (this.inactiveNodes != null) {
-        var _iteratorNormalCompletion9 = true;
-        var _didIteratorError9 = false;
-        var _iteratorError9 = undefined;
+        var _iteratorNormalCompletion7 = true;
+        var _didIteratorError7 = false;
+        var _iteratorError7 = undefined;
 
         try {
-          for (var _iterator9 = this.inactiveNodes[Symbol.iterator](), _step9; !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
-            var inactiveNode = _step9.value;
+          for (var _iterator7 = this.inactiveNodes[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
+            var inactiveNode = _step7.value;
 
             if (inactiveNode != null && inactiveNode.checked) {
               var inactiveNodeType = inactiveNode.type;
@@ -1355,16 +1195,16 @@ var ProjectController = function () {
             }
           }
         } catch (err) {
-          _didIteratorError9 = true;
-          _iteratorError9 = err;
+          _didIteratorError7 = true;
+          _iteratorError7 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion9 && _iterator9.return) {
-              _iterator9.return();
+            if (!_iteratorNormalCompletion7 && _iterator7.return) {
+              _iterator7.return();
             }
           } finally {
-            if (_didIteratorError9) {
-              throw _iteratorError9;
+            if (_didIteratorError7) {
+              throw _iteratorError7;
             }
           }
         }
@@ -1498,18 +1338,18 @@ var ProjectController = function () {
   }, {
     key: 'checkPotentialStartNodeIdChange',
     value: function checkPotentialStartNodeIdChange() {
-      var _this7 = this;
+      var _this8 = this;
 
       return this.$q(function (resolve, reject) {
-        var firstLeafNodeId = _this7.ProjectService.getFirstLeafNodeId();
+        var firstLeafNodeId = _this8.ProjectService.getFirstLeafNodeId();
         if (firstLeafNodeId == null) {
           // there are no steps in the project
           // set the start node id to empty string
-          _this7.ProjectService.setStartNodeId('');
+          _this8.ProjectService.setStartNodeId('');
           resolve();
         } else {
           // we have found a leaf node
-          var currentStartNodeId = _this7.ProjectService.getStartNodeId();
+          var currentStartNodeId = _this8.ProjectService.getStartNodeId();
           if (currentStartNodeId != firstLeafNodeId) {
             /*
              * the node ids are different which means the first leaf node
@@ -1517,18 +1357,18 @@ var ProjectController = function () {
              * the author may want to use the first leaf node id as the
              * new start node id
              */
-            var firstLeafNode = _this7.ProjectService.getNodeById(firstLeafNodeId);
+            var firstLeafNode = _this8.ProjectService.getNodeById(firstLeafNodeId);
             if (firstLeafNode != null) {
               var firstChildTitle = firstLeafNode.title;
 
               // ask the user if they would like to change the start
               // step to the step that is now the first child in the group
-              var confirmUpdateStartStep = _this7.$translate('confirmUpdateStartStep', { startStepTitle: firstChildTitle });
+              var confirmUpdateStartStep = _this8.$translate('confirmUpdateStartStep', { startStepTitle: firstChildTitle });
 
               var doUpdateStartStep = confirm(confirmUpdateStartStep);
 
               if (doUpdateStartStep) {
-                _this7.ProjectService.setStartNodeId(firstLeafNodeId);
+                _this8.ProjectService.setStartNodeId(firstLeafNodeId);
                 resolve();
               } else {
                 resolve();
@@ -1550,17 +1390,17 @@ var ProjectController = function () {
   }, {
     key: 'checkPotentialStartNodeIdChangeThenSaveProject',
     value: function checkPotentialStartNodeIdChangeThenSaveProject() {
-      var _this8 = this;
+      var _this9 = this;
 
       // check if the project start node id should be changed
       return this.checkPotentialStartNodeIdChange().then(function () {
-        _this8.ProjectService.saveProject();
+        _this9.ProjectService.saveProject();
 
         // refresh the project
-        _this8.ProjectService.parseProject();
-        _this8.items = _this8.ProjectService.idToOrder;
+        _this9.ProjectService.parseProject();
+        _this9.items = _this9.ProjectService.idToOrder;
 
-        _this8.unselectAllItems();
+        _this9.unselectAllItems();
       });
     }
 
@@ -1583,7 +1423,7 @@ var ProjectController = function () {
   }, {
     key: 'importStepClicked',
     value: function importStepClicked() {
-      var _this9 = this;
+      var _this10 = this;
 
       this.toggleView('importStep');
 
@@ -1596,7 +1436,7 @@ var ProjectController = function () {
         if (this.libraryProjectsList == null) {
           // populate the library projects drop down
           this.ConfigService.getLibraryProjects().then(function (libraryProjectsList) {
-            _this9.libraryProjectsList = libraryProjectsList;
+            _this10.libraryProjectsList = libraryProjectsList;
           });
         }
       }
@@ -1635,7 +1475,7 @@ var ProjectController = function () {
   }, {
     key: 'showImportProject',
     value: function showImportProject(importProjectId) {
-      var _this10 = this;
+      var _this11 = this;
 
       this.importProjectId = importProjectId;
       if (this.importProjectId == null) {
@@ -1651,13 +1491,13 @@ var ProjectController = function () {
         this.ProjectService.retrieveProjectById(this.importProjectId).then(function (projectJSON) {
 
           // create the mapping of node id to order for the import project
-          _this10.importProjectIdToOrder = {};
-          _this10.importProject = projectJSON;
+          _this11.importProjectIdToOrder = {};
+          _this11.importProject = projectJSON;
 
           // calculate the node order of the import project
-          var result = _this10.ProjectService.getNodeOrderOfProject(_this10.importProject);
-          _this10.importProjectIdToOrder = result.idToOrder;
-          _this10.importProjectItems = result.nodes;
+          var result = _this11.ProjectService.getNodeOrderOfProject(_this11.importProject);
+          _this11.importProjectIdToOrder = result.idToOrder;
+          _this11.importProjectItems = result.nodes;
         });
       }
     }
@@ -1724,13 +1564,13 @@ var ProjectController = function () {
     key: 'getSelectedNodesToImport',
     value: function getSelectedNodesToImport() {
       var selectedNodes = [];
-      var _iteratorNormalCompletion10 = true;
-      var _didIteratorError10 = false;
-      var _iteratorError10 = undefined;
+      var _iteratorNormalCompletion8 = true;
+      var _didIteratorError8 = false;
+      var _iteratorError8 = undefined;
 
       try {
-        for (var _iterator10 = this.importProjectItems[Symbol.iterator](), _step10; !(_iteratorNormalCompletion10 = (_step10 = _iterator10.next()).done); _iteratorNormalCompletion10 = true) {
-          var item = _step10.value;
+        for (var _iterator8 = this.importProjectItems[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
+          var item = _step8.value;
 
           if (item.checked) {
             /*
@@ -1741,16 +1581,16 @@ var ProjectController = function () {
           }
         }
       } catch (err) {
-        _didIteratorError10 = true;
-        _iteratorError10 = err;
+        _didIteratorError8 = true;
+        _iteratorError8 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion10 && _iterator10.return) {
-            _iterator10.return();
+          if (!_iteratorNormalCompletion8 && _iterator8.return) {
+            _iterator8.return();
           }
         } finally {
-          if (_didIteratorError10) {
-            throw _iteratorError10;
+          if (_didIteratorError8) {
+            throw _iteratorError8;
           }
         }
       }
@@ -2044,19 +1884,19 @@ var ProjectController = function () {
      */
 
   }, {
-    key: 'highlightNewNodes',
-    value: function highlightNewNodes(newNodes) {
-      var _this11 = this;
+    key: 'temporarilyHighlightNewNodes',
+    value: function temporarilyHighlightNewNodes(newNodes) {
+      var _this12 = this;
 
       this.$timeout(function () {
         if (newNodes != null) {
-          var _iteratorNormalCompletion11 = true;
-          var _didIteratorError11 = false;
-          var _iteratorError11 = undefined;
+          var _iteratorNormalCompletion9 = true;
+          var _didIteratorError9 = false;
+          var _iteratorError9 = undefined;
 
           try {
-            for (var _iterator11 = newNodes[Symbol.iterator](), _step11; !(_iteratorNormalCompletion11 = (_step11 = _iterator11.next()).done); _iteratorNormalCompletion11 = true) {
-              var newNode = _step11.value;
+            for (var _iterator9 = newNodes[Symbol.iterator](), _step9; !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
+              var newNode = _step9.value;
 
               if (newNode != null) {
                 (function () {
@@ -2074,7 +1914,7 @@ var ProjectController = function () {
                    * element won't get highlighted in the first place
                    * unless this timeout is used.
                    */
-                  _this11.$timeout(function () {
+                  _this12.$timeout(function () {
                     // slowly fade back to original background color
                     nodeElement.css({
                       'transition': 'background-color 3s ease-in-out',
@@ -2085,16 +1925,16 @@ var ProjectController = function () {
               }
             }
           } catch (err) {
-            _didIteratorError11 = true;
-            _iteratorError11 = err;
+            _didIteratorError9 = true;
+            _iteratorError9 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion11 && _iterator11.return) {
-                _iterator11.return();
+              if (!_iteratorNormalCompletion9 && _iterator9.return) {
+                _iterator9.return();
               }
             } finally {
-              if (_didIteratorError11) {
-                throw _iteratorError11;
+              if (_didIteratorError9) {
+                throw _iteratorError9;
               }
             }
           }
