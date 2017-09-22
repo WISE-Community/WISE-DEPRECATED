@@ -523,9 +523,9 @@ var NodeAuthoringController = function () {
 
             try {
               for (var _iterator2 = nodeIdsInBranch[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-                var nodeId = _step2.value;
+                var _nodeId = _step2.value;
 
-                var item = branch.items[nodeId];
+                var item = branch.items[_nodeId];
                 if (item != null) {
                   // make the item checked
                   item.checked = true;
@@ -753,14 +753,14 @@ var NodeAuthoringController = function () {
     value: function transitionCriteriaNodeIdChanged(transitionCriteria) {
       if (transitionCriteria != null && transitionCriteria.params != null) {
         // remember the node id
-        var nodeId = transitionCriteria.params.nodeId;
+        var _nodeId2 = transitionCriteria.params.nodeId;
 
         // clear the params
         transitionCriteria.params = {};
 
-        if (nodeId != null) {
+        if (_nodeId2 != null) {
           // set the node id back into the params
-          transitionCriteria.params.nodeId = nodeId;
+          transitionCriteria.params.nodeId = _nodeId2;
         }
       }
 
@@ -779,20 +779,20 @@ var NodeAuthoringController = function () {
     value: function transitionCriteriaComponentIdChanged(transitionCriteria) {
       if (transitionCriteria != null && transitionCriteria.params != null) {
         // remember the node id and component id
-        var nodeId = transitionCriteria.params.nodeId;
-        var componentId = transitionCriteria.params.componentId;
+        var _nodeId3 = transitionCriteria.params.nodeId;
+        var _componentId = transitionCriteria.params.componentId;
 
         // clear the params
         transitionCriteria.params = {};
 
-        if (nodeId != null) {
+        if (_nodeId3 != null) {
           // set the node id back into the params
-          transitionCriteria.params.nodeId = nodeId;
+          transitionCriteria.params.nodeId = _nodeId3;
         }
 
-        if (componentId != null) {
+        if (_componentId != null) {
           // set the component id back into the params
-          transitionCriteria.params.componentId = componentId;
+          transitionCriteria.params.componentId = _componentId;
         }
       }
 
@@ -863,30 +863,6 @@ var NodeAuthoringController = function () {
 
       // hide the component authoring
       this.hideComponentAuthoring();
-    }
-
-    /**
-     * Move a component up within this node
-     * @param componentId the component id
-     */
-
-  }, {
-    key: 'moveComponentUp',
-    value: function moveComponentUp(componentId) {
-      this.ProjectService.moveComponentUp(this.nodeId, componentId);
-      this.ProjectService.saveProject();
-    }
-
-    /**
-     * Move a component up within this node
-     * @param componentId the component id
-     */
-
-  }, {
-    key: 'moveComponentDown',
-    value: function moveComponentDown(componentId) {
-      this.ProjectService.moveComponentDown(this.nodeId, componentId);
-      this.ProjectService.saveProject();
     }
 
     /**
@@ -1381,26 +1357,26 @@ var NodeAuthoringController = function () {
     key: 'transitionCriteriaNameChanged',
     value: function transitionCriteriaNameChanged(transitionCriteria) {
       if (transitionCriteria != null) {
-        var nodeId = null;
-        var componentId = null;
+        var _nodeId4 = null;
+        var _componentId2 = null;
 
         if (transitionCriteria.params != null) {
           // remember the node id and component id
-          nodeId = transitionCriteria.params.nodeId;
-          componentId = transitionCriteria.params.componentId;
+          _nodeId4 = transitionCriteria.params.nodeId;
+          _componentId2 = transitionCriteria.params.componentId;
         }
 
         // clear the params
         transitionCriteria.params = {};
 
-        if (nodeId != null) {
+        if (_nodeId4 != null) {
           // set the node id back into the params
-          transitionCriteria.params.nodeId = nodeId;
+          transitionCriteria.params.nodeId = _nodeId4;
         }
 
-        if (componentId != null) {
+        if (_componentId2 != null) {
           // set the component id back into the params
-          transitionCriteria.params.componentId = componentId;
+          transitionCriteria.params.componentId = _componentId2;
         }
       }
       this.authoringViewNodeChanged();
@@ -1781,31 +1757,31 @@ var NodeAuthoringController = function () {
     key: 'createBranchCriterionChanged',
     value: function createBranchCriterionChanged() {
       if (this.createBranchCriterion != null) {
-        var nodeId = this.node.id;
+        var _nodeId5 = this.node.id;
         if (this.createBranchCriterion == 'workgroupId') {
           // the branch is based on workgroup id
-          this.ProjectService.setTransitionLogicField(nodeId, 'howToChooseAmongAvailablePaths', 'workgroupId');
-          this.ProjectService.setTransitionLogicField(nodeId, 'whenToChoosePath', 'enterNode');
-          this.ProjectService.setTransitionLogicField(nodeId, 'canChangePath', false);
-          this.ProjectService.setTransitionLogicField(nodeId, 'maxPathsVisitable', 1);
+          this.ProjectService.setTransitionLogicField(_nodeId5, 'howToChooseAmongAvailablePaths', 'workgroupId');
+          this.ProjectService.setTransitionLogicField(_nodeId5, 'whenToChoosePath', 'enterNode');
+          this.ProjectService.setTransitionLogicField(_nodeId5, 'canChangePath', false);
+          this.ProjectService.setTransitionLogicField(_nodeId5, 'maxPathsVisitable', 1);
         } else if (this.createBranchCriterion == 'score') {
           // the branch is based on score
-          this.ProjectService.setTransitionLogicField(nodeId, 'howToChooseAmongAvailablePaths', 'random');
-          this.ProjectService.setTransitionLogicField(nodeId, 'whenToChoosePath', 'studentDataChanged');
-          this.ProjectService.setTransitionLogicField(nodeId, 'canChangePath', false);
-          this.ProjectService.setTransitionLogicField(nodeId, 'maxPathsVisitable', 1);
+          this.ProjectService.setTransitionLogicField(_nodeId5, 'howToChooseAmongAvailablePaths', 'random');
+          this.ProjectService.setTransitionLogicField(_nodeId5, 'whenToChoosePath', 'studentDataChanged');
+          this.ProjectService.setTransitionLogicField(_nodeId5, 'canChangePath', false);
+          this.ProjectService.setTransitionLogicField(_nodeId5, 'maxPathsVisitable', 1);
         } else if (this.createBranchCriterion == 'choiceChosen') {
           // the branch is based on choice chosen
-          this.ProjectService.setTransitionLogicField(nodeId, 'howToChooseAmongAvailablePaths', 'random');
-          this.ProjectService.setTransitionLogicField(nodeId, 'whenToChoosePath', 'studentDataChanged');
-          this.ProjectService.setTransitionLogicField(nodeId, 'canChangePath', false);
-          this.ProjectService.setTransitionLogicField(nodeId, 'maxPathsVisitable', 1);
+          this.ProjectService.setTransitionLogicField(_nodeId5, 'howToChooseAmongAvailablePaths', 'random');
+          this.ProjectService.setTransitionLogicField(_nodeId5, 'whenToChoosePath', 'studentDataChanged');
+          this.ProjectService.setTransitionLogicField(_nodeId5, 'canChangePath', false);
+          this.ProjectService.setTransitionLogicField(_nodeId5, 'maxPathsVisitable', 1);
         } else if (this.createBranchCriterion == 'random') {
           // the branch is based on random assignment
-          this.ProjectService.setTransitionLogicField(nodeId, 'howToChooseAmongAvailablePaths', 'random');
-          this.ProjectService.setTransitionLogicField(nodeId, 'whenToChoosePath', 'enterNode');
-          this.ProjectService.setTransitionLogicField(nodeId, 'canChangePath', false);
-          this.ProjectService.setTransitionLogicField(nodeId, 'maxPathsVisitable', 1);
+          this.ProjectService.setTransitionLogicField(_nodeId5, 'howToChooseAmongAvailablePaths', 'random');
+          this.ProjectService.setTransitionLogicField(_nodeId5, 'whenToChoosePath', 'enterNode');
+          this.ProjectService.setTransitionLogicField(_nodeId5, 'canChangePath', false);
+          this.ProjectService.setTransitionLogicField(_nodeId5, 'maxPathsVisitable', 1);
         }
       }
 
@@ -2007,62 +1983,75 @@ var NodeAuthoringController = function () {
       var component = this.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
       if (component != null) {
         if (component.type == 'MultipleChoice') {
-          // the component is a multiple choice component
+          // populate the drop down with the choices
+          this.createBranchUpdateChoiceChosenIdsHelper(component);
+        }
+      }
+    }
 
-          // get the choices from the component
-          var choices = component.choices;
+    /**
+     * We are creating a branch that is based on which choice the student chooses
+     * in a multiple choice component. We will populate the drop down with the
+     * choices.
+     * @param component we are branching based on the choice chosen in this
+     * component
+     */
 
-          if (choices != null) {
+  }, {
+    key: 'createBranchUpdateChoiceChosenIdsHelper',
+    value: function createBranchUpdateChoiceChosenIdsHelper(component) {
+      // get the choices from the component
+      var choices = component.choices;
 
-            // loop through all the choices
-            for (var c = 0; c < choices.length; c++) {
-              var choice = choices[c];
-              if (choice != null) {
+      if (choices != null) {
 
-                // get the fields of the choice
-                var id = choice.id;
-                var text = choice.text;
-                var feedback = choice.feedback;
-                var isCorrect = choice.isCorrect;
+        // loop through all the choices
+        for (var c = 0; c < choices.length; c++) {
+          var choice = choices[c];
+          if (choice != null) {
 
-                // get the branch that corresponds to the choice
-                var branch = this.createBranchBranches[c];
+            // get the fields of the choice
+            var id = choice.id;
+            var text = choice.text;
+            var feedback = choice.feedback;
+            var isCorrect = choice.isCorrect;
 
-                if (branch != null) {
-                  // get the choice for this branch
-                  branch.choiceId = id;
+            // get the branch that corresponds to the choice
+            var branch = this.createBranchBranches[c];
 
-                  // make a copy of the choices from the component
-                  branch.choices = this.UtilService.makeCopyOfJSONObject(choices);
+            if (branch != null) {
+              // get the choice for this branch
+              branch.choiceId = id;
 
-                  // get the transition corresponding to the branch
-                  var transition = branch.transition;
+              // make a copy of the choices from the component
+              branch.choices = this.UtilService.makeCopyOfJSONObject(choices);
 
-                  if (transition != null) {
+              // get the transition corresponding to the branch
+              var transition = branch.transition;
 
-                    /*
-                     * get the first transition criterion. we will assume
-                     * there is only one transition criterion
-                     */
-                    var criterion = transition.criteria[0];
+              if (transition != null) {
 
-                    if (criterion != null) {
+                /*
+                 * get the first transition criterion. we will assume
+                 * there is only one transition criterion
+                 */
+                var criterion = transition.criteria[0];
 
-                      // get the params
-                      var params = criterion.params;
+                if (criterion != null) {
 
-                      if (params != null) {
+                  // get the params
+                  var params = criterion.params;
 
-                        // set the node id and component id
-                        params.nodeId = nodeId;
-                        params.componentId = componentId;
+                  if (params != null) {
 
-                        if (this.createBranchCriterion == 'choiceChosen') {
-                          // set the choice id
-                          params.choiceIds = [];
-                          params.choiceIds.push(id);
-                        }
-                      }
+                    // set the node id and component id
+                    params.nodeId = nodeId;
+                    params.componentId = componentId;
+
+                    if (this.createBranchCriterion == 'choiceChosen') {
+                      // set the choice id
+                      params.choiceIds = [];
+                      params.choiceIds.push(id);
                     }
                   }
                 }
@@ -2556,18 +2545,18 @@ var NodeAuthoringController = function () {
 
             if (checkedItem != null) {
               // get the node id of the checked item
-              var nodeId = checkedItem.$key;
+              var _nodeId6 = checkedItem.$key;
 
               // remove the branchPathTaken constraints from the step
-              this.ProjectService.removeBranchPathTakenNodeConstraints(nodeId);
+              this.ProjectService.removeBranchPathTakenNodeConstraints(_nodeId6);
 
               /*
                * update the transition of the step to point to the next step
                * in the project. this may be different than the next step
                * if it was still in the branch path.
                */
-              var nodeIdAfter = this.ProjectService.getNodeIdAfter(nodeId);
-              this.ProjectService.setTransition(nodeId, nodeIdAfter);
+              var nodeIdAfter = this.ProjectService.getNodeIdAfter(_nodeId6);
+              this.ProjectService.setTransition(_nodeId6, nodeIdAfter);
             }
           }
 
@@ -2989,9 +2978,9 @@ var NodeAuthoringController = function () {
 
           try {
             for (var _iterator13 = selectedComponents[Symbol.iterator](), _step13; !(_iteratorNormalCompletion13 = (_step13 = _iterator13.next()).done); _iteratorNormalCompletion13 = true) {
-              var componentId = _step13.value;
+              var _componentId3 = _step13.value;
 
-              _this3.ProjectService.deleteComponent(_this3.nodeId, componentId);
+              _this3.ProjectService.deleteComponent(_this3.nodeId, _componentId3);
             }
           } catch (err) {
             _didIteratorError13 = true;
@@ -3096,178 +3085,165 @@ var NodeAuthoringController = function () {
 
     /**
      * Insert the component so it becomes the first component in the step
-     * @TODO refactor function is too long
      */
 
   }, {
     key: 'insertComponentAsFirst',
     value: function insertComponentAsFirst() {
-      var _this4 = this;
-
-      var newComponents = [];
-
       if (this.addComponentMode) {
-        // create a component and add it to this node
-        var newComponent = this.ProjectService.createComponent(this.nodeId, this.selectedComponent, null);
-
-        var data = {
-          "componentId": newComponent.id,
-          "componentType": newComponent.type
-        };
-
-        this.saveEvent('componentCreated', 'Authoring', data);
-        newComponents.push(newComponent);
-        this.turnOffAddComponentMode();
-        this.ProjectService.saveProject();
-        this.highlightNewComponentsAndThenShowComponentAuthoring(newComponents);
+        this.handleAddComponent();
       } else if (this.moveComponentMode) {
-        // get the component ids we are moving
-        var selectedComponentIds = this.getSelectedComponentIds();
-
-        // data saved in the component moved event
-        var _data = {
-          "componentsMoved": this.getComponentObjectsForEventData(selectedComponentIds)
-        };
-
-        // move the components to their new location
-        newComponents = this.ProjectService.moveComponent(this.nodeId, selectedComponentIds, null);
-
-        this.saveEvent('componentMoved', 'Authoring', _data);
-        this.turnOffMoveComponentMode();
-        this.ProjectService.saveProject();
-        this.highlightNewComponentsAndThenShowComponentAuthoring(newComponents);
+        this.handleMoveComponent();
       } else if (this.copyComponentMode) {
-        // get the component ids we are moving
-        var _selectedComponentIds = this.getSelectedComponentIds();
-
-        // data saved in the component copied event
-        var _data2 = {};
-        var componentsCopied = this.getComponentObjectsForEventData(_selectedComponentIds);
-
-        // copy the components to their new location
-        newComponents = this.ProjectService.copyComponentAndInsert(this.nodeId, _selectedComponentIds, null);
-
-        // get the information for all the components that were copied
-        for (var c = 0; c < componentsCopied.length; c++) {
-          var componentCopied = componentsCopied[c];
-          var _newComponent = newComponents[c];
-
-          componentCopied.fromComponentId = componentCopied.componentId;
-          componentCopied.toComponentId = _newComponent.id;
-          delete componentCopied.componentId;
-        }
-
-        _data2.componentsCopied = componentsCopied;
-        this.saveEvent('componentCopied', 'Authoring', _data2);
-        this.turnOffCopyComponentMode();
-        this.ProjectService.saveProject();
-        this.highlightNewComponentsAndThenShowComponentAuthoring(newComponents);
+        this.handleCopyComponent();
       } else if (this.importComponentMode) {
-        // import the selected components and insert them
-        this.importComponents(this.nodeId).then(function (newComponents) {
-          _this4.turnOffImportComponentMode();
-          _this4.ProjectService.saveProject();
-          _this4.highlightNewComponentsAndThenShowComponentAuthoring(newComponents);
-
-          /*
-           * refresh the project assets in case any of the imported
-           * components also imported assets
-           */
-          _this4.ProjectAssetService.retrieveProjectAssets();
-        });
+        this.handleImportComponent();
       }
     }
 
     /**
-     * Insert the component after the given component id
+     * Insert the component after the given component id.
      * @param componentId insert the component after this given component id
-     * TODO refactor function is too long
      */
 
   }, {
     key: 'insertComponentAfter',
     value: function insertComponentAfter(componentId) {
-      var _this5 = this;
-
-      var newComponents = [];
       if (this.addComponentMode) {
-        // create a component and add it to this node
-        var newComponent = this.ProjectService.createComponent(this.nodeId, this.selectedComponent, componentId);
-
-        var data = {
-          "componentId": newComponent.id,
-          "componentType": newComponent.type
-        };
-        this.saveEvent('componentCreated', 'Authoring', data);
-        newComponents.push(newComponent);
-        this.turnOffAddComponentMode();
-        this.ProjectService.saveProject();
-        this.highlightNewComponentsAndThenShowComponentAuthoring(newComponents);
+        this.handleAddComponent(componentId);
       } else if (this.moveComponentMode) {
-        var selectedComponentIds = this.getSelectedComponentIds();
-        if (selectedComponentIds != null && selectedComponentIds.indexOf(componentId) != -1) {
-          /*
-           * the author is trying to move a component and place it after
-           * itself which we will not allow
-           */
-          if (selectedComponentIds.length == 1) {
-            alert(this.$translate('youAreNotAllowedToInsertTheSelectedItemAfterItself'));
-          } else if (selectedComponentIds.length > 1) {
-            alert(this.$translate('youAreNotAllowedToInsertTheSelectedItemsAfterItself'));
-          }
-        } else {
-          // data saved in the component moved event
-          var _data3 = {
-            "componentsMoved": this.getComponentObjectsForEventData(selectedComponentIds)
-          };
-
-          // move the components to their new location
-          newComponents = this.ProjectService.moveComponent(this.nodeId, selectedComponentIds, componentId);
-
-          this.saveEvent('componentMoved', 'Authoring', _data3);
-          this.turnOffMoveComponentMode();
-          this.ProjectService.saveProject();
-          this.highlightNewComponentsAndThenShowComponentAuthoring(newComponents);
-        }
+        this.handleMoveComponent(componentId);
       } else if (this.copyComponentMode) {
-        var _selectedComponentIds2 = this.getSelectedComponentIds();
+        this.handleCopyComponent(componentId);
+      } else if (this.importComponentMode) {
+        this.handleImportComponent(componentId);
+      }
+    }
 
-        // data saved in the component copied event
-        var _data4 = {};
-        var componentsCopied = this.getComponentObjectsForEventData(_selectedComponentIds2);
+    /**
+     * Add components to this step.
+     * @param componentId (optional) Add the components after this component id.
+     * If the componentId is not provided, we will put the components at the
+     * beginning of the step.
+     */
 
-        // copy the components to their new location
-        newComponents = this.ProjectService.copyComponentAndInsert(this.nodeId, _selectedComponentIds2, componentId);
+  }, {
+    key: 'handleAddComponent',
+    value: function handleAddComponent(componentId) {
+      var newComponents = [];
+      // create a component and add it to this node
+      var newComponent = this.ProjectService.createComponent(this.nodeId, this.selectedComponent, componentId);
 
-        // get the information for all the components that were copied
-        for (var c = 0; c < componentsCopied.length; c++) {
-          var componentCopied = componentsCopied[c];
-          var _newComponent2 = newComponents[c];
+      var data = {
+        "componentId": newComponent.id,
+        "componentType": newComponent.type
+      };
+      this.saveEvent('componentCreated', 'Authoring', data);
+      newComponents.push(newComponent);
+      this.turnOffAddComponentMode();
+      this.ProjectService.saveProject();
+      this.highlightNewComponentsAndThenShowComponentAuthoring(newComponents);
+    }
 
-          componentCopied.fromComponentId = componentCopied.componentId;
-          componentCopied.toComponentId = _newComponent2.id;
-          delete componentCopied.componentId;
+    /**
+     * Move components in this step.
+     * @param componentId (optional) Put the moved components after this component
+     * id. If the componentId is not provided, we will put the components at the
+     * beginning of the step.
+     */
+
+  }, {
+    key: 'handleMoveComponent',
+    value: function handleMoveComponent(componentId) {
+      var newComponents = [];
+      var selectedComponentIds = this.getSelectedComponentIds();
+      if (selectedComponentIds != null && selectedComponentIds.indexOf(componentId) != -1) {
+        /*
+         * the author is trying to move a component and place it after
+         * itself which we will not allow
+         */
+        if (selectedComponentIds.length == 1) {
+          alert(this.$translate('youAreNotAllowedToInsertTheSelectedItemAfterItself'));
+        } else if (selectedComponentIds.length > 1) {
+          alert(this.$translate('youAreNotAllowedToInsertTheSelectedItemsAfterItself'));
         }
+      } else {
+        // data saved in the component moved event
+        var data = {
+          "componentsMoved": this.getComponentObjectsForEventData(selectedComponentIds)
+        };
 
-        _data4.componentsCopied = componentsCopied;
-        this.saveEvent('componentCopied', 'Authoring', _data4);
-        this.turnOffCopyComponentMode();
+        // move the components to their new location
+        newComponents = this.ProjectService.moveComponent(this.nodeId, selectedComponentIds, componentId);
+
+        this.saveEvent('componentMoved', 'Authoring', data);
+        this.turnOffMoveComponentMode();
         this.ProjectService.saveProject();
         this.highlightNewComponentsAndThenShowComponentAuthoring(newComponents);
-      } else if (this.importComponentMode) {
-        // import the selected components and insert them
-        newComponents = this.importComponents(this.nodeId, componentId).then(function (newComponents) {
-          _this5.turnOffImportComponentMode();
-          _this5.ProjectService.saveProject();
-          _this5.highlightNewComponentsAndThenShowComponentAuthoring(newComponents);
-
-          /*
-           * refresh the project assets in case any of the imported
-           * components also imported assets
-           */
-          _this5.ProjectAssetService.retrieveProjectAssets();
-        });
       }
+    }
+
+    /**
+     * Copy components in this step.
+     * @param componentId (optional) Put the copied components after this
+     * component id. If the componentId is not provided, we will put the
+     * components at the beginning of the step.
+     */
+
+  }, {
+    key: 'handleCopyComponent',
+    value: function handleCopyComponent(componentId) {
+      var newComponents = [];
+      var selectedComponentIds = this.getSelectedComponentIds();
+
+      // data saved in the component copied event
+      var data = {};
+      var componentsCopied = this.getComponentObjectsForEventData(selectedComponentIds);
+
+      // copy the components to their new location
+      newComponents = this.ProjectService.copyComponentAndInsert(this.nodeId, selectedComponentIds, componentId);
+
+      // get the information for all the components that were copied
+      for (var c = 0; c < componentsCopied.length; c++) {
+        var componentCopied = componentsCopied[c];
+        var newComponent = newComponents[c];
+
+        componentCopied.fromComponentId = componentCopied.componentId;
+        componentCopied.toComponentId = newComponent.id;
+        delete componentCopied.componentId;
+      }
+
+      data.componentsCopied = componentsCopied;
+      this.saveEvent('componentCopied', 'Authoring', data);
+      this.turnOffCopyComponentMode();
+      this.ProjectService.saveProject();
+      this.highlightNewComponentsAndThenShowComponentAuthoring(newComponents);
+    }
+
+    /**
+     * Import components into this step.
+     * @param componentId (optional) Put the imported components after this
+     * component id. If the componentId is not provided, we will put the
+     * components at the beginning of the step.
+     */
+
+  }, {
+    key: 'handleImportComponent',
+    value: function handleImportComponent(componentId) {
+      var _this4 = this;
+
+      // import the selected components and insert them
+      this.importComponents(this.nodeId, componentId).then(function (newComponents) {
+        _this4.turnOffImportComponentMode();
+        _this4.ProjectService.saveProject();
+        _this4.highlightNewComponentsAndThenShowComponentAuthoring(newComponents);
+
+        /*
+         * refresh the project assets in case any of the imported
+         * components also imported assets
+         */
+        _this4.ProjectAssetService.retrieveProjectAssets();
+      });
     }
 
     /**
@@ -3279,7 +3255,7 @@ var NodeAuthoringController = function () {
   }, {
     key: 'highlightNewComponentsAndThenShowComponentAuthoring',
     value: function highlightNewComponentsAndThenShowComponentAuthoring(newComponents) {
-      var _this6 = this;
+      var _this5 = this;
 
       // use a timeout to allow the components time to show up in the UI
       this.$timeout(function () {
@@ -3304,7 +3280,7 @@ var NodeAuthoringController = function () {
                    * element won't get highlighted in the first place
                    * unless this timeout is used.
                    */
-                  _this6.$timeout(function () {
+                  _this5.$timeout(function () {
                     // slowly fade back to original background color
                     componentElement.css({
                       'transition': 'background-color 2s ease-in-out',
@@ -3336,17 +3312,17 @@ var NodeAuthoringController = function () {
          * and type view a little longer so that they can see the change
          * they just made before we switch back to the normal view.
          */
-        _this6.$timeout(function () {
-          _this6.showComponentAuthoring();
-          _this6.turnOffInsertComponentMode();
-          _this6.showCreateComponent = false;
-          _this6.clearComponentsToChecked();
+        _this5.$timeout(function () {
+          _this5.showComponentAuthoring();
+          _this5.turnOffInsertComponentMode();
+          _this5.showCreateComponent = false;
+          _this5.clearComponentsToChecked();
 
           /*
            * use a timeout to wait for the UI to update and then scroll
            * to the first new component
            */
-          _this6.$timeout(function () {
+          _this5.$timeout(function () {
             if (newComponents != null && newComponents.length > 0) {
               // get the UI element of the first new component
               var componentElement = $('#' + newComponents[0].id);
@@ -3397,7 +3373,7 @@ var NodeAuthoringController = function () {
   }, {
     key: 'showImportProject',
     value: function showImportProject(importProjectId) {
-      var _this7 = this;
+      var _this6 = this;
 
       this.importProjectId = importProjectId;
 
@@ -3414,13 +3390,13 @@ var NodeAuthoringController = function () {
         this.ProjectService.retrieveProjectById(this.importProjectId).then(function (projectJSON) {
 
           // create the mapping of node id to order for the import project
-          _this7.importProjectIdToOrder = {};
-          _this7.importProject = projectJSON;
+          _this6.importProjectIdToOrder = {};
+          _this6.importProject = projectJSON;
 
           // calculate the node order of the import project
-          var result = _this7.ProjectService.getNodeOrderOfProject(_this7.importProject);
-          _this7.importProjectIdToOrder = result.idToOrder;
-          _this7.importProjectItems = result.nodes;
+          var result = _this6.ProjectService.getNodeOrderOfProject(_this6.importProject);
+          _this6.importProjectIdToOrder = result.idToOrder;
+          _this6.importProjectItems = result.nodes;
         });
       }
     }
@@ -3529,7 +3505,7 @@ var NodeAuthoringController = function () {
   }, {
     key: 'importComponents',
     value: function importComponents(nodeId, insertAfterComponentId) {
-      var _this8 = this;
+      var _this7 = this;
 
       // data saved in the component imported event
       var data = {
@@ -3580,7 +3556,7 @@ var NodeAuthoringController = function () {
           componentImported.toComponentId = newComponentId;
         }
 
-        _this8.saveEvent('componentImported', 'Authoring', data);
+        _this7.saveEvent('componentImported', 'Authoring', data);
         return newComponents;
       });
     }
@@ -3611,9 +3587,9 @@ var NodeAuthoringController = function () {
     key: 'previewImportNode',
     value: function previewImportNode(node) {
       if (node != null) {
-        var nodeId = node.id;
+        var _nodeId7 = node.id;
         var previewProjectURL = this.importProject.previewProjectURL;
-        var previewStepURL = previewProjectURL + '#/vle/' + nodeId;
+        var previewStepURL = previewProjectURL + '#/vle/' + _nodeId7;
         window.open(previewStepURL);
       }
     }
@@ -3628,9 +3604,9 @@ var NodeAuthoringController = function () {
     key: 'previewImportComponent',
     value: function previewImportComponent(node, componentId) {
       if (node != null) {
-        var nodeId = node.id;
+        var _nodeId8 = node.id;
         var previewProjectURL = this.importProject.previewProjectURL;
-        var previewStepURL = previewProjectURL + '#/vle/' + nodeId + '/' + componentId;
+        var previewStepURL = previewProjectURL + '#/vle/' + _nodeId8 + '/' + componentId;
         window.open(previewStepURL);
       }
     }
@@ -3749,11 +3725,11 @@ var NodeAuthoringController = function () {
 
         try {
           for (var _iterator18 = componentIds[Symbol.iterator](), _step18; !(_iteratorNormalCompletion18 = (_step18 = _iterator18.next()).done); _iteratorNormalCompletion18 = true) {
-            var componentId = _step18.value;
+            var _componentId4 = _step18.value;
 
-            if (componentId != null) {
+            if (_componentId4 != null) {
               // get the component
-              var component = this.ProjectService.getComponentByNodeIdAndComponentId(this.nodeId, componentId);
+              var component = this.ProjectService.getComponentByNodeIdAndComponentId(this.nodeId, _componentId4);
 
               if (component != null) {
                 // create an object with the component id and type
@@ -3866,7 +3842,7 @@ var NodeAuthoringController = function () {
   }, {
     key: 'saveAndParseJSON',
     value: function saveAndParseJSON() {
-      var _this9 = this;
+      var _this8 = this;
 
       if (this.showJSON) {
         /*
@@ -3897,7 +3873,7 @@ var NodeAuthoringController = function () {
 
           // save the project
           this.authoringViewNodeChanged().then(function () {
-            _this9.$rootScope.$broadcast('parseProject');
+            _this8.$rootScope.$broadcast('parseProject');
           });
         }
       }

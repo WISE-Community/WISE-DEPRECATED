@@ -889,24 +889,6 @@ class NodeAuthoringController {
   }
 
   /**
-   * Move a component up within this node
-   * @param componentId the component id
-   */
-  moveComponentUp(componentId) {
-    this.ProjectService.moveComponentUp(this.nodeId, componentId);
-    this.ProjectService.saveProject();
-  }
-
-  /**
-   * Move a component up within this node
-   * @param componentId the component id
-   */
-  moveComponentDown(componentId) {
-    this.ProjectService.moveComponentDown(this.nodeId, componentId);
-    this.ProjectService.saveProject();
-  }
-
-  /**
    * Delete the component from this node
    * @param componentId the component id
    */
@@ -1855,62 +1837,72 @@ class NodeAuthoringController {
         .getComponentByNodeIdAndComponentId(nodeId, componentId);
     if (component != null) {
       if (component.type == 'MultipleChoice') {
-        // the component is a multiple choice component
+        // populate the drop down with the choices
+        this.createBranchUpdateChoiceChosenIdsHelper(component);
+      }
+    }
+  }
 
-        // get the choices from the component
-        let choices = component.choices;
+  /**
+   * We are creating a branch that is based on which choice the student chooses
+   * in a multiple choice component. We will populate the drop down with the
+   * choices.
+   * @param component we are branching based on the choice chosen in this
+   * component
+   */
+  createBranchUpdateChoiceChosenIdsHelper(component) {
+    // get the choices from the component
+    let choices = component.choices;
 
-        if (choices != null) {
+    if (choices != null) {
 
-          // loop through all the choices
-          for (let c = 0; c < choices.length; c++) {
-            let choice = choices[c];
-            if (choice != null) {
+      // loop through all the choices
+      for (let c = 0; c < choices.length; c++) {
+        let choice = choices[c];
+        if (choice != null) {
 
-              // get the fields of the choice
-              let id = choice.id;
-              let text = choice.text;
-              let feedback = choice.feedback;
-              let isCorrect = choice.isCorrect;
+          // get the fields of the choice
+          let id = choice.id;
+          let text = choice.text;
+          let feedback = choice.feedback;
+          let isCorrect = choice.isCorrect;
 
-              // get the branch that corresponds to the choice
-              let branch = this.createBranchBranches[c];
+          // get the branch that corresponds to the choice
+          let branch = this.createBranchBranches[c];
 
-              if (branch != null) {
-                // get the choice for this branch
-                branch.choiceId = id;
+          if (branch != null) {
+            // get the choice for this branch
+            branch.choiceId = id;
 
-                // make a copy of the choices from the component
-                branch.choices = this.UtilService.makeCopyOfJSONObject(choices);
+            // make a copy of the choices from the component
+            branch.choices = this.UtilService.makeCopyOfJSONObject(choices);
 
-                // get the transition corresponding to the branch
-                let transition = branch.transition;
+            // get the transition corresponding to the branch
+            let transition = branch.transition;
 
-                if (transition != null) {
+            if (transition != null) {
 
-                  /*
-                   * get the first transition criterion. we will assume
-                   * there is only one transition criterion
-                   */
-                  let criterion = transition.criteria[0];
+              /*
+               * get the first transition criterion. we will assume
+               * there is only one transition criterion
+               */
+              let criterion = transition.criteria[0];
 
-                  if (criterion != null) {
+              if (criterion != null) {
 
-                    // get the params
-                    let params = criterion.params;
+                // get the params
+                let params = criterion.params;
 
-                    if (params != null) {
+                if (params != null) {
 
-                      // set the node id and component id
-                      params.nodeId = nodeId;
-                      params.componentId = componentId;
+                  // set the node id and component id
+                  params.nodeId = nodeId;
+                  params.componentId = componentId;
 
-                      if (this.createBranchCriterion == 'choiceChosen') {
-                        // set the choice id
-                        params.choiceIds = [];
-                        params.choiceIds.push(id);
-                      }
-                    }
+                  if (this.createBranchCriterion == 'choiceChosen') {
+                    // set the choice id
+                    params.choiceIds = [];
+                    params.choiceIds.push(id);
                   }
                 }
               }
@@ -2728,29 +2720,78 @@ class NodeAuthoringController {
 
   /**
    * Insert the component so it becomes the first component in the step
-   * @TODO refactor function is too long
    */
   insertComponentAsFirst() {
-    let newComponents = [];
-
     if (this.addComponentMode) {
-      // create a component and add it to this node
-      let newComponent = this.ProjectService.createComponent(this.nodeId, this.selectedComponent, null);
-
-      let data = {
-        "componentId": newComponent.id,
-        "componentType": newComponent.type
-      };
-
-      this.saveEvent('componentCreated', 'Authoring', data);
-      newComponents.push(newComponent);
-      this.turnOffAddComponentMode();
-      this.ProjectService.saveProject();
-      this.highlightNewComponentsAndThenShowComponentAuthoring(newComponents);
+      this.handleAddComponent();
     } else if (this.moveComponentMode) {
-      // get the component ids we are moving
-      let selectedComponentIds = this.getSelectedComponentIds();
+      this.handleMoveComponent();
+    } else if (this.copyComponentMode) {
+      this.handleCopyComponent();
+    } else if (this.importComponentMode) {
+      this.handleImportComponent();
+    }
+  }
 
+  /**
+   * Insert the component after the given component id.
+   * @param componentId insert the component after this given component id
+   */
+  insertComponentAfter(componentId) {
+    if (this.addComponentMode) {
+      this.handleAddComponent(componentId);
+    } else if (this.moveComponentMode) {
+      this.handleMoveComponent(componentId);
+    } else if (this.copyComponentMode) {
+      this.handleCopyComponent(componentId);
+    } else if (this.importComponentMode) {
+      this.handleImportComponent(componentId);
+    }
+  }
+
+  /**
+   * Add components to this step.
+   * @param componentId (optional) Add the components after this component id.
+   * If the componentId is not provided, we will put the components at the
+   * beginning of the step.
+   */
+  handleAddComponent(componentId) {
+    let newComponents = [];
+    // create a component and add it to this node
+    let newComponent = this.ProjectService
+        .createComponent(this.nodeId, this.selectedComponent, componentId);
+
+    let data = {
+      "componentId": newComponent.id,
+      "componentType": newComponent.type
+    };
+    this.saveEvent('componentCreated', 'Authoring', data);
+    newComponents.push(newComponent);
+    this.turnOffAddComponentMode();
+    this.ProjectService.saveProject();
+    this.highlightNewComponentsAndThenShowComponentAuthoring(newComponents);
+  }
+
+  /**
+   * Move components in this step.
+   * @param componentId (optional) Put the moved components after this component
+   * id. If the componentId is not provided, we will put the components at the
+   * beginning of the step.
+   */
+  handleMoveComponent(componentId) {
+    let newComponents = [];
+    let selectedComponentIds = this.getSelectedComponentIds();
+    if (selectedComponentIds != null && selectedComponentIds.indexOf(componentId) != -1) {
+      /*
+       * the author is trying to move a component and place it after
+       * itself which we will not allow
+       */
+      if (selectedComponentIds.length == 1) {
+        alert(this.$translate('youAreNotAllowedToInsertTheSelectedItemAfterItself'));
+      } else if (selectedComponentIds.length > 1) {
+        alert(this.$translate('youAreNotAllowedToInsertTheSelectedItemsAfterItself'));
+      }
+    } else {
       // data saved in the component moved event
       let data = {
         "componentsMoved": this.getComponentObjectsForEventData(selectedComponentIds)
@@ -2758,141 +2799,68 @@ class NodeAuthoringController {
 
       // move the components to their new location
       newComponents = this.ProjectService
-          .moveComponent(this.nodeId, selectedComponentIds, null);
+          .moveComponent(this.nodeId, selectedComponentIds, componentId);
 
       this.saveEvent('componentMoved', 'Authoring', data);
       this.turnOffMoveComponentMode();
       this.ProjectService.saveProject();
       this.highlightNewComponentsAndThenShowComponentAuthoring(newComponents);
-    } else if (this.copyComponentMode) {
-      // get the component ids we are moving
-      let selectedComponentIds = this.getSelectedComponentIds();
-
-      // data saved in the component copied event
-      let data = {};
-      let componentsCopied = this.getComponentObjectsForEventData(selectedComponentIds);
-
-      // copy the components to their new location
-      newComponents = this.ProjectService.copyComponentAndInsert(this.nodeId, selectedComponentIds, null);
-
-      // get the information for all the components that were copied
-      for (let c = 0; c < componentsCopied.length; c++) {
-        let componentCopied = componentsCopied[c];
-        let newComponent = newComponents[c];
-
-        componentCopied.fromComponentId = componentCopied.componentId;
-        componentCopied.toComponentId = newComponent.id;
-        delete componentCopied.componentId;
-      }
-
-      data.componentsCopied = componentsCopied;
-      this.saveEvent('componentCopied', 'Authoring', data);
-      this.turnOffCopyComponentMode();
-      this.ProjectService.saveProject();
-      this.highlightNewComponentsAndThenShowComponentAuthoring(newComponents);
-    } else if (this.importComponentMode) {
-      // import the selected components and insert them
-      this.importComponents(this.nodeId).then((newComponents) => {
-        this.turnOffImportComponentMode();
-        this.ProjectService.saveProject();
-        this.highlightNewComponentsAndThenShowComponentAuthoring(newComponents);
-
-        /*
-         * refresh the project assets in case any of the imported
-         * components also imported assets
-         */
-        this.ProjectAssetService.retrieveProjectAssets();
-      });
     }
   }
 
   /**
-   * Insert the component after the given component id
-   * @param componentId insert the component after this given component id
-   * TODO refactor function is too long
+   * Copy components in this step.
+   * @param componentId (optional) Put the copied components after this
+   * component id. If the componentId is not provided, we will put the
+   * components at the beginning of the step.
    */
-  insertComponentAfter(componentId) {
+  handleCopyComponent(componentId) {
     let newComponents = [];
-    if (this.addComponentMode) {
-      // create a component and add it to this node
-      let newComponent = this.ProjectService
-          .createComponent(this.nodeId, this.selectedComponent, componentId);
+    let selectedComponentIds = this.getSelectedComponentIds();
 
-      let data = {
-        "componentId": newComponent.id,
-        "componentType": newComponent.type
-      };
-      this.saveEvent('componentCreated', 'Authoring', data);
-      newComponents.push(newComponent);
-      this.turnOffAddComponentMode();
-      this.ProjectService.saveProject();
-      this.highlightNewComponentsAndThenShowComponentAuthoring(newComponents);
-    } else if (this.moveComponentMode) {
-      let selectedComponentIds = this.getSelectedComponentIds();
-      if (selectedComponentIds != null && selectedComponentIds.indexOf(componentId) != -1) {
-        /*
-         * the author is trying to move a component and place it after
-         * itself which we will not allow
-         */
-        if (selectedComponentIds.length == 1) {
-          alert(this.$translate('youAreNotAllowedToInsertTheSelectedItemAfterItself'));
-        } else if (selectedComponentIds.length > 1) {
-          alert(this.$translate('youAreNotAllowedToInsertTheSelectedItemsAfterItself'));
-        }
-      } else {
-        // data saved in the component moved event
-        let data = {
-          "componentsMoved": this.getComponentObjectsForEventData(selectedComponentIds)
-        };
+    // data saved in the component copied event
+    let data = {};
+    let componentsCopied = this.getComponentObjectsForEventData(selectedComponentIds);
 
-        // move the components to their new location
-        newComponents = this.ProjectService
-            .moveComponent(this.nodeId, selectedComponentIds, componentId);
+    // copy the components to their new location
+    newComponents = this.ProjectService.copyComponentAndInsert(this.nodeId, selectedComponentIds, componentId);
 
-        this.saveEvent('componentMoved', 'Authoring', data);
-        this.turnOffMoveComponentMode();
-        this.ProjectService.saveProject();
-        this.highlightNewComponentsAndThenShowComponentAuthoring(newComponents);
-      }
-    } else if (this.copyComponentMode) {
-      let selectedComponentIds = this.getSelectedComponentIds();
+    // get the information for all the components that were copied
+    for (let c = 0; c < componentsCopied.length; c++) {
+      let componentCopied = componentsCopied[c];
+      let newComponent = newComponents[c];
 
-      // data saved in the component copied event
-      let data = {};
-      let componentsCopied = this.getComponentObjectsForEventData(selectedComponentIds);
-
-      // copy the components to their new location
-      newComponents = this.ProjectService.copyComponentAndInsert(this.nodeId, selectedComponentIds, componentId);
-
-      // get the information for all the components that were copied
-      for (let c = 0; c < componentsCopied.length; c++) {
-        let componentCopied = componentsCopied[c];
-        let newComponent = newComponents[c];
-
-        componentCopied.fromComponentId = componentCopied.componentId;
-        componentCopied.toComponentId = newComponent.id;
-        delete componentCopied.componentId;
-      }
-
-      data.componentsCopied = componentsCopied;
-      this.saveEvent('componentCopied', 'Authoring', data);
-      this.turnOffCopyComponentMode();
-      this.ProjectService.saveProject();
-      this.highlightNewComponentsAndThenShowComponentAuthoring(newComponents);
-    } else if (this.importComponentMode) {
-      // import the selected components and insert them
-      newComponents = this.importComponents(this.nodeId, componentId).then((newComponents) => {
-        this.turnOffImportComponentMode();
-        this.ProjectService.saveProject();
-        this.highlightNewComponentsAndThenShowComponentAuthoring(newComponents);
-
-        /*
-         * refresh the project assets in case any of the imported
-         * components also imported assets
-         */
-        this.ProjectAssetService.retrieveProjectAssets();
-      });
+      componentCopied.fromComponentId = componentCopied.componentId;
+      componentCopied.toComponentId = newComponent.id;
+      delete componentCopied.componentId;
     }
+
+    data.componentsCopied = componentsCopied;
+    this.saveEvent('componentCopied', 'Authoring', data);
+    this.turnOffCopyComponentMode();
+    this.ProjectService.saveProject();
+    this.highlightNewComponentsAndThenShowComponentAuthoring(newComponents);
+  }
+
+  /**
+   * Import components into this step.
+   * @param componentId (optional) Put the imported components after this
+   * component id. If the componentId is not provided, we will put the
+   * components at the beginning of the step.
+   */
+  handleImportComponent(componentId) {
+    // import the selected components and insert them
+    this.importComponents(this.nodeId, componentId).then((newComponents) => {
+      this.turnOffImportComponentMode();
+      this.ProjectService.saveProject();
+      this.highlightNewComponentsAndThenShowComponentAuthoring(newComponents);
+
+      /*
+       * refresh the project assets in case any of the imported
+       * components also imported assets
+       */
+      this.ProjectAssetService.retrieveProjectAssets();
+    });
   }
 
   /**
