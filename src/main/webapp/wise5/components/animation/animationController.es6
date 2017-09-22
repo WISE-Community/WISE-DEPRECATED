@@ -1403,25 +1403,36 @@ class AnimationController {
      * @param t the time
      */
     displayAndBroadcastTime(t) {
-        /*
-         * Remove the digits after the first decimal place.
-         * example
-         * 12.817 will be changed to 12.8
-         */
-        let displayTime = parseInt(t * 10) / 10;
 
-        // show the time on the svg div
-        this.showTime(displayTime);
+        let currentTime = new Date().getTime();
 
-        // create a component state with the time in it
-        let componentState = {};
-        componentState.t = t;
+        if (this.lastBroadcastTime == null) {
+            this.lastBroadcastTime = currentTime;
+        }
 
-        /*
-         * broadcast the component state with the time in it
-         * so other components can know the elapsed time
-         */
-        this.$scope.$emit('componentStudentDataChanged', {nodeId: this.nodeId, componentId: this.componentId, componentState: componentState});
+        if (currentTime - this.lastBroadcastTime > 100) {
+            /*
+             * Remove the digits after the first decimal place.
+             * example
+             * 12.817 will be changed to 12.8
+             */
+            let displayTime = parseInt(t * 10) / 10;
+
+            // show the time on the svg div
+            this.showTime(displayTime);
+
+            // create a component state with the time in it
+            let componentState = {};
+            componentState.t = t;
+
+            /*
+             * broadcast the component state with the time in it
+             * so other components can know the elapsed time
+             */
+            this.$scope.$emit('componentStudentDataChanged', {nodeId: this.nodeId, componentId: this.componentId, componentState: componentState});
+
+            this.lastBroadcastTime = currentTime;
+        }
     }
 
     /**
