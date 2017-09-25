@@ -151,7 +151,7 @@ var AuthoringToolController = function () {
     this.$scope.$on('openAssetChooser', function (event, params) {
       // create the params for opening the asset chooser
       var stateParams = {
-        popup: params.popup,
+        isPopup: params.isPopup,
         projectId: params.projectId,
         nodeId: params.nodeId,
         componentId: params.componentId,

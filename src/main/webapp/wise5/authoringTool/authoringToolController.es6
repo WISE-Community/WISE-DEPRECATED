@@ -165,7 +165,7 @@ class AuthoringToolController {
     this.$scope.$on('openAssetChooser', (event, params) => {
       // create the params for opening the asset chooser
       const stateParams = {
-        popup: params.popup,
+        isPopup: params.isPopup,
         projectId: params.projectId,
         nodeId: params.nodeId,
         componentId: params.componentId,
