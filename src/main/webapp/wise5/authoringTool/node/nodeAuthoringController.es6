@@ -932,17 +932,21 @@ class NodeAuthoringController {
 
   /**
    * The node has changed in the authoring view
+   * @param parseProject whether to parse the whole project to recalculate
+   * significant changes such as branch paths
    */
-  authoringViewNodeChanged() {
+  authoringViewNodeChanged(parseProject) {
     // put the previous version of the node on to the undo stack
     this.undoStack.push(this.currentNodeCopy);
 
     // update the current node copy
     this.currentNodeCopy = this.UtilService.makeCopyOfJSONObject(this.node);
 
-    // refresh the project
-    this.ProjectService.parseProject();
-    this.items = this.ProjectService.idToOrder;
+    if (parseProject) {
+      // refresh the project
+      this.ProjectService.parseProject();
+      this.items = this.ProjectService.idToOrder;
+    }
 
     return this.ProjectService.saveProject();
   }
@@ -2197,7 +2201,8 @@ class NodeAuthoringController {
     this.ProjectService.calculateNodeNumbers();
 
     // save the project
-    this.authoringViewNodeChanged();
+    let parseProject = true;
+    this.authoringViewNodeChanged(parseProject);
   }
 
   /**
@@ -2296,7 +2301,8 @@ class NodeAuthoringController {
     this.ProjectService.calculateNodeNumbers();
 
     // save the project
-    this.authoringViewNodeChanged();
+    let parseProject = true;
+    this.authoringViewNodeChanged(parseProject);
   }
 
   /**
