@@ -3888,41 +3888,44 @@ var ProjectService = function () {
                     // get the parent group
                     var parentGroupId = this.getParentGroupId(nodeId);
 
-                    // get the parent transitions
-                    var parentTransitions = this.getTransitionsByFromNodeId(parentGroupId);
+                    if (parentGroupId != null && parentGroupId != '' && parentGroupId != 'group0') {
 
-                    if (parentTransitions != null) {
+                        // get the parent transitions
+                        var parentTransitions = this.getTransitionsByFromNodeId(parentGroupId);
 
-                        // loop through all the parent transitions
-                        for (var p = 0; p < parentTransitions.length; p++) {
-                            var parentTransition = parentTransitions[p];
+                        if (parentTransitions != null) {
 
-                            var newTransition = {};
+                            // loop through all the parent transitions
+                            for (var p = 0; p < parentTransitions.length; p++) {
+                                var parentTransition = parentTransitions[p];
 
-                            if (parentTransition != null) {
-                                var toNodeId = parentTransition.to;
+                                var newTransition = {};
 
-                                if (this.isGroupNode(toNodeId)) {
-                                    // the transition is to a group
+                                if (parentTransition != null) {
+                                    var toNodeId = parentTransition.to;
 
-                                    // get the start id of the group
-                                    var startId = this.getGroupStartId(toNodeId);
+                                    if (this.isGroupNode(toNodeId)) {
+                                        // the transition is to a group
 
-                                    if (startId == null || startId == '') {
-                                        // there is no start id so we will just use the group id
-                                        newTransition.to = toNodeId;
+                                        // get the start id of the group
+                                        var startId = this.getGroupStartId(toNodeId);
+
+                                        if (startId == null || startId == '') {
+                                            // there is no start id so we will just use the group id
+                                            newTransition.to = toNodeId;
+                                        } else {
+                                            // there is a start id so we will use it as the to node
+                                            newTransition.to = startId;
+                                        }
                                     } else {
-                                        // there is a start id so we will use it as the to node
-                                        newTransition.to = startId;
+                                        // the tranisition is to a step
+                                        newTransition.to = toNodeId;
                                     }
-                                } else {
-                                    // the tranisition is to a step
-                                    newTransition.to = toNodeId;
                                 }
-                            }
 
-                            // add the new transition to the node
-                            node.transitionLogic.transitions.push(newTransition);
+                                // add the new transition to the node
+                                node.transitionLogic.transitions.push(newTransition);
+                            }
                         }
                     }
                 }
@@ -4023,6 +4026,12 @@ var ProjectService = function () {
 
                 // clear out any existing transitions
                 nodeToInsert.transitionLogic.transitions = [];
+
+                /*
+                 * remove the branch path taken constraints from the node we are
+                 * inserting
+                 */
+                this.removeBranchPathTakenNodeConstraints(nodeIdToInsert);
             }
 
             // get the group we are inserting into
@@ -4080,7 +4089,7 @@ var ProjectService = function () {
                     for (var p = 0; p < previousNodes.length; p++) {
                         var previousNode = previousNodes[p];
 
-                        if (previousNode != null) {
+                        if (previousNode != null && previousNode.id != 'group0') {
                             // change the transition to point to the node we are inserting
                             this.updateToTransition(previousNode, startId, nodeIdToInsert);
                         }
