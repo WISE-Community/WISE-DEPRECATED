@@ -939,6 +939,11 @@ class NodeAuthoringController {
 
     // update the current node copy
     this.currentNodeCopy = this.UtilService.makeCopyOfJSONObject(this.node);
+
+    // refresh the project
+    this.ProjectService.parseProject();
+    this.items = this.ProjectService.idToOrder;
+
     return this.ProjectService.saveProject();
   }
 
@@ -1940,7 +1945,8 @@ class NodeAuthoringController {
      * loop through all the items in order and set the transitions so that
      * the steps in a branch path transition to one after the other
      */
-    for (let orderedItem of orderedItems) {
+    for (var i = 0; i < orderedItems.length; i++) {
+      var orderedItem = orderedItems[i];
       if (orderedItem != null && orderedItem.checked) {
         if (previousCheckedNodeId != null) {
           // make the previous node id point to the current item
