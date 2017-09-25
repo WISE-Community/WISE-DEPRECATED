@@ -169,13 +169,13 @@ public class AuthorProjectController {
 						("retrieveFile".equals(command) && project.getFamilytag().equals(FamilyTag.TELS))) {
 
 					if ("createProject".equals(command) && !this.hasAuthorPermissions(user)) {
-						return new ModelAndView(new RedirectView("accessdenied.html"));
+                        return new ModelAndView("errors/accessdenied");
 					}
 
 					if ("copyProject".equals(command) &&
 							(project == null ||
 							(!project.getFamilytag().equals(FamilyTag.TELS) && !this.projectService.canAuthorProject(project, user)))) {
-						return new ModelAndView(new RedirectView("accessdenied.html"));
+                        return new ModelAndView("errors/accessdenied");
 					}
 
 					CredentialManager.setRequestCredentials(request, user);
@@ -644,7 +644,7 @@ public class AuthorProjectController {
 
 					return null;
 				} else {
-					return new ModelAndView(new RedirectView("accessdenied.html"));
+                    return new ModelAndView("errors/accessdenied");
 				}
 			} else if (command.equals("getTimestamp")) {
 				//get the current timestamp on the server and write it to the response
@@ -681,7 +681,7 @@ public class AuthorProjectController {
 				if (this.projectService.canAuthorProject(project, user)) {
 					return this.handleGetEditors(request, response);
 				} else {
-					return new ModelAndView(new RedirectView("accessdenied.html"));
+                    return new ModelAndView("errors/accessdenied");
 				}
 			} else if (command.equals("preview")) {
 				PreviewProjectParameters previewParams = new PreviewProjectParameters();
@@ -802,7 +802,7 @@ public class AuthorProjectController {
 			response.getWriter().write(project.getId().toString());
 			return null;
 		} else {
-			return new ModelAndView(new RedirectView("accessdenied.html"));
+            return new ModelAndView("errors/accessdenied");
 		}
 	}
 
@@ -888,7 +888,7 @@ public class AuthorProjectController {
 				mav.addObject("projectId", projectId);
 				mav.addObject("projectTitle", projectTitle);
 			} else {
-				return new ModelAndView(new RedirectView(wiseBaseURL + "/accessdenied.html"));
+                return new ModelAndView("errors/accessdenied");
 			}
 		}
 		return mav;
@@ -944,7 +944,7 @@ public class AuthorProjectController {
 			response.getWriter().write(project.getId().toString());
 			return null;
 		} else {
-			return new ModelAndView(new RedirectView("accessdenied.html"));
+            return new ModelAndView("errors/accessdenied");
 		}
 	}
 
@@ -1000,7 +1000,7 @@ public class AuthorProjectController {
 			response.getWriter().write(otherUsersAlsoEditingProject);
 			return null;
 		} else {
-			return new ModelAndView(new RedirectView("accessdenied.html"));
+            return new ModelAndView("errors/accessdenied");
 		}
 	}
 
@@ -1038,7 +1038,7 @@ public class AuthorProjectController {
 				}
 			}
 		} else {
-			return new ModelAndView(new RedirectView("accessdenied.html"));
+            return new ModelAndView("errors/accessdenied");
 		}
 	}
 
@@ -1209,11 +1209,11 @@ public class AuthorProjectController {
 	private JSONArray getLibraryProjects(String wiseVersion) throws Exception {
 
 		List<Project> libraryProjects = projectService.getLibraryProjectList();
-		
+
 		if (wiseVersion == null) {
 			wiseVersion = "4";
 		}
-		
+
 		//an array to hold the information for the projects
 		JSONArray libraryProjectArray = new JSONArray();
 

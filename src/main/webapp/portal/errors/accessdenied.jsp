@@ -2,9 +2,8 @@
 
 <!DOCTYPE html>
 <html dir="${textDirection}">
-<head>
-</head>
-<body>
-<h1>Access Denied</h1>
-</body>
+  <head></head>
+  <body>
+    <h1><spring:message code="errors.securityFriendlyError.accessDenied" /></h1>
+  </body>
 </html>

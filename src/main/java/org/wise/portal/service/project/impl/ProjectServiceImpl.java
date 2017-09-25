@@ -376,7 +376,7 @@ public class ProjectServiceImpl implements ProjectService {
 
 				return modelAndView;
 			} else {
-				return new ModelAndView(new RedirectView("../accessdenied.html"));
+                return new ModelAndView("errors/accessdenied");
 			}
 		}
 

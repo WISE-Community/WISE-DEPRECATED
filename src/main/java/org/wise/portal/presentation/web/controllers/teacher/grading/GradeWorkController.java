@@ -1,21 +1,21 @@
 /**
  * Copyright (c) 2007-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
- * 
+ *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
- * 
+ *
  * Permission is hereby granted, without written agreement and without license
  * or royalty fees, to use, copy, modify, and distribute this software and its
  * documentation for any purpose, provided that the above copyright notice and
  * the following two paragraphs appear in all copies of this software.
- * 
+ *
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
  * PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
  * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
  * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
- * 
+ *
  * IN NO EVENT SHALL REGENTS BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT,
  * SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, INCLUDING LOST PROFITS,
  * ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF
@@ -59,7 +59,7 @@ public class GradeWorkController {
 
 	@Autowired
 	private RunService runService;
-	
+
 	@Autowired
 	Properties wiseProperties;
 
@@ -128,26 +128,26 @@ public class GradeWorkController {
 				return handlePostMaxScore(request, response, run);
 			}
 		} else {
-			
+
 			ProjectType projectType = run.getProject().getProjectType();
-			
+
 			if (projectType.equals(ProjectType.LD)) {
 				User user = ControllerUtil.getSignedInUser();
-				
+
 				// check that the user has read or write permission on the run
 				if (user.isAdmin() ||
 						this.runService.hasRunPermission(run, user, BasePermission.WRITE) ||
 						this.runService.hasRunPermission(run, user, BasePermission.READ)) {
-	
+
 					String wiseBaseURL = wiseProperties.getProperty("wiseBaseURL");
 
 			    	String getGradeWorkUrl = wiseBaseURL + "/vle/gradework.html";
 					String getGradingConfigUrl = wiseBaseURL + "/vleconfig?runId=" + run.getId().toString() + "&gradingType=" + gradingType + "&mode=grading&getRevisions=" + getRevisions;
-					
+
 					// get the classroom monitor urls
 					String getClassroomMonitorUrl = wiseBaseURL + "/vle/classroomMonitor.html";
 					String getClassroomMonitorConfigUrl = wiseBaseURL + "/vleconfig?runId=" + run.getId().toString() + "&gradingType=" + gradingType + "&mode=grading&getRevisions=" + getRevisions;
-					
+
 					// set the permission variable so that we can access it in the .jsp
 					if (this.runService.hasRunPermission(run, user, BasePermission.WRITE)) {
 						getGradeWorkUrl += "?loadScriptsIndividually&permission=write";
@@ -156,7 +156,7 @@ public class GradeWorkController {
 						getGradeWorkUrl += "?loadScriptsIndividually&permission=read";
 						getClassroomMonitorUrl += "?loadScriptsIndividually&permission=read";
 					}
-					
+
 					ModelAndView modelAndView = new ModelAndView("vle");
 					modelAndView.addObject("runId", runId);
 					modelAndView.addObject("run", run);
@@ -171,7 +171,7 @@ public class GradeWorkController {
 					return modelAndView;
 
 				} else {
-					return new ModelAndView(new RedirectView("../../accessdenied.html"));
+                    return new ModelAndView("errors/accessdenied");
 				}
 			} else if (runId != null) {
 				ModelAndView modelAndView = new ModelAndView();
@@ -181,7 +181,7 @@ public class GradeWorkController {
 				//throw error
 			}
 		}
-		
+
 		ModelAndView modelAndView = new ModelAndView();
         return modelAndView;
 	}
@@ -198,18 +198,18 @@ public class GradeWorkController {
 		try {
 			//get the nodeId
 			String nodeId = request.getParameter("nodeId");
-			
+
 			//get the new max score value
 			String maxScoreValue = request.getParameter("maxScoreValue");
-			
+
 			int maxScore = 0;
-			
+
 			//check if a max score value was provided
 			if (maxScoreValue != null && !maxScoreValue.equals("")) {
 				//parse the new max score value
-				maxScore = Integer.parseInt(maxScoreValue);	
+				maxScore = Integer.parseInt(maxScoreValue);
 			}
-			
+
 			/*
 			 * the string that we will use to return the new max score JSON object
 			 * once we have successfully updated it on the server. this is so
@@ -217,13 +217,13 @@ public class GradeWorkController {
 			 * score has been saved and that it can then update its local copy.
 			 */
 			String maxScoreReturnJSON = "";
-			
+
 			//get the current run extras
 			String extras = run.getExtras();
-			
+
 			JSONObject jsonExtras;
 			JSONArray maxScores;
-			
+
 			//check if there are extras
 			if (extras == null || extras.equals("")) {
 				//there are no extras so we will have to create it
@@ -232,39 +232,39 @@ public class GradeWorkController {
 				//create a JSONObject from the run extras
 				jsonExtras = new JSONObject(extras);
 			}
-			
+
 			//get the maxScores from the extras
 			maxScores = (JSONArray) jsonExtras.get("maxScores");
-			
+
 			/*
 			 * value to remember if we have updated an existing entry or
 			 * need to add a new entry
 			 */
 			boolean maxScoreUpdated = false;
-			
+
 			//loop through all the max scores in the current run extras
 			for(int x=0; x<maxScores.length(); x++) {
 				//get a max score entry
 				JSONObject maxScoreObj = (JSONObject) maxScores.get(x);
-				
+
 				//get the node id
 				String maxScoreObjNodeId = (String) maxScoreObj.get("nodeId");
-				
+
 				//check if the node id matches the one new one we need to save
 				if (nodeId.equals(maxScoreObjNodeId)) {
 					//it matches so we will update the score
 					maxScoreObj.put("maxScoreValue", maxScore);
-					
+
 					/*
 					 * generate the json string for the updated max score entry
 					 * so we can send it back in the response
 					 */
 					maxScoreReturnJSON = maxScoreObj.toString();
-					
+
 					maxScoreUpdated = true;
 				}
 			}
-			
+
 			//check if we were able to find an existing entry to update it
 			if (!maxScoreUpdated) {
 				/*
@@ -272,26 +272,26 @@ public class GradeWorkController {
 				 * create a new entry
 				 */
 				JSONObject newMaxScore = new JSONObject();
-				
+
 				//set the values
 				newMaxScore.put("nodeId", nodeId);
-				
+
 				//set the max score
-				newMaxScore.put("maxScoreValue", maxScore);	
-				
+				newMaxScore.put("maxScoreValue", maxScore);
+
 				/*
 				 * generate the json string for the updated max score entry
 				 * so we can send it back in the response
 				 */
 				maxScoreReturnJSON = newMaxScore.toString();
-				
+
 				//put the new entry back into the maxScores JSON object
 				maxScores.put(newMaxScore);
 			}
-			
+
 			//save the run extras back
 			runService.setExtras(run, jsonExtras.toString());
-			
+
 			//send the new max score entry back to the client
 			response.getWriter().print(maxScoreReturnJSON);
 		} catch (JSONException e) {
@@ -301,7 +301,7 @@ public class GradeWorkController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return null;
 	}
 }

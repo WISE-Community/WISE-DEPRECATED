@@ -1,21 +1,21 @@
 /**
  * Copyright (c) 2007-2017 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
- * 
+ *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
- * 
+ *
  * Permission is hereby granted, without written agreement and without license
  * or royalty fees, to use, copy, modify, and distribute this software and its
  * documentation for any purpose, provided that the above copyright notice and
  * the following two paragraphs appear in all copies of this software.
- * 
+ *
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
  * PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
  * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
  * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
- * 
+ *
  * IN NO EVENT SHALL REGENTS BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT,
  * SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, INCLUDING LOST PROFITS,
  * ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF
@@ -57,9 +57,9 @@ import org.wise.portal.service.user.UserService;
 import org.wise.portal.service.workgroup.WorkgroupService;
 
 /**
- * Controller for managing students in the run, like
- * displaying students, exporting student names, and updating workgroup memberships
- * 
+ * Controller for managing students in the run, like displaying students,
+ * exporting student names, and updating workgroup memberships
+ *
  * @author Patrick Lawler
  * @author Hiroki Terashima
  */
@@ -93,16 +93,9 @@ public class ManageStudentsController {
 	protected ModelAndView viewMyStudents(
 			@RequestParam("runId") Long runId,
 			HttpServletRequest servletRequest) throws Exception {
-		
 		User user = ControllerUtil.getSignedInUser();
 		Run run = runService.retrieveById(runId);
-
-		// check that the logged-in user has permission for this run
-		if (user.isAdmin() ||
-				user.getUserDetails().hasGrantedAuthority(UserDetailsService.RESEARCHER_ROLE) ||
-				this.aclService.hasPermission(run, BasePermission.ADMINISTRATION, user) ||
-				this.aclService.hasPermission(run, BasePermission.READ, user)) {
-
+		if (userCanViewRun(user, run)) {
 			Set<Workgroup> allworkgroups = this.runService.getWorkgroups(runId);
 			String workgroupsWithoutPeriod = "";
 			Set<ViewMyStudentsPeriod> viewmystudentsallperiods = new TreeSet<ViewMyStudentsPeriod>();
@@ -110,10 +103,10 @@ public class ManageStudentsController {
 			// retrieves the get parameter periodName to determine which
 			// period the link is requesting
 			String periodName = servletRequest.getParameter("periodName");
-			
+
 			int tabIndex = 0;
 			int periodCounter = 0;
-			
+
 			for (Group period : run.getPeriods()) {
 				ViewMyStudentsPeriod viewmystudentsperiod = new ViewMyStudentsPeriod();
 				viewmystudentsperiod.setRun(run);
@@ -124,11 +117,12 @@ public class ManageStudentsController {
 				for (Workgroup workgroup : allworkgroups) {
 					grouplessStudents.removeAll(workgroup.getMembers());
 					try {
-						if (workgroup.getMembers().size() > 0    // don't include workgroups with no members.
+                        // don't include workgroups with no members
+						if (workgroup.getMembers().size() > 0
 								&& !workgroup.isTeacherWorkgroup()
 								&& workgroup.getPeriod().getId().equals(period.getId())) {
 							// set url where this workgroup's work can be retrieved as PDF
-							periodworkgroups.add(workgroup);				
+							periodworkgroups.add(workgroup);
 						}
 					} catch (NullPointerException npe) {
 						// if a workgroup is not in a period, make a list of them and let teacher put them in a period...
@@ -139,14 +133,14 @@ public class ManageStudentsController {
 				viewmystudentsperiod.setGrouplessStudents(grouplessStudents);
 				viewmystudentsperiod.setWorkgroups(periodworkgroups);
 				viewmystudentsallperiods.add(viewmystudentsperiod);
-				
+
 				// determines which period tab to show in the AJAX tab object
 				if (periodName != null && periodName.equals(period.getName())) {
 					tabIndex = periodCounter;
 				}
 				periodCounter++;
 			}
-	
+
 			if (servletRequest.getParameter("tabIndex") != null) {
 				tabIndex = Integer.valueOf(servletRequest.getParameter("tabIndex"));
 			}
@@ -163,6 +157,13 @@ public class ManageStudentsController {
 		}
 	}
 
+	private boolean userCanViewRun(User user, Run run) {
+        return user.isAdmin() ||
+            user.getUserDetails().hasGrantedAuthority(UserDetailsService.RESEARCHER_ROLE) ||
+            this.aclService.hasPermission(run, BasePermission.ADMINISTRATION, user) ||
+            this.aclService.hasPermission(run, BasePermission.READ, user);
+    }
+
 	/**
 	 * Get the students in the specified run and returns them in the model
 	 * @param runId id of the Run
@@ -172,18 +173,10 @@ public class ManageStudentsController {
 	@RequestMapping("/teacher/management/studentlist")
 	protected ModelAndView getStudentList(
 			@RequestParam("runId") Long runId) throws Exception {
-
-		User user = ControllerUtil.getSignedInUser();
 		Run run = runService.retrieveById(runId);
-
-		// check that the logged-in user has permission for this run
-		if (user.isAdmin() ||
-				user.getUserDetails().hasGrantedAuthority(UserDetailsService.RESEARCHER_ROLE) ||
-				this.aclService.hasPermission(run, BasePermission.ADMINISTRATION, user) ||
-				this.aclService.hasPermission(run, BasePermission.READ, user)) {
+		if (userCanViewRun(ControllerUtil.getSignedInUser(), run)) {
 			Set<Group> periods = run.getPeriods();
 			Set<Group> requestedPeriods = new TreeSet<Group>();
-
 			for (Group period : periods) {
 				// TODO in future: filter by period...for now, include all periods
 				requestedPeriods.add(period);
@@ -209,28 +202,15 @@ public class ManageStudentsController {
 	protected void exportStudentList(
 			@RequestParam("runId") Long runId,
 			HttpServletResponse response) throws Exception {
-
-		//get the run
 		Run run = runService.retrieveById(runId);
-
-		//get the project
 		Project project = run.getProject();
-
-		String teacherUserName = "";
-
-		// get the owner of the project
 		User owner = run.getOwner();
-
-		//get the workgroups
 		List<Workgroup> teacherWorkgroups = workgroupService.getWorkgroupListByRunAndUser(run, owner);
-
-		//there should only be one workgroup for the owner
+		// there should only be one workgroup for the owner
 		Workgroup teacherWorkgroup = teacherWorkgroups.get(0);
+        String teacherUserName = teacherWorkgroup.generateWorkgroupName();
 
-		//get the teacher user name
-		teacherUserName = teacherWorkgroup.generateWorkgroupName();
-
-		//get the meta data for the project
+		// get the meta data for the project
 		Long projectId = (Long) project.getId();
 		Long parentProjectId = project.getParentProjectId();
 		String parentProjectIdStr = "N/A";
@@ -300,11 +280,8 @@ public class ManageStudentsController {
 		studentHeaderRow.createCell(columnCounter++).setCellValue("Student Username");
 		studentHeaderRow.createCell(columnCounter++).setCellValue("Student Name");
 
-		//get all the periods
 		Set<Group> periods = run.getPeriods();
 		Iterator<Group> periodsIterator = periods.iterator();
-
-		//loop through all the periods
 		while(periodsIterator.hasNext()) {
 			Group group = periodsIterator.next();
 
@@ -407,7 +384,8 @@ public class ManageStudentsController {
 	 * @param response
 	 * @throws Exception
 	 */
-	@RequestMapping(method = RequestMethod.POST, value = "/teacher/management/submitworkgroupchanges")
+	@RequestMapping(method = RequestMethod.POST,
+        value = "/teacher/management/submitworkgroupchanges")
 	protected void handleWorkgroupChanges(
 			HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
@@ -496,10 +474,7 @@ public class ManageStudentsController {
 		String timestampString = "";
 
 		if (date != null) {
-			// get the object to format timestamps
 			DateFormat dateTimeInstance = DateFormat.getDateTimeInstance();
-
-			// get the timestamp for the annotation
 			long time = date.getTime();
 			Date timestampDate = new Date(time);
 			timestampString = dateTimeInstance.format(timestampDate);

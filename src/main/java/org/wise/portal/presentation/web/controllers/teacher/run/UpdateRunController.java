@@ -1,21 +1,21 @@
 /**
  * Copyright (c) 2008-2015 Regents of the University of California (Regents).
  * Created by WISE, Graduate School of Education, University of California, Berkeley.
- * 
+ *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
- * 
+ *
  * Permission is hereby granted, without written agreement and without license
  * or royalty fees, to use, copy, modify, and distribute this software and its
  * documentation for any purpose, provided that the above copyright notice and
  * the following two paragraphs appear in all copies of this software.
- * 
+ *
  * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
  * PURPOSE. THE SOFTWARE AND ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED
  * HEREUNDER IS PROVIDED "AS IS". REGENTS HAS NO OBLIGATION TO PROVIDE
  * MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
- * 
+ *
  * IN NO EVENT SHALL REGENTS BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT,
  * SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, INCLUDING LOST PROFITS,
  * ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF
@@ -47,9 +47,9 @@ import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.project.ProjectService;
 
 /**
- * Controller for updating run settings, like add period, 
+ * Controller for updating run settings, like add period,
  * enable/disable idea manager and student file uploader.
- * 
+ *
  * @author Patrick Lawler
  * @author Hiroki Terashima
  */
@@ -64,10 +64,10 @@ public class UpdateRunController {
 
 	@Autowired
 	private RunService runService;
-	
+
 	@Autowired
 	private ProjectService projectService;
-	
+
 	@Autowired
 	private IMailFacade mailService = null;
 
@@ -83,7 +83,7 @@ public class UpdateRunController {
 			run = this.runService.retrieveById(Long.parseLong(request.getParameter("runId")));
 			if (!run.getOwner().equals(user) && !user.isAdmin()) {
 				String contextPath = request.getContextPath();
-				return new ModelAndView(new RedirectView(contextPath + "/accessdenied.html"));
+                return new ModelAndView("errors/accessdenied");
 			}
 		}
 		ModelAndView mav = new ModelAndView();
@@ -100,7 +100,7 @@ public class UpdateRunController {
 		if (runId != null) {
 			run = this.runService.retrieveById(Long.parseLong(request.getParameter("runId")));
 			if (!run.getOwner().equals(user) && !user.isAdmin()) {
-				return new ModelAndView(new RedirectView(contextPath + "/accessdenied.html"));
+                return new ModelAndView("errors/accessdenied");
 			}
 		}
 
@@ -141,7 +141,7 @@ public class UpdateRunController {
 				// send email to WISE staff with Survey
 				String linkToSurvey = wiseProperties.getProperty("wiseBaseURL")+"/teacher/run/survey.html?runId="+runId;
 				String emailBody = user.getUserDetails().getUsername()+ " completed a survey for "+run.getName()+" (Run ID="+runId+").\n\nLink to view survey on WISE: "+linkToSurvey+"\n\n"+survey;
-				EmailService emailService = 
+				EmailService emailService =
 						new EmailService("Survey completed [Run ID="+runId+"]: "+run.getName(), emailBody);
 				Thread thread = new Thread(emailService);
 				thread.start();
@@ -156,7 +156,7 @@ public class UpdateRunController {
 					Project project = run.getProject();
 					project.setDeleted(true);
 					project.setDateDeleted(new Date());
-				
+
 					User signedInUser = ControllerUtil.getSignedInUser(); //get the currently signed in user
 					projectService.updateProject(project, signedInUser);
 				} catch (NotAuthorizedException e) {
@@ -166,7 +166,7 @@ public class UpdateRunController {
 				ModelAndView endRunSuccessMAV = new ModelAndView("teacher/run/manage/endRunSuccess");
 				endRunSuccessMAV.addObject("run",run);
 				return endRunSuccessMAV;
-			} 			
+			}
 		} else if ("unArchiveRun".equals(command)) {
 			if (user.getUserDetails().hasGrantedAuthority(UserDetailsService.ADMIN_ROLE) || run.getOwner().equals(user)) {
 				runService.startRun(run);
@@ -175,7 +175,7 @@ public class UpdateRunController {
 					Project project = run.getProject();
 					project.setDeleted(false);
 					project.setDateDeleted(null);
-				
+
 					User signedInUser = ControllerUtil.getSignedInUser(); //get the currently signed in user
 					projectService.updateProject(project, signedInUser);
 				} catch (NotAuthorizedException e) {
@@ -188,16 +188,16 @@ public class UpdateRunController {
 		} else if ("extendReminderTime".equals(command)) {
 			if (user.getUserDetails().hasGrantedAuthority(UserDetailsService.ADMIN_ROLE) || run.getOwner().equals(user)) {
 				this.runService.extendArchiveReminderTime(Long.parseLong(request.getParameter("runId")));
-			}			
+			}
 		}
 		return null;
 	}
-	
+
 	class EmailService implements Runnable {
 
 		private String messageSubject;
 		private String messageBody;
-		
+
 		public EmailService(String messageSubject, String messageBody) {
 			this.messageBody = messageBody;
 			this.messageSubject = messageSubject;
@@ -211,7 +211,7 @@ public class UpdateRunController {
 				if (!sendEmailEnabled) {
 					return;
 				}
-				
+
 				String fromEmail = wiseProperties.getProperty("portalemailaddress");
 				String[] recipients = wiseProperties.getProperty("project_setup").split(",");
 

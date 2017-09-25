@@ -34,7 +34,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.view.RedirectView;
 import org.wise.portal.domain.project.FamilyTag;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.project.impl.PreviewProjectParameters;
@@ -43,8 +42,8 @@ import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.project.ProjectService;
 
 /**
- * Controller for previewing a specific project
- * Parameters can be projectId and runId
+ * Controller for previewing a specific project or run
+ * Parameters can be either projectId or runId
  *
  * @author Matt Fishbach
  * @author Hiroki Terashima
@@ -84,9 +83,9 @@ public class PreviewProjectController {
 			projectIdStr = request.getParameter(PROJECT_ID_PARAM_NAME_LOWERCASE);
 		}
 		String runIdStr = request.getParameter(RUN_ID_PARAM_NAME);
-		Project project = null;
+		Project project;
 		if (projectIdStr != null) {
-			// check to make sure project ID is valid long
+			// make sure that project id is a valid long
 			try {
 				Long.valueOf(projectIdStr);
 			} catch (NumberFormatException nfe) {
@@ -95,7 +94,7 @@ public class PreviewProjectController {
 			}
 			project = projectService.getById(projectIdStr);
 		} else if (runIdStr != null) {
-			// check to make sure run ID is valid long
+			// make sure that run id is a valid long
 			try {
 				Long.valueOf(runIdStr);
 			} catch (NumberFormatException nfe) {
@@ -112,9 +111,9 @@ public class PreviewProjectController {
 		tagNames.add("library");
 
 		User user = ControllerUtil.getSignedInUser();
-
 		if (project.hasTags(tagNames) ||
-				project.getFamilytag().equals(FamilyTag.TELS) || this.projectService.canReadProject(project, user)) {
+				project.getFamilytag().equals(FamilyTag.TELS) ||
+                this.projectService.canReadProject(project, user)) {
 			PreviewProjectParameters params = new PreviewProjectParameters();
 			params.setUser(user);
 			params.setProject(project);
@@ -134,10 +133,7 @@ public class PreviewProjectController {
 
 			return (ModelAndView) projectService.previewProject(params);
 		} else {
-			//get the context path e.g. /wise
-			String contextPath = request.getContextPath();
-
-			return new ModelAndView(new RedirectView(contextPath + "/accessdenied.html"));
+			return new ModelAndView("errors/accessdenied");
 		}
     }
 }

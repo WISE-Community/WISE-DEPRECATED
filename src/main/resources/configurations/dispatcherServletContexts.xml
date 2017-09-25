@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- 
+<!--
  * Copyright (c) 2006-2017 Encore Research Group, University of Toronto
  *
  * This software is distributed under the GNU General Public License, v3,
  * or (at your option) any later version.
- * 
+ *
  * Permission is hereby granted, without written agreement and without license
  * or royalty fees, to use, copy, modify, and distribute this software and its
  * documentation for any purpose, provided that the above copyright notice and
@@ -20,20 +20,20 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  -->
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:mvc="http://www.springframework.org/schema/mvc"
 	xmlns:context="http://www.springframework.org/schema/context"
 	xsi:schemaLocation="
-	http://www.springframework.org/schema/beans 
-    http://www.springframework.org/schema/beans/spring-beans-4.0.xsd 
+	http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
     http://www.springframework.org/schema/mvc
  	http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
-    http://www.springframework.org/schema/context    
+    http://www.springframework.org/schema/context
     http://www.springframework.org/schema/context/spring-context-4.0.xsd
  	">
 
-	<!-- registers the DefaultAnnotationHandlerMapping and AnnotationMethodHandlerAdapter 
-		beans that are required for Spring MVC to dispatch requests to @Controllers. 
+	<!-- registers the DefaultAnnotationHandlerMapping and AnnotationMethodHandlerAdapter
+		beans that are required for Spring MVC to dispatch requests to @Controllers.
 		http://docs.spring.io/spring/docs/3.0.x/spring-framework-reference/html/mvc.html#mvc-annotation-driven -->
 	<mvc:annotation-driven />
 
@@ -43,7 +43,7 @@
 		<context:exclude-filter type="regex"
 			expression=".*?Test.*?" />
 	</context:component-scan>
-	
+
 	<context:component-scan base-package="org.wise.vle.web">
 		<!-- exclude unit test annotations -->
 		<context:exclude-filter type="regex"
@@ -58,7 +58,7 @@
             </list>
         </property>
     </bean>
-	
+
 	<!-- Switch locales according to the user's browser -->
 	<bean id="localeResolver"
 		class="org.springframework.web.servlet.i18n.SessionLocaleResolver">
@@ -100,7 +100,7 @@
 		<property name="defaultEncoding" value="UTF-8" />
 		<property name="fallbackToSystemLocale" value="false" />
 	</bean>
-	
+
 	<bean class="org.springframework.web.context.support.ServletContextAttributeExporter">
         <property name="attributes">
             <map>
@@ -109,7 +109,7 @@
         </property>
     </bean>
 
-	<!-- The real exceptions are logged to the tomcat/logs/catalina.out file. 
+	<!-- The real exceptions are logged to the tomcat/logs/catalina.out file.
 		Look there if you've got a problem. -->
 	<bean id="exceptionResolver"
 		class="org.wise.portal.spring.impl.WISESimpleMappingExceptionResolver">
@@ -118,18 +118,18 @@
 				<prop key="org.springframework.web.multipart.MaxUploadSizeExceededException">errors/maxUploadSizeExceededError</prop>
 				<prop key="java.lang.Exception">errors/friendlyError</prop>
 				<prop key="org.acegisecurity.AccessDeniedException">errors/securityFriendlyError</prop>
-				<prop key="org.wise.portal.presentation.web.exception.NotAuthorizedException">accessdenied</prop>
+				<prop key="org.wise.portal.presentation.web.exception.NotAuthorizedException">errors/accessdenied</prop>
 			</props>
 		</property>
 	</bean>
-	
+
 	<!-- allows user to change language via ?lang=XX url param -->
 	<bean id="localeChangeInterceptor"
 		class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
 		<property name="paramName" value="lang" />
 	</bean>
 
-	<!-- these are resources that do not need to be backed by controllers and 
+	<!-- these are resources that do not need to be backed by controllers and
 		should be handled before looking through the SimpleUrlHandlerMapping mappings -->
 	<mvc:resources mapping="/pages/resources/**" location="/portal/pages/resources/" order="1" />
 	<mvc:resources mapping="/portal/javascript/**" location="/portal/javascript/" order="1" />

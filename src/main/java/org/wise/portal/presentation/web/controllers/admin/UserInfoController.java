@@ -31,8 +31,8 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.view.RedirectView;
 import org.wise.portal.domain.authentication.MutableUserDetails;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
@@ -61,10 +61,9 @@ public class UserInfoController {
 	protected final static String USER_INFO_MAP = "userInfoMap";
 
 	@RequestMapping(value = {"/student/account/info", "/teacher/account/info"})
-	protected ModelAndView handleRequestInternal(
-			HttpServletRequest servletRequest) throws Exception {
+	protected ModelAndView handleGetUserAccountInfo(
+        @RequestParam("userName") String userName) throws Exception {
 		User signedInUser = ControllerUtil.getSignedInUser();
-		String userName = (String) servletRequest.getParameter("userName");
 		User infoUser = this.userService.retrieveUserByUsername(userName);
 
 		if (signedInUser.isAdmin() ||
@@ -72,43 +71,24 @@ public class UserInfoController {
 			MutableUserDetails userDetails = (MutableUserDetails) infoUser.getUserDetails();
 			ModelAndView modelAndView = new ModelAndView();
 
-			//get the user info map that maps fields to values such as 'First Name' to 'Spongebob'
-			HashMap<String, Object> userInfo = userDetails.getInfo();
-
-			//we want the id to be the user id instead of the user details id so we will override it
-			userInfo.put("ID", infoUser.getId());
-
-			modelAndView.addObject(USER_INFO_MAP, userInfo);
+			HashMap<String, Object> userInfoMap = userDetails.getInfo();
+            userInfoMap.put("ID", infoUser.getId());
+			modelAndView.addObject(USER_INFO_MAP, userInfoMap);
 
 			if (infoUser.getUserDetails().hasGrantedAuthority(UserDetailsService.STUDENT_ROLE)) {
-				//the user we are looking up is a student
 				modelAndView.addObject("isStudent", true);
-
-				//get all the runs this student is in
 				List<Run> runList = runService.getRunList(infoUser);
-
-				//set the run list into the model
 				modelAndView.addObject("runList", runList);
-
 				modelAndView.setViewName("student/account/info");
 			} else {
-				//the user we are looking up is a teacher
 				modelAndView.addObject("isStudent", false);
-
-				//get all the runs that this teacher owns
 				List<Run> runListByOwner = runService.getRunListByOwner(infoUser);
-
-				//set the run list into the model
 				modelAndView.addObject("runList", runListByOwner);
-
 				modelAndView.setViewName("teacher/account/info");
 			}
-
 	        return modelAndView;
 		} else {
-			//get the context path e.g. /wise
-			String contextPath = servletRequest.getContextPath();
-			return new ModelAndView(new RedirectView(contextPath + "/accessdenied.html"));
+            return new ModelAndView("errors/accessdenied");
 		}
     }
 }
