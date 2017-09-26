@@ -2,7 +2,9 @@
 
 class StudentProgressController {
 
-    constructor($rootScope,
+    constructor($filter,
+                $mdDialog,
+                $rootScope,
                 $scope,
                 $state,
                 ConfigService,
@@ -10,6 +12,8 @@ class StudentProgressController {
                 StudentStatusService,
                 TeacherDataService,
                 TeacherWebSocketService) {
+        this.$filter = $filter;
+        this.$mdDialog = $mdDialog;
         this.$rootScope = $rootScope;
         this.$scope = $scope;
         this.$state = $state;
@@ -18,6 +22,7 @@ class StudentProgressController {
         this.StudentStatusService = StudentStatusService;
         this.TeacherDataService = TeacherDataService;
         this.TeacherWebSocketService = TeacherWebSocketService;
+        this.$translate = this.$filter('translate');
 
         this.teacherWorkgroupId = this.ConfigService.getWorkgroupId();
 
@@ -457,9 +462,29 @@ class StudentProgressController {
 
         return orderBy;
     }
+
+    /**
+     * Shows a temporary alert saying that Grade By Student view is coming soon
+     **/
+    gradeByStepAlert(ev) {
+        let title = this.$translate('COMING_SOON');
+        let content = this.$translate('tempGradeByStudentAlert');
+        let ok = this.$translate('OK');
+        this.$mdDialog.show(
+            this.$mdDialog.alert()
+                .clickOutsideToClose(true)
+                .title(title)
+                .textContent(content)
+                .ariaLabel(title)
+                .ok(ok)
+                .targetEvent(ev)
+        );
+    }
 }
 
 StudentProgressController.$inject = [
+    '$filter',
+    '$mdDialog',
     '$rootScope',
     '$scope',
     '$state',

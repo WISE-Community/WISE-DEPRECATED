@@ -70,7 +70,8 @@
                     <tbody>
                         <tr class="list-item md-button"
                             ng-repeat="student in studentProgressController.students | orderBy:studentProgressController.getOrderBy()"
-                            ng-show="studentProgressController.isWorkgroupShown(student)">
+                            ng-show="studentProgressController.isWorkgroupShown(student)"
+                            ng-click="studentProgressController.gradeByStepAlert($event)">
                             <td class="center">
                                 <md-icon ng-if="student.online" class="success" aria-label="{{ online |translate }}"> fiber_manual_record </md-icon>
                                 <md-icon ng-if="!student.online" aria-label="{{ offline | translate }}"> fiber_manual_record </md-icon>

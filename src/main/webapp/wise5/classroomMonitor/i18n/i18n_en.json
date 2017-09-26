@@ -163,6 +163,7 @@
     "teamsOnItemNone": "No teams currently on this {{type}}.",
     "teamsOnItemTitle": "Teams on item",
     "teamNoWorkSubmitted": "Team hasn't submitted any work for this step",
+    "tempGradeByStudentAlert": "We'll be adding the Grade By Student view shortly. In the meantime, you can review and grade work for a specific student by going to 'Grade By Step', selecting a step, and then using the 'Find a student' option. Thanks for your patience!",
     "timeSpent": "Time Spent",
     "toggleTeamWorkDisplay": "Show/hide team's work for this step",
     "totalScore": "total score",

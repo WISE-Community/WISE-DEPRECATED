@@ -9,11 +9,13 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var StudentProgressController = function () {
-    function StudentProgressController($rootScope, $scope, $state, ConfigService, ProjectService, StudentStatusService, TeacherDataService, TeacherWebSocketService) {
+    function StudentProgressController($filter, $mdDialog, $rootScope, $scope, $state, ConfigService, ProjectService, StudentStatusService, TeacherDataService, TeacherWebSocketService) {
         var _this = this;
 
         _classCallCheck(this, StudentProgressController);
 
+        this.$filter = $filter;
+        this.$mdDialog = $mdDialog;
         this.$rootScope = $rootScope;
         this.$scope = $scope;
         this.$state = $state;
@@ -22,6 +24,7 @@ var StudentProgressController = function () {
         this.StudentStatusService = StudentStatusService;
         this.TeacherDataService = TeacherDataService;
         this.TeacherWebSocketService = TeacherWebSocketService;
+        this.$translate = this.$filter('translate');
 
         this.teacherWorkgroupId = this.ConfigService.getWorkgroupId();
 
@@ -495,12 +498,25 @@ var StudentProgressController = function () {
 
             return orderBy;
         }
+
+        /**
+         * Shows a temporary alert saying that Grade By Student view is coming soon
+         **/
+
+    }, {
+        key: 'gradeByStepAlert',
+        value: function gradeByStepAlert(ev) {
+            var title = this.$translate('COMING_SOON');
+            var content = this.$translate('tempGradeByStudentAlert');
+            var ok = this.$translate('OK');
+            this.$mdDialog.show(this.$mdDialog.alert().clickOutsideToClose(true).title(title).textContent(content).ariaLabel(title).ok(ok).targetEvent(ev));
+        }
     }]);
 
     return StudentProgressController;
 }();
 
-StudentProgressController.$inject = ['$rootScope', '$scope', '$state', 'ConfigService', 'ProjectService', 'StudentStatusService', 'TeacherDataService', 'TeacherWebSocketService'];
+StudentProgressController.$inject = ['$filter', '$mdDialog', '$rootScope', '$scope', '$state', 'ConfigService', 'ProjectService', 'StudentStatusService', 'TeacherDataService', 'TeacherWebSocketService'];
 
 exports.default = StudentProgressController;
 //# sourceMappingURL=studentProgressController.js.map
