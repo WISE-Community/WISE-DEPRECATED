@@ -694,6 +694,16 @@ var DrawController = function () {
                         }
                     }
                 }
+            } else if (this.mode == 'authoring') {
+
+                if (this.componentContent.starterDrawData != null) {
+                    // there is starter draw data so we will populate it into the draw tool
+                    this.drawingTool.load(this.componentContent.starterDrawData);
+                }
+
+                if (this.componentContent.background != null) {
+                    this.drawingTool.setBackgroundImage(this.componentContent.background);
+                }
             } else {
                 // populate the student work into this component
                 this.setStudentWork(componentState);
