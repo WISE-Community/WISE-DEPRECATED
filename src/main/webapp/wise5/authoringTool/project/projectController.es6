@@ -47,9 +47,6 @@ class ProjectController {
     this.inactiveGroups = this.ProjectService.getInactiveGroups();
     this.inactiveNodes = this.ProjectService.getInactiveNodes();
     this.projectScriptFilename = this.ProjectService.getProjectScriptFilename();
-
-    // show a message when there is more than one
-    // author currently authoring this project
     this.currentAuthorsMessage = '';
     this.projectMode = true;
     this.showCreateGroup = false;
@@ -69,15 +66,12 @@ class ProjectController {
     this.stepBackgroundColors = ['#66c2a5','#fc8d62','#8da0cb','#e78ac3',
         '#a6d854','#ffd92f','#e5c494','#b3b3b3'];
 
-    // we are opening the project so we will set the current node to null
+    // we start by opening the project, with no node being authored
     this.TeacherDataService.setCurrentNode(null);
 
     this.scrollToTopOfPage();
 
-    // process metadata
     this.metadata = this.ProjectService.getProjectMetadata();
-
-    // notify others that this project is being authored
     this.ProjectService.notifyAuthorProjectBegin(this.projectId);
 
     // generate the summernote rubric element id
@@ -87,15 +81,14 @@ class ProjectController {
     this.summernoteRubricHTML = this.ProjectService
         .replaceAssetPaths(this.ProjectService.getProjectRubric());
 
-    // the tooltip text for the insert WISE asset button
-    let insertAssetString = this.$translate('INSERT_ASSET');
+    let insertAssetToolTipText = this.$translate('INSERT_ASSET');
 
     /*
      * create the custom button for inserting WISE assets into
      * summernote
      */
     let insertAssetButton = this.UtilService.createInsertAssetButton(this,
-          this.projectId, null, null, 'rubric', insertAssetString);
+          this.projectId, null, null, 'rubric', insertAssetToolTipText);
 
     /*
      * the options that specifies the tools to display in the
@@ -124,9 +117,8 @@ class ProjectController {
     this.$scope.$on('currentAuthorsReceived', (event, args) => {
       let currentAuthorsUsernames = args.currentAuthorsUsernames;
       let myUserName = this.ConfigService.getMyUserName();
-
-      // remove my username from the currentAuthors
-      currentAuthorsUsernames.splice(currentAuthorsUsernames.indexOf(myUserName),1);
+      currentAuthorsUsernames
+          .splice(currentAuthorsUsernames.indexOf(myUserName), 1);
       if (currentAuthorsUsernames.length > 0) {
         this.currentAuthorsMessage = this.$translate('concurrentAuthorsWarning',
             { currentAuthors: currentAuthorsUsernames.join(', ') });
@@ -136,13 +128,13 @@ class ProjectController {
     });
 
     this.$scope.$on('$destroy', () => {
-      // notify others that this project is no longer being authored
       this.ProjectService.notifyAuthorProjectEnd(this.projectId);
     });
 
     /*
      * Listen for the assetSelected event which occurs when the user
      * selects an asset from the choose asset popup
+     * TODO: refactor too many nesting
      */
     this.$scope.$on('assetSelected', (event, args) => {
       // make sure the event was fired for this component
@@ -229,15 +221,13 @@ class ProjectController {
      * controllers can trigger parsing the project in this controller.
      */
     this.$rootScope.$on('parseProject', () => {
-      // refresh the project
-      this.ProjectService.parseProject();
-      this.items = this.ProjectService.idToOrder;
+      this.refreshProject();
     });
     this.saveEvent('projectOpened', 'Navigation');
   };
 
   /**
-   * Launch the project in preview mode
+   * Launch the project in preview mode in a new tab
    */
   previewProject() {
     let data = { constraints: true };
@@ -246,7 +236,7 @@ class ProjectController {
   };
 
   /**
-   * Launch the project in preview mode without constraints
+   * Launch the project in preview mode without constraints in a new tab
    */
   previewProjectWithoutConstraints() {
     let data = { constraints: false };
@@ -268,18 +258,17 @@ class ProjectController {
   }
 
   saveProject() {
-    //let projectJSONString = JSON.stringify(this.project, null, 4);
-    //let commitMessage = $('#commitMessageInput').val();
-    let commitMessage = 'Made changes to Project.';
+    let commitMessage = 'Made changes to the project.';
     try {
-      // if projectJSONString is bad json, it will throw an exception and not save.
-      //this.ProjectService.project = this.project;
-
-      this.ProjectService.saveProject(commitMessage).then((commitHistoryArray) => {
+      // if projectJSONString is bad json,
+      // an exception will be thrown and it will not save.
+      this.ProjectService.saveProject(commitMessage)
+          .then((commitHistoryArray) => {
         this.commitHistory = commitHistoryArray;
-        $('#commitMessageInput').val('');  // clear field after commit
+        $('#commitMessageInput').val('');
       });
     } catch (error) {
+      // TODO: i18n
       alert('Invalid JSON. Please check syntax. Aborting save.');
       return;
     }
@@ -324,7 +313,8 @@ class ProjectController {
    * @param componentId the component id in the node
    */
   getPossibleTransitionCriteria(nodeId, componentId) {
-    return this.ProjectService.getPossibleTransitionCriteria(nodeId, componentId);
+    return this.ProjectService
+        .getPossibleTransitionCriteria(nodeId, componentId);
   }
 
   /**
@@ -350,32 +340,25 @@ class ProjectController {
    * @param nodeId
    */
   nodeClicked(nodeId) {
-    this.TeacherDataService.endCurrentNodeAndSetCurrentNodeByNodeId(this.nodeId);
-    this.$state.go('root.project.node', {projectId: this.projectId, nodeId:nodeId});
+    this.TeacherDataService
+        .endCurrentNodeAndSetCurrentNodeByNodeId(this.nodeId);
+    this.$state
+        .go('root.project.node', {projectId: this.projectId, nodeId:nodeId});
   };
 
   /**
    * Create a new group (activity)
    */
   createGroup() {
-    const newGroup = this.ProjectService.createGroup(this.createGroupTitle);
-
     /*
      * set the group into this variable to hold it temporarily while the
      * author decides where to place it
      */
-    this.nodeToAdd = newGroup;
+    this.nodeToAdd = this.ProjectService.createGroup(this.createGroupTitle);
 
-    // turn off the create group div
     this.showCreateGroup = false;
-
-    // clear the title from the create group div
     this.createGroupTitle = '';
-
-    // turn on insert mode
     this.insertGroupMode = true;
-
-    // turn on create mode
     this.createMode = true;
   }
 
@@ -383,31 +366,21 @@ class ProjectController {
    * Create a new node (step)
    */
   createNode() {
-    const newNode = this.ProjectService.createNode(this.createNodeTitle);
-
     /*
      * set the node into this variable to hold it temporarily while the
      * author decides where to place it
      */
-    this.nodeToAdd = newNode;
+    this.nodeToAdd = this.ProjectService.createNode(this.createNodeTitle);
 
-    // turn off the create node div
     this.showCreateNode = false;
-
-    // clear the title from the create node div
     this.createNodeTitle = '';
-
-    // turn on insert mode
     this.insertNodeMode = true;
-
-    // turn on create mode
     this.createMode = true;
   }
 
   /**
    * Insert the node(s) inside
    * @param nodeId the node id of the group that we will insert into
-   * TODO refactor function is too big
    */
   insertInside(nodeId) {
     // TODO check that we are inserting into a group
@@ -425,7 +398,6 @@ class ProjectController {
   /**
    * Insert the node(s) after
    * @param nodeId the node id of the node we will insert after
-   * TODO refactor the function is too large
    */
   insertAfter(nodeId) {
     if (this.createMode) {
@@ -445,12 +417,9 @@ class ProjectController {
    * @param type whether to insert 'inside' or 'after' the nodeId parameter
    */
   handleCreateModeInsert(nodeId, type) {
-
     if (type == 'inside') {
-      // create the node inside the group
       this.ProjectService.createNodeInside(this.nodeToAdd, nodeId);
     } else if (type == 'after') {
-      // create the node after the node id
       this.ProjectService.createNodeAfter(this.nodeToAdd, nodeId);
     } else {
       // an unspecified type was provided
@@ -467,13 +436,9 @@ class ProjectController {
      */
     this.nodeToAdd = null;
 
-    // turn off create mode
     this.createMode = false;
-
-    // turn off insert mode
     this.insertGroupMode = false;
     this.insertNodeMode = false;
-
     this.temporarilyHighlightNewNodes(newNodes);
 
     // save and refresh the project
@@ -486,10 +451,8 @@ class ProjectController {
         };
 
         if (this.ProjectService.isGroupNode(newNode.id)) {
-          // save the activity created event to the server
           this.saveEvent('activityCreated', 'Authoring', data);
         } else {
-          // save the step created event to the server
           this.saveEvent('stepCreated', 'Authoring', data);
         }
       }
@@ -509,17 +472,14 @@ class ProjectController {
        * itself so we will not allow that
        */
       if (selectedNodeIds.length == 1) {
-        alert(this.$translate('youAreNotAllowedToInsertTheSelectedItemAfterItself'));
+        alert(this
+            .$translate('youAreNotAllowedToInsertTheSelectedItemAfterItself'));
       } else if (selectedNodeIds.length > 1) {
-        alert(this.$translate('youAreNotAllowedToInsertTheSelectedItemsAfterItself'));
+        alert(this
+            .$translate('youAreNotAllowedToInsertTheSelectedItemsAfterItself'));
       }
     } else {
-      // perform the move
-
-      /*
-       * an array of nodes that will be saved in the data for the move
-       * event
-       */
+      // an array of nodes that will be saved in the data for the move event
       let nodes = [];
       for (let selectedNodeId of selectedNodeIds) {
         let node = {
@@ -532,41 +492,28 @@ class ProjectController {
 
       let newNodes = [];
       if (type == 'inside') {
-        // move the nodes into the group
         newNodes = this.ProjectService.moveNodesInside(selectedNodeIds, nodeId);
       } else if (type == 'after') {
-        // move the nodes after the node id
         newNodes = this.ProjectService.moveNodesAfter(selectedNodeIds, nodeId);
       } else {
         // an unspecified type was provided
         return;
       }
 
-      // turn off move mode
       this.moveMode = false;
-
-      // turn off insert mode
       this.insertGroupMode = false;
       this.insertNodeMode = false;
-
       this.temporarilyHighlightNewNodes(newNodes);
-
-      // save and refresh the project
       this.checkPotentialStartNodeIdChangeThenSaveProject().then(() => {
         if (newNodes != null && newNodes.length > 0) {
           let firstNewNode = newNodes[0];
           if (firstNewNode != null && firstNewNode.id != null) {
-
-            // loop through all the nodes that will be saved in the event data
             for (let n = 0; n < nodes.length; n++) {
               let node = nodes[n];
-
-              // get the new node object
               let newNode = newNodes[n];
-
               if (node != null && newNode != null) {
-                // set the new title
-                node.toTitle = this.ProjectService.getNodePositionAndTitleByNodeId(newNode.id);
+                node.toTitle = this.ProjectService
+                    .getNodePositionAndTitleByNodeId(newNode.id);
               }
             }
 
@@ -616,31 +563,21 @@ class ProjectController {
       return;
     }
 
-    // turn off copy mode
     this.copyMode = false;
-
-    // turn off insert mode
     this.insertGroupMode = false;
     this.insertNodeMode = false;
-
     this.temporarilyHighlightNewNodes(newNodes);
-
-    // save and refresh the project
     this.checkPotentialStartNodeIdChangeThenSaveProject().then(() => {
       if (newNodes != null && newNodes.length > 0) {
         let firstNewNode = newNodes[0];
         if (firstNewNode != null && firstNewNode.id != null) {
-          // loop through all the nodes that will be saved in the event data
           for (let n = 0; n < nodes.length; n++) {
             let node = nodes[n];
             let newNode = newNodes[n];
-
             if (node != null && newNode != null) {
-              // set the new id
               node.toNodeId = newNode.id;
-
-              // set the new title
-              node.toTitle = this.ProjectService.getNodePositionAndTitleByNodeId(newNode.id);
+              node.toTitle = this.ProjectService
+                  .getNodePositionAndTitleByNodeId(newNode.id);
             }
           }
 
@@ -657,84 +594,34 @@ class ProjectController {
   }
 
   /**
-   * Import the step and then create a stepImported event
+   * Import the selected steps and draw attention to them by highlighting them
+   * and scrolling to them.
    * @param nodeIdToInsertInsideOrAfter If this is a group, we will make the
    * new step the first step in the group. If this is a step, we will place
    * the new step after it.
    */
   importSelectedNodes(nodeIdToInsertInsideOrAfter) {
     let selectedNodes = this.getSelectedNodesToImport();
-
-    // get the node titles that we are importing
     let selectedNodeTitles = this.getSelectedNodeTitlesToImport();
-
-    // get the project id we are importing into
     let toProjectId = this.ConfigService.getConfigParam('projectId');
-
-    // get the project id we are importing from
     let fromProjectId = this.importProjectId;
 
     // import the selected nodes and place them after the given group
     this.performImport(nodeIdToInsertInsideOrAfter).then((newNodes) => {
-      // save and refresh the project
       this.checkPotentialStartNodeIdChangeThenSaveProject().then(() => {
-        /*
-         * use a timeout to allow angular to update the UI and then
-         * highlight and scroll to the new nodes
-         */
-        this.$timeout(() => {
-          for (let newNode of newNodes) {
-            if (newNode != null) {
-              let nodeElement = $('#' + newNode.id);
+        let doScrollToNewNodes = true;
+        this.temporarilyHighlightNewNodes(newNodes, doScrollToNewNodes);
 
-              // save the original background color
-              let originalBackgroundColor = nodeElement.css('backgroundColor');
-
-              // highlight the background to draw attention to it
-              nodeElement.css('background-color', '#FFFF9C');
-
-              /*
-               * Use a timeout before starting to transition back to
-               * the original background color. For some reason the
-               * element won't get highlighted in the first place
-               * unless this timeout is used.
-               */
-              this.$timeout(() => {
-                // slowly fade back to original background color
-                nodeElement.css({
-                  'transition': 'background-color 2s ease-in-out',
-                  'background-color': originalBackgroundColor
-                });
-              });
-            }
-          }
-
-          if (newNodes != null && newNodes.length > 0) {
-            // get the UI element of the first new node
-            let nodeElement = $('#' + newNodes[0].id);
-            if (nodeElement != null) {
-              // scroll to the first new node that we've added
-              $('#content').animate({
-                scrollTop: nodeElement.prop('offsetTop') - 60
-              }, 1000);
-            }
-          }
-        });
-
-        // the data for the step imported event
-        let data = {
+        let stepsImportedEventData = {
           stepsImported: []
         };
 
         for (let n = 0; n < selectedNodes.length; n++) {
           let selectedNode = selectedNodes[n];
-
-          // get the old step title
           let selectedNodeTitle = selectedNodeTitles[n];
           let newNode = newNodes[n];
 
-          // set the from and to ids and titles
-          let tempNode = {
+          let stepImported = {
             fromProjectId: parseInt(fromProjectId),
             fromNodeId: selectedNode.id,
             fromTitle: selectedNodeTitle,
@@ -742,9 +629,9 @@ class ProjectController {
             toTitle: this.ProjectService
               .getNodePositionAndTitleByNodeId(newNode.id)
           };
-          data.stepsImported.push(tempNode);
+          stepsImportedEventData.stepsImported.push(stepImported);
         }
-        this.saveEvent('stepImported', 'Authoring', data);
+        this.saveEvent('stepImported', 'Authoring', stepsImportedEventData);
       });
     });
   }
@@ -757,21 +644,12 @@ class ProjectController {
    */
   performImport(nodeIdToInsertInsideOrAfter) {
     let selectedNodes = this.getSelectedNodesToImport();
-
-    // get the project id we are importing into
     let toProjectId = this.ConfigService.getConfigParam('projectId');
-
-    // get the project id we are importing from
     let fromProjectId = this.importProjectId;
 
-    // copy the nodes into the project
     return this.ProjectService.copyNodes(selectedNodes, fromProjectId,
-      toProjectId, nodeIdToInsertInsideOrAfter).then((newNodes) => {
-
-      // refresh the project
-      this.ProjectService.parseProject();
-      this.items = this.ProjectService.idToOrder;
-
+        toProjectId, nodeIdToInsertInsideOrAfter).then((newNodes) => {
+      this.refreshProject();
       this.insertNodeMode = false;
       this.toggleView('project');
 
@@ -804,11 +682,9 @@ class ProjectController {
       let selectedItemTypes = this.getSelectedItemTypes();
       if (selectedItemTypes != null && selectedItemTypes.length > 0) {
         if (selectedItemTypes.length === 0) {
-          // there are no selected items
           alert('Please select an item to copy.');
         } else if (selectedItemTypes.length === 1 &&
           selectedItemTypes[0] === 'node') {
-          // turn on insert and copy modes
           this.insertNodeMode = true;
           this.copyMode = true;
         } else {
@@ -820,7 +696,7 @@ class ProjectController {
 
   /**
    * Turn on move mode
-   * TODO refactor. too many nesting
+   * TODO refactor. too many nesting. Rename function to "turnOnMoveMode"?
    */
   move() {
     // make sure there is at least one item selected
@@ -863,10 +739,12 @@ class ProjectController {
     if (selectedNodeIds != null) {
       let confirmMessage = null;
       if (selectedNodeIds.length == 1) {
-        // the user selected one item TODO: i18n
+        // the user selected one item
+        // TODO: i18n
         confirmMessage = 'Are you sure you want to delete the selected item?';
       } else if (selectedNodeIds.length > 1) {
-        // the user selected multiple items TODO: i18n
+        // the user selected multiple items
+        // TODO: i18n
         confirmMessage = 'Are you sure you want to delete the '
             + selectedNodeIds.length + ' selected items?';
       }
@@ -918,7 +796,6 @@ class ProjectController {
             this.ProjectService.deleteNode(nodeId);
           }
 
-          // update start node id if necesary
           if (deletedStartNodeId) {
             this.updateStartNodeId();
           }
@@ -937,10 +814,8 @@ class ProjectController {
             this.saveEvent('stepDeleted', 'Authoring', data);
           }
 
-          // save the project and refresh
           this.ProjectService.saveProject();
-          this.ProjectService.parseProject();
-          this.items = this.ProjectService.idToOrder;
+          this.refreshProject();
         }
       }
     }
@@ -1011,9 +886,6 @@ class ProjectController {
     return selectedItemTypes;
   }
 
-  /**
-   * Unselect all the items
-   */
   unselectAllItems() {
     angular.forEach(this.items, function(value, key) {
       value.checked = false;
@@ -1066,17 +938,11 @@ class ProjectController {
   cancelMove() {
     this.insertGroupMode = false;
     this.insertNodeMode = false;
-
-    // clear any new node that we might be inserting
     this.nodeToAdd = null;
-
-    // turn off the modes
     this.createMode = false;
     this.moveMode = false;
     this.copyMode = false;
     this.importMode = false;
-
-    // uncheck all the checkboxes
     this.unselectAllItems();
   }
 
@@ -1144,10 +1010,7 @@ class ProjectController {
             let confirmUpdateStartStep =
                 this.$translate('confirmUpdateStartStep',
                     { startStepTitle: firstChildTitle });
-
-            let doUpdateStartStep = confirm(confirmUpdateStartStep);
-
-            if (doUpdateStartStep) {
+            if (confirm(confirmUpdateStartStep)) {
               this.ProjectService.setStartNodeId(firstLeafNodeId);
               resolve();
             } else {
@@ -1167,16 +1030,16 @@ class ProjectController {
    * Check if the start node id has changed and then save the project
    */
   checkPotentialStartNodeIdChangeThenSaveProject() {
-    // check if the project start node id should be changed
     return this.checkPotentialStartNodeIdChange().then(() => {
       this.ProjectService.saveProject();
-
-      // refresh the project
-      this.ProjectService.parseProject();
-      this.items = this.ProjectService.idToOrder;
-
+      this.refreshProject();
       this.unselectAllItems();
     });
+  }
+
+  refreshProject() {
+    this.ProjectService.parseProject();
+    this.items = this.ProjectService.idToOrder;
   }
 
   /**
@@ -1189,19 +1052,17 @@ class ProjectController {
   }
 
   /**
-   * Toggle the import view and load the project drop downs if necessary
+   * Toggle the import view and populate the project drop downs if necessary
    */
   importStepClicked() {
     this.toggleView('importStep');
 
     if (this.importMode) {
       if (this.myProjectsList == null) {
-        // populate the authorable projects drop down
         this.myProjectsList = this.ConfigService.getAuthorableProjects();
       }
 
       if (this.libraryProjectsList == null) {
-        // populate the library projects drop down
         this.ConfigService.getLibraryProjects().then((libraryProjectsList) => {
           this.libraryProjectsList = libraryProjectsList;
         });
@@ -1244,14 +1105,15 @@ class ProjectController {
       this.importProject = null;
     } else {
       // get the import project
-      this.ProjectService.retrieveProjectById(this.importProjectId).then((projectJSON) => {
-
+      this.ProjectService.retrieveProjectById(this.importProjectId)
+          .then((projectJSON) => {
         // create the mapping of node id to order for the import project
         this.importProjectIdToOrder = {};
         this.importProject = projectJSON;
 
         // calculate the node order of the import project
-        const result = this.ProjectService.getNodeOrderOfProject(this.importProject);
+        const result = this.ProjectService
+            .getNodeOrderOfProject(this.importProject);
         this.importProjectIdToOrder = result.idToOrder;
         this.importProjectItems = result.nodes;
       });
@@ -1263,14 +1125,12 @@ class ProjectController {
    */
   previewImportProject() {
     if (this.importProject != null) {
-      // get the preview project url for the import project
-      const previewProjectURL = this.importProject.previewProjectURL;
-      window.open(previewProjectURL);
+      window.open(this.importProject.previewProjectURL);
     }
   }
 
   /**
-   * Preview the step in a new tab
+   * Preview the import step in a new tab
    * @param node
    */
   previewImportNode(node) {
@@ -1348,7 +1208,6 @@ class ProjectController {
    * Save the project JSON string to the server
    */
   saveProjectJSONString() {
-    // create the project object from the project JSON string
     let project = angular.fromJson(this.projectJSONString);
     this.ProjectService.setProject(project);
     this.checkPotentialStartNodeIdChangeThenSaveProject();
@@ -1558,20 +1417,18 @@ class ProjectController {
   }
 
   /**
-   * Temporarily highlight the new nodes
+   * Temporarily highlight the new nodes to draw attention to them
    * @param newNodes the new nodes to highlight
+   * @param doScrollToNewNodes if true, scroll to the first new node added
+   * TODO: can we remove the null checks: ensure that newNodes is never null?
    */
-  temporarilyHighlightNewNodes(newNodes) {
+  temporarilyHighlightNewNodes(newNodes, doScrollToNewNodes = false) {
     this.$timeout(() => {
-      if (newNodes != null) {
+      if (newNodes != null && newNodes.length > 0) {
         for (let newNode of newNodes) {
           if (newNode != null) {
             let nodeElement = $('#' + newNode.id);
-
-            // save the original background color
             let originalBackgroundColor = nodeElement.css('backgroundColor');
-
-            // highlight the background briefly to draw attention to it
             nodeElement.css('background-color', '#FFFF9C');
 
             /*
@@ -1581,12 +1438,19 @@ class ProjectController {
              * unless this timeout is used.
              */
             this.$timeout(() => {
-              // slowly fade back to original background color
               nodeElement.css({
                 'transition': 'background-color 3s ease-in-out',
                 'background-color': originalBackgroundColor
               });
             });
+          }
+        }
+        if (doScrollToNewNodes) {
+          let firstNodeElementAdded = $('#' + newNodes[0].id);
+          if (firstNodeElementAdded != null) {
+            $('#content').animate({
+              scrollTop: firstNodeElementAdded.prop('offsetTop') - 60
+            }, 1000);
           }
         }
       }
@@ -1644,7 +1508,7 @@ class ProjectController {
    * Get the background color for a step
    * @param nodeId get the background color for a step in the project view
    * @return If the node is in a branch path it will return a color. If the
-   * ndoe is not in a branch path it will return null.
+   * node is not in a branch path it will return null.
    */
   getStepBackgroundColor(nodeId) {
     let color = null;

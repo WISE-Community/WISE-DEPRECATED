@@ -42,9 +42,6 @@ var ProjectController = function () {
     this.inactiveGroups = this.ProjectService.getInactiveGroups();
     this.inactiveNodes = this.ProjectService.getInactiveNodes();
     this.projectScriptFilename = this.ProjectService.getProjectScriptFilename();
-
-    // show a message when there is more than one
-    // author currently authoring this project
     this.currentAuthorsMessage = '';
     this.projectMode = true;
     this.showCreateGroup = false;
@@ -63,15 +60,12 @@ var ProjectController = function () {
      */
     this.stepBackgroundColors = ['#66c2a5', '#fc8d62', '#8da0cb', '#e78ac3', '#a6d854', '#ffd92f', '#e5c494', '#b3b3b3'];
 
-    // we are opening the project so we will set the current node to null
+    // we start by opening the project, with no node being authored
     this.TeacherDataService.setCurrentNode(null);
 
     this.scrollToTopOfPage();
 
-    // process metadata
     this.metadata = this.ProjectService.getProjectMetadata();
-
-    // notify others that this project is being authored
     this.ProjectService.notifyAuthorProjectBegin(this.projectId);
 
     // generate the summernote rubric element id
@@ -80,14 +74,13 @@ var ProjectController = function () {
     // set the project rubric into the summernote rubric
     this.summernoteRubricHTML = this.ProjectService.replaceAssetPaths(this.ProjectService.getProjectRubric());
 
-    // the tooltip text for the insert WISE asset button
-    var insertAssetString = this.$translate('INSERT_ASSET');
+    var insertAssetToolTipText = this.$translate('INSERT_ASSET');
 
     /*
      * create the custom button for inserting WISE assets into
      * summernote
      */
-    var insertAssetButton = this.UtilService.createInsertAssetButton(this, this.projectId, null, null, 'rubric', insertAssetString);
+    var insertAssetButton = this.UtilService.createInsertAssetButton(this, this.projectId, null, null, 'rubric', insertAssetToolTipText);
 
     /*
      * the options that specifies the tools to display in the
@@ -105,8 +98,6 @@ var ProjectController = function () {
     this.$scope.$on('currentAuthorsReceived', function (event, args) {
       var currentAuthorsUsernames = args.currentAuthorsUsernames;
       var myUserName = _this.ConfigService.getMyUserName();
-
-      // remove my username from the currentAuthors
       currentAuthorsUsernames.splice(currentAuthorsUsernames.indexOf(myUserName), 1);
       if (currentAuthorsUsernames.length > 0) {
         _this.currentAuthorsMessage = _this.$translate('concurrentAuthorsWarning', { currentAuthors: currentAuthorsUsernames.join(', ') });
@@ -116,13 +107,13 @@ var ProjectController = function () {
     });
 
     this.$scope.$on('$destroy', function () {
-      // notify others that this project is no longer being authored
       _this.ProjectService.notifyAuthorProjectEnd(_this.projectId);
     });
 
     /*
      * Listen for the assetSelected event which occurs when the user
      * selects an asset from the choose asset popup
+     * TODO: refactor too many nesting
      */
     this.$scope.$on('assetSelected', function (event, args) {
       // make sure the event was fired for this component
@@ -205,9 +196,7 @@ var ProjectController = function () {
      * controllers can trigger parsing the project in this controller.
      */
     this.$rootScope.$on('parseProject', function () {
-      // refresh the project
-      _this.ProjectService.parseProject();
-      _this.items = _this.ProjectService.idToOrder;
+      _this.refreshProject();
     });
     this.saveEvent('projectOpened', 'Navigation');
   }
@@ -217,7 +206,7 @@ var ProjectController = function () {
 
 
     /**
-     * Launch the project in preview mode
+     * Launch the project in preview mode in a new tab
      */
     value: function previewProject() {
       var data = { constraints: true };
@@ -229,7 +218,7 @@ var ProjectController = function () {
 
 
     /**
-     * Launch the project in preview mode without constraints
+     * Launch the project in preview mode without constraints in a new tab
      */
     value: function previewProjectWithoutConstraints() {
       var data = { constraints: false };
@@ -256,18 +245,16 @@ var ProjectController = function () {
     value: function saveProject() {
       var _this2 = this;
 
-      //let projectJSONString = JSON.stringify(this.project, null, 4);
-      //let commitMessage = $('#commitMessageInput').val();
-      var commitMessage = 'Made changes to Project.';
+      var commitMessage = 'Made changes to the project.';
       try {
-        // if projectJSONString is bad json, it will throw an exception and not save.
-        //this.ProjectService.project = this.project;
-
+        // if projectJSONString is bad json,
+        // an exception will be thrown and it will not save.
         this.ProjectService.saveProject(commitMessage).then(function (commitHistoryArray) {
           _this2.commitHistory = commitHistoryArray;
-          $('#commitMessageInput').val(''); // clear field after commit
+          $('#commitMessageInput').val('');
         });
       } catch (error) {
+        // TODO: i18n
         alert('Invalid JSON. Please check syntax. Aborting save.');
         return;
       }
@@ -372,24 +359,15 @@ var ProjectController = function () {
      * Create a new group (activity)
      */
     value: function createGroup() {
-      var newGroup = this.ProjectService.createGroup(this.createGroupTitle);
-
       /*
        * set the group into this variable to hold it temporarily while the
        * author decides where to place it
        */
-      this.nodeToAdd = newGroup;
+      this.nodeToAdd = this.ProjectService.createGroup(this.createGroupTitle);
 
-      // turn off the create group div
       this.showCreateGroup = false;
-
-      // clear the title from the create group div
       this.createGroupTitle = '';
-
-      // turn on insert mode
       this.insertGroupMode = true;
-
-      // turn on create mode
       this.createMode = true;
     }
 
@@ -400,31 +378,21 @@ var ProjectController = function () {
   }, {
     key: 'createNode',
     value: function createNode() {
-      var newNode = this.ProjectService.createNode(this.createNodeTitle);
-
       /*
        * set the node into this variable to hold it temporarily while the
        * author decides where to place it
        */
-      this.nodeToAdd = newNode;
+      this.nodeToAdd = this.ProjectService.createNode(this.createNodeTitle);
 
-      // turn off the create node div
       this.showCreateNode = false;
-
-      // clear the title from the create node div
       this.createNodeTitle = '';
-
-      // turn on insert mode
       this.insertNodeMode = true;
-
-      // turn on create mode
       this.createMode = true;
     }
 
     /**
      * Insert the node(s) inside
      * @param nodeId the node id of the group that we will insert into
-     * TODO refactor function is too big
      */
 
   }, {
@@ -445,7 +413,6 @@ var ProjectController = function () {
     /**
      * Insert the node(s) after
      * @param nodeId the node id of the node we will insert after
-     * TODO refactor the function is too large
      */
 
   }, {
@@ -474,10 +441,8 @@ var ProjectController = function () {
       var _this3 = this;
 
       if (type == 'inside') {
-        // create the node inside the group
         this.ProjectService.createNodeInside(this.nodeToAdd, nodeId);
       } else if (type == 'after') {
-        // create the node after the node id
         this.ProjectService.createNodeAfter(this.nodeToAdd, nodeId);
       } else {
         // an unspecified type was provided
@@ -494,13 +459,9 @@ var ProjectController = function () {
        */
       this.nodeToAdd = null;
 
-      // turn off create mode
       this.createMode = false;
-
-      // turn off insert mode
       this.insertGroupMode = false;
       this.insertNodeMode = false;
-
       this.temporarilyHighlightNewNodes(newNodes);
 
       // save and refresh the project
@@ -512,10 +473,8 @@ var ProjectController = function () {
           };
 
           if (_this3.ProjectService.isGroupNode(newNode.id)) {
-            // save the activity created event to the server
             _this3.saveEvent('activityCreated', 'Authoring', data);
           } else {
-            // save the step created event to the server
             _this3.saveEvent('stepCreated', 'Authoring', data);
           }
         }
@@ -545,12 +504,7 @@ var ProjectController = function () {
           alert(this.$translate('youAreNotAllowedToInsertTheSelectedItemsAfterItself'));
         }
       } else {
-        // perform the move
-
-        /*
-         * an array of nodes that will be saved in the data for the move
-         * event
-         */
+        // an array of nodes that will be saved in the data for the move event
         var nodes = [];
         var _iteratorNormalCompletion = true;
         var _didIteratorError = false;
@@ -583,40 +537,26 @@ var ProjectController = function () {
 
         var newNodes = [];
         if (type == 'inside') {
-          // move the nodes into the group
           newNodes = this.ProjectService.moveNodesInside(selectedNodeIds, nodeId);
         } else if (type == 'after') {
-          // move the nodes after the node id
           newNodes = this.ProjectService.moveNodesAfter(selectedNodeIds, nodeId);
         } else {
           // an unspecified type was provided
           return;
         }
 
-        // turn off move mode
         this.moveMode = false;
-
-        // turn off insert mode
         this.insertGroupMode = false;
         this.insertNodeMode = false;
-
         this.temporarilyHighlightNewNodes(newNodes);
-
-        // save and refresh the project
         this.checkPotentialStartNodeIdChangeThenSaveProject().then(function () {
           if (newNodes != null && newNodes.length > 0) {
             var firstNewNode = newNodes[0];
             if (firstNewNode != null && firstNewNode.id != null) {
-
-              // loop through all the nodes that will be saved in the event data
               for (var n = 0; n < nodes.length; n++) {
                 var node = nodes[n];
-
-                // get the new node object
                 var newNode = newNodes[n];
-
                 if (node != null && newNode != null) {
-                  // set the new title
                   node.toTitle = _this4.ProjectService.getNodePositionAndTitleByNodeId(newNode.id);
                 }
               }
@@ -692,30 +632,19 @@ var ProjectController = function () {
         return;
       }
 
-      // turn off copy mode
       this.copyMode = false;
-
-      // turn off insert mode
       this.insertGroupMode = false;
       this.insertNodeMode = false;
-
       this.temporarilyHighlightNewNodes(newNodes);
-
-      // save and refresh the project
       this.checkPotentialStartNodeIdChangeThenSaveProject().then(function () {
         if (newNodes != null && newNodes.length > 0) {
           var firstNewNode = newNodes[0];
           if (firstNewNode != null && firstNewNode.id != null) {
-            // loop through all the nodes that will be saved in the event data
             for (var n = 0; n < nodes.length; n++) {
               var node = nodes[n];
               var newNode = newNodes[n];
-
               if (node != null && newNode != null) {
-                // set the new id
                 node.toNodeId = newNode.id;
-
-                // set the new title
                 node.toTitle = _this5.ProjectService.getNodePositionAndTitleByNodeId(newNode.id);
               }
             }
@@ -733,7 +662,8 @@ var ProjectController = function () {
     }
 
     /**
-     * Import the step and then create a stepImported event
+     * Import the selected steps and draw attention to them by highlighting them
+     * and scrolling to them.
      * @param nodeIdToInsertInsideOrAfter If this is a group, we will make the
      * new step the first step in the group. If this is a step, we will place
      * the new step after it.
@@ -745,109 +675,35 @@ var ProjectController = function () {
       var _this6 = this;
 
       var selectedNodes = this.getSelectedNodesToImport();
-
-      // get the node titles that we are importing
       var selectedNodeTitles = this.getSelectedNodeTitlesToImport();
-
-      // get the project id we are importing into
       var toProjectId = this.ConfigService.getConfigParam('projectId');
-
-      // get the project id we are importing from
       var fromProjectId = this.importProjectId;
 
       // import the selected nodes and place them after the given group
       this.performImport(nodeIdToInsertInsideOrAfter).then(function (newNodes) {
-        // save and refresh the project
         _this6.checkPotentialStartNodeIdChangeThenSaveProject().then(function () {
-          /*
-           * use a timeout to allow angular to update the UI and then
-           * highlight and scroll to the new nodes
-           */
-          _this6.$timeout(function () {
-            var _iteratorNormalCompletion3 = true;
-            var _didIteratorError3 = false;
-            var _iteratorError3 = undefined;
+          var doScrollToNewNodes = true;
+          _this6.temporarilyHighlightNewNodes(newNodes, doScrollToNewNodes);
 
-            try {
-              for (var _iterator3 = newNodes[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-                var newNode = _step3.value;
-
-                if (newNode != null) {
-                  (function () {
-                    var nodeElement = $('#' + newNode.id);
-
-                    // save the original background color
-                    var originalBackgroundColor = nodeElement.css('backgroundColor');
-
-                    // highlight the background to draw attention to it
-                    nodeElement.css('background-color', '#FFFF9C');
-
-                    /*
-                     * Use a timeout before starting to transition back to
-                     * the original background color. For some reason the
-                     * element won't get highlighted in the first place
-                     * unless this timeout is used.
-                     */
-                    _this6.$timeout(function () {
-                      // slowly fade back to original background color
-                      nodeElement.css({
-                        'transition': 'background-color 2s ease-in-out',
-                        'background-color': originalBackgroundColor
-                      });
-                    });
-                  })();
-                }
-              }
-            } catch (err) {
-              _didIteratorError3 = true;
-              _iteratorError3 = err;
-            } finally {
-              try {
-                if (!_iteratorNormalCompletion3 && _iterator3.return) {
-                  _iterator3.return();
-                }
-              } finally {
-                if (_didIteratorError3) {
-                  throw _iteratorError3;
-                }
-              }
-            }
-
-            if (newNodes != null && newNodes.length > 0) {
-              // get the UI element of the first new node
-              var nodeElement = $('#' + newNodes[0].id);
-              if (nodeElement != null) {
-                // scroll to the first new node that we've added
-                $('#content').animate({
-                  scrollTop: nodeElement.prop('offsetTop') - 60
-                }, 1000);
-              }
-            }
-          });
-
-          // the data for the step imported event
-          var data = {
+          var stepsImportedEventData = {
             stepsImported: []
           };
 
           for (var n = 0; n < selectedNodes.length; n++) {
             var selectedNode = selectedNodes[n];
-
-            // get the old step title
             var selectedNodeTitle = selectedNodeTitles[n];
             var newNode = newNodes[n];
 
-            // set the from and to ids and titles
-            var tempNode = {
+            var stepImported = {
               fromProjectId: parseInt(fromProjectId),
               fromNodeId: selectedNode.id,
               fromTitle: selectedNodeTitle,
               toNodeId: newNode.id,
               toTitle: _this6.ProjectService.getNodePositionAndTitleByNodeId(newNode.id)
             };
-            data.stepsImported.push(tempNode);
+            stepsImportedEventData.stepsImported.push(stepImported);
           }
-          _this6.saveEvent('stepImported', 'Authoring', data);
+          _this6.saveEvent('stepImported', 'Authoring', stepsImportedEventData);
         });
       });
     }
@@ -865,20 +721,11 @@ var ProjectController = function () {
       var _this7 = this;
 
       var selectedNodes = this.getSelectedNodesToImport();
-
-      // get the project id we are importing into
       var toProjectId = this.ConfigService.getConfigParam('projectId');
-
-      // get the project id we are importing from
       var fromProjectId = this.importProjectId;
 
-      // copy the nodes into the project
       return this.ProjectService.copyNodes(selectedNodes, fromProjectId, toProjectId, nodeIdToInsertInsideOrAfter).then(function (newNodes) {
-
-        // refresh the project
-        _this7.ProjectService.parseProject();
-        _this7.items = _this7.ProjectService.idToOrder;
-
+        _this7.refreshProject();
         _this7.insertNodeMode = false;
         _this7.toggleView('project');
 
@@ -914,10 +761,8 @@ var ProjectController = function () {
         var selectedItemTypes = this.getSelectedItemTypes();
         if (selectedItemTypes != null && selectedItemTypes.length > 0) {
           if (selectedItemTypes.length === 0) {
-            // there are no selected items
             alert('Please select an item to copy.');
           } else if (selectedItemTypes.length === 1 && selectedItemTypes[0] === 'node') {
-            // turn on insert and copy modes
             this.insertNodeMode = true;
             this.copyMode = true;
           } else {
@@ -929,7 +774,7 @@ var ProjectController = function () {
 
     /**
      * Turn on move mode
-     * TODO refactor. too many nesting
+     * TODO refactor. too many nesting. Rename function to "turnOnMoveMode"?
      */
 
   }, {
@@ -976,10 +821,12 @@ var ProjectController = function () {
       if (selectedNodeIds != null) {
         var confirmMessage = null;
         if (selectedNodeIds.length == 1) {
-          // the user selected one item TODO: i18n
+          // the user selected one item
+          // TODO: i18n
           confirmMessage = 'Are you sure you want to delete the selected item?';
         } else if (selectedNodeIds.length > 1) {
-          // the user selected multiple items TODO: i18n
+          // the user selected multiple items
+          // TODO: i18n
           confirmMessage = 'Are you sure you want to delete the ' + selectedNodeIds.length + ' selected items?';
         }
         if (confirmMessage != null) {
@@ -990,13 +837,13 @@ var ProjectController = function () {
             var stepDeleted = false;
             var stepsDeleted = [];
             var activitiesDeleted = [];
-            var _iteratorNormalCompletion4 = true;
-            var _didIteratorError4 = false;
-            var _iteratorError4 = undefined;
+            var _iteratorNormalCompletion3 = true;
+            var _didIteratorError3 = false;
+            var _iteratorError3 = undefined;
 
             try {
-              for (var _iterator4 = selectedNodeIds[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
-                var nodeId = _step4.value;
+              for (var _iterator3 = selectedNodeIds[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+                var nodeId = _step3.value;
 
                 var node = this.ProjectService.getNodeById(nodeId);
                 var tempNode = {};
@@ -1015,13 +862,13 @@ var ProjectController = function () {
                   // we are deleting an activity
                   activityDeleted = true;
                   var stepsInActivityDeleted = [];
-                  var _iteratorNormalCompletion5 = true;
-                  var _didIteratorError5 = false;
-                  var _iteratorError5 = undefined;
+                  var _iteratorNormalCompletion4 = true;
+                  var _didIteratorError4 = false;
+                  var _iteratorError4 = undefined;
 
                   try {
-                    for (var _iterator5 = node.ids[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
-                      var stepNodeId = _step5.value;
+                    for (var _iterator4 = node.ids[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+                      var stepNodeId = _step4.value;
 
                       var stepTitle = this.ProjectService.getNodePositionAndTitleByNodeId(stepNodeId);
 
@@ -1033,16 +880,16 @@ var ProjectController = function () {
                       stepsInActivityDeleted.push(stepObject);
                     }
                   } catch (err) {
-                    _didIteratorError5 = true;
-                    _iteratorError5 = err;
+                    _didIteratorError4 = true;
+                    _iteratorError4 = err;
                   } finally {
                     try {
-                      if (!_iteratorNormalCompletion5 && _iterator5.return) {
-                        _iterator5.return();
+                      if (!_iteratorNormalCompletion4 && _iterator4.return) {
+                        _iterator4.return();
                       }
                     } finally {
-                      if (_didIteratorError5) {
-                        throw _iteratorError5;
+                      if (_didIteratorError4) {
+                        throw _iteratorError4;
                       }
                     }
                   }
@@ -1056,19 +903,17 @@ var ProjectController = function () {
                 }
                 this.ProjectService.deleteNode(nodeId);
               }
-
-              // update start node id if necesary
             } catch (err) {
-              _didIteratorError4 = true;
-              _iteratorError4 = err;
+              _didIteratorError3 = true;
+              _iteratorError3 = err;
             } finally {
               try {
-                if (!_iteratorNormalCompletion4 && _iterator4.return) {
-                  _iterator4.return();
+                if (!_iteratorNormalCompletion3 && _iterator3.return) {
+                  _iterator3.return();
                 }
               } finally {
-                if (_didIteratorError4) {
-                  throw _iteratorError4;
+                if (_didIteratorError3) {
+                  throw _iteratorError3;
                 }
               }
             }
@@ -1091,10 +936,8 @@ var ProjectController = function () {
               this.saveEvent('stepDeleted', 'Authoring', _data3);
             }
 
-            // save the project and refresh
             this.ProjectService.saveProject();
-            this.ProjectService.parseProject();
-            this.items = this.ProjectService.idToOrder;
+            this.refreshProject();
           }
         }
       }
@@ -1121,13 +964,13 @@ var ProjectController = function () {
       }, selectedNodeIds);
 
       if (this.inactiveNodes != null) {
-        var _iteratorNormalCompletion6 = true;
-        var _didIteratorError6 = false;
-        var _iteratorError6 = undefined;
+        var _iteratorNormalCompletion5 = true;
+        var _didIteratorError5 = false;
+        var _iteratorError5 = undefined;
 
         try {
-          for (var _iterator6 = this.inactiveNodes[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
-            var inactiveNode = _step6.value;
+          for (var _iterator5 = this.inactiveNodes[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+            var inactiveNode = _step5.value;
 
             if (inactiveNode != null && inactiveNode.checked) {
               // the inactive node was checked so we will add it
@@ -1135,16 +978,16 @@ var ProjectController = function () {
             }
           }
         } catch (err) {
-          _didIteratorError6 = true;
-          _iteratorError6 = err;
+          _didIteratorError5 = true;
+          _iteratorError5 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion6 && _iterator6.return) {
-              _iterator6.return();
+            if (!_iteratorNormalCompletion5 && _iterator5.return) {
+              _iterator5.return();
             }
           } finally {
-            if (_didIteratorError6) {
-              throw _iteratorError6;
+            if (_didIteratorError5) {
+              throw _iteratorError5;
             }
           }
         }
@@ -1178,13 +1021,13 @@ var ProjectController = function () {
       }, this);
 
       if (this.inactiveNodes != null) {
-        var _iteratorNormalCompletion7 = true;
-        var _didIteratorError7 = false;
-        var _iteratorError7 = undefined;
+        var _iteratorNormalCompletion6 = true;
+        var _didIteratorError6 = false;
+        var _iteratorError6 = undefined;
 
         try {
-          for (var _iterator7 = this.inactiveNodes[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
-            var inactiveNode = _step7.value;
+          for (var _iterator6 = this.inactiveNodes[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+            var inactiveNode = _step6.value;
 
             if (inactiveNode != null && inactiveNode.checked) {
               var inactiveNodeType = inactiveNode.type;
@@ -1195,16 +1038,16 @@ var ProjectController = function () {
             }
           }
         } catch (err) {
-          _didIteratorError7 = true;
-          _iteratorError7 = err;
+          _didIteratorError6 = true;
+          _iteratorError6 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion7 && _iterator7.return) {
-              _iterator7.return();
+            if (!_iteratorNormalCompletion6 && _iterator6.return) {
+              _iterator6.return();
             }
           } finally {
-            if (_didIteratorError7) {
-              throw _iteratorError7;
+            if (_didIteratorError6) {
+              throw _iteratorError6;
             }
           }
         }
@@ -1212,11 +1055,6 @@ var ProjectController = function () {
 
       return selectedItemTypes;
     }
-
-    /**
-     * Unselect all the items
-     */
-
   }, {
     key: 'unselectAllItems',
     value: function unselectAllItems() {
@@ -1280,17 +1118,11 @@ var ProjectController = function () {
     value: function cancelMove() {
       this.insertGroupMode = false;
       this.insertNodeMode = false;
-
-      // clear any new node that we might be inserting
       this.nodeToAdd = null;
-
-      // turn off the modes
       this.createMode = false;
       this.moveMode = false;
       this.copyMode = false;
       this.importMode = false;
-
-      // uncheck all the checkboxes
       this.unselectAllItems();
     }
 
@@ -1364,10 +1196,7 @@ var ProjectController = function () {
               // ask the user if they would like to change the start
               // step to the step that is now the first child in the group
               var confirmUpdateStartStep = _this8.$translate('confirmUpdateStartStep', { startStepTitle: firstChildTitle });
-
-              var doUpdateStartStep = confirm(confirmUpdateStartStep);
-
-              if (doUpdateStartStep) {
+              if (confirm(confirmUpdateStartStep)) {
                 _this8.ProjectService.setStartNodeId(firstLeafNodeId);
                 resolve();
               } else {
@@ -1392,16 +1221,17 @@ var ProjectController = function () {
     value: function checkPotentialStartNodeIdChangeThenSaveProject() {
       var _this9 = this;
 
-      // check if the project start node id should be changed
       return this.checkPotentialStartNodeIdChange().then(function () {
         _this9.ProjectService.saveProject();
-
-        // refresh the project
-        _this9.ProjectService.parseProject();
-        _this9.items = _this9.ProjectService.idToOrder;
-
+        _this9.refreshProject();
         _this9.unselectAllItems();
       });
+    }
+  }, {
+    key: 'refreshProject',
+    value: function refreshProject() {
+      this.ProjectService.parseProject();
+      this.items = this.ProjectService.idToOrder;
     }
 
     /**
@@ -1417,7 +1247,7 @@ var ProjectController = function () {
     }
 
     /**
-     * Toggle the import view and load the project drop downs if necessary
+     * Toggle the import view and populate the project drop downs if necessary
      */
 
   }, {
@@ -1429,12 +1259,10 @@ var ProjectController = function () {
 
       if (this.importMode) {
         if (this.myProjectsList == null) {
-          // populate the authorable projects drop down
           this.myProjectsList = this.ConfigService.getAuthorableProjects();
         }
 
         if (this.libraryProjectsList == null) {
-          // populate the library projects drop down
           this.ConfigService.getLibraryProjects().then(function (libraryProjectsList) {
             _this10.libraryProjectsList = libraryProjectsList;
           });
@@ -1489,7 +1317,6 @@ var ProjectController = function () {
       } else {
         // get the import project
         this.ProjectService.retrieveProjectById(this.importProjectId).then(function (projectJSON) {
-
           // create the mapping of node id to order for the import project
           _this11.importProjectIdToOrder = {};
           _this11.importProject = projectJSON;
@@ -1510,14 +1337,12 @@ var ProjectController = function () {
     key: 'previewImportProject',
     value: function previewImportProject() {
       if (this.importProject != null) {
-        // get the preview project url for the import project
-        var previewProjectURL = this.importProject.previewProjectURL;
-        window.open(previewProjectURL);
+        window.open(this.importProject.previewProjectURL);
       }
     }
 
     /**
-     * Preview the step in a new tab
+     * Preview the import step in a new tab
      * @param node
      */
 
@@ -1564,13 +1389,13 @@ var ProjectController = function () {
     key: 'getSelectedNodesToImport',
     value: function getSelectedNodesToImport() {
       var selectedNodes = [];
-      var _iteratorNormalCompletion8 = true;
-      var _didIteratorError8 = false;
-      var _iteratorError8 = undefined;
+      var _iteratorNormalCompletion7 = true;
+      var _didIteratorError7 = false;
+      var _iteratorError7 = undefined;
 
       try {
-        for (var _iterator8 = this.importProjectItems[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
-          var item = _step8.value;
+        for (var _iterator7 = this.importProjectItems[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
+          var item = _step7.value;
 
           if (item.checked) {
             /*
@@ -1581,16 +1406,16 @@ var ProjectController = function () {
           }
         }
       } catch (err) {
-        _didIteratorError8 = true;
-        _iteratorError8 = err;
+        _didIteratorError7 = true;
+        _iteratorError7 = err;
       } finally {
         try {
-          if (!_iteratorNormalCompletion8 && _iterator8.return) {
-            _iterator8.return();
+          if (!_iteratorNormalCompletion7 && _iterator7.return) {
+            _iterator7.return();
           }
         } finally {
-          if (_didIteratorError8) {
-            throw _iteratorError8;
+          if (_didIteratorError7) {
+            throw _iteratorError7;
           }
         }
       }
@@ -1638,7 +1463,6 @@ var ProjectController = function () {
   }, {
     key: 'saveProjectJSONString',
     value: function saveProjectJSONString() {
-      // create the project object from the project JSON string
       var project = angular.fromJson(this.projectJSONString);
       this.ProjectService.setProject(project);
       this.checkPotentialStartNodeIdChangeThenSaveProject();
@@ -1879,8 +1703,10 @@ var ProjectController = function () {
     }
 
     /**
-     * Temporarily highlight the new nodes
+     * Temporarily highlight the new nodes to draw attention to them
      * @param newNodes the new nodes to highlight
+     * @param doScrollToNewNodes if true, scroll to the first new node added
+     * TODO: can we remove the null checks: ensure that newNodes is never null?
      */
 
   }, {
@@ -1888,24 +1714,22 @@ var ProjectController = function () {
     value: function temporarilyHighlightNewNodes(newNodes) {
       var _this12 = this;
 
+      var doScrollToNewNodes = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+
       this.$timeout(function () {
-        if (newNodes != null) {
-          var _iteratorNormalCompletion9 = true;
-          var _didIteratorError9 = false;
-          var _iteratorError9 = undefined;
+        if (newNodes != null && newNodes.length > 0) {
+          var _iteratorNormalCompletion8 = true;
+          var _didIteratorError8 = false;
+          var _iteratorError8 = undefined;
 
           try {
-            for (var _iterator9 = newNodes[Symbol.iterator](), _step9; !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
-              var newNode = _step9.value;
+            for (var _iterator8 = newNodes[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
+              var newNode = _step8.value;
 
               if (newNode != null) {
                 (function () {
                   var nodeElement = $('#' + newNode.id);
-
-                  // save the original background color
                   var originalBackgroundColor = nodeElement.css('backgroundColor');
-
-                  // highlight the background briefly to draw attention to it
                   nodeElement.css('background-color', '#FFFF9C');
 
                   /*
@@ -1915,7 +1739,6 @@ var ProjectController = function () {
                    * unless this timeout is used.
                    */
                   _this12.$timeout(function () {
-                    // slowly fade back to original background color
                     nodeElement.css({
                       'transition': 'background-color 3s ease-in-out',
                       'background-color': originalBackgroundColor
@@ -1925,17 +1748,26 @@ var ProjectController = function () {
               }
             }
           } catch (err) {
-            _didIteratorError9 = true;
-            _iteratorError9 = err;
+            _didIteratorError8 = true;
+            _iteratorError8 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion9 && _iterator9.return) {
-                _iterator9.return();
+              if (!_iteratorNormalCompletion8 && _iterator8.return) {
+                _iterator8.return();
               }
             } finally {
-              if (_didIteratorError9) {
-                throw _iteratorError9;
+              if (_didIteratorError8) {
+                throw _iteratorError8;
               }
+            }
+          }
+
+          if (doScrollToNewNodes) {
+            var firstNodeElementAdded = $('#' + newNodes[0].id);
+            if (firstNodeElementAdded != null) {
+              $('#content').animate({
+                scrollTop: firstNodeElementAdded.prop('offsetTop') - 60
+              }, 1000);
             }
           }
         }
@@ -1998,7 +1830,7 @@ var ProjectController = function () {
      * Get the background color for a step
      * @param nodeId get the background color for a step in the project view
      * @return If the node is in a branch path it will return a color. If the
-     * ndoe is not in a branch path it will return null.
+     * node is not in a branch path it will return null.
      */
 
   }, {
