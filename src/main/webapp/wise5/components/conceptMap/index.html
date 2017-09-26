@@ -407,7 +407,7 @@
                              ng-if="conceptMapController.$scope.componentState"
                              width="800"
                              height="600"
-                             ng-style="{'background-image': conceptMapController.componentContent.background != null ? 'url(' + conceptMapController.componentContent.background + ')' : '',
+                             ng-style="{'background-image': conceptMapController.background != null ? 'url(' + conceptMapController.background + ')' : '',
                              'background-size': conceptMapController.backgroundSize,
                              'background-repeat': 'no-repeat',
                              'border': '1px solid black',
@@ -479,7 +479,7 @@
                                 <svg id="{{conceptMapController.svgId}}"
                                      width="800"
                                      height="600"
-                                     ng-style="{'background-image': conceptMapController.componentContent.background != null ? 'url(' + conceptMapController.componentContent.background + ')' : '',
+                                     ng-style="{'background-image': conceptMapController.background != null ? 'url(' + conceptMapController.background + ')' : '',
                                      'background-size': conceptMapController.backgroundSize,
                                      'background-repeat': 'no-repeat',
                                      'border': '1px solid black',
