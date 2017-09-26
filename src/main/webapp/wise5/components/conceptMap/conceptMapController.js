@@ -219,6 +219,7 @@ var ConceptMapController = function () {
 
             // get the component id
             this.componentId = this.componentContent.id;
+            this.setBackgroundImage(this.componentContent.background, this.componentContent.stretchBackground);
 
             // set the id of the svg and other display elements
             this.svgId = 'svg_' + this.nodeId + '_' + this.componentId;
@@ -917,6 +918,10 @@ var ConceptMapController = function () {
                     }
                 }
 
+                if (conceptMapData.backgroundPath != null && conceptMapData.backgroundPath != '') {
+                    this.setBackgroundImage(conceptMapData.backgroundPath, conceptMapData.stretchBackground);
+                }
+
                 /*
                  * move the link text group to the front so that they are on top
                  * of links
@@ -1441,8 +1446,8 @@ var ConceptMapController = function () {
             }
 
             // set the background data into the student data
-            if (this.componentContent.background != null) {
-                var background = this.componentContent.background;
+            if (this.background != null) {
+                var background = this.background;
 
                 // this is the background file name e.g. background.png
                 studentData.background = background.substring(background.lastIndexOf('/') + 1);
@@ -1451,7 +1456,7 @@ var ConceptMapController = function () {
                 studentData.backgroundPath = background;
 
                 // whether to stretch the background to fill the svg element
-                studentData.stretchBackground = this.componentContent.stretchBackground;
+                studentData.stretchBackground = this.stretchBackground;
             }
 
             return studentData;
@@ -2982,18 +2987,6 @@ var ConceptMapController = function () {
 
             // set the link type chooser style
             this.setLinkTypeChooserStyle();
-
-            // check if there is a background specified
-            if (this.componentContent.background != null) {
-
-                if (this.componentContent.stretchBackground) {
-                    // stretch the background to fit the whole svg element
-                    this.backgroundSize = '100% 100%';
-                } else {
-                    // use the original dimensions of the background image
-                    this.backgroundSize = '';
-                }
-            }
         }
 
         /**
@@ -5450,6 +5443,8 @@ var ConceptMapController = function () {
 
                 var mergedNodes = [];
                 var mergedLinks = [];
+                var backgroundPath = null;
+                var stretchBackground = null;
 
                 // loop through all the component state
                 for (var c = 0; c < componentStates.length; c++) {
@@ -5472,8 +5467,21 @@ var ConceptMapController = function () {
                                     // add the links to our merged links
                                     mergedLinks = mergedLinks.concat(conceptMapData.links);
                                 }
+
+                                if (conceptMapData.backgroundPath != null && conceptMapData.backgroundPath != '') {
+                                    backgroundPath = conceptMapData.backgroundPath;
+                                    stretchBackground = conceptMapData.stretchBackground;
+                                }
                             }
                         }
+                    }
+                }
+
+                if (this.componentContent.background != null && this.componentContent.background != '') {
+                    // use the background from this component
+                    backgroundPath = this.componentContent.background;
+                    if (this.componentContent.stretchBackground) {
+                        stretchBackground = this.componentContent.stretchBackground;
                     }
                 }
 
@@ -5482,6 +5490,10 @@ var ConceptMapController = function () {
                 mergedComponentState.studentData.conceptMapData = {};
                 mergedComponentState.studentData.conceptMapData.nodes = mergedNodes;
                 mergedComponentState.studentData.conceptMapData.links = mergedLinks;
+                mergedComponentState.studentData.conceptMapData.backgroundPath = backgroundPath;
+                if (stretchBackground != null) {
+                    mergedComponentState.studentData.conceptMapData.stretchBackground = stretchBackground;
+                }
             }
 
             /*
@@ -5670,6 +5682,28 @@ var ConceptMapController = function () {
             }
 
             return false;
+        }
+
+        /**
+         * Set the background image on the svg canvas
+         * @param backgroundPath the absolute path to the background image
+         * @param stretchBackground whether to stretch the background to cover the
+         * whole svg background
+         */
+
+    }, {
+        key: 'setBackgroundImage',
+        value: function setBackgroundImage(backgroundPath, stretchBackground) {
+            this.background = backgroundPath;
+            this.stretchBackground = stretchBackground;
+
+            if (stretchBackground) {
+                // stretch the background to fit the whole svg element
+                this.backgroundSize = '100% 100%';
+            } else {
+                // use the original dimensions of the background image
+                this.backgroundSize = '';
+            }
         }
     }]);
 
