@@ -364,6 +364,7 @@ var ConceptMapController = function () {
                     this.availableLinks = this.componentContent.links;
                     this.width = this.componentContent.width;
                     this.height = this.componentContent.height;
+                    this.setBackgroundImage(this.componentContent.background, this.componentContent.stretchBackground);
 
                     /*
                      * make sure the SVG element can be accessed. we need to
