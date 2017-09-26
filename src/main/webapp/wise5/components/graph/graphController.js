@@ -5894,6 +5894,12 @@ var GraphController = function () {
                  */
                 var promises = [];
 
+                /*
+                 * this will end up containing the background from the last
+                 * connected component
+                 */
+                var connectedComponentBackgroundImage = null;
+
                 // loop through all the connected components
                 for (var c = 0; c < connectedComponents.length; c++) {
                     var connectedComponent = connectedComponents[c];
@@ -5920,6 +5926,10 @@ var GraphController = function () {
 
                                 // we are showing work so we will not allow the student to edit it
                                 this.isDisabled = true;
+
+                                if (componentState != null && componentState.studentData != null && componentState.studentData.backgroundImage != null) {
+                                    connectedComponentBackgroundImage = componentState.studentData.backgroundImage;
+                                }
                             } else {
                                 /*
                                  * showClassmateWorkSource determines whether to get
@@ -5932,26 +5942,30 @@ var GraphController = function () {
 
                                 // we are showing work so we will not allow the student to edit it
                                 this.isDisabled = true;
+
+                                // get the connected component content
+                                var component = this.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
+                                if (component != null) {
+                                    // inject the asset paths so that the assets are absolute
+                                    component = this.ProjectService.injectAssetPaths(component);
+                                    connectedComponentBackgroundImage = component.backgroundImage;
+                                }
                             }
-                        } else if (type == 'showWork') {
-                            // we are getting the work from this student
-
+                        } else if (type == 'showWork' || type == 'importWork' || type == null) {
                             // get the latest component state from the component
                             var componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
 
                             // get the trials from the component state
                             promises.push(this.getTrialsFromComponentState(nodeId, componentId, componentState));
 
-                            // we are showing work so we will not allow the student to edit it
-                            this.isDisabled = true;
-                        } else if (type == 'importWork' || type == null) {
-                            // we are getting the work from this student
+                            if (type == 'showWork') {
+                                // we are showing work so we will not allow the student to edit it
+                                this.isDisabled = true;
+                            }
 
-                            // get the latest component state from the component
-                            var componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
-
-                            // get the trials from the component state
-                            promises.push(this.getTrialsFromComponentState(nodeId, componentId, componentState));
+                            if (componentState != null && componentState.studentData != null && componentState.studentData.backgroundImage != null) {
+                                connectedComponentBackgroundImage = componentState.studentData.backgroundImage;
+                            }
                         }
                     }
                 }
@@ -5992,6 +6006,14 @@ var GraphController = function () {
                     // create a new component state
                     var newComponentState = _this8.NodeService.createNewComponentState();
                     newComponentState.studentData = studentData;
+
+                    if (_this8.componentContent.backgroundImage != null && _this8.componentContent.backgroundImage != '') {
+                        // use the background image from this component
+                        newComponentState.studentData.backgroundImage = _this8.componentContent.backgroundImage;
+                    } else if (connectedComponentBackgroundImage != null) {
+                        // use the background image from the connected component
+                        newComponentState.studentData.backgroundImage = connectedComponentBackgroundImage;
+                    }
 
                     // populate the component state into this component
                     _this8.setStudentWork(newComponentState);
