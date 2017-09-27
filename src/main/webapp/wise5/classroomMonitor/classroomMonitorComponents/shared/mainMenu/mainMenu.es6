@@ -17,7 +17,7 @@ const MainMenu = {
                               aria-label="{{ value.label }}"
                               ui-sref="{{ key }}"
                               ng-click="value.action()"
-                              ng-class="{'active': $ctrl.state.$current.name === key}">
+                              ng-class="{'active': key.startsWith($ctrl.state.$current.name)}">
                     <md-icon class="menu-sidenav__icon"> {{ value.icon }} </md-icon>
                     <p class="menu-sidenav__item">{{ value.name }}</p>
                 </md-list-item>
@@ -29,7 +29,7 @@ const MainMenu = {
                               aria-label="{{ value.label }}"
                               ui-sref="{{ key }}"
                               ng-click="value.action()"
-                              ng-class="{'active': $ctrl.state.$current.name === key}">
+                              ng-class="{'active': key.startsWith($ctrl.state.$current.name)}">
                     <md-icon class="menu-sidenav__icon"> {{ value.icon }} </md-icon>
                     <p class="menu-sidenav__item">{{ value.name }}</p>
                 </md-list-item>

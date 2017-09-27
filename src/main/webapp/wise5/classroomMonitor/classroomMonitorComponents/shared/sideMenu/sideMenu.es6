@@ -26,7 +26,7 @@ const SideMenu = {
                        ui-sref="{{ key }}"
                        ng-click="value.action()"
                        class="md-icon-button menu-sidebar__link">
-                <md-icon ng-class="{'primary': $ctrl.state.$current.name === key}"> {{ value.icon }} </md-icon>
+                <md-icon ng-class="{ 'primary': key.startsWith($ctrl.state.$current.name) }"> {{ value.icon }} </md-icon>
                 <md-tooltip md-direction="right">{{ value.name }}</md-tooltip>
             </md-button>
         </div>`

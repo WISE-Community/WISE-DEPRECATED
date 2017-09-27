@@ -32,7 +32,7 @@ var SideMenu = {
         onMenuToggle: '&'
     },
     controller: SideMenuController,
-    template: '<div class="menu-sidebar">\n            <md-button ng-repeat="(key, value) in $ctrl.views"\n                       ng-if="value.type === \'primary\' && value.active"\n                       aria-label="{{ value.name }}"\n                       ui-sref="{{ key }}"\n                       ng-click="value.action()"\n                       class="md-icon-button menu-sidebar__link">\n                <md-icon ng-class="{\'primary\': $ctrl.state.$current.name === key}"> {{ value.icon }} </md-icon>\n                <md-tooltip md-direction="right">{{ value.name }}</md-tooltip>\n            </md-button>\n        </div>'
+    template: '<div class="menu-sidebar">\n            <md-button ng-repeat="(key, value) in $ctrl.views"\n                       ng-if="value.type === \'primary\' && value.active"\n                       aria-label="{{ value.name }}"\n                       ui-sref="{{ key }}"\n                       ng-click="value.action()"\n                       class="md-icon-button menu-sidebar__link">\n                <md-icon ng-class="{ \'primary\': key.startsWith($ctrl.state.$current.name) }"> {{ value.icon }} </md-icon>\n                <md-tooltip md-direction="right">{{ value.name }}</md-tooltip>\n            </md-button>\n        </div>'
 };
 
 exports.default = SideMenu;
