@@ -702,82 +702,82 @@ class NodeService {
                          * the branch path to go to
                          */
 
-                         if (transitionResult != null) {
-                             /*
-                                * the user has previously chosen the branch path
-                                * so we will use the transition they chose and
-                                * not ask them again
-                                */
-                         } else {
-                             // ask the user which branch path to go to
+                        if (transitionResult != null) {
+                            /*
+                             * the user has previously chosen the branch path
+                             * so we will use the transition they chose and
+                             * not ask them again
+                             */
+                        } else {
+                            // ask the user which branch path to go to
 
-                             resolvePromiseNow = false;
+                            resolvePromiseNow = false;
 
-                             let chooseBranchPathTemplateUrl = this.ProjectService.getThemePath() + '/templates/branchPathChooser.html';
+                            let chooseBranchPathTemplateUrl = this.ProjectService.getThemePath() + '/templates/branchPathChooser.html';
 
-                             var dialogOptions = {
-                                 templateUrl: chooseBranchPathTemplateUrl,
-                                 controller: ChooseBranchPathController,
-                                 locals: {
-                                     availableTransitions: availableTransitions,
-                                     deferred: deferred,
-                                     nodeId: nodeId
-                                 }
-                             };
+                            var dialogOptions = {
+                                templateUrl: chooseBranchPathTemplateUrl,
+                                controller: ChooseBranchPathController,
+                                locals: {
+                                    availableTransitions: availableTransitions,
+                                    deferred: deferred,
+                                    nodeId: nodeId
+                                }
+                            };
 
-                             /**
-                                * Controller that handles the dialog popup that lets the user
-                                * which branch path to go to.
-                                * @param $scope the scope
-                                * @param $mdDialog the dialog popup object
-                                * @param availableTransitions the branch paths
-                                * @param deferred used to resolve the promise once the user
-                                * has chosen a branch path
-                                * @param nodeId the current node
-                                */
-                             function ChooseBranchPathController($scope, $mdDialog, NodeService, ProjectService, availableTransitions, deferred, nodeId) {
+                            /**
+                             * Controller that handles the dialog popup that lets the user
+                             * which branch path to go to.
+                             * @param $scope the scope
+                             * @param $mdDialog the dialog popup object
+                             * @param availableTransitions the branch paths
+                             * @param deferred used to resolve the promise once the user
+                             * has chosen a branch path
+                             * @param nodeId the current node
+                             */
+                            function ChooseBranchPathController($scope, $mdDialog, NodeService, ProjectService, availableTransitions, deferred, nodeId) {
 
-                                 $scope.availableTransitions = availableTransitions;
-                                 $scope.NodeService = NodeService;
-                                 $scope.ProjectService = ProjectService;
+                                $scope.availableTransitions = availableTransitions;
+                                $scope.NodeService = NodeService;
+                                $scope.ProjectService = ProjectService;
 
-                                 // called when the user clicks on a branch path
-                                 $scope.chooseBranchPath = (transitionResult) => {
-                                     // remember the transition that was chosen
-                                     $scope.NodeService.setTransitionResult(nodeId, transitionResult);
+                                // called when the user clicks on a branch path
+                                $scope.chooseBranchPath = (transitionResult) => {
+                                    // remember the transition that was chosen
+                                    $scope.NodeService.setTransitionResult(nodeId, transitionResult);
 
-                                     // resolve the promise
-                                     deferred.resolve(transitionResult);
+                                    // resolve the promise
+                                    deferred.resolve(transitionResult);
 
-                                     /*
-                                        * don't remember the promise for this step anymore
-                                        * since we have resolved it
-                                        */
-                                     $scope.NodeService.setChooseTransitionPromise(nodeId, null);
+                                    /*
+                                     * don't remember the promise for this step anymore
+                                     * since we have resolved it
+                                     */
+                                    $scope.NodeService.setChooseTransitionPromise(nodeId, null);
 
-                                     // close the dialog
-                                     $mdDialog.hide();
-                                 }
+                                    // close the dialog
+                                    $mdDialog.hide();
+                                }
 
-                                 // obtains the step number and title
-                                 $scope.getNodePositionAndTitleByNodeId = (nodeId) => {
-                                     return $scope.ProjectService.getNodePositionAndTitleByNodeId(nodeId);
-                                 }
+                                // obtains the step number and title
+                                $scope.getNodePositionAndTitleByNodeId = (nodeId) => {
+                                    return $scope.ProjectService.getNodePositionAndTitleByNodeId(nodeId);
+                                }
 
-                                 // called when the dialog is closed
-                                 $scope.close = () => {
-                                     $mdDialog.hide();
-                                 }
-                             }
+                                // called when the dialog is closed
+                                $scope.close = () => {
+                                    $mdDialog.hide();
+                                }
+                            }
 
-                             ChooseBranchPathController.$inject = ['$scope', '$mdDialog', 'NodeService', 'ProjectService', 'availableTransitions', 'deferred', 'nodeId'];
+                            ChooseBranchPathController.$inject = ['$scope', '$mdDialog', 'NodeService', 'ProjectService', 'availableTransitions', 'deferred', 'nodeId'];
 
-                             /*
-                                * show the popup dialog that lets the user choose the
-                                * branch path
-                                */
-                             this.$mdDialog.show(dialogOptions);
-                         }
+                            /*
+                             * show the popup dialog that lets the user choose the
+                             * branch path
+                             */
+                            this.$mdDialog.show(dialogOptions);
+                        }
                     } else {
                         /*
                          * we are in regular student run mode so we will choose

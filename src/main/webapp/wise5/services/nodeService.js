@@ -766,22 +766,22 @@ var NodeService = function () {
 
                             if (transitionResult != null) {
                                 /*
-                                   * the user has previously chosen the branch path
-                                   * so we will use the transition they chose and
-                                   * not ask them again
-                                   */
+                                 * the user has previously chosen the branch path
+                                 * so we will use the transition they chose and
+                                 * not ask them again
+                                 */
                             } else {
 
                                 /**
-                                   * Controller that handles the dialog popup that lets the user
-                                   * which branch path to go to.
-                                   * @param $scope the scope
-                                   * @param $mdDialog the dialog popup object
-                                   * @param availableTransitions the branch paths
-                                   * @param deferred used to resolve the promise once the user
-                                   * has chosen a branch path
-                                   * @param nodeId the current node
-                                   */
+                                 * Controller that handles the dialog popup that lets the user
+                                 * which branch path to go to.
+                                 * @param $scope the scope
+                                 * @param $mdDialog the dialog popup object
+                                 * @param availableTransitions the branch paths
+                                 * @param deferred used to resolve the promise once the user
+                                 * has chosen a branch path
+                                 * @param nodeId the current node
+                                 */
                                 var ChooseBranchPathController = function ChooseBranchPathController($scope, $mdDialog, NodeService, ProjectService, availableTransitions, deferred, nodeId) {
 
                                     $scope.availableTransitions = availableTransitions;
@@ -797,9 +797,9 @@ var NodeService = function () {
                                         deferred.resolve(transitionResult);
 
                                         /*
-                                           * don't remember the promise for this step anymore
-                                           * since we have resolved it
-                                           */
+                                         * don't remember the promise for this step anymore
+                                         * since we have resolved it
+                                         */
                                         $scope.NodeService.setChooseTransitionPromise(nodeId, null);
 
                                         // close the dialog
@@ -836,9 +836,9 @@ var NodeService = function () {
                                 ChooseBranchPathController.$inject = ['$scope', '$mdDialog', 'NodeService', 'ProjectService', 'availableTransitions', 'deferred', 'nodeId'];
 
                                 /*
-                                   * show the popup dialog that lets the user choose the
-                                   * branch path
-                                   */
+                                 * show the popup dialog that lets the user choose the
+                                 * branch path
+                                 */
                                 this.$mdDialog.show(dialogOptions);
                             }
                         } else {
