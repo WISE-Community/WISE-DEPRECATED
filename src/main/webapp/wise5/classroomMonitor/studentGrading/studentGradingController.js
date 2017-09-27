@@ -9,57 +9,115 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var StudentGradingController = function () {
-    function StudentGradingController($mdDialog, $stateParams, AnnotationService, ConfigService, NotebookService, ProjectService, TeacherDataService) {
+    function StudentGradingController($filter, $mdDialog, $mdMedia, $scope, $stateParams, AnnotationService, ConfigService, NotificationService, ProjectService, StudentStatusService, TeacherDataService) {
+        var _this = this;
+
         _classCallCheck(this, StudentGradingController);
 
+        this.$filter = $filter;
         this.$mdDialog = $mdDialog;
+        $scope.$mdMedia = $mdMedia;
+        this.$scope = $scope;
         this.$stateParams = $stateParams;
         this.AnnotationService = AnnotationService;
         this.ConfigService = ConfigService;
-        this.NotebookService = NotebookService;
+        this.NotificationService = NotificationService;
         this.ProjectService = ProjectService;
+        this.StudentStatusService = StudentStatusService;
         this.TeacherDataService = TeacherDataService;
 
-        this.annotationMappings = {};
-
-        this.workgroupId = parseInt(this.$stateParams.workgroupId);
-
-        this.nodeIds = this.ProjectService.getFlattenedProjectAsNodeIds();
-
-        this.branches = this.ProjectService.getBranches();
-
-        this.teacherWorkgroupId = this.ConfigService.getWorkgroupId();
-
-        this.canViewStudentNames = true;
-        this.canGradeStudentWork = true;
-
-        // get the role of the teacher for the run e.g. 'owner', 'write', 'read'
-        var role = this.ConfigService.getTeacherRole(this.teacherWorkgroupId);
-
-        if (role === 'owner') {
-            // the teacher is the owner of the run and has full access
-            this.canViewStudentNames = true;
-            this.canGradeStudentWork = true;
-        } else if (role === 'write') {
-            // the teacher is a shared teacher that can grade the student work
-            this.canViewStudentNames = true;
-            this.canGradeStudentWork = true;
-        } else if (role === 'read') {
-            // the teacher is a shared teacher that can only view the student work
-            this.canViewStudentNames = false;
-            this.canGradeStudentWork = false;
-        }
-
-        if (this.canViewStudentNames) {
-            // display the student name
-            this.userName = this.ConfigService.getUserNameByWorkgroupId(this.workgroupId);
-        } else {
-            // do not display the student name. instead display the workgroup id.
-            this.userName = this.workgroupId;
-        }
-
-        // scroll to the top of the page when the page loads2
+        // scroll to the top of the page
         document.body.scrollTop = document.documentElement.scrollTop = 0;
+
+        this.$translate = this.$filter('translate');
+
+        this.sort = this.TeacherDataService.nodeGradingSort;
+        //this.hiddenComponents = [];
+        this.permissions = this.ConfigService.getPermissions();
+        this.workgroupId = parseInt(this.$stateParams.workgroupId);
+        this.nodeIds = this.ProjectService.getFlattenedProjectAsNodeIds();
+        this.branches = this.ProjectService.getBranches();
+        this.avatarColor = this.ConfigService.getAvatarColorForWorkgroupId(this.workgroupId);
+        this.displayNames = this.ConfigService.getDisplayNamesByWorkgroupId(this.workgroupId);
+        var maxScore = this.StudentStatusService.getMaxScoreForWorkgroupId(this.workgroupId);
+        this.maxScore = maxScore ? maxScore : 0;
+        this.totalScore = this.TeacherDataService.getTotalScoreByWorkgroupId(this.workgroupId);
+        this.projectCompletion = this.StudentStatusService.getStudentProjectCompletion(this.workgroupId, true);
+
+        this.$scope.$on('projectSaved', function (event, args) {
+            // update project maxScore
+            _this.maxScore = _this.StudentStatusService.getMaxScoreForWorkgroupId(_this.workgroupId);
+
+            // update max scores for all nodes
+            //this.updateNodeMaxScores();
+        });
+
+        this.$scope.$on('notificationAdded', function (event, notification) {
+            if (notification.type === 'CRaterResult') {
+                // there is a new CRaterResult notification
+                // TODO: expand to encompass other notification types that should be shown to teacher
+                var workgroupId = notification.toWorkgroupId;
+                var _nodeId = notification.nodeId;
+                if (workgroupId === _this.workgroupId && _this.nodesById[_nodeId]) {
+                    // update the node with the new notification
+                    //this.updateNode(nodeId);
+                }
+            }
+        });
+
+        this.$scope.$on('notificationChanged', function (event, notification) {
+            if (notification.type === 'CRaterResult') {
+                // a CRaterResult notification has changed
+                // TODO: expand to encompass other notification types that should be shown to teacher
+                var workgroupId = notification.toWorkgroupId;
+                var _nodeId2 = notification.nodeId;
+                if (workgroupId === _this.workgroupId && _this.nodesById[_nodeId2]) {
+                    // update the node with the new notification
+                    //this.updateNode(nodeId);
+                }
+            }
+        });
+
+        this.$scope.$on('annotationReceived', function (event, args) {
+            var annotation = args.annotation;
+
+            if (annotation) {
+                var workgroupId = annotation.toWorkgroupId;
+                var _nodeId3 = annotation.nodeId;
+                if (workgroupId === _this.workgroupId && _this.nodesById[_nodeId3]) {
+                    // update the total score for the workgroup
+                    _this.totalScore = _this.TeacherDataService.getTotalScoreByWorkgroupId(workgroupId);
+
+                    // update the node with the new annotation
+                    //this.updateNode(nodeId);
+                }
+            }
+        });
+
+        // listen for the studentStatusReceived event
+        this.$scope.$on('studentStatusReceived', function (event, args) {
+            // get the workgroup id
+            var studentStatus = args.studentStatus;
+            var workgroupId = studentStatus.workgroupId;
+
+            if (workgroupId === _this.workgroupId) {
+                // update project completion for workgroup
+                _this.projectCompletion = _this.StudentStatusService.getStudentProjectCompletion(_this.workgroupId, true);
+            }
+        });
+
+        this.$scope.$on('studentWorkReceived', function (event, args) {
+            var studentWork = args.studentWork;
+
+            if (studentWork != null) {
+                var workgroupId = studentWork.workgroupId;
+                var _nodeId4 = studentWork.nodeId;
+                if (workgroupId === _this.workgroupId && _this.nodesById[_nodeId4]) {
+                    // update the node with the new componentState
+                    //this.updateNode(nodeId);
+                }
+            }
+        });
 
         // save event when student grading view is displayed
         var context = "ClassroomMonitor",
@@ -203,32 +261,23 @@ var StudentGradingController = function () {
 
             return componentState;
         }
-    }, {
-        key: 'showNotebookReport',
-        value: function showNotebookReport($event) {
-            var _this = this;
 
-            this.NotebookService.retrieveNotebookItems(this.workgroupId).then(function (notebookItems) {
-                // assume only one report for now
-                var reportItemId = _this.NotebookService.config.itemTypes.report.notes[0].reportId;
-                var reportItem = _this.NotebookService.getLatestNotebookItemByLocalNotebookItemId(reportItemId);
-                var reportItemContent = reportItem.content.content;
-                _this.$mdDialog.show(_this.$mdDialog.alert({
-                    title: reportItem.content.title,
-                    htmlContent: reportItemContent,
-                    ok: 'Close',
-                    targetEvent: $event
-                })).finally(function () {
-                    alert = undefined;
-                });
-            });
+        /**
+         * Gets and returns the total project score for the currently selected workgroup
+         * @return score object or null
+         */
+
+    }, {
+        key: 'getCurrentWorkgroupScore',
+        value: function getCurrentWorkgroupScore() {
+            return this.TeacherDataService.getTotalScoreByWorkgroupId(this.workgroupId);
         }
     }]);
 
     return StudentGradingController;
 }();
 
-StudentGradingController.$inject = ['$mdDialog', '$stateParams', 'AnnotationService', 'ConfigService', 'NotebookService', 'ProjectService', 'TeacherDataService'];
+StudentGradingController.$inject = ['$filter', '$mdDialog', '$mdMedia', '$scope', '$stateParams', 'AnnotationService', 'ConfigService', 'NotificationService', 'ProjectService', 'StudentStatusService', 'TeacherDataService'];
 
 exports.default = StudentGradingController;
 //# sourceMappingURL=studentGradingController.js.map
