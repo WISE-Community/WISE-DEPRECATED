@@ -347,49 +347,63 @@
             </div>
         </div>
     </div>
-
     <div ng-if='animationController.mode === "authoring"'>
-
-        <md-button class='topButton md-raised md-primary' ng-click='animationController.showAdvancedAuthoring = !animationController.showAdvancedAuthoring'>
-            <md-icon>build</md-icon>
-            <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ "ADVANCED" | translate }}</md-tooltip>
-        </md-button>
+        <div>
+            <md-input-container style='margin-right: 20px; width: 150px; height: 50px;'>
+                <md-button class='topButton md-raised md-primary' ng-click='animationController.showAdvancedAuthoring = !animationController.showAdvancedAuthoring'>
+                    <md-icon>build</md-icon>
+                    <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ "ADVANCED" | translate }}</md-tooltip>
+                </md-button>
+            </md-input-container>
+        </div>
         <div ng-if='animationController.showAdvancedAuthoring'>
-            <span>{{ 'SHOW_SAVE_BUTTON' | translate }}:</span>
-            <input type='checkbox'
-                   ng-model='animationController.authoringComponentContent.showSaveButton'
-                   ng-change='animationController.authoringViewComponentChanged()'/>
-            <br/>
-            <span>{{ 'SHOW_SUBMIT_BUTTON' | translate }}:</span>
-            <input type='checkbox'
-                   ng-model='animationController.authoringComponentContent.showSubmitButton'
-                   ng-change='animationController.showSubmitButtonValueChanged()'/>
-            <div ng-if='animationController.authoringComponentContent.showSubmitButton'
-                 style='display:inline'>
-                <span>{{ 'MAX_SUBMIT' | translate }}:</span>
-                <input type='number'
-                       ng-model='animationController.authoringComponentContent.maxSubmitCount'
-                       ng-change='animationController.authoringViewComponentChanged()'/>
-            </div>
-            <br/>
-            <span>{{ 'MAX_SCORE' | translate }}:</span>
-            <input type='number'
-                   ng-model='animationController.authoringComponentContent.maxScore'
-                   ng-change='animationController.authoringViewComponentChanged()'
-                   ng-model-options='{ debounce: 1000 }'
-                   style='width: 3em'/>
-            <br/>
-            {{ 'COMPONENT_WIDTH' | translate }}:
-            <input type='number'
-                   ng-model='animationController.authoringComponentContent.componentWidth'
-                   ng-change='animationController.authoringViewComponentChanged()'
-                   ng-model-options='{ debounce: 1000 }'
-                   style='width: 3em'/>
-            <br/>
             <div>
-                <button ng-click='animationController.showRubricAuthoring = !animationController.showRubricAuthoring'>
-                    {{ 'EDIT_COMPONENT_RUBRIC' | translate }}
-                </button>
+                <md-checkbox class='md-primary'
+                             ng-model='animationController.authoringComponentContent.showSaveButton'
+                             ng-change='animationController.authoringViewComponentChanged()'>
+                    {{ 'SHOW_SAVE_BUTTON' | translate }}
+                </md-checkbox>
+            </div>
+            <div>
+                <md-checkbox class='md-primary'
+                             ng-model='animationController.authoringComponentContent.showSubmitButton'
+                             ng-change='animationController.authoringViewComponentChanged()'>
+                    {{ 'SHOW_SUBMIT_BUTTON' | translate }}
+                </md-checkbox>
+            </div>
+            <div>
+                <md-input-container style='margin-right: 20px; width: 150px; height: 25px;'
+                                    ng-if='animationController.authoringComponentContent.showSubmitButton'>
+                    <label>{{ 'MAX_SUBMIT' | translate }}</label>
+                    <input type='number'
+                           ng-model='animationController.authoringComponentContent.maxSubmitCount'
+                           ng-model-options='{ debounce: 1000 }'
+                           ng-change='animationController.authoringViewComponentChanged()'/>
+                </md-input-container>
+            </div>
+            <div>
+                <md-input-container style='margin-right: 20px; width: 150px; height: 25px;'>
+                    <label>{{ 'MAX_SCORE' | translate }}</label>
+                    <input type='number'
+                           ng-model='animationController.authoringComponentContent.maxScore'
+                           ng-model-options='{ debounce: 1000 }'
+                           ng-change='animationController.authoringViewComponentChanged()'/>
+                </md-input-container>
+            </div>
+            <div>
+                <md-input-container style='margin-right: 20px; width: 150px; height: 25px;'>
+                    <label>{{ 'COMPONENT_WIDTH' | translate }}</label>
+                    <input type='number'
+                           ng-model='animationController.authoringComponentContent.componentWidth'
+                           ng-model-options='{ debounce: 1000 }'
+                           ng-change='animationController.authoringViewComponentChanged()'/>
+                </md-input-container>
+            </div>
+            <div>
+                <md-button class='topButton md-raised md-primary' ng-click='animationController.showRubricAuthoring = !animationController.showRubricAuthoring'>
+                    <md-icon>message</md-icon>
+                    <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'EDIT_COMPONENT_RUBRIC' | translate }}</md-tooltip>
+                </md-button>
                 <div ng-if='animationController.showRubricAuthoring'>
                     <summernote id='{{animationController.summernoteRubricId}}'
                                 ng-model='animationController.summernoteRubricHTML'
@@ -497,16 +511,20 @@
                 </div>
             </div>
             <div>
-                <button ng-click='animationController.showJSONAuthoring = !animationController.showJSONAuthoring'>
-                        {{ 'SHOW_JSON' | translate }}
-                </button>
-                <br/>
+                <md-button class='topButton md-raised md-primary'
+                           ng-click='animationController.showJSONButtonClicked()'>
+                    <md-icon>code</md-icon>
+                    <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'SHOW_JSON' | translate }}</md-tooltip>
+                </md-button>
+                <span ng-if='animationController.jsonStringChanged'>
+                    {{ 'closeTheJSONViewToSaveTheChanges' | translate }}
+                </span>
                 <div ng-if='animationController.showJSONAuthoring'>
-                    <textarea ng-model='animationController.authoringComponentContentJSONString'
-                           ng-change='animationController.advancedAuthoringViewComponentChanged()'
-                           ng-model-options="{ updateOn: 'blur' }"
-                           rows='10'
-                           cols='100'></textarea>
+                    <md-input-container style='width: 100%;'>
+                        <textarea ng-model='animationController.authoringComponentContentJSONString'
+                                  style='width: 90%; border: 1px solid black;'
+                                  ng-change='animationController.authoringJSONChanged()'></textarea>
+                    </md-input-container>
                 </div>
             </div>
         </div>

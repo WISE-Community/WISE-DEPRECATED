@@ -3051,6 +3051,34 @@ class LabelController {
 
         return false;
     }
+
+    /**
+     * The show JSON button was clicked to show or hide the JSON authoring
+     */
+    showJSONButtonClicked() {
+        // toggle the JSON authoring textarea
+        this.showJSONAuthoring = !this.showJSONAuthoring;
+
+        if (this.jsonStringChanged && !this.showJSONAuthoring) {
+            /*
+             * the author has changed the JSON and has just closed the JSON
+             * authoring view so we will save the component
+             */
+            this.advancedAuthoringViewComponentChanged();
+
+            // scroll to the top of the component
+            this.$rootScope.$broadcast('scrollToComponent', { componentId: this.componentId });
+
+            this.jsonStringChanged = false;
+        }
+    }
+
+    /**
+     * The author has changed the JSON manually in the advanced view
+     */
+    authoringJSONChanged() {
+        this.jsonStringChanged = true;
+    }
 }
 
 LabelController.$inject = [

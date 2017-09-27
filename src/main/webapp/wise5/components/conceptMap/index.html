@@ -168,44 +168,15 @@
                 <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'conceptMap.deleteStarterConceptMap' | translate }}</md-tooltip>
             </md-button>
         </div>
-        <md-button class='topButton md-raised md-primary' ng-click='conceptMapController.showAdvancedAuthoring = !conceptMapController.showAdvancedAuthoring'>
-            <md-icon>build</md-icon>
-            <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ "ADVANCED" | translate }}</md-tooltip>
-        </md-button>
-        <br/>
+        <div>
+            <md-input-container style='margin-right: 20px; width: 150px; height: 50px;'>
+                <md-button class='topButton md-raised md-primary' ng-click='conceptMapController.showAdvancedAuthoring = !conceptMapController.showAdvancedAuthoring'>
+                    <md-icon>build</md-icon>
+                    <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ "ADVANCED" | translate }}</md-tooltip>
+                </md-button>
+            </md-input-container>
+        </div>
         <div ng-if='conceptMapController.showAdvancedAuthoring'>
-            {{ 'SHOW_SAVE_BUTTON' | translate }}:
-            <input type='checkbox'
-                   ng-model='conceptMapController.authoringComponentContent.showSaveButton'
-                   ng-change='conceptMapController.authoringViewShowSaveButtonClicked()'/>
-            <br/>
-            {{ 'SHOW_SUBMIT_BUTTON' | translate }}:
-            <input type='checkbox'
-                   ng-model='conceptMapController.authoringComponentContent.showSubmitButton'
-                   ng-change='conceptMapController.showSubmitButtonValueChanged()'/>
-            <div ng-if='conceptMapController.authoringComponentContent.showSubmitButton'
-                 style='display:inline'>
-                {{ 'MAX_SUBMIT' | translate }}:
-                <input type='number'
-                       ng-model='conceptMapController.authoringComponentContent.maxSubmitCount'
-                       ng-change='conceptMapController.authoringViewComponentChanged()'/>
-            </div>
-            <br/>
-            {{ 'MAX_SCORE' | translate }}:
-            <input type='number'
-                   ng-model='conceptMapController.authoringComponentContent.maxScore'
-                   ng-change='conceptMapController.authoringViewComponentChanged()'
-                   ng-model-options='{ debounce: 1000 }'
-                   style='width: 3em'/>
-            <br/>
-            {{ 'COMPONENT_WIDTH' | translate }}:
-            <input type='number'
-                   ng-model='conceptMapController.authoringComponentContent.componentWidth'
-                   ng-change='conceptMapController.authoringViewComponentChanged()'
-                   ng-model-options='{ debounce: 1000 }'
-                   style='width: 3em'/>
-            <br/>
-            <br/>
             {{ 'conceptMap.showAutoScore' | translate }}: <input type='checkbox'
                                     ng-model='conceptMapController.authoringComponentContent.showAutoScore'
                                     ng-change='conceptMapController.authoringViewComponentChanged()'/>
@@ -256,6 +227,7 @@
                     <option ng-repeat='link in conceptMapController.authoringComponentContent.links'
                             value='{{link.label}}'>{{link.label}}</option>
                 </select>
+                <span ng-if='rule.type == "link"'>{{ 'conceptMap.to' | translate }}</span>
                 <select ng-model='rule.otherNodeLabel'
                         ng-change='conceptMapController.authoringViewComponentChanged()'
                         ng-if='rule.type == "link"'>
@@ -290,10 +262,54 @@
                       cols='200'
                       ng-model-options='{ debounce: 1000 }'></textarea>
             <br/>
+            <br/>
             <div>
-                <button ng-click='conceptMapController.showRubricAuthoring = !conceptMapController.showRubricAuthoring'>
-                    {{ 'EDIT_COMPONENT_RUBRIC' | translate }}
-                </button>
+                <md-checkbox class='md-primary'
+                             ng-model='conceptMapController.authoringComponentContent.showSaveButton'
+                             ng-change='conceptMapController.authoringViewComponentChanged()'>
+                    {{ 'SHOW_SAVE_BUTTON' | translate }}
+                </md-checkbox>
+            </div>
+            <div>
+                <md-checkbox class='md-primary'
+                             ng-model='conceptMapController.authoringComponentContent.showSubmitButton'
+                             ng-change='conceptMapController.authoringViewComponentChanged()'>
+                    {{ 'SHOW_SUBMIT_BUTTON' | translate }}
+                </md-checkbox>
+            </div>
+            <div>
+                <md-input-container style='margin-right: 20px; width: 150px; height: 25px;'
+                                    ng-if='conceptMapController.authoringComponentContent.showSubmitButton'>
+                    <label>{{ 'MAX_SUBMIT' | translate }}</label>
+                    <input type='number'
+                           ng-model='conceptMapController.authoringComponentContent.maxSubmitCount'
+                           ng-model-options='{ debounce: 1000 }'
+                           ng-change='conceptMapController.authoringViewComponentChanged()'/>
+                </md-input-container>
+            </div>
+            <div>
+                <md-input-container style='margin-right: 20px; width: 150px; height: 25px;'>
+                    <label>{{ 'MAX_SCORE' | translate }}</label>
+                    <input type='number'
+                           ng-model='conceptMapController.authoringComponentContent.maxScore'
+                           ng-model-options='{ debounce: 1000 }'
+                           ng-change='conceptMapController.authoringViewComponentChanged()'/>
+                </md-input-container>
+            </div>
+            <div>
+                <md-input-container style='margin-right: 20px; width: 150px; height: 25px;'>
+                    <label>{{ 'COMPONENT_WIDTH' | translate }}</label>
+                    <input type='number'
+                           ng-model='conceptMapController.authoringComponentContent.componentWidth'
+                           ng-model-options='{ debounce: 1000 }'
+                           ng-change='conceptMapController.authoringViewComponentChanged()'/>
+                </md-input-container>
+            </div>
+            <div>
+                <md-button class='topButton md-raised md-primary' ng-click='conceptMapController.showRubricAuthoring = !conceptMapController.showRubricAuthoring'>
+                    <md-icon>message</md-icon>
+                    <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'EDIT_COMPONENT_RUBRIC' | translate }}</md-tooltip>
+                </md-button>
                 <div ng-if='conceptMapController.showRubricAuthoring'>
                     <summernote id='{{conceptMapController.summernoteRubricId}}'
                                 ng-model='conceptMapController.summernoteRubricHTML'
@@ -401,16 +417,20 @@
                 </div>
             </div>
             <div>
-                <button ng-click='conceptMapController.showJSON = !conceptMapController.showJSON'>
-                        {{ 'SHOW_JSON' | translate }}
-                </button>
-                <br/>
-                <div ng-if='conceptMapController.showJSON'>
-                    <textarea ng-model='conceptMapController.authoringComponentContentJSONString'
-                              ng-change='conceptMapController.advancedAuthoringViewComponentChanged()'
-                              ng-model-options="{ updateOn: 'blur' }"
-                              rows='20'
-                              cols='200'></textarea>
+                <md-button class='topButton md-raised md-primary'
+                           ng-click='conceptMapController.showJSONButtonClicked()'>
+                    <md-icon>code</md-icon>
+                    <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'SHOW_JSON' | translate }}</md-tooltip>
+                </md-button>
+                <span ng-if='conceptMapController.jsonStringChanged'>
+                    {{ 'closeTheJSONViewToSaveTheChanges' | translate }}
+                </span>
+                <div ng-if='conceptMapController.showJSONAuthoring'>
+                    <md-input-container style='width: 100%;'>
+                        <textarea ng-model='conceptMapController.authoringComponentContentJSONString'
+                                  style='width: 90%; border: 1px solid black;'
+                                  ng-change='conceptMapController.authoringJSONChanged()'></textarea>
+                    </md-input-container>
                 </div>
             </div>
         </div>

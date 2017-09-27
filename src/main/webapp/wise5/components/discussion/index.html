@@ -17,30 +17,38 @@
                 </md-checkbox>
             </md-input-container>
         </div>
-        <md-button class='topButton md-raised md-primary' ng-click='discussionController.showAdvancedAuthoring = !discussionController.showAdvancedAuthoring'>
-            <md-icon>build</md-icon>
-            <md-tooltip md-direction="top" class="projectButtonTooltip">{{ "ADVANCED" | translate }}</md-tooltip>
-        </md-button>
-        <br/>
+        <div>
+            <md-input-container style='margin-right: 20px; width: 150px; height: 50px;'>
+                <md-button class='topButton md-raised md-primary' ng-click='discussionController.showAdvancedAuthoring = !discussionController.showAdvancedAuthoring'>
+                    <md-icon>build</md-icon>
+                    <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ "ADVANCED" | translate }}</md-tooltip>
+                </md-button>
+            </md-input-container>
+        </div>
         <div ng-if='discussionController.showAdvancedAuthoring'>
-            {{ 'MAX_SCORE' | translate }}:
-            <input type='number'
-                   ng-model='discussionController.authoringComponentContent.maxScore'
-                   ng-change='discussionController.authoringViewComponentChanged()'
-                   ng-model-options='{ debounce: 1000 }'
-                   style='width: 3em'/>
-            <br/>
-            {{ 'COMPONENT_WIDTH' | translate }}:
-            <input type='number'
-                   ng-model='discussionController.authoringComponentContent.componentWidth'
-                   ng-change='discussionController.authoringViewComponentChanged()'
-                   ng-model-options='{ debounce: 1000 }'
-                   style='width: 3em'/>
-            <br/>
             <div>
-                <button ng-click='discussionController.showRubricAuthoring = !discussionController.showRubricAuthoring'>
-                    {{ 'EDIT_COMPONENT_RUBRIC' | translate }}
-                </button>
+                <md-input-container style='margin-right: 20px; width: 150px; height: 25px;'>
+                    <label>{{ 'MAX_SCORE' | translate }}</label>
+                    <input type='number'
+                           ng-model='discussionController.authoringComponentContent.maxScore'
+                           ng-model-options='{ debounce: 1000 }'
+                           ng-change='discussionController.authoringViewComponentChanged()'/>
+                </md-input-container>
+            </div>
+            <div>
+                <md-input-container style='margin-right: 20px; width: 150px; height: 25px;'>
+                    <label>{{ 'COMPONENT_WIDTH' | translate }}</label>
+                    <input type='number'
+                           ng-model='discussionController.authoringComponentContent.componentWidth'
+                           ng-model-options='{ debounce: 1000 }'
+                           ng-change='discussionController.authoringViewComponentChanged()'/>
+                </md-input-container>
+            </div>
+            <div>
+                <md-button class='topButton md-raised md-primary' ng-click='discussionController.showRubricAuthoring = !discussionController.showRubricAuthoring'>
+                    <md-icon>message</md-icon>
+                    <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'EDIT_COMPONENT_RUBRIC' | translate }}</md-tooltip>
+                </md-button>
                 <div ng-if='discussionController.showRubricAuthoring'>
                     <summernote id='{{discussionController.summernoteRubricId}}'
                                 ng-model='discussionController.summernoteRubricHTML'
@@ -148,16 +156,20 @@
                 </div>
             </div>
             <div>
-                <button ng-click='discussionController.showJSON = !discussionController.showJSON'>
-                        {{ 'SHOW_JSON' | translate }}
-                </button>
-                <br/>
-                <div ng-if='discussionController.showJSON'>
-                    <textarea ng-model='discussionController.authoringComponentContentJSONString'
-                              ng-change='discussionController.advancedAuthoringViewComponentChanged()'
-                              ng-model-options="{ updateOn: 'blur' }"
-                              rows='10'
-                              cols='100'></textarea>
+                <md-button class='topButton md-raised md-primary'
+                           ng-click='discussionController.showJSONButtonClicked()'>
+                    <md-icon>code</md-icon>
+                    <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'SHOW_JSON' | translate }}</md-tooltip>
+                </md-button>
+                <span ng-if='discussionController.jsonStringChanged'>
+                    {{ 'closeTheJSONViewToSaveTheChanges' | translate }}
+                </span>
+                <div ng-if='discussionController.showJSONAuthoring'>
+                    <md-input-container style='width: 100%;'>
+                        <textarea ng-model='discussionController.authoringComponentContentJSONString'
+                                  style='width: 90%; border: 1px solid black;'
+                                  ng-change='discussionController.authoringJSONChanged()'></textarea>
+                    </md-input-container>
                 </div>
             </div>
         </div>

@@ -9,44 +9,55 @@
                    placeholder='{{ "outsideURL.enterURLHere" | translate }}'/>
         </md-input-container>
         <div>
-            <md-button class='topButton md-raised md-primary'
-                       ng-click='outsideURLController.showAdvancedAuthoring = !outsideURLController.showAdvancedAuthoring'>
-                <md-icon>build</md-icon>
-                <md-tooltip md-direction="top" class="projectButtonTooltip">{{ "ADVANCED" | translate }}</md-tooltip>
-            </md-button>
-            <br/>
+            <div>
+                <md-input-container style='margin-right: 20px; width: 150px; height: 50px;'>
+                    <md-button class='topButton md-raised md-primary' ng-click='outsideURLController.showAdvancedAuthoring = !outsideURLController.showAdvancedAuthoring'>
+                        <md-icon>build</md-icon>
+                        <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ "ADVANCED" | translate }}</md-tooltip>
+                    </md-button>
+                </md-input-container>
+            </div>
             <div ng-if='outsideURLController.showAdvancedAuthoring'>
-                {{ 'COMPONENT_WIDTH' | translate }}:
-                <input type='number'
-                       ng-model='outsideURLController.authoringComponentContent.componentWidth'
-                       ng-change='outsideURLController.authoringViewComponentChanged()'
-                       ng-model-options='{ debounce: 1000 }'
-                       style='width: 3em'/>
-                <br/>
-                <button ng-click='outsideURLController.showRubricAuthoring = !outsideURLController.showRubricAuthoring'>
-                    {{ 'EDIT_COMPONENT_RUBRIC' | translate }}
-                </button>
-                <div ng-if='outsideURLController.showRubricAuthoring'>
-                    <summernote id='{{outsideURLController.summernoteRubricId}}'
-                                ng-model='outsideURLController.summernoteRubricHTML'
-                                ng-change='outsideURLController.summernoteRubricHTMLChanged()'
-                                config='outsideURLController.summernoteRubricOptions'
-                                ng-model-options='{ debounce: 1000 }'
-                                rows='10'
-                                cols='100'>
-                    </summernote>
+                <div>
+                    <md-input-container style='margin-right: 20px; width: 150px; height: 25px;'>
+                        <label>{{ 'COMPONENT_WIDTH' | translate }}</label>
+                        <input type='number'
+                               ng-model='outsideURLController.authoringComponentContent.componentWidth'
+                               ng-model-options='{ debounce: 1000 }'
+                               ng-change='outsideURLController.authoringViewComponentChanged()'/>
+                    </md-input-container>
                 </div>
                 <div>
-                    <button ng-click='outsideURLController.showJSON = !outsideURLController.showJSON'>
-                            {{ 'SHOW_JSON' | translate }}
-                    </button>
-                    <br/>
-                    <div ng-if='outsideURLController.showJSON'>
-                        <textarea ng-model='outsideURLController.authoringComponentContentJSONString'
-                                  ng-change='outsideURLController.advancedAuthoringViewComponentChanged()'
-                                  ng-model-options="{ updateOn: 'blur' }"
-                                  rows='10'
-                                  cols='100'></textarea>
+                    <md-button class='topButton md-raised md-primary' ng-click='outsideURLController.showRubricAuthoring = !outsideURLController.showRubricAuthoring'>
+                        <md-icon>message</md-icon>
+                        <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'EDIT_COMPONENT_RUBRIC' | translate }}</md-tooltip>
+                    </md-button>
+                    <div ng-if='outsideURLController.showRubricAuthoring'>
+                        <summernote id='{{outsideURLController.summernoteRubricId}}'
+                                    ng-model='outsideURLController.summernoteRubricHTML'
+                                    ng-change='outsideURLController.summernoteRubricHTMLChanged()'
+                                    config='outsideURLController.summernoteRubricOptions'
+                                    ng-model-options='{ debounce: 1000 }'
+                                    rows='10'
+                                    cols='100'>
+                        </summernote>
+                    </div>
+                </div>
+                <div>
+                    <md-button class='topButton md-raised md-primary'
+                               ng-click='outsideURLController.showJSONButtonClicked()'>
+                        <md-icon>code</md-icon>
+                        <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'SHOW_JSON' | translate }}</md-tooltip>
+                    </md-button>
+                    <span ng-if='outsideURLController.jsonStringChanged'>
+                        {{ 'closeTheJSONViewToSaveTheChanges' | translate }}
+                    </span>
+                    <div ng-if='outsideURLController.showJSONAuthoring'>
+                        <md-input-container style='width: 100%;'>
+                            <textarea ng-model='outsideURLController.authoringComponentContentJSONString'
+                                      style='width: 90%; border: 1px solid black;'
+                                      ng-change='outsideURLController.authoringJSONChanged()'></textarea>
+                        </md-input-container>
                     </div>
                 </div>
             </div>

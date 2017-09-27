@@ -504,6 +504,10 @@ class NodeAuthoringController {
             this.authoringViewNodeChanged();
         });
 
+        this.$scope.$on('scrollToComponent', (event, args) => {
+            this.scrollToComponent(args.componentId);
+        });
+
         // scroll to the top of the page
         this.$anchorScroll('top');
 
@@ -3391,25 +3395,10 @@ class NodeAuthoringController {
                 // uncheck all the component checkboxes
                 this.clearComponentsToChecked();
 
-                /*
-                 * use a timeout to wait for the UI to update and then scroll
-                 * to the first new component
-                 */
-                this.$timeout(() => {
-
-                    if (newComponents != null && newComponents.length > 0) {
-
-                        // get the UI element of the first new component
-                        let componentElement = $("#" + newComponents[0].id);
-
-                        if (componentElement != null) {
-                            // scroll to the first new component that we've added
-                            $('#content').animate({
-                                scrollTop: componentElement.prop("offsetTop") - 60
-                            }, 1000);
-                        }
-                    }
-                });
+                if (newComponents != null && newComponents.length > 0) {
+                    // scroll to the first new component
+                    this.scrollToComponent(newComponents[0].id);
+                }
             }, 1000);
         });
     }
@@ -3843,6 +3832,27 @@ class NodeAuthoringController {
                 });
             }
         }
+    }
+
+    /**
+     * Scroll to the top of a component in the step authoring view
+     * @param componentId the id of the component
+     */
+    scrollToComponent(componentId) {
+        /*
+         * use a timeout to wait for the UI to update and then scroll
+         * to the component
+         */
+        this.$timeout(() => {
+            // get the UI element of the first new component
+            let componentElement = $("#" + componentId);
+            if (componentElement != null) {
+                // scroll to the component
+                $('#content').animate({
+                    scrollTop: componentElement.prop("offsetTop") - 60
+                }, 1000);
+            }
+        });
     }
 };
 
