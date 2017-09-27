@@ -266,16 +266,22 @@
                     </div>
                 </div>
             </div>
-            <button ng-click='multipleChoiceController.showJSON = !multipleChoiceController.showJSON'>
-                    {{ 'SHOW_JSON' | translate }}
-            </button>
-            <br/>
-            <div ng-if='multipleChoiceController.showJSON'>
-                <textarea ng-model='multipleChoiceController.authoringComponentContentJSONString'
-                          ng-change='multipleChoiceController.advancedAuthoringViewComponentChanged()'
-                          ng-model-options="{ updateOn: 'blur' }"
-                          rows='30'
-                          cols='100'></textarea>
+            <div>
+                <md-button class='topButton md-raised md-primary'
+                           ng-click='multipleChoiceController.showJSONButtonClicked()'>
+                    <md-icon>code</md-icon>
+                    <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'SHOW_JSON' | translate }}</md-tooltip>
+                </md-button>
+                <span ng-if='multipleChoiceController.jsonStringChanged'>
+                    {{ 'closeTheJSONViewToSaveTheChanges' | translate }}
+                </span>
+                <div ng-if='multipleChoiceController.showJSONAuthoring'>
+                    <md-input-container style='width: 100%;'>
+                        <textarea ng-model='multipleChoiceController.authoringComponentContentJSONString'
+                                  style='width: 90%; border: 1px solid black;'
+                                  ng-change='multipleChoiceController.authoringJSONChanged()'></textarea>
+                    </md-input-container>
+                </div>
             </div>
         </div>
         <br/>

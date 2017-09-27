@@ -497,16 +497,20 @@
                 </div>
             </div>
             <div>
-                <button ng-click='animationController.showJSONAuthoring = !animationController.showJSONAuthoring'>
-                        {{ 'SHOW_JSON' | translate }}
-                </button>
-                <br/>
+                <md-button class='topButton md-raised md-primary'
+                           ng-click='animationController.showJSONButtonClicked()'>
+                    <md-icon>code</md-icon>
+                    <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'SHOW_JSON' | translate }}</md-tooltip>
+                </md-button>
+                <span ng-if='animationController.jsonStringChanged'>
+                    {{ 'closeTheJSONViewToSaveTheChanges' | translate }}
+                </span>
                 <div ng-if='animationController.showJSONAuthoring'>
-                    <textarea ng-model='animationController.authoringComponentContentJSONString'
-                           ng-change='animationController.advancedAuthoringViewComponentChanged()'
-                           ng-model-options="{ updateOn: 'blur' }"
-                           rows='10'
-                           cols='100'></textarea>
+                    <md-input-container style='width: 100%;'>
+                        <textarea ng-model='animationController.authoringComponentContentJSONString'
+                                  style='width: 90%; border: 1px solid black;'
+                                  ng-change='animationController.authoringJSONChanged()'></textarea>
+                    </md-input-container>
                 </div>
             </div>
         </div>

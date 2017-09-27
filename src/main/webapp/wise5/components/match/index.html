@@ -306,16 +306,20 @@
                 </div>
             </div>
             <div>
-                <button ng-click='matchController.showJSON = !matchController.showJSON'>
-                        {{ 'SHOW_JSON' | translate }}
-                </button>
-                <br/>
-                <div ng-if='matchController.showJSON'>
-                    <textarea ng-model='matchController.authoringComponentContentJSONString'
-                              ng-change='matchController.advancedAuthoringViewComponentChanged()'
-                              ng-model-options="{ updateOn: 'blur' }"
-                              rows='30'
-                              cols='100'></textarea>
+                <md-button class='topButton md-raised md-primary'
+                           ng-click='matchController.showJSONButtonClicked()'>
+                    <md-icon>code</md-icon>
+                    <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'SHOW_JSON' | translate }}</md-tooltip>
+                </md-button>
+                <span ng-if='matchController.jsonStringChanged'>
+                    {{ 'closeTheJSONViewToSaveTheChanges' | translate }}
+                </span>
+                <div ng-if='matchController.showJSONAuthoring'>
+                    <md-input-container style='width: 100%;'>
+                        <textarea ng-model='matchController.authoringComponentContentJSONString'
+                                  style='width: 90%; border: 1px solid black;'
+                                  ng-change='matchController.authoringJSONChanged()'></textarea>
+                    </md-input-container>
                 </div>
             </div>
         </div>

@@ -561,16 +561,20 @@
                     </div>
                 </div>
                 <div>
-                    <button ng-click='graphController.showJSON = !graphController.showJSON'>
-                            {{ 'SHOW_JSON' | translate }}
-                    </button>
-                    <br/>
-                    <div ng-if='graphController.showJSON'>
-                        <textarea ng-model='graphController.authoringComponentContentJSONString'
-                                  ng-change='graphController.advancedAuthoringViewComponentChanged()'
-                                  ng-model-options="{ updateOn: 'blur' }"
-                                  rows='30'
-                                  cols='100'></textarea>
+                    <md-button class='topButton md-raised md-primary'
+                               ng-click='graphController.showJSONButtonClicked()'>
+                        <md-icon>code</md-icon>
+                        <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'SHOW_JSON' | translate }}</md-tooltip>
+                    </md-button>
+                    <span ng-if='graphController.jsonStringChanged'>
+                        {{ 'closeTheJSONViewToSaveTheChanges' | translate }}
+                    </span>
+                    <div ng-if='graphController.showJSONAuthoring'>
+                        <md-input-container style='width: 100%;'>
+                            <textarea ng-model='graphController.authoringComponentContentJSONString'
+                                      style='width: 90%; border: 1px solid black;'
+                                      ng-change='graphController.authoringJSONChanged()'></textarea>
+                        </md-input-container>
                     </div>
                 </div>
             </div>

@@ -37,16 +37,20 @@
                     </summernote>
                 </div>
                 <div>
-                    <button ng-click='outsideURLController.showJSON = !outsideURLController.showJSON'>
-                            {{ 'SHOW_JSON' | translate }}
-                    </button>
-                    <br/>
-                    <div ng-if='outsideURLController.showJSON'>
-                        <textarea ng-model='outsideURLController.authoringComponentContentJSONString'
-                                  ng-change='outsideURLController.advancedAuthoringViewComponentChanged()'
-                                  ng-model-options="{ updateOn: 'blur' }"
-                                  rows='10'
-                                  cols='100'></textarea>
+                    <md-button class='topButton md-raised md-primary'
+                               ng-click='outsideURLController.showJSONButtonClicked()'>
+                        <md-icon>code</md-icon>
+                        <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'SHOW_JSON' | translate }}</md-tooltip>
+                    </md-button>
+                    <span ng-if='outsideURLController.jsonStringChanged'>
+                        {{ 'closeTheJSONViewToSaveTheChanges' | translate }}
+                    </span>
+                    <div ng-if='outsideURLController.showJSONAuthoring'>
+                        <md-input-container style='width: 100%;'>
+                            <textarea ng-model='outsideURLController.authoringComponentContentJSONString'
+                                      style='width: 90%; border: 1px solid black;'
+                                      ng-change='outsideURLController.authoringJSONChanged()'></textarea>
+                        </md-input-container>
                     </div>
                 </div>
             </div>
