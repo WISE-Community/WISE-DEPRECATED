@@ -9,13 +9,11 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var StudentProgressController = function () {
-    function StudentProgressController($filter, $mdDialog, $rootScope, $scope, $state, ConfigService, ProjectService, StudentStatusService, TeacherDataService, TeacherWebSocketService) {
+    function StudentProgressController($rootScope, $scope, $state, ConfigService, ProjectService, StudentStatusService, TeacherDataService, TeacherWebSocketService) {
         var _this = this;
 
         _classCallCheck(this, StudentProgressController);
 
-        this.$filter = $filter;
-        this.$mdDialog = $mdDialog;
         this.$rootScope = $rootScope;
         this.$scope = $scope;
         this.$state = $state;
@@ -24,12 +22,8 @@ var StudentProgressController = function () {
         this.StudentStatusService = StudentStatusService;
         this.TeacherDataService = TeacherDataService;
         this.TeacherWebSocketService = TeacherWebSocketService;
-        this.$translate = this.$filter('translate');
 
         this.teacherWorkgroupId = this.ConfigService.getWorkgroupId();
-
-        var startNodeId = this.ProjectService.getStartNodeId();
-        this.rootNodeId = this.ProjectService.getRootNode(startNodeId).id;
 
         // get the current sort order
         this.sort = this.TeacherDataService.studentProgressSort;
@@ -145,8 +139,16 @@ var StudentProgressController = function () {
         }
     }, {
         key: 'getStudentProjectCompletion',
+
+
+        /**
+         * Get project completion data for the given workgroup (only include nodes
+         * with student work)
+         * @param workgroupId the workgroup id
+         * @return object with completed, total, and percent completed (integer
+         * between 0 and 100)
+         */
         value: function getStudentProjectCompletion(workgroupId) {
-            // get project completion data for the given workgroup (only include nodes with student work)
             return this.StudentStatusService.getStudentProjectCompletion(workgroupId, true);
         }
     }, {
@@ -365,6 +367,8 @@ var StudentProgressController = function () {
                     var userName = workgroup.userName;
                     var displayNames = this.ConfigService.getDisplayUserNamesByWorkgroupId(workgroupId).split(', ');
                     var userIds = workgroup.userIds;
+                    var maxScore = this.StudentStatusService.getMaxScoreForWorkgroupId(workgroupId);
+                    maxScore = maxScore ? maxScore : 0;
 
                     for (var i = 0; i < userIds.length; i++) {
                         var id = userIds[i];
@@ -382,15 +386,15 @@ var StudentProgressController = function () {
                             userId: id,
                             periodId: workgroup.periodId,
                             periodName: workgroup.periodName,
-                            workgroupId: workgroup.workgroupId,
+                            workgroupId: workgroupId,
                             displayNames: displayName,
                             userName: displayName,
                             online: isOnline,
-                            location: this.getCurrentNodeForWorkgroupId(workgroup.workgroupId),
-                            timeSpent: this.getStudentTimeSpent(workgroup.workgroupId),
-                            completion: this.getStudentProjectCompletion(workgroup.workgroupId),
-                            score: this.getStudentTotalScore(workgroup.workgroupId),
-                            maxScore: this.StudentStatusService.getMaxScoreForWorkgroupId(workgroup.workgroupId)
+                            location: this.getCurrentNodeForWorkgroupId(workgroupId),
+                            timeSpent: this.getStudentTimeSpent(workgroupId),
+                            completion: this.getStudentProjectCompletion(workgroupId),
+                            score: this.getStudentTotalScore(workgroupId),
+                            maxScore: maxScore
                         };
                         students.push(user);
                     }
@@ -498,25 +502,12 @@ var StudentProgressController = function () {
 
             return orderBy;
         }
-
-        /**
-         * Shows a temporary alert saying that Grade By Student view is coming soon
-         **/
-
-    }, {
-        key: 'gradeByStepAlert',
-        value: function gradeByStepAlert(ev) {
-            var title = this.$translate('COMING_SOON');
-            var content = this.$translate('tempGradeByStudentAlert');
-            var ok = this.$translate('OK');
-            this.$mdDialog.show(this.$mdDialog.alert().clickOutsideToClose(true).title(title).textContent(content).ariaLabel(title).ok(ok).targetEvent(ev));
-        }
     }]);
 
     return StudentProgressController;
 }();
 
-StudentProgressController.$inject = ['$filter', '$mdDialog', '$rootScope', '$scope', '$state', 'ConfigService', 'ProjectService', 'StudentStatusService', 'TeacherDataService', 'TeacherWebSocketService'];
+StudentProgressController.$inject = ['$rootScope', '$scope', '$state', 'ConfigService', 'ProjectService', 'StudentStatusService', 'TeacherDataService', 'TeacherWebSocketService'];
 
 exports.default = StudentProgressController;
 //# sourceMappingURL=studentProgressController.js.map

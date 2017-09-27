@@ -2,9 +2,7 @@
 
 class StudentProgressController {
 
-    constructor($filter,
-                $mdDialog,
-                $rootScope,
+    constructor($rootScope,
                 $scope,
                 $state,
                 ConfigService,
@@ -12,8 +10,6 @@ class StudentProgressController {
                 StudentStatusService,
                 TeacherDataService,
                 TeacherWebSocketService) {
-        this.$filter = $filter;
-        this.$mdDialog = $mdDialog;
         this.$rootScope = $rootScope;
         this.$scope = $scope;
         this.$state = $state;
@@ -22,12 +18,8 @@ class StudentProgressController {
         this.StudentStatusService = StudentStatusService;
         this.TeacherDataService = TeacherDataService;
         this.TeacherWebSocketService = TeacherWebSocketService;
-        this.$translate = this.$filter('translate');
 
         this.teacherWorkgroupId = this.ConfigService.getWorkgroupId();
-
-        let startNodeId = this.ProjectService.getStartNodeId();
-        this.rootNodeId = this.ProjectService.getRootNode(startNodeId).id;
 
         // get the current sort order
         this.sort = this.TeacherDataService.studentProgressSort;
@@ -135,8 +127,14 @@ class StudentProgressController {
         return this.StudentStatusService.getCurrentNodePositionAndNodeTitleForWorkgroupId(workgroupId);
     };
 
+    /**
+     * Get project completion data for the given workgroup (only include nodes
+     * with student work)
+     * @param workgroupId the workgroup id
+     * @return object with completed, total, and percent completed (integer
+     * between 0 and 100)
+     */
     getStudentProjectCompletion(workgroupId) {
-        // get project completion data for the given workgroup (only include nodes with student work)
         return this.StudentStatusService.getStudentProjectCompletion(workgroupId, true);
     };
 
@@ -334,6 +332,8 @@ class StudentProgressController {
                 let userName = workgroup.userName;
                 let displayNames = this.ConfigService.getDisplayUserNamesByWorkgroupId(workgroupId).split(', ');
                 let userIds = workgroup.userIds;
+                let maxScore = this.StudentStatusService.getMaxScoreForWorkgroupId(workgroupId);
+                maxScore = maxScore ? maxScore : 0;
 
                 for (let i = 0; i < userIds.length; i++) {
                     let id = userIds[i];
@@ -351,15 +351,15 @@ class StudentProgressController {
                         userId: id,
                         periodId: workgroup.periodId,
                         periodName: workgroup.periodName,
-                        workgroupId: workgroup.workgroupId,
+                        workgroupId: workgroupId,
                         displayNames: displayName,
                         userName: displayName,
                         online: isOnline,
-                        location: this.getCurrentNodeForWorkgroupId(workgroup.workgroupId),
-                        timeSpent: this.getStudentTimeSpent(workgroup.workgroupId),
-                        completion: this.getStudentProjectCompletion(workgroup.workgroupId),
-                        score: this.getStudentTotalScore(workgroup.workgroupId),
-                        maxScore: this.StudentStatusService.getMaxScoreForWorkgroupId(workgroup.workgroupId)
+                        location: this.getCurrentNodeForWorkgroupId(workgroupId),
+                        timeSpent: this.getStudentTimeSpent(workgroupId),
+                        completion: this.getStudentProjectCompletion(workgroupId),
+                        score: this.getStudentTotalScore(workgroupId),
+                        maxScore: maxScore
                     };
                     students.push(user);
                 }
@@ -462,29 +462,9 @@ class StudentProgressController {
 
         return orderBy;
     }
-
-    /**
-     * Shows a temporary alert saying that Grade By Student view is coming soon
-     **/
-    gradeByStepAlert(ev) {
-        let title = this.$translate('COMING_SOON');
-        let content = this.$translate('tempGradeByStudentAlert');
-        let ok = this.$translate('OK');
-        this.$mdDialog.show(
-            this.$mdDialog.alert()
-                .clickOutsideToClose(true)
-                .title(title)
-                .textContent(content)
-                .ariaLabel(title)
-                .ok(ok)
-                .targetEvent(ev)
-        );
-    }
 }
 
 StudentProgressController.$inject = [
-    '$filter',
-    '$mdDialog',
     '$rootScope',
     '$scope',
     '$state',
