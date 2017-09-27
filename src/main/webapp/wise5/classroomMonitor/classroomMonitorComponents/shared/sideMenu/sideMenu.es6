@@ -21,7 +21,7 @@ const SideMenu = {
     template:
         `<div class="menu-sidebar">
             <md-button ng-repeat="(key, value) in $ctrl.views"
-                       ng-if="value.type === 'primary' && value.active"
+                       ng-if="value.active"
                        aria-label="{{ value.name }}"
                        ui-sref="{{ key }}"
                        ng-click="value.action()"
