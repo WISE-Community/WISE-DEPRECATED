@@ -105,7 +105,7 @@ var NodeProgressController = function () {
                 }
             }
 
-            _this.$state.go('root.nodeProgress', { nodeId: _this.nodeId });
+            _this.$state.go('root.project', { nodeId: _this.nodeId });
         });
 
         // listen for the currentWorkgroupChanged event

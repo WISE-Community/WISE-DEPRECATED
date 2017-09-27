@@ -45,7 +45,7 @@ class ClassroomMonitorController {
         this.menuOpen = false; // boolean to indicate whether monitor nav menu is open
         this.showSideMenu = true; // boolean to indicate whether to show the monitor side menu
         this.showToolbar = true; // boolean to indicate whether to show the monitor toolbar
-        this.showStepTools = false; // boolean to indicate whether to show the step toolbar
+        this.showGradeByStepTools = false; // boolean to indicate whether to show the step toolbar
 
         // ui-views and their corresponding names and icons
         this.views = {
@@ -55,20 +55,20 @@ class ClassroomMonitorController {
                 type: 'primary',
                 active: false
             },
-            'root.nodeProgress': {
+            'root.project': {
                 name: this.$translate('gradeByStep'),
                 icon: 'view_list',
                 type: 'primary',
                 action: () => {
                     let currentView = this.$state.current.name;
-                    if (currentView === 'root.nodeProgress') {
+                    if (currentView === 'root.project') {
                         // if we're currently grading a step, close the node when a nodeProgress menu button is clicked
                         this.NodeService.closeNode();
                     }
                 },
                 active: true
             },
-            'root.studentProgress': {
+            'root.studentLanding': {
                 name: this.$translate('gradeByStudent'),
                 icon: 'people',
                 type: 'primary',
@@ -83,7 +83,7 @@ class ClassroomMonitorController {
             'root.export': {
                 name: this.$translate('dataExport'),
                 icon: 'file_download',
-                type: 'secondary',
+                type: 'primary',
                 active: true
             },
             'root.milestones': {
@@ -198,13 +198,16 @@ class ClassroomMonitorController {
      */
     processUI() {
         let viewName = this.$state.$current.name;
-        this.currentViewName = this.views[viewName].name;
+        let currentView = this.views[viewName];
+        if (currentView) {
+            this.currentViewName = currentView.name;
+        }
 
-        if (viewName === 'root.nodeProgress') {
+        this.showGradeByStepTools = false;
+
+        if (viewName === 'root.project') {
             let nodeId = this.$state.params.nodeId;
-            this.showStepTools = this.ProjectService.isApplicationNode(nodeId);
-        } else {
-            this.showStepTools = false;
+            this.showGradeByStepTools = this.ProjectService.isApplicationNode(nodeId);
         }
     };
 

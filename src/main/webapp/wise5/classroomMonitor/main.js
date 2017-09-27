@@ -294,13 +294,13 @@ var classroomMonitorModule = _angular2.default.module('classroomMonitor', [(0, _
                 return TeacherDataService.retrieveAnnotations();
             }
         }
-    }).state('root.studentProgress', {
-        url: '/studentProgress',
+    }).state('root.studentLanding', {
+        url: '/student',
         templateUrl: 'wise5/classroomMonitor/studentProgress/studentProgress.html',
         controller: 'StudentProgressController',
         controllerAs: 'studentProgressController'
-    }).state('root.studentGrading', {
-        url: '/studentGrading/:workgroupId',
+    }).state('root.student', {
+        url: '/student/:workgroupId',
         templateUrl: 'wise5/classroomMonitor/studentGrading/studentGrading.html',
         controller: 'StudentGradingController',
         controllerAs: 'studentGradingController',
@@ -309,7 +309,7 @@ var classroomMonitorModule = _angular2.default.module('classroomMonitor', [(0, _
                 return TeacherDataService.retrieveStudentDataByWorkgroupId($stateParams.workgroupId);
             }
         }
-    }).state('root.nodeProgress', {
+    }).state('root.project', {
         url: '/project/:nodeId?periodId&workgroupId',
         views: {
             'nodeView': {

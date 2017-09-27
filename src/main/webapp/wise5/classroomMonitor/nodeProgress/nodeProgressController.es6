@@ -103,7 +103,7 @@ class NodeProgressController {
                 }
             }
 
-            this.$state.go('root.nodeProgress', {nodeId: this.nodeId});
+            this.$state.go('root.project', {nodeId: this.nodeId});
         });
 
         // listen for the currentWorkgroupChanged event

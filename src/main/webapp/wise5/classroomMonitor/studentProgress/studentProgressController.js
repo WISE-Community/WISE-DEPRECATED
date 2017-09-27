@@ -432,7 +432,7 @@ var StudentProgressController = function () {
     }, {
         key: 'showStudentGradingView',
         value: function showStudentGradingView(workgroup) {
-            this.$state.go('root.studentGrading', { workgroupId: workgroup.workgroupId });
+            this.$state.go('root.student', { workgroupId: workgroup.workgroupId });
         }
     }, {
         key: 'setSort',

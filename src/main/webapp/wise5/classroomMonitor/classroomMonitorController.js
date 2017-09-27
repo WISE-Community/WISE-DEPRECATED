@@ -40,7 +40,7 @@ var ClassroomMonitorController = function () {
         this.menuOpen = false; // boolean to indicate whether monitor nav menu is open
         this.showSideMenu = true; // boolean to indicate whether to show the monitor side menu
         this.showToolbar = true; // boolean to indicate whether to show the monitor toolbar
-        this.showStepTools = false; // boolean to indicate whether to show the step toolbar
+        this.showGradeByStepTools = false; // boolean to indicate whether to show the step toolbar
 
         // ui-views and their corresponding names and icons
         this.views = {
@@ -50,20 +50,20 @@ var ClassroomMonitorController = function () {
                 type: 'primary',
                 active: false
             },
-            'root.nodeProgress': {
+            'root.project': {
                 name: this.$translate('gradeByStep'),
                 icon: 'view_list',
                 type: 'primary',
                 action: function action() {
                     var currentView = _this.$state.current.name;
-                    if (currentView === 'root.nodeProgress') {
+                    if (currentView === 'root.project') {
                         // if we're currently grading a step, close the node when a nodeProgress menu button is clicked
                         _this.NodeService.closeNode();
                     }
                 },
                 active: true
             },
-            'root.studentProgress': {
+            'root.studentLanding': {
                 name: this.$translate('gradeByStudent'),
                 icon: 'people',
                 type: 'primary',
@@ -78,7 +78,7 @@ var ClassroomMonitorController = function () {
             'root.export': {
                 name: this.$translate('dataExport'),
                 icon: 'file_download',
-                type: 'secondary',
+                type: 'primary',
                 active: true
             },
             'root.milestones': {
@@ -188,13 +188,16 @@ var ClassroomMonitorController = function () {
         key: 'processUI',
         value: function processUI() {
             var viewName = this.$state.$current.name;
-            this.currentViewName = this.views[viewName].name;
+            var currentView = this.views[viewName];
+            if (currentView) {
+                this.currentViewName = currentView.name;
+            }
 
-            if (viewName === 'root.nodeProgress') {
+            this.showGradeByStepTools = false;
+
+            if (viewName === 'root.project') {
                 var nodeId = this.$state.params.nodeId;
-                this.showStepTools = this.ProjectService.isApplicationNode(nodeId);
-            } else {
-                this.showStepTools = false;
+                this.showGradeByStepTools = this.ProjectService.isApplicationNode(nodeId);
             }
         }
     }, {
