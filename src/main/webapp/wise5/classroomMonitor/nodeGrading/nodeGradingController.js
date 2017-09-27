@@ -9,20 +9,17 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var NodeGradingController = function () {
-    function NodeGradingController($filter, $mdDialog, $scope, $state, $stateParams, $timeout, AnnotationService, ConfigService, NodeService, NotificationService, ProjectService, StudentStatusService, TeacherDataService) {
+    function NodeGradingController($filter, $mdDialog, $scope, $stateParams, AnnotationService, ConfigService, NotificationService, ProjectService, StudentStatusService, TeacherDataService) {
         var _this = this;
 
         _classCallCheck(this, NodeGradingController);
 
         this.$filter = $filter;
         this.$mdDialog = $mdDialog;
-        this.$state = $state;
         this.$scope = $scope;
         this.$stateParams = $stateParams;
-        this.$timeout = $timeout;
         this.AnnotationService = AnnotationService;
         this.ConfigService = ConfigService;
-        this.NodeService = NodeService;
         this.NotificationService = NotificationService;
         this.ProjectService = ProjectService;
         this.StudentStatusService = StudentStatusService;
@@ -36,9 +33,6 @@ var NodeGradingController = function () {
         this.maxScore = this.ProjectService.getMaxScoreForNode(this.nodeId);
         this.nodeHasWork = this.ProjectService.nodeHasWork(this.nodeId);
 
-        var startNodeId = this.ProjectService.getStartNodeId();
-        this.rootNode = this.ProjectService.getRootNode(startNodeId);
-
         this.sort = this.TeacherDataService.nodeGradingSort;
 
         this.hiddenComponents = [];
@@ -50,8 +44,6 @@ var NodeGradingController = function () {
             _this.nodeContent = null;
 
             _this.teacherWorkgroupId = _this.ConfigService.getWorkgroupId();
-
-            _this.periods = [];
 
             var node = _this.ProjectService.getNodeById(_this.nodeId);
 
@@ -66,16 +58,8 @@ var NodeGradingController = function () {
             _this.workVisibilityById = {}; // object that specifies whether student work is visible for each workgroup
             _this.workgroupInViewById = {}; // object that holds whether the workgroup is in view or not
 
-            _this.canViewStudentNames = true;
-            _this.canGradeStudentWork = true;
-
             var permissions = _this.ConfigService.getPermissions();
             _this.canViewStudentNames = permissions.canViewStudentNames;
-            _this.canGradeStudentWork = permissions.canGradeStudentWork;
-
-            _this.annotationMappings = {};
-
-            _this.componentStateHistory = [];
 
             _this.setWorkgroupsById();
 
@@ -345,75 +329,6 @@ var NodeGradingController = function () {
         }
 
         /**
-         * Get the html template for the component
-         * @param componentType the component type
-         * @return the path to the html template for the component
-         */
-
-    }, {
-        key: 'getComponentTemplatePath',
-        value: function getComponentTemplatePath(componentType) {
-            return this.NodeService.getComponentTemplatePath(componentType);
-        }
-
-        /**
-         * Get the components for this node.
-         * @return an array that contains the content for the components
-         */
-
-    }, {
-        key: 'getComponents',
-        value: function getComponents() {
-            var components = null;
-
-            if (this.nodeContent != null) {
-                components = this.nodeContent.components;
-            }
-
-            if (components != null && this.isDisabled) {
-                for (var c = 0; c < components.length; c++) {
-                    var component = components[c];
-
-                    component.isDisabled = true;
-                }
-            }
-
-            if (components != null && this.nodeContent.lockAfterSubmit) {
-                for (c = 0; c < components.length; c++) {
-                    component = components[c];
-
-                    component.lockAfterSubmit = true;
-                }
-            }
-
-            return components;
-        }
-    }, {
-        key: 'getComponentById',
-        value: function getComponentById(componentId) {
-            var component = null;
-
-            if (componentId != null) {
-                var components = this.getComponents();
-
-                if (components != null) {
-                    for (var c = 0; c < components.length; c++) {
-                        var tempComponent = components[c];
-
-                        if (tempComponent != null) {
-                            if (componentId === tempComponent.id) {
-                                component = tempComponent;
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-
-            return component;
-        }
-
-        /**
          * Get the student data for a specific part
          * @param the componentId
          * @param the workgroupId id of Workgroup who created the component state
@@ -431,81 +346,6 @@ var NodeGradingController = function () {
             }
 
             return componentState;
-        }
-
-        /**
-         * Get the student data for a specific part
-         * @param the componentId
-         * @param the workgroupId id of Workgroup who created the component state
-         * @return the student data for the given component
-         */
-
-    }, {
-        key: 'getLatestComponentStateByWorkgroupIdAndNodeIdAndComponentId',
-        value: function getLatestComponentStateByWorkgroupIdAndNodeIdAndComponentId(workgroupId, nodeId, componentId) {
-            var componentState = null;
-
-            if (workgroupId != null && nodeId != null && componentId != null) {
-
-                // get the latest component state for the component
-                componentState = this.TeacherDataService.getLatestComponentStateByWorkgroupIdNodeIdAndComponentId(workgroupId, nodeId, componentId);
-            }
-
-            return componentState;
-        }
-    }, {
-        key: 'getComponentStatesByWorkgroupIdAndNodeId',
-        value: function getComponentStatesByWorkgroupIdAndNodeId(workgroupId, nodeId) {
-            var componentStates = this.TeacherDataService.getComponentStatesByWorkgroupIdAndNodeId(workgroupId, nodeId);
-
-            //AnnotationService.populateAnnotationMappings(this.annotationMappings, workgroupId, componentStates);
-
-            return componentStates;
-        }
-    }, {
-        key: 'getUserNameByWorkgroupId',
-        value: function getUserNameByWorkgroupId(workgroupId) {
-            return this.ConfigService.getUserNameByWorkgroupId(workgroupId);
-        }
-    }, {
-        key: 'getAnnotationByStepWorkIdAndType',
-        value: function getAnnotationByStepWorkIdAndType(stepWorkId, type) {
-            return this.AnnotationService.getAnnotationByStepWorkIdAndType(stepWorkId, type);
-        }
-    }, {
-        key: 'getNodeScoreByWorkgroupIdAndNodeId',
-        value: function getNodeScoreByWorkgroupIdAndNodeId(workgroupId, nodeId) {
-            var score = this.AnnotationService.getScore(workgroupId, nodeId);
-            return typeof score === 'number' ? score : '-';
-        }
-    }, {
-        key: 'scoreChanged',
-        value: function scoreChanged(stepWorkId) {
-            var annotation = this.annotationMappings[stepWorkId + '-score'];
-            this.AnnotationService.saveAnnotation(annotation);
-        }
-    }, {
-        key: 'commentChanged',
-        value: function commentChanged(stepWorkId) {
-            var annotation = this.annotationMappings[stepWorkId + '-comment'];
-            this.AnnotationService.saveAnnotation(annotation);
-        }
-    }, {
-        key: 'setupComponentStateHistory',
-        value: function setupComponentStateHistory() {
-            this.getComponentStatesByWorkgroupIdAndNodeId();
-        }
-
-        /**
-         * Get the period id for a workgroup id
-         * @param workgroupId the workgroup id
-         * @returns the period id for the workgroup id
-         */
-
-    }, {
-        key: 'getPeriodIdByWorkgroupId',
-        value: function getPeriodIdByWorkgroupId(workgroupId) {
-            return this.ConfigService.getPeriodIdByWorkgroupId(workgroupId);
         }
 
         /**
@@ -560,24 +400,6 @@ var NodeGradingController = function () {
             }
 
             return averageScore;
-        }
-
-        /**
-         * Get the number of students in the current period
-         * @returns the number of students that are in the period
-         */
-
-    }, {
-        key: 'getNumberOfStudentsInPeriod',
-        value: function getNumberOfStudentsInPeriod() {
-            // get the currently selected period
-            var currentPeriod = this.getCurrentPeriod();
-            var periodId = currentPeriod.periodId;
-
-            // get the number of students that are on the node in the period
-            var count = this.StudentStatusService.getWorkgroupIdsOnNode(this.rootNode.id, periodId).length;
-
-            return count;
         }
 
         /**
@@ -833,7 +655,7 @@ var NodeGradingController = function () {
     return NodeGradingController;
 }();
 
-NodeGradingController.$inject = ['$filter', '$mdDialog', '$scope', '$state', '$stateParams', '$timeout', 'AnnotationService', 'ConfigService', 'NodeService', 'NotificationService', 'ProjectService', 'StudentStatusService', 'TeacherDataService'];
+NodeGradingController.$inject = ['$filter', '$mdDialog', '$scope', '$stateParams', 'AnnotationService', 'ConfigService', 'NotificationService', 'ProjectService', 'StudentStatusService', 'TeacherDataService'];
 
 exports.default = NodeGradingController;
 //# sourceMappingURL=nodeGradingController.js.map

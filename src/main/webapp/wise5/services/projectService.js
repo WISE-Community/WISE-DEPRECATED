@@ -49,10 +49,10 @@ var ProjectService = function () {
         this.additionalProcessingFunctionsMap = {};
 
         // filtering options for navigation displays
-        this.filters = [{ 'name': 'all', 'label': 'All'
-            //{'name': 'todo', 'label': 'Todo'},
-            //{'name': 'completed', 'label': 'Completed'}
-        }];
+        this.filters = [{ 'name': 'all', 'label': 'All' }
+        //{'name': 'todo', 'label': 'Todo'},
+        //{'name': 'completed', 'label': 'Completed'}
+        ];
     }
 
     _createClass(ProjectService, [{
@@ -6056,6 +6056,7 @@ var ProjectService = function () {
         }
 
         /**
+         * TODO: Deprecated, should be removed; replaced by getMaxScoreForWorkgroupId in StudentStatusService
          * Get the max score for the project. If the project contains branches, we
          * will only calculate the max score for a single path from the first node
          * to the last node in the project.
