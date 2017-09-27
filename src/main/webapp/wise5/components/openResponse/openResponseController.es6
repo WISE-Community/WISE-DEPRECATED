@@ -2549,6 +2549,7 @@ class OpenResponseController {
         newConnectedComponent.nodeId = this.nodeId;
         newConnectedComponent.componentId = null;
         newConnectedComponent.type = null;
+        this.authoringAutomaticallySetConnectedComponentComponentIdIfPossible(newConnectedComponent);
 
         // initialize the array of connected components if it does not exist yet
         if (this.authoringComponentContent.connectedComponents == null) {
@@ -2560,6 +2561,40 @@ class OpenResponseController {
 
         // the authoring component content has changed so we will save the project
         this.authoringViewComponentChanged();
+    }
+
+    /**
+     * Automatically set the component id for the connected component if there
+     * is only one viable option.
+     * @param connectedComponent the connected component object we are authoring
+     */
+    authoringAutomaticallySetConnectedComponentComponentIdIfPossible(connectedComponent) {
+        if (connectedComponent != null) {
+            let components = this.getComponentsByNodeId(connectedComponent.nodeId);
+            if (components != null) {
+                let numberOfAllowedComponents = 0;
+                let allowedComponent = null;
+                for (let component of components) {
+                    if (component != null) {
+                        if (this.isConnectedComponentTypeAllowed(component.type) &&
+                                component.id != this.componentId) {
+                            // we have found a viable component we can connect to
+                            numberOfAllowedComponents += 1;
+                            allowedComponent = component;
+                        }
+                    }
+                }
+
+                if (numberOfAllowedComponents == 1) {
+                    /*
+                     * there is only one viable component to connect to so we
+                     * will use it
+                     */
+                    connectedComponent.componentId = allowedComponent.id;
+                    connectedComponent.type = 'importWork';
+                }
+            }
+        }
     }
 
     /**
@@ -2618,6 +2653,7 @@ class OpenResponseController {
         if (connectedComponent != null) {
             connectedComponent.componentId = null;
             connectedComponent.type = null;
+            this.authoringAutomaticallySetConnectedComponentComponentIdIfPossible(connectedComponent);
 
             // the authoring component content has changed so we will save the project
             this.authoringViewComponentChanged();

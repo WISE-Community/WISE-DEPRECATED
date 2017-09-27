@@ -5536,6 +5536,7 @@ var GraphController = function () {
             newConnectedComponent.nodeId = this.nodeId;
             newConnectedComponent.componentId = null;
             newConnectedComponent.type = null;
+            this.authoringAutomaticallySetConnectedComponentComponentIdIfPossible(newConnectedComponent);
 
             // initialize the array of connected components if it does not exist yet
             if (this.authoringComponentContent.connectedComponents == null) {
@@ -5556,6 +5557,63 @@ var GraphController = function () {
 
             // the authoring component content has changed so we will save the project
             this.authoringViewComponentChanged();
+        }
+
+        /**
+         * Automatically set the component id for the connected component if there
+         * is only one viable option.
+         * @param connectedComponent the connected component object we are authoring
+         */
+
+    }, {
+        key: 'authoringAutomaticallySetConnectedComponentComponentIdIfPossible',
+        value: function authoringAutomaticallySetConnectedComponentComponentIdIfPossible(connectedComponent) {
+            if (connectedComponent != null) {
+                var components = this.getComponentsByNodeId(connectedComponent.nodeId);
+                if (components != null) {
+                    var numberOfAllowedComponents = 0;
+                    var allowedComponent = null;
+                    var _iteratorNormalCompletion = true;
+                    var _didIteratorError = false;
+                    var _iteratorError = undefined;
+
+                    try {
+                        for (var _iterator = components[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                            var component = _step.value;
+
+                            if (component != null) {
+                                if (this.isConnectedComponentTypeAllowed(component.type) && component.id != this.componentId) {
+                                    // we have found a viable component we can connect to
+                                    numberOfAllowedComponents += 1;
+                                    allowedComponent = component;
+                                }
+                            }
+                        }
+                    } catch (err) {
+                        _didIteratorError = true;
+                        _iteratorError = err;
+                    } finally {
+                        try {
+                            if (!_iteratorNormalCompletion && _iterator.return) {
+                                _iterator.return();
+                            }
+                        } finally {
+                            if (_didIteratorError) {
+                                throw _iteratorError;
+                            }
+                        }
+                    }
+
+                    if (numberOfAllowedComponents == 1) {
+                        /*
+                         * there is only one viable component to connect to so we
+                         * will use it
+                         */
+                        connectedComponent.componentId = allowedComponent.id;
+                        connectedComponent.type = 'importWork';
+                    }
+                }
+            }
         }
 
         /**
@@ -5747,6 +5805,7 @@ var GraphController = function () {
             if (connectedComponent != null) {
                 connectedComponent.componentId = null;
                 connectedComponent.type = null;
+                this.authoringAutomaticallySetConnectedComponentComponentIdIfPossible(connectedComponent);
 
                 // the authoring component content has changed so we will save the project
                 this.authoringViewComponentChanged();
