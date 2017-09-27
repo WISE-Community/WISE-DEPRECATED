@@ -15,10 +15,14 @@
             </textarea>
             </md-input-container>
         </div>
-        <md-button class='topButton md-raised md-primary' ng-click='openResponseController.showAdvancedAuthoring = !openResponseController.showAdvancedAuthoring'>
-            <md-icon>build</md-icon>
-            <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ "ADVANCED" | translate }}</md-tooltip>
-        </md-button>
+        <div>
+            <md-input-container style='margin-right: 20px; width: 150px; height: 50px;'>
+                <md-button class='topButton md-raised md-primary' ng-click='openResponseController.showAdvancedAuthoring = !openResponseController.showAdvancedAuthoring'>
+                    <md-icon>build</md-icon>
+                    <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ "ADVANCED" | translate }}</md-tooltip>
+                </md-button>
+            </md-input-container>
+        </div>
         <div ng-if='openResponseController.showAdvancedAuthoring'>
             <span>{{ 'openResponse.starterSentence' | translate }} ({{ 'openResponse.optional' | translate }}):</span>
             <br/>
@@ -27,37 +31,6 @@
                       ng-model-options='{ debounce: 1000 }'
                       rows='2'
                       cols='100'></textarea>
-            <br/>
-            <span>{{ 'SHOW_SAVE_BUTTON' | translate }}:</span>
-            <input type='checkbox'
-                   ng-model='openResponseController.authoringComponentContent.showSaveButton'
-                   ng-change='openResponseController.authoringViewComponentChanged()'/>
-            <br/>
-            <span>{{ 'SHOW_SUBMIT_BUTTON' | translate }}:</span>
-            <input type='checkbox'
-                   ng-model='openResponseController.authoringComponentContent.showSubmitButton'
-                   ng-change='openResponseController.showSubmitButtonValueChanged()'/>
-            <div ng-if='openResponseController.authoringComponentContent.showSubmitButton'
-                 style='display:inline'>
-                <span>{{ 'MAX_SUBMIT' | translate }}:</span>
-                <input type='number'
-                       ng-model='openResponseController.authoringComponentContent.maxSubmitCount'
-                       ng-change='openResponseController.authoringViewComponentChanged()'/>
-            </div>
-            <br/>
-            <span>{{ 'MAX_SCORE' | translate }}:</span>
-            <input type='number'
-                   ng-model='openResponseController.authoringComponentContent.maxScore'
-                   ng-change='openResponseController.authoringViewComponentChanged()'
-                   ng-model-options='{ debounce: 1000 }'
-                   style='width: 3em'/>
-            <br/>
-            {{ 'COMPONENT_WIDTH' | translate }}:
-            <input type='number'
-                   ng-model='openResponseController.authoringComponentContent.componentWidth'
-                   ng-change='openResponseController.authoringViewComponentChanged()'
-                   ng-model-options='{ debounce: 1000 }'
-                   style='width: 3em'/>
             <br/>
             <span>{{ 'openResponse.enableCRater' | translate }}:</span>
             <input type='checkbox'
@@ -215,9 +188,52 @@
                 </div>
             </div>
             <div>
-                <button ng-click='openResponseController.showRubricAuthoring = !openResponseController.showRubricAuthoring'>
-                    {{ 'EDIT_COMPONENT_RUBRIC' | translate }}
-                </button>
+                <md-checkbox class='md-primary'
+                             ng-model='openResponseController.authoringComponentContent.showSaveButton'
+                             ng-change='openResponseController.authoringViewComponentChanged()'>
+                    {{ 'SHOW_SAVE_BUTTON' | translate }}
+                </md-checkbox>
+            </div>
+            <div>
+                <md-checkbox class='md-primary'
+                             ng-model='openResponseController.authoringComponentContent.showSubmitButton'
+                             ng-change='openResponseController.authoringViewComponentChanged()'>
+                    {{ 'SHOW_SUBMIT_BUTTON' | translate }}
+                </md-checkbox>
+            </div>
+            <div>
+                <md-input-container style='margin-right: 20px; width: 150px; height: 25px;'
+                                    ng-if='openResponseController.authoringComponentContent.showSubmitButton'>
+                    <label>{{ 'MAX_SUBMIT' | translate }}</label>
+                    <input type='number'
+                           ng-model='openResponseController.authoringComponentContent.maxSubmitCount'
+                           ng-model-options='{ debounce: 1000 }'
+                           ng-change='openResponseController.authoringViewComponentChanged()'/>
+                </md-input-container>
+            </div>
+            <div>
+                <md-input-container style='margin-right: 20px; width: 150px; height: 25px;'>
+                    <label>{{ 'MAX_SCORE' | translate }}</label>
+                    <input type='number'
+                           ng-model='openResponseController.authoringComponentContent.maxScore'
+                           ng-model-options='{ debounce: 1000 }'
+                           ng-change='openResponseController.authoringViewComponentChanged()'/>
+                </md-input-container>
+            </div>
+            <div>
+                <md-input-container style='margin-right: 20px; width: 150px; height: 25px;'>
+                    <label>{{ 'COMPONENT_WIDTH' | translate }}</label>
+                    <input type='number'
+                           ng-model='openResponseController.authoringComponentContent.componentWidth'
+                           ng-model-options='{ debounce: 1000 }'
+                           ng-change='openResponseController.authoringViewComponentChanged()'/>
+                </md-input-container>
+            </div>
+            <div>
+                <md-button class='topButton md-raised md-primary' ng-click='openResponseController.showRubricAuthoring = !openResponseController.showRubricAuthoring'>
+                    <md-icon>message</md-icon>
+                    <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'EDIT_COMPONENT_RUBRIC' | translate }}</md-tooltip>
+                </md-button>
                 <div ng-if='openResponseController.showRubricAuthoring'>
                     <summernote id='{{openResponseController.summernoteRubricId}}'
                                 ng-model='openResponseController.summernoteRubricHTML'

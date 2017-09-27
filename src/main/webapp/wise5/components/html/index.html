@@ -8,22 +8,29 @@
                   rows='10'
                   cols='100'></summernote>
         <div>
-            <md-button class='topButton md-raised md-primary' ng-click='htmlController.showAdvancedAuthoring = !htmlController.showAdvancedAuthoring'>
-                <md-icon>build</md-icon>
-                <md-tooltip md-direction="top" class="projectButtonTooltip">{{ "ADVANCED" | translate }}</md-tooltip>
-            </md-button>
+            <div>
+                <md-input-container style='margin-right: 20px; width: 150px; height: 50px;'>
+                    <md-button class='topButton md-raised md-primary' ng-click='htmlController.showAdvancedAuthoring = !htmlController.showAdvancedAuthoring'>
+                        <md-icon>build</md-icon>
+                        <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ "ADVANCED" | translate }}</md-tooltip>
+                    </md-button>
+                </md-input-container>
+            </div>
             <div ng-if='htmlController.showAdvancedAuthoring'>
                 <div>
-                    {{ 'COMPONENT_WIDTH' | translate }}:
-                    <input type='number'
-                           ng-model='htmlController.authoringComponentContent.componentWidth'
-                           ng-change='htmlController.authoringViewComponentChanged()'
-                           ng-model-options='{ debounce: 1000 }'
-                           style='width: 3em'/>
-                    <br/>
-                    <button ng-click='htmlController.showRubricAuthoring = !htmlController.showRubricAuthoring'>
-                        {{ 'EDIT_COMPONENT_RUBRIC' | translate }}
-                    </button>
+                    <md-input-container style='margin-right: 20px; width: 150px; height: 25px;'>
+                        <label>{{ 'COMPONENT_WIDTH' | translate }}</label>
+                        <input type='number'
+                               ng-model='htmlController.authoringComponentContent.componentWidth'
+                               ng-model-options='{ debounce: 1000 }'
+                               ng-change='htmlController.authoringViewComponentChanged()'/>
+                    </md-input-container>
+                </div>
+                <div>
+                    <md-button class='topButton md-raised md-primary' ng-click='htmlController.showRubricAuthoring = !htmlController.showRubricAuthoring'>
+                        <md-icon>message</md-icon>
+                        <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'EDIT_COMPONENT_RUBRIC' | translate }}</md-tooltip>
+                    </md-button>
                     <div ng-if='htmlController.showRubricAuthoring'>
                         <summernote id='{{htmlController.summernoteRubricId}}'
                                     ng-model='htmlController.summernoteRubricHTML'

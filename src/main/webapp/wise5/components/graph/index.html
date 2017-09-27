@@ -351,47 +351,62 @@
                     </div>
                 </div>
             </div>
-            <md-button class='topButton md-raised md-primary' ng-click='graphController.showAdvancedAuthoring = !graphController.showAdvancedAuthoring'>
-                <md-icon>build</md-icon>
-                <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ "ADVANCED" | translate }}</md-tooltip>
-            </md-button>
-            <br/>
+            <div>
+                <md-input-container style='margin-right: 20px; width: 150px; height: 50px;'>
+                    <md-button class='topButton md-raised md-primary' ng-click='graphController.showAdvancedAuthoring = !graphController.showAdvancedAuthoring'>
+                        <md-icon>build</md-icon>
+                        <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ "ADVANCED" | translate }}</md-tooltip>
+                    </md-button>
+                </md-input-container>
+            </div>
             <div ng-if='graphController.showAdvancedAuthoring'>
-                {{ 'SHOW_SAVE_BUTTON' | translate }}:
-                <input type='checkbox'
-                       ng-model='graphController.authoringComponentContent.showSaveButton'
-                       ng-change='graphController.authoringViewComponentChanged()'/>
-                <br/>
-                {{ 'SHOW_SUBMIT_BUTTON' | translate }}:
-                <input type='checkbox'
-                       ng-model='graphController.authoringComponentContent.showSubmitButton'
-                       ng-change='graphController.showSubmitButtonValueChanged()'/>
-                <div ng-if='graphController.authoringComponentContent.showSubmitButton'
-                     style='display:inline'>
-                    <span>{{ 'MAX_SUBMIT' | translate }}:</span>
-                    <input type='number'
-                           ng-model='graphController.authoringComponentContent.maxSubmitCount'
-                           ng-change='graphController.authoringViewComponentChanged()'/>
-                </div>
-                <br/>
-                {{ 'MAX_SCORE' | translate }}:
-                <input type='number'
-                       ng-model='graphController.authoringComponentContent.maxScore'
-                       ng-change='graphController.authoringViewComponentChanged()'
-                       ng-model-options='{ debounce: 1000 }'
-                       style='width: 3em'/>
-                <br/>
-                {{ 'COMPONENT_WIDTH' | translate }}:
-                <input type='number'
-                       ng-model='graphController.authoringComponentContent.componentWidth'
-                       ng-change='graphController.authoringViewComponentChanged()'
-                       ng-model-options='{ debounce: 1000 }'
-                       style='width: 3em'/>
-                <br/>
                 <div>
-                    <button ng-click='graphController.showRubricAuthoring = !graphController.showRubricAuthoring'>
-                        {{ 'EDIT_COMPONENT_RUBRIC' | translate }}
-                    </button>
+                    <md-checkbox class='md-primary'
+                                 ng-model='graphController.authoringComponentContent.showSaveButton'
+                                 ng-change='graphController.authoringViewComponentChanged()'>
+                        {{ 'SHOW_SAVE_BUTTON' | translate }}
+                    </md-checkbox>
+                </div>
+                <div>
+                    <md-checkbox class='md-primary'
+                                 ng-model='graphController.authoringComponentContent.showSubmitButton'
+                                 ng-change='graphController.authoringViewComponentChanged()'>
+                        {{ 'SHOW_SUBMIT_BUTTON' | translate }}
+                    </md-checkbox>
+                </div>
+                <div>
+                    <md-input-container style='margin-right: 20px; width: 150px; height: 25px;'
+                                        ng-if='graphController.authoringComponentContent.showSubmitButton'>
+                        <label>{{ 'MAX_SUBMIT' | translate }}</label>
+                        <input type='number'
+                               ng-model='graphController.authoringComponentContent.maxSubmitCount'
+                               ng-model-options='{ debounce: 1000 }'
+                               ng-change='graphController.authoringViewComponentChanged()'/>
+                    </md-input-container>
+                </div>
+                <div>
+                    <md-input-container style='margin-right: 20px; width: 150px; height: 25px;'>
+                        <label>{{ 'MAX_SCORE' | translate }}</label>
+                        <input type='number'
+                               ng-model='graphController.authoringComponentContent.maxScore'
+                               ng-model-options='{ debounce: 1000 }'
+                               ng-change='graphController.authoringViewComponentChanged()'/>
+                    </md-input-container>
+                </div>
+                <div>
+                    <md-input-container style='margin-right: 20px; width: 150px; height: 25px;'>
+                        <label>{{ 'COMPONENT_WIDTH' | translate }}</label>
+                        <input type='number'
+                               ng-model='graphController.authoringComponentContent.componentWidth'
+                               ng-model-options='{ debounce: 1000 }'
+                               ng-change='graphController.authoringViewComponentChanged()'/>
+                    </md-input-container>
+                </div>
+                <div>
+                    <md-button class='topButton md-raised md-primary' ng-click='graphController.showRubricAuthoring = !graphController.showRubricAuthoring'>
+                        <md-icon>message</md-icon>
+                        <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'EDIT_COMPONENT_RUBRIC' | translate }}</md-tooltip>
+                    </md-button>
                     <div ng-if='graphController.showRubricAuthoring'>
                         <summernote id='{{graphController.summernoteRubricId}}'
                                     ng-model='graphController.summernoteRubricHTML'
