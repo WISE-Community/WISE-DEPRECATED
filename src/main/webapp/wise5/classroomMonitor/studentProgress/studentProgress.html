@@ -24,17 +24,18 @@
                                 </md-button>
                             </th>
                             <th class="table--list__thead__th" sticky>
-                                <md-button class="table--list__thead__link table--list__thead__link--center"
-                                           ng-click="studentProgressController.setSort('team')" title="{{'sortByTeam' | translate}}">
-                                    <span translate="teamIdTitle"></span>
-                                    <md-icon ng-if="studentProgressController.sort === 'team' || studentProgressController.sort === '-team'" class="text-light table--list__thead__sort" ng-class="{'table--list__thead__sort--reverse': studentProgressController.sort === '-team'}"> arrow_drop_up </md-icon>
-                                </md-button>
-                            </th>
-                            <th class="table--list__thead__th" sticky>
                                 <md-button class="table--list__thead__link table--list__thead__link--left"
                                            ng-click="studentProgressController.setSort('student')" title="{{'sortByStudent' | translate}}">
                                     <span translate="student"></span>
                                     <md-icon ng-if="studentProgressController.sort === 'student' || studentProgressController.sort === '-student'" class="text-light table--list__thead__sort" ng-class="{'table--list__thead__sort--reverse': studentProgressController.sort === '-student'}"> arrow_drop_up </md-icon>
+                                </md-button>
+                            </th>
+                            <th class="table--list__thead__th" sticky>
+                                <md-button class="table--list__thead__link table--list__thead__link--center"
+                                           aria-label="{{ 'teamIdTitle' | translate }}"
+                                           ng-click="studentProgressController.setSort('team')" title="{{'sortByTeam' | translate}}">
+                                    <span translate="teamIdTitle"></span>
+                                    <md-icon ng-if="studentProgressController.sort === 'team' || studentProgressController.sort === '-team'" class="text-light table--list__thead__sort" ng-class="{'table--list__thead__sort--reverse': studentProgressController.sort === '-team'}"> arrow_drop_up </md-icon>
                                 </md-button>
                             </th>
                             <th class="table--list__thead__th" sticky>
@@ -76,8 +77,8 @@
                                 <md-icon ng-if="student.online" class="success" aria-label="{{ online |translate }}"> fiber_manual_record </md-icon>
                                 <md-icon ng-if="!student.online" aria-label="{{ offline | translate }}"> fiber_manual_record </md-icon>
                             </td>
-                            <td class="center">{{ student.workgroupId }}</td>
                             <td class="heavy">{{ student.userName }}</td>
+                            <td class="center">{{ student.workgroupId }}</td>
                             <td class="center">
                                 <div class="td--max-width">{{ student.location }}</div>
                             </td>
