@@ -1,4 +1,13 @@
 <div ng-controller='AudioOscillatorController as audioOscillatorController'>
+    <style>
+        .playStopButton {
+            min-width: 50px;
+            margin-top: -10px;
+        }
+        .md-tooltip.projectButtonTooltip {
+             margin-top: 0px;
+        }
+    </style>
     <div ng-if='audioOscillatorController.mode === "authoring"'>
         <div ng-if='!audioOscillatorController.authoringComponentContent.showPreviousWork'>
             <md-input-container style='width:100%'>
@@ -302,24 +311,37 @@
                         <md-icon>image</md-icon> {{ 'audioOscillator.importData' | translate }}
                     </md-button>
                 </div>
-                <span ng-if='audioOscillatorController.oscillatorTypes.length == 0 || audioOscillatorController.oscillatorTypes.length == 1'>
-                    {{ 'audioOscillator.oscillatorType' | translate }}: {{audioOscillatorController.oscillatorType}}
-                </span>
-                <span ng-if='audioOscillatorController.oscillatorTypes.length > 1'>
-                    {{ 'audioOscillator.oscillatorType' | translate }}:
-                    <select ng-model='audioOscillatorController.oscillatorType'
-                            ng-change='audioOscillatorController.oscillatorTypeChanged()'>
-                        <option ng-repeat='oscillatorType in audioOscillatorController.oscillatorTypes'
-                                value='{{oscillatorType}}'>{{oscillatorType}}</option>
-                    </select>
-                </span>
-                <br/>
-                {{ 'audioOscillator.frequency' | translate }}: <input type='number'
-                                  ng-model='audioOscillatorController.frequency'
-                                  ng-change='audioOscillatorController.frequencyChanged()'/> {{ 'audioOscillator.hz' | translate }}
-                <br/>
-                <button ng-click='audioOscillatorController.playStopClicked()'>{{audioOscillatorController.playStopButtonText}}</button>
-                <br/>
+                <div layout='row' style='height: 80px;'>
+                    <md-input-container ng-if='audioOscillatorController.oscillatorTypes.length > 1'
+                                        style='width: 150px;'>
+                        <label>{{ 'audioOscillator.oscillatorType' | translate }}</label>
+                        <md-select ng-model='audioOscillatorController.oscillatorType'
+                                   ng-change='audioOscillatorController.oscillatorTypeChanged()'
+                                   style='width: 120px'>
+                            <md-option ng-repeat='oscillatorType in audioOscillatorController.oscillatorTypes'
+                                       value='{{oscillatorType}}'>
+                                {{oscillatorType}}
+                            </md-option>
+                        </md-select>
+                    </md-input-container>
+                    <md-input-container style='width: 100px;'>
+                        <label>{{ 'audioOscillator.frequency' | translate }}</label>
+                        <input type='number'
+                               ng-model='audioOscillatorController.frequency'
+                               ng-change='audioOscillatorController.frequencyChanged()'/>
+                    </md-input-container>
+                    <md-input-container style='margin-right: 20px;'>
+                        {{ 'audioOscillator.hz' | translate }}
+                    </md-input-container>
+                    <md-input-container style='margin-right: 20px;'>
+                        <md-button class='playStopButton md-raised md-primary'
+                                   ng-click='audioOscillatorController.playStopClicked()'>
+                            <md-icon ng-if='!audioOscillatorController.isPlaying'>play_arrow</md-icon>
+                            <md-icon ng-if='audioOscillatorController.isPlaying'>stop</md-icon>
+                            <md-tooltip md-direction='top' class='projectButtonTooltip'>{{audioOscillatorController.playStopButtonText}}</md-tooltip>
+                        </md-button>
+                    </md-input-container>
+                </div>
                 <canvas id='{{audioOscillatorController.oscilloscopeId}}' width={{audioOscillatorController.oscilloscopeWidth}} height={{audioOscillatorController.oscilloscopeHeight}} style="border:1px solid lightgrey"></canvas>
                 <div ng-if="audioOscillatorController.isSaveButtonVisible || audioOscillatorController.isSubmitButtonVisible"
                      class="component-content__actions" layout="row" layout-align="start center">
