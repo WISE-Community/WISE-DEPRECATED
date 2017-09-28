@@ -16,6 +16,10 @@ var _nodeProgress = require('./classroomMonitorComponents/nodeProgress/nodeProgr
 
 var _nodeProgress2 = _interopRequireDefault(_nodeProgress);
 
+var _studentGrading = require('./classroomMonitorComponents/studentGrading/studentGrading');
+
+var _studentGrading2 = _interopRequireDefault(_studentGrading);
+
 var _studentProgress = require('./classroomMonitorComponents/studentProgress/studentProgress');
 
 var _studentProgress2 = _interopRequireDefault(_studentProgress);
@@ -26,7 +30,7 @@ var _shared2 = _interopRequireDefault(_shared);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var ClassroomMonitorComponents = angular.module('classroomMonitor.components', ['milestones', 'nodeGrading', 'nodeProgress', 'studentProgress', 'shared']);
+var ClassroomMonitorComponents = angular.module('classroomMonitor.components', ['milestones', 'nodeGrading', 'nodeProgress', 'studentGrading', 'studentProgress', 'shared']);
 
 exports.default = ClassroomMonitorComponents;
 //# sourceMappingURL=classroomMonitorComponents.js.map

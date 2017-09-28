@@ -86,14 +86,15 @@
           </md-button>
         </div>
       </md-list-item>
-      <step-item ng-repeat="node in nodeGradingController.nodesById | toArray | orderBy:studentGradingController.getOrderBy()"
-                 ng-if="studentGradingController.isNodeShown(node.$key)"
-                 expand="studentGradingController.workVisibilityById[node.$key]"
+      <step-item ng-repeat="node in studentGradingController.nodesById | toArray | orderBy:studentGradingController.getOrderBy()"
+                 ng-if="node.show"
+                 expand="studentGradingController.nodeVisibilityById[node.$key]"
                  max-score="node.maxScore"
-                 show-score="node.nodeHasWork"
+                 show-score="node.hasWork"
                  node-id="node.$key"
+                 step-data="node"
                  workgroup-id="studentGradingController.workgroupId"
-                 on-update-expand="studentGradingController.onUpdateExpand(node, value)"
+                 on-update-expand="studentGradingController.onUpdateExpand(nodeId, value)"
                  in-view="studentGradingController.stepInView(node.$key, $inview)"></step-item>
     </md-list>
   </div>

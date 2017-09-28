@@ -2,267 +2,508 @@
 
 class StudentGradingController {
 
-  constructor($filter,
-              $mdDialog,
-              $mdMedia,
-              $scope,
-              $stateParams,
-              AnnotationService,
-              ConfigService,
-              NotificationService,
-              ProjectService,
-              StudentStatusService,
-              TeacherDataService) {
+    constructor($filter,
+                $mdDialog,
+                $mdMedia,
+                $scope,
+                $stateParams,
+                AnnotationService,
+                ConfigService,
+                NotificationService,
+                ProjectService,
+                StudentStatusService,
+                TeacherDataService) {
+        this.$filter = $filter;
+        this.$mdDialog = $mdDialog;
+        $scope.$mdMedia = $mdMedia;
+        this.$scope = $scope;
+        this.$stateParams = $stateParams;
+        this.AnnotationService = AnnotationService;
+        this.ConfigService = ConfigService;
+        this.NotificationService = NotificationService;
+        this.ProjectService = ProjectService;
+        this.StudentStatusService = StudentStatusService;
+        this.TeacherDataService = TeacherDataService;
+        this.$translate = this.$filter('translate');
 
-    this.$filter = $filter;
-    this.$mdDialog = $mdDialog;
-    $scope.$mdMedia = $mdMedia;
-    this.$scope = $scope;
-    this.$stateParams = $stateParams;
-    this.AnnotationService = AnnotationService;
-    this.ConfigService = ConfigService;
-    this.NotificationService = NotificationService;
-    this.ProjectService = ProjectService;
-    this.StudentStatusService = StudentStatusService;
-    this.TeacherDataService = TeacherDataService;
+        // scroll to the top of the page
+        document.body.scrollTop = document.documentElement.scrollTop = 0;
 
-    // scroll to the top of the page
-    document.body.scrollTop = document.documentElement.scrollTop = 0;
+        let sort = this.TeacherDataService.studentGradingSort;
+        this.sort = sort ? sort : 'step';
+        this.TeacherDataService.stepGradingSort = this.sort;
+        this.permissions = this.ConfigService.getPermissions();
+        this.workgroupId = parseInt(this.$stateParams.workgroupId);
+        this.avatarColor = this.ConfigService.getAvatarColorForWorkgroupId(this.workgroupId);
+        this.displayNames = this.ConfigService.getDisplayNamesByWorkgroupId(this.workgroupId);
+        let maxScore = this.StudentStatusService.getMaxScoreForWorkgroupId(this.workgroupId);
+        this.maxScore = maxScore ? maxScore : 0;
+        this.totalScore = this.TeacherDataService.getTotalScoreByWorkgroupId(this.workgroupId);
+        this.projectCompletion = this.StudentStatusService.getStudentProjectCompletion(this.workgroupId, true);
+        this.showNonWorkNodes = false;
+        this.nodeIds = this.ProjectService.getFlattenedProjectAsNodeIds();
+        this.nodesById = {}; // object that will hold node names, statuses, scores, notifications, etc.
+        this.nodeVisibilityById = {}; // object that specifies whether student work is visible for each node
+        this.nodesInViewById = {}; // object that holds whether the node is in view or not
 
-    this.$translate = this.$filter('translate');
+        this.setNodesById();
 
-    this.sort = this.TeacherDataService.nodeGradingSort;
-    //this.hiddenComponents = [];
-    this.permissions = this.ConfigService.getPermissions();
-    this.workgroupId = parseInt(this.$stateParams.workgroupId);
-    this.nodeIds = this.ProjectService.getFlattenedProjectAsNodeIds();
-    this.branches = this.ProjectService.getBranches();
-    this.avatarColor = this.ConfigService.getAvatarColorForWorkgroupId(this.workgroupId);
-    this.displayNames = this.ConfigService.getDisplayNamesByWorkgroupId(this.workgroupId);
-    let maxScore = this.StudentStatusService.getMaxScoreForWorkgroupId(this.workgroupId);
-    this.maxScore = maxScore ? maxScore : 0;
-    this.totalScore = this.TeacherDataService.getTotalScoreByWorkgroupId(this.workgroupId);
-    this.projectCompletion = this.StudentStatusService.getStudentProjectCompletion(this.workgroupId, true);
+        this.$scope.$on('projectSaved', (event, args) => {
+            this.maxScore = this.StudentStatusService.getMaxScoreForWorkgroupId(this.workgroupId);
+            this.updateNodeMaxScores();
+        });
 
-    this.$scope.$on('projectSaved', (event, args) => {
-        // update project maxScore
-        this.maxScore = this.StudentStatusService.getMaxScoreForWorkgroupId(this.workgroupId);
-
-        // update max scores for all nodes
-        //this.updateNodeMaxScores();
-    });
-
-    this.$scope.$on('notificationAdded', (event, notification) => {
-        if (notification.type === 'CRaterResult') {
-            // there is a new CRaterResult notification
-            // TODO: expand to encompass other notification types that should be shown to teacher
-            let workgroupId = notification.toWorkgroupId;
-            let nodeId = notification.nodeId;
-            if (workgroupId === this.workgroupId && this.nodesById[nodeId]) {
-              // update the node with the new notification
-              //this.updateNode(nodeId);
-            }
-        }
-    });
-
-    this.$scope.$on('notificationChanged', (event, notification) => {
-        if (notification.type === 'CRaterResult') {
-            // a CRaterResult notification has changed
-            // TODO: expand to encompass other notification types that should be shown to teacher
-            let workgroupId = notification.toWorkgroupId;
-            let nodeId = notification.nodeId;
-            if (workgroupId === this.workgroupId && this.nodesById[nodeId]) {
-                // update the node with the new notification
-                //this.updateNode(nodeId);
-            }
-        }
-    });
-
-    this.$scope.$on('annotationReceived', (event, args) => {
-        let annotation = args.annotation;
-
-        if (annotation) {
-            let workgroupId = annotation.toWorkgroupId;
-            let nodeId = annotation.nodeId;
-            if (workgroupId === this.workgroupId && this.nodesById[nodeId]) {
-                // update the total score for the workgroup
-                this.totalScore = this.TeacherDataService.getTotalScoreByWorkgroupId(workgroupId);
-
-                // update the node with the new annotation
-                //this.updateNode(nodeId);
-            }
-        }
-    });
-
-    // listen for the studentStatusReceived event
-    this.$scope.$on('studentStatusReceived', (event, args) => {
-        // get the workgroup id
-        let studentStatus = args.studentStatus;
-        let workgroupId = studentStatus.workgroupId;
-
-        if (workgroupId === this.workgroupId) {
-            // update project completion for workgroup
-            this.projectCompletion = this.StudentStatusService.getStudentProjectCompletion(this.workgroupId, true);
-        }
-    });
-
-    this.$scope.$on('studentWorkReceived', (event, args) => {
-        let studentWork = args.studentWork;
-
-        if (studentWork != null) {
-            let workgroupId = studentWork.workgroupId;
-            let nodeId = studentWork.nodeId;
-            if (workgroupId === this.workgroupId && this.nodesById[nodeId]) {
-                // update the node with the new componentState
-                //this.updateNode(nodeId);
-            }
-        }
-    });
-
-    // save event when student grading view is displayed
-    let context = "ClassroomMonitor", nodeId = null, componentId = null, componentType = null,
-        category = "Navigation", event = "studentGradingViewDisplayed", data = { workgroupId: this.workgroupId };
-    this.TeacherDataService.saveEvent(context, nodeId, componentId, componentType, category, event, data);
-  }
-
-  /**
-   * Check if we should show the given node id for the student. We will
-   * determine whether to show a node id or not by checking to see if
-   * the node id is in a branch. If the node id is not in a branch we
-   * will show it. If the node id is in a branch, we need to check which
-   * branch paths the node id is in. If the node id is in a branch path
-   * and the student has work for any node id in the branch path, we will
-   * show the node id passed into this function.
-   * @param nodeId the node id
-   * @return whether to show the node for this student
-   */
-  showNodeIdForStudent(nodeId) {
-      var result = false;
-
-      if (this.ProjectService.isNodeIdInABranch(this.branches, nodeId)) {
-          /*
-           * node is in a branch so we will check if we should show
-           * the node for this student. if the student has work in any
-           * step in the branch path, we will show all the nodes in the
-           * branch.
-           */
-
-          // get the branches this node id is in
-          var branchPaths = this.ProjectService.getBranchPathsByNodeId(this.branches, nodeId);
-
-          // loop through all the branch paths that this node id is in
-          for (var bp = 0; bp < branchPaths.length; bp++) {
-              var branchPathHasWork = false;
-
-              // get a branch path
-              var branchPath = branchPaths[bp];
-
-              // loop through all the node ids in the branch path
-              for (var n = 0; n < branchPath.length; n++) {
-
-                  // get a node id in the branch path
-                  var nodeIdInBranch = branchPath[n];
-
-                  // get the work for this student for the node id
-                  var componentStates = this.TeacherDataService.getComponentStatesByWorkgroupIdAndNodeId(this.workgroupId, nodeIdInBranch);
-
-                  if (componentStates != null && componentStates.length > 0) {
-                      /*
-                       * the student has work for the step so we will say
-                       * the branch path has work and that the node id
-                       * passed into the function should be shown
-                       */
-                      result = true;
-                  }
+        this.$scope.$on('notificationAdded', (event, notification) => {
+          if (notification.type === 'CRaterResult') {
+              // there is a new CRaterResult notification
+              // TODO: expand to encompass other notification types that should be shown to teacher
+              let workgroupId = notification.toWorkgroupId;
+              let nodeId = notification.nodeId;
+              if (workgroupId === this.workgroupId && this.nodesById[nodeId]) {
+                this.updateNode(nodeId);
               }
           }
+        });
 
-      } else {
-          // node is not in a branch so we will show it
-          result = true;
-      }
+        this.$scope.$on('notificationChanged', (event, notification) => {
+            if (notification.type === 'CRaterResult') {
+                // a CRaterResult notification has changed
+                // TODO: expand to encompass other notification types that should be shown to teacher
+                let workgroupId = notification.toWorkgroupId;
+                let nodeId = notification.nodeId;
+                if (workgroupId === this.workgroupId && this.nodesById[nodeId]) {
+                    this.updateNode(nodeId);
+                }
+            }
+        });
 
-      return result;
-  };
+        this.$scope.$on('annotationReceived', (event, args) => {
+            // a new annotation has been received
+            let annotation = args.annotation;
+            if (annotation) {
+                let workgroupId = annotation.toWorkgroupId;
+                let nodeId = annotation.nodeId;
+                if (workgroupId === this.workgroupId && this.nodesById[nodeId]) {
+                    this.totalScore = this.TeacherDataService.getTotalScoreByWorkgroupId(workgroupId);
+                    this.updateNode(nodeId);
+                }
+            }
+        });
 
-  getNodePositionAndTitleByNodeId(nodeId) {
-      return this.ProjectService.getNodePositionAndTitleByNodeId(nodeId);
-  };
+        this.$scope.$on('studentWorkReceived', (event, args) => {
+            // new student work has been received
+            let studentWork = args.studentWork;
+            if (studentWork != null) {
+                let workgroupId = studentWork.workgroupId;
+                let nodeId = studentWork.nodeId;
+                if (workgroupId === this.workgroupId && this.nodesById[nodeId]) {
+                    this.updateNode(nodeId);
+                }
+            }
+        });
 
-  getEventsByWorkgroupId(workgroupId) {
-      return this.TeacherDataService.getEventsByWorkgroupId(workgroupId);
-  };
+        // save event when student grading view is displayed
+        let context = "ClassroomMonitor", nodeId = null, componentId = null, componentType = null,
+            category = "Navigation", event = "studentGradingViewDisplayed", data = { workgroupId: this.workgroupId };
+        this.TeacherDataService.saveEvent(context, nodeId, componentId, componentType, category, event, data);
+    }
 
-  getEventsByWorkgroupIdAndNodeId(workgroupId, nodeId) {
-      return this.TeacherDataService.getEventsByWorkgroupIdAndNodeId(workgroupId, nodeId);
-  };
+    /**
+     * Build the nodesById object; don't include group nodes
+     */
+    setNodesById() {
+        let l = this.nodeIds.length;
+        for (let i = 0; i < l; i++) {
+            let id = this.nodeIds[i];
+            let isApplicationNode = this.ProjectService.isApplicationNode(id);
+            if (isApplicationNode) {
+              let node = this.ProjectService.getNodeById(id);
+              this.nodesById[id] = node;
+              this.nodeVisibilityById[id] = false;
+              this.updateNode(id, true);
+            }
+        }
+    }
 
-  getAnnotationsToWorkgroupId(workgroupId) {
-      return this.TeacherDataService.getAnnotationsToWorkgroupId(workgroupId);
-  };
+    /**
+     * Update statuses, scores, notifications, etc. for a node object
+     * @param nodeID a node ID number
+     * @param init Boolean whether we're in controller initialization or not
+     */
+    updateNode(nodeId, init) {
+        let node = this.nodesById[nodeId];
 
-  getAnnotationsToWorkgroupIdAndNodeId(workgroupId, nodeId) {
-      return this.TeacherDataService.getAnnotationsToWorkgroupIdAndNodeId(workgroupId, nodeId);
-  };
+        if (node) {
+            let alertNotifications = this.getAlertNotificationsByNodeId(nodeId);
+            node.hasAlert = alertNotifications.length > 0;
+            node.hasNewAlert = this.nodeHasNewAlert(alertNotifications);
+            let completionStatus = this.getNodeCompletionStatusByNodeId(nodeId);
+            node.hasWork = this.ProjectService.nodeHasWork(nodeId);
+            node.hasNewWork = completionStatus.hasNewWork;
+            node.isVisible = completionStatus.isVisible ? 1 : 0;
+            node.completionStatus = this.getNodeCompletionStatus(completionStatus);
+            node.score = this.getNodeScoreByNodeId(nodeId);
+            node.hasScore = node.score > -1;
+            node.maxScore = this.ProjectService.getMaxScoreForNode(nodeId);
+            if (node.maxScore > 0) {
+              node.hasMaxScore = true;
+              node.scorePct = node.score > -1 ? +((node.score / node.maxScore).toFixed(2)) : 0;
+            } else {
+              node.hasMaxScore = false;
+              node.scorePct = 0;
+            }
+            node.order = this.ProjectService.getOrderById(nodeId);
+            node.show = this.isNodeShown(nodeId);
 
-  getComponentStatesByWorkgroupIdAndNodeId(workgroupId, nodeId) {
-      return this.TeacherDataService.getComponentStatesByWorkgroupIdAndNodeId(workgroupId, nodeId);
-  };
+            if (!init) {
+                this.nodesById[nodeId] = angular.copy(node);
+            }
+        }
+    }
 
-  scoreChanged(stepWorkId) {
-      var annotation = this.annotationMappings[stepWorkId + '-score'];
-      this.AnnotationService.saveAnnotation(annotation);
-  };
+    getAlertNotificationsByNodeId(nodeId) {
+        let args = {};
+        args.nodeId = nodeId;
+        args.toWorkgroupId = this.workgroupId;
+        return this.NotificationService.getAlertNotifications(args);
+    }
 
-  commentChanged(stepWorkId) {
-      var annotation = this.annotationMappings[stepWorkId + '-comment'];
-      this.AnnotationService.saveAnnotation(annotation);
-  }
+    nodeHasNewAlert(alertNotifications) {
+        let newAlert = false;
 
-  getComponentsByNodeId(nodeId) {
-      return this.ProjectService.getComponentsByNodeId(nodeId);
-  }
+        let l = alertNotifications.length;
+        for (let i = 0; i < l; i++) {
+            let alert = alertNotifications[i];
+            if (!alert.timeDismissed) {
+                newAlert = true;
+                break;
+            }
+        }
 
-  /**
-   * Get the student data for a specific student for a specific component
-   * @param workgroupId the workgroupId id of Workgroup who created the component state
-   * @param nodeId the node id
-   * @param componentId the componentId the component id
-   * @return the student data for the given component
-   */
-  getLatestComponentStateByWorkgroupIdAndNodeIdAndComponentId(workgroupId, nodeId, componentId) {
-      var componentState = null;
+        return newAlert;
+    }
 
-      if (workgroupId != null && nodeId != null && componentId != null) {
+    /**
+     * Returns an object with node completion status, latest work time, and latest annotation time
+     * for a workgroup for the current node
+     * @param nodeId a node ID number
+     * @returns Object with completion, latest work time, latest annotation time
+     */
+    getNodeCompletionStatusByNodeId(nodeId) {
+        let isCompleted = false;
+        let isVisible = false;
 
-          // get the latest component state for the component
-          componentState = this.TeacherDataService.getLatestComponentStateByWorkgroupIdNodeIdAndComponentId(workgroupId, nodeId, componentId);
-      }
+        // TODO: store this info in the nodeStatus so we don't have to calculate every time?
+        let latestWorkTime = this.getLatestWorkTimeByNodeId(nodeId);
 
-      return componentState;
-  }
+        let latestAnnotationTime = this.getLatestAnnotationTimeByNodeId(nodeId);
+        let studentStatus = this.StudentStatusService.getStudentStatusForWorkgroupId(this.workgroupId);
+        if (studentStatus != null) {
+            let nodeStatus = studentStatus.nodeStatuses[nodeId];
+            if (nodeStatus) {
+                isVisible = nodeStatus.isVisible;
+                if (latestWorkTime) {
+                    // workgroup has at least one componentState for this node, so check if node is completed
+                    isCompleted = nodeStatus.isCompleted;
+                }
 
-  /**
-   * Gets and returns the total project score for the currently selected workgroup
-   * @return score object or null
-   */
-  getCurrentWorkgroupScore() {
-      return this.TeacherDataService.getTotalScoreByWorkgroupId(this.workgroupId);
-  }
+                if (!this.ProjectService.nodeHasWork(nodeId)) {
+                    // the step does not generate any work so completion = visited
+                    isCompleted = nodeStatus.isVisited;
+                }
+            }
+        }
+
+        return {
+            isCompleted: isCompleted,
+            isVisible: isVisible,
+            latestWorkTime: latestWorkTime,
+            latestAnnotationTime: latestAnnotationTime
+        };
+    }
+
+    /**
+     * Returns a numerical status value for a given completion status object depending on node completion
+     * Available status values are: 0 (not visited/no work; default), 1 (partially completed), 2 (completed)
+     * @param completionStatus Object
+     * @returns Integer status value
+     */
+    getNodeCompletionStatus(completionStatus) {
+        let hasWork = completionStatus.latestWorkTime !== null;
+        let isCompleted = completionStatus.isCompleted;
+        let isVisible = completionStatus.isVisible;
+
+        // TODO: store this info in the nodeStatus so we don't have to calculate every time (and can use more widely)?
+        let status = 0; // default
+
+        if (!isVisible) {
+            status = -1;
+        } else if (isCompleted) {
+            status = 2;
+        } else if (hasWork) {
+            status = 1;
+        }
+
+        return status;
+    }
+
+    getLatestWorkTimeByNodeId(nodeId) {
+        let time = null;
+        let componentStates = this.TeacherDataService.getComponentStatesByNodeId(nodeId);
+        let n = componentStates.length-1;
+
+        // loop through component states for this node, starting with most recent
+        for (let i = n; i > -1; i--) {
+            let componentState = componentStates[i];
+            if (componentState.workgroupId === this.workgroupId) {
+                // componentState is for given workgroupId
+                time = componentState.serverSaveTime;
+                break;
+            }
+        }
+
+        return time;
+    }
+
+    getLatestAnnotationTimeByNodeId(nodeId) {
+        let time = null;
+        let annotations = this.TeacherDataService.getAnnotationsByNodeId(nodeId);
+        let n = annotations.length-1;
+
+        // loop through annotations for this node, starting with most recent
+        for (let i = n; i > -1; i--) {
+            let annotation = annotations[i];
+            // TODO: support checking for annotations from shared teachers
+            if (annotation.toWorkgroupId === this.workgroupId && annotation.fromWorkgroupId === this.ConfigService.getWorkgroupId()) {
+                time = annotation.serverSaveTime;
+                break;
+            }
+        }
+
+        return time;
+    }
+
+    /**
+     * Returns the score for the current workgroup for a given nodeId
+     * @param nodeId a node ID number
+     * @returns Number score value (defaults to -1 if node has no score)
+     */
+    getNodeScoreByNodeId(nodeId) {
+        let score = this.AnnotationService.getScore(this.workgroupId, nodeId);
+        return (typeof score === 'number' ? score : -1);
+    }
+
+    /**
+     * Returns a numerical status value for a given completion status object depending on node completion
+     * Available status values are: 0 (not visited/no work; default), 1 (partially completed), 2 (completed)
+     * @param completionStatus Object
+     * @returns Integer status value
+     */
+    getWorkgroupCompletionStatus(completionStatus) {
+        let hasWork = completionStatus.latestWorkTime !== null;
+        let isCompleted = completionStatus.isCompleted;
+        let isVisible = completionStatus.isVisible;
+
+        // TODO: store this info in the nodeStatus so we don't have to calculate every time (and can use more widely)?
+        let status = 0; // default
+
+        if (!isVisible) {
+            status = -1;
+        } else if (isCompleted) {
+            status = 2;
+        } else if (hasWork) {
+            status = 1;
+        }
+
+        return status;
+    }
+
+    /**
+     * Get the student data for a specific part
+     * @param the componentId
+     * @param the nodeId id of node we're looking for
+     * @return the student data for the given component
+     */
+    getLatestComponentStateByNodeIdAndComponentId(nodeId,  componentId) {
+        var componentState = null;
+
+        if (nodeId != null && componentId != null) {
+            // get the latest component state for the component
+            componentState = this.TeacherDataService.getLatestComponentStateByWorkgroupIdNodeIdAndComponentId(this.workgroupId, nodeId, componentId);
+        }
+
+        return componentState;
+    }
+
+    /**
+     * Checks whether a node should be shown
+     * @param nodeId the node Id to look for
+     * @returns boolean whether the workgroup should be shown
+     */
+    isNodeShown(nodeId) {
+        let show = false;
+        let node = this.nodesById[nodeId];
+
+        if (node.isVisible && (node.hasWork || this.showNonWorkNodes)) {
+            let currentStep = this.TeacherDataService.getCurrentStep();
+            if (currentStep) {
+                // there is a currently selected step, so check if this one matches
+                if (currentStep.nodeId === parseInt(nodeId)) {
+                    show = true;
+                }
+            } else {
+                // there is no currently selected step, so show this one
+                show = true;
+            }
+        }
+
+        return show;
+    }
+
+    /**
+     * Gets and returns the total project score for the currently selected workgroup
+     * @return score object or null
+     */
+    getCurrentWorkgroupScore() {
+        return this.TeacherDataService.getTotalScoreByWorkgroupId(this.workgroupId);
+    }
+
+    setSort(value) {
+
+        switch (value) {
+            case 'step':
+                if (this.sort === 'step') {
+                    this.sort = '-step';
+                } else {
+                    this.sort = 'step';
+                }
+                break;
+            case 'status':
+                if (this.sort === 'status') {
+                    this.sort = '-status';
+                } else {
+                    this.sort = 'status';
+                }
+                break;
+            case 'score':
+                if (this.sort === 'score') {
+                    this.sort = '-score';
+                } else {
+                    this.sort = 'score';
+                }
+                break;
+        }
+
+        // update value in the teacher data service so we can persist across view instances and workgroup changes
+        this.TeacherDataService.studentGradingSort = this.sort;
+    }
+
+    getOrderBy() {
+        let orderBy = [];
+
+        switch (this.sort) {
+            case 'step':
+                orderBy = ['-isVisible', 'order'];
+                break;
+            case '-step':
+                orderBy = ['-isVisible', '-order'];
+                break;
+            case 'status':
+                orderBy = ['-isVisible', 'completionStatus', 'order'];
+                break;
+            case '-status':
+                orderBy = ['-isVisible', '-completionStatus', 'order'];
+                break;
+            case 'score':
+                orderBy = ['-isVisible', '-hasScore', 'scorePct', 'score', '-hasMaxScore', '-maxScore', 'order'];
+                break;
+            case '-score':
+                orderBy = ['-isVisible', '-hasScore', '-scorePct', 'score', '-hasMaxScore', '-maxScore', 'order'];
+                break;
+        }
+
+        return orderBy;
+    }
+
+    /**
+     * Expand all nodes to show student work
+     */
+    expandAll() {
+
+        // loop through all the workgroups
+        for (let i = 0; i < this.nodeIds.length; i++) {
+
+            // get a node id
+            let id = this.nodeIds[i];
+
+            // check if the node is currently in view
+            if (this.nodesInViewById[id]) {
+                // the node is currently in view so we will expand it
+                this.nodeVisibilityById[id] = true;
+            }
+        }
+
+        /*
+         * set the boolean flag to denote that we are currently expanding
+         * all the nodes
+         */
+        this.isExpandAll = true;
+    }
+
+    /**
+     * Collapse all nodes to hide student work
+     */
+    collapseAll() {
+        let n = this.nodeIds.length;
+
+        for (let i = 0; i < n; i++) {
+            let id = this.nodeIds[i];
+            this.nodeVisibilityById[id] = false;
+        }
+
+        /*
+         * set the boolean flag to denote that we are not currently expanding
+         * all the nodes
+         */
+        this.isExpandAll = false;
+    }
+
+    onUpdateExpand(nodeId, value) {
+        this.nodeVisibilityById[nodeId] = value;
+    }
+
+    /**
+     * A node row has either come into view or gone out of view
+     * @param nodeId the node id that has come into view or gone out
+     * of view
+     * @param inview whether the row is in view or not
+     */
+    stepInView(nodeId, inview) {
+
+        // remember whether the node is in view or not
+        this.nodesInViewById[nodeId] = inview;
+
+        // if we're in expand all mode, expand node row if it's in view
+        if (this.isExpandAll) {
+            if (inview) {
+                this.nodeVisibilityById[nodeId] = true;
+            }
+        }
+    }
 }
 
 StudentGradingController.$inject = [
-  '$filter',
-  '$mdDialog',
-  '$mdMedia',
-  '$scope',
-  '$stateParams',
-  'AnnotationService',
-  'ConfigService',
-  'NotificationService',
-  'ProjectService',
-  'StudentStatusService',
-  'TeacherDataService'
+    '$filter',
+    '$mdDialog',
+    '$mdMedia',
+    '$scope',
+    '$stateParams',
+    'AnnotationService',
+    'ConfigService',
+    'NotificationService',
+    'ProjectService',
+    'StudentStatusService',
+    'TeacherDataService'
 ];
 
 export default StudentGradingController;

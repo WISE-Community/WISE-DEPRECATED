@@ -33,11 +33,13 @@ class TeacherDataService {
 
         this.currentPeriod = null;
         this.currentWorkgroup = null;
+        this.currentStep = null;
         this.currentNode = null;
         this.previousStep = null;
         this.runStatus = null;
         this.periods = [];
         this.nodeGradingSort = 'team';
+        this.studentGradingSort = 'title';
         this.studentProgressSort = 'team student';
 
         /**
@@ -939,6 +941,17 @@ class TeacherDataService {
 
     getCurrentWorkgroup() {
         return this.currentWorkgroup;
+    }
+
+    setCurrentStep(step) {
+        this.currentStep = step;
+
+        // broadcast the event that the current workgroup has changed
+        this.$rootScope.$broadcast('currentStepChanged', {currentStep: this.currentStep});
+    }
+
+    getCurrentStep() {
+        return this.currentStep;
     }
 
     /**
