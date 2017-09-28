@@ -34,48 +34,72 @@
                            ng-model-options='{ debounce: 1000 }'/>
                 </md-input-container>
             </div>
-            <md-button class='topButton md-raised md-primary' ng-click='embeddedController.showAdvancedAuthoring = !embeddedController.showAdvancedAuthoring'>
-                <md-icon>build</md-icon>
-                <md-tooltip md-direction="top" class="projectButtonTooltip">{{ "ADVANCED" | translate }}</md-tooltip>
-            </md-button>
-            <br/>
-            <div ng-if='embeddedController.showAdvancedAuthoring'>
-                <md-input-container style='width: 100%; margin-bottom: -10'>
-                    <label>{{ 'embedded.modelParameters' | translate }}</label>
-                    <textarea rows='1'
-                              ng-model='embeddedController.authoringComponentContent.parameters'
-                              ng-change='embeddedController.authoringViewComponentChanged()'
-                              ng-model-options='{ debounce: 1000 }'>
-                    </textarea>
+            <div>
+                <md-input-container style='margin-right: 20px; width: 150px; height: 50px;'>
+                    <md-button class='topButton md-raised md-primary' ng-click='embeddedController.showAdvancedAuthoring = !embeddedController.showAdvancedAuthoring'>
+                        <md-icon>build</md-icon>
+                        <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ "ADVANCED" | translate }}</md-tooltip>
+                    </md-button>
                 </md-input-container>
-                {{ 'SHOW_SAVE_BUTTON' | translate }}:
-                <input type='checkbox'
-                       ng-model='embeddedController.authoringComponentContent.showSaveButton'
-                       ng-change='embeddedController.authoringViewComponentChanged()'/>
-                <br/>
-                {{ 'SHOW_SUBMIT_BUTTON' | translate }}:
-                <input type='checkbox'
-                       ng-model='embeddedController.authoringComponentContent.showSubmitButton'
-                       ng-change='embeddedController.showSubmitButtonValueChanged()'/>
-                <br/>
-                {{ 'MAX_SCORE' | translate }}:
-                <input type='number'
-                       ng-model='embeddedController.authoringComponentContent.maxScore'
-                       ng-change='embeddedController.authoringViewComponentChanged()'
-                       ng-model-options='{ debounce: 1000 }'
-                       style='width: 3em'/>
-                <br/>
-                {{ 'COMPONENT_WIDTH' | translate }}:
-                <input type='number'
-                       ng-model='embeddedController.authoringComponentContent.componentWidth'
-                       ng-change='embeddedController.authoringViewComponentChanged()'
-                       ng-model-options='{ debounce: 1000 }'
-                       style='width: 3em'/>
-                <br/>
+            </div>
+            <div ng-if='embeddedController.showAdvancedAuthoring'>
                 <div>
-                    <button ng-click='embeddedController.showRubricAuthoring = !embeddedController.showRubricAuthoring'>
-                        {{ 'EDIT_COMPONENT_RUBRIC' | translate }}
-                    </button>
+                    <md-input-container style='width: 100%; margin-bottom: -10'>
+                        <label>{{ 'embedded.modelParameters' | translate }}</label>
+                        <textarea rows='1'
+                                  ng-model='embeddedController.authoringComponentContent.parameters'
+                                  ng-change='embeddedController.authoringViewComponentChanged()'
+                                  ng-model-options='{ debounce: 1000 }'>
+                        </textarea>
+                    </md-input-container>
+                </div>
+                <div>
+                    <md-checkbox class='md-primary'
+                                 ng-model='embeddedController.authoringComponentContent.showSaveButton'
+                                 ng-change='embeddedController.authoringViewComponentChanged()'>
+                        {{ 'SHOW_SAVE_BUTTON' | translate }}
+                    </md-checkbox>
+                </div>
+                <div>
+                    <md-checkbox class='md-primary'
+                                 ng-model='embeddedController.authoringComponentContent.showSubmitButton'
+                                 ng-change='embeddedController.authoringViewComponentChanged()'>
+                        {{ 'SHOW_SUBMIT_BUTTON' | translate }}
+                    </md-checkbox>
+                </div>
+                <div>
+                    <md-input-container style='margin-right: 20px; width: 150px; height: 25px;'
+                                        ng-if='embeddedController.authoringComponentContent.showSubmitButton'>
+                        <label>{{ 'MAX_SUBMIT' | translate }}</label>
+                        <input type='number'
+                               ng-model='embeddedController.authoringComponentContent.maxSubmitCount'
+                               ng-model-options='{ debounce: 1000 }'
+                               ng-change='embeddedController.authoringViewComponentChanged()'/>
+                    </md-input-container>
+                </div>
+                <div>
+                    <md-input-container style='margin-right: 20px; width: 150px; height: 25px;'>
+                        <label>{{ 'MAX_SCORE' | translate }}</label>
+                        <input type='number'
+                               ng-model='embeddedController.authoringComponentContent.maxScore'
+                               ng-model-options='{ debounce: 1000 }'
+                               ng-change='embeddedController.authoringViewComponentChanged()'/>
+                    </md-input-container>
+                </div>
+                <div>
+                    <md-input-container style='margin-right: 20px; width: 150px; height: 25px;'>
+                        <label>{{ 'COMPONENT_WIDTH' | translate }}</label>
+                        <input type='number'
+                               ng-model='embeddedController.authoringComponentContent.componentWidth'
+                               ng-model-options='{ debounce: 1000 }'
+                               ng-change='embeddedController.authoringViewComponentChanged()'/>
+                    </md-input-container>
+                </div>
+                <div>
+                    <md-button class='topButton md-raised md-primary' ng-click='embeddedController.showRubricAuthoring = !embeddedController.showRubricAuthoring'>
+                        <md-icon>message</md-icon>
+                        <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'EDIT_COMPONENT_RUBRIC' | translate }}</md-tooltip>
+                    </md-button>
                     <div ng-if='embeddedController.showRubricAuthoring'>
                         <summernote id='{{embeddedController.summernoteRubricId}}'
                                     ng-model='embeddedController.summernoteRubricHTML'
@@ -183,16 +207,20 @@
                     </div>
                 </div>
                 <div>
-                    <button ng-click='embeddedController.showJSON = !embeddedController.showJSON'>
-                            {{ 'SHOW_JSON' | translate }}
-                    </button>
-                    <br/>
-                    <div ng-if='embeddedController.showJSON'>
-                        <textarea ng-model='embeddedController.authoringComponentContentJSONString'
-                                  ng-change='embeddedController.advancedAuthoringViewComponentChanged()'
-                                  ng-model-options="{ updateOn: 'blur' }"
-                                  rows='10'
-                                  cols='100'></textarea>
+                    <md-button class='topButton md-raised md-primary'
+                               ng-click='embeddedController.showJSONButtonClicked()'>
+                        <md-icon>code</md-icon>
+                        <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'SHOW_JSON' | translate }}</md-tooltip>
+                    </md-button>
+                    <span ng-if='embeddedController.jsonStringChanged'>
+                        {{ 'closeTheJSONViewToSaveTheChanges' | translate }}
+                    </span>
+                    <div ng-if='embeddedController.showJSONAuthoring'>
+                        <md-input-container style='width: 100%;'>
+                            <textarea ng-model='embeddedController.authoringComponentContentJSONString'
+                                      style='width: 90%; border: 1px solid black;'
+                                      ng-change='embeddedController.authoringJSONChanged()'></textarea>
+                        </md-input-container>
                     </div>
                 </div>
             </div>

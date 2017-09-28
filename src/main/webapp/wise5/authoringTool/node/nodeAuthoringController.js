@@ -408,6 +408,10 @@ var NodeAuthoringController = function () {
             _this.authoringViewNodeChanged();
         });
 
+        this.$scope.$on('scrollToComponent', function (event, args) {
+            _this.scrollToComponent(args.componentId);
+        });
+
         // scroll to the top of the page
         this.$anchorScroll('top');
 
@@ -3505,25 +3509,10 @@ var NodeAuthoringController = function () {
                     // uncheck all the component checkboxes
                     _this6.clearComponentsToChecked();
 
-                    /*
-                     * use a timeout to wait for the UI to update and then scroll
-                     * to the first new component
-                     */
-                    _this6.$timeout(function () {
-
-                        if (newComponents != null && newComponents.length > 0) {
-
-                            // get the UI element of the first new component
-                            var componentElement = $("#" + newComponents[0].id);
-
-                            if (componentElement != null) {
-                                // scroll to the first new component that we've added
-                                $('#content').animate({
-                                    scrollTop: componentElement.prop("offsetTop") - 60
-                                }, 1000);
-                            }
-                        }
-                    });
+                    if (newComponents != null && newComponents.length > 0) {
+                        // scroll to the first new component
+                        _this6.scrollToComponent(newComponents[0].id);
+                    }
                 }, 1000);
             });
         }
@@ -4009,6 +3998,30 @@ var NodeAuthoringController = function () {
                     });
                 }
             }
+        }
+
+        /**
+         * Scroll to the top of a component in the step authoring view
+         * @param componentId the id of the component
+         */
+
+    }, {
+        key: 'scrollToComponent',
+        value: function scrollToComponent(componentId) {
+            /*
+             * use a timeout to wait for the UI to update and then scroll
+             * to the component
+             */
+            this.$timeout(function () {
+                // get the UI element of the first new component
+                var componentElement = $("#" + componentId);
+                if (componentElement != null) {
+                    // scroll to the component
+                    $('#content').animate({
+                        scrollTop: componentElement.prop("offsetTop") - 60
+                    }, 1000);
+                }
+            });
         }
     }]);
 

@@ -53,6 +53,7 @@
     "clickTheNewComponentTypeYouWantToAdd": "Click the new component type you want to add",
     "closeBranchPathXStepsChooser": "Close Branch Path {{branchNumber}} Steps Chooser",
     "closeProject": "Close Project",
+    "closeTheJSONViewToSaveTheChanges": "Close the JSON view to save the changes.",
     "component": "Component",
     "concurrentAuthorsWarning": "{{currentAuthors}} is also currently editing this project. Be careful not to overwrite each other's work!",
     "content": "Content",
