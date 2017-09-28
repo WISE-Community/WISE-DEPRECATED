@@ -87,7 +87,7 @@
         {
             "id": "node2",
             "type": "node",
-            "showSaveButton": true,
+            "showSaveButton": false,
             "showSubmitButton": false,
             "constraints": [],
             "transitionLogic": {
@@ -168,7 +168,7 @@
         {
             "id": "node5",
             "type": "node",
-            "showSaveButton": true,
+            "showSaveButton": false,
             "showSubmitButton": false,
             "constraints": [],
             "transitionLogic": {
@@ -208,7 +208,7 @@
                             "isCorrect": false
                         }
                     ],
-                    "showSaveButton": false,
+                    "showSaveButton": true,
                     "showSubmitButton": true,
                     "choiceType": "radio",
                     "maxScore": 2
@@ -218,7 +218,7 @@
         {
             "id": "node6",
             "type": "node",
-            "showSaveButton": true,
+            "showSaveButton": false,
             "showSubmitButton": false,
             "constraints": [],
             "transitionLogic": {
@@ -270,7 +270,7 @@
                             "isCorrect": false
                         }
                     ],
-                    "showSaveButton": false,
+                    "showSaveButton": true,
                     "showSubmitButton": true,
                     "choiceType": "checkbox"
                 }

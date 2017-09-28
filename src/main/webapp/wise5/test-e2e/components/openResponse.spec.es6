@@ -1,63 +1,79 @@
-// E2E test for Open Response component in preview mode
+import {browser, element} from 'protractor';
+
+let saveButton = element(by.id('saveButton'));
+let saveMessage = element(by.binding('openResponseController.saveMessage.text'));
+let submitButton = element(by.id('submitButton'));
+let textarea = element(by.model('openResponseController.studentResponse'));
+let nodeDropDownMenu = element(by.model("stepToolsCtrl.toNodeId"));
+
+function hasClass(element, cls) {
+  return element.getAttribute('class').then((classes) => {
+  return classes.split(' ').indexOf(cls) !== -1;
+  });
+}
+
+function shouldBeDisabled(elements) {
+  for (let element of elements) {
+    expect(hasClass(element, "disabled"));
+  }
+}
+
+function shouldBeEnabled(elements) {
+  for (let element of elements) {
+    expect(!hasClass(element, "disabled"));
+  }
+}
+
+function shouldBePresent(elements) {
+  for (let element of elements) {
+    expect(element.isPresent()).toBeTruthy();
+  }
+}
+
+function shouldBeAbsent(elements) {
+  for (let element of elements) {
+    expect(element.isPresent()).toBeFalsy();
+  }
+}
+
 describe('WISE5 Open Response Component', () => {
 
-    let hasClass = (element, cls) => {
-        return element.getAttribute('class').then((classes) => {
-            return classes.split(' ').indexOf(cls) !== -1;
-        });
-    };
+  beforeAll(() => {
+    browser.get('http://localhost:8080/wise/project/demo#/vle/node2');
+    browser.wait(function() {
+      return nodeDropDownMenu.isPresent()
+    }, 5000);
+  });
 
-    let saveButton = element(by.xpath('//button[@translate="SAVE"]'));
-    let saveMessage = element(by.xpath('//span[@ng-show="openResponseController.saveMessage.text"]'));
-    let submitButton = element(by.xpath('//button[@translate="SUBMIT"]'));
-    let textarea = element(by.xpath('//textarea[@ng-change="openResponseController.studentDataChanged()"]'));
+  it('should show open response component', () => {
+    expect(nodeDropDownMenu.getText()).toBe('1.2: Open Response Step');
 
-    it('should load the vle and go to node5', () => {
-        browser.get('http://localhost:8080/wise/project/demo#/vle/node2');
-        let nodeDropDownMenu = element(by.model("stepToolsCtrl.toNodeId"));
-        browser.wait((nodeDropDownMenu).isPresent(), 5000);  // give it at most 5 seconds to load.
-        expect(browser.getTitle()).toEqual('WISE');
-        expect(nodeDropDownMenu.getText()).toBe('1.2: Open Response Step');
+    let nodeContent = element(by.cssContainingText(
+      '.node-content','This is a step where students enter text.'));
+    shouldBePresent([nodeContent, textarea, saveButton, submitButton]);
+    shouldBeAbsent([saveMessage]);
+    shouldBeEnabled([textarea]);
+    shouldBeDisabled([saveButton, submitButton]);
+  });
 
-        let nodeContent = element(by.cssContainingText('.node-content','This is a step where students enter text.'));
-        expect(nodeContent.isPresent()).toBeTruthy();
-        expect(textarea.isPresent()).toBeTruthy();
+  it('should allow students to type text and edit', () => {
+    let firstSentence = 'Here is my first sentence. ';
+    let secondSentence = 'Here is my second sentence.';
+    textarea.sendKeys(firstSentence);
+    shouldBeEnabled([saveButton, submitButton]);
 
-        // save and submit buttons should be displayed but disabled
-        expect(saveButton.isPresent()).toBeTruthy();
-        expect(hasClass(saveButton, "disabled"));
-        expect(submitButton.isPresent()).toBeTruthy();
-        expect(hasClass(submitButton, "disabled"));
-        expect(saveMessage.getText()).toBe("");  // there should be nothing in the save message
-    });
+    saveButton.click();
+    expect(saveMessage.getText()).toContain("Saved");
+    shouldBeDisabled([saveButton]);
+    shouldBeEnabled([submitButton]);
 
-    it('should allow students to type text and save', () => {
-        let firstSentence = 'Here is my first sentence. ';
-        let secondSentence = 'Here is my second sentence.';
-        textarea.sendKeys(firstSentence);
+    submitButton.click();
+    expect(saveMessage.getText()).toContain("Submitted");
+    shouldBeEnabled([saveButton, submitButton]);
 
-        // save and submit buttons should now be enabled
-        expect(!hasClass(saveButton, "disabled"));
-        expect(!hasClass(submitButton, "disabled"));
-
-        // click on save button
-        saveButton.click();
-        expect(saveMessage.getText()).toContain("Saved");  // save message should show the last saved time
-
-        // save buttons should be displayed but disabled, but the submit button should still be enabled.
-        expect(hasClass(saveButton, "disabled"));
-        expect(!hasClass(submitButton, "disabled"));
-
-        // click on submit button
-        submitButton.click();
-        expect(saveMessage.getText()).toContain("Submitted");  // save message should show the last submitted time
-
-        // save buttons and submit buttons should both be disabled.
-        expect(!hasClass(saveButton, "disabled"));
-        expect(!hasClass(submitButton, "disabled"));
-
-        // you should be able to edit your text
-        textarea.sendKeys(secondSentence);
-        expect(textarea.getAttribute('value')).toEqual(firstSentence + secondSentence); // check the value in the textarea
-    });
+    // should be able to edit your text even after submitting
+    textarea.sendKeys(secondSentence);
+    expect(textarea.getAttribute('value'))
+        .toEqual(firstSentence + secondSentence);
+  });
 });

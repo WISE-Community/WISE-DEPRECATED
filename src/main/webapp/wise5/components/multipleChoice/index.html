@@ -362,13 +362,15 @@
                 </md-input-container>
                 <div ng-if="multipleChoiceController.isSaveButtonVisible || multipleChoiceController.isSubmitButtonVisible"
                      class="component__actions" layout="row" layout-align="start center">
-                    <md-button class="md-raised md-primary"
+                    <md-button id="saveButton"
+                               class="md-raised md-primary"
                                ng-click='multipleChoiceController.saveButtonClicked()'
                                ng-disabled='multipleChoiceController.isDisabled || !multipleChoiceController.isDirty'
                                ng-if='multipleChoiceController.isSaveButtonVisible'
                                aria-label="Save"
                                translate="SAVE"></md-button>
-                    <md-button class="md-raised md-primary"
+                    <md-button id="submitButton"
+                               class="md-raised md-primary"
                                ng-click='multipleChoiceController.submitButtonClicked()'
                                ng-disabled='multipleChoiceController.isSubmitButtonDisabled || multipleChoiceController.isDisabled || !multipleChoiceController.isSubmitDirty'
                                ng-if='multipleChoiceController.isSubmitButtonVisible'

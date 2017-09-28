@@ -1,66 +1,164 @@
 'use strict';
 
-// E2E test for Open Response component in preview mode
+var _protractor = require('protractor');
+
+var saveButton = (0, _protractor.element)(by.id('saveButton'));
+var saveMessage = (0, _protractor.element)(by.binding('openResponseController.saveMessage.text'));
+var submitButton = (0, _protractor.element)(by.id('submitButton'));
+var textarea = (0, _protractor.element)(by.model('openResponseController.studentResponse'));
+var nodeDropDownMenu = (0, _protractor.element)(by.model("stepToolsCtrl.toNodeId"));
+
+function hasClass(element, cls) {
+  return element.getAttribute('class').then(function (classes) {
+    return classes.split(' ').indexOf(cls) !== -1;
+  });
+}
+
+function shouldBeDisabled(elements) {
+  var _iteratorNormalCompletion = true;
+  var _didIteratorError = false;
+  var _iteratorError = undefined;
+
+  try {
+    for (var _iterator = elements[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+      var _element = _step.value;
+
+      expect(hasClass(_element, "disabled"));
+    }
+  } catch (err) {
+    _didIteratorError = true;
+    _iteratorError = err;
+  } finally {
+    try {
+      if (!_iteratorNormalCompletion && _iterator.return) {
+        _iterator.return();
+      }
+    } finally {
+      if (_didIteratorError) {
+        throw _iteratorError;
+      }
+    }
+  }
+}
+
+function shouldBeEnabled(elements) {
+  var _iteratorNormalCompletion2 = true;
+  var _didIteratorError2 = false;
+  var _iteratorError2 = undefined;
+
+  try {
+    for (var _iterator2 = elements[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+      var _element2 = _step2.value;
+
+      expect(!hasClass(_element2, "disabled"));
+    }
+  } catch (err) {
+    _didIteratorError2 = true;
+    _iteratorError2 = err;
+  } finally {
+    try {
+      if (!_iteratorNormalCompletion2 && _iterator2.return) {
+        _iterator2.return();
+      }
+    } finally {
+      if (_didIteratorError2) {
+        throw _iteratorError2;
+      }
+    }
+  }
+}
+
+function shouldBePresent(elements) {
+  var _iteratorNormalCompletion3 = true;
+  var _didIteratorError3 = false;
+  var _iteratorError3 = undefined;
+
+  try {
+    for (var _iterator3 = elements[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+      var _element3 = _step3.value;
+
+      expect(_element3.isPresent()).toBeTruthy();
+    }
+  } catch (err) {
+    _didIteratorError3 = true;
+    _iteratorError3 = err;
+  } finally {
+    try {
+      if (!_iteratorNormalCompletion3 && _iterator3.return) {
+        _iterator3.return();
+      }
+    } finally {
+      if (_didIteratorError3) {
+        throw _iteratorError3;
+      }
+    }
+  }
+}
+
+function shouldBeAbsent(elements) {
+  var _iteratorNormalCompletion4 = true;
+  var _didIteratorError4 = false;
+  var _iteratorError4 = undefined;
+
+  try {
+    for (var _iterator4 = elements[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+      var _element4 = _step4.value;
+
+      expect(_element4.isPresent()).toBeFalsy();
+    }
+  } catch (err) {
+    _didIteratorError4 = true;
+    _iteratorError4 = err;
+  } finally {
+    try {
+      if (!_iteratorNormalCompletion4 && _iterator4.return) {
+        _iterator4.return();
+      }
+    } finally {
+      if (_didIteratorError4) {
+        throw _iteratorError4;
+      }
+    }
+  }
+}
+
 describe('WISE5 Open Response Component', function () {
 
-    var hasClass = function hasClass(element, cls) {
-        return element.getAttribute('class').then(function (classes) {
-            return classes.split(' ').indexOf(cls) !== -1;
-        });
-    };
+  beforeAll(function () {
+    _protractor.browser.get('http://localhost:8080/wise/project/demo#/vle/node2');
+    _protractor.browser.wait(function () {
+      return nodeDropDownMenu.isPresent();
+    }, 5000);
+  });
 
-    var saveButton = element(by.xpath('//button[@translate="SAVE"]'));
-    var saveMessage = element(by.xpath('//span[@ng-show="openResponseController.saveMessage.text"]'));
-    var submitButton = element(by.xpath('//button[@translate="SUBMIT"]'));
-    var textarea = element(by.xpath('//textarea[@ng-change="openResponseController.studentDataChanged()"]'));
+  it('should show open response component', function () {
+    expect(nodeDropDownMenu.getText()).toBe('1.2: Open Response Step');
 
-    it('should load the vle and go to node5', function () {
-        browser.get('http://localhost:8080/wise/project/demo#/vle/node2');
-        var nodeDropDownMenu = element(by.model("stepToolsCtrl.toNodeId"));
-        browser.wait(nodeDropDownMenu.isPresent(), 5000); // give it at most 5 seconds to load.
-        expect(browser.getTitle()).toEqual('WISE');
-        expect(nodeDropDownMenu.getText()).toBe('1.2: Open Response Step');
+    var nodeContent = (0, _protractor.element)(by.cssContainingText('.node-content', 'This is a step where students enter text.'));
+    shouldBePresent([nodeContent, textarea, saveButton, submitButton]);
+    shouldBeAbsent([saveMessage]);
+    shouldBeEnabled([textarea]);
+    shouldBeDisabled([saveButton, submitButton]);
+  });
 
-        var nodeContent = element(by.cssContainingText('.node-content', 'This is a step where students enter text.'));
-        expect(nodeContent.isPresent()).toBeTruthy();
-        expect(textarea.isPresent()).toBeTruthy();
+  it('should allow students to type text and edit', function () {
+    var firstSentence = 'Here is my first sentence. ';
+    var secondSentence = 'Here is my second sentence.';
+    textarea.sendKeys(firstSentence);
+    shouldBeEnabled([saveButton, submitButton]);
 
-        // save and submit buttons should be displayed but disabled
-        expect(saveButton.isPresent()).toBeTruthy();
-        expect(hasClass(saveButton, "disabled"));
-        expect(submitButton.isPresent()).toBeTruthy();
-        expect(hasClass(submitButton, "disabled"));
-        expect(saveMessage.getText()).toBe(""); // there should be nothing in the save message
-    });
+    saveButton.click();
+    expect(saveMessage.getText()).toContain("Saved");
+    shouldBeDisabled([saveButton]);
+    shouldBeEnabled([submitButton]);
 
-    it('should allow students to type text and save', function () {
-        var firstSentence = 'Here is my first sentence. ';
-        var secondSentence = 'Here is my second sentence.';
-        textarea.sendKeys(firstSentence);
+    submitButton.click();
+    expect(saveMessage.getText()).toContain("Submitted");
+    shouldBeEnabled([saveButton, submitButton]);
 
-        // save and submit buttons should now be enabled
-        expect(!hasClass(saveButton, "disabled"));
-        expect(!hasClass(submitButton, "disabled"));
-
-        // click on save button
-        saveButton.click();
-        expect(saveMessage.getText()).toContain("Saved"); // save message should show the last saved time
-
-        // save buttons should be displayed but disabled, but the submit button should still be enabled.
-        expect(hasClass(saveButton, "disabled"));
-        expect(!hasClass(submitButton, "disabled"));
-
-        // click on submit button
-        submitButton.click();
-        expect(saveMessage.getText()).toContain("Submitted"); // save message should show the last submitted time
-
-        // save buttons and submit buttons should both be disabled.
-        expect(!hasClass(saveButton, "disabled"));
-        expect(!hasClass(submitButton, "disabled"));
-
-        // you should be able to edit your text
-        textarea.sendKeys(secondSentence);
-        expect(textarea.getAttribute('value')).toEqual(firstSentence + secondSentence); // check the value in the textarea
-    });
+    // should be able to edit your text even after submitting
+    textarea.sendKeys(secondSentence);
+    expect(textarea.getAttribute('value')).toEqual(firstSentence + secondSentence);
+  });
 });
 //# sourceMappingURL=openResponse.spec.js.map

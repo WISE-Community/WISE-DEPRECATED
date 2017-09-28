@@ -1,201 +1,189 @@
-// E2E test for Open Response component in preview mode
-describe('WISE5 Multiple Choice Component', () => {
+import {browser, element} from 'protractor';
 
-    let hasClass = (element, cls) => {
-        return element.getAttribute('class').then((classes) => {
-            return classes.split(' ').indexOf(cls) !== -1;
-        });
-    };
+let saveButton = element(by.id('saveButton'));
+let saveMessage = element(by.binding('multipleChoiceController.saveMessage.text'));
+let submitButton = element(by.id('submitButton'));
+let submitMessage = element(by.binding('multipleChoiceController.saveMessage.text'));
+let nextButton = element(by.id('nextButton'));
+let prevButton = element(by.id('prevButton'));
+let radioGroup = element(by.model('multipleChoiceController.studentChoices'));
+let nodeDropDownMenu = element(by.model("stepToolsCtrl.toNodeId"));
 
-    let saveButton = element(by.xpath('//button[@translate="save"]'));
-    let saveMessage = element(by.xpath('//span[@ng-show="nodeController.saveMessage.text"]'));
-    let submitButton = element(by.xpath('//button[@translate="SUBMIT"]'));
-    let submitMessage = element(by.xpath('//span[@ng-show="multipleChoiceController.saveMessage.text"]'));
-    let radioGroup = element(by.model('multipleChoiceController.studentChoices'));
-    let spongeBobChoice = element(by.xpath('//md-radio-button[@aria-label="Spongebob"]'));
-    let patrickChoice = element(by.xpath('//md-radio-button[@aria-label="Patrick"]'));
-    let squidwardChoice = element(by.xpath('//md-radio-button[@aria-label="Squidward"]'));
+function hasClass(element, cls) {
+  return element.getAttribute('class').then((classes) => {
+    return classes.split(' ').indexOf(cls) !== -1;
+  });
+}
 
-    it('should load the vle and go to node5', () => {
-        browser.get('http://localhost:8080/wise/project/demo#/vle/node5');
-        let nodeDropDownMenu = element(by.model("stepToolsCtrl.toNodeId"));
-        browser.wait((nodeDropDownMenu).isPresent(), 5000);  // give it at most 5 seconds to load.
-        expect(browser.getTitle()).toEqual('WISE');
-        expect(nodeDropDownMenu.getText()).toBe('1.5: Multiple Choice Step Single Answer');
+function shouldBeSelected(choices) {
+  for (let choice of choices) {
+    expect(choice.getAttribute('aria-checked')).toBe("true");
+  }
+}
 
-        // check that the elements are on the page
-        let nodeContent = element(by.cssContainingText('.node-content','Who lives in a pineapple under the sea?'));
-        expect(nodeContent.isPresent()).toBeTruthy();
-        expect(radioGroup.isPresent()).toBeTruthy();
-        expect(spongeBobChoice.isPresent()).toBeTruthy();
-        expect(spongeBobChoice.getAttribute('aria-checked')).toBe("false");
-        expect(patrickChoice.isPresent()).toBeTruthy();
-        expect(patrickChoice.getAttribute('aria-checked')).toBe("false");
-        expect(squidwardChoice.isPresent()).toBeTruthy();
-        expect(squidwardChoice.getAttribute('aria-checked')).toBe("false");
+function shouldBeUnselected(choices) {
+  for (let choice of choices) {
+    expect(choice.getAttribute('aria-checked')).toBe("false");
+  }
+}
 
-        // save and submit buttons should be displayed but disabled
-        expect(saveButton.isPresent()).toBeTruthy();
-        expect(hasClass(saveButton, "disabled"));
-        expect(submitButton.isPresent()).toBeTruthy();
-        expect(hasClass(submitButton, "disabled"));
-        expect(saveMessage.getText()).toBe("");  // there should be nothing in the save message
-    });
+function shouldBeDisabled(elements) {
+  for (let element of elements) {
+    expect(hasClass(element, "disabled"));
+  }
+}
 
-    it('should allow students to choose a choice and save', () => {
-        spongeBobChoice.click();
-        expect(spongeBobChoice.getAttribute('aria-checked')).toBe("true");
-        expect(patrickChoice.getAttribute('aria-checked')).toBe("false");
-        expect(squidwardChoice.getAttribute('aria-checked')).toBe("false");
+function shouldBeEnabled(elements) {
+  for (let element of elements) {
+    expect(!hasClass(element, "disabled"));
+  }
+}
 
-        // save and submit buttons should now be enabled
-        expect(!hasClass(saveButton, "disabled"));
-        expect(!hasClass(submitButton, "disabled"));
+function shouldBePresent(elements) {
+  for (let element of elements) {
+    expect(element.isPresent()).toBeTruthy();
+  }
+}
 
-        // click on save button
-        saveButton.click();
-        expect(saveMessage.getText()).toContain("Saved");  // save message should show the last saved time
+function shouldBeAbsent(elements) {
+  for (let element of elements) {
+    expect(element.isPresent()).toBeFalsy();
+  }
+}
 
-        // save buttons should be displayed but disabled, but the submit button should still be enabled.
-        expect(hasClass(saveButton, "disabled"));
-        expect(!hasClass(submitButton, "disabled"));
+describe('WISE5 Multiple Choice Component Select One', () => {
+  let spongeBobChoice = element(by.xpath('//md-radio-button[@aria-label="Spongebob"]'));
+  let patrickChoice = element(by.xpath('//md-radio-button[@aria-label="Patrick"]'));
+  let squidwardChoice = element(by.xpath('//md-radio-button[@aria-label="Squidward"]'));
 
-        // choose another choice
-        patrickChoice.click();
-        expect(spongeBobChoice.getAttribute('aria-checked')).toBe("false");
-        expect(patrickChoice.getAttribute('aria-checked')).toBe("true");
-        expect(squidwardChoice.getAttribute('aria-checked')).toBe("false");
+  beforeAll(() => {
+    browser.get('http://localhost:8080/wise/project/demo#/vle/node5');
+    browser.wait(function() {
+      return nodeDropDownMenu.isPresent()
+    }, 5000);
+  });
 
-        // save and submit buttons should now be enabled
-        expect(!hasClass(saveButton, "disabled"));
-        expect(!hasClass(submitButton, "disabled"));
+  it('should show multiple choice multiple answer component', () => {
+    expect(nodeDropDownMenu.getText()).toBe(
+        '1.5: Multiple Choice Step Single Answer');
+    let nodeContent = element(by.cssContainingText(
+        '.node-content','Who lives in a pineapple under the sea?'));
+    shouldBePresent([nodeContent, radioGroup,
+      spongeBobChoice, patrickChoice, squidwardChoice,
+      saveButton,  submitButton]);
+    shouldBeAbsent([saveMessage]);
+    shouldBeUnselected([spongeBobChoice, patrickChoice, squidwardChoice]);
+    shouldBeDisabled([saveButton, submitButton]);
+  });
 
-        // click on submit button
-        submitButton.click();
-        expect(submitMessage.getText()).toContain("Submitted");  // save message should show the last submitted time
+  it('should allow students to choose a choice and save', () => {
+    spongeBobChoice.click();
+    shouldBeSelected([spongeBobChoice]);
+    shouldBeUnselected([patrickChoice, squidwardChoice]);
+    shouldBeEnabled([saveButton, submitButton]);
 
-        // save buttons and submit buttons should both be disabled.
-        expect(!hasClass(saveButton, "disabled"));
-        expect(!hasClass(submitButton, "disabled"));
+    saveButton.click();
+    expect(saveMessage.getText()).toContain("Saved");
+    shouldBeDisabled([saveButton]);
+    shouldBeEnabled([submitButton]);
 
-        // you should be able to choose another choice
-        squidwardChoice.click();
-        expect(spongeBobChoice.getAttribute('aria-checked')).toBe("false");
-        expect(patrickChoice.getAttribute('aria-checked')).toBe("false");
-        expect(squidwardChoice.getAttribute('aria-checked')).toBe("true");
-    });
+    patrickChoice.click();
+    shouldBeSelected([patrickChoice]);
+    shouldBeUnselected([spongeBobChoice, squidwardChoice]);
+    shouldBeEnabled([saveButton, submitButton]);
 
-    let nextButton = element(by.xpath('//button[@aria-label="Next Item"]'));
-    let leonardoChoice = element(by.xpath('//md-checkbox[@aria-label="Leonardo"]'));
-    let donatelloChoice = element(by.xpath('//md-checkbox[@aria-label="Donatello"]'));
-    let michelangeloChoice = element(by.xpath('//md-checkbox[@aria-label="Michelangelo"]'));
-    let raphaelChoice = element(by.xpath('//md-checkbox[@aria-label="Raphael"]'));
-    let squirtleChoice = element(by.xpath('//md-checkbox[@aria-label="Squirtle"]'));
+    submitButton.click();
+    shouldBeDisabled([saveButton, saveButton]);
+    expect(submitMessage.getText()).toContain("Submitted");
 
-    it('should show multiple choice multiple answer component on node6', () => {
-        nextButton.click();
-        let nodeDropDownMenu = element(by.model("stepToolsCtrl.toNodeId"));
-        browser.wait((nodeDropDownMenu).isPresent(), 5000);  // give it at most 5 seconds to load.
-        expect(browser.getTitle()).toEqual('WISE');
-        expect(nodeDropDownMenu.getText()).toBe('1.6: Multiple Choice Step Multiple Answer');
+    // should still be able to choose after submitting
+    squidwardChoice.click();
+    shouldBeSelected([squidwardChoice]);
+    shouldBeUnselected([spongeBobChoice, patrickChoice]);
+  });
 
-        // check that the elements are on the page
-        let nodeContent = element(by.cssContainingText('.node-content','Which of these are Ninja Turtles?'));
-        expect(nodeContent.isPresent()).toBeTruthy();
-        expect(leonardoChoice.isPresent()).toBeTruthy();
-        expect(leonardoChoice.getAttribute('aria-checked')).toBe("false");
-        expect(donatelloChoice.isPresent()).toBeTruthy();
-        expect(donatelloChoice.getAttribute('aria-checked')).toBe("false");
-        expect(michelangeloChoice.isPresent()).toBeTruthy();
-        expect(michelangeloChoice.getAttribute('aria-checked')).toBe("false");
-        expect(raphaelChoice.isPresent()).toBeTruthy();
-        expect(raphaelChoice.getAttribute('aria-checked')).toBe("false");
-        expect(squirtleChoice.isPresent()).toBeTruthy();
-        expect(squirtleChoice.getAttribute('aria-checked')).toBe("false");
+  it('should show previous chosen single-choice items', () => {
+    nextButton.click();
+    expect(nodeDropDownMenu.getText()).toBe('1.6: Multiple Choice Step Multiple Answer');
+    prevButton.click();
+    expect(nodeDropDownMenu.getText()).toBe('1.5: Multiple Choice Step Single Answer');
 
-        // save and submit buttons should be displayed but disabled
-        expect(saveButton.isPresent()).toBeTruthy();
-        expect(hasClass(saveButton, "disabled"));
-        expect(submitButton.isPresent()).toBeTruthy();
-        expect(hasClass(submitButton, "disabled"));
-        expect(saveMessage.getText()).toBe("");  // there should be nothing in the save message
-    });
+    shouldBeSelected([squidwardChoice]);
+    shouldBeUnselected([spongeBobChoice, patrickChoice]);
+  });
 
-    it('should allow students to choose several choices and save', () => {
-        leonardoChoice.click();
-        expect(leonardoChoice.getAttribute('aria-checked')).toBe("true");
-        expect(donatelloChoice.getAttribute('aria-checked')).toBe("false");
-        expect(michelangeloChoice.getAttribute('aria-checked')).toBe("false");
-        expect(raphaelChoice.getAttribute('aria-checked')).toBe("false");
-        expect(squirtleChoice.getAttribute('aria-checked')).toBe("false");
+});
 
-        // save and submit buttons should now be enabled
-        expect(!hasClass(saveButton, "disabled"));
-        expect(!hasClass(submitButton, "disabled"));
+describe('WISE5 Multiple Choice Component Select Multiple', () => {
+  let leonardoChoice = element(by.xpath('//md-checkbox[@aria-label="Leonardo"]'));
+  let donatelloChoice = element(by.xpath('//md-checkbox[@aria-label="Donatello"]'));
+  let michelangeloChoice = element(by.xpath('//md-checkbox[@aria-label="Michelangelo"]'));
+  let raphaelChoice = element(by.xpath('//md-checkbox[@aria-label="Raphael"]'));
+  let squirtleChoice = element(by.xpath('//md-checkbox[@aria-label="Squirtle"]'));
 
-        // click on save button
-        saveButton.click();
-        expect(saveMessage.getText()).toContain("Saved");  // save message should show the last saved time
+  beforeAll(() => {
+    browser.get('http://localhost:8080/wise/project/demo#/vle/node6');
+    browser.wait(function() {
+      return nodeDropDownMenu.isPresent()
+    }, 5000);
+  });
 
-        // save buttons should be displayed but disabled, but the submit button should still be enabled.
-        expect(hasClass(saveButton, "disabled"));
-        expect(!hasClass(submitButton, "disabled"));
+  it('should show multiple choice multiple answer component', () => {
+    expect(nodeDropDownMenu.getText()).toBe(
+      '1.6: Multiple Choice Step Multiple Answer');
 
-        // choose another choice
-        squirtleChoice.click();
-        expect(leonardoChoice.getAttribute('aria-checked')).toBe("true");
-        expect(donatelloChoice.getAttribute('aria-checked')).toBe("false");
-        expect(michelangeloChoice.getAttribute('aria-checked')).toBe("false");
-        expect(raphaelChoice.getAttribute('aria-checked')).toBe("false");
-        expect(squirtleChoice.getAttribute('aria-checked')).toBe("true");
+    let nodeContent = element(by.cssContainingText(
+      '.node-content','Which of these are Ninja Turtles?'));
+    shouldBePresent([nodeContent, leonardoChoice, donatelloChoice,
+      michelangeloChoice, raphaelChoice, squirtleChoice,
+      saveButton, submitButton]);
+    shouldBeAbsent([saveMessage]);
+    shouldBeUnselected([leonardoChoice, donatelloChoice, michelangeloChoice,
+      raphaelChoice, squirtleChoice]);
+    shouldBeDisabled([saveButton, submitButton]);
+  });
 
-        // save and submit buttons should now be enabled
-        expect(!hasClass(saveButton, "disabled"));
-        expect(!hasClass(submitButton, "disabled"));
+  it('should allow students to choose several choices and save', () => {
+    leonardoChoice.click();
+    expect(leonardoChoice.getAttribute('aria-checked')).toBe("true");
+    shouldBeSelected([leonardoChoice]);
+    shouldBeUnselected([donatelloChoice, michelangeloChoice,
+      raphaelChoice, squirtleChoice]);
+    shouldBeEnabled([saveButton, submitButton]);
 
-        // click on submit button
-        submitButton.click();
-        expect(submitMessage.getText()).toContain("Submitted");  // save message should show the last submitted time
+    saveButton.click();
+    expect(saveMessage.getText()).toContain("Saved");
+    shouldBeEnabled([submitButton]);
+    shouldBeDisabled([saveButton]);
 
-        // save buttons and submit buttons should both be disabled.
-        expect(!hasClass(saveButton, "disabled"));
-        expect(!hasClass(submitButton, "disabled"));
+    squirtleChoice.click();
+    shouldBeSelected([leonardoChoice, squirtleChoice]);
+    shouldBeUnselected([donatelloChoice, michelangeloChoice, raphaelChoice]);
+    shouldBeEnabled([saveButton, submitButton]);
 
-        // you should be able to choose another choice
-        michelangeloChoice.click();
-        expect(leonardoChoice.getAttribute('aria-checked')).toBe("true");
-        expect(donatelloChoice.getAttribute('aria-checked')).toBe("false");
-        expect(michelangeloChoice.getAttribute('aria-checked')).toBe("true");
-        expect(raphaelChoice.getAttribute('aria-checked')).toBe("false");
-        expect(squirtleChoice.getAttribute('aria-checked')).toBe("true");
-    });
+    submitButton.click();
+    expect(submitMessage.getText()).toContain("Submitted");
+    shouldBeDisabled([saveButton, submitButton]);
 
-    let previousButton = element(by.xpath('//button[@aria-label="Previous Item"]'));
+    // should still be able to choose after submitting
+    michelangeloChoice.click();
+    shouldBeSelected([leonardoChoice, squirtleChoice, michelangeloChoice]);
+    shouldBeUnselected([donatelloChoice, raphaelChoice]);
+    shouldBeEnabled([saveButton, submitButton]);
 
-    it('should show previously-chosen multiple choice answer', () => {
-        // go back to the previous mc single choice step
-        previousButton.click();
-        let nodeDropDownMenu = element(by.model("stepToolsCtrl.toNodeId"));
-        browser.wait((nodeDropDownMenu).isPresent(), 5000);  // give it at most 5 seconds to load.
-        expect(browser.getTitle()).toEqual('WISE');
-        expect(nodeDropDownMenu.getText()).toBe('1.5: Multiple Choice Step Single Answer');
+    // unselect a previous choice
+    squirtleChoice.click();
+    shouldBeSelected([leonardoChoice, michelangeloChoice]);
+    shouldBeUnselected([donatelloChoice, raphaelChoice, squirtleChoice]);
+  });
 
-        // check that choices have persisted
-        expect(spongeBobChoice.getAttribute('aria-checked')).toBe("false");
-        expect(patrickChoice.getAttribute('aria-checked')).toBe("false");
-        expect(squidwardChoice.getAttribute('aria-checked')).toBe("true");
+  it('should show previous chosen multiple-choice items', () => {
+    prevButton.click();
+    expect(nodeDropDownMenu.getText()).toBe('1.5: Multiple Choice Step Single Answer');
+    nextButton.click();
+    expect(nodeDropDownMenu.getText()).toBe('1.6: Multiple Choice Step Multiple Answer');
 
-        // go back to the previous mc multiple choice step
-        nextButton.click();
-        browser.wait((nodeDropDownMenu).isPresent(), 5000);  // give it at most 5 seconds to load.
-        expect(browser.getTitle()).toEqual('WISE');
-        expect(nodeDropDownMenu.getText()).toBe('1.6: Multiple Choice Step Multiple Answer');
-
-        // check that choices have persisted
-        expect(leonardoChoice.getAttribute('aria-checked')).toBe("true");
-        expect(donatelloChoice.getAttribute('aria-checked')).toBe("false");
-        expect(michelangeloChoice.getAttribute('aria-checked')).toBe("true");
-        expect(raphaelChoice.getAttribute('aria-checked')).toBe("false");
-        expect(squirtleChoice.getAttribute('aria-checked')).toBe("true");
-    });
+    shouldBeSelected([leonardoChoice, michelangeloChoice]);
+    shouldBeUnselected([donatelloChoice, raphaelChoice, squirtleChoice]);
+  });
 });
