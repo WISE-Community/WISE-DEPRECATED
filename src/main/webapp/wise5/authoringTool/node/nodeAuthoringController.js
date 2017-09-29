@@ -1475,6 +1475,7 @@ var NodeAuthoringController = function () {
             if (view == 'addComponent') {
                 // toggle the add component view and hide all the other views
                 this.showCreateComponent = !this.showCreateComponent;
+                this.showGeneralAdvanced = false;
                 this.showEditTransitions = false;
                 this.showConstraints = false;
                 this.showEditButtons = false;
@@ -1485,6 +1486,24 @@ var NodeAuthoringController = function () {
                 this.showStepButtons = true;
                 this.showComponents = true;
                 this.showJSON = false;
+            } else if (view == 'generalAdvanced') {
+
+                // save and parse the JSON if it has changed
+                this.saveAndParseJSON();
+
+                // toggle the edit transitions view and hide all the other views
+                this.showCreateComponent = false;
+                this.showGeneralAdvanced = !this.showGeneralAdvanced;
+                this.showEditTransitions = false;
+                this.showConstraints = false;
+                this.showEditButtons = false;
+                this.showRubricButton = false;
+                this.showCreateBranch = false;
+                //this.showAdvanced = false;
+                this.showImportView = false;
+                this.showStepButtons = false;
+                this.showComponents = false;
+                this.showJSON = false;
             } else if (view == 'editTransitions') {
 
                 // save and parse the JSON if it has changed
@@ -1492,6 +1511,7 @@ var NodeAuthoringController = function () {
 
                 // toggle the edit transitions view and hide all the other views
                 this.showCreateComponent = false;
+                this.showGeneralAdvanced = false;
                 this.showEditTransitions = !this.showEditTransitions;
                 this.showConstraints = false;
                 this.showEditButtons = false;
@@ -1509,6 +1529,7 @@ var NodeAuthoringController = function () {
 
                 // toggle the edit constraints view and hide all the other views
                 this.showCreateComponent = false;
+                this.showGeneralAdvanced = false;
                 this.showEditTransitions = false;
                 this.showConstraints = !this.showConstraints;
                 this.showEditButtons = false;
@@ -1522,6 +1543,7 @@ var NodeAuthoringController = function () {
             } else if (view == 'editButtons') {
                 // toggle the edit buttons view and hide all the other views
                 this.showCreateComponent = false;
+                this.showGeneralAdvanced = false;
                 this.showEditTransitions = false;
                 this.showConstraints = false;
                 this.showEditButtons = !this.showEditButtons;
@@ -1534,6 +1556,7 @@ var NodeAuthoringController = function () {
             } else if (view == 'editRubric') {
                 // toggle the edit buttons view and hide all the other views
                 this.showCreateComponent = false;
+                this.showGeneralAdvanced = false;
                 this.showEditTransitions = false;
                 this.showConstraints = false;
                 this.showEditButtons = false;
@@ -1551,6 +1574,7 @@ var NodeAuthoringController = function () {
 
                 // toggle the edit buttons view and hide all the other views
                 this.showCreateComponent = false;
+                this.showGeneralAdvanced = false;
                 this.showEditTransitions = false;
                 this.showConstraints = false;
                 this.showEditButtons = false;
@@ -1564,6 +1588,7 @@ var NodeAuthoringController = function () {
             } else if (view == 'previousNode') {
                 // hide all the other views
                 this.showCreateComponent = false;
+                this.showGeneralAdvanced = false;
                 this.showEditTransitions = false;
                 this.showConstraints = false;
                 this.showEditButtons = false;
@@ -1587,6 +1612,7 @@ var NodeAuthoringController = function () {
             } else if (view == 'nextNode') {
                 // hide all the other views
                 this.showCreateComponent = false;
+                this.showGeneralAdvanced = false;
                 this.showEditTransitions = false;
                 this.showConstraints = false;
                 this.showEditButtons = false;
@@ -1610,6 +1636,7 @@ var NodeAuthoringController = function () {
             } else if (view == 'advanced') {
                 // toggle the advanced view and hide all the other views
                 this.showCreateComponent = false;
+                this.showGeneralAdvanced = true;
                 this.showEditTransitions = false;
                 this.showConstraints = false;
                 this.showEditButtons = false;
@@ -1623,6 +1650,7 @@ var NodeAuthoringController = function () {
             } else if (view == 'copy') {
                 // toggle the copy view and hide all the other views
                 this.showCreateComponent = false;
+                this.showGeneralAdvanced = false;
                 this.showEditTransitions = false;
                 this.showConstraints = false;
                 this.showEditButtons = false;
@@ -1636,6 +1664,7 @@ var NodeAuthoringController = function () {
             } else if (view == 'move') {
                 // toggle the move view and hide all the other views
                 this.showCreateComponent = false;
+                this.showGeneralAdvanced = false;
                 this.showEditTransitions = false;
                 this.showConstraints = false;
                 this.showEditButtons = false;
@@ -1649,6 +1678,7 @@ var NodeAuthoringController = function () {
             } else if (view == 'import') {
                 // toggle the import view and hide all the other views
                 this.showCreateComponent = false;
+                this.showGeneralAdvanced = false;
                 this.showEditTransitions = false;
                 this.showConstraints = false;
                 this.showEditButtons = false;
@@ -1666,6 +1696,7 @@ var NodeAuthoringController = function () {
 
                 // toggle the import view and hide all the other views
                 this.showCreateComponent = false;
+                this.showGeneralAdvanced = false;
                 this.showEditTransitions = false;
                 this.showConstraints = false;
                 this.showEditButtons = false;
@@ -1681,6 +1712,7 @@ var NodeAuthoringController = function () {
             } else {
                 // hide all the views
                 this.showCreateComponent = false;
+                this.showGeneralAdvanced = false;
                 this.showEditTransitions = false;
                 this.showConstraints = false;
                 this.showEditButtons = false;

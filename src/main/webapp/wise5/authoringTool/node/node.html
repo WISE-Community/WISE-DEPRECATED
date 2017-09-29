@@ -3,6 +3,9 @@
         border-style: solid;
         border-color: black;
     }
+    .bodyDiv {
+        margin-left: 10;
+    }
 </style>
 <div style='background-color: white; position: sticky; top: 17px; z-index: 2;'>
     <md-button class='topButton md-raised md-primary md-raised md-primary' ng-click='nodeAuthoringController.backButtonClicked()'
@@ -97,41 +100,57 @@
     </div>
 
     <div ng-if='nodeAuthoringController.showAdvanced'>
-        <md-button class='topButton md-raised md-primary'
-                   ng-click='nodeAuthoringController.nodeAuthoringViewButtonClicked("editTransitions")'
-                   ng-disabled='nodeAuthoringController.insertComponentMode'>
-            <md-icon>trending_up</md-icon>
-            <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ "editTransitions" | translate }}</md-tooltip>
-        </md-button>
-        <md-button class='topButton md-raised md-primary'
-                   ng-click='nodeAuthoringController.nodeAuthoringViewButtonClicked("editConstraints")'
-                   ng-disabled='nodeAuthoringController.insertComponentMode'>
-            <md-icon>block</md-icon>
-            <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ "editConstraints" | translate }}</md-tooltip>
-        </md-button>
-        <md-button class='topButton md-raised md-primary'
-                   ng-click='nodeAuthoringController.nodeAuthoringViewButtonClicked("createBranch")'
-                   ng-disabled='nodeAuthoringController.insertComponentMode'>
-            <md-icon>call_split</md-icon>
-            <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ "createBranch" | translate }}</md-tooltip>
-        </md-button>
-        <md-button class='topButton md-raised md-primary'
-                   ng-click='nodeAuthoringController.nodeAuthoringViewButtonClicked("showJSON")'
-                   ng-disabled='nodeAuthoringController.insertComponentMode'>
-            <md-icon>code</md-icon>
-            <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ "showJSON" | translate }}</md-tooltip>
-        </md-button>
-        <br/>
-        {{ 'SHOW_SAVE_BUTTON' | translate }}:
-        <input type='checkbox'
-               ng-model='nodeAuthoringController.node.showSaveButton'
-               ng-change='nodeAuthoringController.authoringViewNodeChanged()'/>
-        <br/>
-        {{ 'SHOW_SUBMIT_BUTTON' | translate }}:
-        <input type='checkbox'
-               ng-model='nodeAuthoringController.node.showSubmitButton'
-               ng-change='nodeAuthoringController.authoringViewNodeChanged()'/>
-        <div ng-if='nodeAuthoringController.showEditTransitions'>
+        <div style='margin-bottom: 10;'>
+            <md-button class='topButton md-raised md-primary'
+                       ng-click='nodeAuthoringController.nodeAuthoringViewButtonClicked("generalAdvanced")'
+                       ng-disabled='nodeAuthoringController.insertComponentMode'>
+                <md-icon>settings</md-icon>
+                <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'generalAdvanced' | translate }}</md-tooltip>
+            </md-button>
+            <md-button class='topButton md-raised md-primary'
+                       ng-click='nodeAuthoringController.nodeAuthoringViewButtonClicked("editTransitions")'
+                       ng-disabled='nodeAuthoringController.insertComponentMode'>
+                <md-icon>trending_up</md-icon>
+                <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'editTransitions' | translate }}</md-tooltip>
+            </md-button>
+            <md-button class='topButton md-raised md-primary'
+                       ng-click='nodeAuthoringController.nodeAuthoringViewButtonClicked("editConstraints")'
+                       ng-disabled='nodeAuthoringController.insertComponentMode'>
+                <md-icon>block</md-icon>
+                <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'editConstraints' | translate }}</md-tooltip>
+            </md-button>
+            <md-button class='topButton md-raised md-primary'
+                       ng-click='nodeAuthoringController.nodeAuthoringViewButtonClicked("createBranch")'
+                       ng-disabled='nodeAuthoringController.insertComponentMode'>
+                <md-icon>call_split</md-icon>
+                <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'createBranch' | translate }}</md-tooltip>
+            </md-button>
+            <md-button class='topButton md-raised md-primary'
+                       ng-click='nodeAuthoringController.nodeAuthoringViewButtonClicked("showJSON")'
+                       ng-disabled='nodeAuthoringController.insertComponentMode'>
+                <md-icon>code</md-icon>
+                <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'showJSON' | translate }}</md-tooltip>
+            </md-button>
+        </div>
+        <div ng-if='nodeAuthoringController.showGeneralAdvanced'
+             class='bodyDiv'>
+            <div>
+                <md-checkbox class='md-primary'
+                             ng-model='nodeAuthoringController.node.showSaveButton'
+                             ng-change='nodeAuthoringController.authoringViewNodeChanged()'>
+                    {{ 'SHOW_SAVE_BUTTON' | translate }}
+                </md-checkbox>
+            </div>
+            <div>
+                <md-checkbox class='md-primary'
+                             ng-model='nodeAuthoringController.node.showSubmitButton'
+                             ng-change='nodeAuthoringController.authoringViewNodeChanged()'>
+                    {{ 'SHOW_SUBMIT_BUTTON' | translate }}
+                </md-checkbox>
+            </div>
+        </div>
+        <div ng-if='nodeAuthoringController.showEditTransitions'
+             class='bodyDiv'>
             <span>{{'transitions' | translate}}:</span>
             <div id="transitions" style="margin-left:40px; margin-bottom:10px; background-color:lightgray; width:700px"
                  ng-repeat='(transitionIndex, transition) in nodeAuthoringController.node.transitionLogic.transitions'>
@@ -305,7 +324,9 @@
             <button ng-click='nodeAuthoringController.saveTransitions()' translate="SAVE"></button>
         </div>
 
-        <div ng-if='nodeAuthoringController.showConstraints' style='width:700px'>
+        <div ng-if='nodeAuthoringController.showConstraints'
+             class='bodyDiv'
+             style='width:700px'>
             {{ 'constraints' | translate }}
             <br/>
             <div ng-repeat='constraint in nodeAuthoringController.node.constraints' style='border: 1px solid black'>
@@ -467,7 +488,8 @@
             </div>
             <button ng-click='nodeAuthoringController.addConstraint()' translate='addConstraint'></button>
         </div>
-        <div ng-if='nodeAuthoringController.showCreateBranch'>
+        <div ng-if='nodeAuthoringController.showCreateBranch'
+             class='bodyDiv'>
             {{ 'createBranch' | translate }}
             <br/>
 
@@ -603,7 +625,8 @@
                 </div>
             </div>
         </div>
-        <div ng-if='nodeAuthoringController.showJSON'>
+        <div ng-if='nodeAuthoringController.showJSON'
+             class='bodyDiv'>
             <h6 ng-if='projectController.isGroupNode(nodeAuthoringController.nodeId)'>{{ 'editActivityJSON' | translate }}</h6>
             <h6 ng-if='!projectController.isGroupNode(nodeAuthoringController.nodeId)'>{{ 'editStepJSON' | translate }}</h6>
             <md-input-container style='width: 100%;'>
