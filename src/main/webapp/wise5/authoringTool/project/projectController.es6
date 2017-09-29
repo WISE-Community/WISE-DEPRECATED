@@ -116,6 +116,8 @@ class ProjectController {
             }
         };
 
+        this.projectURL = window.location.origin + this.ConfigService.getConfigParam('projectURL');
+
         this.$scope.$on('currentAuthorsReceived', (event, args) => {
             let currentAuthorsUsernames = args.currentAuthorsUsernames;
             // get the user name of the signed in user
@@ -1728,6 +1730,10 @@ class ProjectController {
         // create the project object from the project JSON string
         let project = angular.fromJson(this.projectJSONString);
         this.ProjectService.setProject(project);
+        let scriptFilename = this.ProjectService.getProjectScriptFilename();
+        if (scriptFilename != null) {
+            this.projectScriptFilename = scriptFilename;
+        }
 
         // save and refresh the project
         this.checkPotentialStartNodeIdChangeThenSaveProject();
@@ -2077,6 +2083,25 @@ class ProjectController {
         }
 
         return color;
+    }
+
+    /**
+     * Copy the project URL to the clipboard
+     */
+    copyProjectURL() {
+        let textArea = document.createElement('textarea');
+        textArea.value = this.projectURL;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+    }
+
+    /**
+     * Open the project.json file in a new tab
+     */
+    openProjectURLInNewTab() {
+        window.open(this.projectURL, '_blank');
     }
 }
 
