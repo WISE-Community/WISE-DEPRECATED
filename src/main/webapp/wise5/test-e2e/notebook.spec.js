@@ -1,13 +1,13 @@
 'use strict';
 
+var hasClass = function hasClass(element, cls) {
+    return element.getAttribute('class').then(function (classes) {
+        return classes.split(' ').indexOf(cls) !== -1;
+    });
+};
+
 // E2E test for working with the notebook in preview mode
 describe('WISE5 Notebook in Preview Mode', function () {
-
-    var hasClass = function hasClass(element, cls) {
-        return element.getAttribute('class').then(function (classes) {
-            return classes.split(' ').indexOf(cls) !== -1;
-        });
-    };
 
     var notebookButton = element(by.tagName('notebook'));
     var notebookReport = element(by.tagName('notebook-report'));
