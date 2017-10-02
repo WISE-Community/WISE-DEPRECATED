@@ -42,22 +42,22 @@ const StepInfo = {
   controller: StepInfoController,
   template:
   `<div layout="row" layout-align="start center">
-    <node-icon node-id="$ctrl.nodeId"
-           size="18"
-           hide-xs></node-icon>
+    <node-icon node-id="$ctrl.nodeId" size="18" hide-xs></node-icon>
+    <span hide-xs>&nbsp;&nbsp;</span>
     <div class="heavy">
-      &nbsp;&nbsp;{{ $ctrl.stepTitle }}
+      {{ $ctrl.stepTitle }}
       <status-icon ng-if="$ctrl.hasAlert"
-             icon-class="$ctrl.alertIconClass"
-             icon-name="$ctrl.alertIconName"
-             icon-label="$ctrl.alertIconLabel"
-             icon-tooltip="$ctrl.alertIconLabel"></status-icon>
+                   icon-class="$ctrl.alertIconClass"
+                   icon-name="$ctrl.alertIconName"
+                   icon-label="$ctrl.alertIconLabel"
+                   icon-tooltip="$ctrl.alertIconLabel"></status-icon>
       <status-icon ng-if="$ctrl.hasRubrics"
-             icon-class="$ctrl.rubricIconClass"
-             icon-name="$ctrl.rubricIconName"
-             icon-label="$ctrl.rubricIconLabel"
-             icon-tooltip="$ctrl.rubricIconLabel"></status-icon>
-      <span ng-if="$ctrl.hasNewWork" class="badge badge--info animate-fade">{{ 'NEW' | translate }}</span>
+                   icon-class="$ctrl.rubricIconClass"
+                   icon-name="$ctrl.rubricIconName"
+                   icon-label="$ctrl.rubricIconLabel"
+                   icon-tooltip="$ctrl.rubricIconLabel"></status-icon>
+      <span ng-if="$ctrl.hasNewWork" class="badge badge--info
+            animate-fade">{{ 'NEW' | translate }}</span>
     </div>
   </div>`
 };

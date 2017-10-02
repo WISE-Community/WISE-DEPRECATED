@@ -99,16 +99,7 @@
     min-width: 0;
     white-space: normal;
     line-height: 1.4;
-}
-
-.table--list__thead__link--center {
     width: 100%;
-    margin: 0 auto;
-}
-
-.table--list__thead__link--left {
-    width: 100%;
-    text-align: left;
 }
 
 .table--list__thead__sort {
@@ -117,6 +108,12 @@
 
 .table--list__thead__sort--reverse {
     transform: rotate(180deg);
+}
+
+.td--wrap {
+    min-width: 180px;
+    white-space: normal;
+    line-height: 1.2;
 }
 
 .td--max-width {

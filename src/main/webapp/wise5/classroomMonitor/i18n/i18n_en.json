@@ -87,6 +87,7 @@
     "milestoneNamePlaceholder": "example \"Milestone 1\"",
     "milestones": "Milestones",
     "name": "Name",
+    "names": "Names",
     "newWork": "New Work",
     "newWorkCounter": "New Work Count: {{count}}",
     "nextStep": "Next Step",

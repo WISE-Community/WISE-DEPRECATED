@@ -76,8 +76,8 @@ var StudentProgressController = function () {
             // update the time spent for the workgroup
             _this.updateTimeSpentForWorkgroupId(workgroupId);
 
-            // update students in the workgroup
-            _this.updateStudents(workgroupId);
+            // update team data
+            _this.updateTeam(workgroupId);
         });
 
         // listen for the studentDisconnected event
@@ -93,8 +93,8 @@ var StudentProgressController = function () {
                 // remove the workgroup from the students online list
                 studentsOnline.splice(indexOfWorkgroupId, 1);
 
-                // update students in the workgroup
-                _this.updateStudents(workgroupId);
+                // update team data
+                _this.updateTeam(workgroupId);
             }
         });
 
@@ -165,7 +165,7 @@ var StudentProgressController = function () {
 
             if (currentPeriod === -1 || workgroup.periodId === this.getCurrentPeriod().periodId) {
                 if (this.currentWorkgroup) {
-                    if (workgroup.displayNames === this.currentWorkgroup.displayNames) {
+                    if (workgroup.workgroupId === this.currentWorkgroup.workgroupId) {
                         show = true;
                     }
                 } else {
@@ -330,13 +330,13 @@ var StudentProgressController = function () {
                     // update the mapping of workgroup id to time spent
                     //this.studentTimeSpent[workgroupId] = timeSpentText;
 
-                    // update the timeSpent for the students with the matching workgroupID
-                    for (var i = 0; i < this.students.length; i++) {
-                        var student = this.students[i];
-                        var id = student.workgroupId;
+                    // update the timeSpent for the team with the matching workgroupID
+                    for (var i = 0; i < this.teams.length; i++) {
+                        var team = this.teams[i];
+                        var id = team.workgroupId;
 
                         if (workgroupId === id) {
-                            student.timeSpent = timeSpentText;
+                            team.timeSpent = timeSpentText;
                         }
                     }
                 }
@@ -344,14 +344,13 @@ var StudentProgressController = function () {
         }
 
         /**
-         * Set up the array of students in the run. Split workgroups into
-         * individual student objects.
+         * Set up the array of workgroups in the run
          */
 
     }, {
         key: 'initializeStudents',
         value: function initializeStudents() {
-            var students = [];
+            this.teams = [];
 
             // get the workgroups
             var workgroups = this.ConfigService.getClassmateUserInfos();
@@ -362,56 +361,28 @@ var StudentProgressController = function () {
 
                 if (workgroup != null) {
                     var workgroupId = workgroup.workgroupId;
-                    var isOnline = this.isWorkgroupOnline(workgroupId);
-
                     var userName = workgroup.userName;
-                    var displayNames = this.ConfigService.getDisplayUserNamesByWorkgroupId(workgroupId).split(', ');
-                    var userIds = workgroup.userIds;
-                    var maxScore = this.StudentStatusService.getMaxScoreForWorkgroupId(workgroupId);
-                    maxScore = maxScore ? maxScore : 0;
-
-                    for (var i = 0; i < userIds.length; i++) {
-                        var id = userIds[i];
-                        var displayName = '';
-
-                        if (this.permissions.canViewStudentNames) {
-                            // put user display name in 'lastName, firstName' order
-                            var names = displayNames[i].split(' ');
-                            displayName = names[1] + ', ' + names[0];
-                        } else {
-                            displayName = id;
-                        }
-
-                        var user = {
-                            userId: id,
-                            periodId: workgroup.periodId,
-                            periodName: workgroup.periodName,
-                            workgroupId: workgroupId,
-                            displayNames: displayName,
-                            userName: displayName,
-                            online: isOnline,
-                            location: this.getCurrentNodeForWorkgroupId(workgroupId),
-                            timeSpent: this.getStudentTimeSpent(workgroupId),
-                            completion: this.getStudentProjectCompletion(workgroupId),
-                            score: this.getStudentTotalScore(workgroupId),
-                            maxScore: maxScore
-                        };
-                        students.push(user);
-                    }
+                    var displayNames = this.ConfigService.getDisplayUserNamesByWorkgroupId(workgroupId);
+                    var team = {
+                        periodId: workgroup.periodId,
+                        periodName: workgroup.periodName,
+                        workgroupId: workgroupId,
+                        userName: displayNames
+                    };
+                    this.teams.push(team);
+                    this.updateTeam(workgroupId);
                 }
             }
-
-            this.students = students;
         }
 
         /**
-         * Update student progress data for students with the given workgroup id
+         * Update data for team with the given workgroup id
          * @param workgroupId
          */
 
     }, {
-        key: 'updateStudents',
-        value: function updateStudents(workgroupId) {
+        key: 'updateTeam',
+        value: function updateTeam(workgroupId) {
             var isOnline = this.isWorkgroupOnline(workgroupId);
             var location = this.getCurrentNodeForWorkgroupId(workgroupId);
             var timeSpent = this.getStudentTimeSpent(workgroupId);
@@ -420,16 +391,17 @@ var StudentProgressController = function () {
             var maxScore = this.StudentStatusService.getMaxScoreForWorkgroupId(workgroupId);
             maxScore = maxScore ? maxScore : 0;
 
-            for (var i = 0; i < this.students.length; i++) {
-                var student = this.students[i];
+            for (var i = 0; i < this.teams.length; i++) {
+                var team = this.teams[i];
 
-                if (student.workgroupId === workgroupId) {
-                    student.isOnline = isOnline;
-                    student.location = location;
-                    student.timeSpent = timeSpent;
-                    student.completion = completion;
-                    student.score = score;
-                    student.maxScore = maxScore;
+                if (team.workgroupId === workgroupId) {
+                    team.isOnline = isOnline;
+                    team.location = location;
+                    team.timeSpent = timeSpent;
+                    team.completion = completion;
+                    team.score = score;
+                    team.maxScore = maxScore;
+                    team.scorePct = maxScore ? score / maxScore : score;
                 }
             }
         }
@@ -448,7 +420,7 @@ var StudentProgressController = function () {
             }
 
             // update value in the teacher data service so we can persist across views
-            this.TeacherDataService.nodeGradingSort = this.sort;
+            this.TeacherDataService.studentProgressSort = this.sort;
         }
     }, {
         key: 'getOrderBy',
@@ -469,16 +441,16 @@ var StudentProgressController = function () {
                     orderBy = ['-userName', 'workgroupId'];
                     break;
                 case 'score':
-                    orderBy = ['score', 'userName'];
+                    orderBy = ['scorePct', 'userName'];
                     break;
                 case '-score':
-                    orderBy = ['-score', 'userName'];
+                    orderBy = ['-scorePct', 'userName'];
                     break;
                 case 'completion':
-                    orderBy = ['completion', 'userName'];
+                    orderBy = ['completion.completionPct', 'userName'];
                     break;
                 case '-completion':
-                    orderBy = ['-completion', 'userName'];
+                    orderBy = ['-completion.completionPct', 'userName'];
                     break;
                 case 'location':
                     orderBy = ['location', 'userName'];
