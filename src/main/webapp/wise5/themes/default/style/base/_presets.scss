@@ -305,6 +305,12 @@ md-select-menu.md-default-theme md-option[selected], md-select-menu md-option[se
   background-color: color('selected-bg');
 }
 
+.md-autocomplete-suggestions-container.md-default-theme li .highlight,
+.md-autocomplete-suggestions-container li .highlight {
+  color: color('primary');
+  background-color: color('selected-bg');
+}
+
 // Animations
 .animate-show {
   max-height: 9999px;

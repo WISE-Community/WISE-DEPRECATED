@@ -22,7 +22,7 @@
         <main-menu state="classroomMonitorController.$state" views="classroomMonitorController.views"></main-menu>
     </md-sidenav>
     <md-content id="content" flex role="main" layout="column" class="l-main l-main--with-toolbar" flex role="main">
-        <div ui-view></div>
+        <div ui-view autoscroll="true"></div>
         <div ng-if="classroomMonitorController.$state.current.name === 'root.project'">
             <ng-include src="'wise5/classroomMonitor/nodeProgress/nodeProgress.html'" ng-controller="NodeProgressController as nodeProgressController"></ng-include>
         </div>

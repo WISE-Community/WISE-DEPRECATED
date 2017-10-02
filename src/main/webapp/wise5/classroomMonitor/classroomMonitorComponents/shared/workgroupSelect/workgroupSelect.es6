@@ -16,9 +16,16 @@ class WorkgroupSelectController {
 
         this.$onInit = () => {
             this.canViewStudentNames = this.ConfigService.getPermissions().canViewStudentNames;
-            this.workgroups = this.ConfigService.getClassmateUserInfos();
+            this.workgroups = angular.copy(this.ConfigService.getClassmateUserInfos());
             this.periodId = this.TeacherDataService.getCurrentPeriod().periodId;
             this.selectedItem = this.getCurrentWorkgroup();
+            let n = this.workgroups.length;
+            for (let i = 0; i < n; i++) {
+                let workgroup = this.workgroups[i];
+                if (this.canViewStudentNames) {
+                    workgroup.displayNames += ' (' + this.$translate('teamId', { id: workgroup.workgroupId}) + ')';
+                }
+            }
         };
 
         /**
@@ -61,7 +68,6 @@ class WorkgroupSelectController {
             let periodId = workgroup.periodId;
             if (this.periodId === -1 || periodId === this.periodId) {
                 let displayNames = workgroup.displayNames;
-
                 if (this.byTeam) {
                     if (displayNames.search(new RegExp(query, 'i')) > -1 || !query) {
                         items.push(workgroup);
@@ -104,7 +110,7 @@ class WorkgroupSelectController {
             }
         }
 
-        let orderedItems = sortByStudentId ? this.orderBy(items, 'userId') : this.orderBy(items, 'displayNames');
+        let orderedItems = sortByStudentId ? this.orderBy(items, 'userId') : this.orderBy(items, 'workgroupId');
 
         return orderedItems;
     }
@@ -139,7 +145,8 @@ const WorkgroupSelect = {
                           placeholder="{{'findAStudent' | translate}}"
                           title="{{'findAStudent' | translate}}">
             <md-item-template>
-                <span md-highlight-text="$ctrl.searchText" md-highlight-flags="ig">{{workgroup.displayNames}}</span>
+                <span md-highlight-text="$ctrl.searchText"
+                      md-highlight-flags="ig">{{ workgroup.displayNames }}</span>
             </md-item-template>
             <md-not-found>
                 {{'noMatchesFound' | translate}}

@@ -24,9 +24,16 @@ var WorkgroupSelectController = function () {
 
         this.$onInit = function () {
             _this.canViewStudentNames = _this.ConfigService.getPermissions().canViewStudentNames;
-            _this.workgroups = _this.ConfigService.getClassmateUserInfos();
+            _this.workgroups = angular.copy(_this.ConfigService.getClassmateUserInfos());
             _this.periodId = _this.TeacherDataService.getCurrentPeriod().periodId;
             _this.selectedItem = _this.getCurrentWorkgroup();
+            var n = _this.workgroups.length;
+            for (var i = 0; i < n; i++) {
+                var workgroup = _this.workgroups[i];
+                if (_this.canViewStudentNames) {
+                    workgroup.displayNames += ' (' + _this.$translate('teamId', { id: workgroup.workgroupId }) + ')';
+                }
+            }
         };
 
         /**
@@ -79,7 +86,6 @@ var WorkgroupSelectController = function () {
                 var periodId = workgroup.periodId;
                 if (this.periodId === -1 || periodId === this.periodId) {
                     var displayNames = workgroup.displayNames;
-
                     if (this.byTeam) {
                         if (displayNames.search(new RegExp(query, 'i')) > -1 || !query) {
                             items.push(workgroup);
@@ -122,7 +128,7 @@ var WorkgroupSelectController = function () {
                 }
             }
 
-            var orderedItems = sortByStudentId ? this.orderBy(items, 'userId') : this.orderBy(items, 'displayNames');
+            var orderedItems = sortByStudentId ? this.orderBy(items, 'userId') : this.orderBy(items, 'workgroupId');
 
             return orderedItems;
         }
@@ -142,7 +148,7 @@ var WorkgroupSelect = {
     bindings: {
         byTeam: '<'
     },
-    template: '<md-autocomplete class="autocomplete"\n                          md-no-cache="true"\n                          md-selected-item="$ctrl.selectedItem"\n                          md-search-text="$ctrl.searchText"\n                          md-selected-item-change="$ctrl.selectedItemChange()"\n                          md-items="workgroup in $ctrl.querySearch($ctrl.searchText)"\n                          md-item-text="workgroup.displayNames"\n                          md-min-length="0"\n                          ng-init="$ctrl.searchText=$ctrl.selectedItem.displayNames"\n                          placeholder="{{\'findAStudent\' | translate}}"\n                          title="{{\'findAStudent\' | translate}}">\n            <md-item-template>\n                <span md-highlight-text="$ctrl.searchText" md-highlight-flags="ig">{{workgroup.displayNames}}</span>\n            </md-item-template>\n            <md-not-found>\n                {{\'noMatchesFound\' | translate}}\n            </md-not-found>\n        </md-autocomplete>',
+    template: '<md-autocomplete class="autocomplete"\n                          md-no-cache="true"\n                          md-selected-item="$ctrl.selectedItem"\n                          md-search-text="$ctrl.searchText"\n                          md-selected-item-change="$ctrl.selectedItemChange()"\n                          md-items="workgroup in $ctrl.querySearch($ctrl.searchText)"\n                          md-item-text="workgroup.displayNames"\n                          md-min-length="0"\n                          ng-init="$ctrl.searchText=$ctrl.selectedItem.displayNames"\n                          placeholder="{{\'findAStudent\' | translate}}"\n                          title="{{\'findAStudent\' | translate}}">\n            <md-item-template>\n                <span md-highlight-text="$ctrl.searchText"\n                      md-highlight-flags="ig">{{ workgroup.displayNames }}</span>\n            </md-item-template>\n            <md-not-found>\n                {{\'noMatchesFound\' | translate}}\n            </md-not-found>\n        </md-autocomplete>',
     controller: WorkgroupSelectController
 };
 
