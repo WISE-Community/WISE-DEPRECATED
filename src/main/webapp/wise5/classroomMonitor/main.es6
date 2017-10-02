@@ -183,14 +183,14 @@ let classroomMonitorModule = angular.module('classroomMonitor', [
                         }
                     }
                 })
-                .state('root.studentLanding', {
-                    url: '/student',
+                .state('root.teamLanding', {
+                    url: '/team',
                     templateUrl: 'wise5/classroomMonitor/studentProgress/studentProgress.html',
                     controller: 'StudentProgressController',
                     controllerAs: 'studentProgressController'
                 })
-                .state('root.student', {
-                    url: '/student/:workgroupId',
+                .state('root.team', {
+                    url: '/team/:workgroupId',
                     templateUrl: 'wise5/classroomMonitor/studentGrading/studentGrading.html',
                     controller: 'StudentGradingController',
                     controllerAs: 'studentGradingController',

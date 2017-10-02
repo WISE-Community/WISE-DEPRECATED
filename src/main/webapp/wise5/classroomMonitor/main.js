@@ -294,13 +294,13 @@ var classroomMonitorModule = _angular2.default.module('classroomMonitor', [(0, _
                 return TeacherDataService.retrieveAnnotations();
             }
         }
-    }).state('root.studentLanding', {
-        url: '/student',
+    }).state('root.teamLanding', {
+        url: '/team',
         templateUrl: 'wise5/classroomMonitor/studentProgress/studentProgress.html',
         controller: 'StudentProgressController',
         controllerAs: 'studentProgressController'
-    }).state('root.student', {
-        url: '/student/:workgroupId',
+    }).state('root.team', {
+        url: '/team/:workgroupId',
         templateUrl: 'wise5/classroomMonitor/studentGrading/studentGrading.html',
         controller: 'StudentGradingController',
         controllerAs: 'studentGradingController',

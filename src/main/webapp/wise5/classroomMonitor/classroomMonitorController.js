@@ -63,8 +63,8 @@ var ClassroomMonitorController = function () {
                 },
                 active: true
             },
-            'root.studentLanding': {
-                name: this.$translate('gradeByStudent'),
+            'root.teamLanding': {
+                name: this.$translate('gradeByTeam'),
                 icon: 'people',
                 type: 'primary',
                 active: true
@@ -78,7 +78,7 @@ var ClassroomMonitorController = function () {
             'root.export': {
                 name: this.$translate('dataExport'),
                 icon: 'file_download',
-                type: 'primary',
+                type: 'secondary',
                 active: true
             },
             'root.milestones': {

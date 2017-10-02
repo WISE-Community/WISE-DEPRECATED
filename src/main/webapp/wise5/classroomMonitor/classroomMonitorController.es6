@@ -68,8 +68,8 @@ class ClassroomMonitorController {
                 },
                 active: true
             },
-            'root.studentLanding': {
-                name: this.$translate('gradeByStudent'),
+            'root.teamLanding': {
+                name: this.$translate('gradeByTeam'),
                 icon: 'people',
                 type: 'primary',
                 active: true
@@ -83,7 +83,7 @@ class ClassroomMonitorController {
             'root.export': {
                 name: this.$translate('dataExport'),
                 icon: 'file_download',
-                type: 'primary',
+                type: 'secondary',
                 active: true
             },
             'root.milestones': {

@@ -398,7 +398,7 @@ class StudentProgressController {
     }
 
     showStudentGradingView(workgroup) {
-        this.$state.go('root.student', {workgroupId: workgroup.workgroupId});
+        this.$state.go('root.team', {workgroupId: workgroup.workgroupId});
     }
 
     setSort(value) {

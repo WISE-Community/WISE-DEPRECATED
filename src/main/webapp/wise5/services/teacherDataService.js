@@ -1013,7 +1013,7 @@ var TeacherDataService = function () {
         value: function setCurrentStep(step) {
             this.currentStep = step;
 
-            // broadcast the event that the current workgroup has changed
+            // broadcast the event that the current step has changed
             this.$rootScope.$broadcast('currentStepChanged', { currentStep: this.currentStep });
         }
     }, {
