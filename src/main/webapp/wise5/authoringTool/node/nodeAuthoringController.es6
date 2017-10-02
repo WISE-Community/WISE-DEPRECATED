@@ -44,8 +44,8 @@ class NodeAuthoringController {
         this.selectedComponent = null;
         this.nodeCopy = null;
         this.undoStack = [];
-        this.howToChooseAmongAvailablePathsOptions = [null, "random", "workgroupId", "firstAvailable", "lastAvailable"];
-        this.whenToChoosePathOptions = [null, "enterNode", "exitNode", "scoreChanged", "studentDataChanged"];
+        this.howToChooseAmongAvailablePathsOptions = [null, 'random', 'workgroupId', 'firstAvailable', 'lastAvailable'];
+        this.whenToChoosePathOptions = [null, 'enterNode', 'exitNode', 'scoreChanged', 'studentDataChanged'];
         this.canChangePathOptions = [null, true, false];
         this.createBranchBranches = [];
 
@@ -244,37 +244,37 @@ class NodeAuthoringController {
         // available transitionCriterias
         this.transitionCriterias = [
             {
-                value: "score",
-                text: this.$translate('SCORE'),
+                value: 'score',
+                text: this.$translate('getASpecificScoreOnAComponent'),
                 params: [
                     {
-                        value: "nodeId",
+                        value: 'nodeId',
                         text: this.$translate('nodeID')
                     },
                     {
-                        value: "componentId",
+                        value: 'componentId',
                         text: this.$translate('componentID')
                     },
                     {
-                        value: "scores",
+                        value: 'scores',
                         text: this.$translate('scoresParens')
                     }
                 ]
             },
             {
-                value: "choiceChosen",
-                text: this.$translate('choiceChosen'),
+                value: 'choiceChosen',
+                text: this.$translate('chooseASpecificChoiceOnAComponent'),
                 params: [
                     {
-                        value: "nodeId",
+                        value: 'nodeId',
                         text: this.$translate('nodeID')
                     },
                     {
-                        value: "componentId",
+                        value: 'componentId',
                         text: this.$translate('componentID')
                     },
                     {
-                        value: "choiceIds",
+                        value: 'choiceIds',
                         text: this.$translate('choices')
                     }
                 ]
@@ -283,19 +283,19 @@ class NodeAuthoringController {
 
         this.branchCriteria = [
             {
-                value: "workgroupId",
+                value: 'workgroupId',
                 text: this.$translate('WORKGROUP_ID')
             },
             {
-                value: "score",
+                value: 'score',
                 text: this.$translate('SCORE')
             },
             {
-                value: "choiceChosen",
+                value: 'choiceChosen',
                 text: this.$translate('choiceChosen')
             },
             {
-                value: "random",
+                value: 'random',
                 text: this.$translate('random')
             }
         ];
@@ -846,6 +846,23 @@ class NodeAuthoringController {
     }
 
     /**
+     * The transition to node id has changed so need to recalculate the step
+     * numbers
+     */
+    authoringViewTransitionToNodeIdChanged() {
+        /*
+         * update the node numbers now that a step has been added to a branch path
+         * e.g. if this is a branching step that is called
+         * 1.5 B View the Potential Energy
+         * then the node number is 1.5 B
+         */
+        this.ProjectService.calculateNodeNumbers();
+
+        // save changes
+        this.authoringViewNodeChanged();
+    }
+
+    /**
      * The transition criteria node id changed so we will update the params
      * accordingly.
      * @param transitionCriteria the transition criteria object that changed
@@ -902,30 +919,45 @@ class NodeAuthoringController {
 
     /**
      * Deletes the specified transition from this node
+     * @param transition the transition to delete
      */
     deleteTransition(transition) {
-        let nodeTransitions = this.node.transitionLogic.transitions;
-
-        let index = nodeTransitions.indexOf(transition);
-        if (index > -1) {
-            nodeTransitions.splice(index, 1);
+        let stepTitle = '';
+        if (transition != null) {
+            stepTitle = this.ProjectService.getNodePositionAndTitleByNodeId(transition.to);
         }
+        let answer = confirm(this.$translate('areYouSureYouWantToDeleteThisPath', { stepTitle: stepTitle }));
+        if (answer) {
+            let nodeTransitions = this.node.transitionLogic.transitions;
 
-        if (nodeTransitions.length <= 1) {
+            let index = nodeTransitions.indexOf(transition);
+            if (index > -1) {
+                nodeTransitions.splice(index, 1);
+            }
+
+            if (nodeTransitions.length <= 1) {
+                /*
+                 * there is zero or one transition so we will clear the parameters
+                 * below since they only apply when there are multiple transitions
+                 */
+                this.node.transitionLogic.howToChooseAmongAvailablePaths = null;
+                this.node.transitionLogic.whenToChoosePath = null;
+                this.node.transitionLogic.canChangePath = null;
+                this.node.transitionLogic.maxPathsVisitable = null;
+            }
+
             /*
-             * there is zero or one transition so we will clear the parameters
-             * below since they only apply when there are multiple transitions
+             * update the node numbers now that a step has been added to a branch path
+             * e.g. if this is a branching step that is called
+             * 1.5 B View the Potential Energy
+             * then the node number is 1.5 B
              */
-            this.node.transitionLogic.howToChooseAmongAvailablePaths = null;
-            this.node.transitionLogic.whenToChoosePath = null;
-            this.node.transitionLogic.canChangePath = null;
-            this.node.transitionLogic.maxPathsVisitable = null;
+            this.ProjectService.calculateNodeNumbers();
+
+            // save changes
+            this.authoringViewNodeChanged();
         }
-
-        // save changes
-        this.authoringViewNodeChanged();
     }
-
 
     /**
      * Save transitions for this node
@@ -1380,19 +1412,24 @@ class NodeAuthoringController {
      * @param removalCriteriaIndex the index of the removal criteria to remove
      */
     deleteTransitionCriteria(transition, transitionCriteriaIndex) {
-        if (transition != null) {
 
-            // get all the transition criteria
-            var transitionCriterias = transition.criteria;
+        let answer = confirm(this.$translate('areYouSureYouWantToDeleteThisRequirement'));
 
-            if (transitionCriterias != null) {
-                // remove the single transition criteria
-                transitionCriterias.splice(transitionCriteriaIndex, 1);
+        if (answer) {
+            if (transition != null) {
+
+                // get all the transition criteria
+                var transitionCriterias = transition.criteria;
+
+                if (transitionCriterias != null) {
+                    // remove the single transition criteria
+                    transitionCriterias.splice(transitionCriteriaIndex, 1);
+                }
             }
-        }
 
-        // save the project
-        this.ProjectService.saveProject();
+            // save the project
+            this.ProjectService.saveProject();
+        }
     }
 
     /**
@@ -1479,6 +1516,7 @@ class NodeAuthoringController {
         if (view == 'addComponent') {
             // toggle the add component view and hide all the other views
             this.showCreateComponent = !this.showCreateComponent;
+            this.showGeneralAdvanced = false;
             this.showEditTransitions = false;
             this.showConstraints = false;
             this.showEditButtons = false;
@@ -1489,6 +1527,24 @@ class NodeAuthoringController {
             this.showStepButtons = true;
             this.showComponents = true;
             this.showJSON = false;
+        } else if (view == 'generalAdvanced') {
+
+            // save and parse the JSON if it has changed
+            this.saveAndParseJSON();
+
+            // toggle the edit transitions view and hide all the other views
+            this.showCreateComponent = false;
+            this.showGeneralAdvanced = !this.showGeneralAdvanced;
+            this.showEditTransitions = false;
+            this.showConstraints = false;
+            this.showEditButtons = false;
+            this.showRubricButton = false;
+            this.showCreateBranch = false;
+            //this.showAdvanced = false;
+            this.showImportView = false;
+            this.showStepButtons = false;
+            this.showComponents = false;
+            this.showJSON = false;
         } else if (view == 'editTransitions') {
 
             // save and parse the JSON if it has changed
@@ -1496,6 +1552,7 @@ class NodeAuthoringController {
 
             // toggle the edit transitions view and hide all the other views
             this.showCreateComponent = false;
+            this.showGeneralAdvanced = false;
             this.showEditTransitions = !this.showEditTransitions;
             this.showConstraints = false;
             this.showEditButtons = false;
@@ -1513,6 +1570,7 @@ class NodeAuthoringController {
 
             // toggle the edit constraints view and hide all the other views
             this.showCreateComponent = false;
+            this.showGeneralAdvanced = false;
             this.showEditTransitions = false;
             this.showConstraints = !this.showConstraints;
             this.showEditButtons = false;
@@ -1526,6 +1584,7 @@ class NodeAuthoringController {
         } else if (view == 'editButtons') {
             // toggle the edit buttons view and hide all the other views
             this.showCreateComponent = false;
+            this.showGeneralAdvanced = false;
             this.showEditTransitions = false;
             this.showConstraints = false;
             this.showEditButtons = !this.showEditButtons;
@@ -1538,6 +1597,7 @@ class NodeAuthoringController {
         } else if (view == 'editRubric') {
             // toggle the edit buttons view and hide all the other views
             this.showCreateComponent = false;
+            this.showGeneralAdvanced = false;
             this.showEditTransitions = false;
             this.showConstraints = false;
             this.showEditButtons = false;
@@ -1555,6 +1615,7 @@ class NodeAuthoringController {
 
             // toggle the edit buttons view and hide all the other views
             this.showCreateComponent = false;
+            this.showGeneralAdvanced = false;
             this.showEditTransitions = false;
             this.showConstraints = false;
             this.showEditButtons = false;
@@ -1568,6 +1629,7 @@ class NodeAuthoringController {
         } else if (view == 'previousNode') {
             // hide all the other views
             this.showCreateComponent = false;
+            this.showGeneralAdvanced = false;
             this.showEditTransitions = false;
             this.showConstraints = false;
             this.showEditButtons = false;
@@ -1591,6 +1653,7 @@ class NodeAuthoringController {
         } else if (view == 'nextNode') {
             // hide all the other views
             this.showCreateComponent = false;
+            this.showGeneralAdvanced = false;
             this.showEditTransitions = false;
             this.showConstraints = false;
             this.showEditButtons = false;
@@ -1614,6 +1677,7 @@ class NodeAuthoringController {
         } else if (view == 'advanced') {
             // toggle the advanced view and hide all the other views
             this.showCreateComponent = false;
+            this.showGeneralAdvanced = true;
             this.showEditTransitions = false;
             this.showConstraints = false;
             this.showEditButtons = false;
@@ -1627,6 +1691,7 @@ class NodeAuthoringController {
         } else if (view == 'copy') {
             // toggle the copy view and hide all the other views
             this.showCreateComponent = false;
+            this.showGeneralAdvanced = false;
             this.showEditTransitions = false;
             this.showConstraints = false;
             this.showEditButtons = false;
@@ -1640,6 +1705,7 @@ class NodeAuthoringController {
         } else if (view == 'move') {
             // toggle the move view and hide all the other views
             this.showCreateComponent = false;
+            this.showGeneralAdvanced = false;
             this.showEditTransitions = false;
             this.showConstraints = false;
             this.showEditButtons = false;
@@ -1653,6 +1719,7 @@ class NodeAuthoringController {
         } else if (view == 'import') {
             // toggle the import view and hide all the other views
             this.showCreateComponent = false;
+            this.showGeneralAdvanced = false;
             this.showEditTransitions = false;
             this.showConstraints = false;
             this.showEditButtons = false;
@@ -1670,6 +1737,7 @@ class NodeAuthoringController {
 
             // toggle the import view and hide all the other views
             this.showCreateComponent = false;
+            this.showGeneralAdvanced = false;
             this.showEditTransitions = false;
             this.showConstraints = false;
             this.showEditButtons = false;
@@ -1685,6 +1753,7 @@ class NodeAuthoringController {
         } else {
             // hide all the views
             this.showCreateComponent = false;
+            this.showGeneralAdvanced = false;
             this.showEditTransitions = false;
             this.showConstraints = false;
             this.showEditButtons = false;
