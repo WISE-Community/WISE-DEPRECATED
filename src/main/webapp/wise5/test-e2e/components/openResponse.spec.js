@@ -2,163 +2,98 @@
 
 var _protractor = require('protractor');
 
-var saveButton = (0, _protractor.element)(by.id('saveButton'));
-var saveMessage = (0, _protractor.element)(by.binding('openResponseController.saveMessage.text'));
-var submitButton = (0, _protractor.element)(by.id('submitButton'));
-var textarea = (0, _protractor.element)(by.model('openResponseController.studentResponse'));
-var nodeDropDownMenu = (0, _protractor.element)(by.model("stepToolsCtrl.toNodeId"));
+var _common = require('../common.js');
 
-function hasClass(element, cls) {
-  return element.getAttribute('class').then(function (classes) {
-    return classes.split(' ').indexOf(cls) !== -1;
-  });
-}
+var common = _interopRequireWildcard(_common);
 
-function shouldBeDisabled(elements) {
-  var _iteratorNormalCompletion = true;
-  var _didIteratorError = false;
-  var _iteratorError = undefined;
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
-  try {
-    for (var _iterator = elements[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-      var _element = _step.value;
-
-      expect(hasClass(_element, "disabled"));
-    }
-  } catch (err) {
-    _didIteratorError = true;
-    _iteratorError = err;
-  } finally {
-    try {
-      if (!_iteratorNormalCompletion && _iterator.return) {
-        _iterator.return();
-      }
-    } finally {
-      if (_didIteratorError) {
-        throw _iteratorError;
-      }
-    }
-  }
-}
-
-function shouldBeEnabled(elements) {
-  var _iteratorNormalCompletion2 = true;
-  var _didIteratorError2 = false;
-  var _iteratorError2 = undefined;
-
-  try {
-    for (var _iterator2 = elements[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-      var _element2 = _step2.value;
-
-      expect(!hasClass(_element2, "disabled"));
-    }
-  } catch (err) {
-    _didIteratorError2 = true;
-    _iteratorError2 = err;
-  } finally {
-    try {
-      if (!_iteratorNormalCompletion2 && _iterator2.return) {
-        _iterator2.return();
-      }
-    } finally {
-      if (_didIteratorError2) {
-        throw _iteratorError2;
-      }
-    }
-  }
-}
-
-function shouldBePresent(elements) {
-  var _iteratorNormalCompletion3 = true;
-  var _didIteratorError3 = false;
-  var _iteratorError3 = undefined;
-
-  try {
-    for (var _iterator3 = elements[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-      var _element3 = _step3.value;
-
-      expect(_element3.isPresent()).toBeTruthy();
-    }
-  } catch (err) {
-    _didIteratorError3 = true;
-    _iteratorError3 = err;
-  } finally {
-    try {
-      if (!_iteratorNormalCompletion3 && _iterator3.return) {
-        _iterator3.return();
-      }
-    } finally {
-      if (_didIteratorError3) {
-        throw _iteratorError3;
-      }
-    }
-  }
-}
-
-function shouldBeAbsent(elements) {
-  var _iteratorNormalCompletion4 = true;
-  var _didIteratorError4 = false;
-  var _iteratorError4 = undefined;
-
-  try {
-    for (var _iterator4 = elements[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
-      var _element4 = _step4.value;
-
-      expect(_element4.isPresent()).toBeFalsy();
-    }
-  } catch (err) {
-    _didIteratorError4 = true;
-    _iteratorError4 = err;
-  } finally {
-    try {
-      if (!_iteratorNormalCompletion4 && _iterator4.return) {
-        _iterator4.return();
-      }
-    } finally {
-      if (_didIteratorError4) {
-        throw _iteratorError4;
-      }
-    }
-  }
-}
+var VLEPage = require('../vlePage.js');
+var OpenResponsePage = require('./openResponsePage.js');
 
 describe('WISE5 Open Response Component', function () {
+  function shouldDisplayDefaultElements(vle, or) {
+    vle.nodeSelectMenuShouldSay('1.2: Open Response Step');
+    common.shouldBePresent([or.textarea, or.saveButton, or.submitButton]);
+    common.shouldBeAbsent([or.saveMessage]);
+    common.shouldBeDisabled([or.saveButton, or.submitButton]);
 
-  beforeAll(function () {
+    var prompt = or.getPrompt();
+    common.shouldBePresent([prompt]);
+    expect(prompt.getText()).toEqual('This is a step where students enter text.');
+  }
+
+  function save(or) {
+    or.save();
+    common.shouldBeDisabled([or.saveButton]);
+    common.shouldBeEnabled([or.submitButton]);
+    expect(or.saveMessage.getText()).toContain("Saved");
+  }
+
+  function submit(or) {
+    or.submit();
+    common.shouldBeDisabled([or.saveButton, or.saveButton]);
+    expect(or.submitMessage.getText()).toContain("Submitted");
+  }
+
+  beforeEach(function () {
+    var vle = new VLEPage();
     _protractor.browser.get('http://localhost:8080/wise/project/demo#/vle/node2');
     _protractor.browser.wait(function () {
-      return nodeDropDownMenu.isPresent();
+      return vle.nodeDropDownMenu.isPresent();
     }, 5000);
   });
 
-  it('should show open response component', function () {
-    expect(nodeDropDownMenu.getText()).toBe('1.2: Open Response Step');
+  it('should allow students to type text and edit', function () {
+    var vle = new VLEPage();
+    var or = new OpenResponsePage();
+    shouldDisplayDefaultElements(vle, or);
 
-    var nodeContent = (0, _protractor.element)(by.cssContainingText('.node-content', 'This is a step where students enter text.'));
-    shouldBePresent([nodeContent, textarea, saveButton, submitButton]);
-    shouldBeAbsent([saveMessage]);
-    shouldBeEnabled([textarea]);
-    shouldBeDisabled([saveButton, submitButton]);
+    var firstSentence = 'Here is my first sentence. ';
+    or.typeResponse(firstSentence);
+    or.textareaShouldSay(firstSentence);
+    common.shouldBeEnabled([or.saveButton, or.submitButton]);
+
+    save(or);
+    common.shouldBeDisabled([or.saveButton]);
+    common.shouldBeEnabled([or.submitButton]);
+
+    // should be able to edit response text even after saving
+    var secondSentence = 'Here is my second sentence. ';
+    or.typeResponse(secondSentence);
+    or.textareaShouldSay(firstSentence + secondSentence);
+
+    submit(or);
+    common.shouldBeDisabled([or.saveButton, or.submitButton]);
+
+    // should be able to edit response text even after submitting
+    var thirdSentence = 'Here is my third sentence.';
+    or.typeResponse(thirdSentence);
+    or.textareaShouldSay(firstSentence + secondSentence + thirdSentence);
   });
 
-  it('should allow students to type text and edit', function () {
-    var firstSentence = 'Here is my first sentence. ';
-    var secondSentence = 'Here is my second sentence.';
-    textarea.sendKeys(firstSentence);
-    shouldBeEnabled([saveButton, submitButton]);
+  it('should auto-save on exit and show previously-entered response on revisit', function () {
+    var vle = new VLEPage();
+    var or = new OpenResponsePage();
+    shouldDisplayDefaultElements(vle, or);
 
-    saveButton.click();
-    expect(saveMessage.getText()).toContain("Saved");
-    shouldBeDisabled([saveButton]);
-    shouldBeEnabled([submitButton]);
+    var seaShellsSentence = 'She sells seashells by the seashore.';
+    or.typeResponse(seaShellsSentence);
+    or.textareaShouldSay(seaShellsSentence);
+    common.shouldBeEnabled([or.saveButton, or.submitButton]);
 
-    submitButton.click();
-    expect(saveMessage.getText()).toContain("Submitted");
-    shouldBeEnabled([saveButton, submitButton]);
+    vle.goToPreviousStep();
+    common.urlShouldBe('http://localhost:8080/wise/project/demo#/vle/node1');
+    vle.nodeSelectMenuShouldSay('1.1: HTML Step');
 
-    // should be able to edit your text even after submitting
-    textarea.sendKeys(secondSentence);
-    expect(textarea.getAttribute('value')).toEqual(firstSentence + secondSentence);
+    vle.goToNextStep();
+    common.urlShouldBe('http://localhost:8080/wise/project/demo#/vle/node2');
+    vle.nodeSelectMenuShouldSay('1.2: Open Response Step');
+    or.textareaShouldSay(seaShellsSentence);
+
+    // auto-save should have occurred, so the save button is disabled.
+    common.shouldBeDisabled([or.saveButton]);
+    common.shouldBeEnabled([or.submitButton]);
   });
 });
 //# sourceMappingURL=openResponse.spec.js.map

@@ -1,13 +1,16 @@
 'use strict';
 
-// E2E test for Setting up a run. The project we created in authoringTool.spec.es6 should now be available in the Project Library
-describe('WISE Setting Up a Run', function () {
+function hasClass(element, cls) {
+    return element.getAttribute('class').then(function (classes) {
+        return classes.split(' ').indexOf(cls) !== -1;
+    });
+};
 
-    function hasClass(element, cls) {
-        return element.getAttribute('class').then(function (classes) {
-            return classes.split(' ').indexOf(cls) !== -1;
-        });
-    };
+// TODO: this test should not depend on project created in authoringTool.spec.es6
+// E2E test for Setting up a run.
+// The project we created in authoringTool.spec.es6
+// should now be available in the Project Library
+describe('WISE Setting Up a Run', function () {
 
     it('should require teacher user to log in to view the project library', function () {
         browser.ignoreSynchronization = true; // doesn't use Angular

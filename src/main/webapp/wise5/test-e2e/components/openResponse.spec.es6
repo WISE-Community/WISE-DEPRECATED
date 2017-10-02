@@ -1,79 +1,92 @@
 import {browser, element} from 'protractor';
-
-let saveButton = element(by.id('saveButton'));
-let saveMessage = element(by.binding('openResponseController.saveMessage.text'));
-let submitButton = element(by.id('submitButton'));
-let textarea = element(by.model('openResponseController.studentResponse'));
-let nodeDropDownMenu = element(by.model("stepToolsCtrl.toNodeId"));
-
-function hasClass(element, cls) {
-  return element.getAttribute('class').then((classes) => {
-  return classes.split(' ').indexOf(cls) !== -1;
-  });
-}
-
-function shouldBeDisabled(elements) {
-  for (let element of elements) {
-    expect(hasClass(element, "disabled"));
-  }
-}
-
-function shouldBeEnabled(elements) {
-  for (let element of elements) {
-    expect(!hasClass(element, "disabled"));
-  }
-}
-
-function shouldBePresent(elements) {
-  for (let element of elements) {
-    expect(element.isPresent()).toBeTruthy();
-  }
-}
-
-function shouldBeAbsent(elements) {
-  for (let element of elements) {
-    expect(element.isPresent()).toBeFalsy();
-  }
-}
+import * as common from '../common.js';
+let VLEPage = require('../vlePage.js');
+let OpenResponsePage = require('./openResponsePage.js');
 
 describe('WISE5 Open Response Component', () => {
+  function shouldDisplayDefaultElements(vle, or) {
+    vle.nodeSelectMenuShouldSay('1.2: Open Response Step');
+    common.shouldBePresent([or.textarea, or.saveButton, or.submitButton]);
+    common.shouldBeAbsent([or.saveMessage]);
+    common.shouldBeDisabled([or.saveButton, or.submitButton]);
 
-  beforeAll(() => {
+    let prompt = or.getPrompt();
+    common.shouldBePresent([prompt]);
+    expect(prompt.getText())
+        .toEqual('This is a step where students enter text.');
+  }
+
+  function save(or) {
+    or.save();
+    common.shouldBeDisabled([or.saveButton]);
+    common.shouldBeEnabled([or.submitButton]);
+    expect(or.saveMessage.getText()).toContain("Saved");
+  }
+
+  function submit(or) {
+    or.submit();
+    common.shouldBeDisabled([or.saveButton, or.saveButton]);
+    expect(or.submitMessage.getText()).toContain("Submitted");
+  }
+
+  beforeEach(() => {
+    let vle = new VLEPage();
     browser.get('http://localhost:8080/wise/project/demo#/vle/node2');
     browser.wait(function() {
-      return nodeDropDownMenu.isPresent()
+      return vle.nodeDropDownMenu.isPresent()
     }, 5000);
   });
 
-  it('should show open response component', () => {
-    expect(nodeDropDownMenu.getText()).toBe('1.2: Open Response Step');
+  it('should allow students to type text and edit', () => {
+    let vle = new VLEPage();
+    let or = new OpenResponsePage();
+    shouldDisplayDefaultElements(vle, or);
 
-    let nodeContent = element(by.cssContainingText(
-      '.node-content','This is a step where students enter text.'));
-    shouldBePresent([nodeContent, textarea, saveButton, submitButton]);
-    shouldBeAbsent([saveMessage]);
-    shouldBeEnabled([textarea]);
-    shouldBeDisabled([saveButton, submitButton]);
+    let firstSentence = 'Here is my first sentence. ';
+    or.typeResponse(firstSentence);
+    or.textareaShouldSay(firstSentence);
+    common.shouldBeEnabled([or.saveButton, or.submitButton]);
+
+    save(or);
+    common.shouldBeDisabled([or.saveButton]);
+    common.shouldBeEnabled([or.submitButton]);
+
+    // should be able to edit response text even after saving
+    let secondSentence = 'Here is my second sentence. ';
+    or.typeResponse(secondSentence);
+    or.textareaShouldSay(firstSentence + secondSentence);
+
+    submit(or);
+    common.shouldBeDisabled([or.saveButton, or.submitButton]);
+
+    // should be able to edit response text even after submitting
+    let thirdSentence = 'Here is my third sentence.';
+    or.typeResponse(thirdSentence);
+    or.textareaShouldSay(firstSentence + secondSentence + thirdSentence);
   });
 
-  it('should allow students to type text and edit', () => {
-    let firstSentence = 'Here is my first sentence. ';
-    let secondSentence = 'Here is my second sentence.';
-    textarea.sendKeys(firstSentence);
-    shouldBeEnabled([saveButton, submitButton]);
+  it('should auto-save on exit and show previously-entered response on revisit',
+      () => {
+    let vle = new VLEPage();
+    let or = new OpenResponsePage();
+    shouldDisplayDefaultElements(vle, or);
 
-    saveButton.click();
-    expect(saveMessage.getText()).toContain("Saved");
-    shouldBeDisabled([saveButton]);
-    shouldBeEnabled([submitButton]);
+    let seaShellsSentence = 'She sells seashells by the seashore.';
+    or.typeResponse(seaShellsSentence);
+    or.textareaShouldSay(seaShellsSentence);
+    common.shouldBeEnabled([or.saveButton, or.submitButton]);
 
-    submitButton.click();
-    expect(saveMessage.getText()).toContain("Submitted");
-    shouldBeEnabled([saveButton, submitButton]);
+    vle.goToPreviousStep();
+    common.urlShouldBe('http://localhost:8080/wise/project/demo#/vle/node1');
+    vle.nodeSelectMenuShouldSay('1.1: HTML Step');
 
-    // should be able to edit your text even after submitting
-    textarea.sendKeys(secondSentence);
-    expect(textarea.getAttribute('value'))
-        .toEqual(firstSentence + secondSentence);
+    vle.goToNextStep();
+    common.urlShouldBe('http://localhost:8080/wise/project/demo#/vle/node2');
+    vle.nodeSelectMenuShouldSay('1.2: Open Response Step');
+    or.textareaShouldSay(seaShellsSentence);
+
+    // auto-save should have occurred, so the save button is disabled.
+    common.shouldBeDisabled([or.saveButton]);
+    common.shouldBeEnabled([or.submitButton]);
   });
 });

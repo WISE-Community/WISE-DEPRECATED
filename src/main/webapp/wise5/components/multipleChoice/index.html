@@ -140,12 +140,14 @@
             </div>
             <div>
                 <div layout='row'>
-                    <h6>{{ 'CONNECTED_COMPONENT' | translate }}</h6>
-                    <md-button class='topButton md-raised md-primary'
-                               ng-click='multipleChoiceController.authoringAddConnectedComponent()'>
-                        <md-icon>add</md-icon>
-                        <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'ADD_CONNECTED_COMPONENT' | translate }}</md-tooltip>
-                    </md-button>
+                    <div>
+                        <label>{{ 'CONNECTED_COMPONENTS' | translate }}</label>
+                        <md-button class='topButton md-raised md-primary'
+                                   ng-click='multipleChoiceController.authoringAddConnectedComponent()'>
+                            <md-icon>add</md-icon>
+                            <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'ADD_CONNECTED_COMPONENT' | translate }}</md-tooltip>
+                        </md-button>
+                    </div>
                 </div>
                 <div ng-repeat='connectedComponent in multipleChoiceController.authoringComponentContent.connectedComponents track by $index'
                      style='border: 2px solid #dddddd; border-radius: 5px; margin-bottom: 10px; padding: 20px 20px 10px 20px;'
@@ -321,7 +323,7 @@
             <div ng-switch-default>
                 <md-input-container class="input-container md-block input-container--open-response input-container--component md-no-float"
                                     ng-switch on="multipleChoiceController.getChoiceType()">
-                    <label class="input-label md-no-float" ng-if="multipleChoiceController.isPromptVisible"><compile data="multipleChoiceController.getPrompt()"></compile></label>
+                    <label class="input-label md-no-float" ng-if="multipleChoiceController.isPromptVisible"><compile id="prompt" data="multipleChoiceController.getPrompt()"></compile></label>
                     <possible-score max-score="multipleChoiceController.componentContent.maxScore"
                                     ng-if="multipleChoiceController.mode === 'student' && !multipleChoiceController.latestAnnotations.score"></possible-score>
                     <md-radio-group ng-switch-when="radio" ng-model="multipleChoiceController.studentChoices"
