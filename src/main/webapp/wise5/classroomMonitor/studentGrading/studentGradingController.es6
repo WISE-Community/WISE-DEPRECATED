@@ -6,6 +6,7 @@ class StudentGradingController {
                 $mdDialog,
                 $mdMedia,
                 $scope,
+                $state,
                 $stateParams,
                 AnnotationService,
                 ConfigService,
@@ -17,6 +18,7 @@ class StudentGradingController {
         this.$mdDialog = $mdDialog;
         $scope.$mdMedia = $mdMedia;
         this.$scope = $scope;
+        this.$state = $state;
         this.$stateParams = $stateParams;
         this.AnnotationService = AnnotationService;
         this.ConfigService = ConfigService;
@@ -49,6 +51,7 @@ class StudentGradingController {
         this.setNodesById();
 
         this.$scope.$on('projectSaved', (event, args) => {
+            // project info has changed, so update max scores
             this.maxScore = this.StudentStatusService.getMaxScoreForWorkgroupId(this.workgroupId);
             this.updateNodeMaxScores();
         });
@@ -78,7 +81,7 @@ class StudentGradingController {
         });
 
         this.$scope.$on('annotationReceived', (event, args) => {
-            // a new annotation has been received
+            // a new annotation has been received, so update corresponding node
             let annotation = args.annotation;
             if (annotation) {
                 let workgroupId = annotation.toWorkgroupId;
@@ -91,7 +94,7 @@ class StudentGradingController {
         });
 
         this.$scope.$on('studentWorkReceived', (event, args) => {
-            // new student work has been received
+            // new student work has been received, so update corresponding node
             let studentWork = args.studentWork;
             if (studentWork != null) {
                 let workgroupId = studentWork.workgroupId;
@@ -99,6 +102,14 @@ class StudentGradingController {
                 if (workgroupId === this.workgroupId && this.nodesById[nodeId]) {
                     this.updateNode(nodeId);
                 }
+            }
+        });
+
+        this.$scope.$on('currentWorkgroupChanged', (event, args) => {
+            // the current workgroup has chnged, so reload the view
+            let workgroup = args.currentWorkgroup;
+            if (currentWorkgroup != null) {
+                this.$state.go('root.team', {workgroupId: workgroup.workgroupId});
             }
         });
 
@@ -497,6 +508,7 @@ StudentGradingController.$inject = [
     '$mdDialog',
     '$mdMedia',
     '$scope',
+    '$state',
     '$stateParams',
     'AnnotationService',
     'ConfigService',

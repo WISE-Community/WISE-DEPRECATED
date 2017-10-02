@@ -9,7 +9,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var StudentGradingController = function () {
-    function StudentGradingController($filter, $mdDialog, $mdMedia, $scope, $stateParams, AnnotationService, ConfigService, NotificationService, ProjectService, StudentStatusService, TeacherDataService) {
+    function StudentGradingController($filter, $mdDialog, $mdMedia, $scope, $state, $stateParams, AnnotationService, ConfigService, NotificationService, ProjectService, StudentStatusService, TeacherDataService) {
         var _this = this;
 
         _classCallCheck(this, StudentGradingController);
@@ -18,6 +18,7 @@ var StudentGradingController = function () {
         this.$mdDialog = $mdDialog;
         $scope.$mdMedia = $mdMedia;
         this.$scope = $scope;
+        this.$state = $state;
         this.$stateParams = $stateParams;
         this.AnnotationService = AnnotationService;
         this.ConfigService = ConfigService;
@@ -50,6 +51,7 @@ var StudentGradingController = function () {
         this.setNodesById();
 
         this.$scope.$on('projectSaved', function (event, args) {
+            // project info has changed, so update max scores
             _this.maxScore = _this.StudentStatusService.getMaxScoreForWorkgroupId(_this.workgroupId);
             _this.updateNodeMaxScores();
         });
@@ -79,7 +81,7 @@ var StudentGradingController = function () {
         });
 
         this.$scope.$on('annotationReceived', function (event, args) {
-            // a new annotation has been received
+            // a new annotation has been received, so update corresponding node
             var annotation = args.annotation;
             if (annotation) {
                 var workgroupId = annotation.toWorkgroupId;
@@ -92,7 +94,7 @@ var StudentGradingController = function () {
         });
 
         this.$scope.$on('studentWorkReceived', function (event, args) {
-            // new student work has been received
+            // new student work has been received, so update corresponding node
             var studentWork = args.studentWork;
             if (studentWork != null) {
                 var workgroupId = studentWork.workgroupId;
@@ -100,6 +102,14 @@ var StudentGradingController = function () {
                 if (workgroupId === _this.workgroupId && _this.nodesById[_nodeId4]) {
                     _this.updateNode(_nodeId4);
                 }
+            }
+        });
+
+        this.$scope.$on('currentWorkgroupChanged', function (event, args) {
+            // the current workgroup has chnged, so reload the view
+            var workgroup = args.currentWorkgroup;
+            if (currentWorkgroup != null) {
+                _this.$state.go('root.team', { workgroupId: workgroup.workgroupId });
             }
         });
 
@@ -545,7 +555,7 @@ var StudentGradingController = function () {
     return StudentGradingController;
 }();
 
-StudentGradingController.$inject = ['$filter', '$mdDialog', '$mdMedia', '$scope', '$stateParams', 'AnnotationService', 'ConfigService', 'NotificationService', 'ProjectService', 'StudentStatusService', 'TeacherDataService'];
+StudentGradingController.$inject = ['$filter', '$mdDialog', '$mdMedia', '$scope', '$state', '$stateParams', 'AnnotationService', 'ConfigService', 'NotificationService', 'ProjectService', 'StudentStatusService', 'TeacherDataService'];
 
 exports.default = StudentGradingController;
 //# sourceMappingURL=studentGradingController.js.map
