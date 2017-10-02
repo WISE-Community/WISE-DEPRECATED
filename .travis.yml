@@ -11,6 +11,7 @@ before_script:
 - sleep 210
 script:
 - npm test
+- npm run test-e2e
 notifications:
   email:
   - honchikun@gmail.com

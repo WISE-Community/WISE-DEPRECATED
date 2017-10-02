@@ -5,15 +5,17 @@ exports.config = {
     //seleniumAddress: 'http://localhost:4444/wd/hub',
 
     specs: [
-        'previewVLE.spec.js',
+        //'previewVLE.spec.js',
         'components/multipleChoice.spec.js',
         'components/openResponse.spec.js',
+        /*
         'notebook.spec.js',
         'portal/portal.spec.js',
         'portal/forgotAccount.spec.js',
         'authoringTool.spec.js',
         'setUpRun.spec.js',
         'classroomMonitor.spec.js'
+        */
     ],
     multiCapabilities : [
         {

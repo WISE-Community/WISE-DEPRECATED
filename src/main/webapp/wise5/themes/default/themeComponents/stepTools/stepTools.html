@@ -27,15 +27,18 @@
         </md-button> TODO: Add notifications and score when operational-->
         <node-status-icon node-id="stepToolsCtrl.nodeId"></node-status-icon>
         <span flex></span>
-        <md-button aria-label="{{ 'previousItem' | translate }}" class="md-icon-button node-nav"
+        <md-button id='prevButton'
+                   aria-label="{{ 'previousItem' | translate }}" class="md-icon-button node-nav"
                    ng-disabled="!stepToolsCtrl.prevId" ng-click="stepToolsCtrl.goToPrevNode()">
             <md-icon> arrow_back </md-icon>
         </md-button>
-        <md-button aria-label="{{ 'nextItem' | translate }}" class="md-icon-button node-nav"
+        <md-button id='nextButton'
+                   aria-label="{{ 'nextItem' | translate }}" class="md-icon-button node-nav"
                    ng-disabled="!stepToolsCtrl.nextId" ng-click="stepToolsCtrl.goToNextNode()">
             <md-icon> arrow_forward </md-icon>
         </md-button>
-        <md-button aria-label="{{ 'projectPlan' | translate }}" class="md-icon-button node-nav" ng-click="stepToolsCtrl.closeNode()">
+        <md-button id='closeNodeButton'
+                   aria-label="{{ 'projectPlan' | translate }}" class="md-icon-button node-nav" ng-click="stepToolsCtrl.closeNode()">
             <md-icon md-theme="default"> view_list </md-icon>
             <md-tooltip md-direction="down">{{ 'projectPlan' | translate }}</md-tooltip>
         </md-button>
