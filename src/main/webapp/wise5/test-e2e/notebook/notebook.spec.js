@@ -8,7 +8,6 @@ var hasClass = function hasClass(element, cls) {
 
 // E2E test for working with the notebook in preview mode
 describe('WISE5 Notebook in Preview Mode', function () {
-
     var notebookButton = element(by.tagName('notebook'));
     var notebookReport = element(by.tagName('notebook-report'));
     var notebookReportToolbar = notebookReport.element(by.css('.notebook-report__toolbar'));

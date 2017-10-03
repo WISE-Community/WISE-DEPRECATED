@@ -1,5 +1,7 @@
 'use strict';
 
+var VLEPage = require('../vlePage.js');
+
 var nodeDropDownMenu = element(by.model("stepToolsCtrl.toNodeId"));
 var nextButton = element(by.id('nextButton'));
 var prevButton = element(by.id('prevButton'));
@@ -332,4 +334,4 @@ describe('WISE5 Student VLE Preview', function () {
     shouldBeHidden([notificationMenu]);
   });
 });
-//# sourceMappingURL=previewVLE.spec.js.map
+//# sourceMappingURL=previewProject.spec.js.map

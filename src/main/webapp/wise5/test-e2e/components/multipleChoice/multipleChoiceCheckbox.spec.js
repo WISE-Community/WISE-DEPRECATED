@@ -2,14 +2,21 @@
 
 var _protractor = require('protractor');
 
-var _common = require('../common.js');
+var _common = require('../../common.js');
 
 var common = _interopRequireWildcard(_common);
 
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+var _vlePage = require('../../vlePage.js');
 
-var VLEPage = require('../vlePage.js');
-var MultipleChoicePage = require('./multipleChoicePage.js');
+var _vlePage2 = _interopRequireDefault(_vlePage);
+
+var _multipleChoicePage = require('./multipleChoicePage.js');
+
+var _multipleChoicePage2 = _interopRequireDefault(_multipleChoicePage);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 describe('WISE5 Multiple Choice Component Select Multiple (checkbox)', function () {
   var leonardoChoice = (0, _protractor.element)(by.xpath('//md-checkbox[@aria-label="Leonardo"]'));
@@ -26,7 +33,7 @@ describe('WISE5 Multiple Choice Component Select Multiple (checkbox)', function 
 
     var prompt = mc.getPrompt();
     common.shouldBePresent([prompt, leonardoChoice, donatelloChoice, michelangeloChoice, raphaelChoice, squirtleChoice]);
-    expect(prompt.getText()).toEqual('This is a multiple choice step where' + '' + ' the student is allowed to choose multiple choices.\n' + 'Which of these are Ninja Turtles?');
+    expect(prompt.getText()).toEqual('This is a multiple choice step where' + ' the student is allowed to choose multiple choices.\n' + 'Which of these are Ninja Turtles?');
     common.shouldBeEnabled([donatelloChoice, michelangeloChoice, raphaelChoice, squirtleChoice]);
     common.shouldBeUnselected([donatelloChoice, michelangeloChoice, raphaelChoice, squirtleChoice]);
   }
@@ -45,16 +52,19 @@ describe('WISE5 Multiple Choice Component Select Multiple (checkbox)', function 
   }
 
   beforeEach(function () {
-    var vle = new VLEPage();
+    var vle = new _vlePage2.default();
     _protractor.browser.get('http://localhost:8080/wise/project/demo#/vle/node6');
     _protractor.browser.wait(function () {
       return vle.nodeDropDownMenu.isPresent();
-    }, 5000);
+    }, 5000, 'VLE didn\'t load properly').then(function () {
+      var mc = new _multipleChoicePage2.default();
+      shouldDisplayDefaultElements(vle, mc);
+    });
   });
 
   it('should allow students to choose several choices and save', function () {
-    var vle = new VLEPage();
-    var mc = new MultipleChoicePage();
+    var vle = new _vlePage2.default();
+    var mc = new _multipleChoicePage2.default();
     shouldDisplayDefaultElements(vle, mc);
     leonardoChoice.click();
     common.shouldBeSelected([leonardoChoice]);
@@ -83,8 +93,8 @@ describe('WISE5 Multiple Choice Component Select Multiple (checkbox)', function 
   });
 
   it('should show previous chosen multiple-choice items', function () {
-    var vle = new VLEPage();
-    var mc = new MultipleChoicePage();
+    var vle = new _vlePage2.default();
+    var mc = new _multipleChoicePage2.default();
     shouldDisplayDefaultElements(vle, mc);
 
     leonardoChoice.click();

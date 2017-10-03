@@ -1,19 +1,19 @@
-let VLEPage = function() {
-  this.nodeDropDownMenu = element(by.model("stepToolsCtrl.toNodeId"));
-  this.nextButton = element(by.id('nextButton'));
-  this.prevButton = element(by.id('prevButton'));
+export default class VLEPage {
+  constructor() {
+    this.nodeDropDownMenu = element(by.model("stepToolsCtrl.toNodeId"));
+    this.nextButton = element(by.id('nextButton'));
+    this.prevButton = element(by.id('prevButton'));
+  }
 
-  this.nodeSelectMenuShouldSay = function(expectedMenuText) {
+  nodeSelectMenuShouldSay(expectedMenuText) {
     expect(this.nodeDropDownMenu.getText()).toBe(expectedMenuText);
-  };
+  }
 
-  this.goToNextStep = function() {
+  goToNextStep() {
     this.nextButton.click();
-  };
+  }
 
-  this.goToPreviousStep = function() {
+  goToPreviousStep() {
     this.prevButton.click();
-  };
-};
-
-module.exports = VLEPage;
+  }
+}

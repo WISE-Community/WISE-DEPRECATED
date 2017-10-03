@@ -4,10 +4,8 @@ let hasClass = (element, cls) => {
     });
 };
 
-
 // E2E test for working with the notebook in preview mode
 describe('WISE5 Notebook in Preview Mode', () => {
-
     let notebookButton = element(by.tagName('notebook'));
     let notebookReport = element(by.tagName('notebook-report'));
     let notebookReportToolbar = notebookReport.element(by.css('.notebook-report__toolbar'));

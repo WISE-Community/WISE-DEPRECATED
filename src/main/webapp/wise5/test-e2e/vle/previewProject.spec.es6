@@ -1,3 +1,4 @@
+let VLEPage = require('../vlePage.js');
 
 let nodeDropDownMenu = element(by.model("stepToolsCtrl.toNodeId"));
 let nextButton = element(by.id('nextButton'));

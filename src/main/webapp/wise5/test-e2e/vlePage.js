@@ -1,22 +1,41 @@
 'use strict';
 
-var VLEPage = function VLEPage() {
-  this.nodeDropDownMenu = element(by.model("stepToolsCtrl.toNodeId"));
-  this.nextButton = element(by.id('nextButton'));
-  this.prevButton = element(by.id('prevButton'));
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 
-  this.nodeSelectMenuShouldSay = function (expectedMenuText) {
-    expect(this.nodeDropDownMenu.getText()).toBe(expectedMenuText);
-  };
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-  this.goToNextStep = function () {
-    this.nextButton.click();
-  };
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-  this.goToPreviousStep = function () {
-    this.prevButton.click();
-  };
-};
+var VLEPage = function () {
+  function VLEPage() {
+    _classCallCheck(this, VLEPage);
 
-module.exports = VLEPage;
+    this.nodeDropDownMenu = element(by.model("stepToolsCtrl.toNodeId"));
+    this.nextButton = element(by.id('nextButton'));
+    this.prevButton = element(by.id('prevButton'));
+  }
+
+  _createClass(VLEPage, [{
+    key: 'nodeSelectMenuShouldSay',
+    value: function nodeSelectMenuShouldSay(expectedMenuText) {
+      expect(this.nodeDropDownMenu.getText()).toBe(expectedMenuText);
+    }
+  }, {
+    key: 'goToNextStep',
+    value: function goToNextStep() {
+      this.nextButton.click();
+    }
+  }, {
+    key: 'goToPreviousStep',
+    value: function goToPreviousStep() {
+      this.prevButton.click();
+    }
+  }]);
+
+  return VLEPage;
+}();
+
+exports.default = VLEPage;
 //# sourceMappingURL=vlePage.js.map

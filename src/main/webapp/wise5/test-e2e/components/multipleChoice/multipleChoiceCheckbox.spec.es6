@@ -1,14 +1,14 @@
 import {browser, element} from 'protractor';
-import * as common from '../common.js';
-let VLEPage = require('../vlePage.js');
-let MultipleChoicePage = require('./multipleChoicePage.js');
+import * as common from '../../common.js';
+import VLEPage from '../../vlePage.js';
+import MultipleChoicePage from './multipleChoicePage.js'
 
 describe('WISE5 Multiple Choice Component Select Multiple (checkbox)', () => {
-  let leonardoChoice = element(by.xpath('//md-checkbox[@aria-label="Leonardo"]'));
-  let donatelloChoice = element(by.xpath('//md-checkbox[@aria-label="Donatello"]'));
-  let michelangeloChoice = element(by.xpath('//md-checkbox[@aria-label="Michelangelo"]'));
-  let raphaelChoice = element(by.xpath('//md-checkbox[@aria-label="Raphael"]'));
-  let squirtleChoice = element(by.xpath('//md-checkbox[@aria-label="Squirtle"]'));
+  const leonardoChoice = element(by.xpath('//md-checkbox[@aria-label="Leonardo"]'));
+  const donatelloChoice = element(by.xpath('//md-checkbox[@aria-label="Donatello"]'));
+  const michelangeloChoice = element(by.xpath('//md-checkbox[@aria-label="Michelangelo"]'));
+  const raphaelChoice = element(by.xpath('//md-checkbox[@aria-label="Raphael"]'));
+  const squirtleChoice = element(by.xpath('//md-checkbox[@aria-label="Squirtle"]'));
 
   function shouldDisplayDefaultElements(vle, mc) {
     vle.nodeSelectMenuShouldSay('1.6: Multiple Choice Step Multiple Answer');
@@ -16,10 +16,10 @@ describe('WISE5 Multiple Choice Component Select Multiple (checkbox)', () => {
     common.shouldBeAbsent([mc.saveMessage]);
     common.shouldBeDisabled([mc.saveButton, mc.submitButton]);
 
-    let prompt = mc.getPrompt();
+    const prompt = mc.getPrompt();
     common.shouldBePresent([prompt, leonardoChoice, donatelloChoice,
       michelangeloChoice, raphaelChoice, squirtleChoice]);
-    expect(prompt.getText()).toEqual('This is a multiple choice step where' +'' +
+    expect(prompt.getText()).toEqual('This is a multiple choice step where' +
       ' the student is allowed to choose multiple choices.\n' +
       'Which of these are Ninja Turtles?');
     common.shouldBeEnabled([donatelloChoice, michelangeloChoice,
@@ -42,16 +42,19 @@ describe('WISE5 Multiple Choice Component Select Multiple (checkbox)', () => {
   }
 
   beforeEach(() => {
-    let vle = new VLEPage();
+    const vle = new VLEPage();
     browser.get('http://localhost:8080/wise/project/demo#/vle/node6');
     browser.wait(function() {
       return vle.nodeDropDownMenu.isPresent()
-    }, 5000);
+    }, 5000, 'VLE didn\'t load properly').then(() => {
+      const mc = new MultipleChoicePage();
+      shouldDisplayDefaultElements(vle, mc);
+    });
   });
 
   it('should allow students to choose several choices and save', () => {
-    let vle = new VLEPage();
-    let mc = new MultipleChoicePage();
+    const vle = new VLEPage();
+    const mc = new MultipleChoicePage();
     shouldDisplayDefaultElements(vle, mc);
     leonardoChoice.click();
     common.shouldBeSelected([leonardoChoice]);
@@ -83,8 +86,8 @@ describe('WISE5 Multiple Choice Component Select Multiple (checkbox)', () => {
   });
 
   it('should show previous chosen multiple-choice items', () => {
-    let vle = new VLEPage();
-    let mc = new MultipleChoicePage();
+    const vle = new VLEPage();
+    const mc = new MultipleChoicePage();
     shouldDisplayDefaultElements(vle, mc);
 
     leonardoChoice.click();
