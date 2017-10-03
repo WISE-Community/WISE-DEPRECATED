@@ -323,7 +323,7 @@
             <div ng-switch-default>
                 <md-input-container class="input-container md-block input-container--open-response input-container--component md-no-float"
                                     ng-switch on="multipleChoiceController.getChoiceType()">
-                    <label class="input-label md-no-float" ng-if="multipleChoiceController.isPromptVisible"><compile data="multipleChoiceController.getPrompt()"></compile></label>
+                    <label class="input-label md-no-float" ng-if="multipleChoiceController.isPromptVisible"><compile id="prompt" data="multipleChoiceController.getPrompt()"></compile></label>
                     <possible-score max-score="multipleChoiceController.componentContent.maxScore"
                                     ng-if="multipleChoiceController.mode === 'student' && !multipleChoiceController.latestAnnotations.score"></possible-score>
                     <md-radio-group ng-switch-when="radio" ng-model="multipleChoiceController.studentChoices"

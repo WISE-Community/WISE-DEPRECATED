@@ -1,205 +1,229 @@
-// E2E test for VLE running in preview mode
+
+let nodeDropDownMenu = element(by.model("stepToolsCtrl.toNodeId"));
+let nextButton = element(by.id('nextButton'));
+let prevButton = element(by.id('prevButton'));
+let closeNodeButton = element(by.id('closeNodeButton'));
+let accountButton = element(by.id('openAccountMenuButton'));
+let accountMenu = element(by.cssContainingText('.md-open-menu-container','Preview Team'));
+let notificationButton = element(by.id('viewNotificationsButton'));
+let notificationMenu = element(by.cssContainingText('.md-open-menu-container','Alerts'));
+
+function hasClass(element, cls) {
+  return element.getAttribute('class').then((classes) => {
+    return classes.split(' ').indexOf(cls) !== -1;
+  });
+}
+
+function shouldBePresent(elements) {
+  for (let element of elements) {
+    expect(element.isPresent()).toBeTruthy();
+  }
+}
+
+function shouldBeHidden(elements) {
+  for (let element of elements) {
+    expect(element.getAttribute('aria-hidden')).toEqual("true")
+  }
+}
+
+function shouldBeDisplayed(elements) {
+  for (let element of elements) {
+    expect(element.getAttribute('aria-hidden')).toEqual("false");
+  }
+}
+
+function shouldBeDisabled(elements) {
+  for (let element of elements) {
+    expect(hasClass(element, "disabled"));
+  }
+}
+
+function shouldBeEnabled(elements) {
+  for (let element of elements) {
+    expect(!hasClass(element, "disabled"));
+  }
+}
+
+function urlShouldBe(expectedURL) {
+  expect(browser.getCurrentUrl()).toEqual(expectedURL);
+}
+
+function nodeDropDownMenuShouldBe(dropDownText) {
+  expect(nodeDropDownMenu.getText()).toBe(dropDownText);
+}
+
 describe('WISE5 Student VLE Preview', () => {
 
-    let hasClass = (element, cls) => {
-        return element.getAttribute('class').then((classes) => {
-            return classes.split(' ').indexOf(cls) !== -1;
-        });
-    };
-
+  beforeAll(() => {
     browser.get('http://localhost:8080/wise/project/demo#/vle/node1');
-    browser.waitForAngular();   // wait for Angular to load
-    let previousButton = element(by.xpath('//button[@aria-label="Previous Item"]'));
-    let nextButton = element(by.xpath('//button[@aria-label="Next Item"]'));
-    let closeButton = element(by.xpath('//button[@aria-label="Project Plan"]'));
-    let accountButton = element(by.xpath('//button[@aria-label="Open account menu"]'));
-    let accountMenu = element(by.cssContainingText('.md-open-menu-container','Preview Team'));
-    let notificationButton = element(by.xpath('//button[@aria-label="View notifications"]'));
-    let notificationMenu = element(by.cssContainingText('.md-open-menu-container','Alerts'));
+    browser.wait(function() {
+      return nodeDropDownMenu.isPresent()
+    }, 5000);
+  });
 
-    it('should load the vle and go to node 1', () => {
-        let nodeDropDownMenu = element(by.model("stepToolsCtrl.toNodeId"));
-        browser.wait((nodeDropDownMenu).isPresent(), 5000);  // give it at most 5 seconds to load.
-        expect(browser.getTitle()).toEqual('WISE');
-        expect(nodeDropDownMenu.getText()).toBe('1.1: HTML Step');
+  it('should load node 1 and show UI elements on the page', () => {
+    expect(browser.getTitle()).toEqual('WISE');
+    nodeDropDownMenuShouldBe('1.1: HTML Step');
+    shouldBePresent([prevButton, nextButton, closeNodeButton,
+      accountButton, accountMenu, notificationButton, notificationMenu]);
+    shouldBeHidden([accountMenu, notificationMenu]);
+  });
+
+  it('should show step content on the page', () => {
+    let nodeContent = element(by.cssContainingText('.node-content','This is a step where authors can enter their own html.'));
+    shouldBePresent([nodeContent]);
+    shouldBeEnabled([nextButton]);
+    shouldBeDisabled([prevButton]);
+  });
+
+  it('should navigate next and previous steps using the buttons', () => {
+    nextButton.click();
+    urlShouldBe('http://localhost:8080/wise/project/demo#/vle/node2');
+    nodeDropDownMenuShouldBe('1.2: Open Response Step');
+    shouldBeEnabled([prevButton, nextButton]);
+    let nodeContent = element(by.cssContainingText('.node-content','This is a step where students enter text.'));
+    shouldBePresent([nodeContent]);
+
+    nextButton.click();
+    urlShouldBe('http://localhost:8080/wise/project/demo#/vle/node3');
+    nodeDropDownMenuShouldBe('1.3: Open Response Step Auto Graded');
+    nodeContent = element(by.cssContainingText('.node-content','Explain how the sun helps animals survive.'));
+    shouldBePresent([nodeContent]);
+
+    prevButton.click();
+    urlShouldBe('http://localhost:8080/wise/project/demo#/vle/node2');
+    nodeDropDownMenuShouldBe('1.2: Open Response Step');
+  });
+
+  it('should allow user to jump to a step using the navigation drop-down menu', () => {
+    nodeDropDownMenu.click();
+    element.all(by.repeater("item in stepToolsCtrl.idToOrder | toArray | orderBy : 'order'")).then((stepSelectOptions) => {
+      expect(stepSelectOptions[1].element(by.css('.node-select__text')).getText()).toBe("1.1: HTML Step");
+      expect(stepSelectOptions[7].element(by.css('.node-select__text')).getText()).toBe("1.7: Challenge Question Step");
+      stepSelectOptions[7].element(by.css('.node-select__text')).click();
+      urlShouldBe('http://localhost:8080/wise/project/demo#/vle/node7');
+    });
+  });
+
+  it('should display the group view and allow user to collapse/expand group navitems', () => {
+    closeNodeButton.click();
+    urlShouldBe('http://localhost:8080/wise/project/demo#/vle/group1');
+
+    element.all(by.repeater('id in navCtrl.rootNode.ids')).then((groupNavItems) => {
+      let activity1 = groupNavItems[0];
+      let activity2 = groupNavItems[1];
+
+      expect(activity1.element(by.className('md-title')).getText()).toEqual('1: Example Steps');
+      expect(activity2.element(by.className('md-title')).getText()).toEqual('2: Example Features');
+
+      // activity 1 should be expanded, Activity 2 should be collapsed
+      expect(hasClass(activity1, 'expanded')).toBe(true);
+      expect(hasClass(activity2, 'expanded')).toBe(false);
+
+      // check for completion icons for steps in Activity 1
+      activity1.all(by.repeater('childId in navitemCtrl.item.ids')).then((stepNavItems) => {
+
+        // step 1.1 should be completed because it's an HTML step and we visited it
+        expect(stepNavItems[0].getText()).toBe('school\n1.1: HTML Step check_circle');
+        expect(stepNavItems[0].element(by.cssContainingText('.material-icons', 'check_circle')).isPresent()).toBeTruthy();
+
+        // step 1.2 should not be completed yet
+        expect(stepNavItems[1].getText()).toBe('school\n1.2: Open Response Step');
+        expect(stepNavItems[1].element(by.cssContainingText('.material-icons', 'check_circle')).isPresent()).toBeFalsy();
+
+        // step 1.7 node7 (the previous step we were on) should be highlighted because we came from it
+        expect(stepNavItems[6].getText()).toBe('school\n1.7: Challenge Question Step');
+        expect(hasClass(stepNavItems[6], 'prev')).toBe(true);  // should have 'prev' class
+        expect(stepNavItems[6].element(by.cssContainingText('.material-icons', 'check_circle')).isPresent()).toBeFalsy();
+      });
+
+      // activity 2 should not be expanded yet, so expand it
+      activity2.element(by.className('nav-item--card__content')).click();
+      expect(hasClass(activity2, 'expanded')).toBe(true);
+      expect(hasClass(activity1, 'expanded')).toBe(true);  // activity 1 should also be expanded still
+
+      // check that steps in activity 2 displays the step title and icon
+      activity2.all(by.repeater('childId in navitemCtrl.item.ids')).then((stepNavItems) => {
+        expect(stepNavItems[0].getText()).toBe('school\n2.1: Show Previous Work 1');
+        expect(stepNavItems[1].getText()).toBe('school\n2.2: Show Previous Work 2');
+        expect(stepNavItems[2].getText()).toBe('school\n2.3: Import Work 1');
+        // go to step 2.3.
+        stepNavItems[2].element(by.tagName('button')).click();
+        urlShouldBe('http://localhost:8080/wise/project/demo#/vle/node22');
+      });
+    });
+  });
+
+  it('should allow user to jump to a step by changing the URL path', () => {
+    // the user changes the URL
+    browser.get('http://localhost:8080/wise/project/demo#/vle/node11');
+    expect(browser.getTitle()).toEqual('WISE');
+    nodeDropDownMenuShouldBe('1.11: Draw Step');
+  });
+
+  it('should allow user to move to a different step with next and prev buttons', () => {
+    nodeDropDownMenuShouldBe('1.11: Draw Step');
+
+    nextButton.click();
+    urlShouldBe('http://localhost:8080/wise/project/demo#/vle/node12');
+    nodeDropDownMenuShouldBe('1.12: Draw Step Auto Graded');
+
+    nextButton.click();
+    urlShouldBe('http://localhost:8080/wise/project/demo#/vle/node13');
+    nodeDropDownMenuShouldBe('1.13: Brainstorm Step');
+
+    prevButton.click();
+    urlShouldBe('http://localhost:8080/wise/project/demo#/vle/node12');
+    nodeDropDownMenuShouldBe('1.12: Draw Step Auto Graded');
+  });
+
+  it('should allow preview user to view the account menu', () => {
+    accountButton.click();
+    shouldBeDisplayed([accountMenu]);
+
+    // account menu should have the preview user account icon and the exit and sign out buttons
+    element.all(by.repeater('userName in themeCtrl.workgroupUserNames')).then((workgroupNames) => {
+      expect(workgroupNames[0].getText()).toBe('Preview Team');
     });
 
-    it('should have UI elements on the page', () => {
-        // Check that previous, next, close, and account buttons are on the page
-        expect(previousButton.isPresent()).toBeTruthy();
-        expect(nextButton.isPresent()).toBeTruthy();
-        expect(closeButton.isPresent()).toBeTruthy();
-        expect(accountButton.isPresent()).toBeTruthy();
-        expect(accountMenu.getAttribute('aria-hidden')).toEqual("true");  // Account menu should be hidden
-    });
+    let exitButton = element(by.id('goHomeButton'));
+    let logOutButton = element(by.id('signOutButton'));
+    shouldBePresent([exitButton, logOutButton]);
 
-    it('should show step content on the page', () => {
-        // Check that the html content is displayed on the page
-        let nodeContent = element(by.cssContainingText('.node-content','This is a step where authors can enter their own html.'));
-        expect(nodeContent.isPresent()).toBeTruthy();
-        expect(previousButton.getAttribute("disabled")).toBe("true");  // the previous button should be disabled on the first step.
-    });
+    // hitting the escape key should dismiss the account menu
+    browser.actions().sendKeys(protractor.Key.ESCAPE).perform();
+    shouldBeHidden([accountMenu]);
 
-    it('should navigate next and previous steps using the buttons', () => {
+    accountButton.click();
+    shouldBeDisplayed([accountMenu]);
 
-        // Click on the next button and expect to go to the next step
-        nextButton.click();
-        expect(browser.getCurrentUrl()).toEqual('http://localhost:8080/wise/project/demo#/vle/node2');
-        expect(element(by.model("stepToolsCtrl.toNodeId")).getText()).toBe('1.2: Open Response Step');
-        expect(previousButton.getAttribute("disabled")).toBe(null);  // the previous button should be enabled on the second step.
+    // clicking outside of the Account Menu should dismiss the Account Menu
+    element(by.xpath('//body')).click();
+    shouldBeHidden([accountMenu]);
+  });
 
-        let nodeContent = element(by.cssContainingText('.node-content','This is a step where students enter text.'));
-        expect(nodeContent.isPresent()).toBeTruthy();
+  it('should allow preview user to view the notification menu', () => {
+    notificationButton.click();   // Open the Notification Menu by clicking on the notification button
+    shouldBeDisplayed([notificationMenu]);
 
-        nextButton.click();
-        expect(browser.getCurrentUrl()).toEqual('http://localhost:8080/wise/project/demo#/vle/node3');
-        expect(element(by.model("stepToolsCtrl.toNodeId")).getText()).toBe('1.3: Open Response Step Auto Graded');
+    // notification menu should have the Alerts title and say that there are no alerts.
+    let notificationDialogTitle = element(by.xpath('//md-toolbar/span/span[@translate="notificationsTitle"]'));
+    expect(notificationDialogTitle.isDisplayed()).toBeTruthy();
+    expect(notificationDialogTitle.getText()).toEqual("Alerts");
 
-        nodeContent = element(by.cssContainingText('.node-content','Explain how the sun helps animals survive.'));
-        expect(nodeContent.isPresent()).toBeTruthy();
+    let notificationDialogContent = element(by.xpath('//md-content/div/span[@translate="noAlerts"]'));
+    expect(notificationDialogContent.isDisplayed()).toBeTruthy();
+    expect(notificationDialogContent.getText()).toEqual("Hi there! You currently have no alerts.");
 
-        // Click on the previous button and expect to go back to the previous step
-        previousButton.click();
-        expect(browser.getCurrentUrl()).toEqual('http://localhost:8080/wise/project/demo#/vle/node2');
-        expect(element(by.model("stepToolsCtrl.toNodeId")).getText()).toBe('1.2: Open Response Step');
-    });
+    // hitting the escape key should dismiss the notification menu
+    browser.actions().sendKeys(protractor.Key.ESCAPE).perform();
+    shouldBeHidden([notificationMenu]);
 
-    it('should allow user to jump to a step using the navigation drop-down menu', () => {
-        let stepSelectMenu = $("#stepSelectMenu");
-        stepSelectMenu.click();
-        element.all(by.repeater("item in stepToolsCtrl.idToOrder | toArray | orderBy : 'order'")).then((stepSelectOptions) => {
-            expect(stepSelectOptions[1].element(by.css('.node-select__text')).getText()).toBe("1.1: HTML Step");
-            expect(stepSelectOptions[7].element(by.css('.node-select__text')).getText()).toBe("1.7: Challenge Question Step");
-            stepSelectOptions[7].element(by.css('.node-select__text')).click();  // Click on step 1.7 in the step select menu
-            expect(browser.getCurrentUrl()).toEqual('http://localhost:8080/wise/project/demo#/vle/node7');
-        });
-    });
+    notificationButton.click();
+    shouldBeDisplayed([notificationMenu]);
 
-    it('should display the group view and allow user to collapse/expand group navitems', () => {
-        // Click on the close button and expect to go to the group view
-        closeButton.click();
-        browser.waitForAngular();   // wait for Angular to load
-        expect(browser.getCurrentUrl()).toEqual('http://localhost:8080/wise/project/demo#/vle/group1');
-
-        element.all(by.repeater('id in navCtrl.rootNode.ids')).then((groupNavItems) => {
-            let activity1 = groupNavItems[0];
-            let activity2 = groupNavItems[1];
-
-            expect(activity1.element(by.className('md-title')).getText()).toEqual('1: Example Steps');
-            expect(activity2.element(by.className('md-title')).getText()).toEqual('2: Example Features');
-
-            // Activity 1 should be expanded, Activity 2 should be collapsed
-            expect(hasClass(activity1, 'expanded')).toBe(true);
-            expect(hasClass(activity2, 'expanded')).toBe(false);
-            expect(browser.getCurrentUrl()).toEqual('http://localhost:8080/wise/project/demo#/vle/group1');
-
-            // Check for completion icons for steps in Activity 1
-            activity1.all(by.repeater('childId in navitemCtrl.item.ids')).then((stepNavItems) => {
-
-                // step 1.1 should be completed because it's an HTML step and we visited it
-                expect(stepNavItems[0].getText()).toBe('school\n1.1: HTML Step check_circle');
-                expect(stepNavItems[0].element(by.cssContainingText('.material-icons', 'check_circle')).isPresent()).toBeTruthy();
-
-                // step 1.2 should not be completed yet
-                expect(stepNavItems[1].getText()).toBe('school\n1.2: Open Response Step');
-                expect(stepNavItems[1].element(by.cssContainingText('.material-icons', 'check_circle')).isPresent()).toBeFalsy();
-
-                // step 1.7 node7 (the previous step we were on) should be highlighted because we came from it
-                expect(stepNavItems[6].getText()).toBe('school\n1.7: Challenge Question Step');
-                expect(hasClass(stepNavItems[6], 'prev')).toBe(true);  // should have 'prev' class
-                expect(stepNavItems[6].element(by.cssContainingText('.material-icons', 'check_circle')).isPresent()).toBeFalsy();
-            });
-
-            // Activity 2 should not be expanded yet, so expand it
-            activity2.element(by.className('nav-item--card__content')).click();
-            expect(hasClass(activity2, 'expanded')).toBe(true);
-            expect(hasClass(activity1, 'expanded')).toBe(true);  // activity 1 should also be expanded still
-
-            // Check that steps in activity 2 displays the step title and icon
-            activity2.all(by.repeater('childId in navitemCtrl.item.ids')).then((stepNavItems) => {
-
-                expect(stepNavItems[0].getText()).toBe('school\n2.1: Show Previous Work 1');
-
-                expect(stepNavItems[1].getText()).toBe('school\n2.2: Show Previous Work 2');
-                expect(stepNavItems[2].getText()).toBe('school\n2.3: Import Work 1');
-                stepNavItems[2].element(by.tagName('button')).click();   // Go to step 2.3.
-                expect(browser.getCurrentUrl()).toEqual('http://localhost:8080/wise/project/demo#/vle/node22');
-            });
-        });
-    });
-
-    it('should allow user to jump to a step by changing the URL path', () => {
-        browser.get('http://localhost:8080/wise/project/demo#/vle/node11');  // User changes the URL
-        let nodeDropDownMenu = element(by.model("stepToolsCtrl.toNodeId"));
-        browser.wait((nodeDropDownMenu).isPresent(), 5000);  // give it at most 5 seconds to load.
-        expect(browser.getTitle()).toEqual('WISE');
-        expect(nodeDropDownMenu.getText()).toBe('1.11: Draw Step');
-
-        // Click on the next button and expect to go to the next step
-        nextButton.click();
-        expect(browser.getCurrentUrl()).toEqual('http://localhost:8080/wise/project/demo#/vle/node12');
-        expect(element(by.model("stepToolsCtrl.toNodeId")).getText()).toBe('1.12: Draw Step Auto Graded');
-
-        nextButton.click();
-        expect(browser.getCurrentUrl()).toEqual('http://localhost:8080/wise/project/demo#/vle/node13');
-        expect(element(by.model("stepToolsCtrl.toNodeId")).getText()).toBe('1.13: Brainstorm Step');
-
-        // Click on the previous button and expect to go back to the previous step
-        previousButton.click();
-        expect(browser.getCurrentUrl()).toEqual('http://localhost:8080/wise/project/demo#/vle/node12');
-        expect(element(by.model("stepToolsCtrl.toNodeId")).getText()).toBe('1.12: Draw Step Auto Graded');
-    });
-
-    it('should allow preview user to view the account menu', () => {
-        accountButton.click();   // Open the Account Menu by clicking on the account button
-        expect(accountMenu.getAttribute('aria-hidden')).toEqual("false");  // Account Menu should be displayed
-
-        // The account menu should have the preview user account icon and the exit and sign out buttons
-        element.all(by.repeater('userName in themeCtrl.workgroupUserNames')).then((workgroupNames) => {
-            expect(workgroupNames[0].getText()).toBe('Preview Team');
-        });
-
-        let exitButton = element(by.xpath('//button[@aria-label="Go Home"]'));
-        expect(exitButton.isPresent()).toBeTruthy();
-        expect(exitButton.getText()).toEqual("GO HOME");
-        let logOutButton = element(by.xpath('//button[@aria-label="Sign Out"]'));
-        expect(logOutButton.isPresent()).toBeTruthy();
-        expect(logOutButton.getText()).toEqual("SIGN OUT");
-
-        // Hitting the escape key should dismiss the account menu
-        browser.actions().sendKeys(protractor.Key.ESCAPE).perform();
-        expect(accountMenu.getAttribute('aria-hidden')).toEqual("true");  // Account Menu should be hidden
-
-        accountButton.click();  // Open the Account Menu by clicking on the account button
-        expect(accountMenu.getAttribute('aria-hidden')).toEqual("false");  // Account Menu should be displayed
-
-        // Clicking outside of the Account Menu should dismiss the Account Menu
-        element(by.xpath('//body')).click();
-        expect(accountMenu.getAttribute('aria-hidden')).toEqual("true");  // Account Menu should be hidden
-    });
-
-    it('should allow preview user to view the notification menu', () => {
-        notificationButton.click();   // Open the Notification Menu by clicking on the notification button
-        expect(notificationMenu.getAttribute('aria-hidden')).toEqual("false");  // Notification Menu should be displayed
-
-        // The notification menu should have the Alerts title and say that there are no alerts.
-        let notificationDialogTitle = element(by.xpath('//md-toolbar/span/span[@translate="notificationsTitle"]'));
-        expect(notificationDialogTitle.isDisplayed()).toBeTruthy();
-        expect(notificationDialogTitle.getText()).toEqual("Alerts");
-
-        let notificationDialogContent = element(by.xpath('//md-content/div/span[@translate="noAlerts"]'));
-        expect(notificationDialogContent.isDisplayed()).toBeTruthy();
-        expect(notificationDialogContent.getText()).toEqual("Hi there! You currently have no alerts.");
-
-        // Hitting the escape key should dismiss the notification menu
-        browser.actions().sendKeys(protractor.Key.ESCAPE).perform();
-        expect(notificationMenu.getAttribute('aria-hidden')).toEqual("true");  // Notification Menu should be hidden
-
-        notificationButton.click();  // Open the Notification Menu by clicking on the notification button
-        expect(notificationMenu.getAttribute('aria-hidden')).toEqual("false");  // Notification Menu should be displayed
-
-        // Clicking outside of the Notification Menu should dismiss the Notification Menu
-        element(by.xpath('//body')).click();
-        expect(notificationMenu.getAttribute('aria-hidden')).toEqual("true");  // Notification Menu should be hidden
-    });
+    // clicking outside of the Notification Menu should dismiss the Notification Menu
+    element(by.xpath('//body')).click();
+    shouldBeHidden([notificationMenu]);
+  });
 });

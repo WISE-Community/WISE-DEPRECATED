@@ -397,7 +397,7 @@
                 <md-input-container class="input-container input-container--open-response md-block md-no-float">
                     <label class="input-label md-no-float" ng-disabled="openResponseController.isDisabled"
                            ng-if="openResponseController.isPromptVisible">
-                        <compile data="openResponseController.getPrompt()"></compile>
+                        <compile id='prompt' data="openResponseController.getPrompt()"></compile>
                         <possible-score max-score="openResponseController.componentContent.maxScore"></possible-score>
                     </label>
                     <div class="input-wrapper" ng-class="{'input-wrapper--richtext': openResponseController.isRichTextEnabled}">

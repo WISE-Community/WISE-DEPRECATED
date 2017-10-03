@@ -1,11 +1,12 @@
+let hasClass = (element, cls) => {
+    return element.getAttribute('class').then((classes) => {
+        return classes.split(' ').indexOf(cls) !== -1;
+    });
+};
+
+
 // E2E test for working with the notebook in preview mode
 describe('WISE5 Notebook in Preview Mode', () => {
-
-    let hasClass = (element, cls) => {
-        return element.getAttribute('class').then((classes) => {
-            return classes.split(' ').indexOf(cls) !== -1;
-        });
-    };
 
     let notebookButton = element(by.tagName('notebook'));
     let notebookReport = element(by.tagName('notebook-report'));
@@ -18,7 +19,6 @@ describe('WISE5 Notebook in Preview Mode', () => {
     let fullScreenButton = element(by.css('[ng-click="$ctrl.fullscreen()"]'));
     let collapseButton = element(by.css('[ng-click="$event.stopPropagation(); $ctrl.collapse()"]'));
     let notebookDialog = element(by.xpath('//notebook-notes/md-sidenav'));
-
 
     it('should load the vle and go to node 1 and show notebook buttons', () => {
         browser.get('http://localhost:8080/wise/project/demo#/vle/node1');

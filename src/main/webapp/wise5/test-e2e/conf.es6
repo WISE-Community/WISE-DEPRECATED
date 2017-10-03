@@ -6,16 +6,15 @@ exports.config = {
 
     specs: [
         //'previewVLE.spec.js',
-        'components/multipleChoice.spec.js',
+        'components/multipleChoiceRadio.spec.js',
+        'components/multipleChoiceCheckbox.spec.js',
         'components/openResponse.spec.js',
-        /*
-        'notebook.spec.js',
-        'portal/portal.spec.js',
-        'portal/forgotAccount.spec.js',
-        'authoringTool.spec.js',
-        'setUpRun.spec.js',
-        'classroomMonitor.spec.js'
-        */
+        // 'notebook.spec.js',
+        // 'portal/portal.spec.js',
+        // 'portal/forgotAccount.spec.js',
+        // 'authoringTool.spec.js',
+        // 'setUpRun.spec.js',
+        // 'classroomMonitor.spec.js'
     ],
     multiCapabilities : [
         {

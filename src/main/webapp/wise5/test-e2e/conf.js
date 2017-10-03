@@ -8,7 +8,7 @@ exports.config = {
 
     specs: [
     //'previewVLE.spec.js',
-    'components/multipleChoice.spec.js', 'components/openResponse.spec.js'],
+    'components/multipleChoiceRadio.spec.js', 'components/multipleChoiceCheckbox.spec.js', 'components/openResponse.spec.js'],
     multiCapabilities: [{
         'browserName': 'chrome',
         'tunnel-identifier': process.env.TRAVIS_JOB_NUMBER,
