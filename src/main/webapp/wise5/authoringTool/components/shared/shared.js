@@ -1,9 +1,7 @@
 'use strict';
 
-//import AccountMenu from './accountMenu/accountMenu';
-
 Object.defineProperty(exports, "__esModule", {
-  value: true
+    value: true
 });
 
 var _mainMenu = require('./mainMenu/mainMenu');
@@ -28,14 +26,7 @@ var _topBar2 = _interopRequireDefault(_topBar);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var Shared = angular.module('shared', []);
+var SharedComponents = angular.module('sharedComponents', []).component('mainMenu', _mainMenu2.default).component('sideMenu', _sideMenu2.default).component('stepTools', _stepTools2.default).component('toolbar', _toolbar2.default).component('topBar', _topBar2.default);
 
-//Shared.component('accountMenu', AccountMenu);
-Shared.component('mainMenu', _mainMenu2.default);
-Shared.component('sideMenu', _sideMenu2.default);
-Shared.component('stepTools', _stepTools2.default);
-Shared.component('toolbar', _toolbar2.default);
-Shared.component('topBar', _topBar2.default);
-
-exports.default = Shared;
+exports.default = SharedComponents;
 //# sourceMappingURL=shared.js.map

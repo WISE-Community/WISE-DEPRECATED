@@ -2,288 +2,220 @@
 
 class AuthoringToolMainController {
 
-    constructor($anchorScroll,
-                $filter,
-                $rootScope,
-                $state,
-                $timeout,
-                ConfigService,
-                ProjectService,
-                TeacherDataService) {
-        this.$anchorScroll = $anchorScroll;
-        this.$filter = $filter;
-        this.$rootScope = $rootScope;
-        this.$state = $state;
-        this.$timeout = $timeout;
-        this.ConfigService = ConfigService;
-        this.ProjectService = ProjectService;
-        this.TeacherDataService = TeacherDataService;
+  constructor(
+      $anchorScroll,
+      $filter,
+      $rootScope,
+      $state,
+      $timeout,
+      ConfigService,
+      ProjectService,
+      TeacherDataService) {
+    this.$anchorScroll = $anchorScroll;
+    this.$filter = $filter;
+    this.$rootScope = $rootScope;
+    this.$state = $state;
+    this.$timeout = $timeout;
+    this.ConfigService = ConfigService;
+    this.ProjectService = ProjectService;
+    this.TeacherDataService = TeacherDataService;
 
-        this.$translate = this.$filter('translate');
+    this.$translate = this.$filter('translate');
+    this.projects = this.ConfigService.getConfigParam('projects');
+    this.sharedProjects = this.ConfigService.getConfigParam('sharedProjects');
+    this.showCreateProjectView = false;
 
-        // get list of projects owned by this user and shared with this
-        this.projects = this.ConfigService.getConfigParam("projects");
-        this.sharedProjects = this.ConfigService.getConfigParam("sharedProjects");
+    this.$rootScope.$on('goHome', () => {
+      this.saveEvent('goToTeacherHome', 'Navigation', null, null);
+    });
+    this.$rootScope.$on('logOut', () => {
+      this.saveEvent('logOut', 'Navigation', null, null);
+    });
+  }
 
+  /**
+   * Get my project or shared project by project id
+   * @param projectId the project id
+   * @return the project object that just contains the name and id and run id
+   * if it is associated with a run. If none were found, return null.
+   */
+  getProjectByProjectId(projectId) {
+    for (let project of this.projects) {
+      if (project != null && project.id == projectId) {
+        return project;
+      }
+    }
+
+    for (let sharedProject of this.sharedProjects) {
+      if (sharedProject != null && sharedProject.id == projectId) {
+        return sharedProject;
+      }
+    }
+    return null;
+  }
+
+  /**
+   * Copy a project after confirming and highlight it to draw attention to it
+   * @param projectId the project to copy
+   */
+  copyProject(projectId) {
+    let project = this.getProjectByProjectId(projectId);
+    let projectName = project.name;
+
+    // get the project info that we will display in the confirm message
+    let projectInfo = projectId + ' ' + projectName;
+    let projectRunId = project.runId;
+    if (projectRunId != null) {
+      projectInfo += ' (Run ID: ' + projectRunId + ')';
+    }
+
+    /*
+     * the message that we will use to confirm that the author wants to copy
+     * the project
+     */
+    let doCopyConfirmMessage =
+        this.$translate('areYouSureYouWantToCopyThisProject') +
+        '\n\n' + projectInfo;
+    if (confirm(doCopyConfirmMessage)) {
+      this.ProjectService.copyProject(projectId).then((projectId) => {
+        this.saveEvent('projectCopied', 'Authoring', null, projectId);
+
+        // refresh the project list and highlight the newly copied project
+        this.ConfigService.retrieveConfig(window.configURL).then(() => {
+          this.projects = this.ConfigService.getConfigParam('projects');
+          this.scrollToTopOfPage();
+          // the timeout is necessary for new element to appear on the page
+          this.$timeout(() => {
+            let newProjectElement = $('#' + projectId);
+            let highlightDuration = 3000;
+            this.highlightElement(newProjectElement, highlightDuration);
+          });
+        });
+      });
+    }
+  }
+
+  createNewProjectButtonClicked() {
+    this.project = this.ProjectService.getNewProjectTemplate();
+    this.showCreateProjectView = true;
+
+    // focus on the newProjectTitle input element
+    this.$timeout(() => {
+      let createGroupTitleInput = document.getElementById('newProjectTitle');
+      if (createGroupTitleInput != null) {
+        createGroupTitleInput.focus();
+      }
+    });
+  }
+
+  /**
+   * Highlights the specified element in yellow for specified duration, used
+   * to draw user's attention to new changes.
+   * @param componentElement DOM element to highlight
+   * @param duration Number how long (in ms) to highlight
+   */
+  highlightElement(componentElement, duration) {
+    let originalBackgroundColor = componentElement.css('backgroundColor');
+    componentElement.css('background-color', '#FFFF9C');
+
+    /*
+     * Use a timeout before starting to transition back to
+     * the original background color. For some reason the
+     * element won't get highlighted in the first place
+     * unless this timeout is used.
+     */
+    this.$timeout(() => {
+      // slowly fade back to original background color
+      componentElement.css({
+        'transition': 'background-color 3s ease-in-out',
+        'background-color': originalBackgroundColor
+      });
+
+      /*
+       * remove these styling fields after we perform
+       * the fade otherwise the regular mouseover
+       * background color change will not work
+       */
+      this.$timeout(() => {
+        componentElement.css({
+          'transition': '',
+          'background-color': ''
+        });
+      }, duration);
+    });
+  }
+
+  /**
+   * Create a new project and open it
+   */
+  registerNewProject() {
+    let projectTitle = this.project.metadata.title;
+    if (projectTitle == null || projectTitle == '') {
+      alert(this.$translate('pleaseEnterAProjectTitleForYourNewProject'));
+    } else {
+      let projectJSONString = angular.toJson(this.project, 4);
+      let commitMessage =
+          this.$translate('projectCreatedOn') + new Date().getTime();
+      this.ProjectService.registerNewProject(projectJSONString, commitMessage)
+          .then((projectId) => {
         this.showCreateProjectView = false;
-
-        this.$rootScope.$on('goHome', () => {
-            // save the go to teacher home event to the server
-            this.saveEvent('goToTeacherHome', 'Navigation', null, null);
-        });
-
-        this.$rootScope.$on('logOut', () => {
-            // save the log out event to the server
-            this.saveEvent('logOut', 'Navigation', null, null);
-        });
+        this.saveEvent('projectCreated', 'Authoring', null, projectId);
+        this.$state.go('root.project', {projectId: projectId});
+      });
     }
+  }
 
-    /**
-     * Get a project by project id
-     * @param projectId the project id
-     * @return the project object that just contains the name and id and run id
-     * if it is associated with a run
-     */
-    getProjectByProjectId(projectId) {
+  cancelRegisterNewProject() {
+    // clear the project template
+    this.project = null;
+    this.showCreateProjectView = false;
+  }
 
-        // loop through all my projects
-        for (var p = 0; p < this.projects.length; p++) {
-            var project = this.projects[p];
+  /**
+   * Open a project in the authoring tool, replacing any current view
+   * @param projectId the project id to open
+   */
+  openProject(projectId) {
+    this.$state.go('root.project', {projectId:projectId});
+  }
 
-            if (project != null) {
-                if (project.id == projectId) {
-                    // we have found the project we want
-                    return project;
-                }
-            }
-        }
+  /**
+   * Launch the project in preview mode in a new tab
+   */
+  previewProject(projectId) {
+    let data = { constraints: true };
+    this.saveEvent('projectPreviewed', 'Authoring', data, projectId);
+    window.open(this.ConfigService.getWISEBaseURL() + '/project/' + projectId);
+  }
 
-        // loop through all the shared projects
-        for (var sp = 0; sp < this.sharedProjects.length; sp++) {
-            var sharedProject = this.sharedProjects[sp];
+  /**
+   * Send the user to the teacher home page
+   */
+  goHome() {
+    window.location = this.ConfigService.getWISEBaseURL() + '/teacher';
+  }
 
-            if (sharedProject != null) {
-                if (sharedProject.id == projectId) {
-                    // we have found the project we want
-                    return sharedProject;
-                }
-            }
-        }
-
-        return null;
+  /**
+   * Save an Authoring Tool event
+   * @param eventName the name of the event
+   * @param category the category of the event
+   * example 'Navigation' or 'Authoring'
+   */
+  saveEvent(eventName, category, data, projectId) {
+    let context = 'AuthoringTool';
+    let nodeId = null;
+    let componentId = null;
+    let componentType = null;
+    if (data == null) {
+      data = {};
     }
+    this.TeacherDataService.saveEvent(context, nodeId, componentId,
+        componentType, category, eventName, data, projectId);
+  }
 
-    /**
-     * Copy a project
-     * @param projectId the project to copy
-     */
-    copyProject(projectId) {
-
-        // get the project info
-        var project = this.getProjectByProjectId(projectId);
-
-        // get the project name
-        var projectName = project.name;
-
-        // get the project run id if any
-        var projectRunId = project.runId;
-
-        // get the project info that we will display in the confirm message
-        var projectInfo = projectId + ' ' + projectName;
-
-        if (projectRunId != null) {
-            // add the run id to the info
-            projectInfo += ' (Run ID: ' + projectRunId + ')';
-        }
-
-        /*
-         * the message that we will use to confirm that the author wants to copy
-         * the project
-         */
-        var message = this.$translate('areYouSureYouWantToCopyThisProject') + '\n\n' + projectInfo;
-
-        var answer = confirm(message);
-
-        if (answer) {
-            // the author answered yes they want to copy
-
-            // copy the project
-            this.ProjectService.copyProject(projectId).then((projectId) => {
-
-                // save the project copied event to the server
-                this.saveEvent('projectCopied', 'Authoring', null, projectId);
-
-                // refresh the project list
-                var configURL = window.configURL;
-                this.ConfigService.retrieveConfig(configURL).then(() => {
-                    this.projects = this.ConfigService.getConfigParam("projects");
-
-                    // scroll to the top of the page
-                    this.$anchorScroll('top');
-
-                    // briefly highlight the new project to draw attention to it
-                    this.$timeout(() => {
-
-                        // get the component UI element
-                        let componentElement = $("#" + projectId);
-
-                        // save the original background color
-                        let originalBackgroundColor = componentElement.css("backgroundColor");
-
-                        // highlight the background briefly to draw attention to it
-                        componentElement.css("background-color", "#FFFF9C");
-
-                        /*
-                         * Use a timeout before starting to transition back to
-                         * the original background color. For some reason the
-                         * element won't get highlighted in the first place
-                         * unless this timeout is used.
-                         */
-                        this.$timeout(() => {
-                            // slowly fade back to original background color
-                            componentElement.css({
-                                'transition': 'background-color 3s ease-in-out',
-                                'background-color': originalBackgroundColor
-                            });
-
-                            /*
-                             * remove these styling fields after we perform
-                             * the fade otherwise the regular mouseover
-                             * background color change will not work
-                             */
-                            this.$timeout(() => {
-                                componentElement.css({
-                                    'transition': '',
-                                    'background-color': ''
-                                });
-                            }, 3000);
-                        });
-                    });
-                });
-            });
-        }
-    }
-
-    /**
-     * The create new project button was clicked
-     */
-    createNewProjectButtonClicked() {
-        // generate a project template for the new project
-        this.project = this.ProjectService.getNewProjectTemplate();
-
-        // show the view where the author enters the title for the new project
-        this.showCreateProjectView = true;
-
-        /*
-         * we are showing the create project view so we will give focus to the
-         * newProjectTitle input element
-         */
-        this.$timeout(() => {
-            var createGroupTitleInput = document.getElementById('newProjectTitle');
-
-            if (createGroupTitleInput != null) {
-                createGroupTitleInput.focus();
-            }
-        });
-    }
-
-    /**
-     * Create a new project
-     */
-    registerNewProject() {
-
-        // get the project title the author has entered
-        var projectTitle = this.project.metadata.title;
-
-        if (projectTitle == null || projectTitle == '') {
-            // the author has not entered a project title
-            alert(this.$translate('pleaseEnterAProjectTitleForYourNewProject'));
-        } else {
-            // the author has entered a project title
-
-            // get the project json string
-            var projectJSONString = angular.toJson(this.project, 4);
-            var commitMessage = this.$translate('projectCreatedOn') + new Date().getTime();
-
-            // create the new project on the server
-            this.ProjectService.registerNewProject(projectJSONString, commitMessage).then((projectId) => {
-                // hide the create project view
-                this.showCreateProjectView = false;
-
-                // save the project created event to the server
-                this.saveEvent('projectCreated', 'Authoring', null, projectId);
-
-                // open the new project in the authoring tool
-                this.$state.go('root.project', {projectId: projectId});
-            });
-        }
-    }
-
-    /**
-     * Cancel the create new project
-     */
-    cancelRegisterNewProject() {
-        // clear the project template
-        this.project = null;
-
-        // hide the create project view
-        this.showCreateProjectView = false;
-    }
-
-    /**
-     * Open a project in the authoring tool
-     * @param projectId the project id to open
-     */
-    openProject(projectId) {
-        this.$state.go('root.project', {projectId:projectId});
-    }
-
-    /**
-     * Launch the project in preview mode
-     */
-    previewProject(projectId) {
-
-        var data = {};
-        data.constraints = true;
-
-        // save the project previewed event
-        this.saveEvent('projectPreviewed', 'Authoring', data, projectId);
-
-        let previewProjectURL = this.ConfigService.getWISEBaseURL() + "/project/" + projectId;
-        window.open(previewProjectURL);
-    }
-
-    /**
-     * Go to the teacher home
-     */
-    goHome() {
-
-        // send the user to the teacher home page
-        let wiseBaseURL = this.ConfigService.getWISEBaseURL();
-        let teacherHomePageURL = wiseBaseURL + '/teacher';
-        window.location = teacherHomePageURL;
-    }
-
-    /**
-     * Save an Authoring Tool event
-     * @param eventName the name of the event
-     * @param category the category of the event
-     * example 'Navigation' or 'Authoring'
-     */
-    saveEvent(eventName, category, data, projectId) {
-
-        let context = 'AuthoringTool';
-        let nodeId = null;
-        let componentId = null;
-        let componentType = null;
-
-        if (data == null) {
-            data = {};
-        }
-
-        // save the event to the server
-        this.TeacherDataService.saveEvent(context, nodeId, componentId, componentType, category, eventName, data, projectId);
-    }
+  scrollToTopOfPage() {
+    this.$anchorScroll('top');
+  }
 };
 
 AuthoringToolMainController.$inject = [

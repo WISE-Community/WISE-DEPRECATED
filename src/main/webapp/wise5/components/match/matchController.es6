@@ -3100,7 +3100,7 @@ class MatchController {
     chooseChoiceAsset(choice) {
         // generate the parameters
         var params = {};
-        params.popup = true;
+        params.isPopup = true;
         params.nodeId = this.nodeId;
         params.componentId = this.componentId;
         params.target = 'choice';
@@ -3118,7 +3118,7 @@ class MatchController {
     chooseBucketAsset(bucket) {
         // generate the parameters
         var params = {};
-        params.popup = true;
+        params.isPopup = true;
         params.nodeId = this.nodeId;
         params.componentId = this.componentId;
         params.target = 'bucket';
