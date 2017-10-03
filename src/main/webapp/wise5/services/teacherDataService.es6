@@ -39,7 +39,7 @@ class TeacherDataService {
         this.runStatus = null;
         this.periods = [];
         this.nodeGradingSort = 'team';
-        this.studentGradingSort = 'title';
+        this.studentGradingSort = 'step';
         this.studentProgressSort = 'team';
 
         /**

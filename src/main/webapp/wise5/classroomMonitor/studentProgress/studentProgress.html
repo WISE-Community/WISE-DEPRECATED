@@ -118,13 +118,13 @@
                                 <md-icon ng-if="!team.online" aria-label="{{ offline | translate }}"> fiber_manual_record </md-icon>
                             </td>
                             <td class="center">{{ team.workgroupId }}</td>
-                            <td class="heavy td--wrap">
+                            <td class="md-body-2 td--wrap">
                                 <div layout="row" layout-wrap>{{ team.userName }}</div>
                             </td>
-                            <td class="center td--wrap td--max-width">
+                            <td class="md-body-1 center td--wrap td--max-width">
                                 {{ team.location }}
                             </td>
-                            <td class="center">{{ team.timeSpent }}</td>
+                            <td class="md-body-1 center">{{ team.timeSpent }}</td>
                             <td layout="row" layout-align="center center">
                                 <project-progress completed="team.completion.completedItems" total="team.completion.totalItems" percent="team.completion.completionPct"</project-progress>
                                 </td>

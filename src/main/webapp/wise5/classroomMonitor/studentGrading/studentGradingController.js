@@ -31,8 +31,7 @@ var StudentGradingController = function () {
         // scroll to the top of the page
         document.body.scrollTop = document.documentElement.scrollTop = 0;
 
-        var sort = this.TeacherDataService.studentGradingSort;
-        this.sort = sort ? sort : 'step';
+        this.sort = this.TeacherDataService.studentGradingSort;
         this.TeacherDataService.stepGradingSort = this.sort;
         this.permissions = this.ConfigService.getPermissions();
         this.workgroupId = parseInt(this.$stateParams.workgroupId);
