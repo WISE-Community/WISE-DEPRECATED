@@ -63,9 +63,7 @@ describe('WISE5 Multiple Choice Component Select Multiple (checkbox)', function 
   });
 
   it('should allow students to choose several choices and save', function () {
-    var vle = new _vlePage2.default();
     var mc = new _multipleChoicePage2.default();
-    shouldDisplayDefaultElements(vle, mc);
     leonardoChoice.click();
     common.shouldBeSelected([leonardoChoice]);
     common.shouldBeUnselected([donatelloChoice, michelangeloChoice, raphaelChoice, squirtleChoice]);
@@ -93,9 +91,7 @@ describe('WISE5 Multiple Choice Component Select Multiple (checkbox)', function 
   });
 
   it('should show previous chosen multiple-choice items', function () {
-    var vle = new _vlePage2.default();
     var mc = new _multipleChoicePage2.default();
-    shouldDisplayDefaultElements(vle, mc);
 
     leonardoChoice.click();
     michelangeloChoice.click();
@@ -105,6 +101,7 @@ describe('WISE5 Multiple Choice Component Select Multiple (checkbox)', function 
     common.shouldBeUnselected([squirtleChoice]);
     common.shouldBeEnabled([mc.saveButton, mc.submitButton]);
 
+    var vle = new _vlePage2.default();
     vle.goToPreviousStep();
     common.urlShouldBe('http://localhost:8080/wise/project/demo#/vle/node5');
     vle.nodeSelectMenuShouldSay('1.5: Multiple Choice Step Single Answer');

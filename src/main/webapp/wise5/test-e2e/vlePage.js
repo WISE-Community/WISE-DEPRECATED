@@ -15,6 +15,13 @@ var VLEPage = function () {
     this.nodeDropDownMenu = element(by.model("stepToolsCtrl.toNodeId"));
     this.nextButton = element(by.id('nextButton'));
     this.prevButton = element(by.id('prevButton'));
+    this.closeNodeButton = element(by.id('closeNodeButton'));
+    this.accountButton = element(by.id('openAccountMenuButton'));
+    this.accountMenu = element(by.cssContainingText('.md-open-menu-container', 'Preview Team'));
+    this.notificationButton = element(by.id('viewNotificationsButton'));
+    this.notificationMenu = element(by.cssContainingText('.md-open-menu-container', 'Alerts'));
+    this.exitButton = element(by.id('goHomeButton'));
+    this.logOutButton = element(by.id('signOutButton'));
   }
 
   _createClass(VLEPage, [{
@@ -31,6 +38,26 @@ var VLEPage = function () {
     key: 'goToPreviousStep',
     value: function goToPreviousStep() {
       this.prevButton.click();
+    }
+  }, {
+    key: 'openAccountMenu',
+    value: function openAccountMenu() {
+      this.accountButton.click();
+    }
+  }, {
+    key: 'openDropDownMenu',
+    value: function openDropDownMenu() {
+      this.nodeDropDownMenu.click();
+    }
+  }, {
+    key: 'openNotificationMenu',
+    value: function openNotificationMenu() {
+      this.notificationButton.click();
+    }
+  }, {
+    key: 'closeNode',
+    value: function closeNode() {
+      this.closeNodeButton.click();
     }
   }]);
 

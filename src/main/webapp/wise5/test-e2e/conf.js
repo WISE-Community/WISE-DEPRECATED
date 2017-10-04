@@ -6,9 +6,7 @@ exports.config = {
     sauceKey: process.env.SAUCE_ACCESS_KEY,
     //seleniumAddress: 'http://localhost:4444/wd/hub',
 
-    specs: [
-    //'vle/previewProject.spec.js',
-    'components/multipleChoice/multipleChoiceRadio.spec.js', 'components/multipleChoice/multipleChoiceCheckbox.spec.js', 'components/openResponse/openResponse.spec.js'],
+    specs: ['vle/previewProject.spec.js', 'components/multipleChoice/multipleChoiceRadio.spec.js', 'components/multipleChoice/multipleChoiceCheckbox.spec.js', 'components/openResponse/openResponse.spec.js'],
     multiCapabilities: [{
         'browserName': 'chrome',
         'tunnel-identifier': process.env.TRAVIS_JOB_NUMBER,

@@ -5,7 +5,7 @@ exports.config = {
     //seleniumAddress: 'http://localhost:4444/wd/hub',
 
     specs: [
-        //'vle/previewProject.spec.js',
+        'vle/previewProject.spec.js',
         'components/multipleChoice/multipleChoiceRadio.spec.js',
         'components/multipleChoice/multipleChoiceCheckbox.spec.js',
         'components/openResponse/openResponse.spec.js',
