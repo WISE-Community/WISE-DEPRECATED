@@ -1202,7 +1202,6 @@ class ConceptMapController {
                     // show the auto feedback in a modal dialog
                     this.$mdDialog.show(
                         this.$mdDialog.alert()
-                        .parent(angular.element(document.querySelector('#' + this.feedbackContainerId)))
                         .clickOutsideToClose(true)
                         .title(this.$translate('FEEDBACK'))
                         .htmlContent(resultString)
