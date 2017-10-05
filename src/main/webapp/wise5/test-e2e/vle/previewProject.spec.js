@@ -127,8 +127,17 @@ describe('WISE5 Student VLE Preview', function () {
     var vle = new _vlePage2.default();
     // the user changes the URL
     _protractor.browser.get('http://localhost:8080/wise/project/demo#/vle/node11');
-    expect(_protractor.browser.getTitle()).toEqual('WISE');
-    vle.nodeSelectMenuShouldSay('1.11: Draw Step');
+    _protractor.browser.wait(function () {
+      return vle.nodeDropDownMenu.isPresent();
+    }, 5000, 'VLE didn\'t load properly').then(function () {
+      vle.nodeSelectMenuShouldSay('1.11: Draw Step');
+    });
+    _protractor.browser.get('http://localhost:8080/wise/project/demo#/vle/node14');
+    _protractor.browser.wait(function () {
+      return vle.nodeDropDownMenu.isPresent();
+    }, 5000, 'VLE didn\'t load properly').then(function () {
+      vle.nodeSelectMenuShouldSay('1.15: Table Step');
+    });
   });
 
   it('should allow preview user to view the account menu', function () {

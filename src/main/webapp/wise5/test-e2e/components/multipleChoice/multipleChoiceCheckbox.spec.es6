@@ -4,11 +4,11 @@ import VLEPage from '../../vlePage.js';
 import MultipleChoicePage from './multipleChoicePage.js'
 
 describe('WISE5 Multiple Choice Component Select Multiple (checkbox)', () => {
-  const leonardoChoice = element(by.xpath('//md-checkbox[@aria-label="Leonardo"]'));
-  const donatelloChoice = element(by.xpath('//md-checkbox[@aria-label="Donatello"]'));
-  const michelangeloChoice = element(by.xpath('//md-checkbox[@aria-label="Michelangelo"]'));
-  const raphaelChoice = element(by.xpath('//md-checkbox[@aria-label="Raphael"]'));
-  const squirtleChoice = element(by.xpath('//md-checkbox[@aria-label="Squirtle"]'));
+  const leonardoChoice = element(by.cssContainingText('md-checkbox','Leonardo'));
+  const donatelloChoice = element(by.cssContainingText('md-checkbox','Donatello'));
+  const michelangeloChoice = element(by.cssContainingText('md-checkbox','Michelangelo'));
+  const raphaelChoice = element(by.cssContainingText('md-checkbox','Raphael'));
+  const squirtleChoice = element(by.cssContainingText('md-checkbox','Squirtle'));
 
   function shouldDisplayDefaultElements(vle, mc) {
     vle.nodeSelectMenuShouldSay('1.6: Multiple Choice Step Multiple Answer');

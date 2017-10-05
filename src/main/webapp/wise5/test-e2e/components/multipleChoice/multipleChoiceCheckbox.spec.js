@@ -19,11 +19,11 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 describe('WISE5 Multiple Choice Component Select Multiple (checkbox)', function () {
-  var leonardoChoice = (0, _protractor.element)(by.xpath('//md-checkbox[@aria-label="Leonardo"]'));
-  var donatelloChoice = (0, _protractor.element)(by.xpath('//md-checkbox[@aria-label="Donatello"]'));
-  var michelangeloChoice = (0, _protractor.element)(by.xpath('//md-checkbox[@aria-label="Michelangelo"]'));
-  var raphaelChoice = (0, _protractor.element)(by.xpath('//md-checkbox[@aria-label="Raphael"]'));
-  var squirtleChoice = (0, _protractor.element)(by.xpath('//md-checkbox[@aria-label="Squirtle"]'));
+  var leonardoChoice = (0, _protractor.element)(by.cssContainingText('md-checkbox', 'Leonardo'));
+  var donatelloChoice = (0, _protractor.element)(by.cssContainingText('md-checkbox', 'Donatello'));
+  var michelangeloChoice = (0, _protractor.element)(by.cssContainingText('md-checkbox', 'Michelangelo'));
+  var raphaelChoice = (0, _protractor.element)(by.cssContainingText('md-checkbox', 'Raphael'));
+  var squirtleChoice = (0, _protractor.element)(by.cssContainingText('md-checkbox', 'Squirtle'));
 
   function shouldDisplayDefaultElements(vle, mc) {
     vle.nodeSelectMenuShouldSay('1.6: Multiple Choice Step Multiple Answer');

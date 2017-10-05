@@ -4,9 +4,9 @@ import VLEPage from '../../vlePage.js';
 import MultipleChoicePage from './multipleChoicePage.js'
 
 describe('WISE5 Multiple Choice Component Select One (radio)', () => {
-  const spongeBobChoice = element(by.xpath('//md-radio-button[@aria-label="Spongebob"]'));
-  const patrickChoice = element(by.xpath('//md-radio-button[@aria-label="Patrick"]'));
-  const squidwardChoice = element(by.xpath('//md-radio-button[@aria-label="Squidward"]'));
+  const spongeBobChoice = element(by.cssContainingText('md-radio-button','Spongebob'));
+  const patrickChoice = element(by.cssContainingText('md-radio-button','Patrick'));
+  const squidwardChoice = element(by.cssContainingText('md-radio-button','Squidward'));
 
   function shouldDisplayDefaultElements(vle, mc) {
     vle.nodeSelectMenuShouldSay('1.5: Multiple Choice Step Single Answer');

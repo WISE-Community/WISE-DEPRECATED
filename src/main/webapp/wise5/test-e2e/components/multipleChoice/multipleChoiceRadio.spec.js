@@ -19,9 +19,9 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 describe('WISE5 Multiple Choice Component Select One (radio)', function () {
-  var spongeBobChoice = (0, _protractor.element)(by.xpath('//md-radio-button[@aria-label="Spongebob"]'));
-  var patrickChoice = (0, _protractor.element)(by.xpath('//md-radio-button[@aria-label="Patrick"]'));
-  var squidwardChoice = (0, _protractor.element)(by.xpath('//md-radio-button[@aria-label="Squidward"]'));
+  var spongeBobChoice = (0, _protractor.element)(by.cssContainingText('md-radio-button', 'Spongebob'));
+  var patrickChoice = (0, _protractor.element)(by.cssContainingText('md-radio-button', 'Patrick'));
+  var squidwardChoice = (0, _protractor.element)(by.cssContainingText('md-radio-button', 'Squidward'));
 
   function shouldDisplayDefaultElements(vle, mc) {
     vle.nodeSelectMenuShouldSay('1.5: Multiple Choice Step Single Answer');
