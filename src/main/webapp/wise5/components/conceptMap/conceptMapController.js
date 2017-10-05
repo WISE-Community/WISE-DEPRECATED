@@ -1190,7 +1190,7 @@ var ConceptMapController = function () {
 
                     if (resultString != "") {
                         // show the auto feedback in a modal dialog
-                        this.$mdDialog.show(this.$mdDialog.alert().parent(angular.element(document.querySelector('#' + this.feedbackContainerId))).clickOutsideToClose(true).title(this.$translate('FEEDBACK')).htmlContent(resultString).ariaLabel(this.$translate('FEEDBACK')).ok(this.$translate('CLOSE')));
+                        this.$mdDialog.show(this.$mdDialog.alert().clickOutsideToClose(true).title(this.$translate('FEEDBACK')).htmlContent(resultString).ariaLabel(this.$translate('FEEDBACK')).ok(this.$translate('CLOSE')));
                     }
 
                     // remember the feedback string
