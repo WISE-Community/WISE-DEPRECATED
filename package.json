@@ -48,7 +48,7 @@
     "compile-sass": "node ./node_modules/gulp/bin/gulp.js compile-sass",
     "test": "node ./node_modules/karma/bin/karma start --single-run --browsers PhantomJS",
     "test-e2e-comment": "test-e2e assumes wise is already running.",
-    "test-e2e": "node ./node_modules/protractor/bin/protractor src/main/webapp/wise5/test-e2e/conf.js",
+    "test-e2e": "node ./node_modules/protractor/bin/protractor src/main/webapp/wise5/test-e2e/conf.js --suite preview,components",
     "test-e2e-all-comment": "test-e2e-all assumes wise is not running yet.",
     "test-e2e-all": "./wise.sh run & sleep 20; ./node_modules/protractor/bin/webdriver-manager update; ./node_modules/protractor/bin/webdriver-manager start & ./node_modules/protractor/bin/protractor src/main/webapp/wise5/test-e2e/conf.js; for pid in $(ps -ef | awk '/tomcat7:run/ {print $2}'); do kill -9 $pid; done",
     "test-watch": "./node_modules/karma/bin/karma start --browsers Chrome"
