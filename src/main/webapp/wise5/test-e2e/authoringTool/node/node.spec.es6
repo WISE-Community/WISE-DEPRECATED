@@ -49,7 +49,7 @@ describe('WISE Authoring Tool Step View', () => {
     const page = new StepPage();
     const ms = new Date().getTime();
     page.setStepTitle('Step ' + ms);
-    expect(page.stepSelectMenu.element(by.css('md-select-value span')).getText()).toContain(': Step ' + ms);
+    expect(page.stepSelectMenu.all(by.css('md-select-value span')).first().getText()).toContain(': Step ' + ms);
   });
 
   it('should add a component', () => {

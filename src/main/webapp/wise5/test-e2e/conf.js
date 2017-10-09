@@ -32,6 +32,10 @@ exports.config = {
     }
     */
   }],
+  onPrepare: function onPrepare() {
+    var SpecReporter = require('jasmine-spec-reporter').SpecReporter;
+    jasmine.getEnv().addReporter(new SpecReporter({ displayStacktrace: 'all' }));
+  },
   params: {
     login: {
       user: 'preview',

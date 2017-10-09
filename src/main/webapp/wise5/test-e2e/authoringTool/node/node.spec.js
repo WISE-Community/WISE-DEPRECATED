@@ -60,7 +60,7 @@ describe('WISE Authoring Tool Step View', function () {
     var page = new _nodePage2.default();
     var ms = new Date().getTime();
     page.setStepTitle('Step ' + ms);
-    expect(page.stepSelectMenu.element(by.css('md-select-value span')).getText()).toContain(': Step ' + ms);
+    expect(page.stepSelectMenu.all(by.css('md-select-value span')).first().getText()).toContain(': Step ' + ms);
   });
 
   it('should add a component', function () {

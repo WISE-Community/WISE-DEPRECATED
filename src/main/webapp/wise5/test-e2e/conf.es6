@@ -29,7 +29,7 @@ exports.config = {
         'vle/previewProject.spec.js'
       ]
     },
-    multiCapabilities : [
+    multiCapabilities: [
         {
             'browserName': 'chrome',
             'tunnel-identifier': process.env.TRAVIS_JOB_NUMBER,
@@ -43,6 +43,10 @@ exports.config = {
         }
         */
     ],
+    onPrepare: function() {
+      var SpecReporter = require('jasmine-spec-reporter').SpecReporter;
+      jasmine.getEnv().addReporter(new SpecReporter({displayStacktrace: 'all'}));
+    },
     params: {
       login: {
         user: 'preview',
