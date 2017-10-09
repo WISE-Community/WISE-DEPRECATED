@@ -4,49 +4,49 @@ export function hasClass(element, cls) {
   });
 }
 
-export function shouldBePresent(elements) {
+export function shouldBePresent(...elements) {
   for (let element of elements) {
     expect(element.isPresent()).toBeTruthy();
   }
 }
 
-export function shouldBeAbsent(elements) {
+export function shouldBeAbsent(...elements) {
   for (let element of elements) {
     expect(element.isPresent()).toBeFalsy();
   }
 }
 
-export function shouldBeHidden(elements) {
+export function shouldBeHidden(...elements) {
   for (let element of elements) {
-    expect(element.getAttribute('aria-hidden')).toEqual("true")
+    expect(element.isDisplayed()).toBeFalsy();
   }
 }
 
-export function shouldBeDisplayed(elements) {
+export function shouldBeDisplayed(...elements) {
   for (let element of elements) {
-    expect(element.getAttribute('aria-hidden')).toEqual("false");
+    expect(element.isDisplayed()).toBeTruthy();
   }
 }
 
-export function shouldBeDisabled(elements) {
+export function shouldBeDisabled(...elements) {
   for (let element of elements) {
     expect(element.getAttribute('disabled')).toBeTruthy();
   }
 }
 
-export function shouldBeEnabled(elements) {
+export function shouldBeEnabled(...elements) {
   for (let element of elements) {
     expect(element.getAttribute('disabled')).toBeNull();
   }
 }
 
-export function shouldBeSelected(choices) {
+export function shouldBeSelected(...choices) {
   for (let choice of choices) {
     expect(choice.getAttribute('aria-checked')).toBe("true");
   }
 }
 
-export function shouldBeUnselected(choices) {
+export function shouldBeUnselected(...choices) {
   for (let choice of choices) {
     expect(choice.getAttribute('aria-checked')).toBe("false");
   }
@@ -54,4 +54,8 @@ export function shouldBeUnselected(choices) {
 
 export function urlShouldBe(expectedURL) {
   expect(browser.getCurrentUrl()).toEqual(expectedURL);
+}
+
+export function urlShouldMatch(urlRegex) {
+  expect(browser.getCurrentUrl()).toMatch(urlRegex);
 }

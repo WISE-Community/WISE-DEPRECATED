@@ -33,12 +33,12 @@ describe('WISE5 Student VLE Preview', function () {
   it('should show first step and default UI elements on the page', function () {
     var vle = new _vlePage2.default();
     vle.nodeSelectMenuShouldSay('1.1: HTML Step');
-    common.shouldBePresent([vle.prevButton, vle.nextButton, vle.closeNodeButton, vle.accountButton, vle.accountMenu, vle.notificationButton, vle.notificationMenu]);
-    common.shouldBeHidden([vle.accountMenu, vle.notificationMenu]);
+    common.shouldBePresent(vle.prevButton, vle.nextButton, vle.closeNodeButton, vle.accountButton, vle.accountMenu, vle.notificationButton, vle.notificationMenu);
+    common.shouldBeHidden(vle.accountMenu, vle.notificationMenu);
     var nodeContent = (0, _protractor.element)(by.cssContainingText('.node-content', 'This is a step where authors can enter their own html.'));
-    common.shouldBePresent([nodeContent]);
-    common.shouldBeEnabled([vle.nextButton]);
-    common.shouldBeDisabled([vle.prevButton]);
+    common.shouldBePresent(nodeContent);
+    common.shouldBeEnabled(vle.nextButton);
+    common.shouldBeDisabled(vle.prevButton);
   });
 
   it('should navigate next and previous steps using the buttons', function () {
@@ -46,15 +46,15 @@ describe('WISE5 Student VLE Preview', function () {
     vle.goToNextStep();
     common.urlShouldBe('http://localhost:8080/wise/project/demo#/vle/node2');
     vle.nodeSelectMenuShouldSay('1.2: Open Response Step');
-    common.shouldBeEnabled([vle.prevButton, vle.nextButton]);
+    common.shouldBeEnabled(vle.prevButton, vle.nextButton);
     var nodeContent = (0, _protractor.element)(by.cssContainingText('.node-content', 'This is a step where students enter text.'));
-    common.shouldBePresent([nodeContent]);
+    common.shouldBePresent(nodeContent);
 
     vle.goToNextStep();
     common.urlShouldBe('http://localhost:8080/wise/project/demo#/vle/node3');
     vle.nodeSelectMenuShouldSay('1.3: Open Response Step Auto Graded');
     nodeContent = (0, _protractor.element)(by.cssContainingText('.node-content', 'Explain how the sun helps animals survive.'));
-    common.shouldBePresent([nodeContent]);
+    common.shouldBePresent(nodeContent);
 
     vle.goToPreviousStep();
     common.urlShouldBe('http://localhost:8080/wise/project/demo#/vle/node2');
@@ -143,29 +143,29 @@ describe('WISE5 Student VLE Preview', function () {
   it('should allow preview user to view the account menu', function () {
     var vle = new _vlePage2.default();
     vle.openAccountMenu();
-    common.shouldBeDisplayed([vle.accountMenu]);
+    common.shouldBeDisplayed(vle.accountMenu);
 
     // account menu should have the preview user account icon and the exit and sign out buttons
     _protractor.element.all(by.repeater('userName in themeCtrl.workgroupUserNames')).then(function (workgroupNames) {
       expect(workgroupNames[0].getText()).toBe('Preview Team');
     });
 
-    common.shouldBePresent([vle.exitButton, vle.logOutButton]);
+    common.shouldBePresent(vle.exitButton, vle.logOutButton);
 
     _protractor.browser.actions().sendKeys(protractor.Key.ESCAPE).perform();
-    common.shouldBeHidden([vle.accountMenu]);
+    common.shouldBeHidden(vle.accountMenu);
 
     vle.openAccountMenu();
-    common.shouldBeDisplayed([vle.accountMenu]);
+    common.shouldBeDisplayed(vle.accountMenu);
 
     clickOnPageBody();
-    common.shouldBeHidden([vle.accountMenu]);
+    common.shouldBeHidden(vle.accountMenu);
   });
 
   it('should allow preview user to view the notification menu', function () {
     var vle = new _vlePage2.default();
     vle.openNotificationMenu();
-    common.shouldBeDisplayed([vle.notificationMenu]);
+    common.shouldBeDisplayed(vle.notificationMenu);
 
     // notification menu should have the Alerts title and say that there are no alerts.
     var notificationDialogTitle = (0, _protractor.element)(by.xpath('//md-toolbar/span/span[@translate="notificationsTitle"]'));
@@ -177,13 +177,13 @@ describe('WISE5 Student VLE Preview', function () {
     expect(notificationDialogContent.getText()).toEqual("Hi there! You currently have no alerts.");
 
     _protractor.browser.actions().sendKeys(protractor.Key.ESCAPE).perform();
-    common.shouldBeHidden([vle.notificationMenu]);
+    common.shouldBeHidden(vle.notificationMenu);
 
     vle.openNotificationMenu();
-    common.shouldBeDisplayed([vle.notificationMenu]);
+    common.shouldBeDisplayed(vle.notificationMenu);
 
     clickOnPageBody();
-    common.shouldBeHidden([vle.notificationMenu]);
+    common.shouldBeHidden(vle.notificationMenu);
   });
 });
 //# sourceMappingURL=previewProject.spec.js.map

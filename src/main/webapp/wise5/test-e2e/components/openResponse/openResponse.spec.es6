@@ -6,26 +6,26 @@ import OpenResponsePage from './openResponsePage.js'
 describe('WISE5 Open Response Component', () => {
   function shouldDisplayDefaultElements(vle, or) {
     vle.nodeSelectMenuShouldSay('1.2: Open Response Step');
-    common.shouldBePresent([or.textarea, or.saveButton, or.submitButton]);
-    common.shouldBeAbsent([or.saveMessage]);
-    common.shouldBeDisabled([or.saveButton, or.submitButton]);
+    common.shouldBePresent(or.textarea, or.saveButton, or.submitButton);
+    common.shouldBeAbsent(or.saveMessage);
+    common.shouldBeDisabled(or.saveButton, or.submitButton);
 
     const prompt = or.getPrompt();
-    common.shouldBePresent([prompt]);
+    common.shouldBePresent(prompt);
     expect(prompt.getText())
         .toEqual('This is a step where students enter text.');
   }
 
   function save(or) {
     or.save();
-    common.shouldBeDisabled([or.saveButton]);
-    common.shouldBeEnabled([or.submitButton]);
+    common.shouldBeDisabled(or.saveButton);
+    common.shouldBeEnabled(or.submitButton);
     expect(or.saveMessage.getText()).toContain("Saved");
   }
 
   function submit(or) {
     or.submit();
-    common.shouldBeDisabled([or.saveButton, or.saveButton]);
+    common.shouldBeDisabled(or.saveButton, or.saveButton);
     expect(or.submitMessage.getText()).toContain("Submitted");
   }
 
@@ -49,11 +49,11 @@ describe('WISE5 Open Response Component', () => {
     const firstSentence = 'Here is my first sentence. ';
     or.typeResponse(firstSentence);
     textareaShouldSay(or, firstSentence);
-    common.shouldBeEnabled([or.saveButton, or.submitButton]);
+    common.shouldBeEnabled(or.saveButton, or.submitButton);
 
     save(or);
-    common.shouldBeDisabled([or.saveButton]);
-    common.shouldBeEnabled([or.submitButton]);
+    common.shouldBeDisabled(or.saveButton);
+    common.shouldBeEnabled(or.submitButton);
 
     // should be able to continue editing response text even after saving
     const secondSentence = 'Here is my second sentence. ';
@@ -61,7 +61,7 @@ describe('WISE5 Open Response Component', () => {
     textareaShouldSay(or, firstSentence + secondSentence);
 
     submit(or);
-    common.shouldBeDisabled([or.saveButton, or.submitButton]);
+    common.shouldBeDisabled(or.saveButton, or.submitButton);
 
     // should be able to continue editing response text even after submitting
     const thirdSentence = 'Here is my third sentence.';
@@ -75,7 +75,7 @@ describe('WISE5 Open Response Component', () => {
     const seaShellsSentence = 'She sells seashells by the seashore.';
     or.typeResponse(seaShellsSentence);
     textareaShouldSay(or, seaShellsSentence);
-    common.shouldBeEnabled([or.saveButton, or.submitButton]);
+    common.shouldBeEnabled(or.saveButton, or.submitButton);
 
     const vle = new VLEPage();
     vle.goToPreviousStep();
@@ -88,7 +88,7 @@ describe('WISE5 Open Response Component', () => {
     textareaShouldSay(or, seaShellsSentence);
 
     // auto-save should have occurred, so the save button is disabled.
-    common.shouldBeDisabled([or.saveButton]);
-    common.shouldBeEnabled([or.submitButton]);
+    common.shouldBeDisabled(or.saveButton);
+    common.shouldBeEnabled(or.submitButton);
   });
 });

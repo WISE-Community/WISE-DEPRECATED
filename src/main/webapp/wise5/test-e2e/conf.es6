@@ -12,7 +12,11 @@ exports.config = {
         // 'notebook/notebook.spec.js',
         // 'portal/portal.spec.js',
         // 'portal/forgotAccount.spec.js',
-        // 'authoringTool/authoringTool.spec.js',
+        'authoringTool/info/info.spec.js',
+        'authoringTool/node/node.spec.js',
+        'authoringTool/notebook/notebook.spec.js',
+        'authoringTool/project/project.spec.js',
+        'authoringTool/projectList/projectList.spec.js',
         // 'portal/setUpRun.spec.js',
         // 'classroomMonitor/classroomMonitor.spec.js'
     ],
@@ -29,7 +33,14 @@ exports.config = {
             'build': process.env.TRAVIS_BUILD_NUMBER
         }
         */
-    ]
+    ],
+    params: {
+      login: {
+        user: 'preview',
+        password: 'wise'
+      },
+      authoringProjectId: 1
+    }
 };
 
 module.exports.config = exports.config;

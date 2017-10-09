@@ -25,27 +25,27 @@ describe('WISE5 Multiple Choice Component Select One (radio)', function () {
 
   function shouldDisplayDefaultElements(vle, mc) {
     vle.nodeSelectMenuShouldSay('1.5: Multiple Choice Step Single Answer');
-    common.shouldBePresent([mc.radioGroup, mc.saveButton, mc.submitButton]);
-    common.shouldBeAbsent([mc.saveMessage]);
-    common.shouldBeDisabled([mc.saveButton, mc.submitButton]);
+    common.shouldBePresent(mc.radioGroup, mc.saveButton, mc.submitButton);
+    common.shouldBeAbsent(mc.saveMessage);
+    common.shouldBeDisabled(mc.saveButton, mc.submitButton);
 
     var prompt = mc.getPrompt();
-    common.shouldBePresent([prompt, spongeBobChoice, patrickChoice, squidwardChoice]);
+    common.shouldBePresent(prompt, spongeBobChoice, patrickChoice, squidwardChoice);
     expect(prompt.getText()).toEqual('This is a multiple choice step where' + ' the student is allowed to choose one choice.\nWho lives in a' + ' pineapple under the sea?');
-    common.shouldBeEnabled([spongeBobChoice, patrickChoice, squidwardChoice]);
-    common.shouldBeUnselected([spongeBobChoice, patrickChoice, squidwardChoice]);
+    common.shouldBeEnabled(spongeBobChoice, patrickChoice, squidwardChoice);
+    common.shouldBeUnselected(spongeBobChoice, patrickChoice, squidwardChoice);
   }
 
   function save(mc) {
     mc.save();
-    common.shouldBeDisabled([mc.saveButton]);
-    common.shouldBeEnabled([mc.submitButton]);
+    common.shouldBeDisabled(mc.saveButton);
+    common.shouldBeEnabled(mc.submitButton);
     expect(mc.saveMessage.getText()).toContain("Saved");
   }
 
   function submit(mc) {
     mc.submit();
-    common.shouldBeDisabled([mc.saveButton, mc.saveButton]);
+    common.shouldBeDisabled(mc.saveButton, mc.saveButton);
     expect(mc.submitMessage.getText()).toContain("Submitted");
   }
 
@@ -63,49 +63,49 @@ describe('WISE5 Multiple Choice Component Select One (radio)', function () {
   it('should allow user to choose a choice and save', function () {
     var mc = new _multipleChoicePage2.default();
     spongeBobChoice.click();
-    common.shouldBeSelected([spongeBobChoice]);
-    common.shouldBeUnselected([patrickChoice, squidwardChoice]);
-    common.shouldBeEnabled([mc.saveButton, mc.submitButton]);
+    common.shouldBeSelected(spongeBobChoice);
+    common.shouldBeUnselected(patrickChoice, squidwardChoice);
+    common.shouldBeEnabled(mc.saveButton, mc.submitButton);
 
     save(mc);
 
     // same choices should still be selected
-    common.shouldBeSelected([spongeBobChoice]);
-    common.shouldBeUnselected([patrickChoice, squidwardChoice]);
+    common.shouldBeSelected(spongeBobChoice);
+    common.shouldBeUnselected(patrickChoice, squidwardChoice);
 
     // should still be able to choose after saving
-    common.shouldBeEnabled([spongeBobChoice, patrickChoice, squidwardChoice]);
+    common.shouldBeEnabled(spongeBobChoice, patrickChoice, squidwardChoice);
     patrickChoice.click();
-    common.shouldBeSelected([patrickChoice]);
-    common.shouldBeUnselected([spongeBobChoice, squidwardChoice]);
-    common.shouldBeEnabled([mc.saveButton, mc.submitButton]);
+    common.shouldBeSelected(patrickChoice);
+    common.shouldBeUnselected(spongeBobChoice, squidwardChoice);
+    common.shouldBeEnabled(mc.saveButton, mc.submitButton);
   });
 
   it('should allow user to choose a choice and submit', function () {
     var mc = new _multipleChoicePage2.default();
     patrickChoice.click();
-    common.shouldBeSelected([patrickChoice]);
-    common.shouldBeUnselected([spongeBobChoice, squidwardChoice]);
-    common.shouldBeEnabled([mc.saveButton, mc.submitButton]);
+    common.shouldBeSelected(patrickChoice);
+    common.shouldBeUnselected(spongeBobChoice, squidwardChoice);
+    common.shouldBeEnabled(mc.saveButton, mc.submitButton);
 
     submit(mc);
 
     // same choices should still be selected
-    common.shouldBeSelected([patrickChoice]);
-    common.shouldBeUnselected([spongeBobChoice, squidwardChoice]);
+    common.shouldBeSelected(patrickChoice);
+    common.shouldBeUnselected(spongeBobChoice, squidwardChoice);
 
     // should still be able to choose after submitting
-    common.shouldBeEnabled([spongeBobChoice, patrickChoice, squidwardChoice]);
+    common.shouldBeEnabled(spongeBobChoice, patrickChoice, squidwardChoice);
     squidwardChoice.click();
-    common.shouldBeSelected([squidwardChoice]);
-    common.shouldBeUnselected([spongeBobChoice, patrickChoice]);
+    common.shouldBeSelected(squidwardChoice);
+    common.shouldBeUnselected(spongeBobChoice, patrickChoice);
   });
 
   it('should preserve selected choices between step visits', function () {
     var mc = new _multipleChoicePage2.default();
     spongeBobChoice.click();
-    common.shouldBeSelected([spongeBobChoice]);
-    common.shouldBeUnselected([squidwardChoice, patrickChoice]);
+    common.shouldBeSelected(spongeBobChoice);
+    common.shouldBeUnselected(squidwardChoice, patrickChoice);
 
     var vle = new _vlePage2.default();
     vle.goToNextStep();
@@ -115,8 +115,8 @@ describe('WISE5 Multiple Choice Component Select One (radio)', function () {
     vle.goToPreviousStep();
     common.urlShouldBe('http://localhost:8080/wise/project/demo#/vle/node5');
     vle.nodeSelectMenuShouldSay('1.5: Multiple Choice Step Single Answer');
-    common.shouldBeSelected([spongeBobChoice]);
-    common.shouldBeUnselected([squidwardChoice, patrickChoice]);
+    common.shouldBeSelected(spongeBobChoice);
+    common.shouldBeUnselected(squidwardChoice, patrickChoice);
   });
 });
 //# sourceMappingURL=multipleChoiceRadio.spec.js.map
