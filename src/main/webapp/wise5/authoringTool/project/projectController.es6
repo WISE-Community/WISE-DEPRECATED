@@ -181,7 +181,7 @@ class ProjectController {
     });
 
     this.$rootScope.$on('projectSaved', () => {
-      this.saveEvent('projectSaved', 'Authoring');
+      //this.saveEvent('projectSaved', 'Authoring');
     });
 
     /*

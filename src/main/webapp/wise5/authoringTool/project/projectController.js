@@ -153,7 +153,7 @@ var ProjectController = function () {
     });
 
     this.$rootScope.$on('projectSaved', function () {
-      _this.saveEvent('projectSaved', 'Authoring');
+      //this.saveEvent('projectSaved', 'Authoring');
     });
 
     /*
