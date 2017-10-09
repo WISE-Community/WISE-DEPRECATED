@@ -3,23 +3,32 @@ exports.config = {
     sauceUser: process.env.SAUCE_USERNAME,
     sauceKey: process.env.SAUCE_ACCESS_KEY,
     //seleniumAddress: 'http://localhost:4444/wd/hub',
-
-    specs: [
-        'vle/previewProject.spec.js',
-        'components/multipleChoice/multipleChoiceRadio.spec.js',
-        'components/multipleChoice/multipleChoiceCheckbox.spec.js',
-        'components/openResponse/openResponse.spec.js',
-        // 'notebook/notebook.spec.js',
-        // 'portal/portal.spec.js',
-        // 'portal/forgotAccount.spec.js',
+    suites: {
+      authoringTool: [
         'authoringTool/info/info.spec.js',
         'authoringTool/node/node.spec.js',
         'authoringTool/notebook/notebook.spec.js',
         'authoringTool/project/project.spec.js',
-        'authoringTool/projectList/projectList.spec.js',
-        // 'portal/setUpRun.spec.js',
-        // 'classroomMonitor/classroomMonitor.spec.js'
-    ],
+        'authoringTool/projectList/projectList.spec.js'
+      ],
+      classroomMonitor: [
+        //'classroomMonitor/classroomMonitor.spec.js'
+      ],
+      components: [
+        'components/multipleChoice/multipleChoiceCheckbox.spec.js',
+        'components/multipleChoice/multipleChoiceRadio.spec.js',
+        'components/openResponse/openResponse.spec.js'
+      ],
+      portal: [
+        //'portal/forgotAccount.spec.js',
+        //'portal/portal.spec.js',
+        //'portal/setUpRun.spec.js'
+      ],
+      vle: [
+        //'notebook/notebook.spec.js',
+        'vle/previewProject.spec.js'
+      ]
+    },
     multiCapabilities : [
         {
             'browserName': 'chrome',
