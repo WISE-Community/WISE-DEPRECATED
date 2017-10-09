@@ -927,30 +927,9 @@ class ProjectController {
         // we have found a leaf node
         let currentStartNodeId = this.ProjectService.getStartNodeId();
         if (currentStartNodeId != firstLeafNodeId) {
-          /*
-           * the node ids are different which means the first leaf node
-           * id is different than the current start node id and that
-           * the author may want to use the first leaf node id as the
-           * new start node id
-           */
-          let firstLeafNode = this.ProjectService.getNodeById(firstLeafNodeId);
-          if (firstLeafNode != null) {
-            let firstChildTitle = firstLeafNode.title;
-
-            // ask the user if they would like to change the start
-            // step to the step that is now the first child in the group
-            let confirmUpdateStartStep =
-                this.$translate('confirmUpdateStartStep',
-                    { startStepTitle: firstChildTitle });
-            if (confirm(confirmUpdateStartStep)) {
-              this.ProjectService.setStartNodeId(firstLeafNodeId);
-              resolve();
-            } else {
-              resolve();
-            }
-          } else {
-            resolve();
-          }
+          // update the start node id
+          this.ProjectService.setStartNodeId(firstLeafNodeId);
+          resolve();
         } else {
           resolve();
         }

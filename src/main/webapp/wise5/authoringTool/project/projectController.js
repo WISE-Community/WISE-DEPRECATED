@@ -1111,28 +1111,9 @@ var ProjectController = function () {
           // we have found a leaf node
           var currentStartNodeId = _this8.ProjectService.getStartNodeId();
           if (currentStartNodeId != firstLeafNodeId) {
-            /*
-             * the node ids are different which means the first leaf node
-             * id is different than the current start node id and that
-             * the author may want to use the first leaf node id as the
-             * new start node id
-             */
-            var firstLeafNode = _this8.ProjectService.getNodeById(firstLeafNodeId);
-            if (firstLeafNode != null) {
-              var firstChildTitle = firstLeafNode.title;
-
-              // ask the user if they would like to change the start
-              // step to the step that is now the first child in the group
-              var confirmUpdateStartStep = _this8.$translate('confirmUpdateStartStep', { startStepTitle: firstChildTitle });
-              if (confirm(confirmUpdateStartStep)) {
-                _this8.ProjectService.setStartNodeId(firstLeafNodeId);
-                resolve();
-              } else {
-                resolve();
-              }
-            } else {
-              resolve();
-            }
+            // update the start node id
+            _this8.ProjectService.setStartNodeId(firstLeafNodeId);
+            resolve();
           } else {
             resolve();
           }

@@ -382,7 +382,7 @@
             </div>
             <div>
               <md-input-container style='margin-right: 20px; width: 150px; height: 50px;'>
-                <md-button class='topButton md-raised md-primary' ng-click='projectController.showJSONClicked()'>
+                <md-button id='showProjectJSONButton' class='topButton md-raised md-primary' ng-click='projectController.showJSONClicked()'>
                   <md-icon>code</md-icon>
                   <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'SHOW_JSON' | translate }}</md-tooltip>
                 </md-button>
@@ -400,6 +400,7 @@
           </div>
           <div style='margin-top: 20px; margin-left: 20px'>
             <div ng-repeat='item in projectController.items | toArray | orderBy : "order"'
+               class='projectItem'
                ng-class='{"node-select--group": projectController.isGroupNode(item.$key), "node-select--node": !projectController.isGroupNode(item.$key)}'
                ng-if='projectController.projectMode'>
               <div id='{{item.$key}}' layout="row"

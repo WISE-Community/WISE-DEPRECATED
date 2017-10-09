@@ -1,7 +1,7 @@
 import {browser, element} from 'protractor';
 import * as common from '../../common.js';
 import VLEPage from '../../vlePage.js';
-import MultipleChoicePage from './multipleChoicePage.js'
+import MultipleChoicePage from './multipleChoicePage.js';
 
 describe('WISE5 Multiple Choice Component Select One (radio)', () => {
   const spongeBobChoice = element(by.xpath('//md-radio-button[@aria-label="Spongebob"]'));

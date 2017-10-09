@@ -13,13 +13,18 @@ exports.shouldBeEnabled = shouldBeEnabled;
 exports.shouldBeSelected = shouldBeSelected;
 exports.shouldBeUnselected = shouldBeUnselected;
 exports.urlShouldBe = urlShouldBe;
+exports.urlShouldMatch = urlShouldMatch;
 function hasClass(element, cls) {
   return element.getAttribute('class').then(function (classes) {
     return classes.split(' ').indexOf(cls) !== -1;
   });
 }
 
-function shouldBePresent(elements) {
+function shouldBePresent() {
+  for (var _len = arguments.length, elements = Array(_len), _key = 0; _key < _len; _key++) {
+    elements[_key] = arguments[_key];
+  }
+
   var _iteratorNormalCompletion = true;
   var _didIteratorError = false;
   var _iteratorError = undefined;
@@ -46,7 +51,11 @@ function shouldBePresent(elements) {
   }
 }
 
-function shouldBeAbsent(elements) {
+function shouldBeAbsent() {
+  for (var _len2 = arguments.length, elements = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+    elements[_key2] = arguments[_key2];
+  }
+
   var _iteratorNormalCompletion2 = true;
   var _didIteratorError2 = false;
   var _iteratorError2 = undefined;
@@ -73,7 +82,11 @@ function shouldBeAbsent(elements) {
   }
 }
 
-function shouldBeHidden(elements) {
+function shouldBeHidden() {
+  for (var _len3 = arguments.length, elements = Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
+    elements[_key3] = arguments[_key3];
+  }
+
   var _iteratorNormalCompletion3 = true;
   var _didIteratorError3 = false;
   var _iteratorError3 = undefined;
@@ -82,7 +95,7 @@ function shouldBeHidden(elements) {
     for (var _iterator3 = elements[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
       var element = _step3.value;
 
-      expect(element.getAttribute('aria-hidden')).toEqual("true");
+      expect(element.isDisplayed()).toBeFalsy();
     }
   } catch (err) {
     _didIteratorError3 = true;
@@ -100,7 +113,11 @@ function shouldBeHidden(elements) {
   }
 }
 
-function shouldBeDisplayed(elements) {
+function shouldBeDisplayed() {
+  for (var _len4 = arguments.length, elements = Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
+    elements[_key4] = arguments[_key4];
+  }
+
   var _iteratorNormalCompletion4 = true;
   var _didIteratorError4 = false;
   var _iteratorError4 = undefined;
@@ -109,7 +126,7 @@ function shouldBeDisplayed(elements) {
     for (var _iterator4 = elements[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
       var element = _step4.value;
 
-      expect(element.getAttribute('aria-hidden')).toEqual("false");
+      expect(element.isDisplayed()).toBeTruthy();
     }
   } catch (err) {
     _didIteratorError4 = true;
@@ -237,5 +254,9 @@ function shouldBeUnselected(choices) {
 
 function urlShouldBe(expectedURL) {
   expect(browser.getCurrentUrl()).toEqual(expectedURL);
+}
+
+function urlShouldMatch(urlRegex) {
+  expect(browser.getCurrentUrl()).toMatch(urlRegex);
 }
 //# sourceMappingURL=common.js.map

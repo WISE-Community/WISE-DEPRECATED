@@ -4,27 +4,27 @@ export function hasClass(element, cls) {
   });
 }
 
-export function shouldBePresent(elements) {
+export function shouldBePresent(...elements) {
   for (let element of elements) {
     expect(element.isPresent()).toBeTruthy();
   }
 }
 
-export function shouldBeAbsent(elements) {
+export function shouldBeAbsent(...elements) {
   for (let element of elements) {
     expect(element.isPresent()).toBeFalsy();
   }
 }
 
-export function shouldBeHidden(elements) {
+export function shouldBeHidden(...elements) {
   for (let element of elements) {
-    expect(element.getAttribute('aria-hidden')).toEqual("true")
+    expect(element.isDisplayed()).toBeFalsy();
   }
 }
 
-export function shouldBeDisplayed(elements) {
+export function shouldBeDisplayed(...elements) {
   for (let element of elements) {
-    expect(element.getAttribute('aria-hidden')).toEqual("false");
+    expect(element.isDisplayed()).toBeTruthy();
   }
 }
 
@@ -54,4 +54,8 @@ export function shouldBeUnselected(choices) {
 
 export function urlShouldBe(expectedURL) {
   expect(browser.getCurrentUrl()).toEqual(expectedURL);
+}
+
+export function urlShouldMatch(urlRegex) {
+  expect(browser.getCurrentUrl()).toMatch(urlRegex);
 }
