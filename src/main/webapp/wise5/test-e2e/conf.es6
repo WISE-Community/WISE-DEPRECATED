@@ -5,16 +5,16 @@ exports.config = {
     //seleniumAddress: 'http://localhost:4444/wd/hub',
 
     specs: [
-        //'previewVLE.spec.js',
-        'components/multipleChoiceRadio.spec.js',
-        'components/multipleChoiceCheckbox.spec.js',
-        'components/openResponse.spec.js',
-        // 'notebook.spec.js',
+        'vle/previewProject.spec.js',
+        'components/multipleChoice/multipleChoiceRadio.spec.js',
+        'components/multipleChoice/multipleChoiceCheckbox.spec.js',
+        'components/openResponse/openResponse.spec.js',
+        // 'notebook/notebook.spec.js',
         // 'portal/portal.spec.js',
         // 'portal/forgotAccount.spec.js',
-        // 'authoringTool.spec.js',
-        // 'setUpRun.spec.js',
-        // 'classroomMonitor.spec.js'
+        // 'authoringTool/authoringTool.spec.js',
+        // 'portal/setUpRun.spec.js',
+        // 'classroomMonitor/classroomMonitor.spec.js'
     ],
     multiCapabilities : [
         {

@@ -2,24 +2,40 @@
 
 class ProjectHistoryController {
 
-    constructor($state, $stateParams, $scope, ProjectService) {
-        this.$state = $state;
-        this.$stateParams = $stateParams;
-        this.$scope = $scope;
-        this.projectId = this.$stateParams.projectId;
-        this.ProjectService = ProjectService;
+  constructor(
+      $state,
+      $stateParams,
+      $scope,
+      ProjectService) {
+    this.$state = $state;
+    this.$stateParams = $stateParams;
+    this.$scope = $scope;
+    this.projectId = this.$stateParams.projectId;
+    this.ProjectService = ProjectService;
 
-        // Retrieve and display the commit history for the current project.
-        this.ProjectService.getCommitHistory().then((commitHistoryArray) => {
-            this.commitHistory = commitHistoryArray;
-        });
-    }
+    this.retrieveCommitHistory();
+  }
 
-    exit() {
-        this.$state.go('root.project', {projectId: this.projectId});
-    }
+  /**
+   * Return to main authoring view
+   * TODO rename to returnToAuthoringView
+   */
+  exit() {
+    this.$state.go('root.project', {projectId: this.projectId});
+  }
+
+  retrieveCommitHistory() {
+    this.ProjectService.getCommitHistory().then((commitHistoryArray) => {
+      this.commitHistory = commitHistoryArray;
+    });
+  }
 }
 
-ProjectHistoryController.$inject = ['$state', '$stateParams', '$scope', 'ProjectService'];
+ProjectHistoryController.$inject = [
+    '$state',
+    '$stateParams',
+    '$scope',
+    'ProjectService'
+];
 
 export default ProjectHistoryController

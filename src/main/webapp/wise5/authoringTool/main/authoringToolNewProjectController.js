@@ -1,7 +1,7 @@
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
+  value: true
 });
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -9,51 +9,50 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var AuthoringToolNewProjectController = function () {
-    function AuthoringToolNewProjectController($filter, $state, $timeout, ConfigService, ProjectService) {
-        _classCallCheck(this, AuthoringToolNewProjectController);
+  function AuthoringToolNewProjectController($filter, $state, $timeout, ConfigService, ProjectService) {
+    _classCallCheck(this, AuthoringToolNewProjectController);
 
-        this.$filter = $filter;
-        this.$state = $state;
-        this.$timeout = $timeout;
-        this.ConfigService = ConfigService;
-        this.ProjectService = ProjectService;
+    this.$filter = $filter;
+    this.$state = $state;
+    this.$timeout = $timeout;
+    this.ConfigService = ConfigService;
+    this.ProjectService = ProjectService;
+    this.$translate = this.$filter('translate');
+    this.project = this.ProjectService.getNewProjectTemplate();
 
-        this.$translate = this.$filter('translate');
+    // focus on the newProjectTitle input element
+    this.$timeout(function () {
+      var newProjectTitleInput = document.getElementById('newProjectTitle');
+      if (newProjectTitleInput != null) {
+        newProjectTitleInput.focus();
+      }
+    });
+  }
 
-        this.project = this.ProjectService.getNewProjectTemplate();
+  /**
+   * Register a new project with WISE
+   */
 
-        /*
-         * we are showing the create new project view so we will give focus to
-         * the newProjectTitle input element
-         */
-        this.$timeout(function () {
-            var newProjectTitleInput = document.getElementById('newProjectTitle');
 
-            if (newProjectTitleInput != null) {
-                newProjectTitleInput.focus();
-            }
-        });
+  _createClass(AuthoringToolNewProjectController, [{
+    key: 'registerNewProject',
+    value: function registerNewProject() {
+      var _this = this;
+
+      var projectJSONString = angular.toJson(this.project, 4);
+      var commitMessage = this.$translate('projectCreatedOn') + new Date().getTime();
+      this.ProjectService.registerNewProject(projectJSONString, commitMessage).then(function (projectId) {
+        _this.$state.go('root.project', { projectId: projectId });
+      });
     }
+  }, {
+    key: 'cancelRegisterNewProject',
+    value: function cancelRegisterNewProject() {
+      this.$state.go('root.main');
+    }
+  }]);
 
-    _createClass(AuthoringToolNewProjectController, [{
-        key: 'registerNewProject',
-        value: function registerNewProject() {
-            var _this = this;
-
-            var projectJSONString = angular.toJson(this.project, 4);
-            var commitMessage = this.$translate('projectCreatedOn') + new Date().getTime();
-            this.ProjectService.registerNewProject(projectJSONString, commitMessage).then(function (projectId) {
-                _this.$state.go('root.project', { projectId: projectId });
-            });
-        }
-    }, {
-        key: 'cancelRegisterNewProject',
-        value: function cancelRegisterNewProject() {
-            this.$state.go('root.main');
-        }
-    }]);
-
-    return AuthoringToolNewProjectController;
+  return AuthoringToolNewProjectController;
 }();
 
 AuthoringToolNewProjectController.$inject = ['$filter', '$state', '$timeout', 'ConfigService', 'ProjectService'];

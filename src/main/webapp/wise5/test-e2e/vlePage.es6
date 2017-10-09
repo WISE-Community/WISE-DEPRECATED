@@ -1,19 +1,42 @@
-let VLEPage = function() {
-  this.nodeDropDownMenu = element(by.model("stepToolsCtrl.toNodeId"));
-  this.nextButton = element(by.id('nextButton'));
-  this.prevButton = element(by.id('prevButton'));
+export default class VLEPage {
+  constructor() {
+    this.nodeDropDownMenu = element(by.model("stepToolsCtrl.toNodeId"));
+    this.nextButton = element(by.id('nextButton'));
+    this.prevButton = element(by.id('prevButton'));
+    this.closeNodeButton = element(by.id('closeNodeButton'));
+    this.accountButton = element(by.id('openAccountMenuButton'));
+    this.accountMenu = element(by.cssContainingText('.md-open-menu-container','Preview Team'));
+    this.notificationButton = element(by.id('viewNotificationsButton'));
+    this.notificationMenu = element(by.cssContainingText('.md-open-menu-container','Alerts'));
+    this.exitButton = element(by.id('goHomeButton'));
+    this.logOutButton = element(by.id('signOutButton'));
+  }
 
-  this.nodeSelectMenuShouldSay = function(expectedMenuText) {
+  nodeSelectMenuShouldSay(expectedMenuText) {
     expect(this.nodeDropDownMenu.getText()).toBe(expectedMenuText);
-  };
+  }
 
-  this.goToNextStep = function() {
+  goToNextStep() {
     this.nextButton.click();
-  };
+  }
 
-  this.goToPreviousStep = function() {
+  goToPreviousStep() {
     this.prevButton.click();
-  };
-};
+  }
 
-module.exports = VLEPage;
+  openAccountMenu() {
+    this.accountButton.click();
+  }
+
+  openDropDownMenu() {
+    this.nodeDropDownMenu.click();
+  }
+
+  openNotificationMenu() {
+    this.notificationButton.click();
+  }
+
+  closeNode() {
+    this.closeNodeButton.click();
+  }
+}

@@ -6,20 +6,13 @@
 class CompileController {
     constructor($compile, $element, $scope) {
 
-        if ($scope.$parent.mode === 'authoring') {
-            // we are in authoring mode so we will watch for changes to the data
-            $scope.$watch(() => {
-                return this.data;
-            }, (data) => {
-                // update the html
-                $element.html(data);
-                $compile($element.contents())($scope);
-            })
-        } else {
-            // we are not in authoring mode so we will just load the data
-            $element.html(this.data);
+        $scope.$watch(() => {
+            return this.data;
+        }, (data) => {
+            // update the html
+            $element.html(data);
             $compile($element.contents())($scope);
-        }
+        })
     }
 }
 

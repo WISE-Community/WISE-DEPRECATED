@@ -3309,7 +3309,7 @@ var MatchController = function () {
         value: function chooseChoiceAsset(choice) {
             // generate the parameters
             var params = {};
-            params.popup = true;
+            params.isPopup = true;
             params.nodeId = this.nodeId;
             params.componentId = this.componentId;
             params.target = 'choice';
@@ -3330,7 +3330,7 @@ var MatchController = function () {
         value: function chooseBucketAsset(bucket) {
             // generate the parameters
             var params = {};
-            params.popup = true;
+            params.isPopup = true;
             params.nodeId = this.nodeId;
             params.componentId = this.componentId;
             params.target = 'bucket';

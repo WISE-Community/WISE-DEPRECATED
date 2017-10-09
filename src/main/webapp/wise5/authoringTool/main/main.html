@@ -1,109 +1,114 @@
 <div id="top" class="view-content view-content--with-sidemenu">
-    <div class="l-constrained" layout="column">
-        <md-content class="node-content md-whiteframe-1dp" style="border-color: {{nodeController.nodeStatus.icon.color}}; position: relative;" layout="row" layout-wrap>
-            <style>
-                .projectItem:hover {
-                    cursor:pointer;
-                    background-color: lightgrey;
-                }
-                .md-tooltip.projectButtonTooltip {
-                     margin-top: 0px;
-                }
-                .projectButton {
-                    margin-right: 15px;
-                }
-            </style>
-            <div style="margin-top: 20px; margin-bottom: 20px; margin-left: 40px;">
-                <md-button id="goHomeButton"
-                           class="md-raised md-primary"
-                           style="font-weight: bold; padding: 10px; display: inline-block;"
-                           ng-click="authoringToolMainController.goHome()">
-                    <md-icon>arrow_back</md-icon>
-                    <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'backToTeacherHome' | translate}}</md-tooltip>
-                </md-button>
-                <md-button id="createNewProjectButton"
-                           class="md-raised md-primary"
-                           style="font-weight: bold; padding: 10px; display: inline-block;"
-                           ng-click="authoringToolMainController.createNewProjectButtonClicked()">
-                    <md-icon>add</md-icon>
-                    <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'createNewProject' | translate}}</md-tooltip>
-                </md-button>
-                <div ng-if='authoringToolMainController.showCreateProjectView'>
-                    <md-input-container style="width: 500; height: 20;">
-                        <label translate="projectTitle"></label>
-                        <input id='newProjectTitle'
-                               ng-model='authoringToolMainController.project.metadata.title'
-                               ng-keyup='$event.keyCode == 13 && authoringToolMainController.registerNewProject()'
-                               placeholder='{{ "enterNewProjectTitleHere" | translate }}'/>
-                    </md-input-container>
-                    <md-button id="createProjectButton"
-                               class="md-raised md-primary"
-                               ng-click="authoringToolMainController.registerNewProject()">
-                        <md-icon>done</md-icon>
-                        <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'create' | translate }}</md-tooltip>
-                    </md-button>
-                    <md-button id="cancelCreateProjectButton"
-                               class="md-raised md-primary"
-                               ng-click="authoringToolMainController.cancelRegisterNewProject()">
-                        <md-icon>clear</md-icon>
-                        <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'CANCEL' | translate }}</md-tooltip>
-                    </md-button>
-                </div>
-                <div style="margin-left: 10px;">
-                    <h3 translate="myProjectsHeading"></h3>
-                    <div id='{{project.id}}'
-                         class="projectItem"
-                         style="padding:2px"
-                         ng-repeat='project in authoringToolMainController.projects'
-                         ng-if='!project.isDeleted'
-                         layout='row'>
-                        <span ng-click="authoringToolMainController.previewProject(project.id)"
-                              class="projectButton">
-                            <md-tooltip md-direction="left"><span translate="preview"></span></md-tooltip>
-                            <md-icon>pageview</md-icon>
-                        </span>
-                        <span ng-click="authoringToolMainController.copyProject(project.id)"
-                              class="projectButton">
-                            <md-tooltip md-direction="left"><span translate="copy"></span></md-tooltip>
-                            <md-icon>content_copy</md-icon>
-                        </span>
-                        <span ng-click="authoringToolMainController.openProject(project.id)"
-                              class="projectButton"
-                              layout='row'
-                              flex>
-                            <span>{{project.id}} - {{project.name}}</span>
-                            <span ng-if="project.runId != null">&nbsp({{ 'RUN_ID' | translate }}: {{project.runId}})</span>
-                            <span flex></span>
-                        </span>
-                    </div>
-                    <h3 translate="sharedProjectsHeading"></h3>
-                    <div ng-if="authoringToolMainController.sharedProjects.length == 0" translate="noSharedProjectsMessage"></div>
-                    <div class="projectItem"
-                         style="padding:2px"
-                         ng-repeat='project in authoringToolMainController.sharedProjects'
-                         ng-if='!project.isDeleted'
-                         layout='row'>
-                        <span ng-click="authoringToolMainController.previewProject(project.id)"
-                              class="projectButton">
-                            <md-tooltip md-direction="left"><span translate="preview"></span></md-tooltip>
-                            <md-icon>pageview</md-icon>
-                        </span>
-                        <span ng-click="authoringToolMainController.copyProject(project.id)"
-                              class="projectButton">
-                            <md-tooltip md-direction="left"><span translate="copy"></span></md-tooltip>
-                            <md-icon>content_copy</md-icon>
-                        </span>
-                        <span ng-click="authoringToolMainController.openProject(project.id)"
-                              class="projectButton"
-                              layout='row'
-                              flex>
-                            <span>{{project.id}} - {{project.name}}</span>
-                            <span ng-if="project.runId != null">&nbsp({{ 'RUN_ID' | translate }}: {{project.runId}})</span>
-                            <span flex></span>
-                        </span>
-                    </div>
-                </div>
-            </div>
-        </md-content>
-    </div>
+  <div class="l-constrained" layout="column">
+    <md-content
+        class="node-content md-whiteframe-1dp"
+        style="border-color: {{nodeController.nodeStatus.icon.color}}; position: relative;"
+        layout="row" layout-wrap>
+      <style>
+        .projectItem:hover {
+          cursor:pointer;
+          background-color: lightgrey;
+        }
+        .md-tooltip.projectButtonTooltip {
+           margin-top: 0px;
+        }
+        .projectButton {
+          margin-right: 15px;
+        }
+      </style>
+      <div style="margin-top: 20px; margin-bottom: 20px; margin-left: 40px;">
+        <md-button id="goHomeButton"
+               class="md-raised md-primary"
+               style="font-weight: bold; padding: 10px; display: inline-block;"
+               ng-click="authoringToolMainController.goHome()">
+          <md-icon>arrow_back</md-icon>
+          <md-tooltip md-direction='top' class='projectButtonTooltip'>
+            {{ 'backToTeacherHome' | translate}}
+          </md-tooltip>
+        </md-button>
+        <md-button id="createNewProjectButton"
+               class="md-raised md-primary"
+               style="font-weight: bold; padding: 10px; display: inline-block;"
+               ng-click="authoringToolMainController.createNewProjectButtonClicked()">
+          <md-icon>add</md-icon>
+          <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'createNewProject' | translate}}</md-tooltip>
+        </md-button>
+        <div ng-if='authoringToolMainController.showCreateProjectView'>
+          <md-input-container style="width: 500; height: 20;">
+            <label translate="projectTitle"></label>
+            <input id='newProjectTitle'
+                 ng-model='authoringToolMainController.project.metadata.title'
+                 ng-keyup='$event.keyCode == 13 && authoringToolMainController.registerNewProject()'
+                 placeholder='{{ "enterNewProjectTitleHere" | translate }}'/>
+          </md-input-container>
+          <md-button id="createProjectButton"
+                 class="md-raised md-primary"
+                 ng-click="authoringToolMainController.registerNewProject()">
+            <md-icon>done</md-icon>
+            <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'create' | translate }}</md-tooltip>
+          </md-button>
+          <md-button id="cancelCreateProjectButton"
+                 class="md-raised md-primary"
+                 ng-click="authoringToolMainController.cancelRegisterNewProject()">
+            <md-icon>clear</md-icon>
+            <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'CANCEL' | translate }}</md-tooltip>
+          </md-button>
+        </div>
+        <div style="margin-left: 10px;">
+          <h3 translate="myProjectsHeading"></h3>
+          <div id='{{project.id}}'
+             class="projectItem"
+             style="padding:2px"
+             ng-repeat='project in authoringToolMainController.projects'
+             ng-if='!project.isDeleted'
+             layout='row'>
+            <span ng-click="authoringToolMainController.previewProject(project.id)"
+                class="projectButton">
+              <md-tooltip md-direction="left"><span translate="preview"></span></md-tooltip>
+              <md-icon>pageview</md-icon>
+            </span>
+            <span ng-click="authoringToolMainController.copyProject(project.id)"
+                class="projectButton">
+              <md-tooltip md-direction="left"><span translate="copy"></span></md-tooltip>
+              <md-icon>content_copy</md-icon>
+            </span>
+            <span ng-click="authoringToolMainController.openProject(project.id)"
+                class="projectButton"
+                layout='row'
+                flex>
+              <span>{{project.id}} - {{project.name}}</span>
+              <span ng-if="project.runId != null">&nbsp({{ 'RUN_ID' | translate }}: {{project.runId}})</span>
+              <span flex></span>
+            </span>
+          </div>
+          <h3 translate="sharedProjectsHeading"></h3>
+          <div ng-if="authoringToolMainController.sharedProjects.length == 0" translate="noSharedProjectsMessage"></div>
+          <div class="projectItem"
+             style="padding:2px"
+             ng-repeat='project in authoringToolMainController.sharedProjects'
+             ng-if='!project.isDeleted'
+             layout='row'>
+            <span ng-click="authoringToolMainController.previewProject(project.id)"
+                class="projectButton">
+              <md-tooltip md-direction="left"><span translate="preview"></span></md-tooltip>
+              <md-icon>pageview</md-icon>
+            </span>
+            <span ng-click="authoringToolMainController.copyProject(project.id)"
+                class="projectButton">
+              <md-tooltip md-direction="left"><span translate="copy"></span></md-tooltip>
+              <md-icon>content_copy</md-icon>
+            </span>
+            <span ng-click="authoringToolMainController.openProject(project.id)"
+                class="projectButton"
+                layout='row'
+                flex>
+              <span>{{project.id}} - {{project.name}}</span>
+              <span ng-if="project.runId != null">&nbsp({{ 'RUN_ID' | translate }}: {{project.runId}})</span>
+              <span flex></span>
+            </span>
+          </div>
+        </div>
+      </div>
+    </md-content>
+  </div>
 </div>

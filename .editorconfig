@@ -6,11 +6,13 @@ root = true
 end_of_line = lf
 insert_final_newline = true
 trim_trailing_whitespace = true
+charset = utf-8
+indent_style = space
 
 # Matches multiple files with brace expansion notation
 # Set default charset
-[*.{js,es6,java}]
-charset = utf-8
-# 4 space indentation
-indent_style = space
+[*.{js,es6}]
 indent_size = 4
+
+[*.{java}]
+indent_size = 2
