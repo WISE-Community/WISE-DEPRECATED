@@ -152,8 +152,13 @@ class TableService extends NodeService {
      * @returns whether the component was completed
      */
     isCompleted(component, componentStates, componentEvents, nodeEvents, node) {
-        let result = false;
-
+        if (!this.componentHasEditableCells(component)) {
+            /*
+             * The component does not have any editable cells so we will say
+             * it is completed.
+             */
+            return true;
+        }
         if (componentStates && componentStates.length) {
             let submitRequired = node.showSubmitButton || (component.showSubmitButton && !node.showSaveButton);
 
@@ -175,20 +180,46 @@ class TableService extends NodeService {
                         if (submitRequired) {
                             // completion requires a submission, so check for isSubmit
                             if (componentState.isSubmit) {
-                                result = true;
-                                break;
+                                return true;
                             }
                         } else {
-                            result = true;
-                            break;
+                            return true;
                         }
                     }
                 }
             }
         }
 
-        return result;
+        return false;
     };
+
+    /**
+     * Check if a table component has any editable cells.
+     * @param component The component content.
+     * @return Whether the component has any editable cells.
+     */
+    componentHasEditableCells(component) {
+        if (component != null) {
+            let tableData = component.tableData;
+            if (tableData != null) {
+                for (let r = 0; r < tableData.length; r++) {
+                    let row = tableData[r];
+                    if (row != null) {
+                        for (let c = 0; c < row.length; c++) {
+                            let cell = row[c];
+                            if (cell != null) {
+                                if (cell.editable === true) {
+                                    return true;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
 
     /**
      * Whether this component generates student work
