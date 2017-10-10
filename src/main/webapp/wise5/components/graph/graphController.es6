@@ -4361,6 +4361,7 @@ class GraphController {
                                     var seriesData = singleSeries.data;
                                     var seriesColor = singleSeries.color;
                                     var marker = singleSeries.marker;
+                                    var dashStyle = singleSeries.dashStyle;
 
                                     // make a series object
                                     var newSeries = {};
@@ -4372,6 +4373,10 @@ class GraphController {
 
                                     if (marker != null) {
                                         newSeries.marker = marker;
+                                    }
+
+                                    if (dashStyle != null) {
+                                        newSeries.dashStyle = dashStyle;
                                     }
 
                                     // add the series to the trial

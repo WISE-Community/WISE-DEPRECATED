@@ -4546,6 +4546,7 @@ var GraphController = function () {
                                         var seriesData = singleSeries.data;
                                         var seriesColor = singleSeries.color;
                                         var marker = singleSeries.marker;
+                                        var dashStyle = singleSeries.dashStyle;
 
                                         // make a series object
                                         var newSeries = {};
@@ -4557,6 +4558,10 @@ var GraphController = function () {
 
                                         if (marker != null) {
                                             newSeries.marker = marker;
+                                        }
+
+                                        if (dashStyle != null) {
+                                            newSeries.dashStyle = dashStyle;
                                         }
 
                                         // add the series to the trial
