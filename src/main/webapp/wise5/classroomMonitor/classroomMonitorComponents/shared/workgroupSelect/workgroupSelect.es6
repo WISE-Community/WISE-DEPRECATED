@@ -29,6 +29,16 @@ class WorkgroupSelectController {
         };
 
         /**
+         * Listen for current workgroup changed event
+         */
+        this.$scope.$on('currentWorkgroupChanged', (event, args) => {
+            let workgroup = args.currentWorkgroup;
+            if (workgroup != null) {
+                this.selectedItem = this.getCurrentWorkgroup();
+            }
+        });
+
+        /**
          * Listen for current period changed event
          */
         this.$scope.$on('currentPeriodChanged', (event, args) => {

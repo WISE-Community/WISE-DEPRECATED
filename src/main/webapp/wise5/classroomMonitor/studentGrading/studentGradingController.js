@@ -28,26 +28,30 @@ var StudentGradingController = function () {
         this.TeacherDataService = TeacherDataService;
         this.$translate = this.$filter('translate');
 
-        // scroll to the top of the page
-        document.body.scrollTop = document.documentElement.scrollTop = 0;
+        this.$onInit = function () {
+            // scroll to the top of the page
+            document.body.scrollTop = document.documentElement.scrollTop = 0;
 
-        this.sort = this.TeacherDataService.studentGradingSort;
-        this.TeacherDataService.stepGradingSort = this.sort;
-        this.permissions = this.ConfigService.getPermissions();
-        this.workgroupId = parseInt(this.$stateParams.workgroupId);
-        this.avatarColor = this.ConfigService.getAvatarColorForWorkgroupId(this.workgroupId);
-        this.displayNames = this.ConfigService.getDisplayNamesByWorkgroupId(this.workgroupId);
-        var maxScore = this.StudentStatusService.getMaxScoreForWorkgroupId(this.workgroupId);
-        this.maxScore = maxScore ? maxScore : 0;
-        this.totalScore = this.TeacherDataService.getTotalScoreByWorkgroupId(this.workgroupId);
-        this.projectCompletion = this.StudentStatusService.getStudentProjectCompletion(this.workgroupId, true);
-        this.showNonWorkNodes = false;
-        this.nodeIds = this.ProjectService.getFlattenedProjectAsNodeIds();
-        this.nodesById = {}; // object that will hold node names, statuses, scores, notifications, etc.
-        this.nodeVisibilityById = {}; // object that specifies whether student work is visible for each node
-        this.nodesInViewById = {}; // object that holds whether the node is in view or not
+            _this.sort = _this.TeacherDataService.studentGradingSort;
+            _this.TeacherDataService.stepGradingSort = _this.sort;
+            _this.permissions = _this.ConfigService.getPermissions();
+            _this.workgroupId = parseInt(_this.$stateParams.workgroupId);
+            var workgroup = _this.ConfigService.getUserInfoByWorkgroupId(_this.workgroupId);
+            _this.TeacherDataService.setCurrentWorkgroup(workgroup);
+            _this.avatarColor = _this.ConfigService.getAvatarColorForWorkgroupId(_this.workgroupId);
+            _this.displayNames = _this.ConfigService.getDisplayNamesByWorkgroupId(_this.workgroupId);
+            var maxScore = _this.StudentStatusService.getMaxScoreForWorkgroupId(_this.workgroupId);
+            _this.maxScore = maxScore ? maxScore : 0;
+            _this.totalScore = _this.TeacherDataService.getTotalScoreByWorkgroupId(_this.workgroupId);
+            _this.projectCompletion = _this.StudentStatusService.getStudentProjectCompletion(_this.workgroupId, true);
+            _this.showNonWorkNodes = false;
+            _this.nodeIds = _this.ProjectService.getFlattenedProjectAsNodeIds();
+            _this.nodesById = {}; // object that will hold node names, statuses, scores, notifications, etc.
+            _this.nodeVisibilityById = {}; // object that specifies whether student work is visible for each node
+            _this.nodesInViewById = {}; // object that holds whether the node is in view or not
 
-        this.setNodesById();
+            _this.setNodesById();
+        };
 
         this.$scope.$on('projectSaved', function (event, args) {
             // project info has changed, so update max scores
@@ -105,10 +109,13 @@ var StudentGradingController = function () {
         });
 
         this.$scope.$on('currentWorkgroupChanged', function (event, args) {
-            // the current workgroup has chnged, so reload the view
+            // the current workgroup has changed, so reload the view
             var workgroup = args.currentWorkgroup;
-            if (currentWorkgroup != null) {
-                _this.$state.go('root.team', { workgroupId: workgroup.workgroupId });
+            if (workgroup != null) {
+                var workgroupId = workgroup.workgroupId;
+                if (_this.workgroupId !== workgroupId) {
+                    _this.$state.go('root.team', { workgroupId: workgroupId });
+                }
             }
         });
 

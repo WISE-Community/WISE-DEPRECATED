@@ -8,7 +8,6 @@ class ClassroomMonitorController {
                 $rootScope,
                 $scope,
                 $state,
-                $stateParams,
                 $window,
                 ConfigService,
                 NodeService,
@@ -24,7 +23,6 @@ class ClassroomMonitorController {
         this.$rootScope = $rootScope;
         this.$scope = $scope;
         this.$state = $state;
-        this.$stateParams = $stateParams;
         this.$window = $window;
         this.ConfigService = ConfigService;
         this.NodeService = NodeService;
@@ -204,10 +202,15 @@ class ClassroomMonitorController {
         }
 
         this.showGradeByStepTools = false;
+        this.showGradeByTeamTools = false;
+        this.workgroupId = null;
 
         if (viewName === 'root.project') {
             let nodeId = this.$state.params.nodeId;
             this.showGradeByStepTools = this.ProjectService.isApplicationNode(nodeId);
+        } else if (viewName === 'root.team') {
+            this.workgroupId = parseInt(this.$state.params.workgroupId);
+            this.showGradeByTeamTools = true;
         }
     };
 
@@ -252,7 +255,6 @@ ClassroomMonitorController.$inject = [
     '$rootScope',
     '$scope',
     '$state',
-    '$stateParams',
     '$window',
     'ConfigService',
     'NodeService',

@@ -28,26 +28,30 @@ class StudentGradingController {
         this.TeacherDataService = TeacherDataService;
         this.$translate = this.$filter('translate');
 
-        // scroll to the top of the page
-        document.body.scrollTop = document.documentElement.scrollTop = 0;
+        this.$onInit = () => {
+            // scroll to the top of the page
+            document.body.scrollTop = document.documentElement.scrollTop = 0;
 
-        this.sort = this.TeacherDataService.studentGradingSort;
-        this.TeacherDataService.stepGradingSort = this.sort;
-        this.permissions = this.ConfigService.getPermissions();
-        this.workgroupId = parseInt(this.$stateParams.workgroupId);
-        this.avatarColor = this.ConfigService.getAvatarColorForWorkgroupId(this.workgroupId);
-        this.displayNames = this.ConfigService.getDisplayNamesByWorkgroupId(this.workgroupId);
-        let maxScore = this.StudentStatusService.getMaxScoreForWorkgroupId(this.workgroupId);
-        this.maxScore = maxScore ? maxScore : 0;
-        this.totalScore = this.TeacherDataService.getTotalScoreByWorkgroupId(this.workgroupId);
-        this.projectCompletion = this.StudentStatusService.getStudentProjectCompletion(this.workgroupId, true);
-        this.showNonWorkNodes = false;
-        this.nodeIds = this.ProjectService.getFlattenedProjectAsNodeIds();
-        this.nodesById = {}; // object that will hold node names, statuses, scores, notifications, etc.
-        this.nodeVisibilityById = {}; // object that specifies whether student work is visible for each node
-        this.nodesInViewById = {}; // object that holds whether the node is in view or not
+            this.sort = this.TeacherDataService.studentGradingSort;
+            this.TeacherDataService.stepGradingSort = this.sort;
+            this.permissions = this.ConfigService.getPermissions();
+            this.workgroupId = parseInt(this.$stateParams.workgroupId);
+            let workgroup = this.ConfigService.getUserInfoByWorkgroupId(this.workgroupId);
+            this.TeacherDataService.setCurrentWorkgroup(workgroup);
+            this.avatarColor = this.ConfigService.getAvatarColorForWorkgroupId(this.workgroupId);
+            this.displayNames = this.ConfigService.getDisplayNamesByWorkgroupId(this.workgroupId);
+            let maxScore = this.StudentStatusService.getMaxScoreForWorkgroupId(this.workgroupId);
+            this.maxScore = maxScore ? maxScore : 0;
+            this.totalScore = this.TeacherDataService.getTotalScoreByWorkgroupId(this.workgroupId);
+            this.projectCompletion = this.StudentStatusService.getStudentProjectCompletion(this.workgroupId, true);
+            this.showNonWorkNodes = false;
+            this.nodeIds = this.ProjectService.getFlattenedProjectAsNodeIds();
+            this.nodesById = {}; // object that will hold node names, statuses, scores, notifications, etc.
+            this.nodeVisibilityById = {}; // object that specifies whether student work is visible for each node
+            this.nodesInViewById = {}; // object that holds whether the node is in view or not
 
-        this.setNodesById();
+            this.setNodesById();
+        }
 
         this.$scope.$on('projectSaved', (event, args) => {
             // project info has changed, so update max scores
@@ -105,10 +109,13 @@ class StudentGradingController {
         });
 
         this.$scope.$on('currentWorkgroupChanged', (event, args) => {
-            // the current workgroup has chnged, so reload the view
+            // the current workgroup has changed, so reload the view
             let workgroup = args.currentWorkgroup;
-            if (currentWorkgroup != null) {
-                this.$state.go('root.team', {workgroupId: workgroup.workgroupId});
+            if (workgroup != null) {
+                let workgroupId = workgroup.workgroupId;
+                if (this.workgroupId !== workgroupId) {
+                    this.$state.go('root.team', {workgroupId: workgroupId});
+                }
             }
         });
 

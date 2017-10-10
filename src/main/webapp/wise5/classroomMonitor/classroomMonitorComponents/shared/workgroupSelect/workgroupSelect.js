@@ -37,6 +37,16 @@ var WorkgroupSelectController = function () {
         };
 
         /**
+         * Listen for current workgroup changed event
+         */
+        this.$scope.$on('currentWorkgroupChanged', function (event, args) {
+            var workgroup = args.currentWorkgroup;
+            if (workgroup != null) {
+                _this.selectedItem = _this.getCurrentWorkgroup();
+            }
+        });
+
+        /**
          * Listen for current period changed event
          */
         this.$scope.$on('currentPeriodChanged', function (event, args) {

@@ -9,7 +9,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var ClassroomMonitorController = function () {
-    function ClassroomMonitorController($filter, $mdDialog, $mdToast, $rootScope, $scope, $state, $stateParams, $window, ConfigService, NodeService, NotebookService, NotificationService, ProjectService, SessionService, TeacherDataService, TeacherWebSocketService) {
+    function ClassroomMonitorController($filter, $mdDialog, $mdToast, $rootScope, $scope, $state, $window, ConfigService, NodeService, NotebookService, NotificationService, ProjectService, SessionService, TeacherDataService, TeacherWebSocketService) {
         var _this = this;
 
         _classCallCheck(this, ClassroomMonitorController);
@@ -19,7 +19,6 @@ var ClassroomMonitorController = function () {
         this.$rootScope = $rootScope;
         this.$scope = $scope;
         this.$state = $state;
-        this.$stateParams = $stateParams;
         this.$window = $window;
         this.ConfigService = ConfigService;
         this.NodeService = NodeService;
@@ -194,10 +193,15 @@ var ClassroomMonitorController = function () {
             }
 
             this.showGradeByStepTools = false;
+            this.showGradeByTeamTools = false;
+            this.workgroupId = null;
 
             if (viewName === 'root.project') {
                 var nodeId = this.$state.params.nodeId;
                 this.showGradeByStepTools = this.ProjectService.isApplicationNode(nodeId);
+            } else if (viewName === 'root.team') {
+                this.workgroupId = parseInt(this.$state.params.workgroupId);
+                this.showGradeByTeamTools = true;
             }
         }
     }, {
@@ -250,7 +254,7 @@ var ClassroomMonitorController = function () {
     return ClassroomMonitorController;
 }();
 
-ClassroomMonitorController.$inject = ['$filter', '$mdDialog', '$mdToast', '$rootScope', '$scope', '$state', '$stateParams', '$window', 'ConfigService', 'NodeService', 'NotebookService', 'NotificationService', 'ProjectService', 'SessionService', 'TeacherDataService', 'TeacherWebSocketService'];
+ClassroomMonitorController.$inject = ['$filter', '$mdDialog', '$mdToast', '$rootScope', '$scope', '$state', '$window', 'ConfigService', 'NodeService', 'NotebookService', 'NotificationService', 'ProjectService', 'SessionService', 'TeacherDataService', 'TeacherWebSocketService'];
 
 exports.default = ClassroomMonitorController;
 //# sourceMappingURL=classroomMonitorController.js.map
