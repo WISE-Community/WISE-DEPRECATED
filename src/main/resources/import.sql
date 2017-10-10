@@ -15,4 +15,6 @@ INSERT INTO teacher_user_details (city,country,curriculumsubjects,displayname,is
 
 INSERT INTO user_details_related_to_roles VALUES (1,1),(1,2),(1,3),(1,5),(2,1),(2,3),(2,5);
 
+INSERT INTO PROJECTS VALUES(1,'2017-10-06 15:48:51.525000',NULL,0,TRUE,FALSE,FALSE,NULL,'{"lastMinified":null,"keywords":null,"compTime":null,"subject":null,"language":null,"lastEdited":null,"title":"My Science Project","tools":{},"maxScores":null,"postLevel":null,"contact":null,"theme":null,"id":null,"summary":null,"totalTime":null,"techReqs":{},"author":null,"lessonPlan":null,"lastCleaned":null,"standards":null,"navMode":null,"versionId":null,"techDetailsString":"","gradeRange":null,"projectId":null}','/e2e-test1/project.json','My Science Project',NULL,4,0,5,NULL,1)
+
 SET DATABASE REFERENTIAL INTEGRITY TRUE

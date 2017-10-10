@@ -39,7 +39,7 @@ class AuthoringToolController {
     // ui-views and their corresponding names, labels, and icons
     this.views = {
       'root.project': {
-        id: "projectHomeButton",
+        id: 'projectHomeButton',
         name: this.$translate('projectHome'),
         label: this.$translate('projectHome'),
         icon: 'home',
@@ -48,6 +48,7 @@ class AuthoringToolController {
         active: true
       },
       'root.project.notebook': {
+        id: 'notebookButton',
         name: this.$translate('notebookSettings'),
         label: this.$translate('notebookSettings'),
         icon: 'book',
@@ -56,6 +57,7 @@ class AuthoringToolController {
         active: true
       },
       'root.project.asset': {
+        id: 'assetButton',
         name: this.$translate('fileManager'),
         label: this.$translate('fileManager'),
         icon: 'attach_file',
@@ -64,6 +66,7 @@ class AuthoringToolController {
         active: true
       },
       'root.project.info': {
+        id: 'infoButton',
         name: this.$translate('PROJECT_INFO'),
         label: this.$translate('PROJECT_INFO'),
         icon: 'info',
@@ -72,6 +75,7 @@ class AuthoringToolController {
         active: true
       },
       'root.main': {
+        id: 'projectListButton',
         name: this.$translate('projectsList'),
         label: this.$translate('projectsList'),
         icon: 'reorder',

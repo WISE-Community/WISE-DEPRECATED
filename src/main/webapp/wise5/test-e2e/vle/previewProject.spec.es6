@@ -21,13 +21,13 @@ describe('WISE5 Student VLE Preview', () => {
   it('should show first step and default UI elements on the page', () => {
     const vle = new VLEPage();
     vle.nodeSelectMenuShouldSay('1.1: HTML Step');
-    common.shouldBePresent([vle.prevButton, vle.nextButton, vle.closeNodeButton,
-      vle.accountButton, vle.accountMenu, vle.notificationButton, vle.notificationMenu]);
-    common.shouldBeHidden([vle.accountMenu, vle.notificationMenu]);
+    common.shouldBePresent(vle.prevButton, vle.nextButton, vle.closeNodeButton,
+      vle.accountButton, vle.accountMenu, vle.notificationButton, vle.notificationMenu);
+    common.shouldBeHidden(vle.accountMenu, vle.notificationMenu);
     const nodeContent = element(by.cssContainingText('.node-content','This is a step where authors can enter their own html.'));
-    common.shouldBePresent([nodeContent]);
-    common.shouldBeEnabled([vle.nextButton]);
-    common.shouldBeDisabled([vle.prevButton]);
+    common.shouldBePresent(nodeContent);
+    common.shouldBeEnabled(vle.nextButton);
+    common.shouldBeDisabled(vle.prevButton);
   });
 
   it('should navigate next and previous steps using the buttons', () => {
@@ -35,15 +35,15 @@ describe('WISE5 Student VLE Preview', () => {
     vle.goToNextStep();
     common.urlShouldBe('http://localhost:8080/wise/project/demo#/vle/node2');
     vle.nodeSelectMenuShouldSay('1.2: Open Response Step');
-    common.shouldBeEnabled([vle.prevButton, vle.nextButton]);
+    common.shouldBeEnabled(vle.prevButton, vle.nextButton);
     let nodeContent = element(by.cssContainingText('.node-content','This is a step where students enter text.'));
-    common.shouldBePresent([nodeContent]);
+    common.shouldBePresent(nodeContent);
 
     vle.goToNextStep();
     common.urlShouldBe('http://localhost:8080/wise/project/demo#/vle/node3');
     vle.nodeSelectMenuShouldSay('1.3: Open Response Step Auto Graded');
     nodeContent = element(by.cssContainingText('.node-content','Explain how the sun helps animals survive.'));
-    common.shouldBePresent([nodeContent]);
+    common.shouldBePresent(nodeContent);
 
     vle.goToPreviousStep();
     common.urlShouldBe('http://localhost:8080/wise/project/demo#/vle/node2');
@@ -132,29 +132,29 @@ describe('WISE5 Student VLE Preview', () => {
   it('should allow preview user to view the account menu', () => {
     const vle = new VLEPage();
     vle.openAccountMenu();
-    common.shouldBeDisplayed([vle.accountMenu]);
+    common.shouldBeDisplayed(vle.accountMenu);
 
     // account menu should have the preview user account icon and the exit and sign out buttons
     element.all(by.repeater('userName in themeCtrl.workgroupUserNames')).then((workgroupNames) => {
       expect(workgroupNames[0].getText()).toBe('Preview Team');
     });
 
-    common.shouldBePresent([vle.exitButton, vle.logOutButton]);
+    common.shouldBePresent(vle.exitButton, vle.logOutButton);
 
     browser.actions().sendKeys(protractor.Key.ESCAPE).perform();
-    common.shouldBeHidden([vle.accountMenu]);
+    common.shouldBeHidden(vle.accountMenu);
 
     vle.openAccountMenu();
-    common.shouldBeDisplayed([vle.accountMenu]);
+    common.shouldBeDisplayed(vle.accountMenu);
 
     clickOnPageBody();
-    common.shouldBeHidden([vle.accountMenu]);
+    common.shouldBeHidden(vle.accountMenu);
   });
 
   it('should allow preview user to view the notification menu', () => {
     const vle = new VLEPage();
     vle.openNotificationMenu();
-    common.shouldBeDisplayed([vle.notificationMenu]);
+    common.shouldBeDisplayed(vle.notificationMenu);
 
     // notification menu should have the Alerts title and say that there are no alerts.
     const notificationDialogTitle = element(by.xpath('//md-toolbar/span/span[@translate="notificationsTitle"]'));
@@ -166,12 +166,12 @@ describe('WISE5 Student VLE Preview', () => {
     expect(notificationDialogContent.getText()).toEqual("Hi there! You currently have no alerts.");
 
     browser.actions().sendKeys(protractor.Key.ESCAPE).perform();
-    common.shouldBeHidden([vle.notificationMenu]);
+    common.shouldBeHidden(vle.notificationMenu);
 
     vle.openNotificationMenu();
-    common.shouldBeDisplayed([vle.notificationMenu]);
+    common.shouldBeDisplayed(vle.notificationMenu);
 
     clickOnPageBody();
-    common.shouldBeHidden([vle.notificationMenu]);
+    common.shouldBeHidden(vle.notificationMenu);
   });
 });
