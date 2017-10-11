@@ -38,8 +38,6 @@ class StudentGradingController {
             this.workgroupId = parseInt(this.$stateParams.workgroupId);
             let workgroup = this.ConfigService.getUserInfoByWorkgroupId(this.workgroupId);
             this.TeacherDataService.setCurrentWorkgroup(workgroup);
-            this.avatarColor = this.ConfigService.getAvatarColorForWorkgroupId(this.workgroupId);
-            this.displayNames = this.ConfigService.getDisplayNamesByWorkgroupId(this.workgroupId);
             let maxScore = this.StudentStatusService.getMaxScoreForWorkgroupId(this.workgroupId);
             this.maxScore = maxScore ? maxScore : 0;
             this.totalScore = this.TeacherDataService.getTotalScoreByWorkgroupId(this.workgroupId);

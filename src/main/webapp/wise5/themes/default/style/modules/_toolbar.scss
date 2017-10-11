@@ -1,5 +1,17 @@
 .md-toolbar-tools {
     font-size: 18px;
+
+    .autocomplete {
+        height: 36px;
+
+        md-autocomplete-wrap {
+            height: 36px;
+        }
+
+        input {
+            height: 36px;
+        }
+    }
 }
 
 .md-toolbar--wise {
@@ -61,7 +73,7 @@
     }
 }
 
-.layout-tools--step {
+.layout-tools--actions {
     @media (min-width: $layout-breakpoint-xs) {
         margin: 0 -16px 0 8px;
     }

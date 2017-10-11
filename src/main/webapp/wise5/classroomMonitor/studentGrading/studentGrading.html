@@ -3,18 +3,7 @@
     <div class="md-subhead content-head" layout="row"
          layout-align="center center" layout-align-gt-sm="start center"
          layout-wrap>
-      <div layout="row" layout-align="center center" layout-align-gt-sm="start center"
-           layout-wrap flex-xs="100" flex-sm="100" flex>
-        <span class="md-avatar">
-          <md-icon class="md-36" style="color: {{ studentGradingController.avatarColor }};"> account_circle </md-icon>
-        </span>
-        <span class="content-head__item" flex flex-sm="none" flex-xs="none"
-              ng-class="{ 'center': !$mdMedia('gt-sm') }">
-           <span class="heavy">{{ studentGradingController.displayNames }}</span>
-           <span class="more">({{ 'accountMenuTeam' | translate:{id: studentGradingController.workgroupId} }})</span>
-        </span>
-      </div>
-      <div class="content-head__more" layout="row" layout-align="center center"
+      <div layout="row" layout-align="center center"
            layout-wrap flex-xs="100" flex-sm="100">
         <div class="accent-2" layout="row" layout-align="center center">
           <h2 class="content-head__item">

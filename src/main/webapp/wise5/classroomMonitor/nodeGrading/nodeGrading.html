@@ -24,7 +24,9 @@
     <md-list class="user-list">
         <md-list-item class="md-whiteframe-1dp md-with-secondary list-item list-item--actions" layout-wrap>
             <div flex-xs="100" flex-sm="100">
-                <workgroup-select></workgroup-select>
+                <workgroup-select by-student="true"
+                                  custom-class="'autocomplete--flat autocomplete--minwidth'"
+                                  use-autocomplete="true"></workgroup-select>
             </div>
             <span flex hide-xs hide-sm></span>
             <div class="md-secondary-container" ng-if="nodeGradingController.nodeHasWork"

@@ -129,6 +129,7 @@
     "selectStep": "Select a Step",
     "save": "Save",
     "score": "Score",
+    "selectATeam": "Select a team",
     "selectedComponentsLabel": "Showing {{selected}}/{{total}} items",
     "showSteps": "Show Steps",
     "serverUpdate": "WISE Server Update",

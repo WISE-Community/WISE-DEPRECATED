@@ -71,6 +71,16 @@ $input-action-vertical-offset-richtext: -7px;
     margin: 0 8px;
     min-width: 0;
     font-weight: 500;
+    font-size: $body-font-size-base;
+    max-width: 180px;
+
+    @media only screen and (min-width: $layout-breakpoint-xs) {
+        max-width: 360px;
+    }
+
+    @media only screen and (min-width: $layout-breakpoint-sm) {
+        max-width: 540px;
+    }
 
     .md-select-value {
         *:first-child {
@@ -126,10 +136,8 @@ $input-action-vertical-offset-richtext: -7px;
     line-height: 1.2;
     text-transform: none;
     margin-top: 3px;
-}
 
-@media only screen and (max-width: $layout-breakpoint-xs - 1) {
-    .node-title, .node-select {
+    @media only screen and (max-width: $layout-breakpoint-xs - 1) {
         font-size: $body-font-size-base;
     }
 }

@@ -19,21 +19,15 @@ var WorkgroupSelectController = function () {
         this.orderBy = orderBy;
         this.ConfigService = ConfigService;
         this.TeacherDataService = TeacherDataService;
-
         this.$translate = this.$filter('translate');
 
         this.$onInit = function () {
+            _this.placeholder = _this.customPlaceholder ? _this.customPlaceholder : _this.$translate('findAStudent');
             _this.canViewStudentNames = _this.ConfigService.getPermissions().canViewStudentNames;
             _this.workgroups = angular.copy(_this.ConfigService.getClassmateUserInfos());
             _this.periodId = _this.TeacherDataService.getCurrentPeriod().periodId;
             _this.selectedItem = _this.getCurrentWorkgroup();
-            var n = _this.workgroups.length;
-            for (var i = 0; i < n; i++) {
-                var workgroup = _this.workgroups[i];
-                if (_this.canViewStudentNames) {
-                    workgroup.displayNames += ' (' + _this.$translate('teamId', { id: workgroup.workgroupId }) + ')';
-                }
-            }
+            _this.setWorkgroups();
         };
 
         /**
@@ -52,17 +46,73 @@ var WorkgroupSelectController = function () {
         this.$scope.$on('currentPeriodChanged', function (event, args) {
             _this.periodId = args.currentPeriod.periodId;
             _this.selectedItem = _this.getCurrentWorkgroup();
+            _this.setWorkgroups();
         });
     }
 
     _createClass(WorkgroupSelectController, [{
-        key: 'setCurrentWorkgroup',
+        key: 'setWorkgroups',
 
+
+        /**
+         * Setup the workgroups data model based on whether we're showing
+         * individual students and whether current user can view student names
+         */
+        value: function setWorkgroups() {
+            if (this.byStudent) {
+                var students = [];
+                var sortByStudentId = false;
+                var n = this.workgroups.length;
+                for (var i = 0; i < n; i++) {
+                    var workgroup = this.workgroups[i];
+                    if (this.canViewStudentNames) {
+                        var names = workgroup.displayNames.split(',');
+                        var l = names.length;
+                        for (var x = 0; x < l; x++) {
+                            var name = names[x].trim();
+                            // get the index of the first empty space
+                            var indexOfSpace = name.indexOf(' ');
+                            // get the student first name e.g. "Spongebob"
+                            var firstName = name.substring(0, indexOfSpace);
+                            var lastName = name.substring(indexOfSpace + 1);
+                            var current = angular.copy(workgroup);
+                            current.displayNames = lastName + ', ' + firstName;
+                            students.push(current);
+                        }
+                    } else {
+                        sortByStudentId = true;
+                        var ids = workgroup.userIds;
+                        var _l = ids.length;
+                        for (var _x = 0; _x < _l; _x++) {
+                            var id = ids[_x];
+                            var _name = this.$translate('studentId', { id: id });
+                            var _current = angular.copy(workgroup);
+                            _current.displayNames = _name;
+                            _current.userId = id;
+                            students.push(_current);
+                        }
+                    }
+                }
+                this.workgroups = sortByStudentId ? this.orderBy(students, 'userId') : this.orderBy(students, 'displayNames');
+            } else {
+                var _n = this.workgroups.length;
+                for (var _i = 0; _i < _n; _i++) {
+                    var _workgroup = this.workgroups[_i];
+                    if (this.canViewStudentNames) {
+                        _workgroup.displayNames += ' (' + this.$translate('teamId', { id: _workgroup.workgroupId }) + ')';
+                    }
+                }
+                this.workgroups = this.orderBy(this.workgroups, 'workgroupId');
+            }
+        }
 
         /**
          * Set the currently selected workgroup
          * @param workgroup the workgroup object
          */
+
+    }, {
+        key: 'setCurrentWorkgroup',
         value: function setCurrentWorkgroup(workgroup) {
             this.TeacherDataService.setCurrentWorkgroup(workgroup);
         }
@@ -75,7 +125,22 @@ var WorkgroupSelectController = function () {
     }, {
         key: 'getCurrentWorkgroup',
         value: function getCurrentWorkgroup() {
-            return this.TeacherDataService.getCurrentWorkgroup();
+            var localGroup = null;
+            var currentWorkgroup = this.TeacherDataService.getCurrentWorkgroup();
+            if (currentWorkgroup) {
+                var n = this.workgroups.length;
+                for (var i = 0; i < n; i++) {
+                    var workgroup = this.workgroups[i];
+                    if (currentWorkgroup.workgroupId === workgroup.workgroupId) {
+                        if (this.byStudent && currentWorkgroup.displayNames === workgroup.displayNames) {
+                            localGroup = workgroup;
+                        } else {
+                            localGroup = workgroup;
+                        }
+                    }
+                }
+            }
+            return localGroup;
         }
 
         /**
@@ -89,63 +154,27 @@ var WorkgroupSelectController = function () {
         value: function querySearch(query) {
             var items = [];
             var n = this.workgroups.length;
-            var sortByStudentId = false;
-
             for (var i = 0; i < n; i++) {
                 var workgroup = this.workgroups[i];
                 var periodId = workgroup.periodId;
                 if (this.periodId === -1 || periodId === this.periodId) {
                     var displayNames = workgroup.displayNames;
-                    if (this.byTeam) {
-                        if (displayNames.search(new RegExp(query, 'i')) > -1 || !query) {
-                            items.push(workgroup);
-                        }
-                    } else {
-                        if (this.canViewStudentNames) {
-                            var names = displayNames.split(',');
-                            var l = names.length;
-                            for (var x = 0; x < l; x++) {
-                                var name = names[x].trim();
-                                // get the index of the first empty space
-                                var indexOfSpace = name.indexOf(' ');
-                                // get the student first name e.g. "Spongebob"
-                                var firstName = name.substring(0, indexOfSpace);
-                                var lastName = name.substring(indexOfSpace + 1);
-
-                                var current = angular.copy(workgroup);
-                                current.displayNames = lastName + ', ' + firstName;
-                                if (current.displayNames.search(new RegExp(query, 'i')) > -1 || !query) {
-                                    items.push(current);
-                                }
-                            }
-                        } else {
-                            sortByStudentId = true;
-                            var ids = workgroup.userIds;
-                            var _l = ids.length;
-                            for (var _x = 0; _x < _l; _x++) {
-                                var id = ids[_x];
-                                var _name = this.$translate('studentId', { id: id });
-
-                                var _current = angular.copy(workgroup);
-                                _current.displayNames = _name;
-                                _current.userId = id;
-                                if (_current.displayNames.search(new RegExp(query, 'i')) > -1 || !query) {
-                                    items.push(_current);
-                                }
-                            }
-                        }
+                    if (displayNames.search(new RegExp(query, 'i')) > -1 || !query) {
+                        items.push(workgroup);
                     }
                 }
             }
-
-            var orderedItems = sortByStudentId ? this.orderBy(items, 'userId') : this.orderBy(items, 'workgroupId');
-
-            return orderedItems;
+            return items;
         }
     }, {
         key: 'selectedItemChange',
         value: function selectedItemChange() {
             this.setCurrentWorkgroup(this.selectedItem);
+        }
+    }, {
+        key: 'clearSearchTerm',
+        value: function clearSearchTerm() {
+            this.searchTerm = '';
         }
     }]);
 
@@ -156,9 +185,12 @@ WorkgroupSelectController.$inject = ['$filter', '$scope', 'orderByFilter', 'Conf
 
 var WorkgroupSelect = {
     bindings: {
-        byTeam: '<'
+        byStudent: '<',
+        customClass: '<',
+        customPlaceholder: '<',
+        useAutocomplete: '<'
     },
-    template: '<md-autocomplete class="autocomplete"\n                          md-no-cache="true"\n                          md-selected-item="$ctrl.selectedItem"\n                          md-search-text="$ctrl.searchText"\n                          md-selected-item-change="$ctrl.selectedItemChange()"\n                          md-items="workgroup in $ctrl.querySearch($ctrl.searchText)"\n                          md-item-text="workgroup.displayNames"\n                          md-min-length="0"\n                          ng-init="$ctrl.searchText=$ctrl.selectedItem.displayNames"\n                          placeholder="{{\'findAStudent\' | translate}}"\n                          title="{{\'findAStudent\' | translate}}">\n            <md-item-template>\n                <span md-highlight-text="$ctrl.searchText"\n                      md-highlight-flags="ig">{{ workgroup.displayNames }}</span>\n            </md-item-template>\n            <md-not-found>\n                {{\'noMatchesFound\' | translate}}\n            </md-not-found>\n        </md-autocomplete>',
+    template: '<md-autocomplete ng-if="$ctrl.useAutocomplete"\n                          class="autocomplete"\n                          ng-class="$ctrl.customClass"\n                          md-no-cache="true"\n                          md-selected-item="$ctrl.selectedItem"\n                          md-search-text="$ctrl.searchText"\n                          md-selected-item-change="$ctrl.selectedItemChange()"\n                          md-items="workgroup in $ctrl.querySearch($ctrl.searchText)"\n                          md-item-text="workgroup.displayNames"\n                          md-min-length="0"\n                          ng-init="$ctrl.searchText=$ctrl.selectedItem.displayNames"\n                          placeholder="{{ $ctrl.placeholder }}"\n                          title="{{ $ctrl.placeholder }}">\n            <md-item-template>\n                <span md-highlight-text="$ctrl.searchText"\n                      md-highlight-flags="ig">{{ workgroup.displayNames }}</span>\n            </md-item-template>\n            <md-not-found>\n                {{ \'noMatchesFound\' | translate }}\n            </md-not-found>\n        </md-autocomplete>\n        <md-select ng-if="!$ctrl.useAutocomplete"\n                   md-theme="default"\n                   ng-class="$ctrl.customClass"\n                   aria-label="{{ $ctrl.placeholder }}"\n                   ng-model="$ctrl.selectedItem"\n                   ng-change="$ctrl.selectedItemChange()"\n                   md-on-close="$ctrl.clearSearchTerm()"\n                   md-selected-text="$ctrl.selectedItem.displayNames">\n            <md-select-header class="select__header" layout="row" flex>\n                <input ng-model="$ctrl.searchTerm"\n                       type="search"\n                       placeholder="{{ \'findAStudent\' | translate }}"\n                       ng-keydown="$event.stopPropagation()">\n            </md-select-header>\n            <md-divider></md-divider>\n            <md-opt-group>\n                <md-option ng-repeat="workgroup in $ctrl.workgroups |\n                    filter:$ctrl.searchTerm"\n                    ng-value="workgroup">\n                    <!-- TODO: add avatar? -->\n                    <span class="node-select__text">{{ workgroup.displayNames }}</span>\n                </md-option>\n            </md-opt-group>\n        </md-select>',
     controller: WorkgroupSelectController
 };
 

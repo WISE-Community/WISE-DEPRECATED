@@ -32,8 +32,8 @@ const Toolbar = {
                     <md-tooltip md-direction="bottom">{{ 'mainMenu' | translate }}</md-tooltip>
                 </md-button>
                 <span class="toolbar-title" ng-if="$ctrl.showTitle">{{ $ctrl.viewName }}</span>
-                <step-tools ng-if="$ctrl.showStepTools" class="layout-tools layout-tools--step" show-position="$ctrl.numberProject" layout-fill></step-tools>
-                <student-grading-tools ng-if="$ctrl.showTeamTools" workgroup-id="$ctrl.workgroupId" class="layout-tools layout-tools--step" layout-fill></student-grading-tools>
+                <step-tools ng-if="$ctrl.showStepTools" class="layout-tools layout-tools--actions" show-position="$ctrl.numberProject" layout-fill></step-tools>
+                <student-grading-tools ng-if="$ctrl.showTeamTools" workgroup-id="$ctrl.workgroupId" class="layout-tools layout-tools--actions" layout-fill></student-grading-tools>
             </div>
         </md-toolbar>`
 };
