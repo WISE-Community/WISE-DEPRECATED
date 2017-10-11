@@ -1,14 +1,17 @@
 "use strict";
 
 class PeriodSelectController {
-    constructor($scope,
+    constructor($filter,
+                $scope,
                 ProjectService,
                 StudentStatusService,
                 TeacherDataService) {
+        this.$filter = $filter;
         this.$scope = $scope;
         this.ProjectService = ProjectService;
         this.StudentStatusService = StudentStatusService;
         this.TeacherDataService = TeacherDataService;
+        this.$translate = this.$filter('translate');
 
         let startNodeId = this.ProjectService.getStartNodeId();
         this.rootNodeId = this.ProjectService.getRootNode(startNodeId).id;
@@ -83,9 +86,19 @@ class PeriodSelectController {
         // get and return the number of workgroups that are in the period
         return this.StudentStatusService.getWorkgroupIdsOnNode(this.rootNodeId, periodId).length;
     }
+
+    getSelectedText() {
+        let text = '';
+        if (this.currentPeriod.periodId === -1) {
+            return this.currentPeriod.periodName;
+        } else {
+            return this.$translate('periodLabel', { name: this.currentPeriod.periodName });
+        }
+    }
 }
 
 PeriodSelectController.$inject = [
+    '$filter',
     '$scope',
     'ProjectService',
     'StudentStatusService',
@@ -93,20 +106,27 @@ PeriodSelectController.$inject = [
 ];
 
 const PeriodSelect = {
+    bindings: {
+        customClass: '<',
+        flat: '<'
+    },
     template:
-        `<md-select ng-model="$ctrl.currentPeriod"
-                    ng-model-options="{trackBy: '$value.periodId'}"
-                    class="md-no-underline md-button md-raised"
+        `<md-select md-theme="default"
+                    ng-model="$ctrl.currentPeriod"
+                    ng-model-options="{ trackBy: '$value.periodId' }"
+                    ng-class="[ $ctrl.customClass,
+                        {'md-no-underline md-button md-raised' : !$ctrl.flat} ]"
                     ng-change="$ctrl.currentPeriodChanged()"
-                    aria-label="{{'selectPeriod' | translate}}">
+                    aria-label="{{ 'selectPeriod' | translate }}"
+                    md-selected-text="$ctrl.getSelectedText()">
             <md-option ng-repeat="period in $ctrl.periods" ng-value="period">
                 <span ng-if="period.periodId === -1" translate="allPeriods"></span>
                 <span ng-if="period.periodId != -1" translate="periodLabel" translate-value-name="{{ period.periodName }}"></span>
                 <span class="text-secondary">
                     (<ng-pluralize count="period.numWorkgroupsInPeriod"
-                        when="{'0': '{{&quot;numberOfTeams_0&quot; | translate}}',
-                            'one': '{{&quot;numberOfTeams_1&quot; | translate}}',
-                            'other': '{{&quot;numberOfTeams_other&quot; | translate:{count: period.numWorkgroupsInPeriod} }}'}">
+                        when="{'0': '{{ &quot;numberOfTeams_0&quot; | translate }}',
+                            'one': '{{ &quot;numberOfTeams_1&quot; | translate }}',
+                            'other': '{{ &quot;numberOfTeams_other&quot; | translate:{count: period.numWorkgroupsInPeriod} }}'}">
                     </ng-pluralize>)
                 </span>
             </md-option>
