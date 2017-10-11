@@ -86,6 +86,15 @@
             body md-select-menu, body md-select-menu md-content {
               max-height: 625px;
             }
+            .projectItem:hover {
+              background-color: #add8e6;
+            }
+            .projectItemTitleDiv:hover {
+              background-color: #add8e6;
+            }
+            .projectItemTitleDiv {
+              width: 100%;
+            }
           </style>
           <div style="background-color: white; margin-bottom: 15px; position: sticky; top: 17px; z-index: 2;">
             <md-button id="projectBackButton" class='topButton md-raised md-primary'
@@ -402,8 +411,8 @@
             <div ng-repeat='item in projectController.items | toArray | orderBy : "order"'
                class='projectItem'
                ng-class='{"node-select--group": projectController.isGroupNode(item.$key), "node-select--node": !projectController.isGroupNode(item.$key)}'
-               ng-if='projectController.projectMode'>
-              <div id='{{item.$key}}' layout="row"
+               ng-if='projectController.projectMode && (!projectController.insertGroupMode || (projectController.insertGroupMode && projectController.isGroupNode(item.$key)))'>
+              <div id='{{item.$key}}' layout='row'
                  ng-class='{"groupHeader": projectController.isGroupNode(item.$key), "stepHeader": !projectController.isGroupNode(item.$key), "branchPathStepHeader": projectController.isNodeInAnyBranchPath(item.$key) && !projectController.isGroupNode(item.$key)}'
                  ng-style='{"background-color": projectController.getStepBackgroundColor(item.$key)}'>
                 <div layout="row">
@@ -415,26 +424,27 @@
                        ng-if='item.order!==0'>
                   </md-checkbox>
                 </div>
-                <div layout="row">
-                  <h6 ng-click='projectController.nodeClicked(item.$key)'
-                    style='display:inline; cursor:pointer;'
-                    ng-if='item.order!==0'>
-                    {{projectController.getNodePositionById(item.$key)}}: {{projectController.getNodeTitleByNodeId(item.$key)}}
-                  </h6>
-                </div>
-                <div layout="row">
-                  <md-button class='insertButton md-raised md-primary' ng-show='(projectController.insertNodeMode && item.order!==0) || (projectController.insertGroupMode && item.order==0)'
-                      ng-if='projectController.isGroupNode(item.$key)'
-                      ng-click='projectController.insertInside(item.$key)'>
-                    <md-icon>call_received</md-icon>
-                    <md-tooltip md-direction="top" class="projectButtonTooltip">{{ "insertAsFirstStep" | translate }}</md-tooltip>
-                  </md-button>
-                  <md-button class='insertButton md-raised md-primary' ng-show='(projectController.insertNodeMode && !projectController.isGroupNode(item.$key)) || (projectController.insertGroupMode && projectController.isGroupNode(item.$key))'
-                       ng-if='item.order!==0'
-                       ng-click='projectController.insertAfter(item.$key)'>
-                    <md-icon>subdirectory_arrow_left</md-icon>
-                    <md-tooltip md-direction="top" class="projectButtonTooltip">{{ "insertAfter" | translate }}</md-tooltip>
-                  </md-button>
+                <div layout='row' class='projectItemTitleDiv' ng-click='projectController.nodeClicked(item.$key)'>
+                  <div layout='row'>
+                    <h6 style='display:inline; cursor:pointer;'
+                      ng-if='item.order!==0'>
+                      {{projectController.getNodePositionById(item.$key)}}: {{projectController.getNodeTitleByNodeId(item.$key)}}
+                    </h6>
+                  </div>
+                  <div layout='row'>
+                    <md-button class='insertButton md-raised md-primary' ng-show='(projectController.insertNodeMode && item.order!==0) || (projectController.insertGroupMode && item.order==0)'
+                        ng-if='projectController.isGroupNode(item.$key)'
+                        ng-click='projectController.insertInside(item.$key)'>
+                      <md-icon>call_received</md-icon>
+                      <md-tooltip md-direction="top" class="projectButtonTooltip">{{ "insertAsFirstStep" | translate }}</md-tooltip>
+                    </md-button>
+                    <md-button class='insertButton md-raised md-primary' ng-show='(projectController.insertNodeMode && !projectController.isGroupNode(item.$key)) || (projectController.insertGroupMode && projectController.isGroupNode(item.$key))'
+                         ng-if='item.order!==0'
+                         ng-click='projectController.insertAfter(item.$key)'>
+                      <md-icon>subdirectory_arrow_left</md-icon>
+                      <md-tooltip md-direction="top" class="projectButtonTooltip">{{ "insertAfter" | translate }}</md-tooltip>
+                    </md-button>
+                  </div>
                 </div>
               </div>
             </div>

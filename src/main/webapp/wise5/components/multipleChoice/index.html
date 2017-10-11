@@ -13,8 +13,8 @@
             <p>{{ 'multipleChoice.selectionType' | translate }}:</p>
             <md-radio-group ng-model='multipleChoiceController.authoringComponentContent.choiceType'
                             ng-change='multipleChoiceController.authoringViewComponentChanged()'>
-                <md-radio-button class='md-primary' value='radio'>{{ 'multipleChoice.radio' | translate }}</md-radio-button>
-                <md-radio-button class='md-primary' value='checkbox'>{{ 'multipleChoice.checkbox' | translate }}</md-radio-button>
+                <md-radio-button class='md-primary' value='radio'>{{ 'multipleChoice.singleAnswer' | translate }}</md-radio-button>
+                <md-radio-button class='md-primary' value='checkbox'>{{ 'multipleChoice.multipleAnswer' | translate }}</md-radio-button>
             </md-radio-group>
             <div ng-if='multipleChoiceController.authoringComponentContent.choices == null || multipleChoiceController.authoringComponentContent.choices.length == 0'>
                 {{ 'multipleChoice.thereAreNoChoicesClickTheAddChoiceButtonToAddAChoice' | translate }}

@@ -173,8 +173,13 @@ var TableService = function (_NodeService) {
          * @returns whether the component was completed
          */
         value: function isCompleted(component, componentStates, componentEvents, nodeEvents, node) {
-            var result = false;
-
+            if (!this.componentHasEditableCells(component)) {
+                /*
+                 * The component does not have any editable cells so we will say
+                 * it is completed.
+                 */
+                return true;
+            }
             if (componentStates && componentStates.length) {
                 var submitRequired = node.showSubmitButton || component.showSubmitButton && !node.showSaveButton;
 
@@ -196,23 +201,49 @@ var TableService = function (_NodeService) {
                             if (submitRequired) {
                                 // completion requires a submission, so check for isSubmit
                                 if (componentState.isSubmit) {
-                                    result = true;
-                                    break;
+                                    return true;
                                 }
                             } else {
-                                result = true;
-                                break;
+                                return true;
                             }
                         }
                     }
                 }
             }
 
-            return result;
+            return false;
         }
     }, {
-        key: 'componentHasWork',
+        key: 'componentHasEditableCells',
 
+
+        /**
+         * Check if a table component has any editable cells.
+         * @param component The component content.
+         * @return Whether the component has any editable cells.
+         */
+        value: function componentHasEditableCells(component) {
+            if (component != null) {
+                var tableData = component.tableData;
+                if (tableData != null) {
+                    for (var r = 0; r < tableData.length; r++) {
+                        var row = tableData[r];
+                        if (row != null) {
+                            for (var c = 0; c < row.length; c++) {
+                                var cell = row[c];
+                                if (cell != null) {
+                                    if (cell.editable === true) {
+                                        return true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            return false;
+        }
 
         /**
          * Whether this component generates student work
@@ -221,6 +252,9 @@ var TableService = function (_NodeService) {
          * component type usually has work.
          * @return whether this component generates student work
          */
+
+    }, {
+        key: 'componentHasWork',
         value: function componentHasWork(component) {
             return true;
         }

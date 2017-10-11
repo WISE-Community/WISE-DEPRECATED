@@ -201,10 +201,12 @@ const StepTools = {
       <md-button id='previousNodeButton' aria-label="{{'previousStep' | translate }}" class="md-icon-button node-nav"
              ng-disabled="!$ctrl.prevId" ng-click="$ctrl.goToPrevNode()">
         <md-icon> arrow_back </md-icon>
+        <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'previousStep' | translate }}</md-tooltip>
       </md-button>
       <md-button id='nextNodeButton' aria-label="{{ 'nextStep' | translate }}" class="md-icon-button node-nav"
              ng-disabled="!$ctrl.nextId" ng-click="$ctrl.goToNextNode()" style="margin-right: 15px">
         <md-icon> arrow_forward </md-icon>
+        <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'nextStep' | translate }}</md-tooltip>
       </md-button>
     </div>`,
   controller: StepToolsController
