@@ -402,7 +402,7 @@
             <div ng-repeat='item in projectController.items | toArray | orderBy : "order"'
                class='projectItem'
                ng-class='{"node-select--group": projectController.isGroupNode(item.$key), "node-select--node": !projectController.isGroupNode(item.$key)}'
-               ng-if='projectController.projectMode'>
+               ng-if='projectController.projectMode && (!projectController.insertGroupMode || (projectController.insertGroupMode && projectController.isGroupNode(item.$key)))'>
               <div id='{{item.$key}}' layout="row"
                  ng-class='{"groupHeader": projectController.isGroupNode(item.$key), "stepHeader": !projectController.isGroupNode(item.$key), "branchPathStepHeader": projectController.isNodeInAnyBranchPath(item.$key) && !projectController.isGroupNode(item.$key)}'
                  ng-style='{"background-color": projectController.getStepBackgroundColor(item.$key)}'>
