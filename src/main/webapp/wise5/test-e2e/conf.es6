@@ -44,8 +44,12 @@ exports.config = {
         */
     ],
     onPrepare: function() {
-      var SpecReporter = require('jasmine-spec-reporter').SpecReporter;
+      let SpecReporter = require('jasmine-spec-reporter').SpecReporter;
       jasmine.getEnv().addReporter(new SpecReporter({displayStacktrace: 'all'}));
+
+      global.isAngularSite = function(flag) {
+        browser.ignoreSynchronization = !flag;
+      }
     },
     params: {
       login: {

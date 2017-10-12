@@ -22,7 +22,7 @@ describe('WISE Authoring Tool Info View', function () {
   beforeAll(function () {
     var page = new _infoPage2.default();
     var params = browser.params;
-    browser.ignoreSynchronization = true; // doesn't use Angular
+    isAngularSite(false);
     browser.get('http://localhost:8080/wise/login');
     $('#username').sendKeys(params.login.user);
     $('#password').sendKeys(params.login.password);
@@ -31,7 +31,7 @@ describe('WISE Authoring Tool Info View', function () {
 
   beforeEach(function () {
     var page = new _infoPage2.default();
-    browser.ignoreSynchronization = false; // uses Angular
+    isAngularSite(true);
     browser.get('http://localhost:8080/wise/author#/project/' + projectId + '/info');
     browser.refresh(); // needed for this issue https://github.com/angular/protractor/issues/2643
     browser.wait(function () {
