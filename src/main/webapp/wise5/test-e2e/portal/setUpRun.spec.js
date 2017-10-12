@@ -9,18 +9,18 @@ function hasClass(element, cls) {
 // TODO: this test should not depend on project created in authoringTool.spec.es6
 // E2E test for Setting up a run.
 // The project we created in authoringTool.spec.es6
-// should now be available in the Project Library
+// should now be available in the Project Library.
 describe('WISE Setting Up a Run', function () {
 
     it('should require teacher user to log in to view the project library', function () {
-        browser.ignoreSynchronization = true; // doesn't use Angular
+        isAngularSite(false);
         browser.get('http://localhost:8080/wise/login');
 
         expect(browser.getTitle()).toEqual('Sign In');
     });
 
     it('should log in using preview username and password and open the project library', function () {
-        browser.ignoreSynchronization = true; // doesn't use Angular
+        isAngularSite(false);
         $('#username').sendKeys('preview');
         $('#password').sendKeys('wise');
         $('#signInButton').click();
@@ -123,7 +123,7 @@ describe('WISE Setting Up a Run', function () {
     });
 
     it('should sign out', function () {
-        browser.ignoreSynchronization = true; // doesn't use Angular
+        isAngularSite(false);
         var signOutButton = $("#signOut");
         expect(signOutButton.isPresent()).toBeTruthy();
         signOutButton.click();

@@ -17,7 +17,7 @@ describe('WISE Portal', function () {
     var contactUSLink = element(by.cssContainingText('a', 'Contact US'));
 
     it('should show WISE logo and login inputs in the homepage', function () {
-        browser.ignoreSynchronization = true; // doesn't use Angular
+        isAngularSite(false);
         browser.get('http://localhost:8080/wise/');
 
         expect(browser.getTitle()).toEqual('Web-based Inquiry Science Environment (WISE)');
@@ -30,7 +30,7 @@ describe('WISE Portal', function () {
     });
 
     it('should not allow invalid username/password to log in', function () {
-        browser.ignoreSynchronization = true; // doesn't use Angular
+        isAngularSite(false);
         browser.get('http://localhost:8080/wise/');
         // try to log in with empty username/password
         signInButton.click();
@@ -66,7 +66,7 @@ describe('WISE Portal', function () {
     });
 
     it('should allow user to reach the create account page from the homepage', function () {
-        browser.ignoreSynchronization = true; // doesn't use Angular
+        isAngularSite(false);
         browser.get('http://localhost:8080/wise/');
         createAccountButton.click();
         expect(browser.getTitle()).toEqual('Create WISE Account');
@@ -84,7 +84,7 @@ describe('WISE Portal', function () {
     });
 
     it('should allow user to reach the contact us page from the homepage', function () {
-        browser.ignoreSynchronization = true; // doesn't use Angular
+        isAngularSite(false);
         browser.get('http://localhost:8080/wise/');
         contactUSLink.click();
         expect(browser.getTitle()).toEqual('Contact WISE');

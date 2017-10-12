@@ -24,17 +24,22 @@ exports.config = {
     'browserName': 'chrome',
     'tunnel-identifier': process.env.TRAVIS_JOB_NUMBER,
     'build': process.env.TRAVIS_BUILD_NUMBER
-    /*,
-    {
-        'browserName': 'firefox',
-        'tunnel-identifier': process.env.TRAVIS_JOB_NUMBER,
-        'build': process.env.TRAVIS_BUILD_NUMBER
-    }
-    */
-  }],
+  }
+  /*,
+  {
+      'browserName': 'firefox',
+      'tunnel-identifier': process.env.TRAVIS_JOB_NUMBER,
+      'build': process.env.TRAVIS_BUILD_NUMBER
+  }
+  */
+  ],
   onPrepare: function onPrepare() {
     var SpecReporter = require('jasmine-spec-reporter').SpecReporter;
     jasmine.getEnv().addReporter(new SpecReporter({ displayStacktrace: 'all' }));
+
+    global.isAngularSite = function (flag) {
+      browser.ignoreSynchronization = !flag;
+    };
   },
   params: {
     login: {

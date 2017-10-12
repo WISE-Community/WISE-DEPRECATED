@@ -11,14 +11,14 @@ function hasClass(element, cls) {
 describe('WISE Setting Up a Run', () => {
 
     it('should require teacher user to log in to view the project library', () => {
-        browser.ignoreSynchronization = true;  // doesn't use Angular
+        isAngularSite(false);
         browser.get('http://localhost:8080/wise/login');
 
         expect(browser.getTitle()).toEqual('Sign In');
     });
 
     it('should log in using preview username and password and open the project library', () => {
-        browser.ignoreSynchronization = true;  // doesn't use Angular
+        isAngularSite(false);
         $('#username').sendKeys('preview');
         $('#password').sendKeys('wise');
         $('#signInButton').click();
@@ -121,7 +121,7 @@ describe('WISE Setting Up a Run', () => {
     });
 
     it('should sign out', () => {
-        browser.ignoreSynchronization = true;  // doesn't use Angular
+        isAngularSite(false);
         let signOutButton = $("#signOut");
         expect(signOutButton.isPresent()).toBeTruthy();
         signOutButton.click();

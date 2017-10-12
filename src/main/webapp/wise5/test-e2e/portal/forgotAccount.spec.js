@@ -12,7 +12,7 @@ describe('WISE forgot account pages for teachers and students', function () {
     var forgotAccountLink = $('#forgotLogin a');
 
     it('should show select account page', function () {
-        browser.ignoreSynchronization = true; // doesn't use Angular
+        isAngularSite(false);
         browser.get('http://localhost:8080/wise/');
         expect(browser.getTitle()).toEqual('Web-based Inquiry Science Environment (WISE)');
         expect(forgotAccountLink.isPresent()).toBeTruthy();
