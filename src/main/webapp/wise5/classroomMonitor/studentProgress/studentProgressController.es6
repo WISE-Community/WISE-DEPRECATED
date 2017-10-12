@@ -24,36 +24,15 @@ class StudentProgressController {
         // get the current sort order
         this.sort = this.TeacherDataService.studentProgressSort;
 
-        // initialize the current workgroup
+        // initialize the current workgroup to null
         this.TeacherDataService.setCurrentWorkgroup(null);
 
         // get the teacher permissions
         this.permissions = this.ConfigService.getPermissions();
 
         this.studentsOnline = this.TeacherWebSocketService.getStudentsOnline();
-
         this.students = [];
         this.initializeStudents();
-
-        this.periods = [];
-
-        // create an option for all periods
-        var allPeriodOption = {
-            periodId: -1,
-            periodName: 'All'
-        };
-
-        this.periods.push(allPeriodOption);
-
-        this.periods = this.periods.concat(this.ConfigService.getPeriods());
-
-        // set the current period if it hasn't been set yet
-        if (this.getCurrentPeriod() == null) {
-            if (this.periods != null && this.periods.length > 0) {
-                // set it to the all periods option
-                this.setCurrentPeriod(this.periods[0]);
-            }
-        }
 
         // listen for the studentsOnlineReceived event
         this.$rootScope.$on('studentsOnlineReceived', (event, args) => {
@@ -145,7 +124,7 @@ class StudentProgressController {
     isWorkgroupShown(workgroup) {
         let show = false;
 
-        let currentPeriod = this.getCurrentPeriod().periodId;
+        let currentPeriod = this.TeacherDataService.getCurrentPeriod();.periodId;
 
         if (currentPeriod === -1 || workgroup.periodId === this.getCurrentPeriod().periodId) {
             if (this.currentWorkgroup) {
@@ -159,22 +138,6 @@ class StudentProgressController {
 
         return show;
     }
-
-    /**
-     * Set the current period
-     * @param period the period object
-     */
-    setCurrentPeriod(period) {
-        this.TeacherDataService.setCurrentPeriod(period);
-        this.$rootScope.$broadcast('periodChanged', {period: period});
-    };
-
-    /**
-     * Get the current period
-     */
-    getCurrentPeriod() {
-        return this.TeacherDataService.getCurrentPeriod();
-    };
 
     getStudentTotalScore(workgroupId) {
         return this.TeacherDataService.getTotalScoreByWorkgroupId(workgroupId);

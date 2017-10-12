@@ -45,6 +45,7 @@
     }
 }
 
+// TODO: convert to BEM for below
 .layout-toolbar {
     position: fixed;
     left: 0;
@@ -54,7 +55,6 @@
     //transition-delay: 250ms;
     z-index: 3;
 }
-
 
 .layout-tools {
     transition: 250ms linear all;
@@ -79,8 +79,35 @@
     }
 }
 
-.toolbar-title {
+.toolbar-title { // TODO: rename to .toolbar__title
     margin-left: 8px;
     font-size: rem(1.6);
     font-weight: 500;
+}
+
+.toolbar__select, .md-button.toolbar__select {
+    margin: 0;
+    min-height: 32px;
+    background-color: color('gray-lightest');
+
+    .md-select-value {
+        height: 32px;
+        text-align: left;
+    }
+}
+
+.toolbar__select--fixedwidth {
+    width: 168px;
+
+    @media only screen and (min-width: $layout-breakpoint-xs) {
+        width: 264px;
+    }
+
+    @media only screen and (min-width: $layout-breakpoint-sm) {
+        width: 432px;
+    }
+}
+
+.toolbar__nav, .md-button.toolbar__nav {
+    margin: 0;
 }

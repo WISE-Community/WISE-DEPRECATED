@@ -62,16 +62,6 @@ var NotebookGradingController = function () {
             this.canGradeStudentWork = false;
         }
 
-        this.periods = this.ConfigService.getPeriods();
-
-        // set the current period if it hasn't been set yet
-        if (this.getCurrentPeriod() == null) {
-            if (this.periods != null && this.periods.length > 0) {
-                // set it to the all periods option
-                this.setCurrentPeriod(this.periods[0]);
-            }
-        }
-
         // save event when notebook grading view is displayed
         var context = "ClassroomMonitor",
             nodeId = null,
@@ -132,28 +122,6 @@ var NotebookGradingController = function () {
         key: "viewReport",
         value: function viewReport(workgroupId) {
             alert(workgroupId);
-        }
-
-        /**
-         * Get the current period
-         */
-
-    }, {
-        key: "getCurrentPeriod",
-        value: function getCurrentPeriod() {
-            return this.TeacherDataService.getCurrentPeriod();
-        }
-    }, {
-        key: "setCurrentPeriod",
-
-
-        /**
-         * Set the current period
-         * @param period the period object
-         */
-        value: function setCurrentPeriod(period) {
-            this.TeacherDataService.setCurrentPeriod(period);
-            this.$rootScope.$broadcast('periodChanged', { period: period });
         }
     }]);
 

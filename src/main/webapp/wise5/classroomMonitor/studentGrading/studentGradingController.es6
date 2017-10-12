@@ -8,6 +8,7 @@ class StudentGradingController {
                 $scope,
                 $state,
                 $stateParams,
+                orderBy,
                 AnnotationService,
                 ConfigService,
                 NotificationService,
@@ -20,6 +21,7 @@ class StudentGradingController {
         this.$scope = $scope;
         this.$state = $state;
         this.$stateParams = $stateParams;
+        this.orderBy = orderBy;
         this.AnnotationService = AnnotationService;
         this.ConfigService = ConfigService;
         this.NotificationService = NotificationService;
@@ -107,12 +109,33 @@ class StudentGradingController {
         });
 
         this.$scope.$on('currentWorkgroupChanged', (event, args) => {
-            // the current workgroup has changed, so reload the view
             let workgroup = args.currentWorkgroup;
             if (workgroup != null) {
                 let workgroupId = workgroup.workgroupId;
                 if (this.workgroupId !== workgroupId) {
+                    // the current workgroup has changed, so reload the view
                     this.$state.go('root.team', {workgroupId: workgroupId});
+                }
+            }
+        });
+
+        this.$scope.$on('currentPeriodChanged', (event, args) => {
+            let periodId = args.currentPeriod.periodId;
+            let currentWorkgroup = this.TeacherDataService.getCurrentWorkgroup();
+            if (!currentWorkgroup) {
+                /*
+                 * there is no currently selected workgroup, so set to the
+                 * first workgroup in the current period
+                 */
+                let workgroups = angular.copy(this.ConfigService.getClassmateUserInfos());
+                workgroups = this.orderBy(workgroups, 'workgroupId');
+                let n = workgroups.length;
+                for (let i = 0; i < n; i++) {
+                    let workgroup = workgroups[i];
+                    if (workgroup.periodId === periodId) {
+                        this.TeacherDataService.setCurrentWorkgroup(workgroup);
+                        break;
+                    }
                 }
             }
         });
@@ -514,6 +537,7 @@ StudentGradingController.$inject = [
     '$scope',
     '$state',
     '$stateParams',
+    'orderByFilter',
     'AnnotationService',
     'ConfigService',
     'NotificationService',

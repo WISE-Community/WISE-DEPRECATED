@@ -72,15 +72,6 @@ $input-action-vertical-offset-richtext: -7px;
     min-width: 0;
     font-weight: 500;
     font-size: $body-font-size-base;
-    max-width: 180px;
-
-    @media only screen and (min-width: $layout-breakpoint-xs) {
-        max-width: 360px;
-    }
-
-    @media only screen and (min-width: $layout-breakpoint-sm) {
-        max-width: 540px;
-    }
 
     .md-select-value {
         *:first-child {

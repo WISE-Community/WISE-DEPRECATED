@@ -295,10 +295,12 @@ md-list-item .md-list-item-inner {
 md-select {
     &.md-button {
         text-transform: none;
-        margin: 0;
-        max-width: 200px;
 
-        .md-select-value .md-select-icon {
+        .md-select-value > span {
+            margin-top: 1px;
+        }
+
+        .md-select-icon {
             margin: 0;
         }
 

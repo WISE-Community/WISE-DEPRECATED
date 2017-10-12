@@ -9,7 +9,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var StudentGradingController = function () {
-    function StudentGradingController($filter, $mdDialog, $mdMedia, $scope, $state, $stateParams, AnnotationService, ConfigService, NotificationService, ProjectService, StudentStatusService, TeacherDataService) {
+    function StudentGradingController($filter, $mdDialog, $mdMedia, $scope, $state, $stateParams, orderBy, AnnotationService, ConfigService, NotificationService, ProjectService, StudentStatusService, TeacherDataService) {
         var _this = this;
 
         _classCallCheck(this, StudentGradingController);
@@ -20,6 +20,7 @@ var StudentGradingController = function () {
         this.$scope = $scope;
         this.$state = $state;
         this.$stateParams = $stateParams;
+        this.orderBy = orderBy;
         this.AnnotationService = AnnotationService;
         this.ConfigService = ConfigService;
         this.NotificationService = NotificationService;
@@ -107,12 +108,33 @@ var StudentGradingController = function () {
         });
 
         this.$scope.$on('currentWorkgroupChanged', function (event, args) {
-            // the current workgroup has changed, so reload the view
             var workgroup = args.currentWorkgroup;
             if (workgroup != null) {
                 var workgroupId = workgroup.workgroupId;
                 if (_this.workgroupId !== workgroupId) {
+                    // the current workgroup has changed, so reload the view
                     _this.$state.go('root.team', { workgroupId: workgroupId });
+                }
+            }
+        });
+
+        this.$scope.$on('currentPeriodChanged', function (event, args) {
+            var periodId = args.currentPeriod.periodId;
+            var currentWorkgroup = _this.TeacherDataService.getCurrentWorkgroup();
+            if (!currentWorkgroup) {
+                /*
+                 * there is no currently selected workgroup, so set to the
+                 * first workgroup in the current period
+                 */
+                var workgroups = angular.copy(_this.ConfigService.getClassmateUserInfos());
+                workgroups = _this.orderBy(workgroups, 'workgroupId');
+                var n = workgroups.length;
+                for (var i = 0; i < n; i++) {
+                    var workgroup = workgroups[i];
+                    if (workgroup.periodId === periodId) {
+                        _this.TeacherDataService.setCurrentWorkgroup(workgroup);
+                        break;
+                    }
                 }
             }
         });
@@ -559,7 +581,7 @@ var StudentGradingController = function () {
     return StudentGradingController;
 }();
 
-StudentGradingController.$inject = ['$filter', '$mdDialog', '$mdMedia', '$scope', '$state', '$stateParams', 'AnnotationService', 'ConfigService', 'NotificationService', 'ProjectService', 'StudentStatusService', 'TeacherDataService'];
+StudentGradingController.$inject = ['$filter', '$mdDialog', '$mdMedia', '$scope', '$state', '$stateParams', 'orderByFilter', 'AnnotationService', 'ConfigService', 'NotificationService', 'ProjectService', 'StudentStatusService', 'TeacherDataService'];
 
 exports.default = StudentGradingController;
 //# sourceMappingURL=studentGradingController.js.map

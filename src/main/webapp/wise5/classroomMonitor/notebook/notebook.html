@@ -15,13 +15,6 @@
     </button>
 
     <div class="l-constrained" layout="column">
-        <div>
-            <button ng-repeat='period in notebookGradingController.periods'
-                    ng-click='notebookGradingController.setCurrentPeriod(period)'
-                    ng-class="{'active': period.periodName == notebookGradingController.getCurrentPeriod().periodName}">
-                {{period.periodName}}
-            </button>
-        </div>
         <div ng-repeat="workgroup in notebookGradingController.workgroups"
             ng-show="notebookGradingController.getCurrentPeriod().periodName == 'All Periods' || workgroup.periodId == notebookGradingController.getCurrentPeriod().periodId">
             <span style="font-weight:bold" ng-if="notebookGradingController.canViewStudentNames">{{workgroup.userName}} ({{'WORKGROUP_ID' | translate }}: {{workgroup.workgroupId}})</span>
