@@ -85,8 +85,15 @@ const StepTools = {
     },
     template:
         `<div layout="row" layout-align="center center">
-            <node-icon node-id="$ctrl.nodeId" size="18"></node-icon>
-            <md-select id="stepSelectMenu" md-theme="default" class="node-select md-subhead"
+            <md-button aria-label="{{ 'previousStep' | translate }}"
+                       class="md-icon-button toolbar__nav"
+                       ng-disabled="!$ctrl.prevId" ng-click="$ctrl.goToPrevNode()">
+                <md-icon> chevron_left </md-icon>
+                <md-tooltip md-direction="bottom">{{ 'previousStep' | translate }}</md-tooltip>
+            </md-button>
+            <node-icon node-id="$ctrl.nodeId" size="18"></node-icon>&nbsp;
+            <md-select id="stepSelectMenu" md-theme="default"
+                       class="md-button md-no-underline toolbar__select toolbar__select--fixedwidth"
                        aria-label="{{ 'selectAStep' | translate }}"
                        ng-model="$ctrl.toNodeId"
                        ng-change="$ctrl.toNodeIdChanged()"
@@ -101,15 +108,10 @@ const StepTools = {
                     </div>
                 </md-option>
             </md-select>
-            <span flex></span>
-            <md-button aria-label="{{ 'previousStep' | translate }}" class="md-icon-button node-nav"
-                       ng-disabled="!$ctrl.prevId" ng-click="$ctrl.goToPrevNode()">
-                <md-icon> arrow_back </md-icon>
-                <md-tooltip md-direction="bottom">{{ 'previousStep' | translate }}</md-tooltip>
-            </md-button>
-            <md-button aria-label="{{ 'nextStep' | translate }}" class="md-icon-button node-nav"
+            <md-button aria-label="{{ 'nextStep' | translate }}"
+                       class="md-icon-button toolbar__nav"
                        ng-disabled="!$ctrl.nextId" ng-click="$ctrl.goToNextNode()">
-                <md-icon> arrow_forward </md-icon>
+                <md-icon> chevron_right </md-icon>
                 <md-tooltip md-direction="bottom">{{ 'nextStep' | translate }}</md-tooltip>
             </md-button>
         </div>`,

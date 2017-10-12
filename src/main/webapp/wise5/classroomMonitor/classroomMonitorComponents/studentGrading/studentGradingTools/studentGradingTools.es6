@@ -121,23 +121,23 @@ const StudentGradingTools = {
   },
   template:
     `<div layout="row" layout-align="center center">
-      <md-icon class="md-30" style="color: {{ $ctrl.avatarColor }};"> account_circle </md-icon>
-      <workgroup-select custom-class="'node-select md-subhead'"
-                        custom-placeholder="$ctrl.selectTeamPlaceholder"></workgroup-select>
-      <span flex></span>
       <md-button aria-label="{{ 'previousTeam' | translate }}"
-                 class="md-icon-button node-nav"
+                 class="md-icon-button toolbar__nav"
                  ng-disabled="!$ctrl.prevId" ng-click="$ctrl.goToPrevTeam()">
-        <md-icon> arrow_back </md-icon>
+        <md-icon> chevron_left </md-icon>
         <md-tooltip md-direction="bottom">{{ 'previousTeam' | translate }}</md-tooltip>
       </md-button>
+      <md-icon class="md-30" hide-xs
+               style="color: {{ $ctrl.avatarColor }};"> account_circle </md-icon>&nbsp;
+      <workgroup-select custom-class="'md-button md-no-underline
+                          toolbar__select toolbar__select--fixedwidth'"
+                        custom-placeholder="$ctrl.selectTeamPlaceholder"></workgroup-select>
       <md-button aria-label="{{ 'nextTeam' | translate }}"
-                 class="md-icon-button node-nav"
+                 class="md-icon-button toolbar__nav"
                  ng-disabled="!$ctrl.nextId" ng-click="$ctrl.goToNextTeam()">
-        <md-icon> arrow_forward </md-icon>
+        <md-icon> chevron_right </md-icon>
         <md-tooltip md-direction="bottom">{{ 'nextTeam' | translate }}</md-tooltip>
       </md-button>
-      <!--<period-select flat="true" custom-class="'node-select md-body-2'"></period-select>-->
     </div>`,
   controller: StudentGradingToolsController
 };
