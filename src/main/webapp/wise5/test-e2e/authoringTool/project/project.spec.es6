@@ -11,7 +11,7 @@ describe('WISE Authoring Tool Project View', () => {
   beforeAll(() => {
     const page = new ProjectPage();
     const params = browser.params;
-    browser.ignoreSynchronization = true;  // doesn't use Angular
+    isAngularSite(false);
     browser.get('http://localhost:8080/wise/login');
     $('#username').sendKeys(params.login.user);
     $('#password').sendKeys(params.login.password);
@@ -20,7 +20,7 @@ describe('WISE Authoring Tool Project View', () => {
 
   beforeEach(() => {
     const page = new ProjectPage();
-    browser.ignoreSynchronization = false;  // uses Angular
+    isAngularSite(true);
     browser.get('http://localhost:8080/wise/author#/project/' + projectId);
     browser.refresh();  // needed for this issue https://github.com/angular/protractor/issues/2643
     browser.wait(() => {
@@ -153,7 +153,7 @@ describe('WISE Authoring Tool Project View', () => {
   it('should exit the authoring tool from project listing view and go to teacher home', () => {
     const page = new ProjectPage();
     page.clickGoHomeButton();
-    browser.ignoreSynchronization = true;
+    isAngularSite(false);
     expect(browser.getCurrentUrl()).toMatch(/.*\/wise\//);
    });
 

@@ -30,7 +30,7 @@ describe('WISE Classroom Monitor', () => {
     }
 
     it('should load even without any students', () => {
-        browser.ignoreSynchronization = true;  // doesn't use Angular
+        isAngularSite(false);
         browser.get('http://localhost:8080/wise/login');
         expect(browser.getTitle()).toEqual('Sign In');
         $('#username').sendKeys('preview');
@@ -47,7 +47,7 @@ describe('WISE Classroom Monitor', () => {
         // Clicking on the classroom monitor link should open the classroom monitor in a new window
         browser.getAllWindowHandles().then((handles) => {
             browser.switchTo().window(handles[1]).then(() => {
-                browser.ignoreSynchronization = false;  // uses Angular
+                isAngularSite(true);
                 browser.refresh();  // needed for this issue https://github.com/angular/protractor/issues/2643
                 browser.waitForAngular();   // wait for Angular to load
                 expect(browser.getCurrentUrl()).toMatch('http://localhost:8080/wise/classroomMonitor/[0-9]+#/project/');
@@ -110,7 +110,7 @@ describe('WISE Classroom Monitor', () => {
             });
         });
 
-        browser.ignoreSynchronization = true;  // doesn't use Angular
+        isAngularSite(false);
         expect(browser.getTitle()).toEqual('WISE Teacher Dashboard');
         let signOutButton = $("#signOut");
         expect(signOutButton.isPresent()).toBeTruthy();
