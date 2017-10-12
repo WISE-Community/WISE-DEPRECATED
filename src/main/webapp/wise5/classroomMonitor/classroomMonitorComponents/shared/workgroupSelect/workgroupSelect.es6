@@ -16,9 +16,7 @@ class WorkgroupSelectController {
         this.$onInit = () => {
             this.placeholder = this.customPlaceholder ? this.customPlaceholder : this.$translate('findAStudent');
             this.canViewStudentNames = this.ConfigService.getPermissions().canViewStudentNames;
-            this.workgroups = angular.copy(this.ConfigService.getClassmateUserInfos());
             this.periodId = this.TeacherDataService.getCurrentPeriod().periodId;
-            this.selectedItem = this.getCurrentWorkgroup();
             this.setWorkgroups();
         };
 
@@ -28,7 +26,7 @@ class WorkgroupSelectController {
         this.$scope.$on('currentWorkgroupChanged', (event, args) => {
             let workgroup = args.currentWorkgroup;
             if (workgroup != null) {
-                this.selectedItem = this.getCurrentWorkgroup();
+                this.setWorkgroups();
             }
         });
 
@@ -37,7 +35,6 @@ class WorkgroupSelectController {
          */
         this.$scope.$on('currentPeriodChanged', (event, args) => {
             this.periodId = args.currentPeriod.periodId;
-            this.selectedItem = this.getCurrentWorkgroup();
             this.setWorkgroups();
         });
     };
@@ -47,51 +44,59 @@ class WorkgroupSelectController {
      * individual students and whether current user can view student names
      */
     setWorkgroups() {
+        this.workgroups = angular.copy(this.ConfigService.getClassmateUserInfos());
         if (this.byStudent) {
             let students = [];
             let sortByStudentId = false;
             let n = this.workgroups.length;
             for (let i = 0; i < n; i++) {
                 let workgroup = this.workgroups[i];
-                if (this.canViewStudentNames) {
-                    let names = workgroup.displayNames.split(',');
-                    let l = names.length;
-                    for (let x = 0; x < l; x++) {
-                        let name = names[x].trim();
-                        // get the index of the first empty space
-                        let indexOfSpace = name.indexOf(' ');
-                        // get the student first name e.g. "Spongebob"
-                        let firstName = name.substring(0, indexOfSpace);
-                        let lastName = name.substring(indexOfSpace+1);
-                        let current = angular.copy(workgroup);
-                        current.displayNames = lastName + ', ' + firstName;
-                        students.push(current);
-                    }
-                } else {
-                    sortByStudentId = true;
-                    let ids = workgroup.userIds;
-                    let l = ids.length;
-                    for (let x = 0; x < l; x++) {
-                        let id = ids[x];
-                        let name = this.$translate('studentId', { id: id });
-                        let current = angular.copy(workgroup);
-                        current.displayNames = name;
-                        current.userId = id;
-                        students.push(current);
+                if (this.periodId === -1 || this.periodId === workgroup.periodId) {
+                    if (this.canViewStudentNames) {
+                        let names = workgroup.displayNames.split(',');
+                        let l = names.length;
+                        for (let x = 0; x < l; x++) {
+                            let name = names[x].trim();
+                            // get the index of the first empty space
+                            let indexOfSpace = name.indexOf(' ');
+                            // get the student first name e.g. "Spongebob"
+                            let firstName = name.substring(0, indexOfSpace);
+                            let lastName = name.substring(indexOfSpace+1);
+                            let current = angular.copy(workgroup);
+                            current.displayNames = lastName + ', ' + firstName;
+                            students.push(current);
+                        }
+                    } else {
+                        sortByStudentId = true;
+                        let ids = workgroup.userIds;
+                        let l = ids.length;
+                        for (let x = 0; x < l; x++) {
+                            let id = ids[x];
+                            let name = this.$translate('studentId', { id: id });
+                            let current = angular.copy(workgroup);
+                            current.displayNames = name;
+                            current.userId = id;
+                            students.push(current);
+                        }
                     }
                 }
             }
             this.workgroups = sortByStudentId ? this.orderBy(students, 'userId') : this.orderBy(students, 'displayNames');
         } else {
+            let workgroups = [];
             let n = this.workgroups.length;
             for (let i = 0; i < n; i++) {
                 let workgroup = this.workgroups[i];
-                if (this.canViewStudentNames) {
-                    workgroup.displayNames += ' (' + this.$translate('teamId', { id: workgroup.workgroupId}) + ')';
+                if (this.periodId === -1 || this.periodId === workgroup.periodId) {
+                    if (this.canViewStudentNames) {
+                        workgroup.displayNames += ' (' + this.$translate('teamId', { id: workgroup.workgroupId}) + ')';
+                    }
+                    workgroups.push(workgroup);
                 }
             }
-            this.workgroups = this.orderBy(this.workgroups, 'workgroupId');
+            this.workgroups = this.orderBy(workgroups, 'workgroupId');
         }
+        this.selectedItem = this.getCurrentWorkgroup();
     }
 
     /**
@@ -115,7 +120,7 @@ class WorkgroupSelectController {
                 let workgroup = this.workgroups[i];
                 if (currentWorkgroup.workgroupId === workgroup.workgroupId) {
                     if (this.byStudent &&
-                        (currentWorkgroup.displayNames === workgroup.displayNames)) {
+                        (currentWorkgroup.userId === workgroup.userId)) {
                         localGroup = workgroup;
                     } else {
                         localGroup = workgroup;
@@ -148,7 +153,20 @@ class WorkgroupSelectController {
     }
 
     selectedItemChange() {
-        this.setCurrentWorkgroup(this.selectedItem);
+        let currentWorkgroup = this.getCurrentWorkgroup();
+        if (currentWorkgroup) {
+            if (this.selectedItem) {
+                if (this.byStudent) {
+                    if (currentWorkgroup.userId !== this.selectedItem.userId) {
+                        this.setCurrentWorkgroup(this.selectedItem);
+                    }
+                } else if (currentWorkgroup.workgroupId !== this.selectedItem.workgroupId) {
+                    this.setCurrentWorkgroup(this.selectedItem);
+                }
+            }
+        } else if (this.selectedItem) {
+            this.setCurrentWorkgroup(this.selectedItem);
+        }
     }
 
     clearSearchTerm() {

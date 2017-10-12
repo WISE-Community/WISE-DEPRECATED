@@ -24,9 +24,7 @@ var WorkgroupSelectController = function () {
         this.$onInit = function () {
             _this.placeholder = _this.customPlaceholder ? _this.customPlaceholder : _this.$translate('findAStudent');
             _this.canViewStudentNames = _this.ConfigService.getPermissions().canViewStudentNames;
-            _this.workgroups = angular.copy(_this.ConfigService.getClassmateUserInfos());
             _this.periodId = _this.TeacherDataService.getCurrentPeriod().periodId;
-            _this.selectedItem = _this.getCurrentWorkgroup();
             _this.setWorkgroups();
         };
 
@@ -36,7 +34,7 @@ var WorkgroupSelectController = function () {
         this.$scope.$on('currentWorkgroupChanged', function (event, args) {
             var workgroup = args.currentWorkgroup;
             if (workgroup != null) {
-                _this.selectedItem = _this.getCurrentWorkgroup();
+                _this.setWorkgroups();
             }
         });
 
@@ -45,7 +43,6 @@ var WorkgroupSelectController = function () {
          */
         this.$scope.$on('currentPeriodChanged', function (event, args) {
             _this.periodId = args.currentPeriod.periodId;
-            _this.selectedItem = _this.getCurrentWorkgroup();
             _this.setWorkgroups();
         });
     }
@@ -59,51 +56,59 @@ var WorkgroupSelectController = function () {
          * individual students and whether current user can view student names
          */
         value: function setWorkgroups() {
+            this.workgroups = angular.copy(this.ConfigService.getClassmateUserInfos());
             if (this.byStudent) {
                 var students = [];
                 var sortByStudentId = false;
                 var n = this.workgroups.length;
                 for (var i = 0; i < n; i++) {
                     var workgroup = this.workgroups[i];
-                    if (this.canViewStudentNames) {
-                        var names = workgroup.displayNames.split(',');
-                        var l = names.length;
-                        for (var x = 0; x < l; x++) {
-                            var name = names[x].trim();
-                            // get the index of the first empty space
-                            var indexOfSpace = name.indexOf(' ');
-                            // get the student first name e.g. "Spongebob"
-                            var firstName = name.substring(0, indexOfSpace);
-                            var lastName = name.substring(indexOfSpace + 1);
-                            var current = angular.copy(workgroup);
-                            current.displayNames = lastName + ', ' + firstName;
-                            students.push(current);
-                        }
-                    } else {
-                        sortByStudentId = true;
-                        var ids = workgroup.userIds;
-                        var _l = ids.length;
-                        for (var _x = 0; _x < _l; _x++) {
-                            var id = ids[_x];
-                            var _name = this.$translate('studentId', { id: id });
-                            var _current = angular.copy(workgroup);
-                            _current.displayNames = _name;
-                            _current.userId = id;
-                            students.push(_current);
+                    if (this.periodId === -1 || this.periodId === workgroup.periodId) {
+                        if (this.canViewStudentNames) {
+                            var names = workgroup.displayNames.split(',');
+                            var l = names.length;
+                            for (var x = 0; x < l; x++) {
+                                var name = names[x].trim();
+                                // get the index of the first empty space
+                                var indexOfSpace = name.indexOf(' ');
+                                // get the student first name e.g. "Spongebob"
+                                var firstName = name.substring(0, indexOfSpace);
+                                var lastName = name.substring(indexOfSpace + 1);
+                                var current = angular.copy(workgroup);
+                                current.displayNames = lastName + ', ' + firstName;
+                                students.push(current);
+                            }
+                        } else {
+                            sortByStudentId = true;
+                            var ids = workgroup.userIds;
+                            var _l = ids.length;
+                            for (var _x = 0; _x < _l; _x++) {
+                                var id = ids[_x];
+                                var _name = this.$translate('studentId', { id: id });
+                                var _current = angular.copy(workgroup);
+                                _current.displayNames = _name;
+                                _current.userId = id;
+                                students.push(_current);
+                            }
                         }
                     }
                 }
                 this.workgroups = sortByStudentId ? this.orderBy(students, 'userId') : this.orderBy(students, 'displayNames');
             } else {
+                var workgroups = [];
                 var _n = this.workgroups.length;
                 for (var _i = 0; _i < _n; _i++) {
                     var _workgroup = this.workgroups[_i];
-                    if (this.canViewStudentNames) {
-                        _workgroup.displayNames += ' (' + this.$translate('teamId', { id: _workgroup.workgroupId }) + ')';
+                    if (this.periodId === -1 || this.periodId === _workgroup.periodId) {
+                        if (this.canViewStudentNames) {
+                            _workgroup.displayNames += ' (' + this.$translate('teamId', { id: _workgroup.workgroupId }) + ')';
+                        }
+                        workgroups.push(_workgroup);
                     }
                 }
-                this.workgroups = this.orderBy(this.workgroups, 'workgroupId');
+                this.workgroups = this.orderBy(workgroups, 'workgroupId');
             }
+            this.selectedItem = this.getCurrentWorkgroup();
         }
 
         /**
@@ -132,7 +137,7 @@ var WorkgroupSelectController = function () {
                 for (var i = 0; i < n; i++) {
                     var workgroup = this.workgroups[i];
                     if (currentWorkgroup.workgroupId === workgroup.workgroupId) {
-                        if (this.byStudent && currentWorkgroup.displayNames === workgroup.displayNames) {
+                        if (this.byStudent && currentWorkgroup.userId === workgroup.userId) {
                             localGroup = workgroup;
                         } else {
                             localGroup = workgroup;
@@ -169,7 +174,20 @@ var WorkgroupSelectController = function () {
     }, {
         key: 'selectedItemChange',
         value: function selectedItemChange() {
-            this.setCurrentWorkgroup(this.selectedItem);
+            var currentWorkgroup = this.getCurrentWorkgroup();
+            if (currentWorkgroup) {
+                if (this.selectedItem) {
+                    if (this.byStudent) {
+                        if (currentWorkgroup.userId !== this.selectedItem.userId) {
+                            this.setCurrentWorkgroup(this.selectedItem);
+                        }
+                    } else if (currentWorkgroup.workgroupId !== this.selectedItem.workgroupId) {
+                        this.setCurrentWorkgroup(this.selectedItem);
+                    }
+                }
+            } else if (this.selectedItem) {
+                this.setCurrentWorkgroup(this.selectedItem);
+            }
         }
     }, {
         key: 'clearSearchTerm',
