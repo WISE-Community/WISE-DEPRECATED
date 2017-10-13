@@ -107,6 +107,13 @@ class NotebookGradingController {
         alert(workgroupId);
     }
 
+    /**
+     * Get the current period
+     */
+    getCurrentPeriod() {
+        return this.TeacherDataService.getCurrentPeriod();
+    };
+
 }
 
 NotebookGradingController.$inject = [

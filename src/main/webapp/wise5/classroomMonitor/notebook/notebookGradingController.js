@@ -123,6 +123,16 @@ var NotebookGradingController = function () {
         value: function viewReport(workgroupId) {
             alert(workgroupId);
         }
+
+        /**
+         * Get the current period
+         */
+
+    }, {
+        key: "getCurrentPeriod",
+        value: function getCurrentPeriod() {
+            return this.TeacherDataService.getCurrentPeriod();
+        }
     }]);
 
     return NotebookGradingController;
