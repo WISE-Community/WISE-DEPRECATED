@@ -60,48 +60,87 @@ var WorkgroupSelectController = function () {
             if (this.byStudent) {
                 var students = [];
                 var sortByStudentId = false;
-                var n = this.workgroups.length;
-                for (var i = 0; i < n; i++) {
-                    var workgroup = this.workgroups[i];
-                    if (this.periodId === -1 || this.periodId === workgroup.periodId) {
-                        var ids = workgroup.userIds;
-                        var names = workgroup.displayNames.split(',');
-                        var l = ids.length;
-                        for (var x = 0; x < l; x++) {
-                            // get the id and name for the current student
-                            var id = ids[x];
-                            var current = angular.copy(workgroup);
-                            current.userId = id;
-                            if (this.canViewStudentNames) {
-                                var name = names[x].trim();
-                                // get the index of the first empty space
-                                var indexOfSpace = name.indexOf(' ');
+                var _iteratorNormalCompletion = true;
+                var _didIteratorError = false;
+                var _iteratorError = undefined;
 
-                                // get the student first name e.g. "Spongebob"
-                                var firstName = name.substring(0, indexOfSpace);
-                                var lastName = name.substring(indexOfSpace + 1);
-                                current.displayNames = lastName + ', ' + firstName;
-                            } else {
-                                var _sortByStudentId = true;
-                                current.displayNames = this.$translate('studentId', { id: id });
+                try {
+                    for (var _iterator = this.workgroups[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                        var workgroup = _step.value;
+
+                        if (this.periodId === -1 || this.periodId === workgroup.periodId) {
+                            var ids = workgroup.userIds;
+                            var names = workgroup.displayNames.split(',');
+                            for (var x = 0; x < ids.length; x++) {
+                                // get the id and name for the current student
+                                var id = ids[x];
+                                var current = angular.copy(workgroup);
+                                current.userId = id;
+                                if (this.canViewStudentNames) {
+                                    var name = names[x].trim();
+                                    // get the index of the first empty space
+                                    var indexOfSpace = name.indexOf(' ');
+
+                                    // get the student first name e.g. "Spongebob"
+                                    var firstName = name.substring(0, indexOfSpace);
+                                    var lastName = name.substring(indexOfSpace + 1);
+                                    current.displayNames = lastName + ', ' + firstName;
+                                } else {
+                                    var _sortByStudentId = true;
+                                    current.displayNames = this.$translate('studentId', { id: id });
+                                }
+                                students.push(current);
                             }
-                            students.push(current);
+                        }
+                    }
+                } catch (err) {
+                    _didIteratorError = true;
+                    _iteratorError = err;
+                } finally {
+                    try {
+                        if (!_iteratorNormalCompletion && _iterator.return) {
+                            _iterator.return();
+                        }
+                    } finally {
+                        if (_didIteratorError) {
+                            throw _iteratorError;
                         }
                     }
                 }
+
                 this.workgroups = sortByStudentId ? this.orderBy(students, 'userId') : this.orderBy(students, 'displayNames');
             } else {
                 var workgroups = [];
-                var _n = this.workgroups.length;
-                for (var _i = 0; _i < _n; _i++) {
-                    var _workgroup = this.workgroups[_i];
-                    if (this.periodId === -1 || this.periodId === _workgroup.periodId) {
-                        if (this.canViewStudentNames) {
-                            _workgroup.displayNames += ' (' + this.$translate('teamId', { id: _workgroup.workgroupId }) + ')';
+                var _iteratorNormalCompletion2 = true;
+                var _didIteratorError2 = false;
+                var _iteratorError2 = undefined;
+
+                try {
+                    for (var _iterator2 = this.workgroups[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+                        var _workgroup = _step2.value;
+
+                        if (this.periodId === -1 || this.periodId === _workgroup.periodId) {
+                            if (this.canViewStudentNames) {
+                                _workgroup.displayNames += ' (' + this.$translate('teamId', { id: _workgroup.workgroupId }) + ')';
+                            }
+                            workgroups.push(_workgroup);
                         }
-                        workgroups.push(_workgroup);
+                    }
+                } catch (err) {
+                    _didIteratorError2 = true;
+                    _iteratorError2 = err;
+                } finally {
+                    try {
+                        if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                            _iterator2.return();
+                        }
+                    } finally {
+                        if (_didIteratorError2) {
+                            throw _iteratorError2;
+                        }
                     }
                 }
+
                 this.workgroups = this.orderBy(workgroups, 'workgroupId');
             }
             this.selectedItem = this.getCurrentWorkgroup();
@@ -129,14 +168,37 @@ var WorkgroupSelectController = function () {
             var localGroup = null;
             var currentWorkgroup = this.TeacherDataService.getCurrentWorkgroup();
             if (currentWorkgroup) {
-                var n = this.workgroups.length;
-                for (var i = 0; i < n; i++) {
-                    var workgroup = this.workgroups[i];
-                    if (currentWorkgroup.workgroupId === workgroup.workgroupId) {
-                        if (this.byStudent && currentWorkgroup.userId === workgroup.userId) {
-                            localGroup = workgroup;
-                        } else {
-                            localGroup = workgroup;
+                var _iteratorNormalCompletion3 = true;
+                var _didIteratorError3 = false;
+                var _iteratorError3 = undefined;
+
+                try {
+                    for (var _iterator3 = this.workgroups[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+                        var workgroup = _step3.value;
+
+                        if (currentWorkgroup.workgroupId === workgroup.workgroupId) {
+                            if (this.byStudent) {
+                                if (currentWorkgroup.userId === workgroup.userId) {
+                                    localGroup = workgroup;
+                                    break;
+                                }
+                            } else {
+                                localGroup = workgroup;
+                                break;
+                            }
+                        }
+                    }
+                } catch (err) {
+                    _didIteratorError3 = true;
+                    _iteratorError3 = err;
+                } finally {
+                    try {
+                        if (!_iteratorNormalCompletion3 && _iterator3.return) {
+                            _iterator3.return();
+                        }
+                    } finally {
+                        if (_didIteratorError3) {
+                            throw _iteratorError3;
                         }
                     }
                 }
@@ -154,17 +216,37 @@ var WorkgroupSelectController = function () {
         key: 'querySearch',
         value: function querySearch(query) {
             var items = [];
-            var n = this.workgroups.length;
-            for (var i = 0; i < n; i++) {
-                var workgroup = this.workgroups[i];
-                var periodId = workgroup.periodId;
-                if (this.periodId === -1 || periodId === this.periodId) {
-                    var displayNames = workgroup.displayNames;
-                    if (displayNames.search(new RegExp(query, 'i')) > -1 || !query) {
-                        items.push(workgroup);
+            var _iteratorNormalCompletion4 = true;
+            var _didIteratorError4 = false;
+            var _iteratorError4 = undefined;
+
+            try {
+                for (var _iterator4 = this.workgroups[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+                    var workgroup = _step4.value;
+
+                    var periodId = workgroup.periodId;
+                    if (this.periodId === -1 || periodId === this.periodId) {
+                        var displayNames = workgroup.displayNames;
+                        if (displayNames.search(new RegExp(query, 'i')) > -1 || !query) {
+                            items.push(workgroup);
+                        }
+                    }
+                }
+            } catch (err) {
+                _didIteratorError4 = true;
+                _iteratorError4 = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion4 && _iterator4.return) {
+                        _iterator4.return();
+                    }
+                } finally {
+                    if (_didIteratorError4) {
+                        throw _iteratorError4;
                     }
                 }
             }
+
             return items;
         }
     }, {

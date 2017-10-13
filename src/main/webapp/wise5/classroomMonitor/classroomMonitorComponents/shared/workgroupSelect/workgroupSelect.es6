@@ -48,14 +48,11 @@ class WorkgroupSelectController {
         if (this.byStudent) {
             let students = [];
             let sortByStudentId = false;
-            let n = this.workgroups.length;
-            for (let i = 0; i < n; i++) {
-                let workgroup = this.workgroups[i];
+            for (let workgroup of this.workgroups) {
                 if (this.periodId === -1 || this.periodId === workgroup.periodId) {
                     let ids = workgroup.userIds;
                     let names = workgroup.displayNames.split(',');
-                    let l = ids.length;
-                    for (let x = 0; x < l; x++) {
+                    for (let x = 0; x < ids.length; x++) {
                         // get the id and name for the current student
                         let id = ids[x];
                         let current = angular.copy(workgroup);
@@ -80,9 +77,7 @@ class WorkgroupSelectController {
             this.workgroups = sortByStudentId ? this.orderBy(students, 'userId') : this.orderBy(students, 'displayNames');
         } else {
             let workgroups = [];
-            let n = this.workgroups.length;
-            for (let i = 0; i < n; i++) {
-                let workgroup = this.workgroups[i];
+            for (let workgroup of this.workgroups) {
                 if (this.periodId === -1 || this.periodId === workgroup.periodId) {
                     if (this.canViewStudentNames) {
                         workgroup.displayNames += ' (' + this.$translate('teamId', { id: workgroup.workgroupId}) + ')';
@@ -111,15 +106,16 @@ class WorkgroupSelectController {
         let localGroup = null;
         let currentWorkgroup = this.TeacherDataService.getCurrentWorkgroup();
         if (currentWorkgroup) {
-            let n = this.workgroups.length;
-            for (let i = 0; i < n; i++) {
-                let workgroup = this.workgroups[i];
+            for (let workgroup of this.workgroups) {
                 if (currentWorkgroup.workgroupId === workgroup.workgroupId) {
-                    if (this.byStudent &&
-                        (currentWorkgroup.userId === workgroup.userId)) {
-                        localGroup = workgroup;
+                    if (this.byStudent) {
+                        if (currentWorkgroup.userId === workgroup.userId) {
+                            localGroup = workgroup;
+                            break;
+                        }
                     } else {
                         localGroup = workgroup;
+                        break;
                     }
                 }
             }
@@ -134,9 +130,7 @@ class WorkgroupSelectController {
      */
     querySearch(query) {
         let items = [];
-        let n = this.workgroups.length;
-        for (let i = 0; i < n; i++) {
-            let workgroup = this.workgroups[i];
+        for (let workgroup of this.workgroups) {
             let periodId = workgroup.periodId;
             if (this.periodId === -1 || periodId === this.periodId) {
                 let displayNames = workgroup.displayNames;
