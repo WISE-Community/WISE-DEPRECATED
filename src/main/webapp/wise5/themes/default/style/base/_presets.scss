@@ -86,6 +86,10 @@ label {
     font-style: italic;
 }
 
+.more {
+    display: inline-block;
+}
+
 // Buttons
 .button--small {
     min-width: 0;
@@ -298,6 +302,12 @@ md-input-container.md-wise-theme label {
 }
 
 md-select-menu.md-default-theme md-option[selected], md-select-menu md-option[selected] {
+  background-color: color('selected-bg');
+}
+
+.md-autocomplete-suggestions-container.md-default-theme li .highlight,
+.md-autocomplete-suggestions-container li .highlight {
+  color: color('primary');
   background-color: color('selected-bg');
 }
 

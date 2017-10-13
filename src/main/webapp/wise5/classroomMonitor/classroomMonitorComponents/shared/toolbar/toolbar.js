@@ -10,7 +10,13 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var ToolbarController = function () {
     function ToolbarController() {
+        var _this = this;
+
         _classCallCheck(this, ToolbarController);
+
+        this.$onChanges = function () {
+            _this.showTitle = !_this.showStepTools && !_this.showTeamTools;
+        };
     }
 
     _createClass(ToolbarController, [{
@@ -28,12 +34,15 @@ ToolbarController.inject = [];
 var Toolbar = {
     bindings: {
         numberProject: '<',
+        showPeriodSelect: '<',
         showStepTools: '<',
+        showTeamTools: '<',
         viewName: '<',
+        workgroupId: '<',
         onMenuToggle: '&'
     },
     controller: ToolbarController,
-    template: '<md-toolbar class="md-whiteframe-1dp layout-toolbar md-toolbar--wise" md-theme="light">\n            <div class="md-toolbar-tools">\n                <md-button aria-label="{{ \'mainMenu\' | translate}}" class="md-icon-button" ng-click="$ctrl.toggleMenu()">\n                    <md-icon> menu </md-icon>\n                    <md-tooltip md-direction="bottom">{{ \'mainMenu\' | translate}}</md-tooltip>\n                </md-button>\n                <span class="toolbar-title" ng-if="!$ctrl.showStepTools">{{ $ctrl.viewName }}</span>\n                <step-tools ng-if="$ctrl.showStepTools" class="layout-tools layout-tools--step" show-position="$ctrl.numberProject" layout-fill></step-tools>\n            </div>\n        </md-toolbar>'
+    template: '<md-toolbar class="md-whiteframe-1dp toolbar md-toolbar--wise" md-theme="light">\n            <div class="md-toolbar-tools toolbar__tools">\n                <md-button aria-label="{{ \'mainMenu\' | translate }}" class="md-icon-button" ng-click="$ctrl.toggleMenu()">\n                    <md-icon> menu </md-icon>\n                    <md-tooltip md-direction="bottom">{{ \'mainMenu\' | translate }}</md-tooltip>\n                </md-button>\n                <span class="toolbar__title" ng-if="$ctrl.showTitle">{{ $ctrl.viewName }}</span>\n                <step-tools ng-if="$ctrl.showStepTools" show-position="$ctrl.numberProject"></step-tools>\n                <student-grading-tools ng-if="$ctrl.showTeamTools" workgroup-id="$ctrl.workgroupId"></student-grading-tools>\n                <span flex></span>\n                <period-select ng-if="$ctrl.showPeriodSelect" custom-class="\'md-no-underline md-button toolbar__select\'"></period-select>\n            </div>\n        </md-toolbar>'
 };
 
 exports.default = Toolbar;

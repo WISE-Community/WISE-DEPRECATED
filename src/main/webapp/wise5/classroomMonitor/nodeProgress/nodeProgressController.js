@@ -28,8 +28,9 @@ var NodeProgressController = function () {
 
         this.currentGroup = null;
 
-        // the current workgroup
-        this.currentWorkgroup = this.TeacherDataService.getCurrentWorkgroup();
+        // clear out the current workgroup
+        this.currentWorkgroup = null;
+        this.TeacherDataService.setCurrentWorkgroup(null);
 
         this.items = this.ProjectService.idToOrder;
 
@@ -105,7 +106,7 @@ var NodeProgressController = function () {
                 }
             }
 
-            _this.$state.go('root.nodeProgress', { nodeId: _this.nodeId });
+            _this.$state.go('root.project', { nodeId: _this.nodeId });
         });
 
         // listen for the currentWorkgroupChanged event

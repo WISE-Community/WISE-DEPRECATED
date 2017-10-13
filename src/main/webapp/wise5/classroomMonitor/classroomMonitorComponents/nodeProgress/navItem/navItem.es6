@@ -101,7 +101,7 @@ class NavItemController {
             this.alertIconLabel = this.$translate('HAS_ALERTS_NEW');
             this.alertIconClass = 'warn';
             this.alertIconName = 'notifications';
-            this.rubricIconLabel = this.$translate('STEP_HAS_TEACHING_TIPS');
+            this.rubricIconLabel = this.$translate('STEP_HAS_RUBRICS_TIPS');
             this.rubricIconClass = 'info';
             this.rubricIconName = 'info';
         };

@@ -59,6 +59,12 @@ md-icon {
         height: 24px;
         min-width: 0;
     }
+    &.md-30 {
+        font-size: 30px;
+        width: 30px;
+        height: 30px;
+        min-width: 0;
+    }
     &.md-36 {
         font-size: 36px;
         width: 36px;
@@ -289,10 +295,12 @@ md-list-item .md-list-item-inner {
 md-select {
     &.md-button {
         text-transform: none;
-        margin: 0;
-        max-width: 200px;
 
-        .md-select-value .md-select-icon {
+        .md-select-value > span {
+            margin-top: 1px;
+        }
+
+        .md-select-icon {
             margin: 0;
         }
 

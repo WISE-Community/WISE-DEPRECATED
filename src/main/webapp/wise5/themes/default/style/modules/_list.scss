@@ -2,24 +2,6 @@
     background-color: #ffffff;
     border-bottom: 1px solid color('gray-lighter');
 
-    .autocomplete {
-        margin: 8px 0;
-        min-width: 250px;
-
-        @media only screen and (min-width: $layout-breakpoint-sm) {
-            min-width: 300px;
-        }
-
-        md-autocomplete-wrap {
-            background-color: #ffffff;
-
-            &:not(.md-menu-showing) {
-                box-shadow: none;
-                background-color: color('gray-lighter');
-            }
-        }
-    }
-
     .md-subheader, &.md-subheader {
         color: color('text');
 
@@ -34,6 +16,10 @@
         .md-avatar {
             margin-right: 8px;
         }
+    }
+
+    .autocomplete {
+        margin: 8px 0;
     }
 }
 

@@ -26,8 +26,9 @@ class NodeProgressController {
 
         this.currentGroup = null;
 
-        // the current workgroup
-        this.currentWorkgroup = this.TeacherDataService.getCurrentWorkgroup();
+        // clear out the current workgroup
+        this.currentWorkgroup = null;
+        this.TeacherDataService.setCurrentWorkgroup(null);
 
         this.items = this.ProjectService.idToOrder;
 
@@ -103,7 +104,7 @@ class NodeProgressController {
                 }
             }
 
-            this.$state.go('root.nodeProgress', {nodeId: this.nodeId});
+            this.$state.go('root.project', {nodeId: this.nodeId});
         });
 
         // listen for the currentWorkgroupChanged event

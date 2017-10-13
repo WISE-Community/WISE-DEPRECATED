@@ -8,7 +8,6 @@ class ClassroomMonitorController {
                 $rootScope,
                 $scope,
                 $state,
-                $stateParams,
                 $window,
                 ConfigService,
                 NodeService,
@@ -24,7 +23,6 @@ class ClassroomMonitorController {
         this.$rootScope = $rootScope;
         this.$scope = $scope;
         this.$state = $state;
-        this.$stateParams = $stateParams;
         this.$window = $window;
         this.ConfigService = ConfigService;
         this.NodeService = NodeService;
@@ -45,7 +43,8 @@ class ClassroomMonitorController {
         this.menuOpen = false; // boolean to indicate whether monitor nav menu is open
         this.showSideMenu = true; // boolean to indicate whether to show the monitor side menu
         this.showToolbar = true; // boolean to indicate whether to show the monitor toolbar
-        this.showStepTools = false; // boolean to indicate whether to show the step toolbar
+        this.showGradeByStepTools = false; // boolean to indicate whether to show the step toolbar
+        this.showPeriodSelect = false; // boolean to indicate whether to show the period select
 
         // ui-views and their corresponding names and icons
         this.views = {
@@ -55,21 +54,21 @@ class ClassroomMonitorController {
                 type: 'primary',
                 active: false
             },
-            'root.nodeProgress': {
+            'root.project': {
                 name: this.$translate('gradeByStep'),
                 icon: 'view_list',
                 type: 'primary',
                 action: () => {
                     let currentView = this.$state.current.name;
-                    if (currentView === 'root.nodeProgress') {
+                    if (currentView === 'root.project') {
                         // if we're currently grading a step, close the node when a nodeProgress menu button is clicked
                         this.NodeService.closeNode();
                     }
                 },
                 active: true
             },
-            'root.studentProgress': {
-                name: this.$translate('gradeByStudent'),
+            'root.teamLanding': {
+                name: this.$translate('gradeByTeam'),
                 icon: 'people',
                 type: 'primary',
                 active: true
@@ -198,13 +197,24 @@ class ClassroomMonitorController {
      */
     processUI() {
         let viewName = this.$state.$current.name;
-        this.currentViewName = this.views[viewName].name;
+        let currentView = this.views[viewName];
+        if (currentView) {
+            this.currentViewName = currentView.name;
+        }
 
-        if (viewName === 'root.nodeProgress') {
+        this.showGradeByStepTools = false;
+        this.showGradeByTeamTools = false;
+        this.showPeriodSelect = true;
+        this.workgroupId = null;
+
+        if (viewName === 'root.project') {
             let nodeId = this.$state.params.nodeId;
-            this.showStepTools = this.ProjectService.isApplicationNode(nodeId);
-        } else {
-            this.showStepTools = false;
+            this.showGradeByStepTools = this.ProjectService.isApplicationNode(nodeId);
+        } else if (viewName === 'root.team') {
+            this.workgroupId = parseInt(this.$state.params.workgroupId);
+            this.showGradeByTeamTools = true;
+        } else if (viewName === 'root.export') {
+            this.showPeriodSelect = false;
         }
     };
 
@@ -249,7 +259,6 @@ ClassroomMonitorController.$inject = [
     '$rootScope',
     '$scope',
     '$state',
-    '$stateParams',
     '$window',
     'ConfigService',
     'NodeService',

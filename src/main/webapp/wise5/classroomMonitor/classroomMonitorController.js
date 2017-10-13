@@ -9,7 +9,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var ClassroomMonitorController = function () {
-    function ClassroomMonitorController($filter, $mdDialog, $mdToast, $rootScope, $scope, $state, $stateParams, $window, ConfigService, NodeService, NotebookService, NotificationService, ProjectService, SessionService, TeacherDataService, TeacherWebSocketService) {
+    function ClassroomMonitorController($filter, $mdDialog, $mdToast, $rootScope, $scope, $state, $window, ConfigService, NodeService, NotebookService, NotificationService, ProjectService, SessionService, TeacherDataService, TeacherWebSocketService) {
         var _this = this;
 
         _classCallCheck(this, ClassroomMonitorController);
@@ -19,7 +19,6 @@ var ClassroomMonitorController = function () {
         this.$rootScope = $rootScope;
         this.$scope = $scope;
         this.$state = $state;
-        this.$stateParams = $stateParams;
         this.$window = $window;
         this.ConfigService = ConfigService;
         this.NodeService = NodeService;
@@ -40,7 +39,8 @@ var ClassroomMonitorController = function () {
         this.menuOpen = false; // boolean to indicate whether monitor nav menu is open
         this.showSideMenu = true; // boolean to indicate whether to show the monitor side menu
         this.showToolbar = true; // boolean to indicate whether to show the monitor toolbar
-        this.showStepTools = false; // boolean to indicate whether to show the step toolbar
+        this.showGradeByStepTools = false; // boolean to indicate whether to show the step toolbar
+        this.showPeriodSelect = false; // boolean to indicate whether to show the period select
 
         // ui-views and their corresponding names and icons
         this.views = {
@@ -50,21 +50,21 @@ var ClassroomMonitorController = function () {
                 type: 'primary',
                 active: false
             },
-            'root.nodeProgress': {
+            'root.project': {
                 name: this.$translate('gradeByStep'),
                 icon: 'view_list',
                 type: 'primary',
                 action: function action() {
                     var currentView = _this.$state.current.name;
-                    if (currentView === 'root.nodeProgress') {
+                    if (currentView === 'root.project') {
                         // if we're currently grading a step, close the node when a nodeProgress menu button is clicked
                         _this.NodeService.closeNode();
                     }
                 },
                 active: true
             },
-            'root.studentProgress': {
-                name: this.$translate('gradeByStudent'),
+            'root.teamLanding': {
+                name: this.$translate('gradeByTeam'),
                 icon: 'people',
                 type: 'primary',
                 active: true
@@ -188,13 +188,24 @@ var ClassroomMonitorController = function () {
         key: 'processUI',
         value: function processUI() {
             var viewName = this.$state.$current.name;
-            this.currentViewName = this.views[viewName].name;
+            var currentView = this.views[viewName];
+            if (currentView) {
+                this.currentViewName = currentView.name;
+            }
 
-            if (viewName === 'root.nodeProgress') {
+            this.showGradeByStepTools = false;
+            this.showGradeByTeamTools = false;
+            this.showPeriodSelect = true;
+            this.workgroupId = null;
+
+            if (viewName === 'root.project') {
                 var nodeId = this.$state.params.nodeId;
-                this.showStepTools = this.ProjectService.isApplicationNode(nodeId);
-            } else {
-                this.showStepTools = false;
+                this.showGradeByStepTools = this.ProjectService.isApplicationNode(nodeId);
+            } else if (viewName === 'root.team') {
+                this.workgroupId = parseInt(this.$state.params.workgroupId);
+                this.showGradeByTeamTools = true;
+            } else if (viewName === 'root.export') {
+                this.showPeriodSelect = false;
             }
         }
     }, {
@@ -247,7 +258,7 @@ var ClassroomMonitorController = function () {
     return ClassroomMonitorController;
 }();
 
-ClassroomMonitorController.$inject = ['$filter', '$mdDialog', '$mdToast', '$rootScope', '$scope', '$state', '$stateParams', '$window', 'ConfigService', 'NodeService', 'NotebookService', 'NotificationService', 'ProjectService', 'SessionService', 'TeacherDataService', 'TeacherWebSocketService'];
+ClassroomMonitorController.$inject = ['$filter', '$mdDialog', '$mdToast', '$rootScope', '$scope', '$state', '$window', 'ConfigService', 'NodeService', 'NotebookService', 'NotificationService', 'ProjectService', 'SessionService', 'TeacherDataService', 'TeacherWebSocketService'];
 
 exports.default = ClassroomMonitorController;
 //# sourceMappingURL=classroomMonitorController.js.map

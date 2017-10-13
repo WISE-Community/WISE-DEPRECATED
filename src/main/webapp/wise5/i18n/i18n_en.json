@@ -113,7 +113,7 @@
     "SHOW_SCORE": "Show Score",
     "SHOW_SUBMIT_BUTTON": "Show Submit Button",
     "SIGN_OUT": "Sign Out",
-    "STEP_HAS_TEACHING_TIPS": "Includes teaching tips",
+    "STEP_HAS_RUBRICS_TIPS": "Step has rubrics/teaching tips",
     "STEP_INFO": "Step Info",
     "STUDENT_DATA_SERVICE_SAVE_COMPONENT_EVENT_COMPONENT_CATEGORY_EVENT_ERROR": "StudentDataService.saveComponentEvent: component, category, event args must not be null",
     "STUDENT_DATA_SERVICE_SAVE_COMPONENT_EVENT_NODE_ID_COMPONENT_ID_COMPONENT_TYPE_ERROR": "StudentDataService.saveComponentEvent: nodeId, componentId, componentType must not be null",
