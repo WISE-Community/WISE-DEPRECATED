@@ -64,32 +64,28 @@ var WorkgroupSelectController = function () {
                 for (var i = 0; i < n; i++) {
                     var workgroup = this.workgroups[i];
                     if (this.periodId === -1 || this.periodId === workgroup.periodId) {
-                        if (this.canViewStudentNames) {
-                            var names = workgroup.displayNames.split(',');
-                            var l = names.length;
-                            for (var x = 0; x < l; x++) {
+                        var ids = workgroup.userIds;
+                        var names = workgroup.displayNames.split(',');
+                        var l = ids.length;
+                        for (var x = 0; x < l; x++) {
+                            // get the id and name for the current student
+                            var id = ids[x];
+                            var current = angular.copy(workgroup);
+                            current.userId = id;
+                            if (this.canViewStudentNames) {
                                 var name = names[x].trim();
                                 // get the index of the first empty space
                                 var indexOfSpace = name.indexOf(' ');
+
                                 // get the student first name e.g. "Spongebob"
                                 var firstName = name.substring(0, indexOfSpace);
                                 var lastName = name.substring(indexOfSpace + 1);
-                                var current = angular.copy(workgroup);
                                 current.displayNames = lastName + ', ' + firstName;
-                                students.push(current);
+                            } else {
+                                var _sortByStudentId = true;
+                                current.displayNames = this.$translate('studentId', { id: id });
                             }
-                        } else {
-                            sortByStudentId = true;
-                            var ids = workgroup.userIds;
-                            var _l = ids.length;
-                            for (var _x = 0; _x < _l; _x++) {
-                                var id = ids[_x];
-                                var _name = this.$translate('studentId', { id: id });
-                                var _current = angular.copy(workgroup);
-                                _current.displayNames = _name;
-                                _current.userId = id;
-                                students.push(_current);
-                            }
+                            students.push(current);
                         }
                     }
                 }
@@ -184,8 +180,10 @@ var WorkgroupSelectController = function () {
                     } else if (currentWorkgroup.workgroupId !== this.selectedItem.workgroupId) {
                         this.setCurrentWorkgroup(this.selectedItem);
                     }
+                } else {
+                    this.setCurrentWorkgroup(null);
                 }
-            } else if (this.selectedItem) {
+            } else {
                 this.setCurrentWorkgroup(this.selectedItem);
             }
         }

@@ -52,32 +52,28 @@ class WorkgroupSelectController {
             for (let i = 0; i < n; i++) {
                 let workgroup = this.workgroups[i];
                 if (this.periodId === -1 || this.periodId === workgroup.periodId) {
-                    if (this.canViewStudentNames) {
-                        let names = workgroup.displayNames.split(',');
-                        let l = names.length;
-                        for (let x = 0; x < l; x++) {
+                    let ids = workgroup.userIds;
+                    let names = workgroup.displayNames.split(',');
+                    let l = ids.length;
+                    for (let x = 0; x < l; x++) {
+                        // get the id and name for the current student
+                        let id = ids[x];
+                        let current = angular.copy(workgroup);
+                        current.userId = id;
+                        if (this.canViewStudentNames) {
                             let name = names[x].trim();
                             // get the index of the first empty space
                             let indexOfSpace = name.indexOf(' ');
+
                             // get the student first name e.g. "Spongebob"
                             let firstName = name.substring(0, indexOfSpace);
                             let lastName = name.substring(indexOfSpace+1);
-                            let current = angular.copy(workgroup);
                             current.displayNames = lastName + ', ' + firstName;
-                            students.push(current);
+                        } else {
+                            let sortByStudentId = true;
+                            current.displayNames = this.$translate('studentId', { id: id });
                         }
-                    } else {
-                        sortByStudentId = true;
-                        let ids = workgroup.userIds;
-                        let l = ids.length;
-                        for (let x = 0; x < l; x++) {
-                            let id = ids[x];
-                            let name = this.$translate('studentId', { id: id });
-                            let current = angular.copy(workgroup);
-                            current.displayNames = name;
-                            current.userId = id;
-                            students.push(current);
-                        }
+                        students.push(current);
                     }
                 }
             }
@@ -163,8 +159,10 @@ class WorkgroupSelectController {
                 } else if (currentWorkgroup.workgroupId !== this.selectedItem.workgroupId) {
                     this.setCurrentWorkgroup(this.selectedItem);
                 }
+            } else {
+                this.setCurrentWorkgroup(null);
             }
-        } else if (this.selectedItem) {
+        } else {
             this.setCurrentWorkgroup(this.selectedItem);
         }
     }
