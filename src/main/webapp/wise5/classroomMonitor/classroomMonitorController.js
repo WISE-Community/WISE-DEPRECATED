@@ -40,6 +40,7 @@ var ClassroomMonitorController = function () {
         this.showSideMenu = true; // boolean to indicate whether to show the monitor side menu
         this.showToolbar = true; // boolean to indicate whether to show the monitor toolbar
         this.showGradeByStepTools = false; // boolean to indicate whether to show the step toolbar
+        this.showPeriodSelect = false; // boolean to indicate whether to show the period select
 
         // ui-views and their corresponding names and icons
         this.views = {
@@ -194,6 +195,7 @@ var ClassroomMonitorController = function () {
 
             this.showGradeByStepTools = false;
             this.showGradeByTeamTools = false;
+            this.showPeriodSelect = true;
             this.workgroupId = null;
 
             if (viewName === 'root.project') {
@@ -202,6 +204,8 @@ var ClassroomMonitorController = function () {
             } else if (viewName === 'root.team') {
                 this.workgroupId = parseInt(this.$state.params.workgroupId);
                 this.showGradeByTeamTools = true;
+            } else if (viewName === 'root.export') {
+                this.showPeriodSelect = false;
             }
         }
     }, {

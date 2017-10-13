@@ -17,6 +17,7 @@ ToolbarController.inject= [];
 const Toolbar = {
     bindings: {
         numberProject: '<',
+        showPeriodSelect: '<',
         showStepTools: '<',
         showTeamTools: '<',
         viewName: '<',
@@ -35,7 +36,7 @@ const Toolbar = {
                 <step-tools ng-if="$ctrl.showStepTools" show-position="$ctrl.numberProject"></step-tools>
                 <student-grading-tools ng-if="$ctrl.showTeamTools" workgroup-id="$ctrl.workgroupId"></student-grading-tools>
                 <span flex></span>
-                <period-select custom-class="'md-no-underline md-button toolbar__select'"></period-select>
+                <period-select ng-if="$ctrl.showPeriodSelect" custom-class="'md-no-underline md-button toolbar__select'"></period-select>
             </div>
         </md-toolbar>`
 };
