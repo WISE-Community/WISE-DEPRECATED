@@ -59,6 +59,12 @@ class ProjectController {
     this.advancedMode = false;
     this.showJSONAuthoring = false;
 
+    // whether there are any step nodes checked
+    this.stepNodeSelected = false;
+
+    // whether there are any activity nodes checked
+    this.activityNodeSelected = false;
+
     /*
      * The colors for the branch path steps. The colors are from
      * http://colorbrewer2.org/
@@ -838,6 +844,8 @@ class ProjectController {
     angular.forEach(this.items, function(value, key) {
       value.checked = false;
     });
+    this.stepNodeSelected = false;
+    this.activityNodeSelected = false;
   }
 
   /**
@@ -1503,6 +1511,44 @@ class ProjectController {
    */
   getParentGroup(nodeId) {
     return this.ProjectService.getParentGroup(nodeId);
+  }
+
+  /**
+   * The checkbox for a node was clicked. We will determine whether there are
+   * any activity nodes that are selected or whether there are any step nodes
+   * that are selected. We do this because we do not allow selecting a mix of
+   * activities and steps. If there are any activity nodes that are selected,
+   * we will disable all the step node check boxes. Alternatively, if there are
+   * any step nodes selected, we will disable all the activity node check boxes.
+   * @param nodeId The node id of the node that was clicked.
+   */
+  projectItemClicked(nodeId) {
+    this.stepNodeSelected = false;
+    this.activityNodeSelected = false;
+
+    // this will check the items that are used in the project
+    for (let nodeId in this.items) {
+      let node = this.items[nodeId];
+      if (node.checked) {
+        if (this.isGroupNode(nodeId)) {
+          this.activityNodeSelected = true;
+        } else {
+          this.stepNodeSelected = true;
+        }
+      }
+    }
+
+    // this will check the items that are unused in the project
+    for (let key in this.idToNode) {
+      let node = this.idToNode[key];
+      if (node.checked) {
+        if (this.isGroupNode(key)) {
+          this.activityNodeSelected = true;
+        } else {
+          this.stepNodeSelected = true;
+        }
+      }
+    }
   }
 }
 

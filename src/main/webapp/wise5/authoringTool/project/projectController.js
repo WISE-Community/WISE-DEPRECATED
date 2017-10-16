@@ -54,6 +54,12 @@ var ProjectController = function () {
     this.advancedMode = false;
     this.showJSONAuthoring = false;
 
+    // whether there are any step nodes checked
+    this.stepNodeSelected = false;
+
+    // whether there are any activity nodes checked
+    this.activityNodeSelected = false;
+
     /*
      * The colors for the branch path steps. The colors are from
      * http://colorbrewer2.org/
@@ -1005,6 +1011,8 @@ var ProjectController = function () {
       angular.forEach(this.items, function (value, key) {
         value.checked = false;
       });
+      this.stepNodeSelected = false;
+      this.activityNodeSelected = false;
     }
 
     /**
@@ -1842,6 +1850,47 @@ var ProjectController = function () {
     key: 'getParentGroup',
     value: function getParentGroup(nodeId) {
       return this.ProjectService.getParentGroup(nodeId);
+    }
+
+    /**
+     * The checkbox for a node was clicked. We will determine whether there are
+     * any activity nodes that are selected or whether there are any step nodes
+     * that are selected. We do this because we do not allow selecting a mix of
+     * activities and steps. If there are any activity nodes that are selected,
+     * we will disable all the step node check boxes. Alternatively, if there are
+     * any step nodes selected, we will disable all the activity node check boxes.
+     * @param nodeId The node id of the node that was clicked.
+     */
+
+  }, {
+    key: 'projectItemClicked',
+    value: function projectItemClicked(nodeId) {
+      this.stepNodeSelected = false;
+      this.activityNodeSelected = false;
+
+      // this will check the items that are used in the project
+      for (var _nodeId in this.items) {
+        var node = this.items[_nodeId];
+        if (node.checked) {
+          if (this.isGroupNode(_nodeId)) {
+            this.activityNodeSelected = true;
+          } else {
+            this.stepNodeSelected = true;
+          }
+        }
+      }
+
+      // this will check the items that are unused in the project
+      for (var key in this.idToNode) {
+        var _node = this.idToNode[key];
+        if (_node.checked) {
+          if (this.isGroupNode(key)) {
+            this.activityNodeSelected = true;
+          } else {
+            this.stepNodeSelected = true;
+          }
+        }
+      }
     }
   }]);
 
