@@ -20,7 +20,7 @@
              ng-mousemove="themeCtrl.mouseMoved()"
              ng-class="{'notebook-enabled': vleController.notebookEnabled}">
             <ng-include src="vleController.themePath + '/templates/topbar.html'"></ng-include>
-            <step-tools class="layout-tools" show-position="themeCtrl.numberProject"
+            <step-tools show-position="themeCtrl.numberProject"
                         ng-show="themeCtrl.layoutState === 'node'"></step-tools>
             <md-content id="content" flex role="main" ui-scrollpoint-target
                         ng-class="{'l-nav': themeCtrl.layoutState === 'nav', 'l-node': themeCtrl.layoutState === 'node'}" layout="column">

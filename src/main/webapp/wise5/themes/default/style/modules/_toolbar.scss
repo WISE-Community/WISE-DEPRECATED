@@ -1,5 +1,17 @@
 .md-toolbar-tools {
     font-size: 18px;
+
+    .autocomplete {
+        height: 36px;
+
+        md-autocomplete-wrap {
+            height: 36px;
+        }
+
+        input {
+            height: 36px;
+        }
+    }
 }
 
 .md-toolbar--wise {
@@ -33,42 +45,47 @@
     }
 }
 
-.layout-toolbar {
+.toolbar {
     position: fixed;
     left: 0;
     right: 0;
     top: $md-toolbar-height;
-    transition: 250ms linear all;
-    //transition-delay: 250ms;
     z-index: 3;
 }
 
-
-.layout-tools {
-    transition: 250ms linear all;
-    //transition-delay: 250ms;
-
-    &.ng-hide-add, &.ng-hide-add-active,
-    &.ng-hide-remove, &.ng-hide-remove-active  {
-        .layout-toolbar {
-            height: 0;
-            min-height: 0;
-
-            .md-toolbar-tools {
-                opacity: 0;
-            }
-        }
-    }
-}
-
-.layout-tools--step {
-    @media (min-width: $layout-breakpoint-xs) {
-        margin: 0 -16px 0 8px;
-    }
-}
-
-.toolbar-title {
+.toolbar__title {
     margin-left: 8px;
     font-size: rem(1.6);
     font-weight: 500;
+}
+
+.toolbar__tools {
+    padding-right: 8px;
+}
+
+.toolbar__nav, .md-button.toolbar__nav {
+    margin: 0;
+}
+
+.toolbar__select, .md-button.toolbar__select {
+    margin: 0;
+    min-height: 32px;
+    background-color: color('gray-lightest');
+
+    .md-select-value {
+        height: 32px;
+        text-align: left;
+    }
+}
+
+.toolbar__select--fixedwidth {
+    width: 168px;
+
+    @media only screen and (min-width: $layout-breakpoint-xs) {
+        width: 264px;
+    }
+
+    @media only screen and (min-width: $layout-breakpoint-sm) {
+        width: 432px;
+    }
 }

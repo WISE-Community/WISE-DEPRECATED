@@ -576,7 +576,7 @@ class UtilService {
 
                     // create the params for opening the asset chooser
                     var params = {};
-                    params.popup = true;
+                    params.isPopup = true;
 
                     if (projectId != null) {
                         params.projectId = projectId;

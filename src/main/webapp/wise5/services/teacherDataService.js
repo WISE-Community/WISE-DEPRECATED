@@ -35,12 +35,14 @@ var TeacherDataService = function () {
 
         this.currentPeriod = null;
         this.currentWorkgroup = null;
+        this.currentStep = null;
         this.currentNode = null;
         this.previousStep = null;
         this.runStatus = null;
         this.periods = [];
         this.nodeGradingSort = 'team';
-        this.studentProgressSort = 'team student';
+        this.studentGradingSort = 'step';
+        this.studentProgressSort = 'team';
 
         /**
          * Listen for the 'annotationSavedToServer' event which is fired when
@@ -971,9 +973,19 @@ var TeacherDataService = function () {
         value: function setCurrentPeriod(period) {
             var previousPeriod = this.currentPeriod;
             this.currentPeriod = period;
+            var periodId = this.currentPeriod.periodId;
 
-            // whenever the current period is set, clear the currently selected workgroup
-            this.setCurrentWorkgroup(null);
+            /*
+             * if currently selected workgroup is in a different period, clear the
+             * currently selected workgroup
+             */
+            var currentWorkgroup = this.getCurrentWorkgroup();
+            if (currentWorkgroup) {
+                var workgroupPeriod = currentWorkgroup.periodId;
+                if (periodId !== -1 && workgroupPeriod !== periodId) {
+                    this.setCurrentWorkgroup(null);
+                }
+            }
 
             // broadcast the event that the current period has changed
             this.$rootScope.$broadcast('currentPeriodChanged', { previousPeriod: previousPeriod, currentPeriod: this.currentPeriod });
@@ -1005,6 +1017,19 @@ var TeacherDataService = function () {
         key: 'getCurrentWorkgroup',
         value: function getCurrentWorkgroup() {
             return this.currentWorkgroup;
+        }
+    }, {
+        key: 'setCurrentStep',
+        value: function setCurrentStep(step) {
+            this.currentStep = step;
+
+            // broadcast the event that the current step has changed
+            this.$rootScope.$broadcast('currentStepChanged', { currentStep: this.currentStep });
+        }
+    }, {
+        key: 'getCurrentStep',
+        value: function getCurrentStep() {
+            return this.currentStep;
         }
 
         /**

@@ -161,6 +161,7 @@ class NodeGradingController {
             workgroup.score = this.getNodeScoreByWorkgroupId(workgroupId);
 
             if (!this.canViewStudentNames) {
+                // TODO: i18n
                 workgroup.displayNames = 'Student ' + workgroupId;
             }
 
@@ -594,7 +595,7 @@ class NodeGradingController {
     }
 
     onUpdateExpand(workgroupId, value) {
-        this.workVisibilityById[workgroupId] = !this.workVisibilityById[workgroupId];
+        this.workVisibilityById[workgroupId] = value;
     }
 
     onUpdateHiddenComponents(value) {

@@ -70,6 +70,18 @@ var _workgroupComponentRevisions = require('./workgroupComponentRevisions/workgr
 
 var _workgroupComponentRevisions2 = _interopRequireDefault(_workgroupComponentRevisions);
 
+var _workgroupNodeGrading = require('./workgroupNodeGrading/workgroupNodeGrading');
+
+var _workgroupNodeGrading2 = _interopRequireDefault(_workgroupNodeGrading);
+
+var _workgroupNodeScore = require('./workgroupNodeScore/workgroupNodeScore');
+
+var _workgroupNodeScore2 = _interopRequireDefault(_workgroupNodeScore);
+
+var _workgroupNodeStatus = require('./workgroupNodeStatus/workgroupNodeStatus');
+
+var _workgroupNodeStatus2 = _interopRequireDefault(_workgroupNodeStatus);
+
 var _workgroupSelect = require('./workgroupSelect/workgroupSelect');
 
 var _workgroupSelect2 = _interopRequireDefault(_workgroupSelect);
@@ -95,6 +107,9 @@ Shared.component('statusIcon', _statusIcon2.default);
 Shared.component('toolbar', _toolbar2.default);
 Shared.component('topBar', _topBar2.default);
 Shared.component('workgroupComponentRevisions', _workgroupComponentRevisions2.default);
+Shared.component('workgroupNodeGrading', _workgroupNodeGrading2.default);
+Shared.component('workgroupNodeScore', _workgroupNodeScore2.default);
+Shared.component('workgroupNodeStatus', _workgroupNodeStatus2.default);
 Shared.component('workgroupSelect', _workgroupSelect2.default);
 
 exports.default = Shared;

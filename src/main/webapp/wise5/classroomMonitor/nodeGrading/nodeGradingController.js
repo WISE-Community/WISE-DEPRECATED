@@ -174,6 +174,7 @@ var NodeGradingController = function () {
                 workgroup.score = this.getNodeScoreByWorkgroupId(workgroupId);
 
                 if (!this.canViewStudentNames) {
+                    // TODO: i18n
                     workgroup.displayNames = 'Student ' + workgroupId;
                 }
 
@@ -619,7 +620,7 @@ var NodeGradingController = function () {
     }, {
         key: 'onUpdateExpand',
         value: function onUpdateExpand(workgroupId, value) {
-            this.workVisibilityById[workgroupId] = !this.workVisibilityById[workgroupId];
+            this.workVisibilityById[workgroupId] = value;
         }
     }, {
         key: 'onUpdateHiddenComponents',

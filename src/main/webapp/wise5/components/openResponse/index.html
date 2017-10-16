@@ -111,12 +111,14 @@
                                               size='5'
                                               ng-model-options='{ debounce: 500 }'
                                               ng-change='openResponseController.authoringViewComponentChanged()'/>
-                        <span>{{ 'openResponse.feedbackToStudent' | translate }}:</span> <textarea type='text'
-                                                 ng-model='multipleAttemptScoringRule.feedbackText'
-                                                 rows='5'
-                                                 cols='100'
-                                                 ng-model-options='{ debounce: 500 }'
-                                                 ng-change='openResponseController.authoringViewComponentChanged()'/>
+                        <span>{{ 'openResponse.feedbackToStudent' | translate }}:</span>
+                        <textarea
+                            type='text'
+                            ng-model='multipleAttemptScoringRule.feedbackText'
+                            rows='5'
+                            cols='100'
+                            ng-model-options='{ debounce: 500 }'
+                            ng-change='openResponseController.authoringViewComponentChanged()'/>
                          <button ng-click='openResponseController.authoringViewMultipleAttemptScoringRuleUpClicked($index)'>{{ 'UP' | translate }}</button>
                          <button ng-click='openResponseController.authoringViewMultipleAttemptScoringRuleDownClicked($index)'>{{ 'DOWN' | translate }}</button>
                          <button ng-click='openResponseController.authoringViewMultipleAttemptScoringRuleDeleteClicked($index)'>{{ 'DELETE' | translate }}</button>
@@ -159,23 +161,25 @@
                                ng-model='notification.isNotifyStudent' />
                         <br/>
                         <div ng-if='notification.isNotifyStudent'>
-                        <span>{{ 'openResponse.feedbackToStudent' | translate }}:</span> <textarea type='text'
-                                         ng-model='notification.notificationMessageToStudent'
-                                         rows='5'
-                                         cols='100'
-                                         ng-model-options='{ debounce: 500 }'
-                                         ng-change='openResponseController.authoringViewComponentChanged()'/>
+                        <span>{{ 'openResponse.feedbackToStudent' | translate }}:</span>
+                        <textarea type='text'
+                             ng-model='notification.notificationMessageToStudent'
+                             rows='5'
+                             cols='100'
+                             ng-model-options='{ debounce: 500 }'
+                             ng-change='openResponseController.authoringViewComponentChanged()'/>
                         </div>
                         <span>{{ 'openResponse.notifyTeacher' | translate }}</span>
                         <input type='checkbox'
                                ng-model='notification.isNotifyTeacher' />
                         <div ng-if='notification.isNotifyTeacher'>
-                        <span>{{ 'openResponse.feedbackToTeacher' | translate }}:</span> <textarea type='text'
-                                                            ng-model='notification.notificationMessageToTeacher'
-                                                            rows='5'
-                                                            cols='100'
-                                                            ng-model-options='{ debounce: 500 }'
-                                                            ng-change='openResponseController.authoringViewComponentChanged()'/>
+                        <span>{{ 'openResponse.feedbackToTeacher' | translate }}:</span>
+                        <textarea type='text'
+                            ng-model='notification.notificationMessageToTeacher'
+                            rows='5'
+                            cols='100'
+                            ng-model-options='{ debounce: 500 }'
+                            ng-change='openResponseController.authoringViewComponentChanged()'/>
                         </div>
                         <br/>
                         <button ng-click='openResponseController.authoringViewNotificationUpClicked($index)'>{{ 'UP' | translate }}</button>
@@ -393,7 +397,7 @@
                 <md-input-container class="input-container input-container--open-response md-block md-no-float">
                     <label class="input-label md-no-float" ng-disabled="openResponseController.isDisabled"
                            ng-if="openResponseController.isPromptVisible">
-                        <compile data="openResponseController.getPrompt()"></compile>
+                        <compile id='prompt' data="openResponseController.getPrompt()"></compile>
                         <possible-score max-score="openResponseController.componentContent.maxScore"></possible-score>
                     </label>
                     <div class="input-wrapper" ng-class="{'input-wrapper--richtext': openResponseController.isRichTextEnabled}">
@@ -406,7 +410,8 @@
                              class="input--textarea input--textarea--disabled">
                                 <compile data="openResponseController.studentResponse"></compile>
                         </div>
-                        <textarea ng-if="!openResponseController.isRichTextEnabled"
+                        <textarea
+                                  ng-if="!openResponseController.isRichTextEnabled"
                                   class="input--textarea"
                                   rows="{{openResponseController.getNumRows() || 3}}"
                                   ng-model="openResponseController.studentResponse"
@@ -437,14 +442,16 @@
         </div>
         <div ng-if="openResponseController.isSaveButtonVisible || openResponseController.isSubmitButtonVisible"
              class="component__actions" layout="row" layout-align="start center">
-            <md-button class="md-raised md-primary"
+            <md-button id='saveButton'
+                       class="md-raised md-primary"
                        ng-class="{'md-raised': !openResponseController.isSubmitButtonVisible}"
                        ng-click="openResponseController.saveButtonClicked()"
                        ng-disabled="openResponseController.isDisabled || !openResponseController.isDirty"
                        ng-if="openResponseController.isSaveButtonVisible"
                        aria-label="{{SAVE | translate}}"
                        translate="SAVE"></md-button>
-            <md-button class="md-raised md-primary"
+            <md-button id='submitButton'
+                       class="md-raised md-primary"
                        ng-click="openResponseController.submitButtonClicked()"
                        ng-disabled="openResponseController.isDisabled || !openResponseController.isSubmitDirty || openResponseController.isSubmitButtonDisabled"
                        ng-if="openResponseController.isSubmitButtonVisible"

@@ -17,6 +17,9 @@ import StatusIcon from './statusIcon/statusIcon';
 import Toolbar from './toolbar/toolbar';
 import TopBar from './topBar/topBar';
 import WorkgroupComponentRevisions from './workgroupComponentRevisions/workgroupComponentRevisions';
+import WorkgroupNodeGrading from './workgroupNodeGrading/workgroupNodeGrading';
+import WorkgroupNodeScore from './workgroupNodeScore/workgroupNodeScore';
+import WorkgroupNodeStatus from './workgroupNodeStatus/workgroupNodeStatus';
 import WorkgroupSelect from './workgroupSelect/workgroupSelect';
 
 let Shared = angular.module('shared', []);
@@ -38,6 +41,9 @@ Shared.component('statusIcon', StatusIcon);
 Shared.component('toolbar', Toolbar);
 Shared.component('topBar', TopBar);
 Shared.component('workgroupComponentRevisions', WorkgroupComponentRevisions);
+Shared.component('workgroupNodeGrading', WorkgroupNodeGrading);
+Shared.component('workgroupNodeScore', WorkgroupNodeScore);
+Shared.component('workgroupNodeStatus', WorkgroupNodeStatus);
 Shared.component('workgroupSelect', WorkgroupSelect);
 
 export default Shared;

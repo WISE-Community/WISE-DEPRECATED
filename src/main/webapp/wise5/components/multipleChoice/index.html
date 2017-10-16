@@ -13,8 +13,8 @@
             <p>{{ 'multipleChoice.selectionType' | translate }}:</p>
             <md-radio-group ng-model='multipleChoiceController.authoringComponentContent.choiceType'
                             ng-change='multipleChoiceController.authoringViewComponentChanged()'>
-                <md-radio-button class='md-primary' value='radio'>{{ 'multipleChoice.radio' | translate }}</md-radio-button>
-                <md-radio-button class='md-primary' value='checkbox'>{{ 'multipleChoice.checkbox' | translate }}</md-radio-button>
+                <md-radio-button class='md-primary' value='radio'>{{ 'multipleChoice.singleAnswer' | translate }}</md-radio-button>
+                <md-radio-button class='md-primary' value='checkbox'>{{ 'multipleChoice.multipleAnswer' | translate }}</md-radio-button>
             </md-radio-group>
             <div ng-if='multipleChoiceController.authoringComponentContent.choices == null || multipleChoiceController.authoringComponentContent.choices.length == 0'>
                 {{ 'multipleChoice.thereAreNoChoicesClickTheAddChoiceButtonToAddAChoice' | translate }}
@@ -323,7 +323,7 @@
             <div ng-switch-default>
                 <md-input-container class="input-container md-block input-container--open-response input-container--component md-no-float"
                                     ng-switch on="multipleChoiceController.getChoiceType()">
-                    <label class="input-label md-no-float" ng-if="multipleChoiceController.isPromptVisible"><compile data="multipleChoiceController.getPrompt()"></compile></label>
+                    <label class="input-label md-no-float" ng-if="multipleChoiceController.isPromptVisible"><compile id="prompt" data="multipleChoiceController.getPrompt()"></compile></label>
                     <possible-score max-score="multipleChoiceController.componentContent.maxScore"
                                     ng-if="multipleChoiceController.mode === 'student' && !multipleChoiceController.latestAnnotations.score"></possible-score>
                     <md-radio-group ng-switch-when="radio" ng-model="multipleChoiceController.studentChoices"
@@ -364,13 +364,15 @@
                 </md-input-container>
                 <div ng-if="multipleChoiceController.isSaveButtonVisible || multipleChoiceController.isSubmitButtonVisible"
                      class="component__actions" layout="row" layout-align="start center">
-                    <md-button class="md-raised md-primary"
+                    <md-button id="saveButton"
+                               class="md-raised md-primary"
                                ng-click='multipleChoiceController.saveButtonClicked()'
                                ng-disabled='multipleChoiceController.isDisabled || !multipleChoiceController.isDirty'
                                ng-if='multipleChoiceController.isSaveButtonVisible'
                                aria-label="Save"
                                translate="SAVE"></md-button>
-                    <md-button class="md-raised md-primary"
+                    <md-button id="submitButton"
+                               class="md-raised md-primary"
                                ng-click='multipleChoiceController.submitButtonClicked()'
                                ng-disabled='multipleChoiceController.isSubmitButtonDisabled || multipleChoiceController.isDisabled || !multipleChoiceController.isSubmitDirty'
                                ng-if='multipleChoiceController.isSubmitButtonVisible'

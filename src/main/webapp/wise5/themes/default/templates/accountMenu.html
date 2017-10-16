@@ -6,7 +6,8 @@
                 <md-icon class="md-48" style="color: {{themeCtrl.getAvatarColorForWorkgroupId(themeCtrl.workgroupId)}};"> account_circle </md-icon>
             </div>
             <div class="md-list-item-text">
-                <span ng-repeat="userName in themeCtrl.workgroupUserNames">{{userName.name}}<span ng-if="!$last">,&nbsp;</span></span>&nbsp;<span class="account-menu__info__team" translate="accountMenuTeam" translate-value-id="{{themeCtrl.workgroupId}}">
+                <span ng-repeat="userName in themeCtrl.workgroupUserNames">{{userName.name}}<span ng-if="!$last">,&nbsp;</span></span>&nbsp;
+                <span class="account-menu__info__team" translate="accountMenuTeam" translate-value-id="{{themeCtrl.workgroupId}}"></span>
             </div>
         </md-list-item>
     </md-list>
@@ -41,7 +42,7 @@
 </div>
 <md-divider></md-divider>
 <div class="account-menu__actions" layout="row">
-    <md-button class="md-primary" ng-click="vleController.goHome()" aria-label="{{'GO_HOME' | translate}}"><span translate="GO_HOME" /></md-button>
+    <md-button id="goHomeButton" class="md-primary" ng-click="vleController.goHome()" aria-label="{{'GO_HOME' | translate}}"><span translate="GO_HOME" /></md-button>
     <span flex></span>
-    <md-button class="md-primary" ng-click="vleController.logOut()" aria-label="{{'SIGN_OUT' | translate}}"><span translate="SIGN_OUT" /></md-button>
+    <md-button id="signOutButton" class="md-primary" ng-click="vleController.logOut()" aria-label="{{'SIGN_OUT' | translate}}"><span translate="SIGN_OUT" /></md-button>
 </div>

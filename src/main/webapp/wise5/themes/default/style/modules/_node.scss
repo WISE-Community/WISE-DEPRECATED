@@ -71,6 +71,7 @@ $input-action-vertical-offset-richtext: -7px;
     margin: 0 8px;
     min-width: 0;
     font-weight: 500;
+    font-size: $body-font-size-base;
 
     .md-select-value {
         *:first-child {
@@ -126,10 +127,8 @@ $input-action-vertical-offset-richtext: -7px;
     line-height: 1.2;
     text-transform: none;
     margin-top: 3px;
-}
 
-@media only screen and (max-width: $layout-breakpoint-xs - 1) {
-    .node-title, .node-select {
+    @media only screen and (max-width: $layout-breakpoint-xs - 1) {
         font-size: $body-font-size-base;
     }
 }

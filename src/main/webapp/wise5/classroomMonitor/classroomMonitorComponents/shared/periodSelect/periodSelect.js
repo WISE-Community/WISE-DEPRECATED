@@ -9,15 +9,17 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var PeriodSelectController = function () {
-    function PeriodSelectController($scope, ProjectService, StudentStatusService, TeacherDataService) {
+    function PeriodSelectController($filter, $scope, ProjectService, StudentStatusService, TeacherDataService) {
         var _this = this;
 
         _classCallCheck(this, PeriodSelectController);
 
+        this.$filter = $filter;
         this.$scope = $scope;
         this.ProjectService = ProjectService;
         this.StudentStatusService = StudentStatusService;
         this.TeacherDataService = TeacherDataService;
+        this.$translate = this.$filter('translate');
 
         var startNodeId = this.ProjectService.getStartNodeId();
         this.rootNodeId = this.ProjectService.getRootNode(startNodeId).id;
@@ -108,15 +110,28 @@ var PeriodSelectController = function () {
             // get and return the number of workgroups that are in the period
             return this.StudentStatusService.getWorkgroupIdsOnNode(this.rootNodeId, periodId).length;
         }
+    }, {
+        key: 'getSelectedText',
+        value: function getSelectedText() {
+            var text = '';
+            if (this.currentPeriod.periodId === -1) {
+                return this.currentPeriod.periodName;
+            } else {
+                return this.$translate('periodLabel', { name: this.currentPeriod.periodName });
+            }
+        }
     }]);
 
     return PeriodSelectController;
 }();
 
-PeriodSelectController.$inject = ['$scope', 'ProjectService', 'StudentStatusService', 'TeacherDataService'];
+PeriodSelectController.$inject = ['$filter', '$scope', 'ProjectService', 'StudentStatusService', 'TeacherDataService'];
 
 var PeriodSelect = {
-    template: '<md-select ng-model="$ctrl.currentPeriod"\n                    ng-model-options="{trackBy: \'$value.periodId\'}"\n                    class="md-no-underline md-button md-raised"\n                    ng-change="$ctrl.currentPeriodChanged()"\n                    aria-label="{{\'selectPeriod\' | translate}}">\n            <md-option ng-repeat="period in $ctrl.periods" ng-value="period">\n                <span ng-if="period.periodId === -1" translate="allPeriods"></span>\n                <span ng-if="period.periodId != -1" translate="periodLabel" translate-value-name="{{ period.periodName }}"></span>\n                <span class="text-secondary">\n                    (<ng-pluralize count="period.numWorkgroupsInPeriod"\n                        when="{\'0\': \'{{&quot;numberOfTeams_0&quot; | translate}}\',\n                            \'one\': \'{{&quot;numberOfTeams_1&quot; | translate}}\',\n                            \'other\': \'{{&quot;numberOfTeams_other&quot; | translate:{count: period.numWorkgroupsInPeriod} }}\'}">\n                    </ng-pluralize>)\n                </span>\n            </md-option>\n        </md-select>',
+    bindings: {
+        customClass: '<'
+    },
+    template: '<md-select md-theme="default"\n                    ng-model="$ctrl.currentPeriod"\n                    ng-model-options="{ trackBy: \'$value.periodId\' }"\n                    ng-class="$ctrl.customClass"\n                    ng-change="$ctrl.currentPeriodChanged()"\n                    aria-label="{{ \'selectPeriod\' | translate }}"\n                    md-selected-text="$ctrl.getSelectedText()">\n            <md-option ng-repeat="period in $ctrl.periods"\n                       ng-value="period"\n                       ng-disabled="!period.numWorkgroupsInPeriod">\n                <span ng-if="period.periodId === -1" translate="allPeriods"></span>\n                <span ng-if="period.periodId != -1" translate="periodLabel" translate-value-name="{{ period.periodName }}"></span>\n                <span class="text-secondary">\n                    (<ng-pluralize count="period.numWorkgroupsInPeriod"\n                        when="{\'0\': \'{{ &quot;numberOfTeams_0&quot; | translate }}\',\n                            \'one\': \'{{ &quot;numberOfTeams_1&quot; | translate }}\',\n                            \'other\': \'{{ &quot;numberOfTeams_other&quot; | translate:{count: period.numWorkgroupsInPeriod} }}\'}">\n                    </ng-pluralize>)\n                </span>\n            </md-option>\n        </md-select>',
     controller: PeriodSelectController
 };
 

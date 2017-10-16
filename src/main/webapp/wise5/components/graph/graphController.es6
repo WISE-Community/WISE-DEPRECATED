@@ -1077,6 +1077,13 @@ class GraphController {
         if (this.xAxis != null) {
             // do not display decimals on the x axis
             this.xAxis.allowDecimals = false;
+
+            this.xAxis.plotBands = null;
+            if (this.componentContent.xAxis != null &&
+                    this.componentContent.xAxis.plotBands != null) {
+                // Get the authored plot bands.
+                this.xAxis.plotBands = this.componentContent.xAxis.plotBands;
+            }
         }
 
         if (this.yAxis == null && this.componentContent.yAxis != null) {
@@ -1119,6 +1126,8 @@ class GraphController {
         // get all the series from the student data
         var series = this.getSeries();
 
+        var trialPlotBands = [];
+
         if (this.componentContent.enableTrials) {
             /*
              * trials are enabled so we will show the ones the student
@@ -1141,9 +1150,26 @@ class GraphController {
                          */
                         var tempSeries = trial.series;
                         series = series.concat(tempSeries);
+
+                        if (trial.xAxis != null &&
+                                trial.xAxis.plotBands != null) {
+                            /*
+                             * Accumulate the plot bands from the trials that
+                             * we are showing.
+                             */
+                            trialPlotBands = trialPlotBands.concat(trial.xAxis.plotBands);
+                        }
                     }
                 }
             }
+        }
+
+        if (trialPlotBands.length > 0) {
+            if (xAxis.plotBands == null) {
+                xAxis.plotBands = [];
+            }
+            // Add the student plot bands to the x axis.
+            xAxis.plotBands = xAxis.plotBands.concat(trialPlotBands);
         }
 
         if ((series == null || series.length === 0) && this.componentContent.series != null) {
@@ -2499,7 +2525,20 @@ class GraphController {
         */
 
         // insert the x axis data
-        studentData.xAxis = this.getXAxis();
+        studentData.xAxis = this.UtilService.makeCopyOfJSONObject(this.getXAxis());
+        /*
+         * The student data plot bands are stored in the trials so we do not
+         * need to save the plot bands in the x axis.
+         */
+        delete studentData.xAxis.plotBands;
+        if (this.componentContent.xAxis != null &&
+                this.componentContent.xAxis.plotBands != null) {
+            /*
+             * There are authored plot bands so we will save those into the
+             * student data since they are not stored in the trials.
+             */
+            studentData.xAxis.plotBands = this.componentContent.xAxis.plotBands;
+        }
 
         // insert the y axis data
         studentData.yAxis = this.getYAxis();
@@ -4361,6 +4400,7 @@ class GraphController {
                                     var seriesData = singleSeries.data;
                                     var seriesColor = singleSeries.color;
                                     var marker = singleSeries.marker;
+                                    var dashStyle = singleSeries.dashStyle;
 
                                     // make a series object
                                     var newSeries = {};
@@ -4374,12 +4414,24 @@ class GraphController {
                                         newSeries.marker = marker;
                                     }
 
+                                    if (dashStyle != null) {
+                                        newSeries.dashStyle = dashStyle;
+                                    }
+
                                     // add the series to the trial
                                     latestTrial.series.push(newSeries);
                                 }
                             }
                         }
                     }
+                }
+
+                if (latestStudentDataTrial.xAxis != null &&
+                        latestStudentDataTrial.xAxis.plotBands != null) {
+                    if (latestTrial.xAxis == null) {
+                        latestTrial.xAxis = {};
+                    }
+                    latestTrial.xAxis.plotBands = latestStudentDataTrial.xAxis.plotBands;
                 }
             }
 
@@ -4856,7 +4908,7 @@ class GraphController {
 
         // generate the parameters
         var params = {};
-        params.popup = true;
+        params.isPopup = true;
         params.nodeId = this.nodeId;
         params.componentId = this.componentId;
         params.target = 'background';

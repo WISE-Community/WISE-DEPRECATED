@@ -5,13 +5,12 @@
                 <h2 class="content-head__item">{{nodeGradingController.getNodeCompletion(nodeGradingController.nodeId)}}%<span class="md-subhead" translate="completion"></span></h2>
                 <h2 class="content-head__item" ng-if="nodeGradingController.nodeHasWork">{{nodeGradingController.getNodeAverageScore()}}<span class="md-subhead" translate="meanScore"></span></h2>
             </div>
-            <div layout-margin>
-                <period-select></period-select>
-            </div>
         </div>
         <span flex></span>
         <div class="content-head__more" layout="row" layout-align="center center">
-            <component-select node-id="{{ nodeGradingController.nodeId }}" on-change="nodeGradingController.onUpdateHiddenComponents(value)"></component-select>
+            <component-select node-id="{{ nodeGradingController.nodeId }}"
+                              custom-class="'md-no-underline md-button'"
+                              on-change="nodeGradingController.onUpdateHiddenComponents(value)"></component-select>
             <md-button ng-click="nodeGradingController.showRubric($event)"
                        class="md-raised info">
                 <md-icon class="info"> info_outline </md-icon>
@@ -24,7 +23,9 @@
     <md-list class="user-list">
         <md-list-item class="md-whiteframe-1dp md-with-secondary list-item list-item--actions" layout-wrap>
             <div flex-xs="100" flex-sm="100">
-                <workgroup-select></workgroup-select>
+                <workgroup-select by-student="true"
+                                  custom-class="'autocomplete--flat autocomplete--minwidth'"
+                                  use-autocomplete="true"></workgroup-select>
             </div>
             <span flex hide-xs hide-sm></span>
             <div class="md-secondary-container" ng-if="nodeGradingController.nodeHasWork"

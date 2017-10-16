@@ -1524,7 +1524,7 @@ var EmbeddedController = function () {
 
             // generate the parameters
             var params = {};
-            params.popup = true;
+            params.isPopup = true;
             params.nodeId = this.nodeId;
             params.componentId = this.componentId;
             params.target = 'modelFile';

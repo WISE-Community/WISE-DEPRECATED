@@ -1202,7 +1202,6 @@ class ConceptMapController {
                     // show the auto feedback in a modal dialog
                     this.$mdDialog.show(
                         this.$mdDialog.alert()
-                        .parent(angular.element(document.querySelector('#' + this.feedbackContainerId)))
                         .clickOutsideToClose(true)
                         .title(this.$translate('FEEDBACK'))
                         .htmlContent(resultString)
@@ -4697,7 +4696,7 @@ class ConceptMapController {
 
         // generate the parameters
         var params = {};
-        params.popup = true;
+        params.isPopup = true;
         params.nodeId = this.nodeId;
         params.componentId = this.componentId;
         params.target = 'background';
@@ -4713,7 +4712,7 @@ class ConceptMapController {
     chooseNodeImage(conceptMapNodeId) {
         // generate the parameters
         var params = {};
-        params.popup = true;
+        params.isPopup = true;
         params.nodeId = this.nodeId;
         params.componentId = this.componentId;
         params.target = conceptMapNodeId;

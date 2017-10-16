@@ -6,15 +6,18 @@
 <div disable-delete-keypress
      ng-mousemove='classroomMonitorController.mouseMoved()'
      role="main" layout="column" layout-fill>
-    <top-bar logo-path="{{classroomMonitorController.logoPath}}"
+    <top-bar logo-path="{{ classroomMonitorController.logoPath }}"
              notifications="classroomMonitorController.notifications"
              project-id="classroomMonitorController.projectId"
              project-title="classroomMonitorController.projectTitle"
              run-id="classroomMonitorController.runId"></top-bar>
     <toolbar ng-if="classroomMonitorController.showToolbar"
              number-project="classroomMonitorController.numberProject"
-             show-step-tools="classroomMonitorController.showStepTools"
+             show-period-select="classroomMonitorController.showPeriodSelect"
+             show-step-tools="classroomMonitorController.showGradeByStepTools"
+             show-team-tools="classroomMonitorController.showGradeByTeamTools"
              view-name="classroomMonitorController.currentViewName"
+             workgroup-id="classroomMonitorController.workgroupId"
              on-menu-toggle="classroomMonitorController.toggleMenu()"></toolbar>
     <md-sidenav md-component-id="monitorSidenav"
                 md-is-open="classroomMonitorController.menuOpen"
@@ -22,8 +25,8 @@
         <main-menu state="classroomMonitorController.$state" views="classroomMonitorController.views"></main-menu>
     </md-sidenav>
     <md-content id="content" flex role="main" layout="column" class="l-main l-main--with-toolbar" flex role="main">
-        <div ui-view></div>
-        <div ng-if="classroomMonitorController.$state.current.name === 'root.nodeProgress'">
+        <div ui-view autoscroll="true"></div>
+        <div ng-if="classroomMonitorController.$state.current.name === 'root.project'">
             <ng-include src="'wise5/classroomMonitor/nodeProgress/nodeProgress.html'" ng-controller="NodeProgressController as nodeProgressController"></ng-include>
         </div>
     </md-content>

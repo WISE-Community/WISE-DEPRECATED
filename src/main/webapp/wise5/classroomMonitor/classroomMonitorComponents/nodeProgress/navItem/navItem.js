@@ -99,7 +99,7 @@ var NavItemController = function () {
             _this.alertIconLabel = _this.$translate('HAS_ALERTS_NEW');
             _this.alertIconClass = 'warn';
             _this.alertIconName = 'notifications';
-            _this.rubricIconLabel = _this.$translate('STEP_HAS_TEACHING_TIPS');
+            _this.rubricIconLabel = _this.$translate('STEP_HAS_RUBRICS_TIPS');
             _this.rubricIconClass = 'info';
             _this.rubricIconName = 'info';
         };

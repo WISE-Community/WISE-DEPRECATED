@@ -99,3 +99,38 @@ $input-action-vertical-offset-richtext: -7px;
         color: color('text-secondary');
     }
 }
+
+.autocomplete--minwidth {
+    @media only screen and (min-width: $layout-breakpoint-xs) {
+        min-width: 300px;
+    }
+
+    @media only screen and (min-width: $layout-breakpoint-sm) {
+        min-width: 300px;
+    }
+}
+
+.autocomplete--flat {
+    md-autocomplete-wrap {
+        background-color: #ffffff;
+
+        &:not(.md-menu-showing) {
+            box-shadow: none;
+            background-color: color('gray-lighter');
+        }
+    }
+}
+
+.select__header {
+    height: $menu-item-height;
+
+    input {
+        height: 100%;
+        width: 100%;
+        padding: 0 8px;
+        outline: none;
+        border: 0 none;
+        font-size: rem(1.4);
+        font-weight: 500;
+    }
+}
