@@ -39,8 +39,10 @@ var ProjectController = function () {
     this.showCreateGroup = false;
     this.showCreateNode = false;
     this.projectTitle = this.ProjectService.getProjectTitle();
-    this.inactiveGroups = this.ProjectService.getInactiveGroups();
+    this.inactiveGroupNodes = this.ProjectService.getInactiveGroupNodes();
+    this.inactiveStepNodes = this.ProjectService.getInactiveStepNodes();
     this.inactiveNodes = this.ProjectService.getInactiveNodes();
+    this.idToNode = this.ProjectService.getIdToNode();
     this.projectScriptFilename = this.ProjectService.getProjectScriptFilename();
     this.currentAuthorsMessage = '';
     this.projectMode = true;
@@ -1146,6 +1148,9 @@ var ProjectController = function () {
     value: function refreshProject() {
       this.ProjectService.parseProject();
       this.items = this.ProjectService.idToOrder;
+      this.inactiveGroupNodes = this.ProjectService.getInactiveGroupNodes();
+      this.inactiveStepNodes = this.ProjectService.getInactiveStepNodes();
+      this.inactiveNodes = this.ProjectService.getInactiveNodes();
     }
 
     /**
@@ -1783,6 +1788,60 @@ var ProjectController = function () {
     key: 'openProjectURLInNewTab',
     value: function openProjectURLInNewTab() {
       window.open(this.projectURL, '_blank');
+    }
+
+    /**
+     * Get the number of inactive groups.
+     * @return The number of inactive groups.
+     */
+
+  }, {
+    key: 'getNumberOfInactiveGroups',
+    value: function getNumberOfInactiveGroups() {
+      var count = 0;
+      for (var n = 0; n < this.inactiveNodes.length; n++) {
+        var inactiveNode = this.inactiveNodes[n];
+        if (inactiveNode != null) {
+          if (inactiveNode.type == 'group') {
+            count++;
+          }
+        }
+      }
+      return count;
+    }
+
+    /**
+     * Get the number of inactive steps. This only counts the inactive steps that
+     * are not in an inactive group.
+     * @return The number of inactive steps (not including the inactive steps that
+     * are in an inactive group).
+     */
+
+  }, {
+    key: 'getNumberOfInactiveSteps',
+    value: function getNumberOfInactiveSteps() {
+      var count = 0;
+      for (var n = 0; n < this.inactiveNodes.length; n++) {
+        var inactiveNode = this.inactiveNodes[n];
+        if (inactiveNode != null) {
+          if (inactiveNode.type == 'node' && this.ProjectService.getParentGroup(inactiveNode.id) == null) {
+            count++;
+          }
+        }
+      }
+      return count;
+    }
+
+    /**
+     * Get the parent of a node.
+     * @param nodeId Get the parent of this node.
+     * @return The parent group node or null if the node does not have a parent.
+     */
+
+  }, {
+    key: 'getParentGroup',
+    value: function getParentGroup(nodeId) {
+      return this.ProjectService.getParentGroup(nodeId);
     }
   }]);
 
