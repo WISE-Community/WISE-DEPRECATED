@@ -317,6 +317,7 @@ class ProjectController {
    * @param nodeId
    */
   nodeClicked(nodeId) {
+    this.unselectAllItems();
     this.TeacherDataService
         .endCurrentNodeAndSetCurrentNodeByNodeId(this.nodeId);
     this.$state
@@ -644,20 +645,15 @@ class ProjectController {
   copy() {
     // make sure there is at least one item selected
     let selectedNodeIds = this.getSelectedNodeIds();
-    if (selectedNodeIds != null && selectedNodeIds.length > 0) {
+    if (selectedNodeIds == null || selectedNodeIds.length == 0) {
+      alert(this.$translate('pleaseSelectAnItemToCopyAndThenClickTheCopyButtonAgain'));
+    } else {
       let selectedItemTypes = this.getSelectedItemTypes();
-      if (selectedItemTypes != null && selectedItemTypes.length > 0) {
-        if (selectedItemTypes.length === 0) {
-          // TODO: i18n
-          alert('Please select an item to copy.');
-        } else if (selectedItemTypes.length === 1 &&
-          selectedItemTypes[0] === 'node') {
-          this.insertNodeMode = true;
-          this.copyMode = true;
-        } else {
-          // TODO: i18n
-          alert('You cannot copy the item(s) at this time.');
-        }
+      if (selectedItemTypes.length === 1 && selectedItemTypes[0] === 'node') {
+        this.insertNodeMode = true;
+        this.copyMode = true;
+      } else if (selectedItemTypes.length === 1 && selectedItemTypes[0] === 'group') {
+        alert(this.$translate('youCannotCopyActivitiesAtThisTime'));
       }
     }
   }
@@ -669,33 +665,16 @@ class ProjectController {
   move() {
     // make sure there is at least one item selected
     let selectedNodeIds = this.getSelectedNodeIds();
-    if (selectedNodeIds != null && selectedNodeIds.length > 0) {
+    if (selectedNodeIds == null || selectedNodeIds.length == 0) {
+      alert(this.$translate('pleaseSelectAnItemToMoveAndThenClickTheMoveButtonAgain'));
+    } else {
       let selectedItemTypes = this.getSelectedItemTypes();
-      if (selectedItemTypes != null && selectedItemTypes.length > 0) {
-        if (selectedItemTypes.length == 0) {
-          // there are no selected items
-          alert('Please select an item to move.');
-        } else if (selectedItemTypes.length == 1) {
-          // all the items the user selected are the same type
-          // TODO: i18n
-          if (selectedItemTypes[0] === 'group') {
-            this.insertGroupMode = true;
-            this.moveMode = true;
-          } else if (selectedItemTypes[0] === 'node') {
-            this.insertNodeMode = true;
-            this.moveMode = true;
-          }
-        } else if (selectedItemTypes.length > 1) {
-          /*
-           * the items the user selected are different types but
-           * we do not allow moving different types of items at
-           * the same time
-           * TODO: i18n
-           */
-          alert('If you want to move multiple items at once, ' +
-              'they must be of the same type. Please select only activities ' +
-              'or only steps.');
-        }
+      if (selectedItemTypes.length === 1 && selectedItemTypes[0] === 'node') {
+        this.insertNodeMode = true;
+        this.moveMode = true;
+      } else if (selectedItemTypes.length === 1 && selectedItemTypes[0] === 'group') {
+        this.insertGroupMode = true;
+        this.moveMode = true;
       }
     }
   }
@@ -706,15 +685,15 @@ class ProjectController {
    */
   delete() {
     let selectedNodeIds = this.getSelectedNodeIds();
-    if (selectedNodeIds != null && selectedNodeIds.length !== 0) {
+    if (selectedNodeIds == null || selectedNodeIds.length == 0) {
+      alert(this.$translate('pleaseSelectAnItemToDeleteAndThenClickTheDeleteButtonAgain'));
+    } else {
       let confirmMessage = '';
       if (selectedNodeIds.length == 1) {
-        // TODO: i18n
-        confirmMessage = 'Are you sure you want to delete the selected item?';
+        confirmMessage = this.$translate('areYouSureYouWantToDeleteTheSelectedItem');
       } else if (selectedNodeIds.length > 1) {
-        // TODO: i18n
-        confirmMessage = 'Are you sure you want to delete the '
-            + selectedNodeIds.length + ' selected items?';
+        confirmMessage = this.$translate('areYouSureYouWantToDeleteTheXSelectedItems',
+            { numItems: selectedNodeIds.length });
       }
       if (confirm(confirmMessage)) {
         let deletedStartNodeId = false;
@@ -782,7 +761,6 @@ class ProjectController {
         this.refreshProject();
       }
     }
-    this.unselectAllItems();
   }
 
   /**
@@ -842,6 +820,12 @@ class ProjectController {
 
   unselectAllItems() {
     angular.forEach(this.items, function(value, key) {
+      value.checked = false;
+    });
+    angular.forEach(this.inactiveGroupNodes, function(value, key) {
+      value.checked = false;
+    });
+    angular.forEach(this.inactiveStepNodes, function(value, key) {
       value.checked = false;
     });
     this.stepNodeSelected = false;
@@ -954,7 +938,6 @@ class ProjectController {
     return this.checkPotentialStartNodeIdChange().then(() => {
       this.ProjectService.saveProject();
       this.refreshProject();
-      this.unselectAllItems();
     });
   }
 
@@ -967,6 +950,7 @@ class ProjectController {
     this.inactiveGroupNodes = this.ProjectService.getInactiveGroupNodes();
     this.inactiveStepNodes = this.ProjectService.getInactiveStepNodes();
     this.inactiveNodes = this.ProjectService.getInactiveNodes();
+    this.unselectAllItems();
   }
 
   /**

@@ -322,6 +322,7 @@ var ProjectController = function () {
      * @param nodeId
      */
     value: function nodeClicked(nodeId) {
+      this.unselectAllItems();
       this.TeacherDataService.endCurrentNodeAndSetCurrentNodeByNodeId(this.nodeId);
       this.$state.go('root.project.node', { projectId: this.projectId, nodeId: nodeId });
     }
@@ -720,19 +721,15 @@ var ProjectController = function () {
     value: function copy() {
       // make sure there is at least one item selected
       var selectedNodeIds = this.getSelectedNodeIds();
-      if (selectedNodeIds != null && selectedNodeIds.length > 0) {
+      if (selectedNodeIds == null || selectedNodeIds.length == 0) {
+        alert(this.$translate('pleaseSelectAnItemToCopyAndThenClickTheCopyButtonAgain'));
+      } else {
         var selectedItemTypes = this.getSelectedItemTypes();
-        if (selectedItemTypes != null && selectedItemTypes.length > 0) {
-          if (selectedItemTypes.length === 0) {
-            // TODO: i18n
-            alert('Please select an item to copy.');
-          } else if (selectedItemTypes.length === 1 && selectedItemTypes[0] === 'node') {
-            this.insertNodeMode = true;
-            this.copyMode = true;
-          } else {
-            // TODO: i18n
-            alert('You cannot copy the item(s) at this time.');
-          }
+        if (selectedItemTypes.length === 1 && selectedItemTypes[0] === 'node') {
+          this.insertNodeMode = true;
+          this.copyMode = true;
+        } else if (selectedItemTypes.length === 1 && selectedItemTypes[0] === 'group') {
+          alert(this.$translate('youCannotCopyActivitiesAtThisTime'));
         }
       }
     }
@@ -747,31 +744,16 @@ var ProjectController = function () {
     value: function move() {
       // make sure there is at least one item selected
       var selectedNodeIds = this.getSelectedNodeIds();
-      if (selectedNodeIds != null && selectedNodeIds.length > 0) {
+      if (selectedNodeIds == null || selectedNodeIds.length == 0) {
+        alert(this.$translate('pleaseSelectAnItemToMoveAndThenClickTheMoveButtonAgain'));
+      } else {
         var selectedItemTypes = this.getSelectedItemTypes();
-        if (selectedItemTypes != null && selectedItemTypes.length > 0) {
-          if (selectedItemTypes.length == 0) {
-            // there are no selected items
-            alert('Please select an item to move.');
-          } else if (selectedItemTypes.length == 1) {
-            // all the items the user selected are the same type
-            // TODO: i18n
-            if (selectedItemTypes[0] === 'group') {
-              this.insertGroupMode = true;
-              this.moveMode = true;
-            } else if (selectedItemTypes[0] === 'node') {
-              this.insertNodeMode = true;
-              this.moveMode = true;
-            }
-          } else if (selectedItemTypes.length > 1) {
-            /*
-             * the items the user selected are different types but
-             * we do not allow moving different types of items at
-             * the same time
-             * TODO: i18n
-             */
-            alert('If you want to move multiple items at once, ' + 'they must be of the same type. Please select only activities ' + 'or only steps.');
-          }
+        if (selectedItemTypes.length === 1 && selectedItemTypes[0] === 'node') {
+          this.insertNodeMode = true;
+          this.moveMode = true;
+        } else if (selectedItemTypes.length === 1 && selectedItemTypes[0] === 'group') {
+          this.insertGroupMode = true;
+          this.moveMode = true;
         }
       }
     }
@@ -785,14 +767,14 @@ var ProjectController = function () {
     key: 'delete',
     value: function _delete() {
       var selectedNodeIds = this.getSelectedNodeIds();
-      if (selectedNodeIds != null && selectedNodeIds.length !== 0) {
+      if (selectedNodeIds == null || selectedNodeIds.length == 0) {
+        alert(this.$translate('pleaseSelectAnItemToDeleteAndThenClickTheDeleteButtonAgain'));
+      } else {
         var confirmMessage = '';
         if (selectedNodeIds.length == 1) {
-          // TODO: i18n
-          confirmMessage = 'Are you sure you want to delete the selected item?';
+          confirmMessage = this.$translate('areYouSureYouWantToDeleteTheSelectedItem');
         } else if (selectedNodeIds.length > 1) {
-          // TODO: i18n
-          confirmMessage = 'Are you sure you want to delete the ' + selectedNodeIds.length + ' selected items?';
+          confirmMessage = this.$translate('areYouSureYouWantToDeleteTheXSelectedItems', { numItems: selectedNodeIds.length });
         }
         if (confirm(confirmMessage)) {
           var deletedStartNodeId = false;
@@ -900,7 +882,6 @@ var ProjectController = function () {
           this.refreshProject();
         }
       }
-      this.unselectAllItems();
     }
 
     /**
@@ -1009,6 +990,12 @@ var ProjectController = function () {
     key: 'unselectAllItems',
     value: function unselectAllItems() {
       angular.forEach(this.items, function (value, key) {
+        value.checked = false;
+      });
+      angular.forEach(this.inactiveGroupNodes, function (value, key) {
+        value.checked = false;
+      });
+      angular.forEach(this.inactiveStepNodes, function (value, key) {
         value.checked = false;
       });
       this.stepNodeSelected = false;
@@ -1143,7 +1130,6 @@ var ProjectController = function () {
       return this.checkPotentialStartNodeIdChange().then(function () {
         _this9.ProjectService.saveProject();
         _this9.refreshProject();
-        _this9.unselectAllItems();
       });
     }
 
@@ -1159,6 +1145,7 @@ var ProjectController = function () {
       this.inactiveGroupNodes = this.ProjectService.getInactiveGroupNodes();
       this.inactiveStepNodes = this.ProjectService.getInactiveStepNodes();
       this.inactiveNodes = this.ProjectService.getInactiveNodes();
+      this.unselectAllItems();
     }
 
     /**

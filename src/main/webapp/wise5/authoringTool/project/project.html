@@ -96,109 +96,111 @@
               width: 100%;
             }
           </style>
-          <div style="background-color: white; margin-bottom: 15px; position: sticky; top: 17px; z-index: 2;">
-            <md-button id="projectBackButton" class='topButton md-raised md-primary'
+          <div style='background-color: white; margin-bottom: 15px; position: sticky; top: 17px; z-index: 2;'>
+            <md-button id='projectBackButton' class='topButton md-raised md-primary'
                 ng-click='projectController.backButtonClicked()'
-                ng-disabled="projectController.insertGroupMode || projectController.insertNodeMode"
-                ng-show="!projectController.projectMode">
+                ng-disabled='projectController.insertGroupMode || projectController.insertNodeMode'
+                ng-show='!projectController.projectMode'>
               <md-icon>arrow_back</md-icon>
-              <md-tooltip md-direction="top" class="projectButtonTooltip"
-                  ng-if="projectController.projectMode">
-                {{ "backToProjectsList" | translate }}
+              <md-tooltip md-direction='top' class='projectButtonTooltip'
+                  ng-if='projectController.projectMode'>
+                {{ 'backToProjectsList' | translate }}
               </md-tooltip>
-              <md-tooltip md-direction="top" class="projectButtonTooltip"
-                  ng-if="!projectController.projectMode">
-                {{ "backToProjectView" | translate }}
+              <md-tooltip md-direction='top' class='projectButtonTooltip'
+                  ng-if='!projectController.projectMode'>
+                {{ 'backToProjectView' | translate }}
               </md-tooltip>
             </md-button>
-            <md-button id="projectInvisibleSpacer"
+            <md-button id='projectInvisibleSpacer'
                 class='topButton md-raised md-primary'
                 style='cursor: default; opacity: 0;'
-                ng-show="projectController.projectMode">
+                ng-show='projectController.projectMode'>
             </md-button>
-            <md-button id="createNewActivityButton"
+            <md-button id='createNewActivityButton'
                 class='topButton md-raised md-primary'
                 ng-click='projectController.creatNewActivityClicked()'
-                ng-disabled="projectController.insertGroupMode || projectController.insertNodeMode"
+                ng-disabled='projectController.insertGroupMode || projectController.insertNodeMode || projectController.stepNodeSelected || projectController.activityNodeSelected'
                 ng-show='projectController.projectMode'>
               <md-icon>queue</md-icon>
-              <md-tooltip md-direction="top" class="projectButtonTooltip">
-                {{ "createNewActivity" | translate }}
+              <md-tooltip md-direction='top' class='projectButtonTooltip'>
+                {{ 'createNewActivity' | translate }}
               </md-tooltip>
             </md-button>
-            <md-button id="createNewStepButton"
+            <md-button id='createNewStepButton'
                 class='topButton md-raised md-primary'
                 ng-click='projectController.createNewStepClicked()'
-                ng-disabled="projectController.insertGroupMode || projectController.insertNodeMode"
+                ng-disabled='projectController.insertGroupMode || projectController.insertNodeMode || projectController.stepNodeSelected || projectController.activityNodeSelected'
                 ng-show='projectController.projectMode'>
               <md-icon>add_box</md-icon>
-              <md-tooltip md-direction="top" class="projectButtonTooltip">
-                {{ "createNewStep" | translate }}
+              <md-tooltip md-direction='top' class='projectButtonTooltip'>
+                {{ 'createNewStep' | translate }}
               </md-tooltip>
             </md-button>
-            <md-button id="importStepButton"
+            <md-button id='importStepButton'
                 class='topButton md-raised md-primary'
                 ng-click='projectController.importStepClicked()'
-                ng-disabled="projectController.insertGroupMode || projectController.insertNodeMode"
+                ng-disabled='projectController.insertGroupMode || projectController.insertNodeMode || projectController.stepNodeSelected || projectController.activityNodeSelected'
                 ng-show='projectController.projectMode'>
               <md-icon>system_update_alt</md-icon>
-              <md-tooltip md-direction="top" class="projectButtonTooltip">
-                {{ "importStep" | translate }}
+              <md-tooltip md-direction='top' class='projectButtonTooltip'>
+                {{ 'importStep' | translate }}
               </md-tooltip>
             </md-button>
-            <md-button id="moveButton" class='topButton md-raised md-primary'
+            <md-button id='moveButton' class='topButton md-raised md-primary'
                 ng-click='projectController.move()'
-                ng-disabled="projectController.getSelectedItems().length == 0 || projectController.insertGroupMode || projectController.insertNodeMode"
+                ng-disabled='projectController.insertGroupMode || projectController.insertNodeMode'
                 ng-show='projectController.projectMode'>
               <md-icon>redo</md-icon>
-              <md-tooltip md-direction="top" class="projectButtonTooltip">
-                {{ "move" | translate }}
+              <md-tooltip md-direction='top' class='projectButtonTooltip'>
+                {{ 'move' | translate }}
               </md-tooltip>
             </md-button>
-            <md-button id="copyButton" class='topButton md-raised md-primary'
+            <md-button id='copyButton' class='topButton md-raised md-primary'
                 ng-click='projectController.copy()'
-                ng-disabled="projectController.getSelectedItems().length == 0 || projectController.insertGroupMode || projectController.insertNodeMode"
+                ng-disabled='projectController.insertGroupMode || projectController.insertNodeMode'
                 ng-show='projectController.projectMode'>
               <md-icon>content_copy</md-icon>
-              <md-tooltip md-direction="top" class="projectButtonTooltip">
-                {{ "copy" | translate }}
+              <md-tooltip md-direction='top' class='projectButtonTooltip'>
+                {{ 'copy' | translate }}
               </md-tooltip>
             </md-button>
-            <md-button id="deleteButton" class='topButton md-raised md-primary'
+            <md-button id='deleteButton' class='topButton md-raised md-primary'
                 ng-click='projectController.delete()'
-                ng-disabled="projectController.getSelectedItems().length == 0 || projectController.insertGroupMode || projectController.insertNodeMode"
+                ng-disabled='projectController.insertGroupMode || projectController.insertNodeMode'
                 ng-show='projectController.projectMode'>
               <md-icon>delete</md-icon>
-              <md-tooltip md-direction="top" class="projectButtonTooltip">
-                {{ "DELETE" | translate }}
+              <md-tooltip md-direction='top' class='projectButtonTooltip'>
+                {{ 'DELETE' | translate }}
               </md-tooltip>
             </md-button>
-            <md-button id="editProjectRubricButton"
+            <md-button id='editProjectRubricButton'
                 class='topButton md-raised md-primary'
                 ng-click='projectController.editProjectRubricClicked()'
-                ng-disabled="projectController.insertGroupMode || projectController.insertNodeMode"
+                ng-disabled='projectController.insertGroupMode || projectController.insertNodeMode || projectController.stepNodeSelected || projectController.activityNodeSelected'
                 ng-show='projectController.projectMode'>
               <md-icon>message</md-icon>
-              <md-tooltip md-direction="top" class="projectButtonTooltip">
-                {{ "editProjectRubric" | translate }}
+              <md-tooltip md-direction='top' class='projectButtonTooltip'>
+                {{ 'editProjectRubric' | translate }}
               </md-tooltip>
             </md-button>
-            <md-button id="advancedProjectAuthoringButton" class='topButton md-raised md-primary' ng-click='projectController.advancedClicked()'
-                ng-disabled="projectController.insertGroupMode || projectController.insertNodeMode"
+            <md-button id='advancedProjectAuthoringButton'
+                class='topButton md-raised md-primary'
+                ng-click='projectController.advancedClicked()'
+                ng-disabled='projectController.insertGroupMode || projectController.insertNodeMode || projectController.stepNodeSelected || projectController.activityNodeSelected'
                 ng-show='projectController.projectMode'>
               <md-icon>build</md-icon>
-              <md-tooltip md-direction="top" class="projectButtonTooltip">{{ "ADVANCED" | translate }}</md-tooltip>
+              <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'ADVANCED' | translate }}</md-tooltip>
             </md-button>
-            <div style="float:right">
-              <md-button id="previewProjectButton" class='topButton md-raised md-primary' ng-click='projectController.previewProject()'
-                  ng-disabled="projectController.insertGroupMode || projectController.insertNodeMode">
+            <div style='float:right'>
+              <md-button id='previewProjectButton' class='topButton md-raised md-primary' ng-click='projectController.previewProject()'
+                  ng-disabled='projectController.insertGroupMode || projectController.insertNodeMode'>
                 <md-icon>visibility</md-icon>
-                <md-tooltip md-direction="top" class="projectButtonTooltip">{{ "previewProject" | translate }}</md-tooltip>
+                <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'previewProject' | translate }}</md-tooltip>
               </md-button>
-              <md-button id="previewProjectWithoutConstraintsButton" class='topButton md-raised md-primary' ng-click='projectController.previewProjectWithoutConstraints()'
-                  ng-disabled="projectController.insertGroupMode || projectController.insertNodeMode">
+              <md-button id='previewProjectWithoutConstraintsButton' class='topButton md-raised md-primary' ng-click='projectController.previewProjectWithoutConstraints()'
+                  ng-disabled='projectController.insertGroupMode || projectController.insertNodeMode'>
                 <md-icon>visibility_off</md-icon>
-                <md-tooltip md-direction="top" class="projectButtonTooltip">{{ "previewProjectWithoutConstraints" | translate }}</md-tooltip>
+                <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'previewProjectWithoutConstraints' | translate }}</md-tooltip>
               </md-button>
               <!-- commented out history button until we can make good use out of this some day.
               <button id="viewHistoryButton" ng-click='projectController.viewProjectHistory()' translate="viewHistory"
@@ -425,7 +427,7 @@
                        ng-if='item.order!==0'>
                   </md-checkbox>
                 </div>
-                <div layout='row' class='projectItemTitleDiv' ng-click='projectController.nodeClicked(item.$key)'>
+                <div layout='row' class='projectItemTitleDiv' ng-click='projectController.insertGroupMode == true || projectController.insertNodeMode == true || projectController.nodeClicked(item.$key)'>
                   <div layout='row'>
                     <h6 style='display:inline; cursor:pointer;'
                       ng-if='item.order!==0 && projectController.isGroupNode(item.$key)'>
@@ -482,7 +484,7 @@
                   </div>
                   <div layout='row'
                        class='projectItemTitleDiv'
-                       ng-click='projectController.nodeClicked(inactiveNode.id)'>
+                       ng-click='projectController.insertGroupMode == true || projectController.insertNodeMode == true || projectController.nodeClicked(inactiveNode.id)'>
                     <div layout='row'>
                       <h6
                         style='display:inline; cursor:pointer;'>
@@ -515,7 +517,7 @@
                     </div>
                     <div layout='row'
                          class='projectItemTitleDiv'
-                         ng-click='projectController.nodeClicked(inactiveChildId)'>
+                         ng-click='projectController.insertGroupMode == true || projectController.insertNodeMode == true || projectController.nodeClicked(inactiveChildId)'>
                       <div layout='row'>
                         <p
                           style='display:inline; cursor:pointer;'>
@@ -564,7 +566,7 @@
                          aria-label='{{projectController.getNodeTitleByNodeId(inactiveNode.id)}}'>
                     </md-checkbox>
                   </div>
-                  <div layout='row' class='projectItemTitleDiv' ng-click='projectController.nodeClicked(inactiveNode.id)'>
+                  <div layout='row' class='projectItemTitleDiv' ng-click='projectController.insertGroupMode == true || projectController.insertNodeMode == true || projectController.nodeClicked(inactiveNode.id)'>
                     <div layout='row'>
                       <p style='display:inline; cursor:pointer;'>
                         {{projectController.getNodeTitleByNodeId(inactiveNode.id)}}

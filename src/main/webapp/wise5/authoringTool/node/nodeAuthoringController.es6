@@ -2606,37 +2606,45 @@ class NodeAuthoringController {
    * The move component button was clicked
    */
   moveButtonClicked() {
-    // hide the other views
-    this.nodeAuthoringViewButtonClicked('move');
+    if (this.getSelectedComponentIds().length == 0) {
+      alert(this.$translate('pleaseSelectAComponentToMoveAndThenClickTheMoveButtonAgain'));
+    } else {
+      // hide the other views
+      this.nodeAuthoringViewButtonClicked('move');
 
-    // turn off add component mode
-    this.turnOffAddComponentMode();
+      // turn off add component mode
+      this.turnOffAddComponentMode();
 
-    // turn on the move component mode
-    this.turnOnMoveComponentMode();
+      // turn on the move component mode
+      this.turnOnMoveComponentMode();
 
-    // turn on the insert component mode
-    this.turnOnInsertComponentMode()
+      // turn on the insert component mode
+      this.turnOnInsertComponentMode()
 
-    // hide the component authoring
-    this.hideComponentAuthoring();
+      // hide the component authoring
+      this.hideComponentAuthoring();
+    }
   }
 
   /**
    * The copy component button was clicked
    */
   copyButtonClicked() {
-    // hide the other views
-    this.nodeAuthoringViewButtonClicked('copy');
+    if (this.getSelectedComponentIds().length == 0) {
+      alert(this.$translate('pleaseSelectAComponentToCopyAndThenClickTheCopyButtonAgain'));
+    } else {
+      // hide the other views
+      this.nodeAuthoringViewButtonClicked('copy');
 
-    // turn on the move component mode
-    this.turnOnCopyComponentMode();
+      // turn on the move component mode
+      this.turnOnCopyComponentMode();
 
-    // turn on the insert component mode
-    this.turnOnInsertComponentMode();
+      // turn on the insert component mode
+      this.turnOnInsertComponentMode();
 
-    // hide the component authoring views
-    this.hideComponentAuthoring();
+      // hide the component authoring views
+      this.hideComponentAuthoring();
+    }
   }
 
   /**
@@ -2644,88 +2652,92 @@ class NodeAuthoringController {
    * TODO refactor too many nesting
    */
   deleteButtonClicked() {
-    this.scrollToTopOfPage();
-
-    /*
-     * hide all the component authoring so that the author only sees the
-     * component numbers and component types
-     */
-    this.hideComponentAuthoring();
-
-    /*
-     * Use a timeout to allow the effects of hideComponentAuthoring() to
-     * take effect. If we don't use a timeout, the user won't see any change
-     * in the UI.
-     */
-    this.$timeout(() => {
-      let confirmMessage = '';
-
-      // get the selected component numbers and types
-      let selectedComponentNumbersAndTypes = this.getSelectedComponentNumbersAndTypes();
-
-      if (selectedComponentNumbersAndTypes.length == 1) {
-        // there is one selected component
-        confirmMessage = 'Are you sure you want to delete this component?\n';
-      } else if (selectedComponentNumbersAndTypes.length > 1) {
-        // there are multiple selected components
-        confirmMessage = 'Are you sure you want to delete these components?\n';
-      }
-
-      // loop through all the selected components
-      for (let c = 0; c < selectedComponentNumbersAndTypes.length; c++) {
-
-        // get a component number and type
-        let selectedComponentNumberAndType = selectedComponentNumbersAndTypes[c];
-
-        // show the component number and type in the message
-        confirmMessage += '\n' + selectedComponentNumberAndType;
-      }
-
-      // ask the user if they are sure they want to delete
-      if (confirm(confirmMessage)) {
-        let selectedComponents = this.getSelectedComponentIds();
-
-        // data saved in the component deleted event
-        let data = {
-          "componentsDeleted": this.getComponentObjectsForEventData(selectedComponents)
-        };
-
-        /*
-         * loop through all the selected component ids and delete the
-         * components
-         */
-        for (let componentId of selectedComponents) {
-          this.ProjectService.deleteComponent(this.nodeId, componentId);
-        }
-
-        this.saveEvent('componentDeleted', 'Authoring', data);
-
-        // check if we need to show the node save or node submit buttons
-        this.checkIfNeedToShowNodeSaveOrNodeSubmitButtons();
-
-        this.ProjectService.saveProject();
-      } else {
-        // uncheck the component check boxes
-        this.clearComponentsToChecked();
-      }
+    if (this.getSelectedComponentIds().length == 0) {
+      alert(this.$translate('pleaseSelectAComponentToDeleteAndThenClickTheDeleteButtonAgain'));
+    } else {
+      this.scrollToTopOfPage();
 
       /*
-       * Wait a small amount of time before returning the UI back to the
-       * normal view. This allows the author to see the component number
-       * and type view a little longer so that they can see the change
-       * they just made before we switch back to the normal view.
+       * hide all the component authoring so that the author only sees the
+       * component numbers and component types
+       */
+      this.hideComponentAuthoring();
+
+      /*
+       * Use a timeout to allow the effects of hideComponentAuthoring() to
+       * take effect. If we don't use a timeout, the user won't see any change
+       * in the UI.
        */
       this.$timeout(() => {
-        // turn off the insert component mode
-        this.turnOffInsertComponentMode();
+        let confirmMessage = '';
 
-        // uncheck the component check boxes
-        this.clearComponentsToChecked();
+        // get the selected component numbers and types
+        let selectedComponentNumbersAndTypes = this.getSelectedComponentNumbersAndTypes();
 
-        // show the component authoring
-        this.showComponentAuthoring();
-      }, 2000);
-    });
+        if (selectedComponentNumbersAndTypes.length == 1) {
+          // there is one selected component
+          confirmMessage = this.$translate('areYouSureYouWantToDeleteThisComponent');
+        } else if (selectedComponentNumbersAndTypes.length > 1) {
+          // there are multiple selected components
+          confirmMessage = this.$translate('areYouSureYouWantToDeleteTheseComponents');
+        }
+
+        // loop through all the selected components
+        for (let c = 0; c < selectedComponentNumbersAndTypes.length; c++) {
+
+          // get a component number and type
+          let selectedComponentNumberAndType = selectedComponentNumbersAndTypes[c];
+
+          // show the component number and type in the message
+          confirmMessage += '\n' + selectedComponentNumberAndType;
+        }
+
+        // ask the user if they are sure they want to delete
+        if (confirm(confirmMessage)) {
+          let selectedComponents = this.getSelectedComponentIds();
+
+          // data saved in the component deleted event
+          let data = {
+            "componentsDeleted": this.getComponentObjectsForEventData(selectedComponents)
+          };
+
+          /*
+           * loop through all the selected component ids and delete the
+           * components
+           */
+          for (let componentId of selectedComponents) {
+            this.ProjectService.deleteComponent(this.nodeId, componentId);
+          }
+
+          this.saveEvent('componentDeleted', 'Authoring', data);
+
+          // check if we need to show the node save or node submit buttons
+          this.checkIfNeedToShowNodeSaveOrNodeSubmitButtons();
+
+          this.ProjectService.saveProject();
+        } else {
+          // uncheck the component check boxes
+          this.clearComponentsToChecked();
+        }
+
+        /*
+         * Wait a small amount of time before returning the UI back to the
+         * normal view. This allows the author to see the component number
+         * and type view a little longer so that they can see the change
+         * they just made before we switch back to the normal view.
+         */
+        this.$timeout(() => {
+          // turn off the insert component mode
+          this.turnOffInsertComponentMode();
+
+          // uncheck the component check boxes
+          this.clearComponentsToChecked();
+
+          // show the component authoring
+          this.showComponentAuthoring();
+        }, 2000);
+      });
+    }
   }
 
   /**
