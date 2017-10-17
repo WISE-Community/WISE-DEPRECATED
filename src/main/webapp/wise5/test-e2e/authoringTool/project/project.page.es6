@@ -181,7 +181,7 @@ export default class ProjectPage {
    * up.
    */
   clickOnStep(activityNumber, stepNumber) {
-    element(by.cssContainingText('h6', activityNumber + '.' + stepNumber + ':')).click();
+    element(by.cssContainingText('p', activityNumber + '.' + stepNumber + ':')).click();
   }
 
   /**
