@@ -241,7 +241,7 @@ var ProjectPage = function () {
   }, {
     key: 'clickOnStep',
     value: function clickOnStep(activityNumber, stepNumber) {
-      element(by.cssContainingText('h6', activityNumber + '.' + stepNumber + ':')).click();
+      element(by.cssContainingText('p', activityNumber + '.' + stepNumber + ':')).click();
     }
 
     /**
