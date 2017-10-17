@@ -13,7 +13,8 @@ class ProjectService {
         this.project = null;
         this.transitions = [];
         this.applicationNodes = [];
-        this.inactiveNodes = [];
+        this.inactiveStepNodes = [];
+        this.inactiveGroupNodes = [];
         this.groupNodes = [];
         this.idToNode = {};
         this.idToElement = {};
@@ -54,7 +55,8 @@ class ProjectService {
     clearProjectFields() {
         this.transitions = [];
         this.applicationNodes = [];
-        this.inactiveNodes = [];
+        this.inactiveStepNodes = [];
+        this.inactiveGroupNodes = [];
         this.groupNodes = [];
         this.idToNode = {};
         this.idToElement = {};
@@ -268,6 +270,23 @@ class ProjectService {
     getGroups() {
         return this.groupNodes;
     };
+
+    /**
+     * Get the inactive group nodes.
+     * @return An array of inactive group nodes.
+     */
+    getInactiveGroupNodes() {
+        return this.inactiveGroupNodes;
+    }
+
+    /**
+     * Get the inactive step nodes. This will include the inactive steps that
+     * are in an inactive group.
+     * @return An array of inactive step nodes.
+     */
+    getInactiveStepNodes() {
+        return this.inactiveStepNodes;
+    }
 
     loadNodes(nodes) {
         if (nodes != null) {
@@ -1015,20 +1034,27 @@ class ProjectService {
             var node = this.getNodeById(nodeId);
 
             if (node != null) {
+                // Check if the node is a child of an active group.
                 var groupNodes = this.getGroupNodes();
-
                 for (var g = 0; g < groupNodes.length; g++) {
                     var groupNode = groupNodes[g];
-
                     if (this.isNodeDirectChildOfGroup(node, groupNode)) {
-                        result = groupNode;
-                        break;
+                        return groupNode;
+                    }
+                }
+
+                // Check if the node is a child of an inactive group.
+                var inactiveGroupNodes = this.getInactiveGroupNodes();
+                for (var ig = 0; ig < inactiveGroupNodes.length; ig++) {
+                    var inactiveGroupNode = inactiveGroupNodes[ig];
+                    if (this.isNodeDirectChildOfGroup(node, inactiveGroupNode)) {
+                        return inactiveGroupNode;
                     }
                 }
             }
         }
 
-        return result;
+        return null;
     };
 
     /**
@@ -1819,18 +1845,17 @@ class ProjectService {
      * objects.
      */
     cleanupBeforeSave() {
-        var inactiveNodes = this.project.inactiveNodes;
+        let activeNodes = this.getActiveNodes();
+        for (let activeNode of activeNodes) {
+            if (activeNode != null) {
+                delete activeNode.checked;
+            }
+        }
 
-        if (inactiveNodes != null) {
-
-            // loop through all the inactive nodes
-            for (var i = 0; i < inactiveNodes.length; i++) {
-                var inactiveNode = inactiveNodes[i];
-
-                if (inactiveNode != null) {
-                    // remove the checked field
-                    delete inactiveNode.checked;
-                }
+        let inactiveNodes = this.getInactiveNodes();
+        for (let inactiveNode of inactiveNodes) {
+            if (inactiveNode != null) {
+                delete inactiveNode.checked;
             }
         }
     }
@@ -3389,6 +3414,13 @@ class ProjectService {
             // add the node to our mapping of node id to node
             this.setIdToNode(node.id, node);
             this.setIdToElement(node.id, node);
+        } else if (nodeId == 'inactiveGroups') {
+            // add the node to the inactive groups
+            this.addInactiveNode(node);
+
+            // add the node to our mapping of node id to node
+            this.setIdToNode(node.id, node);
+            this.setIdToElement(node.id, node);
         } else {
             // add the node to the active nodes
 
@@ -4044,21 +4076,27 @@ class ProjectService {
      * @returns an array with all the group ids
      */
     getGroupIds() {
-
         var groupIds = [];
 
+        // Get the active group node ids.
         var groupNodes = this.groupNodes;
-
-        // loop through all the group nodes
         for (var g = 0; g < groupNodes.length; g++) {
             var group = groupNodes[g];
-
             if (group != null) {
                 var groupId = group.id;
-
                 if (groupId != null) {
-                    // add the group id
                     groupIds.push(groupId);
+                }
+            }
+        }
+
+        // Get the inactive group node ids.
+        var inactiveGroupNodes = this.getInactiveGroupNodes();
+        for (var inactiveGroup of inactiveGroupNodes) {
+            if (inactiveGroup != null) {
+                var inactiveGroupId = inactiveGroup.id;
+                if (inactiveGroupId != null) {
+                    groupIds.push(inactiveGroupId);
                 }
             }
         }
@@ -6797,22 +6835,11 @@ class ProjectService {
     }
 
     /**
-     * Get the inactive groups
-     * @returns the inactive groups
+     * Get the active nodes.
+     * @return An array of the active node objects.
      */
-    getInactiveGroups() {
-        var inactiveGroups = [];
-
-        if (this.project != null) {
-
-            if (this.project.inactiveGroups == null) {
-                this.project.inactiveGroups = [];
-            }
-
-            inactiveGroups = this.project.inactiveGroups;
-        }
-
-        return inactiveGroups;
+    getActiveNodes() {
+        return this.project.nodes;
     }
 
     /**
@@ -6843,16 +6870,10 @@ class ProjectService {
         var node = null;
 
         if (nodeId != null) {
-
-            // get the active nodes
             var activeNodes = this.project.nodes;
-
             if (activeNodes != null) {
-
-                // loop through all the active nodes
                 for (var a = 0; a < activeNodes.length; a++) {
                     var activeNode = activeNodes[a];
-
                     if (activeNode != null) {
                         if (nodeId === activeNode.id) {
                             // we have found the node we want to remove
@@ -6860,6 +6881,11 @@ class ProjectService {
 
                             // remove the node from the array
                             activeNodes.splice(a, 1);
+
+                            if (activeNode.type == 'group') {
+                                this.removeChildNodesFromActiveNodes(activeNode);
+                            }
+
                             break;
                         }
                     }
@@ -6868,6 +6894,20 @@ class ProjectService {
         }
 
         return node;
+    }
+
+    /**
+     * Move the child nodes of a group from the active nodes and put them into
+     * the inactive nodes.
+     * @param node The group node.
+     */
+    removeChildNodesFromActiveNodes(node) {
+        if (node != null) {
+            let childIds = node.ids;
+            for (let childId of childIds) {
+                this.removeNodeFromActiveNodes(childId);
+            }
+        }
     }
 
     /**
@@ -6880,14 +6920,20 @@ class ProjectService {
 
         if (nodeId != null) {
 
+            let parentGroup = this.getParentGroup(nodeId);
+            if (parentGroup != null) {
+                // The node has a parent so we will remove it from the parent.
+                this.removeChildFromParent(nodeId);
+            }
+
             // get all the inactive nodes
-            var inactiveNodes = this.project.inactiveNodes;
+            let inactiveNodes = this.project.inactiveNodes;
 
             if (inactiveNodes != null) {
 
                 // loop through all the inactive nodes
-                for (var i = 0; i < inactiveNodes.length; i++) {
-                    var inactiveNode = inactiveNodes[i];
+                for (let i = 0; i < inactiveNodes.length; i++) {
+                    let inactiveNode = inactiveNodes[i];
 
                     if (inactiveNode != null) {
                         if (nodeId === inactiveNode.id) {
@@ -6901,9 +6947,82 @@ class ProjectService {
                     }
                 }
             }
+
+            this.removeNodeFromInactiveStepNodes(nodeId);
+            this.removeNodeFromInactiveGroupNodes(nodeId);
         }
 
         return node;
+    }
+
+    /**
+     * Remove the child node from the parent group.
+     * @param nodeId The child node to remove from the parent.
+     */
+    removeChildFromParent(nodeId) {
+        let parentGroup = this.getParentGroup(nodeId);
+        if (parentGroup != null) {
+            // Remove the child from the parent
+            for (let i = 0; i < parentGroup.ids.length; i++) {
+                let childId = parentGroup.ids[i];
+                if (nodeId == childId) {
+                    parentGroup.ids.splice(i, 1);
+                    break;
+                }
+            }
+            if (nodeId == parentGroup.startId) {
+                /*
+                 * The child we removed was the start id of the group so we
+                 * will update the start id.
+                 */
+                let startIdUpdated = false;
+                let transitions = this.getTransitionsByFromNodeId(nodeId);
+                if (transitions != null &&
+                        transitions.length > 0 &&
+                        transitions[0] != null &&
+                        transitions[0].to != null) {
+                    parentGroup.startId = transitions[0].to;
+                    startIdUpdated = true;
+                }
+                if (!startIdUpdated && parentGroup.ids.length > 0) {
+                    parentGroup.startId = parentGroup.ids[0];
+                    startIdUpdated = true;
+                }
+                if (!startIdUpdated) {
+                    parentGroup.startId = '';
+                }
+            }
+        }
+    }
+
+    /**
+     * Remove the node from the inactive step nodes array.
+     * @param nodeId The node id of the node we want to remove from the
+     * inactive step nodes array.
+     */
+    removeNodeFromInactiveStepNodes(nodeId) {
+        for (let i = 0; i < this.inactiveStepNodes.length; i++) {
+            let inactiveStepNode = this.inactiveStepNodes[i];
+            if (nodeId == inactiveStepNode.id) {
+                this.inactiveStepNodes.splice(i, 1);
+                break;
+            }
+        }
+    }
+
+    /**
+     * Remove the node from the inactive group nodes array.
+     * @param nodeId The node id of the group we want to remove from the
+     * inactive group nodes array.
+     */
+    removeNodeFromInactiveGroupNodes(nodeId) {
+        for (let i = 0; i < this.inactiveGroupNodes.length; i++) {
+            let inactiveGroupNode = this.inactiveGroupNodes[i];
+            if (nodeId == inactiveGroupNode.id) {
+                this.inactiveGroupNodes.splice(i, 1);
+                break;
+            }
+        }
     }
 
     /**
@@ -6922,8 +7041,11 @@ class ProjectService {
                     // set the node into the mapping data structures
                     this.setIdToNode(nodeId, node);
                     this.setIdToElement(nodeId, node);
-
-                    this.inactiveNodes.push(node);
+                    if (node.type == 'group') {
+                        this.inactiveGroupNodes.push(node);
+                    } else {
+                        this.inactiveStepNodes.push(node);
+                    }
                 }
             }
         }
@@ -6946,13 +7068,7 @@ class ProjectService {
                 // this occurs when the author puts a group into the inactive groups
                 return false;
             } else if (this.isGroupNode(nodeId)) {
-                // the node is a group node
-
-                /*
-                 * all group nodes are active since we don't have an inactive
-                 * groups section
-                 */
-                return true;
+                return this.isGroupActive(nodeId);
             } else {
                 // the node is a step node
 
@@ -7017,6 +7133,19 @@ class ProjectService {
     }
 
     /**
+     * Check if a group is active.
+     * @param nodeId the node id of the group
+     */
+    isGroupActive(nodeId) {
+        for (let activeNode of this.project.nodes) {
+            if (nodeId == activeNode.id) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * Move the node to the active nodes array
      */
     moveToActive(node) {
@@ -7031,6 +7160,18 @@ class ProjectService {
 
                 // add the node to the active array
                 this.addNode(node);
+
+                if (this.isGroupNode(node.id)) {
+                    /*
+                     * This is a group node so we will also move all of its
+                     * children to active.
+                     */
+                    let childIds = node.ids;
+                    for (let childId of childIds) {
+                        let childNode = this.removeNodeFromInactiveNodes(childId);
+                        this.addNode(childNode);
+                    }
+                }
             }
         }
     }
@@ -7072,7 +7213,7 @@ class ProjectService {
                     node.transitionLogic.transitions = [];
                 }
 
-                if (nodeIdToInsertAfter == null || nodeIdToInsertAfter === 'inactiveSteps' || nodeIdToInsertAfter === 'inactiveNodes') {
+                if (nodeIdToInsertAfter == null || nodeIdToInsertAfter === 'inactiveNodes' || nodeIdToInsertAfter === 'inactiveSteps' || nodeIdToInsertAfter === 'inactiveGroups') {
                     // put the node at the beginning of the inactive steps
                     inactiveNodes.splice(0, 0, node);
                 } else {
@@ -7101,6 +7242,28 @@ class ProjectService {
                         inactiveNodes.push(node);
                     }
                 }
+
+                if (node.type == 'group') {
+                    this.inactiveGroupNodes.push(node.id);
+                    this.addGroupChildNodesToInactive(node);
+                } else {
+                    this.inactiveStepNodes.push(node.id);
+                }
+            }
+        }
+    }
+
+    /**
+     * Add a group's child nodes to the inactive nodes.
+     * @param node The group node.
+     */
+    addGroupChildNodesToInactive(node) {
+        if (node != null) {
+            let childIds = node.ids;
+            for (let childId of childIds) {
+                let childNode = this.getNodeById(childId);
+                this.project.inactiveNodes.push(childNode);
+                this.inactiveStepNodes.push(childNode);
             }
         }
     }
@@ -7804,7 +7967,6 @@ class ProjectService {
                     }
                 }
             },
-            "inactiveGroups": [],
             "inactiveNodes": []
         };
     }
@@ -9997,6 +10159,14 @@ class ProjectService {
      */
     getIsNodeAffectedByConstraintResult(nodeId, constraintId) {
         return this.isNodeAffectedByConstraintResult[nodeId + '-' + constraintId];
+    }
+
+    /**
+     * Get the id to node mappings.
+     * @return An object the keys as node ids and the values as nodes.
+     */
+    getIdToNode() {
+        return this.idToNode;
     }
 }
 

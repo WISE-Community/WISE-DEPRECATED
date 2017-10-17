@@ -2919,20 +2919,24 @@ var NodeAuthoringController = function () {
   }, {
     key: 'moveButtonClicked',
     value: function moveButtonClicked() {
-      // hide the other views
-      this.nodeAuthoringViewButtonClicked('move');
+      if (this.getSelectedComponentIds().length == 0) {
+        alert(this.$translate('pleaseSelectAComponentToMoveAndThenClickTheMoveButtonAgain'));
+      } else {
+        // hide the other views
+        this.nodeAuthoringViewButtonClicked('move');
 
-      // turn off add component mode
-      this.turnOffAddComponentMode();
+        // turn off add component mode
+        this.turnOffAddComponentMode();
 
-      // turn on the move component mode
-      this.turnOnMoveComponentMode();
+        // turn on the move component mode
+        this.turnOnMoveComponentMode();
 
-      // turn on the insert component mode
-      this.turnOnInsertComponentMode();
+        // turn on the insert component mode
+        this.turnOnInsertComponentMode();
 
-      // hide the component authoring
-      this.hideComponentAuthoring();
+        // hide the component authoring
+        this.hideComponentAuthoring();
+      }
     }
 
     /**
@@ -2942,17 +2946,21 @@ var NodeAuthoringController = function () {
   }, {
     key: 'copyButtonClicked',
     value: function copyButtonClicked() {
-      // hide the other views
-      this.nodeAuthoringViewButtonClicked('copy');
+      if (this.getSelectedComponentIds().length == 0) {
+        alert(this.$translate('pleaseSelectAComponentToCopyAndThenClickTheCopyButtonAgain'));
+      } else {
+        // hide the other views
+        this.nodeAuthoringViewButtonClicked('copy');
 
-      // turn on the move component mode
-      this.turnOnCopyComponentMode();
+        // turn on the move component mode
+        this.turnOnCopyComponentMode();
 
-      // turn on the insert component mode
-      this.turnOnInsertComponentMode();
+        // turn on the insert component mode
+        this.turnOnInsertComponentMode();
 
-      // hide the component authoring views
-      this.hideComponentAuthoring();
+        // hide the component authoring views
+        this.hideComponentAuthoring();
+      }
     }
 
     /**
@@ -2965,109 +2973,113 @@ var NodeAuthoringController = function () {
     value: function deleteButtonClicked() {
       var _this3 = this;
 
-      this.scrollToTopOfPage();
-
-      /*
-       * hide all the component authoring so that the author only sees the
-       * component numbers and component types
-       */
-      this.hideComponentAuthoring();
-
-      /*
-       * Use a timeout to allow the effects of hideComponentAuthoring() to
-       * take effect. If we don't use a timeout, the user won't see any change
-       * in the UI.
-       */
-      this.$timeout(function () {
-        var confirmMessage = '';
-
-        // get the selected component numbers and types
-        var selectedComponentNumbersAndTypes = _this3.getSelectedComponentNumbersAndTypes();
-
-        if (selectedComponentNumbersAndTypes.length == 1) {
-          // there is one selected component
-          confirmMessage = 'Are you sure you want to delete this component?\n';
-        } else if (selectedComponentNumbersAndTypes.length > 1) {
-          // there are multiple selected components
-          confirmMessage = 'Are you sure you want to delete these components?\n';
-        }
-
-        // loop through all the selected components
-        for (var c = 0; c < selectedComponentNumbersAndTypes.length; c++) {
-
-          // get a component number and type
-          var selectedComponentNumberAndType = selectedComponentNumbersAndTypes[c];
-
-          // show the component number and type in the message
-          confirmMessage += '\n' + selectedComponentNumberAndType;
-        }
-
-        // ask the user if they are sure they want to delete
-        if (confirm(confirmMessage)) {
-          var selectedComponents = _this3.getSelectedComponentIds();
-
-          // data saved in the component deleted event
-          var data = {
-            "componentsDeleted": _this3.getComponentObjectsForEventData(selectedComponents)
-          };
-
-          /*
-           * loop through all the selected component ids and delete the
-           * components
-           */
-          var _iteratorNormalCompletion12 = true;
-          var _didIteratorError12 = false;
-          var _iteratorError12 = undefined;
-
-          try {
-            for (var _iterator12 = selectedComponents[Symbol.iterator](), _step12; !(_iteratorNormalCompletion12 = (_step12 = _iterator12.next()).done); _iteratorNormalCompletion12 = true) {
-              var _componentId3 = _step12.value;
-
-              _this3.ProjectService.deleteComponent(_this3.nodeId, _componentId3);
-            }
-          } catch (err) {
-            _didIteratorError12 = true;
-            _iteratorError12 = err;
-          } finally {
-            try {
-              if (!_iteratorNormalCompletion12 && _iterator12.return) {
-                _iterator12.return();
-              }
-            } finally {
-              if (_didIteratorError12) {
-                throw _iteratorError12;
-              }
-            }
-          }
-
-          _this3.saveEvent('componentDeleted', 'Authoring', data);
-
-          // check if we need to show the node save or node submit buttons
-          _this3.checkIfNeedToShowNodeSaveOrNodeSubmitButtons();
-
-          _this3.ProjectService.saveProject();
-        } else {
-          // uncheck the component check boxes
-          _this3.clearComponentsToChecked();
-        }
+      if (this.getSelectedComponentIds().length == 0) {
+        alert(this.$translate('pleaseSelectAComponentToDeleteAndThenClickTheDeleteButtonAgain'));
+      } else {
+        this.scrollToTopOfPage();
 
         /*
-         * Wait a small amount of time before returning the UI back to the
-         * normal view. This allows the author to see the component number
-         * and type view a little longer so that they can see the change
-         * they just made before we switch back to the normal view.
+         * hide all the component authoring so that the author only sees the
+         * component numbers and component types
          */
-        _this3.$timeout(function () {
-          // turn off the insert component mode
-          _this3.turnOffInsertComponentMode();
+        this.hideComponentAuthoring();
 
-          // uncheck the component check boxes
-          _this3.clearComponentsToChecked();
+        /*
+         * Use a timeout to allow the effects of hideComponentAuthoring() to
+         * take effect. If we don't use a timeout, the user won't see any change
+         * in the UI.
+         */
+        this.$timeout(function () {
+          var confirmMessage = '';
 
-          // show the component authoring
-          _this3.showComponentAuthoring();
-        }, 2000);
-      });
+          // get the selected component numbers and types
+          var selectedComponentNumbersAndTypes = _this3.getSelectedComponentNumbersAndTypes();
+
+          if (selectedComponentNumbersAndTypes.length == 1) {
+            // there is one selected component
+            confirmMessage = _this3.$translate('areYouSureYouWantToDeleteThisComponent');
+          } else if (selectedComponentNumbersAndTypes.length > 1) {
+            // there are multiple selected components
+            confirmMessage = _this3.$translate('areYouSureYouWantToDeleteTheseComponents');
+          }
+
+          // loop through all the selected components
+          for (var c = 0; c < selectedComponentNumbersAndTypes.length; c++) {
+
+            // get a component number and type
+            var selectedComponentNumberAndType = selectedComponentNumbersAndTypes[c];
+
+            // show the component number and type in the message
+            confirmMessage += '\n' + selectedComponentNumberAndType;
+          }
+
+          // ask the user if they are sure they want to delete
+          if (confirm(confirmMessage)) {
+            var selectedComponents = _this3.getSelectedComponentIds();
+
+            // data saved in the component deleted event
+            var data = {
+              "componentsDeleted": _this3.getComponentObjectsForEventData(selectedComponents)
+            };
+
+            /*
+             * loop through all the selected component ids and delete the
+             * components
+             */
+            var _iteratorNormalCompletion12 = true;
+            var _didIteratorError12 = false;
+            var _iteratorError12 = undefined;
+
+            try {
+              for (var _iterator12 = selectedComponents[Symbol.iterator](), _step12; !(_iteratorNormalCompletion12 = (_step12 = _iterator12.next()).done); _iteratorNormalCompletion12 = true) {
+                var _componentId3 = _step12.value;
+
+                _this3.ProjectService.deleteComponent(_this3.nodeId, _componentId3);
+              }
+            } catch (err) {
+              _didIteratorError12 = true;
+              _iteratorError12 = err;
+            } finally {
+              try {
+                if (!_iteratorNormalCompletion12 && _iterator12.return) {
+                  _iterator12.return();
+                }
+              } finally {
+                if (_didIteratorError12) {
+                  throw _iteratorError12;
+                }
+              }
+            }
+
+            _this3.saveEvent('componentDeleted', 'Authoring', data);
+
+            // check if we need to show the node save or node submit buttons
+            _this3.checkIfNeedToShowNodeSaveOrNodeSubmitButtons();
+
+            _this3.ProjectService.saveProject();
+          } else {
+            // uncheck the component check boxes
+            _this3.clearComponentsToChecked();
+          }
+
+          /*
+           * Wait a small amount of time before returning the UI back to the
+           * normal view. This allows the author to see the component number
+           * and type view a little longer so that they can see the change
+           * they just made before we switch back to the normal view.
+           */
+          _this3.$timeout(function () {
+            // turn off the insert component mode
+            _this3.turnOffInsertComponentMode();
+
+            // uncheck the component check boxes
+            _this3.clearComponentsToChecked();
+
+            // show the component authoring
+            _this3.showComponentAuthoring();
+          }, 2000);
+        });
+      }
     }
 
     /**

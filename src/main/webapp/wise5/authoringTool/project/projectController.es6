@@ -44,8 +44,10 @@ class ProjectController {
     this.showCreateGroup = false;
     this.showCreateNode = false;
     this.projectTitle = this.ProjectService.getProjectTitle();
-    this.inactiveGroups = this.ProjectService.getInactiveGroups();
+    this.inactiveGroupNodes = this.ProjectService.getInactiveGroupNodes();
+    this.inactiveStepNodes = this.ProjectService.getInactiveStepNodes();
     this.inactiveNodes = this.ProjectService.getInactiveNodes();
+    this.idToNode = this.ProjectService.getIdToNode();
     this.projectScriptFilename = this.ProjectService.getProjectScriptFilename();
     this.currentAuthorsMessage = '';
     this.projectMode = true;
@@ -56,6 +58,12 @@ class ProjectController {
     this.editProjectRubricMode = false;
     this.advancedMode = false;
     this.showJSONAuthoring = false;
+
+    // whether there are any step nodes checked
+    this.stepNodeSelected = false;
+
+    // whether there are any activity nodes checked
+    this.activityNodeSelected = false;
 
     /*
      * The colors for the branch path steps. The colors are from
@@ -309,6 +317,7 @@ class ProjectController {
    * @param nodeId
    */
   nodeClicked(nodeId) {
+    this.unselectAllItems();
     this.TeacherDataService
         .endCurrentNodeAndSetCurrentNodeByNodeId(this.nodeId);
     this.$state
@@ -636,20 +645,15 @@ class ProjectController {
   copy() {
     // make sure there is at least one item selected
     let selectedNodeIds = this.getSelectedNodeIds();
-    if (selectedNodeIds != null && selectedNodeIds.length > 0) {
+    if (selectedNodeIds == null || selectedNodeIds.length == 0) {
+      alert(this.$translate('pleaseSelectAnItemToCopyAndThenClickTheCopyButtonAgain'));
+    } else {
       let selectedItemTypes = this.getSelectedItemTypes();
-      if (selectedItemTypes != null && selectedItemTypes.length > 0) {
-        if (selectedItemTypes.length === 0) {
-          // TODO: i18n
-          alert('Please select an item to copy.');
-        } else if (selectedItemTypes.length === 1 &&
-          selectedItemTypes[0] === 'node') {
-          this.insertNodeMode = true;
-          this.copyMode = true;
-        } else {
-          // TODO: i18n
-          alert('You cannot copy the item(s) at this time.');
-        }
+      if (selectedItemTypes.length === 1 && selectedItemTypes[0] === 'node') {
+        this.insertNodeMode = true;
+        this.copyMode = true;
+      } else if (selectedItemTypes.length === 1 && selectedItemTypes[0] === 'group') {
+        alert(this.$translate('youCannotCopyActivitiesAtThisTime'));
       }
     }
   }
@@ -661,33 +665,16 @@ class ProjectController {
   move() {
     // make sure there is at least one item selected
     let selectedNodeIds = this.getSelectedNodeIds();
-    if (selectedNodeIds != null && selectedNodeIds.length > 0) {
+    if (selectedNodeIds == null || selectedNodeIds.length == 0) {
+      alert(this.$translate('pleaseSelectAnItemToMoveAndThenClickTheMoveButtonAgain'));
+    } else {
       let selectedItemTypes = this.getSelectedItemTypes();
-      if (selectedItemTypes != null && selectedItemTypes.length > 0) {
-        if (selectedItemTypes.length == 0) {
-          // there are no selected items
-          alert('Please select an item to move.');
-        } else if (selectedItemTypes.length == 1) {
-          // all the items the user selected are the same type
-          // TODO: i18n
-          if (selectedItemTypes[0] === 'group') {
-            this.insertGroupMode = true;
-            this.moveMode = true;
-          } else if (selectedItemTypes[0] === 'node') {
-            this.insertNodeMode = true;
-            this.moveMode = true;
-          }
-        } else if (selectedItemTypes.length > 1) {
-          /*
-           * the items the user selected are different types but
-           * we do not allow moving different types of items at
-           * the same time
-           * TODO: i18n
-           */
-          alert('If you want to move multiple items at once, ' +
-              'they must be of the same type. Please select only activities ' +
-              'or only steps.');
-        }
+      if (selectedItemTypes.length === 1 && selectedItemTypes[0] === 'node') {
+        this.insertNodeMode = true;
+        this.moveMode = true;
+      } else if (selectedItemTypes.length === 1 && selectedItemTypes[0] === 'group') {
+        this.insertGroupMode = true;
+        this.moveMode = true;
       }
     }
   }
@@ -698,15 +685,15 @@ class ProjectController {
    */
   delete() {
     let selectedNodeIds = this.getSelectedNodeIds();
-    if (selectedNodeIds != null && selectedNodeIds.length !== 0) {
+    if (selectedNodeIds == null || selectedNodeIds.length == 0) {
+      alert(this.$translate('pleaseSelectAnItemToDeleteAndThenClickTheDeleteButtonAgain'));
+    } else {
       let confirmMessage = '';
       if (selectedNodeIds.length == 1) {
-        // TODO: i18n
-        confirmMessage = 'Are you sure you want to delete the selected item?';
+        confirmMessage = this.$translate('areYouSureYouWantToDeleteTheSelectedItem');
       } else if (selectedNodeIds.length > 1) {
-        // TODO: i18n
-        confirmMessage = 'Are you sure you want to delete the '
-            + selectedNodeIds.length + ' selected items?';
+        confirmMessage = this.$translate('areYouSureYouWantToDeleteTheXSelectedItems',
+            { numItems: selectedNodeIds.length });
       }
       if (confirm(confirmMessage)) {
         let deletedStartNodeId = false;
@@ -774,7 +761,6 @@ class ProjectController {
         this.refreshProject();
       }
     }
-    this.unselectAllItems();
   }
 
   /**
@@ -836,6 +822,14 @@ class ProjectController {
     angular.forEach(this.items, function(value, key) {
       value.checked = false;
     });
+    angular.forEach(this.inactiveGroupNodes, function(value, key) {
+      value.checked = false;
+    });
+    angular.forEach(this.inactiveStepNodes, function(value, key) {
+      value.checked = false;
+    });
+    this.stepNodeSelected = false;
+    this.activityNodeSelected = false;
   }
 
   /**
@@ -944,7 +938,6 @@ class ProjectController {
     return this.checkPotentialStartNodeIdChange().then(() => {
       this.ProjectService.saveProject();
       this.refreshProject();
-      this.unselectAllItems();
     });
   }
 
@@ -954,6 +947,10 @@ class ProjectController {
   refreshProject() {
     this.ProjectService.parseProject();
     this.items = this.ProjectService.idToOrder;
+    this.inactiveGroupNodes = this.ProjectService.getInactiveGroupNodes();
+    this.inactiveStepNodes = this.ProjectService.getInactiveStepNodes();
+    this.inactiveNodes = this.ProjectService.getInactiveNodes();
+    this.unselectAllItems();
   }
 
   /**
@@ -1452,6 +1449,90 @@ class ProjectController {
    */
   openProjectURLInNewTab() {
     window.open(this.projectURL, '_blank');
+  }
+
+  /**
+   * Get the number of inactive groups.
+   * @return The number of inactive groups.
+   */
+  getNumberOfInactiveGroups() {
+    let count = 0;
+    for (let n = 0; n < this.inactiveNodes.length; n++) {
+      let inactiveNode = this.inactiveNodes[n];
+      if (inactiveNode != null) {
+        if (inactiveNode.type == 'group') {
+          count++;
+        }
+      }
+    }
+    return count;
+  }
+
+  /**
+   * Get the number of inactive steps. This only counts the inactive steps that
+   * are not in an inactive group.
+   * @return The number of inactive steps (not including the inactive steps that
+   * are in an inactive group).
+   */
+  getNumberOfInactiveSteps() {
+    let count = 0;
+    for (let n = 0; n < this.inactiveNodes.length; n++) {
+      let inactiveNode = this.inactiveNodes[n];
+      if (inactiveNode != null) {
+        if (inactiveNode.type == 'node' &&
+              this.ProjectService.getParentGroup(inactiveNode.id) == null) {
+          count++;
+        }
+      }
+    }
+    return count;
+  }
+
+  /**
+   * Get the parent of a node.
+   * @param nodeId Get the parent of this node.
+   * @return The parent group node or null if the node does not have a parent.
+   */
+  getParentGroup(nodeId) {
+    return this.ProjectService.getParentGroup(nodeId);
+  }
+
+  /**
+   * The checkbox for a node was clicked. We will determine whether there are
+   * any activity nodes that are selected or whether there are any step nodes
+   * that are selected. We do this because we do not allow selecting a mix of
+   * activities and steps. If there are any activity nodes that are selected,
+   * we will disable all the step node check boxes. Alternatively, if there are
+   * any step nodes selected, we will disable all the activity node check boxes.
+   * @param nodeId The node id of the node that was clicked.
+   */
+  projectItemClicked(nodeId) {
+    this.stepNodeSelected = false;
+    this.activityNodeSelected = false;
+
+    // this will check the items that are used in the project
+    for (let nodeId in this.items) {
+      let node = this.items[nodeId];
+      if (node.checked) {
+        if (this.isGroupNode(nodeId)) {
+          this.activityNodeSelected = true;
+        } else {
+          this.stepNodeSelected = true;
+        }
+      }
+    }
+
+    // this will check the items that are unused in the project
+    for (let key in this.idToNode) {
+      let node = this.idToNode[key];
+      if (node.checked) {
+        if (this.isGroupNode(key)) {
+          this.activityNodeSelected = true;
+        } else {
+          this.stepNodeSelected = true;
+        }
+      }
+    }
   }
 }
 
