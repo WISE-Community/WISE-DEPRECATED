@@ -32,17 +32,17 @@ const WorkgroupInfo = {
     template:
         `<div layout="row" layout-align="start center">
             <div class="md-avatar" hide-xs>
-                <md-icon class="md-36" style="color: {{$ctrl.avatarColor}};"> account_circle </md-icon>
+                <md-icon class="md-36" style="color: {{ $ctrl.avatarColor }};"> account_circle </md-icon>
             </div>
             <div class="heavy">
-                {{$ctrl.usernames}}
+                {{ $ctrl.usernames }} <span class="md-caption text-secondary more">({{ 'teamId' | translate:{ id: $ctrl.workgroupId} }})</span>
                 <status-icon ng-if="$ctrl.hasAlert"
                              icon-label="$ctrl.alertLabel"
                              icon-tooltip="$ctrl.alertLabel"
                              icon-tooltip="$ctrl.alertMsg"
                              icon-name="$ctrl.alertIconName"
                              icon-class="$ctrl.alertIconClass"></status-icon>
-                <span ng-if="$ctrl.hasNewWork" class="badge badge--info animate-fade">New</span>
+                <span ng-if="$ctrl.hasNewWork" class="badge badge--info animate-fade">{{ 'NEW' | translate }}</span>
             </div>
         </div>`,
     controller: WorkgroupInfoController
