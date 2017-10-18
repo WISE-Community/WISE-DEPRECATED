@@ -1,172 +1,10 @@
 <div ng-controller='MatchController as matchController' flex>
     <div ng-if='matchController.mode === "authoring"'>
-        <div ng-if='!matchController.authoringComponentContent.showPreviousWork'>
-            <md-input-container style='width:100%'>
-                <label>{{ 'PROMPT' | translate }}</label>
-                <textarea rows='1'
-                          ng-model='matchController.authoringComponentContent.prompt'
-                          ng-change='matchController.authoringViewComponentChanged()'
-                          ng-model-options='{ debounce: 1000 }'
-                          placeholder='{{ "enterPromptHere" | translate }}'>
-            </textarea>
-            </md-input-container>
-            <div style='border: 2px solid #dddddd; border-radius: 5px; margin-bottom: 10px; padding: 20px 20px 10px 20px;'>
-                <md-input-container layout='row'
-                                    style='height: 50; margin-top: 0;'>
-                    <h6>{{ 'match.choices' | translate }}</h6>
-                    <md-button class='topButton md-raised md-primary'
-                               ng-click='matchController.authoringAddChoice()'>
-                        <md-icon>add</md-icon>
-                        <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'match.addChoice' | translate }}</md-tooltip>
-                    </md-button>
-                </md-input-container>
-                <div ng-repeat='choice in matchController.authoringComponentContent.choices track by $index'
-                     style='height: 80'
-                     layout='row'>
-                    <md-input-container>
-                        <label>{{ 'match.choiceName' | translate }}</label>
-                        <input ng-model='choice.value'
-                               ng-model-options='{ debounce: 1000 }'
-                               ng-change='matchController.authoringViewComponentChanged()'
-                               size='80'
-                               placeholder='{{ "TYPE_TEXT_OR_CHOOSE_AN_IMAGE" | translate }}'/>
-                    </md-input-container>
-                    <md-button class='moveComponentButton md-raised md-primary'
-                               ng-click='matchController.chooseChoiceAsset(choice)'>
-                        <md-icon>insert_photo</md-icon>
-                        <md-tooltip md-direction='top' class='projectButtonTooltip'>
-                            {{ 'chooseAnImage' | translate }}
-                        </md-tooltip>
-                    </md-button>
-                    <md-button class='moveComponentButton md-raised md-primary'
-                               ng-click='matchController.authoringMoveChoiceUp($index)'>
-                        <md-icon>arrow_upward</md-icon>
-                        <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'UP' | translate }}</md-tooltip>
-                    </md-button>
-                    <md-button class='moveComponentButton md-raised md-primary'
-                               ng-click='matchController.authoringMoveChoiceDown($index)'>
-                        <md-icon>arrow_downward</md-icon>
-                        <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'DOWN' | translate }}</md-tooltip>
-                    </md-button>
-                    <md-button class='moveComponentButton md-raised md-primary'
-                               ng-click='matchController.authoringDeleteChoice($index)'>
-                        <md-icon>delete</md-icon>
-                        <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'match.deleteChoice' | translate }}</md-tooltip>
-                    </md-button>
-                </div>
+        <div class='advancedAuthoringDiv'
+             ng-if='matchController.showAdvancedAuthoring'>
+            <div>
+                <h6>{{ 'advancedAuthoringOptions' | translate }}</h6>
             </div>
-            <div style='border: 2px solid #dddddd; border-radius: 5px; margin-bottom: 10px; padding: 20px 20px 10px 20px;'>
-                <md-input-container layout='row'
-                                    style='height: 50; margin-top: 0;'>
-                    <h6>{{ 'match.buckets' | translate }}</h6>
-                    <md-button class='topButton md-raised md-primary'
-                               ng-click='matchController.authoringAddBucket()'>
-                        <md-icon>add</md-icon>
-                        <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'match.addBucket' | translate }}</md-tooltip>
-                    </md-button>
-                </md-input-container>
-                <md-input-container>
-                    <label>{{ 'match.originBucketName' | translate }}</label>
-                    <input ng-model='matchController.authoringComponentContent.choicesLabel'
-                           ng-change='matchController.authoringViewComponentChanged()'
-                           ng-model-options='{ debounce: 1000 }'
-                           size='80'/>
-                </md-input-container>
-                <div ng-repeat='bucket in matchController.authoringComponentContent.buckets track by $index'
-                     style='height: 80'
-                     layout='row'>
-                    <md-input-container>
-                        <label>{{ 'match.bucketName' | translate }}</label>
-                        <input ng-model='bucket.value'
-                               ng-model-options='{ debounce: 1000 }'
-                               ng-change='matchController.authoringViewComponentChanged()'
-                               size='80'
-                               placeholder='{{ "TYPE_TEXT_OR_CHOOSE_AN_IMAGE" | translate }}'/>
-                    </md-input-container>
-                    <md-button class='moveComponentButton md-raised md-primary'
-                               ng-click='matchController.chooseBucketAsset(choice)'>
-                        <md-icon>insert_photo</md-icon>
-                        <md-tooltip md-direction='top' class='projectButtonTooltip'>
-                            {{ 'chooseAnImage' | translate }}
-                        </md-tooltip>
-                    </md-button>
-                    <md-button class='moveComponentButton md-raised md-primary'
-                               ng-click='matchController.authoringMoveBucketUp($index)'>
-                        <md-icon>arrow_upward</md-icon>
-                        <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'UP' | translate }}</md-tooltip>
-                    </md-button>
-                    <md-button class='moveComponentButton md-raised md-primary'
-                               ng-click='matchController.authoringMoveBucketDown($index)'>
-                        <md-icon>arrow_downward</md-icon>
-                        <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'DOWN' | translate }}</md-tooltip>
-                    </md-button>
-                    <md-button class='moveComponentButton md-raised md-primary'
-                               ng-click='matchController.authoringDeleteBucket($index)'>
-                        <md-icon>delete</md-icon>
-                        <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'match.deleteBucket' | translate }}</md-tooltip>
-                    </md-button>
-                </div>
-            </div>
-            <div style='border: 2px solid #dddddd; border-radius: 5px; margin-bottom: 10px; padding: 20px 20px 10px 20px;'>
-                <h6>{{ 'FEEDBACK' | translate }}</h6>
-                <md-checkbox ng-model='matchController.authoringComponentContent.ordered'
-                             ng-change='matchController.authoringViewComponentChanged()'>
-                    {{ 'match.choicesNeedToBeOrderedWithinBuckets' | translate }}
-                </md-checkbox>
-                <div ng-repeat='bucketFeedback in matchController.authoringComponentContent.feedback'
-                     style='border: 1px solid #dddddd; border-radius: 5px; margin-bottom: 10px; padding: 20px 20px 10px 20px;'>
-                    <p style='margin-left: 10; margin-bottom: 10;'>{{matchController.getBucketValueById(bucketFeedback.bucketId)}}</p>
-                    <div ng-repeat='choiceFeedback in bucketFeedback.choices'
-                         style='border: 1px solid #dddddd; border-radius: 10px; margin-bottom: 10px; padding: 15px 20px 0px 20px;'>
-                        <md-input-container style='margin-right: 20; margin-top: 0; margin-bottom: 10;'>
-                            <span>{{matchController.getChoiceValueById(choiceFeedback.choiceId)}}</span>
-                        </md-input-container>
-                        <div layout='row'>
-                            <md-input-container style='height: 30; margin-right: 20;'>
-                                <label>{{ 'FEEDBACK' | translate }}</label>
-                                <input ng-model='choiceFeedback.feedback'
-                                       ng-model-options='{ debounce: 1000 }'
-                                       ng-change='matchController.authoringViewFeedbackChanged()'
-                                       size='100'/>
-                            </md-input-container>
-                            <md-input-container style='width:110; height: 30;' layout='row'>
-                                <md-checkbox ng-model='choiceFeedback.isCorrect'
-                                             ng-change='matchController.authoringViewFeedbackChanged()' layout='row'>
-                                    {{ 'IS_CORRECT' | translate }}
-                                </md-checkbox>
-                            </md-input-container>
-                        </div>
-                        <div layout='row'
-                             ng-if='matchController.authoringComponentContent.ordered && choiceFeedback.isCorrect'>
-                            <md-input-container style='height: 30; margin-right: 20;'>
-                                <label>{{ 'match.position' | translate }}</label>
-                                <input type='number'
-                                       ng-model='choiceFeedback.position'
-                                       ng-model-options='{ debounce: 1000 }'
-                                       ng-change='matchController.authoringViewComponentChanged()'
-                                       style='width: 4em'/>
-                            </md-input-container>
-                            <md-input-container style='height: 30;'>
-                                <label>{{ 'match.incorrectPositionFeedback' | translate }}</label>
-                                <input ng-model='choiceFeedback.incorrectPositionFeedback'
-                                       ng-model-options='{ debounce: 1000 }'
-                                       ng-change='matchController.authoringViewComponentChanged()'
-                                       size='60'/>
-                            </md-input-container>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div>
-            <md-input-container style='margin-right: 20px; width: 150px; height: 50px;'>
-                <md-button class='topButton md-raised md-primary' ng-click='matchController.showAdvancedAuthoring = !matchController.showAdvancedAuthoring'>
-                    <md-icon>build</md-icon>
-                    <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ "ADVANCED" | translate }}</md-tooltip>
-                </md-button>
-            </md-input-container>
-        </div>
-        <div ng-if='matchController.showAdvancedAuthoring'>
             <div>
                 <md-checkbox class='md-primary'
                              ng-model='matchController.authoringComponentContent.showSaveButton'
@@ -341,10 +179,168 @@
             </div>
         </div>
         <br/>
+        <div ng-if='!matchController.authoringComponentContent.showPreviousWork'>
+            <md-input-container style='width:100%'>
+                <label>{{ 'PROMPT' | translate }}</label>
+                <textarea rows='1'
+                          ng-model='matchController.authoringComponentContent.prompt'
+                          ng-change='matchController.authoringViewComponentChanged()'
+                          ng-model-options='{ debounce: 1000 }'
+                          placeholder='{{ "enterPromptHere" | translate }}'>
+            </textarea>
+            </md-input-container>
+            <div style='border: 2px solid #dddddd; border-radius: 5px; margin-bottom: 10px; padding: 20px 20px 10px 20px;'>
+                <md-input-container layout='row'
+                                    style='height: 50; margin-top: 0;'>
+                    <h6>{{ 'match.choices' | translate }}</h6>
+                    <md-button class='topButton md-raised md-primary'
+                               ng-click='matchController.authoringAddChoice()'>
+                        <md-icon>add</md-icon>
+                        <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'match.addChoice' | translate }}</md-tooltip>
+                    </md-button>
+                </md-input-container>
+                <div ng-repeat='choice in matchController.authoringComponentContent.choices track by $index'
+                     style='height: 80'
+                     layout='row'>
+                    <md-input-container>
+                        <label>{{ 'match.choiceName' | translate }}</label>
+                        <input ng-model='choice.value'
+                               ng-model-options='{ debounce: 1000 }'
+                               ng-change='matchController.authoringViewComponentChanged()'
+                               size='80'
+                               placeholder='{{ "TYPE_TEXT_OR_CHOOSE_AN_IMAGE" | translate }}'/>
+                    </md-input-container>
+                    <md-button class='moveComponentButton md-raised md-primary'
+                               ng-click='matchController.chooseChoiceAsset(choice)'>
+                        <md-icon>insert_photo</md-icon>
+                        <md-tooltip md-direction='top' class='projectButtonTooltip'>
+                            {{ 'chooseAnImage' | translate }}
+                        </md-tooltip>
+                    </md-button>
+                    <md-button class='moveComponentButton md-raised md-primary'
+                               ng-click='matchController.authoringMoveChoiceUp($index)'>
+                        <md-icon>arrow_upward</md-icon>
+                        <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'UP' | translate }}</md-tooltip>
+                    </md-button>
+                    <md-button class='moveComponentButton md-raised md-primary'
+                               ng-click='matchController.authoringMoveChoiceDown($index)'>
+                        <md-icon>arrow_downward</md-icon>
+                        <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'DOWN' | translate }}</md-tooltip>
+                    </md-button>
+                    <md-button class='moveComponentButton md-raised md-primary'
+                               ng-click='matchController.authoringDeleteChoice($index)'>
+                        <md-icon>delete</md-icon>
+                        <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'match.deleteChoice' | translate }}</md-tooltip>
+                    </md-button>
+                </div>
+            </div>
+            <div style='border: 2px solid #dddddd; border-radius: 5px; margin-bottom: 10px; padding: 20px 20px 10px 20px;'>
+                <md-input-container layout='row'
+                                    style='height: 50; margin-top: 0;'>
+                    <h6>{{ 'match.buckets' | translate }}</h6>
+                    <md-button class='topButton md-raised md-primary'
+                               ng-click='matchController.authoringAddBucket()'>
+                        <md-icon>add</md-icon>
+                        <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'match.addBucket' | translate }}</md-tooltip>
+                    </md-button>
+                </md-input-container>
+                <md-input-container>
+                    <label>{{ 'match.originBucketName' | translate }}</label>
+                    <input ng-model='matchController.authoringComponentContent.choicesLabel'
+                           ng-change='matchController.authoringViewComponentChanged()'
+                           ng-model-options='{ debounce: 1000 }'
+                           size='80'/>
+                </md-input-container>
+                <div ng-repeat='bucket in matchController.authoringComponentContent.buckets track by $index'
+                     style='height: 80'
+                     layout='row'>
+                    <md-input-container>
+                        <label>{{ 'match.bucketName' | translate }}</label>
+                        <input ng-model='bucket.value'
+                               ng-model-options='{ debounce: 1000 }'
+                               ng-change='matchController.authoringViewComponentChanged()'
+                               size='80'
+                               placeholder='{{ "TYPE_TEXT_OR_CHOOSE_AN_IMAGE" | translate }}'/>
+                    </md-input-container>
+                    <md-button class='moveComponentButton md-raised md-primary'
+                               ng-click='matchController.chooseBucketAsset(choice)'>
+                        <md-icon>insert_photo</md-icon>
+                        <md-tooltip md-direction='top' class='projectButtonTooltip'>
+                            {{ 'chooseAnImage' | translate }}
+                        </md-tooltip>
+                    </md-button>
+                    <md-button class='moveComponentButton md-raised md-primary'
+                               ng-click='matchController.authoringMoveBucketUp($index)'>
+                        <md-icon>arrow_upward</md-icon>
+                        <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'UP' | translate }}</md-tooltip>
+                    </md-button>
+                    <md-button class='moveComponentButton md-raised md-primary'
+                               ng-click='matchController.authoringMoveBucketDown($index)'>
+                        <md-icon>arrow_downward</md-icon>
+                        <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'DOWN' | translate }}</md-tooltip>
+                    </md-button>
+                    <md-button class='moveComponentButton md-raised md-primary'
+                               ng-click='matchController.authoringDeleteBucket($index)'>
+                        <md-icon>delete</md-icon>
+                        <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'match.deleteBucket' | translate }}</md-tooltip>
+                    </md-button>
+                </div>
+            </div>
+            <div style='border: 2px solid #dddddd; border-radius: 5px; margin-bottom: 10px; padding: 20px 20px 10px 20px;'>
+                <h6>{{ 'FEEDBACK' | translate }}</h6>
+                <md-checkbox ng-model='matchController.authoringComponentContent.ordered'
+                             ng-change='matchController.authoringViewComponentChanged()'>
+                    {{ 'match.choicesNeedToBeOrderedWithinBuckets' | translate }}
+                </md-checkbox>
+                <div ng-repeat='bucketFeedback in matchController.authoringComponentContent.feedback'
+                     style='border: 1px solid #dddddd; border-radius: 5px; margin-bottom: 10px; padding: 20px 20px 10px 20px;'>
+                    <p style='margin-left: 10; margin-bottom: 10;'>{{matchController.getBucketValueById(bucketFeedback.bucketId)}}</p>
+                    <div ng-repeat='choiceFeedback in bucketFeedback.choices'
+                         style='border: 1px solid #dddddd; border-radius: 10px; margin-bottom: 10px; padding: 15px 20px 0px 20px;'>
+                        <md-input-container style='margin-right: 20; margin-top: 0; margin-bottom: 10;'>
+                            <span>{{matchController.getChoiceValueById(choiceFeedback.choiceId)}}</span>
+                        </md-input-container>
+                        <div layout='row'>
+                            <md-input-container style='height: 30; margin-right: 20;'>
+                                <label>{{ 'FEEDBACK' | translate }}</label>
+                                <input ng-model='choiceFeedback.feedback'
+                                       ng-model-options='{ debounce: 1000 }'
+                                       ng-change='matchController.authoringViewFeedbackChanged()'
+                                       size='100'/>
+                            </md-input-container>
+                            <md-input-container style='width:110; height: 30;' layout='row'>
+                                <md-checkbox ng-model='choiceFeedback.isCorrect'
+                                             ng-change='matchController.authoringViewFeedbackChanged()' layout='row'>
+                                    {{ 'IS_CORRECT' | translate }}
+                                </md-checkbox>
+                            </md-input-container>
+                        </div>
+                        <div layout='row'
+                             ng-if='matchController.authoringComponentContent.ordered && choiceFeedback.isCorrect'>
+                            <md-input-container style='height: 30; margin-right: 20;'>
+                                <label>{{ 'match.position' | translate }}</label>
+                                <input type='number'
+                                       ng-model='choiceFeedback.position'
+                                       ng-model-options='{ debounce: 1000 }'
+                                       ng-change='matchController.authoringViewComponentChanged()'
+                                       style='width: 4em'/>
+                            </md-input-container>
+                            <md-input-container style='height: 30;'>
+                                <label>{{ 'match.incorrectPositionFeedback' | translate }}</label>
+                                <input ng-model='choiceFeedback.incorrectPositionFeedback'
+                                       ng-model-options='{ debounce: 1000 }'
+                                       ng-change='matchController.authoringViewComponentChanged()'
+                                       size='60'/>
+                            </md-input-container>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <div ng-style='matchController.mode === "authoring" && {"border": "1px solid black", "padding": "20px"}'>
+    <div ng-style='matchController.mode === "authoring" && {"border": "5px solid black", "padding": "20px"}'>
         <div ng-if='matchController.mode === "authoring"'>
-            <h5>{{ 'PREVIEW' | translate }}</h5>
+            <h5>{{ 'studentPreview' | translate }}</h5>
         </div>
 
         <div ng-switch="matchController.mode">

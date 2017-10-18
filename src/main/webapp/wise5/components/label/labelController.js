@@ -658,6 +658,19 @@ var LabelController = function () {
             // close the popup
             _this.$mdDialog.hide();
         });
+
+        /*
+         * The advanced button for a component was clicked. If the button was
+         * for this component, we will show the advanced authoring.
+         */
+        this.$scope.$on('componentAdvancedButtonClicked', function (event, args) {
+            if (args != null) {
+                var componentId = args.componentId;
+                if (_this.componentId === componentId) {
+                    _this.showAdvancedAuthoring = !_this.showAdvancedAuthoring;
+                }
+            }
+        });
     }
 
     _createClass(LabelController, [{

@@ -9,94 +9,11 @@
         }
     </style>
     <div ng-if='audioOscillatorController.mode === "authoring"'>
-        <div ng-if='!audioOscillatorController.authoringComponentContent.showPreviousWork'>
-            <md-input-container style='width:100%'>
-                <label>{{ 'PROMPT' | translate }}</label>
-                <textarea rows='1'
-                          ng-model='audioOscillatorController.authoringComponentContent.prompt'
-                          ng-change='audioOscillatorController.authoringViewComponentChanged()'
-                          ng-model-options='{ debounce: 1000 }'
-                          placeholder='{{ "enterPromptHere" | translate }}'>
-            </textarea>
-            </md-input-container>
-            <span>{{ 'audioOscillator.oscillatorTypes' | translate }}</span>
-            <span ng-if='audioOscillatorController.authoringComponentContent.oscillatorTypes == null || audioOscillatorController.authoringComponentContent.oscillatorTypes.length == 0' style='color: red;'>
-            ({{ 'audioOscillator.thereAreNoOscillatorTypesSelected' | translate }})</span>
-            <br/>
-            <md-checkbox class='md-primary'
-                         ng-model='audioOscillatorController.authoringSineChecked'
-                         ng-change='audioOscillatorController.authoringViewOscillatorTypeClicked()'>
-                {{ 'audioOscillator.sine' | translate }}
-            </md-checkbox>
-            <br/>
-            <md-checkbox class='md-primary'
-                         ng-model='audioOscillatorController.authoringSquareChecked'
-                         ng-change='audioOscillatorController.authoringViewOscillatorTypeClicked()'>
-                {{ 'audioOscillator.square' | translate }}
-            </md-checkbox>
-            <br/>
-            <md-checkbox class='md-primary'
-                         ng-model='audioOscillatorController.authoringTriangleChecked'
-                         ng-change='audioOscillatorController.authoringViewOscillatorTypeClicked()'>
-                {{ 'audioOscillator.triangle' | translate }}
-            </md-checkbox>
-            <br/>
-            <md-checkbox class='md-primary'
-                         ng-model='audioOscillatorController.authoringSawtoothChecked'
-                         ng-change='audioOscillatorController.authoringViewOscillatorTypeClicked()'>
-                {{ 'audioOscillator.sawtooth' | translate }}
-            </md-checkbox>
-            <br/>
-            <md-input-container>
-                <label>{{ 'audioOscillator.startingFrequency' | translate }}</label>
-                <input type='number'
-                       style='width: 150'
-                       ng-model='audioOscillatorController.authoringComponentContent.startingFrequency'
-                       ng-model-options='{ debounce: 1000 }'
-                       ng-change='labelController.authoringViewComponentChanged()'/>
-            </md-input-container>
-            <br/>
-            <md-input-container>
-                <label>{{ 'audioOscillator.oscillatorWidth' | translate }}</label>
-                <input type='number'
-                       style='width: 150'
-                       ng-model='audioOscillatorController.authoringComponentContent.oscilloscopeWidth'
-                       ng-model-options='{ debounce: 1000 }'
-                       ng-change='labelController.authoringViewComponentChanged()'/>
-            </md-input-container>
-            <md-input-container>
-                <label>{{ 'audioOscillator.oscillatorHeight' | translate }}</label>
-                <input type='number'
-                       style='width: 150'
-                       ng-model='audioOscillatorController.authoringComponentContent.oscilloscopeHeight'
-                       ng-model-options='{ debounce: 1000 }'
-                       ng-change='labelController.authoringViewComponentChanged()'/>
-            </md-input-container>
-            <md-input-container>
-                <label>{{ 'audioOscillator.oscillatorGridSize' | translate }}</label>
-                <input type='number'
-                       style='width: 150'
-                       ng-model='audioOscillatorController.authoringComponentContent.gridCellSize'
-                       ng-model-options='{ debounce: 1000 }'
-                       ng-change='labelController.authoringViewComponentChanged()'/>
-            </md-input-container>
-            <br/>
-            <md-checkbox class='md-primary'
-                         ng-model='audioOscillatorController.authoringComponentContent.stopAfterGoodDraw'
-                         ng-change='audioOscillatorController.authoringViewComponentChanged()'>
-                {{ 'audioOscillator.oscilloscopeStopAfterGoodDraw' | translate }}
-            </md-checkbox>
-        </div>
-        <div>
-            <md-input-container style='margin-right: 20px; width: 150px; height: 50px;'>
-                <md-button class='topButton md-raised md-primary'
-                           ng-click='audioOscillatorController.showAdvancedAuthoring = !audioOscillatorController.showAdvancedAuthoring'>
-                    <md-icon>build</md-icon>
-                    <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ "ADVANCED" | translate }}</md-tooltip>
-                </md-button>
-            </md-input-container>
-        </div>
-        <div ng-if='audioOscillatorController.showAdvancedAuthoring'>
+        <div class='advancedAuthoringDiv'
+             ng-if='audioOscillatorController.showAdvancedAuthoring'>
+            <div>
+                <h6>{{ 'advancedAuthoringOptions' | translate }}</h6>
+            </div>
             <div>
                 <md-checkbox class='md-primary'
                              ng-model='audioOscillatorController.authoringComponentContent.showSaveButton'
@@ -271,10 +188,88 @@
             </div>
         </div>
         <br/>
+        <div ng-if='!audioOscillatorController.authoringComponentContent.showPreviousWork'>
+            <md-input-container style='width:100%'>
+                <label>{{ 'PROMPT' | translate }}</label>
+                <textarea rows='1'
+                          ng-model='audioOscillatorController.authoringComponentContent.prompt'
+                          ng-change='audioOscillatorController.authoringViewComponentChanged()'
+                          ng-model-options='{ debounce: 1000 }'
+                          placeholder='{{ "enterPromptHere" | translate }}'>
+            </textarea>
+            </md-input-container>
+            <span>{{ 'audioOscillator.oscillatorTypes' | translate }}</span>
+            <span ng-if='audioOscillatorController.authoringComponentContent.oscillatorTypes == null || audioOscillatorController.authoringComponentContent.oscillatorTypes.length == 0' style='color: red;'>
+            ({{ 'audioOscillator.thereAreNoOscillatorTypesSelected' | translate }})</span>
+            <br/>
+            <md-checkbox class='md-primary'
+                         ng-model='audioOscillatorController.authoringSineChecked'
+                         ng-change='audioOscillatorController.authoringViewOscillatorTypeClicked()'>
+                {{ 'audioOscillator.sine' | translate }}
+            </md-checkbox>
+            <br/>
+            <md-checkbox class='md-primary'
+                         ng-model='audioOscillatorController.authoringSquareChecked'
+                         ng-change='audioOscillatorController.authoringViewOscillatorTypeClicked()'>
+                {{ 'audioOscillator.square' | translate }}
+            </md-checkbox>
+            <br/>
+            <md-checkbox class='md-primary'
+                         ng-model='audioOscillatorController.authoringTriangleChecked'
+                         ng-change='audioOscillatorController.authoringViewOscillatorTypeClicked()'>
+                {{ 'audioOscillator.triangle' | translate }}
+            </md-checkbox>
+            <br/>
+            <md-checkbox class='md-primary'
+                         ng-model='audioOscillatorController.authoringSawtoothChecked'
+                         ng-change='audioOscillatorController.authoringViewOscillatorTypeClicked()'>
+                {{ 'audioOscillator.sawtooth' | translate }}
+            </md-checkbox>
+            <br/>
+            <md-input-container>
+                <label>{{ 'audioOscillator.startingFrequency' | translate }}</label>
+                <input type='number'
+                       style='width: 150'
+                       ng-model='audioOscillatorController.authoringComponentContent.startingFrequency'
+                       ng-model-options='{ debounce: 1000 }'
+                       ng-change='labelController.authoringViewComponentChanged()'/>
+            </md-input-container>
+            <br/>
+            <md-input-container>
+                <label>{{ 'audioOscillator.oscillatorWidth' | translate }}</label>
+                <input type='number'
+                       style='width: 150'
+                       ng-model='audioOscillatorController.authoringComponentContent.oscilloscopeWidth'
+                       ng-model-options='{ debounce: 1000 }'
+                       ng-change='labelController.authoringViewComponentChanged()'/>
+            </md-input-container>
+            <md-input-container>
+                <label>{{ 'audioOscillator.oscillatorHeight' | translate }}</label>
+                <input type='number'
+                       style='width: 150'
+                       ng-model='audioOscillatorController.authoringComponentContent.oscilloscopeHeight'
+                       ng-model-options='{ debounce: 1000 }'
+                       ng-change='labelController.authoringViewComponentChanged()'/>
+            </md-input-container>
+            <md-input-container>
+                <label>{{ 'audioOscillator.oscillatorGridSize' | translate }}</label>
+                <input type='number'
+                       style='width: 150'
+                       ng-model='audioOscillatorController.authoringComponentContent.gridCellSize'
+                       ng-model-options='{ debounce: 1000 }'
+                       ng-change='labelController.authoringViewComponentChanged()'/>
+            </md-input-container>
+            <br/>
+            <md-checkbox class='md-primary'
+                         ng-model='audioOscillatorController.authoringComponentContent.stopAfterGoodDraw'
+                         ng-change='audioOscillatorController.authoringViewComponentChanged()'>
+                {{ 'audioOscillator.oscilloscopeStopAfterGoodDraw' | translate }}
+            </md-checkbox>
+        </div>
     </div>
-    <div ng-style='audioOscillatorController.mode === "authoring" && {"border": "1px solid black", "padding": "20px"}'>
+    <div ng-style='audioOscillatorController.mode === "authoring" && {"border": "5px solid black", "padding": "20px"}'>
         <div ng-if='audioOscillatorController.mode === "authoring"'>
-            <h5>{{ 'PREVIEW' | translate }}</h5>
+            <h5>{{ 'studentPreview' | translate }}</h5>
         </div>
         <div ng-switch="audioOscillatorController.mode">
             <div ng-switch-when="grading|gradingRevision" ng-switch-when-separator="|" layout="row" layout-wrap>
