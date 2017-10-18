@@ -879,7 +879,7 @@
         <span style='font-weight:bold; margin-right:10px'>{{componentIndex + 1}}. {{nodeAuthoringController.getComponentTypeLabel(component.type)}}</span>
       </md-checkbox>
     </div>
-    <div ng-show='!nodeAuthoringController.insertComponentMode'>
+    <div ng-show='!nodeAuthoringController.insertComponentMode && nodeAuthoringController.showComponentAuthoringViews'>
       <md-input-container style='margin-top: 0; margin-right: 20px; width: 150px;'>
         <md-button class='topButton md-raised md-primary' ng-click='nodeAuthoringController.componentAdvancedButtonClicked(component.id)'>
           <md-icon>build</md-icon>
