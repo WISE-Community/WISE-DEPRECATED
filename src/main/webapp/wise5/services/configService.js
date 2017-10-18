@@ -704,7 +704,7 @@ var ConfigService = function () {
             var usernames = '';
 
             if (workgroupId != null) {
-                if (this.config.canViewStudentNames) {
+                if (this.getPermissions().canViewStudentNames) {
                     var names = this.getUserNamesByWorkgroupId(workgroupId);
                     var l = names.length;
                     for (var i = 0; i < l; i++) {
@@ -716,9 +716,7 @@ var ConfigService = function () {
                         }
                     }
                 } else {
-                    // current user is not allowed to view student names, so return string with workgroupId and student ids
-                    usernames = this.$translate('teamId', { id: workgroupId }) + ' (';
-
+                    // current user is not allowed to view student names, so return string with student ids
                     var userIds = this.getUserIdsByWorkgroupId(workgroupId);
                     for (var _i = 0; _i < userIds.length; _i++) {
                         var id = userIds[_i];
@@ -727,7 +725,6 @@ var ConfigService = function () {
                         }
                         usernames += this.$translate('studentId', { id: id });
                     }
-                    usernames += ')';
                 }
             }
 
