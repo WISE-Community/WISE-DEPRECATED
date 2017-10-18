@@ -30,6 +30,8 @@ $input-action-vertical-offset-richtext: -7px;
     }
 }
 
+// TODO: use BEM conventions
+
 .node-content {
     padding: 0 0 48px;
     background-color: #ffffff;
@@ -210,7 +212,8 @@ $input-action-vertical-offset-richtext: -7px;
     }
 }
 
-// TODO: move to own sass module file (.node--info)
+// TODO: move to own sass module file (only gets used by teacher)
+// TODO: use BEM (.node--info)
 .node-info {
     margin: 0;
 
@@ -226,11 +229,11 @@ $input-action-vertical-offset-richtext: -7px;
 
     .component {
         &:first-child {
-            margin-top: 12px;
+            margin-top: -16px;
         }
     }
 
-    .component, .component__content {
+    .component, .component__content, .component__header {
         margin-left: -8px;
         margin-right: -8px;
     }
