@@ -447,16 +447,16 @@ class StudentGradingController {
                 orderBy = ['-isVisible', '-order'];
                 break;
             case 'status':
-                orderBy = ['-isVisible', 'completionStatus', 'order'];
+                orderBy = ['-isVisible', 'completionStatus', '-hasNewAlert', 'order'];
                 break;
             case '-status':
-                orderBy = ['-isVisible', '-completionStatus', 'order'];
+                orderBy = ['-isVisible', '-completionStatus', '-hasNewAlert', 'order'];
                 break;
             case 'score':
-                orderBy = ['-isVisible', '-hasScore', 'scorePct', 'score', '-hasMaxScore', '-maxScore', 'order'];
+                orderBy = ['-isVisible', '-hasScore', '-hasMaxScore', 'scorePct', '-maxScore', 'score', 'order'];
                 break;
             case '-score':
-                orderBy = ['-isVisible', '-hasScore', '-scorePct', 'score', '-hasMaxScore', '-maxScore', 'order'];
+                orderBy = ['-isVisible', '-hasScore', '-hasMaxScore', '-scorePct', '-maxScore', 'score', 'order'];
                 break;
         }
 

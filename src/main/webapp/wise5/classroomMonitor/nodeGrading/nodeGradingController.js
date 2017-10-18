@@ -9,7 +9,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var NodeGradingController = function () {
-    function NodeGradingController($filter, $mdDialog, $scope, $stateParams, AnnotationService, ConfigService, NotificationService, ProjectService, StudentStatusService, TeacherDataService) {
+    function NodeGradingController($filter, $mdDialog, $scope, $stateParams, AnnotationService, ConfigService, NodeService, NotificationService, ProjectService, StudentStatusService, TeacherDataService) {
         var _this = this;
 
         _classCallCheck(this, NodeGradingController);
@@ -20,7 +20,7 @@ var NodeGradingController = function () {
         this.$stateParams = $stateParams;
         this.AnnotationService = AnnotationService;
         this.ConfigService = ConfigService;
-        this.NotificationService = NotificationService;
+        this.NodeService = NodeService, this.NotificationService = NotificationService;
         this.ProjectService = ProjectService;
         this.StudentStatusService = StudentStatusService;
         this.TeacherDataService = TeacherDataService;
@@ -172,11 +172,6 @@ var NodeGradingController = function () {
                 workgroup.isVisible = completionStatus.isVisible ? 1 : 0;
                 workgroup.completionStatus = this.getWorkgroupCompletionStatus(completionStatus);
                 workgroup.score = this.getNodeScoreByWorkgroupId(workgroupId);
-
-                if (!this.canViewStudentNames) {
-                    // TODO: i18n
-                    workgroup.displayNames = 'Student ' + workgroupId;
-                }
 
                 if (!init) {
                     this.workgroupsById[workgroupId] = angular.copy(workgroup);
@@ -452,62 +447,7 @@ var NodeGradingController = function () {
     }, {
         key: 'showRubric',
         value: function showRubric($event) {
-
-            // get the step number and title
-            var stepNumberAndTitle = this.ProjectService.getNodePositionAndTitleByNodeId(this.nodeId);
-            var rubricTitle = this.$translate('STEP_INFO');
-
-            /*
-             * create the dialog header, actions, and content elements
-             */
-            var dialogHeader = '<md-toolbar>\n                <div class="md-toolbar-tools">\n                    <h2>' + stepNumberAndTitle + '</h2>\n                </div>\n            </md-toolbar>';
-
-            var dialogActions = '<md-dialog-actions layout="row" layout-align="end center">\n                <md-button class="md-primary" ng-click="openInNewWindow()" aria-label="{{ \'openInNewWindow\' | translate }}">{{ \'openInNewWindow\' | translate }}</md-button>\n                <md-button class="md-primary" ng-click="close()" aria-label="{{ \'close\' | translate }}">{{ \'close\' | translate }}</md-button>\n            </md-dialog-actions>';
-
-            var dialogContent = '<md-dialog-content class="gray-lighter-bg">\n                <div class="md-dialog-content" id="nodeInfo_' + this.nodeId + '">\n                    <node-info node-id="' + this.nodeId + '"></node-info>\n                </div>\n            </md-dialog-content>';
-
-            // create the dialog string
-            var dialogString = '<md-dialog class="dialog--wider" aria-label="' + stepNumberAndTitle + ' - ' + rubricTitle + '">' + dialogHeader + dialogContent + dialogActions + '</md-dialog>';
-            var nodeId = this.nodeId;
-
-            // display the rubric in a popup
-            this.$mdDialog.show({
-                template: dialogString,
-                fullscreen: true,
-                controller: ['$scope', '$mdDialog', function DialogController($scope, $mdDialog) {
-
-                    // display the rubric in a new tab
-                    $scope.openInNewWindow = function () {
-
-                        // open a new tab
-                        var w = window.open('', '_blank');
-
-                        /*
-                         * create the header for the new window that contains the project title
-                         */
-                        var windowHeader = '<md-toolbar class="layout-row">\n                                <div class="md-toolbar-tools primary-bg" style="color: #ffffff;">\n                                    <h2>' + stepNumberAndTitle + '</h2>\n                                </div>\n                            </md-toolbar>';
-
-                        var rubricContent = document.getElementById('nodeInfo_' + nodeId).innerHTML;
-
-                        // create the window string
-                        var windowString = '<link rel=\'stylesheet\' href=\'../wise5/lib/bootstrap/css/bootstrap.min.css\' />\n                            <link rel=\'stylesheet\' href=\'../wise5/themes/default/style/monitor.css\'>\n                            <link rel=\'stylesheet\' href=\'../wise5/themes/default/style/angular-material.css\'>\n                            <link rel=\'stylesheet\' href=\'../wise5/lib/summernote/dist/summernote.css\' />\n                            <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic%7CMaterial+Icons" media="all">\n                            <body class="layout-column">\n                                <div class="layout-column">' + windowHeader + '<md-content class="md-padding">' + rubricContent + '</div></md-content></div>\n                            </body>';
-
-                        // write the rubric content to the new tab
-                        w.document.write(windowString);
-
-                        // close the popup
-                        $mdDialog.hide();
-                    };
-
-                    // close the popup
-                    $scope.close = function () {
-                        $mdDialog.hide();
-                    };
-                }],
-                targetEvent: $event,
-                clickOutsideToClose: true,
-                escapeToClose: true
-            });
+            this.NodeService.showNodeInfo(this.nodeId, $event);
         }
     }, {
         key: 'setSort',
@@ -547,22 +487,22 @@ var NodeGradingController = function () {
 
             switch (this.sort) {
                 case 'team':
-                    orderBy = ['-isVisible', 'displayNames'];
+                    orderBy = ['-isVisible', 'workgroupId'];
                     break;
                 case '-team':
-                    orderBy = ['-isVisible', '-displayNames'];
+                    orderBy = ['-isVisible', '-workgroupId'];
                     break;
                 case 'status':
-                    orderBy = ['-isVisible', 'completionStatus', 'displayNames'];
+                    orderBy = ['-isVisible', 'completionStatus', 'workgroupId'];
                     break;
                 case '-status':
-                    orderBy = ['-isVisible', '-completionStatus', 'displayNames'];
+                    orderBy = ['-isVisible', '-completionStatus', 'workgroupId'];
                     break;
                 case 'score':
-                    orderBy = ['-isVisible', 'score', 'displayNames'];
+                    orderBy = ['-isVisible', 'score', 'workgroupId'];
                     break;
                 case '-score':
-                    orderBy = ['-isVisible', '-score', 'displayNames'];
+                    orderBy = ['-isVisible', '-score', 'workgroupId'];
                     break;
             }
 
@@ -656,7 +596,7 @@ var NodeGradingController = function () {
     return NodeGradingController;
 }();
 
-NodeGradingController.$inject = ['$filter', '$mdDialog', '$scope', '$stateParams', 'AnnotationService', 'ConfigService', 'NotificationService', 'ProjectService', 'StudentStatusService', 'TeacherDataService'];
+NodeGradingController.$inject = ['$filter', '$mdDialog', '$scope', '$stateParams', 'AnnotationService', 'ConfigService', 'NodeService', 'NotificationService', 'ProjectService', 'StudentStatusService', 'TeacherDataService'];
 
 exports.default = NodeGradingController;
 //# sourceMappingURL=nodeGradingController.js.map
