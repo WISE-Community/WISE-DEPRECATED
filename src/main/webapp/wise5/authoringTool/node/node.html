@@ -9,6 +9,13 @@
   .criteriaContent {
     margin-left: 30px;
   }
+  .advancedAuthoringDiv {
+    border: 2px solid black;
+    padding: 20;
+  }
+  .advancedAuthoringDiv > div {
+      padding: 5 20;
+  }
 </style>
 <div style='background-color: white; position: sticky; top: 17px; z-index: 2;'>
   <md-button id='backToProjectButton' class='topButton md-raised md-primary md-raised md-primary'
@@ -853,7 +860,7 @@
     </div>
   </div>
 </div>
-<div style='margin-left: 176px;' ng-if='nodeAuthoringController.insertComponentMode'>
+<div style='margin-left: 45px;' ng-if='nodeAuthoringController.insertComponentMode'>
   <md-button class='moveComponentButton md-raised md-primary'
          ng-click='nodeAuthoringController.insertComponentAsFirst()'>
     <md-icon>keyboard_backspace</md-icon>
@@ -863,21 +870,31 @@
 </div>
 <div ng-repeat='(componentIndex, component) in nodeAuthoringController.components'
    class='component md-padding'
+   style='padding: 0; margin-top: 0; margin-left: 16;'
    ng-show='nodeAuthoringController.showComponents && !nodeAuthoringController.showImportView'>
-  <div id='{{component.id}}' layout='row'>
-    <div layout='row' style='margin-top: 10px; width: 200px;'>
+  <div id='{{component.id}}' layout='row' style='height: 40; margin-top: 0; margin-bottom: 0;'>
+    <div style='margin-top: 15; width: 200px;'>
       <md-checkbox ng-model='nodeAuthoringController.componentsToChecked[component.id]'
              ng-disabled='nodeAuthoringController.insertComponentMode'>
         <span style='font-weight:bold; margin-right:10px'>{{componentIndex + 1}}. {{nodeAuthoringController.getComponentTypeLabel(component.type)}}</span>
       </md-checkbox>
     </div>
-    <div layout='row' ng-show='nodeAuthoringController.insertComponentMode'>
-      <md-button class='moveComponentButton md-raised md-primary'
-             ng-click='nodeAuthoringController.insertComponentAfter(component.id)'>
-        <md-icon>subdirectory_arrow_left</md-icon>
-        <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ "insertAfter" | translate }}</md-tooltip>
-      </md-button>
+    <div ng-show='!nodeAuthoringController.insertComponentMode'>
+      <md-input-container style='margin-top: 0; margin-right: 20px; width: 150px;'>
+        <md-button class='topButton md-raised md-primary' ng-click='nodeAuthoringController.componentAdvancedButtonClicked(component.id)'>
+          <md-icon>build</md-icon>
+          <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'ADVANCED' | translate }}</md-tooltip>
+        </md-button>
+      </md-input-container>
     </div>
+  </div>
+  <div style='height: 30; margin-top: 10; margin-left: 30;' ng-show='nodeAuthoringController.insertComponentMode'>
+    <md-button class='moveComponentButton md-raised md-primary'
+           style='margin-top: 0;'
+           ng-click='nodeAuthoringController.insertComponentAfter(component.id)'>
+      <md-icon>keyboard_backspace</md-icon>
+      <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ "insertAfter" | translate }}</md-tooltip>
+    </md-button>
   </div>
   <component ng-if='nodeAuthoringController.showComponentAuthoringViews' node-id='{{nodeAuthoringController.nodeId}}' component-id='{{component.id}}' mode='authoring'></component>
   <md-divider ng-if='nodeAuthoringController.showComponentAuthoringViews && !$last'></md-divider>

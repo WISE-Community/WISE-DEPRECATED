@@ -4,28 +4,12 @@
     </style>
 
     <div ng-if='openResponseController.mode === "authoring"'>
-        <div ng-if='!openResponseController.authoringComponentContent.showPreviousWork'>
-            <md-input-container style='width:100%'>
-                <label>{{ 'PROMPT' | translate }}</label><span><md-icon>announcement</md-icon><md-tooltip md-direction="right">{{ 'openResponse.promptTip' | translate }}</md-tooltip></span>
-                <textarea rows='1'
-                          ng-model='openResponseController.authoringComponentContent.prompt'
-                          ng-change='openResponseController.authoringViewComponentChanged()'
-                          ng-model-options='{ debounce: 1000 }'
-                          placeholder='{{ "enterPromptHere" | translate }}'>
-            </textarea>
-            </md-input-container>
-        </div>
-        <div>
-            <md-input-container style='margin-right: 20px; width: 150px; height: 50px;'>
-                <md-button class='topButton md-raised md-primary' ng-click='openResponseController.showAdvancedAuthoring = !openResponseController.showAdvancedAuthoring'>
-                    <md-icon>build</md-icon>
-                    <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ "ADVANCED" | translate }}</md-tooltip>
-                </md-button>
-            </md-input-container>
-        </div>
-        <div ng-if='openResponseController.showAdvancedAuthoring'>
-            <span>{{ 'openResponse.starterSentence' | translate }} ({{ 'openResponse.optional' | translate }}):</span>
-            <br/>
+        <div class='advancedAuthoringDiv'
+             ng-if='openResponseController.showAdvancedAuthoring'>
+            <div>
+                <h6>{{ 'advancedAuthoringOptions' | translate }}</h6>
+            </div
+            <p>{{ 'openResponse.starterSentence' | translate }} ({{ 'openResponse.optional' | translate }}):</p>
             <textarea ng-model='openResponseController.authoringComponentContent.starterSentence'
                       ng-change='openResponseController.authoringViewComponentChanged()'
                       ng-model-options='{ debounce: 1000 }'
@@ -364,11 +348,21 @@
                 </div>
             </div>
         </div>
-        <br/>
+        <div ng-if='!openResponseController.authoringComponentContent.showPreviousWork'>
+            <md-input-container style='width:100%'>
+                <label>{{ 'PROMPT' | translate }}</label><span><md-icon>announcement</md-icon><md-tooltip md-direction="right">{{ 'openResponse.promptTip' | translate }}</md-tooltip></span>
+                <textarea rows='1'
+                          ng-model='openResponseController.authoringComponentContent.prompt'
+                          ng-change='openResponseController.authoringViewComponentChanged()'
+                          ng-model-options='{ debounce: 1000 }'
+                          placeholder='{{ "enterPromptHere" | translate }}'>
+            </textarea>
+            </md-input-container>
+        </div>
     </div>
-    <div>
+    <div ng-style='openResponseController.mode === "authoring" && {"border": "5px solid black", "padding": "20px"}'>
         <div ng-if='openResponseController.mode === "authoring"'>
-            <h5>{{ 'PREVIEW' | translate }}</h5>
+            <h5>{{ 'studentPreview' | translate }}</h5>
         </div>
         <div ng-switch="openResponseController.mode">
             <div ng-switch-when="grading|gradingRevision" ng-switch-when-separator="|" layout="row" layout-wrap>

@@ -7,6 +7,185 @@
 </style>
 
 <div ng-controller='LabelController as labelController' flex>
+    <div class='advancedAuthoringDiv'
+         ng-if='labelController.showAdvancedAuthoring'>
+        <div>
+            <h6>{{ 'advancedAuthoringOptions' | translate }}</h6>
+        </div>
+        <div>
+            <md-checkbox class='md-primary'
+                         ng-model='labelController.authoringComponentContent.showSaveButton'
+                         ng-change='labelController.authoringViewComponentChanged()'>
+                {{ 'SHOW_SAVE_BUTTON' | translate }}
+            </md-checkbox>
+        </div>
+        <div>
+            <md-checkbox class='md-primary'
+                         ng-model='labelController.authoringComponentContent.showSubmitButton'
+                         ng-change='labelController.authoringViewComponentChanged()'>
+                {{ 'SHOW_SUBMIT_BUTTON' | translate }}
+            </md-checkbox>
+        </div>
+        <div>
+            <md-input-container style='margin-right: 20px; width: 150px; height: 25px;'
+                                ng-if='labelController.authoringComponentContent.showSubmitButton'>
+                <label>{{ 'MAX_SUBMIT' | translate }}</label>
+                <input type='number'
+                       ng-model='labelController.authoringComponentContent.maxSubmitCount'
+                       ng-model-options='{ debounce: 1000 }'
+                       ng-change='labelController.authoringViewComponentChanged()'/>
+            </md-input-container>
+        </div>
+        <div>
+            <md-input-container style='margin-right: 20px; width: 150px; height: 25px;'>
+                <label>{{ 'MAX_SCORE' | translate }}</label>
+                <input type='number'
+                       ng-model='labelController.authoringComponentContent.maxScore'
+                       ng-model-options='{ debounce: 1000 }'
+                       ng-change='labelController.authoringViewComponentChanged()'/>
+            </md-input-container>
+        </div>
+        <div>
+            <md-input-container style='margin-right: 20px; width: 150px; height: 25px;'>
+                <label>{{ 'COMPONENT_WIDTH' | translate }}</label>
+                <input type='number'
+                       ng-model='labelController.authoringComponentContent.componentWidth'
+                       ng-model-options='{ debounce: 1000 }'
+                       ng-change='labelController.authoringViewComponentChanged()'/>
+            </md-input-container>
+        </div>
+        <div>
+            <md-button class='topButton md-raised md-primary' ng-click='labelController.showRubricAuthoring = !labelController.showRubricAuthoring'>
+                <md-icon>message</md-icon>
+                <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'EDIT_COMPONENT_RUBRIC' | translate }}</md-tooltip>
+            </md-button>
+            <div ng-if='labelController.showRubricAuthoring'>
+                <summernote id='{{labelController.summernoteRubricId}}'
+                            ng-model='labelController.summernoteRubricHTML'
+                            ng-change='labelController.summernoteRubricHTMLChanged()'
+                            config='labelController.summernoteRubricOptions'
+                            ng-model-options='{ debounce: 1000 }'
+                            rows='10'
+                            cols='100'>
+                </summernote>
+            </div>
+        </div>
+        <div>
+            <div layout='row'>
+                <div>
+                    <label>{{ 'CONNECTED_COMPONENTS' | translate }}</label>
+                    <md-button class='topButton md-raised md-primary'
+                               ng-click='labelController.authoringAddConnectedComponent()'>
+                        <md-icon>add</md-icon>
+                        <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'ADD_CONNECTED_COMPONENT' | translate }}</md-tooltip>
+                    </md-button>
+                </div>
+            </div>
+            <div ng-repeat='connectedComponent in labelController.authoringComponentContent.connectedComponents track by $index'
+                 style='border: 2px solid #dddddd; border-radius: 5px; margin-bottom: 10px; padding: 20px 20px 10px 20px;'
+                 layout='row'>
+                <div flex>
+                    <md-input-container style='margin-right: 20; width: 300;'>
+                        <label>{{ 'step' | translate }}</label>
+                        <md-select ng-model='connectedComponent.nodeId'
+                                   ng-change='labelController.authoringConnectedComponentNodeIdChanged(connectedComponent)'
+                                   style='width: 300'>
+                            <md-option ng-repeat='item in labelController.idToOrder | toArray | orderBy : "order"'
+                                       value='{{item.$key}}'
+                                       ng-if='labelController.isApplicationNode(item.$key)'>
+                                {{ labelController.getNodePositionAndTitleByNodeId(item.$key) }}
+                            </md-option>
+                        </md-select>
+                    </md-input-container>
+                    <md-input-container style='margin-right: 20; width: 300;'>
+                        <label>{{ 'component' | translate }}</label>
+                        <md-select ng-model='connectedComponent.componentId'
+                                   ng-change='labelController.authoringConnectedComponentComponentIdChanged(connectedComponent)'
+                                   style='width: 300'>
+                            <md-option ng-repeat='(componentIndex, component) in labelController.getComponentsByNodeId(connectedComponent.nodeId)'
+                                       value='{{component.id}}'
+                                       ng-disabled='!labelController.isConnectedComponentTypeAllowed(component.type) || component.id == labelController.componentId'>
+                                {{ componentIndex + 1 }}. {{ component.type }} <span ng-if='component.id == labelController.componentId'>({{ 'thisComponent' | translate }})</span>
+                            </md-option>
+                        </md-select>
+                    </md-input-container>
+                    <md-input-container style='margin-right: 20; width: 200;'>
+                        <label>{{ 'type' | translate }}</label>
+                        <md-select ng-model='connectedComponent.type'
+                                   ng-change='labelController.authoringConnectedComponentTypeChanged(connectedComponent)'
+                                   style='width: 200'>
+                            <md-option value='importWork'>
+                                {{ 'importWork' | translate }}
+                            </md-option>
+                            <md-option value='showWork'>
+                                {{ 'showWork' | translate }}
+                            </md-option>
+                        </md-select>
+                    </md-input-container>
+                    <span flex></span>
+                    <md-input-container style='margin-left: 20;'>
+                        <md-button class='topButton md-raised md-primary'
+                                   ng-click='labelController.authoringDeleteConnectedComponent($index)'>
+                            <md-icon>delete</md-icon>
+                            <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'DELETE' | translate }}</md-tooltip>
+                        </md-button>
+                    </md-input-container>
+                </div>
+            </div>
+        </div>
+        <div style='margin-top: 10px; margin-bottom: 10px;'>
+            <div>
+                <label>{{ 'tags' | translate }}</label>
+                <md-button class='topButton md-raised md-primary'
+                           ng-click='labelController.addTag()'>
+                    <md-icon>add</md-icon>
+                    <md-tooltip md-direction="top" class="projectButtonTooltip">{{ "addTag" | translate }}</md-tooltip>
+                </md-button>
+            </div>
+            <div ng-repeat='tag in labelController.authoringComponentContent.tags track by $index'>
+                <div layout='row'>
+                    <md-input-container style='margin-bottom: 0px'>
+                        <label></label>
+                        <input ng-model='labelController.authoringComponentContent.tags[$index]'
+                               ng-change='labelController.authoringViewComponentChanged()'
+                               ng-model-options='{ debounce: 1000 }'
+                               size='100'
+                               placeholder='{{ "enterTag" | translate }}'/>
+                    </md-input-container>
+                    <md-button class='moveComponentButton md-raised md-primary' ng-click='labelController.moveTagUp($index)'>
+                        <md-icon>arrow_upward</md-icon>
+                        <md-tooltip md-direction="top" class="projectButtonTooltip">{{ 'moveUp' | translate }}</md-tooltip>
+                    </md-button>
+                    <md-button class='moveComponentButton md-raised md-primary' ng-click='labelController.moveTagDown($index)'>
+                        <md-icon>arrow_downward</md-icon>
+                        <md-tooltip md-direction="top" class="projectButtonTooltip">{{ 'moveDown' | translate }}</md-tooltip>
+                    </md-button>
+                    <md-button class='moveComponentButton md-raised md-primary' ng-click='labelController.deleteTag($index)'>
+                        <md-icon>delete</md-icon>
+                        <md-tooltip md-direction="top" class="projectButtonTooltip">{{ 'DELETE' | translate }}</md-tooltip>
+                    </md-button>
+                </div>
+            </div>
+        </div>
+        <div>
+            <md-button class='topButton md-raised md-primary'
+                       ng-click='labelController.showJSONButtonClicked()'>
+                <md-icon>code</md-icon>
+                <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'SHOW_JSON' | translate }}</md-tooltip>
+            </md-button>
+            <span ng-if='labelController.jsonStringChanged'>
+                {{ 'closeTheJSONViewToSaveTheChanges' | translate }}
+            </span>
+            <div ng-if='labelController.showJSONAuthoring'>
+                <md-input-container style='width: 100%;'>
+                    <textarea ng-model='labelController.authoringComponentContentJSONString'
+                              style='width: 90%; border: 1px solid black;'
+                              ng-change='labelController.authoringJSONChanged()'></textarea>
+                </md-input-container>
+            </div>
+        </div>
+    </div>
+    <br/>
     <div ng-if='labelController.mode === "authoring"'>
         <div ng-if='!labelController.authoringComponentContent.showPreviousWork'>
             <md-input-container style='width:100%'>
@@ -176,193 +355,10 @@
                 <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'label.deleteStarterLabels' | translate }}</md-tooltip>
             </md-button>
         </div>
-        <div>
-            <md-input-container style='margin-right: 20px; width: 150px; height: 50px;'>
-                <md-button class='topButton md-raised md-primary' ng-click='labelController.showAdvancedAuthoring = !labelController.showAdvancedAuthoring'>
-                    <md-icon>build</md-icon>
-                    <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ "ADVANCED" | translate }}</md-tooltip>
-                </md-button>
-            </md-input-container>
-        </div>
-        <div ng-if='labelController.showAdvancedAuthoring'>
-            <div>
-                <md-checkbox class='md-primary'
-                             ng-model='labelController.authoringComponentContent.showSaveButton'
-                             ng-change='labelController.authoringViewComponentChanged()'>
-                    {{ 'SHOW_SAVE_BUTTON' | translate }}
-                </md-checkbox>
-            </div>
-            <div>
-                <md-checkbox class='md-primary'
-                             ng-model='labelController.authoringComponentContent.showSubmitButton'
-                             ng-change='labelController.authoringViewComponentChanged()'>
-                    {{ 'SHOW_SUBMIT_BUTTON' | translate }}
-                </md-checkbox>
-            </div>
-            <div>
-                <md-input-container style='margin-right: 20px; width: 150px; height: 25px;'
-                                    ng-if='labelController.authoringComponentContent.showSubmitButton'>
-                    <label>{{ 'MAX_SUBMIT' | translate }}</label>
-                    <input type='number'
-                           ng-model='labelController.authoringComponentContent.maxSubmitCount'
-                           ng-model-options='{ debounce: 1000 }'
-                           ng-change='labelController.authoringViewComponentChanged()'/>
-                </md-input-container>
-            </div>
-            <div>
-                <md-input-container style='margin-right: 20px; width: 150px; height: 25px;'>
-                    <label>{{ 'MAX_SCORE' | translate }}</label>
-                    <input type='number'
-                           ng-model='labelController.authoringComponentContent.maxScore'
-                           ng-model-options='{ debounce: 1000 }'
-                           ng-change='labelController.authoringViewComponentChanged()'/>
-                </md-input-container>
-            </div>
-            <div>
-                <md-input-container style='margin-right: 20px; width: 150px; height: 25px;'>
-                    <label>{{ 'COMPONENT_WIDTH' | translate }}</label>
-                    <input type='number'
-                           ng-model='labelController.authoringComponentContent.componentWidth'
-                           ng-model-options='{ debounce: 1000 }'
-                           ng-change='labelController.authoringViewComponentChanged()'/>
-                </md-input-container>
-            </div>
-            <div>
-                <md-button class='topButton md-raised md-primary' ng-click='labelController.showRubricAuthoring = !labelController.showRubricAuthoring'>
-                    <md-icon>message</md-icon>
-                    <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'EDIT_COMPONENT_RUBRIC' | translate }}</md-tooltip>
-                </md-button>
-                <div ng-if='labelController.showRubricAuthoring'>
-                    <summernote id='{{labelController.summernoteRubricId}}'
-                                ng-model='labelController.summernoteRubricHTML'
-                                ng-change='labelController.summernoteRubricHTMLChanged()'
-                                config='labelController.summernoteRubricOptions'
-                                ng-model-options='{ debounce: 1000 }'
-                                rows='10'
-                                cols='100'>
-                    </summernote>
-                </div>
-            </div>
-            <div>
-                <div layout='row'>
-                    <div>
-                        <label>{{ 'CONNECTED_COMPONENTS' | translate }}</label>
-                        <md-button class='topButton md-raised md-primary'
-                                   ng-click='labelController.authoringAddConnectedComponent()'>
-                            <md-icon>add</md-icon>
-                            <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'ADD_CONNECTED_COMPONENT' | translate }}</md-tooltip>
-                        </md-button>
-                    </div>
-                </div>
-                <div ng-repeat='connectedComponent in labelController.authoringComponentContent.connectedComponents track by $index'
-                     style='border: 2px solid #dddddd; border-radius: 5px; margin-bottom: 10px; padding: 20px 20px 10px 20px;'
-                     layout='row'>
-                    <div flex>
-                        <md-input-container style='margin-right: 20; width: 300;'>
-                            <label>{{ 'step' | translate }}</label>
-                            <md-select ng-model='connectedComponent.nodeId'
-                                       ng-change='labelController.authoringConnectedComponentNodeIdChanged(connectedComponent)'
-                                       style='width: 300'>
-                                <md-option ng-repeat='item in labelController.idToOrder | toArray | orderBy : "order"'
-                                           value='{{item.$key}}'
-                                           ng-if='labelController.isApplicationNode(item.$key)'>
-                                    {{ labelController.getNodePositionAndTitleByNodeId(item.$key) }}
-                                </md-option>
-                            </md-select>
-                        </md-input-container>
-                        <md-input-container style='margin-right: 20; width: 300;'>
-                            <label>{{ 'component' | translate }}</label>
-                            <md-select ng-model='connectedComponent.componentId'
-                                       ng-change='labelController.authoringConnectedComponentComponentIdChanged(connectedComponent)'
-                                       style='width: 300'>
-                                <md-option ng-repeat='(componentIndex, component) in labelController.getComponentsByNodeId(connectedComponent.nodeId)'
-                                           value='{{component.id}}'
-                                           ng-disabled='!labelController.isConnectedComponentTypeAllowed(component.type) || component.id == labelController.componentId'>
-                                    {{ componentIndex + 1 }}. {{ component.type }} <span ng-if='component.id == labelController.componentId'>({{ 'thisComponent' | translate }})</span>
-                                </md-option>
-                            </md-select>
-                        </md-input-container>
-                        <md-input-container style='margin-right: 20; width: 200;'>
-                            <label>{{ 'type' | translate }}</label>
-                            <md-select ng-model='connectedComponent.type'
-                                       ng-change='labelController.authoringConnectedComponentTypeChanged(connectedComponent)'
-                                       style='width: 200'>
-                                <md-option value='importWork'>
-                                    {{ 'importWork' | translate }}
-                                </md-option>
-                                <md-option value='showWork'>
-                                    {{ 'showWork' | translate }}
-                                </md-option>
-                            </md-select>
-                        </md-input-container>
-                        <span flex></span>
-                        <md-input-container style='margin-left: 20;'>
-                            <md-button class='topButton md-raised md-primary'
-                                       ng-click='labelController.authoringDeleteConnectedComponent($index)'>
-                                <md-icon>delete</md-icon>
-                                <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'DELETE' | translate }}</md-tooltip>
-                            </md-button>
-                        </md-input-container>
-                    </div>
-                </div>
-            </div>
-            <div style='margin-top: 10px; margin-bottom: 10px;'>
-                <div>
-                    <label>{{ 'tags' | translate }}</label>
-                    <md-button class='topButton md-raised md-primary'
-                               ng-click='labelController.addTag()'>
-                        <md-icon>add</md-icon>
-                        <md-tooltip md-direction="top" class="projectButtonTooltip">{{ "addTag" | translate }}</md-tooltip>
-                    </md-button>
-                </div>
-                <div ng-repeat='tag in labelController.authoringComponentContent.tags track by $index'>
-                    <div layout='row'>
-                        <md-input-container style='margin-bottom: 0px'>
-                            <label></label>
-                            <input ng-model='labelController.authoringComponentContent.tags[$index]'
-                                   ng-change='labelController.authoringViewComponentChanged()'
-                                   ng-model-options='{ debounce: 1000 }'
-                                   size='100'
-                                   placeholder='{{ "enterTag" | translate }}'/>
-                        </md-input-container>
-                        <md-button class='moveComponentButton md-raised md-primary' ng-click='labelController.moveTagUp($index)'>
-                            <md-icon>arrow_upward</md-icon>
-                            <md-tooltip md-direction="top" class="projectButtonTooltip">{{ 'moveUp' | translate }}</md-tooltip>
-                        </md-button>
-                        <md-button class='moveComponentButton md-raised md-primary' ng-click='labelController.moveTagDown($index)'>
-                            <md-icon>arrow_downward</md-icon>
-                            <md-tooltip md-direction="top" class="projectButtonTooltip">{{ 'moveDown' | translate }}</md-tooltip>
-                        </md-button>
-                        <md-button class='moveComponentButton md-raised md-primary' ng-click='labelController.deleteTag($index)'>
-                            <md-icon>delete</md-icon>
-                            <md-tooltip md-direction="top" class="projectButtonTooltip">{{ 'DELETE' | translate }}</md-tooltip>
-                        </md-button>
-                    </div>
-                </div>
-            </div>
-            <div>
-                <md-button class='topButton md-raised md-primary'
-                           ng-click='labelController.showJSONButtonClicked()'>
-                    <md-icon>code</md-icon>
-                    <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'SHOW_JSON' | translate }}</md-tooltip>
-                </md-button>
-                <span ng-if='labelController.jsonStringChanged'>
-                    {{ 'closeTheJSONViewToSaveTheChanges' | translate }}
-                </span>
-                <div ng-if='labelController.showJSONAuthoring'>
-                    <md-input-container style='width: 100%;'>
-                        <textarea ng-model='labelController.authoringComponentContentJSONString'
-                                  style='width: 90%; border: 1px solid black;'
-                                  ng-change='labelController.authoringJSONChanged()'></textarea>
-                    </md-input-container>
-                </div>
-            </div>
-        </div>
-        <br/>
     </div>
-    <div ng-style='labelController.mode === "authoring" && {"border": "1px solid black", "padding": "20px"}'>
+    <div ng-style='labelController.mode === "authoring" && {"border": "5px solid black", "padding": "20px"}'>
         <div ng-if='labelController.mode === "authoring"'>
-            <h5>{{ 'PREVIEW' | translate }}</h5>
+            <h5>{{ 'studentPreview' | translate }}</h5>
         </div>
         <div ng-switch="labelController.mode">
             <div ng-switch-when="grading|gradingRevision" ng-switch-when-separator="|" layout="row" layout-wrap>

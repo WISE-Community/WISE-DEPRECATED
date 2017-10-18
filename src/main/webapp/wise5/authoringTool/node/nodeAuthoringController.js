@@ -3933,6 +3933,19 @@ var NodeAuthoringController = function () {
         }
       }
     }
+
+    /**
+     * The advanced button was clicked on a component. We will broadcast an event
+     * so that the appropriate child component can display their advanced
+     * authoring options.
+     * @param componentId The component id whose advanced button was clicked.
+     */
+
+  }, {
+    key: 'componentAdvancedButtonClicked',
+    value: function componentAdvancedButtonClicked(componentId) {
+      this.$rootScope.$broadcast('componentAdvancedButtonClicked', { componentId: componentId });
+    }
   }]);
 
   return NodeAuthoringController;

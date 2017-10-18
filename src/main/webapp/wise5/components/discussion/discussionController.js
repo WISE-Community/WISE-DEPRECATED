@@ -649,6 +649,19 @@ var DiscussionController = function () {
             // close the popup
             _this2.$mdDialog.hide();
         });
+
+        /*
+         * The advanced button for a component was clicked. If the button was
+         * for this component, we will show the advanced authoring.
+         */
+        this.$scope.$on('componentAdvancedButtonClicked', function (event, args) {
+            if (args != null) {
+                var componentId = args.componentId;
+                if (_this2.componentId === componentId) {
+                    _this2.showAdvancedAuthoring = !_this2.showAdvancedAuthoring;
+                }
+            }
+        });
     }
 
     /**

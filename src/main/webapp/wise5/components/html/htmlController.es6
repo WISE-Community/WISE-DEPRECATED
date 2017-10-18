@@ -368,6 +368,19 @@ class HTMLController {
             // close the popup
             this.$mdDialog.hide();
         });
+
+        /*
+         * The advanced button for a component was clicked. If the button was
+         * for this component, we will show the advanced authoring.
+         */
+        this.$scope.$on('componentAdvancedButtonClicked', (event, args) => {
+            if (args != null) {
+                let componentId = args.componentId;
+                if (this.componentId === componentId) {
+                    this.showAdvancedAuthoring = !this.showAdvancedAuthoring;
+                }
+            }
+        });
     }
 
     /**

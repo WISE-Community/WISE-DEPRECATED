@@ -4,45 +4,11 @@
             var embeddedController = embeddedController;
         </script>
         <div ng-if='embeddedController.mode === "authoring"'>
-            <div ng-if='!embeddedController.authoringComponentContent.showPreviousWork'>
-                <md-input-container style='height: 40px'>
-                    <label>{{ 'embedded.modelFileName' | translate }}</label>
-                    <input size='100'
-                           ng-model='embeddedController.authoringComponentContent.url'
-                           ng-change='embeddedController.authoringViewComponentChanged()'
-                           ng-model-options='{ debounce: 1000 }'/>
-                </md-input-container>
-                <md-button class='topButton md-raised md-primary' ng-click='embeddedController.chooseModelFile()'>
-                    <md-icon>insert_photo</md-icon>
-                    <md-tooltip md-direction="top" class="projectButtonTooltip">{{ 'embedded.chooseTheModelFile' | translate }}</md-tooltip>
-                </md-button>
-                <br/>
-                <md-input-container style='height: 40px'>
-                    <label>{{ 'WIDTH' | translate }} ({{ 'OPTIONAL' | translate }})</label>
-                    <input size='20'
-                           type='number'
-                           ng-model='embeddedController.authoringComponentContent.width'
-                           ng-change='embeddedController.authoringViewComponentChanged()'
-                           ng-model-options='{ debounce: 1000 }'/>
-                </md-input-container>
-                <md-input-container style='height: 40px'>
-                    <label>{{ 'HEIGHT' | translate }} ({{ 'OPTIONAL' | translate }})</label>
-                    <input size='20'
-                           type='number'
-                           ng-model='embeddedController.authoringComponentContent.height'
-                           ng-change='embeddedController.authoringViewComponentChanged()'
-                           ng-model-options='{ debounce: 1000 }'/>
-                </md-input-container>
-            </div>
-            <div>
-                <md-input-container style='margin-right: 20px; width: 150px; height: 50px;'>
-                    <md-button class='topButton md-raised md-primary' ng-click='embeddedController.showAdvancedAuthoring = !embeddedController.showAdvancedAuthoring'>
-                        <md-icon>build</md-icon>
-                        <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ "ADVANCED" | translate }}</md-tooltip>
-                    </md-button>
-                </md-input-container>
-            </div>
-            <div ng-if='embeddedController.showAdvancedAuthoring'>
+            <div class='advancedAuthoringDiv'
+                 ng-if='embeddedController.showAdvancedAuthoring'>
+                <div>
+                    <h6>{{ 'advancedAuthoringOptions' | translate }}</h6>
+                </div>
                 <div>
                     <md-input-container style='width: 100%; margin-bottom: -10'>
                         <label>{{ 'embedded.modelParameters' | translate }}</label>
@@ -227,10 +193,40 @@
                 </div>
             </div>
             <br/>
+            <div ng-if='!embeddedController.authoringComponentContent.showPreviousWork'>
+                <md-input-container style='height: 40px'>
+                    <label>{{ 'embedded.modelFileName' | translate }}</label>
+                    <input size='100'
+                           ng-model='embeddedController.authoringComponentContent.url'
+                           ng-change='embeddedController.authoringViewComponentChanged()'
+                           ng-model-options='{ debounce: 1000 }'/>
+                </md-input-container>
+                <md-button class='topButton md-raised md-primary' ng-click='embeddedController.chooseModelFile()'>
+                    <md-icon>insert_photo</md-icon>
+                    <md-tooltip md-direction="top" class="projectButtonTooltip">{{ 'embedded.chooseTheModelFile' | translate }}</md-tooltip>
+                </md-button>
+                <br/>
+                <md-input-container style='height: 40px'>
+                    <label>{{ 'WIDTH' | translate }} ({{ 'OPTIONAL' | translate }})</label>
+                    <input size='20'
+                           type='number'
+                           ng-model='embeddedController.authoringComponentContent.width'
+                           ng-change='embeddedController.authoringViewComponentChanged()'
+                           ng-model-options='{ debounce: 1000 }'/>
+                </md-input-container>
+                <md-input-container style='height: 40px'>
+                    <label>{{ 'HEIGHT' | translate }} ({{ 'OPTIONAL' | translate }})</label>
+                    <input size='20'
+                           type='number'
+                           ng-model='embeddedController.authoringComponentContent.height'
+                           ng-change='embeddedController.authoringViewComponentChanged()'
+                           ng-model-options='{ debounce: 1000 }'/>
+                </md-input-container>
+            </div>
         </div>
-        <div ng-style='embeddedController.mode === "authoring" && {"border": "1px solid black", "padding": "20px"}'>
+        <div ng-style='embeddedController.mode === "authoring" && {"border": "5px solid black", "padding": "20px"}'>
             <div ng-if='embeddedController.mode === "authoring"'>
-                <h5>{{ 'PREVIEW' | translate }}</h5>
+                <h5>{{ 'studentPreview' | translate }}</h5>
             </div>
             <div ng-switch="embeddedController.mode">
                 <div ng-switch-when="grading|gradingRevision" ng-switch-when-separator="|" layout="row" layout-wrap>

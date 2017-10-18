@@ -665,6 +665,19 @@ class AnimationController {
             }
         };
 
+        /*
+         * The advanced button for a component was clicked. If the button was
+         * for this component, we will show the advanced authoring.
+         */
+        this.$scope.$on('componentAdvancedButtonClicked', (event, args) => {
+            if (args != null) {
+                let componentId = args.componentId;
+                if (this.componentId === componentId) {
+                    this.showAdvancedAuthoring = !this.showAdvancedAuthoring;
+                }
+            }
+        });
+
         // load script for this component, if any
         let script = this.componentContent.script;
         if (script != null) {
