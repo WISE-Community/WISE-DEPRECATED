@@ -44,18 +44,19 @@
         </div>
       </div>
       <div>
-        <div layout='row'>
-          <div>
-            <label>{{ 'CONNECTED_COMPONENTS' | translate }}</label>
-            <md-button class='topButton md-raised md-primary'
-                ng-click='discussionController.authoringAddConnectedComponent()'>
-              <md-icon>add</md-icon>
-              <md-tooltip md-direction='top'
-                  class='projectButtonTooltip'>
-                {{ 'ADD_CONNECTED_COMPONENT' | translate }}
-              </md-tooltip>
-            </md-button>
-          </div>
+        <div style='height: 50;'>
+          <label style='vertical-align: middle; display:inline-block;'>
+            {{ 'CONNECTED_COMPONENTS' | translate }}
+          </label>
+          <md-button class='topButton md-raised md-primary'
+              style='vertical-align: middle; display:inline-block;'
+              ng-click='discussionController.authoringAddConnectedComponent()'>
+            <md-icon>add</md-icon>
+            <md-tooltip md-direction='top'
+                class='projectButtonTooltip'>
+              {{ 'ADD_CONNECTED_COMPONENT' | translate }}
+            </md-tooltip>
+          </md-button>
         </div>
         <div ng-repeat='connectedComponent in discussionController.authoringComponentContent.connectedComponents track by $index'
             style='border: 2px solid #dddddd; border-radius: 5px; margin-bottom: 10px; padding: 20px 20px 10px 20px;'
@@ -116,9 +117,10 @@
         </div>
       </div>
       <div style='margin-top: 10px; margin-bottom: 10px;'>
-        <div>
-          <label>{{ 'tags' | translate }}</label>
+        <div style='height: 50;'>
+          <label style='vertical-align: middle; display:inline-block;'>{{ 'tags' | translate }}</label>
           <md-button class='topButton md-raised md-primary'
+              style='vertical-align: middle; display:inline-block;'
               ng-click='discussionController.addTag()'>
             <md-icon>add</md-icon>
             <md-tooltip md-direction='top'

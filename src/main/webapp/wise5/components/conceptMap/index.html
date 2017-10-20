@@ -160,9 +160,12 @@
         </div>
       </div>
       <div>
-        <div>
-          <label>{{ 'CONNECTED_COMPONENTS' | translate }}</label>
+        <div style='height: 50;'>
+          <label style='vertical-align: middle; display:inline-block;'>
+            {{ 'CONNECTED_COMPONENTS' | translate }}
+          </label>
           <md-button class='topButton md-raised md-primary'
+              style='vertical-align: middle; display:inline-block;'
               ng-click='conceptMapController.authoringAddConnectedComponent()'>
             <md-icon>add</md-icon>
             <md-tooltip md-direction='top'
@@ -230,9 +233,12 @@
         </div>
       </div>
       <div style='margin-top: 10px; margin-bottom: 10px;'>
-        <div>
-          <label>{{ 'tags' | translate }}</label>
+        <div style='height: 50;'>
+          <label style='vertical-align: middle; display:inline-block;'>
+            {{ 'tags' | translate }}
+          </label>
           <md-button class='topButton md-raised md-primary'
+              style='vertical-align: middle; display:inline-block;'
               ng-click='conceptMapController.addTag()'>
             <md-icon>add</md-icon>
             <md-tooltip md-direction='top'
