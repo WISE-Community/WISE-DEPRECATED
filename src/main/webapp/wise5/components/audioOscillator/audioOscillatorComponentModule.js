@@ -1,7 +1,7 @@
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
+  value: true
 });
 
 var _audioOscillatorService = require('./audioOscillatorService');
@@ -15,7 +15,7 @@ var _audioOscillatorController2 = _interopRequireDefault(_audioOscillatorControl
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var audioOscillatorComponentModule = angular.module('audioOscillatorComponentModule', ['pascalprecht.translate']).service(_audioOscillatorService2.default.name, _audioOscillatorService2.default).controller(_audioOscillatorController2.default.name, _audioOscillatorController2.default).config(['$translatePartialLoaderProvider', function ($translatePartialLoaderProvider) {
-    $translatePartialLoaderProvider.addPart('components/audioOscillator/i18n');
+  $translatePartialLoaderProvider.addPart('components/audioOscillator/i18n');
 }]);
 
 exports.default = audioOscillatorComponentModule;

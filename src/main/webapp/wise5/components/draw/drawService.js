@@ -1,7 +1,7 @@
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
+  value: true
 });
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -19,343 +19,343 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var DrawService = function (_NodeService) {
-    _inherits(DrawService, _NodeService);
+  _inherits(DrawService, _NodeService);
 
-    function DrawService($filter, StudentDataService, UtilService) {
-        _classCallCheck(this, DrawService);
+  function DrawService($filter, StudentDataService, UtilService) {
+    _classCallCheck(this, DrawService);
 
-        var _this = _possibleConstructorReturn(this, (DrawService.__proto__ || Object.getPrototypeOf(DrawService)).call(this));
+    var _this = _possibleConstructorReturn(this, (DrawService.__proto__ || Object.getPrototypeOf(DrawService)).call(this));
 
-        _this.$filter = $filter;
-        _this.StudentDataService = StudentDataService;
-        _this.UtilService = UtilService;
+    _this.$filter = $filter;
+    _this.StudentDataService = StudentDataService;
+    _this.UtilService = UtilService;
 
-        _this.$translate = _this.$filter('translate');
-        return _this;
+    _this.$translate = _this.$filter('translate');
+    return _this;
+  }
+
+  /**
+   * Get the component type label
+   * example
+   * "Draw"
+   */
+
+
+  _createClass(DrawService, [{
+    key: 'getComponentTypeLabel',
+    value: function getComponentTypeLabel() {
+      return this.$translate('draw.componentTypeLabel');
     }
 
     /**
-     * Get the component type label
-     * example
-     * "Draw"
+     * Create a Draw component object
+     * @returns a new Draw component object
      */
 
+  }, {
+    key: 'createComponent',
+    value: function createComponent() {
+      var component = {};
+      component.id = this.UtilService.generateKey();
+      component.type = 'Draw';
+      component.prompt = '';
+      component.showSaveButton = false;
+      component.showSubmitButton = false;
+      component.stamps = {};
+      component.stamps.Stamps = [];
+      component.tools = {};
+      component.tools.select = true;
+      component.tools.line = true;
+      component.tools.shape = true;
+      component.tools.freeHand = true;
+      component.tools.text = true;
+      component.tools.stamp = true;
+      component.tools.strokeColor = true;
+      component.tools.fillColor = true;
+      component.tools.clone = true;
+      component.tools.strokeWidth = true;
+      component.tools.sendBack = true;
+      component.tools.sendForward = true;
+      component.tools.undo = true;
+      component.tools.redo = true;
+      component.tools.delete = true;
+      return component;
+    }
 
-    _createClass(DrawService, [{
-        key: 'getComponentTypeLabel',
-        value: function getComponentTypeLabel() {
-            return this.$translate('draw.componentTypeLabel');
+    /**
+     * Copies an existing Draw component object
+     * @returns a copied Draw component object
+     */
+
+  }, {
+    key: 'copyComponent',
+    value: function copyComponent(componentToCopy) {
+      var component = this.createComponent();
+      component.prompt = componentToCopy.prompt;
+      component.showSaveButton = componentToCopy.showSaveButton;
+      component.showSubmitButton = componentToCopy.showSubmitButton;
+      component.stamps = componentToCopy.stamps;
+      component.stamps.Stamps = componentToCopy.stamps.Stamps;
+      return component;
+    }
+  }, {
+    key: 'getStudentWorkJPEG',
+    value: function getStudentWorkJPEG(componentState) {
+      if (componentState != null) {
+        var studentData = componentState.studentData;
+
+        if (studentData != null && studentData.drawData != null) {
+          var drawData = JSON.parse(studentData.drawData);
+          if (drawData != null && drawData.jpeg != null && drawData.jpeg != '') {
+            return drawData.jpeg;
+          }
         }
+      }
+      return null;
+    }
+  }, {
+    key: 'populateComponentState',
 
-        /**
-         * Create a Draw component object
-         * @returns a new Draw component object
-         */
 
-    }, {
-        key: 'createComponent',
-        value: function createComponent() {
-            var component = {};
-            component.id = this.UtilService.generateKey();
-            component.type = 'Draw';
-            component.prompt = '';
-            component.showSaveButton = false;
-            component.showSubmitButton = false;
-            component.stamps = {};
-            component.stamps.Stamps = [];
-            component.tools = {};
-            component.tools.select = true;
-            component.tools.line = true;
-            component.tools.shape = true;
-            component.tools.freeHand = true;
-            component.tools.text = true;
-            component.tools.stamp = true;
-            component.tools.strokeColor = true;
-            component.tools.fillColor = true;
-            component.tools.clone = true;
-            component.tools.strokeWidth = true;
-            component.tools.sendBack = true;
-            component.tools.sendForward = true;
-            component.tools.undo = true;
-            component.tools.redo = true;
-            component.tools.delete = true;
-            return component;
+    /**
+     * Populate a component state with the data from another component state
+     * @param componentStateFromOtherComponent the component state to obtain the data from
+     * @return a new component state that contains the student data from the other
+     * component state
+     */
+    value: function populateComponentState(componentStateFromOtherComponent) {
+      var componentState = null;
+
+      if (componentStateFromOtherComponent != null) {
+
+        // create an empty component state
+        componentState = this.StudentDataService.createComponentState();
+
+        // get the component type of the other component state
+        var otherComponentType = componentStateFromOtherComponent.componentType;
+
+        if (otherComponentType === 'Draw') {
+          // the other component is an Draw component
+
+          // get the student data from the other component state
+          var studentData = componentStateFromOtherComponent.studentData;
+
+          // create a copy of the student data
+          var studentDataCopy = this.UtilService.makeCopyOfJSONObject(studentData);
+
+          // set the student data into the new component state
+          componentState.studentData = studentDataCopy;
         }
+      }
 
-        /**
-         * Copies an existing Draw component object
-         * @returns a copied Draw component object
-         */
+      return componentState;
+    }
+  }, {
+    key: 'isCompleted',
 
-    }, {
-        key: 'copyComponent',
-        value: function copyComponent(componentToCopy) {
-            var component = this.createComponent();
-            component.prompt = componentToCopy.prompt;
-            component.showSaveButton = componentToCopy.showSaveButton;
-            component.showSubmitButton = componentToCopy.showSubmitButton;
-            component.stamps = componentToCopy.stamps;
-            component.stamps.Stamps = componentToCopy.stamps.Stamps;
-            return component;
-        }
-    }, {
-        key: 'getStudentWorkJPEG',
-        value: function getStudentWorkJPEG(componentState) {
-            if (componentState != null) {
-                var studentData = componentState.studentData;
 
-                if (studentData != null && studentData.drawData != null) {
-                    var drawData = JSON.parse(studentData.drawData);
-                    if (drawData != null && drawData.jpeg != null && drawData.jpeg != "") {
-                        return drawData.jpeg;
-                    }
-                }
+    /**
+     * Check if the component was completed
+     * @param component the component object
+     * @param componentStates the component states for the specific component
+     * @param componentEvents the events for the specific component
+     * @param nodeEvents the events for the parent node of the component
+     * @param node parent node of the component
+     * @returns whether the component was completed
+     */
+    value: function isCompleted(component, componentStates, componentEvents, nodeEvents, node) {
+      var result = false;
+
+      if (componentStates && componentStates.length) {
+        var submitRequired = node.showSubmitButton || component.showSubmitButton && !node.showSaveButton;
+
+        if (submitRequired) {
+          // completion requires a submission, so check for isSubmit in any component states
+          for (var i = 0, l = componentStates.length; i < l; i++) {
+            var state = componentStates[i];
+            if (state.isSubmit && state.studentData) {
+              // component state is a submission
+              if (state.studentData.drawData) {
+                // there is draw data so the component is completed
+                // TODO: check for empty drawing or drawing same as initial state
+                result = true;
+                break;
+              }
             }
-            return null;
-        }
-    }, {
-        key: 'populateComponentState',
+          }
+        } else {
+          // get the last component state
+          var _l = componentStates.length - 1;
+          var componentState = componentStates[_l];
 
+          var studentData = componentState.studentData;
 
-        /**
-         * Populate a component state with the data from another component state
-         * @param componentStateFromOtherComponent the component state to obtain the data from
-         * @return a new component state that contains the student data from the other
-         * component state
-         */
-        value: function populateComponentState(componentStateFromOtherComponent) {
-            var componentState = null;
-
-            if (componentStateFromOtherComponent != null) {
-
-                // create an empty component state
-                componentState = this.StudentDataService.createComponentState();
-
-                // get the component type of the other component state
-                var otherComponentType = componentStateFromOtherComponent.componentType;
-
-                if (otherComponentType === 'Draw') {
-                    // the other component is an Draw component
-
-                    // get the student data from the other component state
-                    var studentData = componentStateFromOtherComponent.studentData;
-
-                    // create a copy of the student data
-                    var studentDataCopy = this.UtilService.makeCopyOfJSONObject(studentData);
-
-                    // set the student data into the new component state
-                    componentState.studentData = studentDataCopy;
-                }
+          if (studentData) {
+            if (studentData.drawData) {
+              // there is draw data so the component is completed
+              // TODO: check for empty drawing or drawing same as initial state
+              result = true;
             }
-
-            return componentState;
+          }
         }
-    }, {
-        key: 'isCompleted',
+      }
+
+      return result;
+    }
+  }, {
+    key: 'removeBackgroundFromComponentState',
 
 
-        /**
-         * Check if the component was completed
-         * @param component the component object
-         * @param componentStates the component states for the specific component
-         * @param componentEvents the events for the specific component
-         * @param nodeEvents the events for the parent node of the component
-         * @param node parent node of the component
-         * @returns whether the component was completed
-         */
-        value: function isCompleted(component, componentStates, componentEvents, nodeEvents, node) {
-            var result = false;
+    /**
+     * Remove the background object from the draw data in the component state
+     * @param componentState the component state
+     * @returns the componentState
+     */
+    value: function removeBackgroundFromComponentState(componentState) {
 
-            if (componentStates && componentStates.length) {
-                var submitRequired = node.showSubmitButton || component.showSubmitButton && !node.showSaveButton;
+      if (componentState != null) {
+        var studentData = componentState.studentData;
 
-                if (submitRequired) {
-                    // completion requires a submission, so check for isSubmit in any component states
-                    for (var i = 0, l = componentStates.length; i < l; i++) {
-                        var state = componentStates[i];
-                        if (state.isSubmit && state.studentData) {
-                            // component state is a submission
-                            if (state.studentData.drawData) {
-                                // there is draw data so the component is completed
-                                // TODO: check for empty drawing or drawing same as initial state
-                                result = true;
-                                break;
-                            }
-                        }
-                    }
-                } else {
-                    // get the last component state
-                    var _l = componentStates.length - 1;
-                    var componentState = componentStates[_l];
+        if (studentData != null) {
 
-                    var studentData = componentState.studentData;
+          // get the draw data string
+          var drawData = studentData.drawData;
 
-                    if (studentData) {
-                        if (studentData.drawData) {
-                            // there is draw data so the component is completed
-                            // TODO: check for empty drawing or drawing same as initial state
-                            result = true;
-                        }
-                    }
+          if (drawData != null) {
+
+            // convert the draw data string to an object
+            var drawDataObject = angular.fromJson(drawData);
+
+            if (drawDataObject != null) {
+
+              // get the canvas value
+              var canvas = drawDataObject.canvas;
+
+              if (canvas != null) {
+
+                // remove the background image from the canvas
+                delete canvas.backgroundImage;
+
+                // convert the object back to a JSON string
+                var drawDataJSONString = angular.toJson(drawDataObject);
+
+                if (drawDataJSONString != null) {
+                  // set the draw data JSON string back into the student data
+                  studentData.drawData = drawDataJSONString;
                 }
+              }
             }
-
-            return result;
+          }
         }
-    }, {
-        key: 'removeBackgroundFromComponentState',
+      };
 
+      return componentState;
+    }
 
-        /**
-         * Remove the background object from the draw data in the component state
-         * @param componentState the component state
-         * @returns the componentState
-         */
-        value: function removeBackgroundFromComponentState(componentState) {
+    /**
+     * Whether this component generates student work
+     * @param component (optional) the component object. if the component object
+     * is not provided, we will use the default value of whether the
+     * component type usually has work.
+     * @return whether this component generates student work
+     */
 
-            if (componentState != null) {
-                var studentData = componentState.studentData;
+  }, {
+    key: 'componentHasWork',
+    value: function componentHasWork(component) {
+      return true;
+    }
 
-                if (studentData != null) {
+    /**
+     * Whether this component uses a save button
+     * @return whether this component uses a save button
+     */
 
-                    // get the draw data string
-                    var drawData = studentData.drawData;
+  }, {
+    key: 'componentUsesSaveButton',
+    value: function componentUsesSaveButton() {
+      return true;
+    }
 
-                    if (drawData != null) {
+    /**
+     * Whether this component uses a submit button
+     * @return whether this component uses a submit button
+     */
 
-                        // convert the draw data string to an object
-                        var drawDataObject = angular.fromJson(drawData);
+  }, {
+    key: 'componentUsesSubmitButton',
+    value: function componentUsesSubmitButton() {
+      return true;
+    }
 
-                        if (drawDataObject != null) {
+    /**
+     * Check if the component state has student work. Sometimes a component
+     * state may be created if the student visits a component but doesn't
+     * actually perform any work. This is where we will check if the student
+     * actually performed any work.
+     * @param componentState the component state object
+     * @param componentContent the component content
+     * @return whether the component state has any work
+     */
 
-                            // get the canvas value
-                            var canvas = drawDataObject.canvas;
+  }, {
+    key: 'componentStateHasStudentWork',
+    value: function componentStateHasStudentWork(componentState, componentContent) {
 
-                            if (canvas != null) {
+      if (componentState != null) {
 
-                                // remove the background image from the canvas
-                                delete canvas.backgroundImage;
+        var studentData = componentState.studentData;
 
-                                // convert the object back to a JSON string
-                                var drawDataJSONString = angular.toJson(drawDataObject);
+        if (studentData != null) {
 
-                                if (drawDataJSONString != null) {
-                                    // set the draw data JSON string back into the student data
-                                    studentData.drawData = drawDataJSONString;
-                                }
-                            }
-                        }
-                    }
-                }
-            };
+          // get the student draw data
+          var drawData = studentData.drawData;
 
-            return componentState;
-        }
+          // get the draw data as a JSON object
+          var drawDataJSON = angular.fromJson(drawData);
 
-        /**
-         * Whether this component generates student work
-         * @param component (optional) the component object. if the component object
-         * is not provided, we will use the default value of whether the
-         * component type usually has work.
-         * @return whether this component generates student work
-         */
+          if (componentContent == null) {
+            // the component content was not provided
 
-    }, {
-        key: 'componentHasWork',
-        value: function componentHasWork(component) {
-            return true;
-        }
+            if (drawDataJSON != null && drawDataJSON.canvas != null && drawDataJSON.canvas.objects != null && drawDataJSON.canvas.objects.length > 0) {
 
-        /**
-         * Whether this component uses a save button
-         * @return whether this component uses a save button
-         */
-
-    }, {
-        key: 'componentUsesSaveButton',
-        value: function componentUsesSaveButton() {
-            return true;
-        }
-
-        /**
-         * Whether this component uses a submit button
-         * @return whether this component uses a submit button
-         */
-
-    }, {
-        key: 'componentUsesSubmitButton',
-        value: function componentUsesSubmitButton() {
-            return true;
-        }
-
-        /**
-         * Check if the component state has student work. Sometimes a component
-         * state may be created if the student visits a component but doesn't
-         * actually perform any work. This is where we will check if the student
-         * actually performed any work.
-         * @param componentState the component state object
-         * @param componentContent the component content
-         * @return whether the component state has any work
-         */
-
-    }, {
-        key: 'componentStateHasStudentWork',
-        value: function componentStateHasStudentWork(componentState, componentContent) {
-
-            if (componentState != null) {
-
-                var studentData = componentState.studentData;
-
-                if (studentData != null) {
-
-                    // get the student draw data
-                    var drawData = studentData.drawData;
-
-                    // get the draw data as a JSON object
-                    var drawDataJSON = angular.fromJson(drawData);
-
-                    if (componentContent == null) {
-                        // the component content was not provided
-
-                        if (drawDataJSON != null && drawDataJSON.canvas != null && drawDataJSON.canvas.objects != null && drawDataJSON.canvas.objects.length > 0) {
-
-                            return true;
-                        }
-                    } else {
-                        // the component content was provided
-
-                        var starterDrawData = componentContent.starterDrawData;
-
-                        if (starterDrawData == null || starterDrawData == '') {
-                            // there is no starter draw data
-
-                            if (drawDataJSON != null && drawDataJSON.canvas != null && drawDataJSON.canvas.objects != null && drawDataJSON.canvas.objects.length > 0) {
-
-                                return true;
-                            }
-                        } else {
-                            /*
-                             * there is starter draw data so we will compare it with
-                             * the student draw data
-                             */
-
-                            if (drawData != null && drawData != '' && drawData !== starterDrawData) {
-                                /*
-                                 * the student draw data is different than the
-                                 * starter draw data
-                                 */
-                                return true;
-                            }
-                        }
-                    }
-                }
+              return true;
             }
+          } else {
+            // the component content was provided
 
-            return false;
+            var starterDrawData = componentContent.starterDrawData;
+
+            if (starterDrawData == null || starterDrawData == '') {
+              // there is no starter draw data
+
+              if (drawDataJSON != null && drawDataJSON.canvas != null && drawDataJSON.canvas.objects != null && drawDataJSON.canvas.objects.length > 0) {
+
+                return true;
+              }
+            } else {
+              /*
+               * there is starter draw data so we will compare it with
+               * the student draw data
+               */
+
+              if (drawData != null && drawData != '' && drawData !== starterDrawData) {
+                /*
+                 * the student draw data is different than the
+                 * starter draw data
+                 */
+                return true;
+              }
+            }
+          }
         }
-    }]);
+      }
 
-    return DrawService;
+      return false;
+    }
+  }]);
+
+  return DrawService;
 }(_nodeService2.default);
 
 DrawService.$inject = ['$filter', 'StudentDataService', 'UtilService'];
